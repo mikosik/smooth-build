@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.lang.base.define.Definitions.baseTypeDefinitions;
-import static org.smoothbuild.lang.base.define.TestingModuleLocation.BUILD_FILE_PATH;
-import static org.smoothbuild.lang.base.define.TestingModuleLocation.importedModuleLocation;
-import static org.smoothbuild.lang.base.define.TestingModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.TestingFileLocation.BUILD_FILE_PATH;
+import static org.smoothbuild.lang.base.define.TestingFileLocation.fileLocation;
+import static org.smoothbuild.lang.base.define.TestingFileLocation.importedFileLocation;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.ModuleLocation;
+import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
@@ -23,27 +23,27 @@ import com.google.common.collect.ImmutableMap;
 
 public class TestModuleLoader {
   private final String sourceCode;
-  private ModuleLocation moduleLocation;
+  private FileLocation fileLocation;
   private Definitions imported;
   private Maybe<Definitions> module;
 
   public static TestModuleLoader module(String sourceCode) {
-    return new TestModuleLoader(sourceCode, moduleLocation(), baseTypeDefinitions());
+    return new TestModuleLoader(sourceCode, fileLocation(), baseTypeDefinitions());
   }
 
-  public TestModuleLoader(String sourceCode, ModuleLocation moduleLocation, Definitions imported) {
+  public TestModuleLoader(String sourceCode, FileLocation fileLocation, Definitions imported) {
     this.sourceCode = sourceCode;
-    this.moduleLocation = moduleLocation;
+    this.fileLocation = fileLocation;
     this.imported = imported;
   }
 
   public TestModuleLoader withImportedModuleLocation() {
-    withModuleLocation(importedModuleLocation());
+    withModuleLocation(importedFileLocation());
     return this;
   }
 
-  public TestModuleLoader withModuleLocation(ModuleLocation moduleLocation) {
-    this.moduleLocation = moduleLocation;
+  public TestModuleLoader withModuleLocation(FileLocation fileLocation) {
+    this.fileLocation = fileLocation;
     return this;
   }
 
@@ -130,7 +130,7 @@ public class TestModuleLoader {
   }
 
   private Maybe<Definitions> load() {
-    return LoadModule.loadModule(imported, moduleLocation, sourceCode);
+    return LoadModule.loadModule(imported, fileLocation, sourceCode);
   }
 
   public static Log err(int line, String message) {

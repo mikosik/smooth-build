@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.lang.base.define.FileLocation.fileLocation;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.define.Location.location;
-import static org.smoothbuild.lang.base.define.Space.USER;
+import static org.smoothbuild.lang.base.define.TestingSModule.module;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.file.Path;
@@ -17,20 +18,20 @@ import com.google.common.testing.EqualsTester;
 public class LocationTest {
   @Test
   public void line_returns_value_passed_during_construction() {
-    Location location = location(mLocation("abc"), 13);
+    Location location = location(fLocation("abc"), 13);
     assertThat(location.line())
         .isEqualTo(13);
   }
 
   @Test
   public void zero_line_is_forbidden() {
-    assertCall(() -> location(mLocation("abc"), 0))
+    assertCall(() -> location(fLocation("abc"), 0))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void negative_line_is_forbidden() {
-    assertCall(() -> location(mLocation("abc"), -1))
+    assertCall(() -> location(fLocation("abc"), -1))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -40,9 +41,9 @@ public class LocationTest {
 
     tester.addEqualityGroup(internal(), internal());
     tester.addEqualityGroup(commandLineLocation(), commandLineLocation());
-    tester.addEqualityGroup(location(mLocation("abc"), 7), location(mLocation("abc"), 7));
-    tester.addEqualityGroup(location(mLocation("abc"), 11), location(mLocation("abc"), 11));
-    tester.addEqualityGroup(location(mLocation("def"), 11), location(mLocation("def"), 11));
+    tester.addEqualityGroup(location(fLocation("abc"), 7), location(fLocation("abc"), 7));
+    tester.addEqualityGroup(location(fLocation("abc"), 11), location(fLocation("abc"), 11));
+    tester.addEqualityGroup(location(fLocation("def"), 11), location(fLocation("def"), 11));
 
     tester.testEquals();
   }
@@ -51,7 +52,7 @@ public class LocationTest {
   class to_string {
     @Test
     public void file() {
-      Location location = location(ModuleLocation.moduleLocation(USER, Path.of("abc")), 2);
+      Location location = location(module("abc").smoothFile(), 2);
       assertThat(location.toString())
           .isEqualTo("abc:2");
     }
@@ -63,14 +64,14 @@ public class LocationTest {
     }
 
     @Test
-    public void unknown() {
+    public void internal_location() {
       Location location = internal();
       assertThat(location.toString())
           .isEqualTo("smooth internal");
     }
   }
 
-  private static ModuleLocation mLocation(String name) {
-    return ModuleLocation.moduleLocation(USER, Path.of(name));
+  private static FileLocation fLocation(String name) {
+    return fileLocation(module("abc"), Path.of(name));
   }
 }

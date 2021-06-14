@@ -9,17 +9,16 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorith
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readFileContentAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
-import static org.smoothbuild.lang.base.define.ModuleLocation.moduleLocation;
-import static org.smoothbuild.lang.base.define.Space.USER;
+import static org.smoothbuild.lang.base.define.TestingSModule.module;
 import static org.smoothbuild.util.Lists.list;
 
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -37,7 +36,7 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(readTupleElementAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
-    hashes.add(readFileContentAlgorithmHash(moduleLocation(USER, Path.of("abc"))));
+    hashes.add(readFileContentAlgorithmHash(module("abc").smoothFile()));
 
     assertThat(hashes.size())
         .isEqualTo(8);
@@ -84,7 +83,9 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void read_file_content_algorithm_has_different_hash_for_different_modules() {
-    assertThat(readFileContentAlgorithmHash(moduleLocation(USER, Path.of("abc"))))
-        .isNotEqualTo(readFileContentAlgorithmHash(moduleLocation(USER, Path.of("def"))));
+    FileLocation fileLocationA = module("abc").smoothFile();
+    FileLocation fileLocationB = module("def").smoothFile();
+    assertThat(readFileContentAlgorithmHash(fileLocationA))
+        .isNotEqualTo(readFileContentAlgorithmHash(fileLocationB));
   }
 }

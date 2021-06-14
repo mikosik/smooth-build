@@ -24,13 +24,13 @@ import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
+import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.ModuleLocation;
 
 public class ParseModule {
-  public static Maybe<ModuleContext> parseModule(ModuleLocation info, String sourceCode) {
+  public static Maybe<ModuleContext> parseModule(FileLocation fileLocation, String sourceCode) {
     var result = new Maybe<ModuleContext>();
-    ErrorListener errorListener = new ErrorListener(info, result);
+    ErrorListener errorListener = new ErrorListener(fileLocation, result);
     SmoothLexer lexer = new SmoothLexer(CharStreams.fromString(sourceCode));
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
@@ -43,11 +43,11 @@ public class ParseModule {
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final ModuleLocation moduleLocation;
+    private final FileLocation fileLocation;
     private final Logger logger;
 
-    public ErrorListener(ModuleLocation moduleLocation, Logger logger) {
-      this.moduleLocation = moduleLocation;
+    public ErrorListener(FileLocation fileLocation, Logger logger) {
+      this.fileLocation = fileLocation;
       this.logger = logger;
     }
 
@@ -64,9 +64,9 @@ public class ParseModule {
 
     private Location createLocation(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
-        return location(moduleLocation, line);
+        return location(fileLocation, line);
       } else {
-        return locationOf(moduleLocation, (Token) offendingSymbol);
+        return locationOf(fileLocation, (Token) offendingSymbol);
       }
     }
 
@@ -75,7 +75,7 @@ public class ParseModule {
         int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
       String message = join("\n",
           "Found ambiguity in grammar.",
-          "Report this as a bug together with file: " + moduleLocation.path() + ", details:",
+          "Report this as a bug together with file: " + fileLocation.path() + ", details:",
           "startIndex=" + startIndex,
           "stopiIndex=" + stopIndex,
           "exact=" + exact,
@@ -99,7 +99,7 @@ public class ParseModule {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      logger.log(parseError(locationOf(moduleLocation, token), message));
+      logger.log(parseError(locationOf(fileLocation, token), message));
     }
   }
 }

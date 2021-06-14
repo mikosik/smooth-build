@@ -13,12 +13,12 @@ import static org.smoothbuild.lang.TestingLang.reference;
 import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
+import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
-import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Constructor;

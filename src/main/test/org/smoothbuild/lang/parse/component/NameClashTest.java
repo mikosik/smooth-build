@@ -2,15 +2,15 @@ package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.base.define.TestingModuleLocation.importedModuleLocation;
-import static org.smoothbuild.lang.base.define.TestingModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.TestingFileLocation.fileLocation;
+import static org.smoothbuild.lang.base.define.TestingFileLocation.importedFileLocation;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.ModuleLocation;
+import org.smoothbuild.lang.base.define.FileLocation;
 
 public class NameClashTest {
   @Nested
@@ -29,7 +29,7 @@ public class NameClashTest {
                otherModuleValue = "def";
                """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleValue"));
+            .loadsWithError(1, alreadyDefinedIn(importedFileLocation(), "otherModuleValue"));
       }
 
       @Test
@@ -44,7 +44,7 @@ public class NameClashTest {
                 otherModuleFunction = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleFunction"));
+            .loadsWithError(1, alreadyDefinedIn(importedFileLocation(), "otherModuleFunction"));
       }
 
       @Test
@@ -59,7 +59,7 @@ public class NameClashTest {
                 otherModuleStruct = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleStruct"));
+            .loadsWithError(1, alreadyDefinedIn(importedFileLocation(), "otherModuleStruct"));
       }
     }
 
@@ -71,7 +71,7 @@ public class NameClashTest {
                myValue = "abc";
                myValue = "def";
                """)
-            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myValue"));
+            .loadsWithError(2, alreadyDefinedIn(fileLocation(), "myValue"));
       }
 
       @Test
@@ -80,7 +80,7 @@ public class NameClashTest {
                myFunction() = "abc";
                myFunction = "def";
                """)
-            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myFunction"));
+            .loadsWithError(2, alreadyDefinedIn(fileLocation(), "myFunction"));
       }
 
       @Test
@@ -89,7 +89,7 @@ public class NameClashTest {
                MyStruct {}
                myStruct = "abc";
                """)
-            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myStruct"));
+            .loadsWithError(2, alreadyDefinedIn(fileLocation(), "myStruct"));
       }
     }
   }
@@ -110,7 +110,7 @@ public class NameClashTest {
                 otherModuleValue() = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleValue"));
+            .loadsWithError(1, alreadyDefinedIn(importedFileLocation(), "otherModuleValue"));
       }
 
       @Test
@@ -125,7 +125,7 @@ public class NameClashTest {
                 otherModuleFunction() = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleFunction"));
+            .loadsWithError(1, alreadyDefinedIn(importedFileLocation(), "otherModuleFunction"));
       }
 
       @Test
@@ -140,7 +140,7 @@ public class NameClashTest {
                 otherModuleStruct() = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleStruct"));
+            .loadsWithError(1, alreadyDefinedIn(importedFileLocation(), "otherModuleStruct"));
       }
     }
 
@@ -152,7 +152,7 @@ public class NameClashTest {
                myValue = "abc";
                myValue() = "def";
                """)
-            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myValue"));
+            .loadsWithError(2, alreadyDefinedIn(fileLocation(), "myValue"));
       }
 
       @Test
@@ -161,7 +161,7 @@ public class NameClashTest {
                myFunction() = "abc";
                myFunction() = "def";
                """)
-            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myFunction"));
+            .loadsWithError(2, alreadyDefinedIn(fileLocation(), "myFunction"));
       }
 
       @Test
@@ -170,7 +170,7 @@ public class NameClashTest {
                MyStruct {}
                myStruct() = "abc";
                """)
-            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myStruct"));
+            .loadsWithError(2, alreadyDefinedIn(fileLocation(), "myStruct"));
       }
     }
   }
@@ -185,7 +185,7 @@ public class NameClashTest {
                String param,
                String param);    
                """)
-          .loadsWithError(4, alreadyDefinedIn(moduleLocation(), 3, "param"));
+          .loadsWithError(4, alreadyDefinedIn(fileLocation(), 3, "param"));
     }
   }
 
@@ -214,8 +214,8 @@ public class NameClashTest {
                 """)
             .withImported(imported)
             .loadsWithErrors(List.of(
-                    err(1, alreadyDefinedIn(importedModuleLocation(), "OtherModuleStruct")),
-                    err(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleStruct"))
+                    err(1, alreadyDefinedIn(importedFileLocation(), "OtherModuleStruct")),
+                    err(1, alreadyDefinedIn(importedFileLocation(), "otherModuleStruct"))
                 ));
       }
     }
@@ -229,8 +229,8 @@ public class NameClashTest {
                OtherModuleStruct {}
                """)
             .loadsWithErrors(List.of(
-                    err(2, alreadyDefinedIn(moduleLocation(), "OtherModuleStruct")),
-                    err(2, alreadyDefinedIn(moduleLocation(), "otherModuleStruct"))
+                    err(2, alreadyDefinedIn(fileLocation(), "OtherModuleStruct")),
+                    err(2, alreadyDefinedIn(fileLocation(), "otherModuleStruct"))
                 ));
       }
     }
@@ -246,7 +246,7 @@ public class NameClashTest {
                String field
              }
              """)
-          .loadsWithError(3, alreadyDefinedIn(moduleLocation(), 2, "field"));
+          .loadsWithError(3, alreadyDefinedIn(fileLocation(), 2, "field"));
     }
   }
 
@@ -266,7 +266,7 @@ public class NameClashTest {
                 OtherModuleValue{}
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleValue"));
+            .loadsWithError(1, alreadyDefinedIn(importedFileLocation(), "otherModuleValue"));
       }
 
       @Test
@@ -281,7 +281,7 @@ public class NameClashTest {
                 OtherModuleFunction{}
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleFunction"));
+            .loadsWithError(1, alreadyDefinedIn(importedFileLocation(), "otherModuleFunction"));
       }
     }
 
@@ -293,7 +293,7 @@ public class NameClashTest {
                myValue = "abc";
                MyValue{}
                """)
-            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myValue"));
+            .loadsWithError(2, alreadyDefinedIn(fileLocation(), "myValue"));
       }
 
       @Test
@@ -302,17 +302,16 @@ public class NameClashTest {
                myFunction() = "abc";
                MyFunction{}
                """)
-            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myFunction"));
+            .loadsWithError(2, alreadyDefinedIn(fileLocation(), "myFunction"));
       }
     }
   }
 
-  private static String alreadyDefinedIn(ModuleLocation moduleLocation, String name) {
-    return alreadyDefinedIn(moduleLocation, 1, name);
+  private static String alreadyDefinedIn(FileLocation fileLocation, String name) {
+    return alreadyDefinedIn(fileLocation, 1, name);
   }
 
-  private static String alreadyDefinedIn(ModuleLocation moduleLocation, int line, String name) {
-    return "`" + name + "` is already defined at " + moduleLocation.path()
-        + ":" + line + ".";
+  private static String alreadyDefinedIn(FileLocation fileLocation, int line, String name) {
+    return "`" + name + "` is already defined at " + fileLocation.path() + ":" + line + ".";
   }
 }
