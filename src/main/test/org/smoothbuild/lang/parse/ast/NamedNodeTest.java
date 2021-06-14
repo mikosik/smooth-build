@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.testing.common.TestingLocation.loc;
+import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 
 import org.junit.jupiter.api.Test;
 

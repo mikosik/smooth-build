@@ -14,38 +14,38 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.JavaCodeLoader;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.io.util.JarFile;
-import org.smoothbuild.lang.base.define.ModuleLocation;
+import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSource;
 import okio.Okio;
 
 public class ReadFileContentAlgorithm extends Algorithm {
-  private final ModuleLocation moduleLocation;
+  private final FileLocation fileLocation;
   private final JavaCodeLoader javaCodeLoader;
   private final FullPathResolver fullPathResolver;
 
-  public ReadFileContentAlgorithm(Spec spec, ModuleLocation moduleLocation,
+  public ReadFileContentAlgorithm(Spec spec, FileLocation fileLocation,
       JavaCodeLoader javaCodeLoader, FullPathResolver fullPathResolver) {
     super(spec, false);
-    this.moduleLocation = moduleLocation;
+    this.fileLocation = fileLocation;
     this.javaCodeLoader = javaCodeLoader;
     this.fullPathResolver = fullPathResolver;
   }
 
   @Override
   public Hash hash() {
-    return readFileContentAlgorithmHash(moduleLocation);
+    return readFileContentAlgorithmHash(fileLocation);
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws IOException {
-    Path resolvedJarPath = fullPathResolver.resolve(moduleLocation.toNative());
+    Path resolvedJarPath = fullPathResolver.resolve(fileLocation.module().nativeFile());
     Blob content = createContent(nativeApi, resolvedJarPath);
     if (content == null) {
       return new Output(null, nativeApi.messages());
     }
-    javaCodeLoader.storeJarFile(new JarFile(moduleLocation, resolvedJarPath, content.hash()));
+    javaCodeLoader.storeJarFile(new JarFile(fileLocation, resolvedJarPath, content.hash()));
     return new Output(content, nativeApi.messages());
   }
 
@@ -53,11 +53,15 @@ public class ReadFileContentAlgorithm extends Algorithm {
     try (BufferedSource source = Okio.buffer(Okio.source(jdkPath))) {
       return nativeApi.factory().blob(sink -> sink.writeAll(source));
     } catch (FileNotFoundException e) {
-      nativeApi.log().error("Cannot find file '" + moduleLocation.toNative().prefixedPath() + "'.");
+      nativeApi.log().error("Cannot find file '" + nativeFilePath() + "'.");
       return null;
     } catch (IOException e) {
-      nativeApi.log().error("Error reading file '" + moduleLocation.toNative().prefixedPath() + "'.");
+      nativeApi.log().error("Error reading file '" + nativeFilePath() + "'.");
       return null;
     }
+  }
+
+  private String nativeFilePath() {
+    return fileLocation.module().nativeFile().prefixedPath();
   }
 }

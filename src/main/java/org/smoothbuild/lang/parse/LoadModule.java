@@ -16,8 +16,8 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.ModuleLocation;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
@@ -29,16 +29,16 @@ import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
   public static Maybe<Definitions> loadModule(
-      Definitions imported, ModuleLocation moduleLocation, String sourceCode) {
+      Definitions imported, FileLocation fileLocation, String sourceCode) {
     var result = new Maybe<Definitions>();
 
-    Maybe<ModuleContext> moduleContext = parseModule(moduleLocation, sourceCode);
+    Maybe<ModuleContext> moduleContext = parseModule(fileLocation, sourceCode);
     result.logAllFrom(moduleContext);
     if (result.hasProblems()) {
       return Maybe.withLogsFrom(moduleContext);
     }
 
-    Ast ast = fromParseTree(moduleLocation, moduleContext.value());
+    Ast ast = fromParseTree(fileLocation, moduleContext.value());
     result.logAll(analyzeSemantically(imported, ast));
     if (result.hasProblems()) {
       return result;

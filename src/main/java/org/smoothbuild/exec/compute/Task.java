@@ -49,7 +49,7 @@ public abstract class Task {
   }
 
   public Space space() {
-    return location.moduleLocation().space();
+    return location.file().space();
   }
 
   public String name() {

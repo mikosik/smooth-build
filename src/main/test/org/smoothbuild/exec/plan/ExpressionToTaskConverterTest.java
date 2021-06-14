@@ -5,8 +5,8 @@ import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.parameterRef;
+import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
-import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import java.util.ArrayList;
 import java.util.List;

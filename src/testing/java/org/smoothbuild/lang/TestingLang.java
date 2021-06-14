@@ -1,7 +1,7 @@
 package org.smoothbuild.lang;
 
 import static java.lang.Math.max;
-import static org.smoothbuild.testing.common.TestingLocation.loc;
+import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 
 import java.util.List;
 import java.util.Optional;

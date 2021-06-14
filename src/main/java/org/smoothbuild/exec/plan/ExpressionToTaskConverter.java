@@ -43,10 +43,10 @@ import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.ModuleLocation;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundedVariables;
@@ -240,11 +240,11 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
 
   @Override
   public Task visit(Scope<TaskSupplier> context, NativeExpression expression) {
-    ModuleLocation module = expression.location().moduleLocation().toNative();
+    FileLocation nativeFile = expression.location().file().module().nativeFile();
     var contentAlgorithm = new ReadFileContentAlgorithm(
-        toSpecConverter.visit(blob()), module, javaCodeLoader, fullPathResolver);
+        toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fullPathResolver);
 
-    String name = "_native_module('" + module.prefixedPath() + "')";
+    String name = "_native_module('" + nativeFile.prefixedPath() + "')";
     var contentTask = new NormalTask(
         NATIVE, blob(), name, contentAlgorithm, list(), expression.location());
     var methodPathTask = fixedStringTask(expression.path(), expression.location());
