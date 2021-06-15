@@ -8,8 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class TupleTest extends TestingContext {
   @Test
   public void creating_tuple_with_less_elements_than_specified_in_its_spec_causes_exception() {
@@ -139,7 +137,7 @@ public class TupleTest extends TestingContext {
   @Test
   public void tuple_can_be_read_by_hash() {
     Tuple person = johnDoePerson();
-    Truth.assertThat(objectDbOther().get(person.hash()))
+    assertThat(objectDbOther().get(person.hash()))
         .isEqualTo(person);
   }
 

@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class NothingArrayTest extends TestingContext {
   @Test
   public void spec_of_nothing_array_is_nothing_array() {
@@ -25,7 +23,7 @@ public class NothingArrayTest extends TestingContext {
   @Test
   public void nothing_array_can_be_read_by_hash() {
     Array array = emptyArrayOf(nothingSpec());
-    Truth.assertThat(objectDbOther().get(array.hash()))
+    assertThat(objectDbOther().get(array.hash()))
         .isEqualTo(array);
   }
 

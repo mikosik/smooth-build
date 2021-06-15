@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class BlobTest extends TestingContext {
@@ -43,37 +41,37 @@ public class BlobTest extends TestingContext {
 
   @Test
   public void blobs_with_equal_content_are_equal() {
-    Truth.assertThat(blob(bytes))
+    assertThat(blob(bytes))
         .isEqualTo(blob(bytes));
   }
 
   @Test
   public void blobs_with_different_content_are_not_equal() {
-    Truth.assertThat(blob(bytes))
+    assertThat(blob(bytes))
         .isNotEqualTo(blob(otherBytes));
   }
 
   @Test
   public void hash_of_blobs_with_equal_content_is_the_same() {
-    Truth.assertThat(blob(bytes).hash())
+    assertThat(blob(bytes).hash())
         .isEqualTo(blob(bytes).hash());
   }
 
   @Test
   public void hash_of_blobs_with_different_content_is_not_the_same() {
-    Truth.assertThat(blob(bytes).hash())
+    assertThat(blob(bytes).hash())
         .isNotEqualTo(blob(otherBytes).hash());
   }
 
   @Test
   public void hash_code_of_blob_with_equal_content_is_the_same() {
-    Truth.assertThat(blob(bytes).hashCode())
+    assertThat(blob(bytes).hashCode())
         .isEqualTo(blob(bytes).hashCode());
   }
 
   @Test
   public void hash_code_of_blobs_with_different_values_is_not_the_same() {
-    Truth.assertThat(blob(bytes).hashCode())
+    assertThat(blob(bytes).hashCode())
         .isNotEqualTo(blob(otherBytes).hashCode());
   }
 
@@ -81,7 +79,7 @@ public class BlobTest extends TestingContext {
   public void blob_can_be_read_by_hash() {
     Blob blob = blob(bytes);
     Hash hash = blob.hash();
-    Truth.assertThat(objectDbOther().get(hash))
+    assertThat(objectDbOther().get(hash))
         .isEqualTo(blob);
   }
 

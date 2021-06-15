@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class BoolTest extends TestingContext {
   @Test
   public void spec_of_bool_is_bool() {
@@ -31,49 +29,49 @@ public class BoolTest extends TestingContext {
 
   @Test
   public void bools_with_equal_values_are_equal() {
-    Truth.assertThat(bool(true))
+    assertThat(bool(true))
         .isEqualTo(bool(true));
   }
 
   @Test
   public void bools_with_different_values_are_not_equal() {
-    Truth.assertThat(bool(true))
+    assertThat(bool(true))
         .isNotEqualTo(bool(false));
   }
 
   @Test
   public void hash_of_true_bools_are_the_same() {
-    Truth.assertThat(bool(true).hash())
+    assertThat(bool(true).hash())
         .isEqualTo(bool(true).hash());
   }
 
   @Test
   public void hash_of_false_bools_are_the_same() {
-    Truth.assertThat(bool(false).hash())
+    assertThat(bool(false).hash())
         .isEqualTo(bool(false).hash());
   }
 
   @Test
   public void hash_of_bools_with_different_values_is_not_the_same() {
-    Truth.assertThat(bool(true).hash())
+    assertThat(bool(true).hash())
         .isNotEqualTo(bool(false).hash());
   }
 
   @Test
   public void hash_code_of_true_bools_is_the_same() {
-    Truth.assertThat(bool(true).hashCode())
+    assertThat(bool(true).hashCode())
         .isEqualTo(bool(true).hashCode());
   }
 
   @Test
   public void hash_code_of_false_bools_is_the_same() {
-    Truth.assertThat(bool(false).hashCode())
+    assertThat(bool(false).hashCode())
         .isEqualTo(bool(false).hashCode());
   }
 
   @Test
   public void hash_code_of_bools_with_different_values_is_not_the_same() {
-    Truth.assertThat(bool(true).hashCode())
+    assertThat(bool(true).hashCode())
         .isNotEqualTo(bool(false).hashCode());
   }
 
@@ -81,7 +79,7 @@ public class BoolTest extends TestingContext {
   public void bool_can_be_read_back_by_hash() {
     Bool bool = bool(true);
     Hash hash = bool.hash();
-    Truth.assertThat(objectDbOther().get(hash))
+    assertThat(objectDbOther().get(hash))
         .isEqualTo(bool);
   }
 
