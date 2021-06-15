@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class Obj {
+public abstract class Obj {
   private final MerkleRoot merkleRoot;
   protected final HashedDb hashedDb;
 
@@ -35,9 +35,7 @@ public class Obj {
     return merkleRoot.spec();
   }
 
-  public String valueToString() {
-    return "...";
-  }
+  public abstract String valueToString();
 
   @Override
   public boolean equals(Object object) {
