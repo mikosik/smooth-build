@@ -19,13 +19,13 @@ public class Defined implements Named {
     this.name = requireNonNull(name);
   }
 
+  public Type type() {
+    return type;
+  }
+
   @Override
   public Location location() {
     return location;
-  }
-
-  public Type type() {
-    return type;
   }
 
   @Override
