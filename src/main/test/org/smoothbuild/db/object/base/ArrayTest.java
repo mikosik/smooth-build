@@ -13,8 +13,6 @@ import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.TestingSpecs;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class ArrayTest extends TestingContext {
@@ -170,7 +168,7 @@ public class ArrayTest extends TestingContext {
         .add(rstring1)
         .add(rstring2)
         .build();
-    Truth.assertThat(objectDbOther().get(array.hash()))
+    assertThat(objectDbOther().get(array.hash()))
         .isEqualTo(array);
   }
 

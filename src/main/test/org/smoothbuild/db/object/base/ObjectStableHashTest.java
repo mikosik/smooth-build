@@ -8,8 +8,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class ObjectStableHashTest extends TestingContext {
@@ -17,7 +15,7 @@ public class ObjectStableHashTest extends TestingContext {
   class _any {
     @Test
     public void hash_of_some_any_is_stable() {
-      Truth.assertThat(any(Hash.of(12345)).hash())
+      assertThat(any(Hash.of(12345)).hash())
           .isEqualTo(Hash.decode("c3bf0d48a05773734060eabbcbf5ad75ebb6a095"));
     }
   }
@@ -26,13 +24,13 @@ public class ObjectStableHashTest extends TestingContext {
   class _blob {
     @Test
     public void hash_of_empty_blob_is_stable() throws Exception {
-      Truth.assertThat(blobBuilder().build().hash())
+      assertThat(blobBuilder().build().hash())
           .isEqualTo(Hash.decode("56f9a1616c2a91bd3e7c059e885ab33d3964e759"));
     }
 
     @Test
     public void hash_of_some_blob_is_stable() {
-      Truth.assertThat(blob(ByteString.encodeUtf8("aaa")).hash())
+      assertThat(blob(ByteString.encodeUtf8("aaa")).hash())
           .isEqualTo(Hash.decode("44894c15dc104081f903b23b0ccc28542221ca14"));
     }
   }
@@ -41,13 +39,13 @@ public class ObjectStableHashTest extends TestingContext {
   class _bool {
     @Test
     public void hash_of_true_bool_is_stable() {
-      Truth.assertThat(bool(true).hash())
+      assertThat(bool(true).hash())
           .isEqualTo(Hash.decode("4098ba24a25839b9302d0fac6ebcd7f7aa7d5aed"));
     }
 
     @Test
     public void hash_of_false_bool_is_stable() {
-      Truth.assertThat(bool(false).hash())
+      assertThat(bool(false).hash())
           .isEqualTo(Hash.decode("3b641feda4deab9676f58d0f62981d8593c10c08"));
     }
   }
@@ -92,7 +90,7 @@ public class ObjectStableHashTest extends TestingContext {
 
     @Test
     public void hash_of_non_empty_any_array_is_stable() {
-      Truth.assertThat(arrayBuilder(anySpec()).add(any(Hash.of(1234))).build().hash())
+      assertThat(arrayBuilder(anySpec()).add(any(Hash.of(1234))).build().hash())
           .isEqualTo(Hash.decode("8ca8a3c55b082c48a2735701105485d1323ef159"));
     }
 
@@ -104,7 +102,7 @@ public class ObjectStableHashTest extends TestingContext {
 
     @Test
     public void hash_of_non_empty_blob_array_is_stable() {
-      Truth.assertThat(arrayBuilder(blobSpec()).add(blob(ByteString.of())).build().hash())
+      assertThat(arrayBuilder(blobSpec()).add(blob(ByteString.of())).build().hash())
           .isEqualTo(Hash.decode("329e4dfd95a5dcbcc2ff3d7dde3ca20f236cc0d4"));
     }
 
@@ -116,7 +114,7 @@ public class ObjectStableHashTest extends TestingContext {
 
     @Test
     public void hash_of_non_empty_bool_array_is_stable() {
-      Truth.assertThat(arrayBuilder(boolSpec()).add(bool(true)).build().hash())
+      assertThat(arrayBuilder(boolSpec()).add(bool(true)).build().hash())
           .isEqualTo(Hash.decode("fc0f1008bd3c72106e59e065fd6ba6658f2ffcba"));
     }
 
@@ -134,7 +132,7 @@ public class ObjectStableHashTest extends TestingContext {
 
     @Test
     public void hash_of_non_empty_string_array_is_stable() {
-      Truth.assertThat(arrayBuilder(stringSpec()).add(string("")).build().hash())
+      assertThat(arrayBuilder(stringSpec()).add(string("")).build().hash())
           .isEqualTo(Hash.decode("3a631e7e0e6d858454e427003cb4685791f650ab"));
     }
 
@@ -146,7 +144,7 @@ public class ObjectStableHashTest extends TestingContext {
 
     @Test
     public void hash_of_non_empty_tuple_array_is_stable() {
-      Truth.assertThat(arrayBuilder(personSpec()).add(person("John", "Doe")).build().hash())
+      assertThat(arrayBuilder(personSpec()).add(person("John", "Doe")).build().hash())
           .isEqualTo(Hash.decode("e06466885b0ff8bd31e6eb2fb5af60e35eb11888"));
     }
   }

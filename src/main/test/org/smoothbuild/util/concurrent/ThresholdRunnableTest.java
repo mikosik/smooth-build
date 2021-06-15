@@ -1,5 +1,6 @@
 package org.smoothbuild.util.concurrent;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
@@ -8,14 +9,12 @@ import static org.mockito.Mockito.verifyNoInteractions;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.common.truth.Truth;
-
 public class ThresholdRunnableTest {
   @Test
   public void negative_count_causes_exception() {
     IllegalArgumentException e =
         assertThrows(IllegalArgumentException.class, () -> new ThresholdRunnable(-1, () -> {}));
-    Truth.assertThat(e.getMessage())
+    assertThat(e.getMessage())
         .isEqualTo("'count' argument is -1 but should be 0 or more.");
   }
 

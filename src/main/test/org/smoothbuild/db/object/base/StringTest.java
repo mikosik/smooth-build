@@ -5,8 +5,6 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class StringTest extends TestingContext {
   private final String string = "my string";
   private final String otherString = "my string 2";
@@ -68,7 +66,7 @@ public class StringTest extends TestingContext {
   @Test
   public void str_can_be_read_back_by_hash() {
     Str str = string(string);
-    Truth.assertThat(objectDbOther().get(str.hash()))
+    assertThat(objectDbOther().get(str.hash()))
         .isEqualTo(str);
   }
 
