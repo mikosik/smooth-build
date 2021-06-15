@@ -1,9 +1,13 @@
 package org.smoothbuild.install;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -63,17 +67,20 @@ public class InstallationHashes {
   }
 
   private HashNode moduleNode(SModule module) throws IOException {
-    FileLocation smoothFile = module.smoothFile();
-    HashNode smoothFileNode = new HashNode(
-        smoothFile.prefixedPath(), Hash.of(fullPathResolver.resolve(smoothFile)));
-    FileLocation nativeFileLocation = module.nativeFile();
-    Path nativeFullPath = fullPathResolver.resolve(nativeFileLocation);
-    String name = module.name() + " module";
-    if (Files.exists(nativeFullPath)) {
-      HashNode jarFile = new HashNode(nativeFileLocation.prefixedPath(), Hash.of(nativeFullPath));
-      return new HashNode(name, ImmutableList.of(smoothFileNode, jarFile));
+    Optional<HashNode> smoothFileNode = nodeFor(module.smoothFile());
+    Optional<HashNode> nativeFileNode = nodeFor(module.nativeFile());
+    var nodes = Stream.of(smoothFileNode, nativeFileNode)
+        .flatMap(Optional::stream)
+        .collect(toImmutableList());
+    return new HashNode(module.name() + " module", nodes);
+  }
+
+  private Optional<HashNode> nodeFor(FileLocation fileLocation) throws IOException {
+    Path resolvedPath = fullPathResolver.resolve(fileLocation);
+    if (Files.exists(resolvedPath)) {
+      return Optional.of(new HashNode(fileLocation.prefixedPath(), Hash.of(resolvedPath)));
     } else {
-      return new HashNode(name, ImmutableList.of(smoothFileNode));
+      return Optional.empty();
     }
   }
 }
