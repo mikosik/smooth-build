@@ -93,7 +93,8 @@ public class AstCreator {
           return Optional.of(new NativeExpression(
               unquote(nativ.STRING().getText()),
               isPure(nativ),
-              locationOf(fileLocation, nativ)));
+              locationOf(fileLocation, nativ),
+              fileLocation.withExtension("jar")));
         }
       }
 

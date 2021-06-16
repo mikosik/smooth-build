@@ -5,7 +5,6 @@ import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.testing.TestingContext;
 
 public class SpecStableHashTest extends TestingContext {

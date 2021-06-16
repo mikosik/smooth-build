@@ -1,9 +1,9 @@
 package org.smoothbuild.install;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.install.InstallationPaths.STANDARD_LIBRARY_MODULES;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Properties;
@@ -13,18 +13,21 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.define.FileLocation;
-import org.smoothbuild.lang.base.define.SModule;
+import org.smoothbuild.lang.base.define.ModuleFiles;
 
 import com.google.common.collect.ImmutableList;
 
 public class InstallationHashes {
   private final InstallationPaths installationPaths;
   private final FullPathResolver fullPathResolver;
+  private final ModuleFilesDetector moduleFilesDetector;
 
   @Inject
-  public InstallationHashes(InstallationPaths installationPaths, FullPathResolver fullPathResolver) {
+  public InstallationHashes(InstallationPaths installationPaths, FullPathResolver fullPathResolver,
+      ModuleFilesDetector moduleFilesDetector) {
     this.installationPaths = installationPaths;
     this.fullPathResolver = fullPathResolver;
+    this.moduleFilesDetector = moduleFilesDetector;
   }
 
   public HashNode installationNode() throws IOException {
@@ -60,24 +63,25 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    for (SModule module : InstallationPaths.STANDARD_LIBRARY_MODULES) {
+    for (ModuleFiles module : moduleFilesDetector.detect(STANDARD_LIBRARY_MODULES)) {
       builder.add(moduleNode(module));
     }
     return new HashNode("standard libraries", builder.build());
   }
 
-  private HashNode moduleNode(SModule module) throws IOException {
-    Optional<HashNode> smoothFileNode = nodeFor(module.smoothFile());
-    Optional<HashNode> nativeFileNode = nodeFor(module.nativeFile());
-    var nodes = Stream.of(smoothFileNode, nativeFileNode)
+  private HashNode moduleNode(ModuleFiles moduleFiles) throws IOException {
+    Optional<HashNode> smoothNode = nodeFor(Optional.of(moduleFiles.smoothFile()));
+    Optional<HashNode> nativeNode = nodeFor(moduleFiles.nativeFile());
+    var nodes = Stream.of(smoothNode, nativeNode)
         .flatMap(Optional::stream)
         .collect(toImmutableList());
-    return new HashNode(module.name() + " module", nodes);
+    return new HashNode(moduleFiles.name() + " module", nodes);
   }
 
-  private Optional<HashNode> nodeFor(FileLocation fileLocation) throws IOException {
-    Path resolvedPath = fullPathResolver.resolve(fileLocation);
-    if (Files.exists(resolvedPath)) {
+  private Optional<HashNode> nodeFor(Optional<FileLocation> file) throws IOException {
+    if (file.isPresent()) {
+      FileLocation fileLocation = file.get();
+      Path resolvedPath = fullPathResolver.resolve(fileLocation);
       return Optional.of(new HashNode(fileLocation.prefixedPath(), Hash.of(resolvedPath)));
     } else {
       return Optional.empty();

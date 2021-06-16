@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.lang.base.define.TestingSModule.module;
+import static org.smoothbuild.lang.base.define.TestingFileLocation.fileLocation;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -38,6 +38,6 @@ public class LocationHelpersTest {
   }
 
   private static FileLocation mLocation() {
-    return module("script.smooth").smoothFile();
+    return fileLocation("script.smooth");
   }
 }

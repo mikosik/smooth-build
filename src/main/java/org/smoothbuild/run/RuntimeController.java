@@ -20,27 +20,31 @@ import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.install.FullPathResolver;
+import org.smoothbuild.install.ModuleFilesDetector;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.FileLocation;
-import org.smoothbuild.lang.base.define.SModule;
+import org.smoothbuild.lang.base.define.ModuleFiles;
 
 import com.google.common.collect.ImmutableList;
 
 import okio.BufferedSource;
 
 public class RuntimeController {
-  private static final ImmutableList<SModule> MODULES =
-      ImmutableList.<SModule>builder()
+  private static final ImmutableList<FileLocation> MODULES =
+      ImmutableList.<FileLocation>builder()
           .addAll(STANDARD_LIBRARY_MODULES)
-          .add(new SModule(USER, Path.of(USER_MODULE_FILE_NAME), STANDARD_LIBRARY_MODULES))
+          .add(new FileLocation(USER, Path.of(USER_MODULE_FILE_NAME)))
           .build();
 
   private final FullPathResolver fullPathResolver;
+  private final ModuleFilesDetector moduleFilesDetector;
   private final Reporter reporter;
 
   @Inject
-  public RuntimeController(FullPathResolver fullPathResolver, Reporter reporter) {
+  public RuntimeController(FullPathResolver fullPathResolver,
+      ModuleFilesDetector moduleFilesDetector, Reporter reporter) {
     this.fullPathResolver = fullPathResolver;
+    this.moduleFilesDetector = moduleFilesDetector;
     this.reporter = reporter;
   }
 
@@ -48,7 +52,7 @@ public class RuntimeController {
     reporter.startNewPhase("Parsing");
 
     Definitions allDefinitions = Definitions.baseTypeDefinitions();
-    for (SModule module : MODULES) {
+    for (ModuleFiles module : moduleFilesDetector.detect(MODULES)) {
       FileLocation smoothFile = module.smoothFile();
       Maybe<Definitions> definitions = load(allDefinitions, smoothFile);
       reporter.report(smoothFile.path().toString(), definitions.logs());

@@ -13,6 +13,7 @@ import static org.smoothbuild.lang.TestingLang.reference;
 import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
+import static org.smoothbuild.lang.base.define.TestingFileLocation.nativeFileLocation;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
@@ -92,8 +93,8 @@ public class ExpressionTest {
           String myFunction();
           """)
         .loadsSuccessfully()
-        .containsReferencable(function(
-            2, STRING, "myFunction", new NativeExpression("Impl.met", false, loc(1))));
+        .containsReferencable(function(2, STRING, "myFunction",
+            new NativeExpression("Impl.met", false, loc(1), nativeFileLocation())));
   }
 
   @Test
@@ -103,8 +104,8 @@ public class ExpressionTest {
           String myFunction();
           """)
         .loadsSuccessfully()
-        .containsReferencable(function(
-            2, STRING, "myFunction", new NativeExpression("Impl.met", true, loc(1))));
+        .containsReferencable(function(2, STRING, "myFunction",
+            new NativeExpression("Impl.met", true, loc(1), nativeFileLocation())));
   }
 
   @Test
