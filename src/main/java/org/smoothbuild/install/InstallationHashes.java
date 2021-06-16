@@ -75,7 +75,7 @@ public class InstallationHashes {
     var nodes = Stream.of(smoothNode, nativeNode)
         .flatMap(Optional::stream)
         .collect(toImmutableList());
-    return new HashNode(moduleFiles.name() + " module", nodes);
+    return new HashNode(moduleFiles.path() + " module", nodes);
   }
 
   private Optional<HashNode> nodeFor(Optional<FileLocation> file) throws IOException {
