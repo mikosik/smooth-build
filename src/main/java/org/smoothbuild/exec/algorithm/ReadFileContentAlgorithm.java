@@ -21,31 +21,31 @@ import okio.BufferedSource;
 import okio.Okio;
 
 public class ReadFileContentAlgorithm extends Algorithm {
-  private final FileLocation fileLocation;
+  private final FileLocation nativeFile;
   private final JavaCodeLoader javaCodeLoader;
   private final FullPathResolver fullPathResolver;
 
-  public ReadFileContentAlgorithm(Spec spec, FileLocation fileLocation,
+  public ReadFileContentAlgorithm(Spec spec, FileLocation nativeFile,
       JavaCodeLoader javaCodeLoader, FullPathResolver fullPathResolver) {
     super(spec, false);
-    this.fileLocation = fileLocation;
+    this.nativeFile = nativeFile;
     this.javaCodeLoader = javaCodeLoader;
     this.fullPathResolver = fullPathResolver;
   }
 
   @Override
   public Hash hash() {
-    return readFileContentAlgorithmHash(fileLocation);
+    return readFileContentAlgorithmHash(nativeFile);
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws IOException {
-    Path resolvedJarPath = fullPathResolver.resolve(fileLocation.module().nativeFile());
+    Path resolvedJarPath = fullPathResolver.resolve(nativeFile);
     Blob content = createContent(nativeApi, resolvedJarPath);
     if (content == null) {
       return new Output(null, nativeApi.messages());
     }
-    javaCodeLoader.storeJarFile(new JarFile(fileLocation, resolvedJarPath, content.hash()));
+    javaCodeLoader.storeJarFile(new JarFile(nativeFile, resolvedJarPath, content.hash()));
     return new Output(content, nativeApi.messages());
   }
 
@@ -53,15 +53,11 @@ public class ReadFileContentAlgorithm extends Algorithm {
     try (BufferedSource source = Okio.buffer(Okio.source(jdkPath))) {
       return nativeApi.factory().blob(sink -> sink.writeAll(source));
     } catch (FileNotFoundException e) {
-      nativeApi.log().error("Cannot find file '" + nativeFilePath() + "'.");
+      nativeApi.log().error("Cannot find file '" + nativeFile.prefixedPath() + "'.");
       return null;
     } catch (IOException e) {
-      nativeApi.log().error("Error reading file '" + nativeFilePath() + "'.");
+      nativeApi.log().error("Error reading file '" + nativeFile.prefixedPath() + "'.");
       return null;
     }
-  }
-
-  private String nativeFilePath() {
-    return fileLocation.module().nativeFile().prefixedPath();
   }
 }
