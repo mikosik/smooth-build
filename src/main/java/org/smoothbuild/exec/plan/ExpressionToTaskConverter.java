@@ -240,7 +240,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
 
   @Override
   public Task visit(Scope<TaskSupplier> context, NativeExpression expression) {
-    FileLocation nativeFile = expression.location().file().module().nativeFile();
+    FileLocation nativeFile = expression.nativeFile();
     var contentAlgorithm = new ReadFileContentAlgorithm(
         toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fullPathResolver);
 

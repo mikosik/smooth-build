@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.lang.base.define.Space.USER;
-import static org.smoothbuild.util.Lists.list;
 
 import java.nio.file.Path;
 
@@ -15,42 +14,38 @@ public class FileLocationTest {
   @Test
   public void equals_and_hash_code() {
     String file = "abc.smooth";
-    SModule slibModule = new SModule(STANDARD_LIBRARY, Path.of(file), list());
-    SModule userModule1 = new SModule(USER, Path.of(file), list());
-    SModule userModule1WithReferences = new SModule(USER, Path.of(file), list(slibModule));
-    SModule userModule2 = new SModule(USER, Path.of("def"), list());
 
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(
-        userModule1.smoothFile(),
-        userModule1.smoothFile());
+        new FileLocation(USER, Path.of(file)),
+        new FileLocation(USER, Path.of(file)));
     tester.addEqualityGroup(
-        userModule1WithReferences.smoothFile(),
-        userModule1WithReferences.smoothFile());
+        new FileLocation(USER, Path.of("def")),
+        new FileLocation(USER, Path.of("def")));
     tester.addEqualityGroup(
-        userModule1.nativeFile(),
-        userModule1.nativeFile());
-    tester.addEqualityGroup(
-        userModule2.smoothFile(),
-        userModule2.smoothFile());
-    tester.addEqualityGroup(
-        slibModule.smoothFile(),
-        slibModule.smoothFile());
+        new FileLocation(STANDARD_LIBRARY, Path.of(file)),
+        new FileLocation(STANDARD_LIBRARY, Path.of(file)));
 
     tester.testEquals();
   }
 
   @Test
   void prefixed_path() {
-    FileLocation moduleLocation =
-        new SModule(USER, Path.of("full/path.smooth"), list()).smoothFile();
-    assertThat((Object) moduleLocation.prefixedPath())
+    FileLocation fileLocation = new FileLocation(USER, Path.of("full/path.smooth"));
+    assertThat((Object) fileLocation.prefixedPath())
         .isEqualTo("{prj}/full/path.smooth");
   }
 
   @Test
+  void with_extension() {
+    FileLocation fileLocation = new FileLocation(USER, Path.of("full/path.smooth"));
+    assertThat(fileLocation.withExtension("jar"))
+        .isEqualTo(new FileLocation(USER, Path.of("full/path.jar")));
+  }
+
+  @Test
   public void to_string() {
-    FileLocation location = new SModule(USER, Path.of("abc"), list()).smoothFile();
+    FileLocation location = new FileLocation(USER, Path.of("abc"));
     assertThat(location.toString())
         .isEqualTo("{prj}/abc");
   }

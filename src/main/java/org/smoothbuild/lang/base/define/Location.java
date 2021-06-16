@@ -5,7 +5,6 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.define.FileLocation.fileLocation;
 import static org.smoothbuild.lang.base.define.Space.INTERNAL;
 import static org.smoothbuild.lang.base.define.Space.USER;
-import static org.smoothbuild.util.Lists.list;
 
 /**
  * This class is immutable.
@@ -13,11 +12,11 @@ import static org.smoothbuild.util.Lists.list;
 public record Location(FileLocation file, int line) {
 
   public static Location commandLineLocation() {
-    return new Location(fileLocation(new SModule(USER, null, list()), null), 1);
+    return new Location(fileLocation(USER, null), 1);
   }
 
   public static Location internal() {
-    return new Location(fileLocation(new SModule(INTERNAL, null, list()), null), -1);
+    return new Location(fileLocation(INTERNAL, null), -1);
   }
 
   public static Location location(FileLocation fileLocation, int line) {

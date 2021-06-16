@@ -6,7 +6,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.STRING;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
 import static org.smoothbuild.lang.TestingLang.function;
-import static org.smoothbuild.lang.base.define.TestingSModule.module;
+import static org.smoothbuild.lang.base.define.TestingFileLocation.fileLocation;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -136,8 +136,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_read_file_content_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new ReadFileContentAlgorithm(
-        null, module("abc").smoothFile(), null, null);
+    Algorithm algorithm = new ReadFileContentAlgorithm(null, fileLocation("abc"), null, null);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("ec008449a75038ffa0a81c6deccfa6068dfcb852"));
@@ -145,8 +144,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_read_file_content_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new ReadFileContentAlgorithm(
-        null, module("abc").smoothFile(), null, null);
+    Algorithm algorithm = new ReadFileContentAlgorithm(null, fileLocation("abc"), null, null);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("480aa6dc1679071d2c6dbaf66bd6f4d463411c8b"));
