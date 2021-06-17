@@ -16,7 +16,7 @@ public class Types {
   /**
    * Base types available in smooth language.
    */
-  public static final ImmutableSet<Type> BASE_TYPES = ImmutableSet.of(
+  public static final ImmutableSet<BaseType> BASE_TYPES = ImmutableSet.of(
       ANY,
       BLOB,
       BOOL,

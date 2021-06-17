@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 
 import org.smoothbuild.lang.base.type.Type;
@@ -32,7 +31,7 @@ public record Definitions(
   public static Definitions baseTypeDefinitions() {
     ImmutableMap<String, Defined> baseTypes =
         BASE_TYPES.stream()
-            .collect(toImmutableMap(Type::name, t -> new Defined(t, t.name(), internal())));
+            .collect(toImmutableMap(Type::name, BaseTypeDefinition::new));
     return new Definitions(baseTypes, ImmutableMap.of());
   }
 }
