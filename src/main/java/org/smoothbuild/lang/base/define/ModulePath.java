@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
+import static org.smoothbuild.util.io.Paths.removeExtension;
+
 import java.util.Objects;
 
 public class ModulePath {
@@ -7,6 +9,10 @@ public class ModulePath {
 
   public ModulePath(String path) {
     this.path = path;
+  }
+
+  public static ModulePath of(FileLocation file) {
+    return new ModulePath(removeExtension(file.prefixedPath()));
   }
 
   @Override

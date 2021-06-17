@@ -18,7 +18,9 @@ import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.Referencable;
+import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
@@ -28,10 +30,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
-  public static Maybe<Definitions> loadModule(
-      Definitions imported, FileLocation fileLocation, String sourceCode) {
-    var result = new Maybe<Definitions>();
-
+  public static Maybe<SModule> loadModule(
+      Definitions imported, ModuleFiles moduleFiles, String sourceCode) {
+    var result = new Maybe<SModule>();
+    FileLocation fileLocation = moduleFiles.smoothFile();
     Maybe<ModuleContext> moduleContext = parseModule(fileLocation, sourceCode);
     result.logAllFrom(moduleContext);
     if (result.hasProblems()) {
@@ -60,7 +62,8 @@ public class LoadModule {
     var definedStructs = sortedAst.structs().stream()
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
-    result.setValue(new Definitions(definedStructs, referencables));
+    result.setValue(
+        new SModule(moduleFiles.path(), imported.modules(), definedStructs, referencables));
     return result;
   }
 

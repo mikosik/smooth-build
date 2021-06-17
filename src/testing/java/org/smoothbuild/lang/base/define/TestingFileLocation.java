@@ -9,11 +9,15 @@ public class TestingFileLocation {
   private static final String IMPORTED_FILE_PATH = "imported.smooth";
 
   public static FileLocation fileLocation() {
+    return smoothFileLocation();
+  }
+
+  public static FileLocation smoothFileLocation() {
     return fileLocation(BUILD_FILE_PATH);
   }
 
   public static FileLocation nativeFileLocation() {
-    return fileLocation(BUILD_FILE_PATH).withExtension("jar");
+    return smoothFileLocation().withExtension("jar");
   }
 
   public static FileLocation importedFileLocation() {

@@ -1,7 +1,5 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.util.io.Paths.removeExtension;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -26,7 +24,7 @@ public class ModuleFilesDetector {
   public ImmutableList<ModuleFiles> detect(List<FileLocation> smoothFiles) {
     var builder = ImmutableList.<ModuleFiles>builder();
     for (FileLocation file : smoothFiles) {
-      ModulePath name = new ModulePath(removeExtension(file.prefixedPath()));
+      ModulePath name = ModulePath.of(file);
       builder.add(new ModuleFiles(name, file.space(), file, nativeFileFor(file)));
     }
     return builder.build();

@@ -1,37 +1,31 @@
 package org.smoothbuild.lang.base.define;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
+import static org.smoothbuild.util.Lists.concat;
 
-import org.smoothbuild.lang.base.type.Type;
-
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public record Definitions(
+    ImmutableList<SModule> modules,
     ImmutableMap<String, Defined> types,
     ImmutableMap<String, Referencable> referencables) {
 
   public static Definitions empty() {
-    return new Definitions(ImmutableMap.of(), ImmutableMap.of());
+    return new Definitions(ImmutableList.of(), ImmutableMap.of(), ImmutableMap.of());
   }
 
-  public static Definitions union(Definitions first, Definitions second) {
+
+  public Definitions withModule(SModule module) {
     return new Definitions(
+        concat(modules, module),
         ImmutableMap.<String, Defined>builder()
-            .putAll(first.types)
-            .putAll(second.types)
+            .putAll(types)
+            .putAll(module.types())
             .build(),
         ImmutableMap.<String, Referencable>builder()
-            .putAll(first.referencables)
-            .putAll(second.referencables)
+            .putAll(referencables)
+            .putAll(module.referencables())
             .build()
     );
-  }
-
-  public static Definitions baseTypeDefinitions() {
-    ImmutableMap<String, Defined> baseTypes =
-        BASE_TYPES.stream()
-            .collect(toImmutableMap(Type::name, BaseTypeDefinition::new));
-    return new Definitions(baseTypes, ImmutableMap.of());
   }
 }
