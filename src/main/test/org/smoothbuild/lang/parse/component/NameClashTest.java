@@ -22,9 +22,9 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleValue = "abc";
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                otherModuleValue = "def";
                """)
@@ -37,9 +37,9 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleFunction() = "abc";
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 otherModuleFunction = "def";
                 """)
@@ -52,9 +52,9 @@ public class NameClashTest {
         Definitions imported = module("""
             OtherModuleStruct {}
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 otherModuleStruct = "def";
                 """)
@@ -103,9 +103,9 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleValue = "abc";
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 otherModuleValue() = "def";
                 """)
@@ -118,9 +118,9 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleFunction() = "abc";
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 otherModuleFunction() = "def";
                 """)
@@ -133,9 +133,9 @@ public class NameClashTest {
         Definitions imported = module("""
             OtherModuleStruct {}
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 otherModuleStruct() = "def";
                 """)
@@ -206,9 +206,9 @@ public class NameClashTest {
         Definitions imported = module("""
             OtherModuleStruct {}
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 OtherModuleStruct {}
                 """)
@@ -259,9 +259,9 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleValue = "abc";
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 OtherModuleValue{}
                 """)
@@ -274,9 +274,9 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleFunction() = "abc";
             """)
-            .withImportedModuleLocation()
+            .withImportedModuleFiles()
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 OtherModuleFunction{}
                 """)

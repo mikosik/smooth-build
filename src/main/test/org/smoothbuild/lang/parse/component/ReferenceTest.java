@@ -87,7 +87,7 @@ public class ReferenceTest {
             String otherModuleValue;
             """)
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
             myValue = otherModuleValue;
             """)
@@ -102,7 +102,7 @@ public class ReferenceTest {
             String otherModuleFunction();
             """)
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 myValue = otherModuleFunction;
                 """)
@@ -116,7 +116,7 @@ public class ReferenceTest {
             OtherModuleStruct{}
             """)
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                 myValue = otherModuleStruct;
                 """)
@@ -220,7 +220,7 @@ public class ReferenceTest {
             String otherModuleValue;
             """)
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                result = otherModuleValue();
                """)
@@ -235,7 +235,7 @@ public class ReferenceTest {
             String otherModuleFunction();
             """)
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                result = otherModuleFunction();
                """)
@@ -249,7 +249,7 @@ public class ReferenceTest {
             OtherModuleStruct {}
             """)
             .loadsSuccessfully()
-            .getModule();
+            .getModuleAsDefinitions();
         module("""
                result = otherModuleStruct();
                """)

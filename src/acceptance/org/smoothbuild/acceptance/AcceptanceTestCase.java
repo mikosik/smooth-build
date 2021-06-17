@@ -23,6 +23,7 @@ import static org.smoothbuild.acceptance.CommandWithArgs.versionCommand;
 import static org.smoothbuild.cli.console.Reporter.prefixMultiline;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
+import static org.smoothbuild.install.ProjectPaths.USER_MODULE_LOCATION;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Strings.unlines;
@@ -224,14 +225,14 @@ public abstract class AcceptanceTestCase {
   }
 
   public void assertSysOutContainsParseError(int lineNumber, String... errorLines) {
-    errorLines[0] = USER_MODULE_PATH.toString() + ":" + lineNumber + ": " + errorLines[0];
+    errorLines[0] = USER_MODULE_PATH + ":" + lineNumber + ": " + errorLines[0];
     assertSysOutContainsParseError(errorLines);
   }
 
   public void assertSysOutContainsParseError(String... errorLines) {
     errorLines[0] = "ERROR: " + errorLines[0];
     assertSysOutContains(
-        "  " + USER_MODULE_PATH.toString(),
+        "  " + USER_MODULE_LOCATION.prefixedPath(),
         prefixMultiline(errorLines));
   }
 

@@ -6,6 +6,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.install.InstallationPaths.STANDARD_LIBRARY_MODULES;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_FILE_NAME;
+import static org.smoothbuild.lang.base.define.SModule.baseTypesModule;
 import static org.smoothbuild.lang.base.define.Space.USER;
 import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 
@@ -24,6 +25,7 @@ import org.smoothbuild.install.ModuleFilesDetector;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.ModuleFiles;
+import org.smoothbuild.lang.base.define.SModule;
 
 import com.google.common.collect.ImmutableList;
 
@@ -51,16 +53,15 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
     reporter.startNewPhase("Parsing");
 
-    Definitions allDefinitions = Definitions.baseTypeDefinitions();
-    for (ModuleFiles module : moduleFilesDetector.detect(MODULES)) {
-      FileLocation smoothFile = module.smoothFile();
-      Maybe<Definitions> definitions = load(allDefinitions, smoothFile);
-      reporter.report(smoothFile.path().toString(), definitions.logs());
+    Definitions allDefinitions = Definitions.empty().withModule(baseTypesModule());
+    for (ModuleFiles moduleFiles : moduleFilesDetector.detect(MODULES)) {
+      Maybe<SModule> module = load(allDefinitions, moduleFiles);
+      reporter.report(moduleFiles.smoothFile().prefixedPath(), module.logs());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
         return EXIT_CODE_ERROR;
       } else {
-        allDefinitions = Definitions.union(allDefinitions, definitions.value());
+        allDefinitions = allDefinitions.withModule(module.value());
       }
     }
     runner.accept(allDefinitions);
@@ -68,12 +69,12 @@ public class RuntimeController {
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private Maybe<Definitions> load(Definitions imported, FileLocation smoothFile) {
-    var sourceCode = readFileContent(fullPathResolver.resolve(smoothFile));
+  private Maybe<SModule> load(Definitions imported, ModuleFiles moduleFiles) {
+    var sourceCode = readFileContent(fullPathResolver.resolve(moduleFiles.smoothFile()));
     if (sourceCode.hasProblems()) {
       return  Maybe.withLogsFrom(sourceCode);
     } else {
-      return loadModule(imported, smoothFile, sourceCode.value());
+      return loadModule(imported, moduleFiles, sourceCode.value());
     }
   }
 
