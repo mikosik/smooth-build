@@ -5,6 +5,7 @@ import static org.smoothbuild.install.InstallationPaths.STANDARD_LIBRARY_MODULES
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Stream;
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.ModuleFiles;
+import org.smoothbuild.lang.base.define.ModulePath;
 
 import com.google.common.collect.ImmutableList;
 
@@ -63,19 +65,20 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    for (ModuleFiles module : moduleFilesDetector.detect(STANDARD_LIBRARY_MODULES)) {
-      builder.add(moduleNode(module));
+    var files = moduleFilesDetector.detect(STANDARD_LIBRARY_MODULES);
+    for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
+      builder.add(moduleNode(entry.getKey(), entry.getValue()));
     }
     return new HashNode("standard libraries", builder.build());
   }
 
-  private HashNode moduleNode(ModuleFiles moduleFiles) throws IOException {
+  private HashNode moduleNode(ModulePath path, ModuleFiles moduleFiles) throws IOException {
     Optional<HashNode> smoothNode = nodeFor(Optional.of(moduleFiles.smoothFile()));
     Optional<HashNode> nativeNode = nodeFor(moduleFiles.nativeFile());
     var nodes = Stream.of(smoothNode, nativeNode)
         .flatMap(Optional::stream)
         .collect(toImmutableList());
-    return new HashNode(moduleFiles.path() + " module", nodes);
+    return new HashNode(path + " module", nodes);
   }
 
   private Optional<HashNode> nodeFor(Optional<FileLocation> file) throws IOException {

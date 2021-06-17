@@ -19,6 +19,7 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModuleFiles;
+import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Type;
@@ -30,8 +31,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
-  public static Maybe<SModule> loadModule(
-      Definitions imported, ModuleFiles moduleFiles, String sourceCode) {
+  public static Maybe<SModule> loadModule(Definitions imported, ModulePath path,
+      ModuleFiles moduleFiles, String sourceCode) {
     var result = new Maybe<SModule>();
     FileLocation fileLocation = moduleFiles.smoothFile();
     Maybe<ModuleContext> moduleContext = parseModule(fileLocation, sourceCode);
@@ -63,7 +64,7 @@ public class LoadModule {
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
     result.setValue(
-        new SModule(moduleFiles.path(), imported.modules(), definedStructs, referencables));
+        new SModule(path, imported.modules(), definedStructs, referencables));
     return result;
   }
 

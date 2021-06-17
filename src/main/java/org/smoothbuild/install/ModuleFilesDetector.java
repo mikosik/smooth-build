@@ -11,7 +11,7 @@ import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class ModuleFilesDetector {
   private final FullPathResolver fullPathResolver;
@@ -21,11 +21,10 @@ public class ModuleFilesDetector {
     this.fullPathResolver = fullPathResolver;
   }
 
-  public ImmutableList<ModuleFiles> detect(List<FileLocation> smoothFiles) {
-    var builder = ImmutableList.<ModuleFiles>builder();
+  public ImmutableMap<ModulePath, ModuleFiles> detect(List<FileLocation> smoothFiles) {
+    var builder = ImmutableMap.<ModulePath, ModuleFiles>builder();
     for (FileLocation file : smoothFiles) {
-      ModulePath name = ModulePath.of(file);
-      builder.add(new ModuleFiles(name, file, nativeFileFor(file)));
+      builder.put(ModulePath.of(file), new ModuleFiles(file, nativeFileFor(file)));
     }
     return builder.build();
   }

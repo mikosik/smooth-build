@@ -15,6 +15,7 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.ModuleFiles;
+import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Type;
@@ -127,7 +128,8 @@ public class TestModuleLoader {
   }
 
   private Maybe<SModule> load() {
-    return LoadModule.loadModule(imported, moduleFiles, sourceCode);
+    return LoadModule.loadModule(
+        imported, ModulePath.of(moduleFiles.smoothFile()), moduleFiles, sourceCode);
   }
 
   public static Log err(int line, String message) {

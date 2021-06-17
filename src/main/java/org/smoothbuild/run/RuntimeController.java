@@ -13,6 +13,7 @@ import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
@@ -25,9 +26,11 @@ import org.smoothbuild.install.ModuleFilesDetector;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.FileLocation;
 import org.smoothbuild.lang.base.define.ModuleFiles;
+import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import okio.BufferedSource;
 
@@ -54,8 +57,10 @@ public class RuntimeController {
     reporter.startNewPhase("Parsing");
 
     Definitions allDefinitions = Definitions.empty().withModule(baseTypesModule());
-    for (ModuleFiles moduleFiles : moduleFilesDetector.detect(MODULES)) {
-      Maybe<SModule> module = load(allDefinitions, moduleFiles);
+    ImmutableMap<ModulePath, ModuleFiles> files = moduleFilesDetector.detect(MODULES);
+    for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
+      ModuleFiles moduleFiles = entry.getValue();
+      Maybe<SModule> module = load(allDefinitions, entry.getKey(), moduleFiles);
       reporter.report(moduleFiles.smoothFile().prefixedPath(), module.logs());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
@@ -69,12 +74,12 @@ public class RuntimeController {
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private Maybe<SModule> load(Definitions imported, ModuleFiles moduleFiles) {
+  private Maybe<SModule> load(Definitions imported, ModulePath path, ModuleFiles moduleFiles) {
     var sourceCode = readFileContent(fullPathResolver.resolve(moduleFiles.smoothFile()));
     if (sourceCode.hasProblems()) {
       return  Maybe.withLogsFrom(sourceCode);
     } else {
-      return loadModule(imported, moduleFiles, sourceCode.value());
+      return loadModule(imported, path, moduleFiles, sourceCode.value());
     }
   }
 
