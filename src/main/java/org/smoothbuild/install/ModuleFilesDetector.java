@@ -25,7 +25,7 @@ public class ModuleFilesDetector {
     var builder = ImmutableList.<ModuleFiles>builder();
     for (FileLocation file : smoothFiles) {
       ModulePath name = ModulePath.of(file);
-      builder.add(new ModuleFiles(name, file.space(), file, nativeFileFor(file)));
+      builder.add(new ModuleFiles(name, file, nativeFileFor(file)));
     }
     return builder.build();
   }
