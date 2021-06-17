@@ -64,7 +64,7 @@ public class LoadModule {
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
     result.setValue(
-        new SModule(path, imported.modules(), definedStructs, referencables));
+        new SModule(path, moduleFiles, imported.modules(), definedStructs, referencables));
     return result;
   }
 
