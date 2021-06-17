@@ -15,6 +15,6 @@ public class TestingModuleFiles {
   }
 
   private static ModuleFiles moduleFiles(FileLocation fileLocation) {
-    return new ModuleFiles(ModulePath.of(fileLocation), fileLocation, Optional.empty());
+    return new ModuleFiles(fileLocation, Optional.empty());
   }
 }
