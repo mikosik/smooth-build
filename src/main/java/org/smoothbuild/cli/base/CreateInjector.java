@@ -38,6 +38,7 @@ public class CreateInjector {
   public static Injector createInjector(Path installationDir, PrintWriter out) {
     return Guice.createInjector(PRODUCTION,
         new PathsModule(installationDir),
+        new FileSystemModule(),
         new ConsoleModule(out));
   }
 }
