@@ -1,7 +1,7 @@
 package org.smoothbuild.lang;
 
 import static java.lang.Math.max;
-import static org.smoothbuild.lang.base.define.TestingFileLocation.nativeFileLocation;
+import static org.smoothbuild.lang.base.define.TestingFilePath.nativeFilePath;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 
 import java.util.List;
@@ -81,7 +81,7 @@ public class TestingLang {
   public static Function function(int line, Type type, String name, String implementedBy,
       Item... parameters) {
     NativeExpression nativeExpression = new NativeExpression(
-        implementedBy, true, loc(max(line - 1, 1)), nativeFileLocation());
+        implementedBy, true, loc(max(line - 1, 1)), nativeFilePath());
     return function(line, type, name, nativeExpression, parameters);
   }
 
@@ -96,7 +96,7 @@ public class TestingLang {
 
   public static Value value(int line, Type type, String name, String implementedBy) {
     NativeExpression nativ = new NativeExpression(
-        implementedBy, true, loc(line -1), nativeFileLocation());
+        implementedBy, true, loc(line -1), nativeFilePath());
     return new Value(type, name, nativ, loc(line));
   }
 

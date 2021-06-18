@@ -1,20 +1,20 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.lang.base.define.TestingFileLocation.importedFileLocation;
-import static org.smoothbuild.lang.base.define.TestingFileLocation.smoothFileLocation;
+import static org.smoothbuild.lang.base.define.TestingFilePath.importedFilePath;
+import static org.smoothbuild.lang.base.define.TestingFilePath.smoothFilePath;
 
 import java.util.Optional;
 
 public class TestingModuleFiles {
   public static ModuleFiles moduleFiles() {
-    return moduleFiles(smoothFileLocation());
+    return moduleFiles(smoothFilePath());
   }
 
   public static ModuleFiles importedModuleFiles() {
-    return moduleFiles(importedFileLocation());
+    return moduleFiles(importedFilePath());
   }
 
-  private static ModuleFiles moduleFiles(FileLocation fileLocation) {
-    return new ModuleFiles(fileLocation, Optional.empty());
+  private static ModuleFiles moduleFiles(FilePath filePath) {
+    return new ModuleFiles(filePath, Optional.empty());
   }
 }

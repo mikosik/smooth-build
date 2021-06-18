@@ -9,7 +9,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorith
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readFileContentAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
-import static org.smoothbuild.lang.base.define.TestingFileLocation.fileLocation;
+import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashSet;
@@ -35,7 +35,7 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(readTupleElementAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
-    hashes.add(readFileContentAlgorithmHash(fileLocation("abc")));
+    hashes.add(readFileContentAlgorithmHash(filePath("abc")));
 
     assertThat(hashes.size())
         .isEqualTo(8);
@@ -82,7 +82,7 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void read_file_content_algorithm_has_different_hash_for_different_modules() {
-    assertThat(readFileContentAlgorithmHash(fileLocation("abc")))
-        .isNotEqualTo(readFileContentAlgorithmHash(fileLocation("def")));
+    assertThat(readFileContentAlgorithmHash(filePath("abc")))
+        .isNotEqualTo(readFileContentAlgorithmHash(filePath("def")));
   }
 }

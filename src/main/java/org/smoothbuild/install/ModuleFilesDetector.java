@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.define.FileLocation;
+import org.smoothbuild.lang.base.define.FilePath;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 
@@ -21,19 +21,19 @@ public class ModuleFilesDetector {
     this.fullPathResolver = fullPathResolver;
   }
 
-  public ImmutableMap<ModulePath, ModuleFiles> detect(List<FileLocation> smoothFiles) {
+  public ImmutableMap<ModulePath, ModuleFiles> detect(List<FilePath> smoothFiles) {
     var builder = ImmutableMap.<ModulePath, ModuleFiles>builder();
-    for (FileLocation file : smoothFiles) {
+    for (FilePath file : smoothFiles) {
       builder.put(ModulePath.of(file), new ModuleFiles(file, nativeFileFor(file)));
     }
     return builder.build();
   }
 
-  private Optional<FileLocation> nativeFileFor(FileLocation file) {
-    FileLocation nativeFileLocation = file.withExtension("jar");
-    Path resolved = fullPathResolver.resolve(nativeFileLocation);
+  private Optional<FilePath> nativeFileFor(FilePath file) {
+    FilePath nativeFilePath = file.withExtension("jar");
+    Path resolved = fullPathResolver.resolve(nativeFilePath);
     if (Files.exists(resolved)) {
-      return Optional.of(nativeFileLocation);
+      return Optional.of(nativeFilePath);
     } else {
       return Optional.empty();
     }

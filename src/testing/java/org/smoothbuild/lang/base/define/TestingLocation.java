@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
 import static org.smoothbuild.lang.base.define.Location.location;
-import static org.smoothbuild.lang.base.define.TestingFileLocation.fileLocation;
+import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
 
 public class TestingLocation {
   public static Location loc() {
@@ -9,6 +9,6 @@ public class TestingLocation {
   }
 
   public static Location loc(int line) {
-    return location(fileLocation(), line);
+    return location(filePath(), line);
   }
 }

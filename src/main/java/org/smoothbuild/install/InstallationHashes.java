@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.define.FileLocation;
+import org.smoothbuild.lang.base.define.FilePath;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 
@@ -81,11 +81,11 @@ public class InstallationHashes {
     return new HashNode(path + " module", nodes);
   }
 
-  private Optional<HashNode> nodeFor(Optional<FileLocation> file) throws IOException {
+  private Optional<HashNode> nodeFor(Optional<FilePath> file) throws IOException {
     if (file.isPresent()) {
-      FileLocation fileLocation = file.get();
-      Path resolvedPath = fullPathResolver.resolve(fileLocation);
-      return Optional.of(new HashNode(fileLocation.prefixedPath(), Hash.of(resolvedPath)));
+      FilePath filePath = file.get();
+      Path resolvedPath = fullPathResolver.resolve(filePath);
+      return Optional.of(new HashNode(filePath.prefixedPath(), Hash.of(resolvedPath)));
     } else {
       return Optional.empty();
     }

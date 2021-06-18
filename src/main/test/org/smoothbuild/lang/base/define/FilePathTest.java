@@ -10,42 +10,42 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 
-public class FileLocationTest {
+public class FilePathTest {
   @Test
   public void equals_and_hash_code() {
     String file = "abc.smooth";
 
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(
-        new FileLocation(PRJ, Path.of(file)),
-        new FileLocation(PRJ, Path.of(file)));
+        new FilePath(PRJ, Path.of(file)),
+        new FilePath(PRJ, Path.of(file)));
     tester.addEqualityGroup(
-        new FileLocation(PRJ, Path.of("def")),
-        new FileLocation(PRJ, Path.of("def")));
+        new FilePath(PRJ, Path.of("def")),
+        new FilePath(PRJ, Path.of("def")));
     tester.addEqualityGroup(
-        new FileLocation(SDK, Path.of(file)),
-        new FileLocation(SDK, Path.of(file)));
+        new FilePath(SDK, Path.of(file)),
+        new FilePath(SDK, Path.of(file)));
 
     tester.testEquals();
   }
 
   @Test
   void prefixed_path() {
-    FileLocation fileLocation = new FileLocation(PRJ, Path.of("full/path.smooth"));
-    assertThat((Object) fileLocation.prefixedPath())
+    FilePath filePath = new FilePath(PRJ, Path.of("full/path.smooth"));
+    assertThat((Object) filePath.prefixedPath())
         .isEqualTo("{prj}/full/path.smooth");
   }
 
   @Test
   void with_extension() {
-    FileLocation fileLocation = new FileLocation(PRJ, Path.of("full/path.smooth"));
-    assertThat(fileLocation.withExtension("jar"))
-        .isEqualTo(new FileLocation(PRJ, Path.of("full/path.jar")));
+    FilePath filePath = new FilePath(PRJ, Path.of("full/path.smooth"));
+    assertThat(filePath.withExtension("jar"))
+        .isEqualTo(new FilePath(PRJ, Path.of("full/path.jar")));
   }
 
   @Test
   public void to_string() {
-    FileLocation location = new FileLocation(PRJ, Path.of("abc"));
+    FilePath location = new FilePath(PRJ, Path.of("abc"));
     assertThat(location.toString())
         .isEqualTo("{prj}/abc");
   }

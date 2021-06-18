@@ -16,7 +16,7 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.FileLocation;
+import org.smoothbuild.lang.base.define.FilePath;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
@@ -34,14 +34,14 @@ public class LoadModule {
   public static Maybe<SModule> loadModule(Definitions imported, ModulePath path,
       ModuleFiles moduleFiles, String sourceCode) {
     var result = new Maybe<SModule>();
-    FileLocation fileLocation = moduleFiles.smoothFile();
-    Maybe<ModuleContext> moduleContext = parseModule(fileLocation, sourceCode);
+    FilePath filePath = moduleFiles.smoothFile();
+    Maybe<ModuleContext> moduleContext = parseModule(filePath, sourceCode);
     result.logAllFrom(moduleContext);
     if (result.hasProblems()) {
       return Maybe.withLogsFrom(moduleContext);
     }
 
-    Ast ast = fromParseTree(fileLocation, moduleContext.value());
+    Ast ast = fromParseTree(filePath, moduleContext.value());
     result.logAll(analyzeSemantically(imported, ast));
     if (result.hasProblems()) {
       return result;

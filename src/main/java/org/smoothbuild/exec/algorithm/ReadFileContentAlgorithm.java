@@ -14,18 +14,18 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.JavaCodeLoader;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.io.util.JarFile;
-import org.smoothbuild.lang.base.define.FileLocation;
+import org.smoothbuild.lang.base.define.FilePath;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSource;
 import okio.Okio;
 
 public class ReadFileContentAlgorithm extends Algorithm {
-  private final FileLocation nativeFile;
+  private final FilePath nativeFile;
   private final JavaCodeLoader javaCodeLoader;
   private final FullPathResolver fullPathResolver;
 
-  public ReadFileContentAlgorithm(Spec spec, FileLocation nativeFile,
+  public ReadFileContentAlgorithm(Spec spec, FilePath nativeFile,
       JavaCodeLoader javaCodeLoader, FullPathResolver fullPathResolver) {
     super(spec, false);
     this.nativeFile = nativeFile;
