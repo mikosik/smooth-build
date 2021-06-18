@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.define.FileLocation.fileLocation;
 import static org.smoothbuild.lang.base.define.Space.INTERNAL;
-import static org.smoothbuild.lang.base.define.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.PRJ;
 
 /**
  * This class is immutable.
@@ -12,7 +12,7 @@ import static org.smoothbuild.lang.base.define.Space.USER;
 public record Location(FileLocation file, int line) {
 
   public static Location commandLineLocation() {
-    return new Location(fileLocation(USER, null), 1);
+    return new Location(fileLocation(PRJ, null), 1);
   }
 
   public static Location internal() {

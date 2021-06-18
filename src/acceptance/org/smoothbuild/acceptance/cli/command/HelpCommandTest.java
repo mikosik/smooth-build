@@ -93,10 +93,10 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       warning level
                                       i, info          - contains any log
                    
-                                      u, user          - evaluates expression from user
-                                      module
-                                      s, slib          - evaluates expression from
-                                      smooth standard library module
+                                      p, prj, project  - evaluates expression from
+                                      project module
+                                      s, sdk           - evaluates expression from
+                                      smooth SDK module
                    
                                       c, call          - evaluates function call
                                       conv, conversion - evaluates automatic conversion

@@ -1,7 +1,7 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.lang.base.define.Space.STANDARD_LIBRARY;
-import static org.smoothbuild.lang.base.define.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.PRJ;
+import static org.smoothbuild.lang.base.define.Space.SDK;
 
 import java.nio.file.Path;
 
@@ -34,9 +34,9 @@ public class PathsModule extends AbstractModule {
 
   private ImmutableMap<Space, Path> resolvers(Path standardLibraryDir, Path projectDir) {
     if (projectDir == null) {
-      return ImmutableMap.of(STANDARD_LIBRARY, standardLibraryDir);
+      return ImmutableMap.of(SDK, standardLibraryDir);
     } else {
-      return ImmutableMap.of(STANDARD_LIBRARY, standardLibraryDir, USER, projectDir);
+      return ImmutableMap.of(SDK, standardLibraryDir, PRJ, projectDir);
     }
   }
 }

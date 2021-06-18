@@ -23,8 +23,8 @@ public class TaskMatchers {
   static final TaskMatcher AT_LEAST_WARNING = logLevelMatcher(WARNING);
   static final TaskMatcher AT_LEAST_INFO = logLevelMatcher(INFO);
 
-  static final TaskMatcher USER = spaceMatcher(Space.USER);
-  static final TaskMatcher SLIB = spaceMatcher(Space.STANDARD_LIBRARY);
+  static final TaskMatcher PRJ = spaceMatcher(Space.PRJ);
+  static final TaskMatcher SDK = spaceMatcher(Space.SDK);
 
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
   static final TaskMatcher CONVERSION = kindMatcher(TaskKind.CONVERSION);
@@ -32,7 +32,7 @@ public class TaskMatchers {
   static final TaskMatcher NATIVE = kindMatcher(TaskKind.NATIVE);
   static final TaskMatcher VALUE = kindMatcher(TaskKind.VALUE);
 
-  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(USER, or(CALL, VALUE)));
+  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(CALL, VALUE)));
 
   private static final ImmutableMap<String, TaskMatcher> MAP =
       ImmutableMap.<String, TaskMatcher>builder()
@@ -49,10 +49,11 @@ public class TaskMatchers {
           .put("info", AT_LEAST_INFO)
           .put("i", AT_LEAST_INFO)
 
-          .put("user", USER)
-          .put("u", USER)
-          .put("slib", SLIB)
-          .put("s", SLIB)
+          .put("project", PRJ)
+          .put("prj", PRJ)
+          .put("p", PRJ)
+          .put("sdk", SDK)
+          .put("s", SDK)
 
           .put("call", CALL)
           .put("c", CALL)
