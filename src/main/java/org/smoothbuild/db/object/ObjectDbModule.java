@@ -1,12 +1,14 @@
 package org.smoothbuild.db.object;
 
 import static org.smoothbuild.install.ProjectPaths.OBJECT_DB_PATH;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
 
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.ForSpace;
 import org.smoothbuild.io.util.TempManager;
 
 import com.google.inject.AbstractModule;
@@ -18,7 +20,7 @@ public class ObjectDbModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ObjectDb provideObjectDb(FileSystem fileSystem, TempManager tempManager) {
+  public ObjectDb provideObjectDb(@ForSpace(PRJ) FileSystem fileSystem, TempManager tempManager) {
     HashedDb hashedDb = new HashedDb(fileSystem, OBJECT_DB_PATH, tempManager);
     return ObjectDb.objectDb(hashedDb);
   }
