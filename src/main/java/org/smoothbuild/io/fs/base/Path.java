@@ -103,6 +103,35 @@ public class Path {
     }
   }
 
+  public Path changeExtension(String extension) {
+    failWithIllegalArgumentIf(isRoot(), "Cannot change extension of '.'.");
+    failWithIllegalArgumentIf(
+        extension.contains("."), "Extension cannot contain '.', but = " + extension);
+    failWithIllegalArgumentIf(
+        extension.contains("/"), "Extension cannot contain '/', but = " + extension);
+    String withoutExtension = removeExtension(value);
+    if (extension.isEmpty()) {
+      return new Path(withoutExtension);
+    } else {
+      return new Path(withoutExtension + "." + extension);
+    }
+  }
+
+  private void failWithIllegalArgumentIf(boolean illegal, String message) {
+    if (illegal) {
+      throw new IllegalArgumentException(message);
+    }
+  }
+
+  private static String removeExtension(String string) {
+    int dotIndex = string.lastIndexOf('.');
+    if (dotIndex == -1) {
+      return string;
+    } else {
+      return string.substring(0, dotIndex);
+    }
+  }
+
   public List<Path> parts() {
     if (isRoot()) {
       return new ArrayList<>();
