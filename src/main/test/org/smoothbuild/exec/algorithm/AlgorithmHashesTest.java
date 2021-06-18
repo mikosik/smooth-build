@@ -9,7 +9,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorith
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readFileContentAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
-import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
+import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashSet;

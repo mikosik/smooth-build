@@ -1,7 +1,6 @@
-package org.smoothbuild.lang.base.define;
+package org.smoothbuild.io.fs.base;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.io.fs.base.Path;
 
 /**
  * This class is immutable.

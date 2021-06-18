@@ -2,15 +2,16 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
+import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.define.Location.location;
-import static org.smoothbuild.lang.base.define.Space.PRJ;
-import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.io.fs.base.FilePath;
 
 import com.google.common.testing.EqualsTester;
 

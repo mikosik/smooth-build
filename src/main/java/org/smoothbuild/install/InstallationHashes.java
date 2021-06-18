@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.define.FilePath;
+import org.smoothbuild.io.fs.base.FilePath;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 

@@ -13,8 +13,8 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.JavaCodeLoader;
 import org.smoothbuild.install.FullPathResolver;
+import org.smoothbuild.io.fs.base.FilePath;
 import org.smoothbuild.io.util.JarFile;
-import org.smoothbuild.lang.base.define.FilePath;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSource;

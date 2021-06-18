@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse.component;
 
+import static org.smoothbuild.io.fs.base.TestingFilePath.nativeFilePath;
 import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.TestingLang.array;
 import static org.smoothbuild.lang.TestingLang.blob;
@@ -13,7 +14,6 @@ import static org.smoothbuild.lang.TestingLang.reference;
 import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
-import static org.smoothbuild.lang.base.define.TestingFilePath.nativeFilePath;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;

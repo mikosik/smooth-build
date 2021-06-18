@@ -2,7 +2,7 @@ package org.smoothbuild.exec.algorithm;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
-import org.smoothbuild.lang.base.define.FilePath;
+import org.smoothbuild.io.fs.base.FilePath;
 
 import okio.ByteString;
 

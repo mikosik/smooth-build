@@ -1,7 +1,7 @@
 package org.smoothbuild.lang;
 
 import static java.lang.Math.max;
-import static org.smoothbuild.lang.base.define.TestingFilePath.nativeFilePath;
+import static org.smoothbuild.io.fs.base.TestingFilePath.nativeFilePath;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 
 import java.util.List;
