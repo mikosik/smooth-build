@@ -11,7 +11,7 @@ public class ModulePath {
     this.path = path;
   }
 
-  public static ModulePath of(FileLocation file) {
+  public static ModulePath of(FilePath file) {
     return new ModulePath(removeExtension(file.prefixedPath()));
   }
 

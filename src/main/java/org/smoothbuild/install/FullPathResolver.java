@@ -2,7 +2,7 @@ package org.smoothbuild.install;
 
 import java.nio.file.Path;
 
-import org.smoothbuild.lang.base.define.FileLocation;
+import org.smoothbuild.lang.base.define.FilePath;
 import org.smoothbuild.lang.base.define.Space;
 
 import com.google.common.collect.ImmutableMap;
@@ -14,11 +14,11 @@ public class FullPathResolver {
     this.resolvers = resolvers;
   }
 
-  public Path resolve(FileLocation fileLocation) {
-    Path path = resolvers.get(fileLocation.space());
+  public Path resolve(FilePath filePath) {
+    Path path = resolvers.get(filePath.space());
     if (path == null) {
-      throw new RuntimeException("Cannot resolve full path for " + fileLocation);
+      throw new RuntimeException("Cannot resolve full path for " + filePath);
     }
-    return path.resolve(fileLocation.path());
+    return path.resolve(filePath.path());
   }
 }

@@ -43,7 +43,7 @@ import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.FileLocation;
+import org.smoothbuild.lang.base.define.FilePath;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
@@ -240,7 +240,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
 
   @Override
   public Task visit(Scope<TaskSupplier> context, NativeExpression expression) {
-    FileLocation nativeFile = expression.nativeFile();
+    FilePath nativeFile = expression.nativeFile();
     var contentAlgorithm = new ReadFileContentAlgorithm(
         toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fullPathResolver);
 

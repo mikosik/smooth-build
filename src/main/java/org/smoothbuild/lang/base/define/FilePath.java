@@ -8,18 +8,18 @@ import org.smoothbuild.util.io.Paths;
 /**
  * This class is immutable.
  */
-public record FileLocation(Space space, Path path) {
+public record FilePath(Space space, Path path) {
 
-  public static FileLocation fileLocation(Space space, Path path) {
-    return new FileLocation(space, path);
+  public static FilePath filePath(Space space, Path path) {
+    return new FilePath(space, path);
   }
 
   public String prefixedPath() {
     return "{" + space().prefix() + "}/" + path;
   }
 
-  public FileLocation withExtension(String extension) {
-    return new FileLocation(space, Paths.changeExtension(path, extension));
+  public FilePath withExtension(String extension) {
+    return new FilePath(space, Paths.changeExtension(path, extension));
   }
 
   @Override

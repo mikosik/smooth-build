@@ -1,12 +1,11 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.define.FileLocation.fileLocation;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.define.Location.location;
 import static org.smoothbuild.lang.base.define.Space.PRJ;
-import static org.smoothbuild.lang.base.define.TestingFileLocation.fileLocation;
+import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.file.Path;
@@ -53,7 +52,7 @@ public class LocationTest {
   class to_string {
     @Test
     public void file() {
-      Location location = location(fileLocation("abc"), 2);
+      Location location = location(filePath("abc"), 2);
       assertThat(location.toString())
           .isEqualTo("abc:2");
     }
@@ -72,7 +71,7 @@ public class LocationTest {
     }
   }
 
-  private static FileLocation fLocation(String name) {
-    return fileLocation(PRJ, Path.of(name));
+  private static FilePath fLocation(String name) {
+    return FilePath.filePath(PRJ, Path.of(name));
   }
 }

@@ -6,6 +6,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_NAME;
+import static org.smoothbuild.lang.base.define.FilePath.filePath;
 import static org.smoothbuild.lang.base.define.SModule.baseTypesModule;
 import static org.smoothbuild.lang.base.define.Space.PRJ;
 import static org.smoothbuild.lang.parse.LoadModule.loadModule;
@@ -24,7 +25,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.install.ModuleFilesDetector;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.FileLocation;
+import org.smoothbuild.lang.base.define.FilePath;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
@@ -35,10 +36,10 @@ import com.google.common.collect.ImmutableMap;
 import okio.BufferedSource;
 
 public class RuntimeController {
-  private static final ImmutableList<FileLocation> MODULES =
-      ImmutableList.<FileLocation>builder()
+  private static final ImmutableList<FilePath> MODULES =
+      ImmutableList.<FilePath>builder()
           .addAll(SDK_MODULES)
-          .add(new FileLocation(PRJ, Path.of(PRJ_MODULE_FILE_NAME)))
+          .add(filePath(PRJ, Path.of(PRJ_MODULE_FILE_NAME)))
           .build();
 
   private final FullPathResolver fullPathResolver;
