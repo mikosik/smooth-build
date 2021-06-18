@@ -2,9 +2,11 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.lang.base.define.FilePath.filePath;
-import static org.smoothbuild.lang.base.define.Space.INTERNAL;
-import static org.smoothbuild.lang.base.define.Space.PRJ;
+import static org.smoothbuild.io.fs.base.FilePath.filePath;
+import static org.smoothbuild.io.fs.base.Space.INTERNAL;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
+
+import org.smoothbuild.io.fs.base.FilePath;
 
 /**
  * This class is immutable.

@@ -24,7 +24,7 @@ import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.define.FilePath;
+import org.smoothbuild.io.fs.base.FilePath;
 import org.smoothbuild.lang.base.define.Location;
 
 public class ParseModule {

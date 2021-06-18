@@ -5,8 +5,8 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STRING;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
+import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.lang.TestingLang.function;
-import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;

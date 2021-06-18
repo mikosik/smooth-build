@@ -3,8 +3,8 @@ package org.smoothbuild.lang;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.io.fs.base.TestingFilePath.BUILD_FILE_PATH;
 import static org.smoothbuild.lang.base.define.SModule.baseTypesModule;
-import static org.smoothbuild.lang.base.define.TestingFilePath.BUILD_FILE_PATH;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.importedModuleFiles;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
 

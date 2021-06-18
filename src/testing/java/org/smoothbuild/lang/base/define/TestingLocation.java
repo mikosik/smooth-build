@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
+import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.lang.base.define.Location.location;
-import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
 
 public class TestingLocation {
   public static Location loc() {

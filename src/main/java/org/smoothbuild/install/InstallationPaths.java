@@ -1,13 +1,13 @@
 package org.smoothbuild.install;
 
+import static org.smoothbuild.io.fs.base.FilePath.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.base.define.FilePath.filePath;
-import static org.smoothbuild.lang.base.define.Space.SDK;
+import static org.smoothbuild.io.fs.base.Space.SDK;
 import static org.smoothbuild.util.Lists.list;
 
 import java.nio.file.Path;
 
-import org.smoothbuild.lang.base.define.FilePath;
+import org.smoothbuild.io.fs.base.FilePath;
 
 import com.google.common.collect.ImmutableList;
 

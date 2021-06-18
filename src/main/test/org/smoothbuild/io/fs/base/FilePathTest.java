@@ -1,9 +1,9 @@
-package org.smoothbuild.lang.base.define;
+package org.smoothbuild.io.fs.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.base.define.Space.PRJ;
-import static org.smoothbuild.lang.base.define.Space.SDK;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
+import static org.smoothbuild.io.fs.base.Space.SDK;
 
 import org.junit.jupiter.api.Test;
 

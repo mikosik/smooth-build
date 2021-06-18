@@ -1,16 +1,16 @@
 package org.smoothbuild.lang.parse.component;
 
+import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
+import static org.smoothbuild.io.fs.base.TestingFilePath.importedFilePath;
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
-import static org.smoothbuild.lang.base.define.TestingFilePath.importedFilePath;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.io.fs.base.FilePath;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.FilePath;
 
 public class NameClashTest {
   @Nested

@@ -1,11 +1,11 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.lang.base.define.Space.PRJ;
-import static org.smoothbuild.lang.base.define.Space.SDK;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
+import static org.smoothbuild.io.fs.base.Space.SDK;
 
 import java.nio.file.Path;
 
-import org.smoothbuild.lang.base.define.Space;
+import org.smoothbuild.io.fs.base.Space;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
