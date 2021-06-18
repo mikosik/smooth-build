@@ -22,7 +22,7 @@ import static org.smoothbuild.acceptance.CommandWithArgs.planCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.versionCommand;
 import static org.smoothbuild.cli.console.Reporter.prefixMultiline;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_LOCATION;
+import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
@@ -232,7 +232,7 @@ public abstract class AcceptanceTestCase {
   public void assertSysOutContainsParseError(String... errorLines) {
     errorLines[0] = "ERROR: " + errorLines[0];
     assertSysOutContains(
-        "  " + PRJ_MODULE_LOCATION.prefixedPath(),
+        "  " + PRJ_MODULE_FILE_PATH.prefixedPath(),
         prefixMultiline(errorLines));
   }
 

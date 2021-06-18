@@ -1,14 +1,13 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.define.Location.location;
 import static org.smoothbuild.lang.base.define.Space.PRJ;
 import static org.smoothbuild.lang.base.define.TestingFilePath.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-
-import java.nio.file.Path;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -72,6 +71,6 @@ public class LocationTest {
   }
 
   private static FilePath fLocation(String name) {
-    return FilePath.filePath(PRJ, Path.of(name));
+    return FilePath.filePath(PRJ, path(name));
   }
 }

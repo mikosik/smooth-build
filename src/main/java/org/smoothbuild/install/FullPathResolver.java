@@ -19,6 +19,6 @@ public class FullPathResolver {
     if (path == null) {
       throw new RuntimeException("Cannot resolve full path for " + filePath);
     }
-    return path.resolve(filePath.path());
+    return path.resolve(filePath.path().toString());
   }
 }

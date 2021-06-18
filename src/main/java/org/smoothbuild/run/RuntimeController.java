@@ -5,10 +5,8 @@ import static okio.Okio.source;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_NAME;
-import static org.smoothbuild.lang.base.define.FilePath.filePath;
+import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
 import static org.smoothbuild.lang.base.define.SModule.baseTypesModule;
-import static org.smoothbuild.lang.base.define.Space.PRJ;
 import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 
 import java.io.IOException;
@@ -39,7 +37,7 @@ public class RuntimeController {
   private static final ImmutableList<FilePath> MODULES =
       ImmutableList.<FilePath>builder()
           .addAll(SDK_MODULES)
-          .add(filePath(PRJ, Path.of(PRJ_MODULE_FILE_NAME)))
+          .add(PRJ_MODULE_FILE_PATH)
           .build();
 
   private final FullPathResolver fullPathResolver;

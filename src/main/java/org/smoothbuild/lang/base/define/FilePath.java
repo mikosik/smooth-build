@@ -1,9 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
-import java.nio.file.Path;
-
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.util.io.Paths;
+import org.smoothbuild.io.fs.base.Path;
 
 /**
  * This class is immutable.
@@ -19,7 +17,7 @@ public record FilePath(Space space, Path path) {
   }
 
   public FilePath withExtension(String extension) {
-    return new FilePath(space, Paths.changeExtension(path, extension));
+    return filePath(space, path.changeExtension(extension));
   }
 
   @Override

@@ -1,5 +1,7 @@
 package org.smoothbuild.install;
 
+import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.base.define.FilePath.filePath;
 import static org.smoothbuild.lang.base.define.Space.SDK;
 import static org.smoothbuild.util.Lists.list;
 
@@ -11,11 +13,9 @@ import com.google.common.collect.ImmutableList;
 
 public class InstallationPaths {
   private static final String LIB_DIR_NAME = "lib";
-  private static final Path SDK_API_MODULE_FILE = Path.of("api.smooth");
-  public static final ImmutableList<FilePath>
-      SDK_MODULES = list(new FilePath(SDK, SDK_API_MODULE_FILE));
+  public static final ImmutableList<FilePath> SDK_MODULES = list(filePath(SDK, path("api.smooth")));
   private static final String SMOOTH_JAR = "smooth.jar";
-  private final Path installationDir;
+  private final java.nio.file.Path installationDir;
 
   public InstallationPaths(Path installationDir) {
     this.installationDir = installationDir;
