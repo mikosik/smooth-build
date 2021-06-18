@@ -1,8 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.define.Space.PRJ;
-
-import java.nio.file.Path;
 
 public class TestingFilePath {
   public static final String BUILD_FILE_PATH = "myBuild.smooth";
@@ -25,6 +24,6 @@ public class TestingFilePath {
   }
 
   public static FilePath filePath(String filePath) {
-    return new FilePath(PRJ, Path.of(filePath));
+    return new FilePath(PRJ, path(filePath));
   }
 }
