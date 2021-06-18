@@ -32,11 +32,11 @@ public class PathsModule extends AbstractModule {
         new FullPathResolver(resolvers(installationPaths.standardLibraryDir(), projectDir)));
   }
 
-  private ImmutableMap<Space, Path> resolvers(Path standardLibraryDir, Path projectDir) {
+  private ImmutableMap<Space, Path> resolvers(Path sdkApiDir, Path projectDir) {
     if (projectDir == null) {
-      return ImmutableMap.of(SDK, standardLibraryDir);
+      return ImmutableMap.of(SDK, sdkApiDir);
     } else {
-      return ImmutableMap.of(SDK, standardLibraryDir, PRJ, projectDir);
+      return ImmutableMap.of(SDK, sdkApiDir, PRJ, projectDir);
     }
   }
 }
