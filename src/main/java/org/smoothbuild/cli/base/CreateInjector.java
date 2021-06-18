@@ -29,7 +29,7 @@ public class CreateInjector {
     return Guice.createInjector(PRODUCTION,
         new ExecuteModule(),
         new ObjectDbModule(),
-        new FileSystemModule(projectDir),
+        new FileSystemModule(projectDir, installationDir),
         new PathsModule(installationDir, projectDir),
         new LoggerModule(logLevel, taskMatcher),
         new ConsoleModule(out));
