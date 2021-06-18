@@ -160,6 +160,69 @@ public class PathTest {
   }
 
   @ParameterizedTest
+  @MethodSource("changeExtensionArguments")
+  public void changeExtension(String path, String extension, String expected) {
+    assertThat(path(path).changeExtension(extension))
+        .isEqualTo(path(expected));
+  }
+
+  public static Stream<Arguments> changeExtensionArguments() {
+    return Stream.of(
+        arguments("abc", "csv", "abc.csv"),
+        arguments("path/abc", "csv", "path/abc.csv"),
+        arguments("long/path/abc", "csv", "long/path/abc.csv"),
+
+        arguments("abc.txt", "csv", "abc.csv"),
+        arguments("path/abc.txt", "csv", "path/abc.csv"),
+        arguments("long/path/abc.txt", "csv", "long/path/abc.csv"),
+
+        arguments("abc.txt", "", "abc"),
+        arguments("path/abc.txt", "", "path/abc"),
+        arguments("long/path/abc.txt", "", "long/path/abc")
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("changeExtensionIllegalArguments")
+  public void changeExtension_fails_for(String path, String part) {
+    assertCall(() -> path(path).changeExtension(part))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  public static Stream<Arguments> changeExtensionIllegalArguments() {
+    return Stream.of(
+        arguments(".", ""),
+        arguments(".", "csv"),
+
+        arguments(".", "."),
+        arguments(".", ".."),
+        arguments(".", "/"),
+        arguments(".", "xyz/"),
+        arguments(".", "/xyz"),
+        arguments(".", "xyz/uvw"),
+        arguments(".", " / "),
+        arguments(".", "xyz/uvw/rst"),
+
+        arguments("abc", "."),
+        arguments("abc", ".."),
+        arguments("abc", "/"),
+        arguments("abc", "xyz/"),
+        arguments("abc", "/xyz"),
+        arguments("abc", "xyz/uvw"),
+        arguments("abc", " / "),
+        arguments("abc", "xyz/uvw/rst"),
+        arguments("abc/def", "."),
+        arguments("abc/def", ".."),
+        arguments("abc/def", "/"),
+        arguments("abc/def", "xyz/"),
+        arguments("abc/def", "/xyz"),
+        arguments("abc/def", "xyz/uvw"),
+        arguments("abc/def", " / "),
+        arguments("abc/def", "xyz/uvw/rst")
+    );
+  }
+
+  @ParameterizedTest
   @MethodSource("partsArguments")
   public void parts(String path, List<String> expectedParts) {
     List<Path> actualParts = path(path).parts();
