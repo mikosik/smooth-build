@@ -139,7 +139,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ReadFileContentAlgorithm(null, fileLocation("abc"), null, null);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("ec008449a75038ffa0a81c6deccfa6068dfcb852"));
+        .isEqualTo(Hash.decode("ae5af8f3ee7e767788337877461a3e93c58384ae"));
   }
 
   @Test
@@ -147,7 +147,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ReadFileContentAlgorithm(null, fileLocation("abc"), null, null);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("480aa6dc1679071d2c6dbaf66bd6f4d463411c8b"));
+        .isEqualTo(Hash.decode("1a09d909f8a6df6e40dfed4e550fb9bd981a5481"));
   }
 
   private static Algorithm computation(Hash hash) {

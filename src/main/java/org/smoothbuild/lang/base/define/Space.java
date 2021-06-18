@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.base.define;
 
 public enum Space {
-  USER("prj"),
-  STANDARD_LIBRARY("slib"),
+  PRJ("prj"),
+  SDK("sdk"),
   INTERNAL("int");
 
   private final String prefix;

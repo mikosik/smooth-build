@@ -1,7 +1,7 @@
 package org.smoothbuild.install;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.install.InstallationPaths.STANDARD_LIBRARY_MODULES;
+import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -65,7 +65,7 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    var files = moduleFilesDetector.detect(STANDARD_LIBRARY_MODULES);
+    var files = moduleFilesDetector.detect(SDK_MODULES);
     for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
       builder.add(moduleNode(entry.getKey(), entry.getValue()));
     }

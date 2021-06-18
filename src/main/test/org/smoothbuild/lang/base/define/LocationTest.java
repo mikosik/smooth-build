@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.define.FileLocation.fileLocation;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.define.Location.location;
-import static org.smoothbuild.lang.base.define.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.PRJ;
 import static org.smoothbuild.lang.base.define.TestingFileLocation.fileLocation;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -73,6 +73,6 @@ public class LocationTest {
   }
 
   private static FileLocation fLocation(String name) {
-    return fileLocation(USER, Path.of(name));
+    return fileLocation(PRJ, Path.of(name));
   }
 }

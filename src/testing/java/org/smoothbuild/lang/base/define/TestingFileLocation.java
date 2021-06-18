@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.lang.base.define.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.PRJ;
 
 import java.nio.file.Path;
 
@@ -25,6 +25,6 @@ public class TestingFileLocation {
   }
 
   public static FileLocation fileLocation(String filePath) {
-    return new FileLocation(USER, Path.of(filePath));
+    return new FileLocation(PRJ, Path.of(filePath));
   }
 }

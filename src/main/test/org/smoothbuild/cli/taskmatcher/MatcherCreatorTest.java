@@ -15,8 +15,8 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CONVERSION;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.LITERAL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NATIVE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SLIB;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.USER;
+import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PRJ;
+import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.and;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.or;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -85,7 +85,7 @@ public class MatcherCreatorTest {
   public static Stream<? extends Arguments> provideArguments() {
     return Stream.of(
         arguments("all", ALL),
-        arguments("default", or(and(USER, CALL), AT_LEAST_INFO)),
+        arguments("default", or(and(PRJ, CALL), AT_LEAST_INFO)),
         arguments("none", NONE),
 
         arguments("fatal", AT_LEAST_FATAL),
@@ -97,10 +97,11 @@ public class MatcherCreatorTest {
         arguments("info", AT_LEAST_INFO),
         arguments("i", AT_LEAST_INFO),
 
-        arguments("user", USER),
-        arguments("u", USER),
-        arguments("slib", SLIB),
-        arguments("s", SLIB),
+        arguments("project", PRJ),
+        arguments("prj", PRJ),
+        arguments("p", PRJ),
+        arguments("sdk", SDK),
+        arguments("s", SDK),
 
         arguments("call", CALL),
         arguments("c", CALL),
@@ -111,19 +112,19 @@ public class MatcherCreatorTest {
         arguments("literal", LITERAL),
         arguments("l", LITERAL),
 
-        arguments("   user", USER),
-        arguments("user   ", USER),
-        arguments("   user   ", USER),
+        arguments("   project", PRJ),
+        arguments("project   ", PRJ),
+        arguments("   project   ", PRJ),
 
-        arguments("call & user", and(CALL, USER)),
-        arguments("call & user & warning", and(CALL, and(USER, AT_LEAST_WARNING))),
-        arguments("call | user", or(CALL, USER)),
-        arguments("call | user | warning", or(CALL, or(USER, AT_LEAST_WARNING))),
-        arguments("call & user | warning", or(and(CALL, USER), AT_LEAST_WARNING)),
-        arguments("warning | call & user", or(and(CALL, USER), AT_LEAST_WARNING)),
+        arguments("call & project", and(CALL, PRJ)),
+        arguments("call & project & warning", and(CALL, and(PRJ, AT_LEAST_WARNING))),
+        arguments("call | project", or(CALL, PRJ)),
+        arguments("call | project | warning", or(CALL, or(PRJ, AT_LEAST_WARNING))),
+        arguments("call & project | warning", or(and(CALL, PRJ), AT_LEAST_WARNING)),
+        arguments("warning | call & project", or(and(CALL, PRJ), AT_LEAST_WARNING)),
         arguments("(call)", CALL),
-        arguments("call & (user | warning)", and(CALL, or(USER, AT_LEAST_WARNING))),
-        arguments("(user | warning) & call", and(CALL, or(USER, AT_LEAST_WARNING)))
+        arguments("call & (project | warning)", and(CALL, or(PRJ, AT_LEAST_WARNING))),
+        arguments("(project | warning) & call", and(CALL, or(PRJ, AT_LEAST_WARNING)))
     );
   }
 
