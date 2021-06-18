@@ -4,6 +4,7 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
 import static org.smoothbuild.run.FindReferencables.findReferencables;
 import static org.smoothbuild.util.Lists.list;
 
@@ -16,6 +17,7 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.artifact.ArtifactBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.ForSpace;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.define.Definitions;
 
@@ -27,7 +29,7 @@ public class BuildRunner {
 
   @Inject
   public BuildRunner(Console console, RuntimeController runtimeController,
-      BuildExecutor buildExecutor, FileSystem fileSystem) {
+      BuildExecutor buildExecutor, @ForSpace(PRJ) FileSystem fileSystem) {
     this.console = console;
     this.runtimeController = runtimeController;
     this.buildExecutor = buildExecutor;

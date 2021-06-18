@@ -1,5 +1,7 @@
 package org.smoothbuild.exec.compute;
 
+import static org.smoothbuild.io.fs.base.Space.PRJ;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.ForSpace;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.plugin.MessageLogger;
@@ -27,7 +30,8 @@ public class Container implements NativeApi, Closeable {
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(FileSystem fileSystem, ObjectFactory objectFactory, TempManager tempManager) {
+  public Container(@ForSpace(PRJ) FileSystem fileSystem, ObjectFactory objectFactory,
+      TempManager tempManager) {
     this.fileSystem = fileSystem;
     this.objectFactory = objectFactory;
     this.tempManager = tempManager;

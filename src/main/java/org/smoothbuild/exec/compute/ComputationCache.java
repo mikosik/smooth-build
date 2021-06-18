@@ -6,6 +6,7 @@ import static org.smoothbuild.exec.base.MessageTuple.severity;
 import static org.smoothbuild.exec.compute.ComputationCacheException.computationCacheException;
 import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.ForSpace;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 
@@ -36,7 +38,8 @@ public class ComputationCache {
   private final ObjectFactory objectFactory;
 
   @Inject
-  public ComputationCache(FileSystem fileSystem, ObjectDb objectDb, ObjectFactory objectFactory) {
+  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjectDb objectDb,
+      ObjectFactory objectFactory) {
     this.fileSystem = fileSystem;
     this.objectDb = objectDb;
     this.objectFactory = objectFactory;

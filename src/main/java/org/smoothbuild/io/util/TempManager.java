@@ -1,6 +1,7 @@
 package org.smoothbuild.io.util;
 
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,6 +11,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.ForSpace;
 import org.smoothbuild.io.fs.base.Path;
 
 /**
@@ -21,7 +23,7 @@ public class TempManager {
   private final AtomicInteger id = new AtomicInteger();
 
   @Inject
-  public TempManager(FileSystem fileSystem) {
+  public TempManager(@ForSpace(PRJ) FileSystem fileSystem) {
     this.fileSystem = fileSystem;
   }
 

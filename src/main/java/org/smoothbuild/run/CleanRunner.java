@@ -7,6 +7,7 @@ import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.install.ProjectPaths.OBJECT_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.io.fs.base.Space.PRJ;
 
 import java.io.IOException;
 
@@ -14,13 +15,14 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.ForSpace;
 
 public class CleanRunner {
   private final FileSystem fileSystem;
   private final Console console;
 
   @Inject
-  public CleanRunner(FileSystem fileSystem, Console console) {
+  public CleanRunner(@ForSpace(PRJ) FileSystem fileSystem, Console console) {
     this.fileSystem = fileSystem;
     this.console = console;
   }
