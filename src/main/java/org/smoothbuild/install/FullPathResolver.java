@@ -2,20 +2,23 @@ package org.smoothbuild.install;
 
 import java.nio.file.Path;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.io.fs.base.FilePath;
 import org.smoothbuild.io.fs.base.Space;
 
 import com.google.common.collect.ImmutableMap;
 
 public class FullPathResolver {
-  private final ImmutableMap<Space, Path> resolvers;
+  private final ImmutableMap<Space, Path> spacePaths;
 
-  public FullPathResolver(ImmutableMap<Space, Path> resolvers) {
-    this.resolvers = resolvers;
+  @Inject
+  public FullPathResolver(ImmutableMap<Space, Path> spacePaths) {
+    this.spacePaths = spacePaths;
   }
 
   public Path resolve(FilePath filePath) {
-    Path path = resolvers.get(filePath.space());
+    Path path = spacePaths.get(filePath.space());
     if (path == null) {
       throw new RuntimeException("Cannot resolve full path for " + filePath);
     }
