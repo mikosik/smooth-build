@@ -60,7 +60,7 @@ public class RuntimeController {
     for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
       ModuleFiles moduleFiles = entry.getValue();
       Maybe<SModule> module = load(allDefinitions, entry.getKey(), moduleFiles);
-      reporter.report(moduleFiles.smoothFile().prefixedPath(), module.logs());
+      reporter.report(moduleFiles.smoothFile().toString(), module.logs());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
         return EXIT_CODE_ERROR;

@@ -31,7 +31,7 @@ public class FilePathTest {
   @Test
   void prefixed_path() {
     FilePath filePath = new FilePath(PRJ, path("full/path.smooth"));
-    assertThat((Object) filePath.prefixedPath())
+    assertThat((Object) filePath.toString())
         .isEqualTo("{prj}/full/path.smooth");
   }
 

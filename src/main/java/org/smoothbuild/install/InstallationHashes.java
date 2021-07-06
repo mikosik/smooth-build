@@ -85,7 +85,7 @@ public class InstallationHashes {
     if (file.isPresent()) {
       FilePath filePath = file.get();
       Path resolvedPath = fullPathResolver.resolve(filePath);
-      return Optional.of(new HashNode(filePath.prefixedPath(), Hash.of(resolvedPath)));
+      return Optional.of(new HashNode(filePath.toString(), Hash.of(resolvedPath)));
     } else {
       return Optional.empty();
     }

@@ -11,17 +11,17 @@ public record FilePath(Space space, Path path) {
     return new FilePath(space, path);
   }
 
-  public String prefixedPath() {
-    return "{" + space().prefix() + "}/" + path;
-  }
-
   public FilePath withExtension(String extension) {
     return filePath(space, path.changeExtension(extension));
   }
 
+  public String q() {
+    return "'" + this + "'";
+  }
+
   @Override
   public String toString() {
-    return prefixedPath();
+    return "{" + space().prefix() + "}/" + path;
   }
 
   public Hash hash() {

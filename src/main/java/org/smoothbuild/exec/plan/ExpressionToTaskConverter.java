@@ -244,7 +244,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     var contentAlgorithm = new ReadFileContentAlgorithm(
         toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fullPathResolver);
 
-    String name = "_native_module('" + nativeFile.prefixedPath() + "')";
+    String name = "_native_module('" + nativeFile.toString() + "')";
     var contentTask = new NormalTask(
         NATIVE, blob(), name, contentAlgorithm, list(), expression.location());
     var methodPathTask = fixedStringTask(expression.path(), expression.location());

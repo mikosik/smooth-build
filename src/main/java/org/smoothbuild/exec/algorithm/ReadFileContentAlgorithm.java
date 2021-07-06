@@ -53,10 +53,10 @@ public class ReadFileContentAlgorithm extends Algorithm {
     try (BufferedSource source = Okio.buffer(Okio.source(jdkPath))) {
       return nativeApi.factory().blob(sink -> sink.writeAll(source));
     } catch (FileNotFoundException e) {
-      nativeApi.log().error("Cannot find file '" + nativeFile.prefixedPath() + "'.");
+      nativeApi.log().error("Cannot find file " + nativeFile.q() + ".");
       return null;
     } catch (IOException e) {
-      nativeApi.log().error("Error reading file '" + nativeFile.prefixedPath() + "'.");
+      nativeApi.log().error("Error reading file " + nativeFile.q() + ".");
       return null;
     }
   }

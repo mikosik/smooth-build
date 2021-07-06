@@ -13,8 +13,8 @@ public class ModulePath {
     this.path = path;
   }
 
-  public static ModulePath of(FilePath file) {
-    return new ModulePath(removeExtension(file.prefixedPath()));
+  public static ModulePath of(FilePath filePath) {
+    return new ModulePath(removeExtension(filePath.toString()));
   }
 
   @Override

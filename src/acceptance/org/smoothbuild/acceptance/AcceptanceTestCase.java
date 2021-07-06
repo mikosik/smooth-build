@@ -232,7 +232,7 @@ public abstract class AcceptanceTestCase {
   public void assertSysOutContainsParseError(String... errorLines) {
     errorLines[0] = "ERROR: " + errorLines[0];
     assertSysOutContains(
-        "  " + PRJ_MODULE_FILE_PATH.prefixedPath(),
+        "  " + PRJ_MODULE_FILE_PATH.toString(),
         prefixMultiline(errorLines));
   }
 

@@ -117,8 +117,8 @@ public class JavaCodeLoader {
       return loadClass(jarFile.resolvedPath(), methodPath.classBinaryName());
     } catch (ClassNotFoundException e) {
       throw newInvalidPathException(referencable, methodPath,
-          "Class '" + methodPath.classBinaryName() + "' does not exist in jar '"
-          + jarFile.location().prefixedPath() + "'.");
+          "Class '" + methodPath.classBinaryName() + "' does not exist in jar "
+          + jarFile.filePath().q() + ".");
     }
   }
 
