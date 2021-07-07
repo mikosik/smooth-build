@@ -46,7 +46,11 @@ public class Hash extends ByteString {
   }
 
   public static Hash of(java.nio.file.Path path) throws IOException {
-    try (Source source = source(path.toFile())) {
+    return Hash.of(source(path.toFile()));
+  }
+
+  public static Hash of(Source source) throws IOException {
+    try (source) {
       HashingSource hashingSource = hashingSource(source);
       buffer(hashingSource).readAll(blackhole());
       return new Hash(hashingSource.hash());

@@ -5,6 +5,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.EOFException;
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,6 +50,12 @@ public class HashTest {
     file = File.createTempFile("tmp", ".tmp");
     Files.write(byteString.toByteArray(), file);
     assertThat(Hash.of(file.toPath()))
+        .isEqualTo(Hash.of(byteString));
+  }
+
+  @Test
+  public void hash_of_source_is_equal_to_hash_of_its_bytes() throws IOException {
+    assertThat(Hash.of(new Buffer().write(byteString)))
         .isEqualTo(Hash.of(byteString));
   }
 
