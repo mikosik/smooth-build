@@ -9,11 +9,11 @@ import org.smoothbuild.io.fs.base.Space;
 
 import com.google.common.collect.ImmutableMap;
 
-public class FullPathResolver {
+public class JPathResolver {
   private final ImmutableMap<Space, Path> spacePaths;
 
   @Inject
-  public FullPathResolver(ImmutableMap<Space, Path> spacePaths) {
+  public JPathResolver(ImmutableMap<Space, Path> spacePaths) {
     this.spacePaths = spacePaths;
   }
 

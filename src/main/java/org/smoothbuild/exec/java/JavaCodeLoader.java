@@ -19,7 +19,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.exec.java.JavaMethodPath.JavaMethodPathParsingException;
-import org.smoothbuild.install.FullPathResolver;
+import org.smoothbuild.install.JPathResolver;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
@@ -35,11 +35,11 @@ import org.smoothbuild.plugin.NativeApi;
 public class JavaCodeLoader {
   private final HashMap<CacheKey, JavaCode> javaCodeCache;
   private final HashMap<Hash, JarFile> jarFileCache;
-  private final FullPathResolver fullPathResolver;
+  private final JPathResolver jPathResolver;
 
   @Inject
-  public JavaCodeLoader(FullPathResolver fullPathResolver) {
-    this.fullPathResolver = fullPathResolver;
+  public JavaCodeLoader(JPathResolver jPathResolver) {
+    this.jPathResolver = jPathResolver;
     this.javaCodeCache = new HashMap<>();
     this.jarFileCache = new HashMap<>();
   }
@@ -117,7 +117,7 @@ public class JavaCodeLoader {
 
   private Class<?> findClass(Referencable referencable, JarFile jarFile,
       JavaMethodPath methodPath) throws LoadingJavaCodeException {
-      Path jarPath = fullPathResolver.resolve(jarFile.filePath());
+      Path jarPath = jPathResolver.resolve(jarFile.filePath());
     try {
       return loadClass(jarPath, methodPath.classBinaryName());
     } catch (ClassNotFoundException e) {
