@@ -1,24 +1,23 @@
 package org.smoothbuild.install;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.base.FileResolver;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ModuleFilesDetector {
-  private final FullPathResolver fullPathResolver;
+  private final FileResolver fileResolver;
 
   @Inject
-  public ModuleFilesDetector(FullPathResolver fullPathResolver) {
-    this.fullPathResolver = fullPathResolver;
+  public ModuleFilesDetector(FileResolver fileResolver) {
+    this.fileResolver = fileResolver;
   }
 
   public ImmutableMap<ModulePath, ModuleFiles> detect(List<FilePath> smoothFiles) {
@@ -31,11 +30,9 @@ public class ModuleFilesDetector {
 
   private Optional<FilePath> nativeFileFor(FilePath file) {
     FilePath nativeFilePath = file.withExtension("jar");
-    Path resolved = fullPathResolver.resolve(nativeFilePath);
-    if (Files.exists(resolved)) {
-      return Optional.of(nativeFilePath);
-    } else {
-      return Optional.empty();
-    }
+    return switch (fileResolver.pathState(nativeFilePath)) {
+      case FILE -> Optional.of(nativeFilePath);
+      case DIR, NOTHING -> Optional.empty();
+    };
   }
 }

@@ -4,7 +4,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
@@ -14,6 +13,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.base.FileResolver;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 
@@ -21,14 +21,14 @@ import com.google.common.collect.ImmutableList;
 
 public class InstallationHashes {
   private final InstallationPaths installationPaths;
-  private final FullPathResolver fullPathResolver;
+  private final FileResolver fileResolver;
   private final ModuleFilesDetector moduleFilesDetector;
 
   @Inject
-  public InstallationHashes(InstallationPaths installationPaths, FullPathResolver fullPathResolver,
+  public InstallationHashes(InstallationPaths installationPaths, FileResolver fileResolver,
       ModuleFilesDetector moduleFilesDetector) {
     this.installationPaths = installationPaths;
-    this.fullPathResolver = fullPathResolver;
+    this.fileResolver = fileResolver;
     this.moduleFilesDetector = moduleFilesDetector;
   }
 
@@ -84,8 +84,7 @@ public class InstallationHashes {
   private Optional<HashNode> nodeFor(Optional<FilePath> file) throws IOException {
     if (file.isPresent()) {
       FilePath filePath = file.get();
-      Path resolvedPath = fullPathResolver.resolve(filePath);
-      return Optional.of(new HashNode(filePath.toString(), Hash.of(resolvedPath)));
+      return Optional.of(new HashNode(filePath.toString(), Hash.of(fileResolver.source(filePath))));
     } else {
       return Optional.empty();
     }

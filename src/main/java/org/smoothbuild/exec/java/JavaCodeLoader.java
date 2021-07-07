@@ -8,6 +8,7 @@ import static org.smoothbuild.util.reflect.Methods.isStatic;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.exec.java.JavaMethodPath.JavaMethodPathParsingException;
+import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
@@ -33,9 +35,11 @@ import org.smoothbuild.plugin.NativeApi;
 public class JavaCodeLoader {
   private final HashMap<CacheKey, JavaCode> javaCodeCache;
   private final HashMap<Hash, JarFile> jarFileCache;
+  private final FullPathResolver fullPathResolver;
 
   @Inject
-  public JavaCodeLoader() {
+  public JavaCodeLoader(FullPathResolver fullPathResolver) {
+    this.fullPathResolver = fullPathResolver;
     this.javaCodeCache = new HashMap<>();
     this.jarFileCache = new HashMap<>();
   }
@@ -84,7 +88,7 @@ public class JavaCodeLoader {
     return nativ;
   }
 
-  private static Method findMethod(Referencable referencable, JarFile jarFile, JavaMethodPath path)
+  private Method findMethod(Referencable referencable, JarFile jarFile, JavaMethodPath path)
       throws LoadingJavaCodeException {
     Method method = findClassMethod(referencable, jarFile, path);
     if (!isPublic(method)) {
@@ -100,7 +104,7 @@ public class JavaCodeLoader {
     }
   }
 
-  private static Method findClassMethod(Referencable referencable, JarFile jarFile,
+  private Method findClassMethod(Referencable referencable, JarFile jarFile,
       JavaMethodPath methodPath) throws LoadingJavaCodeException {
     String methodName = methodPath.methodName();
     Class<?> clazz = findClass(referencable, jarFile, methodPath);
@@ -111,10 +115,11 @@ public class JavaCodeLoader {
             clazz.getCanonicalName() + "' does not have '" + methodName + "' method."));
   }
 
-  private static Class<?> findClass(Referencable referencable, JarFile jarFile,
+  private Class<?> findClass(Referencable referencable, JarFile jarFile,
       JavaMethodPath methodPath) throws LoadingJavaCodeException {
+      Path jarPath = fullPathResolver.resolve(jarFile.filePath());
     try {
-      return loadClass(jarFile.resolvedPath(), methodPath.classBinaryName());
+      return loadClass(jarPath, methodPath.classBinaryName());
     } catch (ClassNotFoundException e) {
       throw newInvalidPathException(referencable, methodPath,
           "Class '" + methodPath.classBinaryName() + "' does not exist in jar "

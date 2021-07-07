@@ -4,7 +4,6 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readFileContentAlgo
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Blob;
@@ -12,25 +11,24 @@ import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.JavaCodeLoader;
-import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.base.FileResolver;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.BufferedSource;
-import okio.Okio;
 
 public class ReadFileContentAlgorithm extends Algorithm {
   private final FilePath nativeFile;
   private final JavaCodeLoader javaCodeLoader;
-  private final FullPathResolver fullPathResolver;
+  private final FileResolver fileResolver;
 
   public ReadFileContentAlgorithm(Spec spec, FilePath nativeFile,
-      JavaCodeLoader javaCodeLoader, FullPathResolver fullPathResolver) {
+      JavaCodeLoader javaCodeLoader, FileResolver fileResolver) {
     super(spec, false);
     this.nativeFile = nativeFile;
     this.javaCodeLoader = javaCodeLoader;
-    this.fullPathResolver = fullPathResolver;
+    this.fileResolver = fileResolver;
   }
 
   @Override
@@ -40,17 +38,16 @@ public class ReadFileContentAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws IOException {
-    Path resolvedJarPath = fullPathResolver.resolve(nativeFile);
-    Blob content = createContent(nativeApi, resolvedJarPath);
+    Blob content = createContent(nativeApi, nativeFile);
     if (content == null) {
       return new Output(null, nativeApi.messages());
     }
-    javaCodeLoader.storeJarFile(new JarFile(nativeFile, resolvedJarPath, content.hash()));
+    javaCodeLoader.storeJarFile(new JarFile(nativeFile, content.hash()));
     return new Output(content, nativeApi.messages());
   }
 
-  private Blob createContent(NativeApi nativeApi, Path jdkPath) {
-    try (BufferedSource source = Okio.buffer(Okio.source(jdkPath))) {
+  private Blob createContent(NativeApi nativeApi, FilePath filePath) {
+    try (BufferedSource source = fileResolver.source(filePath)) {
       return nativeApi.factory().blob(sink -> sink.writeAll(source));
     } catch (FileNotFoundException e) {
       nativeApi.log().error("Cannot find file " + nativeFile.q() + ".");
