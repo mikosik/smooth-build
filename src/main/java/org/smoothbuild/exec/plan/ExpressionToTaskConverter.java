@@ -39,8 +39,8 @@ import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.exec.compute.VirtualTask;
 import org.smoothbuild.exec.java.JavaCodeLoader;
-import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.base.FileResolver;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Definitions;
@@ -74,15 +74,15 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final JavaCodeLoader javaCodeLoader;
-  private final FullPathResolver fullPathResolver;
+  private final FileResolver fileResolver;
 
   @Inject
   public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory,
-      JavaCodeLoader javaCodeLoader, FullPathResolver fullPathResolver) {
+      JavaCodeLoader javaCodeLoader, FileResolver fileResolver) {
     this.toSpecConverter = new TypeToSpecConverter(objectFactory);
     this.definitions = definitions;
     this.javaCodeLoader = javaCodeLoader;
-    this.fullPathResolver = fullPathResolver;
+    this.fileResolver = fileResolver;
   }
 
   @Override
@@ -242,7 +242,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   public Task visit(Scope<TaskSupplier> context, NativeExpression expression) {
     FilePath nativeFile = expression.nativeFile();
     var contentAlgorithm = new ReadFileContentAlgorithm(
-        toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fullPathResolver);
+        toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fileResolver);
 
     String name = "_native_module('" + nativeFile.toString() + "')";
     var contentTask = new NormalTask(

@@ -1,7 +1,5 @@
 package org.smoothbuild.run;
 
-import static okio.Okio.buffer;
-import static okio.Okio.source;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
@@ -11,7 +9,6 @@ import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
@@ -20,9 +17,9 @@ import javax.inject.Inject;
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.install.ModuleFilesDetector;
 import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.base.FileResolver;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
@@ -40,14 +37,14 @@ public class RuntimeController {
           .add(PRJ_MODULE_FILE_PATH)
           .build();
 
-  private final FullPathResolver fullPathResolver;
+  private final FileResolver fileResolver;
   private final ModuleFilesDetector moduleFilesDetector;
   private final Reporter reporter;
 
   @Inject
-  public RuntimeController(FullPathResolver fullPathResolver,
-      ModuleFilesDetector moduleFilesDetector, Reporter reporter) {
-    this.fullPathResolver = fullPathResolver;
+  public RuntimeController(FileResolver fileResolver, ModuleFilesDetector moduleFilesDetector,
+      Reporter reporter) {
+    this.fileResolver = fileResolver;
     this.moduleFilesDetector = moduleFilesDetector;
     this.reporter = reporter;
   }
@@ -74,7 +71,7 @@ public class RuntimeController {
   }
 
   private Maybe<SModule> load(Definitions imported, ModulePath path, ModuleFiles moduleFiles) {
-    var sourceCode = readFileContent(fullPathResolver.resolve(moduleFiles.smoothFile()));
+    var sourceCode = readFileContent(moduleFiles.smoothFile());
     if (sourceCode.hasProblems()) {
       return Maybe.withLogsFrom(sourceCode);
     } else {
@@ -82,7 +79,7 @@ public class RuntimeController {
     }
   }
 
-  private static Maybe<String> readFileContent(Path filePath) {
+  private Maybe<String> readFileContent(FilePath filePath) {
     var result = new Maybe<String>();
     try {
       result.setValue(readFileContentImpl(filePath));
@@ -94,8 +91,8 @@ public class RuntimeController {
     return result;
   }
 
-  private static String readFileContentImpl(Path filePath) throws IOException {
-    try (BufferedSource source = buffer(source(filePath))) {
+  private String readFileContentImpl(FilePath filePath) throws IOException {
+    try (BufferedSource source = fileResolver.source(filePath)) {
       return source.readString(SmoothConstants.CHARSET);
     }
   }
