@@ -2,10 +2,11 @@ package org.smoothbuild.io.fs.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.Space.PRJ;
-import static org.smoothbuild.io.fs.base.Space.SDK;
+import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.io.fs.space.Space.SDK;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.io.fs.space.FilePath;
 
 import com.google.common.testing.EqualsTester;
 

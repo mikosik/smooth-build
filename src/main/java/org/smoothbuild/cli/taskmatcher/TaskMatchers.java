@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.exec.compute.TaskKind;
-import org.smoothbuild.io.fs.base.Space;
+import org.smoothbuild.io.fs.space.Space;
 
 import com.google.common.collect.ImmutableMap;
 

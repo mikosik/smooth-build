@@ -1,7 +1,9 @@
 package org.smoothbuild.io.fs.base;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.Space.PRJ;
+import static org.smoothbuild.io.fs.space.Space.PRJ;
+
+import org.smoothbuild.io.fs.space.FilePath;
 
 public class TestingFilePath {
   public static final String BUILD_FILE_PATH = "myBuild.smooth";

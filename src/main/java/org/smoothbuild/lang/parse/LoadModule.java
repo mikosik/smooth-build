@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;

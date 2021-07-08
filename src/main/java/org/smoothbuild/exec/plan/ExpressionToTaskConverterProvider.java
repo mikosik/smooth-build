@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.exec.java.JavaCodeLoader;
-import org.smoothbuild.io.fs.base.FileResolver;
+import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.lang.base.define.Definitions;
 
 public class ExpressionToTaskConverterProvider {

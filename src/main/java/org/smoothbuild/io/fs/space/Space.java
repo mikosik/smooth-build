@@ -1,4 +1,4 @@
-package org.smoothbuild.io.fs.base;
+package org.smoothbuild.io.fs.space;
 
 public enum Space {
   PRJ("prj"),

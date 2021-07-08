@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.io.fs.base.Space.PRJ;
+import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.ForSpace;
+import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.plugin.MessageLogger;

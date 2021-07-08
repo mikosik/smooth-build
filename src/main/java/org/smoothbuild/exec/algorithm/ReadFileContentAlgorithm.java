@@ -11,8 +11,8 @@ import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.JavaCodeLoader;
-import org.smoothbuild.io.fs.base.FilePath;
-import org.smoothbuild.io.fs.base.FileResolver;
+import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.plugin.NativeApi;
 

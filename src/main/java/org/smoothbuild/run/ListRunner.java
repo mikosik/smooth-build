@@ -1,6 +1,6 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.io.fs.base.Space.PRJ;
+import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import javax.inject.Inject;
 

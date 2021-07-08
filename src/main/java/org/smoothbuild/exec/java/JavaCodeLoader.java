@@ -19,7 +19,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.exec.java.JavaMethodPath.JavaMethodPathParsingException;
-import org.smoothbuild.install.JPathResolver;
+import org.smoothbuild.io.fs.space.JPathResolver;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;

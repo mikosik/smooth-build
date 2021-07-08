@@ -4,7 +4,7 @@ import static org.smoothbuild.util.io.Paths.removeExtension;
 
 import java.util.Objects;
 
-import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.space.FilePath;
 
 public class ModulePath {
   private final String path;
