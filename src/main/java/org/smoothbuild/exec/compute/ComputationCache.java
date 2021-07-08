@@ -6,7 +6,7 @@ import static org.smoothbuild.exec.base.MessageTuple.severity;
 import static org.smoothbuild.exec.compute.ComputationCacheException.computationCacheException;
 import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.io.fs.base.Space.PRJ;
+import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import java.io.IOException;
 
@@ -22,9 +22,9 @@ import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.ForSpace;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.io.fs.space.ForSpace;
 
 import okio.BufferedSink;
 import okio.BufferedSource;

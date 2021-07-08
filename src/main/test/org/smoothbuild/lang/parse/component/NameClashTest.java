@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Definitions;
 
 public class NameClashTest {

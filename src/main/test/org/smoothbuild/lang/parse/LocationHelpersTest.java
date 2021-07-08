@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Location;
 
 public class LocationHelpersTest {

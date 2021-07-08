@@ -1,4 +1,4 @@
-package org.smoothbuild.io.fs.base;
+package org.smoothbuild.io.fs.space;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;
 
-import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;

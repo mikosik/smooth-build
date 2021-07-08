@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.io.fs.base.Space;
+import org.smoothbuild.io.fs.space.Space;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;

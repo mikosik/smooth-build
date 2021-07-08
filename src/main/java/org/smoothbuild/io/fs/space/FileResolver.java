@@ -1,8 +1,11 @@
-package org.smoothbuild.io.fs.base;
+package org.smoothbuild.io.fs.space;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
+
+import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.PathState;
 
 import com.google.common.collect.ImmutableMap;
 

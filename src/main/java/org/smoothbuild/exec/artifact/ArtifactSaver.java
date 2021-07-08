@@ -6,7 +6,7 @@ import static org.smoothbuild.exec.artifact.ArtifactPaths.targetPath;
 import static org.smoothbuild.exec.base.FileStruct.fileContent;
 import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.Space.PRJ;
+import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,8 +19,8 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.ForSpace;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.DuplicatesDetector;

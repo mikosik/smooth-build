@@ -5,7 +5,7 @@ import static org.smoothbuild.io.fs.base.TestingFilePath.smoothFilePath;
 
 import java.util.Optional;
 
-import org.smoothbuild.io.fs.base.FilePath;
+import org.smoothbuild.io.fs.space.FilePath;
 
 public class TestingModuleFiles {
   public static ModuleFiles moduleFiles() {
