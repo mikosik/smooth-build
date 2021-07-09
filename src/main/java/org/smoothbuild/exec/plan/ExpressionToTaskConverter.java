@@ -119,7 +119,10 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
 
   @Override
   public Task visit(Scope<TaskSupplier> scope, CallExpression expression) {
-    Callable callable = expression.callable();
+    // TODO This cast is temporary as for now CallExpression is always created with
+    //  ReferenceExpression
+    String name = ((ReferenceExpression) expression.callable()).name();
+    Callable callable = (Callable) definitions.referencables().get(name);
     if (callable instanceof Function function) {
       var argumentTypes = map(expression.arguments(), e -> expressionType(scope, e));
       var variables = inferVariableBounds(function.type().parameterTypes(), argumentTypes, LOWER);

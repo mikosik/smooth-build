@@ -1,45 +1,39 @@
 package org.smoothbuild.exec.plan;
 
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Arrays.stream;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.parameterRef;
-import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.lang.TestingLang;
+import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.Scope;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class ExpressionToTaskConverterTest extends TestingContext {
-  private ExpressionToTaskConverter converter;
-
-  @BeforeEach
-  public void beforeEach() {
-    converter = new ExpressionToTaskConverter(Definitions.empty(), objectFactory(), null, null);
-  }
-
   @Test
   public void task_for_unused_arguments_are_not_created() {
     Expression blobLiteral = TestingLang.blob(0x22);
     Function function = function(BLOB, "myFunction", TestingLang.blob(0x33), parameter(BLOB, "p"));
-    CallExpression call = new CallExpression(BLOB, function, ImmutableList.of(blobLiteral), loc());
-
-    Task rootTask = converter.visit(new Scope<>(Map.of()), call);
+    CallExpression call = call(11, BLOB, function, blobLiteral);
+    Task rootTask = converter(function).visit(new Scope<>(Map.of()), call);
 
     assertThat(findTasks(rootTask, "0x22"))
         .hasSize(0);
@@ -58,13 +52,20 @@ public class ExpressionToTaskConverterTest extends TestingContext {
 
     CallExpression myFunctionCall = call(BLOB, myFunction, TestingLang.blob(0x17));
 
-    Task task = converter.visit(new Scope<>(Map.of()), myFunctionCall);
+    Task task = converter(myFunction, twoBlobsEater).visit(new Scope<>(Map.of()), myFunctionCall);
 
     List<Task> found = findTasks(task, "0x17");
     assertThat(found)
         .hasSize(2);
     assertThat(found.get(0))
         .isSameInstanceAs(found.get(1));
+  }
+
+  private ExpressionToTaskConverter converter(Function... functions) {
+    ImmutableMap<String, Referencable> referencables =
+        stream(functions).collect(toImmutableMap(Defined::name, f -> f));
+    var definitions = new Definitions(null, null, referencables);
+    return new ExpressionToTaskConverter(definitions, objectFactory(), null, null);
   }
 
   private static List<Task> findTasks(Task task, String name) {
