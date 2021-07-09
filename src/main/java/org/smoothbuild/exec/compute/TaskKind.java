@@ -5,5 +5,6 @@ public enum TaskKind {
   CONVERSION,
   LITERAL,
   NATIVE,
-  VALUE
+  VALUE,
+  FUNCTION_REFERENCE
 }

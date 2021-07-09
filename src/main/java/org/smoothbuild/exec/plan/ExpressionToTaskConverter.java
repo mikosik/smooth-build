@@ -3,6 +3,7 @@ package org.smoothbuild.exec.plan;
 import static org.smoothbuild.exec.compute.IfTask.IF_FUNCTION_NAME;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
+import static org.smoothbuild.exec.compute.TaskKind.FUNCTION_REFERENCE;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.NATIVE;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
@@ -25,6 +26,7 @@ import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
+import org.smoothbuild.exec.algorithm.CallableReferenceAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
@@ -32,6 +34,7 @@ import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadFileContentAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
+import org.smoothbuild.exec.compute.CallTask;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
@@ -46,9 +49,12 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Referencable;
+import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundedVariables;
+import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -99,19 +105,32 @@ public class ExpressionToTaskConverter
 
   @Override
   public TaskSupplier visit(Scope<TaskSupplier> scope, ReferenceExpression reference) {
-    Value value = (Value) definitions.referencables().get(reference.name());
-    if (value.body() instanceof NativeExpression nativ) {
-      return new TaskSupplier(value.type(), reference.location(), () -> {
-        Algorithm algorithm = new CallNativeAlgorithm(
+    Referencable referencable = definitions.referencables().get(reference.name());
+    if (referencable instanceof Value value) {
+      if (value.body() instanceof NativeExpression nativ) {
+        return new TaskSupplier(value.type(), reference.location(), () -> {
+          Algorithm algorithm = new CallNativeAlgorithm(
             javaCodeLoader, value.type().visit(toSpecConverter), value, nativ.isPure());
         TaskSupplier nativeCode = visit(scope, nativ);
         return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
             list(nativeCode), reference.location());
-      });
+        });
+      } else {
+        return new TaskSupplier(value.type(), reference.location(), () -> {
+          TaskSupplier task = value.body().visit(scope, this);
+          TaskSupplier convertedTask = convertIfNeeded(task, value.type());
+          return new VirtualTask(VALUE, value.extendedName(), convertedTask, reference.location());
+        });
+      }
     } else {
-      return new TaskSupplier(value.type(), reference.location(), () -> {
-        TaskSupplier taskSupplier = convertIfNeeded(value.body().visit(scope, this), value.type());
-        return new VirtualTask(VALUE, value.extendedName(), taskSupplier, reference.location());
+      Callable callable = (Callable) referencable;
+      Type type = callable.type().strip();
+      return new TaskSupplier(type, reference.location(), () -> {
+        SModule module = definitions.modules().get(callable.modulePath());
+        var algorithm = new CallableReferenceAlgorithm(
+            callable, module, toSpecConverter.functionSpec());
+        return new NormalTask(FUNCTION_REFERENCE, type, callable.extendedName(),
+            algorithm, list(), reference.location());
       });
     }
   }
@@ -123,36 +142,34 @@ public class ExpressionToTaskConverter
 
   @Override
   public TaskSupplier visit(Scope<TaskSupplier> scope, CallExpression expression) {
-    // TODO This cast is temporary as for now CallExpression is always created with
-    //  ReferenceExpression
-    String name = ((ReferenceExpression) expression.callable()).name();
-    Callable callable = (Callable) definitions.referencables().get(name);
-    if (callable instanceof Function function) {
-      var argumentTypes = map(expression.arguments(), e -> expressionType(scope, e));
-      var variables = inferVariableBounds(function.type().parameterTypes(), argumentTypes, LOWER);
-      Type actualResultType = function.resultType().mapVariables(variables, LOWER);
+    var location = expression.location();
+    var callable = expression.callable().visit(scope, this);
+    var arguments = childrenTasks(scope, expression.arguments());
+    var argumentTypes = map(arguments, TaskSupplier::type);
+    var functionType = (FunctionType) callable.type();
+    var variables = inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
+    var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
 
+    return new TaskSupplier(actualResultType, location, () -> new CallTask(CALL, actualResultType,
+        "_function_call", concat(callable, arguments), location, variables, scope, this));
+  }
+
+  public Task taskForCall(Scope<TaskSupplier> scope, BoundedVariables variables,
+      Type actualResultType, String functionName, ImmutableList<TaskSupplier> arguments,
+      Location location) {
+    Callable callable = (Callable) definitions.referencables().get(functionName);
+    if (callable instanceof Function function) {
       if (function.body() instanceof NativeExpression nativ) {
-        return new TaskSupplier(actualResultType, expression.location(), () -> {
-          var arguments = childrenTasks(scope, expression.arguments());
-          return taskForNativeFunction(scope, arguments, function, nativ, variables,
-              actualResultType, expression.location());
-        });
+        return taskForNativeFunction(scope, arguments, function, nativ, variables,
+            actualResultType, location);
       } else {
-        return new TaskSupplier(actualResultType, expression.location(), () -> {
-          var arguments = childrenTasks(scope, expression.arguments());
-          return taskForDefinedFunction(
-              scope, actualResultType, function, arguments, expression.location());
-        });
+        return taskForDefinedFunction(scope, actualResultType, function, arguments, location);
       }
     } else if (callable instanceof Constructor constructor) {
       Type resultType = constructor.type().resultType();
-      return new TaskSupplier(resultType, expression.location(), () -> {
-        TupleSpec tupleSpec = (TupleSpec) resultType.visit(toSpecConverter);
-        List<TaskSupplier> dependencies = childrenTasks(scope, expression.arguments());
-        return taskForConstructorCall(CALL, resultType, tupleSpec, constructor.extendedName(),
-            dependencies, expression.location());
-      });
+      TupleSpec tupleSpec = (TupleSpec) resultType.visit(toSpecConverter);
+      return taskForConstructorCall(CALL, resultType, tupleSpec, constructor.extendedName(),
+          arguments, location);
     } else {
       throw new RuntimeException("Unexpected case: " + callable.getClass().getCanonicalName());
     }
@@ -195,14 +212,6 @@ public class ExpressionToTaskConverter
       builder.put(names.get(i).name(), arguments.get(i));
     }
     return builder.build();
-  }
-
-  private static Type expressionType(Scope<TaskSupplier> scope, Expression expression) {
-    if (expression instanceof ParameterReferenceExpression parameterReference) {
-      return scope.get(parameterReference.name()).type();
-    } else {
-      return expression.type();
-    }
   }
 
   private List<TaskSupplier> convertedArguments(

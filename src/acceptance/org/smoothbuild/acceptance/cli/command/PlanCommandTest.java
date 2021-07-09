@@ -62,7 +62,8 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
-            String myFunction()
+            String _function_call
+              String(String) myFunction()
               String "abc"
           """);
     }
@@ -79,11 +80,26 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
-            String oneStringParameter()
-              Native _native_function
-                String "org.smoothbuild.acceptance.testing."...
-                Blob _native_module('{prj}/build.jar')
+            String _function_call
+              String(String) oneStringParameter()
               String "abc"
+          """);
+    }
+
+    @Test
+    public void native_function_call_without_argument() throws Exception {
+      createNativeJar(ReturnAbc.class);
+      createUserModule(format("""
+            @Native("%s.function")
+            String returnAbc();
+            result = returnAbc();
+            """, ReturnAbc.class.getCanonicalName()));
+      runSmoothPlan("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          String result
+            String _function_call
+              String() returnAbc()
           """);
     }
 
@@ -99,7 +115,8 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           MyStruct result
-            MyStruct myStruct()
+            MyStruct _function_call
+              MyStruct(String) myStruct()
               String "abc"
           """);
     }
@@ -117,7 +134,8 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String .field
-              MyStruct myStruct()
+              MyStruct _function_call
+                MyStruct(String) myStruct()
                 String "abc"
           """);
     }

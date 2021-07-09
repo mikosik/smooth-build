@@ -39,6 +39,10 @@ public class AlgorithmHashes {
     return hash(7, filePath.hash());
   }
 
+  public static Hash callableReferenceAlgorithmHash(Hash moduleHash, String functionName) {
+    return hash(8, Hash.of(moduleHash, Hash.of(functionName)));
+  }
+
   private static Hash hash(int id, Hash hash) {
     return Hash.of(Hash.of(id), hash);
   }
