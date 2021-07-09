@@ -74,10 +74,5 @@ public class CallableTest extends TestingContext {
     public MyCallable(Type string, String name, List<Item> parameters, Location location) {
       super(string, name, ImmutableList.copyOf(parameters), location);
     }
-
-    @Override
-    public Expression createCallExpression(ImmutableList<Expression> arguments, Location location) {
-      return null;
-    }
   }
 }
