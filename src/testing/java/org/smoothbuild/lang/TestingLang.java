@@ -11,6 +11,7 @@ import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -71,7 +72,9 @@ public class TestingLang {
 
   public static CallExpression call(
       int line, Type type, Callable callable, Expression... arguments) {
-    return new CallExpression(type, callable, ImmutableList.copyOf(arguments), loc(line));
+    Location loc = loc(line);
+    ReferenceExpression reference = new ReferenceExpression(callable.name(), callable.type(), loc);
+    return new CallExpression(type, reference, ImmutableList.copyOf(arguments), loc);
   }
 
   public static Function function(Type type, String name, Item... parameters) {

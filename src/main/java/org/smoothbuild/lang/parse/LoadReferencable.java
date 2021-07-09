@@ -18,6 +18,7 @@ import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
+import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
@@ -142,8 +143,11 @@ public class LoadReferencable {
 
     private Expression createCall(CallNode call) {
       Callable callable = find(call.calledName());
-      ImmutableList<Expression> argExpressions = createArgumentExpressions(call, callable);
-      return callable.createCallExpression(argExpressions, call.location());
+      ImmutableList<Expression> arguments = createArgumentExpressions(call, callable);
+      Type resultType = callable.inferResultType(arguments);
+      ReferenceExpression reference = new ReferenceExpression(
+          call.calledName(), callable.type(), call.location());
+      return new CallExpression(resultType, reference, arguments, call.location());
     }
 
     private Callable find(String name) {
