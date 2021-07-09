@@ -87,4 +87,9 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
     return objectFactory.tupleSpec(
         ImmutableList.of(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }
+
+  public TupleSpec functionSpec() {
+    return objectFactory.tupleSpec(
+        ImmutableList.of(objectFactory.stringSpec(), objectFactory.blobSpec()));
+  }
 }
