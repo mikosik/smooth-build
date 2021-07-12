@@ -64,8 +64,8 @@ public class LoadModule {
     var definedStructs = sortedAst.structs().stream()
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
-    result.setValue(
-        new SModule(path, hash, moduleFiles, imported.modules(), definedStructs, referencables));
+    result.setValue(new SModule(path, hash, moduleFiles, imported.modules().values().asList(),
+        definedStructs, referencables));
     return result;
   }
 

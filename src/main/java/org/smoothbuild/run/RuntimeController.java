@@ -78,7 +78,7 @@ public class RuntimeController {
     if (sourceCode.hasProblems()) {
       return Maybe.withLogsFrom(sourceCode);
     } else {
-      Maybe<Hash> hash = moduleHash(path, moduleFiles, imported.modules());
+      Maybe<Hash> hash = moduleHash(path, moduleFiles, imported.modules().values().asList());
       if (hash.hasProblems()) {
         return Maybe.withLogsFrom(hash);
       } else {
