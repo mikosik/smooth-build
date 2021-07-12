@@ -19,10 +19,11 @@ public record SModule(
     ImmutableMap<String, ? extends Referencable> referencables) {
 
   public static SModule baseTypesModule() {
-    var types = BASE_TYPES.stream().collect(toImmutableMap(Type::name, BaseTypeDefinition::new));
-    ModulePath path = new ModulePath("internal-module");
-    Hash hash = moduleHash(path, Hash.of(new Hash[] {}), list());
-    return new SModule(path, hash, null, list(), types, ImmutableMap.of());
+    ModulePath modulePath = new ModulePath("internal-module");
+    var types = BASE_TYPES.stream()
+        .collect(toImmutableMap(Type::name, t -> new BaseTypeDefinition(modulePath, t)));
+    Hash hash = moduleHash(modulePath, Hash.of(new Hash[] {}), list());
+    return new SModule(modulePath, hash, null, list(), types, ImmutableMap.of());
   }
 
   public static Hash moduleHash(ModulePath path, Hash filesHash, ImmutableList<SModule> modules) {

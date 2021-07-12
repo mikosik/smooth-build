@@ -55,12 +55,12 @@ public class LoadModule {
     }
     Ast sortedAst = maybeSortedAst.value();
 
-    result.logAll(inferTypes(sortedAst, imported));
+    result.logAll(inferTypes(path, sortedAst, imported));
     if (result.hasProblems()) {
       return result;
     }
 
-    var referencables = loadReferencables(imported, sortedAst);
+    var referencables = loadReferencables(path, imported, sortedAst);
     var definedStructs = sortedAst.structs().stream()
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
@@ -69,26 +69,27 @@ public class LoadModule {
     return result;
   }
 
-  private static ImmutableMap<String, Referencable> loadReferencables(Definitions imported, Ast ast) {
+  private static ImmutableMap<String, Referencable> loadReferencables(
+      ModulePath path, Definitions imported, Ast ast) {
     var local = new HashMap<String, Referencable>();
     for (StructNode struct : ast.structs()) {
-      Constructor constructor = loadConstructor(struct);
+      Constructor constructor = loadConstructor(path, struct);
       local.put(constructor.name(), constructor);
     }
     Referencables referencables = new Referencables(imported.referencables(), local);
     for (ReferencableNode referencable : ast.referencable()) {
-      local.put(referencable.name(), loadReferencable(referencable, referencables));
+      local.put(referencable.name(), loadReferencable(path, referencable, referencables));
     }
     return ImmutableMap.copyOf(local);
   }
 
-  private static Constructor loadConstructor(StructNode struct) {
+  private static Constructor loadConstructor(ModulePath path, StructNode struct) {
     Type resultType = struct.type().get();
     String name = struct.constructor().name();
     ImmutableList<Item> parameters = struct.fields()
         .stream()
         .map(field -> new Item(field.type().get(), field.name(), empty()))
         .collect(toImmutableList());
-    return new Constructor(resultType, name, parameters, struct.location());
+    return new Constructor(resultType, path, name, parameters, struct.location());
   }
 }

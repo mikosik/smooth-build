@@ -72,7 +72,8 @@ public class CallableTest extends TestingContext {
     }
 
     public MyCallable(Type string, String name, List<Item> parameters, Location location) {
-      super(string, name, ImmutableList.copyOf(parameters), location);
+      super(string, TestingModulePath.modulePath(), name, ImmutableList.copyOf(parameters),
+          location);
     }
   }
 }

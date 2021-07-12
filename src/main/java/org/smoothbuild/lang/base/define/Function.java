@@ -16,9 +16,9 @@ import com.google.common.collect.ImmutableList;
 public class Function extends Callable {
   private final Expression body;
 
-  public Function(Type resultType, String name, ImmutableList<Item> parameters, Expression body,
-      Location location) {
-    super(resultType, name, parameters, location);
+  public Function(Type resultType, ModulePath modulePath, String name,
+      ImmutableList<Item> parameters, Expression body, Location location) {
+    super(resultType, modulePath, name, parameters, location);
     this.body = requireNonNull(body);
   }
 
@@ -33,6 +33,7 @@ public class Function extends Callable {
     }
     return object instanceof Function that
         && this.resultType().equals(that.resultType())
+        && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())
         && this.parameters().equals(that.parameters())
         && this.body.equals(that.body)
@@ -41,7 +42,7 @@ public class Function extends Callable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), name(), parameters(), body, location());
+    return Objects.hash(resultType(), modulePath(), name(), parameters(), body, location());
   }
 
   @Override

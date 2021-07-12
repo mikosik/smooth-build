@@ -6,8 +6,8 @@ import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Type;
 
 public class Referencable extends Defined implements ReferencableLike {
-  public Referencable(Type type, String name, Location location) {
-    super(type, name, location);
+  public Referencable(Type type, ModulePath modulePath, String name, Location location) {
+    super(type, modulePath, name, location);
   }
 
   @Override

@@ -3,6 +3,7 @@ package org.smoothbuild.lang;
 import static java.lang.Math.max;
 import static org.smoothbuild.io.fs.base.TestingFilePath.nativeFilePath;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
+import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 
 import java.util.List;
 import java.util.Optional;
@@ -94,17 +95,18 @@ public class TestingLang {
 
   public static Function function(int line, Type type, String name, Expression body,
       Item... parameters) {
-    return new Function(type, name, ImmutableList.copyOf(parameters), body, loc(line));
+    return new Function(
+        type, modulePath(), name, ImmutableList.copyOf(parameters), body, loc(line));
   }
 
   public static Value value(int line, Type type, String name, String implementedBy) {
     NativeExpression nativ = new NativeExpression(
         implementedBy, true, loc(line -1), nativeFilePath());
-    return new Value(type, name, nativ, loc(line));
+    return new Value(type, modulePath(), name, nativ, loc(line));
   }
 
   public static Value value(int line, Type type, String name, Expression expression) {
-    return new Value(type, name, expression, loc(line));
+    return new Value(type, modulePath(), name, expression, loc(line));
   }
 
   public static StructType struct(String name, ItemSignature field) {
@@ -112,7 +114,8 @@ public class TestingLang {
   }
 
   public static Constructor constr(int line, Type resultType, String name, Item... parameters) {
-    return new Constructor(resultType, name, ImmutableList.copyOf(parameters), loc(line));
+    return new Constructor(
+        resultType, modulePath(), name, ImmutableList.copyOf(parameters), loc(line));
   }
 
   public static Item parameter(Type type, String name) {

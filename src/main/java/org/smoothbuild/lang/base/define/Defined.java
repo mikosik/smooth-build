@@ -11,10 +11,12 @@ import org.smoothbuild.lang.parse.ast.Named;
 public class Defined implements Named {
   private final Type type;
   private final Location location;
+  private final ModulePath modulePath;
   private final String name;
 
-  public Defined(Type type, String name, Location location) {
+  public Defined(Type type, ModulePath modulePath, String name, Location location) {
     this.type = requireNonNull(type);
+    this.modulePath = modulePath;
     this.location = requireNonNull(location);
     this.name = requireNonNull(name);
   }
@@ -26,6 +28,10 @@ public class Defined implements Named {
   @Override
   public Location location() {
     return location;
+  }
+
+  public ModulePath modulePath() {
+    return modulePath;
   }
 
   @Override
