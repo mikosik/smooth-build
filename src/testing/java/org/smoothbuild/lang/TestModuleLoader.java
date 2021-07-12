@@ -129,7 +129,7 @@ public class TestModuleLoader {
 
   private Maybe<SModule> load() {
     return LoadModule.loadModule(
-        imported, ModulePath.of(moduleFiles.smoothFile()), moduleFiles, sourceCode);
+        ModulePath.of(moduleFiles.smoothFile()), moduleFiles, sourceCode, imported);
   }
 
   public static Log err(int line, String message) {

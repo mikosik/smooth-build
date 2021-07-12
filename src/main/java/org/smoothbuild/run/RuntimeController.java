@@ -75,7 +75,7 @@ public class RuntimeController {
     if (sourceCode.hasProblems()) {
       return Maybe.withLogsFrom(sourceCode);
     } else {
-      return loadModule(imported, path, moduleFiles, sourceCode.value());
+      return loadModule(path, moduleFiles, sourceCode.value(), imported);
     }
   }
 
