@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Maybe;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Defined;
@@ -31,7 +32,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
-  public static Maybe<SModule> loadModule(ModulePath path, ModuleFiles moduleFiles,
+  public static Maybe<SModule> loadModule(ModulePath path, Hash hash, ModuleFiles moduleFiles,
       String sourceCode, Definitions imported) {
     var result = new Maybe<SModule>();
     FilePath filePath = moduleFiles.smoothFile();
@@ -64,7 +65,7 @@ public class LoadModule {
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
     result.setValue(
-        new SModule(path, moduleFiles, imported.modules(), definedStructs, referencables));
+        new SModule(path, hash, moduleFiles, imported.modules(), definedStructs, referencables));
     return result;
   }
 

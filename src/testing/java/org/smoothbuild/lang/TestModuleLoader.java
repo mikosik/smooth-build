@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.ModuleFiles;
@@ -129,7 +130,7 @@ public class TestModuleLoader {
 
   private Maybe<SModule> load() {
     return LoadModule.loadModule(
-        ModulePath.of(moduleFiles.smoothFile()), moduleFiles, sourceCode, imported);
+        ModulePath.of(moduleFiles.smoothFile()), Hash.of(13) , moduleFiles, sourceCode, imported);
   }
 
   public static Log err(int line, String message) {
