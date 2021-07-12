@@ -31,8 +31,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
-  public static Maybe<SModule> loadModule(Definitions imported, ModulePath path,
-      ModuleFiles moduleFiles, String sourceCode) {
+  public static Maybe<SModule> loadModule(ModulePath path, ModuleFiles moduleFiles,
+      String sourceCode, Definitions imported) {
     var result = new Maybe<SModule>();
     FilePath filePath = moduleFiles.smoothFile();
     Maybe<ModuleContext> moduleContext = parseModule(filePath, sourceCode);
