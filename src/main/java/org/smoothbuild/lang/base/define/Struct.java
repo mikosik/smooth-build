@@ -8,8 +8,8 @@ import com.google.common.collect.ImmutableList;
 public class Struct extends Defined {
   private final ImmutableList<Item> fields;
 
-  public Struct(String name, ImmutableList<Item> fields, Location location) {
-    super(struct(name, toItemSignatures(fields)), name, location);
+  public Struct(ModulePath modulePath, String name, ImmutableList<Item> fields, Location location) {
+    super(struct(name, toItemSignatures(fields)), modulePath, name, location);
     this.fields = fields;
   }
 

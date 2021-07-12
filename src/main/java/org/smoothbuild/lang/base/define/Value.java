@@ -11,8 +11,8 @@ import org.smoothbuild.lang.expr.Expression;
 public class Value extends Referencable {
   private final Expression body;
 
-  public Value(Type type, String name, Expression body, Location location) {
-    super(type, name, location);
+  public Value(Type type, ModulePath modulePath, String name, Expression body, Location location) {
+    super(type, modulePath, name, location);
     this.body = body;
   }
 

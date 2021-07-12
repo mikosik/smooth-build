@@ -51,7 +51,7 @@ public class NameTest {
   }
 
   @Nested
-  class function {
+  class _function {
     @Test
     public void with_normal_name() {
       module("""

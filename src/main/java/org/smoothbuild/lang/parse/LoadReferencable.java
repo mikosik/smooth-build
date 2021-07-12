@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
@@ -41,30 +42,34 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadReferencable {
-  public static Referencable loadReferencable(
-      ReferencableNode referencableNode, Referencables referencables) {
+  public static Referencable loadReferencable(ModulePath path, ReferencableNode referencableNode,
+      Referencables referencables) {
     if (referencableNode instanceof FuncNode funcNode) {
-      return loadFunction(funcNode, referencables);
+      return loadFunction(path, funcNode, referencables);
     } else {
-      return loadValue(referencableNode, referencables);
+      return loadValue(path, referencableNode, referencables);
     }
   }
 
-  private static Value loadValue(ReferencableNode referencableNode, Referencables referencables) {
+  private static Value loadValue(
+      ModulePath path, ReferencableNode referencableNode, Referencables referencables) {
     ExpressionLoader loader = new ExpressionLoader(referencables, ImmutableMap.of());
     return new Value(
         referencableNode.type().get(),
+        path,
         referencableNode.name(),
         loader.bodyExpression(referencableNode),
         referencableNode.location());
   }
 
-  private static Function loadFunction(FuncNode funcNode, Referencables referencables) {
+  private static Function loadFunction(ModulePath path, FuncNode funcNode,
+      Referencables referencables) {
     ImmutableList<Item> parameters = loadParameters(funcNode, referencables);
     ExpressionLoader loader = new ExpressionLoader(referencables,
         parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
     return new Function(
         funcNode.resultType().get(),
+        path,
         funcNode.name(),
         parameters,
         loader.bodyExpression(funcNode),

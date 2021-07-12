@@ -27,6 +27,7 @@ import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.Struct;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
@@ -56,7 +57,7 @@ import org.smoothbuild.lang.parse.ast.ValueNode;
 import com.google.common.collect.ImmutableList;
 
 public class InferTypes {
-  public static List<Log> inferTypes(Ast ast, Definitions imported) {
+  public static List<Log> inferTypes(ModulePath path, Ast ast, Definitions imported) {
     var logger = new MemoryLogger();
     new AstVisitor() {
       @Override
@@ -71,7 +72,7 @@ public class InferTypes {
             .stream()
             .map(f -> new Item(f.type().get(), f.name(), empty()))
             .collect(toImmutableList());
-        struct.setStruct(Optional.of(new Struct(struct.name(), fields, struct.location())));
+        struct.setStruct(Optional.of(new Struct(path, struct.name(), fields, struct.location())));
       }
 
       @Override

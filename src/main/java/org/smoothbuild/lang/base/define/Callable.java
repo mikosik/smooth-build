@@ -20,8 +20,9 @@ public abstract class Callable extends Referencable {
   private final Type resultType;
   private final ImmutableList<Item> parameters;
 
-  public Callable(Type resultType, String name, ImmutableList<Item> parameters, Location location) {
-    super(functionType(resultType, parameters), name, location);
+  public Callable(Type resultType, ModulePath modulePath, String name,
+      ImmutableList<Item> parameters, Location location) {
+    super(functionType(resultType, parameters), modulePath, name, location);
     this.resultType = requireNonNull(resultType);
     this.parameters = requireNonNull(parameters);
   }

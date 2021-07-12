@@ -14,7 +14,6 @@ public record Definitions(
     return new Definitions(ImmutableList.of(), ImmutableMap.of(), ImmutableMap.of());
   }
 
-
   public Definitions withModule(SModule module) {
     return new Definitions(
         concat(modules, module),
