@@ -1,17 +1,14 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.util.Lists.concat;
-
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public record Definitions(
-    ImmutableList<SModule> modules,
+    ImmutableMap<ModulePath, SModule> modules,
     ImmutableMap<String, Defined> types,
     ImmutableMap<String, Referencable> referencables) {
 
   public static Definitions empty() {
-    return new Definitions(ImmutableList.of(), ImmutableMap.of(), ImmutableMap.of());
+    return new Definitions(ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of());
   }
 
   public Definitions withModule(SModule module) {
@@ -26,5 +23,13 @@ public record Definitions(
             .putAll(module.referencables())
             .build()
     );
+  }
+
+  private static ImmutableMap<ModulePath, SModule> concat(
+      ImmutableMap<ModulePath, SModule> modules, SModule module) {
+    var builder = ImmutableMap.<ModulePath, SModule>builder();
+    builder.putAll(modules);
+    builder.put(module.path(), module);
+    return builder.build();
   }
 }
