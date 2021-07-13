@@ -7,6 +7,9 @@ import org.smoothbuild.lang.base.type.Type;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 
+/**
+ * This class is thread-safe.
+ */
 public record TaskSupplier(Type type, Supplier<Task> supplier) {
   public TaskSupplier(Type type, Supplier<Task> supplier) {
     this.type = type;
