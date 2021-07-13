@@ -14,7 +14,6 @@ import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Lists.zip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,6 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundedVariables;
-import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -70,7 +68,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSupplier>, Task> {
+public class ExpressionToTaskConverter
+    implements ExpressionVisitor<Scope<TaskSupplier>, TaskSupplier> {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final JavaCodeLoader javaCodeLoader;
@@ -86,39 +85,44 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, FieldReadExpression expression) {
-    ItemSignature field = expression.field();
-    StructType structType = (StructType) expression.expression().type();
-    Algorithm algorithm = new ReadTupleElementAlgorithm(
-        structType.fieldIndex(field.name().get()), field.type().visit(toSpecConverter));
-    List<Task> children = childrenTasks(scope, expression.expression());
-    return new NormalTask(CALL, field.type(), "." + field.name().get(), algorithm, children,
-        expression.location());
+  public TaskSupplier visit(Scope<TaskSupplier> scope, FieldReadExpression expression) {
+    Type type = expression.field().type();
+    return new TaskSupplier(type, expression.location(), () -> {
+      StructType structType = (StructType) expression.expression().type();
+      String name = expression.field().name().get();
+      Algorithm algorithm = new ReadTupleElementAlgorithm(
+          structType.fieldIndex(name), type.visit(toSpecConverter));
+      List<TaskSupplier> children = childrenTasks(scope, expression.expression());
+      return new NormalTask(CALL, type, "." + name, algorithm, children, expression.location());
+    });
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, ReferenceExpression reference) {
+  public TaskSupplier visit(Scope<TaskSupplier> scope, ReferenceExpression reference) {
     Value value = (Value) definitions.referencables().get(reference.name());
     if (value.body() instanceof NativeExpression nativ) {
-      Algorithm algorithm = new CallNativeAlgorithm(
-          javaCodeLoader, value.type().visit(toSpecConverter), value, nativ.isPure());
-      Task nativeCode = visit(scope, nativ);
-      return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
-          list(nativeCode), reference.location());
+      return new TaskSupplier(value.type(), reference.location(), () -> {
+        Algorithm algorithm = new CallNativeAlgorithm(
+            javaCodeLoader, value.type().visit(toSpecConverter), value, nativ.isPure());
+        TaskSupplier nativeCode = visit(scope, nativ);
+        return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
+            list(nativeCode), reference.location());
+      });
     } else {
-      Task task = value.body().visit(scope, this);
-      Task convertedTask = convertIfNeeded(task, value.type());
-      return new VirtualTask(VALUE, value.extendedName(), convertedTask, reference.location());
+      return new TaskSupplier(value.type(), reference.location(), () -> {
+        TaskSupplier taskSupplier = convertIfNeeded(value.body().visit(scope, this), value.type());
+        return new VirtualTask(VALUE, value.extendedName(), taskSupplier, reference.location());
+      });
     }
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, ParameterReferenceExpression expression) {
-    return scope.get(expression.name()).getTask();
+  public TaskSupplier visit(Scope<TaskSupplier> scope, ParameterReferenceExpression expression) {
+    return scope.get(expression.name());
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, CallExpression expression) {
+  public TaskSupplier visit(Scope<TaskSupplier> scope, CallExpression expression) {
     // TODO This cast is temporary as for now CallExpression is always created with
     //  ReferenceExpression
     String name = ((ReferenceExpression) expression.callable()).name();
@@ -129,27 +133,33 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
       Type actualResultType = function.resultType().mapVariables(variables, LOWER);
 
       if (function.body() instanceof NativeExpression nativ) {
-        var arguments = childrenTasks(scope, expression.arguments());
-        return taskForNativeFunction(scope, arguments, function, nativ, variables, actualResultType,
-            expression.location());
+        return new TaskSupplier(actualResultType, expression.location(), () -> {
+          var arguments = childrenTasks(scope, expression.arguments());
+          return taskForNativeFunction(scope, arguments, function, nativ, variables,
+              actualResultType, expression.location());
+        });
       } else {
-        var arguments = childrenTaskSuppliers(scope, expression.arguments(), argumentTypes);
-        return taskForDefinedFunction(
-            scope, actualResultType, function, arguments, expression.location());
+        return new TaskSupplier(actualResultType, expression.location(), () -> {
+          var arguments = childrenTasks(scope, expression.arguments());
+          return taskForDefinedFunction(
+              scope, actualResultType, function, arguments, expression.location());
+        });
       }
     } else if (callable instanceof Constructor constructor) {
       Type resultType = constructor.type().resultType();
-      TupleSpec tupleSpec = (TupleSpec) resultType.visit(toSpecConverter);
-      List<Task> dependencies = childrenTasks(scope, expression.arguments());
-      return taskForConstructorCall(CALL, resultType, tupleSpec, constructor.extendedName(),
-          dependencies, expression.location());
+      return new TaskSupplier(resultType, expression.location(), () -> {
+        TupleSpec tupleSpec = (TupleSpec) resultType.visit(toSpecConverter);
+        List<TaskSupplier> dependencies = childrenTasks(scope, expression.arguments());
+        return taskForConstructorCall(CALL, resultType, tupleSpec, constructor.extendedName(),
+            dependencies, expression.location());
+      });
     } else {
       throw new RuntimeException("Unexpected case: " + callable.getClass().getCanonicalName());
     }
   }
 
   private Task taskForConstructorCall(TaskKind taskKind, Type resultType, TupleSpec tupleSpec,
-      String name, List<Task> dependencies, Location location) {
+      String name, List<TaskSupplier> dependencies, Location location) {
     Algorithm algorithm = new CreateTupleAlgorithm(tupleSpec);
     return new NormalTask(taskKind, resultType, name, algorithm, dependencies, location);
   }
@@ -157,15 +167,14 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
       Function function, List<TaskSupplier> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
-    Task callTask = function.body().visit(newScope, this);
-    Task task = convertIfNeeded(callTask, actualResultType);
-    return new VirtualTask(CALL, function.extendedName(), task, location);
+    var taskSupplier = convertIfNeeded(function.body().visit(newScope, this), actualResultType);
+    return new VirtualTask(CALL, function.extendedName(), taskSupplier, location);
   }
 
-  private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<Task> arguments,
+  private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<TaskSupplier> arguments,
       Function function, NativeExpression nativ, BoundedVariables variables, Type actualResultType,
       Location location) {
-    Task nativeCode = visit(scope, nativ);
+    TaskSupplier nativeCode = visit(scope, nativ);
     Algorithm algorithm = new CallNativeAlgorithm(
         javaCodeLoader, actualResultType.visit(toSpecConverter), function, nativ.isPure());
     var actualParameterTypes = map(
@@ -196,8 +205,9 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     }
   }
 
-  private List<Task> convertedArguments(List<Type> actualParameterTypes, List<Task> arguments) {
-    List<Task> result = new ArrayList<>();
+  private List<TaskSupplier> convertedArguments(
+      List<Type> actualParameterTypes, List<TaskSupplier> arguments) {
+    List<TaskSupplier> result = new ArrayList<>();
     for (int i = 0; i < arguments.size(); i++) {
       Type type = actualParameterTypes.get(i);
       result.add(convertIfNeeded(arguments.get(i), type));
@@ -206,83 +216,89 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, ArrayLiteralExpression expression) {
-    List<Task> elements = childrenTasks(scope, expression.elements());
+  public TaskSupplier visit(Scope<TaskSupplier> scope, ArrayLiteralExpression expression) {
+    List<TaskSupplier> elements = childrenTasks(scope, expression.elements());
     ArrayType actualType = arrayType(elements).orElse(expression.type());
 
-    Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
-    List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
-    return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
-        expression.location());
+    return new TaskSupplier(actualType, expression.location(), () -> {
+      Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
+      var convertedElements = convertedElements(actualType.elemType(), elements);
+      return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
+          expression.location());
+    });
   }
 
-  private List<Task> convertedElements(Type type, List<Task> elements) {
+  private ImmutableList<TaskSupplier> convertedElements(Type type, List<TaskSupplier> elements) {
     return map(elements, t -> convertIfNeeded(t, type));
   }
 
-  private Optional<ArrayType> arrayType(List<Task> elements) {
+  private Optional<ArrayType> arrayType(List<TaskSupplier> elements) {
     return elements
         .stream()
-        .map(Task::type)
+        .map(TaskSupplier::type)
         .reduce((typeA, typeB) -> typeA.mergeWith(typeB, UPPER))
         .map(Types::array);
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, BlobLiteralExpression expression) {
-    var blobSpec = toSpecConverter.visit(blob());
-    var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
-    return new NormalTask(
-        LITERAL, blob(), algorithm.shortedLiteral(), algorithm, list(), expression.location());
+  public TaskSupplier visit(Scope<TaskSupplier> scope, BlobLiteralExpression expression) {
+    return new TaskSupplier(blob(), expression.location(), () -> {
+      var blobSpec = toSpecConverter.visit(blob());
+      var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
+      return new NormalTask(
+          LITERAL, blob(), algorithm.shortedLiteral(), algorithm, list(), expression.location());
+    });
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, StringLiteralExpression expression) {
+  public TaskSupplier visit(Scope<TaskSupplier> scope, StringLiteralExpression expression) {
     return fixedStringTask(expression.string(), expression.location());
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> context, NativeExpression expression) {
-    FilePath nativeFile = expression.nativeFile();
-    var contentAlgorithm = new ReadFileContentAlgorithm(
-        toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fileResolver);
-
-    String name = "_native_module('" + nativeFile.toString() + "')";
-    var contentTask = new NormalTask(
-        NATIVE, blob(), name, contentAlgorithm, list(), expression.location());
-    var methodPathTask = fixedStringTask(expression.path(), expression.location());
-
-    return taskForConstructorCall(
-        NATIVE, expression.type(), toSpecConverter.nativeCodeSpec(), "_native_function",
-        list(methodPathTask, contentTask), expression.location());
+  public TaskSupplier visit(Scope<TaskSupplier> context, NativeExpression expression) {
+    TaskSupplier contentTask = nativeBlobTask(expression);
+    TaskSupplier methodPathTask = fixedStringTask(expression.path(), expression.location());
+    return new TaskSupplier(expression.type(), expression.location(), () -> {
+      ImmutableList<TaskSupplier> dependencies = list(methodPathTask, contentTask);
+      return taskForConstructorCall(NATIVE, expression.type(), toSpecConverter.nativeCodeSpec(),
+          "_native_function", dependencies, expression.location());
+    });
   }
 
-  private NormalTask fixedStringTask(String string, Location location) {
-    var stringType = toSpecConverter.visit(string());
-    var algorithm = new FixedStringAlgorithm(stringType, string);
-    String name = algorithm.shortedString();
-    return new NormalTask(LITERAL, string(), name, algorithm, list(), location);
+  private TaskSupplier nativeBlobTask(NativeExpression expression) {
+    return new TaskSupplier(blob(), expression.location(), () -> {
+      FilePath nativeFile = expression.nativeFile();
+      var contentAlgorithm = new ReadFileContentAlgorithm(
+          toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fileResolver);
+      String name = "_native_module('" + nativeFile.toString() + "')";
+      return new NormalTask(NATIVE, blob(), name, contentAlgorithm, list(), expression.location());
+    });
   }
 
-  private ImmutableList<TaskSupplier> childrenTaskSuppliers(Scope<TaskSupplier> scope,
-      ImmutableList<Expression> expressions, ImmutableList<Type> argumentTypes) {
-    return zip(expressions, argumentTypes,
-        (e, t) -> new TaskSupplier(t, () -> e.visit(scope, this)));
+  private TaskSupplier fixedStringTask(String string, Location location) {
+    return new TaskSupplier(string(), location, () -> {
+      var stringType = toSpecConverter.visit(string());
+      var algorithm = new FixedStringAlgorithm(stringType, string);
+      String name = algorithm.shortedString();
+      return new NormalTask(LITERAL, string(), name, algorithm, list(), location);
+    });
   }
 
-  private List<Task> childrenTasks(Scope<TaskSupplier> scope, List<Expression> children) {
-    ImmutableList.Builder<Task> builder = ImmutableList.builder();
+  private List<TaskSupplier> childrenTasks(Scope<TaskSupplier> scope, List<Expression> children) {
+    ImmutableList.Builder<TaskSupplier> builder = ImmutableList.builder();
     for (Expression child : children) {
       builder.add(child.visit(scope, this));
     }
     return builder.build();
   }
 
-  private ImmutableList<Task> childrenTasks(Scope<TaskSupplier> scope, Expression expression) {
+  private ImmutableList<TaskSupplier> childrenTasks(Scope<TaskSupplier> scope,
+      Expression expression) {
     return list(expression.visit(scope, this));
   }
 
-  private Task convertIfNeeded(Task task, Type requiredType) {
+  private TaskSupplier convertIfNeeded(TaskSupplier task, Type requiredType) {
     if (task.type().equals(requiredType)) {
       return task;
     } else {
@@ -290,11 +306,13 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     }
   }
 
-  private NormalTask convert(Type requiredType, Task task) {
-    String description = requiredType.name() + "<-" + task.type().name();
-    Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(toSpecConverter));
-    List<Task> dependencies = list(task);
-    return new NormalTask(
-        CONVERSION, requiredType, description, algorithm, dependencies, task.location());
+  private TaskSupplier convert(Type requiredType, TaskSupplier task) {
+    return new TaskSupplier(requiredType, task.location(), () -> {
+      String description = requiredType.name() + "<-" + task.type().name();
+      Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(toSpecConverter));
+      List<TaskSupplier> dependencies = list(task);
+      return new NormalTask(
+          CONVERSION, requiredType, description, algorithm, dependencies, task.location());
+    });
   }
 }

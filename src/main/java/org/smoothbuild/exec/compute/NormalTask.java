@@ -10,6 +10,7 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
+import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -19,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 
 public class NormalTask extends ComputableTask {
   public NormalTask(TaskKind kind, Type type, String name, Algorithm algorithm,
-      List<? extends Task> dependencies, Location location) {
+      List<? extends TaskSupplier> dependencies, Location location) {
     super(kind, type, name, algorithm, dependencies, location);
   }
 
@@ -27,7 +28,7 @@ public class NormalTask extends ComputableTask {
   public Feeder<Obj> startComputation(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
     ImmutableList<Feeder<Obj>> dependencyResults =
-        map(dependencies(), ch -> ch.startComputation(worker));
+        map(dependencies(), d -> d.getTask().startComputation(worker));
     runWhenAllAvailable(dependencyResults,
         () -> worker.enqueueComputation(this, toInput(dependencyResults), result));
     return result;
