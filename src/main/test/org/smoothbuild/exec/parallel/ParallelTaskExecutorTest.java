@@ -18,6 +18,7 @@ import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,6 +42,7 @@ import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -294,8 +296,8 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private static Task task(Algorithm algorithm, List<Task> dependencies) {
-    return new NormalTask(
-        CALL, STRING, "task-name", algorithm, dependencies, internal());
+    var suppliers = map(dependencies, d -> new TaskSupplier(d.type(), d.location(), () -> d));
+    return new NormalTask(CALL, STRING, "task-name", algorithm, suppliers, internal());
   }
 
   private static Output toStr(NativeApi nativeApi, int i) {

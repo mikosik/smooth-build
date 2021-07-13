@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
+import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.io.fs.space.Space;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
@@ -20,10 +21,10 @@ public abstract class Task {
   private final TaskKind kind;
   private final Type type;
   private final String name;
-  protected final ImmutableList<Task> dependencies;
+  protected final ImmutableList<TaskSupplier> dependencies;
   protected final Location location;
 
-  public Task(TaskKind kind, Type type, String name, List<? extends Task> dependencies,
+  public Task(TaskKind kind, Type type, String name, List<? extends TaskSupplier> dependencies,
       Location location) {
     this.kind = kind;
     this.type = type;
@@ -40,7 +41,7 @@ public abstract class Task {
     return type;
   }
 
-  public ImmutableList<Task> dependencies() {
+  public ImmutableList<TaskSupplier> dependencies() {
     return dependencies;
   }
 

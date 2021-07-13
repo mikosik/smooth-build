@@ -15,6 +15,7 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
+import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -25,7 +26,7 @@ import com.google.common.collect.ImmutableList;
 public class IfTask extends ComputableTask {
   public static final String IF_FUNCTION_NAME = "if";
 
-  public IfTask(Type type, Algorithm algorithm, List<? extends Task> dependencies,
+  public IfTask(Type type, Algorithm algorithm, List<? extends TaskSupplier> dependencies,
       Location location) {
     super(CALL, type, IF_FUNCTION_NAME + PARENTHESES, algorithm, dependencies, location);
   }
@@ -65,18 +66,18 @@ public class IfTask extends ComputableTask {
   }
 
   private Task nativeCodeTask() {
-    return dependencies().get(0);
+    return dependencies().get(0).getTask();
   }
 
   private Task conditionTask() {
-    return dependencies().get(1);
+    return dependencies().get(1).getTask();
   }
 
   private Task thenTask() {
-    return dependencies().get(2);
+    return dependencies().get(2).getTask();
   }
 
   private Task elseTask() {
-    return dependencies().get(3);
+    return dependencies().get(3).getTask();
   }
 }

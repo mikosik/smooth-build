@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
+import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
@@ -11,9 +12,9 @@ import org.smoothbuild.util.concurrent.FeedingConsumer;
 import com.google.common.collect.ImmutableList;
 
 public class VirtualTask extends Task {
-  private final Task task;
+  private final TaskSupplier task;
 
-  public VirtualTask(TaskKind kind, String name, Task task, Location location) {
+  public VirtualTask(TaskKind kind, String name, TaskSupplier task, Location location) {
     super(kind, task.type(), name, ImmutableList.of(task), location);
     this.task = task;
   }
@@ -21,7 +22,7 @@ public class VirtualTask extends Task {
   @Override
   public Feeder<Obj> startComputation(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
-    task.startComputation(worker).addConsumer(
+    task.getTask().startComputation(worker).addConsumer(
         obj -> {
           worker.reporter().print(this, ResultSource.GROUP, List.of());
           result.accept(obj);

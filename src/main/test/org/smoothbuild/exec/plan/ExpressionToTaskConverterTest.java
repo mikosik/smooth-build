@@ -33,7 +33,7 @@ public class ExpressionToTaskConverterTest extends TestingContext {
     Expression blobLiteral = TestingLang.blob(0x22);
     Function function = function(BLOB, "myFunction", TestingLang.blob(0x33), parameter(BLOB, "p"));
     CallExpression call = call(11, BLOB, function, blobLiteral);
-    Task rootTask = converter(function).visit(new Scope<>(Map.of()), call);
+    Task rootTask = converter(function).visit(new Scope<>(Map.of()), call).getTask();
 
     assertThat(findTasks(rootTask, "0x22"))
         .hasSize(0);
@@ -52,7 +52,8 @@ public class ExpressionToTaskConverterTest extends TestingContext {
 
     CallExpression myFunctionCall = call(BLOB, myFunction, TestingLang.blob(0x17));
 
-    Task task = converter(myFunction, twoBlobsEater).visit(new Scope<>(Map.of()), myFunctionCall);
+    Task task = converter(myFunction, twoBlobsEater).visit(new Scope<>(Map.of()), myFunctionCall)
+        .getTask();
 
     List<Task> found = findTasks(task, "0x17");
     assertThat(found)
@@ -78,6 +79,6 @@ public class ExpressionToTaskConverterTest extends TestingContext {
     if (task.name().equals(name)) {
       result.add(task);
     }
-    task.dependencies().forEach(t -> findTasksRecursive(t, name, result));
+    task.dependencies().forEach(t -> findTasksRecursive(t.getTask(), name, result));
   }
 }
