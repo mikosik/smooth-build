@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.compute;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.util.Lists.skipFirst;
 
 import java.util.List;
 
@@ -16,8 +16,6 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
-
-import com.google.common.collect.ImmutableList;
 
 public class CallTask extends Task {
   private final BoundedVariables variables;
@@ -43,11 +41,8 @@ public class CallTask extends Task {
 
   private void onFunctionAvailable(Tuple functionTuple, Worker worker, FeedingConsumer<Obj> result) {
     String functionName = FunctionTuple.name(functionTuple).jValue();
-    ImmutableList<TaskSupplier> arguments = dependencies().stream()
-        .skip(1)
-        .collect(toImmutableList());
-    Task task = expressionToTaskConverter.taskForCall(scope, variables, type(), functionName,
-        arguments, location());
+    Task task = expressionToTaskConverter.taskForCall(
+        scope, variables, type(), functionName, skipFirst(dependencies), location());
     task.startComputation(worker).addConsumer(result);
   }
 }
