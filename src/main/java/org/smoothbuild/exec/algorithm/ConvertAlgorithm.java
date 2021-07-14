@@ -25,10 +25,19 @@ public class ConvertAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    assertThat(input.objects().size() == 1);
+    if (input.objects().size() != 1) {
+      throw newBuildBrokenException("Expected input size == 1 but was " + input.objects().size());
+    }
     Obj obj = input.objects().get(0);
-    assertThat(!outputSpec().equals(obj.spec()));
+    assertThatSpecsAreNotEqual(obj);
     return new Output(convert(outputSpec(), obj, nativeApi), nativeApi.messages());
+  }
+
+  private void assertThatSpecsAreNotEqual(Obj obj) {
+    if (outputSpec().equals(obj.spec())) {
+      throw newBuildBrokenException(
+          "Expected non equal specs but got " + outputSpec() + " " + obj.spec());
+    }
   }
 
   private static Obj convert(Spec destinationSpec, Obj obj, NativeApi nativeApi) {
@@ -37,7 +46,7 @@ public class ConvertAlgorithm extends Algorithm {
     } else if (obj instanceof Array array) {
       return convertArray(destinationSpec, array, nativeApi);
     }
-    throw newBuildBrokenException();
+    throw newBuildBrokenException("Expected `Array` spec but got " + obj.getClass());
   }
 
   private static Obj convertArray(Spec destinationSpec, Array array, NativeApi nativeApi) {
@@ -49,13 +58,8 @@ public class ConvertAlgorithm extends Algorithm {
     return arrayBuilder.build();
   }
 
-  private static void assertThat(boolean expression) {
-    if (!expression) {
-      throw newBuildBrokenException();
-    }
-  }
-
-  private static RuntimeException newBuildBrokenException() {
-    return new RuntimeException("This should not happen. It means smooth build release is broken.");
+  private static RuntimeException newBuildBrokenException(String message) {
+    return new RuntimeException(
+        "This should not happen. It means smooth build release is broken." + message);
   }
 }
