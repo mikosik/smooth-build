@@ -3,6 +3,7 @@ package org.smoothbuild.exec.algorithm;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callableReferenceAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
@@ -36,9 +37,10 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
     hashes.add(readFileContentAlgorithmHash(filePath("abc")));
+    hashes.add(callableReferenceAlgorithmHash(Hash.of(""), "function-name"));
 
     assertThat(hashes.size())
-        .isEqualTo(8);
+        .isEqualTo(9);
   }
 
   @Test
@@ -84,5 +86,17 @@ public class AlgorithmHashesTest extends TestingContext {
   public void read_file_content_algorithm_has_different_hash_for_different_modules() {
     assertThat(readFileContentAlgorithmHash(filePath("abc")))
         .isNotEqualTo(readFileContentAlgorithmHash(filePath("def")));
+  }
+
+  @Test
+  public void callable_reference_algorithm_has_different_hash_for_different_modules() {
+    assertThat(callableReferenceAlgorithmHash(Hash.of(123), "function-name"))
+        .isNotEqualTo(callableReferenceAlgorithmHash(Hash.of(345), "function-name"));
+  }
+
+  @Test
+  public void callable_reference_algorithm_has_different_hash_for_different_function_names() {
+    assertThat(callableReferenceAlgorithmHash(Hash.of(123), "function-name"))
+        .isNotEqualTo(callableReferenceAlgorithmHash(Hash.of(123), "other-name"));
   }
 }
