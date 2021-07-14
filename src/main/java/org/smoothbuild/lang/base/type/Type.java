@@ -154,7 +154,7 @@ public abstract class Type {
 
   public Type strip() {
     if (this instanceof FunctionType || this instanceof ArrayType) {
-      return typeConstructor.construct(stripTypes(this.covariants), stripTypes(contravariants));
+      return typeConstructor.construct(stripTypes(covariants), stripTypes(contravariants));
     } else {
       return this;
     }
