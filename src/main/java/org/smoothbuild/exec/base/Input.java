@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.base;
 
-import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.util.Iterables.map;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;
@@ -18,6 +18,6 @@ public record Input(ImmutableList<Obj> objects, Hash hash) {
   }
 
   private static Hash calculateHash(Iterable<? extends Obj> objects) {
-    return Hash.of(stream(objects).map(Obj::hash).toArray(Hash[]::new));
+    return Hash.of(map(objects, Obj::hash));
   }
 }

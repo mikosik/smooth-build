@@ -133,7 +133,7 @@ public class RuntimeController {
         logger.error("Cannot read file '" + filePath + "'.");
       }
     }
-    Hash hash = Hash.of(hashes.toArray(new Hash[] {}));
+    Hash hash = Hash.of(hashes);
     return maybeValueAndLogs(hash, logger);
   }
 }

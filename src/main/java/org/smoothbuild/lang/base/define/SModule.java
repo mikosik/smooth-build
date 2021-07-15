@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base.define;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.map;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.type.Type;
@@ -22,7 +23,7 @@ public record SModule(
     ModulePath modulePath = new ModulePath("internal-module");
     var types = BASE_TYPES.stream()
         .collect(toImmutableMap(Type::name, t -> new BaseTypeDefinition(modulePath, t)));
-    Hash hash = calculateModuleHash(modulePath, Hash.of(new Hash[] {}), list());
+    Hash hash = calculateModuleHash(modulePath, Hash.of(list()), list());
     return new SModule(modulePath, hash, null, list(), types, ImmutableMap.of());
   }
 
@@ -35,9 +36,6 @@ public record SModule(
   }
 
   private static Hash referencedModulesHash(ImmutableList<SModule> modules) {
-    Hash[] hashes = modules.stream()
-        .map(SModule::hash)
-        .toArray(Hash[]::new);
-    return Hash.of(hashes);
+    return Hash.of(map(modules, SModule::hash));
   }
 }

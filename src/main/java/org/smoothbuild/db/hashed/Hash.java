@@ -1,11 +1,13 @@
 package org.smoothbuild.db.hashed;
 
+import static java.util.Arrays.asList;
 import static okio.Okio.blackhole;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
@@ -63,6 +65,10 @@ public class Hash extends ByteString {
    */
 
   public static Hash of(Hash... hashes) {
+    return Hash.of(asList(hashes));
+  }
+
+  public static Hash of(List<Hash> hashes) {
     Hasher hasher = function().newHasher();
     for (Hash hash : hashes) {
       hasher.putBytes(hash.toByteArray());
