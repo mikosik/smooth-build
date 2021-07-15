@@ -1,59 +1,62 @@
 package org.smoothbuild.lang.base.define;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
+import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
+import static org.smoothbuild.lang.expr.Expression.toTypes;
 
-import java.util.Objects;
-
+import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
 
 /**
- * This class is immutable.
+ * This class and all its subclasses are immutable.
  */
-public class Function extends Callable {
-  private final Expression body;
+public abstract class Function extends Referencable {
+  public static final String PARENTHESES = "()";
+  private final Type resultType;
+  private final ImmutableList<Item> parameters;
 
   public Function(Type resultType, ModulePath modulePath, String name,
-      ImmutableList<Item> parameters, Expression body, Location location) {
-    super(resultType, modulePath, name, parameters, location);
-    this.body = requireNonNull(body);
+      ImmutableList<Item> parameters, Location location) {
+    super(functionType(resultType, parameters), modulePath, name, location);
+    this.resultType = requireNonNull(resultType);
+    this.parameters = requireNonNull(parameters);
   }
 
-  public Expression body() {
-    return body;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (this == object) {
-      return true;
-    }
-    return object instanceof Function that
-        && this.resultType().equals(that.resultType())
-        && this.modulePath().equals(that.modulePath())
-        && this.name().equals(that.name())
-        && this.parameters().equals(that.parameters())
-        && this.body.equals(that.body)
-        && this.location().equals(that.location());
+  private static FunctionType functionType(Type resultType, ImmutableList<Item> parameters) {
+    return new FunctionType(resultType, toItemSignatures(parameters));
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), parameters(), body, location());
+  public FunctionType type() {
+    return (FunctionType) super.type();
   }
 
   @Override
-  public String toString() {
-    return "Function(`" + resultType() + "(" + parametersToString() + ")" + " = " + body + "`)";
+  public String extendedName() {
+    return name() + PARENTHESES;
   }
 
-  private String parametersToString() {
-    return parameters()
-        .stream()
-        .map(Object::toString)
-        .collect(joining(", "));
+  public Type resultType() {
+    return resultType;
+  }
+
+  public ImmutableList<Item> parameters() {
+    return parameters;
+  }
+
+  public Type inferResultType(ImmutableList<Expression> arguments) {
+    var variableToBounds =
+        inferVariableBounds(type().parameterTypes(), toTypes(arguments), LOWER);
+    return resultType().mapVariables(variableToBounds, LOWER);
+  }
+
+  public boolean canBeCalledArgless() {
+    return parameters.stream()
+        .allMatch(p -> p.defaultValue().isPresent());
   }
 }

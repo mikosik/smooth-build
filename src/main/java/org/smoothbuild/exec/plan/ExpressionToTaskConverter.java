@@ -25,12 +25,12 @@ import javax.inject.Inject;
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
-import org.smoothbuild.exec.algorithm.CallableReferenceAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
+import org.smoothbuild.exec.algorithm.FunctionReferenceAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadFileContentAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.compute.CallTask;
@@ -41,12 +41,12 @@ import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.exec.compute.VirtualTask;
 import org.smoothbuild.exec.java.JavaCodeLoader;
 import org.smoothbuild.io.fs.space.FileResolver;
-import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundedVariables;
@@ -118,13 +118,13 @@ public class ExpressionToTaskConverter
         });
       }
     } else {
-      var callable = (Callable) referencable;
-      var type = callable.type().strip();
+      var function = (Function) referencable;
+      var type = function.type().strip();
       return new TaskSupplier(type, reference.location(), () -> {
-        var module = definitions.modules().get(callable.modulePath());
-        var algorithm = new CallableReferenceAlgorithm(
-            callable, module, toSpecConverter.functionSpec());
-        return new NormalTask(FUNCTION_REFERENCE, type, callable.extendedName(),
+        var module = definitions.modules().get(function.modulePath());
+        var algorithm = new FunctionReferenceAlgorithm(
+            function, module, toSpecConverter.functionSpec());
+        return new NormalTask(FUNCTION_REFERENCE, type, function.extendedName(),
             algorithm, list(), reference.location());
       });
     }
@@ -138,35 +138,35 @@ public class ExpressionToTaskConverter
   @Override
   public TaskSupplier visit(Scope<TaskSupplier> scope, CallExpression expression) {
     var location = expression.location();
-    var callable = expression.callable().visit(scope, this);
+    var function = expression.function().visit(scope, this);
     var arguments = childrenTasks(scope, expression.arguments());
     var argumentTypes = map(arguments, TaskSupplier::type);
-    var functionType = (FunctionType) callable.type();
+    var functionType = (FunctionType) function.type();
     var variables = inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
     var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
 
     return new TaskSupplier(actualResultType, location, () -> new CallTask(CALL, actualResultType,
-        "_function_call", concat(callable, arguments), location, variables, scope, this));
+        "_function_call", concat(function, arguments), location, variables, scope, this));
   }
 
   public Task taskForCall(Scope<TaskSupplier> scope, BoundedVariables variables,
       Type actualResultType, String functionName, ImmutableList<TaskSupplier> arguments,
       Location location) {
-    var callable = (Callable) definitions.referencables().get(functionName);
-    if (callable instanceof Function function) {
-      if (function.body() instanceof NativeExpression nativ) {
-        return taskForNativeFunction(scope, arguments, function, nativ, variables,
+    var function = (Function) definitions.referencables().get(functionName);
+    if (function instanceof RealFunction realFunction) {
+      if (realFunction.body() instanceof NativeExpression nativ) {
+        return taskForNativeFunction(scope, arguments, realFunction, nativ, variables,
             actualResultType, location);
       } else {
-        return taskForDefinedFunction(scope, actualResultType, function, arguments, location);
+        return taskForDefinedFunction(scope, actualResultType, realFunction, arguments, location);
       }
-    } else if (callable instanceof Constructor constructor) {
+    } else if (function instanceof Constructor constructor) {
       var resultType = constructor.type().resultType();
       var tupleSpec = (TupleSpec) resultType.visit(toSpecConverter);
       return taskForConstructorCall(CALL, resultType, tupleSpec, constructor.extendedName(),
           arguments, location);
     } else {
-      throw new RuntimeException("Unexpected case: " + callable.getClass().getCanonicalName());
+      throw new RuntimeException("Unexpected case: " + function.getClass().getCanonicalName());
     }
   }
 
@@ -177,14 +177,14 @@ public class ExpressionToTaskConverter
   }
 
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
-      Function function, List<TaskSupplier> arguments, Location location) {
+      RealFunction function, List<TaskSupplier> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     var taskSupplier = convertIfNeeded(actualResultType, function.body().visit(newScope, this));
     return new VirtualTask(CALL, function.extendedName(), taskSupplier, location);
   }
 
   private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<TaskSupplier> arguments,
-      Function function, NativeExpression nativ, BoundedVariables variables, Type actualResultType,
+      RealFunction function, NativeExpression nativ, BoundedVariables variables, Type actualResultType,
       Location location) {
     var nativeCode = visit(scope, nativ);
     var algorithm = new CallNativeAlgorithm(

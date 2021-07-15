@@ -2,7 +2,7 @@ package org.smoothbuild.exec.compute;
 
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
-import static org.smoothbuild.lang.base.define.Callable.PARENTHESES;
+import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 

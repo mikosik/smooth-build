@@ -16,7 +16,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.f;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.RealFunction;
 
 public class TrailingCommaTest {
   @Nested
@@ -162,7 +162,7 @@ public class TrailingCommaTest {
   class argument_list {
     @Test
     public void can_have_trailing_comma() {
-      Function function = function(2, BLOB, "myFunction", "Impl.met", parameter(BLOB, "blob"));
+      RealFunction function = function(2, BLOB, "myFunction", "Impl.met", parameter(BLOB, "blob"));
       module(functionCall("0x07,"))
           .loadsSuccessfully()
           .containsReferencable(value(3, BLOB, "result", call(3, BLOB, function, blob(3, 7))));

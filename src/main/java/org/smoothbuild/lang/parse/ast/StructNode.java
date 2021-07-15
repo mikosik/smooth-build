@@ -47,7 +47,7 @@ public class StructNode extends NamedNode {
     setType(struct.map(Defined::type));
   }
 
-  public class ConstructorNode extends CallableNode {
+  public class ConstructorNode extends FunctionNode {
     public ConstructorNode(String structName, List<ItemNode> params, Location location) {
       super(
           Optional.of(new TypeNode(structName, location)),

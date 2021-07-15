@@ -6,10 +6,10 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
+import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
@@ -31,8 +31,8 @@ import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FieldReadNode;
-import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
+import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
@@ -44,8 +44,8 @@ import com.google.common.collect.ImmutableMap;
 public class LoadReferencable {
   public static Referencable loadReferencable(ModulePath path, ReferencableNode referencableNode,
       Referencables referencables) {
-    if (referencableNode instanceof FuncNode funcNode) {
-      return loadFunction(path, funcNode, referencables);
+    if (referencableNode instanceof RealFuncNode realFuncNode) {
+      return loadFunction(path, realFuncNode, referencables);
     } else {
       return loadValue(path, referencableNode, referencables);
     }
@@ -62,24 +62,24 @@ public class LoadReferencable {
         referencableNode.location());
   }
 
-  private static Function loadFunction(ModulePath path, FuncNode funcNode,
+  private static RealFunction loadFunction(ModulePath path, RealFuncNode realFuncNode,
       Referencables referencables) {
-    ImmutableList<Item> parameters = loadParameters(funcNode, referencables);
+    ImmutableList<Item> parameters = loadParameters(realFuncNode, referencables);
     ExpressionLoader loader = new ExpressionLoader(referencables,
         parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
-    return new Function(
-        funcNode.resultType().get(),
+    return new RealFunction(
+        realFuncNode.resultType().get(),
         path,
-        funcNode.name(),
+        realFuncNode.name(),
         parameters,
-        loader.bodyExpression(funcNode),
-        funcNode.location());
+        loader.bodyExpression(realFuncNode),
+        realFuncNode.location());
   }
 
   private static ImmutableList<Item> loadParameters(
-      FuncNode funcNode, Referencables referencables) {
+      RealFuncNode realFuncNode, Referencables referencables) {
     ExpressionLoader parameterLoader = new ExpressionLoader(referencables, ImmutableMap.of());
-    return map(funcNode.params(), parameterLoader::createParameter);
+    return map(realFuncNode.params(), parameterLoader::createParameter);
   }
 
   private static class ExpressionLoader {
@@ -147,20 +147,20 @@ public class LoadReferencable {
     }
 
     private Expression createCall(CallNode call) {
-      Callable callable = find(call.calledName());
-      ImmutableList<Expression> arguments = createArgumentExpressions(call, callable);
-      Type resultType = callable.inferResultType(arguments);
+      Function function = find(call.calledName());
+      ImmutableList<Expression> arguments = createArgumentExpressions(call, function);
+      Type resultType = function.inferResultType(arguments);
       ReferenceExpression reference = new ReferenceExpression(
-          call.calledName(), callable.type(), call.location());
+          call.calledName(), function.type(), call.location());
       return new CallExpression(resultType, reference, arguments, call.location());
     }
 
-    private Callable find(String name) {
-      return (Callable) referencables.findReferencableLike(name);
+    private Function find(String name) {
+      return (Function) referencables.findReferencableLike(name);
     }
 
-    private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {
-      ImmutableList<Item> parameters = callable.parameters();
+    private ImmutableList<Expression> createArgumentExpressions(CallNode call, Function function) {
+      ImmutableList<Item> parameters = function.parameters();
       Builder<Expression> resultBuilder = ImmutableList.builder();
       List<ArgNode> assignedArgs = call.assignedArgs();
       for (int i = 0; i < parameters.size(); i++) {

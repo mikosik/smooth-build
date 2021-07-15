@@ -13,10 +13,10 @@ import org.smoothbuild.lang.expr.NativeExpression;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallableNode extends ReferencableNode {
+public class FunctionNode extends ReferencableNode {
   private final ImmutableList<ItemNode> params;
 
-  public CallableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> exprNode,
+  public FunctionNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> exprNode,
       List<ItemNode> params, Optional<NativeExpression> nativ, Location location) {
     super(typeNode, name, exprNode, nativ, location);
     this.params = ImmutableList.copyOf(params);

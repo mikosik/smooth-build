@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class Constructor extends Callable {
+public class Constructor extends Function {
   public Constructor(Type resultType, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Location location) {
     super(resultType, modulePath, name, parameters, location);

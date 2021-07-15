@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public record CallExpression(
-    Type type, Expression callable, ImmutableList<Expression> arguments, Location location)
+    Type type, Expression function, ImmutableList<Expression> arguments, Location location)
     implements Expression {
   @Override
   public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor) {

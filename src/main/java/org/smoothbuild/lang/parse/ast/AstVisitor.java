@@ -23,11 +23,11 @@ public class AstVisitor {
   }
 
   public void visitConstructor(ConstructorNode constructor) {
-    visitCallable(constructor);
+    visitFunction(constructor);
   }
 
-  public void visitCallable(CallableNode callable) {
-    visitParams(callable.params());
+  public void visitFunction(FunctionNode function) {
+    visitParams(function.params());
   }
 
   public void visitFields(List<ItemNode> fields) {
@@ -43,7 +43,7 @@ public class AstVisitor {
   }
 
   public void visitReferencable(ReferencableNode referencable) {
-    if (referencable instanceof FuncNode func) {
+    if (referencable instanceof RealFuncNode func) {
       visitFunc(func);
     } else if (referencable instanceof ValueNode value) {
       visitValue(value);
@@ -60,10 +60,10 @@ public class AstVisitor {
     value.expr().ifPresent(this::visitExpr);
   }
 
-  public void visitFunc(FuncNode func) {
+  public void visitFunc(RealFuncNode func) {
     func.typeNode().ifPresent(this::visitType);
     func.expr().ifPresent(this::visitExpr);
-    visitCallable(func);
+    visitFunction(func);
   }
 
   public void visitParams(List<ItemNode> params) {

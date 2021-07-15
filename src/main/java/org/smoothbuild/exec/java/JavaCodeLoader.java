@@ -21,8 +21,8 @@ import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.exec.java.JavaMethodPath.JavaMethodPathParsingException;
 import org.smoothbuild.io.fs.space.JPathResolver;
 import org.smoothbuild.io.util.JarFile;
-import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
@@ -48,7 +48,7 @@ public class JavaCodeLoader {
     jarFileCache.put(jarFile.hash(), jarFile);
   }
 
-  public synchronized JavaCode load(Function function, String methodPath, Hash jarHash)
+  public synchronized JavaCode load(RealFunction function, String methodPath, Hash jarHash)
       throws LoadingJavaCodeException {
     JavaMethodPath path = parseMethodPath(function, methodPath);
     JavaCode javaCode = loadNativeImpl(function, path, jarHash);
@@ -144,8 +144,8 @@ public class JavaCodeLoader {
     }
   }
 
-  private static void assertNativeParameterTypesMatchesFuncParameters(
-      JavaCode javaCode, Function function, JavaMethodPath path) throws LoadingJavaCodeException {
+  private static void assertNativeParameterTypesMatchesFuncParameters(JavaCode javaCode,
+      RealFunction function, JavaMethodPath path) throws LoadingJavaCodeException {
     Parameter[] nativeParams = javaCode.method().getParameters();
     List<Item> params = function.parameters();
     if (params.size() != nativeParams.length - 1) {

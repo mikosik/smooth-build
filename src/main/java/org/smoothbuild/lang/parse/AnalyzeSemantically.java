@@ -25,11 +25,11 @@ import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
-import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.Named;
 import org.smoothbuild.lang.parse.ast.NamedNode;
+import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
@@ -96,7 +96,7 @@ public class AnalyzeSemantically {
     new AstVisitor() {
       Scope<ReferencableLike> scope = localScope;
       @Override
-      public void visitFunc(FuncNode func) {
+      public void visitFunc(RealFuncNode func) {
         func.typeNode().ifPresent(this::visitType);
 
         var nameToParam = func.params()
@@ -106,7 +106,7 @@ public class AnalyzeSemantically {
         func.expr().ifPresent(this::visitExpr);
         scope = scope.outerScope();
 
-        visitCallable(func);
+        visitFunction(func);
       }
 
       @Override
@@ -133,7 +133,7 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitFunc(FuncNode func) {
+      public void visitFunc(RealFuncNode func) {
         super.visitFunc(func);
         func.typeNode().ifPresent(this::assertTypeIsDefined);
       }
@@ -263,7 +263,7 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitFunc(FuncNode func) {
+      public void visitFunc(RealFuncNode func) {
         super.visitFunc(func);
         if (func.typeNode().isPresent()) {
           var counters = new CountersMap<String>();
@@ -301,7 +301,7 @@ public class AnalyzeSemantically {
   private static void detectNativesWithBodyAndNonNativesWithoutBody(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitFunc(FuncNode func) {
+      public void visitFunc(RealFuncNode func) {
         super.visitFunc(func);
         check(func, "function");
       }

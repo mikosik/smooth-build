@@ -23,7 +23,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.f;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Constructor;
-import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.expr.NativeExpression;
@@ -207,7 +207,7 @@ public class ExpressionTest {
 
   @Test
   public void function_call_with_argument() {
-    Function function = function(2, STRING, "myFunction", "Impl.met", parameter(BLOB, "param1"));
+    RealFunction function = function(2, STRING, "myFunction", "Impl.met", parameter(BLOB, "param1"));
     module("""
           @Native("Impl.met")
           String myFunction(Blob param1);
@@ -221,7 +221,7 @@ public class ExpressionTest {
 
   @Test
   public void function_call_with_named_argument() {
-    Function function = function(2, STRING, "myFunction", "Impl.met", parameter(BLOB, "param1"));
+    RealFunction function = function(2, STRING, "myFunction", "Impl.met", parameter(BLOB, "param1"));
     module("""
           @Native("Impl.met")
           String myFunction(Blob param1);

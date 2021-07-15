@@ -40,12 +40,12 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.lang.parse.ast.CallableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FieldReadNode;
-import org.smoothbuild.lang.parse.ast.FuncNode;
+import org.smoothbuild.lang.parse.ast.FunctionNode;
 import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
+import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
@@ -81,13 +81,13 @@ public class InferTypes {
       }
 
       @Override
-      public void visitFunc(FuncNode func) {
+      public void visitFunc(RealFuncNode func) {
         visitParams(func.params());
         func.expr().ifPresent(this::visitExpr);
         func.setType(functionType(func));
       }
 
-      private Optional<Type> functionType(FuncNode func) {
+      private Optional<Type> functionType(RealFuncNode func) {
         var resultType = bodyType(func);
         var parameterSignatures = func.optParameterSignatures();
         if (resultType.isPresent() && parameterSignatures.isPresent()) {
@@ -104,8 +104,8 @@ public class InferTypes {
       }
 
       @Override
-      public void visitCallable(CallableNode callable) {
-        super.visitCallable(callable);
+      public void visitFunction(FunctionNode function) {
+        super.visitFunction(function);
       }
 
       private Optional<Type> bodyType(ReferencableNode referencable) {

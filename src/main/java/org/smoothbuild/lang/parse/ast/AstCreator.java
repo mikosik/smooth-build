@@ -81,7 +81,7 @@ public class AstCreator {
           referencables.add(new ValueNode(type, name, expr, nativ, location));
         } else {
           List<ItemNode> params = createParams(ref.paramList());
-          referencables.add(new FuncNode(type, name, params, expr, nativ, location));
+          referencables.add(new RealFuncNode(type, name, params, expr, nativ, location));
         }
         return null;
       }

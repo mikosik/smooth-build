@@ -3,10 +3,10 @@ package org.smoothbuild.exec.algorithm;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callableReferenceAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.functionReferenceAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readFileContentAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
@@ -37,7 +37,7 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
     hashes.add(readFileContentAlgorithmHash(filePath("abc")));
-    hashes.add(callableReferenceAlgorithmHash(Hash.of(""), "function-name"));
+    hashes.add(functionReferenceAlgorithmHash(Hash.of(""), "function-name"));
 
     assertThat(hashes.size())
         .isEqualTo(9);
@@ -89,14 +89,14 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void callable_reference_algorithm_has_different_hash_for_different_modules() {
-    assertThat(callableReferenceAlgorithmHash(Hash.of(123), "function-name"))
-        .isNotEqualTo(callableReferenceAlgorithmHash(Hash.of(345), "function-name"));
+  public void function_reference_algorithm_has_different_hash_for_different_modules() {
+    assertThat(functionReferenceAlgorithmHash(Hash.of(123), "function-name"))
+        .isNotEqualTo(functionReferenceAlgorithmHash(Hash.of(345), "function-name"));
   }
 
   @Test
-  public void callable_reference_algorithm_has_different_hash_for_different_function_names() {
-    assertThat(callableReferenceAlgorithmHash(Hash.of(123), "function-name"))
-        .isNotEqualTo(callableReferenceAlgorithmHash(Hash.of(123), "other-name"));
+  public void function_reference_algorithm_has_different_hash_for_different_function_names() {
+    assertThat(functionReferenceAlgorithmHash(Hash.of(123), "function-name"))
+        .isNotEqualTo(functionReferenceAlgorithmHash(Hash.of(123), "other-name"));
   }
 }

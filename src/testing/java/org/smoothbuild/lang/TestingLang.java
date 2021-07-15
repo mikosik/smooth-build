@@ -8,11 +8,11 @@ import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -67,35 +67,35 @@ public class TestingLang {
     return new FieldReadExpression(field, expression, loc(line));
   }
 
-  public static CallExpression call(Type type, Callable callable, Expression... arguments) {
-    return call(1, type, callable, arguments);
+  public static CallExpression call(Type type, Function function, Expression... arguments) {
+    return call(1, type, function, arguments);
   }
 
   public static CallExpression call(
-      int line, Type type, Callable callable, Expression... arguments) {
+      int line, Type type, Function function, Expression... arguments) {
     Location loc = loc(line);
-    ReferenceExpression reference = new ReferenceExpression(callable.name(), callable.type(), loc);
+    ReferenceExpression reference = new ReferenceExpression(function.name(), function.type(), loc);
     return new CallExpression(type, reference, ImmutableList.copyOf(arguments), loc);
   }
 
-  public static Function function(Type type, String name, Item... parameters) {
+  public static RealFunction function(Type type, String name, Item... parameters) {
     return function(1, type, name, "Impl.met", parameters);
   }
 
-  public static Function function(int line, Type type, String name, String implementedBy,
+  public static RealFunction function(int line, Type type, String name, String implementedBy,
       Item... parameters) {
     NativeExpression nativeExpression = new NativeExpression(
         implementedBy, true, loc(max(line - 1, 1)), nativeFilePath());
     return function(line, type, name, nativeExpression, parameters);
   }
 
-  public static Function function(Type type, String name, Expression body, Item... parameters) {
+  public static RealFunction function(Type type, String name, Expression body, Item... parameters) {
     return function(1, type, name, body, parameters);
   }
 
-  public static Function function(int line, Type type, String name, Expression body,
+  public static RealFunction function(int line, Type type, String name, Expression body,
       Item... parameters) {
-    return new Function(
+    return new RealFunction(
         type, modulePath(), name, ImmutableList.copyOf(parameters), body, loc(line));
   }
 

@@ -18,43 +18,43 @@ import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallableTest extends TestingContext {
+public class FunctionTest extends TestingContext {
 
   @Test
   public void type_returns_function_type() {
-    Callable callable = new MyCallable(STRING, "name", list(), loc(7));
-    assertThat(callable.type())
+    Function function = new MyFunction(STRING, "name", list(), loc(7));
+    assertThat(function.type())
         .isEqualTo(new FunctionType(STRING, ImmutableList.of()));
   }
 
   @Test
   public void params_returns_signature_params() {
     List<Item> parameters = list(item("name"));
-    Callable callable = new MyCallable(STRING, "name", parameters);
-    assertThat(callable.parameters())
+    Function function = new MyFunction(STRING, "name", parameters);
+    assertThat(function.parameters())
         .isEqualTo(parameters);
   }
 
   @Test
-  public void callable_without_params_can_be_called_without_args() {
-    Callable callable = new MyCallable(STRING, "name", list());
-    assertThat(callable.canBeCalledArgless())
+  public void function_without_params_can_be_called_without_args() {
+    Function function = new MyFunction(STRING, "name", list());
+    assertThat(function.canBeCalledArgless())
         .isTrue();
   }
 
   @Test
-  public void callable_with_all_params_with_default_values_can_be_called_without_args() {
+  public void function_with_all_params_with_default_values_can_be_called_without_args() {
     List<Item> parameters = list(paramWithDefault(), paramWithDefault());
-    Callable callable = new MyCallable(STRING, "name", parameters);
-    assertThat(callable.canBeCalledArgless())
+    Function function = new MyFunction(STRING, "name", parameters);
+    assertThat(function.canBeCalledArgless())
         .isTrue();
   }
 
   @Test
-  public void callable_with_one_param_without_default_values_cannot_be_called_without_args() {
+  public void function_with_one_param_without_default_values_cannot_be_called_without_args() {
     List<Item> parameters = list(paramWithDefault(), paramWithoutDefault());
-    Callable callable = new MyCallable(STRING, "name", parameters);
-    assertThat(callable.canBeCalledArgless())
+    Function function = new MyFunction(STRING, "name", parameters);
+    assertThat(function.canBeCalledArgless())
         .isFalse();
   }
 
@@ -66,12 +66,12 @@ public class CallableTest extends TestingContext {
     return new Item(STRING, "a", Optional.empty());
   }
 
-  public static class MyCallable extends Callable {
-    public MyCallable(Type string, String name, List<Item> parameters) {
+  public static class MyFunction extends Function {
+    public MyFunction(Type string, String name, List<Item> parameters) {
       this(string, name, parameters, loc(1));
     }
 
-    public MyCallable(Type string, String name, List<Item> parameters, Location location) {
+    public MyFunction(Type string, String name, List<Item> parameters, Location location) {
       super(string, TestingModulePath.modulePath(), name, ImmutableList.copyOf(parameters),
           location);
     }

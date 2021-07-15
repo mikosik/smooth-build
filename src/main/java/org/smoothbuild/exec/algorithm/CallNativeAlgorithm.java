@@ -18,7 +18,7 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.JavaCode;
 import org.smoothbuild.exec.java.JavaCodeLoader;
 import org.smoothbuild.exec.java.LoadingJavaCodeException;
-import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.plugin.NativeApi;
@@ -73,7 +73,7 @@ public class CallNativeAlgorithm extends Algorithm {
   private JavaCode loadJavaCode(Tuple nativeCode) throws LoadingJavaCodeException {
     Blob content = NativeCodeTuple.content(nativeCode);
     String methodPath = NativeCodeTuple.methodPath(nativeCode).jValue();
-    if (referencable instanceof Function function) {
+    if (referencable instanceof RealFunction function) {
       return javaCodeLoader.load(function, methodPath, content.hash());
     } else {
       return javaCodeLoader.load((Value) referencable, methodPath, content.hash());
