@@ -9,18 +9,13 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemoryLogger implements Logger {
+public class LogBuffer implements Logger, Logs {
   private final List<Log> logs;
-  private boolean hasProblems;
+  private boolean containsProblem;
 
-  public MemoryLogger() {
+  public LogBuffer() {
     this.logs = new ArrayList<>();
-    this.hasProblems = false;
-  }
-
-  public MemoryLogger(MemoryLogger logger) {
-    this.logs = new ArrayList<>(logger.logs);
-    this.hasProblems = logger.hasProblems;
+    this.containsProblem = false;
   }
 
   @Override
@@ -44,23 +39,29 @@ public class MemoryLogger implements Logger {
   }
 
   @Override
+  public void logAll(Logs logs) {
+    this.logs.addAll(logs.toList());
+    this.containsProblem = this.containsProblem || logs.containsProblem();
+  }
+
+  @Override
   public void log(Log log) {
-    if (log.level() == FATAL || log.level() == ERROR) {
-      hasProblems = true;
-    }
+    containsProblem = containsProblem || log.level().isAProblem();
     logs.add(log);
   }
 
-  public boolean hasProblems() {
-    return hasProblems;
+  @Override
+  public boolean containsProblem() {
+    return containsProblem;
   }
 
-  public List<Log> logs() {
+  @Override
+  public List<Log> toList() {
     return unmodifiableList(logs);
   }
 
-  public void logAllFrom(MemoryLogger logger) {
-    logs.addAll(logger.logs);
-    hasProblems = hasProblems || logger.hasProblems;
+  @Override
+  public ImmutableLogs toImmutableLogs() {
+    return new ImmutableLogs(logs);
   }
 }

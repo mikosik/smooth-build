@@ -3,7 +3,6 @@ package org.smoothbuild.lang.parse;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
 import static org.smoothbuild.lang.base.type.Types.array;
@@ -22,8 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Item;
@@ -58,7 +57,7 @@ import com.google.common.collect.ImmutableList;
 
 public class InferTypes {
   public static List<Log> inferTypes(ModulePath path, Ast ast, Definitions imported) {
-    var logger = new MemoryLogger();
+    var logBuffer = new LogBuffer();
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
@@ -123,7 +122,7 @@ public class InferTypes {
           Optional<Type> type = createType(referencable.typeNode().get());
           type.ifPresent(t -> exprType.ifPresent(et -> {
             if (!t.isAssignableFrom(et)) {
-              logger.log(parseError(referencable, "`" + referencable.name()
+              logBuffer.log(parseError(referencable, "`" + referencable.name()
                   + "` has body which type is " + et.q()
                   + " and it is not convertible to its declared type " + t.q()
                   + "."));
@@ -139,7 +138,7 @@ public class InferTypes {
         if (referencable.typeNode().isPresent()) {
           return createType(referencable.typeNode().get());
         } else {
-          logger.log(parseError(referencable, referencable.q()
+          logBuffer.log(parseError(referencable, referencable.q()
               + " is native so it should have declared result type."));
           return empty();
         }
@@ -158,7 +157,7 @@ public class InferTypes {
             if (optDefaultValueType.isPresent()) {
               Type dt = optDefaultValueType.get();
               if (!type.isParamAssignableFrom(dt)) {
-                logger.log(parseError(param, "Parameter " + param.q() + " is of type " + type.q()
+                logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + type.q()
                     + " so it cannot have default value of type " + dt.q() + "."));
               }
             }
@@ -217,7 +216,7 @@ public class InferTypes {
                 expr.setType(((StructType) t).fieldWithName(expr.fieldName()).type());
               } else {
                 expr.setType(empty());
-                logger.log(parseError(expr.location(), "Type " + t.q()
+                logBuffer.log(parseError(expr.location(), "Type " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               }
             },
@@ -262,17 +261,17 @@ public class InferTypes {
         } else if (calledType.get() instanceof FunctionType functionType) {
           ImmutableList<ItemSignature> parameters = functionType.parameters();
           Maybe<List<ArgNode>> args = inferArgsToParamsAssignment(call, parameters);
-          if (args.hasProblems()) {
-            logger.logAllFrom(args);
+          if (args.containsProblem()) {
+            logBuffer.logAll(args.logs());
             call.setType(Optional.empty());
           } else {
             call.setAssignedArgs(args.value());
             Maybe<Type> type = inferCallType(call, functionType.resultType(), parameters);
-            logger.logAllFrom(type);
-            call.setType(ofNullable(type.value()));
+            logBuffer.logAll(type.logs());
+            call.setType(type.valueOptional());
           }
         } else {
-          logger.log(parseError(call.location(),
+          logBuffer.log(parseError(call.location(),
               "`" + name + "`" + " cannot be called as it is not a function."));
           call.setType(Optional.empty());
         }
@@ -302,6 +301,6 @@ public class InferTypes {
         blob.setType(blob());
       }
     }.visitAst(ast);
-    return logger.logs();
+    return logBuffer.toList();
   }
 }

@@ -6,6 +6,8 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.IntStream.range;
+import static org.smoothbuild.cli.console.Maybe.maybeLogs;
+import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
 import java.util.HashSet;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.parse.ast.ArgNode;
@@ -23,23 +26,22 @@ import com.google.common.collect.ImmutableList;
 public class InferArgsToParamsAssignment {
   public static Maybe<List<ArgNode>> inferArgsToParamsAssignment(
       CallNode call, List<ItemSignature> parameters) {
-    var result = new Maybe<List<ArgNode>>();
+    var logBuffer = new LogBuffer();
     var nameToIndex = nameToIndex(parameters);
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
 
-    result.logAll(findPositionalArgumentAfterNamedArgumentError(call));
-    result.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, parameters));
-    result.logAll(findUnknownParameterNameErrors(call, nameToIndex));
-    result.logAll(findDuplicateAssignmentErrors(call, positionalArguments, parameters));
-    if (result.hasProblems()) {
-      return result;
+    logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call));
+    logBuffer.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, parameters));
+    logBuffer.logAll(findUnknownParameterNameErrors(call, nameToIndex));
+    logBuffer.logAll(findDuplicateAssignmentErrors(call, positionalArguments, parameters));
+    if (logBuffer.containsProblem()) {
+      return maybeLogs(logBuffer);
     }
 
     List<ArgNode> assignedArgs = assignedArgs(call, parameters, nameToIndex);
-    result.logAll(findUnassignedParametersWithoutDefaultValuesErrors(
+    logBuffer.logAll(findUnassignedParametersWithoutDefaultValuesErrors(
         call, assignedArgs, parameters));
-    result.setValue(assignedArgs);
-    return result;
+    return maybeValueAndLogs(assignedArgs, logBuffer);
   }
 
   private static ImmutableList<ArgNode> leadingPositionalArguments(CallNode call) {

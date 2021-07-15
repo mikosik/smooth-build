@@ -3,7 +3,10 @@ package org.smoothbuild.lang.parse.ast;
 import static java.lang.String.join;
 import static java.util.Collections.rotate;
 import static java.util.stream.Collectors.toSet;
+import static org.smoothbuild.cli.console.ImmutableLogs.logs;
 import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.cli.console.Maybe.maybeLogs;
+import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
@@ -13,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.graph.GraphEdge;
@@ -82,19 +85,18 @@ public class Ast {
   }
 
   public Maybe<Ast> sortedByDependencies() {
-    var result = new Maybe<Ast>();
     var sortedTypes = sortStructsByDependencies();
     if (sortedTypes.sorted() == null) {
-      reportCycle(result,"Type hierarchy" , sortedTypes.cycle());
-      return result;
+      Log error = createCycleError("Type hierarchy", sortedTypes.cycle());
+      return maybeLogs(logs(error));
     }
     var sortedReferencables = sortReferencablesByDependencies();
     if (sortedReferencables.sorted() == null) {
-      reportCycle(result, "Dependency graph", sortedReferencables.cycle());
-      return result;
+      Log error = createCycleError("Dependency graph", sortedReferencables.cycle());
+      return maybeLogs(logs(error));
     }
-    result.setValue(new Ast(sortedTypes.valuesReversed(), sortedReferencables.valuesReversed()));
-    return result;
+    Ast ast = new Ast(sortedTypes.valuesReversed(), sortedReferencables.valuesReversed());
+    return maybeValue(ast);
   }
 
   private TopologicalSortingResult<String, ReferencableNode, Location>
@@ -156,8 +158,7 @@ public class Ast {
     return new GraphNode<>(struct.name(), struct, ImmutableList.copyOf(dependencies));
   }
 
-  private static void reportCycle(Logger logger, String name,
-      List<GraphEdge<Location, String>> cycle) {
+  private static Log createCycleError(String name, List<GraphEdge<Location, String>> cycle) {
     // Choosing edge with lowest line number and printing a cycle starting from that edge
     // is a way to make report deterministic and (as a result) to make testing those reports simple.
     int edgeIndex = chooseEdgeWithLowestLineNumber(cycle);
@@ -170,7 +171,7 @@ public class Ast {
       lines.add(current.value() + ": " + previous + " -> " + dependency);
       previous = dependency;
     }
-    logger.log(error(name + " contains cycle:\n" + join("\n", lines)));
+    return error(name + " contains cycle:\n" + join("\n", lines));
   }
 
   private static int chooseEdgeWithLowestLineNumber(List<GraphEdge<Location, String>> cycle) {

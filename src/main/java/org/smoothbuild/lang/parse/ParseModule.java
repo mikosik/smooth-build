@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static java.lang.String.join;
+import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.base.define.Location.location;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -22,6 +23,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothLexer;
 import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.io.fs.space.FilePath;
@@ -29,8 +31,8 @@ import org.smoothbuild.lang.base.define.Location;
 
 public class ParseModule {
   public static Maybe<ModuleContext> parseModule(FilePath filePath, String sourceCode) {
-    var result = new Maybe<ModuleContext>();
-    ErrorListener errorListener = new ErrorListener(filePath, result);
+    var logBuffer = new LogBuffer();
+    ErrorListener errorListener = new ErrorListener(filePath, logBuffer);
     SmoothLexer lexer = new SmoothLexer(CharStreams.fromString(sourceCode));
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
@@ -38,8 +40,7 @@ public class ParseModule {
     SmoothParser parser = new SmoothParser(new CommonTokenStream(lexer));
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
-    result.setValue(parser.module());
-    return result;
+    return maybeValueAndLogs(parser.module(), logBuffer);
   }
 
   public static class ErrorListener implements ANTLRErrorListener {

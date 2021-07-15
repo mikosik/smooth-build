@@ -1,6 +1,8 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.stream.IntStream.range;
+import static org.smoothbuild.cli.console.Maybe.maybeLogs;
+import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.type.ItemSignature;
@@ -21,11 +24,11 @@ import org.smoothbuild.lang.parse.ast.CallNode;
 public class InferCallType {
   public static Maybe<Type> inferCallType(CallNode call, Type resultType,
       List<ItemSignature> parameters) {
-    Maybe<Type> result = new Maybe<>();
+    var logBuffer = new LogBuffer();
     List<ArgNode> assignedArgs = call.assignedArgs();
-    findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, result);
-    if (result.hasProblems()) {
-      return result;
+    findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, logBuffer);
+    if (logBuffer.containsProblem()) {
+      return maybeLogs(logBuffer);
     }
     List<Optional<Type>> assignedTypes = assignedTypes(parameters, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
@@ -33,9 +36,9 @@ public class InferCallType {
           map(parameters, ItemSignature::type),
           map(assignedTypes, Optional::get),
           LOWER);
-      result.setValue(resultType.mapVariables(variableToBounds, LOWER));
+      return maybeValueAndLogs(resultType.mapVariables(variableToBounds, LOWER), logBuffer);
     }
-    return result;
+    return maybeLogs(logBuffer);
   }
 
   private static void findIllegalTypeAssignmentErrors(
