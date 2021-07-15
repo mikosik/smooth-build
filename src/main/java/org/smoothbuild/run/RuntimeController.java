@@ -10,6 +10,7 @@ import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
 import static org.smoothbuild.lang.base.define.SModule.baseTypesModule;
+import static org.smoothbuild.lang.base.define.SModule.calculateModuleHash;
 import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 
 import java.io.IOException;
@@ -116,7 +117,7 @@ public class RuntimeController {
       return maybeLogs(moduleFilesHash.logs());
     }
     Hash filesHash = moduleFilesHash.value();
-    Hash hash = SModule.moduleHash(path, filesHash, modules);
+    Hash hash = calculateModuleHash(path, filesHash, modules);
     return maybeValue(hash);
   }
 
