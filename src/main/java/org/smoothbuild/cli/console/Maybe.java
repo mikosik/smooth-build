@@ -1,39 +1,50 @@
 package org.smoothbuild.cli.console;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.Objects;
+import java.util.Optional;
 
-public class Maybe<V> extends MemoryLogger {
-  private V value;
+public class Maybe<V> {
+  private final V value;
+  private final ImmutableLogs logs;
 
-  public Maybe() {
-    this.value = null;
+  public static <T> Maybe<T> maybeValue(T value) {
+    return new Maybe<>(value, new ImmutableLogs(list()));
   }
 
-  public static <T> Maybe<T> of(T value) {
-    return new Maybe<>(value);
+  public static <T> Maybe<T> maybeLogs(Logs logs) {
+    return new Maybe<>(null, logs);
   }
 
-  public static <T> Maybe<T> withLogsFrom(MemoryLogger logger) {
-    return new Maybe<>(logger);
+  public static <T> Maybe<T> maybeValueAndLogs(T value, Logs logs) {
+    return new Maybe<>(value, logs);
   }
 
-  private Maybe(V value) {
+  private Maybe(V value, Logs logs) {
+    checkArgument(value != null || logs.containsProblem());
     this.value = value;
-  }
-
-  private Maybe(MemoryLogger logger) {
-    super(logger);
-    this.value = null;
-  }
-
-  public void setValue(V value) {
-    this.value = value;
+    this.logs = logs.toImmutableLogs();
   }
 
   public V value() {
+    checkState(value != null, "No value is stored in this Maybe.");
     return value;
+  }
+
+  public Optional<V> valueOptional() {
+    return Optional.ofNullable(value);
+  }
+
+  public ImmutableLogs logs() {
+    return logs;
+  }
+
+  public boolean containsProblem() {
+    return logs.containsProblem();
   }
 
   @Override
@@ -42,14 +53,14 @@ public class Maybe<V> extends MemoryLogger {
       return true;
     }
     if (o instanceof Maybe<?> that) {
-      return Objects.equals(value, that.value) && this.logs().equals(that.logs());
+      return Objects.equals(value, that.value) && this.logs.equals(that.logs);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(value, logs());
+    return Objects.hash(value, logs);
   }
 
   @Override
@@ -58,7 +69,6 @@ public class Maybe<V> extends MemoryLogger {
   }
 
   private String logsToString() {
-    var elements = logs().stream().map(Object::toString).collect(toImmutableList());
-    return "[" + String.join(", ", elements) + "]";
+    return "[" + logs.toList().stream().map(Object::toString).collect(joining(",")) + "]";
   }
 }

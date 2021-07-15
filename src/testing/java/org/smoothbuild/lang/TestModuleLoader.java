@@ -54,7 +54,7 @@ public class TestModuleLoader {
   public TestModuleLoader loadsSuccessfully() {
     module = load();
     assertWithMessage(messageWithSourceCode())
-        .that(module.logs())
+        .that(module.logs().toList())
         .isEmpty();
     return this;
   }
@@ -101,7 +101,7 @@ public class TestModuleLoader {
   public void loadsWithProblems() {
     var module = load();
     assertWithMessage(messageWithSourceCode())
-        .that(module.hasProblems())
+        .that(module.containsProblem())
         .isTrue();
   }
 
@@ -116,7 +116,7 @@ public class TestModuleLoader {
   public void loadsWithErrors(List<Log> errors) {
     var module = load();
     assertWithMessage(messageWithSourceCode())
-        .that(module.logs())
+        .that(module.logs().toList())
         .containsExactlyElementsIn(errors);
   }
 

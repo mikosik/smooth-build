@@ -2,6 +2,11 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.cli.console.ImmutableLogs.logs;
+import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.cli.console.Maybe.maybeLogs;
+import static org.smoothbuild.cli.console.Maybe.maybeValue;
+import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
 import static org.smoothbuild.lang.base.define.SModule.baseTypesModule;
@@ -17,6 +22,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothConstants;
+import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
@@ -60,7 +66,7 @@ public class RuntimeController {
     for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
       ModuleFiles moduleFiles = entry.getValue();
       Maybe<SModule> module = load(allDefinitions, entry.getKey(), moduleFiles);
-      reporter.report(moduleFiles.smoothFile().toString(), module.logs());
+      reporter.report(moduleFiles.smoothFile().toString(), module.logs().toList());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
         return EXIT_CODE_ERROR;
@@ -75,12 +81,12 @@ public class RuntimeController {
 
   private Maybe<SModule> load(Definitions imported, ModulePath path, ModuleFiles moduleFiles) {
     var sourceCode = readFileContent(moduleFiles.smoothFile());
-    if (sourceCode.hasProblems()) {
-      return Maybe.withLogsFrom(sourceCode);
+    if (sourceCode.containsProblem()) {
+      return maybeLogs(sourceCode.logs());
     } else {
       Maybe<Hash> hash = moduleHash(path, moduleFiles, imported.modules().values().asList());
-      if (hash.hasProblems()) {
-        return Maybe.withLogsFrom(hash);
+      if (hash.containsProblem()) {
+        return maybeLogs(hash.logs());
       } else {
         return loadModule(path, hash.value(), moduleFiles, sourceCode.value(), imported);
       }
@@ -88,15 +94,13 @@ public class RuntimeController {
   }
 
   private Maybe<String> readFileContent(FilePath filePath) {
-    var result = new Maybe<String>();
     try {
-      result.setValue(readFileContentImpl(filePath));
+      return maybeValue(readFileContentImpl(filePath));
     } catch (NoSuchFileException e) {
-      result.error("'" + filePath + "' doesn't exist.");
+      return maybeLogs(logs(error("'" + filePath + "' doesn't exist.")));
     } catch (IOException e) {
-      result.error("Cannot read build script file '" + filePath + "'.");
+      return maybeLogs(logs(error("Cannot read build script file '" + filePath + "'.")));
     }
-    return result;
   }
 
   private String readFileContentImpl(FilePath filePath) throws IOException {
@@ -108,27 +112,27 @@ public class RuntimeController {
   private Maybe<Hash> moduleHash(
       ModulePath path, ModuleFiles moduleFiles, ImmutableList<SModule> modules) {
     Maybe<Hash> moduleFilesHash = hashOfModuleFiles(moduleFiles);
-    if (moduleFilesHash.hasProblems()) {
-      return Maybe.withLogsFrom(moduleFilesHash);
+    if (moduleFilesHash.containsProblem()) {
+      return maybeLogs(moduleFilesHash.logs());
     }
     Hash filesHash = moduleFilesHash.value();
     Hash hash = SModule.moduleHash(path, filesHash, modules);
-    return Maybe.of(hash);
+    return maybeValue(hash);
   }
 
   private Maybe<Hash> hashOfModuleFiles(ModuleFiles moduleFiles) {
-    Maybe<Hash> hash = new Maybe<>();
+    var logger = new LogBuffer();
     List<Hash> hashes = new ArrayList<>();
     for (FilePath filePath : moduleFiles.asList()) {
       try {
         hashes.add(Hash.of(fileResolver.source(filePath)));
       } catch (NoSuchFileException e) {
-        hash.error("'" + filePath + "' doesn't exist.");
+        logger.error("'" + filePath + "' doesn't exist.");
       } catch (IOException e) {
-        hash.error("Cannot read file '" + filePath + "'.");
+        logger.error("Cannot read file '" + filePath + "'.");
       }
     }
-    hash.setValue(Hash.of(hashes.toArray(new Hash[] {})));
-    return hash;
+    Hash hash = Hash.of(hashes.toArray(new Hash[] {}));
+    return maybeValueAndLogs(hash, logger);
   }
 }

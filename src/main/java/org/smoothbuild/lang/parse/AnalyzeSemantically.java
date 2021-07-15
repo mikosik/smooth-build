@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.cli.console.ImmutableLogs;
 import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.like.ReferencableLike;
@@ -45,19 +46,19 @@ import org.smoothbuild.util.UnescapingFailedException;
 import com.google.common.collect.ImmutableList;
 
 public class AnalyzeSemantically {
-  public static List<Log> analyzeSemantically(Definitions imported, Ast ast) {
-    var logger = new MemoryLogger();
-    unescapeStringLiterals(logger, ast);
-    decodeBlobLiterals(logger, ast);
-    resolveReferences(logger, imported, ast);
-    detectUndefinedTypes(logger, imported, ast);
-    detectDuplicateGlobalNames(logger, imported, ast);
-    detectDuplicateFieldNames(logger, ast);
-    detectDuplicateParamNames(logger, ast);
-    detectStructNameWithSingleCapitalLetter(logger, ast);
-    detectIllegalPolytypes(logger, ast);
-    detectNativesWithBodyAndNonNativesWithoutBody(logger, ast);
-    return logger.logs();
+  public static ImmutableLogs analyzeSemantically(Definitions imported, Ast ast) {
+    var logBuffer = new LogBuffer();
+    unescapeStringLiterals(logBuffer, ast);
+    decodeBlobLiterals(logBuffer, ast);
+    resolveReferences(logBuffer, imported, ast);
+    detectUndefinedTypes(logBuffer, imported, ast);
+    detectDuplicateGlobalNames(logBuffer, imported, ast);
+    detectDuplicateFieldNames(logBuffer, ast);
+    detectDuplicateParamNames(logBuffer, ast);
+    detectStructNameWithSingleCapitalLetter(logBuffer, ast);
+    detectIllegalPolytypes(logBuffer, ast);
+    detectNativesWithBodyAndNonNativesWithoutBody(logBuffer, ast);
+    return logBuffer.toImmutableLogs();
   }
 
   private static void unescapeStringLiterals(Logger logger, Ast ast) {
