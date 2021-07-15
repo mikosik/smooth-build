@@ -22,11 +22,11 @@ public record SModule(
     ModulePath modulePath = new ModulePath("internal-module");
     var types = BASE_TYPES.stream()
         .collect(toImmutableMap(Type::name, t -> new BaseTypeDefinition(modulePath, t)));
-    Hash hash = moduleHash(modulePath, Hash.of(new Hash[] {}), list());
+    Hash hash = calculateModuleHash(modulePath, Hash.of(new Hash[] {}), list());
     return new SModule(modulePath, hash, null, list(), types, ImmutableMap.of());
   }
 
-  public static Hash moduleHash(ModulePath path, Hash filesHash, ImmutableList<SModule> modules) {
+  public static Hash calculateModuleHash(ModulePath path, Hash filesHash, ImmutableList<SModule> modules) {
     return Hash.of(
         Hash.of(path.toString()),
         filesHash,
