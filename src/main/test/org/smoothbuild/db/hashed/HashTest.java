@@ -10,6 +10,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.io.Files;
+import com.google.common.testing.EqualsTester;
 
 import okio.Buffer;
 import okio.ByteString;
@@ -40,7 +41,7 @@ public class HashTest {
   public void read_hash_from_source() throws Exception {
     buffer = new Buffer();
     hash = Hash.of("abc");
-    buffer.write(hash);
+    buffer.write(hash.toByteString());
     assertThat(Hash.read(buffer))
         .isEqualTo(hash);
   }
@@ -111,5 +112,22 @@ public class HashTest {
   public void decode_from_string() {
     assertThat(Hash.decode("010A"))
         .isEqualTo(new Hash(ByteString.of(new byte[] {1, 10})));
+  }
+
+  @Test
+  public void equal_and_hashCode() {
+    byte b1 = 1;
+    byte b2 = 2;
+    byte b3 = 3;
+    new EqualsTester()
+        .addEqualityGroup(newHash(b1), newHash(b1))
+        .addEqualityGroup(newHash(b2), newHash(b2))
+        .addEqualityGroup(newHash(b3), newHash(b3))
+        .addEqualityGroup(newHash(b1, b2), newHash(b1, b2))
+        .testEquals();
+  }
+
+  private Hash newHash(byte... bytes) {
+    return new Hash(ByteString.of(bytes));
   }
 }

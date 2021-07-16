@@ -105,7 +105,7 @@ public class HashedDb {
   public Hash writeHashes(Iterable<Hash> hashes) throws HashedDbException {
     try (HashingBufferedSink sink = sink()) {
       for (Hash hash : hashes) {
-        sink.write(hash);
+        sink.write(hash.toByteString());
       }
       sink.close();
       return sink.hash();
@@ -191,6 +191,6 @@ public class HashedDb {
   }
 
   public static Path dataFullPath(Path hashedDbPath, Hash hash) {
-    return hashedDbPath.appendPart(hash.hex());
+    return hashedDbPath.appendPart(hash.toHexString());
   }
 }

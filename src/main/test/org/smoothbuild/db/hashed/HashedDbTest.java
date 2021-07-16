@@ -147,7 +147,7 @@ public class HashedDbTest extends TestingContext {
   public void when_hash_points_to_directory_then_sink_causes_corrupted_exception()
       throws IOException {
     hash = Hash.of(bytes1);
-    hashedDbFileSystem().createDir(path(hash.hex()));
+    hashedDbFileSystem().createDir(path(hash.toHexString()));
 
     assertCall(() -> hashedDb().sink().write(bytes1).close())
         .throwsException(new IOException(

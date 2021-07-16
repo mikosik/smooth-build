@@ -49,9 +49,9 @@ public class ComputationCache {
       throws ComputationCacheException {
     try (BufferedSink sink = fileSystem.sink(toPath(computationHash))) {
       Array messages = output.messages();
-      sink.write(messages.hash());
+      sink.write(messages.hash().toByteString());
       if (!containsErrors(messages)) {
-        sink.write(output.value().hash());
+        sink.write(output.value().hash().toByteString());
       }
     } catch (IOException e) {
       throw computationCacheException(e);
@@ -103,6 +103,6 @@ public class ComputationCache {
   }
 
   static Path toPath(Hash computationHash) {
-    return COMPUTATION_CACHE_PATH.appendPart(computationHash.hex());
+    return COMPUTATION_CACHE_PATH.appendPart(computationHash.toHexString());
   }
 }

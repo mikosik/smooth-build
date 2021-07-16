@@ -21,22 +21,28 @@ import okio.HashingSource;
 import okio.Sink;
 import okio.Source;
 
-public class Hash extends ByteString {
+public class Hash {
+  private final ByteString byteString;
+
   public Hash(ByteString byteString) {
-    this(byteString.toByteArray());
+    this.byteString = byteString;
   }
 
-  public Hash(byte[] data) {
-    super(data);
+  public ByteString toByteString() {
+    return byteString;
   }
 
   @Override
   public String toString() {
-    return hex();
+    return toHexString();
+  }
+
+  public String toHexString() {
+    return byteString.hex();
   }
 
   public static Hash read(BufferedSource source) throws IOException {
-    return new Hash(source.readByteArray(hashesSize()));
+    return new Hash(source.readByteString(hashesSize()));
   }
 
   private static HashingSource hashingSource(Source source) {
@@ -71,7 +77,7 @@ public class Hash extends ByteString {
   public static Hash of(List<Hash> hashes) {
     Hasher hasher = function().newHasher();
     for (Hash hash : hashes) {
-      hasher.putBytes(hash.toByteArray());
+      hasher.putBytes(hash.byteString.toByteArray());
     }
     return convert(hasher.hash());
   }
@@ -93,7 +99,7 @@ public class Hash extends ByteString {
   }
 
   private static Hash convert(HashCode hash) {
-    return new Hash(hash.asBytes());
+    return new Hash(ByteString.of(hash.asBytes()));
   }
 
   public static int hashesSize() {
@@ -103,5 +109,19 @@ public class Hash extends ByteString {
   @SuppressWarnings("deprecation")
   private static HashFunction function() {
     return Hashing.sha1();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    return o instanceof Hash that
+        && this.byteString.equals(that.byteString);
+  }
+
+  @Override
+  public int hashCode() {
+    return byteString.hashCode();
   }
 }

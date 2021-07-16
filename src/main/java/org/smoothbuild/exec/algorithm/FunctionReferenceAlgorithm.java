@@ -34,7 +34,7 @@ public class FunctionReferenceAlgorithm extends Algorithm {
   @Override
   public Output run(Input input, NativeApi nativeApi) throws IOException {
     Str name = nativeApi.factory().string(function.name());
-    Blob moduleHash = nativeApi.factory().blob(sink -> sink.write(module.hash()));
+    Blob moduleHash = nativeApi.factory().blob(sink -> sink.write(module.hash().toByteString()));
     Tuple functionTuple = nativeApi
         .factory()
         .tuple((TupleSpec) outputSpec(), list(name, moduleHash));
