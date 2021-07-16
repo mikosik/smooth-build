@@ -23,7 +23,7 @@ import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 import com.google.common.collect.ImmutableList;
 
-public class IfTask extends ComputableTask {
+public class IfTask extends AlgorithmTask {
   public static final String IF_FUNCTION_NAME = "if";
 
   public IfTask(Type type, Algorithm algorithm, List<? extends TaskSupplier> dependencies,

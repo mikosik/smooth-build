@@ -7,10 +7,10 @@ import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 
-public abstract class ComputableTask extends Task {
+public abstract class AlgorithmTask extends Task {
   private final Algorithm algorithm;
 
-  public ComputableTask(TaskKind kind, Type type, String name, Algorithm algorithm,
+  public AlgorithmTask(TaskKind kind, Type type, String name, Algorithm algorithm,
       List<? extends TaskSupplier> dependencies, Location location) {
     super(kind, type, name, dependencies, location);
     this.algorithm = algorithm;

@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.base.Input;
-import org.smoothbuild.exec.compute.ComputableTask;
+import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -85,7 +85,7 @@ public class ParallelTaskExecutor {
       return result;
     }
 
-    public void enqueueComputation(ComputableTask task, Input input, Consumer<Obj> consumer) {
+    public void enqueueComputation(AlgorithmTask task, Input input, Consumer<Obj> consumer) {
       jobExecutor.enqueue(() -> {
         try {
           ResultHandler resultHandler = new ResultHandler(task, consumer, reporter, jobExecutor);

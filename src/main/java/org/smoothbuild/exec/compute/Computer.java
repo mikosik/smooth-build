@@ -36,7 +36,7 @@ public class Computer {
     this.feeders = new ConcurrentHashMap<>();
   }
 
-  public void compute(ComputableTask task, Input input, Consumer<Computed> consumer)
+  public void compute(AlgorithmTask task, Input input, Consumer<Computed> consumer)
       throws ComputationCacheException, IOException {
     Hash hash = computationHash(task.algorithm(), input);
     FeedingConsumer<Computed> newFeeder = new FeedingConsumer<>();

@@ -18,7 +18,7 @@ import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 import com.google.common.collect.ImmutableList;
 
-public class NormalTask extends ComputableTask {
+public class NormalTask extends AlgorithmTask {
   public NormalTask(TaskKind kind, Type type, String name, Algorithm algorithm,
       List<? extends TaskSupplier> dependencies, Location location) {
     super(kind, type, name, algorithm, dependencies, location);

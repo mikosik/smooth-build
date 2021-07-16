@@ -36,7 +36,7 @@ import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.compute.ComputableTask;
+import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.NormalTask;
@@ -197,7 +197,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     RuntimeException exception = new RuntimeException();
     Computer computer = new Computer(null, null, null) {
       @Override
-      public void compute(ComputableTask task, Input input, Consumer<Computed> consumer) {
+      public void compute(AlgorithmTask task, Input input, Consumer<Computed> consumer) {
         throw exception;
       }
     };
