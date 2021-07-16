@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.define.TestingItem.item;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
+import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
 
@@ -22,7 +23,7 @@ public class FunctionTest extends TestingContext {
 
   @Test
   public void type_returns_function_type() {
-    Function function = new MyFunction(STRING, "name", list(), loc(7));
+    Function function = myFunction(STRING, list());
     assertThat(function.type())
         .isEqualTo(new FunctionType(STRING, ImmutableList.of()));
   }
@@ -30,14 +31,14 @@ public class FunctionTest extends TestingContext {
   @Test
   public void params_returns_signature_params() {
     List<Item> parameters = list(item("name"));
-    Function function = new MyFunction(STRING, "name", parameters);
+    Function function = myFunction(STRING, parameters);
     assertThat(function.parameters())
         .isEqualTo(parameters);
   }
 
   @Test
   public void function_without_params_can_be_called_without_args() {
-    Function function = new MyFunction(STRING, "name", list());
+    Function function = myFunction(STRING, list());
     assertThat(function.canBeCalledArgless())
         .isTrue();
   }
@@ -45,7 +46,7 @@ public class FunctionTest extends TestingContext {
   @Test
   public void function_with_all_params_with_default_values_can_be_called_without_args() {
     List<Item> parameters = list(paramWithDefault(), paramWithDefault());
-    Function function = new MyFunction(STRING, "name", parameters);
+    Function function = myFunction(STRING, parameters);
     assertThat(function.canBeCalledArgless())
         .isTrue();
   }
@@ -53,7 +54,7 @@ public class FunctionTest extends TestingContext {
   @Test
   public void function_with_one_param_without_default_values_cannot_be_called_without_args() {
     List<Item> parameters = list(paramWithDefault(), paramWithoutDefault());
-    Function function = new MyFunction(STRING, "name", parameters);
+    Function function = myFunction(STRING, parameters);
     assertThat(function.canBeCalledArgless())
         .isFalse();
   }
@@ -66,14 +67,8 @@ public class FunctionTest extends TestingContext {
     return new Item(STRING, "a", Optional.empty());
   }
 
-  public static class MyFunction extends Function {
-    public MyFunction(Type string, String name, List<Item> parameters) {
-      this(string, name, parameters, loc(1));
-    }
-
-    public MyFunction(Type string, String name, List<Item> parameters, Location location) {
-      super(string, TestingModulePath.modulePath(), name, ImmutableList.copyOf(parameters),
-          location);
-    }
+  private static Function myFunction(Type type, List<Item> parameters) {
+    return new RealFunction(type, modulePath(), "name", ImmutableList.copyOf(parameters),
+        mock(Expression.class), loc(1));
   }
 }
