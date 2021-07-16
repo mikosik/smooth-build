@@ -11,10 +11,10 @@ import com.google.common.collect.ImmutableMap;
 
 public class Referencables {
   private final ImmutableMap<String, Referencable> imported;
-  private final Map<String, ? extends ReferencableLike> local;
+  private final Map<String, Referencable> local;
 
   public Referencables(ImmutableMap<String, Referencable> imported,
-      Map<String, ? extends ReferencableLike> local) {
+      Map<String, Referencable> local) {
     this.imported = imported;
     this.local = local;
   }
