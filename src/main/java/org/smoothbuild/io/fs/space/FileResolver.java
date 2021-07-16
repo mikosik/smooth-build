@@ -1,9 +1,14 @@
 package org.smoothbuild.io.fs.space;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import org.smoothbuild.SmoothConstants;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.PathState;
 
@@ -11,15 +16,44 @@ import com.google.common.collect.ImmutableMap;
 
 import okio.BufferedSource;
 
+/**
+ * This class is thread-safe.
+ */
+@Singleton
 public class FileResolver {
   private final ImmutableMap<Space, FileSystem> fileSystems;
+  private final Map<FilePath, Hash> cache;
 
   @Inject
   public FileResolver(ImmutableMap<Space, FileSystem> fileSystems) {
     this.fileSystems = fileSystems;
+    this.cache = new HashMap<>();
   }
 
-  public BufferedSource source(FilePath filePath) throws IOException {
+  public synchronized Hash hashOf(FilePath filePath) throws IOException {
+    Hash hash = cache.get(filePath);
+    if (hash == null) {
+      hash = Hash.of(source(filePath));
+      cache.put(filePath, hash);
+    }
+    return hash;
+  }
+
+  public synchronized String readFileContentAndCacheHash(FilePath filePath) throws IOException {
+    String content = readFileContent(filePath);
+    if (!cache.containsKey(filePath)) {
+      cache.put(filePath, Hash.of(content));
+    }
+    return content;
+  }
+
+  private String readFileContent(FilePath filePath) throws IOException {
+    try (BufferedSource source = source(filePath)) {
+      return source.readString(SmoothConstants.CHARSET);
+    }
+  }
+
+  private BufferedSource source(FilePath filePath) throws IOException {
     return fileSystemFor(filePath).source(filePath.path());
   }
 

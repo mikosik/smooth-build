@@ -7,12 +7,11 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;
 
-import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 
-public record NativeExpression(String path, boolean isPure, Location location, FilePath nativeFile)
+public record NativeExpression(String path, boolean isPure, Location location)
     implements Expression {
   private static final Type TYPE = struct("Native", list(
       new ItemSignature(string(), "path", Optional.empty()),

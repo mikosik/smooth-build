@@ -46,9 +46,7 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String returnAbc
-              Native _native_function
-                String "org.smoothbuild.acceptance.testing."...
-                Blob _native_module('{prj}/build.jar')
+              String "org.smoothbuild.acceptance.testing."...
           """);
     }
 

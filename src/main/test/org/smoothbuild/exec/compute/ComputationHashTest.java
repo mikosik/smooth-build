@@ -5,7 +5,6 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STRING;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
-import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.util.Lists.list;
 
@@ -17,7 +16,6 @@ import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadFileContentAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -132,22 +130,6 @@ public class ComputationHashTest extends TestingContext {
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));
-  }
-
-  @Test
-  public void hash_of_computation_with_read_file_content_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new ReadFileContentAlgorithm(null, filePath("abc"), null, null);
-    Input input = input(list());
-    assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("ae5af8f3ee7e767788337877461a3e93c58384ae"));
-  }
-
-  @Test
-  public void hash_of_computation_with_read_file_content_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new ReadFileContentAlgorithm(null, filePath("abc"), null, null);
-    Input input = input(list(string("abc"), string("def")));
-    assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("1a09d909f8a6df6e40dfed4e550fb9bd981a5481"));
   }
 
   private static Algorithm computation(Hash hash) {

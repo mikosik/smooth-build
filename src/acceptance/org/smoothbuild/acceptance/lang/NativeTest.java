@@ -52,12 +52,12 @@ public class NativeTest extends AcceptanceTestCase {
     @Test
     public void without_native_jar_file_causes_error() throws Exception {
       createUserModule("""
-            @Native("MissingClass.function")
+            @Native("MissingClass.method")
             String myValue;
             """);
       runSmoothBuild("myValue");
       assertFinishedWithError();
-      assertSysOutContains("Error reading file '{prj}/build.jar'.");
+      assertSysOutContains(fileNotFoundErrorMessage("myValue", "MissingClass.method"));
     }
 
     @Test
@@ -366,7 +366,7 @@ public class NativeTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("result");
       assertFinishedWithError();
-      assertSysOutContains("Error reading file '{prj}/build.jar'.");
+      assertSysOutContains(fileNotFoundErrorMessage("myFunction", "MissingClass.method"));
     }
 
     @Test
@@ -651,6 +651,11 @@ public class NativeTest extends AcceptanceTestCase {
         }
       }
     }
+  }
+
+  private String fileNotFoundErrorMessage(String memberName, String methodPath) {
+    return "Error loading native implementation for `" + memberName + "` specified as `" +
+        methodPath + "`: Error reading file '{prj}/build.jar'.";
   }
 
   private static String fetchTimestamp(String text) {

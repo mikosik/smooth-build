@@ -7,10 +7,8 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHas
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.functionReferenceAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readFileContentAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
-import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashSet;
@@ -36,11 +34,10 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(readTupleElementAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
-    hashes.add(readFileContentAlgorithmHash(filePath("abc")));
     hashes.add(functionReferenceAlgorithmHash(Hash.of(""), "function-name"));
 
     assertThat(hashes.size())
-        .isEqualTo(9);
+        .isEqualTo(8);
   }
 
   @Test
@@ -80,12 +77,6 @@ public class AlgorithmHashesTest extends TestingContext {
   public void fixed_blob_algorithm_has_different_hash_for_different_byte_strings() {
     assertThat(fixedBlobAlgorithmHash(ByteString.of((byte) 1)))
         .isNotEqualTo(fixedBlobAlgorithmHash(ByteString.of((byte) 2)));
-  }
-
-  @Test
-  public void read_file_content_algorithm_has_different_hash_for_different_modules() {
-    assertThat(readFileContentAlgorithmHash(filePath("abc")))
-        .isNotEqualTo(readFileContentAlgorithmHash(filePath("def")));
   }
 
   @Test

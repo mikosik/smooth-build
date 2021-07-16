@@ -84,7 +84,7 @@ public class InstallationHashes {
   private Optional<HashNode> nodeFor(Optional<FilePath> file) throws IOException {
     if (file.isPresent()) {
       FilePath filePath = file.get();
-      return Optional.of(new HashNode(filePath.toString(), Hash.of(fileResolver.source(filePath))));
+      return Optional.of(new HashNode(filePath.toString(), fileResolver.hashOf(filePath)));
     } else {
       return Optional.empty();
     }

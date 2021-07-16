@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.io.fs.base.TestingFilePath.nativeFilePath;
 import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.TestingLang.array;
 import static org.smoothbuild.lang.TestingLang.blob;
@@ -94,7 +93,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(2, STRING, "myFunction",
-            new NativeExpression("Impl.met", false, loc(1), nativeFilePath())));
+            new NativeExpression("Impl.met", false, loc(1))));
   }
 
   @Test
@@ -105,7 +104,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(2, STRING, "myFunction",
-            new NativeExpression("Impl.met", true, loc(1), nativeFilePath())));
+            new NativeExpression("Impl.met", true, loc(1))));
   }
 
   @Test

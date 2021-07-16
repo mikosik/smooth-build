@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.exec.java.JavaMethodPath.JavaMethodPathParsingException;
+import org.smoothbuild.exec.java.MethodPath.JavaMethodPathParsingException;
 
-public class JavaMethodPathTest {
+public class MethodPathTest {
   @ParameterizedTest
   @MethodSource("illegal_path_test_data")
   public void path_with_dot_at_the_beginning(String path) {
-    assertCall(() -> JavaMethodPath.parse(path))
+    assertCall(() -> MethodPath.parse(path))
         .throwsException(new JavaMethodPathParsingException("Illegal path to java method. " +
             "Expected <binary class name>.<method name>, but was `" + path + "`."));
   }

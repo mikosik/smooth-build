@@ -31,7 +31,6 @@ import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
 import org.smoothbuild.exec.algorithm.FunctionReferenceAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadFileContentAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.compute.CallTask;
 import org.smoothbuild.exec.compute.IfTask;
@@ -39,8 +38,7 @@ import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.exec.compute.VirtualTask;
-import org.smoothbuild.exec.java.JavaCodeLoader;
-import org.smoothbuild.io.fs.space.FileResolver;
+import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
@@ -73,16 +71,14 @@ public class ExpressionToTaskConverter
     implements ExpressionVisitor<Scope<TaskSupplier>, TaskSupplier> {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
-  private final JavaCodeLoader javaCodeLoader;
-  private final FileResolver fileResolver;
+  private final MethodLoader methodLoader;
 
   @Inject
   public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory,
-      JavaCodeLoader javaCodeLoader, FileResolver fileResolver) {
+      MethodLoader methodLoader) {
     this.toSpecConverter = new TypeToSpecConverter(objectFactory);
     this.definitions = definitions;
-    this.javaCodeLoader = javaCodeLoader;
-    this.fileResolver = fileResolver;
+    this.methodLoader = methodLoader;
   }
 
   @Override
@@ -104,8 +100,8 @@ public class ExpressionToTaskConverter
     if (referencable instanceof Value value) {
       if (value.body() instanceof NativeExpression nativ) {
         return new TaskSupplier(value.type(), reference.location(), () -> {
-          var algorithm = new CallNativeAlgorithm(
-              javaCodeLoader, value.type().visit(toSpecConverter), value, nativ.isPure());
+          var algorithm = new CallNativeAlgorithm(methodLoader,
+              value.type().visit(toSpecConverter), value, nativ.isPure());
           var nativeCode = visit(scope, nativ);
           return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
               list(nativeCode), reference.location());
@@ -187,8 +183,8 @@ public class ExpressionToTaskConverter
       RealFunction function, NativeExpression nativ, BoundedVariables variables, Type actualResultType,
       Location location) {
     var nativeCode = visit(scope, nativ);
-    var algorithm = new CallNativeAlgorithm(
-        javaCodeLoader, actualResultType.visit(toSpecConverter), function, nativ.isPure());
+    var algorithm = new CallNativeAlgorithm(methodLoader, actualResultType.visit(toSpecConverter),
+        function, nativ.isPure());
     var actualParameterTypes = map(
         function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
     var dependencies = concat(nativeCode, convertedArguments(actualParameterTypes, arguments));
@@ -242,36 +238,20 @@ public class ExpressionToTaskConverter
 
   @Override
   public TaskSupplier visit(Scope<TaskSupplier> scope, StringLiteralExpression expression) {
-    return fixedStringTask(expression.string(), expression.location());
+    return fixedStringTask(expression.string(), expression.location(), LITERAL);
   }
 
   @Override
   public TaskSupplier visit(Scope<TaskSupplier> context, NativeExpression expression) {
-    var contentTask = nativeBlobTask(expression);
-    var methodPathTask = fixedStringTask(expression.path(), expression.location());
-    return new TaskSupplier(expression.type(), expression.location(), () -> {
-      ImmutableList<TaskSupplier> dependencies = list(methodPathTask, contentTask);
-      return taskForConstructorCall(NATIVE, expression.type(), toSpecConverter.nativeCodeSpec(),
-          "_native_function", dependencies, expression.location());
-    });
+    return fixedStringTask(expression.path(), expression.location(), NATIVE);
   }
 
-  private TaskSupplier nativeBlobTask(NativeExpression expression) {
-    return new TaskSupplier(blob(), expression.location(), () -> {
-      var nativeFile = expression.nativeFile();
-      var contentAlgorithm = new ReadFileContentAlgorithm(
-          toSpecConverter.visit(blob()), nativeFile, javaCodeLoader, fileResolver);
-      var name = "_native_module('" + nativeFile.toString() + "')";
-      return new NormalTask(NATIVE, blob(), name, contentAlgorithm, list(), expression.location());
-    });
-  }
-
-  private TaskSupplier fixedStringTask(String string, Location location) {
+  private TaskSupplier fixedStringTask(String string, Location location, TaskKind taskKind) {
     return new TaskSupplier(string(), location, () -> {
       var stringType = toSpecConverter.visit(string());
       var algorithm = new FixedStringAlgorithm(stringType, string);
       var name = algorithm.shortedString();
-      return new NormalTask(LITERAL, string(), name, algorithm, list(), location);
+      return new NormalTask(taskKind, string(), name, algorithm, list(), location);
     });
   }
 

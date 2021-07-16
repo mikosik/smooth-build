@@ -5,19 +5,17 @@ import static org.smoothbuild.exec.base.MessageTuple.containsErrors;
 import static org.smoothbuild.util.Lists.skipFirst;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
-import org.smoothbuild.exec.base.NativeCodeTuple;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.java.JavaCode;
-import org.smoothbuild.exec.java.JavaCodeLoader;
-import org.smoothbuild.exec.java.LoadingJavaCodeException;
+import org.smoothbuild.exec.java.LoadingMethodException;
+import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
@@ -26,13 +24,13 @@ import org.smoothbuild.plugin.NativeApi;
 import com.google.common.collect.ImmutableList;
 
 public class CallNativeAlgorithm extends Algorithm {
-  private final JavaCodeLoader javaCodeLoader;
+  private final MethodLoader methodLoader;
   private final Referencable referencable;
 
-  public CallNativeAlgorithm(JavaCodeLoader javaCodeLoader, Spec outputSpec,
+  public CallNativeAlgorithm(MethodLoader methodLoader, Spec outputSpec,
       Referencable referencable, boolean isPure) {
     super(outputSpec, isPure);
-    this.javaCodeLoader = javaCodeLoader;
+    this.methodLoader = methodLoader;
     this.referencable = referencable;
   }
 
@@ -43,10 +41,10 @@ public class CallNativeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    JavaCode javaCode = loadJavaCode((Tuple) input.objects().get(0));
+    Method method = loadMethod((Str) input.objects().get(0));
     try {
       ImmutableList<Obj> nativeArgs = skipFirst(input.objects());
-      Obj result = (Obj) javaCode.method().invoke(null, createArguments(nativeApi, nativeArgs));
+      Obj result = (Obj) method.invoke(null, createArguments(nativeApi, nativeArgs));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
           nativeApi.log().error("`" + referencable.name()
@@ -70,13 +68,12 @@ public class CallNativeAlgorithm extends Algorithm {
     }
   }
 
-  private JavaCode loadJavaCode(Tuple nativeCode) throws LoadingJavaCodeException {
-    Blob content = NativeCodeTuple.content(nativeCode);
-    String methodPath = NativeCodeTuple.methodPath(nativeCode).jValue();
+  private Method loadMethod(Str path) throws LoadingMethodException {
+    String methodPath = path.jValue();
     if (referencable instanceof RealFunction function) {
-      return javaCodeLoader.load(function, methodPath, content.hash());
+      return methodLoader.load(function, methodPath);
     } else {
-      return javaCodeLoader.load((Value) referencable, methodPath, content.hash());
+      return methodLoader.load((Value) referencable, methodPath);
     }
   }
 

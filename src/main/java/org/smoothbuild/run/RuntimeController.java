@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.Reporter;
@@ -37,8 +36,6 @@ import org.smoothbuild.lang.base.define.SModule;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
-import okio.BufferedSource;
 
 public class RuntimeController {
   private static final ImmutableList<FilePath> MODULES =
@@ -96,17 +93,11 @@ public class RuntimeController {
 
   private Maybe<String> readFileContent(FilePath filePath) {
     try {
-      return maybeValue(readFileContentImpl(filePath));
+      return maybeValue(fileResolver.readFileContentAndCacheHash(filePath));
     } catch (NoSuchFileException e) {
       return maybeLogs(logs(error("'" + filePath + "' doesn't exist.")));
     } catch (IOException e) {
       return maybeLogs(logs(error("Cannot read build script file '" + filePath + "'.")));
-    }
-  }
-
-  private String readFileContentImpl(FilePath filePath) throws IOException {
-    try (BufferedSource source = fileResolver.source(filePath)) {
-      return source.readString(SmoothConstants.CHARSET);
     }
   }
 
@@ -126,7 +117,7 @@ public class RuntimeController {
     List<Hash> hashes = new ArrayList<>();
     for (FilePath filePath : moduleFiles.asList()) {
       try {
-        hashes.add(Hash.of(fileResolver.source(filePath)));
+        hashes.add(fileResolver.hashOf(filePath));
       } catch (NoSuchFileException e) {
         logger.error("'" + filePath + "' doesn't exist.");
       } catch (IOException e) {

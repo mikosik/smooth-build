@@ -2,7 +2,6 @@ package org.smoothbuild.exec.algorithm;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
-import org.smoothbuild.io.fs.space.FilePath;
 
 import okio.ByteString;
 
@@ -35,12 +34,8 @@ public class AlgorithmHashes {
     return hash(6, Hash.of(byteString));
   }
 
-  public static Hash readFileContentAlgorithmHash(FilePath filePath) {
-    return hash(7, filePath.hash());
-  }
-
   public static Hash functionReferenceAlgorithmHash(Hash moduleHash, String functionName) {
-    return hash(8, Hash.of(moduleHash, Hash.of(functionName)));
+    return hash(7, Hash.of(moduleHash, Hash.of(functionName)));
   }
 
   private static Hash hash(int id, Hash hash) {
