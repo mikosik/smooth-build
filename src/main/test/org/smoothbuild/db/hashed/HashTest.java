@@ -16,13 +16,6 @@ import okio.Buffer;
 import okio.ByteString;
 
 public class HashTest {
-  private final String string = "some string";
-  private final String string2 = "some other string";
-  private final ByteString byteString = ByteString.of(new byte[] {1, 2, 3, 4});
-  private File file;
-  private Hash hash;
-  private Buffer buffer;
-
   @Test
   public void read_from_empty_source_throws_eof_exception() {
     assertCall(() -> Hash.read(new Buffer()))
@@ -31,7 +24,7 @@ public class HashTest {
 
   @Test
   public void read_from_source_having_less_bytes_than_needed_throws_eof_exception() {
-    buffer = new Buffer();
+    Buffer buffer = new Buffer();
     buffer.write(new byte[Hash.hashesSize() - 1]);
     assertCall(() -> Hash.read(buffer))
         .throwsException(EOFException.class);
@@ -39,8 +32,8 @@ public class HashTest {
 
   @Test
   public void read_hash_from_source() throws Exception {
-    buffer = new Buffer();
-    hash = Hash.of("abc");
+    Buffer buffer = new Buffer();
+    Hash hash = Hash.of("abc");
     buffer.write(hash.toByteString());
     assertThat(Hash.read(buffer))
         .isEqualTo(hash);
@@ -48,16 +41,16 @@ public class HashTest {
 
   @Test
   public void hash_of_file_is_equal_to_hash_of_its_bytes() throws Exception {
-    file = File.createTempFile("tmp", ".tmp");
-    Files.write(byteString.toByteArray(), file);
+    File file = File.createTempFile("tmp", ".tmp");
+    Files.write(someByteString().toByteArray(), file);
     assertThat(Hash.of(file.toPath()))
-        .isEqualTo(Hash.of(byteString));
+        .isEqualTo(Hash.of(someByteString()));
   }
 
   @Test
   public void hash_of_source_is_equal_to_hash_of_its_bytes() throws IOException {
-    assertThat(Hash.of(new Buffer().write(byteString)))
-        .isEqualTo(Hash.of(byteString));
+    assertThat(Hash.of(new Buffer().write(someByteString())))
+        .isEqualTo(Hash.of(someByteString()));
   }
 
   @Test
@@ -74,13 +67,14 @@ public class HashTest {
 
   @Test
   public void hash_of_given_string_is_always_the_same() {
-    assertThat(Hash.of(string))
-        .isEqualTo(Hash.of(string));
+    assertThat(Hash.of("some string"))
+        .isEqualTo(Hash.of("some string"));
   }
 
   @Test
   public void hashes_of_different_strings_are_different() {
-    assertThat(Hash.of(string))
+    String string2 = "some other string";
+    assertThat(Hash.of("some string"))
         .isNotEqualTo(Hash.of(string2));
   }
 
@@ -98,14 +92,14 @@ public class HashTest {
 
   @Test
   public void hash_of_given_bytestring_is_always_the_same() {
-    assertThat(Hash.of(byteString))
-        .isEqualTo(Hash.of(byteString));
+    assertThat(Hash.of(someByteString()))
+        .isEqualTo(Hash.of(someByteString()));
   }
 
   @Test
   public void hashes_of_different_bytes_are_different() {
-    assertThat(Hash.of(byteString))
-        .isNotEqualTo(byteString.substring(1));
+    assertThat(Hash.of(someByteString()))
+        .isNotEqualTo(someByteString().substring(1));
   }
 
   @Test
@@ -129,5 +123,9 @@ public class HashTest {
 
   private Hash newHash(byte... bytes) {
     return new Hash(ByteString.of(bytes));
+  }
+
+  private static ByteString someByteString() {
+    return ByteString.of(new byte[] {1, 2, 3, 4});
   }
 }
