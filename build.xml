@@ -134,11 +134,10 @@
 
     <target name="compile.main.java" depends="generate-lang-parser, generate-task-filter-parser">
         <javac destdir="${dir.build.class.main.java}"
-               source="15"
+               source="16"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="--enable-preview"/>
             <src path="${dir.src.main.java}"/>
             <src path="${dir.build.java.smooth-parser}"/>
             <src path="${dir.build.java.task-matcher-parser}"/>
@@ -161,11 +160,10 @@
 
     <target name="compile.slib.java" depends="compile.main.java">
         <javac destdir="${dir.build.class.slib.java}"
-               source="15"
+               source="16"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="--enable-preview"/>
             <src path="${dir.src.slib.java}"/>
             <classpath>
                 <path refid="classpath-for.slib.java"/>
@@ -189,11 +187,10 @@
 
     <target name="compile.testing.java" depends="compile.main.java">
         <javac destdir="${dir.build.class.testing.java}"
-               source="15"
+               source="16"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="--enable-preview"/>
             <src path="${dir.src.testing.java}"/>
             <classpath>
                 <path refid="classpath-for.testing.java"/>
@@ -228,11 +225,10 @@
 
     <target name="compile.main.test" depends="compile.testing.java">
         <javac destdir="${dir.build.class.main.test}"
-               source="15"
+               source="16"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="--enable-preview"/>
             <src path="${dir.src.main.test}"/>
             <classpath>
                 <path refid="classpath-for.main.test"/>
@@ -255,11 +251,10 @@
 
     <target name="compile.slib.test" depends="compile.slib.java, compile.testing.java">
         <javac destdir="${dir.build.class.slib.test}"
-               source="15"
+               source="16"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="--enable-preview"/>
             <src path="${dir.src.slib.test}"/>
             <classpath>
                 <path refid="classpath-for.slib.test"/>
@@ -281,11 +276,10 @@
 
     <target name="compile.testing.test" depends="compile.testing.java">
         <javac destdir="${dir.build.class.testing.test}"
-               source="15"
+               source="16"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="--enable-preview"/>
             <src path="${dir.src.testing.test}"/>
             <classpath>
                 <path refid="classpath-for.testing.test"/>
@@ -308,11 +302,10 @@
 
     <target name="compile.acceptance.tests" depends="compile.testing.java">
         <javac destdir="${dir.build.class.acceptance}"
-               source="15"
+               source="16"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="--enable-preview"/>
             <src path="${dir.src.acceptance}"/>
             <classpath>
                 <path refid="classpath.for.acceptance"/>
