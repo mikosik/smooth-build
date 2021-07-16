@@ -158,6 +158,17 @@ public class LiteralTest {
           .loadsSuccessfully();
     }
 
+    private static class ArrayElements implements ArgumentsProvider {
+      @Override
+      public Stream<Arguments> provideArguments(ExtensionContext context) {
+        return Stream.of(
+            arguments("[]"),
+            arguments("0x01"),
+            arguments("\"abc\"")
+        );
+      }
+    }
+
     @Test
     public void error_in_first_element_doesnt_suppress_error_in_second_element() {
       module("""
@@ -171,17 +182,6 @@ public class LiteralTest {
               err(3, "In call to `myFunction`: Unknown parameter `unknown1`."),
               err(4, "In call to `myFunction`: Unknown parameter `unknown2`.")
           ));
-    }
-  }
-
-  private static class ArrayElements implements ArgumentsProvider {
-    @Override
-    public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return Stream.of(
-          arguments("[]"),
-          arguments("0x01"),
-          arguments("\"abc\"")
-      );
     }
   }
 }
