@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -55,6 +56,11 @@ public class FunctionType extends Type {
   @Override
   public <T> T visit(TypeVisitor<T> visitor) {
     return visitor.visit(this);
+  }
+
+  public Type inferResultType(List<Type> argumentTypes) {
+    var variableToBounds = inferVariableBounds(parameterTypes(), argumentTypes, LOWER);
+    return resultType().mapVariables(variableToBounds, LOWER);
   }
 
   @Override

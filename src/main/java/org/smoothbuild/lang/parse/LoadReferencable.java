@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static org.smoothbuild.lang.expr.Expression.toTypes;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -149,7 +150,7 @@ public class LoadReferencable {
     private Expression createCall(CallNode call) {
       Function function = find(call.called().name());
       ImmutableList<Expression> arguments = createArgumentExpressions(call, function);
-      Type resultType = function.inferResultType(arguments);
+      Type resultType = function.type().inferResultType(toTypes(arguments));
       ReferenceExpression reference = new ReferenceExpression(
           call.called().name(), function.type(), call.location());
       return new CallExpression(resultType, reference, arguments, call.location());

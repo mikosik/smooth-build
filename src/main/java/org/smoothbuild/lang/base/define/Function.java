@@ -2,13 +2,9 @@ package org.smoothbuild.lang.base.define;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
-import static org.smoothbuild.lang.base.type.Side.LOWER;
-import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
-import static org.smoothbuild.lang.expr.Expression.toTypes;
 
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
 
@@ -45,12 +41,6 @@ public abstract class Function extends Referencable {
 
   public ImmutableList<Item> parameters() {
     return parameters;
-  }
-
-  public Type inferResultType(ImmutableList<Expression> arguments) {
-    var variableToBounds =
-        inferVariableBounds(type().parameterTypes(), toTypes(arguments), LOWER);
-    return resultType().mapVariables(variableToBounds, LOWER);
   }
 
   public boolean canBeCalledArgless() {
