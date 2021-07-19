@@ -210,4 +210,10 @@ public class MethodLoader {
   }
 
   private static record CacheKey(Hash jarHash, String path) {}
+
+  public static class LoadingMethodException extends Exception {
+    public LoadingMethodException(String message, Throwable e) {
+      super(message, e);
+    }
+  }
 }
