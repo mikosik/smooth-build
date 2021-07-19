@@ -70,10 +70,6 @@ public class Hash {
    * Doing the same with Okio library would require ugly code to catch and swallow IOExceptions.
    */
 
-  public static Hash of(Hash... hashes) {
-    return Hash.of(asList(hashes));
-  }
-
   public static Hash of(List<Hash> hashes) {
     Hasher hasher = function().newHasher();
     for (Hash hash : hashes) {

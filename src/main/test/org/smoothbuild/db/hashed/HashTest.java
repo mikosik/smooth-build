@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.EOFException;
@@ -55,14 +56,14 @@ public class HashTest {
 
   @Test
   public void hash_of_given_array_of_hashes_is_always_the_same() {
-    assertThat(Hash.of(Hash.of(1), Hash.of(2)))
-        .isEqualTo(Hash.of(Hash.of(1), Hash.of(2)));
+    assertThat(Hash.of(asList(Hash.of(1), Hash.of(2))))
+        .isEqualTo(Hash.of(asList(Hash.of(1), Hash.of(2))));
   }
 
   @Test
   public void hash_of_different_array_of_hashes_are_different() {
-    assertThat(Hash.of(Hash.of(1), Hash.of(2)))
-        .isNotEqualTo(Hash.of(Hash.of(1), Hash.of(3)));
+    assertThat(Hash.of(asList(Hash.of(1), Hash.of(2))))
+        .isNotEqualTo(Hash.of(asList(Hash.of(1), Hash.of(3))));
   }
 
   @Test

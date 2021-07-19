@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.compute;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.exec.compute.ResultSource.DISK;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
@@ -89,6 +90,6 @@ public class Computer {
   }
 
   public static Hash computationHash(Hash sandboxHash, Algorithm algorithm, Input input) {
-    return Hash.of(sandboxHash, algorithm.hash(), input.hash());
+    return Hash.of(asList(sandboxHash, algorithm.hash(), input.hash()));
   }
 }

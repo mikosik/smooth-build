@@ -2,6 +2,7 @@ package org.smoothbuild.exec.parallel;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -229,7 +230,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Algorithm valueAlgorithm(String value) {
-    return new TestAlgorithm(Hash.of(Hash.of(2), Hash.of(value))) {
+    return new TestAlgorithm(Hash.of(asList(Hash.of(2), Hash.of(value)))) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         Str result = nativeApi.factory().string(value);

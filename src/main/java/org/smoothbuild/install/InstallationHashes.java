@@ -1,6 +1,7 @@
 package org.smoothbuild.install;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 
 import java.io.IOException;
@@ -50,13 +51,14 @@ public class InstallationHashes {
 
   // visible for testing
   static Hash calculateJavaPlatformHash(Properties properties) {
-    return Hash.of(
+    return Hash.of(asList(
         hash(properties, "java.vendor"),
         hash(properties, "java.version"),
         hash(properties, "java.runtime.name"),
         hash(properties, "java.runtime.version"),
         hash(properties, "java.vm.name"),
-        hash(properties, "java.vm.version"));
+        hash(properties, "java.vm.version")
+    ));
   }
 
   private static Hash hash(Properties properties, String name) {

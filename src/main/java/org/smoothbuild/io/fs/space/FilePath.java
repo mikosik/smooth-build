@@ -1,5 +1,7 @@
 package org.smoothbuild.io.fs.space;
 
+import static java.util.Arrays.asList;
+
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.Path;
 
@@ -26,6 +28,9 @@ public record FilePath(Space space, Path path) {
   }
 
   public Hash hash() {
-    return Hash.of(Hash.of(path.toString()), Hash.of(space().name()));
+    return Hash.of(asList(
+        Hash.of(path.toString()),
+        Hash.of(space().name())
+    ));
   }
 }

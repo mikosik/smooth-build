@@ -1,5 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
+import static java.util.Arrays.asList;
+
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
 
@@ -35,14 +37,14 @@ public class AlgorithmHashes {
   }
 
   public static Hash functionReferenceAlgorithmHash(Hash moduleHash, String functionName) {
-    return hash(7, Hash.of(moduleHash, Hash.of(functionName)));
+    return hash(7, Hash.of(asList(moduleHash, Hash.of(functionName))));
   }
 
   private static Hash hash(int id, Hash hash) {
-    return Hash.of(Hash.of(id), hash);
+    return Hash.of(asList(Hash.of(id), hash));
   }
 
   private static Hash hash(int id) {
-    return Hash.of(Hash.of(id));
+    return Hash.of(asList(Hash.of(id)));
   }
 }

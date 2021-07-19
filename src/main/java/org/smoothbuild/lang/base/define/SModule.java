@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -28,11 +29,10 @@ public record SModule(
   }
 
   public static Hash calculateModuleHash(ModulePath path, Hash filesHash, ImmutableList<SModule> modules) {
-    return Hash.of(
+    return Hash.of(asList(
         Hash.of(path.toString()),
         filesHash,
-        referencedModulesHash(modules)
-    );
+        referencedModulesHash(modules)));
   }
 
   private static Hash referencedModulesHash(ImmutableList<SModule> modules) {
