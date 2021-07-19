@@ -1,6 +1,8 @@
 package org.smoothbuild.lang;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.lang.Math.max;
+import static java.util.Arrays.stream;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 
@@ -74,7 +76,8 @@ public class TestingLang {
       int line, Type type, Function function, Expression... arguments) {
     Location loc = loc(line);
     ReferenceExpression reference = new ReferenceExpression(function.name(), function.type(), loc);
-    return new CallExpression(type, reference, ImmutableList.copyOf(arguments), loc);
+    var args = stream(arguments).map(Optional::of).collect(toImmutableList());
+    return new CallExpression(type, reference, args, loc);
   }
 
   public static RealFunction function(Type type, String name, Item... parameters) {

@@ -149,29 +149,20 @@ public class LoadReferencable {
 
     private Expression createCall(CallNode call) {
       Function function = find(call.called().name());
-      ImmutableList<Expression> arguments = createArgumentExpressions(call, function);
+      ImmutableList<Optional<Expression>> argumentExpressions = createArgumentExpressions(call);
       Type resultType = function.type().inferResultType(createArgumentTypes(call));
       ReferenceExpression reference = new ReferenceExpression(
           call.called().name(), function.type(), call.location());
-      return new CallExpression(resultType, reference, arguments, call.location());
+      return new CallExpression(resultType, reference, argumentExpressions, call.location());
     }
 
     private Function find(String name) {
       return (Function) referencables.findReferencableLike(name);
     }
 
-    private ImmutableList<Expression> createArgumentExpressions(CallNode call, Function function) {
-      ImmutableList<Item> parameters = function.parameters();
-      Builder<Expression> resultBuilder = ImmutableList.builder();
-      List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
-      for (int i = 0; i < parameters.size(); i++) {
-        if (assignedArgs.get(i).isPresent()) {
-          resultBuilder.add(createExpression(assignedArgs.get(i).get().expr()));
-        } else {
-          resultBuilder.add(parameters.get(i).defaultValue().get());
-        }
-      }
-      return resultBuilder.build();
+    private ImmutableList<Optional<Expression>> createArgumentExpressions(CallNode call) {
+      return map(call.assignedArgs(),
+          optionalArg -> optionalArg.map(a -> createExpression(a.expr())));
     }
 
     private ImmutableList<Type> createArgumentTypes(CallNode call) {

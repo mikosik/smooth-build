@@ -32,6 +32,7 @@ import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
 import org.smoothbuild.exec.algorithm.FunctionReferenceAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.compute.CallTask;
+import org.smoothbuild.exec.compute.DefaultValueTask;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
@@ -63,6 +64,7 @@ import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.util.Scope;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -134,7 +136,7 @@ public class ExpressionToTaskConverter
   public TaskSupplier visit(Scope<TaskSupplier> scope, CallExpression expression) {
     var location = expression.location();
     var function = expression.function().visit(scope, this);
-    var arguments = childrenTasks(scope, expression.arguments());
+    var arguments = argumentTasks(scope, function, expression.arguments());
     var argumentTypes = map(arguments, TaskSupplier::type);
     var functionType = (FunctionType) function.type();
     var variables = inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
@@ -142,6 +144,38 @@ public class ExpressionToTaskConverter
 
     return new TaskSupplier(actualResultType, location, () -> new CallTask(CALL, actualResultType,
         "_function_call", concat(function, arguments), location, variables, scope, this));
+  }
+
+  private List<TaskSupplier> argumentTasks(Scope<TaskSupplier> scope, TaskSupplier function,
+      List<Optional<Expression>> arguments) {
+    var builder = ImmutableList.<TaskSupplier>builder();
+    for (int i = 0; i < arguments.size(); i++) {
+      Optional<Expression> argument = arguments.get(i);
+      if (argument.isPresent()) {
+        builder.add(argument.get().visit(scope, this));
+      } else {
+        builder.add(defaultValueTask(function, i, scope));
+      }
+    }
+    return builder.build();
+  }
+
+  private TaskSupplier defaultValueTask(TaskSupplier function, int index,
+      Scope<TaskSupplier> scope) {
+    Type type = ((FunctionType) function.type()).parameterTypes().get(index);
+    // TODO this location is not correct
+    Location location = function.location();
+    // TODO task name is not precise
+    Supplier<Task> task = () -> new DefaultValueTask(
+        type, "default parameter value", list(function), index, location, scope, this);
+    return new TaskSupplier(type, location, task);
+  }
+
+  public TaskSupplier taskForDefaultValue(Scope<TaskSupplier> scope, String functionName,
+      int index) {
+    var function = (Function) definitions.referencables().get(functionName);
+    var defaultValueExpression = function.parameters().get(index).defaultValue().get();
+    return defaultValueExpression.visit(scope, this);
   }
 
   public Task taskForCall(Scope<TaskSupplier> scope, BoundedVariables variables,
