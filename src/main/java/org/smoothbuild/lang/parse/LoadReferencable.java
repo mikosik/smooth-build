@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static org.smoothbuild.lang.expr.Expression.toTypes;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -15,6 +14,7 @@ import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.ArrayType;
+import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
@@ -150,7 +150,7 @@ public class LoadReferencable {
     private Expression createCall(CallNode call) {
       Function function = find(call.called().name());
       ImmutableList<Expression> arguments = createArgumentExpressions(call, function);
-      Type resultType = function.type().inferResultType(toTypes(arguments));
+      Type resultType = function.type().inferResultType(createArgumentTypes(call));
       ReferenceExpression reference = new ReferenceExpression(
           call.called().name(), function.type(), call.location());
       return new CallExpression(resultType, reference, arguments, call.location());
@@ -169,6 +169,21 @@ public class LoadReferencable {
           resultBuilder.add(createExpression(assignedArgs.get(i).get().expr()));
         } else {
           resultBuilder.add(parameters.get(i).defaultValue().get());
+        }
+      }
+      return resultBuilder.build();
+    }
+
+    private ImmutableList<Type> createArgumentTypes(CallNode call) {
+      FunctionType functionType = ((FunctionType) call.called().type().get());
+      List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
+      ImmutableList<ItemSignature> parameters = functionType.parameters();
+      Builder<Type> resultBuilder = ImmutableList.builder();
+      for (int i = 0; i < parameters.size(); i++) {
+        if (assignedArgs.get(i).isPresent()) {
+          resultBuilder.add(assignedArgs.get(i).get().type().get());
+        } else {
+          resultBuilder.add(parameters.get(i).defaultValueType().get());
         }
       }
       return resultBuilder.build();
