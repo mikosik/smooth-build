@@ -260,7 +260,7 @@ public class InferTypes {
           call.setType(Optional.empty());
         } else if (calledType.get() instanceof FunctionType functionType) {
           ImmutableList<ItemSignature> parameters = functionType.parameters();
-          Maybe<List<ArgNode>> args = inferArgsToParamsAssignment(call, parameters);
+          Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, parameters);
           if (args.containsProblem()) {
             logBuffer.logAll(args.logs());
             call.setType(Optional.empty());

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.Arrays.asList;
+import static java.util.Collections.nCopies;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -10,9 +10,11 @@ import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
@@ -24,7 +26,7 @@ import org.smoothbuild.lang.parse.ast.CallNode;
 import com.google.common.collect.ImmutableList;
 
 public class InferArgsToParamsAssignment {
-  public static Maybe<List<ArgNode>> inferArgsToParamsAssignment(
+  public static Maybe<List<Optional<ArgNode>>> inferArgsToParamsAssignment(
       CallNode call, List<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     var nameToIndex = nameToIndex(parameters);
@@ -38,9 +40,9 @@ public class InferArgsToParamsAssignment {
       return maybeLogs(logBuffer);
     }
 
-    List<ArgNode> assignedArgs = assignedArgs(call, parameters, nameToIndex);
-    logBuffer.logAll(findUnassignedParametersWithoutDefaultValuesErrors(
-        call, assignedArgs, parameters));
+    List<Optional<ArgNode>> assignedArgs = assignedArgs(call, parameters, nameToIndex);
+    logBuffer.logAll(
+        findUnassignedParametersWithoutDefaultValuesErrors(call, assignedArgs, parameters));
     return maybeValueAndLogs(assignedArgs, logBuffer);
   }
 
@@ -51,16 +53,17 @@ public class InferArgsToParamsAssignment {
         .collect(toImmutableList());
   }
 
-  private static List<ArgNode> assignedArgs(
+  private static List<Optional<ArgNode>> assignedArgs(
       CallNode call, List<ItemSignature> parameters, Map<String, Integer> nameToIndex) {
     List<ArgNode> args = call.args();
-    List<ArgNode> assignedList = asList(new ArgNode[parameters.size()]);
+    List<Optional<ArgNode>> assignedList =
+        new ArrayList<>(nCopies(parameters.size(), Optional.empty()));
     for (int i = 0; i < args.size(); i++) {
       ArgNode arg = args.get(i);
       if (arg.declaresName()) {
-        assignedList.set(nameToIndex.get(arg.name()), arg);
+        assignedList.set(nameToIndex.get(arg.name()), Optional.of(arg));
       } else {
-        assignedList.set(i, arg);
+        assignedList.set(i, Optional.of(arg));
       }
     }
     return assignedList;
@@ -109,9 +112,9 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findUnassignedParametersWithoutDefaultValuesErrors(CallNode call,
-      List<ArgNode> assignedList, List<ItemSignature> parameters) {
+      List<Optional<ArgNode>> assignedList, List<ItemSignature> parameters) {
     return range(0, assignedList.size())
-        .filter(i -> assignedList.get(i) == null)
+        .filter(i -> assignedList.get(i).isEmpty())
         .mapToObj(parameters::get)
         .filter(p -> !p.hasDefaultValue())
         .map(p -> parameterMustBeSpecifiedError(call, p))

@@ -25,7 +25,7 @@ public class InferCallType {
   public static Maybe<Type> inferCallType(CallNode call, Type resultType,
       List<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
-    List<ArgNode> assignedArgs = call.assignedArgs();
+    List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
     findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
@@ -41,12 +41,12 @@ public class InferCallType {
     return maybeLogs(logBuffer);
   }
 
-  private static void findIllegalTypeAssignmentErrors(
-      CallNode call, List<ArgNode> assignedList, List<ItemSignature> parameters, Logger logger) {
+  private static void findIllegalTypeAssignmentErrors(CallNode call,
+      List<Optional<ArgNode>> assignedList, List<ItemSignature> parameters, Logger logger) {
     range(0, assignedList.size())
-        .filter(i -> assignedList.get(i) != null)
-        .filter(i -> !isAssignable(parameters.get(i), assignedList.get(i)))
-        .mapToObj(i -> illegalAssignmentError(call, parameters.get(i), assignedList.get(i)))
+        .filter(i -> assignedList.get(i).isPresent())
+        .filter(i -> !isAssignable(parameters.get(i), assignedList.get(i).get()))
+        .mapToObj(i -> illegalAssignmentError(call, parameters.get(i), assignedList.get(i).get()))
         .forEach(logger::log);
   }
 
@@ -65,14 +65,14 @@ public class InferCallType {
   }
 
   private static List<Optional<Type>> assignedTypes(
-      List<ItemSignature> parameters, List<ArgNode> arguments) {
+      List<ItemSignature> parameters, List<Optional<ArgNode>> arguments) {
     List<Optional<Type>> assigned = new ArrayList<>();
     for (int i = 0; i < parameters.size(); i++) {
-      ArgNode arg = arguments.get(i);
-      if (arg == null) {
-        assigned.add(parameters.get(i).defaultValueType());
+      Optional<ArgNode> arg = arguments.get(i);
+      if (arg.isPresent()) {
+        assigned.add(arg.get().type().map(Type::strip));
       } else {
-        assigned.add(arg.type().map(Type::strip));
+        assigned.add(parameters.get(i).defaultValueType());
       }
     }
     return assigned;

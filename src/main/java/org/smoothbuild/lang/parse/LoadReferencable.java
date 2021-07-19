@@ -163,12 +163,12 @@ public class LoadReferencable {
     private ImmutableList<Expression> createArgumentExpressions(CallNode call, Function function) {
       ImmutableList<Item> parameters = function.parameters();
       Builder<Expression> resultBuilder = ImmutableList.builder();
-      List<ArgNode> assignedArgs = call.assignedArgs();
+      List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
       for (int i = 0; i < parameters.size(); i++) {
-        if (assignedArgs.get(i) == null) {
-          resultBuilder.add(parameters.get(i).defaultValue().get());
+        if (assignedArgs.get(i).isPresent()) {
+          resultBuilder.add(createExpression(assignedArgs.get(i).get().expr()));
         } else {
-          resultBuilder.add(createExpression(assignedArgs.get(i).expr()));
+          resultBuilder.add(parameters.get(i).defaultValue().get());
         }
       }
       return resultBuilder.build();
