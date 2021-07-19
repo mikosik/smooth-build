@@ -13,7 +13,6 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_WARNING;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CONVERSION;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.LITERAL;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NATIVE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PRJ;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
@@ -107,8 +106,6 @@ public class MatcherCreatorTest {
         arguments("c", CALL),
         arguments("conversion", CONVERSION),
         arguments("conv", CONVERSION),
-        arguments("native", NATIVE),
-        arguments("n", NATIVE),
         arguments("literal", LITERAL),
         arguments("l", LITERAL),
 

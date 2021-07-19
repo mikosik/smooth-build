@@ -5,7 +5,6 @@ import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.FUNCTION_REFERENCE;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
-import static org.smoothbuild.exec.compute.TaskKind.NATIVE;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
@@ -238,20 +237,20 @@ public class ExpressionToTaskConverter
 
   @Override
   public TaskSupplier visit(Scope<TaskSupplier> scope, StringLiteralExpression expression) {
-    return fixedStringTask(expression.string(), expression.location(), LITERAL);
+    return fixedStringTask(expression.string(), expression.location());
   }
 
   @Override
   public TaskSupplier visit(Scope<TaskSupplier> context, NativeExpression expression) {
-    return fixedStringTask(expression.path(), expression.location(), NATIVE);
+    return fixedStringTask(expression.path(), expression.location());
   }
 
-  private TaskSupplier fixedStringTask(String string, Location location, TaskKind taskKind) {
+  private TaskSupplier fixedStringTask(String string, Location location) {
     return new TaskSupplier(string(), location, () -> {
       var stringType = toSpecConverter.visit(string());
       var algorithm = new FixedStringAlgorithm(stringType, string);
       var name = algorithm.shortedString();
-      return new NormalTask(taskKind, string(), name, algorithm, list(), location);
+      return new NormalTask(TaskKind.LITERAL, string(), name, algorithm, list(), location);
     });
   }
 
