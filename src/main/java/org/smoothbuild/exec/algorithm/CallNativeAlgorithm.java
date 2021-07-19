@@ -14,11 +14,8 @@ import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.java.LoadingMethodException;
 import org.smoothbuild.exec.java.MethodLoader;
-import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.define.Referencable;
-import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
@@ -41,7 +38,8 @@ public class CallNativeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    Method method = loadMethod((Str) input.objects().get(0));
+    String methodPath = ((Str) input.objects().get(0)).jValue();
+    Method method = methodLoader.load(referencable, methodPath);
     try {
       ImmutableList<Obj> nativeArgs = skipFirst(input.objects());
       Obj result = (Obj) method.invoke(null, createArguments(nativeApi, nativeArgs));
@@ -65,15 +63,6 @@ public class CallNativeAlgorithm extends Algorithm {
     } catch (InvocationTargetException e) {
       throw new NativeCallException("`" + referencable.name()
           + "` threw java exception from its native code.", e.getCause());
-    }
-  }
-
-  private Method loadMethod(Str path) throws LoadingMethodException {
-    String methodPath = path.jValue();
-    if (referencable instanceof RealFunction function) {
-      return methodLoader.load(function, methodPath);
-    } else {
-      return methodLoader.load((Value) referencable, methodPath);
     }
   }
 

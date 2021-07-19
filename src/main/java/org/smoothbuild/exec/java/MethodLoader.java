@@ -47,21 +47,15 @@ public class MethodLoader {
     this.methodCache = new HashMap<>();
   }
 
-  public synchronized Method load(RealFunction function, String methodPath)
+  public synchronized Method load(Referencable referencable, String methodPath)
       throws LoadingMethodException {
-    MethodPath path = parseMethodPath(function, methodPath);
-    Method method = loadMethod(function, path);
-    assertNativeResultMatchesDeclared(function, method, function.type().resultType(), path);
-    assertNativeParameterTypesMatchesFuncParameters(method, function, path);
-    return method;
-  }
-
-  public synchronized Method load(Value value, String methodPath)
-      throws LoadingMethodException {
-    MethodPath path = parseMethodPath(value, methodPath);
-    Method method = loadMethod(value, path);
-    assertNativeResultMatchesDeclared(value, method, value.type(), path);
-    assertNativeHasOneParameter(method, value, path);
+    MethodPath path = parseMethodPath(referencable, methodPath);
+    Method method = loadMethod(referencable, path);
+    if (referencable instanceof RealFunction function) {
+      assertMethodMatchesFunctionRequirements(function, method, path);
+    } else {
+      assertMethodMatchesValueRequirements((Value) referencable, method, path);
+    }
     return method;
   }
 
@@ -140,6 +134,18 @@ public class MethodLoader {
   private static boolean hasContainerParameter(Method method) {
     Class<?>[] types = method.getParameterTypes();
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
+  }
+
+  private void assertMethodMatchesFunctionRequirements(RealFunction function, Method method,
+      MethodPath path) throws LoadingMethodException {
+    assertNativeResultMatchesDeclared(function, method, function.type().resultType(), path);
+    assertNativeParameterTypesMatchesFuncParameters(method, function, path);
+  }
+
+  private void assertMethodMatchesValueRequirements(Value value, Method method, MethodPath path)
+      throws LoadingMethodException {
+    assertNativeResultMatchesDeclared(value, method, value.type(), path);
+    assertNativeHasOneParameter(method, value, path);
   }
 
   private static void assertNativeResultMatchesDeclared(Referencable referencable,
