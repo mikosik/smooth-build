@@ -5,11 +5,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 import static org.smoothbuild.util.io.Okios.readAndClose;
+import static org.smoothbuild.util.io.Okios.writeAndClose;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import okio.Buffer;
+import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ByteString;
 import okio.Sink;
@@ -73,6 +75,32 @@ public class OkiosTest {
       BufferedSource source = mock(BufferedSource.class);
       readAndClose(source, s -> "");
       verify(source).close();
+    }
+  }
+
+  @Nested
+  class _write_and_close {
+    @Test
+    public void copies_bytes() throws Exception {
+      Buffer buffer = new Buffer();
+      writeAndClose(buffer, s -> s.write(bytes));
+      assertThat(buffer.readByteString())
+          .isEqualTo(bytes);
+    }
+
+    @Test
+    public void works_for_empty_sink() throws Exception {
+      Buffer buffer = new Buffer();
+      writeAndClose(buffer, s -> s.write(ByteString.of()));
+      assertThat(buffer.readByteString())
+          .isEqualTo(ByteString.of());
+    }
+
+    @Test
+    public void closes_sink() throws Exception {
+      BufferedSink sink = mock(BufferedSink.class);
+      writeAndClose(sink, s -> {});
+      verify(sink).close();
     }
   }
 
