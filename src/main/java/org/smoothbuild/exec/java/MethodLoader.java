@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.compute.Container;
-import org.smoothbuild.exec.java.MethodPath.JavaMethodPathParsingException;
+import org.smoothbuild.exec.java.MethodPath.MethodPathParsingException;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.io.fs.space.JPathResolver;
@@ -63,7 +63,7 @@ public class MethodLoader {
       throws LoadingMethodException {
     try {
       return MethodPath.parse(path);
-    } catch (JavaMethodPathParsingException e) {
+    } catch (MethodPathParsingException e) {
       throw newLoadingException(referencable, path, e.getMessage(), e);
     }
   }
