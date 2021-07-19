@@ -17,13 +17,11 @@ import com.google.common.collect.ImmutableList;
  */
 public abstract class Function extends Referencable {
   public static final String PARENTHESES = "()";
-  private final Type resultType;
   private final ImmutableList<Item> parameters;
 
   public Function(Type resultType, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Location location) {
     super(functionType(resultType, parameters), modulePath, name, location);
-    this.resultType = requireNonNull(resultType);
     this.parameters = requireNonNull(parameters);
   }
 
@@ -42,7 +40,7 @@ public abstract class Function extends Referencable {
   }
 
   public Type resultType() {
-    return resultType;
+    return type().resultType();
   }
 
   public ImmutableList<Item> parameters() {
