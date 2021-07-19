@@ -147,11 +147,11 @@ public class LoadReferencable {
     }
 
     private Expression createCall(CallNode call) {
-      Function function = find(call.calledName());
+      Function function = find(call.called().name());
       ImmutableList<Expression> arguments = createArgumentExpressions(call, function);
       Type resultType = function.inferResultType(arguments);
       ReferenceExpression reference = new ReferenceExpression(
-          call.calledName(), function.type(), call.location());
+          call.called().name(), function.type(), call.location());
       return new CallExpression(resultType, reference, arguments, call.location());
     }
 

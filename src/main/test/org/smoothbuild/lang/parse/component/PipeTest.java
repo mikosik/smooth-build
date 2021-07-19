@@ -17,8 +17,8 @@ public class PipeTest {
         String myIdentity(String value);
         result = "abc" | myIdentity(myFunction(unknown=""));
         """).loadsWithErrors(List.of(
-            err(5, "In call to `myFunction`: Unknown parameter `unknown`."),
-            err(5, "In call to `myIdentity`: Too many positional arguments.")
+            err(5, "In call to function with type `String(String a, String b)`: Unknown parameter `unknown`."),
+            err(5, "In call to function with type `String(String value)`: Too many positional arguments.")
         ));
   }
 }

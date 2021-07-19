@@ -1,6 +1,5 @@
 package org.smoothbuild.db.hashed;
 
-import static java.util.Arrays.asList;
 import static okio.Okio.blackhole;
 import static okio.Okio.buffer;
 import static okio.Okio.source;

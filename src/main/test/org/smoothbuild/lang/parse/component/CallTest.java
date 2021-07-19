@@ -11,7 +11,8 @@ public class CallTest {
            myIdentity(String param) = param;
            result = myIdentity("abc", "def");
            """)
-        .loadsWithError(2, "In call to `myIdentity`: Too many positional arguments.");
+        .loadsWithError(2, "In call to function with type `String(String param)`:" +
+            " Too many positional arguments.");
   }
 
   @Test
@@ -20,7 +21,8 @@ public class CallTest {
            returnFirst(String param1, String param2) = param1;
            result = returnFirst("abc");
            """)
-        .loadsWithError(2, "In call to `returnFirst`: Parameter `param2` must be specified.");
+        .loadsWithError(2, "In call to function with type `String(String param1, String param2)`:" +
+            " Parameter `param2` must be specified.");
   }
 
   @Test
@@ -29,7 +31,8 @@ public class CallTest {
            myIdentity(String param) = param;
            result = myIdentity(wrongName="abc");
            """)
-        .loadsWithError(2, "In call to `myIdentity`: Unknown parameter `wrongName`.");
+        .loadsWithError(2,
+            "In call to function with type `String(String param)`: Unknown parameter `wrongName`.");
   }
 
   @Test
@@ -56,7 +59,7 @@ public class CallTest {
            returnFirst(String param1, String param2) = param1;
            result = returnFirst(param2="def", "abc");
            """)
-        .loadsWithError(2, "In call to `returnFirst`: "
+        .loadsWithError(2, "In call to function with type `String(String param1, String param2)`: "
             + "Positional arguments must be placed before named arguments.");
   }
 
@@ -66,7 +69,8 @@ public class CallTest {
            myIdentity(String param) = param;
            result = myIdentity(param="abc", param="abc");
            """)
-        .loadsWithError(2, "In call to `myIdentity`: `param` is already assigned.");
+        .loadsWithError(2, "In call to function with type `String(String param)`:" +
+            " `param` is already assigned.");
   }
 
   @Test
@@ -75,7 +79,8 @@ public class CallTest {
            myIdentity(String param) = param;
            result = myIdentity("abc", param="abc");
            """)
-        .loadsWithError(2, "In call to `myIdentity`: `param` is already assigned.");
+        .loadsWithError(2,
+            "In call to function with type `String(String param)`: `param` is already assigned.");
   }
 
   @Test

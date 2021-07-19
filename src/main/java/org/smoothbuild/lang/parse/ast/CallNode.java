@@ -21,8 +21,8 @@ public class CallNode extends ExprNode {
     return ref;
   }
 
-  public String calledName() {
-    return ref.name();
+  public RefNode called() {
+    return ref;
   }
 
   public List<ArgNode> args() {

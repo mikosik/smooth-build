@@ -179,8 +179,8 @@ public class LiteralTest {
             ];
             """)
           .loadsWithErrors(List.of(
-              err(3, "In call to `myFunction`: Unknown parameter `unknown1`."),
-              err(4, "In call to `myFunction`: Unknown parameter `unknown2`.")
+              err(3, "In call to function with type `String()`: Unknown parameter `unknown1`."),
+              err(4, "In call to function with type `String()`: Unknown parameter `unknown2`.")
           ));
     }
   }

@@ -61,7 +61,7 @@ public class InferCallType {
   }
 
   private static String inCallToPrefix(CallNode call) {
-    return "In call to `" + call.calledName() + "`: ";
+    return "In call to function with type " + call.called().type().get().q() + ": ";
   }
 
   private static List<Optional<Type>> assignedTypes(

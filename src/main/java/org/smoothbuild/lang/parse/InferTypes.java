@@ -254,7 +254,7 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        String name = call.calledName();
+        ExprNode called = call.called();
         Optional<Type> calledType = call.ref().referenced().inferredType();
         if (calledType.isEmpty()) {
           call.setType(Optional.empty());
@@ -272,9 +272,16 @@ public class InferTypes {
           }
         } else {
           logBuffer.log(parseError(call.location(),
-              "`" + name + "`" + " cannot be called as it is not a function."));
+              description(called) + " cannot be called as it is not a function."));
           call.setType(Optional.empty());
         }
+      }
+
+      private static String description(ExprNode node) {
+        if (node instanceof RefNode refNode) {
+          return "`" + refNode.name() + "`";
+        }
+        return "expression";
       }
 
       @Override
