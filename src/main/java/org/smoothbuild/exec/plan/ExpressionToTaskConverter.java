@@ -88,7 +88,7 @@ public class ExpressionToTaskConverter
       var name = expression.field().name().get();
       var algorithm = new ReadTupleElementAlgorithm(
           structType.fieldIndex(name), type.visit(toSpecConverter));
-      var children = childrenTasks(scope, expression.expression());
+      var children = childrenTasks(scope, list(expression.expression()));
       return new NormalTask(CALL, type, "." + name, algorithm, children, expression.location());
     });
   }
@@ -255,16 +255,7 @@ public class ExpressionToTaskConverter
   }
 
   private List<TaskSupplier> childrenTasks(Scope<TaskSupplier> scope, List<Expression> children) {
-    ImmutableList.Builder<TaskSupplier> builder = ImmutableList.builder();
-    for (Expression child : children) {
-      builder.add(child.visit(scope, this));
-    }
-    return builder.build();
-  }
-
-  private ImmutableList<TaskSupplier> childrenTasks(Scope<TaskSupplier> scope,
-      Expression expression) {
-    return list(expression.visit(scope, this));
+    return map(children, ch -> ch.visit(scope, this));
   }
 
   private ImmutableList<TaskSupplier> convertedElements(Type type, List<TaskSupplier> elements) {
