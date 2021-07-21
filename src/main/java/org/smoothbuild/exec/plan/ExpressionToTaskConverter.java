@@ -31,10 +31,10 @@ import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
 import org.smoothbuild.exec.algorithm.FunctionReferenceAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
+import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.CallTask;
 import org.smoothbuild.exec.compute.DefaultValueTask;
 import org.smoothbuild.exec.compute.IfTask;
-import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.exec.compute.VirtualTask;
@@ -91,7 +91,7 @@ public class ExpressionToTaskConverter
       var algorithm = new ReadTupleElementAlgorithm(
           structType.fieldIndex(name), type.visit(toSpecConverter));
       var children = childrenTasks(scope, list(expression.expression()));
-      return new NormalTask(CALL, type, "." + name, algorithm, children, expression.location());
+      return new AlgorithmTask(CALL, type, "." + name, algorithm, children, expression.location());
     });
   }
 
@@ -104,7 +104,7 @@ public class ExpressionToTaskConverter
           var algorithm = new CallNativeAlgorithm(methodLoader,
               value.type().visit(toSpecConverter), value, nativ.isPure());
           var nativeCode = visit(scope, nativ);
-          return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
+          return new AlgorithmTask(VALUE, value.type(), value.extendedName(), algorithm,
               list(nativeCode), reference.location());
         });
       } else {
@@ -121,7 +121,7 @@ public class ExpressionToTaskConverter
         var module = definitions.modules().get(function.modulePath());
         var algorithm = new FunctionReferenceAlgorithm(
             function, module, toSpecConverter.functionSpec());
-        return new NormalTask(FUNCTION_REFERENCE, type, function.extendedName(),
+        return new AlgorithmTask(FUNCTION_REFERENCE, type, function.extendedName(),
             algorithm, list(), reference.location());
       });
     }
@@ -202,7 +202,7 @@ public class ExpressionToTaskConverter
   private Task taskForConstructorCall(TaskKind taskKind, Type resultType, TupleSpec tupleSpec,
       String name, List<TaskSupplier> dependencies, Location location) {
     var algorithm = new CreateTupleAlgorithm(tupleSpec);
-    return new NormalTask(taskKind, resultType, name, algorithm, dependencies, location);
+    return new AlgorithmTask(taskKind, resultType, name, algorithm, dependencies, location);
   }
 
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
@@ -225,7 +225,7 @@ public class ExpressionToTaskConverter
       var dependencies = concat(nativeCode, convertedArguments(actualParameterTypes, arguments));
       var algorithm = new CallNativeAlgorithm(methodLoader, actualResultType.visit(toSpecConverter),
           function, nativ.isPure());
-      return new NormalTask(CALL, actualResultType, function.extendedName(), algorithm,
+      return new AlgorithmTask(CALL, actualResultType, function.extendedName(), algorithm,
           dependencies, location);
     }
   }
@@ -247,7 +247,7 @@ public class ExpressionToTaskConverter
     return new TaskSupplier(actualType, expression.location(), () -> {
       var algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
       var convertedElements = convertedElements(actualType.elemType(), elements);
-      return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
+      return new AlgorithmTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
           expression.location());
     });
   }
@@ -265,7 +265,7 @@ public class ExpressionToTaskConverter
     return new TaskSupplier(blob(), expression.location(), () -> {
       var blobSpec = toSpecConverter.visit(blob());
       var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
-      return new NormalTask(
+      return new AlgorithmTask(
           LITERAL, blob(), algorithm.shortedLiteral(), algorithm, list(), expression.location());
     });
   }
@@ -285,7 +285,7 @@ public class ExpressionToTaskConverter
       var stringType = toSpecConverter.visit(string());
       var algorithm = new FixedStringAlgorithm(stringType, string);
       var name = algorithm.shortedString();
-      return new NormalTask(TaskKind.LITERAL, string(), name, algorithm, list(), location);
+      return new AlgorithmTask(TaskKind.LITERAL, string(), name, algorithm, list(), location);
     });
   }
 
@@ -314,7 +314,7 @@ public class ExpressionToTaskConverter
       var description = requiredType.name() + "<-" + task.type().name();
       var algorithm = new ConvertAlgorithm(requiredType.visit(toSpecConverter));
       var dependencies = list(task);
-      return new NormalTask(
+      return new AlgorithmTask(
           CONVERSION, requiredType, description, algorithm, dependencies, task.location());
     });
   }
