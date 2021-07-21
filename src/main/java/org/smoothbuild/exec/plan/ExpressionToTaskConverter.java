@@ -215,15 +215,16 @@ public class ExpressionToTaskConverter
   private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<TaskSupplier> arguments,
       RealFunction function, NativeExpression nativ, BoundedVariables variables, Type actualResultType,
       Location location) {
-    var nativeCode = visit(scope, nativ);
-    var algorithm = new CallNativeAlgorithm(methodLoader, actualResultType.visit(toSpecConverter),
-        function, nativ.isPure());
     var actualParameterTypes = map(
         function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
-    var dependencies = concat(nativeCode, convertedArguments(actualParameterTypes, arguments));
     if (function.name().equals(IF_FUNCTION_NAME)) {
-      return new IfTask(actualResultType, algorithm, dependencies, location);
+      var dependencies = convertedArguments(actualParameterTypes, arguments);
+      return new IfTask(actualResultType, dependencies, location);
     } else {
+      var nativeCode = visit(scope, nativ);
+      var dependencies = concat(nativeCode, convertedArguments(actualParameterTypes, arguments));
+      var algorithm = new CallNativeAlgorithm(methodLoader, actualResultType.visit(toSpecConverter),
+          function, nativ.isPure());
       return new NormalTask(CALL, actualResultType, function.extendedName(), algorithm,
           dependencies, location);
     }
