@@ -1,11 +1,11 @@
 package org.smoothbuild.exec.plan;
 
-import static org.smoothbuild.exec.compute.IfTask.IF_FUNCTION_NAME;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.FUNCTION_REFERENCE;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
+import static org.smoothbuild.lang.base.define.InternalModule.IF_FUNCTION_NAME;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
@@ -208,8 +208,12 @@ public class ExpressionToTaskConverter
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
       RealFunction function, List<TaskSupplier> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
-    var taskSupplier = convertIfNeeded(actualResultType, function.body().visit(newScope, this));
-    return new VirtualTask(CALL, function.extendedName(), taskSupplier, location);
+    if (function.name().equals(IF_FUNCTION_NAME)) {
+      return new IfTask(actualResultType, arguments, location);
+    } else {
+      var taskSupplier = convertIfNeeded(actualResultType, function.body().visit(newScope, this));
+      return new VirtualTask(CALL, function.extendedName(), taskSupplier, location);
+    }
   }
 
   private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<TaskSupplier> arguments,
@@ -217,17 +221,12 @@ public class ExpressionToTaskConverter
       Location location) {
     var actualParameterTypes = map(
         function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
-    if (function.name().equals(IF_FUNCTION_NAME)) {
-      var dependencies = convertedArguments(actualParameterTypes, arguments);
-      return new IfTask(actualResultType, dependencies, location);
-    } else {
-      var nativeCode = visit(scope, nativ);
-      var dependencies = concat(nativeCode, convertedArguments(actualParameterTypes, arguments));
-      var algorithm = new CallNativeAlgorithm(methodLoader, actualResultType.visit(toSpecConverter),
-          function, nativ.isPure());
-      return new AlgorithmTask(CALL, actualResultType, function.extendedName(), algorithm,
-          dependencies, location);
-    }
+    var nativeCode = visit(scope, nativ);
+    var dependencies = concat(nativeCode, convertedArguments(actualParameterTypes, arguments));
+    var algorithm = new CallNativeAlgorithm(methodLoader, actualResultType.visit(toSpecConverter),
+        function, nativ.isPure());
+    return new AlgorithmTask(CALL, actualResultType, function.extendedName(), algorithm,
+        dependencies, location);
   }
 
   private static ImmutableMap<String, TaskSupplier> nameToArgumentMap(

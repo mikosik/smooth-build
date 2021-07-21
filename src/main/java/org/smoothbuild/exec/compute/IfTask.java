@@ -2,6 +2,7 @@ package org.smoothbuild.exec.compute;
 
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
+import static org.smoothbuild.lang.base.define.InternalModule.IF_FUNCTION_NAME;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -14,7 +15,6 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 
 public class IfTask extends StepTask {
-  public static final String IF_FUNCTION_NAME = "if";
 
   public IfTask(Type type, List<? extends TaskSupplier> dependencies, Location location) {
     super(CALL, type, IF_FUNCTION_NAME + PARENTHESES, dependencies, location);

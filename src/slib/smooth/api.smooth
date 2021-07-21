@@ -31,13 +31,6 @@ Bool equal(
   A second,
 );
 
-@Native("org.smoothbuild.slib.common.IfFunction.function")
-A if(
-  Bool condition,
-  A thenValue,
-  A elseValue,
-);
-
 @Native("org.smoothbuild.slib.common.ConcatFunction.function")
 [A] concat(
   [A] array1,

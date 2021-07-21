@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.base.define;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
@@ -19,7 +18,7 @@ public class RealFunction extends Function {
   public RealFunction(Type resultType, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Expression body, Location location) {
     super(resultType, modulePath, name, parameters, location);
-    this.body = requireNonNull(body);
+    this.body = body;
   }
 
   public Expression body() {

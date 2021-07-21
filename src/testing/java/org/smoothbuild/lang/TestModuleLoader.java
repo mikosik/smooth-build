@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.io.fs.base.TestingFilePath.BUILD_FILE_PATH;
-import static org.smoothbuild.lang.base.define.SModule.baseTypesModule;
+import static org.smoothbuild.lang.base.define.InternalModule.internalModule;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.importedModuleFiles;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
 
@@ -32,7 +32,7 @@ public class TestModuleLoader {
 
   public static TestModuleLoader module(String sourceCode) {
     return new TestModuleLoader(
-        sourceCode, moduleFiles(), Definitions.empty().withModule(baseTypesModule()));
+        sourceCode, moduleFiles(), Definitions.empty().withModule(internalModule()));
   }
 
   public TestModuleLoader(String sourceCode, ModuleFiles moduleFiles, Definitions imported) {

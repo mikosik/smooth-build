@@ -9,7 +9,7 @@ import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
-import static org.smoothbuild.lang.base.define.SModule.baseTypesModule;
+import static org.smoothbuild.lang.base.define.InternalModule.internalModule;
 import static org.smoothbuild.lang.base.define.SModule.calculateModuleHash;
 import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 
@@ -59,7 +59,7 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
     reporter.startNewPhase("Parsing");
 
-    Definitions allDefinitions = Definitions.empty().withModule(baseTypesModule());
+    Definitions allDefinitions = Definitions.empty().withModule(internalModule());
     ImmutableMap<ModulePath, ModuleFiles> files = moduleFilesDetector.detect(MODULES);
     for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
       ModuleFiles moduleFiles = entry.getValue();
