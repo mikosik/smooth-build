@@ -68,10 +68,6 @@ public class TestingLang {
     return new FieldReadExpression(field, expression, loc(line));
   }
 
-  public static CallExpression call(Type type, Function function, Expression... arguments) {
-    return call(1, type, function, arguments);
-  }
-
   public static CallExpression call(
       int line, Type type, Function function, Expression... arguments) {
     Location loc = loc(line);
