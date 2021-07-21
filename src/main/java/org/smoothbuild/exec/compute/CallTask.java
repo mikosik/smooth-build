@@ -3,6 +3,7 @@ package org.smoothbuild.exec.compute;
 import static org.smoothbuild.util.Lists.skipFirst;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Tuple;
@@ -14,10 +15,8 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.BoundedVariables;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.Scope;
-import org.smoothbuild.util.concurrent.Feeder;
-import org.smoothbuild.util.concurrent.FeedingConsumer;
 
-public class CallTask extends Task {
+public class CallTask extends StepTask {
   private final BoundedVariables variables;
   private final Scope<TaskSupplier> scope;
   private final ExpressionToTaskConverter expressionToTaskConverter;
@@ -32,15 +31,8 @@ public class CallTask extends Task {
   }
 
   @Override
-  public Feeder<Obj> startComputation(Worker worker) {
-    FeedingConsumer<Obj> result = new FeedingConsumer<>();
-    Feeder<Obj> functionFeeder = dependencies.get(0).getTask().startComputation(worker);
-    functionFeeder.addConsumer(o -> onFunctionAvailable((Tuple) o, worker, result));
-    return result;
-  }
-
-  private void onFunctionAvailable(Tuple functionTuple, Worker worker, FeedingConsumer<Obj> result) {
-    String functionName = FunctionTuple.name(functionTuple).jValue();
+  protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
+    String functionName = FunctionTuple.name(((Tuple) obj)).jValue();
     Task task = expressionToTaskConverter.taskForCall(
         scope, variables, type(), functionName, skipFirst(dependencies), location());
     task.startComputation(worker).addConsumer(result);

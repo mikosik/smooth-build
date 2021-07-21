@@ -1,32 +1,23 @@
 package org.smoothbuild.exec.compute;
 
+import static org.smoothbuild.util.Lists.list;
+
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.util.concurrent.Feeder;
-import org.smoothbuild.util.concurrent.FeedingConsumer;
 
-import com.google.common.collect.ImmutableList;
-
-public class VirtualTask extends Task {
-  private final TaskSupplier task;
-
+public class VirtualTask extends StepTask {
   public VirtualTask(TaskKind kind, String name, TaskSupplier task, Location location) {
-    super(kind, task.type(), name, ImmutableList.of(task), location);
-    this.task = task;
+    super(kind, task.type(), name, list(task), location);
   }
 
   @Override
-  public Feeder<Obj> startComputation(Worker worker) {
-    FeedingConsumer<Obj> result = new FeedingConsumer<>();
-    task.getTask().startComputation(worker).addConsumer(
-        obj -> {
-          worker.reporter().print(this, ResultSource.GROUP, List.of());
-          result.accept(obj);
-        });
-    return result;
+  protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
+    worker.reporter().print(this, ResultSource.GROUP, List.of());
+    result.accept(obj);
   }
 }
