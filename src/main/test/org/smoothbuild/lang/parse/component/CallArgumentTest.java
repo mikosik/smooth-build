@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Test;
 
-public class CallTest {
+public class CallArgumentTest {
   @Test
   public void passing_more_positional_arguments_than_parameters_causes_error() {
     module("""
