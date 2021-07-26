@@ -5,7 +5,6 @@ import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.FUNCTION_REFERENCE;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
-import static org.smoothbuild.lang.base.define.InternalModule.IF_FUNCTION_NAME;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
@@ -42,6 +41,7 @@ import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.IfFunction;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.RealFunction;
@@ -189,6 +189,8 @@ public class ExpressionToTaskConverter
       } else {
         return taskForDefinedFunction(scope, actualResultType, realFunction, arguments, location);
       }
+    } else if (function instanceof IfFunction) {
+      return new IfTask(actualResultType, arguments, location);
     } else if (function instanceof Constructor constructor) {
       var resultType = constructor.type().resultType();
       var tupleSpec = (TupleSpec) resultType.visit(toSpecConverter);
@@ -208,12 +210,8 @@ public class ExpressionToTaskConverter
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
       RealFunction function, List<TaskSupplier> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
-    if (function.name().equals(IF_FUNCTION_NAME)) {
-      return new IfTask(actualResultType, arguments, location);
-    } else {
-      var taskSupplier = convertIfNeeded(actualResultType, function.body().visit(newScope, this));
-      return new VirtualTask(CALL, function.extendedName(), taskSupplier, location);
-    }
+    var taskSupplier = convertIfNeeded(actualResultType, function.body().visit(newScope, this));
+    return new VirtualTask(CALL, function.extendedName(), taskSupplier, location);
   }
 
   private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<TaskSupplier> arguments,

@@ -3,7 +3,7 @@ package org.smoothbuild.exec.compute;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
-import static org.smoothbuild.lang.base.define.InternalModule.IF_FUNCTION_NAME;
+import static org.smoothbuild.lang.base.define.IfFunction.IF_FUNCTION_NAME;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
