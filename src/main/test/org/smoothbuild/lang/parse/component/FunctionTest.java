@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.TestingLang.nativ;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -18,7 +19,8 @@ public class FunctionTest {
           String nonDefault);
         """)
         .loadsSuccessfully()
-        .containsReferencable(function(2, STRING, "myFunction", "Impl.met",
+        .containsReferencable(function(2, STRING, "myFunction",
+            nativ(1, "Impl.met"),
             parameter(STRING, "default", string(3, "value")),
             parameter(STRING, "nonDefault")));
   }

@@ -5,7 +5,9 @@ import static org.smoothbuild.lang.TestingLang.array;
 import static org.smoothbuild.lang.TestingLang.blob;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.TestingLang.nativ;
 import static org.smoothbuild.lang.TestingLang.parameter;
+import static org.smoothbuild.lang.TestingLang.reference;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
@@ -13,10 +15,10 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
+import static org.smoothbuild.lang.base.type.TestingTypes.item;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.define.RealFunction;
 
 public class TrailingCommaTest {
   @Nested
@@ -60,7 +62,7 @@ public class TrailingCommaTest {
       module(functionDeclaration("String param1,"))
           .loadsSuccessfully()
           .containsReferencable(
-              function(2, STRING, "myFunction", "Impl.met", parameter(STRING, "param1")));
+              function(2, STRING, "myFunction", nativ(1, "Impl.met"), parameter(STRING, "param1")));
     }
 
     @Test
@@ -95,7 +97,7 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(functionTypeDeclaration("String,"))
           .loadsSuccessfully()
-          .containsReferencable(value(2, f(BLOB, STRING), "myValue", "Impl.met"));
+          .containsReferencable(value(2, f(BLOB, STRING), "myValue", nativ(1, "Impl.met")));
     }
 
     @Test
@@ -162,10 +164,10 @@ public class TrailingCommaTest {
   class argument_list {
     @Test
     public void can_have_trailing_comma() {
-      RealFunction function = function(2, BLOB, "myFunction", "Impl.met", parameter(BLOB, "blob"));
       module(functionCall("0x07,"))
           .loadsSuccessfully()
-          .containsReferencable(value(3, BLOB, "result", call(3, BLOB, function, blob(3, 7))));
+          .containsReferencable(value(3, BLOB, "result",
+              call(3, BLOB, reference(3, f(BLOB, item(BLOB, "blob")), "myFunction"), blob(3, 7))));
     }
 
     @Test

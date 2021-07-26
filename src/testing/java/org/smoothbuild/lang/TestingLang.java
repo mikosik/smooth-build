@@ -1,7 +1,6 @@
 package org.smoothbuild.lang;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.lang.Math.max;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Constructor;
-import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.RealFunction;
@@ -69,22 +67,19 @@ public class TestingLang {
   }
 
   public static CallExpression call(
-      int line, Type type, Function function, Expression... arguments) {
+      int line, Type type, Expression expression, Expression... arguments) {
     Location loc = loc(line);
-    ReferenceExpression reference = new ReferenceExpression(function.name(), function.type(), loc);
     var args = stream(arguments).map(Optional::of).collect(toImmutableList());
-    return new CallExpression(type, reference, args, loc);
+    return new CallExpression(type, expression, args, loc);
   }
 
   public static RealFunction function(Type type, String name, Item... parameters) {
-    return function(1, type, name, "Impl.met", parameters);
+    return function(1, type, name, nativ(1, "Impl.met"), parameters);
   }
 
-  public static RealFunction function(int line, Type type, String name, String implementedBy,
+  public static RealFunction function(int line, Type type, String name, NativeExpression nativ,
       Item... parameters) {
-    NativeExpression nativeExpression = new NativeExpression(
-        implementedBy, true, loc(max(line - 1, 1)));
-    return function(line, type, name, nativeExpression, parameters);
+    return function(line, type, name, (Expression) nativ, parameters);
   }
 
   public static RealFunction function(Type type, String name, Expression body, Item... parameters) {
@@ -97,9 +92,16 @@ public class TestingLang {
         type, modulePath(), name, ImmutableList.copyOf(parameters), body, loc(line));
   }
 
-  public static Value value(int line, Type type, String name, String implementedBy) {
-    NativeExpression nativ = new NativeExpression(implementedBy, true, loc(line -1));
+  public static Value value(int line, Type type, String name, NativeExpression nativ) {
     return new Value(type, modulePath(), name, nativ, loc(line));
+  }
+
+  public static NativeExpression nativ(int line, String implementedBy) {
+    return nativ(line, implementedBy, true);
+  }
+
+  public static NativeExpression nativ(int line, String implementedBy, boolean pure) {
+    return new NativeExpression(implementedBy, pure, loc(line));
   }
 
   public static Value value(int line, Type type, String name, Expression expression) {
