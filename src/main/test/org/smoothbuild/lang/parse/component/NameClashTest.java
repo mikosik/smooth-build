@@ -205,7 +205,7 @@ public class NameClashTest {
              @Native("impl")
              String myFunction(
                String param,
-               String param);    
+               String param);
                """)
           .loadsWithError(4, alreadyDefinedIn(filePath(), 3, "param"));
     }
