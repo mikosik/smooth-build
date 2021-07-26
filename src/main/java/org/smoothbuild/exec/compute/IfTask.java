@@ -1,8 +1,10 @@
 package org.smoothbuild.exec.compute;
 
+import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
 import static org.smoothbuild.lang.base.define.InternalModule.IF_FUNCTION_NAME;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -24,7 +26,12 @@ public class IfTask extends StepTask {
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
     boolean condition = ((Bool) obj).jValue();
     Task subTaskToCompute = condition ? thenTask() : elseTask();
-    subTaskToCompute.startComputation(worker).addConsumer(result);
+    subTaskToCompute.startComputation(worker)
+        .chain((o) -> {
+          worker.reporter().print(this, EXECUTION, list());
+          return o;
+        })
+        .addConsumer(result);
   }
 
   private Task thenTask() {

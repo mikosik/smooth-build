@@ -161,6 +161,9 @@ public class BuildCommandTest {
       private static final String NATIVE_CALL_TASK_HEADER = """
           concat()                                 build.smooth:1
           """;
+      private static final String IF_CALL_TASK_HEADER = """
+          if()                                     build.smooth:1
+          """;
 
       @Test
       public void shows_call_when_enabled() throws IOException {
@@ -184,7 +187,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void shows_native_call_when_enabled() throws IOException {
+      public void shows_call_to_native_function_when_enabled() throws IOException {
         createUserModule("""
                 result = concat(["a"], ["b"]);
                 """);
@@ -194,13 +197,33 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_native_calls_when_not_enabled() throws IOException {
+      public void hides_call_to_native_function_when_not_enabled() throws IOException {
         createUserModule("""
                 result = concat(["a"], ["b"]);
                 """);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
+      }
+
+      @Test
+      public void shows_call_to_internal_if_function_when_enabled() throws IOException {
+        createUserModule("""
+                result = if(true, "true", "false");
+                """);
+        runSmooth(buildCommand("--show-tasks=call", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(IF_CALL_TASK_HEADER);
+      }
+
+      @Test
+      public void shows_call_to_internal_if_function_when_not_enabled() throws IOException {
+        createUserModule("""
+                result = if(true, "true", "false");
+                """);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(IF_CALL_TASK_HEADER);
       }
     }
 
