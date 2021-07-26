@@ -93,6 +93,31 @@ public class ExpressionTest {
     }
 
     @Test
+    public void with_value_reference() {
+      module("""
+          @Native("Impl.met")
+          String() myValue;
+          result = myValue();
+          """)
+          .loadsSuccessfully()
+          .containsReferencable(
+              value(3, STRING, "result", call(3, STRING, reference(3, f(STRING), "myValue"))));
+    }
+
+    @Test
+    public void with_value_reference_and_argument() {
+      module("""
+          @Native("Impl.met")
+          String(Blob) myValue;
+          result = myValue(
+            0x07);
+          """)
+          .loadsSuccessfully()
+          .containsReferencable(value(3, STRING, "result", call(3, STRING,
+              reference(3, f(STRING, item(BLOB)), "myValue"), blob(4, 7))));
+    }
+
+    @Test
     public void with_constructor_reference() {
       StructType struct = struct("MyStruct", itemSignature(STRING, "field"));
       Constructor constr = constr(1, struct, "myStruct", parameter(STRING, "field"));
@@ -118,6 +143,27 @@ public class ExpressionTest {
           .loadsSuccessfully()
           .containsReferencable(value(4, struct, "result", call(4, struct,
               reference(4, f(struct, item(STRING, "field")), "myStruct"), string(5, "aaa"))));
+    }
+
+    @Test
+    public void with_parameter_reference() {
+      module("""
+          result(String() f) = f();
+          """)
+          .loadsSuccessfully()
+          .containsReferencable(function(1, STRING, "result",
+              call(1, STRING, parameterRef(f(STRING), "f")), parameter(f(STRING), "f")));
+    }
+
+    @Test
+    public void with_parameter_reference_and_argument() {
+      module("""
+          result(String(Blob) f) = f(0x09);
+          """)
+          .loadsSuccessfully()
+          .containsReferencable(function(1, STRING, "result",
+              call(1, STRING, parameterRef(f(STRING, BLOB), "f"), blob(1, 9)),
+              parameter(f(STRING, BLOB), "f")));
     }
   }
 
@@ -235,6 +281,18 @@ public class ExpressionTest {
           .loadsSuccessfully()
           .containsReferencable(value(2, f(STRING), "result",
               reference(3, f(STRING), "myFunction")));
+    }
+
+    @Test
+    public void to_constructor() {
+      module("""
+          MyStruct {}
+          MyStruct() result =
+            myStruct;
+          """)
+          .loadsSuccessfully()
+          .containsReferencable(value(2, f(struct("MyStruct")), "result",
+              reference(3, f(struct("MyStruct")), "myStruct")));
     }
   }
 

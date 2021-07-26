@@ -110,8 +110,8 @@ public class TestingLang {
     return new NativeExpression(implementedBy, pure, loc(line));
   }
 
-  public static StructType struct(String name, ItemSignature field) {
-    return Types.struct(name, list(field));
+  public static StructType struct(String name, ItemSignature... fields) {
+    return Types.struct(name, list(fields));
   }
 
   public static Constructor constr(int line, Type resultType, String name, Item... parameters) {
