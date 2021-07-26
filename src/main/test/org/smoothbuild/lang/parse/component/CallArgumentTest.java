@@ -26,6 +26,17 @@ public class CallArgumentTest {
   }
 
   @Test
+  public void passing_less_positional_arguments_than_parameters_causes_error_version_without_name() {
+    module("""
+           returnFirst(String param1, String param2) = param1;
+           functionValue = returnFirst;
+           result = functionValue("abc");
+           """)
+        .loadsWithError(3, "In call to function with type `String(String, String)`:" +
+            " Parameter #2 must be specified.");
+  }
+
+  @Test
   public void named_argument_which_doesnt_exist_causes_error() {
     module("""
            myIdentity(String param) = param;

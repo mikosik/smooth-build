@@ -40,6 +40,16 @@ public class CallTest {
     }
 
     @Test
+    public void value_of_function_with_parameter_type_succeeds() {
+      module("""
+             @Native("impl")
+             String(String) myFunctionValue;
+             result = myFunctionValue("abc");
+             """)
+          .loadsSuccessfully();
+    }
+
+    @Test
     public void value_of_function_type_declared_below_succeeds() {
       module("""
              result = myFunctionValue();
@@ -55,6 +65,16 @@ public class CallTest {
              @Native("impl")
              String myFunction();
              result = myFunction();
+             """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void function_with_parameter_succeeds() {
+      module("""
+             @Native("impl")
+             String myFunction(String string);
+             result = myFunction("abc");
              """)
           .loadsSuccessfully();
     }
@@ -164,6 +184,14 @@ public class CallTest {
     public void of_function_type_succeeds() {
       module("""
              myFunction(String() param) = param();
+             """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void of_function_with_parameter_type_succeeds() {
+      module("""
+             myFunction(String(String) param) = param("abc");
              """)
           .loadsSuccessfully();
     }

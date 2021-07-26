@@ -4,17 +4,17 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Collections.nCopies;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
@@ -24,6 +24,7 @@ import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class InferArgsToParamsAssignment {
   public static Maybe<List<Optional<ArgNode>>> inferArgsToParamsAssignment(
@@ -99,10 +100,7 @@ public class InferArgsToParamsAssignment {
 
   private static List<Log> findDuplicateAssignmentErrors(
       CallNode call, List<ArgNode> positionalArguments, List<ItemSignature> parameters) {
-    var names = new HashSet<String>();
-    parameters.stream()
-        .limit(positionalArguments.size())
-        .forEach(p -> names.add(p.name().get()));
+    Set<String> names = positionalArgumentNames(positionalArguments, parameters);
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)
@@ -111,25 +109,38 @@ public class InferArgsToParamsAssignment {
         .collect(toList());
   }
 
+  private static Set<String> positionalArgumentNames(List<ArgNode> positionalArguments,
+      List<ItemSignature> parameters) {
+    return parameters.stream()
+        .limit(positionalArguments.size())
+        .flatMap(p -> p.name().stream())
+        .collect(toSet());
+  }
+
   private static List<Log> findUnassignedParametersWithoutDefaultValuesErrors(CallNode call,
       List<Optional<ArgNode>> assignedList, List<ItemSignature> parameters) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())
-        .mapToObj(parameters::get)
-        .filter(p -> !p.hasDefaultValue())
-        .map(p -> parameterMustBeSpecifiedError(call, p))
+        .filter(i -> !parameters.get(i).hasDefaultValue())
+        .mapToObj(i -> parameterMustBeSpecifiedError(call, i, parameters.get(i)))
         .collect(toList());
   }
 
-  private static Log parameterMustBeSpecifiedError(CallNode call, ItemSignature param) {
-    return parseError(call, inCallToPrefix(call) + "Parameter `" + param.name().get() +
-        "` must be specified.");
+  private static Log parameterMustBeSpecifiedError(CallNode call, int i, ItemSignature param) {
+    String paramName = param.name().map(n -> "`" + n + "`").orElse("#" + (i + 1));
+    return parseError(call,
+        inCallToPrefix(call) + "Parameter " + paramName + " must be specified.");
   }
 
   private static Map<String, Integer> nameToIndex(List<ItemSignature> parameters) {
-    return range(0, parameters.size())
-        .boxed()
-        .collect(toMap(i -> parameters.get(i).name().get(), i -> i));
+    var builder = ImmutableMap.<String, Integer>builder();
+    for (int i = 0; i < parameters.size(); i++) {
+      Optional<String> name = parameters.get(i).name();
+      if (name.isPresent()) {
+        builder.put(name.get(), i);
+      }
+    }
+    return builder.build();
   }
 
   private static String inCallToPrefix(CallNode call) {
