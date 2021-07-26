@@ -326,9 +326,8 @@ public class AnalyzeSemantically {
 
   private static Log alreadyDefinedError(Named named, Location location) {
     String atLocation = location.equals(Location.internal())
-        ? ""
-        : " at " + location;
-    return parseError(
-        named.location(), "`" + named.name() + "` is already defined" + atLocation + ".");
+        ? " internally."
+        : " at " + location + ".";
+    return parseError(named.location(), "`" + named.name() + "` is already defined" + atLocation);
   }
 }

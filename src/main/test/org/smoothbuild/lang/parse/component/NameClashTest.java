@@ -92,6 +92,17 @@ public class NameClashTest {
             .loadsWithError(2, alreadyDefinedIn(filePath(), "myStruct"));
       }
     }
+
+    @Nested
+    class internal {
+      @Test
+      public void function() {
+        module("""
+                if = "def";
+                """)
+            .loadsWithError(1, alreadyDefinedInternally("if"));
+      }
+    }
   }
 
   @Nested
@@ -173,6 +184,17 @@ public class NameClashTest {
             .loadsWithError(2, alreadyDefinedIn(filePath(), "myStruct"));
       }
     }
+
+    @Nested
+    class internal {
+      @Test
+      public void function() {
+        module("""
+                if() = "def";
+                """)
+            .loadsWithError(1, alreadyDefinedInternally("if"));
+      }
+    }
   }
 
   @Nested
@@ -198,7 +220,7 @@ public class NameClashTest {
         module("""
                String {}
                """)
-            .loadsWithError(1, "`" + "String" + "` is already defined.");
+            .loadsWithError(1, "`" + "String" + "` is already defined internally.");
       }
 
       @Test
@@ -305,6 +327,17 @@ public class NameClashTest {
             .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunction"));
       }
     }
+
+    @Nested
+    class internal {
+      @Test
+      public void function() {
+        module("""
+                If{}
+                """)
+            .loadsWithError(1, alreadyDefinedInternally("if"));
+      }
+    }
   }
 
   private static String alreadyDefinedIn(FilePath filePath, String name) {
@@ -313,5 +346,9 @@ public class NameClashTest {
 
   private static String alreadyDefinedIn(FilePath filePath, int line, String name) {
     return "`" + name + "` is already defined at " + filePath.path() + ":" + line + ".";
+  }
+
+  private static String alreadyDefinedInternally(String name) {
+    return "`" + name + "` is already defined internally.";
   }
 }
