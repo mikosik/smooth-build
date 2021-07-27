@@ -145,7 +145,7 @@ public class TestedType {
   /**
    * Polytypes that can be used in any place. Each variable in such a polytype occurs exactly once.
    */
-  public static final List<TestedType> TESTED_INVALID_POLYTYPES = list(
+  public static final List<TestedType> TESTED_SINGLE_VARIABLE_POLYTYPES = list(
       A,
       a(A),
       a(a(A)),
@@ -159,7 +159,7 @@ public class TestedType {
   public static final List<TestedType> TESTED_TYPES = ImmutableList.<TestedType>builder()
       .addAll(TESTED_MONOTYPES)
       .addAll(TESTED_VALID_POLYTYPES)
-      .addAll(TESTED_INVALID_POLYTYPES)
+      .addAll(TESTED_SINGLE_VARIABLE_POLYTYPES)
       .build();
 
   public static TestedType a2(TestedType type) {

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.base.type.TestedType.TESTED_INVALID_POLYTYPES;
+import static org.smoothbuild.lang.base.type.TestedType.TESTED_SINGLE_VARIABLE_POLYTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_VALID_POLYTYPES;
 import static org.smoothbuild.util.Strings.unlines;
@@ -42,8 +42,8 @@ public class TypeTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(TestedInvalidPolytypes.class)
-    public void cannot_declare_invalid_polytype(TestedType type) {
+    @ArgumentsSource(TestedSingleVariablePolytypes.class)
+    public void cannot_declare_single_variable_polytype(TestedType type) {
       module(unlines(
           "@Native(\"Impl.met\")",
           type.name() + " myValue;",
@@ -100,8 +100,8 @@ public class TypeTest {
       }
 
       @ParameterizedTest
-      @ArgumentsSource(TestedInvalidPolytypes.class)
-      public void cannot_declare_invalid_polytype(TestedType type) {
+      @ArgumentsSource(TestedSingleVariablePolytypes.class)
+      public void cannot_declare_single_variable_polytype(TestedType type) {
         module(unlines(
             "@Native(\"impl\")",
             type.name() + " myFunction();",
@@ -156,8 +156,8 @@ public class TypeTest {
       }
 
       @ParameterizedTest
-      @ArgumentsSource(TestedInvalidPolytypes.class)
-      public void cannot_declare_invalid_polytype(TestedType type) {
+      @ArgumentsSource(TestedSingleVariablePolytypes.class)
+      public void cannot_declare_single_variable_polytype(TestedType type) {
         module(unlines(
             "@Native(\"Impl.met\")",
             "String myFunction(" + type.name() + " param);",
@@ -168,8 +168,8 @@ public class TypeTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(TestedInvalidPolytypes.class)
-    public void can_declare_invalid_polytype_when_param_has_such_type(TestedType type) {
+    @ArgumentsSource(TestedSingleVariablePolytypes.class)
+    public void can_declare_single_variable_polytype_when_param_type_has_such_variable(TestedType type) {
       module(unlines(
           "@Native(\"Impl.met\")",
           type.name() + " myFunction(" + type.name() + " param);",
@@ -178,8 +178,8 @@ public class TypeTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(TestedInvalidPolytypes.class)
-    public void can_declare_invalid_polytype_param_when_some_other_param_has_such_type(
+    @ArgumentsSource(TestedSingleVariablePolytypes.class)
+    public void can_declare_single_variable_polytype_param_when_some_other_param_has_such_type(
         TestedType type) {
       module(unlines(
           "@Native(\"Impl.met\")",
@@ -214,8 +214,8 @@ public class TypeTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(TestedInvalidPolytypes.class)
-    public void cannot_declare_invalid_polytype(TestedType testedType) {
+    @ArgumentsSource(TestedSingleVariablePolytypes.class)
+    public void cannot_declare_single_variable_polytype(TestedType testedType) {
       TestModuleLoader module = module(unlines(
           testedType.typeDeclarationsAsString(),
           "MyStruct {",
@@ -331,10 +331,10 @@ public class TypeTest {
     }
   }
 
-  private static class TestedInvalidPolytypes implements ArgumentsProvider {
+  private static class TestedSingleVariablePolytypes implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return TESTED_INVALID_POLYTYPES.stream()
+      return TESTED_SINGLE_VARIABLE_POLYTYPES.stream()
           .map(Arguments::of);
     }
   }
