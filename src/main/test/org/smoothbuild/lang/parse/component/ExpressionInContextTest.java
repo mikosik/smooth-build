@@ -156,6 +156,18 @@ public class ExpressionInContextTest {
         """)
           .loadsSuccessfully();
     }
+
+    @Test
+    public void function_in_call_expression() {
+      module("""
+        MyStruct {
+          String() myFunction
+        }
+        String justAbc() = "abc";
+        result = myStruct(justAbc).myFunction();
+        """)
+          .loadsSuccessfully();
+    }
   }
 
   @Nested
@@ -256,6 +268,16 @@ public class ExpressionInContextTest {
         """)
           .loadsSuccessfully();
     }
+
+    @Test
+    public void function_in_call_expression() {
+      module("""
+        String justAbc() = "abc";
+        String() highOrderFunction() = justAbc;
+        result = highOrderFunction()();
+        """)
+          .loadsSuccessfully();
+    }
   }
 
   @Nested
@@ -305,6 +327,15 @@ public class ExpressionInContextTest {
           """)
           .loadsSuccessfully();
     }
+
+    @Test
+    public void function_in_call_expression() {
+      module("""
+        String justAbc() = "abc";
+        result = justAbc();
+        """)
+          .loadsSuccessfully();
+    }
   }
 
   @Nested
@@ -352,6 +383,16 @@ public class ExpressionInContextTest {
           String myValue = "abc";
           String myFunction(String value = myValue) = "abc";
           """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void function_in_call_expression() {
+      module("""
+        String justAbc() = "abc";
+        myValue = justAbc;
+        result = myValue();
+        """)
           .loadsSuccessfully();
     }
   }
