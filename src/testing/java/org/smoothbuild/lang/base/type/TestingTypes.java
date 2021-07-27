@@ -22,12 +22,12 @@ public class TestingTypes {
   public static final StringType STRING = string();
   public static final BlobType BLOB = blob();
   public static final NothingType NOTHING = nothing();
-  public static final StructType PERSON = struct("Person", List.of(
+  public static final StructType PERSON = struct("Person", list(
           new ItemSignature(STRING, "firstName", Optional.empty()),
           new ItemSignature(STRING, "lastName", Optional.empty())));
-  public static final StructType FLAG = struct("Flag", List.of(
+  public static final StructType FLAG = struct("Flag", list(
           new ItemSignature(BOOL, "flag", Optional.empty())));
-  public static final StructType DATA = struct("Data", List.of(
+  public static final StructType DATA = struct("Data", list(
           new ItemSignature(BLOB, "data", Optional.empty())));
   public static final Variable A = variable("A");
   public static final Variable B = variable("B");
@@ -47,7 +47,7 @@ public class TestingTypes {
   public static final FunctionType ARRAY_LENGTH_FUNCTION = f(STRING, a(A));
 
   public static final ImmutableList<Type> FUNCTION_TYPES =
-      ImmutableList.of(
+      list(
           STRING_GETTER_FUNCTION,
           PERSON_GETTER_FUNCTION,
           STRING_MAP_FUNCTION,

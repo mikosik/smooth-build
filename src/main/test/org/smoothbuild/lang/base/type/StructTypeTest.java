@@ -33,21 +33,21 @@ public class StructTypeTest {
   @Test
   public void field_can_be_retrieved_by_name() {
     ItemSignature field = itemSignature(string(), "name1");
-    StructType struct = struct("Struct", List.of(field));
+    StructType struct = struct("Struct", list(field));
     assertThat(struct.fieldWithName("name1"))
         .isSameInstanceAs(field);
   }
 
   @Test
   public void contains_field_with_name_returns_true_for_existing_field() {
-    StructType struct = struct("Struct", List.of(itemSignature(string(), "name1")));
+    StructType struct = struct("Struct", list(itemSignature(string(), "name1")));
     assertThat(struct.containsFieldWithName("name1"))
         .isTrue();
   }
 
   @Test
   public void contains_field_with_name_returns_false_for_not_existing_field() {
-    StructType struct = struct("Struct", List.of(itemSignature(string(), "name1")));
+    StructType struct = struct("Struct", list(itemSignature(string(), "name1")));
     assertThat(struct.containsFieldWithName("name2"))
         .isFalse();
   }

@@ -4,6 +4,7 @@ import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.io.fs.base.TestingFilePath.importedFilePath;
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
@@ -235,7 +236,7 @@ public class NameClashTest {
                 OtherModuleStruct {}
                 """)
             .withImported(imported)
-            .loadsWithErrors(List.of(
+            .loadsWithErrors(list(
                     err(1, alreadyDefinedIn(importedFilePath(), "OtherModuleStruct")),
                     err(1, alreadyDefinedIn(importedFilePath(), "otherModuleStruct"))
                 ));
@@ -250,7 +251,7 @@ public class NameClashTest {
                OtherModuleStruct {}
                OtherModuleStruct {}
                """)
-            .loadsWithErrors(List.of(
+            .loadsWithErrors(list(
                     err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")),
                     err(2, alreadyDefinedIn(filePath(), "otherModuleStruct"))
                 ));

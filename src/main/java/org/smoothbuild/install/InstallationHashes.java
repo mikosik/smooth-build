@@ -3,6 +3,7 @@ package org.smoothbuild.install;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
+import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 import java.util.Map.Entry;
@@ -34,11 +35,11 @@ public class InstallationHashes {
   }
 
   public HashNode installationNode() throws IOException {
-    return new HashNode("installation", ImmutableList.of(sandboxNode(), standardLibsNode()));
+    return new HashNode("installation", list(sandboxNode(), standardLibsNode()));
   }
 
   public HashNode sandboxNode() throws IOException {
-    return new HashNode("sandbox", ImmutableList.of(smoothJarNode(), javaPlatformNode()));
+    return new HashNode("sandbox", list(smoothJarNode(), javaPlatformNode()));
   }
 
   private HashNode smoothJarNode() throws IOException {

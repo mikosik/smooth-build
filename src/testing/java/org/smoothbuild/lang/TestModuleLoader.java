@@ -7,6 +7,7 @@ import static org.smoothbuild.io.fs.base.TestingFilePath.BUILD_FILE_PATH;
 import static org.smoothbuild.lang.base.define.InternalModule.internalModule;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.importedModuleFiles;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
+import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -106,11 +108,11 @@ public class TestModuleLoader {
   }
 
   public void loadsWithError(int line, String message) {
-    loadsWithErrors(List.of(err(line, message)));
+    loadsWithErrors(list(err(line, message)));
   }
 
   public void loadsWithError(String message) {
-    loadsWithErrors(List.of(error(message)));
+    loadsWithErrors(list(error(message)));
   }
 
   public void loadsWithErrors(List<Log> errors) {

@@ -7,6 +7,7 @@ import static org.smoothbuild.exec.base.FileStruct.fileContent;
 import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.DuplicatesDetector;
+import org.smoothbuild.util.Lists;
 
 /**
  * This class is NOT thread-safe.
@@ -49,7 +51,7 @@ public class ArtifactSaver {
   }
 
   private Path saveFile(Path artifactPath, Tuple file) throws IOException, DuplicatedPathsException {
-    saveFileArray(artifactPath, List.of(file));
+    saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileObjectPath(file));
   }
 

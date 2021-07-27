@@ -4,6 +4,7 @@ import static com.google.common.truth.Fact.fact;
 import static com.google.common.truth.Fact.simpleFact;
 import static com.google.common.truth.Truth.assertAbout;
 import static java.util.Arrays.asList;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class AssertCall {
         Throwable actualThrowable = (Throwable) actual;
         check("getMessage()").that(actualThrowable.getMessage()).isEqualTo(expected.getMessage());
       }
-      return new ExceptionCauseSubject(List.of(
+      return new ExceptionCauseSubject(list(
           fact("expected call to throw", expectedClassName),
           fact("with message", ((Throwable) actual).getMessage())));
     }
@@ -61,7 +62,7 @@ public class AssertCall {
       } else if (actual.getClass() != expected) {
         failWithActual(fact("expected call to throw", expected.getCanonicalName()));
       }
-      return new ExceptionCauseSubject(List.of(
+      return new ExceptionCauseSubject(list(
           fact("expected call to throw", expected.getCanonicalName())));
     }
 

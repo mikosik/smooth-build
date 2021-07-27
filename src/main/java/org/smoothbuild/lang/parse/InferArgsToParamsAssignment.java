@@ -9,6 +9,7 @@ import static java.util.stream.IntStream.range;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
+import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -83,9 +85,9 @@ public class InferArgsToParamsAssignment {
   private static List<Log> findTooManyPositionalArgumentsError(
       CallNode call, List<ArgNode> positionalArguments, List<ItemSignature> parameters) {
     if (parameters.size() < positionalArguments.size()) {
-      return List.of(parseError(call, inCallToPrefix(call) + "Too many positional arguments."));
+      return list(parseError(call, inCallToPrefix(call) + "Too many positional arguments."));
     }
-    return List.of();
+    return list();
   }
 
   private static List<Log> findUnknownParameterNameErrors(

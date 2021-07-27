@@ -3,6 +3,7 @@ package org.smoothbuild.lang.parse.component;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -178,7 +179,7 @@ public class LiteralTest {
               myFunction(unknown2="")
             ];
             """)
-          .loadsWithErrors(List.of(
+          .loadsWithErrors(list(
               err(3, "In call to function with type `String()`: Unknown parameter `unknown1`."),
               err(4, "In call to function with type `String()`: Unknown parameter `unknown2`.")
           ));

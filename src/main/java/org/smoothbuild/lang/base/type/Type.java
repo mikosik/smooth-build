@@ -4,6 +4,7 @@ import static org.smoothbuild.lang.base.type.BoundedVariables.merge;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
 
@@ -26,7 +27,7 @@ public abstract class Type {
   protected final boolean isPolytype;
 
   protected Type(String name, TypeConstructor typeConstructor, boolean isPolytype) {
-    this(name, typeConstructor, ImmutableList.of(), ImmutableList.of(), isPolytype);
+    this(name, typeConstructor, list(), list(), isPolytype);
   }
 
   protected Type(String name, TypeConstructor typeConstructor,

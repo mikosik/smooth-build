@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class FunctionType extends Type {
     super(
         createName(result, parameters),
         createTypeConstructor(parameterTypes),
-        ImmutableList.of(result),
+        list(result),
         parameterTypes,
         createIsPolytype(result, parameterTypes));
     this.result = requireNonNull(result);

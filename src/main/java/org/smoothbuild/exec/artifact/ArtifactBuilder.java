@@ -4,6 +4,7 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.exec.artifact.ArtifactPaths.artifactPath;
+import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 import java.util.List;
@@ -73,11 +74,11 @@ public class ArtifactBuilder {
   }
 
   private void reportSuccess(String name, Path path) {
-    report(name, path.q(), List.of());
+    report(name, path.q(), list());
   }
 
   private void reportFailure(String name, String errorMessage) {
-    report(name, "???", List.of(error(errorMessage)));
+    report(name, "???", list(error(errorMessage)));
   }
 
   private void report(String name, String pathOrError, List<Log> logs) {

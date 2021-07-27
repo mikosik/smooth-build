@@ -20,6 +20,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STRING;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -91,7 +92,7 @@ public class SpecTest {
   }
 
   public static List<Arguments> jType_test_data() {
-    return List.of(
+    return list(
         arguments(ANY, Any.class),
         arguments(BOOL, Bool.class),
         arguments(STRING, Str.class),
@@ -112,7 +113,7 @@ public class SpecTest {
   }
 
   public static List<Arguments> elem_spec_test_data() {
-    return List.of(
+    return list(
         arguments(ARRAY_ANY, ANY),
         arguments(ARRAY_BOOL, BOOL),
         arguments(ARRAY_STRING, STRING),

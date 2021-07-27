@@ -15,6 +15,7 @@ import static org.smoothbuild.cli.console.Log.warning;
 import static org.smoothbuild.cli.console.Reporter.toText;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.ByteArrayOutputStream;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.util.Lists;
 
 public class ReporterTest extends TestingContext {
   private static final String HEADER = "TASK NAME";
@@ -45,7 +47,7 @@ public class ReporterTest extends TestingContext {
       reporter = new Reporter(console, null, FATAL);
       reporter.report("header", logsWithAllLevels());
       assertThat(outputStream.toString())
-          .contains(toText("header", List.of(FATAL_LOG)));
+          .contains(toText("header", list(FATAL_LOG)));
     }
 
     @Test
@@ -53,7 +55,7 @@ public class ReporterTest extends TestingContext {
       reporter = new Reporter(console, null, ERROR);
       reporter.report("header", logsWithAllLevels());
       assertThat(outputStream.toString())
-          .contains(toText("header", List.of(FATAL_LOG, ERROR_LOG)));
+          .contains(toText("header", list(FATAL_LOG, ERROR_LOG)));
     }
 
     @Test
@@ -61,7 +63,7 @@ public class ReporterTest extends TestingContext {
       reporter = new Reporter(console, null, WARNING);
       reporter.report("header", logsWithAllLevels());
       assertThat(outputStream.toString())
-          .contains(toText("header", List.of(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
+          .contains(toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
     }
 
     @Test
@@ -82,7 +84,7 @@ public class ReporterTest extends TestingContext {
         reporter = new Reporter(console, ALL, FATAL);
         reporter.report(task(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
-            .contains(toText("header", List.of(FATAL_LOG)));
+            .contains(toText("header", list(FATAL_LOG)));
       }
 
       @Test
@@ -90,7 +92,7 @@ public class ReporterTest extends TestingContext {
         reporter = new Reporter(console, ALL, ERROR);
         reporter.report(task(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
-            .contains(toText("header", List.of(FATAL_LOG, ERROR_LOG)));
+            .contains(toText("header", list(FATAL_LOG, ERROR_LOG)));
       }
 
       @Test
@@ -98,7 +100,7 @@ public class ReporterTest extends TestingContext {
         reporter = new Reporter(console, ALL, WARNING);
         reporter.report(task(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
-            .contains(toText("header", List.of(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
+            .contains(toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
       }
 
       @Test
@@ -155,25 +157,25 @@ public class ReporterTest extends TestingContext {
 
     @Test
     public void returns_false_when_only_info_was_logged() {
-      reporter.report(task(), HEADER, List.of(info("message string")));
+      reporter.report(task(), HEADER, list(info("message string")));
       assertFalse(reporter.isProblemReported());
     }
 
     @Test
     public void returns_false_when_only_warning_was_logged() {
-      reporter.report(task(), HEADER, List.of(warning("message string")));
+      reporter.report(task(), HEADER, list(warning("message string")));
       assertFalse(reporter.isProblemReported());
     }
 
     @Test
     public void returns_true_when_error_was_logged() {
-      reporter.report(task(), HEADER, List.of(error("message string")));
+      reporter.report(task(), HEADER, list(error("message string")));
       assertTrue(reporter.isProblemReported());
     }
 
     @Test
     public void returns_true_when_fatal_was_logged() {
-      reporter.report(task(), HEADER, List.of(fatal("message string")));
+      reporter.report(task(), HEADER, list(fatal("message string")));
       assertTrue(reporter.isProblemReported());
     }
   }
@@ -240,7 +242,7 @@ public class ReporterTest extends TestingContext {
   }
 
   private static List<Log> logsWithAllLevels() {
-    return List.of(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG);
+    return list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG);
   }
 
   private static Task task() {

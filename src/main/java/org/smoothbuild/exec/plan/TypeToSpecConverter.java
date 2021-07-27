@@ -1,6 +1,7 @@
 package org.smoothbuild.exec.plan;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.AnySpec;
@@ -85,11 +86,11 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
 
   public TupleSpec nativeCodeSpec() {
     return objectFactory.tupleSpec(
-        ImmutableList.of(objectFactory.stringSpec(), objectFactory.blobSpec()));
+        list(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }
 
   public TupleSpec functionSpec() {
     return objectFactory.tupleSpec(
-        ImmutableList.of(objectFactory.stringSpec(), objectFactory.blobSpec()));
+        list(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }
 }

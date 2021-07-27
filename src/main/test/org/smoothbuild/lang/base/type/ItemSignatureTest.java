@@ -8,6 +8,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ItemSignatureTest {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(new ItemSignature(STRING, "equal", Optional.of(STRING)));
     tester.addEqualityGroup(new ItemSignature(STRING, "equal", Optional.empty()));
-    for (Type type : List.of(BOOL, STRING, a(STRING), BLOB, NOTHING, PERSON)) {
+    for (Type type : list(BOOL, STRING, a(STRING), BLOB, NOTHING, PERSON)) {
       tester.addEqualityGroup(new ItemSignature(type, name, Optional.of(STRING)));
       tester.addEqualityGroup(new ItemSignature(type, "name2", Optional.of(STRING)));
     }

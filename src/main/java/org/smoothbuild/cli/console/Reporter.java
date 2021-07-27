@@ -5,6 +5,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.FATAL;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -133,7 +135,7 @@ public class Reporter {
       total += count;
     }
     if (total == 0) {
-      print("No logs reported.", List.of());
+      print("No logs reported.", list());
     }
   }
 

@@ -9,6 +9,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.B;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
@@ -90,7 +91,7 @@ public class BoundedVariablesTest {
           .addBounds(A, oneSideBound(LOWER, STRING));
       BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(A, oneSideBound(UPPER, BOOL));
-      assertThat(merge(List.of(toMerge, boundedVariables)))
+      assertThat(merge(list(toMerge, boundedVariables)))
           .isEqualTo(BoundedVariables.empty().addBounds(A, new Bounds(STRING, BOOL)));
     }
 
@@ -100,7 +101,7 @@ public class BoundedVariablesTest {
           .addBounds(B, oneSideBound(LOWER, STRING));
       BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(A, oneSideBound(UPPER, BOOL));
-      BoundedVariables actual = merge(List.of(toMerge, boundedVariables));
+      BoundedVariables actual = merge(list(toMerge, boundedVariables));
       assertThat(actual.boundsMap().get(A)).isEqualTo(oneSideBound(UPPER, BOOL));
       assertThat(actual.boundsMap().get(B)).isEqualTo(oneSideBound(LOWER, STRING));
     }
@@ -110,7 +111,7 @@ public class BoundedVariablesTest {
       BoundedVariables boundedVariables = BoundedVariables.empty();
       BoundedVariables toMerge = BoundedVariables.empty()
           .addBounds(B, oneSideBound(LOWER, STRING));
-      assertThat(merge(List.of(toMerge, boundedVariables)))
+      assertThat(merge(list(toMerge, boundedVariables)))
           .isSameInstanceAs(toMerge);
     }
 
@@ -119,7 +120,7 @@ public class BoundedVariablesTest {
       BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(B, oneSideBound(LOWER, STRING));
       BoundedVariables toMerge = BoundedVariables.empty();
-      assertThat(merge(List.of(toMerge, boundedVariables)))
+      assertThat(merge(list(toMerge, boundedVariables)))
           .isSameInstanceAs(boundedVariables);
     }
   }
@@ -132,7 +133,7 @@ public class BoundedVariablesTest {
           .addBounds(A, oneSideBound(LOWER, STRING));
       BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(A, oneSideBound(UPPER, BOOL));
-      assertThat(merge(List.of(toMerge), List.of(boundedVariables)))
+      assertThat(merge(list(toMerge), list(boundedVariables)))
           .isEqualTo(BoundedVariables.empty().addBounds(A, new Bounds(STRING, BOOL)));
     }
 
@@ -142,7 +143,7 @@ public class BoundedVariablesTest {
           .addBounds(B, oneSideBound(LOWER, STRING));
       BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(A, oneSideBound(UPPER, BOOL));
-      BoundedVariables actual = merge(List.of(toMerge), List.of(boundedVariables));
+      BoundedVariables actual = merge(list(toMerge), list(boundedVariables));
       assertThat(actual.boundsMap().get(A)).isEqualTo(oneSideBound(UPPER, BOOL));
       assertThat(actual.boundsMap().get(B)).isEqualTo(oneSideBound(LOWER, STRING));
     }
@@ -152,7 +153,7 @@ public class BoundedVariablesTest {
       BoundedVariables boundedVariables = BoundedVariables.empty();
       BoundedVariables toMerge = BoundedVariables.empty()
           .addBounds(B, oneSideBound(LOWER, STRING));
-      assertThat(merge(List.of(toMerge), List.of(boundedVariables)))
+      assertThat(merge(list(toMerge), list(boundedVariables)))
           .isSameInstanceAs(toMerge);
     }
 
@@ -161,7 +162,7 @@ public class BoundedVariablesTest {
       BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(B, oneSideBound(LOWER, STRING));
       BoundedVariables toMerge = BoundedVariables.empty();
-      assertThat(merge(List.of(toMerge), List.of(boundedVariables)))
+      assertThat(merge(list(toMerge), list(boundedVariables)))
           .isSameInstanceAs(boundedVariables);
     }
   }

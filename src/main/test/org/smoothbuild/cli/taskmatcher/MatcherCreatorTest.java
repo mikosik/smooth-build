@@ -19,6 +19,7 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.and;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.or;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class MatcherCreatorTest {
       for (Space space : Space.values()) {
         for (Level level : Level.values()) {
           Task task = task(kind, space);
-          List<Log> logs = List.of(new Log(level, "ignored"));
+          List<Log> logs = list(new Log(level, "ignored"));
           boolean actual = matcher.matches(task, logs);
           boolean expected = expectedMatcher.matches(task, logs);
           if (actual != expected) {

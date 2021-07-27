@@ -20,6 +20,7 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.util.Lists;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final NativeApi nativeApi;
@@ -78,7 +79,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
             "recurse is not supported by SandboxedJavaFileManager.list()");
       }
       Set<JavaFileObject> result = packageToJavaFileObjects.get(packageName);
-      return result == null ? List.of() : result;
+      return result == null ? Lists.list() : result;
     } else {
       return super.list(location, packageName, kinds, recurse);
     }

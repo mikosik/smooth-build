@@ -9,6 +9,7 @@ import static org.smoothbuild.exec.base.MessageTuple.level;
 import static org.smoothbuild.exec.base.MessageTuple.text;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
@@ -42,14 +43,14 @@ public class ExecutionReporter {
     } else {
       Log error = error(
           "Execution failed with:\n" + getStackTraceAsString(computed.exception()));
-      print(task, resultSource, List.of(error));
+      print(task, resultSource, list(error));
     }
   }
 
   public void reportComputerException(Task task, Throwable throwable) {
     Log fatal = fatal(
         "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
-    reporter.report(task, header(task, EXECUTION), List.of(fatal));
+    reporter.report(task, header(task, EXECUTION), list(fatal));
   }
 
   private void print(Task task, ResultSource resultSource, Array messages) {

@@ -3,6 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
+import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ public class FunctionTypeNodeTest {
   class _is_polytype {
     @Test
     public void function_with_variable_in_result_type() {
-      TypeNode function = new FunctionTypeNode(variable(), ImmutableList.of(), internal());
+      TypeNode function = new FunctionTypeNode(variable(), list(), internal());
       assertThat(function.isPolytype())
           .isTrue();
     }
@@ -22,7 +23,7 @@ public class FunctionTypeNodeTest {
     @Test
     public void function_with_variable_in_parameter_type() {
       TypeNode function = new FunctionTypeNode(
-          normalType(), ImmutableList.of(variable()), internal());
+          normalType(), list(variable()), internal());
       assertThat(function.isPolytype())
           .isTrue();
     }
@@ -30,23 +31,23 @@ public class FunctionTypeNodeTest {
     @Test
     public void function_without_variables() {
       TypeNode function = new FunctionTypeNode(
-          normalType(), ImmutableList.of(normalType()), internal());
+          normalType(), list(normalType()), internal());
       assertThat(function.isPolytype())
           .isFalse();
     }
 
     @Test
     public void polytype_function_node_with_depth_2_in_result_type() {
-      TypeNode inner = new FunctionTypeNode(variable(), ImmutableList.of(normalType()), internal());
-      TypeNode function = new FunctionTypeNode(inner, ImmutableList.of(normalType()), internal());
+      TypeNode inner = new FunctionTypeNode(variable(), list(normalType()), internal());
+      TypeNode function = new FunctionTypeNode(inner, list(normalType()), internal());
       assertThat(function.isPolytype())
           .isTrue();
     }
 
     @Test
     public void polytype_function_node_with_depth_2_in_parameter_type() {
-      TypeNode inner = new FunctionTypeNode(variable(), ImmutableList.of(normalType()), internal());
-      TypeNode function = new FunctionTypeNode(normalType(), ImmutableList.of(inner), internal());
+      TypeNode inner = new FunctionTypeNode(variable(), list(normalType()), internal());
+      TypeNode function = new FunctionTypeNode(normalType(), list(inner), internal());
       assertThat(function.isPolytype())
           .isTrue();
     }
@@ -54,8 +55,8 @@ public class FunctionTypeNodeTest {
     @Test
     public void non_polytype_function_node_with_depth_2() {
       TypeNode inner = new FunctionTypeNode(
-          normalType(), ImmutableList.of(normalType()), internal());
-      TypeNode function = new FunctionTypeNode(inner, ImmutableList.of(inner), internal());
+          normalType(), list(normalType()), internal());
+      TypeNode function = new FunctionTypeNode(inner, list(inner), internal());
       assertThat(function.isPolytype())
           .isFalse();
     }
@@ -66,7 +67,7 @@ public class FunctionTypeNodeTest {
     @Test
     public void function_without_variables() {
       TypeNode function = new FunctionTypeNode(
-          normalType(), ImmutableList.of(normalType()), internal());
+          normalType(), list(normalType()), internal());
       assertThat(function.variablesUsedOnce())
           .isEmpty();
     }
@@ -74,7 +75,7 @@ public class FunctionTypeNodeTest {
     @Test
     public void function_with_variable_in_result_type() {
       TypeNode function = new FunctionTypeNode(
-          variable("A"), ImmutableList.of(normalType()), internal());
+          variable("A"), list(normalType()), internal());
       assertThat(function.variablesUsedOnce())
           .containsExactly("A");
     }
@@ -82,7 +83,7 @@ public class FunctionTypeNodeTest {
     @Test
     public void function_with_variable_in_parameter_type() {
       TypeNode function = new FunctionTypeNode(
-          normalType(), ImmutableList.of(variable("A")), internal());
+          normalType(), list(variable("A")), internal());
       assertThat(function.variablesUsedOnce())
           .containsExactly("A");
     }
@@ -90,7 +91,7 @@ public class FunctionTypeNodeTest {
     @Test
     public void function_with_same_variable_in_result_type_and_parameter_type() {
       TypeNode function = new FunctionTypeNode(
-          variable("A"), ImmutableList.of(variable("A")), internal());
+          variable("A"), list(variable("A")), internal());
       assertThat(function.variablesUsedOnce())
           .isEmpty();
     }
@@ -98,7 +99,7 @@ public class FunctionTypeNodeTest {
     @Test
     public void function_with_same_variable_in_two_parameter_types() {
       TypeNode function = new FunctionTypeNode(
-          normalType(), ImmutableList.of(variable("A"), variable("A")), internal());
+          normalType(), list(variable("A"), variable("A")), internal());
       assertThat(function.variablesUsedOnce())
           .isEmpty();
     }

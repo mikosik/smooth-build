@@ -46,8 +46,6 @@ import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.collect.ImmutableList;
-
 public class ParallelTaskExecutorTest extends TestingContext {
   private ParallelTaskExecutor parallelTaskExecutor;
   private ExecutionReporter reporter;
@@ -189,7 +187,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     verify(reporter).report(
         eq(task),
         eq("task-name                                smooth internal"),
-        eq(List.of(error("Execution failed with:\n" + getStackTraceAsString(exception)))));
+        eq(list(error("Execution failed with:\n" + getStackTraceAsString(exception)))));
   }
 
   @Test
@@ -292,7 +290,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private static Task task(Algorithm algorithm) {
-    return task(algorithm, ImmutableList.of());
+    return task(algorithm, list());
   }
 
   private static Task task(Algorithm algorithm, List<Task> dependencies) {

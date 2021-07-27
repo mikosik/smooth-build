@@ -203,32 +203,32 @@ public class ListsTest {
   class _zip {
     @Test
     public void empty_lists_zip_to_empty_list() {
-      assertThat(zip(List.of(), List.of(), (String a, String b) -> a))
-          .isEqualTo(List.of());
+      assertThat(zip(list(), list(), (String a, String b) -> a))
+          .isEqualTo(list());
     }
 
     @Test
     public void first_list_longer_than_second__causes_exception() {
-      assertCall(() -> zip(List.of(), List.of("a"), (String a, String b) -> a))
+      assertCall(() -> zip(list(), list("a"), (String a, String b) -> a))
           .throwsException(IllegalArgumentException.class);
     }
 
     @Test
     public void first_list_shorter_than_second__causes_exception() {
-      assertCall(() -> zip(List.of("a"), List.of(), (String a, String b) -> a))
+      assertCall(() -> zip(list("a"), list(), (String a, String b) -> a))
           .throwsException(IllegalArgumentException.class);
     }
 
     @Test
     public void lists_elements_are_zipped_together() {
-      assertThat(zip(List.of("a", "b"), List.of("1", "2"), (String a, String b) -> a + b))
-          .isEqualTo(List.of("a1", "b2"));
+      assertThat(zip(list("a", "b"), list("1", "2"), (String a, String b) -> a + b))
+          .isEqualTo(list("a1", "b2"));
     }
 
     @Test
     public void different_type_lists_elements_are_zipped_together() {
-      assertThat(zip(List.of("a", "b"), List.of(1, 2), (String a, Integer b) -> a + b))
-          .isEqualTo(List.of("a1", "b2"));
+      assertThat(zip(list("a", "b"), list(1, 2), (String a, Integer b) -> a + b))
+          .isEqualTo(list("a1", "b2"));
     }
   }
 
@@ -236,31 +236,31 @@ public class ListsTest {
   class _allMatch {
     @Test
     public void empty_lists_match() {
-      assertThat(allMatch(List.of(), List.of(), alwaysFalsePredicate()))
+      assertThat(allMatch(list(), list(), alwaysFalsePredicate()))
           .isTrue();
     }
 
     @Test
     public void same_size_lists_with_same_content_matches() {
-      assertThat(allMatch(List.of("aaa"), List.of("aaa"), String::equals))
+      assertThat(allMatch(list("aaa"), list("aaa"), String::equals))
           .isTrue();
     }
 
     @Test
     public void list_which_beginning_is_equal_to_other_list_does_not_match_it() {
-      assertThat(allMatch(List.of("aaa"), List.of("aaa", "bbb"), String::equals))
+      assertThat(allMatch(list("aaa"), list("aaa", "bbb"), String::equals))
           .isFalse();
     }
 
     @Test
     public void non_empty_list_does_not_match_empty() {
-      assertThat(allMatch(List.of("aaa"), List.of(), alwaysTruePredicate()))
+      assertThat(allMatch(list("aaa"), list(), alwaysTruePredicate()))
           .isFalse();
     }
 
     @Test
     public void empty_list_does_not_match_non_empty() {
-      assertThat(allMatch(List.of(), List.of("aaa"), alwaysTruePredicate()))
+      assertThat(allMatch(list(), list("aaa"), alwaysTruePredicate()))
           .isFalse();
     }
 

@@ -89,7 +89,7 @@ public class TestedType {
       Set.of()
   );
 
-  public static final ImmutableList<TestedType> ELEMENTARY_TYPES = ImmutableList.of(
+  public static final ImmutableList<TestedType> ELEMENTARY_TYPES = list(
       ANY,
       BLOB,
       BOOL,
@@ -98,7 +98,7 @@ public class TestedType {
       STRUCT,
       A);
 
-  public static final List<TestedType> TESTED_MONOTYPES = ImmutableList.of(
+  public static final List<TestedType> TESTED_MONOTYPES = list(
       ANY,
       BLOB,
       BOOL,
@@ -131,7 +131,7 @@ public class TestedType {
    * Polytypes that can be used in any place. Each variable in such a polytype occurs more than
    * once.
    */
-  public static final List<TestedType> TESTED_VALID_POLYTYPES = ImmutableList.of(
+  public static final List<TestedType> TESTED_VALID_POLYTYPES = list(
       a(f(A, A)),
       a(a(f(A, A))),
       f(A, A),
@@ -145,7 +145,7 @@ public class TestedType {
   /**
    * Polytypes that can be used in any place. Each variable in such a polytype occurs exactly once.
    */
-  public static final List<TestedType> TESTED_INVALID_POLYTYPES = ImmutableList.of(
+  public static final List<TestedType> TESTED_INVALID_POLYTYPES = list(
       A,
       a(A),
       a(a(A)),

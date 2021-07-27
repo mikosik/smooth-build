@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,11 +21,11 @@ public class RecursivePathsIteratorTest {
   @Test
   public void test() throws IOException {
     doTestIterable("abc",
-        List.of("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
+        list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
     doTestIterable("abc/xyz",
-        List.of("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
+        list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
     doTestIterable("abc/xyz/prs",
-        List.of("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
+        list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
   }
 
   private void doTestIterable(String rootDir, List<String> names) throws IOException {
@@ -34,8 +35,8 @@ public class RecursivePathsIteratorTest {
   @Test
   public void iterates_subdirectory() throws Exception {
     doTestIterable(
-        "abc", List.of("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"),
-        "abc/def", List.of("4.txt", "5.txt"));
+        "abc", list("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"),
+        "abc/def", list("4.txt", "5.txt"));
   }
 
   @Test
@@ -63,7 +64,7 @@ public class RecursivePathsIteratorTest {
   @Test
   public void throws_exception_when_dir_disappears_during_iteration() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    createFiles(fileSystem, "dir", List.of("1.txt", "2.txt", "subdir/somefile"));
+    createFiles(fileSystem, "dir", list("1.txt", "2.txt", "subdir/somefile"));
 
     PathIterator iterator = recursivePathsIterator(fileSystem, path("dir"));
     iterator.next();

@@ -331,7 +331,7 @@ public class TypeTest {
   }
 
   public static List<Arguments> mergeWith_upper_direction_test_data() {
-    return List.of(
+    return list(
         arguments(ANY, ANY, ANY),
         arguments(ANY, BLOB, ANY),
         arguments(ANY, BOOL, ANY),
@@ -1588,7 +1588,7 @@ public class TypeTest {
   }
 
   public static List<Arguments> mergeWith_lower_direction_test_data() {
-    return List.of(
+    return list(
         arguments(ANY, ANY, ANY),
         arguments(ANY, BLOB, BLOB),
         arguments(ANY, BOOL, BOOL),

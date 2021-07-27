@@ -345,7 +345,7 @@ public class PathTest {
   }
 
   public static List<Arguments> paths() {
-    return List.of(
+    return list(
 
         // zero characters long
         arguments("", false),

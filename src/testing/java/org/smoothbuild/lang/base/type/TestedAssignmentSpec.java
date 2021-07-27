@@ -11,6 +11,7 @@ import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
 import static org.smoothbuild.lang.base.type.TestedType.a;
 import static org.smoothbuild.lang.base.type.TestedType.a2;
 import static org.smoothbuild.lang.base.type.TestedType.f;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +100,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     gen(r, f(NOTHING, BLOB),    mNothing(), mFunc(oneOf(NOTHING), oneOf(ANY, BLOB)));
     gen(r, f(NOTHING, NOTHING), mNothing(), mFunc(oneOf(NOTHING), mAll()));
 
-    r.addAll(List.of(
+    r.addAll(list(
         // functions
         illegalAssignment(f(a(BLOB)), a(BLOB)),
         illegalAssignment(f(a(NOTHING)), a(NOTHING)),
@@ -159,7 +160,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
 
     gen(r, f(A), oneOf(NOTHING), mFunc(oneOf(A, NOTHING)));
 
-    r.addAll(List.of(
+    r.addAll(list(
         // functions
         illegalAssignment(f(a(A)), a(A)),
         illegalAssignment(f(a2(A)), a2(A)),
@@ -228,7 +229,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     gen(r, a2(A), oneOf(NOTHING, a(NOTHING)), TestedType::isArrayOfArrays);
     gen(r, a2(B), oneOf(NOTHING, a(NOTHING)), TestedType::isArrayOfArrays);
 
-    r.addAll(List.of(
+    r.addAll(list(
         allowedAssignment(f(A, A), f(A, A)),
         illegalAssignment(f(A, A, A), f(A, B, A)),
         illegalAssignment(f(A, A, A), f(B, A, B)),

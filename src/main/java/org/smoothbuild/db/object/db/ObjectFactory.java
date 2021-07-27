@@ -3,6 +3,7 @@ package org.smoothbuild.db.object.db;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
+import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 
@@ -49,11 +50,11 @@ public class ObjectFactory {
 
   private static TupleSpec createMessageSpec(ObjectDb objectDb) {
     StringSpec stringSpec = objectDb.stringSpec();
-    return objectDb.tupleSpec(ImmutableList.of(stringSpec, stringSpec));
+    return objectDb.tupleSpec(list(stringSpec, stringSpec));
   }
 
   private static TupleSpec createFileSpec(ObjectDb objectDb) {
-    return objectDb.tupleSpec(ImmutableList.of(objectDb.blobSpec(), objectDb.stringSpec()));
+    return objectDb.tupleSpec(list(objectDb.blobSpec(), objectDb.stringSpec()));
   }
 
   public Any any(Hash wrappedHash) {
@@ -80,7 +81,7 @@ public class ObjectFactory {
   }
 
   public Tuple file(Str path, Blob content) {
-    return objectDb.tuple(fileSpec(), ImmutableList.of(content, path));
+    return objectDb.tuple(fileSpec(), list(content, path));
   }
 
   public Str string(String string) {
@@ -142,6 +143,6 @@ public class ObjectFactory {
   private Tuple message(String severity, String text) {
     Obj textObject = objectDb.string(text);
     Obj severityObject = objectDb.string(severity);
-    return objectDb.tuple(messageSpec(), ImmutableList.of(textObject, severityObject));
+    return objectDb.tuple(messageSpec(), list(textObject, severityObject));
   }
 }

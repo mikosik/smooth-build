@@ -25,7 +25,7 @@ public class FunctionTest extends TestingContext {
   public void type_returns_function_type() {
     Function function = myFunction(STRING, list());
     assertThat(function.type())
-        .isEqualTo(new FunctionType(STRING, ImmutableList.of()));
+        .isEqualTo(new FunctionType(STRING, list()));
   }
 
   @Test

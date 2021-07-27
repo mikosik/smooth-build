@@ -2,8 +2,7 @@ package org.smoothbuild.db.object.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-
-import java.util.List;
+import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
@@ -11,26 +10,26 @@ import org.smoothbuild.testing.TestingContext;
 public class TupleTest extends TestingContext {
   @Test
   public void creating_tuple_with_less_elements_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> tuple(personSpec(), List.of(string("John"))))
+    assertCall(() -> tuple(personSpec(), list(string("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_more_elements_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> tuple(personSpec(), List.of(string("John"), string("Doe"), string("abc"))))
+    assertCall(() -> tuple(personSpec(), list(string("John"), string("Doe"), string("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_element_to_null_throws_exception() {
-    assertCall(() -> tuple(personSpec(), List.of(string("John"), null)))
+    assertCall(() -> tuple(personSpec(), list(string("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_element_to_object_of_wrong_spec_throws_exception() {
     Array array = arrayBuilder(stringSpec()).build();
-    assertCall(() -> tuple(personSpec(), List.of(string("John"), array)))
+    assertCall(() -> tuple(personSpec(), list(string("John"), array)))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -73,7 +72,7 @@ public class TupleTest extends TestingContext {
 
   @Test
   public void super_object_is_null_when_tuple_spec_has_no_elements() {
-    Tuple tuple = tuple(emptySpec(), List.of());
+    Tuple tuple = tuple(emptySpec(), list());
     assertThat(tuple.superObject())
         .isNull();
   }
@@ -96,7 +95,7 @@ public class TupleTest extends TestingContext {
   @Test
   public void tuples_with_one_element_different_are_not_equal() {
     Tuple person1 = johnDoePerson();
-    Tuple person2 = tuple(personSpec(), List.of(string("John"), string("Doe2")));
+    Tuple person2 = tuple(personSpec(), list(string("John"), string("Doe2")));
 
     assertThat(person1)
         .isNotEqualTo(person2);
@@ -113,7 +112,7 @@ public class TupleTest extends TestingContext {
   @Test
   public void tuples_with_different_element_have_different_hashes() {
     Tuple person1 = johnDoePerson();
-    Tuple person2 = tuple(personSpec(), List.of(string("John"), string("Doe2")));
+    Tuple person2 = tuple(personSpec(), list(string("John"), string("Doe2")));
     assertThat(person1.hash())
         .isNotEqualTo(person2.hash());
   }
@@ -129,7 +128,7 @@ public class TupleTest extends TestingContext {
   @Test
   public void tuples_with_different_element_have_different_hash_codes() {
     Tuple person1 = johnDoePerson();
-    Tuple person2 = tuple(personSpec(), List.of(string("John"), string("Doe2")));
+    Tuple person2 = tuple(personSpec(), list(string("John"), string("Doe2")));
         assertThat(person1.hashCode())
             .isNotEqualTo(person2.hashCode());
   }
@@ -160,6 +159,6 @@ public class TupleTest extends TestingContext {
   }
 
   private Tuple johnDoePerson() {
-    return tuple(personSpec(), List.of(string("John"), string("Doe")));
+    return tuple(personSpec(), list(string("John"), string("Doe")));
   }
 }

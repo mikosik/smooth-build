@@ -5,6 +5,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Lists.filter;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.Node.State.BEING_PROCESSED;
 import static org.smoothbuild.util.graph.SortTopologically.Node.State.NOT_VISITED;
@@ -22,7 +23,7 @@ public class SortTopologically {
   public static <K, N, E> TopologicalSortingResult<K, N, E> sortTopologically(
       Collection<GraphNode<K, N, E>> nodes) {
     if (nodes.isEmpty()) {
-      return new TopologicalSortingResult<>(ImmutableList.of(), null);
+      return new TopologicalSortingResult<>(list(), null);
     }
     ImmutableList<Node<K, N, E>> wrappedNodes = nodes.stream()
         .map(Node::new)

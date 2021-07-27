@@ -1,8 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static java.util.Objects.requireNonNull;
-
-import com.google.common.collect.ImmutableList;
+import static org.smoothbuild.util.Lists.list;
 
 /**
  * This class is immutable.
@@ -11,8 +10,8 @@ public class ArrayType extends Type {
   private final Type elemType;
 
   public ArrayType(Type elemType) {
-    super("[" +  elemType.name() + "]", createTypeConstructor(),
-        ImmutableList.of(elemType), ImmutableList.of(), elemType.isPolytype());
+    super("[" +  elemType.name() + "]", createTypeConstructor(), list(elemType), list(),
+        elemType.isPolytype());
     this.elemType = requireNonNull(elemType);
   }
 

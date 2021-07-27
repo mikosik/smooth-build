@@ -5,6 +5,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
@@ -23,18 +24,18 @@ public class SortTopologicallyTest {
     @Test
     public void empty() {
       assertSortTopologically(
-          List.of(),
-          List.of(
-              List.of()));
+          list(),
+          list(
+              list()));
     }
 
     @Test
     public void single_node() {
       var n1 = node(1);
       assertSortTopologically(
-          List.of(n1),
-          List.of(
-              List.of(n1)));
+          list(n1),
+          list(
+              list(n1)));
     }
 
     @Test
@@ -42,9 +43,9 @@ public class SortTopologicallyTest {
       var n1 = node(1);
       var n2 = node(2);
       assertSortTopologically(
-          List.of(n1, n2),
-          List.of(
-              List.of(n1)));
+          list(n1, n2),
+          list(
+              list(n1)));
     }
 
     @Test
@@ -53,143 +54,143 @@ public class SortTopologicallyTest {
       var n2 = node(2);
       var n3 = node(3);
       assertSortTopologically(
-          List.of(n1, n2, n3),
-          List.of(
-              List.of(n1)));
+          list(n1, n2, n3),
+          list(
+              list(n1)));
     }
 
     @Test
     public void single_line() {
-      var n1 = node(1, List.of(2));
-      var n2 = node(2, List.of(3));
+      var n1 = node(1, list(2));
+      var n2 = node(2, list(3));
       var n3 = node(3);
       assertSortTopologically(
-          List.of(n1, n2, n3),
-          List.of(
-              List.of(n1, n2, n3)));
+          list(n1, n2, n3),
+          list(
+              list(n1, n2, n3)));
     }
 
     @Test
     public void single_line_with_island() {
-      var n1 = node(1, List.of(2));
-      var n2 = node(2, List.of(3));
+      var n1 = node(1, list(2));
+      var n2 = node(2, list(3));
       var n3 = node(3);
       var n4 = node(4);
       assertSortTopologically(
-          List.of(n1, n2, n3, n4),
-          List.of(
-              List.of(n1, n2, n3)));
+          list(n1, n2, n3, n4),
+          list(
+              list(n1, n2, n3)));
     }
 
     @Test
     public void two_lines() {
-      var n1 = node(1, List.of(2));
-      var n2 = node(2, List.of(3));
+      var n1 = node(1, list(2));
+      var n2 = node(2, list(3));
       var n3 = node(3);
-      var n4 = node(4, List.of(5));
-      var n5 = node(5, List.of(6));
+      var n4 = node(4, list(5));
+      var n5 = node(5, list(6));
       var n6 = node(6);
       assertSortTopologically(
-          List.of(n1, n2, n3, n4, n5, n6),
-          List.of(
-              List.of(n1, n2, n3),
-              List.of(n4, n5, n6)));
+          list(n1, n2, n3, n4, n5, n6),
+          list(
+              list(n1, n2, n3),
+              list(n4, n5, n6)));
     }
 
     @Test
     public void two_lines_with_island() {
-      var n1 = node(1, List.of(2));
-      var n2 = node(2, List.of(3));
+      var n1 = node(1, list(2));
+      var n2 = node(2, list(3));
       var n3 = node(3);
-      var n4 = node(4, List.of(5));
-      var n5 = node(5, List.of(6));
+      var n4 = node(4, list(5));
+      var n5 = node(5, list(6));
       var n6 = node(6);
       var n7 = node(7);
       assertSortTopologically(
-          List.of(n1, n2, n3, n4, n5, n6, n7),
-          List.of(
-              List.of(n1, n2, n3),
-              List.of(n4, n5, n6)));
+          list(n1, n2, n3, n4, n5, n6, n7),
+          list(
+              list(n1, n2, n3),
+              list(n4, n5, n6)));
     }
 
     @Test
     public void simple_tree() {
-      var n1 = node(1, List.of(2, 3));
+      var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
       assertSortTopologically(
-          List.of(n1, n2, n3),
-          List.of(
-              List.of(n1, n2),
-              List.of(n1, n3)));
+          list(n1, n2, n3),
+          list(
+              list(n1, n2),
+              list(n1, n3)));
     }
 
     @Test
     public void two_simple_trees() {
-      var n1 = node(1, List.of(2, 3));
+      var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
-      var n4 = node(4, List.of(5, 6));
+      var n4 = node(4, list(5, 6));
       var n5 = node(5);
       var n6 = node(6);
       assertSortTopologically(
-          List.of(n1, n2, n3, n4, n5, n6),
-          List.of(
-              List.of(n1, n2),
-              List.of(n1, n3),
-              List.of(n4, n5),
-              List.of(n4, n6)));
+          list(n1, n2, n3, n4, n5, n6),
+          list(
+              list(n1, n2),
+              list(n1, n3),
+              list(n4, n5),
+              list(n4, n6)));
     }
 
     @Test
     public void simple_tree_with_island() {
-      var n1 = node(1, List.of(2, 3));
+      var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
       var n4 = node(4);
       assertSortTopologically(
-          List.of(n1, n2, n3, n4),
-          List.of(
-              List.of(n1, n2),
-              List.of(n1, n3)));
+          list(n1, n2, n3, n4),
+          list(
+              list(n1, n2),
+              list(n1, n3)));
     }
 
     @Test
     public void two_roots() {
-      var n1 = node(1, List.of(2, 3));
+      var n1 = node(1, list(2, 3));
       var n2 = node(2);
       var n3 = node(3);
-      var n4 = node(4, List.of(2, 3));
+      var n4 = node(4, list(2, 3));
       assertSortTopologically(
-          List.of(n1, n2, n3, n4),
-          List.of(
-              List.of(n1, n2),
-              List.of(n1, n3),
-              List.of(n4, n2),
-              List.of(n4, n3)));
+          list(n1, n2, n3, n4),
+          list(
+              list(n1, n2),
+              list(n1, n3),
+              list(n4, n2),
+              list(n4, n3)));
     }
 
     @Test
     public void parallel_edges() {
-      var n1 = node(1, List.of(2, 2));
+      var n1 = node(1, list(2, 2));
       var n2 = node(2);
       assertSortTopologically(
-          List.of(n1, n2),
-          List.of(
-              List.of(n1, n2)));
+          list(n1, n2),
+          list(
+              list(n1, n2)));
     }
 
     @Test
     public void parallel_path_between_nodes() {
-      var n1 = node(1, List.of(2, 3));
-      var n2 = node(2, List.of(4));
-      var n3 = node(3, List.of(4));
+      var n1 = node(1, list(2, 3));
+      var n2 = node(2, list(4));
+      var n3 = node(3, list(4));
       var n4 = node(4);
       assertSortTopologically(
-          List.of(n1, n2, n3, n4),
-          List.of(
-              List.of(n1, n2, n4),
-              List.of(n1, n3, n4)));
+          list(n1, n2, n3, n4),
+          list(
+              list(n1, n2, n4),
+              list(n1, n3, n4)));
     }
   }
 
@@ -197,52 +198,52 @@ public class SortTopologicallyTest {
   class detects_cycle {
     @Test
     public void to_itself() {
-      var n1 = node(1, List.of(1));
+      var n1 = node(1, list(1));
       assertCycleDetected(
-          List.of(n1),
-          List.of(n1));
+          list(n1),
+          list(n1));
     }
 
     @Test
     public void to_itself_when_it_has_also_dangling_node() {
       var n1 = node(1);
-      var n2 = node(2, List.of(1, 2));
+      var n2 = node(2, list(1, 2));
 
       assertCycleDetected(
-          List.of(n1, n2),
-          List.of(n2)
+          list(n1, n2),
+          list(n2)
       );
     }
 
     @Test
     public void between_two_nodes_when_no_root_exists() {
-      var n1 = node(1, List.of(2));
-      var n2 = node(2, List.of(1));
+      var n1 = node(1, list(2));
+      var n2 = node(2, list(1));
       assertCycleDetected(
-          List.of(n1, n2),
-          List.of(n1, n2));
+          list(n1, n2),
+          list(n1, n2));
     }
 
     @Test
     public void between_two_nodes_when_island_exists() {
       var n1 = node(1);
-      var n2 = node(2, List.of(3));
-      var n3 = node(3, List.of(2));
+      var n2 = node(2, list(3));
+      var n3 = node(3, list(2));
       assertCycleDetected(
-          List.of(n1, n2, n3),
-          List.of(n2, n3)
+          list(n1, n2, n3),
+          list(n2, n3)
       );
     }
 
     @Test
     public void between_two_nodes_when_root_exists() {
-      var n1 = node(1, List.of(2));
-      var n2 = node(2, List.of(3));
-      var n3 = node(3, List.of(2));
-      var nodes = List.of(n1, n2, n3);
+      var n1 = node(1, list(2));
+      var n2 = node(2, list(3));
+      var n3 = node(3, list(2));
+      var nodes = list(n1, n2, n3);
       assertCycleDetected(
           nodes,
-          List.of(n2, n3)
+          list(n2, n3)
       );
     }
 
@@ -285,8 +286,8 @@ public class SortTopologicallyTest {
   class fails {
     @Test
     public void when_edge_points_to_nonexistent_node() {
-      var n1 = node(1, List.of(2));
-      var nodes = List.of(n1);
+      var n1 = node(1, list(2));
+      var nodes = list(n1);
 
       assertCall(() -> sortTopologically(nodes))
           .throwsException(new IllegalArgumentException(
@@ -297,7 +298,7 @@ public class SortTopologicallyTest {
     public void when_two_nodes_has_same_key() {
       var n1 = node(1);
       var n1b = node(1);
-      var nodes = List.of(n1, n1b);
+      var nodes = list(n1, n1b);
 
       assertCall(() -> sortTopologically(nodes))
           .throwsException(IllegalArgumentException.class);
@@ -307,7 +308,7 @@ public class SortTopologicallyTest {
   @Test
   public void sorting_algorithm_has_linear_complexity() {
     AtomicInteger key = new AtomicInteger();
-    var topLayer = createLayer(key, List.of());
+    var topLayer = createLayer(key, list());
     var nodes = new ArrayList<>(topLayer);
     int layerCount = 100;
     for (int i = 0; i < layerCount; i++) {

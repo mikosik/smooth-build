@@ -36,7 +36,6 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.plugin.NativeApi;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.util.Providers;
 
 import okio.ByteString;
@@ -211,11 +210,11 @@ public class TestingContext {
   }
 
   public Tuple empty() {
-    return tuple(emptySpec(), ImmutableList.of());
+    return tuple(emptySpec(), list());
   }
 
   public Tuple person(String firstName, String lastName) {
-    return tuple(personSpec(), ImmutableList.of(string(firstName), string(lastName)));
+    return tuple(personSpec(), list(string(firstName), string(lastName)));
   }
 
   public Array messageArrayWithOneError() {

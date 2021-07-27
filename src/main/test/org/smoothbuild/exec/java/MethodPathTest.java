@@ -1,6 +1,7 @@
 package org.smoothbuild.exec.java;
 
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class MethodPathTest {
   }
 
   private static List<String> illegal_path_test_data() {
-    return List.of(
+    return list(
         "abc",
         ".abc",
         "abc."

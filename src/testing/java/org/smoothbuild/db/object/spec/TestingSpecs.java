@@ -1,5 +1,7 @@
 package org.smoothbuild.db.object.spec;
 
+import static org.smoothbuild.util.Lists.list;
+
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.testing.TestingContext;
 
@@ -30,7 +32,7 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY2_NOTHING = array(ARRAY_NOTHING);
   public static final ArraySpec ARRAY2_PERSON = array(ARRAY_PERSON);
 
-  public static ImmutableList<Spec> SPECS_TO_TEST = ImmutableList.of(
+  public static ImmutableList<Spec> SPECS_TO_TEST = list(
       ANY,
       BLOB,
       BOOL,

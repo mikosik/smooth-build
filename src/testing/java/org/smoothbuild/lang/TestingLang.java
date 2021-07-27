@@ -4,6 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 import java.util.Optional;
@@ -109,7 +110,7 @@ public class TestingLang {
   }
 
   public static StructType struct(String name, ItemSignature field) {
-    return Types.struct(name, List.of(field));
+    return Types.struct(name, list(field));
   }
 
   public static Constructor constr(int line, Type resultType, String name, Item... parameters) {

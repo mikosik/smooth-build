@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 
@@ -231,7 +232,7 @@ public class AstCreator {
         if (typeList != null) {
           return map(typeList.type(), this::createType);
         } else {
-          return ImmutableList.of();
+          return list();
         }
       }
     }.visit(module);
