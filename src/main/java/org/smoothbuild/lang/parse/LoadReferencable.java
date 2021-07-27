@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.DefinedFunction;
+import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.NativeFunction;
+import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
@@ -52,36 +55,32 @@ public class LoadReferencable {
     }
   }
 
-  private static Value loadValue(ModulePath path, ReferencableNode referencableNode) {
-    ExpressionLoader loader = new ExpressionLoader(ImmutableMap.of());
-    return new Value(
-        referencableNode.type().get(),
-        path,
-        referencableNode.name(),
-        loader.bodyExpression(referencableNode),
-        referencableNode.location());
+  private static Value loadValue(ModulePath path, ReferencableNode valueNode) {
+    Type type = valueNode.type().get();
+    String name = valueNode.name();
+    Location location = valueNode.location();
+    if (valueNode.nativ().isPresent()) {
+      return new NativeValue(type, path, name, valueNode.nativ().get(), location);
+    } else {
+      ExpressionLoader loader = new ExpressionLoader(ImmutableMap.of());
+      return new DefinedValue(
+          type, path, name, loader.createExpression(valueNode.expr().get()), location);
+    }
   }
 
   private static Function loadFunction(ModulePath path, RealFuncNode realFuncNode) {
     ImmutableList<Item> parameters = loadParameters(realFuncNode);
+    Type resultType = realFuncNode.resultType().get();
+    String name = realFuncNode.name();
+    Location location = realFuncNode.location();
     if (realFuncNode.nativ().isPresent()) {
       return new NativeFunction(
-          realFuncNode.resultType().get(),
-          path,
-          realFuncNode.name(),
-          parameters,
-          realFuncNode.nativ().get(),
-          realFuncNode.location());
+          resultType, path, name, parameters, realFuncNode.nativ().get(), location);
     } else {
       ExpressionLoader loader = new ExpressionLoader(
           parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
-      return new DefinedFunction(
-          realFuncNode.resultType().get(),
-          path,
-          realFuncNode.name(),
-          parameters,
-          loader.createExpression(realFuncNode.expr().get()),
-          realFuncNode.location());
+      return new DefinedFunction(resultType, path, name, parameters,
+          loader.createExpression(realFuncNode.expr().get()), location);
     }
   }
 
@@ -96,14 +95,6 @@ public class LoadReferencable {
 
     public ExpressionLoader(ImmutableMap<String, Type> functionParameters) {
       this.functionParameters = functionParameters;
-    }
-
-    private Expression bodyExpression(ReferencableNode referencable) {
-      if (referencable.nativ().isPresent()) {
-        return referencable.nativ().get();
-      } else {
-        return createExpression(referencable.expr().get());
-      }
     }
 
     public Item createParameter(ItemNode param) {

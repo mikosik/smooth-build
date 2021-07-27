@@ -40,13 +40,14 @@ import org.smoothbuild.exec.compute.VirtualTask;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.DefinedFunction;
+import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.IfFunction;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NativeFunction;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundedVariables;
 import org.smoothbuild.lang.base.type.FunctionType;
@@ -99,22 +100,21 @@ public class ExpressionToTaskConverter
   @Override
   public TaskSupplier visit(Scope<TaskSupplier> scope, ReferenceExpression reference) {
     var referencable = definitions.referencables().get(reference.name());
-    if (referencable instanceof Value value) {
-      if (value.body() instanceof NativeExpression nativ) {
-        return new TaskSupplier(value.type(), reference.location(), () -> {
+    if (referencable instanceof NativeValue nativeValue) {
+        return new TaskSupplier(nativeValue.type(), reference.location(), () -> {
+          NativeExpression nativ = nativeValue.nativ();
           var algorithm = new CallNativeAlgorithm(methodLoader,
-              value.type().visit(toSpecConverter), value, nativ.isPure());
+              nativeValue.type().visit(toSpecConverter), nativeValue, nativ.isPure());
           var nativeCode = visit(scope, nativ);
-          return new AlgorithmTask(VALUE, value.type(), value.extendedName(), algorithm,
+          return new AlgorithmTask(VALUE, nativeValue.type(), nativeValue.extendedName(), algorithm,
               list(nativeCode), reference.location());
         });
-      } else {
-        return new TaskSupplier(value.type(), reference.location(), () -> {
-          var task = value.body().visit(scope, this);
-          var convertedTask = convertIfNeeded(value.type(), task);
-          return new VirtualTask(VALUE, value.extendedName(), convertedTask, reference.location());
+    } else if (referencable instanceof DefinedValue definedValue) {
+        return new TaskSupplier(definedValue.type(), reference.location(), () -> {
+          var task = definedValue.body().visit(scope, this);
+          var convertedTask = convertIfNeeded(definedValue.type(), task);
+          return new VirtualTask(VALUE, definedValue.extendedName(), convertedTask, reference.location());
         });
-      }
     } else {
       var function = (Function) referencable;
       var type = function.type().strip();

@@ -10,10 +10,11 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.DefinedFunction;
+import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NativeFunction;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
@@ -93,8 +94,12 @@ public class TestingLang {
     return new DefinedFunction(type, modulePath(), name, list(parameters), body, loc(line));
   }
 
-  public static Value value(int line, Type type, String name, NativeExpression nativ) {
-    return new Value(type, modulePath(), name, nativ, loc(line));
+  public static DefinedValue value(int line, Type type, String name, Expression expression) {
+    return new DefinedValue(type, modulePath(), name, expression, loc(line));
+  }
+
+  public static NativeValue value(int line, Type type, String name, NativeExpression nativ) {
+    return new NativeValue(type, modulePath(), name, nativ, loc(line));
   }
 
   public static NativeExpression nativ(int line, String implementedBy) {
@@ -103,10 +108,6 @@ public class TestingLang {
 
   public static NativeExpression nativ(int line, String implementedBy, boolean pure) {
     return new NativeExpression(implementedBy, pure, loc(line));
-  }
-
-  public static Value value(int line, Type type, String name, Expression expression) {
-    return new Value(type, modulePath(), name, expression, loc(line));
   }
 
   public static StructType struct(String name, ItemSignature field) {
