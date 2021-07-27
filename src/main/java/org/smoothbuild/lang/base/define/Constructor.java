@@ -22,6 +22,7 @@ public class Constructor extends Function {
     }
     return object instanceof Constructor that
         && this.resultType().equals(that.resultType())
+        && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())
         && this.parameters().equals(that.parameters())
         && this.location().equals(that.location());
@@ -29,6 +30,6 @@ public class Constructor extends Function {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), name(), parameters(), location());
+    return Objects.hash(resultType(), modulePath(), name(), parameters(), location());
   }
 }
