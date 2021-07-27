@@ -10,7 +10,7 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.mapM;
 import static org.smoothbuild.util.Lists.sane;
-import static org.smoothbuild.util.Lists.skipFirst;
+import static org.smoothbuild.util.Lists.skip;
 import static org.smoothbuild.util.Lists.zip;
 
 import java.util.ArrayList;
@@ -19,8 +19,6 @@ import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class ListsTest {
   @Nested
@@ -103,32 +101,30 @@ public class ListsTest {
     }
   }
 
-
   @Nested
-  class _skip_first {
+  class _skip {
     @Test
-    public void returns_empty_for_single_element_list(){
-      assertThat(skipFirst(ImmutableList.of("first")))
-          .isEmpty();
+    public void returns_same_list_when_skipping_zero(){
+      assertThat(skip(0, list("first", "second", "third")))
+          .isEqualTo(list("first", "second", "third"));
     }
 
     @Test
-    public void returns_elements_without_first(){
-      assertThat(skipFirst(ImmutableList.of("first", "second", "third")))
-          .isEqualTo(ImmutableList.of("second", "third"));
+    public void returns_without_first_element_when_skipping_one(){
+      assertThat(skip(1, list("first", "second", "third")))
+          .isEqualTo(list("second", "third"));
     }
 
     @Test
-    public void returns_empty_list_when_predicate_is_always_false(){
-      assertThat(filter(asList("first", "second", "third"), x -> false))
-          .isEmpty();
+    public void returns_empty_when_all_are_skipped(){
+      assertThat(skip(3, list("first", "second", "third")))
+          .isEqualTo(list());
     }
 
     @Test
-    public void leaves_only_elements_matching_predicate(){
-      assertThat(filter(asList("first", "second", "third"), s -> s.startsWith("s")))
-          .containsExactly("second")
-          .inOrder();
+    public void throws_exception_when_to_skip_is_greater_than_list_size(){
+      assertCall(() -> skip(4, list("first", "second", "third")))
+          .throwsException(IndexOutOfBoundsException.class);
     }
   }
 

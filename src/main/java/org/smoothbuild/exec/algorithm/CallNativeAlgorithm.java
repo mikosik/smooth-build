@@ -2,7 +2,7 @@ package org.smoothbuild.exec.algorithm;
 
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.base.MessageTuple.containsErrors;
-import static org.smoothbuild.util.Lists.skipFirst;
+import static org.smoothbuild.util.Lists.skip;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,7 +41,7 @@ public class CallNativeAlgorithm extends Algorithm {
     String methodPath = ((Str) input.objects().get(0)).jValue();
     Method method = methodLoader.load(referencable, methodPath);
     try {
-      ImmutableList<Obj> nativeArgs = skipFirst(input.objects());
+      ImmutableList<Obj> nativeArgs = skip(1, input.objects());
       Obj result = (Obj) method.invoke(null, createArguments(nativeApi, nativeArgs));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {

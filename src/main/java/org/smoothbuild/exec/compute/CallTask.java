@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.util.Lists.skipFirst;
+import static org.smoothbuild.util.Lists.skip;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -34,7 +34,7 @@ public class CallTask extends StepTask {
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
     String functionName = FunctionTuple.name(((Tuple) obj)).jValue();
     Task task = expressionToTaskConverter.taskForCall(
-        scope, variables, type(), functionName, skipFirst(dependencies), location());
+        scope, variables, type(), functionName, skip(1, dependencies), location());
     task.startComputation(worker).addConsumer(result);
   }
 }

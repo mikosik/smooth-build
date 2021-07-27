@@ -32,8 +32,8 @@ public class Lists {
         .build();
   }
 
-  public static <E> ImmutableList<E> skipFirst(ImmutableList<E> list) {
-    return list.subList(1, list.size());
+  public static <E> ImmutableList<E> skip(int toSkip, List<E> list) {
+    return ImmutableList.copyOf(list).subList(toSkip, list.size());
   }
 
   public static <E> ImmutableList<E> filter(List<E> list, Predicate<? super E> predicate) {
