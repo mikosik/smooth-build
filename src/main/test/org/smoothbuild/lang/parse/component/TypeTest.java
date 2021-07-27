@@ -131,6 +131,17 @@ public class TypeTest {
             .loadsWithError(4, "`result` has body which type is `String` and it is not "
                 + "convertible to its declared type `Nothing`.");
       }
+
+      @ParameterizedTest
+      @ArgumentsSource(TestedSingleVariablePolytypes.class)
+      public void can_declare_single_variable_polytype_param_when_some_other_param_has_such_type(
+          TestedType type) {
+        module(unlines(
+            "@Native(\"Impl.met\")",
+            "Blob myFunction(" + type.name() + " param, " + type.name() + " param2);",
+            type.typeDeclarationsAsString()))
+            .loadsSuccessfully();
+      }
     }
 
     @Nested
@@ -173,17 +184,6 @@ public class TypeTest {
       module(unlines(
           "@Native(\"Impl.met\")",
           type.name() + " myFunction(" + type.name() + " param);",
-          type.typeDeclarationsAsString()))
-          .loadsSuccessfully();
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(TestedSingleVariablePolytypes.class)
-    public void can_declare_single_variable_polytype_param_when_some_other_param_has_such_type(
-        TestedType type) {
-      module(unlines(
-          "@Native(\"Impl.met\")",
-          "Blob myFunction(" + type.name() + " param, " + type.name() + " param2);",
           type.typeDeclarationsAsString()))
           .loadsSuccessfully();
     }
