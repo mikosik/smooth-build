@@ -22,7 +22,6 @@ import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
-import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableMap;
 

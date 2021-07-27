@@ -39,12 +39,13 @@ import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.exec.compute.VirtualTask;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.lang.base.define.Constructor;
+import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.IfFunction;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.RealFunction;
+import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundedVariables;
@@ -182,13 +183,11 @@ public class ExpressionToTaskConverter
       Type actualResultType, String functionName, ImmutableList<TaskSupplier> arguments,
       Location location) {
     var function = (Function) definitions.referencables().get(functionName);
-    if (function instanceof RealFunction realFunction) {
-      if (realFunction.body() instanceof NativeExpression nativ) {
-        return taskForNativeFunction(scope, arguments, realFunction, nativ, variables,
-            actualResultType, location);
-      } else {
-        return taskForDefinedFunction(scope, actualResultType, realFunction, arguments, location);
-      }
+    if (function instanceof DefinedFunction definedFunction) {
+      return taskForDefinedFunction(scope, actualResultType, definedFunction, arguments, location);
+    } else if (function instanceof NativeFunction nativeFunction) {
+      return taskForNativeFunction(scope, arguments, nativeFunction, nativeFunction.nativ(),
+          variables, actualResultType, location);
     } else if (function instanceof IfFunction) {
       return new IfTask(actualResultType, arguments, location);
     } else if (function instanceof Constructor constructor) {
@@ -208,15 +207,15 @@ public class ExpressionToTaskConverter
   }
 
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
-      RealFunction function, List<TaskSupplier> arguments, Location location) {
+      DefinedFunction function, List<TaskSupplier> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     var taskSupplier = convertIfNeeded(actualResultType, function.body().visit(newScope, this));
     return new VirtualTask(CALL, function.extendedName(), taskSupplier, location);
   }
 
   private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<TaskSupplier> arguments,
-      RealFunction function, NativeExpression nativ, BoundedVariables variables, Type actualResultType,
-      Location location) {
+      NativeFunction function, NativeExpression nativ, BoundedVariables variables,
+      Type actualResultType, Location location) {
     var actualParameterTypes = map(
         function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
     var nativeCode = visit(scope, nativ);

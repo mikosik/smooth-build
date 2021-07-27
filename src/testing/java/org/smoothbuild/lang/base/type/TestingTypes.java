@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.util.Lists.list;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;

@@ -24,8 +24,8 @@ import org.smoothbuild.exec.java.MethodPath.MethodPathParsingException;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.io.fs.space.JPathResolver;
+import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.RealFunction;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
@@ -51,7 +51,7 @@ public class MethodLoader {
       throws LoadingMethodException {
     MethodPath path = parseMethodPath(referencable, methodPath);
     Method method = loadMethod(referencable, path);
-    if (referencable instanceof RealFunction function) {
+    if (referencable instanceof Function function) {
       assertMethodMatchesFunctionRequirements(function, method, path);
     } else {
       assertMethodMatchesValueRequirements((Value) referencable, method, path);
@@ -138,7 +138,7 @@ public class MethodLoader {
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
 
-  private void assertMethodMatchesFunctionRequirements(RealFunction function, Method method,
+  private void assertMethodMatchesFunctionRequirements(Function function, Method method,
       MethodPath methodPath) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(function, method, function.type().resultType(), methodPath);
     assertNativeParameterTypesMatchesFuncParameters(method, function, methodPath);
@@ -162,7 +162,7 @@ public class MethodLoader {
   }
 
   private static void assertNativeParameterTypesMatchesFuncParameters(Method method,
-      RealFunction function, MethodPath methodPath) throws LoadingMethodException {
+      Function function, MethodPath methodPath) throws LoadingMethodException {
     Parameter[] nativeParams = method.getParameters();
     List<Item> params = function.parameters();
     if (params.size() != nativeParams.length - 1) {

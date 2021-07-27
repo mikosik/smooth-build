@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.Lists;
 
 public class ReporterTest extends TestingContext {
   private static final String HEADER = "TASK NAME";

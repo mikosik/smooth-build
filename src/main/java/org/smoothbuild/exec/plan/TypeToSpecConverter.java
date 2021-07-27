@@ -23,8 +23,6 @@ import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
 import org.smoothbuild.lang.base.type.Variable;
 
-import com.google.common.collect.ImmutableList;
-
 public class TypeToSpecConverter extends TypeVisitor<Spec> {
   private final ObjectFactory objectFactory;
 

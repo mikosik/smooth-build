@@ -29,8 +29,6 @@ import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.util.io.DataWriter;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * This class is thread-safe.
  * Builders returned by xxxBuilder() methods are not thread-safe.

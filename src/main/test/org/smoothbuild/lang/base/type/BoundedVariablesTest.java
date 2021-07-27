@@ -11,8 +11,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

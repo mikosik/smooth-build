@@ -68,7 +68,7 @@ public class FunctionTest extends TestingContext {
   }
 
   private static Function myFunction(Type type, List<Item> parameters) {
-    return new RealFunction(type, modulePath(), "name", ImmutableList.copyOf(parameters),
+    return new DefinedFunction(type, modulePath(), "name", ImmutableList.copyOf(parameters),
         mock(Expression.class), loc(1));
   }
 }

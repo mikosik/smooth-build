@@ -12,10 +12,10 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class RealFunction extends Function {
+public class DefinedFunction extends Function {
   private final Expression body;
 
-  public RealFunction(Type resultType, ModulePath modulePath, String name,
+  public DefinedFunction(Type resultType, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Expression body, Location location) {
     super(resultType, modulePath, name, parameters, location);
     this.body = body;
@@ -30,7 +30,7 @@ public class RealFunction extends Function {
     if (this == object) {
       return true;
     }
-    return object instanceof RealFunction that
+    return object instanceof DefinedFunction that
         && this.resultType().equals(that.resultType())
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())

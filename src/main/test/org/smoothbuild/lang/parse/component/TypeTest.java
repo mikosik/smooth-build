@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.base.type.TestedType.TESTED_SINGLE_VARIABLE_POLYTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
+import static org.smoothbuild.lang.base.type.TestedType.TESTED_SINGLE_VARIABLE_POLYTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_VALID_POLYTYPES;
 import static org.smoothbuild.util.Strings.unlines;
 

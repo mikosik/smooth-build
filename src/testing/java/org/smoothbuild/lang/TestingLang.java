@@ -6,13 +6,13 @@ import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.util.Lists.list;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Constructor;
+import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.RealFunction;
+import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -74,23 +74,23 @@ public class TestingLang {
     return new CallExpression(type, expression, args, loc);
   }
 
-  public static RealFunction function(Type type, String name, Item... parameters) {
+  public static NativeFunction function(Type type, String name, Item... parameters) {
     return function(1, type, name, nativ(1, "Impl.met"), parameters);
   }
 
-  public static RealFunction function(int line, Type type, String name, NativeExpression nativ,
+  public static NativeFunction function(int line, Type type, String name, NativeExpression nativ,
       Item... parameters) {
-    return function(line, type, name, (Expression) nativ, parameters);
+    return new NativeFunction(type, modulePath(), name, list(parameters), nativ, loc(line));
   }
 
-  public static RealFunction function(Type type, String name, Expression body, Item... parameters) {
+  public static DefinedFunction function(Type type, String name, Expression body,
+      Item... parameters) {
     return function(1, type, name, body, parameters);
   }
 
-  public static RealFunction function(int line, Type type, String name, Expression body,
+  public static DefinedFunction function(int line, Type type, String name, Expression body,
       Item... parameters) {
-    return new RealFunction(
-        type, modulePath(), name, ImmutableList.copyOf(parameters), body, loc(line));
+    return new DefinedFunction(type, modulePath(), name, list(parameters), body, loc(line));
   }
 
   public static Value value(int line, Type type, String name, NativeExpression nativ) {

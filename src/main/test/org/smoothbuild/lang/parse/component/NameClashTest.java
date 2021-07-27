@@ -6,8 +6,6 @@ import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.util.Lists.list;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.space.FilePath;

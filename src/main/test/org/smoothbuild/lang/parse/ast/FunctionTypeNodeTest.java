@@ -8,8 +8,6 @@ import static org.smoothbuild.util.Lists.list;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.collect.ImmutableList;
-
 public class FunctionTypeNodeTest {
   @Nested
   class _is_polytype {

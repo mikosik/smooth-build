@@ -23,7 +23,6 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
