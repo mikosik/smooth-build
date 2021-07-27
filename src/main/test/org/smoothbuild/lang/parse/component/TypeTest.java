@@ -298,10 +298,9 @@ public class TypeTest {
     @Test
     public void parameter() {
       module("""
-             @Native("Impl.met")
-             String myFunction(Undefined param);
+             String myFunction(Undefined param) = "abc";
              """)
-          .loadsWithError(2, "Undefined type `Undefined`.");
+          .loadsWithError(1, "Undefined type `Undefined`.");
     }
 
     @Test

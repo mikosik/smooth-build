@@ -54,8 +54,7 @@ public class DeclarationOrderTest {
     @Test
     public void function_can_be_used_as_parameter_type() {
       module("""
-             @Native("Impl.met")
-             String myFunction(MyStruct param);
+             String myFunction(MyStruct param) = "abc";
              MyStruct {}
              """)
           .loadsSuccessfully();
@@ -64,8 +63,7 @@ public class DeclarationOrderTest {
     @Test
     public void function_can_be_used_as_parameter_arrayed_type() {
       module("""
-             @Native("Impl.met")
-             String myFunction([MyStruct] param);
+             String myFunction([MyStruct] param) = "abc";
              MyStruct {}
              """)
           .loadsSuccessfully();
@@ -84,8 +82,7 @@ public class DeclarationOrderTest {
     @Test
     public void function_can_be_used_as_arrayed_result_type() {
       module("""
-             @Native("Impl.met")
-             [MyStruct] myFunction(String param);
+             [MyStruct] myFunction(String param) = [];
              MyStruct {}
              """)
           .loadsSuccessfully();

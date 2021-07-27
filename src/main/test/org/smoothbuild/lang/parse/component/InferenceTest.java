@@ -32,8 +32,7 @@ public class InferenceTest {
   @Test
   public void function_reference() {
     module("""
-        @Native("Impl.met")
-        String myFunction(Blob param);
+        String myFunction(Blob param) = "abc";
         myValue = myFunction;
         """)
         .loadsSuccessfully()
@@ -43,8 +42,7 @@ public class InferenceTest {
   @Test
   public void argless_function_call() {
     module("""
-        @Native("Impl.met")
-        String myFunction();
+        String myFunction() = "abc";
         myValue = myFunction();
         """)
         .loadsSuccessfully()
@@ -75,8 +73,7 @@ public class InferenceTest {
   public void generic_function_with_monotype_function_argument() {
     module("""
         A myIdentity(A a) = a;
-        @Native("Impl.met")
-        Blob myOtherFunction(String s);
+        Blob myOtherFunction(String s) = 0x09;
         myValue = myIdentity(myOtherFunction);
         """)
         .loadsSuccessfully()
@@ -107,8 +104,7 @@ public class InferenceTest {
   public void generic_function_with_polytype_function_argument() {
     module("""
         A myIdentity(A a) = a;
-        @Native("Impl.met")
-        B myOtherFunction(B b);
+        B myOtherFunction(B b) = b;
         myFunction() = myIdentity(myOtherFunction);
         """)
         .loadsSuccessfully()

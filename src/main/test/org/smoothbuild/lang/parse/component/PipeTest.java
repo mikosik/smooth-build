@@ -10,14 +10,12 @@ public class PipeTest {
   @Test
   public void regression_test_error_in_expression_of_argument_of_not_first_element_of_pipe() {
     module("""
-        @Native("impl")
-        String myFunction(String a, String b);
-        @Native("impl")
-        String myIdentity(String value);
+        String myFunction(String a, String b) = "abc";
+        String myIdentity(String s) = s;
         result = "abc" | myIdentity(myFunction(unknown=""));
         """).loadsWithErrors(list(
-            err(5, "In call to function with type `String(String a, String b)`: Unknown parameter `unknown`."),
-            err(5, "In call to function with type `String(String value)`: Too many positional arguments.")
+            err(3, "In call to function with type `String(String a, String b)`: Unknown parameter `unknown`."),
+            err(3, "In call to function with type `String(String s)`: Too many positional arguments.")
         ));
   }
 }

@@ -12,8 +12,7 @@ public class ReferenceTest {
     @Test
     public void value_succeeds() {
       module("""
-             @Native("impl")
-             String myValue;
+             String myValue = "abc";
              result = myValue;
              """)
           .loadsSuccessfully();
@@ -23,8 +22,7 @@ public class ReferenceTest {
     public void value_declared_below_succeeds() {
       module("""
              result = myValue;
-             @Native("impl")
-             String myValue;
+             String myValue = "abc";
              """)
           .loadsSuccessfully();
     }
@@ -32,8 +30,7 @@ public class ReferenceTest {
     @Test
     public void function_succeeds() {
       module("""
-             @Native("impl")
-             String myFunction();
+             String myFunction() = "abc";
              result = myFunction;
              """)
           .loadsSuccessfully();
@@ -43,8 +40,7 @@ public class ReferenceTest {
     public void function_declared_below_succeeds() {
       module("""
              result = myFunction;
-             @Native("Impl.met")
-             String myFunction();
+             String myFunction() = "abc";
              """)
           .loadsSuccessfully();
     }
@@ -73,8 +69,7 @@ public class ReferenceTest {
     @Test
     public void value_succeeds() {
       Definitions imported = module("""
-          @Native("impl")
-          String otherModuleValue;
+          String otherModuleValue = "abc";
           """)
           .loadsSuccessfully()
           .getModuleAsDefinitions();
@@ -88,8 +83,7 @@ public class ReferenceTest {
     @Test
     public void function_succeeds() {
       Definitions imported = module("""
-          @Native("impl")
-          String otherModuleFunction();
+          String otherModuleFunction() = "abc";
           """)
           .loadsSuccessfully()
           .getModuleAsDefinitions();

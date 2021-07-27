@@ -12,19 +12,17 @@ public class CallTest {
     @Test
     public void value_of_non_function_type_fails() {
       module("""
-             @Native("impl")
-             String myValue;
+             String myValue = "abc";
              result = myValue();
              """)
-          .loadsWithError(3, "`myValue` cannot be called as it is not a function.");
+          .loadsWithError(2, "`myValue` cannot be called as it is not a function.");
     }
 
     @Test
     public void value_of_non_function_type_declared_below_fails() {
       module("""
              result = myValue();
-             @Native("Impl.met")
-             String myValue;
+             String myValue = "abc";
              """)
           .loadsWithError(1, "`myValue` cannot be called as it is not a function.");
     }
@@ -62,8 +60,7 @@ public class CallTest {
     @Test
     public void function_succeeds() {
       module("""
-             @Native("impl")
-             String myFunction();
+             String myFunction() = "abc";
              result = myFunction();
              """)
           .loadsSuccessfully();
@@ -72,8 +69,7 @@ public class CallTest {
     @Test
     public void function_with_parameter_succeeds() {
       module("""
-             @Native("impl")
-             String myFunction(String string);
+             String myFunction(String string) = "abc";
              result = myFunction("abc");
              """)
           .loadsSuccessfully();
@@ -83,8 +79,7 @@ public class CallTest {
     public void function_declared_below_succeeds() {
       module("""
              result = myFunction();
-             @Native("impl")
-             String myFunction();
+             String myFunction() = "abc";
              """)
           .loadsSuccessfully();
     }
@@ -113,8 +108,7 @@ public class CallTest {
     @Test
     public void value_of_non_function_type_fails() {
       Definitions imported = module("""
-          @Native("impl")
-          String otherModuleValue;
+          String otherModuleValue = "abc";
           """)
           .loadsSuccessfully()
           .getModuleAsDefinitions();
@@ -143,8 +137,7 @@ public class CallTest {
     @Test
     public void function_succeeds() {
       Definitions imported = module("""
-          @Native("impl")
-          String otherModuleFunction();
+          String otherModuleFunction() = "abc";
           """)
           .loadsSuccessfully()
           .getModuleAsDefinitions();

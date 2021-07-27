@@ -201,12 +201,11 @@ public class NameClashTest {
     @Test
     public void other_parameter() {
       module("""
-             @Native("impl")
              String myFunction(
                String param,
-               String param);
+               String param) = "abc";
                """)
-          .loadsWithError(4, alreadyDefinedIn(filePath(), 3, "param"));
+          .loadsWithError(3, alreadyDefinedIn(filePath(), 2, "param"));
     }
   }
 

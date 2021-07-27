@@ -11,8 +11,7 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
-          @Native("impl")
-          String myFunction(Blob param);
+          String myFunction(Blob b) = "abc";
           result = myFunction(0x01);
           """)
           .loadsSuccessfully();
@@ -29,8 +28,7 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
-        @Native("impl")
-        String myFunction(Blob value = 0x01);
+        String myFunction(Blob b = 0x01) = "abc";
         """)
           .loadsSuccessfully();
     }
@@ -41,8 +39,7 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
-        @Native("impl")
-        String myFunction(String param);
+        String myFunction(String param) = "abc";
         result = myFunction("abc");
         """)
           .loadsSuccessfully();
@@ -59,8 +56,7 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
-        @Native("impl")
-        String myFunction(String value = "abc");
+        String myFunction(String s = "abc") = "abc";
         """)
           .loadsSuccessfully();
     }
@@ -75,8 +71,7 @@ public class ExpressionInContextTest {
           String field,
         }
         myValue = myStruct("abc");
-        @Native("impl")
-        String myFunction(String param);
+        String myFunction(String s) = "abc";
         result = myFunction(myValue.field);
         """)
           .loadsSuccessfully();
@@ -101,8 +96,7 @@ public class ExpressionInContextTest {
           String field,
         }
         value = myStruct("abc");
-        @Native("impl")
-        String myFunction(String value = value.field);
+        String myFunction(String value = value.field) = "abc";
         """)
           .loadsSuccessfully();
     }
@@ -113,10 +107,8 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
-          @Native("impl")
-          A myIdentity(A value);
-          @Native("impl")
-          String myFunction(String param);
+          A myIdentity(A a) = a;
+          String myFunction(String param) = "abc";
           result = myFunction("abc" | myIdentity());
           """)
           .loadsSuccessfully();
@@ -134,9 +126,8 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
-          String myIdentity(String string) = string;
-          @Native("impl")
-          String myFunction(String param = "abc" | myIdentity());
+          A myIdentity(A a) = a;
+          String myFunction(String param = "abc" | myIdentity()) = "abc";
           """)
           .loadsSuccessfully();
     }
@@ -147,10 +138,8 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
-        @Native("impl")
-        String otherFunction();
-        @Native("impl")
-        String myFunction(String param);
+        String otherFunction() = "abc";
+        String myFunction(String param) = "abc";
         result = myFunction(otherFunction());
         """)
           .loadsSuccessfully();
@@ -168,10 +157,8 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
-        @Native("impl")
-        String myFunction();
-        @Native("impl")
-         String otherFunction(String value = myFunction());
+        String myFunction() = "abc";
+        String otherFunction(String value = myFunction()) = "abc";
         """)
           .loadsSuccessfully();
     }
@@ -182,10 +169,8 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
-          @Native("Impl.met")
-          String otherFunction();
-          @Native("Impl.met")
-          String myFunction(String() param);
+          String otherFunction() = "abc";
+          String myFunction(String() param) = "abc";
           result = myFunction(otherFunction);
           """)
           .loadsSuccessfully();
@@ -203,10 +188,8 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
-          @Native("Impl.met")
-          String myFunction();
-          @Native("Impl.met")
-          String otherFunction(String() value = myFunction);
+          String myFunction() = "abc";
+          String otherFunction(String() value = myFunction) = "abc";
           """)
           .loadsSuccessfully();
     }
@@ -217,10 +200,8 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
-          @Native("Impl.met")
-          String myValue;
-          @Native("Impl.met")
-          String myFunction(String param);
+          String myValue = "abc";
+          String myFunction(String param) = "abc";
           result = myFunction(myValue);
           """)
           .loadsSuccessfully();
@@ -229,8 +210,7 @@ public class ExpressionInContextTest {
     @Test
     public void array_element() {
       module("""
-           @Native("Impl.met")
-           String myValue;
+           String myValue = "abc";
            result = [ myValue ];
            """)
           .loadsSuccessfully();
@@ -239,10 +219,8 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
-          @Native("Impl.met")
-          String myValue;
-          @Native("Impl.met")
-          String myFunction(String value = myValue);
+          String myValue = "abc";
+          String myFunction(String value = myValue) = "abc";
           """)
           .loadsSuccessfully();
     }

@@ -99,8 +99,7 @@ public class NameTest {
     @Test
     public void with_normal_name() {
       module("""
-             @Native("impl")
-             String myFunction(String name);
+             String myFunction(String name) = "abc";
              """)
           .loadsSuccessfully();
     }

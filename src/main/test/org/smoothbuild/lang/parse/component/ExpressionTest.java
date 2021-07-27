@@ -57,39 +57,36 @@ public class ExpressionTest {
     @Test
     public void with_function_reference() {
       module("""
-          @Native("Impl.met")
-          String myFunction();
+          String myFunction() = "abc";
           result = myFunction();
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              value(3, STRING, "result", call(3, STRING, reference(3, f(STRING), "myFunction"))));
+              value(2, STRING, "result", call(2, STRING, reference(2, f(STRING), "myFunction"))));
     }
 
     @Test
     public void with_function_reference_and_argument() {
       module("""
-          @Native("Impl.met")
-          String myFunction(Blob param1);
+          String myFunction(Blob b) = "abc";
           result = myFunction(
             0x07);
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(3, STRING, "result", call(3, STRING,
-              reference(3, f(STRING, item(BLOB, "param1")), "myFunction"), blob(4, 7))));
+          .containsReferencable(value(2, STRING, "result", call(2, STRING,
+              reference(2, f(STRING, item(BLOB, "b")), "myFunction"), blob(3, 7))));
     }
 
     @Test
     public void with_function_reference_and_named_argument() {
       module("""
-          @Native("Impl.met")
-          String myFunction(Blob param1);
-          result = myFunction(param1=
+          String myFunction(Blob b) = "abc";
+          result = myFunction(b=
             0x07);
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(3, STRING, "result", call(3, STRING,
-              reference(3, f(STRING, item(BLOB, "param1")), "myFunction"), blob(4, 7))));
+          .containsReferencable(value(2, STRING, "result", call(2, STRING,
+              reference(2, f(STRING, item(BLOB, "b")), "myFunction"), blob(3, 7))));
     }
 
     @Test

@@ -8,6 +8,7 @@ import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.nativ;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.reference;
+import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
@@ -62,7 +63,7 @@ public class TrailingCommaTest {
       module(functionDeclaration("String param1,"))
           .loadsSuccessfully()
           .containsReferencable(
-              function(2, STRING, "myFunction", nativ(1, "Impl.met"), parameter(STRING, "param1")));
+              function(1, STRING, "myFunction", string(1, "abc"), parameter(STRING, "param1")));
     }
 
     @Test
@@ -85,8 +86,7 @@ public class TrailingCommaTest {
 
     private String functionDeclaration(CharSequence string) {
       return """
-        @Native("Impl.met")
-        String myFunction(PLACEHOLDER);
+        String myFunction(PLACEHOLDER) = "abc";
         """.replace("PLACEHOLDER", string);
     }
   }
@@ -166,8 +166,8 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(functionCall("0x07,"))
           .loadsSuccessfully()
-          .containsReferencable(value(3, BLOB, "result",
-              call(3, BLOB, reference(3, f(BLOB, item(BLOB, "blob")), "myFunction"), blob(3, 7))));
+          .containsReferencable(value(2, BLOB, "result",
+              call(2, BLOB, reference(2, f(BLOB, item(BLOB, "b")), "myFunction"), blob(2, 7))));
     }
 
     @Test
@@ -190,8 +190,7 @@ public class TrailingCommaTest {
 
     private String functionCall(CharSequence string) {
       return """
-        @Native("Impl.met")
-        Blob myFunction(Blob blob);
+        Blob myFunction(Blob b) = b;
         result = myFunction(PLACEHOLDER);
         """.replace("PLACEHOLDER", string);
     }
