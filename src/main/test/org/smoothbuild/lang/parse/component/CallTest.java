@@ -15,7 +15,7 @@ public class CallTest {
              String myValue = "abc";
              result = myValue();
              """)
-          .loadsWithError(2, "`myValue` cannot be called as it is not a function.");
+          .loadsWithError(2, "`myValue` cannot be called as it is not a function but `String`.");
     }
 
     @Test
@@ -24,7 +24,7 @@ public class CallTest {
              result = myValue();
              String myValue = "abc";
              """)
-          .loadsWithError(1, "`myValue` cannot be called as it is not a function.");
+          .loadsWithError(1, "`myValue` cannot be called as it is not a function but `String`.");
     }
 
     @Test
@@ -116,7 +116,8 @@ public class CallTest {
              result = otherModuleValue();
              """)
           .withImported(imported)
-          .loadsWithError(1, "`otherModuleValue` cannot be called as it is not a function.");
+          .loadsWithError(1,
+              "`otherModuleValue` cannot be called as it is not a function but `String`.");
     }
 
     @Test
@@ -170,7 +171,7 @@ public class CallTest {
       module("""
              myFunction(String param) = param();
              """)
-          .loadsWithError(1, "`param` cannot be called as it is not a function.");
+          .loadsWithError(1, "`param` cannot be called as it is not a function but `String`.");
     }
 
     @Test

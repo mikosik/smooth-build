@@ -271,8 +271,8 @@ public class InferTypes {
             call.setType(type.valueOptional());
           }
         } else {
-          logBuffer.log(parseError(call.location(),
-              description(called) + " cannot be called as it is not a function."));
+          logBuffer.log(parseError(call.location(), description(called)
+              + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(Optional.empty());
         }
       }

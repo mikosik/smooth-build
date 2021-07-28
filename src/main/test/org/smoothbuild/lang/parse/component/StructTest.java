@@ -105,7 +105,7 @@ public class StructTest {
           }
           String result = myStruct("abc").field();
           """)
-          .loadsWithError(4, "expression cannot be called as it is not a function.");
+          .loadsWithError(4, "expression cannot be called as it is not a function but `String`.");
     }
 
     @Test
@@ -113,7 +113,7 @@ public class StructTest {
       module("""
           MyStruct {
             String field,
-          }  
+          }
           String result = MyStruct.field(myStruct("abc"));
           """)
           .loadsWithError(4, """
