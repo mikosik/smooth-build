@@ -4,20 +4,20 @@ module      : ( struct | ref )* EOF ;
 struct      : TNAME '{' fieldList? '}' ;
 fieldList   : field ( ',' field )* ','? ;
 field       : type NAME ;
-ref         : nat? type? NAME (p='(' paramList? ')')? ('=' expr)? ';' ;
+ref         : nat? type? NAME paramList? ('=' expr)? ';' ;
 nat         : '@Native(' STRING (',' (pure='PURE' | impure='IMPURE'))? ')' ;
-paramList   : param ( ',' param )* ','? ;
+paramList   : '(' ( param ( ',' param )* ','? )? ')' ;
 param       : type NAME ( '=' expr )? ;
-expr        : nonPipeExpr ( p+='|' call )* ;
-nonPipeExpr : nonPipeExpr fieldRead
+expr        : subexpr ( p+='|' call )* ;
+subexpr     : subexpr fieldRead
             | call
             | NAME
             | STRING
             | BLOB
             | array
             ;
-call        : NAME p='(' argList? ')' ;
-argList     : arg ( ',' arg )* ','? ;
+call        : NAME argList ;
+argList     : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg         : ( NAME '=' )? expr ;
 array       : '[' ( expr (',' expr)* (',')? )?  ']' ;
 fieldRead   : '.' NAME ;

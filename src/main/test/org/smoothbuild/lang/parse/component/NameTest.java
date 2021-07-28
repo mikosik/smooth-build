@@ -165,7 +165,7 @@ public class NameTest {
              myStruct{}
              """)
           .loadsWithError(1, """
-              mismatched input '{' expecting {'(', '=', ';'}
+              mismatched input '{' expecting {'=', ';', '('}
               myStruct{}
                       ^""");
     }

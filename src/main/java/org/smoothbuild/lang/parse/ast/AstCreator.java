@@ -23,7 +23,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.FieldReadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FunctionTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NatContext;
-import org.smoothbuild.antlr.lang.SmoothParser.NonPipeExprContext;
+import org.smoothbuild.antlr.lang.SmoothParser.SubexprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.RefContext;
@@ -78,7 +78,7 @@ public class AstCreator {
         Optional<ExprNode> expr = createExprSane(ref.expr());
         Optional<NativeExpression> nativ = createNativeSane(ref.nat());
         Location location = locationOf(filePath, nameNode);
-        if (ref.p == null) {
+        if (ref.paramList() == null) {
           referencables.add(new ValueNode(type, name, expr, nativ, location));
         } else {
           List<ItemNode> params = createParams(ref.paramList());
@@ -125,7 +125,7 @@ public class AstCreator {
       }
 
       private ExprNode createExpr(ExprContext expr) {
-        NonPipeExprContext initialExpression = expr.nonPipeExpr();
+        SubexprContext initialExpression = expr.subexpr();
         ExprNode result = createNonPipeExpr(initialExpression);
         List<CallContext> callsInPipe = expr.call();
         for (int i = 0; i < callsInPipe.size(); i++) {
@@ -145,9 +145,9 @@ public class AstCreator {
         return new CallNode(newRefNode(calledName), args, locationOf(filePath, calledName));
       }
 
-      private ExprNode createNonPipeExpr(NonPipeExprContext expr) {
+      private ExprNode createNonPipeExpr(SubexprContext expr) {
         if (expr.fieldRead() != null) {
-          ExprNode structExpr = createNonPipeExpr(expr.nonPipeExpr());
+          ExprNode structExpr = createNonPipeExpr(expr.subexpr());
           FieldReadContext accessor = expr.fieldRead();
           String name = accessor.NAME().getText();
           return new FieldReadNode(structExpr, name, locationOf(filePath, accessor));
@@ -172,7 +172,7 @@ public class AstCreator {
         if (expr.BLOB() != null) {
           return new BlobNode(expr.BLOB().getText().substring(2), locationOf(filePath, expr));
         }
-        throw new RuntimeException("Illegal parse tree: " + NonPipeExprContext.class.getSimpleName()
+        throw new RuntimeException("Illegal parse tree: " + SubexprContext.class.getSimpleName()
             + " without children.");
       }
 
