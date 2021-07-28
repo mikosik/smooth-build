@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
@@ -10,20 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
-import org.smoothbuild.antlr.lang.SmoothParser.CallContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldReadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FunctionTypeContext;
+import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NatContext;
-import org.smoothbuild.antlr.lang.SmoothParser.SubexprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.RefContext;
@@ -125,45 +129,36 @@ public class AstCreator {
       }
 
       private ExprNode createExpr(ExprContext expr) {
-        SubexprContext initialExpression = expr.subexpr();
-        ExprNode result = createNonPipeExpr(initialExpression);
-        List<CallContext> callsInPipe = expr.call();
-        for (int i = 0; i < callsInPipe.size(); i++) {
-          CallContext call = callsInPipe.get(i);
-          result = createCallInPipe(result, expr, i, call.NAME(), createArgList(call.argList()));
+        ExprNode result = createExprHead(expr.exprHead());
+        List<ChainContext> chainsInPipe = expr.chain();
+        for (int i = 0; i < chainsInPipe.size(); i++) {
+          ArgNode firstArgument = firstArgument(result, expr.p.get(i));
+          ChainContext chain = chainsInPipe.get(i);
+          result = createChainExpr(firstArgument, chain);
         }
         return result;
       }
 
-      private ExprNode createCallInPipe(ExprNode result, ExprContext expr, int i,
-          TerminalNode calledName, List<ArgNode> argList) {
-        // Location of nameless piped argument is set to the location of pipe character '|'.
-        Location location = locationOf(filePath, expr.p.get(i));
-        List<ArgNode> args = new ArrayList<>();
-        args.add(new ArgNode(null, result, location));
-        args.addAll(argList);
-        return new CallNode(newRefNode(calledName), args, locationOf(filePath, calledName));
+      private ExprNode createExprHead(ExprHeadContext expr) {
+        if (expr.chain() != null) {
+          return createChainExpr(null, expr.chain());
+        }
+        if (expr.literal() != null) {
+          return createLiteral(expr.literal());
+        }
+        throw newRuntimeException(ExprHeadContext.class);
       }
 
-      private ExprNode createNonPipeExpr(SubexprContext expr) {
-        if (expr.fieldRead() != null) {
-          ExprNode structExpr = createNonPipeExpr(expr.subexpr());
-          FieldReadContext accessor = expr.fieldRead();
-          String name = accessor.NAME().getText();
-          return new FieldReadNode(structExpr, name, locationOf(filePath, accessor));
-        }
+      private ArgNode firstArgument(ExprNode result, Token pipeCharacter) {
+        // Location of nameless piped argument is set to the location of pipe character '|'.
+        Location location = locationOf(filePath, pipeCharacter);
+        return new ArgNode(null, result, location);
+      }
+
+      private ExprNode createLiteral(LiteralContext expr) {
         if (expr.array() != null) {
           List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
           return new ArrayNode(elements, locationOf(filePath, expr));
-        }
-        if (expr.call() != null) {
-          CallContext call = expr.call();
-          Location location = locationOf(filePath, call);
-          List<ArgNode> args = createArgList(call.argList());
-          return new CallNode(newRefNode(call.NAME()), args, location);
-        }
-        if (expr.NAME() != null) {
-          return newRefNode(expr.NAME());
         }
         if (expr.STRING() != null) {
           String quotedString = expr.STRING().getText();
@@ -172,7 +167,33 @@ public class AstCreator {
         if (expr.BLOB() != null) {
           return new BlobNode(expr.BLOB().getText().substring(2), locationOf(filePath, expr));
         }
-        throw new RuntimeException("Illegal parse tree: " + SubexprContext.class.getSimpleName()
+        throw newRuntimeException(LiteralContext.class);
+      }
+
+      private ExprNode createChainExpr(ArgNode firstArgument, ChainContext chain) {
+        ExprNode result = newRefNode(chain.NAME());
+        for (ChainPartContext chainPart : chain.chainPart()) {
+          if (chainPart.argList() != null) {
+            List<ArgNode> args = createArgList(chainPart.argList());
+            if (firstArgument != null) {
+              args = concat(firstArgument, args);
+              firstArgument = null;
+            }
+            Location location = locationOf(filePath, chainPart);
+            result = new CallNode(result, args, location);
+          } else if (chainPart.fieldRead() != null) {
+            FieldReadContext fieldRead = chainPart.fieldRead();
+            String name = fieldRead.NAME().getText();
+            result = new FieldReadNode(result, name, locationOf(filePath, fieldRead));
+          } else {
+            throw newRuntimeException(ChainContext.class);
+          }
+        }
+        return result;
+      }
+
+      private RuntimeException newRuntimeException(Class<?> clazz) {
+        return new RuntimeException("Illegal parse tree: " + clazz.getSimpleName()
             + " without children.");
       }
 

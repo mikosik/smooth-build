@@ -80,7 +80,10 @@ public class StructTest {
           """
           result = "abc".accessedField;
           """)
-          .loadsWithError(1, "Type `String` doesn't have field `accessedField`.");
+          .loadsWithError(1, """
+              mismatched input '.' expecting {';', '|'}
+              result = "abc".accessedField;
+                            ^""");
     }
 
     @Test
@@ -99,13 +102,10 @@ public class StructTest {
       module("""
           MyStruct {
             String field,
-          } 
+          }
           String result = myStruct("abc").field();
           """)
-          .loadsWithError(4, """
-              mismatched input '(' expecting {';', '|', '.'}
-              String result = myStruct("abc").field();
-                                                   ^""");
+          .loadsWithError(4, "expression cannot be called as it is not a function.");
     }
 
     @Test

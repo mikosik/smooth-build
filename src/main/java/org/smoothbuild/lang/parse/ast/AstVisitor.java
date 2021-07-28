@@ -104,7 +104,7 @@ public class AstVisitor {
   }
 
   public void visitCall(CallNode call) {
-    visitRef(call.ref());
+    visitExpr(call.function());
     visitArgs(call.args());
   }
 

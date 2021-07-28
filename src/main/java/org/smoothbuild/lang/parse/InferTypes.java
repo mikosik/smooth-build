@@ -254,8 +254,8 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        ExprNode called = call.called();
-        Optional<Type> calledType = call.ref().referenced().inferredType();
+        ExprNode called = call.function();
+        Optional<Type> calledType = called.type();
         if (calledType.isEmpty()) {
           call.setType(Optional.empty());
         } else if (calledType.get() instanceof FunctionType functionType) {

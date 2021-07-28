@@ -144,7 +144,7 @@ public class LoadReferencable {
     }
 
     private Expression createCall(CallNode call) {
-      Expression called = createExpression(call.called());
+      Expression called = createExpression(call.function());
       var argumentExpressions = createArgumentExpressions(call);
       var functionType = ((FunctionType) called.type());
       var resultType = functionType.inferResultType(createArgumentTypes(call));
@@ -157,7 +157,7 @@ public class LoadReferencable {
     }
 
     private ImmutableList<Type> createArgumentTypes(CallNode call) {
-      FunctionType functionType = ((FunctionType) call.called().type().get());
+      FunctionType functionType = ((FunctionType) call.function().type().get());
       List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
       ImmutableList<ItemSignature> parameters = functionType.parameters();
       Builder<Type> resultBuilder = ImmutableList.builder();
