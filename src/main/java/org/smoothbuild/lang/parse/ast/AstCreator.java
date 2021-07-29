@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
@@ -9,7 +10,6 @@ import static org.smoothbuild.util.Lists.sane;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -17,6 +17,7 @@ import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ChainCallContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
@@ -130,18 +131,18 @@ public class AstCreator {
 
       private ExprNode createExpr(ExprContext expr) {
         ExprNode result = createExprHead(expr.exprHead());
-        List<ChainContext> chainsInPipe = expr.chain();
-        for (int i = 0; i < chainsInPipe.size(); i++) {
-          var firstArg = new AtomicReference<>(firstArgument(result, expr.p.get(i)));
-          ChainContext chain = chainsInPipe.get(i);
-          result = createChainExpr(firstArg, chain);
+        List<ChainCallContext> chainCallsInPipe = expr.chainCall();
+        for (int i = 0; i < chainCallsInPipe.size(); i++) {
+          var pipedArg = pipedArgument(result, expr.p.get(i));
+          ChainCallContext chain = chainCallsInPipe.get(i);
+          result = createChainCallExpr(pipedArg, chain);
         }
         return result;
       }
 
       private ExprNode createExprHead(ExprHeadContext expr) {
         if (expr.chain() != null) {
-          return createChainExpr(new AtomicReference<>(null), expr.chain());
+          return createChainExpr(expr.chain());
         }
         if (expr.literal() != null) {
           return createLiteral(expr.literal());
@@ -149,7 +150,7 @@ public class AstCreator {
         throw newRuntimeException(ExprHeadContext.class);
       }
 
-      private ArgNode firstArgument(ExprNode result, Token pipeCharacter) {
+      private ArgNode pipedArgument(ExprNode result, Token pipeCharacter) {
         // Location of nameless piped argument is set to the location of pipe character '|'.
         Location location = locationOf(filePath, pipeCharacter);
         return new ArgNode(null, result, location);
@@ -170,17 +171,41 @@ public class AstCreator {
         throw newRuntimeException(LiteralContext.class);
       }
 
-      private ExprNode createChainExpr(AtomicReference<ArgNode> firstArgument, ChainContext chain) {
+      private ExprNode createChainExpr(ChainContext chain) {
         ExprNode result = newRefNode(chain.NAME());
-        for (ChainPartContext chainPart : chain.chainPart()) {
+        return createChainParts(result, chain.chainPart());
+      }
+
+      private ExprNode createChainCallExpr(ArgNode pipedArg, ChainCallContext chainCall) {
+        ExprNode result = newRefNode(chainCall.NAME());
+        for (FieldReadContext fieldRead : chainCall.fieldRead()) {
+          result = createFieldRead(result, fieldRead);
+        }
+
+        var args = createArgList(chainCall.argList());
+        result = createCall(result, concat(pipedArg, args), chainCall.argList());
+
+        return createChainParts(result, chainCall.chainPart());
+      }
+
+      private RefNode newRefNode(TerminalNode name) {
+        return new RefNode(name.getText(), locationOf(filePath, name));
+      }
+
+      private FieldReadNode createFieldRead(ExprNode result, FieldReadContext fieldRead) {
+        String name = fieldRead.NAME().getText();
+        Location location = locationOf(filePath, fieldRead);
+        return new FieldReadNode(result, name, location);
+      }
+
+      private ExprNode createChainParts(ExprNode expr, List<ChainPartContext> chainParts) {
+        ExprNode result = expr;
+        for (ChainPartContext chainPart : chainParts) {
           if (chainPart.argList() != null) {
-            List<ArgNode> args = createArgList(firstArgument, chainPart.argList());
-            Location location = locationOf(filePath, chainPart);
-            result = new CallNode(result, args, location);
+            var args = createArgList(chainPart.argList());
+            result = createCall(result, args, chainPart.argList());
           } else if (chainPart.fieldRead() != null) {
-            FieldReadContext fieldRead = chainPart.fieldRead();
-            String name = fieldRead.NAME().getText();
-            result = new FieldReadNode(result, name, locationOf(filePath, fieldRead));
+            result = createFieldRead(result, chainPart.fieldRead());
           } else {
             throw newRuntimeException(ChainContext.class);
           }
@@ -188,17 +213,8 @@ public class AstCreator {
         return result;
       }
 
-      private RefNode newRefNode(TerminalNode name) {
-        return new RefNode(name.getText(), locationOf(filePath, name));
-      }
-
-      private List<ArgNode> createArgList(
-          AtomicReference<ArgNode> firstArgument, ArgListContext argList) {
+      private List<ArgNode> createArgList(ArgListContext argList) {
         List<ArgNode> result = new ArrayList<>();
-        ArgNode first = firstArgument.getAndSet(null);
-        if (first != null) {
-          result.add(first);
-        }
         for (ArgContext arg : argList.arg()) {
           ExprContext expr = arg.expr();
           TerminalNode nameNode = arg.NAME();
@@ -207,6 +223,12 @@ public class AstCreator {
           result.add(new ArgNode(name, exprNode, locationOf(filePath, arg)));
         }
         return result;
+      }
+
+      private ExprNode createCall(
+          ExprNode function, List<ArgNode> args, ArgListContext argListContext) {
+        Location location = locationOf(filePath, argListContext);
+        return new CallNode(function, args, location);
       }
 
       private Optional<TypeNode> createTypeSane(TypeContext type) {

@@ -8,13 +8,14 @@ ref         : nat? type? NAME paramList? ('=' expr)? ';' ;
 nat         : '@Native(' STRING (',' (pure='PURE' | impure='IMPURE'))? ')' ;
 paramList   : '(' ( param ( ',' param )* ','? )? ')' ;
 param       : type NAME ( '=' expr )? ;
-expr        : exprHead ( p+='|' chain )* ;
+expr        : exprHead ( p+='|' chainCall )* ;
 exprHead    : chain | literal ;
 literal     : STRING
             | BLOB
             | array
             ;
 chain       : NAME ( chainPart )* ;
+chainCall   : NAME ( fieldRead )* argList ( chainPart )* ;
 chainPart   : argList | fieldRead ;
 argList     : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg         : ( NAME '=' )? expr ;

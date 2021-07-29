@@ -18,4 +18,19 @@ public class PipeTest {
             err(3, "In call to function with type `String(String s)`: Too many positional arguments.")
         ));
   }
+
+  @Test
+  public void non_first_chain_in_a_pipe_must_have_function_call() {
+    module("""
+        MyStruct {
+          String myField
+        }
+        myValue = myStruct("def");
+        result = "abc" | myValue.myField;
+        """)
+        .loadsWithError(5, """
+            extraneous input ';' expecting {'(', '.'}
+            result = "abc" | myValue.myField;
+                                            ^""");
+  }
 }
