@@ -5,15 +5,14 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.NativeExpression;
 
 public class ReferencableNode extends NamedNode implements ReferencableLike {
   private final Optional<TypeNode> typeNode;
   private final Optional<ExprNode> expr;
-  private final Optional<NativeExpression> nativ;
+  private final Optional<NativeNode> nativ;
 
   public ReferencableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> expr,
-      Optional<NativeExpression> nativ, Location location) {
+      Optional<NativeNode> nativ, Location location) {
     super(name, location);
     this.typeNode = typeNode;
     this.expr = expr;
@@ -28,7 +27,7 @@ public class ReferencableNode extends NamedNode implements ReferencableLike {
     return expr;
   }
 
-  public Optional<NativeExpression> nativ() {
+  public Optional<NativeNode> nativ() {
     return nativ;
   }
 

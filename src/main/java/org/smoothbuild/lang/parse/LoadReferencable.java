@@ -27,6 +27,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
+import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
@@ -37,6 +38,7 @@ import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
+import org.smoothbuild.lang.parse.ast.NativeNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
@@ -60,7 +62,7 @@ public class LoadReferencable {
     String name = valueNode.name();
     Location location = valueNode.location();
     if (valueNode.nativ().isPresent()) {
-      return new NativeValue(type, path, name, valueNode.nativ().get(), location);
+      return new NativeValue(type, path, name, loadNative(valueNode.nativ().get()), location);
     } else {
       ExpressionLoader loader = new ExpressionLoader(ImmutableMap.of());
       return new DefinedValue(
@@ -75,13 +77,17 @@ public class LoadReferencable {
     Location location = realFuncNode.location();
     if (realFuncNode.nativ().isPresent()) {
       return new NativeFunction(
-          resultType, path, name, parameters, realFuncNode.nativ().get(), location);
+          resultType, path, name, parameters, loadNative(realFuncNode.nativ().get()), location);
     } else {
       ExpressionLoader loader = new ExpressionLoader(
           parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
       return new DefinedFunction(resultType, path, name, parameters,
           loader.createExpression(realFuncNode.expr().get()), location);
     }
+  }
+
+  private static NativeExpression loadNative(NativeNode nativeNode) {
+    return new NativeExpression(nativeNode.path(), nativeNode.isPure(), nativeNode.location());
   }
 
   private static ImmutableList<Item> loadParameters(

@@ -9,7 +9,6 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.NativeExpression;
 
 import com.google.common.collect.ImmutableList;
 
@@ -17,7 +16,7 @@ public class FunctionNode extends ReferencableNode {
   private final ImmutableList<ItemNode> params;
 
   public FunctionNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> exprNode,
-      List<ItemNode> params, Optional<NativeExpression> nativ, Location location) {
+      List<ItemNode> params, Optional<NativeNode> nativ, Location location) {
     super(typeNode, name, exprNode, nativ, location);
     this.params = ImmutableList.copyOf(params);
   }
