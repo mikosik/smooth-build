@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
@@ -10,6 +9,7 @@ import static org.smoothbuild.util.Lists.sane;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -132,16 +132,16 @@ public class AstCreator {
         ExprNode result = createExprHead(expr.exprHead());
         List<ChainContext> chainsInPipe = expr.chain();
         for (int i = 0; i < chainsInPipe.size(); i++) {
-          ArgNode firstArgument = firstArgument(result, expr.p.get(i));
+          var firstArg = new AtomicReference<>(firstArgument(result, expr.p.get(i)));
           ChainContext chain = chainsInPipe.get(i);
-          result = createChainExpr(firstArgument, chain);
+          result = createChainExpr(firstArg, chain);
         }
         return result;
       }
 
       private ExprNode createExprHead(ExprHeadContext expr) {
         if (expr.chain() != null) {
-          return createChainExpr(null, expr.chain());
+          return createChainExpr(new AtomicReference<>(null), expr.chain());
         }
         if (expr.literal() != null) {
           return createLiteral(expr.literal());
@@ -170,15 +170,11 @@ public class AstCreator {
         throw newRuntimeException(LiteralContext.class);
       }
 
-      private ExprNode createChainExpr(ArgNode firstArgument, ChainContext chain) {
+      private ExprNode createChainExpr(AtomicReference<ArgNode> firstArgument, ChainContext chain) {
         ExprNode result = newRefNode(chain.NAME());
         for (ChainPartContext chainPart : chain.chainPart()) {
           if (chainPart.argList() != null) {
-            List<ArgNode> args = createArgList(chainPart.argList());
-            if (firstArgument != null) {
-              args = concat(firstArgument, args);
-              firstArgument = null;
-            }
+            List<ArgNode> args = createArgList(firstArgument, chainPart.argList());
             Location location = locationOf(filePath, chainPart);
             result = new CallNode(result, args, location);
           } else if (chainPart.fieldRead() != null) {
@@ -192,26 +188,23 @@ public class AstCreator {
         return result;
       }
 
-      private RuntimeException newRuntimeException(Class<?> clazz) {
-        return new RuntimeException("Illegal parse tree: " + clazz.getSimpleName()
-            + " without children.");
-      }
-
       private RefNode newRefNode(TerminalNode name) {
         return new RefNode(name.getText(), locationOf(filePath, name));
       }
 
-      private List<ArgNode> createArgList(ArgListContext argList) {
+      private List<ArgNode> createArgList(
+          AtomicReference<ArgNode> firstArgument, ArgListContext argList) {
         List<ArgNode> result = new ArrayList<>();
-        if (argList != null) {
-          List<ArgContext> args = argList.arg();
-          for (ArgContext arg : args) {
-            ExprContext expr = arg.expr();
-            TerminalNode nameNode = arg.NAME();
-            String name = nameNode == null ? null : nameNode.getText();
-            ExprNode exprNode = createExpr(expr);
-            result.add(new ArgNode(name, exprNode, locationOf(filePath, arg)));
-          }
+        ArgNode first = firstArgument.getAndSet(null);
+        if (first != null) {
+          result.add(first);
+        }
+        for (ArgContext arg : argList.arg()) {
+          ExprContext expr = arg.expr();
+          TerminalNode nameNode = arg.NAME();
+          String name = nameNode == null ? null : nameNode.getText();
+          ExprNode exprNode = createExpr(expr);
+          result.add(new ArgNode(name, exprNode, locationOf(filePath, arg)));
         }
         return result;
       }
@@ -255,6 +248,11 @@ public class AstCreator {
         } else {
           return list();
         }
+      }
+
+      private RuntimeException newRuntimeException(Class<?> clazz) {
+        return new RuntimeException("Illegal parse tree: " + clazz.getSimpleName()
+            + " without children.");
       }
     }.visit(module);
     return new Ast(structs, referencables);
