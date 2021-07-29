@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse.component;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
@@ -17,7 +18,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 public class LiteralTest {
   @Nested
-  class blob_literal {
+  class _blob_literal {
     @ParameterizedTest
     @ValueSource(strings = {
         "0x",
@@ -58,7 +59,7 @@ public class LiteralTest {
   }
 
   @Nested
-  class string_literal {
+  class _string_literal {
     @ParameterizedTest
     @ValueSource(strings = {
         "",
@@ -121,7 +122,7 @@ public class LiteralTest {
   }
 
   @Nested
-  class array_literal {
+  class _array_literal {
     @ParameterizedTest
     @ArgumentsSource(ArrayElements.class)
     public void with_one_element(String literal) {
@@ -181,6 +182,37 @@ public class LiteralTest {
               err(3, "In call to function with type `String()`: Unknown parameter `unknown1`."),
               err(4, "In call to function with type `String()`: Unknown parameter `unknown2`.")
           );
+    }
+  }
+
+  @Nested
+  class _native_literal {
+    @Nested
+    class _causes_error_when {
+      @ParameterizedTest
+      @ValueSource(strings = {"", "()"})
+      public void path_has_illegal_escape_sequence(String valueOrFunction) {
+        var module = format("""
+          @Native("\\A")
+          String value%s;
+          """, valueOrFunction);
+        var error = err(1, "Illegal escape sequence at char index = 1. "
+            + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
+
+        module(module).loadsWith(error);
+      }
+
+      @ParameterizedTest
+      @ValueSource(strings = {"", "()"})
+      public void path_has_escape_sequence_without_code(String valueOrFunction) {
+        var module = format("""
+          @Native("\\")
+          String value%s;
+             """, valueOrFunction);
+        var error = err(1, "Missing escape code after backslash \\ at char index = 0.");
+
+        module(module).loadsWith(error);
+      }
     }
   }
 }

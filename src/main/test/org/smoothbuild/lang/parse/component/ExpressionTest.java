@@ -190,7 +190,7 @@ public class ExpressionTest {
           String result;
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(2, STRING, "result", nativ(1, "Impl.met", true)));
+          .containsReferencable(value(2, STRING, "result", nativ(1, string(1, "Impl.met"), true)));
     }
 
     @Test
@@ -200,7 +200,7 @@ public class ExpressionTest {
           String result;
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(2, STRING, "result", nativ(1, "Impl.met", false)));
+          .containsReferencable(value(2, STRING, "result", nativ(1, string(1, "Impl.met"), false)));
     }
 
     @Test
@@ -210,7 +210,7 @@ public class ExpressionTest {
           String result;
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(2, STRING, "result", nativ(1, "Impl.met", true)));
+          .containsReferencable(value(2, STRING, "result", nativ(1, string(1, "Impl.met"), true)));
     }
 
     @Test
@@ -220,7 +220,8 @@ public class ExpressionTest {
           String myFunction();
           """)
           .loadsSuccessfully()
-          .containsReferencable(function(2, STRING, "myFunction", nativ(1, "Impl.met", true)));
+          .containsReferencable(
+              function(2, STRING, "myFunction", nativ(1, string(1, "Impl.met"), true)));
     }
 
     @Test
@@ -230,7 +231,8 @@ public class ExpressionTest {
           String myFunction();
           """)
           .loadsSuccessfully()
-          .containsReferencable(function(2, STRING, "myFunction", nativ(1, "Impl.met", false)));
+          .containsReferencable(
+              function(2, STRING, "myFunction", nativ(1, string(1, "Impl.met"), false)));
     }
 
     @Test
@@ -240,7 +242,8 @@ public class ExpressionTest {
           String myFunction();
           """)
           .loadsSuccessfully()
-          .containsReferencable(function(2, STRING, "myFunction", nativ(1, "Impl.met", true)));
+          .containsReferencable(
+              function(2, STRING, "myFunction", nativ(1, string(1, "Impl.met"), true)));
     }
   }
 

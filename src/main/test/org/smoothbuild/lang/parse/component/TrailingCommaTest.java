@@ -97,7 +97,8 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(functionTypeDeclaration("String,"))
           .loadsSuccessfully()
-          .containsReferencable(value(2, f(BLOB, STRING), "myValue", nativ(1, "Impl.met")));
+          .containsReferencable(
+              value(2, f(BLOB, STRING), "myValue", nativ(1, string(1, "Impl.met"))));
     }
 
     @Test

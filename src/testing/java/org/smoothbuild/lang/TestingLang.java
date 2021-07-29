@@ -76,7 +76,7 @@ public class TestingLang {
   }
 
   public static NativeFunction function(Type type, String name, Item... parameters) {
-    return function(1, type, name, nativ(1, "Impl.met"), parameters);
+    return function(1, type, name, nativ(1, string(1, "Impl.met")), parameters);
   }
 
   public static NativeFunction function(int line, Type type, String name, NativeExpression nativ,
@@ -102,11 +102,12 @@ public class TestingLang {
     return new NativeValue(type, modulePath(), name, nativ, loc(line));
   }
 
-  public static NativeExpression nativ(int line, String implementedBy) {
+  public static NativeExpression nativ(int line, StringLiteralExpression implementedBy) {
     return nativ(line, implementedBy, true);
   }
 
-  public static NativeExpression nativ(int line, String implementedBy, boolean pure) {
+  public static NativeExpression nativ(
+      int line, StringLiteralExpression implementedBy, boolean pure) {
     return new NativeExpression(implementedBy, pure, loc(line));
   }
 

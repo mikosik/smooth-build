@@ -272,8 +272,8 @@ public class ExpressionToTaskConverter
   }
 
   @Override
-  public TaskSupplier visit(Scope<TaskSupplier> context, NativeExpression expression) {
-    return fixedStringTask(expression.path(), expression.location());
+  public TaskSupplier visit(Scope<TaskSupplier> scope, NativeExpression expression) {
+    return visit(scope, expression.path());
   }
 
   private TaskSupplier fixedStringTask(String string, Location location) {

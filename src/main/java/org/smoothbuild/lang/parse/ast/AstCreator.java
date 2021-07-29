@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
@@ -96,7 +97,7 @@ public class AstCreator {
           return Optional.empty();
         } else {
           return Optional.of(new NativeNode(
-              unquote(nativ.STRING().getText()),
+              createStringNode(nativ, nativ.STRING()),
               isPure(nativ),
               locationOf(filePath, nativ)));
         }
@@ -161,13 +162,18 @@ public class AstCreator {
           return new ArrayNode(elements, locationOf(filePath, expr));
         }
         if (expr.STRING() != null) {
-          String quotedString = expr.STRING().getText();
-          return new StringNode(unquote(quotedString), locationOf(filePath, expr));
+          return createStringNode(expr, expr.STRING());
         }
         if (expr.BLOB() != null) {
           return new BlobNode(expr.BLOB().getText().substring(2), locationOf(filePath, expr));
         }
         throw newRuntimeException(LiteralContext.class);
+      }
+
+      private StringNode createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
+        String unquoted = unquote(quotedString.getText());
+        Location location = locationOf(filePath, expr);
+        return new StringNode(unquoted, location);
       }
 
       private ExprNode createChainExpr(ChainContext chain) {

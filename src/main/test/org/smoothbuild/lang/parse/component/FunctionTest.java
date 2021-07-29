@@ -20,7 +20,7 @@ public class FunctionTest {
         """)
         .loadsSuccessfully()
         .containsReferencable(function(2, STRING, "myFunction",
-            nativ(1, "Impl.met"),
+            nativ(1, string(1, "Impl.met")),
             parameter(STRING, "default", string(3, "value")),
             parameter(STRING, "nonDefault")));
   }

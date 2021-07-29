@@ -87,7 +87,8 @@ public class LoadReferencable {
   }
 
   private static NativeExpression loadNative(NativeNode nativeNode) {
-    return new NativeExpression(nativeNode.path(), nativeNode.isPure(), nativeNode.location());
+    var path = createStringLiteral(nativeNode.path());
+    return new NativeExpression(path, nativeNode.isPure(), nativeNode.location());
   }
 
   private static ImmutableList<Item> loadParameters(
@@ -128,7 +129,7 @@ public class LoadReferencable {
         return createBlobLiteral(blobNode);
       }
       if (expr instanceof ArrayNode arrayNode) {
-        return createArray(arrayNode);
+        return createArrayLiteral(arrayNode);
       }
       throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
     }
@@ -177,22 +178,22 @@ public class LoadReferencable {
       return resultBuilder.build();
     }
 
-    private Expression createStringLiteral(StringNode string) {
-      return new StringLiteralExpression(
-          string.unescapedValue(),
-          string.location());
-    }
-
-    private Expression createBlobLiteral(BlobNode blob) {
-      return new BlobLiteralExpression(
-          blob.byteString(),
-          blob.location());
-    }
-
-    private Expression createArray(ArrayNode array) {
+    private Expression createArrayLiteral(ArrayNode array) {
       ArrayType type = (ArrayType) array.type().get();
       ImmutableList<Expression> elements = map(array.elements(), this::createExpression);
       return new ArrayLiteralExpression(type, elements, array.location());
     }
+  }
+
+  public static StringLiteralExpression createStringLiteral(StringNode string) {
+    return new StringLiteralExpression(
+        string.unescapedValue(),
+        string.location());
+  }
+
+  public static BlobLiteralExpression createBlobLiteral(BlobNode blob) {
+    return new BlobLiteralExpression(
+        blob.byteString(),
+        blob.location());
   }
 }
