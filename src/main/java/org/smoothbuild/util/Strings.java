@@ -15,6 +15,10 @@ public class Strings {
 
   private static final String BACKSLASH_STRING = "\\";
 
+  public static String q(String string) {
+    return "`" + string + "`";
+  }
+
   public static String unlines(String... lines) {
     return String.join("\n", lines);
   }

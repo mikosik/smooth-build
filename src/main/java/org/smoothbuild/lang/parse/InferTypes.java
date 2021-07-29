@@ -16,6 +16,7 @@ import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsTo
 import static org.smoothbuild.lang.parse.InferCallType.inferCallType;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Strings.q;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,7 @@ public class InferTypes {
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
         if (struct.fields().stream().anyMatch(f -> f.type().isEmpty())) {
-          struct.setStruct(Optional.empty());
+          struct.setStruct(empty());
           return;
         }
 
@@ -93,7 +94,7 @@ public class InferTypes {
         if (resultType.isPresent() && parameterSignatures.isPresent()) {
           return Optional.of(function(resultType.get(), parameterSignatures.get()));
         } else {
-          return Optional.empty();
+          return empty();
         }
       }
 
@@ -184,7 +185,7 @@ public class InferTypes {
             return Optional.of(function(
                 result.get(), toItemSignatures(map(parameters, Optional::get))));
           } else {
-            return Optional.empty();
+            return empty();
           }
         } else {
           return Optional.of(findType(type.name()).type());
@@ -212,12 +213,16 @@ public class InferTypes {
         super.visitFieldRead(expr);
         expr.expr().type().ifPresentOrElse(
             t -> {
-              if (t instanceof StructType st && st.containsFieldWithName(expr.fieldName())) {
-                expr.setType(((StructType) t).fieldWithName(expr.fieldName()).type());
-              } else {
+              if (!(t instanceof StructType st)) {
                 expr.setType(empty());
                 logBuffer.log(parseError(expr.location(), "Type " + t.q()
+                    + " is not a struct so it doesn't have " + q(expr.fieldName()) + " field."));
+              } else if (!st.containsFieldWithName(expr.fieldName())) {
+                expr.setType(empty());
+                logBuffer.log(parseError(expr.location(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
+              } else {
+                expr.setType(((StructType) t).fieldWithName(expr.fieldName()).type());
               }
             },
             () -> expr.setType(empty())
@@ -257,13 +262,13 @@ public class InferTypes {
         ExprNode called = call.function();
         Optional<Type> calledType = called.type();
         if (calledType.isEmpty()) {
-          call.setType(Optional.empty());
+          call.setType(empty());
         } else if (calledType.get() instanceof FunctionType functionType) {
           ImmutableList<ItemSignature> parameters = functionType.parameters();
           Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, parameters);
           if (args.containsProblem()) {
             logBuffer.logAll(args.logs());
-            call.setType(Optional.empty());
+            call.setType(empty());
           } else {
             call.setAssignedArgs(args.value());
             Maybe<Type> type = inferCallType(call, functionType.resultType(), parameters);
@@ -273,7 +278,7 @@ public class InferTypes {
         } else {
           logBuffer.log(parseError(call.location(), description(called)
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
-          call.setType(Optional.empty());
+          call.setType(empty());
         }
       }
 

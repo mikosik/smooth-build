@@ -94,7 +94,27 @@ public class StructTest {
           }
           result = myStruct("abc").otherField;
           """)
-          .loadsWithError(4, "Type `MyStruct` doesn't have field `otherField`.");
+          .loadsWithError(4, "Struct `MyStruct` doesn't have field `otherField`.");
+    }
+
+    @Test
+    public void reading_field_from_literal_value_causes_error() {
+      module("""
+          result = "abc".someField;
+          """)
+          .loadsWithError(1, """
+              mismatched input '.' expecting {';', '|'}
+              result = "abc".someField;
+                            ^""");
+    }
+
+    @Test
+    public void reading_field_from_non_literal_non_struct_value_causes_error() {
+      module("""
+          myValue = "abc";
+          result = myValue.someField;
+          """)
+          .loadsWithError(2, "Type `String` is not a struct so it doesn't have `someField` field.");
     }
 
     @Test
