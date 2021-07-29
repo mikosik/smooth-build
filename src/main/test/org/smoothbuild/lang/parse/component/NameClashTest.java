@@ -4,7 +4,6 @@ import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.io.fs.base.TestingFilePath.importedFilePath;
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -233,10 +232,10 @@ public class NameClashTest {
                 OtherModuleStruct {}
                 """)
             .withImported(imported)
-            .loadsWithErrors(list(
-                    err(1, alreadyDefinedIn(importedFilePath(), "OtherModuleStruct")),
-                    err(1, alreadyDefinedIn(importedFilePath(), "otherModuleStruct"))
-                ));
+            .loadsWith(
+                err(1, alreadyDefinedIn(importedFilePath(), "OtherModuleStruct")),
+                err(1, alreadyDefinedIn(importedFilePath(), "otherModuleStruct"))
+            );
       }
     }
 
@@ -248,10 +247,10 @@ public class NameClashTest {
                OtherModuleStruct {}
                OtherModuleStruct {}
                """)
-            .loadsWithErrors(list(
-                    err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")),
-                    err(2, alreadyDefinedIn(filePath(), "otherModuleStruct"))
-                ));
+            .loadsWith(
+                err(2, alreadyDefinedIn(filePath(), "OtherModuleStruct")),
+                err(2, alreadyDefinedIn(filePath(), "otherModuleStruct"))
+            );
       }
     }
   }

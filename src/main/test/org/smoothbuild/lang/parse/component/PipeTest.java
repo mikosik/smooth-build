@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,10 +12,10 @@ public class PipeTest {
         String myFunction(String a, String b) = "abc";
         String myIdentity(String s) = s;
         result = "abc" | myIdentity(myFunction(unknown=""));
-        """).loadsWithErrors(list(
+        """).loadsWith(
             err(3, "In call to function with type `String(String a, String b)`: Unknown parameter `unknown`."),
             err(3, "In call to function with type `String(String s)`: Too many positional arguments.")
-        ));
+        );
   }
 
   @Test

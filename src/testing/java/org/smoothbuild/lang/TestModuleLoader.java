@@ -7,9 +7,6 @@ import static org.smoothbuild.io.fs.base.TestingFilePath.BUILD_FILE_PATH;
 import static org.smoothbuild.lang.base.define.InternalModule.internalModule;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.importedModuleFiles;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
-import static org.smoothbuild.util.Lists.list;
-
-import java.util.List;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
@@ -107,26 +104,25 @@ public class TestModuleLoader {
   }
 
   public void loadsWithError(int line, String message) {
-    loadsWithErrors(list(err(line, message)));
+    loadsWith(err(line, message));
   }
 
   public void loadsWithError(String message) {
-    loadsWithErrors(list(error(message)));
+    loadsWith(error(message));
   }
 
-  public void loadsWithErrors(List<Log> errors) {
+  public void loadsWith(Log... logs) {
     var module = load();
     assertWithMessage(messageWithSourceCode())
         .that(module.logs().toList())
-        .containsExactlyElementsIn(errors);
+        .containsExactlyElementsIn(logs);
   }
 
   private String messageWithSourceCode() {
-    String message = "For source code = "
+    return "For source code = "
         + "\n====================\n"
         + sourceCode
         + "\n====================\n";
-    return message;
   }
 
   private Maybe<SModule> load() {
