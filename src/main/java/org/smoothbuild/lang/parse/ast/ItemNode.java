@@ -18,7 +18,7 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
   public void setType(Optional<Type> type) {
     super.setType(type);
     signature = type()
-        .map(t -> new ItemSignature(t, Optional.of(name()), expr().flatMap(Node::type)));
+        .map(t -> new ItemSignature(t, Optional.of(name()), body().flatMap(Node::type)));
   }
 
   public Optional<ItemSignature> itemSignature() {

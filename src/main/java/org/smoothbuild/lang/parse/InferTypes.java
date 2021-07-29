@@ -84,7 +84,7 @@ public class InferTypes {
       @Override
       public void visitFunc(RealFuncNode func) {
         visitParams(func.params());
-        func.expr().ifPresent(this::visitExpr);
+        func.body().ifPresent(this::visitExpr);
         func.setType(functionType(func));
       }
 
@@ -100,7 +100,7 @@ public class InferTypes {
 
       @Override
       public void visitValue(ValueNode value) {
-        value.expr().ifPresent(this::visitExpr);
+        value.body().ifPresent(this::visitExpr);
         value.setType(bodyType(value));
       }
 
@@ -110,8 +110,8 @@ public class InferTypes {
       }
 
       private Optional<Type> bodyType(ReferencableNode referencable) {
-        if (referencable.expr().isPresent()) {
-          return typeOfDeclaredBody(referencable, referencable.expr().get());
+        if (referencable.body().isPresent()) {
+          return typeOfDeclaredBody(referencable, referencable.body().get());
         } else {
           return typeOfNativeBody(referencable);
         }
@@ -152,7 +152,7 @@ public class InferTypes {
         param.setType(optType);
         if (optType.isPresent()) {
           Type type = optType.get();
-          var optDefaultValue = param.expr();
+          var optDefaultValue = param.body();
           if (optDefaultValue.isPresent()) {
             var optDefaultValueType = optDefaultValue.get().type();
             if (optDefaultValueType.isPresent()) {

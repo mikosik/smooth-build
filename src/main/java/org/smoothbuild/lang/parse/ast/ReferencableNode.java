@@ -8,14 +8,14 @@ import org.smoothbuild.lang.base.type.Type;
 
 public class ReferencableNode extends NamedNode implements ReferencableLike {
   private final Optional<TypeNode> typeNode;
-  private final Optional<ExprNode> expr;
+  private final Optional<ExprNode> body;
   private final Optional<NativeNode> nativ;
 
-  public ReferencableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> expr,
+  public ReferencableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> body,
       Optional<NativeNode> nativ, Location location) {
     super(name, location);
     this.typeNode = typeNode;
-    this.expr = expr;
+    this.body = body;
     this.nativ = nativ;
   }
 
@@ -23,8 +23,8 @@ public class ReferencableNode extends NamedNode implements ReferencableLike {
     return typeNode;
   }
 
-  public Optional<ExprNode> expr() {
-    return expr;
+  public Optional<ExprNode> body() {
+    return body;
   }
 
   public Optional<NativeNode> nativ() {

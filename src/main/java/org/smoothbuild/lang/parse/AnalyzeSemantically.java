@@ -103,7 +103,7 @@ public class AnalyzeSemantically {
             .stream()
             .collect(toImmutableMap(ReferencableLike::name, p -> p, (a, b) -> a));
         scope = new Scope<>(scope, nameToParam);
-        func.expr().ifPresent(this::visitExpr);
+        func.body().ifPresent(this::visitExpr);
         scope = scope.outerScope();
 
         visitFunction(func);
@@ -313,10 +313,10 @@ public class AnalyzeSemantically {
       }
 
       private void check(ReferencableNode referencable, String referencableKind) {
-        if (referencable.nativ().isPresent() && referencable.expr().isPresent()) {
+        if (referencable.nativ().isPresent() && referencable.body().isPresent()) {
           logger.log(parseError(referencable, "Native " + referencableKind + " cannot have body."));
         }
-        if (referencable.nativ().isEmpty() && referencable.expr().isEmpty()) {
+        if (referencable.nativ().isEmpty() && referencable.body().isEmpty()) {
           logger.log(parseError(referencable,
               "Non native " + referencableKind + " cannot have empty body."));
         }

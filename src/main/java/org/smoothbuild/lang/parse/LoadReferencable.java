@@ -66,7 +66,7 @@ public class LoadReferencable {
     } else {
       ExpressionLoader loader = new ExpressionLoader(ImmutableMap.of());
       return new DefinedValue(
-          type, path, name, loader.createExpression(valueNode.expr().get()), location);
+          type, path, name, loader.createExpression(valueNode.body().get()), location);
     }
   }
 
@@ -82,7 +82,7 @@ public class LoadReferencable {
       ExpressionLoader loader = new ExpressionLoader(
           parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
       return new DefinedFunction(resultType, path, name, parameters,
-          loader.createExpression(realFuncNode.expr().get()), location);
+          loader.createExpression(realFuncNode.body().get()), location);
     }
   }
 
@@ -107,7 +107,7 @@ public class LoadReferencable {
     public Item createParameter(ItemNode param) {
       Type type = param.typeNode().get().type().get();
       String name = param.name();
-      Optional<Expression> defaultValue = param.expr()
+      Optional<Expression> defaultValue = param.body()
           .map(this::createExpression);
       return new Item(type, name, defaultValue);
     }
