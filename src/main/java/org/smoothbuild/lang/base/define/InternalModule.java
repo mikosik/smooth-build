@@ -15,7 +15,7 @@ public class InternalModule {
   public static SModule internalModule() {
     ModulePath modulePath = new ModulePath("internal-module");
     var types = BASE_TYPES.stream()
-        .collect(toImmutableMap(Type::name, t -> new BaseTypeDefinition(modulePath, t)));
+        .collect(toImmutableMap(Type::name, t -> new DefinedBaseType(modulePath, t)));
     Hash hash = calculateModuleHash(modulePath, Hash.of(list()), list());
     return new SModule(modulePath, hash, null, list(), types, referencables(modulePath));
   }
