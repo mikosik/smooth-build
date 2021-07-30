@@ -12,13 +12,11 @@ import java.util.function.Consumer;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 
 public class IfTask extends StepTask {
-
-  public IfTask(Type type, List<? extends TaskSupplier> dependencies, Location location) {
+  public IfTask(Type type, List<LazyTask> dependencies, Location location) {
     super(CALL, type, IF_FUNCTION_NAME + PARENTHESES, dependencies, location);
   }
 
@@ -35,10 +33,10 @@ public class IfTask extends StepTask {
   }
 
   private Task thenTask() {
-    return dependencies().get(1).getTask();
+    return dependencies().get(1).task();
   }
 
   private Task elseTask() {
-    return dependencies().get(2).getTask();
+    return dependencies().get(2).task();
   }
 }

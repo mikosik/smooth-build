@@ -10,6 +10,4 @@ public interface Expression {
   public Type type();
 
   public Location location();
-
-  public abstract <C, T> T visit(C context, ExpressionVisitor<C, T> visitor);
 }

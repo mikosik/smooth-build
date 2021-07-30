@@ -7,24 +7,25 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.exec.compute.LazyTask;
 import org.smoothbuild.exec.compute.Task;
 
 import com.google.common.base.Supplier;
 
-public class TaskSupplierTest {
+public class LazyTaskTest {
   @Test
   public void supplier_is_not_called_in_constructor() {
     Supplier<Task> supplier = mock(Supplier.class);
-    new TaskSupplier(null, null, supplier);
+    new LazyTask(null, null, supplier);
     verifyNoInteractions(supplier);
   }
 
   @Test
   public void multiple_calls_to_get_causes_only_one_call_to_supplier() {
     Supplier<Task> supplier = mock(Supplier.class);
-    TaskSupplier taskSupplier = new TaskSupplier(null, null, supplier);
-    taskSupplier.getTask();
-    taskSupplier.getTask();
+    LazyTask lazyTask = new LazyTask(null, null, supplier);
+    lazyTask.task();
+    lazyTask.task();
     verify(supplier, times(1)).get();
   }
 
@@ -32,8 +33,8 @@ public class TaskSupplierTest {
   public void second_call_return_same_object_as_first() {
     Task task = mock(Task.class);
     Supplier<Task> supplier = () -> task;
-    TaskSupplier taskSupplier = new TaskSupplier(null, null, supplier);
-    assertThat(taskSupplier.getTask())
-        .isSameInstanceAs(taskSupplier.getTask());
+    LazyTask lazyTask = new LazyTask(null, null, supplier);
+    assertThat(lazyTask.task())
+        .isSameInstanceAs(lazyTask.task());
   }
 }

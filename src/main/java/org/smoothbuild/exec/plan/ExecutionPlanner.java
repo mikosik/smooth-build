@@ -38,6 +38,6 @@ public class ExecutionPlanner {
   }
 
   private Task createPlan(Expression expression, ExpressionToTaskConverter converter) {
-    return expression.visit(new Scope<>(Map.of()), converter).getTask();
+    return converter.taskFor(expression, new Scope<>(Map.of()));
   }
 }

@@ -7,15 +7,11 @@ import org.smoothbuild.lang.base.type.Type;
 
 import okio.ByteString;
 
-public record BlobLiteralExpression(ByteString byteString, Location location) implements Expression {
+public record BlobLiteralExpression(ByteString byteString, Location location)
+    implements Expression {
   @Override
   public Type type() {
     return blob();
-  }
-
-  @Override
-  public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor) {
-    return visitor.visit(context, this);
   }
 
   @Override

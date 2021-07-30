@@ -5,14 +5,13 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 public abstract class StepTask extends Task {
-  public StepTask(TaskKind kind, Type type, String name, List<? extends TaskSupplier> dependencies,
+  public StepTask(TaskKind kind, Type type, String name, List<? extends Dependency> dependencies,
       Location location) {
     super(kind, type, name, dependencies, location);
   }
@@ -20,7 +19,7 @@ public abstract class StepTask extends Task {
   @Override
   public Feeder<Obj> startComputation(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
-    dependencies().get(0).getTask()
+    dependencies().get(0).task()
         .startComputation(worker)
         .addConsumer(obj -> onCompleted(obj, worker, result));
     return result;

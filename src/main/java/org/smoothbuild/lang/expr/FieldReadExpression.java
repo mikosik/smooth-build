@@ -10,9 +10,4 @@ public record FieldReadExpression(ItemSignature field, Expression expression, Lo
   public Type type() {
     return field.type();
   }
-
-  @Override
-  public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor) {
-    return visitor.visit(context, this);
-  }
 }

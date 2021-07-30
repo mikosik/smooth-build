@@ -10,7 +10,6 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -22,7 +21,7 @@ public class AlgorithmTask extends Task {
   private final Algorithm algorithm;
 
   public AlgorithmTask(TaskKind kind, Type type, String name, Algorithm algorithm,
-      List<? extends TaskSupplier> dependencies, Location location) {
+      List<? extends Dependency> dependencies, Location location) {
     super(kind, type, name, dependencies, location);
     this.algorithm = algorithm;
   }
@@ -35,7 +34,7 @@ public class AlgorithmTask extends Task {
   public Feeder<Obj> startComputation(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
     ImmutableList<Feeder<Obj>> dependencyResults =
-        map(dependencies(), d -> d.getTask().startComputation(worker));
+        map(dependencies(), d -> d.task().startComputation(worker));
     runWhenAllAvailable(dependencyResults,
         () -> worker.enqueueComputation(this, toInput(dependencyResults), result));
     return result;

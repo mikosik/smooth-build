@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.exec.plan.TaskSupplier;
 import org.smoothbuild.io.fs.space.Space;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
@@ -15,16 +14,16 @@ import com.google.common.collect.ImmutableList;
 /**
  * Subclasses of this class must be immutable.
  */
-public abstract class Task {
+public abstract class Task implements Dependency {
   public static final int NAME_LENGTH_LIMIT = 40;
 
   private final TaskKind kind;
   private final Type type;
   private final String name;
-  protected final ImmutableList<TaskSupplier> dependencies;
+  protected final ImmutableList<Dependency> dependencies;
   protected final Location location;
 
-  public Task(TaskKind kind, Type type, String name, List<? extends TaskSupplier> dependencies,
+  public Task(TaskKind kind, Type type, String name, List<? extends Dependency> dependencies,
       Location location) {
     this.kind = kind;
     this.type = type;
@@ -37,16 +36,23 @@ public abstract class Task {
     return kind;
   }
 
+  @Override
   public Type type() {
     return type;
   }
 
-  public ImmutableList<TaskSupplier> dependencies() {
+  public ImmutableList<Dependency> dependencies() {
     return dependencies;
   }
 
+  @Override
   public Location location() {
     return location;
+  }
+
+  @Override
+  public Task task() {
+    return this;
   }
 
   public Space space() {

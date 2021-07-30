@@ -21,9 +21,4 @@ public record NativeExpression(StringLiteralExpression path, boolean isPure, Loc
   public Type type() {
     return TYPE;
   }
-
-  @Override
-  public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor) {
-    return null;
-  }
 }
