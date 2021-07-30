@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
@@ -26,7 +25,6 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.Struct;
 import org.smoothbuild.lang.base.type.FunctionType;
@@ -67,11 +65,7 @@ public class InferTypes {
           struct.setStruct(empty());
           return;
         }
-
-        var fields = struct.fields()
-            .stream()
-            .map(f -> new Item(f.type().get(), path, f.name(), empty(), f.location()))
-            .collect(toImmutableList());
+        var fields = map(struct.fields(), f -> f.toItem(path));
         struct.setStruct(Optional.of(new Struct(path, struct.name(), fields, struct.location())));
       }
 

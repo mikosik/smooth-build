@@ -1,8 +1,6 @@
 package org.smoothbuild.lang.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static java.util.Optional.empty;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
@@ -10,6 +8,7 @@ import static org.smoothbuild.lang.parse.InferTypes.inferTypes;
 import static org.smoothbuild.lang.parse.LoadReferencable.loadReferencable;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.HashMap;
 
@@ -21,17 +20,14 @@ import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.SModule;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
@@ -86,12 +82,9 @@ public class LoadModule {
   }
 
   private static Constructor loadConstructor(ModulePath path, StructNode struct) {
-    Type resultType = struct.type().get();
-    String name = struct.constructor().name();
-    ImmutableList<Item> parameters = struct.fields()
-        .stream()
-        .map(field -> new Item(field.type().get(), path, field.name(), empty(), field.location()))
-        .collect(toImmutableList());
+    var resultType = struct.type().get();
+    var name = struct.constructor().name();
+    var parameters = map(struct.fields(), f -> f.toItem(path));
     return new Constructor(resultType, path, name, parameters, struct.location());
   }
 }

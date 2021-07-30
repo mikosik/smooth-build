@@ -1,8 +1,12 @@
 package org.smoothbuild.lang.parse.ast;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
@@ -28,5 +32,10 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
   @Override
   public Optional<Type> inferredType() {
     return type();
+  }
+
+  public Item toItem(ModulePath path) {
+    checkState(body().isEmpty());
+    return new Item(type().get(), path, name(), Optional.empty(), location());
   }
 }
