@@ -118,10 +118,10 @@ public class AstCreator {
       }
 
       private ItemNode createParam(ParamContext param) {
-        TypeNode type = createType(param.type());
-        String name = param.NAME().getText();
-        Location location = locationOf(filePath, param);
-        Optional<ExprNode> defaultValue = Optional.ofNullable(param.expr()).map(this::createExpr);
+        var type = createType(param.type());
+        var name = param.NAME().getText();
+        var defaultValue = Optional.ofNullable(param.expr()).map(this::createExpr);
+        var location = locationOf(filePath, param);
         return new ItemNode(type, name, defaultValue, location);
       }
 
