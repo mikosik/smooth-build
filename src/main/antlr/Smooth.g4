@@ -1,37 +1,36 @@
 grammar Smooth;
 
-module      : ( struct | ref )* EOF ;
-struct      : TNAME '{' fieldList? '}' ;
-fieldList   : field ( ',' field )* ','? ;
-field       : type NAME ;
-ref         : nat? type? NAME paramList? ('=' expr)? ';' ;
-nat         : '@Native(' STRING (',' (pure='PURE' | impure='IMPURE'))? ')' ;
-paramList   : '(' ( param ( ',' param )* ','? )? ')' ;
-param       : type NAME ( '=' expr )? ;
-expr        : exprHead ( p+='|' chainCall )* ;
-exprHead    : chain | literal ;
-literal     : STRING
-            | BLOB
-            | array
-            ;
-chain       : NAME ( chainPart )* ;
-chainCall   : NAME ( fieldRead )* argList ( chainPart )* ;
-chainPart   : argList | fieldRead ;
-argList     : '(' ( arg ( ',' arg )* ','? )? ')' ;
-arg         : ( NAME '=' )? expr ;
-array       : '[' ( expr (',' expr)* (',')? )?  ']' ;
-fieldRead   : '.' NAME ;
-type        : TNAME                        # typeName
-            | '[' type ']'                 # arrayType
-            | type '(' typeList ')'        # functionType
-            ;
+module       : ( struct | referencable )* EOF ;
+struct       : TNAME '{' fieldList? '}' ;
+fieldList    : field ( ',' field )* ','? ;
+field        : type NAME ;
+referencable : nat? type? NAME paramList? ('=' expr)? ';' ;
+nat          : '@Native(' STRING (',' (pure='PURE' | impure='IMPURE'))? ')' ;
+paramList    : '(' ( param ( ',' param )* ','? )? ')' ;
+param        : type NAME ( '=' expr )? ;
+expr         : exprHead ( p+='|' chainCall )* ;
+exprHead     : chain | literal ;
+literal      : STRING
+             | BLOB
+             | array
+             ;
+chain        : NAME ( chainPart )* ;
+chainCall    : NAME ( fieldRead )* argList ( chainPart )* ;
+chainPart    : argList | fieldRead ;
+argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
+arg          : ( NAME '=' )? expr ;
+array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
+fieldRead    : '.' NAME ;
+type         : TNAME                        # typeName
+             | '[' type ']'                 # arrayType
+             | type '(' typeList ')'        # functionType
+             ;
+typeList     : ( type (',' type)* ','? )? ;
 
-typeList    : ( type (',' type)* ','? )? ;
-
-NAME        : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
-TNAME       : LARGE_LETTER ( IDENTIFIER_CHAR )* ;
-STRING      : '"' (ESC | ~('\r' | '\n'))*? '"' ;
-BLOB        : '0x' HEX_DIGIT* ;
+NAME         : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
+TNAME        : LARGE_LETTER ( IDENTIFIER_CHAR )* ;
+STRING       : '"' (ESC | ~('\r' | '\n'))*? '"' ;
+BLOB         : '0x' HEX_DIGIT* ;
 
 fragment ESC              : '\\"'
                           | '\\\\'

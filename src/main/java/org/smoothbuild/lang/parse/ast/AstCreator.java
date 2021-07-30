@@ -32,7 +32,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NatContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.RefContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ReferencableContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
@@ -75,18 +75,18 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitRef(RefContext ref) {
-        TerminalNode nameNode = ref.NAME();
-        visitChildren(ref);
-        Optional<TypeNode> type = createTypeSane(ref.type());
+      public Void visitReferencable(ReferencableContext referencable) {
+        TerminalNode nameNode = referencable.NAME();
+        visitChildren(referencable);
+        Optional<TypeNode> type = createTypeSane(referencable.type());
         String name = nameNode.getText();
-        Optional<ExprNode> expr = createExprSane(ref.expr());
-        Optional<NativeNode> nativ = createNativeSane(ref.nat());
+        Optional<ExprNode> expr = createExprSane(referencable.expr());
+        Optional<NativeNode> nativ = createNativeSane(referencable.nat());
         Location location = locationOf(filePath, nameNode);
-        if (ref.paramList() == null) {
+        if (referencable.paramList() == null) {
           referencables.add(new ValueNode(type, name, expr, nativ, location));
         } else {
-          List<ItemNode> params = createParams(ref.paramList());
+          List<ItemNode> params = createParams(referencable.paramList());
           referencables.add(new RealFuncNode(type, name, params, expr, nativ, location));
         }
         return null;
