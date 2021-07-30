@@ -16,7 +16,7 @@ public class Defined implements Named {
 
   public Defined(Type type, ModulePath modulePath, String name, Location location) {
     this.type = requireNonNull(type);
-    this.modulePath = modulePath;
+    this.modulePath = requireNonNull(modulePath);
     this.location = requireNonNull(location);
     this.name = requireNonNull(name);
   }
