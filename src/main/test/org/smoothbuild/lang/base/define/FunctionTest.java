@@ -60,11 +60,15 @@ public class FunctionTest extends TestingContext {
   }
 
   private Item paramWithDefault() {
-    return new Item(STRING, "a", Optional.of(mock(Expression.class)));
+    return param(Optional.of(mock(Expression.class)));
   }
 
   private Item paramWithoutDefault() {
-    return new Item(STRING, "a", Optional.empty());
+    return param(Optional.empty());
+  }
+
+  private Item param(Optional<Expression> defaultValue) {
+    return new Item(STRING, modulePath(), "a", defaultValue, loc());
   }
 
   private static Function myFunction(Type type, List<Item> parameters) {

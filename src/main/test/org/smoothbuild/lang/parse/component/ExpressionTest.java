@@ -117,7 +117,7 @@ public class ExpressionTest {
     @Test
     public void with_constructor_reference() {
       StructType struct = struct("MyStruct", itemSignature(STRING, "field"));
-      Constructor constr = constr(1, struct, "myStruct", parameter(STRING, "field"));
+      Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
       module("""
           MyStruct {
             String field
@@ -149,7 +149,7 @@ public class ExpressionTest {
           """)
           .loadsSuccessfully()
           .containsReferencable(function(1, STRING, "result",
-              call(1, STRING, parameterRef(f(STRING), "f")), parameter(f(STRING), "f")));
+              call(1, STRING, parameterRef(f(STRING), "f")), parameter(1, f(STRING), "f")));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class ExpressionTest {
           .loadsSuccessfully()
           .containsReferencable(function(1, STRING, "result",
               call(1, STRING, parameterRef(f(STRING, BLOB), "f"), blob(1, 9)),
-              parameter(f(STRING, BLOB), "f")));
+              parameter(1, f(STRING, BLOB), "f")));
     }
   }
 
@@ -255,7 +255,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(
-            1, BLOB, "myFunction", parameterRef(2, BLOB, "param1"), parameter(BLOB, "param1")));
+            1, BLOB, "myFunction", parameterRef(2, BLOB, "param1"), parameter(1, BLOB, "param1")));
   }
 
   @Nested
@@ -362,7 +362,7 @@ public class ExpressionTest {
           """)
           .loadsSuccessfully()
           .containsReferencable(function(1, STRING, "myFunction",
-              string(3, "abc"), parameter(BLOB, "param1")));
+              string(3, "abc"), parameter(2, BLOB, "param1")));
     }
 
     @Test
@@ -375,7 +375,7 @@ public class ExpressionTest {
           """)
           .loadsSuccessfully()
           .containsReferencable(function(1, STRING, "myFunction",
-              string(4, "abc"), parameter(BLOB, "param1", blob(3, 7))));
+              string(4, "abc"), parameter(2, BLOB, "param1", blob(3, 7))));
     }
 
     @Test

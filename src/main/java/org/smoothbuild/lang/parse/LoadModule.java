@@ -90,7 +90,7 @@ public class LoadModule {
     String name = struct.constructor().name();
     ImmutableList<Item> parameters = struct.fields()
         .stream()
-        .map(field -> new Item(field.type().get(), field.name(), empty()))
+        .map(field -> new Item(field.type().get(), path, field.name(), empty(), field.location()))
         .collect(toImmutableList());
     return new Constructor(resultType, path, name, parameters, struct.location());
   }

@@ -16,17 +16,17 @@ public class IfFunction extends Function {
   private static final Variable RESULT_TYPE = new Variable("A");
 
   public IfFunction(ModulePath modulePath) {
-    super(RESULT_TYPE, modulePath, IF_FUNCTION_NAME, createParameters(), internal());
+    super(RESULT_TYPE, modulePath, IF_FUNCTION_NAME, createParameters(modulePath), internal());
   }
 
-  private static ImmutableList<Item> createParameters() {
+  private static ImmutableList<Item> createParameters(ModulePath modulePath) {
     return list(
-        parameter(bool(), "condition"),
-        parameter(RESULT_TYPE, "then"),
-        parameter(RESULT_TYPE, "else"));
+        parameter(bool(), modulePath, "condition"),
+        parameter(RESULT_TYPE, modulePath, "then"),
+        parameter(RESULT_TYPE, modulePath, "else"));
   }
 
-  private static Item parameter(Type type, String name) {
-    return new Item(type, name, Optional.empty());
+  private static Item parameter(Type type, ModulePath modulePath, String name) {
+    return new Item(type, modulePath, name, Optional.empty(), internal());
   }
 }

@@ -70,7 +70,7 @@ public class InferTypes {
 
         var fields = struct.fields()
             .stream()
-            .map(f -> new Item(f.type().get(), f.name(), empty()))
+            .map(f -> new Item(f.type().get(), path, f.name(), empty(), f.location()))
             .collect(toImmutableList());
         struct.setStruct(Optional.of(new Struct(path, struct.name(), fields, struct.location())));
       }

@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base.define;
 
-import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.ItemSignature;
@@ -17,15 +17,28 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public record Item(Type type, String name, Optional<Expression> defaultValue) {
-  public Item(Type type, String name, Optional<Expression> defaultValue) {
-    this.type = requireNonNull(type);
-    this.name = requireNonNull(name);
-    this.defaultValue = requireNonNull(defaultValue);
+public class Item extends Referencable {
+  private final Optional<Expression> defaultValue;
+  private final ItemSignature signature;
+
+  public Item(Type type, ModulePath modulePath, String name, Optional<Expression> defaultValue,
+      Location location) {
+    super(type, modulePath, name, location);
+    this.defaultValue = defaultValue;
+    this.signature =
+        new ItemSignature(type(), Optional.of(name()), defaultValue.map(Expression::type));
   }
 
   public ItemSignature signature() {
-    return new ItemSignature(type, Optional.of(name), defaultValue.map(Expression::type));
+    return signature;
+  }
+
+  public Optional<Expression> defaultValue() {
+    return defaultValue;
+  }
+
+  private String defaultValueToString() {
+    return defaultValue.map(v -> " = " + v).orElse("");
   }
 
   @Override
@@ -33,11 +46,25 @@ public record Item(Type type, String name, Optional<Expression> defaultValue) {
     return "Item(`" + type().name() + " " + name() + defaultValueToString() + "`)";
   }
 
-  private String defaultValueToString() {
-    return defaultValue.map(v -> " = " + v).orElse("");
-  }
-
   public static ImmutableList<ItemSignature> toItemSignatures(List<Item> items) {
     return map(items, Item::signature);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    return (o instanceof Item that)
+        && Objects.equals(this.type(), that.type())
+        && Objects.equals(this.modulePath(), that.modulePath())
+        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.defaultValue, that.defaultValue)
+        && Objects.equals(this.location(), that.location());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type(), modulePath(), name(), defaultValue, location());
   }
 }

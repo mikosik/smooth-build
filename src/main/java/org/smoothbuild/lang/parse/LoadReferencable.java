@@ -64,14 +64,14 @@ public class LoadReferencable {
     if (valueNode.nativ().isPresent()) {
       return new NativeValue(type, path, name, loadNative(valueNode.nativ().get()), location);
     } else {
-      ExpressionLoader loader = new ExpressionLoader(ImmutableMap.of());
+      ExpressionLoader loader = new ExpressionLoader(path, ImmutableMap.of());
       return new DefinedValue(
           type, path, name, loader.createExpression(valueNode.body().get()), location);
     }
   }
 
   private static Function loadFunction(ModulePath path, RealFuncNode realFuncNode) {
-    ImmutableList<Item> parameters = loadParameters(realFuncNode);
+    ImmutableList<Item> parameters = loadParameters(path, realFuncNode);
     Type resultType = realFuncNode.resultType().get();
     String name = realFuncNode.name();
     Location location = realFuncNode.location();
@@ -79,7 +79,7 @@ public class LoadReferencable {
       return new NativeFunction(
           resultType, path, name, parameters, loadNative(realFuncNode.nativ().get()), location);
     } else {
-      ExpressionLoader loader = new ExpressionLoader(
+      ExpressionLoader loader = new ExpressionLoader(path,
           parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
       return new DefinedFunction(resultType, path, name, parameters,
           loader.createExpression(realFuncNode.body().get()), location);
@@ -91,16 +91,17 @@ public class LoadReferencable {
     return new NativeExpression(path, nativeNode.isPure(), nativeNode.location());
   }
 
-  private static ImmutableList<Item> loadParameters(
-      RealFuncNode realFuncNode) {
-    ExpressionLoader parameterLoader = new ExpressionLoader(ImmutableMap.of());
+  private static ImmutableList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
+    ExpressionLoader parameterLoader = new ExpressionLoader(path, ImmutableMap.of());
     return map(realFuncNode.params(), parameterLoader::createParameter);
   }
 
   private static class ExpressionLoader {
+    private final ModulePath modulePath;
     private final ImmutableMap<String, Type> functionParameters;
 
-    public ExpressionLoader(ImmutableMap<String, Type> functionParameters) {
+    public ExpressionLoader(ModulePath modulePath, ImmutableMap<String, Type> functionParameters) {
+      this.modulePath = modulePath;
       this.functionParameters = functionParameters;
     }
 
@@ -109,7 +110,7 @@ public class LoadReferencable {
       String name = param.name();
       Optional<Expression> defaultValue = param.body()
           .map(this::createExpression);
-      return new Item(type, name, defaultValue);
+      return new Item(type, modulePath, name, defaultValue, param.location());
     }
 
     private Expression createExpression(ExprNode expr) {

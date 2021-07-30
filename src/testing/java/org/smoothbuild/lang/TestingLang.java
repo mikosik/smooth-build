@@ -120,20 +120,20 @@ public class TestingLang {
         resultType, modulePath(), name, ImmutableList.copyOf(parameters), loc(line));
   }
 
-  public static Item parameter(Type type, String name) {
-    return parameter(type, name, Optional.empty());
+  public static Item parameter(int line, Type type, String name) {
+    return parameter(line, type, name, Optional.empty());
   }
 
-  public static Item parameter(Type type, String name, Expression defaultValue) {
-    return parameter(type, name, Optional.of(defaultValue));
+  public static Item parameter(int line, Type type, String name, Expression defaultValue) {
+    return parameter(line, type, name, Optional.of(defaultValue));
   }
 
-  private static Item parameter(Type type, String name,
+  private static Item parameter(int line, Type type, String name,
       Optional<Expression> defaultValue) {
-    return new Item(type, name, defaultValue);
+    return new Item(type, modulePath(), name, defaultValue, loc(line));
   }
 
   public static Item field(Type type, String name) {
-    return new Item(type, name, Optional.empty());
+    return new Item(type, modulePath(), name, Optional.empty(), loc(1));
   }
 }

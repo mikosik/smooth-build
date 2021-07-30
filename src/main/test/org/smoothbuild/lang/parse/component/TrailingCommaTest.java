@@ -63,7 +63,7 @@ public class TrailingCommaTest {
       module(functionDeclaration("String param1,"))
           .loadsSuccessfully()
           .containsReferencable(
-              function(1, STRING, "myFunction", string(1, "abc"), parameter(STRING, "param1")));
+              function(1, STRING, "myFunction", string(1, "abc"), parameter(1, STRING, "param1")));
     }
 
     @Test
