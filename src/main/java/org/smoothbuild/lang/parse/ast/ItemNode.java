@@ -10,8 +10,8 @@ import org.smoothbuild.lang.base.type.Type;
 public class ItemNode extends ReferencableNode implements ReferencableLike {
   private Optional<ItemSignature> signature;
 
-  public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> expr, Location location) {
-    super(Optional.of(typeNode), name, expr, Optional.empty(), location);
+  public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> body, Location location) {
+    super(Optional.of(typeNode), name, body, Optional.empty(), location);
   }
 
   @Override
