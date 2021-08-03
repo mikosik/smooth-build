@@ -25,8 +25,8 @@ import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.io.fs.space.JPathResolver;
 import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.plugin.NativeApi;
@@ -47,7 +47,7 @@ public class MethodLoader {
     this.methodCache = new HashMap<>();
   }
 
-  public synchronized Method load(Referencable referencable, String methodPath)
+  public synchronized Method load(GlobalReferencable referencable, String methodPath)
       throws LoadingMethodException {
     MethodPath path = parseMethodPath(referencable, methodPath);
     Method method = loadMethod(referencable, path);
@@ -59,7 +59,7 @@ public class MethodLoader {
     return method;
   }
 
-  private static MethodPath parseMethodPath(Referencable referencable, String path)
+  private static MethodPath parseMethodPath(GlobalReferencable referencable, String path)
       throws LoadingMethodException {
     try {
       return MethodPath.parse(path);
@@ -68,7 +68,7 @@ public class MethodLoader {
     }
   }
 
-  private Method loadMethod(Referencable referencable, MethodPath methodPath)
+  private Method loadMethod(GlobalReferencable referencable, MethodPath methodPath)
       throws LoadingMethodException {
     FilePath jarFilePath = referencable.location().file().withExtension("jar");
     Hash jarHash = hashOf(referencable, methodPath, jarFilePath);
@@ -81,7 +81,7 @@ public class MethodLoader {
     return method;
   }
 
-  private Hash hashOf(Referencable referencable, MethodPath methodPath, FilePath jarFilePath)
+  private Hash hashOf(GlobalReferencable referencable, MethodPath methodPath, FilePath jarFilePath)
       throws LoadingMethodException {
     try {
       return fileResolver.hashOf(jarFilePath);
@@ -94,7 +94,7 @@ public class MethodLoader {
     }
   }
 
-  private Method findMethod(Referencable referencable, FilePath jarFilePath, MethodPath methodPath)
+  private Method findMethod(GlobalReferencable referencable, FilePath jarFilePath, MethodPath methodPath)
       throws LoadingMethodException {
     Method method = findClassMethod(referencable, jarFilePath, methodPath);
     if (!isPublic(method)) {
@@ -110,7 +110,7 @@ public class MethodLoader {
     }
   }
 
-  private Method findClassMethod(Referencable referencable, FilePath jarFilePath,
+  private Method findClassMethod(GlobalReferencable referencable, FilePath jarFilePath,
       MethodPath methodPath) throws LoadingMethodException {
     String methodName = methodPath.methodName();
     Class<?> clazz = findClass(referencable, jarFilePath, methodPath);
@@ -121,7 +121,7 @@ public class MethodLoader {
             clazz.getCanonicalName() + "' does not have '" + methodName + "' method."));
   }
 
-  private Class<?> findClass(Referencable referencable, FilePath jarFilePath,
+  private Class<?> findClass(GlobalReferencable referencable, FilePath jarFilePath,
       MethodPath methodPath) throws LoadingMethodException {
       Path jarPath = jPathResolver.resolve(jarFilePath);
     try {
@@ -150,7 +150,7 @@ public class MethodLoader {
     assertNativeHasOneParameter(method, value, methodPath);
   }
 
-  private static void assertNativeResultMatchesDeclared(Referencable referencable,
+  private static void assertNativeResultMatchesDeclared(GlobalReferencable referencable,
       Method method, Type resultType, MethodPath methodPath) throws LoadingMethodException {
     Class<?> resultJType = method.getReturnType();
     if (!mapTypeToJType(resultType).equals(resultJType)) {
@@ -195,17 +195,17 @@ public class MethodLoader {
   }
 
   private static LoadingMethodException newInvalidPathException(
-      Referencable referencable, MethodPath methodPath, String message) {
+      GlobalReferencable referencable, MethodPath methodPath, String message) {
     return newLoadingException(referencable, methodPath.toString(),
         "Invalid native path `" + methodPath + "`: " + message, null);
   }
 
   private static LoadingMethodException newLoadingException(
-      Referencable referencable, MethodPath methodPath, String message) {
+      GlobalReferencable referencable, MethodPath methodPath, String message) {
     return newLoadingException(referencable, methodPath.toString(), message, null);
   }
 
-  private static LoadingMethodException newLoadingException(Referencable referencable,
+  private static LoadingMethodException newLoadingException(GlobalReferencable referencable,
       String path, String message, Exception e) {
     return new LoadingMethodException("Error loading native implementation for "
         + referencable.q() + " specified as `" + path + "`: " + message, e);

@@ -9,12 +9,12 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
-import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.ArrayType;
@@ -49,7 +49,8 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadReferencable {
-  public static Referencable loadReferencable(ModulePath path, ReferencableNode referencableNode) {
+  public static GlobalReferencable loadReferencable(ModulePath path,
+      ReferencableNode referencableNode) {
     if (referencableNode instanceof RealFuncNode realFuncNode) {
       return loadFunction(path, realFuncNode);
     } else {

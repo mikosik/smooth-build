@@ -14,7 +14,7 @@ public record SModule(
     ModuleFiles files,
     ImmutableList<SModule> referencedModules,
     ImmutableMap<String, ? extends Defined> types,
-    ImmutableMap<String, ? extends Referencable> referencables) {
+    ImmutableMap<String, ? extends GlobalReferencable> referencables) {
 
   public static Hash calculateModuleHash(ModulePath path, Hash filesHash, ImmutableList<SModule> modules) {
     return Hash.of(asList(

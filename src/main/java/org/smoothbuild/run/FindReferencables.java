@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Referencable;
+import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Value;
 
 public class FindReferencables {
@@ -19,7 +19,7 @@ public class FindReferencables {
     List<Value> referencables = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
-      Referencable referencable = values.get(name);
+      GlobalReferencable referencable = values.get(name);
       if (referencable != null) {
         if (referencable instanceof Value value) {
           referencables.add(value);

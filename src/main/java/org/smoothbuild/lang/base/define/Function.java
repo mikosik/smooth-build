@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class and all its subclasses are immutable.
  */
-public abstract class Function extends Referencable {
+public abstract class Function extends GlobalReferencable {
   public static final String PARENTHESES = "()";
   private final ImmutableList<Item> parameters;
 

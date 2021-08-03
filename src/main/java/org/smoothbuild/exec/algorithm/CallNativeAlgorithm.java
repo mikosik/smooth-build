@@ -15,17 +15,17 @@ import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
-import org.smoothbuild.lang.base.define.Referencable;
+import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
 public class CallNativeAlgorithm extends Algorithm {
   private final MethodLoader methodLoader;
-  private final Referencable referencable;
+  private final GlobalReferencable referencable;
 
   public CallNativeAlgorithm(MethodLoader methodLoader, Spec outputSpec,
-      Referencable referencable, boolean isPure) {
+      GlobalReferencable referencable, boolean isPure) {
     super(outputSpec, isPure);
     this.methodLoader = methodLoader;
     this.referencable = referencable;

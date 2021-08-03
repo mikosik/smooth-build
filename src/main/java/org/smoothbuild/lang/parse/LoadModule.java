@@ -20,9 +20,9 @@ import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
@@ -68,9 +68,9 @@ public class LoadModule {
     return maybeValueAndLogs(module, logBuffer);
   }
 
-  private static ImmutableMap<String, Referencable> loadReferencables(
+  private static ImmutableMap<String, GlobalReferencable> loadReferencables(
       ModulePath path, Ast ast) {
-    var local = new HashMap<String, Referencable>();
+    var local = new HashMap<String, GlobalReferencable>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(path, struct);
       local.put(constructor.name(), constructor);

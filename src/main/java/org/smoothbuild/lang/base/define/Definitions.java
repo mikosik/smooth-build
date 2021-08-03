@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 public record Definitions(
     ImmutableMap<ModulePath, SModule> modules,
     ImmutableMap<String, Defined> types,
-    ImmutableMap<String, Referencable> referencables) {
+    ImmutableMap<String, GlobalReferencable> referencables) {
 
   public static Definitions empty() {
     return new Definitions(ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of());
@@ -18,7 +18,7 @@ public record Definitions(
             .putAll(types)
             .putAll(module.types())
             .build(),
-        ImmutableMap.<String, Referencable>builder()
+        ImmutableMap.<String, GlobalReferencable>builder()
             .putAll(referencables)
             .putAll(module.referencables())
             .build()

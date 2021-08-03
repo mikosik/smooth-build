@@ -13,9 +13,9 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
@@ -57,25 +57,25 @@ public class TestModuleLoader {
     return this;
   }
 
-  public void containsReferencable(Referencable expected) {
+  public void containsReferencable(GlobalReferencable expected) {
     String name = expected.name();
-    Referencable actual = assertContainsReferencable(name);
+    GlobalReferencable actual = assertContainsReferencable(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
   public void containsReferencableWithType(String name, Type expectedType) {
-    Referencable referencable = assertContainsReferencable(name);
+    GlobalReferencable referencable = assertContainsReferencable(name);
     assertThat(referencable.type())
         .isEqualTo(expectedType);
   }
 
-  private Referencable assertContainsReferencable(String name) {
-    ImmutableMap<String, ? extends Referencable> referencables = module.value().referencables();
+  private GlobalReferencable assertContainsReferencable(String name) {
+    var referencables = module.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(referencables)
         .containsKey(name);
-    Referencable actual = referencables.get(name);
+    GlobalReferencable actual = referencables.get(name);
     return actual;
   }
 

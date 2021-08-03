@@ -20,7 +20,7 @@ public class InternalModule {
     return new SModule(modulePath, hash, null, list(), types, referencables(modulePath));
   }
 
-  private static ImmutableMap<String, Referencable> referencables(ModulePath modulePath) {
+  private static ImmutableMap<String, GlobalReferencable> referencables(ModulePath modulePath) {
     Function ifFunction = new IfFunction(modulePath);
     return ImmutableMap.of(ifFunction.name(), ifFunction);
   }
