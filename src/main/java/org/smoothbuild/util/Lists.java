@@ -18,15 +18,15 @@ public class Lists {
     return ImmutableList.copyOf(elements);
   }
 
-  public static <E> ImmutableList<E> concat(E element, List<E> list) {
-    return ImmutableList.<E>builder()
+  public static <R, S extends R, T extends R> ImmutableList<R> concat(S element, List<T> list) {
+    return ImmutableList.<R>builder()
         .add(element)
         .addAll(list)
         .build();
   }
 
-  public static <E> ImmutableList<E> concat(List<E> list, E element) {
-    return ImmutableList.<E>builder()
+  public static <R, S extends R, T extends R> ImmutableList<R> concat(List<S> list, T element) {
+    return ImmutableList.<R>builder()
         .addAll(list)
         .add(element)
         .build();

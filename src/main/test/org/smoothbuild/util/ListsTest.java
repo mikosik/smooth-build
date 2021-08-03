@@ -74,6 +74,24 @@ public class ListsTest {
         assertThat(list)
             .containsExactly("second");
       }
+
+      @Test
+      public void first_can_be_subtype_of_list_elements(){
+        Integer one = 1;
+        Integer two = 2;
+        List<Number> list = asList(two);
+        assertThat(concat(one, list))
+            .containsExactly(one, two);
+      }
+
+      @Test
+      public void list_element_type_can_be_subtype_of_first(){
+        Integer one = 1;
+        Integer two = 2;
+        List<Integer> list = asList(two);
+        assertThat(concat((Number) one, list))
+            .containsExactly(one, two);
+      }
     }
 
     @Nested
@@ -97,6 +115,24 @@ public class ListsTest {
         concat(list, "second");
         assertThat(list)
             .containsExactly("first");
+      }
+
+      @Test
+      public void last_can_be_subtype_of_list_element_types(){
+        Integer one = 1;
+        Integer two = 2;
+        List<Number> list = asList(one);
+        assertThat(concat(list, two))
+            .containsExactly(one, two);
+      }
+
+      @Test
+      public void list_element_type_can_be_subtype_of_last_type(){
+        Integer one = 1;
+        Integer two = 2;
+        List<Integer> list = asList(one);
+        assertThat(concat(list, (Number) two))
+            .containsExactly(one, two);
       }
     }
   }

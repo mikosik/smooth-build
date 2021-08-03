@@ -24,16 +24,11 @@ public class CallTask extends StepTask {
   public CallTask(TaskKind kind, Type type, String name, Task function,
       List<LazyTask> arguments, Location location, BoundedVariables variables,
       Scope<LazyTask> scope, ExpressionToTaskConverter expressionToTaskConverter) {
-    super(kind, type, name, createDependencies(function, arguments), location);
+    super(kind, type, name, concat(function, arguments), location);
     this.arguments = arguments;
     this.variables = variables;
     this.scope = scope;
     this.expressionToTaskConverter = expressionToTaskConverter;
-  }
-
-  private static List<Dependency> createDependencies(Dependency function,
-      List<? extends Dependency> arguments) {
-    return concat(function, (List<Dependency>) arguments);
   }
 
   @Override
