@@ -155,7 +155,7 @@ public class ExpressionToTaskConverter {
     var structType = (StructType) expression.expression().type();
     var name = expression.field().name().get();
     var algorithm = new ReadTupleElementAlgorithm(
-        structType.fieldIndex(name), type.visit(toSpecConverter));
+        structType.fieldIndex(name), toSpecConverter.visit(type));
     var dependencies = list(taskFor(expression.expression(), scope));
     return new AlgorithmTask(CALL, type, "." + name, algorithm, dependencies, expression.location());
   }
@@ -187,7 +187,7 @@ public class ExpressionToTaskConverter {
       NativeValue nativeValue) {
     NativeExpression nativ = nativeValue.nativ();
     var algorithm = new CallNativeAlgorithm(methodLoader,
-        nativeValue.type().visit(toSpecConverter), nativeValue, nativ.isPure());
+        toSpecConverter.visit(nativeValue.type()), nativeValue, nativ.isPure());
     var nativeCode = lazyTaskFor(nativ, scope);
     return new AlgorithmTask(VALUE, nativeValue.type(), nativeValue.extendedName(), algorithm,
         list(nativeCode), reference.location());
@@ -276,7 +276,7 @@ public class ExpressionToTaskConverter {
       return new IfTask(actualResultType, arguments, location);
     } else if (function instanceof Constructor constructor) {
       var resultType = constructor.type().resultType();
-      var tupleSpec = (TupleSpec) resultType.visit(toSpecConverter);
+      var tupleSpec = (TupleSpec) toSpecConverter.visit(resultType);
       return constructorCallTask(resultType, tupleSpec, constructor.extendedName(),
           arguments, location);
     } else {
@@ -302,7 +302,7 @@ public class ExpressionToTaskConverter {
   private Task callNativeFunctionTask(Scope<LazyTask> scope, List<LazyTask> arguments,
       NativeFunction function, NativeExpression nativ, BoundedVariables variables,
       Type actualResultType, Location location) {
-    var algorithm = new CallNativeAlgorithm(methodLoader, actualResultType.visit(toSpecConverter),
+    var algorithm = new CallNativeAlgorithm(methodLoader, toSpecConverter.visit(actualResultType),
         function, nativ.isPure());
     var dependencies = concat(
         taskFor(nativ, scope), convertedArgumentTasks(arguments, function, variables));
@@ -333,7 +333,7 @@ public class ExpressionToTaskConverter {
 
   private Task convertTask(Type requiredType, Task task) {
     var description = requiredType.name() + "<-" + task.type().name();
-    var algorithm = new ConvertAlgorithm(requiredType.visit(toSpecConverter));
+    var algorithm = new ConvertAlgorithm(toSpecConverter.visit(requiredType));
     return new AlgorithmTask(
         CONVERSION, requiredType, description, algorithm, list(task), task.location());
   }

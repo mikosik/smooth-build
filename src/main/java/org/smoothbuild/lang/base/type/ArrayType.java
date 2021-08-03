@@ -25,11 +25,6 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public <T> T visit(TypeVisitor<T> visitor) {
-    return visitor.visit(this);
-  }
-
-  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;

@@ -1,14 +1,11 @@
 package org.smoothbuild.exec.plan;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.map;
 
 import org.smoothbuild.db.object.db.ObjectFactory;
-import org.smoothbuild.db.object.spec.AnySpec;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
-import org.smoothbuild.db.object.spec.BoolSpec;
-import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
@@ -20,69 +17,58 @@ import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
-import org.smoothbuild.lang.base.type.TypeVisitor;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Variable;
 
-public class TypeToSpecConverter extends TypeVisitor<Spec> {
+public class TypeToSpecConverter {
   private final ObjectFactory objectFactory;
 
   public TypeToSpecConverter(ObjectFactory objectFactory) {
     this.objectFactory = objectFactory;
   }
 
-  @Override
-  public AnySpec visit(AnyType type) {
-    return objectFactory.anySpec();
+  public Spec visit(Type type) {
+    // TODO refactor to pattern matching once we have java 17
+    if (type instanceof AnyType) {
+      return objectFactory.anySpec();
+    } else if (type instanceof BlobType blob) {
+      return visit(blob);
+    } else if (type instanceof BoolType) {
+      return objectFactory.boolSpec();
+    } else if (type instanceof NothingType) {
+      return objectFactory.nothingSpec();
+    } else if (type instanceof StringType stringType) {
+      return visit(stringType);
+    } else if (type instanceof StructType struct) {
+      Iterable<Spec> fieldSpecs = map(struct.fields(), f -> visit(f.type()));
+      return objectFactory.tupleSpec(fieldSpecs);
+    } else if (type instanceof Variable) {
+      throw new UnsupportedOperationException();
+    } else if (type instanceof ArrayType array) {
+      return visit(array);
+    } else if (type instanceof FunctionType) {
+      return nativeCodeSpec();
+    } else {
+      throw new IllegalArgumentException("Unknown type " + type.getClass().getCanonicalName());
+    }
   }
 
-  @Override
   public BlobSpec visit(BlobType type) {
     return objectFactory.blobSpec();
   }
 
-  @Override
-  public BoolSpec visit(BoolType type) {
-    return objectFactory.boolSpec();
-  }
-
-  @Override
-  public NothingSpec visit(NothingType type) {
-    return objectFactory.nothingSpec();
-  }
-
-  @Override
-  public StringSpec visit(StringType type) {
+  public StringSpec visit(StringType string) {
     return objectFactory.stringSpec();
   }
 
-  @Override
-  public TupleSpec visit(StructType type) {
-    Iterable<Spec> fieldTypes =
-        type.fields().stream()
-            .map(f -> f.type().visit(this))
-            .collect(toImmutableList());
-    return objectFactory.tupleSpec(fieldTypes);
-  }
-
-  @Override
-  public Spec visit(Variable type) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public ArraySpec visit(ArrayType type) {
-    if (type.isPolytype()) {
+  public ArraySpec visit(ArrayType array) {
+    if (array.isPolytype()) {
       throw new UnsupportedOperationException();
     }
-    return objectFactory.arraySpec(type.elemType().visit(this));
+    return objectFactory.arraySpec(visit(array.elemType()));
   }
 
-  @Override
-  public Spec visit(FunctionType type) {
-    return nativeCodeSpec();
-  }
-
-  public TupleSpec nativeCodeSpec() {
+  private TupleSpec nativeCodeSpec() {
     return objectFactory.tupleSpec(
         list(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }

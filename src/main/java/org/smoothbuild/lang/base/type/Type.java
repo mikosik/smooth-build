@@ -165,8 +165,6 @@ public abstract class Type {
     return map(types, Type::strip);
   }
 
-  public abstract <T> T visit(TypeVisitor<T> visitor);
-
   @Override
   public boolean equals(Object object) {
     if (this == object) {

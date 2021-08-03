@@ -54,11 +54,6 @@ public class FunctionType extends Type {
     return map(parameters, ItemSignature::type);
   }
 
-  @Override
-  public <T> T visit(TypeVisitor<T> visitor) {
-    return visitor.visit(this);
-  }
-
   public Type inferResultType(List<Type> argumentTypes) {
     var variableToBounds = inferVariableBounds(parameterTypes(), argumentTypes, LOWER);
     return resultType().mapVariables(variableToBounds, LOWER);
