@@ -33,6 +33,7 @@ import static org.smoothbuild.lang.base.type.Types.function;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.constraint.TestingBoundedVariables.bv;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -229,7 +230,7 @@ public class TypeTest {
 
   public static List<Arguments> inferVariableBounds_test_data() {
     var r = new ArrayList<Arguments>();
-    for (Type type : Lists.concat(ELEMENTARY_TYPES, X)) {
+    for (Type type : concat(ELEMENTARY_TYPES, X)) {
       if (type instanceof NothingType) {
         // arrays
         r.add(arguments(A, NOTHING, bv(A, LOWER, NOTHING)));
@@ -2853,7 +2854,7 @@ public class TypeTest {
 
   public static List<Arguments> elemType_test_data() {
     var result = new ArrayList<Arguments>();
-    for (Type type : Lists.concat(ELEMENTARY_TYPES, X)) {
+    for (Type type : concat(ELEMENTARY_TYPES, X)) {
       result.add(arguments(a(type), type));
       result.add(arguments(a(a(type)), a(type)));
       result.add(arguments(a(a(a(type))), a(a(type))));
