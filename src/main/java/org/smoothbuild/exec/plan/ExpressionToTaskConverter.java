@@ -173,7 +173,7 @@ public class ExpressionToTaskConverter {
     } else if (referencable instanceof DefinedValue definedValue) {
       return new LazyTask(definedValue.type(), reference.location(),
           () -> definedValueTask(scope, reference, definedValue));
-    } else if (referencable instanceof Function function){
+    } else if (referencable instanceof Function function) {
       var type = function.type().strip();
       return new LazyTask(type, reference.location(),
           () -> functionReferenceTask(reference, function, type));
