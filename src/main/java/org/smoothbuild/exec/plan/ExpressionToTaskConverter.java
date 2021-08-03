@@ -90,7 +90,7 @@ public class ExpressionToTaskConverter {
   private LazyTask lazyTaskFor(Expression expression, Scope<LazyTask> scope) {
     // TODO refactor to pattern matching once we have java 17
     if (expression instanceof NativeExpression nativ) {
-      return stringLiteralLazyTask(nativ.path());
+      return nativeLazyTask(nativ);
     } else if (expression instanceof CallExpression call) {
       return callLazyTask(scope, call);
     } else if (expression instanceof FieldReadExpression fieldRead) {
@@ -109,6 +109,10 @@ public class ExpressionToTaskConverter {
       throw new IllegalArgumentException(
           "Unknown expression " + expression.getClass().getCanonicalName() + ".");
     }
+  }
+
+  private LazyTask nativeLazyTask(NativeExpression nativ) {
+    return stringLiteralLazyTask(nativ.path());
   }
 
   private LazyTask callLazyTask(Scope<LazyTask> scope, CallExpression call) {
@@ -169,7 +173,7 @@ public class ExpressionToTaskConverter {
     var referencable = definitions.referencables().get(reference.name());
     if (referencable instanceof NativeValue nativeValue) {
       return new LazyTask(nativeValue.type(), reference.location(),
-          () -> callNativeValueTask(scope, reference, nativeValue));
+          () -> callNativeValueTask(reference, nativeValue));
     } else if (referencable instanceof DefinedValue definedValue) {
       return new LazyTask(definedValue.type(), reference.location(),
           () -> definedValueTask(scope, reference, definedValue));
@@ -183,12 +187,11 @@ public class ExpressionToTaskConverter {
     }
   }
 
-  private Task callNativeValueTask(Scope<LazyTask> scope, ReferenceExpression reference,
-      NativeValue nativeValue) {
+  private Task callNativeValueTask(ReferenceExpression reference, NativeValue nativeValue) {
     NativeExpression nativ = nativeValue.nativ();
     var algorithm = new CallNativeAlgorithm(methodLoader,
         toSpecConverter.visit(nativeValue.type()), nativeValue, nativ.isPure());
-    var nativeCode = lazyTaskFor(nativ, scope);
+    var nativeCode = nativeLazyTask(nativ);
     return new AlgorithmTask(VALUE, nativeValue.type(), nativeValue.extendedName(), algorithm,
         list(nativeCode), reference.location());
   }
