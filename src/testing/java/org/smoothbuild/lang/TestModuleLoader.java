@@ -28,9 +28,9 @@ public class TestModuleLoader {
   private Definitions imported;
   private Maybe<SModule> module;
 
-  public static TestModuleLoader module(String sourceCode) {
+  public static TestModuleLoader module(String code) {
     return new TestModuleLoader(
-        sourceCode, moduleFiles(), Definitions.empty().withModule(internalModule()));
+        code, moduleFiles(), Definitions.empty().withModule(internalModule()));
   }
 
   public TestModuleLoader(String sourceCode, ModuleFiles moduleFiles, Definitions imported) {

@@ -27,7 +27,7 @@ import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 
-public class ExpressionTest {
+public class ExpressionLoadingTest {
   @Test
   public void array_literal_expression() {
     module("""
@@ -319,31 +319,6 @@ public class ExpressionTest {
     }
 
     @Test
-    public void non_native_value_without_body_fails() {
-      module("""
-          String result;
-          """)
-          .loadsWithError(1, "Non native value cannot have empty body.");
-    }
-
-    @Test
-    public void native_value_with_body_fails() {
-      module("""
-          @Native("Impl.met")
-          String myValue = "abc";
-          """)
-          .loadsWithError(2, "Native value cannot have body.");
-    }
-
-    @Test
-    public void native_value_without_declared_result_type_causes_error() {
-      module("""
-        @Native("Impl.met")
-        myFunction;""")
-          .loadsWithError(2, "`myFunction` is native so it should have declared result type.");
-    }
-
-    @Test
     public void defined_function() {
       module("""
           Blob myFunction() =
@@ -366,7 +341,7 @@ public class ExpressionTest {
     }
 
     @Test
-    public void function_with_parameter_with_default_value() {
+    public void defined_function_with_parameter_with_default_value() {
       module("""
           String myFunction(
             Blob param1 =
@@ -376,32 +351,6 @@ public class ExpressionTest {
           .loadsSuccessfully()
           .containsReferencable(function(1, STRING, "myFunction",
               string(4, "abc"), parameter(2, BLOB, "param1", blob(3, 7))));
-    }
-
-    @Test
-    public void non_native_function_without_body() {
-      module("""
-          String myFunction();
-          """)
-          .loadsWithError(1, "Non native function cannot have empty body.");
-    }
-
-    @Test
-    public void native_function_with_body() {
-      module("""
-          @Native("Impl.met")
-          String myFunction() = "abc";
-          """)
-          .loadsWithError(2, "Native function cannot have body.");
-    }
-
-    @Test
-    public void native_function_without_declared_result_type_fails() {
-      module("""
-        @Native("Impl.met")
-        myFunction();
-        """)
-          .loadsWithError(2, "`myFunction` is native so it should have declared result type.");
     }
 
     @Test
