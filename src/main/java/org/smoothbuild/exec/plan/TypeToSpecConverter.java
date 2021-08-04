@@ -3,6 +3,8 @@ package org.smoothbuild.exec.plan;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
@@ -23,6 +25,7 @@ import org.smoothbuild.lang.base.type.Variable;
 public class TypeToSpecConverter {
   private final ObjectFactory objectFactory;
 
+  @Inject
   public TypeToSpecConverter(ObjectFactory objectFactory) {
     this.objectFactory = objectFactory;
   }

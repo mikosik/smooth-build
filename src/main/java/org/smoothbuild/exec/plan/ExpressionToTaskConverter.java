@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -76,10 +75,10 @@ public class ExpressionToTaskConverter {
   private final MethodLoader methodLoader;
 
   @Inject
-  public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory,
+  public ExpressionToTaskConverter(Definitions definitions, TypeToSpecConverter toSpecConverter,
       MethodLoader methodLoader) {
-    this.toSpecConverter = new TypeToSpecConverter(objectFactory);
     this.definitions = definitions;
+    this.toSpecConverter = toSpecConverter;
     this.methodLoader = methodLoader;
   }
 
