@@ -93,7 +93,9 @@ public class TestModuleLoader {
   }
 
   public Definitions getModuleAsDefinitions() {
-    return Definitions.empty().withModule(module.value());
+    return Definitions.empty()
+        .withModule(internalModule())
+        .withModule(module.value());
   }
 
   public void loadsWithProblems() {
