@@ -13,6 +13,10 @@ public record Bounds(Type lower, Type upper) {
     };
   }
 
+  public static Bounds unbounded() {
+    return new Bounds(nothing(), any());
+  }
+
   public Bounds mergeWith(Bounds bounds) {
     return new Bounds(
         lower.mergeWith(bounds.lower, UPPER),

@@ -149,4 +149,32 @@ public class FunctionTest extends AcceptanceTestCase {
     assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
+
+  @Test
+  public void function_can_be_argument_to_other_function() throws Exception {
+    createNativeJar(ThrowException.class);
+    createUserModule("""
+            String returnAbc() = "abc";
+            A invokeProducer(A() producer) = producer();
+            result = invokeProducer(returnAbc);
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(artifactFileContentAsString("result"))
+        .isEqualTo("abc");
+  }
+
+  @Test
+  public void function_can_be_result_of_other_function() throws Exception {
+    createNativeJar(ThrowException.class);
+    createUserModule("""
+            String returnAbc() = "abc";
+            String() createProducer() = returnAbc;
+            result = createProducer()();
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(artifactFileContentAsString("result"))
+        .isEqualTo("abc");
+  }
 }

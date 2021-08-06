@@ -4,6 +4,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.base.type.Bounds.unbounded;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
@@ -65,8 +66,17 @@ public class FunctionType extends Type {
   }
 
   public Type inferResultType(List<Type> argumentTypes) {
-    var variableToBounds = inferVariableBounds(parameterTypes(), argumentTypes, LOWER);
-    return resultType().mapVariables(variableToBounds, LOWER);
+    var boundedVariables = inferVariableBoundsInCall(resultType(), parameterTypes(), argumentTypes);
+    return resultType().mapVariables(boundedVariables, LOWER);
+  }
+
+  public static BoundedVariables inferVariableBoundsInCall(Type resultTypes,
+      List<Type> parameterTypes, List<Type> argumentTypes) {
+    var variableToBounds = inferVariableBounds(parameterTypes, argumentTypes, LOWER);
+    for (Variable variable : resultTypes.variables()) {
+      variableToBounds = variableToBounds.addBounds(variable, unbounded());
+    }
+    return variableToBounds;
   }
 
   @Override

@@ -3,8 +3,8 @@ package org.smoothbuild.lang.parse;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
+import static org.smoothbuild.lang.base.type.FunctionType.inferVariableBoundsInCall;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
-import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
@@ -32,11 +32,11 @@ public class InferCallType {
     }
     List<Optional<Type>> assignedTypes = assignedTypes(parameters, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
-      var variableToBounds = inferVariableBounds(
+      var boundedVariables = inferVariableBoundsInCall(
+          resultType,
           map(parameters, ItemSignature::type),
-          map(assignedTypes, Optional::get),
-          LOWER);
-      return maybeValueAndLogs(resultType.mapVariables(variableToBounds, LOWER), logBuffer);
+          map(assignedTypes, Optional::get));
+      return maybeValueAndLogs(resultType.mapVariables(boundedVariables, LOWER), logBuffer);
     }
     return maybeLogs(logBuffer);
   }
