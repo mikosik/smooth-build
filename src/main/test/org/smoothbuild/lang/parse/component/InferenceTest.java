@@ -1,113 +1,338 @@
 package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.base.type.TestingTypes.B;
+import static org.smoothbuild.lang.base.type.TestingTypes.A;
+import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.lang.base.type.TestingTypes.item;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class InferenceTest {
-  @Test
-  public void string_literal() {
-    module("""
-        myValue = "abc";
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myValue", STRING);
+  @Nested
+  class _inferring_value_type_from {
+    @Test
+    public void string_literal() {
+      String code = """
+          myValue = "abc";
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myValue", STRING);
+    }
+
+    @Test
+    public void blob_literal() {
+      String code = """
+          myValue = 0x07;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myValue", BLOB);
+    }
+
+    @Test
+    public void array_literal() {
+      String code = """
+          myValue = [ "abc" ];
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myValue", a(STRING));
+    }
+
+    @Test
+    public void value_reference() {
+      String code = """
+          String stringValue = "abc";
+          myValue = stringValue;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myValue", STRING);
+    }
+
+    @Test
+    public void function_reference() {
+      String code = """
+          String myFunction(Blob param) = "abc";
+          myValue = myFunction;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myValue", f(STRING, BLOB));
+    }
+
+    @Test
+    public void function_call() {
+      String code = """
+          String myFunction() = "abc";
+          myValue = myFunction();
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myValue", STRING);
+    }
   }
 
-  @Test
-  public void blob_literal() {
-    module("""
-        myValue = 0x07;
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myValue", BLOB);
+  @Nested
+  class _inferring_function_result_type_from {
+    @Test
+    public void string_literal() {
+      String code = """
+          myFunction() = "abc";
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(STRING));
+    }
+
+    @Test
+    public void blob_literal() {
+      String code = """
+          myFunction() = 0x07;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(BLOB));
+    }
+
+    @Test
+    public void array_literal() {
+      String code = """
+          myFunction() = [ "abc" ];
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(a(STRING)));
+    }
+
+    @Test
+    public void value_reference() {
+      String code = """
+          String stringValue = "abc";
+          myFunction() = stringValue;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(STRING));
+    }
+
+    @Test
+    public void function_reference() {
+      String code = """
+          String otherFunction(Blob param) = "abc";
+          myFunction() = otherFunction;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(f(STRING, BLOB)));
+    }
+
+    @Test
+    public void function_call() {
+      String code = """
+          String otherFunction() = "abc";
+          myFunction() = otherFunction();
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(STRING));
+    }
+
+    @Test
+    public void function_parameter() {
+      String code = """
+          myFunction(String param) = param;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(STRING, item(STRING, "param")));
+    }
+
+    @Test
+    public void function_generic_parameter() {
+      String code = """
+          myFunction(A param) = param;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(A, item(A, "param")));
+    }
   }
 
-  @Test
-  public void function_reference() {
-    module("""
-        String myFunction(Blob param) = "abc";
-        myValue = myFunction;
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myValue", f(STRING, BLOB));
-  }
+  @Nested
+  class _inferring_call_result_type {
+    @Nested
+    class _identity_function_applied_to {
+      @Test
+      public void nothing() {
+        String code = """
+            @Native("impl.met")
+            Nothing nothingValue;
+            A myIdentity(A a) = a;
+            myValue = myIdentity(nothingValue);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", NOTHING);
+      }
 
-  @Test
-  public void argless_function_call() {
-    module("""
-        String myFunction() = "abc";
-        myValue = myFunction();
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myValue", STRING);
-  }
+      @Test
+      public void argument_of_base_type() {
+        String code = """
+            A myIdentity(A a) = a;
+            myValue = myIdentity("abc");
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", STRING);
+      }
 
-  @Test
-  public void generic_function_with_monotype_argument() {
-    module("""
-        A myIdentity(A a) = a;
-        myValue = myIdentity("abc");
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myValue", STRING);
-  }
+      @Test
+      public void array() {
+        String code = """
+            A myIdentity(A a) = a;
+            myValue = myIdentity(["abc"]);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", a(STRING));
+      }
 
-  @Test
-  public void generic_function_with_monotype_array_argument() {
-    module("""
-        A myIdentity(A a) = a;
-        myValue = myIdentity(["abc"]);
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myValue", a(STRING));
-  }
+      @Test
+      public void function() {
+        String code = """
+            A myIdentity(A a) = a;
+            String myFunction(Blob param) = "abc";
+            myValue = myIdentity(myFunction);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", f(STRING, BLOB));
+      }
+    }
 
-  @Test
-  public void generic_function_with_monotype_function_argument() {
-    module("""
-        A myIdentity(A a) = a;
-        Blob myOtherFunction(String s) = 0x09;
-        myValue = myIdentity(myOtherFunction);
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myValue", f(BLOB, STRING));
-  }
+    @Nested
+    class _first_element_function_applied_to {
+      @Test
+      public void nothing_array() {
+        String code = """
+            @Native("impl.met")
+            A firstElement([A] array);
+            myValue = firstElement([]);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", NOTHING);
+      }
 
-  @Test
-  public void generic_function_with_polytype_argument() {
-    module("""
-        A myIdentity(A a) = a;
-        myFunction(B b) = myIdentity(b);
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myFunction", f(B, item(B, "b")));
-  }
+      @Test
+      public void array() {
+        String code = """
+            @Native("impl.met")
+            A firstElement([A] array);
+            myValue = firstElement(["abc"]);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", STRING);
+      }
 
-  @Test
-  public void generic_function_with_polytype_array_argument() {
-    module("""
-        A myIdentity(A a) = a;
-        myFunction(B b) = myIdentity([b]);
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myFunction", f(a(B), item(B, "b")));
-  }
+      @Test
+      public void array2() {
+        String code = """
+            @Native("impl.met")
+            A firstElement([A] array);
+            myValue = firstElement([["abc"]]);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", a(STRING));
+      }
 
-  @Test
-  public void generic_function_with_polytype_function_argument() {
-    module("""
-        A myIdentity(A a) = a;
-        B myOtherFunction(B b) = b;
-        myFunction() = myIdentity(myOtherFunction);
-        """)
-        .loadsSuccessfully()
-        .containsReferencableWithType("myFunction", f(f(B, B)));
+      @Test
+      public void function_array_with_convertible_functions() {
+        String code = """
+            @Native("impl.met")
+            A firstElement([A] array);
+            String myFunction1(Blob param) = "abc";
+            String myFunction2(String param) = "abc";
+            myValue = firstElement([ myFunction1, myFunction2 ]);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", f(STRING, NOTHING));
+      }
+
+      @Test
+      public void function_array_with_inconvertible_functions() {
+        String code = """
+            @Native("impl.met")
+            A firstElement([A] array);
+            String myFunction1(Blob param) = "abc";
+            String myFunction2(Blob param, Blob param2) = "abc";
+            myValue = firstElement([ myFunction1, myFunction2 ]);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", ANY);
+      }
+    }
+
+    @Nested
+    class _single_element_array_function_applied_to {
+      @Test
+      public void nothing() {
+        String code = """
+            @Native("impl.met")
+            Nothing nothingValue;
+            [A] singleElement(A a) = [a];
+            myValue = singleElement(nothingValue);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", a(NOTHING));
+      }
+
+      @Test
+      public void argument_of_base_type() {
+        String code = """
+            [A] singleElement(A a) = [a];
+            myValue = singleElement("abc");
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", a(STRING));
+      }
+
+      @Test
+      public void array() {
+        String code = """
+            [A] singleElement(A a) = [a];
+            myValue = singleElement(["abc"]);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", a(a(STRING)));
+      }
+
+      @Test
+      public void function() {
+        String code = """
+            [A] singleElement(A a) = [a];
+            String myFunction(Blob param) = "abc";
+            myValue = singleElement(myFunction);
+            """;
+        module(code)
+            .loadsSuccessfully()
+            .containsReferencableWithType("myValue", a(f(STRING, BLOB)));
+      }
+    }
   }
 }
