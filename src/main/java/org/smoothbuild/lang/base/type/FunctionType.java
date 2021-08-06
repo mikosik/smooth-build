@@ -1,14 +1,19 @@
 package org.smoothbuild.lang.base.type;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * This class is immutable.
@@ -28,7 +33,7 @@ public class FunctionType extends Type {
         createTypeConstructor(parameterTypes),
         list(result),
         parameterTypes,
-        createIsPolytype(result, parameterTypes));
+        calculateVariables(result, parameterTypes));
     this.result = requireNonNull(result);
     this.parameters = requireNonNull(parameters);
   }
@@ -38,8 +43,13 @@ public class FunctionType extends Type {
         (covar, contravar) -> new FunctionType(covar.get(0), toItemSignatures(contravar)));
   }
 
-  private static boolean createIsPolytype(Type resultType, ImmutableList<Type> parameters) {
-    return resultType.isPolytype() || parameters.stream().anyMatch(Type::isPolytype);
+  private static ImmutableSet<Variable> calculateVariables(Type resultType,
+      ImmutableList<Type> parameters) {
+    return concat(resultType, parameters).stream()
+        .map(Type::variables)
+        .flatMap(Collection::stream)
+        .sorted(comparing(Type::name))
+        .collect(toImmutableSet());
   }
 
   public Type resultType() {

@@ -11,7 +11,7 @@ public class ArrayType extends Type {
 
   public ArrayType(Type elemType) {
     super("[" +  elemType.name() + "]", createTypeConstructor(), list(elemType), list(),
-        elemType.isPolytype());
+        elemType.variables());
     this.elemType = requireNonNull(elemType);
   }
 

@@ -15,6 +15,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * This class and all its subclasses are immutable.
@@ -24,19 +25,19 @@ public abstract class Type {
   private final TypeConstructor typeConstructor;
   private final ImmutableList<Type> covariants;
   private final ImmutableList<Type> contravariants;
-  protected final boolean isPolytype;
+  private final ImmutableSet<Variable> variables;
 
-  protected Type(String name, TypeConstructor typeConstructor, boolean isPolytype) {
-    this(name, typeConstructor, list(), list(), isPolytype);
+  protected Type(String name, TypeConstructor typeConstructor, ImmutableSet<Variable> variables) {
+    this(name, typeConstructor, list(), list(), variables);
   }
 
-  protected Type(String name, TypeConstructor typeConstructor,
-      ImmutableList<Type> covariants, ImmutableList<Type> contravariants, boolean isPolytype) {
+  protected Type(String name, TypeConstructor typeConstructor, ImmutableList<Type> covariants,
+      ImmutableList<Type> contravariants, ImmutableSet<Variable> variables) {
     this.name = name;
     this.typeConstructor = typeConstructor;
     this.covariants = covariants;
     this.contravariants = contravariants;
-    this.isPolytype = isPolytype;
+    this.variables = variables;
   }
 
   public String name() {
@@ -51,7 +52,14 @@ public abstract class Type {
    * @return true iff this type contains type variable(s).
    */
   public boolean isPolytype() {
-    return isPolytype;
+    return !variables().isEmpty();
+  }
+
+  /**
+   * @return type variables sorted alphabetically
+   */
+  public ImmutableSet<Variable> variables() {
+      return variables;
   }
 
   public boolean isAssignableFrom(Type type) {
@@ -88,7 +96,7 @@ public abstract class Type {
   }
 
   public Type mapVariables(BoundedVariables boundedVariables, Side side) {
-    if (isPolytype) {
+    if (isPolytype()) {
       if (this instanceof Variable) {
         return boundedVariables.boundsMap().get(this).get(side);
       } else {

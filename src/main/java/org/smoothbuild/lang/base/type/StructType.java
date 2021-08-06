@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.util.Sets.set;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +17,7 @@ public class StructType extends Type {
   private final ImmutableMap<String, Integer> fieldNameToIndex;
 
   public StructType(String name, ImmutableList<ItemSignature> fields) {
-    super(name, new TypeConstructor(name), false);
+    super(name, new TypeConstructor(name), set());
     this.fields = fields;
     this.fieldNameToIndex = fieldsMap(fields);
   }

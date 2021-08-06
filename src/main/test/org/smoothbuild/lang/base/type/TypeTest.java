@@ -13,6 +13,8 @@ import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_LENGTH_FUNCTION;
 import static org.smoothbuild.lang.base.type.TestingTypes.B;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
+import static org.smoothbuild.lang.base.type.TestingTypes.C;
+import static org.smoothbuild.lang.base.type.TestingTypes.D;
 import static org.smoothbuild.lang.base.type.TestingTypes.DATA;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.FLAG;
@@ -36,10 +38,12 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Sets.set;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -196,6 +200,44 @@ public class TypeTest {
     }
 
     return result;
+  }
+
+  @ParameterizedTest
+  @MethodSource("variables_test_data")
+  public void variables(Type type, Set<Variable> variables) {
+    assertThat(type.variables())
+        .containsExactlyElementsIn(variables)
+        .inOrder();
+  }
+
+  public static List<Arguments> variables_test_data() {
+    return list(
+        arguments(ANY, set()),
+        arguments(BLOB, set()),
+        arguments(BOOL, set()),
+        arguments(STRING, set()),
+        arguments(NOTHING, set()),
+        arguments(PERSON, set()),
+
+        arguments(a(ANY), set()),
+        arguments(a(BLOB), set()),
+        arguments(a(BOOL), set()),
+        arguments(a(STRING), set()),
+        arguments(a(NOTHING), set()),
+        arguments(a(PERSON), set()),
+
+        arguments(f(STRING), set()),
+        arguments(f(STRING, BOOL), set()),
+
+        arguments(A, set(A)),
+        arguments(a(A), set(A)),
+        arguments(a(a(A)), set(A)),
+        arguments(f(A), set(A)),
+        arguments(f(A, STRING), set(A)),
+        arguments(f(STRING, A), set(A)),
+        arguments(f(B, A), set(A, B)),
+        arguments(f(D, C, B, A), set(A, B, C, D))
+    );
   }
 
   @ParameterizedTest

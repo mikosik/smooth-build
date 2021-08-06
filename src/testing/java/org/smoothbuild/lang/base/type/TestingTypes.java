@@ -30,6 +30,8 @@ public class TestingTypes {
           new ItemSignature(BLOB, "data", Optional.empty())));
   public static final Variable A = variable("A");
   public static final Variable B = variable("B");
+  public static final Variable C = variable("C");
+  public static final Variable D = variable("D");
   public static final Variable X = variable("X");
 
   public static final ImmutableList<Type> ELEMENTARY_TYPES = ImmutableList.<Type>builder()
