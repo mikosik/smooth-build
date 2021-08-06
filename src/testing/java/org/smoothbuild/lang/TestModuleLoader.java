@@ -75,8 +75,7 @@ public class TestModuleLoader {
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(referencables)
         .containsKey(name);
-    GlobalReferencable actual = referencables.get(name);
-    return actual;
+    return referencables.get(name);
   }
 
   public void containsType(Type expected) {
