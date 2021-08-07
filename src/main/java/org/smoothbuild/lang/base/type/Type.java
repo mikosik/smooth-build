@@ -1,7 +1,9 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.BoundedVariables.merge;
+import static com.google.common.collect.Iterables.concat;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
+import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
+import static org.smoothbuild.lang.base.type.BoundsMap.merge;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.list;
@@ -95,48 +97,48 @@ public abstract class Type {
         && allMatch(contravariants, that.contravariants, inequalReversedFunction);
   }
 
-  public Type mapVariables(BoundedVariables boundedVariables, Side side) {
+  public Type mapVariables(BoundsMap boundsMap, Side side) {
     if (isPolytype()) {
       if (this instanceof Variable) {
-        return boundedVariables.boundsMap().get(this).get(side);
+        return boundsMap.map().get(this).bounds().get(side);
       } else {
         return typeConstructor.construct(
-            map(covariants, c -> c.mapVariables(boundedVariables, side)),
-            map(contravariants, c -> c.mapVariables(boundedVariables, side.reversed())));
+            map(covariants, c -> c.mapVariables(boundsMap, side)),
+            map(contravariants, c -> c.mapVariables(boundsMap, side.reversed())));
       }
     } else {
       return this;
     }
   }
 
-  public static BoundedVariables inferVariableBounds(
+  public static BoundsMap inferVariableBounds(
       List<Type> typesA, List<Type> typesB, Side side) {
-    return BoundedVariables.merge(zip(typesA, typesB, inferFunction(side)));
+    return BoundsMap.merge(zip(typesA, typesB, inferFunction(side)));
   }
 
-  public BoundedVariables inferVariableBounds(Type that, Side side) {
+  public BoundsMap inferVariableBounds(Type that, Side side) {
     if (this instanceof Variable variable) {
-      return BoundedVariables.empty().addBounds(variable, oneSideBound(side, that));
+      return boundsMap(new Bounded(variable, oneSideBound(side, that)));
     } else if (that.equals(side.edge())) {
       return inferVariableBoundFromEdge(side);
     } else if (this.typeConstructor.equals(that.typeConstructor)) {
-      return merge(
+      return merge(concat(
           zip(covariants, that.covariants, inferFunction(side)),
-          zip(contravariants, that.contravariants, inferFunction(side.reversed())));
+          zip(contravariants, that.contravariants, inferFunction(side.reversed()))));
     } else {
-      return BoundedVariables.empty();
+      return boundsMap();
     }
   }
 
-  private static BiFunction<Type, Type, BoundedVariables> inferFunction(Side side) {
+  private static BiFunction<Type, Type, BoundsMap> inferFunction(Side side) {
     return (Type a, Type b) -> a.inferVariableBounds(b, side);
   }
 
-  private BoundedVariables inferVariableBoundFromEdge(Side side) {
+  private BoundsMap inferVariableBoundFromEdge(Side side) {
     Side reversed = side.reversed();
-    return merge(
+    return merge(concat(
         map(covariants, t -> t.inferVariableBounds(side.edge(), side)),
-        map(contravariants, t -> t.inferVariableBounds(reversed.edge(), reversed)));
+        map(contravariants, t1 -> t1.inferVariableBounds(reversed.edge(), reversed))));
   }
 
   public Type mergeWith(Type that, Side direction) {

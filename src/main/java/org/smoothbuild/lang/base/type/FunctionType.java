@@ -13,6 +13,8 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.Collection;
 import java.util.List;
 
+import org.smoothbuild.util.Sets;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -70,13 +72,11 @@ public class FunctionType extends Type {
     return resultType().mapVariables(boundedVariables, LOWER);
   }
 
-  public static BoundedVariables inferVariableBoundsInCall(Type resultTypes,
+  public static BoundsMap inferVariableBoundsInCall(Type resultTypes,
       List<Type> parameterTypes, List<Type> argumentTypes) {
-    var variableToBounds = inferVariableBounds(parameterTypes, argumentTypes, LOWER);
-    for (Variable variable : resultTypes.variables()) {
-      variableToBounds = variableToBounds.addBounds(variable, unbounded());
-    }
-    return variableToBounds;
+    var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, LOWER);
+    var resultVariables = Sets.map(resultTypes.variables(), v -> new Bounded(v, unbounded()));
+    return boundedVariables.mergeWith(resultVariables);
   }
 
   @Override

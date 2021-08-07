@@ -50,7 +50,7 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.BoundedVariables;
+import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
@@ -266,7 +266,7 @@ public class ExpressionToTaskConverter {
     return taskFor(defaultValueExpression, scope);
   }
 
-  public Task taskForNamedFunctionCall(Scope<LazyTask> scope, BoundedVariables variables,
+  public Task taskForNamedFunctionCall(Scope<LazyTask> scope, BoundsMap variables,
       Type actualResultType, String functionName, List<LazyTask> arguments, Location location) {
     var function = (Function) definitions.referencables().get(functionName);
     if (function instanceof DefinedFunction definedFunction) {
@@ -302,7 +302,7 @@ public class ExpressionToTaskConverter {
   }
 
   private Task callNativeFunctionTask(Scope<LazyTask> scope, List<LazyTask> arguments,
-      NativeFunction function, NativeExpression nativ, BoundedVariables variables,
+      NativeFunction function, NativeExpression nativ, BoundsMap variables,
       Type actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(methodLoader, toSpecConverter.visit(actualResultType),
         function, nativ.isPure());
@@ -313,7 +313,7 @@ public class ExpressionToTaskConverter {
   }
 
   private ImmutableList<Task> convertedArgumentTasks(List<LazyTask> arguments,
-      NativeFunction function, BoundedVariables variables) {
+      NativeFunction function, BoundsMap variables) {
     var actualTypes = map(function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
     var argumentTasks = map(arguments, LazyTask::task);
     return zip(actualTypes, argumentTasks, this::convertIfNeeded);

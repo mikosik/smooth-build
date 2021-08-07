@@ -11,18 +11,18 @@ import org.smoothbuild.exec.base.FunctionTuple;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.exec.plan.ExpressionToTaskConverter;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.type.BoundedVariables;
+import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.Scope;
 
 public class CallTask extends StepTask {
   private final List<LazyTask> arguments;
-  private final BoundedVariables variables;
+  private final BoundsMap variables;
   private final Scope<LazyTask> scope;
   private final ExpressionToTaskConverter expressionToTaskConverter;
 
   public CallTask(TaskKind kind, Type type, String name, Task function,
-      List<LazyTask> arguments, Location location, BoundedVariables variables,
+      List<LazyTask> arguments, Location location, BoundsMap variables,
       Scope<LazyTask> scope, ExpressionToTaskConverter expressionToTaskConverter) {
     super(kind, type, name, concat(function, arguments), location);
     this.arguments = arguments;
