@@ -61,7 +61,7 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String _function_call
-              String(String) myFunction()
+              String(String) :myFunction
               String "abc"
           """);
     }
@@ -79,7 +79,7 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String _function_call
-              String(String) oneStringParameter()
+              String(String) :oneStringParameter
               String "abc"
           """);
     }
@@ -97,7 +97,7 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String _function_call
-              String() returnAbc()
+              String() :returnAbc
           """);
     }
 
@@ -114,7 +114,7 @@ public class PlanCommandTest {
       assertSysOutContains("""
           MyStruct result
             MyStruct _function_call
-              MyStruct(String) myStruct()
+              MyStruct(String) :myStruct
               String "abc"
           """);
     }
@@ -133,7 +133,7 @@ public class PlanCommandTest {
           String result
             String .field
               MyStruct _function_call
-                MyStruct(String) myStruct()
+                MyStruct(String) :myStruct
                 String "abc"
           """);
     }

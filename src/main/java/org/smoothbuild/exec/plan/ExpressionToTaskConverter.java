@@ -208,7 +208,7 @@ public class ExpressionToTaskConverter {
     var module = definitions.modules().get(function.modulePath());
     var algorithm = new FunctionReferenceAlgorithm(
         function, module, toSpecConverter.functionSpec());
-    return new AlgorithmTask(FUNCTION_REFERENCE, type, function.extendedName(),
+    return new AlgorithmTask(FUNCTION_REFERENCE, type, ":" + function.name(),
         algorithm, list(), reference.location());
   }
 

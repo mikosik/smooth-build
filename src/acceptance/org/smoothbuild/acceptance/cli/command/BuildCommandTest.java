@@ -514,7 +514,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myFunction()                             build.smooth:2
+          myFunction()                             build.smooth:2                 group
           """);
     }
 
@@ -530,6 +530,18 @@ public class BuildCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           .myField                                 build.smooth:4
+          """);
+    }
+
+    @Test
+    public void function_reference() throws IOException {
+      createUserModule("""
+          result = if;
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          :if                                      build.smooth:1
           """);
     }
 
