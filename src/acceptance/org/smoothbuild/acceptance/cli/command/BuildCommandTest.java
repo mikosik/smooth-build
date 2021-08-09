@@ -519,6 +519,18 @@ public class BuildCommandTest {
     }
 
     @Test
+    public void conversion() throws IOException {
+      createUserModule("""
+          [String] result = [];
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          [String]<-[Nothing]                      build.smooth:1
+          """);
+    }
+
+    @Test
     public void field_read() throws IOException {
       createUserModule("""
           MyStruct {
