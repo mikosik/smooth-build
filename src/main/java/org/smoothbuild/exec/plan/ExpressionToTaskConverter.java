@@ -233,7 +233,7 @@ public class ExpressionToTaskConverter {
       ArrayType actualType) {
     var algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
     var convertedElements = map(elements, e -> convertIfNeeded(actualType.elemType(), e));
-    return new AlgorithmTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
+    return new AlgorithmTask(LITERAL, actualType, "[]", algorithm, convertedElements,
         expression.location());
   }
 

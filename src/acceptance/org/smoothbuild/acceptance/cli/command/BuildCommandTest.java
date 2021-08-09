@@ -541,7 +541,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          [String]                                 build.smooth:1
+          []                                       build.smooth:1
           """);
     }
 

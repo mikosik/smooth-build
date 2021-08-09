@@ -147,7 +147,7 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
               [String] result
-                [String] [String]
+                [String] []
                   String "abc"
                   String "def"
               """);
@@ -215,7 +215,7 @@ public class PlanCommandTest {
       assertSysOutContains("""
               [String] result
                 [String] [String]<-[Nothing]
-                  [Nothing] [Nothing]
+                  [Nothing] []
               """);
     }
   }
