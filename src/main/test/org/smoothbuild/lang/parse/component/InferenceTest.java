@@ -10,6 +10,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.lang.base.type.TestingTypes.item;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -333,6 +334,28 @@ public class InferenceTest {
             .loadsSuccessfully()
             .containsReferencableWithType("myValue", a(f(STRING, BLOB)));
       }
+    }
+
+    @Test
+    @Disabled
+    public void bug() {
+      // This test fails because call to function `f` will infer bounds for 2 variables:
+      // A: (String, C)
+      // B: ([C], Any)
+      // Algorithm infers that B is upper than `[C]` so it takes `[C]` as call result, but
+      // it's wrong. Algorithm is unable to notice that `C` is upper from `String` so it doesn't
+      // do that substitution and can't find correct result `[String]`.
+      // Fixing it is not easy because there can be cases with longer chain of dependencies
+      // between `C` and `String` and there can be cases with circular dependencies that are
+      // illegal. This probably means that we need more powerful inferring algorithm.
+      String code = """
+            B f(A item, B(A) convert) = convert(item);
+            [C] single(C elem) = [elem];
+            result = f("abc", single);
+            """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("result", a(STRING));
     }
   }
 }
