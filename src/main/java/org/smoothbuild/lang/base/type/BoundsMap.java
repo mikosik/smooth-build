@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,5 +46,11 @@ public record BoundsMap(ImmutableMap<Variable, Bounded> map) {
     return map.values()
         .stream()
         .allMatch(b -> b.bounds().areConsistent());
+  }
+
+  public String toFormattedString() {
+    return map.values().stream()
+        .map(Bounded::toFormattedString)
+        .collect(joining("\n"));
   }
 }

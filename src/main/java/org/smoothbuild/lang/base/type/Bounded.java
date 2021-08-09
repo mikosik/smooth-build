@@ -7,4 +7,8 @@ public record Bounded(Variable variable, Bounds bounds) {
     checkArgument(bounded1.variable().equals(bounded2.variable()));
     return new Bounded(bounded1.variable(), bounded1.bounds().mergeWith(bounded2.bounds()));
   }
+
+  public String toFormattedString() {
+    return variable.name() + ": (" + bounds.lower().name() + ", " + bounds.upper().name() + ")";
+  }
 }
