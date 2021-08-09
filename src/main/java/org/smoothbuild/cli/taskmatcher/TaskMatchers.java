@@ -33,7 +33,7 @@ public class TaskMatchers {
   static final TaskMatcher REFERENCE = kindMatcher(TaskKind.REFERENCE);
   static final TaskMatcher VALUE = kindMatcher(TaskKind.VALUE);
 
-  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(CALL, VALUE)));
+  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(or(CALL, VALUE), FIELD)));
 
   private static final ImmutableMap<String, TaskMatcher> MAP =
       ImmutableMap.<String, TaskMatcher>builder()

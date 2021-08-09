@@ -44,7 +44,7 @@ public class BuildCommand extends ExclusiveCommand {
           
           Available task matchers:
             all              - all tasks
-            default          - shortcut for 'info|(user&(call|value))'
+            default          - shortcut for 'info|(user&(call|value|field))'
             none             - no tasks
           
             f, fatal         - contains a log with fatal level

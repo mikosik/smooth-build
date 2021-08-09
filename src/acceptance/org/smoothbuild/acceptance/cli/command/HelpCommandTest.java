@@ -83,7 +83,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                     Available task matchers:
                                       all              - all tasks
                                       default          - shortcut for 'info|(user&
-                                      (call|value))'
+                                      (call|value|field))'
                                       none             - no tasks
                    
                                       f, fatal         - contains a log with fatal level

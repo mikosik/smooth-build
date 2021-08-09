@@ -1,5 +1,6 @@
 package org.smoothbuild.cli.taskmatcher;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
@@ -25,6 +26,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -50,9 +52,9 @@ public class MatcherCreatorTest {
     StringBuilder builder = new StringBuilder();
     for (TaskKind kind : TaskKind.values()) {
       for (Space space : Space.values()) {
-        for (Level level : Level.values()) {
+        for (Level level : levels()) {
           Task task = task(kind, space);
-          List<Log> logs = list(new Log(level, "message"));
+          List<Log> logs = level == null ? list() : list(new Log(level, "message"));
           boolean actual = matcher.matches(task, logs);
           boolean expected = expectedMatcher.matches(task, logs);
           if (actual != expected) {
@@ -78,6 +80,12 @@ public class MatcherCreatorTest {
     }
   }
 
+  private static List<Level> levels() {
+    ArrayList<Level> levels = new ArrayList<>(asList(Level.values()));
+    levels.add(null);
+    return levels;
+  }
+
   private Task task(TaskKind kind, Space space) {
     Task task = mock(Task.class);
     when(task.kind()).thenReturn(kind);
@@ -88,7 +96,7 @@ public class MatcherCreatorTest {
   public static Stream<? extends Arguments> provideArguments() {
     return Stream.of(
         arguments("all", ALL),
-        arguments("default", or(and(PRJ, CALL), AT_LEAST_INFO)),
+        arguments("default", or(and(PRJ, or(or(CALL, VALUE), FIELD)), AT_LEAST_INFO)),
         arguments("none", NONE),
 
         arguments("fatal", AT_LEAST_FATAL),
