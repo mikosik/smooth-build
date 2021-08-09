@@ -28,6 +28,7 @@ public class TaskMatchers {
 
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
   static final TaskMatcher CONVERSION = kindMatcher(TaskKind.CONVERSION);
+  static final TaskMatcher FIELD = kindMatcher(TaskKind.FIELD_READ);
   static final TaskMatcher LITERAL = kindMatcher(TaskKind.LITERAL);
   static final TaskMatcher VALUE = kindMatcher(TaskKind.VALUE);
 
@@ -58,6 +59,8 @@ public class TaskMatchers {
           .put("c", CALL)
           .put("conversion", CONVERSION)
           .put("conv", CONVERSION)
+          .put("fr", FIELD)
+          .put("field", FIELD)
           .put("literal", LITERAL)
           .put("l", LITERAL)
           .put("value", VALUE)

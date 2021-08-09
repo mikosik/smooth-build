@@ -2,6 +2,7 @@ package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
+import static org.smoothbuild.exec.compute.TaskKind.FIELD_READ;
 import static org.smoothbuild.exec.compute.TaskKind.FUNCTION_REFERENCE;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
@@ -160,7 +161,8 @@ public class ExpressionToTaskConverter {
     var algorithm = new ReadTupleElementAlgorithm(
         structType.fieldIndex(name), toSpecConverter.visit(type));
     var dependencies = list(taskFor(expression.expression(), scope));
-    return new AlgorithmTask(CALL, type, "." + name, algorithm, dependencies, expression.location());
+    return new AlgorithmTask(
+        FIELD_READ, type, "." + name, algorithm, dependencies, expression.location());
   }
 
   private LazyTask parameterReferenceLazyTask(Scope<LazyTask> scope,

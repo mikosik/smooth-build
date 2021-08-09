@@ -228,6 +228,41 @@ public class BuildCommandTest {
     }
 
     @Nested
+    class field_read_matcher extends AcceptanceTestCase {
+      private static final String FIELD_READ_TASK_HEADER = """
+          .myField                                 build.smooth:5
+          """;
+
+      @Test
+      public void shows_field_read_when_enabled() throws IOException {
+        createUserModule("""
+                MyStruct {
+                  String myField
+                }
+                aStruct = myStruct("abc");
+                result = aStruct.myField;
+                """);
+        runSmooth(buildCommand("--show-tasks=field", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(FIELD_READ_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_literals_when_not_enabled() throws IOException {
+        createUserModule("""
+                MyStruct {
+                  String myField
+                }
+                aStruct = myStruct("abc");
+                result = aStruct.myField;
+                """);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(FIELD_READ_TASK_HEADER);
+      }
+    }
+
+    @Nested
     class value_matcher extends AcceptanceTestCase {
       private static final String VALUE_TASK_HEADER = """
           myValue                                  build.smooth:2                 group

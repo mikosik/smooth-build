@@ -100,6 +100,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
                    
                                       c, call          - evaluates function call
                                       conv, conversion - evaluates automatic conversion
+                                      fr, field        - evaluates field read
                                       l, literal       - evaluates compile time literal
                                       v, value         - evaluates value expression
            """);
