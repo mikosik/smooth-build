@@ -30,6 +30,7 @@ public class TaskMatchers {
   static final TaskMatcher CONVERSION = kindMatcher(TaskKind.CONVERSION);
   static final TaskMatcher FIELD = kindMatcher(TaskKind.FIELD_READ);
   static final TaskMatcher LITERAL = kindMatcher(TaskKind.LITERAL);
+  static final TaskMatcher REFERENCE = kindMatcher(TaskKind.REFERENCE);
   static final TaskMatcher VALUE = kindMatcher(TaskKind.VALUE);
 
   static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(CALL, VALUE)));
@@ -63,6 +64,8 @@ public class TaskMatchers {
           .put("field", FIELD)
           .put("literal", LITERAL)
           .put("l", LITERAL)
+          .put("r", REFERENCE)
+          .put("reference", REFERENCE)
           .put("value", VALUE)
           .put("v", VALUE)
 

@@ -6,5 +6,5 @@ public enum TaskKind {
   FIELD_READ,
   LITERAL,
   VALUE,
-  FUNCTION_REFERENCE
+  REFERENCE
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.exec.plan;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.FIELD_READ;
-import static org.smoothbuild.exec.compute.TaskKind.FUNCTION_REFERENCE;
+import static org.smoothbuild.exec.compute.TaskKind.REFERENCE;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
@@ -208,8 +208,8 @@ public class ExpressionToTaskConverter {
     var module = definitions.modules().get(function.modulePath());
     var algorithm = new FunctionReferenceAlgorithm(
         function, module, toSpecConverter.functionSpec());
-    return new AlgorithmTask(FUNCTION_REFERENCE, type, ":" + function.name(),
-        algorithm, list(), reference.location());
+    return new AlgorithmTask(REFERENCE, type, ":" + function.name(), algorithm, list(),
+        reference.location());
   }
 
   private LazyTask arrayLiteralLazyTask(Scope<LazyTask> scope,
