@@ -502,4 +502,84 @@ public class BuildCommandTest {
       }
     }
   }
+
+  @Nested
+  class _reported_task_header_for extends AcceptanceTestCase {
+    @Test
+    public void call() throws IOException {
+      createUserModule("""
+          myFunction() = "abc";
+          result = myFunction();
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          myFunction()                             build.smooth:2
+          """);
+    }
+
+    @Test
+    public void field_read() throws IOException {
+      createUserModule("""
+          MyStruct {
+            String myField
+          }
+          result = myStruct("abc").myField;
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          .myField                                 build.smooth:4
+          """);
+    }
+
+    @Test
+    public void literal_array() throws IOException {
+      createUserModule("""
+          result = [ "abc" ];
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          [String]                                 build.smooth:1
+          """);
+    }
+
+    @Test
+    public void literal_blob() throws IOException {
+      createUserModule("""
+          result = 0x0102;
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          0x0102                                   build.smooth:1
+          """);
+    }
+
+    @Test
+    public void literal_string() throws IOException {
+      createUserModule("""
+          result = "abc";
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          "abc"                                    build.smooth:1
+          """);
+    }
+
+    @Test
+    public void value() throws IOException {
+      createUserModule("""
+          myValue = "abc";
+          result = myValue;
+          """);
+      runSmooth(buildCommand("--show-tasks=all", "result"));
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          myValue                                  build.smooth:2                 group
+          """);
+    }
+  }
 }
