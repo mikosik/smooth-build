@@ -58,7 +58,6 @@ public class BuildCommand extends ExclusiveCommand {
             c, call          - evaluates function call
             conv, conversion - evaluates automatic conversion
             l, literal       - evaluates compile time literal
-            n, native        - loads native code
             v, value         - evaluates value expression
           """
   )
