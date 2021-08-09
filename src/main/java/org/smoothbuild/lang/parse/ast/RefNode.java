@@ -23,4 +23,9 @@ public class RefNode extends ExprNode {
   public ReferencableLike referenced() {
     return referenced;
   }
+
+  @Override
+  public String toString() {
+    return RefNode.class.getName() + "(" + name + ")";
+  }
 }
