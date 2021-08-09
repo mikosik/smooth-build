@@ -28,7 +28,7 @@ import org.smoothbuild.cli.command.BuildCommand;
 
 public class BuildCommandTest {
   @Nested
-  class basic extends AcceptanceTestCase {
+  class _basic extends AcceptanceTestCase {
     @Test
     public void temp_file_is_deleted_after_build_execution() throws Exception {
       createNativeJar(TempFilePath.class);
@@ -71,7 +71,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class DefaultModule extends DefaultModuleTestCase {
+  class _default_module extends DefaultModuleTestCase {
     @Override
     protected CommandWithArgs commandNameWithArgument() {
       return buildCommand("result");
@@ -79,7 +79,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class LockFile extends LockFileTestCase {
+  class _lock_file extends LockFileTestCase {
     @Override
     protected CommandWithArgs commandNameWithArgument() {
       return buildCommand("result");
@@ -87,7 +87,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class FunctionArgs extends ValuesArgTestCase {
+  class _value_arguments extends ValuesArgTestCase {
     @Override
     protected String commandName() {
       return BuildCommand.NAME;
@@ -100,7 +100,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class LogLevelOption extends LogLevelOptionTestCase {
+  class _log_level_option extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
       runSmooth(buildCommand(option, "result"));
@@ -108,7 +108,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class show_tasks_option {
+  class _show_tasks_option {
     @Nested
     class basic extends AcceptanceTestCase {
       @Test
@@ -127,70 +127,46 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class literal_matcher extends AcceptanceTestCase {
-      private static final String LITERAL_TASK_HEADER = """
-          "myLiteral"                              build.smooth:1
-          """;
-
-      @Test
-      public void shows_literals_when_enabled() throws IOException {
-        createUserModule("""
-                result = "myLiteral";
-                """);
-        runSmooth(buildCommand("--show-tasks=literal", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(LITERAL_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_literals_when_not_enabled() throws IOException {
-        createUserModule("""
-                result = "myLiteral";
-                """);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(LITERAL_TASK_HEADER);
-      }
-    }
-
-    @Nested
     class call_matcher extends AcceptanceTestCase {
-      private static final String CALL_TASK_HEADER = """
+      private static final String DEFINED_FUNCTION_CALL = """
+          myFunction() = "myLiteral";
+          result = myFunction();
+          """;
+      private static final String DEFINED_CALL_TASK_HEADER = """
           myFunction()                             build.smooth:2                 group
           """;
+      private static final String NATIVE_FUNCTION_CALL = """
+            result = concat(["a"], ["b"]);
+            """;
       private static final String NATIVE_CALL_TASK_HEADER = """
           concat()                                 build.smooth:1
           """;
-      private static final String IF_CALL_TASK_HEADER = """
+      private static final String  INTERNAL_FUNCTION_CALL = """
+            result = if(true, "true", "false");
+            """;
+      private static final String INTERNAL_CALL_TASK_HEADER = """
           if()                                     build.smooth:1
           """;
 
       @Test
       public void shows_call_when_enabled() throws IOException {
-        createUserModule("""
-            myFunction() = "myLiteral";
-            result = myFunction();
-            """);
+        createUserModule(DEFINED_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(CALL_TASK_HEADER);
+        assertSysOutContains(DEFINED_CALL_TASK_HEADER);
       }
 
       @Test
       public void hides_calls_when_not_enabled() throws IOException {
-        createUserModule("""
-                result = "myLiteral";
-                """);
+        createUserModule(DEFINED_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(CALL_TASK_HEADER);
+        assertSysOutDoesNotContain(DEFINED_CALL_TASK_HEADER);
       }
 
       @Test
       public void shows_call_to_native_function_when_enabled() throws IOException {
-        createUserModule("""
-                result = concat(["a"], ["b"]);
-                """);
+        createUserModule(NATIVE_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains(NATIVE_CALL_TASK_HEADER);
@@ -198,9 +174,7 @@ public class BuildCommandTest {
 
       @Test
       public void hides_call_to_native_function_when_not_enabled() throws IOException {
-        createUserModule("""
-                result = concat(["a"], ["b"]);
-                """);
+        createUserModule(NATIVE_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
@@ -208,40 +182,63 @@ public class BuildCommandTest {
 
       @Test
       public void shows_call_to_internal_if_function_when_enabled() throws IOException {
-        createUserModule("""
-                result = if(true, "true", "false");
-                """);
+        createUserModule(INTERNAL_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(IF_CALL_TASK_HEADER);
+        assertSysOutContains(INTERNAL_CALL_TASK_HEADER);
       }
 
       @Test
       public void shows_call_to_internal_if_function_when_not_enabled() throws IOException {
-        createUserModule("""
-                result = if(true, "true", "false");
-                """);
+        createUserModule(INTERNAL_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(IF_CALL_TASK_HEADER);
+        assertSysOutDoesNotContain(INTERNAL_CALL_TASK_HEADER);
+      }
+    }
+
+    @Nested
+    class conversion_matcher extends AcceptanceTestCase {
+      private static final String CONVERSION = """
+            [String] result = [];
+            """;
+      private static final String CONVERSION_TASK_HEADER = """
+          [String]<-[Nothing]                      build.smooth:1
+          """;
+
+      @Test
+      public void shows_conversion_when_enabled() throws IOException {
+        createUserModule(CONVERSION);
+        runSmooth(buildCommand("--show-tasks=conversion", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(CONVERSION_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_conversion_when_not_enabled() throws IOException {
+        createUserModule(CONVERSION);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(CONVERSION_TASK_HEADER);
       }
     }
 
     @Nested
     class field_read_matcher extends AcceptanceTestCase {
+      private static final String FIELD_READ = """
+            MyStruct {
+              String myField
+            }
+            aStruct = myStruct("abc");
+            result = aStruct.myField;
+            """;
       private static final String FIELD_READ_TASK_HEADER = """
           .myField                                 build.smooth:5
           """;
 
       @Test
       public void shows_field_read_when_enabled() throws IOException {
-        createUserModule("""
-                MyStruct {
-                  String myField
-                }
-                aStruct = myStruct("abc");
-                result = aStruct.myField;
-                """);
+        createUserModule(FIELD_READ);
         runSmooth(buildCommand("--show-tasks=field", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains(FIELD_READ_TASK_HEADER);
@@ -249,13 +246,7 @@ public class BuildCommandTest {
 
       @Test
       public void hides_literals_when_not_enabled() throws IOException {
-        createUserModule("""
-                MyStruct {
-                  String myField
-                }
-                aStruct = myStruct("abc");
-                result = aStruct.myField;
-                """);
+        createUserModule(FIELD_READ);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain(FIELD_READ_TASK_HEADER);
@@ -263,44 +254,69 @@ public class BuildCommandTest {
     }
 
     @Nested
+    class literal_matcher extends AcceptanceTestCase {
+      private static final String LITERAL = """
+            result = "myLiteral";
+            """;
+      private static final String LITERAL_TASK_HEADER = """
+          "myLiteral"                              build.smooth:1
+          """;
+
+      @Test
+      public void shows_literals_when_enabled() throws IOException {
+        createUserModule(LITERAL);
+        runSmooth(buildCommand("--show-tasks=literal", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(LITERAL_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_literals_when_not_enabled() throws IOException {
+        createUserModule(LITERAL);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(LITERAL_TASK_HEADER);
+      }
+    }
+
+    @Nested
     class value_matcher extends AcceptanceTestCase {
-      private static final String VALUE_TASK_HEADER = """
+      private static final String DEFINED_VALUE = """
+            myValue = "abc";
+            result = myValue;
+            """;
+      private static final String DEFINED_VALUE_TASK_HEADER = """
           myValue                                  build.smooth:2                 group
           """;
+      private static final String NATIVE_VALUE = format("""
+            @Native("%s.function")
+            String returnAbc;
+            result = returnAbc;
+            """, ReturnAbc.class.getCanonicalName());
       private static final String NATIVE_VALUE_TASK_HEADER = """
           returnAbc                                build.smooth:3
           """;
 
       @Test
       public void shows_value_when_enabled() throws IOException {
-        createUserModule("""
-            myValue = "abc";
-            result = myValue;
-            """);
+        createUserModule(DEFINED_VALUE);
         runSmooth(buildCommand("--show-tasks=value", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(VALUE_TASK_HEADER);
+        assertSysOutContains(DEFINED_VALUE_TASK_HEADER);
       }
 
       @Test
       public void hides_value_when_not_enabled() throws IOException {
-        createUserModule("""
-            myValue = "abc";
-            result = myValue;
-            """);
+        createUserModule(DEFINED_VALUE);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(VALUE_TASK_HEADER);
+        assertSysOutDoesNotContain(DEFINED_VALUE_TASK_HEADER);
       }
 
       @Test
       public void shows_native_value_when_enabled() throws IOException {
         createNativeJar(ReturnAbc.class);
-        createUserModule(format("""
-            @Native("%s.function")
-            String returnAbc;
-            result = returnAbc;
-            """, ReturnAbc.class.getCanonicalName()));
+        createUserModule(NATIVE_VALUE);
         runSmooth(buildCommand("--show-tasks=value", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains(NATIVE_VALUE_TASK_HEADER);
@@ -309,47 +325,16 @@ public class BuildCommandTest {
       @Test
       public void hides_native_value_when_not_enabled() throws IOException {
         createNativeJar(ReturnAbc.class);
-        createUserModule(format("""
-            @Native("%s.function")
-            String returnAbc;
-            result = returnAbc;
-            """, ReturnAbc.class.getCanonicalName()));
+        createUserModule(NATIVE_VALUE);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain(NATIVE_VALUE_TASK_HEADER);
       }
     }
-
-    @Nested
-    class conversion_matcher extends AcceptanceTestCase {
-      private static final String CONVERSION_TASK_HEADER = """
-          [String]<-[Nothing]                      build.smooth:1
-          """;
-
-      @Test
-      public void shows_conversion_when_enabled() throws IOException {
-        createUserModule("""
-                [String] result = [];
-                """);
-        runSmooth(buildCommand("--show-tasks=conversion", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(CONVERSION_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_conversion_when_not_enabled() throws IOException {
-        createUserModule("""
-                [String] result = [];
-                """);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(CONVERSION_TASK_HEADER);
-      }
-    }
   }
 
   @Nested
-  class when_log_level_option {
+  class _when_log_level_option {
     @Nested
     class is_fatal extends AcceptanceTestCase {
       @Test
