@@ -1,10 +1,11 @@
 package org.smoothbuild.exec.compute;
 
 public enum TaskKind {
+  BUILDER,
   CALL,
   CONVERSION,
   FIELD_READ,
   LITERAL,
-  VALUE,
-  REFERENCE
+  REFERENCE,
+  VALUE
 }

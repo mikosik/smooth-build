@@ -124,9 +124,8 @@ public class ExpressionToTaskConverter {
     var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
     var location = call.location();
 
-    return new LazyTask(actualResultType, location,
-        () -> new CallTask(CALL, actualResultType, "_function_call", function, arguments,
-            location, variables, scope, this));
+    return new LazyTask(actualResultType, location, () -> new CallTask(actualResultType, function,
+        arguments, location, variables, scope, this));
   }
 
   private List<LazyTask> argumentLazyTasks(Scope<LazyTask> scope, Dependency function,

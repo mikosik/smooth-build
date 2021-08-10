@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.compute;
 
+import static org.smoothbuild.exec.compute.TaskKind.BUILDER;
 import static org.smoothbuild.util.Lists.concat;
 
 import java.util.List;
@@ -21,10 +22,10 @@ public class CallTask extends StepTask {
   private final Scope<LazyTask> scope;
   private final ExpressionToTaskConverter expressionToTaskConverter;
 
-  public CallTask(TaskKind kind, Type type, String name, Task function,
-      List<LazyTask> arguments, Location location, BoundsMap variables,
-      Scope<LazyTask> scope, ExpressionToTaskConverter expressionToTaskConverter) {
-    super(kind, type, name, concat(function, arguments), location);
+  public CallTask(Type type, Task function, List<LazyTask> arguments, Location location,
+      BoundsMap variables, Scope<LazyTask> scope,
+      ExpressionToTaskConverter expressionToTaskConverter) {
+    super(BUILDER, type, "building-function-call", concat(function, arguments), location);
     this.arguments = arguments;
     this.variables = variables;
     this.scope = scope;

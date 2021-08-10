@@ -4,8 +4,8 @@ public enum ResultSource {
   CONST("const"),
   DISK("cache"),
   MEMORY("mem"),
-  EXECUTION(""),
-  GROUP("group");
+  EXECUTION("exec"),
+  GROUP("");
 
   private final String name;
 

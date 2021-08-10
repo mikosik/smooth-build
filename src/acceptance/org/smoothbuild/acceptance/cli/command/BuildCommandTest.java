@@ -133,13 +133,13 @@ public class BuildCommandTest {
           result = myFunction();
           """;
       private static final String DEFINED_CALL_TASK_HEADER = """
-          myFunction()                             build.smooth:2                 group
+          myFunction()                             build.smooth:2
           """;
       private static final String NATIVE_FUNCTION_CALL = """
             result = concat(["a"], ["b"]);
             """;
       private static final String NATIVE_CALL_TASK_HEADER = """
-          concat()                                 build.smooth:1
+          concat()                                 build.smooth:1                 exec
           """;
       private static final String  INTERNAL_FUNCTION_CALL = """
             result = if(true, "true", "false");
@@ -203,7 +203,7 @@ public class BuildCommandTest {
             [String] result = [];
             """;
       private static final String CONVERSION_TASK_HEADER = """
-          [String]<-[Nothing]                      build.smooth:1
+          [String]<-[Nothing]                      build.smooth:1                 exec
           """;
 
       @Test
@@ -233,7 +233,7 @@ public class BuildCommandTest {
             result = aStruct.myField;
             """;
       private static final String FIELD_READ_TASK_HEADER = """
-          .myField                                 build.smooth:5
+          .myField                                 build.smooth:5                 exec
           """;
 
       @Test
@@ -259,7 +259,7 @@ public class BuildCommandTest {
             result = "myLiteral";
             """;
       private static final String LITERAL_TASK_HEADER = """
-          "myLiteral"                              build.smooth:1
+          "myLiteral"                              build.smooth:1                 exec
           """;
 
       @Test
@@ -286,7 +286,7 @@ public class BuildCommandTest {
             result = myValue;
             """;
       private static final String DEFINED_VALUE_TASK_HEADER = """
-          myValue                                  build.smooth:2                 group
+          myValue                                  build.smooth:2
           """;
       private static final String NATIVE_VALUE = format("""
             @Native("%s.function")
@@ -294,7 +294,7 @@ public class BuildCommandTest {
             result = returnAbc;
             """, ReturnAbc.class.getCanonicalName());
       private static final String NATIVE_VALUE_TASK_HEADER = """
-          returnAbc                                build.smooth:3
+          returnAbc                                build.smooth:3                 exec
           """;
 
       @Test
@@ -514,7 +514,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myFunction()                             build.smooth:2                 group
+          myFunction()                             build.smooth:2
           """);
     }
 
@@ -526,7 +526,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          [String]<-[Nothing]                      build.smooth:1
+          [String]<-[Nothing]                      build.smooth:1                 exec
           """);
     }
 
@@ -541,7 +541,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          .myField                                 build.smooth:4
+          .myField                                 build.smooth:4                 exec
           """);
     }
 
@@ -553,7 +553,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          :if                                      build.smooth:1
+          :if                                      build.smooth:1                 exec
           """);
     }
 
@@ -565,7 +565,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          []                                       build.smooth:1
+          []                                       build.smooth:1                 exec
           """);
     }
 
@@ -577,7 +577,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          0x0102                                   build.smooth:1
+          0x0102                                   build.smooth:1                 exec
           """);
     }
 
@@ -589,7 +589,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          "abc"                                    build.smooth:1
+          "abc"                                    build.smooth:1                 exec
           """);
     }
 
@@ -602,7 +602,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myValue                                  build.smooth:2                 group
+          myValue                                  build.smooth:2
           """);
     }
   }

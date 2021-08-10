@@ -1,6 +1,5 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.exec.compute.ResultSource.GROUP;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.function.Consumer;
@@ -16,7 +15,6 @@ public class VirtualTask extends StepTask {
 
   @Override
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
-    worker.reporter().print(this, GROUP, list());
     result.accept(obj);
   }
 }

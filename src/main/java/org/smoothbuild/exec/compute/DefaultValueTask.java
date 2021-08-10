@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.exec.compute.TaskKind.VALUE;
+import static org.smoothbuild.exec.compute.TaskKind.BUILDER;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,7 +22,7 @@ public class DefaultValueTask extends StepTask {
   public DefaultValueTask(Type type, String name, List<Dependency> dependencies, int index,
       Location location, Scope<LazyTask> scope,
       ExpressionToTaskConverter expressionToTaskConverter) {
-    super(VALUE, type, name, dependencies, location);
+    super(BUILDER, type, "building:" + name, dependencies, location);
     this.index = index;
     this.scope = scope;
     this.expressionToTaskConverter = expressionToTaskConverter;
