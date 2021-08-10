@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.base;
 
-import static org.smoothbuild.util.Iterables.map;
+import static org.smoothbuild.util.Lists.map;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;

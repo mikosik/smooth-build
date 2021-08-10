@@ -12,7 +12,7 @@ import static org.smoothbuild.db.object.spec.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.SpecKind.TUPLE;
 import static org.smoothbuild.db.object.spec.SpecKind.specKindMarkedWith;
-import static org.smoothbuild.util.Iterables.map;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
