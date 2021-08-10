@@ -1,7 +1,6 @@
 package org.smoothbuild.exec.compute;
 
 public enum ResultSource {
-  CONST("const"),
   DISK("cache"),
   MEMORY("mem"),
   EXECUTION("exec"),
