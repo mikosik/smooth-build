@@ -1,6 +1,7 @@
 package org.smoothbuild.util;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Streams.stream;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -32,29 +33,27 @@ public class Lists {
         .build();
   }
 
-  public static <E> ImmutableList<E> skip(int toSkip, List<E> list) {
-    return ImmutableList.copyOf(list).subList(toSkip, list.size());
+  public static <E> ImmutableList<E> skip(int toSkip, Iterable<E> iterable) {
+    ImmutableList<E> asList = ImmutableList.copyOf(iterable);
+    return asList.subList(toSkip, asList.size());
   }
 
-  public static <E> ImmutableList<E> filter(List<E> list, Predicate<? super E> predicate) {
-    return list
-        .stream()
+  public static <E> ImmutableList<E> filter(Iterable<E> iterable, Predicate<? super E> predicate) {
+    return stream(iterable)
         .filter(predicate)
         .collect(toImmutableList());
   }
 
   public static <E, R> ImmutableList<R> map(
-      List<E> list, Function<? super E, ? extends R> function) {
-    return list
-        .stream()
+      Iterable<E> iterable, Function<? super E, ? extends R> function) {
+    return stream(iterable)
         .map(function)
         .collect(toImmutableList());
   }
 
   public static <E, R> List<R> mapM(
-      List<E> list, Function<? super E, ? extends R> function) {
-    return list
-        .stream()
+      Iterable<E> iterable, Function<? super E, ? extends R> function) {
+    return stream(iterable)
         .map(function)
         .collect(toList());
   }
