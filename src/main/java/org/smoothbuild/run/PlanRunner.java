@@ -55,6 +55,7 @@ public class PlanRunner {
 
     private void printPlans(Definitions definitions, List<Value> values) {
       executionPlanner.createPlans(definitions, values)
+          .values()
           .forEach(this::print);
     }
 

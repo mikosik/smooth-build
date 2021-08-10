@@ -1,12 +1,11 @@
 package org.smoothbuild.exec.parallel;
 
-import static java.util.stream.Collectors.toList;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
@@ -16,10 +15,11 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
-import com.google.common.collect.Streams;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Executes tasks in parallel.
@@ -43,7 +43,7 @@ public class ParallelTaskExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<Task, Obj> executeAll(Iterable<Task> tasks) throws InterruptedException {
+  public Map<Value, Optional<Obj>> executeAll(Map<Value, Task> tasks) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(tasks);
   }
@@ -65,24 +65,15 @@ public class ParallelTaskExecutor {
       return reporter;
     }
 
-    public Map<Task, Obj> executeAll(Iterable<Task> tasks) throws InterruptedException {
-      List<Feeder<Obj>> results = Streams.stream(tasks)
-          .map(t -> t.startComputation(this))
-          .collect(toList());
-      runWhenAllAvailable(results, jobExecutor::terminate);
+    public Map<Value, Optional<Obj>> executeAll(Map<Value, Task> tasks)
+        throws InterruptedException {
+      ImmutableMap<Value, Feeder<Obj>> results = tasks.entrySet().stream()
+          .collect(toImmutableMap(Entry::getKey, e -> e.getValue().startComputation(this)));
+      runWhenAllAvailable(results.values(), jobExecutor::terminate);
 
       jobExecutor.awaitTermination();
-      return toMap(tasks, results);
-    }
-
-    private static HashMap<Task, Obj> toMap(
-        Iterable<Task> tasks, List<Feeder<Obj>> results) {
-      HashMap<Task, Obj> result = new HashMap<>();
-      Iterator<Feeder<Obj>> it = results.iterator();
-      for (Task task : tasks) {
-        result.put(task, it.next().get());
-      }
-      return result;
+      return results.entrySet().stream()
+          .collect(toImmutableMap(Entry::getKey, e -> Optional.ofNullable(e.getValue().get())));
     }
 
     public void enqueueComputation(AlgorithmTask task, Input input, Consumer<Obj> consumer) {

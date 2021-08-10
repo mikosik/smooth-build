@@ -22,6 +22,8 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -44,6 +46,7 @@ import org.smoothbuild.exec.compute.Dependency;
 import org.smoothbuild.exec.compute.LazyTask;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -182,9 +185,10 @@ public class ParallelTaskExecutorTest extends TestingContext {
     parallelTaskExecutor = new ParallelTaskExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
     Task task = task(throwingAlgorithm(exception));
+    Value value = mock(Value.class);
 
-    assertThat(parallelTaskExecutor.executeAll(list(task)).get(task))
-        .isNull();
+    assertThat(parallelTaskExecutor.executeAll(Map.of(value, task)).get(value).isEmpty())
+        .isTrue();
     verify(reporter).report(
         eq(task),
         eq("task-name                                smooth internal                exec"),
@@ -201,12 +205,14 @@ public class ParallelTaskExecutorTest extends TestingContext {
       }
     };
     parallelTaskExecutor = new ParallelTaskExecutor(computer, reporter);
+    Value value = mock(Value.class);
     Task task = task(valueAlgorithm("A"));
 
-    Obj object = parallelTaskExecutor.executeAll(list(task)).get(task);
+    Optional<Obj> object = parallelTaskExecutor.executeAll(Map.of(value, task)).get(value);
 
     verify(reporter, only()).reportComputerException(same(task), same(exception));
-    assertThat(object).isNull();
+    assertThat(object.isEmpty())
+        .isTrue();
   }
 
   private Task concat(Task... dependencies) {
@@ -287,7 +293,8 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   private static Obj executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
       throws InterruptedException {
-    return parallelTaskExecutor.executeAll(list(task)).get(task);
+    Value value = mock(Value.class);
+    return parallelTaskExecutor.executeAll(Map.of(value, task)).get(value).get();
   }
 
   private static Task task(Algorithm algorithm) {

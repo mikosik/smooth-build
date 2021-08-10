@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.plan;
 
-import static java.util.stream.Collectors.toList;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 
 import java.util.List;
@@ -15,6 +15,8 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.util.Scope;
 
+import com.google.common.collect.ImmutableMap;
+
 public class ExecutionPlanner {
   private final ExpressionToTaskConverterProvider converterProvider;
 
@@ -23,12 +25,10 @@ public class ExecutionPlanner {
     this.converterProvider = converterProvider;
   }
 
-  public List<Task> createPlans(Definitions definitions, List<Value> values) {
+  public ImmutableMap<Value, Task> createPlans(Definitions definitions, List<Value> values) {
     TaskCreator converter = converterProvider.get(definitions);
-    return values
-        .stream()
-        .map(v -> createPlan(v, converter))
-        .collect(toList());
+    return values.stream()
+        .collect(toImmutableMap(v -> v, v -> createPlan(v, converter)));
   }
 
   private Task createPlan(Value value, TaskCreator converter) {

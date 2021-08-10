@@ -9,6 +9,7 @@ import static org.smoothbuild.util.Lists.list;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -41,18 +42,18 @@ public class ArtifactBuilder {
   }
 
   public void buildArtifacts(Definitions definitions, List<Value> values) {
-    List<Task> plans = executionPlanner.createPlans(definitions, values);
+    Map<Value, Task> plans = executionPlanner.createPlans(definitions, values);
     if (reporter.isProblemReported()) {
       return;
     }
     try {
-      Map<Task, Obj> artifacts = parallelExecutor.executeAll(plans);
-      if (!artifacts.containsValue(null)) {
+      Map<Value, Optional<Obj>> artifacts = parallelExecutor.executeAll(plans);
+      if (!artifacts.containsValue(Optional.<Obj>empty())) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
         artifacts.entrySet()
             .stream()
             .sorted(comparing(e -> e.getKey().name()))
-            .forEach(e -> save(e.getKey().type(), e.getKey().name(), e.getValue()));
+            .forEach(e -> save(e.getKey().type(), e.getKey().name(), e.getValue().get()));
       }
     } catch (InterruptedException e) {
       reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
@@ -60,9 +61,9 @@ public class ArtifactBuilder {
     }
   }
 
-  private void save(Type type, String name, Obj object) {
+  private void save(Type type, String name, Obj obj) {
     try {
-      Path path = artifactSaver.save(type, name, object);
+      Path path = artifactSaver.save(type, name, obj);
       reportSuccess(name, path);
     } catch (IOException e) {
       reportFailure(name,

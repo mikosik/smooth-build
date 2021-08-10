@@ -36,15 +36,15 @@ public class ArtifactSaver {
     this.fileSystem = fileSystem;
   }
 
-  public Path save(Type type, String name, Obj object)
+  public Path save(Type type, String name, Obj obj)
       throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(name);
     if (type instanceof ArrayType arrayType) {
-      return saveArray(arrayType, artifactPath, (Array) object);
+      return saveArray(arrayType, artifactPath, (Array) obj);
     } else if (type.name().equals(FileStruct.NAME)) {
-      return saveFile(artifactPath, (Tuple) object);
+      return saveFile(artifactPath, (Tuple) obj);
     } else {
-      return saveBaseObject(artifactPath, object);
+      return saveBaseObject(artifactPath, obj);
     }
   }
 
