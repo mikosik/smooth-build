@@ -1,10 +1,9 @@
 package org.smoothbuild.exec.parallel;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static org.smoothbuild.util.Maps.mapValues;
 import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -16,10 +15,7 @@ import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.lang.base.define.Value;
-import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Executes tasks in parallel.
@@ -67,13 +63,11 @@ public class ParallelTaskExecutor {
 
     public Map<Value, Optional<Obj>> executeAll(Map<Value, Task> tasks)
         throws InterruptedException {
-      ImmutableMap<Value, Feeder<Obj>> results = tasks.entrySet().stream()
-          .collect(toImmutableMap(Entry::getKey, e -> e.getValue().startComputation(this)));
+      var results = mapValues(tasks, task -> task.startComputation(this));
       runWhenAllAvailable(results.values(), jobExecutor::terminate);
 
       jobExecutor.awaitTermination();
-      return results.entrySet().stream()
-          .collect(toImmutableMap(Entry::getKey, e -> Optional.ofNullable(e.getValue().get())));
+      return mapValues(results, feeder -> Optional.ofNullable(feeder.get()));
     }
 
     public void enqueueComputation(AlgorithmTask task, Input input, Consumer<Obj> consumer) {

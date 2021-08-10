@@ -1,11 +1,10 @@
 package org.smoothbuild.io.fs;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.io.fs.space.Space.SDK;
+import static org.smoothbuild.util.Maps.mapValues;
 
 import java.nio.file.Path;
-import java.util.Map.Entry;
 
 import org.smoothbuild.install.InstallationPaths;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -36,9 +35,7 @@ public class FileSystemModule extends AbstractModule {
   @Provides
   @Singleton
   public ImmutableMap<Space, FileSystem> provideFileSystems(ImmutableMap<Space, Path> spacePaths) {
-    return spacePaths.entrySet()
-        .stream()
-        .collect(toImmutableMap(Entry::getKey, e -> newFileSystem(e.getValue())));
+    return mapValues(spacePaths, FileSystemModule::newFileSystem);
   }
 
   private static SynchronizedFileSystem newFileSystem(Path path) {
