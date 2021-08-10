@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.plan;
 
-import static com.google.common.collect.Maps.toMap;
+import static org.smoothbuild.util.Maps.toMap;
 
 import java.util.List;
 

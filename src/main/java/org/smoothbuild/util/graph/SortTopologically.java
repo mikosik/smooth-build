@@ -1,12 +1,12 @@
 package org.smoothbuild.util.graph;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Maps.toMap;
 import static org.smoothbuild.util.graph.SortTopologically.Node.State.BEING_PROCESSED;
 import static org.smoothbuild.util.graph.SortTopologically.Node.State.NOT_VISITED;
 import static org.smoothbuild.util.graph.SortTopologically.Node.State.PROCESSED;
@@ -79,7 +79,7 @@ public class SortTopologically {
       rootKeys = Set.of(nodes.iterator().next().key());
     }
 
-    var keyToNode = nodes.stream().collect(toImmutableMap(Node::key, n -> n));
+    var keyToNode = toMap(nodes, Node::key, n -> n);
     var currentPath = new LinkedList<PathElem<K, N, E>>();
     var resultSequence = new ArrayDeque<Node<K, N, E>>(nodes.size());
 

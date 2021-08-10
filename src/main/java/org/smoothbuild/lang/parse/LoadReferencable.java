@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Maps.toMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -80,10 +80,9 @@ public class LoadReferencable {
       return new NativeFunction(
           resultType, path, name, parameters, loadNative(realFuncNode.nativ().get()), location);
     } else {
-      ExpressionLoader loader = new ExpressionLoader(path,
-          parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
+      var expressionLoader = new ExpressionLoader(path, toMap(parameters, Item::name, Item::type));
       return new DefinedFunction(resultType, path, name, parameters,
-          loader.createExpression(realFuncNode.body().get()), location);
+          expressionLoader.createExpression(realFuncNode.body().get()), location);
     }
   }
 

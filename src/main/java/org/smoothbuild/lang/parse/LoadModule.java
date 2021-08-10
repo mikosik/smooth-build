@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
@@ -9,6 +8,7 @@ import static org.smoothbuild.lang.parse.LoadReferencable.loadReferencable;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Maps.toMap;
 
 import java.util.HashMap;
 
@@ -60,9 +60,8 @@ public class LoadModule {
     }
 
     var referencables = loadReferencables(path, sortedAst);
-    var definedStructs = sortedAst.structs().stream()
-        .map(structNode -> structNode.struct().get())
-        .collect(toImmutableMap(Defined::name, d -> (Defined) d));
+    var structs = map(sortedAst.structs(), s -> s.struct().get());
+    var definedStructs = toMap(structs, Defined::name, d -> (Defined) d);
     SModule module = new SModule(path, hash, moduleFiles, imported.modules().values().asList(),
         definedStructs, referencables);
     return maybeValueAndLogs(module, logBuffer);
