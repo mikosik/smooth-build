@@ -1,6 +1,5 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.exec.compute.ResultSource.GROUP;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public abstract class StepTask extends Task {
   }
 
   private void notifyCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
-    worker.reporter().print(this, GROUP, list());
+    worker.reporter().print(this, list());
     onCompleted(obj, worker, result);
   }
 

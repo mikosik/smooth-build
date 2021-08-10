@@ -3,8 +3,7 @@ package org.smoothbuild.exec.compute;
 public enum ResultSource {
   DISK("cache"),
   MEMORY("mem"),
-  EXECUTION("exec"),
-  GROUP("");
+  EXECUTION("exec");
 
   private final String name;
 

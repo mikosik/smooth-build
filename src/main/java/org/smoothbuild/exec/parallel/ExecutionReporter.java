@@ -43,36 +43,43 @@ public class ExecutionReporter {
     } else {
       Log error = error(
           "Execution failed with:\n" + getStackTraceAsString(computed.exception()));
-      print(task, resultSource, list(error));
+      print(task, list(error), resultSource);
     }
   }
 
   public void reportComputerException(Task task, Throwable throwable) {
     Log fatal = fatal(
         "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
-    reporter.report(task, header(task, EXECUTION), list(fatal));
+    ExecutionReporter.this.print(task, list(fatal), EXECUTION.toString());
   }
 
   private void print(Task task, ResultSource resultSource, Array messages) {
     List<Log> logs = Streams.stream(messages.asIterable(Tuple.class))
         .map(m -> new Log(level(m), text(m)))
         .collect(toList());
-    print(task, resultSource, logs);
+    print(task, logs, resultSource);
   }
 
-  public void print(Task task, ResultSource resultSource, List<Log> logs) {
+  public void print(Task task, List<Log> logs) {
+    print(task, logs, "");
+  }
+
+  public void print(Task task, List<Log> logs, ResultSource resultSource) {
+    print(task, logs, resultSource.toString());
+  }
+
+  private void print(Task task, List<Log> logs, String resultSource) {
     reporter.report(task, header(task, resultSource), logs);
   }
 
-  private static String header(Task task, ResultSource resultSource) {
+  private static String header(Task task, String resultSource) {
     String nameString = task.name();
     String locationString = task.location().toString();
-    String sourceString = resultSource.toString();
 
     String nameColumn = padEnd(nameString, NAME_LENGTH_LIMIT + 1, ' ');
-    String locationColumn = sourceString.isEmpty()
+    String locationColumn = resultSource.isEmpty()
         ? locationString
         : padEnd(locationString, 30, ' ') + " ";
-    return nameColumn + locationColumn + sourceString;
+    return nameColumn + locationColumn + resultSource;
   }
 }
