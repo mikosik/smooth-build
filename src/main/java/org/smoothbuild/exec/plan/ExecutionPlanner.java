@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.plan;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.Maps.toMap;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ public class ExecutionPlanner {
 
   public ImmutableMap<Value, Task> createPlans(Definitions definitions, List<Value> values) {
     TaskCreator taskCreator = taskCreatorProvider.get(definitions);
-    return values.stream()
-        .collect(toImmutableMap(v -> v, taskCreator::commandLineValueTask));
+    return toMap(values, taskCreator::commandLineValueTask);
   }
 }
