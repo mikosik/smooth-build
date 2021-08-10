@@ -3,17 +3,16 @@ Change Log
 
 Version 0.20.0 (??????????)
 
- * added `native` matcher to `--show-tasks` option in `smooth build` command
+ * added `field`, `reference` matchers to `--show-tasks` option in `smooth build` command
  * changed smooth language: added PURE/IMPURE attribute to @Native annotation
  * changed smooth language: added `Any` type
  * changed smooth language: parameters with default values are no longer required to be placed at the end of parameter list
  * changed smooth language: removed automatic conversions
- * changed smooth language: function call in a pipe has to have parentheses
+ * changed smooth language: function call must have parentheses
  * renamed slib functions: aFile -> projectFile, files -> projectFiles
- * changed smooth language by introducing global values
- * changed smooth language so function call outside pipe must always have parentheses
- * changed smooth language to allow pipe as default value of parameter
- * changed smooth language to allow pipe as element of array literal
+ * changed smooth language: introduced global values
+ * changed smooth language: allowed pipe as default value of parameter
+ * changed smooth language: allowed pipe as element of array literal
 
 Version 0.19.0 (2020.08.03)
 ---------------------------
