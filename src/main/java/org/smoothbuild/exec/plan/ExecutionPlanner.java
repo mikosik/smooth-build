@@ -24,20 +24,20 @@ public class ExecutionPlanner {
   }
 
   public List<Task> createPlans(Definitions definitions, List<Value> values) {
-    ExpressionToTaskConverter converter = converterProvider.get(definitions);
+    TaskCreator converter = converterProvider.get(definitions);
     return values
         .stream()
         .map(v -> createPlan(v, converter))
         .collect(toList());
   }
 
-  private Task createPlan(Value value, ExpressionToTaskConverter converter) {
+  private Task createPlan(Value value, TaskCreator converter) {
     Expression expression = new ReferenceExpression(
         value.name(), value.type(), commandLineLocation());
     return createPlan(expression, converter);
   }
 
-  private Task createPlan(Expression expression, ExpressionToTaskConverter converter) {
+  private Task createPlan(Expression expression, TaskCreator converter) {
     return converter.taskFor(expression, new Scope<>(Map.of()));
   }
 }

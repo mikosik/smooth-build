@@ -16,7 +16,7 @@ public class ExpressionToTaskConverterProvider {
     this.methodLoader = methodLoader;
   }
 
-  public ExpressionToTaskConverter get(Definitions definitions) {
-    return new ExpressionToTaskConverter(definitions, typeToSpecConverter, methodLoader);
+  public TaskCreator get(Definitions definitions) {
+    return new TaskCreator(definitions, typeToSpecConverter, methodLoader);
   }
 }

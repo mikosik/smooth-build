@@ -10,7 +10,7 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.exec.base.FunctionTuple;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.exec.plan.ExpressionToTaskConverter;
+import org.smoothbuild.exec.plan.TaskCreator;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.Type;
@@ -20,22 +20,21 @@ public class CallTask extends StepTask {
   private final List<LazyTask> arguments;
   private final BoundsMap variables;
   private final Scope<LazyTask> scope;
-  private final ExpressionToTaskConverter expressionToTaskConverter;
+  private final TaskCreator taskCreator;
 
   public CallTask(Type type, Task function, List<LazyTask> arguments, Location location,
-      BoundsMap variables, Scope<LazyTask> scope,
-      ExpressionToTaskConverter expressionToTaskConverter) {
+      BoundsMap variables, Scope<LazyTask> scope, TaskCreator taskCreator) {
     super(BUILDER, type, "building-function-call", concat(function, arguments), location);
     this.arguments = arguments;
     this.variables = variables;
     this.scope = scope;
-    this.expressionToTaskConverter = expressionToTaskConverter;
+    this.taskCreator = taskCreator;
   }
 
   @Override
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
     String functionName = FunctionTuple.name(((Tuple) obj)).jValue();
-    Task task = expressionToTaskConverter.taskForNamedFunctionCall(
+    Task task = taskCreator.taskForNamedFunctionCall(
         scope, variables, type(), functionName, arguments, location());
     task.startComputation(worker).addConsumer(result);
   }

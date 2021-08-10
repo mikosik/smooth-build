@@ -70,13 +70,13 @@ import org.smoothbuild.util.Scope;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class ExpressionToTaskConverter {
+public class TaskCreator {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final MethodLoader methodLoader;
 
   @Inject
-  public ExpressionToTaskConverter(Definitions definitions, TypeToSpecConverter toSpecConverter,
+  public TaskCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
       MethodLoader methodLoader) {
     this.definitions = definitions;
     this.toSpecConverter = toSpecConverter;
