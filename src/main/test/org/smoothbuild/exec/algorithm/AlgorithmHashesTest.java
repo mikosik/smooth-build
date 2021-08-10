@@ -6,8 +6,8 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithm
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.functionReferenceAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
@@ -34,7 +34,7 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(readTupleElementAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
-    hashes.add(functionReferenceAlgorithmHash(Hash.of(""), "function-name"));
+    hashes.add(referenceAlgorithmHash(Hash.of(""), "global-referencable-name"));
 
     assertThat(hashes.size())
         .isEqualTo(8);
@@ -80,14 +80,14 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void function_reference_algorithm_has_different_hash_for_different_modules() {
-    assertThat(functionReferenceAlgorithmHash(Hash.of(123), "function-name"))
-        .isNotEqualTo(functionReferenceAlgorithmHash(Hash.of(345), "function-name"));
+  public void reference_algorithm_has_different_hash_for_different_modules() {
+    assertThat(referenceAlgorithmHash(Hash.of(123), "referencable-name"))
+        .isNotEqualTo(referenceAlgorithmHash(Hash.of(345), "referencable-name"));
   }
 
   @Test
-  public void function_reference_algorithm_has_different_hash_for_different_function_names() {
-    assertThat(functionReferenceAlgorithmHash(Hash.of(123), "function-name"))
-        .isNotEqualTo(functionReferenceAlgorithmHash(Hash.of(123), "other-name"));
+  public void reference_algorithm_has_different_hash_for_different_function_names() {
+    assertThat(referenceAlgorithmHash(Hash.of(123), "referencable-name"))
+        .isNotEqualTo(referenceAlgorithmHash(Hash.of(123), "other-name"));
   }
 }

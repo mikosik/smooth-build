@@ -22,7 +22,6 @@ import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Value;
-import org.smoothbuild.lang.base.type.Type;
 
 public class ArtifactBuilder {
   private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";
@@ -53,7 +52,7 @@ public class ArtifactBuilder {
         artifacts.entrySet()
             .stream()
             .sorted(comparing(e -> e.getKey().name()))
-            .forEach(e -> save(e.getKey().type(), e.getKey().name(), e.getValue().get()));
+            .forEach(e -> save(e.getKey(), e.getValue().get()));
       }
     } catch (InterruptedException e) {
       reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
@@ -61,9 +60,10 @@ public class ArtifactBuilder {
     }
   }
 
-  private void save(Type type, String name, Obj obj) {
+  private void save(Value value, Obj obj) {
+    String name = value.name();
     try {
-      Path path = artifactSaver.save(type, name, obj);
+      Path path = artifactSaver.save(value, obj);
       reportSuccess(name, path);
     } catch (IOException e) {
       reportFailure(name,

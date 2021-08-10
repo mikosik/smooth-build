@@ -36,7 +36,7 @@ public class AlgorithmHashes {
     return hash(6, Hash.of(byteString));
   }
 
-  public static Hash functionReferenceAlgorithmHash(Hash moduleHash, String functionName) {
+  public static Hash referenceAlgorithmHash(Hash moduleHash, String functionName) {
     return hash(7, Hash.of(asList(moduleHash, Hash.of(functionName))));
   }
 

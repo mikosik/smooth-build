@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.exec.base.FunctionTuple;
+import org.smoothbuild.exec.base.LambdaTuple;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.exec.plan.TaskCreator;
 import org.smoothbuild.lang.base.define.Location;
@@ -29,7 +29,7 @@ public class DefaultValueTask extends StepTask {
 
   @Override
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
-    String functionName = FunctionTuple.name(((Tuple) obj)).jValue();
+    String functionName = LambdaTuple.name(((Tuple) obj)).jValue();
     Task task = taskCreator.taskForNamedFunctionParameterDefaultValue(
         scope, functionName, index);
     task.startComputation(worker).addConsumer(result);

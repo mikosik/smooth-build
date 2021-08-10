@@ -6,6 +6,8 @@ import static org.smoothbuild.exec.compute.TaskKind.FIELD_READ;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.REFERENCE;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
+import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
+import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
@@ -29,12 +31,12 @@ import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
-import org.smoothbuild.exec.algorithm.FunctionReferenceAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
+import org.smoothbuild.exec.algorithm.ReferenceAlgorithm;
 import org.smoothbuild.exec.compute.AlgorithmTask;
-import org.smoothbuild.exec.compute.CallTask;
 import org.smoothbuild.exec.compute.DefaultValueTask;
 import org.smoothbuild.exec.compute.Dependency;
+import org.smoothbuild.exec.compute.EvaluateTask;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.LazyTask;
 import org.smoothbuild.exec.compute.Task;
@@ -45,11 +47,13 @@ import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.IfFunction;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
+import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.FunctionType;
@@ -124,8 +128,8 @@ public class TaskCreator {
     var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
     var location = call.location();
 
-    return new LazyTask(actualResultType, location, () -> new CallTask(actualResultType, function,
-        arguments, location, variables, scope, this));
+    return new LazyTask(actualResultType, location, () -> new EvaluateTask(
+        actualResultType, function, arguments, location, variables, scope, this));
   }
 
   private List<LazyTask> argumentLazyTasks(Scope<LazyTask> scope, Dependency function,
@@ -171,44 +175,23 @@ public class TaskCreator {
 
   private LazyTask referenceLazyTask(Scope<LazyTask> scope, ReferenceExpression reference) {
     var referencable = definitions.referencables().get(reference.name());
-    if (referencable instanceof NativeValue nativeValue) {
-      return new LazyTask(nativeValue.type(), reference.location(),
-          () -> callNativeValueTask(reference, nativeValue));
-    } else if (referencable instanceof DefinedValue definedValue) {
-      return new LazyTask(definedValue.type(), reference.location(),
-          () -> definedValueTask(scope, reference, definedValue));
-    } else if (referencable instanceof Function function) {
-      var type = function.type().strip();
-      return new LazyTask(type, reference.location(),
-          () -> functionReferenceTask(reference, function, type));
+    var type = referencable.type().strip();
+    return new LazyTask(type, reference.location(),
+        () -> referenceTask(scope, reference, referencable, type));
+  }
+
+  private Task referenceTask(Scope<LazyTask> scope, ReferenceExpression reference,
+      GlobalReferencable referencable, Type type) {
+    var module = definitions.modules().get(referencable.modulePath());
+    var algorithm = new ReferenceAlgorithm(referencable, module, toSpecConverter.functionSpec());
+    AlgorithmTask task = new AlgorithmTask(
+        REFERENCE, type, ":" + referencable.name(), algorithm, list(), reference.location());
+    if (referencable instanceof Value) {
+      return new EvaluateTask(
+          type, task, list(), reference.location(), boundsMap(), scope, this);
     } else {
-      throw new IllegalArgumentException(
-          "Cannot handle " + referencable.getClass().getCanonicalName() + ".");
+      return task;
     }
-  }
-
-  private Task callNativeValueTask(ReferenceExpression reference, NativeValue nativeValue) {
-    NativeExpression nativ = nativeValue.nativ();
-    var algorithm = new CallNativeAlgorithm(methodLoader,
-        toSpecConverter.visit(nativeValue.type()), nativeValue, nativ.isPure());
-    var nativeCode = nativeLazyTask(nativ);
-    return new AlgorithmTask(VALUE, nativeValue.type(), nativeValue.extendedName(), algorithm,
-        list(nativeCode), reference.location());
-  }
-
-  private Task definedValueTask(Scope<LazyTask> scope, ReferenceExpression reference,
-      DefinedValue definedValue) {
-    var task = taskFor(definedValue.body(), scope);
-    var convertedTask = convertIfNeeded(definedValue.type(), task);
-    return new VirtualTask(VALUE, definedValue.extendedName(), convertedTask, reference.location());
-  }
-
-  private Task functionReferenceTask(ReferenceExpression reference, Function function, Type type) {
-    var module = definitions.modules().get(function.modulePath());
-    var algorithm = new FunctionReferenceAlgorithm(
-        function, module, toSpecConverter.functionSpec());
-    return new AlgorithmTask(REFERENCE, type, ":" + function.name(), algorithm, list(),
-        reference.location());
   }
 
   private LazyTask arrayLiteralLazyTask(Scope<LazyTask> scope,
@@ -267,25 +250,58 @@ public class TaskCreator {
     return taskFor(defaultValueExpression, scope);
   }
 
-  public Task taskForNamedFunctionCall(Scope<LazyTask> scope, BoundsMap variables,
-      Type actualResultType, String functionName, List<LazyTask> arguments, Location location) {
-    var function = (Function) definitions.referencables().get(functionName);
-    if (function instanceof DefinedFunction definedFunction) {
+  public Task taskForEvaluatingLambda(Scope<LazyTask> scope, BoundsMap variables,
+      Type actualResultType, String name, List<LazyTask> arguments, Location location) {
+    var referencable = definitions.referencables().get(name);
+    if (referencable instanceof Value value) {
+      return valueTask(scope, value, location);
+    } else if (referencable instanceof DefinedFunction definedFunction) {
       return definedFunctionTask(scope, actualResultType, definedFunction, arguments, location);
-    } else if (function instanceof NativeFunction nativeFunction) {
+    } else if (referencable instanceof NativeFunction nativeFunction) {
       return callNativeFunctionTask(scope, arguments, nativeFunction, nativeFunction.nativ(),
           variables, actualResultType, location);
-    } else if (function instanceof IfFunction) {
+    } else if (referencable instanceof IfFunction) {
       return new IfTask(actualResultType, arguments, location);
-    } else if (function instanceof Constructor constructor) {
+    } else if (referencable instanceof Constructor constructor) {
       var resultType = constructor.type().resultType();
       var tupleSpec = (TupleSpec) toSpecConverter.visit(resultType);
       return constructorCallTask(resultType, tupleSpec, constructor.extendedName(),
           arguments, location);
     } else {
       throw new IllegalArgumentException(
-          "Unexpected case: " + function.getClass().getCanonicalName());
+          "Unexpected case: " + referencable.getClass().getCanonicalName());
     }
+  }
+
+  public Task commandLineValueTask(Value value) {
+    return valueTask(new Scope<>(Map.of()), value, commandLineLocation());
+  }
+
+  private Task valueTask(Scope<LazyTask> scope, Value value, Location location) {
+    if (value instanceof DefinedValue definedValue) {
+      return definedValueTask(scope, definedValue, location);
+    } else if (value instanceof NativeValue nativeValue) {
+      return callNativeValueTask(nativeValue, location);
+    } else {
+      throw new IllegalArgumentException(
+          "Unexpected case: " + value.getClass().getCanonicalName());
+    }
+  }
+
+  private Task definedValueTask(Scope<LazyTask> scope, DefinedValue definedValue,
+      Location location) {
+    var task = taskFor(definedValue.body(), scope);
+    var convertedTask = convertIfNeeded(definedValue.type(), task);
+    return new VirtualTask(VALUE, definedValue.extendedName(), convertedTask, location);
+  }
+
+  private Task callNativeValueTask(NativeValue nativeValue, Location location) {
+    NativeExpression nativ = nativeValue.nativ();
+    var algorithm = new CallNativeAlgorithm(
+        methodLoader, toSpecConverter.visit(nativeValue.type()), nativeValue, nativ.isPure());
+    var nativeCode = nativeLazyTask(nativ);
+    return new AlgorithmTask(VALUE, nativeValue.type(), nativeValue.extendedName(), algorithm,
+        list(nativeCode), location);
   }
 
   private Task definedFunctionTask(Scope<LazyTask> scope, Type actualResultType,

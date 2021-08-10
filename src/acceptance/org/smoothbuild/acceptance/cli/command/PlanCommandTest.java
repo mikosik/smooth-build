@@ -28,8 +28,8 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
-            String myValue
-              String "abc"
+            String building-evaluation
+              String :myValue
           """);
     }
 
@@ -45,8 +45,8 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
-            String returnAbc
-              String "org.smoothbuild.acceptance.testing."...
+            String building-evaluation
+              String :returnAbc
           """);
     }
 
@@ -60,7 +60,7 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
-            String building-function-call
+            String building-evaluation
               String(String) :myFunction
               String "abc"
           """);
@@ -78,7 +78,7 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
-            String building-function-call
+            String building-evaluation
               String(String) :oneStringParameter
               String "abc"
           """);
@@ -96,7 +96,7 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
-            String building-function-call
+            String building-evaluation
               String() :returnAbc
           """);
     }
@@ -113,7 +113,7 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           MyStruct result
-            MyStruct building-function-call
+            MyStruct building-evaluation
               MyStruct(String) :myStruct
               String "abc"
           """);
@@ -132,7 +132,7 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String .field
-              MyStruct building-function-call
+              MyStruct building-evaluation
                 MyStruct(String) :myStruct
                 String "abc"
           """);
