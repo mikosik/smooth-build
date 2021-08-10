@@ -13,15 +13,15 @@ import org.smoothbuild.lang.base.define.Value;
 import com.google.common.collect.ImmutableMap;
 
 public class ExecutionPlanner {
-  private final ExpressionToTaskConverterProvider converterProvider;
+  private final TaskCreatorProvider taskCreatorProvider;
 
   @Inject
-  public ExecutionPlanner(ExpressionToTaskConverterProvider converterProvider) {
-    this.converterProvider = converterProvider;
+  public ExecutionPlanner(TaskCreatorProvider taskCreatorProvider) {
+    this.taskCreatorProvider = taskCreatorProvider;
   }
 
   public ImmutableMap<Value, Task> createPlans(Definitions definitions, List<Value> values) {
-    TaskCreator taskCreator = converterProvider.get(definitions);
+    TaskCreator taskCreator = taskCreatorProvider.get(definitions);
     return values.stream()
         .collect(toImmutableMap(v -> v, taskCreator::commandLineValueTask));
   }
