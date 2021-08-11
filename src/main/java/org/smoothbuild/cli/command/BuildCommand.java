@@ -33,7 +33,7 @@ public class BuildCommand extends ExclusiveCommand {
           
           Filter is a boolean expression made up of matchers (listed below), \
           boolean operators '&', '|', grouping brackets '(', ')'.
-          Default value is 'info|(user&(call|value))'
+          Default value is 'info|(user&(call|value|field))'
           
           For each matched tasks its name and properties are printed together with logs that \
           match filter specified with --log-level option. \

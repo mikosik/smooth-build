@@ -68,7 +68,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                     Filter is a boolean expression made up of matchers
                                       (listed below), boolean operators '&', '|',
                                       grouping brackets '(', ')'.
-                                    Default value is 'info|(user&(call|value))'
+                                    Default value is 'info|(user&(call|value|field))'
                    
                                     For each matched tasks its name and properties are
                                       printed together with logs that match filter
