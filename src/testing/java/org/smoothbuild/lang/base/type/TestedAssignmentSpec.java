@@ -237,11 +237,11 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         illegalAssignment(f(A, A, A), f(A, A, NOTHING)),
         illegalAssignment(f(A, A, A), f(A, A, BLOB)),
         allowedAssignment(f(A, A, A), f(NOTHING, A, A)),
-        illegalAssignment(f(A, A), f(NOTHING, NOTHING)),
-        illegalAssignment(f(A, A), f(NOTHING, BLOB)),
+        allowedAssignment(f(A, A), f(NOTHING, NOTHING)),
+        allowedAssignment(f(A, A), f(NOTHING, BLOB)),
         illegalAssignment(f(A, A), f(BLOB, A)),
         illegalAssignment(f(A, A), f(BLOB, NOTHING)),
-        illegalAssignment(f(A, A), f(BLOB, BLOB)),
+        allowedAssignment(f(A, A), f(BLOB, BLOB)),
         allowedAssignment(f(A, A, NOTHING), f(A, A, A)),
         allowedAssignment(f(A, A, NOTHING), f(A, A, NOTHING)),
         allowedAssignment(f(A, A, NOTHING), f(A, A, BLOB)),
@@ -263,8 +263,8 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         illegalAssignment(f(NOTHING, A), f(A, NOTHING)),
         illegalAssignment(f(NOTHING, A), f(A, BLOB)),
         allowedAssignment(f(NOTHING, A), f(NOTHING, A)),
-        illegalAssignment(f(NOTHING, A), f(NOTHING, NOTHING)),
-        illegalAssignment(f(NOTHING, A), f(NOTHING, BLOB)),
+        allowedAssignment(f(NOTHING, A), f(NOTHING, NOTHING)),
+        allowedAssignment(f(NOTHING, A), f(NOTHING, BLOB)),
         illegalAssignment(f(NOTHING, A), f(BLOB, A)),
         illegalAssignment(f(NOTHING, A), f(BLOB, NOTHING)),
         illegalAssignment(f(NOTHING, A), f(BLOB, BLOB)),
@@ -273,11 +273,11 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         illegalAssignment(f(BLOB, A), f(A, NOTHING)),
         illegalAssignment(f(BLOB, A), f(A, BLOB)),
         allowedAssignment(f(BLOB, A), f(NOTHING, A)),
-        illegalAssignment(f(BLOB, A), f(NOTHING, NOTHING)),
-        illegalAssignment(f(BLOB, A), f(NOTHING, BLOB)),
+        allowedAssignment(f(BLOB, A), f(NOTHING, NOTHING)),
+        allowedAssignment(f(BLOB, A), f(NOTHING, BLOB)),
         allowedAssignment(f(BLOB, A), f(BLOB, A)),
-        illegalAssignment(f(BLOB, A), f(BLOB, NOTHING)),
-        illegalAssignment(f(BLOB, A), f(BLOB, BLOB))
+        allowedAssignment(f(BLOB, A), f(BLOB, NOTHING)),
+        allowedAssignment(f(BLOB, A), f(BLOB, BLOB))
     ));
     return r;
   }

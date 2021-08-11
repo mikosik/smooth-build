@@ -79,7 +79,7 @@ public abstract class Type {
 
   private boolean inequalParam(Type that, Side side) {
     return inequalByEdgeCases(that, side)
-        || (this instanceof Variable && (side == LOWER || that instanceof Variable))
+        || (this instanceof Variable)
         || inequalByConstruction(that, side, s -> (a, b) -> a.inequalParam(b, s));
   }
 
