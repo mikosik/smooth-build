@@ -35,7 +35,6 @@ import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.algorithm.ReferenceAlgorithm;
 import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.DefaultValueTask;
-import org.smoothbuild.exec.compute.Dependency;
 import org.smoothbuild.exec.compute.EvaluateTask;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.LazyTask;
@@ -87,11 +86,11 @@ public class TaskCreator {
     this.methodLoader = methodLoader;
   }
 
-  public Task taskFor(Expression expression, Scope<LazyTask> scope) {
-    return lazyTaskFor(expression, scope).task();
+  public Task taskFor(Expression expression, Scope<Task> scope) {
+    return lazyTaskFor(expression, scope);
   }
 
-  private LazyTask lazyTaskFor(Expression expression, Scope<LazyTask> scope) {
+  private Task lazyTaskFor(Expression expression, Scope<Task> scope) {
     // TODO refactor to pattern matching once we have java 17
     if (expression instanceof NativeExpression nativ) {
       return nativeLazyTask(nativ);
@@ -119,11 +118,11 @@ public class TaskCreator {
     return stringLiteralLazyTask(nativ.path());
   }
 
-  private LazyTask callLazyTask(Scope<LazyTask> scope, CallExpression call) {
+  private LazyTask callLazyTask(Scope<Task> scope, CallExpression call) {
     var function = taskFor(call.function(), scope);
     var functionType = (FunctionType) function.type();
     var arguments = argumentLazyTasks(scope, function, call.arguments(), call.location());
-    var argumentTypes = map(arguments, Dependency::type);
+    var argumentTypes = map(arguments, Task::type);
     var variables = inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
     var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
     var location = call.location();
@@ -132,9 +131,9 @@ public class TaskCreator {
         actualResultType, function, arguments, location, variables, scope, this));
   }
 
-  private List<LazyTask> argumentLazyTasks(Scope<LazyTask> scope, Dependency function,
+  private List<Task> argumentLazyTasks(Scope<Task> scope, Task function,
       List<Optional<Expression>> arguments, Location location) {
-    var builder = ImmutableList.<LazyTask>builder();
+    var builder = ImmutableList.<Task>builder();
     for (int i = 0; i < arguments.size(); i++) {
       builder.add(arguments.get(i)
           .map(a -> lazyTaskFor(a, scope))
@@ -143,7 +142,7 @@ public class TaskCreator {
     return builder.build();
   }
 
-  private LazyTask defaultValueLazyTask(Dependency function, int index, Scope<LazyTask> scope,
+  private LazyTask defaultValueLazyTask(Task function, int index, Scope<Task> scope,
       Location location) {
     var type = ((FunctionType) function.type()).parameterTypes().get(index);
     // TODO task name is not precise
@@ -152,13 +151,13 @@ public class TaskCreator {
             type, "default parameter value", list(function), index, location, scope, this));
   }
 
-  private LazyTask fieldReadLazyTask(Scope<LazyTask> scope, FieldReadExpression fieldRead) {
+  private LazyTask fieldReadLazyTask(Scope<Task> scope, FieldReadExpression fieldRead) {
     var type = fieldRead.field().type();
     var location = fieldRead.location();
     return new LazyTask(type, location, () -> fieldReadTask(scope, fieldRead, type));
   }
 
-  private Task fieldReadTask(Scope<LazyTask> scope, FieldReadExpression expression, Type type) {
+  private Task fieldReadTask(Scope<Task> scope, FieldReadExpression expression, Type type) {
     var structType = (StructType) expression.expression().type();
     var name = expression.field().name().get();
     var algorithm = new ReadTupleElementAlgorithm(
@@ -168,19 +167,19 @@ public class TaskCreator {
         FIELD_READ, type, "." + name, algorithm, dependencies, expression.location());
   }
 
-  private LazyTask parameterReferenceLazyTask(Scope<LazyTask> scope,
+  private Task parameterReferenceLazyTask(Scope<Task> scope,
       ParameterReferenceExpression parameterReference) {
     return scope.get(parameterReference.name());
   }
 
-  private LazyTask referenceLazyTask(Scope<LazyTask> scope, ReferenceExpression reference) {
+  private LazyTask referenceLazyTask(Scope<Task> scope, ReferenceExpression reference) {
     var referencable = definitions.referencables().get(reference.name());
     var type = referencable.type().strip();
     return new LazyTask(type, reference.location(),
         () -> referenceTask(scope, reference, referencable, type));
   }
 
-  private Task referenceTask(Scope<LazyTask> scope, ReferenceExpression reference,
+  private Task referenceTask(Scope<Task> scope, ReferenceExpression reference,
       GlobalReferencable referencable, Type type) {
     var module = definitions.modules().get(referencable.modulePath());
     var algorithm = new ReferenceAlgorithm(referencable, module, toSpecConverter.functionSpec());
@@ -194,8 +193,7 @@ public class TaskCreator {
     }
   }
 
-  private LazyTask arrayLiteralLazyTask(Scope<LazyTask> scope,
-      ArrayLiteralExpression arrayLiteral) {
+  private LazyTask arrayLiteralLazyTask(Scope<Task> scope, ArrayLiteralExpression arrayLiteral) {
     var elements = map(arrayLiteral.elements(), e -> taskFor(e, scope));
     var actualType = arrayType(elements).orElse(arrayLiteral.type());
 
@@ -206,7 +204,7 @@ public class TaskCreator {
   private static Optional<ArrayType> arrayType(List<Task> elements) {
     return elements
         .stream()
-        .map(Dependency::type)
+        .map(Task::type)
         .reduce((typeA, typeB) -> typeA.mergeWith(typeB, UPPER))
         .map(Types::array);
   }
@@ -243,15 +241,15 @@ public class TaskCreator {
     return new AlgorithmTask(LITERAL, string(), name, algorithm, list(), location);
   }
 
-  public Task taskForNamedFunctionParameterDefaultValue(Scope<LazyTask> scope, String functionName,
+  public Task taskForNamedFunctionParameterDefaultValue(Scope<Task> scope, String functionName,
       int index) {
     var function = (Function) definitions.referencables().get(functionName);
     var defaultValueExpression = function.parameters().get(index).defaultValue().get();
     return taskFor(defaultValueExpression, scope);
   }
 
-  public Task taskForEvaluatingLambda(Scope<LazyTask> scope, BoundsMap variables,
-      Type actualResultType, String name, List<LazyTask> arguments, Location location) {
+  public Task taskForEvaluatingLambda(Scope<Task> scope, BoundsMap variables,
+      Type actualResultType, String name, List<Task> arguments, Location location) {
     var referencable = definitions.referencables().get(name);
     if (referencable instanceof Value value) {
       return valueTask(scope, value, location);
@@ -277,7 +275,7 @@ public class TaskCreator {
     return valueTask(new Scope<>(Map.of()), value, commandLineLocation());
   }
 
-  private Task valueTask(Scope<LazyTask> scope, Value value, Location location) {
+  private Task valueTask(Scope<Task> scope, Value value, Location location) {
     if (value instanceof DefinedValue definedValue) {
       return definedValueTask(scope, definedValue, location);
     } else if (value instanceof NativeValue nativeValue) {
@@ -288,8 +286,7 @@ public class TaskCreator {
     }
   }
 
-  private Task definedValueTask(Scope<LazyTask> scope, DefinedValue definedValue,
-      Location location) {
+  private Task definedValueTask(Scope<Task> scope, DefinedValue definedValue, Location location) {
     var task = taskFor(definedValue.body(), scope);
     var convertedTask = convertIfNeeded(definedValue.type(), task);
     return new VirtualTask(VALUE, definedValue.extendedName(), convertedTask, location);
@@ -304,21 +301,20 @@ public class TaskCreator {
         list(nativeCode), location);
   }
 
-  private Task definedFunctionTask(Scope<LazyTask> scope, Type actualResultType,
-      DefinedFunction function, List<LazyTask> arguments, Location location) {
+  private Task definedFunctionTask(Scope<Task> scope, Type actualResultType,
+      DefinedFunction function, List<Task> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     var body = taskFor(function.body(), newScope);
     var convertedTask = convertIfNeeded(actualResultType, body);
     return new VirtualTask(CALL, function.extendedName(), convertedTask, location);
   }
 
-  private static ImmutableMap<String, LazyTask> nameToArgumentMap(List<Item> names,
-      List<LazyTask> arguments) {
+  private static Map<String, Task> nameToArgumentMap(List<Item> names, List<Task> arguments) {
     var mapEntries = zip(names, arguments, (n, a) -> Map.entry(n.name(), a));
     return ImmutableMap.copyOf(mapEntries);
   }
 
-  private Task callNativeFunctionTask(Scope<LazyTask> scope, List<LazyTask> arguments,
+  private Task callNativeFunctionTask(Scope<Task> scope, List<Task> arguments,
       NativeFunction function, NativeExpression nativ, BoundsMap variables,
       Type actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(methodLoader, toSpecConverter.visit(actualResultType),
@@ -329,15 +325,14 @@ public class TaskCreator {
         dependencies, location);
   }
 
-  private ImmutableList<Task> convertedArgumentTasks(List<LazyTask> arguments,
-      NativeFunction function, BoundsMap variables) {
+  private ImmutableList<Task> convertedArgumentTasks(List<Task> arguments, NativeFunction function,
+      BoundsMap variables) {
     var actualTypes = map(function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
-    var argumentTasks = map(arguments, LazyTask::task);
-    return zip(actualTypes, argumentTasks, this::convertIfNeeded);
+    return zip(actualTypes, arguments, this::convertIfNeeded);
   }
 
   private Task constructorCallTask(Type resultType, TupleSpec tupleSpec, String name,
-      List<LazyTask> arguments, Location location) {
+      List<Task> arguments, Location location) {
     var algorithm = new CreateTupleAlgorithm(tupleSpec);
     return new AlgorithmTask(CALL, resultType, name, algorithm, arguments, location);
   }

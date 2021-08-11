@@ -17,7 +17,7 @@ import org.smoothbuild.lang.base.type.Type;
 public class IfTask extends StepTask {
   private static final String IF_TASK_NAME = IF_FUNCTION_NAME + PARENTHESES;
 
-  public IfTask(Type type, List<LazyTask> dependencies, Location location) {
+  public IfTask(Type type, List<Task> dependencies, Location location) {
     super(BUILDER, type, "building:" + IF_TASK_NAME, dependencies, location);
   }
 
@@ -25,16 +25,16 @@ public class IfTask extends StepTask {
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
     boolean condition = ((Bool) obj).jValue();
     Task subTaskToCompute = condition ? thenTask() : elseTask();
-    Task task = new VirtualTask(CALL, IF_TASK_NAME, subTaskToCompute, location());
-    task.startComputation(worker)
+    new VirtualTask(CALL, IF_TASK_NAME, subTaskToCompute, location())
+        .startComputation(worker)
         .addConsumer(result);
   }
 
   private Task thenTask() {
-    return dependencies().get(1).task();
+    return dependencies().get(1);
   }
 
   private Task elseTask() {
-    return dependencies().get(2).task();
+    return dependencies().get(2);
   }
 }

@@ -12,8 +12,8 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
-public abstract class StepTask extends Task {
-  public StepTask(TaskKind kind, Type type, String name, List<? extends Dependency> dependencies,
+public abstract class StepTask extends RealTask {
+  public StepTask(TaskKind kind, Type type, String name, List<Task> dependencies,
       Location location) {
     super(kind, type, name, dependencies, location);
   }
@@ -21,7 +21,7 @@ public abstract class StepTask extends Task {
   @Override
   public Feeder<Obj> startComputation(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
-    dependencies().get(0).task()
+    dependencies().get(0)
         .startComputation(worker)
         .addConsumer(obj -> notifyCompleted(obj, worker, result));
     return result;

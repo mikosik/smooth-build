@@ -42,7 +42,6 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Computer;
-import org.smoothbuild.exec.compute.Dependency;
 import org.smoothbuild.exec.compute.LazyTask;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
@@ -303,7 +302,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   private static Task task(Algorithm algorithm, List<Task> dependencies) {
     var suppliers = map(
-        dependencies, d -> (Dependency) new LazyTask(d.type(), d.location(), () -> d));
+        dependencies, d -> (Task) new LazyTask(d.type(), d.location(), () -> d));
     return new AlgorithmTask(CALL, STRING, "task-name", algorithm, suppliers, internal());
   }
 

@@ -17,13 +17,13 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.Scope;
 
 public class EvaluateTask extends StepTask {
-  private final List<LazyTask> arguments;
+  private final List<Task> arguments;
   private final BoundsMap variables;
-  private final Scope<LazyTask> scope;
+  private final Scope<Task> scope;
   private final TaskCreator taskCreator;
 
-  public EvaluateTask(Type type, Task referencable, List<LazyTask> arguments, Location location,
-      BoundsMap variables, Scope<LazyTask> scope, TaskCreator taskCreator) {
+  public EvaluateTask(Type type, Task referencable, List<Task> arguments, Location location,
+      BoundsMap variables, Scope<Task> scope, TaskCreator taskCreator) {
     super(BUILDER, type, "building-evaluation", concat(referencable, arguments), location);
     this.arguments = arguments;
     this.variables = variables;

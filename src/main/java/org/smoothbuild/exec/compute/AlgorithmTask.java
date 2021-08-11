@@ -15,13 +15,11 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
-import com.google.common.collect.ImmutableList;
-
-public class AlgorithmTask extends Task {
+public class AlgorithmTask extends RealTask {
   private final Algorithm algorithm;
 
   public AlgorithmTask(TaskKind kind, Type type, String name, Algorithm algorithm,
-      List<? extends Dependency> dependencies, Location location) {
+      List<Task> dependencies, Location location) {
     super(kind, type, name, dependencies, location);
     this.algorithm = algorithm;
   }
@@ -33,8 +31,7 @@ public class AlgorithmTask extends Task {
   @Override
   public Feeder<Obj> startComputation(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
-    ImmutableList<Feeder<Obj>> dependencyResults =
-        map(dependencies(), d -> d.task().startComputation(worker));
+    var dependencyResults = map(dependencies(), d -> d.startComputation(worker));
     runWhenAllAvailable(dependencyResults,
         () -> worker.enqueueComputation(this, toInput(dependencyResults), result));
     return result;

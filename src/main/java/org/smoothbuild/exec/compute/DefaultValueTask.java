@@ -16,11 +16,11 @@ import org.smoothbuild.util.Scope;
 
 public class DefaultValueTask extends StepTask {
   private final int index;
-  private final Scope<LazyTask> scope;
+  private final Scope<Task> scope;
   private final TaskCreator taskCreator;
 
-  public DefaultValueTask(Type type, String name, List<Dependency> dependencies, int index,
-      Location location, Scope<LazyTask> scope, TaskCreator taskCreator) {
+  public DefaultValueTask(Type type, String name, List<Task> dependencies, int index,
+      Location location, Scope<Task> scope, TaskCreator taskCreator) {
     super(BUILDER, type, "building:" + name, dependencies, location);
     this.index = index;
     this.scope = scope;

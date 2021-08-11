@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
-import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.exec.compute.RealTask.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
