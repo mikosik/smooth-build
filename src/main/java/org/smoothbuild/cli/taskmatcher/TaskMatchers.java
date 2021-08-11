@@ -38,8 +38,11 @@ public class TaskMatchers {
   private static final ImmutableMap<String, TaskMatcher> MAP =
       ImmutableMap.<String, TaskMatcher>builder()
           .put("all", ALL)
+          .put("a", ALL)
           .put("default", DEFAULT)
+          .put("d", DEFAULT)
           .put("none", NONE)
+          .put("n", NONE)
 
           .put("fatal", AT_LEAST_FATAL)
           .put("f", AT_LEAST_FATAL)

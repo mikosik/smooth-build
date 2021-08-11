@@ -3,6 +3,7 @@ Change Log
 
 Version 0.20.0 (??????????)
 
+ * added `a`, `d`, `n` to `--show-tasks` option in `smooth build` command as shortcuts to `all`, `default`, `none`
  * added `field`, `reference` matchers to `--show-tasks` option in `smooth build` command
  * changed smooth language: added PURE/IMPURE attribute to @Native annotation
  * changed smooth language: added `Any` type

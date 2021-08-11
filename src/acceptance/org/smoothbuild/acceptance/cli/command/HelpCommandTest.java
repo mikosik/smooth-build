@@ -81,10 +81,10 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       warning level.
                    
                                     Available task matchers:
-                                      all              - all tasks
-                                      default          - shortcut for 'info|(user&
+                                      a, all           - all tasks
+                                      d, default       - shortcut for 'info|(user&
                                       (call|value|field))'
-                                      none             - no tasks
+                                      n, none          - no tasks
                    
                                       f, fatal         - contains a log with fatal level
                                       e, error         - contains a log with at least

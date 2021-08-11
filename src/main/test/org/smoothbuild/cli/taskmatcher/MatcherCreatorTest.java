@@ -96,8 +96,11 @@ public class MatcherCreatorTest {
   public static Stream<? extends Arguments> provideArguments() {
     return Stream.of(
         arguments("all", ALL),
+        arguments("a", ALL),
         arguments("default", or(and(PRJ, or(or(CALL, VALUE), FIELD)), AT_LEAST_INFO)),
+        arguments("d", or(and(PRJ, or(or(CALL, VALUE), FIELD)), AT_LEAST_INFO)),
         arguments("none", NONE),
+        arguments("n", NONE),
 
         arguments("fatal", AT_LEAST_FATAL),
         arguments("f", AT_LEAST_FATAL),
