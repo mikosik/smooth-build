@@ -38,7 +38,9 @@ import org.smoothbuild.exec.compute.DefaultValueTask;
 import org.smoothbuild.exec.compute.EvaluateTask;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.LazyTask;
+import org.smoothbuild.exec.compute.MapTask;
 import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.exec.compute.VirtualTask;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.lang.base.define.Constructor;
@@ -50,6 +52,7 @@ import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.IfFunction;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.MapFunction;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.Value;
@@ -120,15 +123,38 @@ public class TaskCreator {
 
   private LazyTask callLazyTask(Scope<Task> scope, CallExpression call) {
     var function = taskFor(call.function(), scope);
-    var functionType = (FunctionType) function.type();
     var arguments = argumentLazyTasks(scope, function, call.arguments(), call.location());
-    var argumentTypes = map(arguments, Task::type);
-    var variables = inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
-    var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
-    var location = call.location();
+    return callLazyTask(scope, function, arguments, call.location());
+  }
 
-    return new LazyTask(actualResultType, location, () -> new EvaluateTask(
-        actualResultType, function, arguments, location, variables, scope, this));
+  public LazyTask callLazyTask(Scope<Task> scope, Task function, List<Task> arguments,
+      Location location) {
+    var variables = inferVariablesInFunctionCall(function, arguments);
+    var functionType = (FunctionType) function.type();
+    var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
+
+    return new LazyTask(actualResultType, location,
+        () -> callTask(scope, function, arguments, location, variables));
+  }
+
+  public EvaluateTask callTask(Scope<Task> scope, Task function, List<Task> arguments,
+      Location location) {
+    var variables = inferVariablesInFunctionCall(function, arguments);
+    return callTask(scope, function, arguments, location, variables);
+  }
+
+  private EvaluateTask callTask(Scope<Task> scope, Task function, List<Task> arguments,
+      Location location, BoundsMap variables) {
+    var functionType = (FunctionType) function.type();
+    var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
+    return new EvaluateTask(
+        actualResultType, function, arguments, location, variables, scope, this);
+  }
+
+  private static BoundsMap inferVariablesInFunctionCall(Task function, List<Task> arguments) {
+    var functionType = (FunctionType) function.type();
+    var argumentTypes = map(arguments, Task::type);
+    return inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
   }
 
   private List<Task> argumentLazyTasks(Scope<Task> scope, Task function,
@@ -211,10 +237,14 @@ public class TaskCreator {
 
   private Task arrayLiteralTask(ArrayLiteralExpression expression, List<Task> elements,
       ArrayType actualType) {
-    var algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
     var convertedElements = map(elements, e -> convertIfNeeded(actualType.elemType(), e));
-    return new AlgorithmTask(LITERAL, actualType, "[]", algorithm, convertedElements,
-        expression.location());
+    return arrayLiteralTask(LITERAL, actualType, convertedElements, expression.location());
+  }
+
+  public AlgorithmTask arrayLiteralTask(TaskKind taskKind, ArrayType type,
+      ImmutableList<Task> elements, Location location) {
+    var algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(type));
+    return new AlgorithmTask(taskKind, type, "[]", algorithm, elements, location);
   }
 
   private LazyTask blobLiteralLazyTask(BlobLiteralExpression blobLiteral) {
@@ -260,6 +290,8 @@ public class TaskCreator {
           variables, actualResultType, location);
     } else if (referencable instanceof IfFunction) {
       return new IfTask(actualResultType, arguments, location);
+    } else if (referencable instanceof MapFunction) {
+      return new MapTask(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof Constructor constructor) {
       var resultType = constructor.type().resultType();
       var tupleSpec = (TupleSpec) toSpecConverter.visit(resultType);

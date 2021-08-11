@@ -11,6 +11,7 @@ Smooth standard library
 | [jar](api/jar.md)                     | Jars (compresses) files. |
 | [javac](api/javac.md)                 | Compiles java files. |
 | [junit](api/junit.md)                 | Runs junit tests. |
+| [map](api/map.md)                     | Applies given function to each element of an array. |
 | [not](api/not.md)                     | Returns negation of its argument. |
 | [or](api/or.md)                       | Returns `true` if any argument is `true`. |
 | [projectFile](api/projectFile.md)     | Reads single file from project filesystem. |

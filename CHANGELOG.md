@@ -3,8 +3,9 @@ Change Log
 
 Version 0.20.0 (??????????)
 
+ * added slib function: `map`
  * added `a`, `d`, `n` to `--show-tasks` option in `smooth build` command as shortcuts to `all`, `default`, `none`
- * added `field`, `reference` matchers to `--show-tasks` option in `smooth build` command
+ * added `field`, `reference`, `map` matchers to `--show-tasks` option in `smooth build` command
  * changed smooth language: added PURE/IMPURE attribute to @Native annotation
  * changed smooth language: added `Any` type
  * changed smooth language: parameters with default values are no longer required to be placed at the end of parameter list

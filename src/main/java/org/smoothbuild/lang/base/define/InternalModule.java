@@ -21,6 +21,7 @@ public class InternalModule {
 
   private static ImmutableMap<String, GlobalReferencable> referencables(ModulePath modulePath) {
     Function ifFunction = new IfFunction(modulePath);
-    return ImmutableMap.of(ifFunction.name(), ifFunction);
+    Function mapFunction = new MapFunction(modulePath);
+    return toMap(list(ifFunction, mapFunction), Defined::name, f -> f);
   }
 }

@@ -6,6 +6,7 @@ public enum TaskKind {
   CONVERSION,
   FIELD_READ,
   LITERAL,
+  MAP,
   REFERENCE,
   VALUE
 }

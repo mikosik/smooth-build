@@ -26,7 +26,7 @@ public class IfFunction extends Function {
         parameter(RESULT_TYPE, modulePath, "else"));
   }
 
-  private static Item parameter(Type type, ModulePath modulePath, String name) {
+  public static Item parameter(Type type, ModulePath modulePath, String name) {
     return new Item(type, modulePath, name, Optional.empty(), internal());
   }
 }

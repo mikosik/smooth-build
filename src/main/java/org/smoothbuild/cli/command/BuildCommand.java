@@ -59,6 +59,8 @@ public class BuildCommand extends ExclusiveCommand {
             conv, conversion - evaluates automatic conversion
             fr, field        - evaluates field read
             l, literal       - evaluates compile time literal
+            m, map           - evaluates single call to a function in evaluation of \
+          `map` function call
             r, reference     - evaluates function reference expression
             v, value         - evaluates value expression
           """

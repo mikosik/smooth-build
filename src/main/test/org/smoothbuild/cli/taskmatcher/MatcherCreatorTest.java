@@ -15,6 +15,7 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CONVERSION;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.FIELD;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.LITERAL;
+import static org.smoothbuild.cli.taskmatcher.TaskMatchers.MAP;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PRJ;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.REFERENCE;
@@ -125,6 +126,8 @@ public class MatcherCreatorTest {
         arguments("field", FIELD),
         arguments("literal", LITERAL),
         arguments("l", LITERAL),
+        arguments("map", MAP),
+        arguments("m", MAP),
         arguments("v", VALUE),
         arguments("value", VALUE),
         arguments("r", REFERENCE),
