@@ -10,6 +10,8 @@ import org.smoothbuild.util.concurrent.Feeder;
 import com.google.common.collect.ImmutableList;
 
 public interface Task {
+  public TaskKind kind();
+
   public Type type();
 
   public String name();
@@ -19,8 +21,6 @@ public interface Task {
   public String description();
 
   public Location location();
-
-  public TaskKind kind();
 
   public default Space space() {
     return location().file().space();
