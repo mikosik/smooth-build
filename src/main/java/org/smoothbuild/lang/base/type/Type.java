@@ -73,14 +73,18 @@ public abstract class Type {
   }
 
   private boolean inequal(Type that, Side side) {
-    return inequalByEdgeCases(that, side)
-        || inequalByConstruction(that, side, s -> (Type a, Type b) -> a.inequal(b, s));
+    return inequalImpl(that, side, (a, b) -> s -> a.inequal(b, s));
   }
 
   private boolean inequalParam(Type that, Side side) {
+    return (this instanceof Variable)
+        || inequalImpl(that, side, (a, b) -> s -> a.inequalParam(b, s));
+  }
+
+  private boolean inequalImpl(Type that, Side side,
+      BiFunction<Type, Type, Function<Side, Boolean>> inequalityFunction) {
     return inequalByEdgeCases(that, side)
-        || (this instanceof Variable)
-        || inequalByConstruction(that, side, s -> (a, b) -> a.inequalParam(b, s));
+        || inequalByConstruction(that, side, inequalityFunction);
   }
 
   private boolean inequalByEdgeCases(Type that, Side side) {
@@ -88,13 +92,11 @@ public abstract class Type {
         || this.equals(side.reversed().edge());
   }
 
-  private boolean inequalByConstruction(Type that, Side side,
-      Function<Side, BiFunction<Type, Type, Boolean>> inequalityFunctionProducer) {
-    var inequalFunction = inequalityFunctionProducer.apply(side);
-    var inequalReversedFunction = inequalityFunctionProducer.apply(side.reversed());
+  private boolean inequalByConstruction(Type that, Side s,
+      BiFunction<Type, Type, Function<Side, Boolean>> f) {
     return this.typeConstructor.equals(that.typeConstructor)
-        && allMatch(covariants, that.covariants, inequalFunction)
-        && allMatch(contravariants, that.contravariants, inequalReversedFunction);
+        && allMatch(covariants, that.covariants, (a, b) -> f.apply(a, b).apply(s))
+        && allMatch(contravariants, that.contravariants, (a, b) -> f.apply(a, b).apply(s.reversed()));
   }
 
   public Type mapVariables(BoundsMap boundsMap, Side side) {
