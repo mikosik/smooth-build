@@ -904,6 +904,30 @@ public class DeclarationTest {
           module(code)
               .loadsSuccessfully();
         }
+
+        @Test
+        public void function_parameter_name_is_stripped_during_assignment() {
+          String code = """
+            myFunction(String param) = param;
+            valueReferencingFunction = myFunction;
+            result = valueReferencingFunction(param="abc");
+            """;
+          module(code)
+              .loadsWithError(3,
+                  "In call to function with type `String(String)`: Unknown parameter `param`.");
+        }
+
+        @Test
+        public void function_default_argument_is_stripped_during_assignment() {
+          String code = """
+            myFunction(String param = "abc") = param;
+            valueReferencingFunction = myFunction;
+            result = valueReferencingFunction();
+            """;
+          module(code)
+              .loadsWithError(3, "In call to function with type `String(String)`: "
+                  + "Parameter #1 must be specified.");
+        }
       }
 
       @Nested
