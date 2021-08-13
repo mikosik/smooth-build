@@ -108,9 +108,9 @@ public class LoadReferencable {
     public Item createParameter(ItemNode param) {
       Type type = param.typeNode().get().type().get();
       String name = param.name();
-      Optional<Expression> defaultValue = param.body()
+      Optional<Expression> defaultArgument = param.body()
           .map(this::createExpression);
-      return new Item(type, modulePath, name, defaultValue, param.location());
+      return new Item(type, modulePath, name, defaultArgument, param.location());
     }
 
     private Expression createExpression(ExprNode expr) {

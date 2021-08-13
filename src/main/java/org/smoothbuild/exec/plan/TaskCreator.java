@@ -35,7 +35,7 @@ import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.algorithm.ReferenceAlgorithm;
 import org.smoothbuild.exec.compute.AlgorithmTask;
-import org.smoothbuild.exec.compute.DefaultValueTask;
+import org.smoothbuild.exec.compute.DefaultArgumentTask;
 import org.smoothbuild.exec.compute.EvaluateTask;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.LazyTask;
@@ -201,15 +201,15 @@ public class TaskCreator {
     for (int i = 0; i < arguments.size(); i++) {
       builder.add(arguments.get(i)
           .map(a -> lazyTaskFor(scope, a))
-          .orElse(defaultValueLazyTask(function, i, scope, location)));
+          .orElse(defaultArgumentLazyTask(function, i, scope, location)));
     }
     return builder.build();
   }
 
-  private LazyTask defaultValueLazyTask(Task function, int index, Scope<Task> scope,
+  private LazyTask defaultArgumentLazyTask(Task function, int index, Scope<Task> scope,
       Location location) {
     var type = ((FunctionType) function.type()).parameterTypes().get(index);
-    return new LazyTask(type, location, () -> new DefaultValueTask(type,
+    return new LazyTask(type, location, () -> new DefaultArgumentTask(type,
         "default parameter value", list(function), index, location, scope, TaskCreator.this));
   }
 
@@ -349,11 +349,10 @@ public class TaskCreator {
 
   // helper methods
 
-  public Task namedFunctionParameterDefaultValueEagerTask(
-      Scope<Task> scope, String functionName, int index) {
+  public Task defaultArgumentEagerTask(Scope<Task> scope, String functionName, int index) {
     var function = (Function) definitions.referencables().get(functionName);
-    var defaultValueExpression = function.parameters().get(index).defaultValue().get();
-    return eagerTaskFor(scope, defaultValueExpression);
+    var defaultArgumentExpression = function.parameters().get(index).defaultValue().get();
+    return eagerTaskFor(scope, defaultArgumentExpression);
   }
 
   public Task evaluateLambdaEagerTask(Scope<Task> scope, BoundsMap variables,

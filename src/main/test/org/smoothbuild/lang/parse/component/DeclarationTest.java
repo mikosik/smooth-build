@@ -690,7 +690,7 @@ public class DeclarationTest {
         }
 
         @Test
-        public void polytype_parameter_can_have_default_value() {
+        public void polytype_parameter_can_have_default_argument() {
           module("""
         A myFunc(A value = "abc") = value;
         """)
@@ -698,7 +698,7 @@ public class DeclarationTest {
         }
 
         @Test
-        public void default_value_gets_converted_to_polytype_parameter() {
+        public void default_argument_gets_converted_to_polytype_parameter() {
           module("""
         [A] myFunc(A param1, [A] param2 = []) = param2;
         [String] result = myFunc("abc");
@@ -886,7 +886,7 @@ public class DeclarationTest {
         }
 
         @Test
-        public void parameter_with_default_value_can_be_assigned_positionally() {
+        public void parameter_with_default_argument_can_be_assigned_positionally() {
           String code = """
               myIdentity(String param1="abc", String param2="def") = param1;
               result = myIdentity("abc", "def");
@@ -896,7 +896,7 @@ public class DeclarationTest {
         }
 
         @Test
-        public void parameter_with_default_value_can_be_assigned_by_name() {
+        public void parameter_with_default_argument_can_be_assigned_by_name() {
           String code = """
             myIdentity(String param1="abc", String param2="def") = param1;
             result = myIdentity(param1="abc", param2="def");

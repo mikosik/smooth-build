@@ -341,7 +341,7 @@ public class ExpressionLoadingTest {
     }
 
     @Test
-    public void defined_function_with_parameter_with_default_value() {
+    public void defined_function_with_parameter_with_default_argument() {
       module("""
           String myFunction(
             Blob param1 =

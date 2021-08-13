@@ -44,7 +44,7 @@ public class InferArgsToParamsAssignment {
 
     List<Optional<ArgNode>> assignedArgs = assignedArgs(call, parameters, nameToIndex);
     logBuffer.logAll(
-        findUnassignedParametersWithoutDefaultValuesErrors(call, assignedArgs, parameters));
+        findUnassignedParametersWithoutDefaultArgumentsErrors(call, assignedArgs, parameters));
     return maybeValueAndLogs(assignedArgs, logBuffer);
   }
 
@@ -118,7 +118,7 @@ public class InferArgsToParamsAssignment {
         .collect(toSet());
   }
 
-  private static List<Log> findUnassignedParametersWithoutDefaultValuesErrors(CallNode call,
+  private static List<Log> findUnassignedParametersWithoutDefaultArgumentsErrors(CallNode call,
       List<Optional<ArgNode>> assignedList, List<ItemSignature> parameters) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())

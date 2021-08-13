@@ -43,7 +43,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value() {
+    public void parameter_default_argument() {
       module("""
         String myFunction(Blob b = 0x01) = "abc";
         """)
@@ -110,7 +110,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value() {
+    public void parameter_default_argument() {
       module("""
         String myFunction(String s = "abc") = "abc";
         """)
@@ -177,7 +177,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value() {
+    public void parameter_default_argument() {
       module("""
         String myFunction([String] s = ["abc"]) = "abc";
         """)
@@ -260,7 +260,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value() {
+    public void parameter_default_argument() {
       module("""
         MyStruct {
           String field,
@@ -364,7 +364,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value() {
+    public void parameter_default_argument() {
       module("""
           A myIdentity(A a) = a;
           String myFunction(String param = "abc" | myIdentity()) = "abc";
@@ -413,7 +413,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value() {
+    public void parameter_default_argument() {
       module("""
         String myFunction() = "abc";
         String otherFunction(String value = myFunction()) = "abc";
@@ -485,7 +485,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value() {
+    public void parameter_default_argument() {
       module("""
           String myFunction() = "abc";
           String otherFunction(String() value = myFunction) = "abc";
@@ -618,7 +618,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value() {
+    public void parameter_default_argument() {
       module("""
           String myValue = "abc";
           String myFunction(String value = myValue) = "abc";
@@ -721,7 +721,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value_fails() {
+    public void parameter_default_argument_fails() {
       module("""
           MyStruct {}
           String myFunction(String value = MyStruct) = "abc";
@@ -893,7 +893,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void parameter_default_value_fails() {
+    public void parameter_default_argument_fails() {
       module("""
           String myFunction(String value = A) = "abc";
           """)
@@ -1000,7 +1000,7 @@ public class ExpressionUsageTest {
       }
 
       @Test
-      public void parameter_default_value() {
+      public void parameter_default_argument() {
         module("""
         String myFunction(Blob b = undefined) = "abc";
         """)

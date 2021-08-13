@@ -33,7 +33,7 @@ public class CallNode extends ExprNode {
   /**
    * @return List of arguments where position of argument specifies to which parameter that
    * argument has been assigned. Optional.empty() value means that given parameter has no
-   * argument assigned and parameter's default value should be used.
+   * argument assigned explicitly and parameter's default argument should be used.
    */
   public List<Optional<ArgNode>> assignedArgs() {
     return assignedArgs;

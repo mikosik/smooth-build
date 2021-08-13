@@ -9,9 +9,8 @@
  - __base type__ - Unstructured type that is built into language.
    Base type cannot be declared by user.
    They include `Any`, `Blob`, `Bool`, `Nothing` `String`.
- - __default value__ - Value assigned to function parameter upon its declaration.
-   Function can be called without specifying such parameter in which case default value
-   will be assigned to it.
+ - __default argument__ - Value assigned to function parameter upon its declaration.
+   Function can be called without specifying such parameter in which case default argument is used.
  - __monotype__ - Type that does not have type variables.
  - __polytype__ - Type that has type variables.
  - __pure / impure__ - Pure function is a native function which always returns same result for

@@ -117,7 +117,7 @@ public class AssignmentTest {
 
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
-  public void default_value_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
+  public void default_argument_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target();
     TestedType source = testSpec.source();
     String sourceCode = unlines(
@@ -131,7 +131,7 @@ public class AssignmentTest {
     } else {
       module(sourceCode)
           .loadsWithError(1, "Parameter `param` is of type " + target.qStripped()
-               + " so it cannot have default value of type " + source.q() + ".");
+               + " so it cannot have default argument of type " + source.q() + ".");
     }
   }
 

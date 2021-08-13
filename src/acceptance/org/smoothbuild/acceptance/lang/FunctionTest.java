@@ -11,7 +11,7 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class FunctionTest extends AcceptanceTestCase {
   @Nested
-  class parameter_default_value {
+  class parameter_default_argument {
     @Test
     public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
       createUserModule("""

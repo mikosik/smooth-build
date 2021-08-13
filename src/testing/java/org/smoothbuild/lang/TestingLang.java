@@ -124,13 +124,13 @@ public class TestingLang {
     return parameter(line, type, name, Optional.empty());
   }
 
-  public static Item parameter(int line, Type type, String name, Expression defaultValue) {
-    return parameter(line, type, name, Optional.of(defaultValue));
+  public static Item parameter(int line, Type type, String name, Expression defaultArg) {
+    return parameter(line, type, name, Optional.of(defaultArg));
   }
 
   private static Item parameter(int line, Type type, String name,
-      Optional<Expression> defaultValue) {
-    return new Item(type, modulePath(), name, defaultValue, loc(line));
+      Optional<Expression> defaultArg) {
+    return new Item(type, modulePath(), name, defaultArg, loc(line));
   }
 
   public static Item field(Type type, String name) {

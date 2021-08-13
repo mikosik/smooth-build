@@ -306,12 +306,10 @@ main = javaJar("src/main");
 other = javaJar("src/other"); 
 ```
 
-#### Function parameter default value
+#### Function parameter default argument
 
-When we define function parameter we can provide default value for some of them.
+When we define function parameter we can provide default argument for some of them.
 This way call to such function does not have to provide value for such parameters.
-The only limitation is that all parameters with default values must be placed
-after parameters without default values.
 
 Let's create function that creates text file:
 
@@ -319,19 +317,19 @@ Let's create function that creates text file:
 File textFile(String text, String name = "file.txt") = file(toBlob(text), name);
 ```
 
-We can call it without specifying `name` parameter as it has default value:
+We can call it without specifying `name` parameter as it has default argument:
 
 ```
 File myFile = textFile("I love text files.");
 ```
 
-but we can also override default value by specifying value for `name` parameter:
+but we can also override default argument by specifying value for `name` parameter:
 
 ```
 File myFile = textFile("I love text files.", "secret.txt");
 ```
 
-If a function has more than one parameter with default value, and we want to specify
+If a function has more than one parameter with default argument, and we want to specify
 values only for some of them then we can select those parameters by prefixing
 argument with parameter name and equal sign `=`. For example:
 

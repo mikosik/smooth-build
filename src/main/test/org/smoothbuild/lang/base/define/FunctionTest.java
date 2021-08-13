@@ -45,7 +45,7 @@ public class FunctionTest extends TestingContext {
   }
 
   @Test
-  public void function_with_all_params_with_default_values_can_be_called_without_args() {
+  public void function_with_all_params_with_default_arguments_can_be_called_without_args() {
     List<Item> parameters = list(paramWithDefault(), paramWithDefault());
     Function function = myFunction(STRING, parameters);
     assertThat(function.canBeCalledArgless())
@@ -53,7 +53,7 @@ public class FunctionTest extends TestingContext {
   }
 
   @Test
-  public void function_with_one_param_without_default_values_cannot_be_called_without_args() {
+  public void function_with_one_param_without_default_arguments_cannot_be_called_without_args() {
     List<Item> parameters = list(paramWithDefault(), paramWithoutDefault());
     Function function = myFunction(STRING, parameters);
     assertThat(function.canBeCalledArgless())
@@ -68,8 +68,8 @@ public class FunctionTest extends TestingContext {
     return param(Optional.empty());
   }
 
-  private Item param(Optional<Expression> defaultValue) {
-    return new Item(STRING, modulePath(), "a", defaultValue, loc());
+  private Item param(Optional<Expression> defaultArgument) {
+    return new Item(STRING, modulePath(), "a", defaultArgument, loc());
   }
 
   private static Function myFunction(Type type, List<Item> parameters) {

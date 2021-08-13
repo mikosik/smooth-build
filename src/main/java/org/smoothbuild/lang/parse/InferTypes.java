@@ -146,14 +146,14 @@ public class InferTypes {
         param.setType(optType);
         if (optType.isPresent()) {
           Type type = optType.get();
-          var optDefaultValue = param.body();
-          if (optDefaultValue.isPresent()) {
-            var optDefaultValueType = optDefaultValue.get().type();
-            if (optDefaultValueType.isPresent()) {
-              Type dt = optDefaultValueType.get();
+          var optDefaultArgument = param.body();
+          if (optDefaultArgument.isPresent()) {
+            var optDefaultArgumentType = optDefaultArgument.get().type();
+            if (optDefaultArgumentType.isPresent()) {
+              Type dt = optDefaultArgumentType.get();
               if (!type.isParamAssignableFrom(dt)) {
                 logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + type.q()
-                    + " so it cannot have default value of type " + dt.q() + "."));
+                    + " so it cannot have default argument of type " + dt.q() + "."));
               }
             }
           }

@@ -170,7 +170,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void in_default_value_body_of_other_parameter_is_not_visible() {
+      public void in_default_argument_body_of_other_parameter_is_not_visible() {
         module("""
         func(String param, String withDefault = param) = param;
         """)
@@ -178,7 +178,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void in_its_default_value_body_is_not_visible() {
+      public void in_its_default_argument_body_is_not_visible() {
         module("""
         func(String withDefault = withDefault) = withDefault;
         """)
