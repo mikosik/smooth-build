@@ -658,7 +658,6 @@ public class ExpressionUsageTest {
           .loadsSuccessfully();
     }
 
-    // TODO is this right class for this case?
     @Test
     public void struct_in_field_read_expression_fails_when_its_type_is_not_struct() {
       module("""
