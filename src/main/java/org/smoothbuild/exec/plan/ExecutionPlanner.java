@@ -22,6 +22,6 @@ public class ExecutionPlanner {
 
   public ImmutableMap<Value, Task> createPlans(Definitions definitions, List<Value> values) {
     TaskCreator taskCreator = taskCreatorProvider.get(definitions);
-    return toMap(values, taskCreator::commandLineValueTask);
+    return toMap(values, taskCreator::commandLineValueEagerTask);
   }
 }

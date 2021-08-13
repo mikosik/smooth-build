@@ -30,7 +30,7 @@ public class DefaultValueTask extends StepTask {
   @Override
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
     String functionName = LambdaTuple.name(((Tuple) obj)).jValue();
-    Task task = taskCreator.taskForNamedFunctionParameterDefaultValue(
+    Task task = taskCreator.namedFunctionParameterDefaultValueEagerTask(
         scope, functionName, index);
     task.compute(worker).addConsumer(result);
   }

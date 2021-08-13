@@ -34,7 +34,7 @@ public class EvaluateTask extends StepTask {
   @Override
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
     String name = LambdaTuple.name(((Tuple) obj)).jValue();
-    Task task = taskCreator.taskForEvaluatingLambda(
+    Task task = taskCreator.evaluateLambdaEagerTask(
         scope, variables, type(), name, arguments, location());
     task.compute(worker).addConsumer(result);
   }

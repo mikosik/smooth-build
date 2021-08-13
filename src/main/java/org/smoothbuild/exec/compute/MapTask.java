@@ -54,14 +54,14 @@ public class MapTask extends RealTask {
     Array array = (Array) obj;
     ArrayType arrayType = (ArrayType) type();
     var elemTasks = map(array.asIterable(Obj.class), o -> mapElementTask(arrayType.elemType(), o));
-    taskCreator.arrayLiteralTask(MAP, arrayType, elemTasks, location())
+    taskCreator.arrayEagerTask(MAP, arrayType, elemTasks, location())
         .compute(worker)
         .addConsumer(result);
   }
 
   private Task mapElementTask(Type elemType, Obj element) {
     ImmutableList<Task> argument = list(elemTask(elemType, element, arrayTask().location()));
-    return taskCreator.callTask(scope, functionTask(), argument, functionTask().location());
+    return taskCreator.callEagerTask(scope, functionTask(), argument, functionTask().location());
   }
 
   private Task elemTask(Type elemType, Obj element, Location location) {
