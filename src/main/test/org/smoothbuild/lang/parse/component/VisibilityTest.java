@@ -681,7 +681,6 @@ public class VisibilityTest {
 
     @Nested
     class _parameter_shadowing {
-      // TODO more cases - we can shadow function value (imported and local) etc
       @Test
       public void other_parameter_fails() {
         module("""
