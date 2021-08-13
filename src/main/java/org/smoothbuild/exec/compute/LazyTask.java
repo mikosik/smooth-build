@@ -41,8 +41,8 @@ public record LazyTask(Type type, Location location, Supplier<Task> supplier) im
   }
 
   @Override
-  public Feeder<Obj> startComputation(Worker worker) {
-    return task().startComputation(worker);
+  public Feeder<Obj> compute(Worker worker) {
+    return task().compute(worker);
   }
 
   private Task task() {

@@ -21,7 +21,7 @@ public class DummyTask extends AbstractTask {
   }
 
   @Override
-  public Feeder<Obj> startComputation(Worker worker) {
+  public Feeder<Obj> compute(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
     result.accept(obj);
     return result;

@@ -26,5 +26,5 @@ public interface Task {
     return location().file().space();
   }
 
-  public Feeder<Obj> startComputation(Worker worker);
+  public Feeder<Obj> compute(Worker worker);
 }

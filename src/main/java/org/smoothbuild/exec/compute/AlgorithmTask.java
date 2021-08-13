@@ -29,9 +29,9 @@ public class AlgorithmTask extends RealTask {
   }
 
   @Override
-  public Feeder<Obj> startComputation(Worker worker) {
+  public Feeder<Obj> compute(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
-    var dependencyResults = map(dependencies(), d -> d.startComputation(worker));
+    var dependencyResults = map(dependencies(), d -> d.compute(worker));
     runWhenAllAvailable(dependencyResults,
         () -> worker.enqueueComputation(this, toInput(dependencyResults), result));
     return result;

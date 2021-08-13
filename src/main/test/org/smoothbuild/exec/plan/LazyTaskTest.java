@@ -64,8 +64,8 @@ public class LazyTaskTest {
   @Test
   public void multiple_calls_to_start_computation_causes_only_one_call_to_supplier() {
     LazyTask lazyTask = new LazyTask(null, null, supplier);
-    lazyTask.startComputation(mock(Worker.class));
-    lazyTask.startComputation(mock(Worker.class));
+    lazyTask.compute(mock(Worker.class));
+    lazyTask.compute(mock(Worker.class));
     verify(supplier, times(1)).get();
   }
 }

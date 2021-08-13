@@ -26,7 +26,7 @@ public class IfTask extends StepTask {
     boolean condition = ((Bool) obj).jValue();
     Task subTaskToCompute = condition ? thenTask() : elseTask();
     new VirtualTask(CALL, IF_TASK_NAME, subTaskToCompute, location())
-        .startComputation(worker)
+        .compute(worker)
         .addConsumer(result);
   }
 

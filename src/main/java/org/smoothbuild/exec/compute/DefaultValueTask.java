@@ -32,6 +32,6 @@ public class DefaultValueTask extends StepTask {
     String functionName = LambdaTuple.name(((Tuple) obj)).jValue();
     Task task = taskCreator.taskForNamedFunctionParameterDefaultValue(
         scope, functionName, index);
-    task.startComputation(worker).addConsumer(result);
+    task.compute(worker).addConsumer(result);
   }
 }

@@ -36,6 +36,6 @@ public class EvaluateTask extends StepTask {
     String name = LambdaTuple.name(((Tuple) obj)).jValue();
     Task task = taskCreator.taskForEvaluatingLambda(
         scope, variables, type(), name, arguments, location());
-    task.startComputation(worker).addConsumer(result);
+    task.compute(worker).addConsumer(result);
   }
 }

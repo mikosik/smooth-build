@@ -1,7 +1,6 @@
 package org.smoothbuild.exec.compute;
 
 import static org.smoothbuild.exec.compute.TaskKind.BUILDER;
-import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.MAP;
 import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
 import static org.smoothbuild.lang.base.define.MapFunction.MAP_FUNCTION_NAME;
@@ -37,16 +36,16 @@ public class MapTask extends RealTask {
   }
 
   @Override
-  public Feeder<Obj> startComputation(Worker worker) {
+  public Feeder<Obj> compute(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
     // functionTask is started, but we don't add any consumer waiting for it here.
     // Each task that actually maps single array element using that function will depend
     // on functionTask. We start it here to potentially so it executes in background so
     // is quicker available to element mapping tasks.
-    functionTask().startComputation(worker);
+    functionTask().compute(worker);
 
     arrayTask()
-        .startComputation(worker)
+        .compute(worker)
         .addConsumer(obj -> onArrayCompleted(obj, result, worker));
     return result;
   }
@@ -56,7 +55,7 @@ public class MapTask extends RealTask {
     ArrayType arrayType = (ArrayType) type();
     var elemTasks = map(array.asIterable(Obj.class), o -> mapElementTask(arrayType.elemType(), o));
     taskCreator.arrayLiteralTask(MAP, arrayType, elemTasks, location())
-        .startComputation(worker)
+        .compute(worker)
         .addConsumer(result);
   }
 

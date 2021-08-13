@@ -19,10 +19,10 @@ public abstract class StepTask extends RealTask {
   }
 
   @Override
-  public Feeder<Obj> startComputation(Worker worker) {
+  public Feeder<Obj> compute(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
     dependencies().get(0)
-        .startComputation(worker)
+        .compute(worker)
         .addConsumer(obj -> notifyCompleted(obj, worker, result));
     return result;
   }

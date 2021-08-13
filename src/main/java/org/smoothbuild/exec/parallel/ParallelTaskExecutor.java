@@ -63,7 +63,7 @@ public class ParallelTaskExecutor {
 
     public Map<Value, Optional<Obj>> executeAll(Map<Value, Task> tasks)
         throws InterruptedException {
-      var results = mapValues(tasks, task -> task.startComputation(this));
+      var results = mapValues(tasks, task -> task.compute(this));
       runWhenAllAvailable(results.values(), jobExecutor::terminate);
 
       jobExecutor.awaitTermination();
