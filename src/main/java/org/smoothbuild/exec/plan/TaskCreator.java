@@ -81,32 +81,44 @@ public class TaskCreator {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final MethodLoader methodLoader;
-
-  private final Map<Class<?>, Object> map = ImmutableMap.<Class<?>, Object>builder()
-      .put(NativeExpression.class,
-          new Handler<>(this::nativeLazy, this::nativeEager))
-      .put(CallExpression.class,
-          new Handler<>(this::callLazy, this::callEager))
-      .put(FieldReadExpression.class,
-          new Handler<>(this::fieldReadLazy, this::fieldReadEager))
-      .put(ParameterReferenceExpression.class,
-          new Handler<>(this::paramReferenceLazyTask, this::paramReferenceLazyTask))
-      .put(ReferenceExpression.class,
-          new Handler<>(this::referenceLazy, this::referenceEager))
-      .put(ArrayLiteralExpression.class,
-          new Handler<>(this::arrayLazy, this::arrayEager))
-      .put(BlobLiteralExpression.class,
-          new Handler<>(this::blobLazy, this::blobEager))
-      .put(StringLiteralExpression.class,
-          new Handler<>(this::stringLazy, this::stringEager))
-      .build();
+  private final Map<Class<?>, Handler<?>> map;
 
   @Inject
   public TaskCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
       MethodLoader methodLoader) {
+    this(definitions, toSpecConverter, methodLoader, ImmutableMap.of());
+  }
+
+  // Visible for testing
+  TaskCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
+      MethodLoader methodLoader, Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;
     this.toSpecConverter = toSpecConverter;
     this.methodLoader = methodLoader;
+    this.map = constructHandlers(additionalHandlers);
+  }
+
+  private ImmutableMap<Class<?>, Handler<?>> constructHandlers(
+      Map<Class<?>, Handler<?>> additionalHandlers) {
+    return ImmutableMap.<Class<?>, Handler<?>>builder()
+        .put(NativeExpression.class,
+            new Handler<>(this::nativeLazy, this::nativeEager))
+        .put(CallExpression.class,
+            new Handler<>(this::callLazy, this::callEager))
+        .put(FieldReadExpression.class,
+            new Handler<>(this::fieldReadLazy, this::fieldReadEager))
+        .put(ParameterReferenceExpression.class,
+            new Handler<>(this::paramReferenceLazyTask, this::paramReferenceLazyTask))
+        .put(ReferenceExpression.class,
+            new Handler<>(this::referenceLazy, this::referenceEager))
+        .put(ArrayLiteralExpression.class,
+            new Handler<>(this::arrayLazy, this::arrayEager))
+        .put(BlobLiteralExpression.class,
+            new Handler<>(this::blobLazy, this::blobEager))
+        .put(StringLiteralExpression.class,
+            new Handler<>(this::stringLazy, this::stringEager))
+        .putAll(additionalHandlers)
+        .build();
   }
 
   public Task taskFor(Scope<Task> scope, Expression expression, boolean eager) {
@@ -124,6 +136,9 @@ public class TaskCreator {
   public <T> Handler<T> handlerFor(Expression expression) {
     @SuppressWarnings("unchecked")
     Handler<T> result = (Handler<T>) map.get(expression.getClass());
+    if (result == null) {
+      System.out.println("expression.getClass() = " + expression.getClass());
+    }
     return result;
   }
 
@@ -463,7 +478,7 @@ public class TaskCreator {
         CONVERSION, requiredType, description, algorithm, list(task), task.location());
   }
 
-  private record Handler<E>(
+  public record Handler<E>(
       BiFunction<Scope<Task>, E, Task> lazyTask,
       BiFunction<Scope<Task>, E, Task> eagerTask) {
     public BiFunction<Scope<Task>, E, Task> task(boolean eager) {

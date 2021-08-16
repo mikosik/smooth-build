@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
+import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NativeFunction;
@@ -51,6 +52,10 @@ public class TestingLang {
         Types.array(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
+  public static ReferenceExpression reference(GlobalReferencable referencable) {
+    return reference(1, referencable.type(), referencable.name());
+  }
+
   public static ReferenceExpression reference(int line, Type type, String name) {
     return new ReferenceExpression(name, type, loc(line));
   }
@@ -66,6 +71,10 @@ public class TestingLang {
   public static FieldReadExpression fieldRead(
       int line, ItemSignature field, Expression expression) {
     return new FieldReadExpression(field, expression, loc(line));
+  }
+
+  public static CallExpression call(Type type, Expression expression, Expression... arguments) {
+    return call(1, type, expression, arguments);
   }
 
   public static CallExpression call(
@@ -118,6 +127,10 @@ public class TestingLang {
   public static Constructor constr(int line, Type resultType, String name, Item... parameters) {
     return new Constructor(
         resultType, modulePath(), name, ImmutableList.copyOf(parameters), loc(line));
+  }
+
+  public static Item parameter(Type type, String name) {
+    return parameter(1, type, name);
   }
 
   public static Item parameter(int line, Type type, String name) {
