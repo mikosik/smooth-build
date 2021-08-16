@@ -10,8 +10,6 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Any;
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
@@ -19,7 +17,6 @@ import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.db.object.spec.AnySpec;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
@@ -55,10 +52,6 @@ public class ObjectFactory {
     return objectDb.tupleSpec(list(objectDb.blobSpec(), objectDb.stringSpec()));
   }
 
-  public Any any(Hash wrappedHash) {
-    return objectDb.any(wrappedHash);
-  }
-
   public ArrayBuilder arrayBuilder(Spec elementSpec) {
     return objectDb.arrayBuilder(elementSpec);
   }
@@ -92,10 +85,6 @@ public class ObjectFactory {
 
   public ArraySpec arraySpec(Spec elementSpec) {
     return objectDb.arraySpec(elementSpec);
-  }
-
-  public AnySpec anySpec() {
-    return objectDb.anySpec();
   }
 
   public BlobSpec blobSpec() {

@@ -99,30 +99,23 @@ public class TestedType {
       A);
 
   public static final List<TestedType> TESTED_MONOTYPES = list(
-      ANY,
       BLOB,
       BOOL,
       NOTHING,
       STRING,
       STRUCT,
-      a(ANY),
       a(BLOB),
       a(NOTHING),
       a(STRUCT),
-      a(a(ANY)),
       a(a(BLOB)),
       a(a(NOTHING)),
       a(a(STRUCT)),
       f(BLOB),
-      f(ANY),
       f(NOTHING),
-      f(f(ANY)),
       f(f(BLOB)),
       f(f(NOTHING)),
-      f(BLOB, ANY),
       f(BLOB, BOOL),
       f(BLOB, NOTHING),
-      f(BLOB, f(ANY)),
       f(BLOB, f(BOOL)),
       f(BLOB, f(NOTHING))
   );

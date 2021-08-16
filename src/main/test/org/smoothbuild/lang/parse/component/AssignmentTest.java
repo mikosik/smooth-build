@@ -8,6 +8,7 @@ import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
+import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -112,7 +113,7 @@ public class AssignmentTest {
   }
 
   private static List<TestedAssignmentSpec> parameter_assignment_test_data() {
-    return parameter_assignment_test_specs();
+    return parameter_assignment_test_specs(false);
   }
 
   @ParameterizedTest
@@ -152,21 +153,23 @@ public class AssignmentTest {
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        result.add(Arguments.of(
-            type1, type2, type1.strippedType().mergeWith(type2.strippedType(), UPPER)));
+        Type commonSuperType = type1.strippedType().mergeWith(type2.strippedType(), UPPER);
+        if (!commonSuperType.contains(any())) {
+          result.add(Arguments.of(type1, type2, commonSuperType));
+        }
       }
     }
     return result;
   }
 
   private static List<TestedAssignmentSpec> without_polytypes_test_specs() {
-    return assignment_test_specs()
+    return assignment_test_specs(false)
         .stream()
         .filter(a -> !(a.target().type().isPolytype() || a.source().type().isPolytype()))
         .collect(toList());
   }
 
   private static List<TestedAssignmentSpec> test_specs() {
-    return assignment_test_specs();
+    return assignment_test_specs(false);
   }
 }

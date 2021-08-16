@@ -31,6 +31,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
+import static org.smoothbuild.lang.base.type.Types.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.function;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.constraint.TestingBoundsMap.bm;
@@ -57,7 +58,7 @@ import com.google.common.testing.EqualsTester;
 public class TypeTest {
   @Test
   public void verify_all_base_types_are_tested() {
-    assertThat(BASE_TYPES)
+    assertThat(INFERABLE_BASE_TYPES)
         .hasSize(5);
   }
 
@@ -203,6 +204,124 @@ public class TypeTest {
   }
 
   @ParameterizedTest
+  @MethodSource("contains_test_data")
+  public void contains(Type type, Type contained, boolean expected) {
+    assertThat(type.contains(contained))
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> contains_test_data() {
+    return list(
+        arguments(ANY, ANY, true),
+        arguments(ANY, BLOB, false),
+        arguments(ANY, BOOL, false),
+        arguments(ANY, NOTHING, false),
+        arguments(ANY, STRING, false),
+        arguments(ANY, PERSON, false),
+
+        arguments(ANY, a(ANY), false),
+        arguments(ANY, a(BLOB), false),
+        arguments(ANY, a(BOOL), false),
+        arguments(ANY, a(NOTHING), false),
+        arguments(ANY, a(STRING), false),
+        arguments(ANY, a(PERSON), false),
+
+        arguments(ANY, f(ANY), false),
+        arguments(ANY, f(BLOB), false),
+        arguments(ANY, f(BOOL), false),
+        arguments(ANY, f(NOTHING), false),
+        arguments(ANY, f(STRING), false),
+        arguments(ANY, f(PERSON), false),
+
+        arguments(BLOB, ANY, false),
+        arguments(BLOB, BLOB, true),
+        arguments(BLOB, BOOL, false),
+        arguments(BLOB, NOTHING, false),
+        arguments(BLOB, STRING, false),
+        arguments(BLOB, PERSON, false),
+
+        arguments(BLOB, a(ANY), false),
+        arguments(BLOB, a(BLOB), false),
+        arguments(BLOB, a(BOOL), false),
+        arguments(BLOB, a(NOTHING), false),
+        arguments(BLOB, a(STRING), false),
+        arguments(BLOB, a(PERSON), false),
+
+        arguments(BLOB, f(ANY), false),
+        arguments(BLOB, f(BLOB), false),
+        arguments(BLOB, f(BOOL), false),
+        arguments(BLOB, f(NOTHING), false),
+        arguments(BLOB, f(STRING), false),
+        arguments(BLOB, f(PERSON), false),
+
+        arguments(a(BLOB), ANY, false),
+        arguments(a(BLOB), BLOB, true),
+        arguments(a(BLOB), BOOL, false),
+        arguments(a(BLOB), NOTHING, false),
+        arguments(a(BLOB), STRING, false),
+        arguments(a(BLOB), PERSON, false),
+
+        arguments(a(BLOB), a(ANY), false),
+        arguments(a(BLOB), a(BLOB), true),
+        arguments(a(BLOB), a(BOOL), false),
+        arguments(a(BLOB), a(NOTHING), false),
+        arguments(a(BLOB), a(STRING), false),
+        arguments(a(BLOB), a(PERSON), false),
+
+        arguments(a(BLOB), f(ANY), false),
+        arguments(a(BLOB), f(BLOB), false),
+        arguments(a(BLOB), f(BOOL), false),
+        arguments(a(BLOB), f(NOTHING), false),
+        arguments(a(BLOB), f(STRING), false),
+        arguments(a(BLOB), f(PERSON), false),
+
+        arguments(f(BLOB), ANY, false),
+        arguments(f(BLOB), BLOB, true),
+        arguments(f(BLOB), BOOL, false),
+        arguments(f(BLOB), NOTHING, false),
+        arguments(f(BLOB), STRING, false),
+        arguments(f(BLOB), PERSON, false),
+
+        arguments(f(BLOB), a(ANY), false),
+        arguments(f(BLOB), a(BLOB), false),
+        arguments(f(BLOB), a(BOOL), false),
+        arguments(f(BLOB), a(NOTHING), false),
+        arguments(f(BLOB), a(STRING), false),
+        arguments(f(BLOB), a(PERSON), false),
+
+        arguments(f(BLOB), f(ANY), false),
+        arguments(f(BLOB), f(BLOB), true),
+        arguments(f(BLOB), f(BOOL), false),
+        arguments(f(BLOB), f(NOTHING), false),
+        arguments(f(BLOB), f(STRING), false),
+        arguments(f(BLOB), f(PERSON), false),
+
+        arguments(f(STRING, BLOB), ANY, false),
+        arguments(f(STRING, BLOB), BLOB, true),
+        arguments(f(STRING, BLOB), BOOL, false),
+        arguments(f(STRING, BLOB), NOTHING, false),
+        arguments(f(STRING, BLOB), STRING, true),
+        arguments(f(STRING, BLOB), PERSON, false),
+
+        arguments(f(STRING, BLOB), a(ANY), false),
+        arguments(f(STRING, BLOB), a(BLOB), false),
+        arguments(f(STRING, BLOB), a(BOOL), false),
+        arguments(f(STRING, BLOB), a(NOTHING), false),
+        arguments(f(STRING, BLOB), a(STRING), false),
+        arguments(f(STRING, BLOB), a(PERSON), false),
+
+        arguments(f(STRING, BLOB), f(ANY), false),
+        arguments(f(STRING, BLOB), f(BLOB), false),
+        arguments(f(STRING, BLOB), f(BOOL), false),
+        arguments(f(STRING, BLOB), f(NOTHING), false),
+        arguments(f(STRING, BLOB), f(STRING), false),
+        arguments(f(STRING, BLOB), f(PERSON), false),
+
+        arguments(f(STRING, BLOB), f(STRING, BLOB), true)
+    );
+  }
+
+  @ParameterizedTest
   @MethodSource("variables_test_data")
   public void variables(Type type, Set<Variable> variables) {
     assertThat(type.variables())
@@ -248,7 +367,7 @@ public class TypeTest {
   }
 
   public static List<TestedAssignmentSpec> isAssignableFrom_test_data() {
-    return TestedAssignmentSpec.assignment_test_specs();
+    return TestedAssignmentSpec.assignment_test_specs(true);
   }
 
   @ParameterizedTest
@@ -259,7 +378,7 @@ public class TypeTest {
   }
 
   public static List<TestedAssignmentSpec> isParamAssignableFrom_test_data() {
-    return TestedAssignmentSpec.parameter_assignment_test_specs();
+    return TestedAssignmentSpec.parameter_assignment_test_specs(true);
   }
 
   @ParameterizedTest

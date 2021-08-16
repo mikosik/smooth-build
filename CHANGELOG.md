@@ -7,7 +7,6 @@ Version 0.20.0 (??????????)
  * added `a`, `d`, `n` to `--show-tasks` option in `smooth build` command as shortcuts to `all`, `default`, `none`
  * added `field`, `reference`, `map` matchers to `--show-tasks` option in `smooth build` command
  * changed smooth language: added PURE/IMPURE attribute to @Native annotation
- * changed smooth language: added `Any` type
  * changed smooth language: parameters with default arguments are no longer required to be placed at the end of parameter list
  * changed smooth language: removed automatic conversions
  * changed smooth language: function call must have parentheses

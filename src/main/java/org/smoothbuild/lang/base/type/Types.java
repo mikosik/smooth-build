@@ -14,15 +14,24 @@ public class Types {
   private static final StringType STRING = new StringType();
 
   /**
-   * Base types available in smooth language.
+   * Base types that are legal in smooth language.
    */
   public static final ImmutableSet<BaseType> BASE_TYPES = ImmutableSet.of(
-      ANY,
       BLOB,
       BOOL,
       NOTHING,
       STRING
   );
+
+  /**
+   * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
+   * language.
+   */
+  public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES =
+      ImmutableSet.<BaseType>builder()
+          .addAll(BASE_TYPES)
+          .add(ANY)
+          .build();
 
   public static Variable variable(String name) {
     checkArgument(isVariableName(name), "Illegal type variable name '%s'", name);

@@ -6,7 +6,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.spec.AnySpec;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
@@ -41,9 +40,7 @@ public class ConvertAlgorithm extends Algorithm {
   }
 
   private static Obj convert(Spec destinationSpec, Obj obj, NativeApi nativeApi) {
-    if (destinationSpec instanceof AnySpec) {
-      return nativeApi.factory().any(obj.hash());
-    } else if (obj instanceof Array array) {
+    if (obj instanceof Array array) {
       return convertArray(destinationSpec, array, nativeApi);
     }
     throw newBuildBrokenException("Expected `Array` spec but got " + obj.getClass());

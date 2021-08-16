@@ -18,6 +18,7 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 /**
  * This class and all its subclasses are immutable.
@@ -55,6 +56,12 @@ public abstract class Type {
    */
   public boolean isPolytype() {
     return !variables().isEmpty();
+  }
+
+  public boolean contains(Type that) {
+    return this.equals(that)
+        || covariants.stream().anyMatch(c -> c.contains(that))
+        || contravariants.stream().anyMatch(c -> c.contains(that));
   }
 
   /**

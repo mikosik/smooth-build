@@ -12,15 +12,6 @@ import okio.ByteString;
 
 public class ObjectStableHashTest extends TestingContext {
   @Nested
-  class _any {
-    @Test
-    public void hash_of_some_any_is_stable() {
-      assertThat(any(Hash.of(12345)).hash())
-          .isEqualTo(Hash.decode("c3bf0d48a05773734060eabbcbf5ad75ebb6a095"));
-    }
-  }
-
-  @Nested
   class _blob {
     @Test
     public void hash_of_empty_blob_is_stable() throws Exception {
@@ -82,18 +73,6 @@ public class ObjectStableHashTest extends TestingContext {
 
   @Nested
   class _array {
-    @Test
-    public void hash_of_empty_any_array_is_stable() {
-      assertThat(emptyArrayOf(anySpec()).hash())
-          .isEqualTo(Hash.decode("7407748acd5db8248df4aef7446c06b2753c78d7"));
-    }
-
-    @Test
-    public void hash_of_non_empty_any_array_is_stable() {
-      assertThat(arrayBuilder(anySpec()).add(any(Hash.of(1234))).build().hash())
-          .isEqualTo(Hash.decode("8ca8a3c55b082c48a2735701105485d1323ef159"));
-    }
-
     @Test
     public void hash_of_empty_blob_array_is_stable() {
       assertThat(emptyArrayOf(blobSpec()).hash())

@@ -55,50 +55,62 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     return new TestedAssignmentSpec(target, source, true);
   }
 
-  public static List<TestedAssignmentSpec> assignment_test_specs() {
+  public static List<TestedAssignmentSpec> assignment_test_specs(boolean includeAny) {
     var result = new ArrayList<TestedAssignmentSpec>();
-    result.addAll(testSpecsCommonForNormalCaseAndParameterAssignment());
-    result.addAll(testSpecSpecificForNormalAssignment());
+    result.addAll(testSpecsCommonForNormalCaseAndParameterAssignment(includeAny));
+    result.addAll(testSpecSpecificForNormalAssignment(includeAny));
     return result;
   }
 
-  public static List<TestedAssignmentSpec> parameter_assignment_test_specs() {
+  public static List<TestedAssignmentSpec> parameter_assignment_test_specs(boolean includeAny) {
     var result = new ArrayList<TestedAssignmentSpec>();
-    result.addAll(testSpecsCommonForNormalCaseAndParameterAssignment());
-    result.addAll(testSpecsSpecificForParameterAssignment());
+    result.addAll(testSpecsCommonForNormalCaseAndParameterAssignment(includeAny));
+    result.addAll(testSpecsSpecificForParameterAssignment(includeAny));
     return result;
   }
 
-  public static List<TestedAssignmentSpec> testSpecsCommonForNormalCaseAndParameterAssignment() {
+  private static List<TestedAssignmentSpec> testSpecsCommonForNormalCaseAndParameterAssignment(
+      boolean includeAny) {
     var r = new ArrayList<TestedAssignmentSpec>();
-    gen(r, ANY, mAll());
-    gen(r, BLOB, oneOf(BLOB, NOTHING));
-    gen(r, NOTHING, oneOf(NOTHING));
-    gen(r, STRUCT, oneOf(STRUCT, NOTHING));
+    if (includeAny) {
+      gen(r, ANY, includeAny, mAll());
+    }
+    gen(r, BLOB, includeAny, oneOf(BLOB, NOTHING));
+    gen(r, NOTHING, includeAny, oneOf(NOTHING));
+    gen(r, STRUCT, includeAny, oneOf(STRUCT, NOTHING));
 
-    gen(r, a(ANY), TestedType::isArray, mNothing());
-    gen(r, a(BLOB), oneOf(a(BLOB), a(NOTHING), NOTHING));
-    gen(r, a(NOTHING), oneOf(a(NOTHING), NOTHING));
-    gen(r, a(STRUCT), oneOf(a(STRUCT), a(NOTHING), NOTHING));
+    if (includeAny) {
+      gen(r, a(ANY), includeAny, TestedType::isArray, mNothing());
+    }
+    gen(r, a(BLOB), includeAny, oneOf(a(BLOB), a(NOTHING), NOTHING));
+    gen(r, a(NOTHING), includeAny, oneOf(a(NOTHING), NOTHING));
+    gen(r, a(STRUCT), includeAny, oneOf(a(STRUCT), a(NOTHING), NOTHING));
+    if (includeAny) {
+      gen(r, a2(ANY), includeAny, TestedType::isArrayOfArrays, t -> t.isArrayOf(NOTHING), mNothing());
+    }
+    gen(r, a2(BLOB), includeAny, oneOf(a2(BLOB), a2(NOTHING), a(NOTHING), NOTHING));
+    gen(r, a2(NOTHING), includeAny, oneOf(a2(NOTHING), a(NOTHING), NOTHING));
+    gen(r, a2(STRUCT), includeAny, oneOf(a2(STRUCT), a2(NOTHING), a(NOTHING), NOTHING));
 
-    gen(r, a2(ANY), TestedType::isArrayOfArrays, t -> t.isArrayOf(NOTHING), mNothing());
-    gen(r, a2(BLOB), oneOf(a2(BLOB), a2(NOTHING), a(NOTHING), NOTHING));
-    gen(r, a2(NOTHING), oneOf(a2(NOTHING), a(NOTHING), NOTHING));
-    gen(r, a2(STRUCT), oneOf(a2(STRUCT), a2(NOTHING), a(NOTHING), NOTHING));
+    if (includeAny) {
+      gen(r, f(ANY), includeAny, mNothing(), mFunc(mAll()));
+    }
+    gen(r, f(BLOB), includeAny, mNothing(), mFunc(oneOf(BLOB, NOTHING)));
+    gen(r, f(NOTHING), includeAny, mNothing(), mFunc(oneOf(NOTHING)));
 
-    gen(r, f(ANY),              mNothing(), mFunc(mAll()));
-    gen(r, f(BLOB),             mNothing(), mFunc(oneOf(BLOB, NOTHING)));
-    gen(r, f(NOTHING),          mNothing(), mFunc(oneOf(NOTHING)));
-
-    gen(r, f(ANY, ANY),         mNothing(), mFunc(mAll(), oneOf(ANY)));
-    gen(r, f(ANY, BLOB),        mNothing(), mFunc(mAll(), oneOf(ANY, BLOB)));
-    gen(r, f(ANY, NOTHING),     mNothing(), mFunc(mAll(), mAll()));
-    gen(r, f(BLOB, ANY),        mNothing(), mFunc(oneOf(BLOB, NOTHING), oneOf(ANY)));
-    gen(r, f(BLOB, BLOB),       mNothing(), mFunc(oneOf(BLOB, NOTHING), oneOf(ANY, BLOB)));
-    gen(r, f(BLOB, NOTHING),    mNothing(), mFunc(oneOf(BLOB, NOTHING), mAll()));
-    gen(r, f(NOTHING, ANY),     mNothing(), mFunc(oneOf(NOTHING), oneOf(ANY)));
-    gen(r, f(NOTHING, BLOB),    mNothing(), mFunc(oneOf(NOTHING), oneOf(ANY, BLOB)));
-    gen(r, f(NOTHING, NOTHING), mNothing(), mFunc(oneOf(NOTHING), mAll()));
+    if (includeAny) {
+      gen(r, f(ANY, ANY), includeAny, mNothing(), mFunc(mAll(), oneOf(ANY)));
+      gen(r, f(ANY, BLOB), includeAny, mNothing(), mFunc(mAll(), oneOf(ANY, BLOB)));
+      gen(r, f(ANY, NOTHING), includeAny, mNothing(), mFunc(mAll(), mAll()));
+      gen(r, f(BLOB, ANY), includeAny, mNothing(), mFunc(oneOf(BLOB, NOTHING), oneOf(ANY)));
+    }
+    gen(r, f(BLOB, BLOB), includeAny, mNothing(), mFunc(oneOf(BLOB, NOTHING), oneOf(ANY, BLOB)));
+    gen(r, f(BLOB, NOTHING), includeAny, mNothing(), mFunc(oneOf(BLOB, NOTHING), mAll()));
+    if (includeAny) {
+      gen(r, f(NOTHING, ANY), includeAny, mNothing(), mFunc(oneOf(NOTHING), oneOf(ANY)));
+    }
+    gen(r, f(NOTHING, BLOB), includeAny, mNothing(), mFunc(oneOf(NOTHING), oneOf(ANY, BLOB)));
+    gen(r, f(NOTHING, NOTHING), includeAny, mNothing(), mFunc(oneOf(NOTHING), mAll()));
 
     r.addAll(list(
         // functions
@@ -148,17 +160,18 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     return r;
   }
 
-  public static List<TestedAssignmentSpec> testSpecSpecificForNormalAssignment() {
+  private static List<TestedAssignmentSpec> testSpecSpecificForNormalAssignment(
+      boolean includeAny) {
     List<TestedAssignmentSpec> r = new ArrayList<>();
-    gen(r, A, oneOf(NOTHING, A));
-    gen(r, B, oneOf(NOTHING));
+    gen(r, A, includeAny, oneOf(NOTHING, A));
+    gen(r, B, includeAny, oneOf(NOTHING));
 
-    gen(r, a(A), oneOf(NOTHING, a(NOTHING), a(A)));
-    gen(r, a(B), oneOf(NOTHING, a(NOTHING)));
-    gen(r, a2(A), oneOf(NOTHING, a(NOTHING), a2(NOTHING), a2(A)));
-    gen(r, a2(B), oneOf(NOTHING, a(NOTHING), a2(NOTHING)));
+    gen(r, a(A), includeAny, oneOf(NOTHING, a(NOTHING), a(A)));
+    gen(r, a(B), includeAny, oneOf(NOTHING, a(NOTHING)));
+    gen(r, a2(A), includeAny, oneOf(NOTHING, a(NOTHING), a2(NOTHING), a2(A)));
+    gen(r, a2(B), includeAny, oneOf(NOTHING, a(NOTHING), a2(NOTHING)));
 
-    gen(r, f(A), oneOf(NOTHING), mFunc(oneOf(A, NOTHING)));
+    gen(r, f(A), includeAny, oneOf(NOTHING), mFunc(oneOf(A, NOTHING)));
 
     r.addAll(list(
         // functions
@@ -220,14 +233,15 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     return r;
   }
 
-  public static List<TestedAssignmentSpec> testSpecsSpecificForParameterAssignment() {
+  private static List<TestedAssignmentSpec> testSpecsSpecificForParameterAssignment(
+      boolean includeAny) {
     List<TestedAssignmentSpec> r = new ArrayList<>();
-    gen(r, A, mAll());
-    gen(r, B, mAll());
-    gen(r, a(A), mNothing(), TestedType::isArray);
-    gen(r, a(B), mNothing(), TestedType::isArray);
-    gen(r, a2(A), oneOf(NOTHING, a(NOTHING)), TestedType::isArrayOfArrays);
-    gen(r, a2(B), oneOf(NOTHING, a(NOTHING)), TestedType::isArrayOfArrays);
+    gen(r, A, includeAny, mAll());
+    gen(r, B, includeAny, mAll());
+    gen(r, a(A), includeAny, mNothing(), TestedType::isArray);
+    gen(r, a(B), includeAny, mNothing(), TestedType::isArray);
+    gen(r, a2(A), includeAny, oneOf(NOTHING, a(NOTHING)), TestedType::isArrayOfArrays);
+    gen(r, a2(B), includeAny, oneOf(NOTHING, a(NOTHING)), TestedType::isArrayOfArrays);
 
     r.addAll(list(
         allowedAssignment(f(A, A), f(A, A)),
@@ -309,19 +323,22 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
   }
 
   private static List<TestedAssignmentSpec> gen(List<TestedAssignmentSpec> result,
-      TestedType target, Predicate<TestedType>... allowedPredicates) {
-    for (TestedType type : generateTypes(2)) {
+      TestedType target, boolean includeAny, Predicate<TestedType>... allowedPredicates) {
+    for (TestedType type : generateTypes(2, includeAny)) {
       boolean allowed = stream(allowedPredicates).anyMatch(predicate -> predicate.test(type));
       result.add(new TestedAssignmentSpec(target, type, allowed));
     }
     return result;
   }
 
-  private static ImmutableList<TestedType> generateTypes(int depth) {
+  private static ImmutableList<TestedType> generateTypes(int depth, boolean includeAny) {
     Builder<TestedType> builder = ImmutableList.builder();
-    builder.add(ANY, BLOB, NOTHING, STRUCT);
+    builder.add(BLOB, NOTHING, STRUCT);
+    if (includeAny) {
+      builder.add(ANY);
+    }
     if (0 < depth) {
-      List<TestedType> types = generateTypes(depth - 1);
+      List<TestedType> types = generateTypes(depth - 1, includeAny);
       for (TestedType type : types) {
         builder.add(a(type));
         builder.add(f(type));

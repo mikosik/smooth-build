@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
+import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.function;
@@ -239,15 +240,23 @@ public class InferTypes {
           return empty();
         }
 
-        Type elemType = firstType.get();
+        Type type = firstType.get();
         for (int i = 1; i < expressions.size(); i++) {
-          Optional<Type> type = expressions.get(i).type();
-          if (type.isEmpty()) {
+          ExprNode elem = expressions.get(i);
+          Optional<Type> elemType = elem.type();
+          if (elemType.isEmpty()) {
             return empty();
           }
-          elemType = elemType.mergeWith(type.get(), UPPER);
+          type = type.mergeWith(elemType.get(), UPPER);
+          if (type.contains(any())) {
+            logBuffer.log(parseError(elem.location(),
+                "Array elements at indexes 0 and " + i + " doesn't have common super type."
+                + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
+                + "\nElement at index " + i + " type = " + elemType.get().q()));
+            return empty();
+          }
         }
-        return Optional.of(array(elemType));
+        return Optional.of(array(type));
       }
 
       @Override
@@ -263,6 +272,8 @@ public class InferTypes {
           if (args.containsProblem()) {
             logBuffer.logAll(args.logs());
             call.setType(empty());
+          } else if (someArgumentHasNotInferredType(args.value())) {
+            call.setType(empty());
           } else {
             call.setAssignedArgs(args.value());
             Maybe<Type> type = inferCallType(call, functionType.resultType(), parameters);
@@ -274,6 +285,12 @@ public class InferTypes {
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
         }
+      }
+
+      private static boolean someArgumentHasNotInferredType(List<Optional<ArgNode>> assignedArgs) {
+        return assignedArgs.stream()
+            .flatMap(Optional::stream)
+            .anyMatch(a -> a.type().isEmpty());
       }
 
       private static String description(ExprNode node) {

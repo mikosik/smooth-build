@@ -1,10 +1,12 @@
 package org.smoothbuild.lang.parse;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.base.type.FunctionType.inferVariableBoundsInCall;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
@@ -16,10 +18,13 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
+import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
+
+import com.google.common.collect.ImmutableList;
 
 public class InferCallType {
   public static Maybe<Type> inferCallType(CallNode call, Type resultType,
@@ -36,6 +41,11 @@ public class InferCallType {
           resultType,
           map(parameters, ItemSignature::type),
           map(assignedTypes, Optional::get));
+      var variableProblems = findVariableProblems(call, boundedVariables);
+      if (!variableProblems.isEmpty()) {
+        logBuffer.logAll(variableProblems);
+        return maybeLogs(logBuffer);
+      }
       return maybeValueAndLogs(resultType.mapVariables(boundedVariables, LOWER), logBuffer);
     }
     return maybeLogs(logBuffer);
@@ -80,5 +90,14 @@ public class InferCallType {
 
   private static boolean allAssignedTypesAreInferred(List<Optional<Type>> assigned) {
     return assigned.stream().allMatch(Optional::isPresent);
+  }
+
+  private static ImmutableList<Log> findVariableProblems(
+      CallNode call, BoundsMap boundedVariables) {
+    return boundedVariables.map().values().stream()
+        .filter(b -> b.bounds().get(LOWER).contains(any()))
+        .map(b -> parseError(call, "Cannot infer actual type for type variable "
+            + b.variable().q() + "."))
+        .collect(toImmutableList());
   }
 }

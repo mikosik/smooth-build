@@ -11,7 +11,6 @@ import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
-import org.smoothbuild.lang.base.type.AnyType;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
@@ -32,9 +31,7 @@ public class TypeToSpecConverter {
 
   public Spec visit(Type type) {
     // TODO refactor to pattern matching once we have java 17
-    if (type instanceof AnyType) {
-      return objectFactory.anySpec();
-    } else if (type instanceof BlobType blob) {
+    if (type instanceof BlobType blob) {
       return visit(blob);
     } else if (type instanceof BoolType) {
       return objectFactory.boolSpec();

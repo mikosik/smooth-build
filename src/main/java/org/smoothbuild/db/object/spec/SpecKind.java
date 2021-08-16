@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.spec;
 
-import org.smoothbuild.db.object.base.Any;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
@@ -14,8 +13,7 @@ public enum SpecKind {
   ARRAY((byte) 3, Array.class),
   BLOB((byte) 4, Blob.class),
   BOOL((byte) 5, Bool.class),
-  STRING((byte) 6, Str.class),
-  ANY((byte) 7, Any.class);
+  STRING((byte) 6, Str.class);
 
   private final byte marker;
   private final Class<? extends Obj> jType;

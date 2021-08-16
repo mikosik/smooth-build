@@ -31,19 +31,16 @@ public class SpecCachingTest extends TestingContext {
 
   private static List<Function<ObjectDb, Spec>> spec_creators() {
     return list(
-        ObjectDb::anySpec,
         ObjectDb::blobSpec,
         ObjectDb::boolSpec,
         ObjectDb::nothingSpec,
         ObjectDb::stringSpec,
         SpecCachingTest::tupleSpec,
-        (objectDb) -> objectDb.arraySpec(objectDb.anySpec()),
         (objectDb) -> objectDb.arraySpec(objectDb.blobSpec()),
         (objectDb) -> objectDb.arraySpec(objectDb.boolSpec()),
         (objectDb) -> objectDb.arraySpec(objectDb.nothingSpec()),
         (objectDb) -> objectDb.arraySpec(objectDb.stringSpec()),
         (objectDb) -> objectDb.arraySpec(tupleSpec(objectDb)),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.anySpec())),
         (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.blobSpec())),
         (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.boolSpec())),
         (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.nothingSpec())),

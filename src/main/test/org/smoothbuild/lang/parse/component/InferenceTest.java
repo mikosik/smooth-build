@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
-import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -168,6 +167,104 @@ public class InferenceTest {
   }
 
   @Nested
+  class _inferring_array_literal_type {
+    @Test
+    public void when_elements_have_the_same_type() {
+      String code = """
+            result = [ "abc", "def" ];
+            """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("result", a(STRING));
+    }
+
+    @Test
+    public void when_elements_have_convertible_types() {
+      String code = """
+            @Native("impl.met")
+            Nothing myNothing();
+            result = [ "abc", myNothing() ];
+            """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("result", a(STRING));
+    }
+
+    @Test
+    public void when_elements_have_base_types_that_have_no_common_super_type() {
+      String code = """
+            result = [
+              "abc",
+              0x01,
+            ];
+            """;
+      module(code)
+          .loadsWithError(3,"""
+                  Array elements at indexes 0 and 1 doesn't have common super type.
+                  Element at index 0 type = `String`
+                  Element at index 1 type = `Blob`""");
+    }
+
+    @Test
+    public void when_elements_have_function_types_that_have_no_common_super_type() {
+      String code = """
+            String firstFunction() = "abc";
+            Blob secondFunction() = 0x01;
+            result = [
+              firstFunction,
+              secondFunction,
+            ];
+            """;
+      module(code)
+          .loadsWithError(5, """
+                  Array elements at indexes 0 and 1 doesn't have common super type.
+                  Element at index 0 type = `String()`
+                  Element at index 1 type = `Blob()`""");
+    }
+  }
+
+  @Nested
+  class _inferring_function_parameter_generic_types_fails_when_variable_has_two_inconvertible_lower_bounds {
+    @Test
+    public void base_types() {
+      String code = """
+          String myEqual(A p1, A p2) = "true";
+          result = myEqual("def", 0x01);
+          """;
+      module(code)
+          .loadsWithError(2, "Cannot infer actual type for type variable `A`.");
+    }
+
+    @Test
+    public void arrays() {
+      String code = """
+          String myEqual(A p1, A p2) = "true";
+          result = myEqual(["def"], [0x01]);
+          """;
+      module(code)
+          .loadsWithError(2, "Cannot infer actual type for type variable `A`.");
+    }
+
+    @Test
+    public void structs_with_the_same_object_db_representation() {
+      String code = """
+          Vector {
+            String x,
+            String y,
+          }
+          Tuple {
+            String a,
+            String b,
+          }
+          String myEqual(A p1, A p2) = "true";
+          result = myEqual(vector("aaa", "bbb"), tuple("aaa", "bbb"));
+          """;
+      module(code)
+          .loadsWithError(10, "Cannot infer actual type for type variable `A`.");
+    }
+  }
+
+  @Nested
   class _inferring_call_result_type {
     @Nested
     class _identity_function_applied_to {
@@ -269,20 +366,6 @@ public class InferenceTest {
         module(code)
             .loadsSuccessfully()
             .containsReferencableWithType("myValue", f(STRING, NOTHING));
-      }
-
-      @Test
-      public void function_array_with_inconvertible_functions() {
-        String code = """
-            @Native("impl.met")
-            A firstElement([A] array);
-            String myFunction1(Blob param) = "abc";
-            String myFunction2(Blob param, Blob param2) = "abc";
-            myValue = firstElement([ myFunction1, myFunction2 ]);
-            """;
-        module(code)
-            .loadsSuccessfully()
-            .containsReferencableWithType("myValue", ANY);
       }
     }
 

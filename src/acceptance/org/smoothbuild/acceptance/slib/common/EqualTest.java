@@ -52,28 +52,6 @@ public class EqualTest extends AcceptanceTestCase {
       assertThat(artifactAsBoolean("result"))
           .isEqualTo(false);
     }
-
-    @Test
-    public void string_is_not_equal_to_bool() throws Exception {
-      createUserModule("""
-          result = equal("aaa", true);
-          """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(false);
-    }
-
-    @Test
-    public void empty_string_is_not_equal_to_empty_array() throws Exception {
-      createUserModule("""
-          result = equal("", []);
-          """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(false);
-    }
   }
 
   @Nested
@@ -154,26 +132,6 @@ public class EqualTest extends AcceptanceTestCase {
       assertFinishedWithSuccess();
       assertThat(artifactAsBoolean("result"))
           .isEqualTo(false);
-    }
-
-    @Test
-    public void struct_is_equal_to_different_struct_type_with_the_same_low_level_representation()
-        throws Exception {
-      createUserModule("""
-          Vector {
-            String x,
-            String y,
-          }
-          Tuple {
-            String a,
-            String b,
-          }
-          result = equal(vector("aaa", "bbb"), tuple("aaa", "bbb"));
-          """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactAsBoolean("result"))
-          .isEqualTo(true);
     }
   }
 

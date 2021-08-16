@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.object.base.Any;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
@@ -18,7 +17,6 @@ import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.db.ObjectFactory;
-import org.smoothbuild.db.object.spec.AnySpec;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
@@ -144,10 +142,6 @@ public class TestingContext {
     return fullFileSystem;
   }
 
-  public AnySpec anySpec() {
-    return objectDb().anySpec();
-  }
-
   public BoolSpec boolSpec() {
     return objectDb().boolSpec();
   }
@@ -183,10 +177,6 @@ public class TestingContext {
 
   public TupleSpec fileSpec() {
     return tupleSpec(list(blobSpec(), stringSpec()));
-  }
-
-  public Any any(Hash value) {
-    return objectDb().any(value);
   }
 
   public Bool bool(boolean value) {
