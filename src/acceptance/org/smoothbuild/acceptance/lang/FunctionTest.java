@@ -1,54 +1,106 @@
 package org.smoothbuild.acceptance.lang;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.String.format;
 
 import java.io.IOException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.testing.StringIdentity;
 import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class FunctionTest extends AcceptanceTestCase {
   @Nested
   class parameter_default_argument {
-    @Test
-    public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
-      createUserModule("""
+    @Nested
+    class _in_defined_function {
+      @Test
+      public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
+        createUserModule("""
           func(String withDefault = "abc") = withDefault;
           result = func();
           """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactFileContentAsString("result"))
-          .isEqualTo("abc");
-    }
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
 
-    @Test
-    public void is_ignored_when_parameter_is_assigned_in_a_call() throws Exception {
-      createUserModule("""
+      @Test
+      public void is_ignored_when_parameter_is_assigned_in_a_call() throws Exception {
+        createUserModule("""
               func(String withDefault = "abc") = withDefault;
               result = func("def");
               """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactFileContentAsString("result"))
-          .isEqualTo("def");
-    }
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("def");
+      }
 
-    @Test
-    public void is_not_evaluated_when_not_needed() throws Exception {
-      createNativeJar(ThrowException.class);
-      createUserModule("""
-          @Native("impl")
+      @Test
+      public void is_not_evaluated_when_not_needed() throws Exception {
+        createNativeJar(ThrowException.class);
+        createUserModule(format("""
+          @Native("%s.function")
           Nothing throwException();
           func(String withDefault = throwException()) = withDefault;
           result = func("def");
-          """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactFileContentAsString("result"))
-          .isEqualTo("def");
+          """, ThrowException.class.getCanonicalName()));
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("def");
+      }
+    }
+
+    @Nested
+    class _in_native_function {
+      @Test
+      public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
+        createNativeJar(StringIdentity.class);
+        createUserModule(format("""
+            @Native("%s.function")
+            String stringIdentity(String value = "abc");
+            result = stringIdentity();
+            """, StringIdentity.class.getCanonicalName()));
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
+
+      @Test
+      public void is_ignored_when_parameter_is_assigned_in_a_call() throws Exception {
+        createNativeJar(StringIdentity.class);
+        createUserModule(format("""
+            @Native("%s.function")
+            String stringIdentity(String value = "abc");
+            result = stringIdentity("def");
+            """, StringIdentity.class.getCanonicalName()));
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("def");
+      }
+
+      @Test
+      public void is_not_evaluated_when_not_needed() throws Exception {
+        createNativeJar(StringIdentity.class, ThrowException.class);
+        createUserModule(format("""
+            @Native("%s.function")
+            String stringIdentity(String value = throwException());
+            @Native("%s.function")
+            Nothing throwException();
+            result = stringIdentity("def");
+            """, StringIdentity.class.getCanonicalName(), ThrowException.class.getCanonicalName()));
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("def");
+      }
     }
   }
 
