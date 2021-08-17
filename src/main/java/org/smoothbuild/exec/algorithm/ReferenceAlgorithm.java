@@ -3,8 +3,6 @@ package org.smoothbuild.exec.algorithm;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
-import java.io.IOException;
-
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Str;
@@ -32,7 +30,7 @@ public class ReferenceAlgorithm extends Algorithm {
   }
 
   @Override
-  public Output run(Input input, NativeApi nativeApi) throws IOException {
+  public Output run(Input input, NativeApi nativeApi) {
     Str name = nativeApi.factory().string(referencable.name());
     Blob moduleHash = nativeApi.factory().blob(sink -> sink.write(module.hash().toByteString()));
     Tuple functionTuple = nativeApi

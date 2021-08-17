@@ -56,10 +56,12 @@ public class ObjectFactory {
     return objectDb.arrayBuilder(elementSpec);
   }
 
-  public Blob blob(DataWriter dataWriter) throws IOException {
+  public Blob blob(DataWriter dataWriter) {
     try (BlobBuilder builder = blobBuilder()) {
-      dataWriter.writeTo(builder.sink());
+      builder.write(dataWriter);
       return builder.build();
+    } catch (IOException e) {
+      throw new ObjectDbException(e);
     }
   }
 

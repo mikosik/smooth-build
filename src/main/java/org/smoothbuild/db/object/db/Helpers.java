@@ -24,4 +24,17 @@ public class Helpers {
   public static interface HashedDbCallable<T> {
     public T call() throws HashedDbException;
   }
+
+  public static void wrapException(HashedDbRunnable runnable) {
+    try {
+      runnable.run();
+    } catch (HashedDbException e) {
+      throw new ObjectDbException(e);
+    }
+  }
+
+  @FunctionalInterface
+  public static interface HashedDbRunnable {
+    public void run() throws HashedDbException;
+  }
 }

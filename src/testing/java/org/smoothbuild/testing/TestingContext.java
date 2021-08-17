@@ -3,8 +3,6 @@ package org.smoothbuild.testing;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Lists.list;
 
-import java.io.IOException;
-
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.base.Array;
@@ -241,10 +239,6 @@ public class TestingContext {
   }
 
   public Blob blob(ByteString bytes) {
-    try {
-      return objectFactory().blob(sink -> sink.write(bytes));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return objectFactory().blob(sink -> sink.write(bytes));
   }
 }

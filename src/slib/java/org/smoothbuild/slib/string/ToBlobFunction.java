@@ -13,7 +13,7 @@ public class ToBlobFunction {
     return stringToBlob(nativeApi, string);
   }
 
-  public static Blob stringToBlob(NativeApi nativeApi, Str string) throws IOException {
+  public static Blob stringToBlob(NativeApi nativeApi, Str string) {
     return nativeApi.factory().blob(sink -> sink.writeString(string.jValue(), CHARSET));
   }
 }

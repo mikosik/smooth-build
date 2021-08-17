@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static org.smoothbuild.db.hashed.HashedDb.dataFullPath;
+import static org.smoothbuild.db.hashed.Helpers.wrapException;
 import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.nio.charset.Charset;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.util.io.DataWriter;
 
 import okio.Buffer;
 import okio.BufferedSink;
@@ -46,6 +48,10 @@ public class HashingBufferedSink implements BufferedSink {
       }
     }
     return hash;
+  }
+
+  public void write(DataWriter dataWriter) throws HashedDbException {
+    wrapException(() -> dataWriter.writeTo(this));
   }
 
   @Override

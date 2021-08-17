@@ -3,8 +3,6 @@ package org.smoothbuild.exec.algorithm;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.compute.RealTask.NAME_LENGTH_LIMIT;
 
-import java.io.IOException;
-
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.spec.BlobSpec;
@@ -43,7 +41,7 @@ public class FixedBlobAlgorithm extends Algorithm {
   }
 
   @Override
-  public Output run(Input input, NativeApi nativeApi) throws IOException {
+  public Output run(Input input, NativeApi nativeApi) {
     Blob blob = nativeApi
         .factory()
         .blob(sink -> sink.write(byteString));
