@@ -1,15 +1,11 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.exec.base.MessageTuple.severity;
 import static org.smoothbuild.exec.base.MessageTuple.text;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.io.util.TempDir;
-import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.testing.TestingContext;
 
 public class ContainerTest extends TestingContext {
@@ -30,15 +26,5 @@ public class ContainerTest extends TestingContext {
         .isEqualTo("message");
     assertThat(severity(tuple))
         .isEqualTo("ERROR");
-  }
-
-  @Test
-  public void create_temp_dir_call_is_forwarded_to_temp_dir_manager() throws Exception {
-    TempDir tempDir = mock(TempDir.class);
-    TempManager tempManager = mock(TempManager.class);
-    Container container = new Container(null, null, tempManager);
-    when(tempManager.tempDir(container)).thenReturn(tempDir);
-    assertThat(container.createTempDir())
-        .isEqualTo(tempDir);
   }
 }

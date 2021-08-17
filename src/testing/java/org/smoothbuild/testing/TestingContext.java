@@ -49,7 +49,6 @@ public class TestingContext {
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
   private TempManager tempManager;
-  private FileSystem tempManagerFileSystem;
 
   public NativeApi nativeApi() {
     return container();
@@ -70,7 +69,7 @@ public class TestingContext {
   }
 
   private Container newContainer() {
-    return new Container(fullFileSystem(), objectFactory(), tempManager());
+    return new Container(fullFileSystem(), objectFactory());
   }
 
   public ObjectFactory objectFactory() {
@@ -123,16 +122,9 @@ public class TestingContext {
 
   public TempManager tempManager() {
     if (tempManager == null) {
-      tempManager = new TempManager(tempManagerFileSystem());
+      tempManager = new TempManager();
     }
     return tempManager;
-  }
-
-  public FileSystem tempManagerFileSystem() {
-    if (tempManagerFileSystem == null) {
-      tempManagerFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
-    }
-    return tempManagerFileSystem;
   }
 
   public FileSystem fullFileSystem() {

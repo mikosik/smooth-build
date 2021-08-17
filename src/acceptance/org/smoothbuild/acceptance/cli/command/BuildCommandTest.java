@@ -8,7 +8,6 @@ import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.util.Strings.unlines;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Nested;
@@ -23,26 +22,11 @@ import org.smoothbuild.acceptance.testing.ReportError;
 import org.smoothbuild.acceptance.testing.ReportInfo;
 import org.smoothbuild.acceptance.testing.ReportWarning;
 import org.smoothbuild.acceptance.testing.ReturnAbc;
-import org.smoothbuild.acceptance.testing.TempFilePath;
 import org.smoothbuild.cli.command.BuildCommand;
 
 public class BuildCommandTest {
   @Nested
   class _basic extends AcceptanceTestCase {
-    @Test
-    public void temp_file_is_deleted_after_build_execution() throws Exception {
-      createNativeJar(TempFilePath.class);
-      createUserModule(format("""
-              @Native("%s.function")
-              String tempFilePath();
-              result = tempFilePath();
-              """, TempFilePath.class.getCanonicalName()));
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(new File(artifactFileContentAsString("result")).exists())
-          .isFalse();
-    }
-
     @Test
     public void build_command_clears_artifacts_dir() throws Exception {
       String path = ARTIFACTS_PATH.appendPart("file.txt").toString();

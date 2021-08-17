@@ -73,16 +73,15 @@ public class Computer {
         computed.resultSource() == EXECUTION && isPure ? DISK : MEMORY);
   }
 
-  private Computed runAlgorithm(Algorithm algorithm, Input input) throws IOException {
-    try (Container container = containerProvider.get()) {
-      Output output;
-      try {
-        output = algorithm.run(input, container);
-      } catch (Exception e) {
-        return new Computed(e, EXECUTION);
-      }
-      return new Computed(output, EXECUTION);
+  private Computed runAlgorithm(Algorithm algorithm, Input input) {
+    Container container = containerProvider.get();
+    Output output;
+    try {
+      output = algorithm.run(input, container);
+    } catch (Exception e) {
+      return new Computed(e, EXECUTION);
     }
+    return new Computed(output, EXECUTION);
   }
 
   private Hash computationHash(Algorithm algorithm, Input input) {
