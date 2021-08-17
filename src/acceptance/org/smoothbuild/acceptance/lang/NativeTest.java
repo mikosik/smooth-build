@@ -16,13 +16,13 @@ import org.smoothbuild.acceptance.testing.BrokenIdentity;
 import org.smoothbuild.acceptance.testing.EmptyStringArray;
 import org.smoothbuild.acceptance.testing.NonPublicMethod;
 import org.smoothbuild.acceptance.testing.NonStaticMethod;
-import org.smoothbuild.acceptance.testing.OneStringParameter;
 import org.smoothbuild.acceptance.testing.ReportFixedError;
 import org.smoothbuild.acceptance.testing.ReportTwoErrors;
 import org.smoothbuild.acceptance.testing.ReportWarningAndReturnNull;
 import org.smoothbuild.acceptance.testing.ReturnAbc;
 import org.smoothbuild.acceptance.testing.ReturnNull;
 import org.smoothbuild.acceptance.testing.ReturnStringTuple;
+import org.smoothbuild.acceptance.testing.StringIdentity;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.acceptance.testing.WithoutContainer;
@@ -62,16 +62,16 @@ public class NativeTest extends AcceptanceTestCase {
 
     @Test
     public void without_declared_type_causes_error() throws Exception {
-      createNativeJar(OneStringParameter.class);
+      createNativeJar(StringIdentity.class);
       createUserModule(format("""
             @Native("%s.function")
-            oneStringParameter;
-            result = oneStringParameter;
-            """, OneStringParameter.class.getCanonicalName()));
+            stringIdentity;
+            result = stringIdentity;
+            """, StringIdentity.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithError();
       assertSysOutContainsParseError(2,
-          "`oneStringParameter` is native so it should have declared result type.\n");
+          "`stringIdentity` is native so it should have declared result type.\n");
     }
 
     @Nested
@@ -187,17 +187,17 @@ public class NativeTest extends AcceptanceTestCase {
 
         @Test
         public void has_too_many_parameters() throws Exception {
-          createNativeJar(OneStringParameter.class);
-          String classPath = OneStringParameter.class.getCanonicalName();
+          createNativeJar(StringIdentity.class);
+          String classPath = StringIdentity.class.getCanonicalName();
           createUserModule(format("""
               @Native("%s.function")
-              String oneStringParameter;
-              result = oneStringParameter;
+              String stringIdentity;
+              result = stringIdentity;
               """, classPath));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains(errorLoadingMessage("oneStringParameter", classPath + ".function",
-              "`oneStringParameter` has native implementation that has too many parameter(s) = 2"));
+          assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+              "`stringIdentity` has native implementation that has too many parameter(s) = 2"));
         }
 
         @Nested
@@ -345,12 +345,12 @@ public class NativeTest extends AcceptanceTestCase {
   class _native_function {
     @Test
     public void can_return_passed_argument() throws Exception {
-      createNativeJar(OneStringParameter.class);
+      createNativeJar(StringIdentity.class);
       createUserModule(format("""
             @Native("%s.function")
-            String oneStringParameter(String string);
-            result = oneStringParameter('token');
-            """, OneStringParameter.class.getCanonicalName()));
+            String stringIdentity(String string);
+            result = stringIdentity("token");
+            """, StringIdentity.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
@@ -448,66 +448,66 @@ public class NativeTest extends AcceptanceTestCase {
 
       @Test
       public void has_result_type_different_than_declared_in_smooth_file() throws Exception {
-        createNativeJar(OneStringParameter.class);
-        String classPath = OneStringParameter.class.getCanonicalName();
+        createNativeJar(StringIdentity.class);
+        String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
             @Native("%s.function")
-            File oneStringParameter(String string);
-            result = oneStringParameter("abc");
+            File stringIdentity(String string);
+            result = stringIdentity("abc");
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("oneStringParameter", classPath + ".function",
-            "`oneStringParameter` declares type `File` "
+        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+            "`stringIdentity` declares type `File` "
             + "so its native implementation result type must be " + Tuple.class.getCanonicalName() +
             " but it is " + Str.class.getCanonicalName() + ".\n"));
       }
 
       @Test
       public void has_too_many_parameters() throws Exception {
-        createNativeJar(OneStringParameter.class);
-        String classPath = OneStringParameter.class.getCanonicalName();
+        createNativeJar(StringIdentity.class);
+        String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
             @Native("%s.function")
-            String oneStringParameter();
-            result = oneStringParameter();
+            String stringIdentity();
+            result = stringIdentity();
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("oneStringParameter", classPath + ".function",
-            "Function `oneStringParameter` has 0 parameter(s) but its native implementation "
+        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+            "Function `stringIdentity` has 0 parameter(s) but its native implementation "
                 + "has 1 parameter(s)."));
       }
 
       @Test
       public void has_too_few_parameters() throws Exception {
-        createNativeJar(OneStringParameter.class);
-        String classPath = OneStringParameter.class.getCanonicalName();
+        createNativeJar(StringIdentity.class);
+        String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
             @Native("%s.function")
-            String oneStringParameter(String a, String b);
-            result = oneStringParameter(a="abc", b="abc");
+            String stringIdentity(String a, String b);
+            result = stringIdentity(a="abc", b="abc");
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("oneStringParameter", classPath + ".function",
-            "Function `oneStringParameter` has 2 parameter(s) but its native implementation "
+        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+            "Function `stringIdentity` has 2 parameter(s) but its native implementation "
                 + "has 1 parameter(s)."));
       }
 
       @Test
       public void has_different_parameter_type() throws Exception {
-        createNativeJar(OneStringParameter.class);
-        String classPath = OneStringParameter.class.getCanonicalName();
+        createNativeJar(StringIdentity.class);
+        String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
             @Native("%s.function")
-            String oneStringParameter([String] string);
-            result = oneStringParameter([]);
+            String stringIdentity([String] string);
+            result = stringIdentity([]);
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("oneStringParameter", classPath + ".function",
-            "Function `oneStringParameter` parameter `string` has type `[String]` "
+        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+            "Function `stringIdentity` parameter `string` has type `[String]` "
             + "so its native implementation type must be " + Array.class.getCanonicalName()
             + " but it is " + Str.class.getCanonicalName() + "."));
       }

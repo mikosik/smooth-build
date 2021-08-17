@@ -11,8 +11,8 @@ import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.acceptance.cli.command.common.ValuesArgTestCase;
-import org.smoothbuild.acceptance.testing.OneStringParameter;
 import org.smoothbuild.acceptance.testing.ReturnAbc;
+import org.smoothbuild.acceptance.testing.StringIdentity;
 import org.smoothbuild.cli.command.PlanCommand;
 
 public class PlanCommandTest {
@@ -68,18 +68,18 @@ public class PlanCommandTest {
 
     @Test
     public void native_function_call_with_argument() throws Exception {
-      createNativeJar(OneStringParameter.class);
+      createNativeJar(StringIdentity.class);
       createUserModule(format("""
             @Native("%s.function")
-            String oneStringParameter(String value);
-            result = oneStringParameter("abc");
-            """, OneStringParameter.class.getCanonicalName()));
+            String stringIdentity(String value);
+            result = stringIdentity("abc");
+            """, StringIdentity.class.getCanonicalName()));
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
             String building-evaluation
-              String(String) :oneStringParameter
+              String(String) :stringIdentity
               String "abc"
           """);
     }
