@@ -7,6 +7,7 @@ Smooth standard library
 | [equal](api/equal.md)                 | Returns `true` when arguments are equal. |
 | [file](api/file.md)                   | Creates File from path and content. |
 | [filter](api/filter.md)               | Filters files according to glob pattern. |
+| [id](api/id.md)                       | Identity function - it returns its only argument. |
 | [if](api/if.md)                       | Returns one of two values depending on bool condition. |
 | [jar](api/jar.md)                     | Jars (compresses) files. |
 | [javac](api/javac.md)                 | Compiles java files. |

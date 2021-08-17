@@ -3,7 +3,7 @@ Change Log
 
 Version 0.20.0 (??????????)
 
- * added slib function: `map`
+ * added slib functions: `map`, `id`
  * added `a`, `d`, `n` to `--show-tasks` option in `smooth build` command as shortcuts to `all`, `default`, `none`
  * added `field`, `reference`, `map` matchers to `--show-tasks` option in `smooth build` command
  * changed smooth language: added PURE/IMPURE attribute to @Native annotation

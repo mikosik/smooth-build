@@ -108,3 +108,5 @@ String toString(
 Blob zip(
   [File] files,
 );
+
+A id(A a) = a;
