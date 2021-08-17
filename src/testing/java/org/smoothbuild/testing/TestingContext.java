@@ -27,11 +27,11 @@ import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
+import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.inject.util.Providers;

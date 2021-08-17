@@ -1,4 +1,4 @@
-package org.smoothbuild.io.util;
+package org.smoothbuild.install;
 
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 

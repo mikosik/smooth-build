@@ -1,4 +1,4 @@
-package org.smoothbuild.io.util;
+package org.smoothbuild.install;
 
 import static com.google.common.truth.Truth.assertThat;
 
