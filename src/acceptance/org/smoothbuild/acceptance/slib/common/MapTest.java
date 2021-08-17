@@ -15,7 +15,7 @@ public class MapTest extends AcceptanceTestCase {
     createUserModule(code);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list(Character.toString(1), Character.toString(0)));
   }
 
@@ -29,7 +29,7 @@ public class MapTest extends AcceptanceTestCase {
     createUserModule(code);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("test01.txt", "test02.txt"));
   }
 }

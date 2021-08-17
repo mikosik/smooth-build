@@ -27,7 +27,7 @@ public class ConcatTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("abc", "def"));
   }
 
@@ -54,7 +54,7 @@ public class ConcatTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("abc", "def"));
   }
 }

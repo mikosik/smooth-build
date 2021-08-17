@@ -314,7 +314,7 @@ public abstract class AcceptanceTestCase {
    * or (when artifact is an array) returns list containing stringified elements.
    * Works with array artifacts of any depth.
    */
-  public Object stringifiedArtifact(String name) {
+  public Object artifactStringified(String name) {
     try {
       return actual(artifactAbsolutePath(name), s -> s.readString(CHARSET));
     } catch (IOException e) {

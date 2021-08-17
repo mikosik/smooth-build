@@ -30,7 +30,7 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
 
     // Currently it is not possible to read artifact of a struct so we are not testing that.
     if (expected != null) {
-      assertThat(stringifiedArtifact("result"))
+      assertThat(artifactStringified("result"))
           .isEqualTo(expected);
     }
   }

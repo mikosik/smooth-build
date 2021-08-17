@@ -18,7 +18,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("abc"));
   }
 
@@ -32,7 +32,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
             """, Flatten.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("aa", "bb", "cc"));
   }
 
@@ -46,7 +46,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
             """, Flatten.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list(list("aa"), list("bb", "cc")));
   }
 
@@ -59,7 +59,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("aa", "bb"));
   }
 }

@@ -83,7 +83,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list());
   }
 
@@ -107,7 +107,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list());
   }
 
@@ -119,7 +119,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("abc", "def"));
   }
 
@@ -131,7 +131,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list());
   }
 
@@ -143,7 +143,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list());
   }
 
@@ -155,7 +155,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("A", "B"));
   }
 
@@ -167,7 +167,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list());
   }
 

@@ -30,7 +30,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list());
   }
 
@@ -43,7 +43,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list(list(), list(list("aaa"))));
   }
 
@@ -59,7 +59,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list());
   }
 
@@ -73,7 +73,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("aaa", "bbb"));
   }
 
@@ -87,7 +87,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("aaa"));
   }
 
@@ -101,7 +101,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("bbb"));
   }
 
@@ -116,7 +116,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list(list("aaa")));
   }
 
@@ -132,7 +132,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list(list("aaa")));
   }
 
@@ -148,7 +148,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Append.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("bbb"));
   }
 
@@ -162,7 +162,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Append.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("aaa", "bbb"));
   }
 
@@ -181,7 +181,7 @@ public class InferenceTest extends AcceptanceTestCase {
             """, Append.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
+    assertThat(artifactStringified("result"))
         .isEqualTo(list("bbb"));
   }
 }
