@@ -10,10 +10,6 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class ToBlobFunction {
   public static Blob function(NativeApi nativeApi, Str string) throws IOException {
-    return stringToBlob(nativeApi, string);
-  }
-
-  public static Blob stringToBlob(NativeApi nativeApi, Str string) {
     return nativeApi.factory().blob(sink -> sink.writeString(string.jValue(), CHARSET));
   }
 }
