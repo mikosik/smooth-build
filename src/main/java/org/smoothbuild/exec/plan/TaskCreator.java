@@ -49,7 +49,6 @@ import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
-import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.IfFunction;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
@@ -261,22 +260,20 @@ public class TaskCreator {
   // ReferenceExpression
 
   private Task referenceLazy(Scope<Task> scope, ReferenceExpression reference) {
-    var referencable = definitions.referencables().get(reference.name());
-    var type = referencable.type().strip();
+    var type = reference.type().strip();
     return new LazyTask(type, reference.location(),
-        () -> referenceEagerTask(scope, reference, referencable, type));
+        () -> referenceEagerTask(scope, reference, type));
   }
 
   private Task referenceEager(Scope<Task> scope, ReferenceExpression reference) {
-    var referencable = definitions.referencables().get(reference.name());
-    return referenceEagerTask(scope, reference, referencable, referencable.type().strip());
+    return referenceEagerTask(scope, reference, reference.type().strip());
   }
 
-  private Task referenceEagerTask(Scope<Task> scope, ReferenceExpression reference,
-      GlobalReferencable referencable, Type type) {
+  private Task referenceEagerTask(Scope<Task> scope, ReferenceExpression reference, Type type) {
+    var referencable = definitions.referencables().get(reference.name());
     var module = definitions.modules().get(referencable.modulePath());
     var algorithm = new ReferenceAlgorithm(referencable, module, toSpecConverter.functionSpec());
-    AlgorithmTask task = new AlgorithmTask(
+    var task = new AlgorithmTask(
         REFERENCE, type, ":" + referencable.name(), algorithm, list(), reference.location());
     if (referencable instanceof Value) {
       return new EvaluateTask(
