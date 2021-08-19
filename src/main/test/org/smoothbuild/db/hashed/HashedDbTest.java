@@ -5,7 +5,6 @@ import static java.lang.Byte.MAX_VALUE;
 import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
@@ -16,7 +15,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -155,7 +153,7 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Nested
-  class aBool {
+  class _boolean {
     @Test
     public void with_true_value_can_be_read_back() throws Exception {
       hash = hashedDb().writeBoolean(true);
@@ -172,8 +170,7 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Nested
-  @TestInstance(PER_CLASS) // workaround that allows non-static allByteValues
-  class aByte {
+  class _byte {
     @ParameterizedTest
     @MethodSource("allByteValues")
     public void with_given_value_can_be_read_back(int value) throws Exception {
@@ -182,14 +179,14 @@ public class HashedDbTest extends TestingContext {
           .isEqualTo(value);
     }
 
-    private Stream<Arguments> allByteValues() {
+    private static Stream<Arguments> allByteValues() {
       return IntStream.range(MIN_VALUE, MAX_VALUE)
           .mapToObj(Arguments::of);
     }
   }
 
   @Nested
-  class aString {
+  class _string {
     @ParameterizedTest
     @ValueSource(strings = {"", "a", "abc", "!@#$"})
     public void with_given_value_can_be_read_back() throws Exception {
@@ -200,7 +197,7 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Nested
-  class aHashSequence {
+  class _hash_sequence {
     @Test
     public void with_no_elements_can_be_read_back() throws Exception {
       hash = hashedDb().writeHashes();
@@ -238,7 +235,7 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Nested
-  class read_hashes_with_expected_size {
+  class _read_hashes_with_expected_size {
     @Test
     public void reading_0_hashes_with_expect_size_0_succeeds() throws Exception {
       hash = hashedDb().writeHashes();
@@ -291,7 +288,7 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Nested
-  class read_hashes_with_expected_min_and_max_size {
+  class _read_hashes_with_expected_min_and_max_size {
     @Test
     public void reading_less_hashes_than_expected_range_causes_exception() throws Exception {
       hash = hashedDb().writeHashes(Hash.of("a"));
