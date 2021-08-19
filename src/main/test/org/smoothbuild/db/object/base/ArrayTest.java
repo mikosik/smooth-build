@@ -6,9 +6,11 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.TestingSpecs;
 import org.smoothbuild.testing.TestingContext;
@@ -220,5 +222,46 @@ public class ArrayTest extends TestingContext {
     assertThat(array.toString())
         .isEqualTo("""
             ["abc","def"]:""" + array.hash());
+  }
+
+  @Nested
+  class _nothing_array {
+    @Test
+    public void spec_of_nothing_array_is_nothing_array() {
+      Array array = emptyArrayOf(nothingSpec());
+      assertThat(array.spec())
+          .isEqualTo(arraySpec(nothingSpec()));
+    }
+
+    @Test
+    public void nothing_array_is_empty() {
+      assertThat(emptyArrayOf(nothingSpec()).asIterable(Obj.class))
+          .isEmpty();
+    }
+
+    @Test
+    public void nothing_array_can_be_read_by_hash() {
+      Array array = emptyArrayOf(nothingSpec());
+      assertThat(objectDbOther().get(array.hash()))
+          .isEqualTo(array);
+    }
+
+    @Test
+    public void nothing_array_read_by_hash_is_empty() {
+      Array array = emptyArrayOf(nothingSpec());
+      assertThat(((Array) objectDbOther().get(array.hash())).asIterable(Obj.class))
+          .isEmpty();
+    }
+
+    @Test
+    public void nothing_array_to_string() {
+      Array array = emptyArrayOf(nothingSpec());
+      assertThat(array.toString())
+          .isEqualTo("[]:" + array.hash());
+    }
+
+    private Array emptyArrayOf(NothingSpec elemSpec) {
+      return arrayBuilder(elemSpec).build();
+    }
   }
 }
