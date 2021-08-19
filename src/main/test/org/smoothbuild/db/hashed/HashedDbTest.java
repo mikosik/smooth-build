@@ -10,6 +10,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -153,6 +154,31 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Nested
+  class _big_integer {
+    @ParameterizedTest
+    @MethodSource("allByteValues")
+    public void with_single_byte_value_can_be_read_back(int value) throws Exception {
+      hash = hashedDb().writeByte((byte) value);
+      assertThat(hashedDb().readBigInteger(hash))
+          .isEqualTo(BigInteger.valueOf(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {Integer.MIN_VALUE, 1_000_000, Integer.MAX_VALUE})
+    public void with_given_value_can_be_read_back(int value) throws Exception {
+      BigInteger bigInteger = BigInteger.valueOf(value);
+      hash = hashedDb().writeBigInteger(bigInteger);
+      assertThat(hashedDb().readBigInteger(hash))
+          .isEqualTo(bigInteger);
+    }
+
+    private static Stream<Arguments> allByteValues() {
+      return IntStream.rangeClosed(Byte.MIN_VALUE, Byte.MAX_VALUE)
+          .mapToObj(Arguments::of);
+    }
+  }
+
+  @Nested
   class _boolean {
     @Test
     public void with_true_value_can_be_read_back() throws Exception {
@@ -180,7 +206,7 @@ public class HashedDbTest extends TestingContext {
     }
 
     private static Stream<Arguments> allByteValues() {
-      return IntStream.range(MIN_VALUE, MAX_VALUE)
+      return IntStream.rangeClosed(MIN_VALUE, MAX_VALUE)
           .mapToObj(Arguments::of);
     }
   }

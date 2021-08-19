@@ -14,7 +14,7 @@ public class ObjectStableHashTest extends TestingContext {
   @Nested
   class _blob {
     @Test
-    public void hash_of_empty_blob_is_stable() throws Exception {
+    public void hash_of_empty_blob_is_stable() {
       assertThat(blobBuilder().build().hash())
           .isEqualTo(Hash.decode("56f9a1616c2a91bd3e7c059e885ab33d3964e759"));
     }
@@ -38,6 +38,27 @@ public class ObjectStableHashTest extends TestingContext {
     public void hash_of_false_bool_is_stable() {
       assertThat(bool(false).hash())
           .isEqualTo(Hash.decode("3b641feda4deab9676f58d0f62981d8593c10c08"));
+    }
+  }
+
+  @Nested
+  class _int {
+    @Test
+    public void hash_of_zero_int_is_stable() {
+      assertThat(int_(0).hash())
+          .isEqualTo(Hash.decode("5b314f0301c9cbdc74e9045b1322bbb9c53c8b6e"));
+    }
+
+    @Test
+    public void hash_of_positive_int_is_stable() {
+      assertThat(int_(123).hash())
+          .isEqualTo(Hash.decode("2687526fa7a53185f1944094e1d21de2373259ac"));
+    }
+
+    @Test
+    public void hash_of_negative_int_is_stable() {
+      assertThat(int_(-123).hash())
+          .isEqualTo(Hash.decode("129777bfe4f2c0432433be4b5767d29c67d251af"));
     }
   }
 

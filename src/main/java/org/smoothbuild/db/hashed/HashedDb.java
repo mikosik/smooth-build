@@ -7,6 +7,7 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
@@ -31,6 +32,28 @@ public class HashedDb {
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
     this.tempManager = tempManager;
+  }
+
+  public Hash writeBigInteger(BigInteger value) throws HashedDbException {
+    try (HashingBufferedSink sink = sink()) {
+      sink.write(value.toByteArray());
+      sink.close();
+      return sink.hash();
+    } catch (IOException e) {
+      throw new HashedDbException(e);
+    }
+  }
+
+  public BigInteger readBigInteger(Hash hash) throws HashedDbException {
+    try (BufferedSource source = source(hash)) {
+      byte[] bytes = source.readByteArray();
+      if (bytes.length == 0) {
+        throw new DecodingBigIntegerException(hash);
+      }
+      return new BigInteger(bytes);
+    } catch (IOException e) {
+      throw new HashedDbException(hash, e);
+    }
   }
 
   public Hash writeBoolean(boolean value) throws HashedDbException {

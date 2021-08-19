@@ -3,6 +3,8 @@ package org.smoothbuild.testing;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Lists.list;
 
+import java.math.BigInteger;
+
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.base.Array;
@@ -10,6 +12,7 @@ import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
@@ -18,6 +21,7 @@ import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
+import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
@@ -136,6 +140,10 @@ public class TestingContext {
     return objectDb().boolSpec();
   }
 
+  public IntSpec intSpec() {
+    return objectDb().intSpec();
+  }
+
   public StringSpec stringSpec() {
     return objectDb().stringSpec();
   }
@@ -171,6 +179,10 @@ public class TestingContext {
 
   public Bool bool(boolean value) {
     return objectDb().bool(value);
+  }
+
+  public Int int_(int value) {
+    return objectDb().int_(BigInteger.valueOf(value));
   }
 
   public Str string(String string) {

@@ -7,12 +7,14 @@ import static org.smoothbuild.db.object.db.Helpers.wrapException;
 import static org.smoothbuild.db.object.spec.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.SpecKind.BOOL;
+import static org.smoothbuild.db.object.spec.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.SpecKind.TUPLE;
 import static org.smoothbuild.db.object.spec.SpecKind.specKindMarkedWith;
 import static org.smoothbuild.util.Lists.map;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -25,6 +27,7 @@ import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.MerkleRoot;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
@@ -32,6 +35,7 @@ import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
+import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.SpecKind;
@@ -54,6 +58,7 @@ public class ObjectDb {
 
   private BlobSpec blobSpec;
   private BoolSpec boolSpec;
+  private IntSpec intSpec;
   private NothingSpec nothingSpec;
   private StringSpec stringSpec;
 
@@ -72,11 +77,13 @@ public class ObjectDb {
     try {
       this.blobSpec = new BlobSpec(writeBaseSpecRoot(BLOB), hashedDb, this);
       this.boolSpec = new BoolSpec(writeBaseSpecRoot(BOOL), hashedDb, this);
+      this.intSpec = new IntSpec(writeBaseSpecRoot(INT), hashedDb, this);
       this.nothingSpec = new NothingSpec(writeBaseSpecRoot(NOTHING), hashedDb, this);
       this.stringSpec = new StringSpec(writeBaseSpecRoot(STRING), hashedDb, this);
 
       cacheSpec(blobSpec);
       cacheSpec(boolSpec);
+      cacheSpec(intSpec);
       cacheSpec(nothingSpec);
       cacheSpec(stringSpec);
     } catch (HashedDbException e) {
@@ -96,6 +103,10 @@ public class ObjectDb {
 
   public Bool bool(boolean value) {
     return wrapException(() -> newBool(value));
+  }
+
+  public Int int_(BigInteger value) {
+    return wrapException(() -> newInt(value));
   }
 
   public Str string(String string) {
@@ -147,6 +158,10 @@ public class ObjectDb {
     return boolSpec;
   }
 
+  public IntSpec intSpec() {
+    return intSpec;
+  }
+
   public NothingSpec nothingSpec() {
     return nothingSpec;
   }
@@ -189,6 +204,10 @@ public class ObjectDb {
         case BOOL -> {
           assertSize(hash, BOOL, hashes, 1);
           yield boolSpec;
+        }
+        case INT -> {
+          assertSize(hash, BOOL, hashes, 1);
+          yield intSpec;
         }
         case NOTHING -> {
           assertSize(hash, NOTHING, hashes, 1);
@@ -253,7 +272,7 @@ public class ObjectDb {
     return result;
   }
 
-  // methods for creating spec instances
+  // methods for creating Obj-s
 
   public Array newArray(ArraySpec spec, Iterable<? extends Obj> elements)
       throws HashedDbException {
@@ -268,6 +287,10 @@ public class ObjectDb {
     return boolSpec.newObj(writeRoot(boolSpec, writeBoolData(value)));
   }
 
+  private Int newInt(BigInteger value) throws HashedDbException {
+    return intSpec.newObj(writeRoot(intSpec, writeIntData(value)));
+  }
+
   private Str newString(String string) throws HashedDbException {
     return stringSpec.newObj(writeRoot(stringSpec, writeStringData(string)));
   }
@@ -275,6 +298,8 @@ public class ObjectDb {
   private Tuple newTuple(TupleSpec spec, List<?extends Obj> objects) throws HashedDbException {
     return spec.newObj(writeRoot(spec, writeTupleData(objects)));
   }
+
+  // methods for creating Spec-s
 
   private ArraySpec newArraySpec(Spec elementSpec) throws HashedDbException {
     Hash hash = writeArraySpecRoot(elementSpec);
@@ -307,6 +332,10 @@ public class ObjectDb {
 
   private Hash writeBoolData(boolean value) throws HashedDbException {
     return hashedDb.writeBoolean(value);
+  }
+
+  private Hash writeIntData(BigInteger value) throws HashedDbException {
+    return hashedDb.writeBigInteger(value);
   }
 
   private Hash writeStringData(String string) throws HashedDbException {

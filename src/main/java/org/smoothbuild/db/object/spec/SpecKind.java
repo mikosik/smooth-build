@@ -3,6 +3,7 @@ package org.smoothbuild.db.object.spec;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
@@ -13,7 +14,8 @@ public enum SpecKind {
   ARRAY((byte) 3, Array.class),
   BLOB((byte) 4, Blob.class),
   BOOL((byte) 5, Bool.class),
-  STRING((byte) 6, Str.class);
+  STRING((byte) 6, Str.class),
+  INT((byte) 7, Int.class);
 
   private final byte marker;
   private final Class<? extends Obj> jType;
