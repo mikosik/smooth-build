@@ -31,7 +31,7 @@ public class ProjectFileTest extends AcceptanceTestCase {
   @Test
   public void illegal_path_causes_error() throws Exception {
     createUserModule("""
-            result = projectFile('..');
+            result = projectFile("..");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

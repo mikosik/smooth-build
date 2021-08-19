@@ -28,7 +28,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s.function")
             [E] testFlatten([[E]] array);
-            result = testFlatten(array = [ [ 'aa' ], [ 'bb', 'cc' ] ]);
+            result = testFlatten(array = [ [ "aa" ], [ "bb", "cc" ] ]);
             """, Flatten.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -42,7 +42,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s.function")
             [E] testFlatten([[E]] array);
-            result = testFlatten(array = [ [ [ 'aa' ], [ 'bb', 'cc' ] ] ]);
+            result = testFlatten(array = [ [ [ "aa" ], [ "bb", "cc" ] ] ]);
             """, Flatten.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -55,7 +55,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
     createUserModule("""
             A testIdentity(A v) = v;
             [A] pair(A a1, A a2) = [ a1, a2 ];
-            result = pair(a1 = testIdentity(v = 'aa'), a2 = testIdentity(v = 'bb'));
+            result = pair(a1 = testIdentity(v = "aa"), a2 = testIdentity(v = "bb"));
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();

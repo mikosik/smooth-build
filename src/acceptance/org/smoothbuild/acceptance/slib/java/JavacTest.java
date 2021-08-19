@@ -17,7 +17,7 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void error_is_logged_when_compilation_error_occurs() throws Exception {
     createUserModule("""
-            result = [ file(toBlob('public private class MyClass {}'), 'MyClass.java') ]
+            result = [ file(toBlob("public private class MyClass {}"), "MyClass.java") ]
               | javac();
             """);
     runSmoothBuild("result");
@@ -40,7 +40,7 @@ public class JavacTest extends AcceptanceTestCase {
     String classSource = "public class MyClass { "
         + "public static String myMethod() {return \\\"test-string\\\";}}";
     createUserModule(
-        "  result = [file(toBlob('" + classSource + "'), 'MyClass.java')] | javac();  ");
+        "  result = [file(toBlob(\"" + classSource + "\"), \"MyClass.java\")] | javac();  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(invoke(artifactAbsolutePath("result").resolve("MyClass.class"), "myMethod"))
@@ -95,8 +95,8 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void illegal_source_parameter_causes_error() throws Exception {
     createUserModule("""
-            result = [ file(toBlob('public class MyClass {}'), 'MyClass.java') ]
-              | javac(source='0.9');
+            result = [ file(toBlob("public class MyClass {}"), "MyClass.java") ]
+              | javac(source="0.9");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -106,8 +106,8 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void illegal_target_parameter_causes_error() throws Exception {
     createUserModule("""
-            result = [ file(toBlob('public class MyClass {}'), 'MyClass.java') ]
-              | javac(target='0.9');
+            result = [ file(toBlob("public class MyClass {}"), "MyClass.java") ]
+              | javac(target="0.9");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -118,8 +118,8 @@ public class JavacTest extends AcceptanceTestCase {
   public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error()
       throws Exception {
     createUserModule("""
-            result = [ file(toBlob('public enum MyClass { VALUE }'), 'MyClass.java') ]
-              | javac(source='1.4', target='1.4');
+            result = [ file(toBlob("public enum MyClass { VALUE }"), "MyClass.java") ]
+              | javac(source="1.4", target="1.4");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

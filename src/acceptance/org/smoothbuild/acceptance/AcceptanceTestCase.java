@@ -2,7 +2,6 @@ package org.smoothbuild.acceptance;
 
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.createDirectories;
 import static java.util.stream.Collectors.toList;
@@ -71,16 +70,8 @@ public abstract class AcceptanceTestCase {
     deleteRecursively(projectDirAbsolutePath());
   }
 
-  public void createUserModule(String... lines) throws IOException {
-    createUserModuleRaw(quotesX2(join("\n", lines)));
-  }
-
-  public static String quotesX2(String string) {
-    return string.replace('\'', '"');
-  }
-
-  public void createUserModuleRaw(String buildScript) throws IOException {
-    createFile(PRJ_MODULE_PATH.toString(), buildScript);
+  public void createUserModule(String code) throws IOException {
+    createFile(PRJ_MODULE_PATH.toString(), code);
   }
 
   public void createFile(String path, String content) throws IOException {

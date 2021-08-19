@@ -12,7 +12,7 @@ public class IfTest extends AcceptanceTestCase {
   @Test
   public void if_returns_first_value_when_condition_is_true() throws Exception {
     createUserModule("""
-            result = if(true, 'then clause', 'else clause');
+            result = if(true, "then clause", "else clause");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -23,7 +23,7 @@ public class IfTest extends AcceptanceTestCase {
   @Test
   public void if_returns_second_value_when_condition_is_false() throws Exception {
     createUserModule("""
-            result = if(false, 'then clause', 'else clause');
+            result = if(false, "then clause", "else clause");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -37,7 +37,7 @@ public class IfTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s.function")
             Nothing throwException();
-            result = if(false, throwException(), 'else clause');
+            result = if(false, throwException(), "else clause");
             """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -51,7 +51,7 @@ public class IfTest extends AcceptanceTestCase {
     createUserModule(format("""
             @Native("%s.function")
             Nothing throwException();
-            result = if(true, 'then clause', throwException());
+            result = if(true, "then clause", throwException());
             """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -67,7 +67,7 @@ public class IfTest extends AcceptanceTestCase {
       createUserModule(format("""
             @Native("%s.function")
             Nothing throwException();
-            result = if(true, if(false, throwException(), 'else clause'), 'ignored');
+            result = if(true, if(false, throwException(), "else clause"), "ignored");
             """, ThrowException.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
@@ -82,7 +82,7 @@ public class IfTest extends AcceptanceTestCase {
       createUserModule(format("""
             @Native("%s.function")
             Nothing throwException();
-            result = if(true, if(true, 'then clause', throwException()), 'ignored');
+            result = if(true, if(true, "then clause", throwException()), "ignored");
             """, ThrowException.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();

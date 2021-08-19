@@ -46,7 +46,7 @@ public class LiteralTest extends AcceptanceTestCase {
       "\\\""         // escaped double quotes
   })
   public void string_literal_value_is_decoded(String string) throws Exception {
-    createUserModuleRaw("result = \"" + string + "\";");
+    createUserModule("result = \"" + string + "\";");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
