@@ -52,8 +52,8 @@ public class ObjectDb {
    * which is invoked before instance of ObjectDb is returned from factory method.
    */
 
-  private BoolSpec boolSpec;
   private BlobSpec blobSpec;
+  private BoolSpec boolSpec;
   private NothingSpec nothingSpec;
   private StringSpec stringSpec;
 
@@ -182,21 +182,21 @@ public class ObjectDb {
             "It has illegal SpecKind marker = " + marker + ".");
       }
       return switch (specKind) {
-        case BOOL -> {
-          assertSize(hash, BOOL, hashes, 1);
-          yield boolSpec;
-        }
-        case STRING -> {
-          assertSize(hash, STRING, hashes, 1);
-          yield stringSpec;
-        }
         case BLOB -> {
           assertSize(hash, BLOB, hashes, 1);
           yield blobSpec;
         }
+        case BOOL -> {
+          assertSize(hash, BOOL, hashes, 1);
+          yield boolSpec;
+        }
         case NOTHING -> {
           assertSize(hash, NOTHING, hashes, 1);
           yield nothingSpec;
+        }
+        case STRING -> {
+          assertSize(hash, STRING, hashes, 1);
+          yield stringSpec;
         }
         case ARRAY -> {
           assertSize(hash, ARRAY, hashes, 2);
