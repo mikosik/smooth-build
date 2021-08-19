@@ -1,5 +1,7 @@
 package org.smoothbuild.db.hashed;
 
+import java.io.IOException;
+
 public class HashedDbException extends Exception {
   public HashedDbException(String message) {
     super(message);
@@ -9,7 +11,7 @@ public class HashedDbException extends Exception {
     super(message, cause);
   }
 
-  public HashedDbException(Hash hash, Throwable cause) {
+  public HashedDbException(Hash hash, IOException cause) {
     super("Cannot read data at " + hash + ".", cause);
   }
 

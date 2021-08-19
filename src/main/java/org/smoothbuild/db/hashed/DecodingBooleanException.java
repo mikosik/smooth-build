@@ -2,7 +2,7 @@ package org.smoothbuild.db.hashed;
 
 public class DecodingBooleanException extends HashedDbException {
   public DecodingBooleanException(Hash hash) {
-    super(hash, null);
+    this(hash, null);
   }
 
   public DecodingBooleanException(Hash hash, DecodingByteException e) {
