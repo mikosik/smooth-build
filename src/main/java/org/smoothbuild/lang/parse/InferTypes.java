@@ -8,6 +8,7 @@ import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.function;
+import static org.smoothbuild.lang.base.type.Types.int_;
 import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
@@ -44,6 +45,7 @@ import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FunctionNode;
 import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
+import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
@@ -322,6 +324,12 @@ public class InferTypes {
       public void visitBlobLiteral(BlobNode blob) {
         super.visitBlobLiteral(blob);
         blob.setType(blob());
+      }
+
+      @Override
+      public void visitIntLiteral(IntNode intNode) {
+        super.visitIntLiteral(intNode);
+        intNode.setType(int_());
       }
     }.visitAst(ast);
     return logBuffer.toList();

@@ -2,6 +2,8 @@ package org.smoothbuild.exec.algorithm;
 
 import static java.util.Arrays.asList;
 
+import java.math.BigInteger;
+
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
 
@@ -38,6 +40,10 @@ public class AlgorithmHashes {
 
   public static Hash referenceAlgorithmHash(Hash moduleHash, String functionName) {
     return hash(7, Hash.of(asList(moduleHash, Hash.of(functionName))));
+  }
+
+  public static Hash fixedIntAlgorithmHash(BigInteger bigInteger) {
+    return hash(8, Hash.of(ByteString.of(bigInteger.toByteArray())));
   }
 
   private static Hash hash(int id, Hash hash) {

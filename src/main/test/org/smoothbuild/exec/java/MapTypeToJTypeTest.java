@@ -5,6 +5,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
+import static org.smoothbuild.lang.base.type.TestingTypes.INT;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -20,6 +21,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
@@ -29,7 +31,7 @@ public class MapTypeToJTypeTest {
   @Test
   public void verify_all_types_are_tested_below() {
     assertThat(BASE_TYPES.size())
-        .isEqualTo(4);
+        .isEqualTo(5);
   }
 
   @ParameterizedTest
@@ -44,6 +46,7 @@ public class MapTypeToJTypeTest {
         arguments(A, Obj.class),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
+        arguments(INT, Int.class),
         arguments(NOTHING, Obj.class),
         arguments(STRING, Str.class),
         arguments(PERSON, Tuple.class),
@@ -51,12 +54,15 @@ public class MapTypeToJTypeTest {
         arguments(a(A), Array.class),
         arguments(a(BLOB), Array.class),
         arguments(a(BOOL), Array.class),
+        arguments(a(INT), Array.class),
         arguments(a(NOTHING), Array.class),
         arguments(a(STRING), Array.class),
         arguments(a(PERSON), Array.class),
+
         arguments(a(a(A)), Array.class),
         arguments(a(a(BLOB)), Array.class),
         arguments(a(a(BOOL)), Array.class),
+        arguments(a(a(INT)), Array.class),
         arguments(a(a(NOTHING)), Array.class),
         arguments(a(a(STRING)), Array.class),
         arguments(a(a(PERSON)), Array.class)

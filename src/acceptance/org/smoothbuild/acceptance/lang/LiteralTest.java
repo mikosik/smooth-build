@@ -2,6 +2,8 @@ package org.smoothbuild.acceptance.lang;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.math.BigInteger;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -24,6 +26,22 @@ public class LiteralTest extends AcceptanceTestCase {
     assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo(ByteString.decodeHex(hexDigits));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "0",
+      "1",
+      "-1",
+      "1234",
+      "-123456",
+      "123456789000000"})
+  public void int_literal_value_is_decoded(String intLiteral) throws Exception {
+    createUserModule("result = " + intLiteral + ";");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(artifactFileContent("result"))
+        .isEqualTo(ByteString.of(new BigInteger(intLiteral, 10).toByteArray()));
   }
 
   @ParameterizedTest

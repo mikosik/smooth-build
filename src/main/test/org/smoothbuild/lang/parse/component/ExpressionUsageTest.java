@@ -75,6 +75,73 @@ public class ExpressionUsageTest {
   }
 
   @Nested
+  class _int_literal_used_as {
+    @Test
+    public void function_argument() {
+      module("""
+          String myFunction(Int i) = "abc";
+          result = myFunction(123);
+          """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void function_body() {
+      module("""
+          result() = 123;
+          """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void value_body() {
+      module("""
+          result = 123;
+          """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void array_element() {
+      module("""
+           result = [ 123 ];
+           """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void parameter_default_argument() {
+      module("""
+        String myFunction(Int i = 123) = "abc";
+        """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void function_in_call_expression_fails() {
+      module("""
+          result = 123("abc");
+          """)
+          .loadsWithError(1, """
+              mismatched input '(' expecting {';', '|'}
+              result = 123("abc");
+                          ^""");
+    }
+
+    @Test
+    public void struct_in_field_read_expression_fails() {
+      module(
+          """
+          result = 123.accessedField;
+          """)
+          .loadsWithError(1, """
+              mismatched input '.' expecting {';', '|'}
+              result = 123.accessedField;
+                          ^""");
+    }
+  }
+
+  @Nested
   class _string_literal_used_as {
     @Test
     public void function_argument() {
@@ -679,7 +746,7 @@ public class ExpressionUsageTest {
           result = myFunction(MyStruct);
           """)
           .loadsWithError(3, """
-              extraneous input 'MyStruct' expecting {')', '[', NAME, STRING, BLOB}
+              extraneous input 'MyStruct' expecting {')', '[', NAME, STRING, BLOB, INT}
               result = myFunction(MyStruct);
                                   ^^^^^^^^""");
     }
@@ -691,7 +758,7 @@ public class ExpressionUsageTest {
           result() = MyStruct;
           """)
           .loadsWithError(2, """
-              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB}
+              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB, INT}
               result() = MyStruct;
                          ^^^^^^^^""");
     }
@@ -703,7 +770,7 @@ public class ExpressionUsageTest {
           result = MyStruct;
           """)
           .loadsWithError(2, """
-              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB}
+              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB, INT}
               result = MyStruct;
                        ^^^^^^^^""");
     }
@@ -715,7 +782,7 @@ public class ExpressionUsageTest {
           result = [ MyStruct ];
           """)
           .loadsWithError(2, """
-              extraneous input 'MyStruct' expecting {'[', ']', NAME, STRING, BLOB}
+              extraneous input 'MyStruct' expecting {'[', ']', NAME, STRING, BLOB, INT}
               result = [ MyStruct ];
                          ^^^^^^^^""");
     }
@@ -727,7 +794,7 @@ public class ExpressionUsageTest {
           String myFunction(String value = MyStruct) = "abc";
           """)
           .loadsWithError(2, """
-              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB}
+              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB, INT}
               String myFunction(String value = MyStruct) = "abc";
                                                ^^^^^^^^""");
     }
@@ -740,7 +807,7 @@ public class ExpressionUsageTest {
             """)
           .loadsWith(
               err(2, """
-                  mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB}
+                  mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB, INT}
                   result = MyStruct();
                            ^^^^^^^^"""),
               err(2, """
@@ -759,7 +826,7 @@ public class ExpressionUsageTest {
             """;
       module(code)
           .loadsWithError(4, """
-              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB}
+              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB, INT}
               result = MyStruct.myField;
                        ^^^^^^^^""");
     }
@@ -854,7 +921,7 @@ public class ExpressionUsageTest {
           result = myFunction(A);
           """)
           .loadsWithError(2, """
-              extraneous input 'A' expecting {')', '[', NAME, STRING, BLOB}
+              extraneous input 'A' expecting {')', '[', NAME, STRING, BLOB, INT}
               result = myFunction(A);
                                   ^""");
     }
@@ -865,7 +932,7 @@ public class ExpressionUsageTest {
           result() = A;
           """)
           .loadsWithError(1, """
-              mismatched input 'A' expecting {'[', NAME, STRING, BLOB}
+              mismatched input 'A' expecting {'[', NAME, STRING, BLOB, INT}
               result() = A;
                          ^""");
     }
@@ -876,7 +943,7 @@ public class ExpressionUsageTest {
           result = A;
           """)
           .loadsWithError(1, """
-              mismatched input 'A' expecting {'[', NAME, STRING, BLOB}
+              mismatched input 'A' expecting {'[', NAME, STRING, BLOB, INT}
               result = A;
                        ^""");
     }
@@ -887,7 +954,7 @@ public class ExpressionUsageTest {
           result = [ A ];
           """)
           .loadsWithError(1, """
-              extraneous input 'A' expecting {'[', ']', NAME, STRING, BLOB}
+              extraneous input 'A' expecting {'[', ']', NAME, STRING, BLOB, INT}
               result = [ A ];
                          ^""");
     }
@@ -898,7 +965,7 @@ public class ExpressionUsageTest {
           String myFunction(String value = A) = "abc";
           """)
           .loadsWithError(1, """
-              mismatched input 'A' expecting {'[', NAME, STRING, BLOB}
+              mismatched input 'A' expecting {'[', NAME, STRING, BLOB, INT}
               String myFunction(String value = A) = "abc";
                                                ^""");
     }
@@ -910,7 +977,7 @@ public class ExpressionUsageTest {
             """)
           .loadsWith(
               err(1, """
-                  mismatched input 'A' expecting {'[', NAME, STRING, BLOB}
+                  mismatched input 'A' expecting {'[', NAME, STRING, BLOB, INT}
                   result = A();
                            ^"""),
               err(1, """
@@ -926,7 +993,7 @@ public class ExpressionUsageTest {
             """;
       module(code)
           .loadsWithError(1, """
-              mismatched input 'A' expecting {'[', NAME, STRING, BLOB}
+              mismatched input 'A' expecting {'[', NAME, STRING, BLOB, INT}
               result = A.myField;
                        ^""");
     }

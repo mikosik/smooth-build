@@ -3,6 +3,7 @@ package org.smoothbuild.lang.parse.component;
 import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypes.INT;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
@@ -34,6 +35,16 @@ public class InferenceTest {
       module(code)
           .loadsSuccessfully()
           .containsReferencableWithType("myValue", BLOB);
+    }
+
+    @Test
+    public void int_literal() {
+      String code = """
+          myValue = 123;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myValue", INT);
     }
 
     @Test
@@ -100,6 +111,16 @@ public class InferenceTest {
       module(code)
           .loadsSuccessfully()
           .containsReferencableWithType("myFunction", f(BLOB));
+    }
+
+    @Test
+    public void int_literal() {
+      String code = """
+          myFunction() = 123;
+          """;
+      module(code)
+          .loadsSuccessfully()
+          .containsReferencableWithType("myFunction", f(INT));
     }
 
     @Test

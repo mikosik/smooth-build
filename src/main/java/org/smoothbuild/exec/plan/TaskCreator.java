@@ -12,6 +12,7 @@ import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.base.type.Types.blob;
+import static org.smoothbuild.lang.base.type.Types.int_;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
@@ -31,6 +32,7 @@ import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
+import org.smoothbuild.exec.algorithm.FixedIntAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.algorithm.ReferenceAlgorithm;
@@ -67,6 +69,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
+import org.smoothbuild.lang.expr.IntLiteralExpression;
 import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
@@ -114,6 +117,8 @@ public class TaskCreator {
             new Handler<>(this::arrayLazy, this::arrayEager))
         .put(BlobLiteralExpression.class,
             new Handler<>(this::blobLazy, this::blobEager))
+        .put(IntLiteralExpression.class,
+            new Handler<>(this::intLazy, this::intEager))
         .put(StringLiteralExpression.class,
             new Handler<>(this::stringLazy, this::stringEager))
         .putAll(additionalHandlers)
@@ -334,6 +339,24 @@ public class TaskCreator {
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     return new AlgorithmTask(
         LITERAL, blob(), algorithm.shortedLiteral(), algorithm, list(), expression.location());
+  }
+
+  // IntLiteralExpression
+
+  private Task intLazy(Scope<Task> scope, IntLiteralExpression intLiteral) {
+    return new LazyTask(int_(), intLiteral.location(), () -> intEagerTask(intLiteral));
+  }
+
+  private Task intEager(Scope<Task> scope, IntLiteralExpression intLiteral) {
+    return intEagerTask(intLiteral);
+  }
+
+  private AlgorithmTask intEagerTask(IntLiteralExpression expression) {
+    var intSpec = toSpecConverter.visit(int_());
+    var bigInteger = expression.bigInteger();
+    var algorithm = new FixedIntAlgorithm(intSpec, bigInteger);
+    return new AlgorithmTask(
+        LITERAL, int_(), bigInteger.toString(), algorithm, list(), expression.location());
   }
 
   // StringLiteralExpression

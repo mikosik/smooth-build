@@ -5,11 +5,14 @@ import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedVa
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import java.math.BigInteger;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
@@ -105,6 +108,17 @@ public class ComputationCacheTest extends TestingContext {
   }
 
   @Test
+  public void written_int_array_can_be_read_back() throws Exception {
+    Obj intValue = int_(123);
+    array = arrayBuilder(intSpec()).add(intValue).build();
+    computationCache().write(hash, new Output(array, emptyMessageArray()));
+    ArraySpec arraySpec = arraySpec(intSpec());
+
+    assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Int.class))
+        .containsExactly(intValue);
+  }
+
+  @Test
   public void written_string_array_can_be_read_back() throws Exception {
     stringValue = string(string);
     array = arrayBuilder(stringSpec()).add(stringValue).build();
@@ -140,6 +154,15 @@ public class ComputationCacheTest extends TestingContext {
 
     assertThat(((Bool) computationCache().read(hash, boolSpec()).value()).jValue())
         .isTrue();
+  }
+
+  @Test
+  public void written_int_can_be_read_back() throws Exception {
+    Int intValue = int_(123);
+    computationCache().write(hash, new Output(intValue, emptyMessageArray()));
+
+    assertThat(((Int) computationCache().read(hash, intSpec()).value()).jValue())
+        .isEqualTo(BigInteger.valueOf(123));
   }
 
   @Test

@@ -5,12 +5,14 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,9 +37,10 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
     hashes.add(referenceAlgorithmHash(Hash.of(""), "global-referencable-name"));
+    hashes.add(fixedIntAlgorithmHash(BigInteger.valueOf(123)));
 
     assertThat(hashes.size())
-        .isEqualTo(8);
+        .isEqualTo(9);
   }
 
   @Test
@@ -89,5 +92,11 @@ public class AlgorithmHashesTest extends TestingContext {
   public void reference_algorithm_has_different_hash_for_different_function_names() {
     assertThat(referenceAlgorithmHash(Hash.of(123), "referencable-name"))
         .isNotEqualTo(referenceAlgorithmHash(Hash.of(123), "other-name"));
+  }
+
+  @Test
+  public void fixed_int_algorithm_has_different_hash_for_different_integers() {
+    assertThat(fixedIntAlgorithmHash(BigInteger.valueOf(123)))
+        .isNotEqualTo(fixedIntAlgorithmHash(BigInteger.valueOf(124)));
   }
 }

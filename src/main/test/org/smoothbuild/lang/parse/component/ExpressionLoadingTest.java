@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.constr;
 import static org.smoothbuild.lang.TestingLang.fieldRead;
 import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.TestingLang.int_;
 import static org.smoothbuild.lang.TestingLang.nativ;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.parameterRef;
@@ -16,6 +17,7 @@ import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypes.INT;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
@@ -50,6 +52,16 @@ public class ExpressionLoadingTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(value(1, BLOB, "result", blob(2, 7)));
+  }
+
+  @Test
+  public void int_literal_expression() {
+    module("""
+          result =
+            123;
+          """)
+        .loadsSuccessfully()
+        .containsReferencable(value(1, INT, "result", int_(2, 123)));
   }
 
   @Nested

@@ -3,6 +3,7 @@ package org.smoothbuild.acceptance.lang.convert;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
 import static org.smoothbuild.lang.base.type.TestedType.BOOL;
+import static org.smoothbuild.lang.base.type.TestedType.INT;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
@@ -45,6 +46,9 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         // Bool
         allowedConversion(BOOL, BOOL),
 
+        // Int
+        allowedConversion(INT, INT),
+
         // No test cases for Nothing - it cannot be converted to anything.
 
         // String
@@ -60,6 +64,10 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         // [Bool]
         allowedConversion(a(BOOL), a(BOOL)),
         allowedConversion(a(BOOL), a(NOTHING)),
+
+        // [Int]
+        allowedConversion(a(INT), a(INT)),
+        allowedConversion(a(INT), a(NOTHING)),
 
         // [Nothing]
         allowedConversion(a(NOTHING), a(NOTHING)),
@@ -83,6 +91,12 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
 
         allowedConversion(a(a(BOOL)), a(a(BOOL))),
         allowedConversion(a(a(BOOL)), a(a(NOTHING))),
+
+        // [[Int]]
+        allowedConversion(a(a(INT)), a(NOTHING)),
+
+        allowedConversion(a(a(INT)), a(a(INT))),
+        allowedConversion(a(a(INT)), a(a(NOTHING))),
 
         // [[Nothing]]
         allowedConversion(a(a(NOTHING)), a(NOTHING)),

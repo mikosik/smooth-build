@@ -3,6 +3,7 @@ package org.smoothbuild.acceptance.cli;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.BooleanCreators.falseByteString;
 import static org.smoothbuild.testing.BooleanCreators.trueByteString;
+import static org.smoothbuild.testing.IntCreators.intToByteString;
 import static org.smoothbuild.util.Lists.list;
 
 import java.nio.file.Files;
@@ -21,6 +22,19 @@ public class ArtifactTest extends AcceptanceTestCase {
     assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactAsByteStrings("result"))
         .isEqualTo(trueByteString());
+  }
+
+  @Test
+  public void store_int_artifact() throws Exception {
+    String code = """
+        result = -12345678;
+        """;
+    createUserModule(code);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
+    assertThat(artifactAsByteStrings("result"))
+        .isEqualTo(intToByteString(-12345678));
   }
 
   @Test

@@ -6,6 +6,7 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,12 +15,14 @@ import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
+import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
@@ -73,6 +76,10 @@ public class ObjectFactory {
     return objectDb.bool(value);
   }
 
+  public Int int_(BigInteger value) {
+    return objectDb.int_(value);
+  }
+
   public Tuple file(Str path, Blob content) {
     return objectDb.tuple(fileSpec(), list(content, path));
   }
@@ -95,6 +102,10 @@ public class ObjectFactory {
 
   public BoolSpec boolSpec() {
     return objectDb.boolSpec();
+  }
+
+  public IntSpec intSpec() {
+    return objectDb.intSpec();
   }
 
   public TupleSpec fileSpec() {

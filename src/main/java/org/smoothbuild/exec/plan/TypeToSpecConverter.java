@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
+import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
@@ -15,6 +16,7 @@ import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
 import org.smoothbuild.lang.base.type.FunctionType;
+import org.smoothbuild.lang.base.type.IntType;
 import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
@@ -35,6 +37,8 @@ public class TypeToSpecConverter {
       return visit(blob);
     } else if (type instanceof BoolType) {
       return objectFactory.boolSpec();
+    } else if (type instanceof IntType intType) {
+      return visit(intType);
     } else if (type instanceof NothingType) {
       return objectFactory.nothingSpec();
     } else if (type instanceof StringType stringType) {
@@ -55,6 +59,10 @@ public class TypeToSpecConverter {
 
   public BlobSpec visit(BlobType type) {
     return objectFactory.blobSpec();
+  }
+
+  public IntSpec visit(IntType type) {
+    return objectFactory.intSpec();
   }
 
   public StringSpec visit(StringType string) {

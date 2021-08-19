@@ -96,6 +96,8 @@ public class AstVisitor {
       visitStringLiteral(stringNode);
     } else if (expr instanceof BlobNode blobNode) {
       visitBlobLiteral(blobNode);
+    } else if (expr instanceof IntNode intNode) {
+      visitIntLiteral(intNode);
     } else {
       throw new RuntimeException("Unknown node " + expr.getClass().getSimpleName());
     }
@@ -127,7 +129,10 @@ public class AstVisitor {
   public void visitStringLiteral(StringNode string) {
   }
 
-  public void visitBlobLiteral(BlobNode string) {
+  public void visitBlobLiteral(BlobNode blob) {
+  }
+
+  public void visitIntLiteral(IntNode int_) {
   }
 
   public <E> void visitIndexedElements(List<E> elements, BiConsumer<Integer, ? super E> consumer) {

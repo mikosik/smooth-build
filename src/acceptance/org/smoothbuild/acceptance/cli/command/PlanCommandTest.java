@@ -206,6 +206,19 @@ public class PlanCommandTest {
     }
 
     @Test
+    public void int_literal() throws Exception {
+      createUserModule("""
+              result = -1234;
+              """);
+      runSmoothPlan("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+              Int result
+                Int -1234
+              """);
+    }
+
+    @Test
     public void convert_computation() throws Exception {
       createUserModule("""
               [String] result = [];

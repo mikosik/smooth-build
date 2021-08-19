@@ -27,6 +27,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
+import org.smoothbuild.lang.expr.IntLiteralExpression;
 import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
@@ -37,6 +38,7 @@ import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FieldReadNode;
+import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.NativeNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
@@ -129,6 +131,9 @@ public class LoadReferencable {
       if (expr instanceof BlobNode blobNode) {
         return createBlobLiteral(blobNode);
       }
+      if (expr instanceof IntNode intNode) {
+        return createIntLiteral(intNode);
+      }
       if (expr instanceof ArrayNode arrayNode) {
         return createArrayLiteral(arrayNode);
       }
@@ -196,5 +201,11 @@ public class LoadReferencable {
     return new BlobLiteralExpression(
         blob.byteString(),
         blob.location());
+  }
+
+  public static IntLiteralExpression createIntLiteral(IntNode intNode) {
+    return new IntLiteralExpression(
+        intNode.bigInteger(),
+        intNode.location());
   }
 }

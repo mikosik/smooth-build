@@ -12,6 +12,7 @@ expr         : exprHead ( p+='|' chainCall )* ;
 exprHead     : chain | literal ;
 literal      : STRING
              | BLOB
+             | INT
              | array
              ;
 chain        : NAME ( chainPart )* ;
@@ -31,6 +32,7 @@ NAME         : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
 TNAME        : LARGE_LETTER ( IDENTIFIER_CHAR )* ;
 STRING       : '"' (ESC | ~('\r' | '\n'))*? '"' ;
 BLOB         : '0x' HEX_DIGIT* ;
+INT          : '-'? DIGIT+ ;
 
 fragment ESC              : '\\"'
                           | '\\\\'
@@ -41,13 +43,14 @@ fragment IDENTIFIER_CHAR  : SMALL_LETTER
                           ;
 fragment SMALL_LETTER     : 'a'..'z' ;
 fragment LARGE_LETTER     : 'A'..'Z' ;
-fragment NON_LETTER       : '0'..'9'
+fragment NON_LETTER       : DIGIT
                           | '_'
                           ;
-fragment HEX_DIGIT        : '0'..'9'
+fragment HEX_DIGIT        : DIGIT
                           | 'A'..'F'
                           | 'a'..'f'
                           ;
+fragment DIGIT            : '0'..'9' ;
 
 COMMENT                   : '#'  ~( '\r' | '\n' )* -> skip ;
 WS                        : [ \t\n\r]+ -> skip ;

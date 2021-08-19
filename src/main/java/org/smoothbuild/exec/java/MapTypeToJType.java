@@ -3,6 +3,7 @@ package org.smoothbuild.exec.java;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
@@ -27,6 +28,7 @@ public class MapTypeToJType {
       return switch (type.name()) {
         case TypeNames.BLOB -> Blob.class;
         case TypeNames.BOOL -> Bool.class;
+        case TypeNames.INT -> Int.class;
         case TypeNames.NOTHING -> Obj.class;
         case TypeNames.STRING -> Str.class;
         default -> throw new IllegalArgumentException("Unknown type: " + type.q());

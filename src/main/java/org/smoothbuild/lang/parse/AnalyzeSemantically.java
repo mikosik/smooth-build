@@ -26,6 +26,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
+import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.Named;
 import org.smoothbuild.lang.parse.ast.NamedNode;
@@ -50,6 +51,7 @@ public class AnalyzeSemantically {
     var logBuffer = new LogBuffer();
     unescapeStringLiterals(logBuffer, ast);
     decodeBlobLiterals(logBuffer, ast);
+    decodeIntLiterals(logBuffer, ast);
     resolveReferences(logBuffer, imported, ast);
     detectUndefinedTypes(logBuffer, imported, ast);
     detectDuplicateGlobalNames(logBuffer, imported, ast);
@@ -84,6 +86,20 @@ public class AnalyzeSemantically {
           blob.decodeByteString();
         } catch (DecodingHexException e) {
           logger.log(parseError(blob, "Illegal Blob literal. " + e.getMessage()));
+        }
+      }
+    }.visitAst(ast);
+  }
+
+  private static void decodeIntLiterals(Logger logger, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitIntLiteral(IntNode intNode) {
+        super.visitIntLiteral(intNode);
+        try {
+          intNode.decodeBigInteger();
+        } catch (NumberFormatException e) {
+          logger.log(parseError(intNode, "Illegal Int literal: `" + intNode.literal() + "`."));
         }
       }
     }.visitAst(ast);

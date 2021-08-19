@@ -167,6 +167,9 @@ public class AstCreator {
         if (expr.BLOB() != null) {
           return new BlobNode(expr.BLOB().getText().substring(2), locationOf(filePath, expr));
         }
+        if (expr.INT() != null) {
+          return new IntNode(expr.INT().getText(), locationOf(filePath, expr));
+        }
         throw newRuntimeException(LiteralContext.class);
       }
 

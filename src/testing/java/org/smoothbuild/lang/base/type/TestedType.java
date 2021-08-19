@@ -9,6 +9,7 @@ import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
+import static org.smoothbuild.lang.base.type.Types.int_;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
@@ -55,6 +56,11 @@ public class TestedType {
       bool(),
       "true",
       new String(new byte[] {1})
+  );
+  public static final TestedType INT = new TestedType(
+      int_(),
+      "123",
+      new String(new byte[] {123})
   );
   public static final TestedType NOTHING = new TestedType(
       nothing(),

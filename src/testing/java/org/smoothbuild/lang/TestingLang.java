@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.util.Lists.list;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Constructor;
@@ -25,6 +26,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
+import org.smoothbuild.lang.expr.IntLiteralExpression;
 import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
@@ -41,6 +43,14 @@ public class TestingLang {
 
   public static BlobLiteralExpression blob(int line, int data) {
     return new BlobLiteralExpression(ByteString.of((byte) data), loc(line));
+  }
+
+  public static IntLiteralExpression int_(int value) {
+    return int_(1, value);
+  }
+
+  public static IntLiteralExpression int_(int line, int value) {
+    return new IntLiteralExpression(BigInteger.valueOf(value), loc(line));
   }
 
   public static StringLiteralExpression string(int line, String data) {

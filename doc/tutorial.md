@@ -119,14 +119,13 @@ and run build command that will provide results instantly.
 ### Type system
 
 Smooth language is statically typed which means all types are known at compile time.
-It is also strongly typed so it is not possible to assign value of one type
+It is also strongly typed, so it is not possible to assign value of one type
 to value of different type unless the former is convertible to the latter.
 First let's discuss all types available in smooth language.
 
 #### Base types
 Base types are predefined by the language (cannot be defined by user).
-Currently, we have following base types: String, Bool, Blob, Nothing.
-Others (like Int) will be added before smooth reaches version 1.0.
+Currently, we have following base types: Bool, String, Int, Blob, Nothing.
 
 ##### _Bool_
 Boolean value that can be either `true` or `false`.
@@ -142,6 +141,15 @@ which is a sequence of characters enclosed in double quotes.
 
 ```
 String welcomeString = "Hello World";
+```
+
+##### _Int_
+Int is an arbitrary-precision integer.
+String value can be defined using Int literal,
+which is a sequence of decimal digits optionally prefixed with minus sign (`-`).
+
+```
+Int favoriteNumber = 123;
 ```
 
 ##### _Blob_

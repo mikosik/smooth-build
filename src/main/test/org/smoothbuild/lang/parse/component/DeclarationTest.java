@@ -1051,7 +1051,7 @@ public class DeclarationTest {
         }
 
         @Nested
-        class causes_error_when {
+        class _causes_error_when {
           @Test
           public void has_only_one_digit() {
             module("result = 0x1;")
@@ -1071,6 +1071,72 @@ public class DeclarationTest {
               extraneous input 'GG' expecting ';'
               result = 0xGG;
                          ^^""");
+          }
+        }
+      }
+
+      @Nested
+      class _declaring_int_literal {
+        @ParameterizedTest
+        @ValueSource(strings = {
+            "0",
+            "12",
+            "123",
+            "1234",
+            "123456789",
+            "-1",
+            "-2",
+            "-10",
+            "-123456789",
+        })
+        public void is_legal(String literal) {
+          module("result = " + literal + ";")
+              .loadsSuccessfully();
+        }
+
+
+        @Nested
+        class _causes_error_when {
+          @ParameterizedTest
+          @ValueSource(strings = {
+              "00",
+              "01",
+              "001",
+              "-0",
+              "-00",
+              "-01",
+              "-001",
+          })
+          public void has_leading_zeros(String literal) {
+            module("result = " + literal + ";")
+                .loadsWithError(1, "Illegal Int literal: `" + literal + "`.");
+          }
+
+          @Test
+          public void has_two_minus_signs() {
+            module("result = --1;")
+                .loadsWithError(1, """
+                    token recognition error at: '--'
+                    result = --1;
+                             ^""");
+          }
+
+          @Test
+          public void has_space_inside() {
+            module("result = 12 3;")
+                .loadsWithError(1, """
+                  extraneous input '3' expecting ';'
+                  result = 12 3;
+                              ^""");
+          }
+
+          @Test
+          public void has_space_after_minus_sign() {
+            module("result = - 123;")
+                .loadsWithError(1, """
+                  token recognition error at: '- '
+                  result = - 123;
+                           ^""");
           }
         }
       }

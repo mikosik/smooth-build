@@ -10,6 +10,7 @@ public class Types {
   private static final AnyType ANY = new AnyType();
   private static final BlobType BLOB = new BlobType();
   private static final BoolType BOOL = new BoolType();
+  private static final IntType INT = new IntType();
   private static final NothingType NOTHING = new NothingType();
   private static final StringType STRING = new StringType();
 
@@ -19,6 +20,7 @@ public class Types {
   public static final ImmutableSet<BaseType> BASE_TYPES = ImmutableSet.of(
       BLOB,
       BOOL,
+      INT,
       NOTHING,
       STRING
   );
@@ -48,6 +50,10 @@ public class Types {
 
   public static BoolType bool() {
     return BOOL;
+  }
+
+  public static IntType int_() {
+    return INT;
   }
 
   public static NothingType nothing() {
