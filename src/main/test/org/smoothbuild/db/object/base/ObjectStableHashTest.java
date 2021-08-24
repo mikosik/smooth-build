@@ -46,19 +46,19 @@ public class ObjectStableHashTest extends TestingContext {
     @Test
     public void hash_of_zero_int_is_stable() {
       assertThat(int_(0).hash())
-          .isEqualTo(Hash.decode("5b314f0301c9cbdc74e9045b1322bbb9c53c8b6e"));
+          .isEqualTo(Hash.decode("a74ab70e73150249cbeab4a98b3724191de5b765"));
     }
 
     @Test
     public void hash_of_positive_int_is_stable() {
       assertThat(int_(123).hash())
-          .isEqualTo(Hash.decode("2687526fa7a53185f1944094e1d21de2373259ac"));
+          .isEqualTo(Hash.decode("499c2f0fa7eec7f337bb8f70eb20d66fd38b89a3"));
     }
 
     @Test
     public void hash_of_negative_int_is_stable() {
       assertThat(int_(-123).hash())
-          .isEqualTo(Hash.decode("129777bfe4f2c0432433be4b5767d29c67d251af"));
+          .isEqualTo(Hash.decode("60eeed22193aef6ae9f60990cbb7b974a7059340"));
     }
   }
 

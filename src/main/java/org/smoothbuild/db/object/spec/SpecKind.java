@@ -9,13 +9,13 @@ import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 
 public enum SpecKind {
+  INT((byte) 0, Int.class),
   NOTHING((byte) 1, null),
   TUPLE((byte) 2, Tuple.class),
   ARRAY((byte) 3, Array.class),
   BLOB((byte) 4, Blob.class),
   BOOL((byte) 5, Bool.class),
-  STRING((byte) 6, Str.class),
-  INT((byte) 7, Int.class);
+  STRING((byte) 6, Str.class);
 
   private final byte marker;
   private final Class<? extends Obj> jType;
