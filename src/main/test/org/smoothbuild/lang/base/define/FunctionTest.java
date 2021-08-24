@@ -31,7 +31,7 @@ public class FunctionTest extends TestingContext {
 
   @Test
   public void params_returns_signature_params() {
-    List<Item> parameters = list(parameter(1, Types.string(), "name"));
+    List<Item> parameters = list(parameter(1, Types.stringT(), "name"));
     Function function = myFunction(STRING, parameters);
     assertThat(function.parameters())
         .isEqualTo(parameters);

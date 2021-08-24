@@ -57,9 +57,9 @@ public class TestingLang {
     return new StringLiteralExpression(data, loc(line));
   }
 
-  public static ArrayLiteralExpression array(int line, Type elemType, Expression... expressions) {
+  public static ArrayLiteralExpression arrayE(int line, Type elemType, Expression... expressions) {
     return new ArrayLiteralExpression(
-        Types.array(elemType), ImmutableList.copyOf(expressions), loc(line));
+        Types.arrayT(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
   public static ReferenceExpression reference(GlobalReferencable referencable) {
@@ -131,7 +131,7 @@ public class TestingLang {
   }
 
   public static StructType struct(String name, ItemSignature... fields) {
-    return Types.struct(name, list(fields));
+    return Types.structT(name, list(fields));
   }
 
   public static Constructor constr(int line, Type resultType, String name, Item... parameters) {

@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.base.type.Types.blob;
-import static org.smoothbuild.lang.base.type.Types.string;
-import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.blobT;
+import static org.smoothbuild.lang.base.type.Types.stringT;
+import static org.smoothbuild.lang.base.type.Types.structT;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;
@@ -13,9 +13,9 @@ import org.smoothbuild.lang.base.type.Type;
 
 public record NativeExpression(StringLiteralExpression path, boolean isPure, Location location)
     implements Expression {
-  private static final Type TYPE = struct("Native", list(
-      new ItemSignature(string(), "path", Optional.empty()),
-      new ItemSignature(blob(), "content", Optional.empty())));
+  private static final Type TYPE = structT("Native", list(
+      new ItemSignature(stringT(), "path", Optional.empty()),
+      new ItemSignature(blobT(), "content", Optional.empty())));
 
   @Override
   public Type type() {

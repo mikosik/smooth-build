@@ -43,7 +43,7 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void cache_contains_written_result() throws Exception {
-    computationCache().write(hash, new Output(string("result"), emptyMessageArray()));
+    computationCache().write(hash, new Output(strV("result"), emptyMessageArray()));
     assertThat(computationCache().contains(hash))
         .isTrue();
   }
@@ -59,27 +59,27 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void reading_not_written_value_fails() {
-    assertCall(() -> computationCache().read(hash, stringSpec()))
+    assertCall(() -> computationCache().read(hash, strS()))
         .throwsException(ComputationCacheException.class);
   }
 
   @Test
   public void written_messages_can_be_read_back() throws Exception {
-    stringValue = string("abc");
-    Obj message = errorMessage("error message");
-    Array messages = array(message);
+    stringValue = strV("abc");
+    Obj message = errorMessageV("error message");
+    Array messages = arrayV(message);
     computationCache().write(hash, new Output(stringValue, messages));
 
-    assertThat(computationCache().read(hash, stringSpec()).messages())
+    assertThat(computationCache().read(hash, strS()).messages())
         .isEqualTo(messages);
   }
 
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
-    file = file(path, bytes);
+    file = fileV(path, bytes);
     array = arrayBuilder(objectFactory().fileSpec()).add(file).build();
     computationCache().write(hash, new Output(array, emptyMessageArray()));
-    ArraySpec arraySpec = arraySpec(objectFactory().fileSpec());
+    ArraySpec arraySpec = arrayS(objectFactory().fileSpec());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Tuple.class))
         .containsExactly(file);
@@ -87,10 +87,10 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
-    blob = blob(bytes);
-    array = arrayBuilder(blobSpec()).add(blob).build();
+    blob = blobV(bytes);
+    array = arrayBuilder(blobS()).add(blob).build();
     computationCache().write(hash, new Output(array, emptyMessageArray()));
-    ArraySpec arraySpec = arraySpec(blobSpec());
+    ArraySpec arraySpec = arrayS(blobS());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Blob.class))
         .containsExactly(blob);
@@ -98,10 +98,10 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void written_bool_array_can_be_read_back() throws Exception {
-    boolValue = bool(true);
-    array = arrayBuilder(boolSpec()).add(boolValue).build();
+    boolValue = boolV(true);
+    array = arrayBuilder(boolS()).add(boolValue).build();
     computationCache().write(hash, new Output(array, emptyMessageArray()));
-    ArraySpec arraySpec = arraySpec(boolSpec());
+    ArraySpec arraySpec = arrayS(boolS());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Bool.class))
         .containsExactly(boolValue);
@@ -109,10 +109,10 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void written_int_array_can_be_read_back() throws Exception {
-    Obj intValue = int_(123);
-    array = arrayBuilder(intSpec()).add(intValue).build();
+    Obj intValue = intV(123);
+    array = arrayBuilder(intS()).add(intValue).build();
     computationCache().write(hash, new Output(array, emptyMessageArray()));
-    ArraySpec arraySpec = arraySpec(intSpec());
+    ArraySpec arraySpec = arrayS(intS());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Int.class))
         .containsExactly(intValue);
@@ -120,10 +120,10 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void written_string_array_can_be_read_back() throws Exception {
-    stringValue = string(string);
-    array = arrayBuilder(stringSpec()).add(stringValue).build();
+    stringValue = strV(string);
+    array = arrayBuilder(strS()).add(stringValue).build();
     computationCache().write(hash, new Output(array, emptyMessageArray()));
-    ArraySpec arraySpec = arraySpec(stringSpec());
+    ArraySpec arraySpec = arrayS(strS());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Str.class))
         .containsExactly(stringValue);
@@ -131,7 +131,7 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
-    file = file(path, bytes);
+    file = fileV(path, bytes);
     computationCache().write(hash, new Output(file, emptyMessageArray()));
 
     assertThat(computationCache().read(hash, objectFactory().fileSpec()).value())
@@ -140,36 +140,36 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void written_blob_can_be_read_back() throws Exception {
-    blob = blob(bytes);
+    blob = blobV(bytes);
     computationCache().write(hash, new Output(blob, emptyMessageArray()));
 
-    assertThat(computationCache().read(hash, blobSpec()).value())
+    assertThat(computationCache().read(hash, blobS()).value())
         .isEqualTo(blob);
   }
 
   @Test
   public void written_bool_can_be_read_back() throws Exception {
-    boolValue = bool(true);
+    boolValue = boolV(true);
     computationCache().write(hash, new Output(boolValue, emptyMessageArray()));
 
-    assertThat(((Bool) computationCache().read(hash, boolSpec()).value()).jValue())
+    assertThat(((Bool) computationCache().read(hash, boolS()).value()).jValue())
         .isTrue();
   }
 
   @Test
   public void written_int_can_be_read_back() throws Exception {
-    Int intValue = int_(123);
+    Int intValue = intV(123);
     computationCache().write(hash, new Output(intValue, emptyMessageArray()));
 
-    assertThat(((Int) computationCache().read(hash, intSpec()).value()).jValue())
+    assertThat(((Int) computationCache().read(hash, intS()).value()).jValue())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
   @Test
   public void written_string_can_be_read_back() throws Exception {
-    stringValue = string(string);
+    stringValue = strV(string);
     computationCache().write(hash, new Output(stringValue, emptyMessageArray()));
-    assertThat(((Str) computationCache().read(hash, stringSpec()).value()).jValue())
+    assertThat(((Str) computationCache().read(hash, strS()).value()).jValue())
         .isEqualTo(string);
   }
 }

@@ -27,13 +27,13 @@ public class OutputClassFileTest extends TestingContext {
       sink.write(bytes);
     }
     assertThat(fileArrayBuilder.build().asIterable(Tuple.class))
-        .containsExactly(file(path, bytes));
+        .containsExactly(fileV(path, bytes));
   }
 
   @Test
   public void get_name_returns_file_path() {
     OutputClassFile outputClassFile =
-        new OutputClassFile(arrayBuilder(fileSpec()), path, nativeApi());
+        new OutputClassFile(arrayBuilder(fileS()), path, nativeApi());
     assertThat(outputClassFile.getName())
         .isEqualTo("/" + path.toString());
   }

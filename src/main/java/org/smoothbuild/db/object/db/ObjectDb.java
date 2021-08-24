@@ -39,7 +39,7 @@ import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.SpecKind;
-import org.smoothbuild.db.object.spec.StringSpec;
+import org.smoothbuild.db.object.spec.StrSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
 
 import com.google.common.collect.ImmutableList;
@@ -60,7 +60,7 @@ public class ObjectDb {
   private BoolSpec boolSpec;
   private IntSpec intSpec;
   private NothingSpec nothingSpec;
-  private StringSpec stringSpec;
+  private StrSpec strSpec;
 
   public static ObjectDb objectDb(HashedDb hashedDb) {
       ObjectDb objectDb = new ObjectDb(hashedDb);
@@ -79,13 +79,13 @@ public class ObjectDb {
       this.boolSpec = new BoolSpec(writeBaseSpecRoot(BOOL), hashedDb, this);
       this.intSpec = new IntSpec(writeBaseSpecRoot(INT), hashedDb, this);
       this.nothingSpec = new NothingSpec(writeBaseSpecRoot(NOTHING), hashedDb, this);
-      this.stringSpec = new StringSpec(writeBaseSpecRoot(STRING), hashedDb, this);
+      this.strSpec = new StrSpec(writeBaseSpecRoot(STRING), hashedDb, this);
 
       cacheSpec(blobSpec);
       cacheSpec(boolSpec);
       cacheSpec(intSpec);
       cacheSpec(nothingSpec);
-      cacheSpec(stringSpec);
+      cacheSpec(strSpec);
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -94,26 +94,26 @@ public class ObjectDb {
   // methods for creating objects or object builders
 
   public ArrayBuilder arrayBuilder(Spec elementSpec) {
-    return new ArrayBuilder(arraySpec(elementSpec), this);
+    return new ArrayBuilder(arrayS(elementSpec), this);
   }
 
   public BlobBuilder blobBuilder() {
     return wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
   }
 
-  public Bool bool(boolean value) {
-    return wrapException(() -> newBool(value));
+  public Bool boolV(boolean value) {
+    return wrapException(() -> newBoolV(value));
   }
 
-  public Int int_(BigInteger value) {
-    return wrapException(() -> newInt(value));
+  public Int intV(BigInteger value) {
+    return wrapException(() -> newIntV(value));
   }
 
-  public Str string(String string) {
-    return wrapException(() -> newString(string));
+  public Str strV(String string) {
+    return wrapException(() -> newStrV(string));
   }
 
-  public Tuple tuple(TupleSpec tupleSpec, Iterable<? extends Obj> elements) {
+  public Tuple tupleV(TupleSpec tupleSpec, Iterable<? extends Obj> elements) {
     List<Obj> elementsList = ImmutableList.copyOf(elements);
     var specs = tupleSpec.elementSpecs();
     if (specs.size() != elementsList.size()) {
@@ -129,7 +129,7 @@ public class ObjectDb {
             + " at that index.");
       }
     }
-    return wrapException(() -> newTuple(tupleSpec, elementsList));
+    return wrapException(() -> newTupleV(tupleSpec, elementsList));
   }
 
   public Obj get(Hash hash) {
@@ -146,32 +146,32 @@ public class ObjectDb {
 
   // methods for returning specs
 
-  public ArraySpec arraySpec(Spec elementSpec) {
-    return cacheSpec(wrapException(() -> newArraySpec(elementSpec)));
+  public ArraySpec arrayS(Spec elementSpec) {
+    return cacheSpec(wrapException(() -> newArrayS(elementSpec)));
   }
 
-  public BlobSpec blobSpec() {
+  public BlobSpec blobS() {
     return blobSpec;
   }
 
-  public BoolSpec boolSpec() {
+  public BoolSpec boolS() {
     return boolSpec;
   }
 
-  public IntSpec intSpec() {
+  public IntSpec intS() {
     return intSpec;
   }
 
-  public NothingSpec nothingSpec() {
+  public NothingSpec nothingS() {
     return nothingSpec;
   }
 
-  public StringSpec stringSpec() {
-    return stringSpec;
+  public StrSpec strS() {
+    return strSpec;
   }
 
-  public TupleSpec tupleSpec(Iterable<? extends Spec> elementSpecs) {
-    return cacheSpec(wrapException(() -> newTupleSpec(elementSpecs)));
+  public TupleSpec tupleS(Iterable<? extends Spec> elementSpecs) {
+    return cacheSpec(wrapException(() -> newTupleS(elementSpecs)));
   }
 
   private Spec getSpecOrChainException(
@@ -215,18 +215,18 @@ public class ObjectDb {
         }
         case STRING -> {
           assertSize(hash, STRING, hashes, 1);
-          yield stringSpec;
+          yield strSpec;
         }
         case ARRAY -> {
           assertSize(hash, ARRAY, hashes, 2);
           Spec elementSpec = getSpecOrChainException(
               hashes.get(1), e -> new CannotDecodeSpecException(hash));
-          yield cacheSpec(newArraySpec(hash, elementSpec));
+          yield cacheSpec(newArrayS(hash, elementSpec));
         }
         case TUPLE -> {
           assertSize(hash, TUPLE, hashes, 2);
           ImmutableList<Spec> elements = readTupleSpecElementSpecs(hashes.get(1), hash);
-          yield cacheSpec(newTupleSpec(hash, elements));
+          yield cacheSpec(newTupleS(hash, elements));
         }
       };
     } catch (HashedDbException e) {
@@ -274,48 +274,48 @@ public class ObjectDb {
 
   // methods for creating Obj-s
 
-  public Array newArray(ArraySpec spec, Iterable<? extends Obj> elements)
+  public Array newArrayV(ArraySpec spec, Iterable<? extends Obj> elements)
       throws HashedDbException {
     return spec.newObj(writeRoot(spec, writeArrayData(elements)));
   }
 
-  public Blob newBlob(Hash dataHash) throws HashedDbException {
+  public Blob newBlobV(Hash dataHash) throws HashedDbException {
     return blobSpec.newObj(writeRoot(blobSpec, dataHash));
   }
 
-  private Bool newBool(boolean value) throws HashedDbException {
+  private Bool newBoolV(boolean value) throws HashedDbException {
     return boolSpec.newObj(writeRoot(boolSpec, writeBoolData(value)));
   }
 
-  private Int newInt(BigInteger value) throws HashedDbException {
+  private Int newIntV(BigInteger value) throws HashedDbException {
     return intSpec.newObj(writeRoot(intSpec, writeIntData(value)));
   }
 
-  private Str newString(String string) throws HashedDbException {
-    return stringSpec.newObj(writeRoot(stringSpec, writeStringData(string)));
+  private Str newStrV(String string) throws HashedDbException {
+    return strSpec.newObj(writeRoot(strSpec, writeStringData(string)));
   }
 
-  private Tuple newTuple(TupleSpec spec, List<?extends Obj> objects) throws HashedDbException {
+  private Tuple newTupleV(TupleSpec spec, List<?extends Obj> objects) throws HashedDbException {
     return spec.newObj(writeRoot(spec, writeTupleData(objects)));
   }
 
   // methods for creating Spec-s
 
-  private ArraySpec newArraySpec(Spec elementSpec) throws HashedDbException {
+  private ArraySpec newArrayS(Spec elementSpec) throws HashedDbException {
     Hash hash = writeArraySpecRoot(elementSpec);
-    return newArraySpec(hash, elementSpec);
+    return newArrayS(hash, elementSpec);
   }
 
-  private ArraySpec newArraySpec(Hash hash, Spec elementSpec) {
+  private ArraySpec newArrayS(Hash hash, Spec elementSpec) {
     return new ArraySpec(hash, elementSpec, hashedDb, this);
   }
 
-  private TupleSpec newTupleSpec(Iterable<? extends Spec> elementSpecs) throws HashedDbException {
+  private TupleSpec newTupleS(Iterable<? extends Spec> elementSpecs) throws HashedDbException {
     Hash hash = writeTupleSpecRoot(elementSpecs);
-    return newTupleSpec(hash, elementSpecs);
+    return newTupleS(hash, elementSpecs);
   }
 
-  private TupleSpec newTupleSpec(Hash hash, Iterable<? extends Spec> elementSpecs) {
+  private TupleSpec newTupleS(Hash hash, Iterable<? extends Spec> elementSpecs) {
     return new TupleSpec(hash, elementSpecs, hashedDb, this);
   }
 

@@ -150,6 +150,11 @@ public class AstCreator {
         throw newRuntimeException(ExprHeadContext.class);
       }
 
+      private ExprNode createChainExpr(ChainContext chain) {
+        ExprNode result = newRefNode(chain.NAME());
+        return createChainParts(result, chain.chainPart());
+      }
+
       private ArgNode pipedArgument(ExprNode result, Token pipeCharacter) {
         // Location of nameless piped argument is set to the location of pipe character '|'.
         Location location = locationOf(filePath, pipeCharacter);
@@ -161,14 +166,14 @@ public class AstCreator {
           List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
           return new ArrayNode(elements, locationOf(filePath, expr));
         }
-        if (expr.STRING() != null) {
-          return createStringNode(expr, expr.STRING());
-        }
         if (expr.BLOB() != null) {
           return new BlobNode(expr.BLOB().getText().substring(2), locationOf(filePath, expr));
         }
         if (expr.INT() != null) {
           return new IntNode(expr.INT().getText(), locationOf(filePath, expr));
+        }
+        if (expr.STRING() != null) {
+          return createStringNode(expr, expr.STRING());
         }
         throw newRuntimeException(LiteralContext.class);
       }
@@ -177,11 +182,6 @@ public class AstCreator {
         String unquoted = unquote(quotedString.getText());
         Location location = locationOf(filePath, expr);
         return new StringNode(unquoted, location);
-      }
-
-      private ExprNode createChainExpr(ChainContext chain) {
-        ExprNode result = newRefNode(chain.NAME());
-        return createChainParts(result, chain.chainPart());
       }
 
       private ExprNode createChainCallExpr(ArgNode pipedArg, ChainCallContext chainCall) {

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
 import static org.smoothbuild.lang.base.define.Location.internal;
-import static org.smoothbuild.lang.base.type.Types.bool;
+import static org.smoothbuild.lang.base.type.Types.boolT;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;
@@ -21,7 +21,7 @@ public class IfFunction extends Function {
 
   private static ImmutableList<Item> createParameters(ModulePath modulePath) {
     return list(
-        parameter(bool(), modulePath, "condition"),
+        parameter(boolT(), modulePath, "condition"),
         parameter(RESULT_TYPE, modulePath, "then"),
         parameter(RESULT_TYPE, modulePath, "else"));
   }

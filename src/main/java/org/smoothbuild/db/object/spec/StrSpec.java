@@ -12,8 +12,8 @@ import org.smoothbuild.db.object.db.ObjectDb;
 /**
  * This class is immutable.
  */
-public class StringSpec extends Spec {
-  public StringSpec(Hash hash, HashedDb hashedDb, ObjectDb objectDb) {
+public class StrSpec extends Spec {
+  public StrSpec(Hash hash, HashedDb hashedDb, ObjectDb objectDb) {
     super(hash, STRING, hashedDb, objectDb);
   }
 

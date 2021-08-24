@@ -4,14 +4,14 @@ import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
-import static org.smoothbuild.lang.base.type.Types.any;
-import static org.smoothbuild.lang.base.type.Types.array;
-import static org.smoothbuild.lang.base.type.Types.blob;
-import static org.smoothbuild.lang.base.type.Types.function;
-import static org.smoothbuild.lang.base.type.Types.int_;
+import static org.smoothbuild.lang.base.type.Types.anyT;
+import static org.smoothbuild.lang.base.type.Types.arrayT;
+import static org.smoothbuild.lang.base.type.Types.blobT;
+import static org.smoothbuild.lang.base.type.Types.functionT;
+import static org.smoothbuild.lang.base.type.Types.intT;
 import static org.smoothbuild.lang.base.type.Types.isVariableName;
-import static org.smoothbuild.lang.base.type.Types.nothing;
-import static org.smoothbuild.lang.base.type.Types.string;
+import static org.smoothbuild.lang.base.type.Types.nothingT;
+import static org.smoothbuild.lang.base.type.Types.stringT;
 import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.InferCallType.inferCallType;
@@ -89,7 +89,7 @@ public class InferTypes {
         var resultType = bodyType(func);
         var parameterSignatures = func.optParameterSignatures();
         if (resultType.isPresent() && parameterSignatures.isPresent()) {
-          return Optional.of(function(resultType.get(), parameterSignatures.get()));
+          return Optional.of(functionT(resultType.get(), parameterSignatures.get()));
         } else {
           return empty();
         }
@@ -174,12 +174,12 @@ public class InferTypes {
           return Optional.of(variable(type.name()));
         } else if (type instanceof ArrayTypeNode array) {
           TypeNode elementType = array.elementType();
-          return createType(elementType).map(Types::array);
+          return createType(elementType).map(Types::arrayT);
         } else if (type instanceof FunctionTypeNode function) {
           Optional<Type> result = createType(function.resultType());
           var parameters = map(function.parameterTypes(), this::createType);
           if (result.isPresent() && parameters.stream().allMatch(Optional::isPresent)) {
-            return Optional.of(function(
+            return Optional.of(functionT(
                 result.get(), toItemSignatures(map(parameters, Optional::get))));
           } else {
             return empty();
@@ -235,7 +235,7 @@ public class InferTypes {
       private Optional<Type> findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return Optional.of(array(nothing()));
+          return Optional.of(arrayT(nothingT()));
         }
         Optional<Type> firstType = expressions.get(0).type();
         if (firstType.isEmpty()) {
@@ -250,7 +250,7 @@ public class InferTypes {
             return empty();
           }
           type = type.mergeWith(elemType.get(), UPPER);
-          if (type.contains(any())) {
+          if (type.contains(anyT())) {
             logBuffer.log(parseError(elem.location(),
                 "Array elements at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
@@ -258,7 +258,7 @@ public class InferTypes {
             return empty();
           }
         }
-        return Optional.of(array(type));
+        return Optional.of(arrayT(type));
       }
 
       @Override
@@ -317,19 +317,19 @@ public class InferTypes {
       @Override
       public void visitStringLiteral(StringNode string) {
         super.visitStringLiteral(string);
-        string.setType(string());
+        string.setType(stringT());
       }
 
       @Override
       public void visitBlobLiteral(BlobNode blob) {
         super.visitBlobLiteral(blob);
-        blob.setType(blob());
+        blob.setType(blobT());
       }
 
       @Override
       public void visitIntLiteral(IntNode intNode) {
         super.visitIntLiteral(intNode);
-        intNode.setType(int_());
+        intNode.setType(intT());
       }
     }.visitAst(ast);
     return logBuffer.toList();

@@ -70,7 +70,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
             task(valueAlgorithm("D"))));
 
     assertThat(executeSingleTask(task))
-        .isEqualTo(string("((A,B),(C,D))"));
+        .isEqualTo(strV("((A,B),(C,D))"));
   }
 
   @Test
@@ -82,7 +82,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
         task(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
 
     assertThat(executeSingleTask(task))
-        .isEqualTo(string("(11,21)"));
+        .isEqualTo(strV("(11,21)"));
   }
 
   @Test
@@ -97,7 +97,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     Task task = concat(task1, task2, task3, task4);
 
     assertThat(executeSingleTask(task))
-        .isEqualTo(string("(0,0,0,0)"));
+        .isEqualTo(strV("(0,0,0,0)"));
 
     ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
     verify(reporter, times(1)).report(eq(task1), captor.capture());
@@ -125,7 +125,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       Task task = concat(task1, task2);
 
       assertThat(executeSingleTask(task))
-          .isEqualTo(string("(0,0)"));
+          .isEqualTo(strV("(0,0)"));
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
       verify(reporter, times(1)).report(eq(task1), captor.capture());
@@ -149,7 +149,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       Task task = concat(task1, task2);
 
       assertThat(executeSingleTask(task))
-          .isEqualTo(string("(0,0)"));
+          .isEqualTo(strV("(0,0)"));
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
       verify(reporter, times(1)).report(eq(task1), captor.capture());
@@ -175,7 +175,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
         task(getIncrementAlgorithm(counter)));
 
     assertThat(executeSingleTask(task))
-        .isEqualTo(string("(1,1,0)"));
+        .isEqualTo(strV("(1,1,0)"));
   }
 
   @Test
@@ -326,7 +326,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
 
     protected TestAlgorithm(Hash hash, boolean isPure) {
-      super(stringSpec(), isPure);
+      super(strS(), isPure);
       this.hash = hash;
     }
 
@@ -337,7 +337,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
     @Override
     public Spec outputSpec() {
-      return stringSpec();
+      return strS();
     }
   }
 }

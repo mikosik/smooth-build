@@ -1,13 +1,11 @@
 package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.TestingLang.array;
-import static org.smoothbuild.lang.TestingLang.blob;
+import static org.smoothbuild.lang.TestingLang.arrayE;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.constr;
 import static org.smoothbuild.lang.TestingLang.fieldRead;
 import static org.smoothbuild.lang.TestingLang.function;
-import static org.smoothbuild.lang.TestingLang.int_;
 import static org.smoothbuild.lang.TestingLang.nativ;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.parameterRef;
@@ -25,6 +23,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.item;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -41,7 +40,8 @@ public class ExpressionLoadingTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(
-            value(1, a(BLOB), "result", array(2, BLOB, blob(3, 7), blob(4, 8))));
+            value(1, a(BLOB), "result", arrayE(2, BLOB, TestingLang.blob(3, 7), TestingLang
+                .blob(4, 8))));
   }
 
   @Test
@@ -51,7 +51,7 @@ public class ExpressionLoadingTest {
             0x07;
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, BLOB, "result", blob(2, 7)));
+        .containsReferencable(value(1, BLOB, "result", TestingLang.blob(2, 7)));
   }
 
   @Test
@@ -61,7 +61,7 @@ public class ExpressionLoadingTest {
             123;
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, INT, "result", int_(2, 123)));
+        .containsReferencable(value(1, INT, "result", TestingLang.int_(2, 123)));
   }
 
   @Nested
@@ -86,7 +86,7 @@ public class ExpressionLoadingTest {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(2, STRING, "result", call(2, STRING,
-              reference(2, f(STRING, item(BLOB, "b")), "myFunction"), blob(3, 7))));
+              reference(2, f(STRING, item(BLOB, "b")), "myFunction"), TestingLang.blob(3, 7))));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ExpressionLoadingTest {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(2, STRING, "result", call(2, STRING,
-              reference(2, f(STRING, item(BLOB, "b")), "myFunction"), blob(3, 7))));
+              reference(2, f(STRING, item(BLOB, "b")), "myFunction"), TestingLang.blob(3, 7))));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class ExpressionLoadingTest {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(3, STRING, "result", call(3, STRING,
-              reference(3, f(STRING, item(BLOB)), "myValue"), blob(4, 7))));
+              reference(3, f(STRING, item(BLOB)), "myValue"), TestingLang.blob(4, 7))));
     }
 
     @Test
@@ -171,7 +171,7 @@ public class ExpressionLoadingTest {
           """)
           .loadsSuccessfully()
           .containsReferencable(function(1, STRING, "result",
-              call(1, STRING, parameterRef(f(STRING, BLOB), "f"), blob(1, 9)),
+              call(1, STRING, parameterRef(f(STRING, BLOB), "f"), TestingLang.blob(1, 9)),
               parameter(1, f(STRING, BLOB), "f")));
     }
   }
@@ -327,7 +327,7 @@ public class ExpressionLoadingTest {
             0x07;
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(1, BLOB, "myValue", blob(2, 7)));
+          .containsReferencable(value(1, BLOB, "myValue", TestingLang.blob(2, 7)));
     }
 
     @Test
@@ -337,7 +337,7 @@ public class ExpressionLoadingTest {
             0x07;
           """)
           .loadsSuccessfully()
-          .containsReferencable(function(1, BLOB, "myFunction", blob(2, 7)));
+          .containsReferencable(function(1, BLOB, "myFunction", TestingLang.blob(2, 7)));
     }
 
     @Test
@@ -362,7 +362,7 @@ public class ExpressionLoadingTest {
           """)
           .loadsSuccessfully()
           .containsReferencable(function(1, STRING, "myFunction",
-              string(4, "abc"), parameter(2, BLOB, "param1", blob(3, 7))));
+              string(4, "abc"), parameter(2, BLOB, "param1", TestingLang.blob(3, 7))));
     }
 
     @Test

@@ -24,7 +24,7 @@ import org.smoothbuild.db.object.spec.BoolSpec;
 import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
-import org.smoothbuild.db.object.spec.StringSpec;
+import org.smoothbuild.db.object.spec.StrSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
@@ -136,121 +136,125 @@ public class TestingContext {
     return fullFileSystem;
   }
 
-  public BoolSpec boolSpec() {
-    return objectDb().boolSpec();
+  // Spec-s
+
+  public ArraySpec arrayS(Spec elementSpec) {
+    return objectDb().arrayS(elementSpec);
   }
 
-  public IntSpec intSpec() {
-    return objectDb().intSpec();
+  public BlobSpec blobS() {
+    return objectDb().blobS();
   }
 
-  public StringSpec stringSpec() {
-    return objectDb().stringSpec();
+  public BoolSpec boolS() {
+    return objectDb().boolS();
   }
 
-  public BlobSpec blobSpec() {
-    return objectDb().blobSpec();
+  public IntSpec intS() {
+    return objectDb().intS();
   }
 
-  public NothingSpec nothingSpec() {
-    return objectDb().nothingSpec();
+  public NothingSpec nothingS() {
+    return objectDb().nothingS();
   }
 
-  public ArraySpec arraySpec(Spec elementSpec) {
-    return objectDb().arraySpec(elementSpec);
+  public StrSpec strS() {
+    return objectDb().strS();
   }
 
-  public TupleSpec tupleSpec(Iterable<? extends Spec> elementSpecs) {
-    return objectDb().tupleSpec(elementSpecs);
+  public TupleSpec tupleS(Iterable<? extends Spec> elementSpecs) {
+    return objectDb().tupleS(elementSpecs);
   }
 
-  public TupleSpec emptySpec() {
-    return tupleSpec(list());
+  public TupleSpec emptyTupleS() {
+    return tupleS(list());
   }
 
-  public TupleSpec personSpec() {
-    Spec string = stringSpec();
-    return tupleSpec(list(string, string));
+  public TupleSpec personS() {
+    Spec string = strS();
+    return tupleS(list(string, string));
   }
 
-  public TupleSpec fileSpec() {
-    return tupleSpec(list(blobSpec(), stringSpec()));
+  public TupleSpec fileS() {
+    return tupleS(list(blobS(), strS()));
   }
 
-  public Bool bool(boolean value) {
-    return objectDb().bool(value);
+  // Obj-s (values)
+
+  public Array arrayV(Obj... elements) {
+    return arrayV(elements[0].spec(), elements);
   }
 
-  public Int int_(int value) {
-    return objectDb().int_(BigInteger.valueOf(value));
-  }
-
-  public Str string(String string) {
-    return objectDb().string(string);
-  }
-
-  public BlobBuilder blobBuilder() {
-    return objectDb().blobBuilder();
+  public Array arrayV(Spec elementSpec, Obj... elements) {
+    return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
   public ArrayBuilder arrayBuilder(Spec elemSpec) {
     return objectDb().arrayBuilder(elemSpec);
   }
 
-  public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> elements) {
-    return objectDb().tuple(spec, elements);
+  public Blob blobV(ByteString bytes) {
+    return objectFactory().blob(sink -> sink.write(bytes));
   }
 
-  public Tuple empty() {
-    return tuple(emptySpec(), list());
+  public BlobBuilder blobBuilder() {
+    return objectDb().blobBuilder();
   }
 
-  public Tuple person(String firstName, String lastName) {
-    return tuple(personSpec(), list(string(firstName), string(lastName)));
+  public Bool boolV(boolean value) {
+    return objectDb().boolV(value);
+  }
+
+  public Int intV(int value) {
+    return objectDb().intV(BigInteger.valueOf(value));
+  }
+
+  public Str strV(String string) {
+    return objectDb().strV(string);
+  }
+
+  public Tuple tupleV(TupleSpec spec, Iterable<? extends Obj> elements) {
+    return objectDb().tupleV(spec, elements);
+  }
+
+  public Tuple emptyTupleV() {
+    return tupleV(emptyTupleS(), list());
+  }
+
+  public Tuple personV(String firstName, String lastName) {
+    return tupleV(personS(), list(strV(firstName), strV(lastName)));
   }
 
   public Array messageArrayWithOneError() {
-    return array(objectFactory().errorMessage("error message"));
+    return arrayV(objectFactory().errorMessage("error message"));
   }
 
   public Array emptyMessageArray() {
-    return array(objectFactory().messageSpec());
+    return arrayV(objectFactory().messageSpec());
   }
 
-  public Array array(Obj... elements) {
-    return array(elements[0].spec(), elements);
-  }
-
-  public Array array(Spec elementSpec, Obj... elements) {
-    return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
-  }
-
-  public Obj errorMessage(String text) {
+  public Tuple errorMessageV(String text) {
     return objectFactory().errorMessage(text);
   }
 
-  public Obj warningMessage(String text) {
+  public Tuple warningMessageV(String text) {
     return objectFactory().warningMessage(text);
   }
 
-  public Obj infoMessage(String text) {
+  public Tuple infoMessageV(String text) {
     return objectFactory().infoMessage(text);
   }
 
-  public Tuple file(Path path) {
-    return file(path, ByteString.encodeString(path.toString(), CHARSET));
+  public Tuple fileV(Path path) {
+    return fileV(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public Tuple file(Path path, ByteString content) {
-    return file(path.toString(), blob(content));
+  public Tuple fileV(Path path, ByteString content) {
+    return fileV(path.toString(), blobV(content));
   }
 
-  public Tuple file(String path, Blob blob) {
+  public Tuple fileV(String path, Blob blob) {
     Str string = objectFactory().string(path);
     return objectFactory().file(string, blob);
-  }
-
-  public Blob blob(ByteString bytes) {
-    return objectFactory().blob(sink -> sink.write(bytes));
   }
 }

@@ -11,9 +11,9 @@ import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
-import static org.smoothbuild.lang.base.type.Types.blob;
-import static org.smoothbuild.lang.base.type.Types.int_;
-import static org.smoothbuild.lang.base.type.Types.string;
+import static org.smoothbuild.lang.base.type.Types.blobT;
+import static org.smoothbuild.lang.base.type.Types.intT;
+import static org.smoothbuild.lang.base.type.Types.stringT;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -309,7 +309,7 @@ public class TaskCreator {
         .stream()
         .map(Task::type)
         .reduce((typeA, typeB) -> typeA.mergeWith(typeB, UPPER))
-        .map(Types::array);
+        .map(Types::arrayT);
   }
 
   private Task arrayEagerTask(ArrayLiteralExpression expression, List<Task> elements,
@@ -327,7 +327,7 @@ public class TaskCreator {
   // BlobLiteralExpression
 
   private Task blobLazy(Scope<Task> scope, BlobLiteralExpression blobLiteral) {
-    return new LazyTask(blob(), blobLiteral.location(), () -> blogEagerTask(blobLiteral));
+    return new LazyTask(blobT(), blobLiteral.location(), () -> blogEagerTask(blobLiteral));
   }
 
   private Task blobEager(Scope<Task> scope, BlobLiteralExpression expression) {
@@ -335,16 +335,16 @@ public class TaskCreator {
   }
 
   private AlgorithmTask blogEagerTask(BlobLiteralExpression expression) {
-    var blobSpec = toSpecConverter.visit(blob());
+    var blobSpec = toSpecConverter.visit(blobT());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     return new AlgorithmTask(
-        LITERAL, blob(), algorithm.shortedLiteral(), algorithm, list(), expression.location());
+        LITERAL, blobT(), algorithm.shortedLiteral(), algorithm, list(), expression.location());
   }
 
   // IntLiteralExpression
 
   private Task intLazy(Scope<Task> scope, IntLiteralExpression intLiteral) {
-    return new LazyTask(int_(), intLiteral.location(), () -> intEagerTask(intLiteral));
+    return new LazyTask(intT(), intLiteral.location(), () -> intEagerTask(intLiteral));
   }
 
   private Task intEager(Scope<Task> scope, IntLiteralExpression intLiteral) {
@@ -352,11 +352,11 @@ public class TaskCreator {
   }
 
   private AlgorithmTask intEagerTask(IntLiteralExpression expression) {
-    var intSpec = toSpecConverter.visit(int_());
+    var intSpec = toSpecConverter.visit(intT());
     var bigInteger = expression.bigInteger();
     var algorithm = new FixedIntAlgorithm(intSpec, bigInteger);
     return new AlgorithmTask(
-        LITERAL, int_(), bigInteger.toString(), algorithm, list(), expression.location());
+        LITERAL, intT(), bigInteger.toString(), algorithm, list(), expression.location());
   }
 
   // StringLiteralExpression
@@ -370,16 +370,16 @@ public class TaskCreator {
   }
 
   private LazyTask stringLazyTask(StringLiteralExpression stringLiteral) {
-    return new LazyTask(string(), stringLiteral.location(),
+    return new LazyTask(stringT(), stringLiteral.location(),
         () -> stringEagerTask(stringLiteral));
   }
 
   private Task stringEagerTask(StringLiteralExpression stringLiteral) {
-    var stringType = toSpecConverter.visit(string());
+    var stringType = toSpecConverter.visit(stringT());
     var algorithm = new FixedStringAlgorithm(stringType, stringLiteral.string());
     var name = algorithm.shortedString();
     return new AlgorithmTask(
-        LITERAL, string(), name, algorithm, list(), stringLiteral.location());
+        LITERAL, stringT(), name, algorithm, list(), stringLiteral.location());
   }
 
   // helper methods

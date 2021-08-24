@@ -2,13 +2,13 @@ package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
-import static org.smoothbuild.lang.base.type.Types.any;
-import static org.smoothbuild.lang.base.type.Types.blob;
-import static org.smoothbuild.lang.base.type.Types.bool;
-import static org.smoothbuild.lang.base.type.Types.int_;
-import static org.smoothbuild.lang.base.type.Types.nothing;
-import static org.smoothbuild.lang.base.type.Types.string;
-import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.anyT;
+import static org.smoothbuild.lang.base.type.Types.blobT;
+import static org.smoothbuild.lang.base.type.Types.boolT;
+import static org.smoothbuild.lang.base.type.Types.intT;
+import static org.smoothbuild.lang.base.type.Types.nothingT;
+import static org.smoothbuild.lang.base.type.Types.stringT;
+import static org.smoothbuild.lang.base.type.Types.structT;
 import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.util.Lists.list;
 
@@ -17,18 +17,18 @@ import java.util.Optional;
 import com.google.common.collect.ImmutableList;
 
 public class TestingTypes {
-  public static final AnyType ANY = any();
-  public static final BoolType BOOL = bool();
-  public static final IntType INT = int_();
-  public static final StringType STRING = string();
-  public static final BlobType BLOB = blob();
-  public static final NothingType NOTHING = nothing();
-  public static final StructType PERSON = struct("Person", list(
+  public static final AnyType ANY = anyT();
+  public static final BlobType BLOB = blobT();
+  public static final BoolType BOOL = boolT();
+  public static final IntType INT = intT();
+  public static final NothingType NOTHING = nothingT();
+  public static final StringType STRING = stringT();
+  public static final StructType PERSON = structT("Person", list(
           new ItemSignature(STRING, "firstName", Optional.empty()),
           new ItemSignature(STRING, "lastName", Optional.empty())));
-  public static final StructType FLAG = struct("Flag", list(
+  public static final StructType FLAG = structT("Flag", list(
           new ItemSignature(BOOL, "flag", Optional.empty())));
-  public static final StructType DATA = struct("Data", list(
+  public static final StructType DATA = structT("Data", list(
           new ItemSignature(BLOB, "data", Optional.empty())));
   public static final Variable A = variable("A");
   public static final Variable B = variable("B");
@@ -67,19 +67,19 @@ public class TestingTypes {
           .build();
 
   public static ArrayType a(Type elemType) {
-    return Types.array(elemType);
+    return Types.arrayT(elemType);
   }
 
   public static FunctionType f(Type resultType) {
-    return Types.function(resultType, list());
+    return Types.functionT(resultType, list());
   }
 
   public static FunctionType f(Type resultType, Type... paramTypes) {
-    return Types.function(resultType, toItemSignatures(list(paramTypes)));
+    return Types.functionT(resultType, toItemSignatures(list(paramTypes)));
   }
 
   public static FunctionType f(Type resultType, ItemSignature... params) {
-    return Types.function(resultType, list(params));
+    return Types.functionT(resultType, list(params));
   }
 
   public static ItemSignature item(Type type, String name) {

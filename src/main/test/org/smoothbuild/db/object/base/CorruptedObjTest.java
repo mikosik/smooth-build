@@ -53,7 +53,7 @@ public class CorruptedObjTest extends TestingContext {
        */
       Hash objectHash =
           hash(
-              hash(stringSpec()),
+              hash(strS()),
               hash("aaa"));
       assertThat(((Str) objectDb().get(objectHash)).jValue())
           .isEqualTo("aaa");
@@ -102,7 +102,7 @@ public class CorruptedObjTest extends TestingContext {
       ByteString byteString = ByteString.of((byte) 1, (byte) 2);
       Hash objectHash =
           hash(
-              hash(blobSpec()),
+              hash(blobS()),
               hash(byteString));
       assertThat(((Blob) objectDb().get(objectHash)).source().readByteString())
           .isEqualTo(byteString);
@@ -113,7 +113,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = Hash.of(33);
       Hash objectHash =
           hash(
-              hash(blobSpec()),
+              hash(blobS()),
               dataHash);
       assertCall(() -> ((Blob) objectDb().get(objectHash)).source())
           .throwsException(new CannotDecodeObjectException(objectHash))
@@ -132,7 +132,7 @@ public class CorruptedObjTest extends TestingContext {
     public void learning_test(boolean value) throws Exception {
       Hash objectHash =
           hash(
-              hash(boolSpec()),
+              hash(boolS()),
               hash(value));
       assertThat(((Bool) objectDb().get(objectHash)).jValue())
           .isEqualTo(value);
@@ -143,7 +143,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = hash(ByteString.of());
       Hash objectHash =
           hash(
-              hash(boolSpec()),
+              hash(boolS()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objectHash)).jValue())
           .throwsException(new CannotDecodeObjectException(objectHash))
@@ -155,7 +155,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = hash(ByteString.of((byte) 0, (byte) 0));
       Hash objectHash =
           hash(
-              hash(boolSpec()),
+              hash(boolS()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objectHash)).jValue())
           .throwsException(new CannotDecodeObjectException(objectHash))
@@ -169,7 +169,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = hash(ByteString.of(value));
       Hash objectHash =
           hash(
-              hash(boolSpec()),
+              hash(boolS()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objectHash)).jValue())
           .throwsException(new CannotDecodeObjectException(objectHash))
@@ -194,7 +194,7 @@ public class CorruptedObjTest extends TestingContext {
     public void learning_test() throws Exception {
       Hash objectHash =
           hash(
-              hash(nothingSpec()),
+              hash(nothingS()),
               hash("aaa"));
       assertCall(() -> ((Str) objectDb().get(objectHash)).jValue())
           .throwsException(new ObjectDbException("Cannot create java object for 'NOTHING' spec."));
@@ -211,14 +211,14 @@ public class CorruptedObjTest extends TestingContext {
        */
       Hash objectHash =
           hash(
-              hash(arraySpec(stringSpec())),
+              hash(arrayS(strS())),
               hash(
                   hash(
-                      hash(stringSpec()),
+                      hash(strS()),
                       hash("aaa")
                   ),
                   hash(
-                      hash(stringSpec()),
+                      hash(strS()),
                       hash("bbb")
                   )
               ));
@@ -238,7 +238,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash notHashOfHashSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objectHash =
           hash(
-              hash(arraySpec(stringSpec())),
+              hash(arrayS(strS())),
               notHashOfHashSequence
           );
       assertCall(() -> ((Array) objectDb().get(objectHash)).asIterable(Obj.class))
@@ -250,14 +250,14 @@ public class CorruptedObjTest extends TestingContext {
     public void with_one_element_of_wrong_spec_is_corrupted() throws Exception {
       Hash objectHash =
           hash(
-              hash(arraySpec(stringSpec())),
+              hash(arrayS(strS())),
               hash(
                   hash(
-                      hash(stringSpec()),
+                      hash(strS()),
                       hash("aaa")
                   ),
                   hash(
-                      hash(boolSpec()),
+                      hash(boolS()),
                       hash(true)
                   )
               ));
@@ -286,7 +286,7 @@ public class CorruptedObjTest extends TestingContext {
        */
       Hash objectHash =
           hash(
-              hash(stringSpec()),
+              hash(strS()),
               hash("aaa"));
       assertThat(((Str) objectDb().get(objectHash)).jValue())
           .isEqualTo("aaa");
@@ -297,7 +297,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash notStringHash = hash(ByteString.of((byte) -64));
       Hash objectHash =
           hash(
-              hash(stringSpec()),
+              hash(strS()),
               notStringHash);
       assertCall(() -> ((Str) objectDb().get(objectHash)).jValue())
           .throwsException(new CannotDecodeObjectException(objectHash))
@@ -315,21 +315,21 @@ public class CorruptedObjTest extends TestingContext {
        */
       assertThat(
           hash(
-              hash(personSpec()),
+              hash(personS()),
               hash(
-                  hash(string("John")),
-                  hash(string("Doe")))))
-          .isEqualTo(person("John", "Doe").hash());
+                  hash(strV("John")),
+                  hash(strV("Doe")))))
+          .isEqualTo(personV("John", "Doe").hash());
     }
 
     @Test
     public void with_too_few_elements_is_corrupted() throws Exception {
       Hash elementValuesHash =
           hash(
-              hash(string("John")));
+              hash(strV("John")));
       Hash tupleHash =
           hash(
-              hash(personSpec()),
+              hash(personS()),
               elementValuesHash);
       Tuple tuple = (Tuple) objectDb().get(tupleHash);
       assertCall(() -> tuple.get(0))
@@ -341,12 +341,12 @@ public class CorruptedObjTest extends TestingContext {
     public void with_too_many_elements_is_corrupted() throws Exception {
       Hash elementValuesHash =
           hash(
-              hash(string("John")),
-              hash(string("Doe")),
-              hash(string("junk")));
+              hash(strV("John")),
+              hash(strV("Doe")),
+              hash(strV("junk")));
       Hash tupleHash =
           hash(
-              hash(personSpec()),
+              hash(personS()),
               elementValuesHash);
       Tuple tuple = (Tuple) objectDb().get(tupleHash);
       assertCall(() -> tuple.get(0))
@@ -358,10 +358,10 @@ public class CorruptedObjTest extends TestingContext {
     public void with_element_of_wrong_spec_is_corrupted() throws Exception {
       Hash tupleHash =
           hash(
-              hash(personSpec()),
+              hash(personS()),
               hash(
-                  hash(string("John")),
-                  hash(bool(true))));
+                  hash(strV("John")),
+                  hash(boolV(true))));
       Tuple tuple = (Tuple) objectDb().get(tupleHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new CannotDecodeObjectException(tupleHash,
@@ -388,7 +388,7 @@ public class CorruptedObjTest extends TestingContext {
             hash(STRING.marker())
         );
         assertThat(hash)
-            .isEqualTo(stringSpec().hash());
+            .isEqualTo(strS().hash());
       }
 
       @Test
@@ -399,10 +399,10 @@ public class CorruptedObjTest extends TestingContext {
          */
         Hash hash = hash(
             hash(ARRAY.marker()),
-            hash(stringSpec())
+            hash(strS())
         );
         assertThat(hash)
-            .isEqualTo(arraySpec(stringSpec()).hash());
+            .isEqualTo(arrayS(strS()).hash());
       }
 
       @Test
@@ -414,12 +414,12 @@ public class CorruptedObjTest extends TestingContext {
         Hash hash = hash(
             hash(TUPLE.marker()),
             hash(
-                hash(stringSpec()),
-                hash(stringSpec())
+                hash(strS()),
+                hash(strS())
             )
         );
         assertThat(hash)
-            .isEqualTo(personSpec().hash());
+            .isEqualTo(personS().hash());
       }
     }
 
@@ -494,8 +494,8 @@ public class CorruptedObjTest extends TestingContext {
         Hash hash = hash(
             hash(TUPLE.marker()),
             hash(
-                hash(stringSpec()),
-                hash(stringSpec())
+                hash(strS()),
+                hash(strS())
             ),
             hash("corrupted")
         );
@@ -517,7 +517,7 @@ public class CorruptedObjTest extends TestingContext {
 
       @Test
       public void with_elements_being_array_of_non_spec_causes_exception() throws Exception {
-        Hash stringHash = hash(string("abc"));
+        Hash stringHash = hash(strV("abc"));
         Hash hash =
             hash(
                 hash(TUPLE.marker()),
@@ -538,7 +538,7 @@ public class CorruptedObjTest extends TestingContext {
                 hash(TUPLE.marker()),
                 hash(
                     notASpecHash,
-                    hash(stringSpec())));
+                    hash(strS())));
         assertThatGetSpec(hash)
             .throwsException(new CannotDecodeSpecException(hash, elementReadingErrorMessage(0)))
             .withCause(new CannotDecodeSpecException(notASpecHash));
@@ -561,7 +561,7 @@ public class CorruptedObjTest extends TestingContext {
       public void with_additional_child() throws Exception {
         Hash hash = hash(
             hash(ARRAY.marker()),
-            hash(stringSpec()),
+            hash(strS()),
             hash("corrupted")
         );
         assertThatGetSpec(hash)

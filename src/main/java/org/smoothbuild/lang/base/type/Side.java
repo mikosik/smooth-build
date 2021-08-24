@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.Types.any;
-import static org.smoothbuild.lang.base.type.Types.nothing;
+import static org.smoothbuild.lang.base.type.Types.anyT;
+import static org.smoothbuild.lang.base.type.Types.nothingT;
 
 public enum Side {
   UPPER,
@@ -16,8 +16,8 @@ public enum Side {
 
   public Type edge() {
     return switch (this) {
-      case UPPER -> any();
-      case LOWER -> nothing();
+      case UPPER -> anyT();
+      case LOWER -> nothingT();
     };
   }
 }

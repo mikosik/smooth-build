@@ -34,8 +34,8 @@ import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.INFERABLE_BASE_TYPES;
-import static org.smoothbuild.lang.base.type.Types.function;
-import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.functionT;
+import static org.smoothbuild.lang.base.type.Types.structT;
 import static org.smoothbuild.lang.base.type.constraint.TestingBoundsMap.bm;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.concat;
@@ -88,41 +88,41 @@ public class TypeTest {
 
   public static Stream<Arguments> names() {
     return Stream.of(
+        arguments(A, "A"),
         arguments(ANY, "Any"),
+        arguments(BLOB, "Blob"),
         arguments(BOOL, "Bool"),
         arguments(INT, "Int"),
-        arguments(STRING, "String"),
-        arguments(BLOB, "Blob"),
         arguments(NOTHING, "Nothing"),
+        arguments(STRING, "String"),
         arguments(PERSON, "Person"),
-        arguments(A, "A"),
 
+        arguments(a(A), "[A]"),
         arguments(a(ANY), "[Any]"),
+        arguments(a(BLOB), "[Blob]"),
         arguments(a(BOOL), "[Bool]"),
         arguments(a(INT), "[Int]"),
-        arguments(a(STRING), "[String]"),
-        arguments(a(BLOB), "[Blob]"),
         arguments(a(NOTHING), "[Nothing]"),
+        arguments(a(STRING), "[String]"),
         arguments(a(PERSON), "[Person]"),
-        arguments(a(A), "[A]"),
 
+        arguments(a(a(A)), "[[A]]"),
         arguments(a(a(ANY)), "[[Any]]"),
+        arguments(a(a(BLOB)), "[[Blob]]"),
         arguments(a(a(BOOL)), "[[Bool]]"),
         arguments(a(a(INT)), "[[Int]]"),
-        arguments(a(a(STRING)), "[[String]]"),
-        arguments(a(a(BLOB)), "[[Blob]]"),
         arguments(a(a(NOTHING)), "[[Nothing]]"),
+        arguments(a(a(STRING)), "[[String]]"),
         arguments(a(a(PERSON)), "[[Person]]"),
-        arguments(a(a(A)), "[[A]]"),
 
-        arguments(STRING_GETTER_FUNCTION, "String()"),
-        arguments(PERSON_GETTER_FUNCTION, "Person()"),
-        arguments(STRING_MAP_FUNCTION, "String(String)"),
-        arguments(PERSON_MAP_FUNCTION, "Person(Person)"),
-        arguments(IDENTITY_FUNCTION, "A(A)"),
         arguments(ARRAY_HEAD_FUNCTION, "A([A])"),
         arguments(ARRAY_LENGTH_FUNCTION, "String([A])"),
-        arguments(function(BOOL, list(
+        arguments(IDENTITY_FUNCTION, "A(A)"),
+        arguments(PERSON_GETTER_FUNCTION, "Person()"),
+        arguments(PERSON_MAP_FUNCTION, "Person(Person)"),
+        arguments(STRING_GETTER_FUNCTION, "String()"),
+        arguments(STRING_MAP_FUNCTION, "String(String)"),
+        arguments(functionT(BOOL, list(
             new ItemSignature(BLOB, Optional.of("name"), Optional.empty()))), "Bool(Blob name)")
     );
   }
@@ -356,16 +356,16 @@ public class TypeTest {
         arguments(BLOB, set()),
         arguments(BOOL, set()),
         arguments(INT, set()),
-        arguments(STRING, set()),
         arguments(NOTHING, set()),
+        arguments(STRING, set()),
         arguments(PERSON, set()),
 
         arguments(a(ANY), set()),
         arguments(a(BLOB), set()),
         arguments(a(BOOL), set()),
         arguments(a(INT), set()),
-        arguments(a(STRING), set()),
         arguments(a(NOTHING), set()),
+        arguments(a(STRING), set()),
         arguments(a(PERSON), set()),
 
         arguments(f(STRING), set()),
@@ -611,11 +611,11 @@ public class TypeTest {
         .addAll(ELEMENTARY_TYPES)
         .add(A)
         .add(B)
-        .add(struct("MyStruct", list()))
-        .add(struct("MyStruct", list(itemSignature(BOOL, "field"))))
-        .add(struct("MyStruct2", list(itemSignature(BOOL, "field"))))
-        .add(struct("MyStruct", list(itemSignature(STRING, "field"))))
-        .add(struct("MyStruct", list(itemSignature(BOOL, "field2"))))
+        .add(structT("MyStruct", list()))
+        .add(structT("MyStruct", list(itemSignature(BOOL, "field"))))
+        .add(structT("MyStruct2", list(itemSignature(BOOL, "field"))))
+        .add(structT("MyStruct", list(itemSignature(STRING, "field"))))
+        .add(structT("MyStruct", list(itemSignature(BOOL, "field2"))))
         .build();
     for (Type type : types) {
       equalsTester.addEqualityGroup(type, type);

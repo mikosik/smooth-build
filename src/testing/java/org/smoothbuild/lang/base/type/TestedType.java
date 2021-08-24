@@ -6,13 +6,13 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
-import static org.smoothbuild.lang.base.type.Types.any;
-import static org.smoothbuild.lang.base.type.Types.blob;
-import static org.smoothbuild.lang.base.type.Types.bool;
-import static org.smoothbuild.lang.base.type.Types.int_;
-import static org.smoothbuild.lang.base.type.Types.nothing;
-import static org.smoothbuild.lang.base.type.Types.string;
-import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.anyT;
+import static org.smoothbuild.lang.base.type.Types.blobT;
+import static org.smoothbuild.lang.base.type.Types.boolT;
+import static org.smoothbuild.lang.base.type.Types.intT;
+import static org.smoothbuild.lang.base.type.Types.nothingT;
+import static org.smoothbuild.lang.base.type.Types.stringT;
+import static org.smoothbuild.lang.base.type.Types.structT;
 import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -42,53 +42,53 @@ public class TestedType {
       null
   );
   public static final TestedType ANY = new TestedType(
-      any(),
+      anyT(),
       "createAny()",
       null,
       Set.of(),
       Set.of("Any createAny() = \"abc\";"));
   public static final TestedType BLOB = new TestedType(
-      blob(),
+      blobT(),
       "0x" + encodeString("xyz", US_ASCII).hex(),
       "xyz"
   );
   public static final TestedType BOOL = new TestedType(
-      bool(),
+      boolT(),
       "true",
       new String(new byte[] {1})
   );
   public static final TestedType INT = new TestedType(
-      int_(),
+      intT(),
       "123",
       new String(new byte[] {123})
   );
   public static final TestedType NOTHING = new TestedType(
-      nothing(),
+      nothingT(),
       "reportError(\"e\")",
       null,
       Set.of(),
       Set.of("@Native(\"impl\") Nothing reportError(String message);"));
   public static final TestedType STRING = new TestedType(
-      string(),
+      stringT(),
       "\"abc\"",
       "abc"
   );
   public static final TestedType STRUCT = new TestedType(
-      struct("Person", list(new ItemSignature(string(), "name", Optional.empty()))),
+      structT("Person", list(new ItemSignature(stringT(), "name", Optional.empty()))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of()
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", list(new ItemSignature(blob(), "value", Optional.empty()))),
+      structT("Data", list(new ItemSignature(blobT(), "value", Optional.empty()))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of()
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", list(new ItemSignature(bool(), "value", Optional.empty()))),
+      structT("Flag", list(new ItemSignature(boolT(), "value", Optional.empty()))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),
@@ -169,8 +169,8 @@ public class TestedType {
     if (type == NOTHING) {
       return new TestedArrayType(
           type,
-          Types.array(nothing()),
-          Types.array(nothing()),
+          Types.arrayT(nothingT()),
+          Types.arrayT(nothingT()),
           "[]",
           list(),
           Set.of(),
@@ -185,8 +185,8 @@ public class TestedType {
   private static TestedType a(TestedType type, Object value) {
     return new TestedArrayType(
         type,
-        Types.array(type.type),
-        Types.array(type.strippedType),
+        Types.arrayT(type.type),
+        Types.arrayT(type.strippedType),
         "[" + type.literal + "]",
         value,
         type.typeDeclarations(),
@@ -339,8 +339,8 @@ public class TestedType {
     return new TestedFunctionType(
         strippedResultType,
         ImmutableList.copyOf(strippedParams),
-        Types.function(resultType.strippedType, parameters),
-        Types.function(strippedResultType.strippedType, toUnnamedSignatures(strippedParams)),
+        Types.functionT(resultType.strippedType, parameters),
+        Types.functionT(strippedResultType.strippedType, toUnnamedSignatures(strippedParams)),
         name,
         null,
         typeDeclarations,

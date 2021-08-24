@@ -84,39 +84,36 @@ public class AstVisitor {
   public void visitType(TypeNode type) {}
 
   public void visitExpr(ExprNode expr) {
-    if (expr instanceof FieldReadNode fieldReadNode) {
-      visitFieldRead(fieldReadNode);
-    } else if (expr instanceof ArrayNode arrayNode) {
+    if (expr instanceof ArrayNode arrayNode) {
       visitArray(arrayNode);
+    } else if (expr instanceof BlobNode blobNode) {
+      visitBlobLiteral(blobNode);
     } else if (expr instanceof CallNode callNode) {
       visitCall(callNode);
+    } else if (expr instanceof FieldReadNode fieldReadNode) {
+      visitFieldRead(fieldReadNode);
+    } else if (expr instanceof IntNode intNode) {
+      visitIntLiteral(intNode);
     } else if (expr instanceof RefNode refNode) {
       visitRef(refNode);
     } else if (expr instanceof StringNode stringNode) {
       visitStringLiteral(stringNode);
-    } else if (expr instanceof BlobNode blobNode) {
-      visitBlobLiteral(blobNode);
-    } else if (expr instanceof IntNode intNode) {
-      visitIntLiteral(intNode);
     } else {
       throw new RuntimeException("Unknown node " + expr.getClass().getSimpleName());
     }
-  }
-
-  public void visitFieldRead(FieldReadNode expr) {
-    visitExpr(expr.expr());
   }
 
   public void visitArray(ArrayNode array) {
     array.elements().forEach(this::visitExpr);
   }
 
+  public void visitBlobLiteral(BlobNode blob) {
+  }
+
   public void visitCall(CallNode call) {
     visitExpr(call.function());
     visitArgs(call.args());
   }
-
-  public void visitRef(RefNode ref) {}
 
   public void visitArgs(List<ArgNode> args) {
     args.forEach(this::visitArg);
@@ -126,13 +123,16 @@ public class AstVisitor {
     visitExpr(arg.expr());
   }
 
-  public void visitStringLiteral(StringNode string) {
-  }
-
-  public void visitBlobLiteral(BlobNode blob) {
+  public void visitFieldRead(FieldReadNode expr) {
+    visitExpr(expr.expr());
   }
 
   public void visitIntLiteral(IntNode int_) {
+  }
+
+  public void visitRef(RefNode ref) {}
+
+  public void visitStringLiteral(StringNode string) {
   }
 
   public <E> void visitIndexedElements(List<E> elements, BiConsumer<Integer, ? super E> consumer) {

@@ -17,8 +17,8 @@ public class InputTest extends TestingContext{
 
   @Test
   public void different_inputs_have_different_hashes() {
-    rstring1 = string("abc");
-    rstring2 = string("def");
+    rstring1 = strV("abc");
+    rstring2 = strV("def");
     input1 = input(list(rstring1));
     input2 = input(list(rstring2));
 
@@ -28,8 +28,8 @@ public class InputTest extends TestingContext{
 
   @Test
   public void inputs_with_same_values_but_in_different_order_have_different_hashes() {
-    rstring1 = string("abc");
-    rstring2 = string("def");
+    rstring1 = strV("abc");
+    rstring2 = strV("def");
     input1 = input(list(rstring1, rstring2));
     input2 = input(list(rstring2, rstring1));
 
@@ -39,7 +39,7 @@ public class InputTest extends TestingContext{
 
   @Test
   public void equal_inputs_have_equal_hashes() {
-    rstring1 = string("abc");
+    rstring1 = strV("abc");
     input1 = input(list(rstring1));
     input2 = input(list(rstring1));
 
@@ -49,7 +49,7 @@ public class InputTest extends TestingContext{
 
   @Test
   public void input_with_no_values_has_hash_different_from_input_with_one_value() {
-    rstring1 = string("abc");
+    rstring1 = strV("abc");
     input1 = input(list(rstring1));
     input2 = input(list());
 

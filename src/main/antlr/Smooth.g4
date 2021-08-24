@@ -10,10 +10,10 @@ paramList    : '(' ( param ( ',' param )* ','? )? ')' ;
 param        : type NAME ( '=' expr )? ;
 expr         : exprHead ( p+='|' chainCall )* ;
 exprHead     : chain | literal ;
-literal      : STRING
-             | BLOB
+literal      : array
              | INT
-             | array
+             | BLOB
+             | STRING
              ;
 chain        : NAME ( chainPart )* ;
 chainCall    : NAME ( fieldRead )* argList ( chainPart )* ;
@@ -30,9 +30,9 @@ typeList     : ( type (',' type)* ','? )? ;
 
 NAME         : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
 TNAME        : LARGE_LETTER ( IDENTIFIER_CHAR )* ;
-STRING       : '"' (ESC | ~('\r' | '\n'))*? '"' ;
-BLOB         : '0x' HEX_DIGIT* ;
 INT          : '-'? DIGIT+ ;
+BLOB         : '0x' HEX_DIGIT* ;
+STRING       : '"' (ESC | ~('\r' | '\n'))*? '"' ;
 
 fragment ESC              : '\\"'
                           | '\\\\'

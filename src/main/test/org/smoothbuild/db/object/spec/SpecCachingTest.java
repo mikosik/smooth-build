@@ -31,28 +31,28 @@ public class SpecCachingTest extends TestingContext {
 
   private static List<Function<ObjectDb, Spec>> spec_creators() {
     return list(
-        ObjectDb::blobSpec,
-        ObjectDb::boolSpec,
-        ObjectDb::intSpec,
-        ObjectDb::nothingSpec,
-        ObjectDb::stringSpec,
+        ObjectDb::blobS,
+        ObjectDb::boolS,
+        ObjectDb::intS,
+        ObjectDb::nothingS,
+        ObjectDb::strS,
         SpecCachingTest::tupleSpec,
-        (objectDb) -> objectDb.arraySpec(objectDb.blobSpec()),
-        (objectDb) -> objectDb.arraySpec(objectDb.boolSpec()),
-        (objectDb) -> objectDb.arraySpec(objectDb.intSpec()),
-        (objectDb) -> objectDb.arraySpec(objectDb.nothingSpec()),
-        (objectDb) -> objectDb.arraySpec(objectDb.stringSpec()),
-        (objectDb) -> objectDb.arraySpec(tupleSpec(objectDb)),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.blobSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.boolSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.intSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.nothingSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.stringSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(tupleSpec(objectDb)))
+        (objectDb) -> objectDb.arrayS(objectDb.blobS()),
+        (objectDb) -> objectDb.arrayS(objectDb.boolS()),
+        (objectDb) -> objectDb.arrayS(objectDb.intS()),
+        (objectDb) -> objectDb.arrayS(objectDb.nothingS()),
+        (objectDb) -> objectDb.arrayS(objectDb.strS()),
+        (objectDb) -> objectDb.arrayS(tupleSpec(objectDb)),
+        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.blobS())),
+        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.boolS())),
+        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.intS())),
+        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.nothingS())),
+        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.strS())),
+        (objectDb) -> objectDb.arrayS(objectDb.arrayS(tupleSpec(objectDb)))
     );
   }
 
   private static TupleSpec tupleSpec(ObjectDb objectDb) {
-    return objectDb.tupleSpec(list(objectDb.stringSpec(), objectDb.stringSpec()));
+    return objectDb.tupleS(list(objectDb.strS(), objectDb.strS()));
   }
 }

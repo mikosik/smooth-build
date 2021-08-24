@@ -25,7 +25,7 @@ import org.smoothbuild.db.object.spec.BoolSpec;
 import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
-import org.smoothbuild.db.object.spec.StringSpec;
+import org.smoothbuild.db.object.spec.StrSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -47,12 +47,12 @@ public class ObjectFactory {
   }
 
   private static TupleSpec createMessageSpec(ObjectDb objectDb) {
-    StringSpec stringSpec = objectDb.stringSpec();
-    return objectDb.tupleSpec(list(stringSpec, stringSpec));
+    StrSpec strSpec = objectDb.strS();
+    return objectDb.tupleS(list(strSpec, strSpec));
   }
 
   private static TupleSpec createFileSpec(ObjectDb objectDb) {
-    return objectDb.tupleSpec(list(objectDb.blobSpec(), objectDb.stringSpec()));
+    return objectDb.tupleS(list(objectDb.blobS(), objectDb.strS()));
   }
 
   public ArrayBuilder arrayBuilder(Spec elementSpec) {
@@ -73,39 +73,39 @@ public class ObjectFactory {
   }
 
   public Bool bool(boolean value) {
-    return objectDb.bool(value);
+    return objectDb.boolV(value);
   }
 
   public Int int_(BigInteger value) {
-    return objectDb.int_(value);
+    return objectDb.intV(value);
   }
 
   public Tuple file(Str path, Blob content) {
-    return objectDb.tuple(fileSpec(), list(content, path));
+    return objectDb.tupleV(fileSpec(), list(content, path));
   }
 
   public Str string(String string) {
-    return objectDb.string(string);
+    return objectDb.strV(string);
   }
 
   public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> elements) {
-    return objectDb.tuple(spec, elements);
+    return objectDb.tupleV(spec, elements);
   }
 
   public ArraySpec arraySpec(Spec elementSpec) {
-    return objectDb.arraySpec(elementSpec);
+    return objectDb.arrayS(elementSpec);
   }
 
   public BlobSpec blobSpec() {
-    return objectDb.blobSpec();
+    return objectDb.blobS();
   }
 
   public BoolSpec boolSpec() {
-    return objectDb.boolSpec();
+    return objectDb.boolS();
   }
 
   public IntSpec intSpec() {
-    return objectDb.intSpec();
+    return objectDb.intS();
   }
 
   public TupleSpec fileSpec() {
@@ -117,15 +117,15 @@ public class ObjectFactory {
   }
 
   public NothingSpec nothingSpec() {
-    return objectDb.nothingSpec();
+    return objectDb.nothingS();
   }
 
-  public StringSpec stringSpec() {
-    return objectDb.stringSpec();
+  public StrSpec stringSpec() {
+    return objectDb.strS();
   }
 
   public TupleSpec tupleSpec(Iterable<? extends Spec> elementSpecs) {
-    return objectDb.tupleSpec(elementSpecs);
+    return objectDb.tupleS(elementSpecs);
   }
 
   public Tuple errorMessage(String text) {
@@ -141,8 +141,8 @@ public class ObjectFactory {
   }
 
   private Tuple message(String severity, String text) {
-    Obj textObject = objectDb.string(text);
-    Obj severityObject = objectDb.string(severity);
-    return objectDb.tuple(messageSpec(), list(textObject, severityObject));
+    Obj textObject = objectDb.strV(text);
+    Obj severityObject = objectDb.strV(severity);
+    return objectDb.tupleV(messageSpec(), list(textObject, severityObject));
   }
 }

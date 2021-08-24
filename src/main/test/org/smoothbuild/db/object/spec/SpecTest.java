@@ -34,6 +34,7 @@ import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Str;
+import org.smoothbuild.db.object.base.Tuple;
 
 import com.google.common.testing.EqualsTester;
 
@@ -61,25 +62,25 @@ public class SpecTest {
 
   public static Stream<Arguments> names() {
     return Stream.of(
-        arguments(INT, "INT"),
-        arguments(BOOL, "BOOL"),
-        arguments(STRING, "STRING"),
         arguments(BLOB, "BLOB"),
+        arguments(BOOL, "BOOL"),
+        arguments(INT, "INT"),
         arguments(NOTHING, "NOTHING"),
+        arguments(STRING, "STRING"),
         arguments(PERSON, "{STRING,STRING}"),
 
-        arguments(ARRAY_INT, "[INT]"),
-        arguments(ARRAY_BOOL, "[BOOL]"),
-        arguments(ARRAY_STRING, "[STRING]"),
         arguments(ARRAY_BLOB, "[BLOB]"),
+        arguments(ARRAY_BOOL, "[BOOL]"),
+        arguments(ARRAY_INT, "[INT]"),
         arguments(ARRAY_NOTHING, "[NOTHING]"),
+        arguments(ARRAY_STRING, "[STRING]"),
         arguments(ARRAY_PERSON, "[{STRING,STRING}]"),
 
-        arguments(ARRAY2_INT, "[[INT]]"),
-        arguments(ARRAY2_BOOL, "[[BOOL]]"),
-        arguments(ARRAY2_STRING, "[[STRING]]"),
         arguments(ARRAY2_BLOB, "[[BLOB]]"),
+        arguments(ARRAY2_BOOL, "[[BOOL]]"),
+        arguments(ARRAY2_INT, "[[INT]]"),
         arguments(ARRAY2_NOTHING, "[[NOTHING]]"),
+        arguments(ARRAY2_STRING, "[[STRING]]"),
         arguments(ARRAY2_PERSON, "[[{STRING,STRING}]]")
     );
   }
@@ -93,15 +94,19 @@ public class SpecTest {
 
   public static List<Arguments> jType_test_data() {
     return list(
-        arguments(INT, Int.class),
-        arguments(BOOL, Bool.class),
-        arguments(STRING, Str.class),
         arguments(BLOB, Blob.class),
+        arguments(BOOL, Bool.class),
+        arguments(INT, Int.class),
         arguments(NOTHING, null),
-        arguments(ARRAY_BOOL, Array.class),
-        arguments(ARRAY_STRING, Array.class),
+        arguments(PERSON, Tuple.class),
+        arguments(STRING, Str.class),
+
         arguments(ARRAY_BLOB, Array.class),
-        arguments(ARRAY_NOTHING, Array.class)
+        arguments(ARRAY_BOOL, Array.class),
+        arguments(ARRAY_INT, Array.class),
+        arguments(ARRAY_NOTHING, Array.class),
+        arguments(ARRAY_PERSON, Array.class),
+        arguments(ARRAY_STRING, Array.class)
     );
   }
 
@@ -114,41 +119,43 @@ public class SpecTest {
 
   public static List<Arguments> elem_spec_test_data() {
     return list(
-        arguments(ARRAY_INT, INT),
-        arguments(ARRAY_BOOL, BOOL),
-        arguments(ARRAY_STRING, STRING),
         arguments(ARRAY_BLOB, BLOB),
-        arguments(ARRAY_PERSON, PERSON),
+        arguments(ARRAY_BOOL, BOOL),
+        arguments(ARRAY_INT, INT),
         arguments(ARRAY_NOTHING, NOTHING),
+        arguments(ARRAY_STRING, STRING),
+        arguments(ARRAY_PERSON, PERSON),
 
-        arguments(ARRAY2_INT, ARRAY_INT),
-        arguments(ARRAY2_BOOL, ARRAY_BOOL),
-        arguments(ARRAY2_STRING, ARRAY_STRING),
         arguments(ARRAY2_BLOB, ARRAY_BLOB),
-        arguments(ARRAY2_PERSON, ARRAY_PERSON),
-        arguments(ARRAY2_NOTHING, ARRAY_NOTHING));
+        arguments(ARRAY2_BOOL, ARRAY_BOOL),
+        arguments(ARRAY2_INT, ARRAY_INT),
+        arguments(ARRAY2_NOTHING, ARRAY_NOTHING),
+        arguments(ARRAY2_STRING, ARRAY_STRING),
+        arguments(ARRAY2_PERSON, ARRAY_PERSON));
   }
 
   @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(INT, INT);
-    tester.addEqualityGroup(BOOL, BOOL);
-    tester.addEqualityGroup(STRING, STRING);
     tester.addEqualityGroup(BLOB, BLOB);
+    tester.addEqualityGroup(BOOL, BOOL);
+    tester.addEqualityGroup(INT, INT);
     tester.addEqualityGroup(NOTHING, NOTHING);
+    tester.addEqualityGroup(STRING, STRING);
     tester.addEqualityGroup(PERSON, PERSON);
 
-    tester.addEqualityGroup(ARRAY_INT, ARRAY_INT);
-    tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
-    tester.addEqualityGroup(ARRAY_STRING, ARRAY_STRING);
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
+    tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
+    tester.addEqualityGroup(ARRAY_INT, ARRAY_INT);
+    tester.addEqualityGroup(ARRAY_NOTHING, ARRAY_NOTHING);
+    tester.addEqualityGroup(ARRAY_STRING, ARRAY_STRING);
     tester.addEqualityGroup(ARRAY_PERSON, ARRAY_PERSON);
 
-    tester.addEqualityGroup(ARRAY2_INT, ARRAY2_INT);
-    tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
-    tester.addEqualityGroup(ARRAY2_STRING, ARRAY2_STRING);
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
+    tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
+    tester.addEqualityGroup(ARRAY2_INT, ARRAY2_INT);
+    tester.addEqualityGroup(ARRAY2_NOTHING, ARRAY2_NOTHING);
+    tester.addEqualityGroup(ARRAY2_STRING, ARRAY2_STRING);
     tester.addEqualityGroup(ARRAY2_PERSON, ARRAY2_PERSON);
     tester.testEquals();
   }

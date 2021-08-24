@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
-import static org.smoothbuild.lang.base.type.Types.function;
+import static org.smoothbuild.lang.base.type.Types.functionT;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -63,7 +63,7 @@ public class StructNode extends NamedNode {
       Optional<Type> type = StructNode.this.type();
       if (type.isPresent() && eachFieldSignatureIsPresent()) {
         return Optional.of(
-            function(type.get(), map(fields, itemNode -> itemNode.itemSignature().get())));
+            functionT(type.get(), map(fields, itemNode -> itemNode.itemSignature().get())));
       } else {
         return Optional.empty();
       }

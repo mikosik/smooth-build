@@ -10,7 +10,7 @@ import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.Spec;
-import org.smoothbuild.db.object.spec.StringSpec;
+import org.smoothbuild.db.object.spec.StrSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
@@ -65,7 +65,7 @@ public class TypeToSpecConverter {
     return objectFactory.intSpec();
   }
 
-  public StringSpec visit(StringType string) {
+  public StrSpec visit(StringType string) {
     return objectFactory.stringSpec();
   }
 

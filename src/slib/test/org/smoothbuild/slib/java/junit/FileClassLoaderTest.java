@@ -23,7 +23,7 @@ public class FileClassLoaderTest extends TestingContext {
   }
 
   private Tuple createByteCodeFile(Class<?> klass) throws IOException {
-    return file(path(binaryPath(klass)), Classes.bytecode(klass));
+    return fileV(path(binaryPath(klass)), Classes.bytecode(klass));
   }
 
   public static class MyClass {

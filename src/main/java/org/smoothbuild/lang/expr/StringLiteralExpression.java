@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.type.Types;
 public record StringLiteralExpression(String string, Location location) implements Expression {
   @Override
   public Type type() {
-    return Types.string();
+    return Types.stringT();
   }
 
   @Override

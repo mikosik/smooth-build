@@ -49,9 +49,9 @@ import com.google.common.collect.ImmutableList;
 public class AnalyzeSemantically {
   public static ImmutableLogs analyzeSemantically(Definitions imported, Ast ast) {
     var logBuffer = new LogBuffer();
-    unescapeStringLiterals(logBuffer, ast);
     decodeBlobLiterals(logBuffer, ast);
     decodeIntLiterals(logBuffer, ast);
+    decodeStringLiterals(logBuffer, ast);
     resolveReferences(logBuffer, imported, ast);
     detectUndefinedTypes(logBuffer, imported, ast);
     detectDuplicateGlobalNames(logBuffer, imported, ast);
@@ -61,20 +61,6 @@ public class AnalyzeSemantically {
     detectIllegalPolytypes(logBuffer, ast);
     detectNativesWithBodyAndNonNativesWithoutBody(logBuffer, ast);
     return logBuffer.toImmutableLogs();
-  }
-
-  private static void unescapeStringLiterals(Logger logger, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitStringLiteral(StringNode string) {
-        super.visitStringLiteral(string);
-        try {
-          string.calculateUnescaped();
-        } catch (UnescapingFailedException e) {
-          logger.log(parseError(string, e.getMessage()));
-        }
-      }
-    }.visitAst(ast);
   }
 
   private static void decodeBlobLiterals(Logger logger, Ast ast) {
@@ -100,6 +86,20 @@ public class AnalyzeSemantically {
           intNode.decodeBigInteger();
         } catch (NumberFormatException e) {
           logger.log(parseError(intNode, "Illegal Int literal: `" + intNode.literal() + "`."));
+        }
+      }
+    }.visitAst(ast);
+  }
+
+  private static void decodeStringLiterals(Logger logger, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitStringLiteral(StringNode string) {
+        super.visitStringLiteral(string);
+        try {
+          string.calculateUnescaped();
+        } catch (UnescapingFailedException e) {
+          logger.log(parseError(string, e.getMessage()));
         }
       }
     }.visitAst(ast);

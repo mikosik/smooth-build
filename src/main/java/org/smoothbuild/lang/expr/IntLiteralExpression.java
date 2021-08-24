@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.base.type.Types.int_;
+import static org.smoothbuild.lang.base.type.Types.intT;
 
 import java.math.BigInteger;
 
@@ -11,7 +11,7 @@ public record IntLiteralExpression(BigInteger bigInteger, Location location)
     implements Expression {
   @Override
   public Type type() {
-    return int_();
+    return intT();
   }
 
   @Override

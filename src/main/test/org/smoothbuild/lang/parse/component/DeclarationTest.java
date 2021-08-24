@@ -4,8 +4,7 @@ import static java.lang.String.format;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.TestingLang.array;
-import static org.smoothbuild.lang.TestingLang.blob;
+import static org.smoothbuild.lang.TestingLang.arrayE;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.nativ;
@@ -36,6 +35,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.lang.TestModuleLoader;
+import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.type.TestedType;
 
 public class DeclarationTest {
@@ -975,7 +975,8 @@ public class DeclarationTest {
           module(functionCall("0x07,"))
               .loadsSuccessfully()
               .containsReferencable(value(2, BLOB, "result",
-                  call(2, BLOB, reference(2, f(BLOB, item(BLOB, "b")), "myFunction"), blob(2, 7))));
+                  call(2, BLOB, reference(2, f(BLOB, item(BLOB, "b")), "myFunction"), TestingLang
+                      .blob(2, 7))));
         }
 
         @Test
@@ -1247,7 +1248,8 @@ public class DeclarationTest {
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
                 .loadsSuccessfully()
-                .containsReferencable(value(1, a(BLOB), "result", array(1, BLOB, blob(1, 7))));
+                .containsReferencable(value(1, a(BLOB), "result", arrayE(1, BLOB, TestingLang
+                    .blob(1, 7))));
           }
 
           @Test

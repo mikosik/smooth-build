@@ -3,9 +3,9 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
-import static org.smoothbuild.lang.base.type.Types.nothing;
-import static org.smoothbuild.lang.base.type.Types.string;
-import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.nothingT;
+import static org.smoothbuild.lang.base.type.Types.stringT;
+import static org.smoothbuild.lang.base.type.Types.structT;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
@@ -17,37 +17,37 @@ import org.junit.jupiter.api.Test;
 public class StructTypeTest {
   @Test
   public void struct_type_without_fields_can_be_created() {
-    struct("Struct", list());
+    structT("Struct", list());
   }
 
   @Test
   public void first_field_type_can_be_nothing() {
-    struct("Struct", fields(nothing()));
+    structT("Struct", fields(nothingT()));
   }
 
   @Test
   public void first_field_type_can_be_nothing_array() {
-    struct("Struct", fields(a(nothing())));
+    structT("Struct", fields(a(nothingT())));
   }
 
   @Test
   public void field_can_be_retrieved_by_name() {
-    ItemSignature field = itemSignature(string(), "name1");
-    StructType struct = struct("Struct", list(field));
+    ItemSignature field = itemSignature(stringT(), "name1");
+    StructType struct = structT("Struct", list(field));
     assertThat(struct.fieldWithName("name1"))
         .isSameInstanceAs(field);
   }
 
   @Test
   public void contains_field_with_name_returns_true_for_existing_field() {
-    StructType struct = struct("Struct", list(itemSignature(string(), "name1")));
+    StructType struct = structT("Struct", list(itemSignature(stringT(), "name1")));
     assertThat(struct.containsFieldWithName("name1"))
         .isTrue();
   }
 
   @Test
   public void contains_field_with_name_returns_false_for_not_existing_field() {
-    StructType struct = struct("Struct", list(itemSignature(string(), "name1")));
+    StructType struct = structT("Struct", list(itemSignature(stringT(), "name1")));
     assertThat(struct.containsFieldWithName("name2"))
         .isFalse();
   }

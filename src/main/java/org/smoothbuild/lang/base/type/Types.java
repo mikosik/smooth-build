@@ -40,39 +40,39 @@ public class Types {
     return new Variable(name);
   }
 
-  public static AnyType any() {
+  public static AnyType anyT() {
     return ANY;
   }
 
-  public static BlobType blob() {
-    return BLOB;
-  }
-
-  public static BoolType bool() {
-    return BOOL;
-  }
-
-  public static IntType int_() {
-    return INT;
-  }
-
-  public static NothingType nothing() {
-    return NOTHING;
-  }
-
-  public static StringType string() {
-    return STRING;
-  }
-
-  public static StructType struct(String name, Iterable<ItemSignature> fields) {
-    return new StructType(name, ImmutableList.copyOf(fields));
-  }
-
-  public static ArrayType array(Type elemType) {
+  public static ArrayType arrayT(Type elemType) {
     return new ArrayType(elemType);
   }
 
-  public static FunctionType function(Type resultType, Iterable<ItemSignature> parameters) {
+  public static BlobType blobT() {
+    return BLOB;
+  }
+
+  public static BoolType boolT() {
+    return BOOL;
+  }
+
+  public static IntType intT() {
+    return INT;
+  }
+
+  public static NothingType nothingT() {
+    return NOTHING;
+  }
+
+  public static StringType stringT() {
+    return STRING;
+  }
+
+  public static StructType structT(String name, Iterable<ItemSignature> fields) {
+    return new StructType(name, ImmutableList.copyOf(fields));
+  }
+
+  public static FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
     return new FunctionType(resultType, ImmutableList.copyOf(parameters));
   }
 

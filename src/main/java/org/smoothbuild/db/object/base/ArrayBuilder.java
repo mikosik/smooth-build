@@ -41,6 +41,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return wrapException(() -> objectDb.newArray(spec, elements));
+    return wrapException(() -> objectDb.newArrayV(spec, elements));
   }
 }

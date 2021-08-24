@@ -116,11 +116,20 @@ public class LoadReferencable {
     }
 
     private Expression createExpression(ExprNode expr) {
-      if (expr instanceof FieldReadNode fieldReadNode) {
-        return createFieldRead(fieldReadNode);
+      if (expr instanceof ArrayNode arrayNode) {
+        return createArrayLiteral(arrayNode);
+      }
+      if (expr instanceof BlobNode blobNode) {
+        return createBlobLiteral(blobNode);
       }
       if (expr instanceof CallNode callNode) {
         return createCall(callNode);
+      }
+      if (expr instanceof FieldReadNode fieldReadNode) {
+        return createFieldRead(fieldReadNode);
+      }
+      if (expr instanceof IntNode intNode) {
+        return createIntLiteral(intNode);
       }
       if (expr instanceof RefNode refNode) {
         return createReference(refNode);
@@ -128,32 +137,13 @@ public class LoadReferencable {
       if (expr instanceof StringNode stringNode) {
         return createStringLiteral(stringNode);
       }
-      if (expr instanceof BlobNode blobNode) {
-        return createBlobLiteral(blobNode);
-      }
-      if (expr instanceof IntNode intNode) {
-        return createIntLiteral(intNode);
-      }
-      if (expr instanceof ArrayNode arrayNode) {
-        return createArrayLiteral(arrayNode);
-      }
       throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
     }
 
-    private Expression createFieldRead(FieldReadNode fieldReadNode) {
-      StructType type = (StructType) fieldReadNode.expr().type().get();
-      ItemSignature field = type.fieldWithName(fieldReadNode.fieldName());
-      Expression expression = createExpression(fieldReadNode.expr());
-      return new FieldReadExpression(field, expression, fieldReadNode.location());
-    }
-
-    private Expression createReference(RefNode ref) {
-      ReferencableLike referenced = ref.referenced();
-      if (referenced instanceof ItemNode) {
-        String name = ref.name();
-        return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
-      }
-      return new ReferenceExpression(ref.name(), referenced.inferredType().get(), ref.location());
+    private Expression createArrayLiteral(ArrayNode array) {
+      ArrayType type = (ArrayType) array.type().get();
+      ImmutableList<Expression> elements = map(array.elements(), this::createExpression);
+      return new ArrayLiteralExpression(type, elements, array.location());
     }
 
     private Expression createCall(CallNode call) {
@@ -184,17 +174,21 @@ public class LoadReferencable {
       return resultBuilder.build();
     }
 
-    private Expression createArrayLiteral(ArrayNode array) {
-      ArrayType type = (ArrayType) array.type().get();
-      ImmutableList<Expression> elements = map(array.elements(), this::createExpression);
-      return new ArrayLiteralExpression(type, elements, array.location());
+    private Expression createFieldRead(FieldReadNode fieldReadNode) {
+      StructType type = (StructType) fieldReadNode.expr().type().get();
+      ItemSignature field = type.fieldWithName(fieldReadNode.fieldName());
+      Expression expression = createExpression(fieldReadNode.expr());
+      return new FieldReadExpression(field, expression, fieldReadNode.location());
     }
-  }
 
-  public static StringLiteralExpression createStringLiteral(StringNode string) {
-    return new StringLiteralExpression(
-        string.unescapedValue(),
-        string.location());
+    private Expression createReference(RefNode ref) {
+      ReferencableLike referenced = ref.referenced();
+      if (referenced instanceof ItemNode) {
+        String name = ref.name();
+        return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
+      }
+      return new ReferenceExpression(ref.name(), referenced.inferredType().get(), ref.location());
+    }
   }
 
   public static BlobLiteralExpression createBlobLiteral(BlobNode blob) {
@@ -207,5 +201,11 @@ public class LoadReferencable {
     return new IntLiteralExpression(
         intNode.bigInteger(),
         intNode.location());
+  }
+
+  public static StringLiteralExpression createStringLiteral(StringNode string) {
+    return new StringLiteralExpression(
+        string.unescapedValue(),
+        string.location());
   }
 }
