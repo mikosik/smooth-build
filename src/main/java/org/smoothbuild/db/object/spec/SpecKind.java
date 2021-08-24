@@ -8,6 +8,8 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 
+import com.google.common.collect.ImmutableMap;
+
 public enum SpecKind {
   INT((byte) 0, Int.class),
   NOTHING((byte) 1, null),
@@ -17,6 +19,16 @@ public enum SpecKind {
   BOOL((byte) 5, Bool.class),
   STRING((byte) 6, Str.class);
 
+  private static final ImmutableMap<Byte, SpecKind> markerToSpecKindMap = ImmutableMap.<Byte, SpecKind>builder()
+      .put((byte) 0, INT)
+      .put((byte) 1, NOTHING)
+      .put((byte) 2, TUPLE)
+      .put((byte) 3, ARRAY)
+      .put((byte) 4, BLOB)
+      .put((byte) 5, BOOL)
+      .put((byte) 6, STRING)
+      .build();
+
   private final byte marker;
   private final Class<? extends Obj> jType;
 
@@ -25,13 +37,8 @@ public enum SpecKind {
     this.jType = jType;
   }
 
-  public static SpecKind specKindMarkedWith(byte marker) {
-    for (SpecKind value : values()) {
-      if (value.marker == marker) {
-        return value;
-      }
-    }
-    return null;
+  public static SpecKind fromMarker(byte marker) {
+    return markerToSpecKindMap.get(marker);
   }
 
   public byte marker() {

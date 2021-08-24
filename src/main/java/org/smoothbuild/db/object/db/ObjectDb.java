@@ -11,7 +11,7 @@ import static org.smoothbuild.db.object.spec.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.SpecKind.TUPLE;
-import static org.smoothbuild.db.object.spec.SpecKind.specKindMarkedWith;
+import static org.smoothbuild.db.object.spec.SpecKind.fromMarker;
 import static org.smoothbuild.util.Lists.map;
 
 import java.math.BigInteger;
@@ -191,7 +191,7 @@ public class ObjectDb {
     try {
       List<Hash> hashes = hashedDb.readHashes(hash, 1, 2);
       byte marker = hashedDb.readByte(hashes.get(0));
-      SpecKind specKind = specKindMarkedWith(marker);
+      SpecKind specKind = fromMarker(marker);
       if (specKind == null) {
         throw new CannotDecodeSpecException(hash,
             "It has illegal SpecKind marker = " + marker + ".");
