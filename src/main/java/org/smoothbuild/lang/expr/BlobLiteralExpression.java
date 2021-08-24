@@ -13,9 +13,4 @@ public record BlobLiteralExpression(ByteString byteString, Location location)
   public Type type() {
     return blobT();
   }
-
-  @Override
-  public String toString() {
-    return "BlobLiteralExpression{" + byteString + ", " + location() + "}";
-  }
 }

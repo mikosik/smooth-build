@@ -9,9 +9,4 @@ public record StringLiteralExpression(String string, Location location) implemen
   public Type type() {
     return Types.stringT();
   }
-
-  @Override
-  public String toString() {
-    return "StringLiteralExpression{" + string + ", " + location() + "}";
-  }
 }

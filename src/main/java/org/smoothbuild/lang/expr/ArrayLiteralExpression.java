@@ -8,9 +8,4 @@ import com.google.common.collect.ImmutableList;
 public record ArrayLiteralExpression(
     ArrayType type, ImmutableList<Expression> elements, Location location)
     implements Expression {
-
-  @Override
-  public String toString() {
-    return "ArrayLiteralExpression{" + type.name() + ", " + elements + ", " + location() + "}";
-  }
 }

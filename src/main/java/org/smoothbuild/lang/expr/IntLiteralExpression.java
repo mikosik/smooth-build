@@ -13,9 +13,4 @@ public record IntLiteralExpression(BigInteger bigInteger, Location location)
   public Type type() {
     return intT();
   }
-
-  @Override
-  public String toString() {
-    return "IntLiteralExpression{" + bigInteger + ", " + location() + "}";
-  }
 }
