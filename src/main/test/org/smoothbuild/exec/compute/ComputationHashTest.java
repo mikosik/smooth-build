@@ -2,7 +2,7 @@ package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
-import static org.smoothbuild.db.object.spec.TestingSpecs.STRING;
+import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
 import static org.smoothbuild.lang.TestingLang.function;
@@ -126,7 +126,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_read_tuple_element_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ReadTupleElementAlgorithm(0, STRING);
+    Algorithm algorithm = new ReadTupleElementAlgorithm(0, STR);
     Input input = input(list(strV("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));
