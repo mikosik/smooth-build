@@ -35,16 +35,21 @@ public class TestingSpecs {
   public static ImmutableList<Spec> SPECS_TO_TEST = list(
       BLOB,
       BOOL,
+      INT,
       NOTHING,
       STRING,
       PERSON,
+
       ARRAY_BLOB,
       ARRAY_BOOL,
+      ARRAY_INT,
       ARRAY_NOTHING,
       ARRAY_STRING,
       ARRAY_PERSON,
+
       ARRAY2_BLOB,
       ARRAY2_BOOL,
+      ARRAY2_INT,
       ARRAY2_NOTHING,
       ARRAY2_STRING,
       ARRAY2_PERSON
