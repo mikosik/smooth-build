@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class Array extends Obj {
+public class Array extends Val {
   private final ObjectDb objectDb;
 
   public Array(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {

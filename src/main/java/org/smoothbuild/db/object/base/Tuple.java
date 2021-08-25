@@ -17,8 +17,8 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class Tuple extends Obj {
-  private ImmutableList<Obj> elements;
+public class Tuple extends Val {
+  private ImmutableList<Val> elements;
   private final ObjectDb objectDb;
 
   public Tuple(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
@@ -31,18 +31,18 @@ public class Tuple extends Obj {
     return (TupleSpec) super.spec();
   }
 
-  public Obj get(int index) {
-    ImmutableList<Obj> elements = elements();
+  public Val get(int index) {
+    ImmutableList<Val> elements = elements();
     checkIndex(index, elements.size());
     return elements.get(index);
   }
 
-  public Obj superObject() {
-    ImmutableList<Obj> elements = elements();
+  public Val superObject() {
+    ImmutableList<Val> elements = elements();
     return elements.size() == 0 ? null : elements.iterator().next();
   }
 
-  private ImmutableList<Obj> elements() {
+  private ImmutableList<Val> elements() {
     if (elements == null) {
       var elementSpecs = spec().elementSpecs();
       var elementHashes = readElementHashes(elementSpecs);
@@ -51,16 +51,16 @@ public class Tuple extends Obj {
             hash(), "Its TUPLE spec declares " + elementSpecs.size()
             + " elements but its data points to" + elementHashes.size() + "  elements.");
       }
-      var builder = ImmutableList.<Obj>builder();
+      var builder = ImmutableList.<Val>builder();
       for (int i = 0; i < elementSpecs.size(); i++) {
-        Obj object = objectDb.get(elementHashes.get(i));
+        Obj obj = objectDb.get(elementHashes.get(i));
         Spec spec = elementSpecs.get(i);
-        if (spec.equals(object.spec())) {
-          builder.add(object);
+        if (spec.equals(obj.spec())) {
+          builder.add((Val) obj);
         } else {
           throw new CannotDecodeObjectException(hash(), "Its TUPLE spec declares element " + i
               + " to have " + spec.name() + " spec but its data has object with " +
-              object.spec().name() + " spec at that index.");
+              obj.spec().name() + " spec at that index.");
         }
       }
       elements = builder.build();
@@ -68,7 +68,7 @@ public class Tuple extends Obj {
     return elements;
   }
 
-  private List<Hash> readElementHashes(final ImmutableList<Spec> elementSpecs) {
+  private List<Hash> readElementHashes(ImmutableList<Spec> elementSpecs) {
     try {
       return hashedDb.readHashes(dataHash(), elementSpecs.size());
     } catch (HashedDbException e) {

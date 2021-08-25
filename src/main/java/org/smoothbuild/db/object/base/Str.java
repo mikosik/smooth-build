@@ -8,7 +8,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 /**
  * This class is immutable.
  */
-public class Str extends Obj {
+public class Str extends Val {
   public Str(MerkleRoot merkleRoot, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
   }

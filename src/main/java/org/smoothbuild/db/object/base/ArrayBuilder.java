@@ -20,8 +20,8 @@ public class ArrayBuilder {
     this.elements = new ArrayList<>();
   }
 
-  public ArrayBuilder addAll(Iterable<? extends Obj> objects) {
-    stream(objects).forEach(this::add);
+  public ArrayBuilder addAll(Iterable<? extends Obj> objs) {
+    stream(objs).forEach(this::add);
     return this;
   }
 

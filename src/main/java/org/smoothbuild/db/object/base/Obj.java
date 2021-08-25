@@ -1,26 +1,23 @@
 package org.smoothbuild.db.object.base;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.spec.Spec;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * This class is immutable.
- */
 public abstract class Obj {
-  private final MerkleRoot merkleRoot;
-  protected final HashedDb hashedDb;
+  protected final MerkleRoot merkleRoot;
 
-  public Obj(MerkleRoot merkleRoot, HashedDb hashedDb) {
-    this.merkleRoot = requireNonNull(merkleRoot);
-    this.hashedDb = requireNonNull(hashedDb);
+  public Obj(MerkleRoot merkleRoot) {
+    this.merkleRoot = merkleRoot;
+  }
+
+  public static String elementsToStringValues(ImmutableList<? extends Obj> objects) {
+    return objects.stream().map(Obj::valueToString).collect(joining(","));
   }
 
   public Hash hash() {
@@ -50,9 +47,5 @@ public abstract class Obj {
   @Override
   public String toString() {
     return valueToString() + ":" + hash();
-  }
-
-  public static String elementsToStringValues(ImmutableList<Obj> objects) {
-    return objects.stream().map(Obj::valueToString).collect(joining(","));
   }
 }

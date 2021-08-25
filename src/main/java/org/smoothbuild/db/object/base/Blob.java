@@ -9,7 +9,7 @@ import okio.BufferedSource;
 /**
  * This class is immutable.
  */
-public class Blob extends Obj {
+public class Blob extends Val {
   public Blob(MerkleRoot merkleRoot, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
   }

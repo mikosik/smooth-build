@@ -9,7 +9,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 /**
  * This class is immutable.
  */
-public class Int extends Obj {
+public class Int extends Val {
   public Int(MerkleRoot merkleRoot, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
   }
