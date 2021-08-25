@@ -197,25 +197,10 @@ public class ObjectDb {
             "It has illegal SpecKind marker = " + marker + ".");
       }
       return switch (specKind) {
-        case BLOB -> {
-          assertSize(hash, BLOB, hashes, 1);
-          yield blobSpec;
-        }
-        case BOOL -> {
-          assertSize(hash, BOOL, hashes, 1);
-          yield boolSpec;
-        }
-        case INT -> {
-          assertSize(hash, BOOL, hashes, 1);
-          yield intSpec;
-        }
-        case NOTHING -> {
-          assertSize(hash, NOTHING, hashes, 1);
-          yield nothingSpec;
-        }
-        case STRING -> {
-          assertSize(hash, STRING, hashes, 1);
-          yield strSpec;
+        case BLOB, BOOL, INT, NOTHING, STRING -> {
+          assertSize(hash, specKind, hashes, 1);
+          throw new RuntimeException(
+              "Internal error: Spec with kind " + specKind + " should be found in cache.");
         }
         case ARRAY -> {
           assertSize(hash, ARRAY, hashes, 2);
