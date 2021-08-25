@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
 public class IntTest extends TestingContext {
-  private final String string = "my string";
-  private final String otherString = "my string 2";
-
   @Test
   public void spec_of_int_is_int() {
     assertThat(intV(123).spec())
