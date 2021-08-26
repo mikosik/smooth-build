@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.db;
 
-import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.db.object.db.Helpers.wrapException;
@@ -331,10 +330,10 @@ public class ObjectDb {
     return writeSequence(elements);
   }
 
-  private Hash writeSequence(Iterable<? extends Obj> objects) throws HashedDbException {
-    Hash[] hashes = stream(objects)
-        .map(Obj::hash)
-        .toArray(Hash[]::new);
+  // helpers
+
+  private Hash writeSequence(Iterable<? extends Obj> objs) throws HashedDbException {
+    var hashes = map(objs, Obj::hash);
     return hashedDb.writeHashes(hashes);
   }
 
