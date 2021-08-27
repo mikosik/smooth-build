@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.TestingSpecs;
+import org.smoothbuild.db.object.spec.ValSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -201,14 +202,14 @@ public class ArrayTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("spec_test_data")
-  public void spec(Spec spec) {
+  public void spec(ValSpec spec) {
     Array array = arrayBuilder(spec).build();
     assertThat(array.spec())
         .isEqualTo(arrayS(spec));
   }
 
   private static List<Spec> spec_test_data() {
-    return TestingSpecs.SPECS_TO_TEST;
+    return TestingSpecs.VAL_SPECS_TO_TEST;
   }
 
   @Test

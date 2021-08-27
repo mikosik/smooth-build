@@ -12,20 +12,30 @@ import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Call;
+import org.smoothbuild.db.object.base.Const;
+import org.smoothbuild.db.object.base.EArray;
+import org.smoothbuild.db.object.base.Expr;
+import org.smoothbuild.db.object.base.FieldRead;
 import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.base.Val;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
+import org.smoothbuild.db.object.spec.CallSpec;
+import org.smoothbuild.db.object.spec.ConstSpec;
+import org.smoothbuild.db.object.spec.EArraySpec;
+import org.smoothbuild.db.object.spec.FieldReadSpec;
 import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
-import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StrSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.db.object.spec.ValSpec;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
@@ -136,9 +146,9 @@ public class TestingContext {
     return fullFileSystem;
   }
 
-  // Spec-s
+  // Obj Spec-s
 
-  public ArraySpec arrayS(Spec elementSpec) {
+  public ArraySpec arrayS(ValSpec elementSpec) {
     return objectDb().arrayS(elementSpec);
   }
 
@@ -162,7 +172,7 @@ public class TestingContext {
     return objectDb().strS();
   }
 
-  public TupleSpec tupleS(Iterable<? extends Spec> elementSpecs) {
+  public TupleSpec tupleS(Iterable<? extends ValSpec> elementSpecs) {
     return objectDb().tupleS(elementSpecs);
   }
 
@@ -170,8 +180,12 @@ public class TestingContext {
     return tupleS(list());
   }
 
+  public TupleSpec tupleWithStrS() {
+    return tupleS(list(strS()));
+  }
+
   public TupleSpec personS() {
-    Spec string = strS();
+    ValSpec string = strS();
     return tupleS(list(string, string));
   }
 
@@ -179,17 +193,35 @@ public class TestingContext {
     return tupleS(list(blobS(), strS()));
   }
 
+  // Expr Spec-s
+
+  public CallSpec callS() {
+    return objectDb().callS();
+  }
+
+  public ConstSpec constS() {
+    return objectDb().constS();
+  }
+
+  public EArraySpec eArrayS() {
+    return objectDb().eArrayS();
+  }
+
+  public FieldReadSpec fieldReadS() {
+    return objectDb().fieldReadS();
+  }
+
   // Obj-s (values)
 
-  public Array arrayV(Obj... elements) {
+  public Array arrayV(Val... elements) {
     return arrayV(elements[0].spec(), elements);
   }
 
-  public Array arrayV(Spec elementSpec, Obj... elements) {
+  public Array arrayV(ValSpec elementSpec, Obj... elements) {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
-  public ArrayBuilder arrayBuilder(Spec elemSpec) {
+  public ArrayBuilder arrayBuilder(ValSpec elemSpec) {
     return objectDb().arrayBuilder(elemSpec);
   }
 
@@ -219,6 +251,14 @@ public class TestingContext {
 
   public Tuple emptyTupleV() {
     return tupleV(emptyTupleS(), list());
+  }
+
+  public Tuple tupleWithStrV() {
+    return tupleV(tupleWithStrS(), list(strV("abc")));
+  }
+
+  public Tuple tupleWithStrV(Str str) {
+    return tupleV(tupleWithStrS(), list(str));
   }
 
   public Tuple personV(String firstName, String lastName) {
@@ -256,5 +296,27 @@ public class TestingContext {
   public Tuple fileV(String path, Blob blob) {
     Str string = objectFactory().string(path);
     return objectFactory().file(string, blob);
+  }
+
+  // Expr-s
+
+  public Call callE(Expr function, Iterable<? extends Expr> arguments) {
+    return objectDb().callExpr(function, arguments);
+  }
+
+  public Const constE() {
+    return objectDb().constExpr(intV(123));
+  }
+
+  public Const constE(Val val) {
+    return objectDb().constExpr(val);
+  }
+
+  public EArray eArray(Iterable<? extends Expr> elements) {
+    return objectDb().eArrayExpr(elements);
+  }
+
+  public FieldRead fieldReadE(Expr tuple, Int index) {
+    return objectDb().fieldReadExpr(tuple, index);
   }
 }

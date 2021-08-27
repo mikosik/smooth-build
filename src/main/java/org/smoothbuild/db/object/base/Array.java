@@ -1,9 +1,11 @@
 package org.smoothbuild.db.object.base;
 
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodingObjectException;
 import static org.smoothbuild.util.Lists.map;
 
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.HashedDbException;
+import java.util.List;
+
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.CannotDecodeObjectException;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.ArraySpec;
@@ -15,11 +17,8 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Array extends Val {
-  private final ObjectDb objectDb;
-
-  public Array(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
-    super(merkleRoot, hashedDb);
-    this.objectDb = objectDb;
+  public Array(MerkleRoot merkleRoot, ObjectDb objectDb) {
+    super(merkleRoot, objectDb);
   }
 
   @Override
@@ -50,11 +49,10 @@ public class Array extends Val {
   }
 
   private ImmutableList<Obj> elements() {
-    try {
-      return map(hashedDb.readHashes(dataHash()), objectDb::get);
-    } catch (HashedDbException e) {
-      throw new CannotDecodeObjectException(hash(), e);
-    }
+    List<Hash> elementsHashes = getDataSequence();
+    return wrapObjectDbExceptionAsDecodingObjectException(
+        hash(),
+        () -> map(elementsHashes, h -> objectDb().get(h)));
   }
 
   @Override

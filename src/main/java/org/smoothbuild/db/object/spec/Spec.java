@@ -3,7 +3,6 @@ package org.smoothbuild.db.object.spec;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.base.MerkleRoot;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.db.ObjectDb;
@@ -11,13 +10,11 @@ import org.smoothbuild.db.object.db.ObjectDb;
 public abstract class Spec {
   private final Hash hash;
   private final SpecKind kind;
-  protected final HashedDb hashedDb;
-  protected final ObjectDb objectDb;
+  private final ObjectDb objectDb;
 
-  protected Spec(Hash hash, SpecKind kind, HashedDb hashedDb, ObjectDb objectDb) {
+  protected Spec(Hash hash, SpecKind kind, ObjectDb objectDb) {
     this.hash = hash;
     this.kind = kind;
-    this.hashedDb = hashedDb;
     this.objectDb = objectDb;
   }
 
@@ -28,6 +25,14 @@ public abstract class Spec {
 
   public Hash hash() {
     return hash;
+  }
+
+  public SpecKind kind() {
+    return kind;
+  }
+
+  protected ObjectDb objectDb() {
+    return objectDb;
   }
 
   @Override
@@ -47,10 +52,6 @@ public abstract class Spec {
 
   public String name() {
     return kind.name();
-  }
-
-  public SpecKind kind() {
-    return kind;
   }
 
   public Class<? extends Obj> jType() {

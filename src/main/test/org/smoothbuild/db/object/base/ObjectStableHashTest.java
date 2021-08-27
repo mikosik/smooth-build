@@ -1,11 +1,12 @@
 package org.smoothbuild.db.object.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.spec.ValSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -38,6 +39,72 @@ public class ObjectStableHashTest extends TestingContext {
     public void hash_of_false_bool_is_stable() {
       assertThat(boolV(false).hash())
           .isEqualTo(Hash.decode("3b641feda4deab9676f58d0f62981d8593c10c08"));
+    }
+  }
+
+  @Nested
+  class _const {
+    @Test
+    public void hash_of_const_blob_expression_is_stable() {
+      assertThat(constE(blobV(ByteString.of((byte) 1, (byte) 2, (byte) 3))).hash())
+          .isEqualTo(Hash.decode("efdb16653cd81c43502b42264557b3a383a348d1"));
+    }
+
+    @Test
+    public void hash_of_const_bool_expression_is_stable() {
+      assertThat(constE(boolV(true)).hash())
+          .isEqualTo(Hash.decode("696913ab01c1488de7161d69fc7b59da61368944"));
+    }
+
+    @Test
+    public void hash_of_const_int_expression_is_stable() {
+      assertThat(constE(intV(123)).hash())
+          .isEqualTo(Hash.decode("2a7928b15367b26c71416079f93c6aa0bf37bc65"));
+    }
+
+    @Test
+    public void hash_of_const_string_expression_is_stable() {
+      assertThat(constE(strV("abc")).hash())
+          .isEqualTo(Hash.decode("6f932b1bd1eb5a5fa55d82ee9d0c5130899bfbb7"));
+    }
+  }
+
+  @Nested
+  class _call {
+    @Test
+    public void hash_of_call_expression_with_one_argument_is_stable() {
+      assertThat(callE(constE(intV(1)), list(constE(intV(2)))).hash())
+          .isEqualTo(Hash.decode("01f702aed0ff152251af37d7b0a1ae2bc323b930"));
+    }
+
+    @Test
+    public void hash_of_call_expression_without_arguments_is_stable() {
+      assertThat(callE(constE(intV(1)), list()).hash())
+          .isEqualTo(Hash.decode("180fabed4d0cf3ffaa1f6fded51061c6ec9d81cd"));
+    }
+  }
+
+  @Nested
+  class _earray {
+    @Test
+    public void hash_of_empty_earray_expression_is_stable() {
+      assertThat(eArray(list()).hash())
+          .isEqualTo(Hash.decode("83f658942c9dd57f75ebf537bc9880c9e22fa85d"));
+    }
+
+    @Test
+    public void hash_of_earray_expression_is_stable() {
+      assertThat(eArray(list(constE(intV(1)))).hash())
+          .isEqualTo(Hash.decode("9042b984055b94da27c36572c7dc2873c03041e3"));
+    }
+  }
+
+  @Nested
+  class _field_read {
+    @Test
+    public void hash_of_field_read_expression_is_stable() {
+      assertThat(fieldReadE(constE(intV(1)), intV(2)).hash())
+          .isEqualTo(Hash.decode("de8a53138bd2e0422424bc438a6732140964b966"));
     }
   }
 
@@ -149,7 +216,7 @@ public class ObjectStableHashTest extends TestingContext {
     }
   }
 
-  private Array emptyArrayOf(Spec elemSpec) {
+  private Array emptyArrayOf(ValSpec elemSpec) {
     return arrayBuilder(elemSpec).build();
   }
 }

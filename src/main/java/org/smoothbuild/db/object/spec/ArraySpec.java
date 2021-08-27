@@ -5,7 +5,6 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.db.object.spec.SpecKind.ARRAY;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.MerkleRoot;
 import org.smoothbuild.db.object.db.ObjectDb;
@@ -13,18 +12,18 @@ import org.smoothbuild.db.object.db.ObjectDb;
 /**
  * This class is immutable.
  */
-public class ArraySpec extends Spec {
-  private final Spec elemSpec;
+public class ArraySpec extends ValSpec {
+  private final ValSpec elemSpec;
 
-  public ArraySpec(Hash hash, Spec elemSpec, HashedDb hashedDb, ObjectDb objectDb) {
-    super(hash, ARRAY, hashedDb, objectDb);
+  public ArraySpec(Hash hash, ValSpec elemSpec, ObjectDb objectDb) {
+    super(hash, ARRAY, objectDb);
     this.elemSpec = requireNonNull(elemSpec);
   }
 
   @Override
   public Array newObj(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Array(merkleRoot, objectDb, hashedDb);
+    return new Array(merkleRoot, objectDb());
   }
 
   @Override
@@ -32,7 +31,7 @@ public class ArraySpec extends Spec {
     return "[" + elemSpec.name() + "]";
   }
 
-  public Spec elemSpec() {
+  public ValSpec elemSpec() {
     return elemSpec;
   }
 

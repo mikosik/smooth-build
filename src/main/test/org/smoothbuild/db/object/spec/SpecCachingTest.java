@@ -37,12 +37,18 @@ public class SpecCachingTest extends TestingContext {
         ObjectDb::nothingS,
         ObjectDb::strS,
         SpecCachingTest::tupleSpec,
+        ObjectDb::callS,
+        ObjectDb::constS,
+        ObjectDb::eArrayS,
+        ObjectDb::fieldReadS,
+
         (objectDb) -> objectDb.arrayS(objectDb.blobS()),
         (objectDb) -> objectDb.arrayS(objectDb.boolS()),
         (objectDb) -> objectDb.arrayS(objectDb.intS()),
         (objectDb) -> objectDb.arrayS(objectDb.nothingS()),
         (objectDb) -> objectDb.arrayS(objectDb.strS()),
         (objectDb) -> objectDb.arrayS(tupleSpec(objectDb)),
+
         (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.blobS())),
         (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.boolS())),
         (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.intS())),

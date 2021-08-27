@@ -24,9 +24,9 @@ import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
 import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
-import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StrSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.db.object.spec.ValSpec;
 import org.smoothbuild.util.io.DataWriter;
 
 /**
@@ -55,7 +55,7 @@ public class ObjectFactory {
     return objectDb.tupleS(list(objectDb.blobS(), objectDb.strS()));
   }
 
-  public ArrayBuilder arrayBuilder(Spec elementSpec) {
+  public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
     return objectDb.arrayBuilder(elementSpec);
   }
 
@@ -92,7 +92,7 @@ public class ObjectFactory {
     return objectDb.tupleV(spec, elements);
   }
 
-  public ArraySpec arraySpec(Spec elementSpec) {
+  public ArraySpec arraySpec(ValSpec elementSpec) {
     return objectDb.arrayS(elementSpec);
   }
 
@@ -124,7 +124,7 @@ public class ObjectFactory {
     return objectDb.strS();
   }
 
-  public TupleSpec tupleSpec(Iterable<? extends Spec> elementSpecs) {
+  public TupleSpec tupleSpec(Iterable<? extends ValSpec> elementSpecs) {
     return objectDb.tupleS(elementSpecs);
   }
 

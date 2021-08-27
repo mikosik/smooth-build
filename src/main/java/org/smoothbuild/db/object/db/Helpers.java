@@ -25,6 +25,20 @@ public class Helpers {
     public T call() throws HashedDbException;
   }
 
+  public static <T> T wrapObjectDbExceptionAsDecodingObjectException(
+      Hash hash, ObjectDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (ObjectDbException e) {
+      throw new CannotDecodeObjectException(hash, e);
+    }
+  }
+
+  @FunctionalInterface
+  public static interface ObjectDbCallable<T> {
+    public T call() throws ObjectDbException;
+  }
+
   public static void wrapException(HashedDbRunnable runnable) {
     try {
       runnable.run();

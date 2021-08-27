@@ -9,9 +9,9 @@ import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.IntSpec;
-import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StrSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.db.object.spec.ValSpec;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
@@ -31,7 +31,7 @@ public class TypeToSpecConverter {
     this.objectFactory = objectFactory;
   }
 
-  public Spec visit(Type type) {
+  public ValSpec visit(Type type) {
     // TODO refactor to pattern matching once we have java 17
     if (type instanceof BlobType blob) {
       return visit(blob);
@@ -44,7 +44,7 @@ public class TypeToSpecConverter {
     } else if (type instanceof StringType stringType) {
       return visit(stringType);
     } else if (type instanceof StructType struct) {
-      Iterable<Spec> fieldSpecs = map(struct.fields(), f -> visit(f.type()));
+      Iterable<ValSpec> fieldSpecs = map(struct.fields(), f -> visit(f.type()));
       return objectFactory.tupleSpec(fieldSpecs);
     } else if (type instanceof Variable) {
       throw new UnsupportedOperationException();

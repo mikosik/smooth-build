@@ -16,6 +16,10 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_STR;
 import static org.smoothbuild.db.object.spec.TestingSpecs.BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.BOOL;
+import static org.smoothbuild.db.object.spec.TestingSpecs.CALL;
+import static org.smoothbuild.db.object.spec.TestingSpecs.CONST;
+import static org.smoothbuild.db.object.spec.TestingSpecs.EARRAY;
+import static org.smoothbuild.db.object.spec.TestingSpecs.FIELD_READ;
 import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
@@ -32,6 +36,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Call;
+import org.smoothbuild.db.object.base.Const;
+import org.smoothbuild.db.object.base.EArray;
+import org.smoothbuild.db.object.base.FieldRead;
 import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
@@ -68,6 +76,10 @@ public class SpecTest {
         arguments(NOTHING, "NOTHING"),
         arguments(STR, "STRING"),
         arguments(PERSON, "{STRING,STRING}"),
+        arguments(CALL, "CALL"),
+        arguments(CONST, "CONST"),
+        arguments(EARRAY, "EARRAY"),
+        arguments(FIELD_READ, "FIELD_READ"),
 
         arguments(ARRAY_BLOB, "[BLOB]"),
         arguments(ARRAY_BOOL, "[BOOL]"),
@@ -100,6 +112,10 @@ public class SpecTest {
         arguments(NOTHING, null),
         arguments(PERSON, Tuple.class),
         arguments(STR, Str.class),
+        arguments(CALL, Call.class),
+        arguments(CONST, Const.class),
+        arguments(EARRAY, EArray.class),
+        arguments(FIELD_READ, FieldRead.class),
 
         arguments(ARRAY_BLOB, Array.class),
         arguments(ARRAY_BOOL, Array.class),
@@ -143,6 +159,10 @@ public class SpecTest {
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STR, STR);
     tester.addEqualityGroup(PERSON, PERSON);
+    tester.addEqualityGroup(CALL, CALL);
+    tester.addEqualityGroup(CONST, CONST);
+    tester.addEqualityGroup(EARRAY, EARRAY);
+    tester.addEqualityGroup(FIELD_READ, FIELD_READ);
 
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);

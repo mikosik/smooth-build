@@ -10,13 +10,14 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 import okio.BufferedSource;
 
@@ -137,17 +138,17 @@ public class HashedDb {
     }
   }
 
-  public List<Hash> readHashes(Hash hash, int expectedSize) throws HashedDbException {
-    List<Hash> hashes = readHashes(hash);
+  public ImmutableList<Hash> readHashes(Hash hash, int expectedSize) throws HashedDbException {
+    var hashes = readHashes(hash);
     if (hashes.size() != expectedSize) {
       throw new DecodingHashSequenceException(hash, expectedSize, hashes.size());
     }
     return hashes;
   }
 
-  public List<Hash> readHashes(Hash hash, int minExpectedSize, int maxExpectedSize) throws
-      HashedDbException {
-    List<Hash> hashes = readHashes(hash);
+  public ImmutableList<Hash> readHashes(Hash hash, int minExpectedSize, int maxExpectedSize)
+      throws HashedDbException {
+    var hashes = readHashes(hash);
     if (hashes.size() < minExpectedSize || maxExpectedSize < hashes.size()) {
       throw new DecodingHashSequenceException(
           hash, minExpectedSize, maxExpectedSize, hashes.size());
@@ -155,12 +156,12 @@ public class HashedDb {
     return hashes;
   }
 
-  public List<Hash> readHashes(Hash hash) throws HashedDbException {
-    List<Hash> result = new ArrayList<>();
+  public ImmutableList<Hash> readHashes(Hash hash) throws HashedDbException {
+    Builder<Hash> builder = ImmutableList.builder();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {
         if (source.request(Hash.hashesSize())) {
-          result.add(Hash.read(source));
+          builder.add(Hash.read(source));
         } else {
           throw new DecodingHashSequenceException(hash);
         }
@@ -168,7 +169,7 @@ public class HashedDb {
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }
-    return result;
+    return builder.build();
   }
 
   public boolean contains(Hash hash) throws CorruptedHashedDbException {

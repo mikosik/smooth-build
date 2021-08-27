@@ -8,6 +8,7 @@ import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.spec.ValSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -47,7 +48,7 @@ public class ConvertAlgorithm extends Algorithm {
   }
 
   private static Obj convertArray(Spec destinationSpec, Array array, NativeApi nativeApi) {
-    Spec elemSpec = ((ArraySpec) destinationSpec).elemSpec();
+    ValSpec elemSpec = ((ArraySpec) destinationSpec).elemSpec();
     ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elemSpec);
     for (Obj element : array.asIterable(Obj.class)) {
       arrayBuilder.add(convert(elemSpec, element, nativeApi));

@@ -1,24 +1,24 @@
 package org.smoothbuild.db.object.spec;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.db.object.spec.SpecKind.INT;
+import static org.smoothbuild.db.object.spec.SpecKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Int;
+import org.smoothbuild.db.object.base.Call;
 import org.smoothbuild.db.object.base.MerkleRoot;
 import org.smoothbuild.db.object.db.ObjectDb;
 
 /**
  * This class is immutable.
  */
-public class IntSpec extends ValSpec {
-  public IntSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, INT, objectDb);
+public class CallSpec extends ExprSpec {
+  public CallSpec(Hash hash, ObjectDb objectDb) {
+    super(hash, CALL, objectDb);
   }
 
   @Override
-  public Int newObj(MerkleRoot merkleRoot) {
+  public Call newObj(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Int(merkleRoot, objectDb());
+    return new Call(merkleRoot, objectDb());
   }
 }

@@ -11,12 +11,16 @@ public class TestingSpecs {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
 
-  public static final Spec BLOB = OBJECT_DB.blobS();
-  public static final Spec BOOL = OBJECT_DB.boolS();
-  public static final Spec INT = OBJECT_DB.intS();
-  public static final Spec NOTHING = OBJECT_DB.nothingS();
-  public static final Spec STR = OBJECT_DB.strS();
+  public static final ValSpec BLOB = OBJECT_DB.blobS();
+  public static final ValSpec BOOL = OBJECT_DB.boolS();
+  public static final ValSpec INT = OBJECT_DB.intS();
+  public static final ValSpec NOTHING = OBJECT_DB.nothingS();
+  public static final ValSpec STR = OBJECT_DB.strS();
   public static final TupleSpec PERSON = CONTEXT.personS();
+  public static final Spec CALL = CONTEXT.callS();
+  public static final Spec CONST = CONTEXT.constS();
+  public static final Spec EARRAY = CONTEXT.eArrayS();
+  public static final Spec FIELD_READ = CONTEXT.fieldReadS();
 
   public static final ArraySpec ARRAY_BLOB = array(BLOB);
   public static final ArraySpec ARRAY_BOOL = array(BOOL);
@@ -32,7 +36,7 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY2_STR = array(ARRAY_STR);
   public static final ArraySpec ARRAY2_PERSON = array(ARRAY_PERSON);
 
-  public static ImmutableList<Spec> SPECS_TO_TEST = list(
+  public static final ImmutableList<Spec> VAL_SPECS_TO_TEST = list(
       BLOB,
       BOOL,
       INT,
@@ -54,7 +58,8 @@ public class TestingSpecs {
       ARRAY2_STR,
       ARRAY2_PERSON
   );
-  private static ArraySpec array(Spec elemSpec) {
+
+  private static ArraySpec array(ValSpec elemSpec) {
     return OBJECT_DB.arrayS(elemSpec);
   }
 }

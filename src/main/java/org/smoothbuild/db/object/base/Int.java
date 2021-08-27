@@ -4,18 +4,18 @@ import static org.smoothbuild.db.object.db.Helpers.wrapDecodingObjectException;
 
 import java.math.BigInteger;
 
-import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.object.db.ObjectDb;
 
 /**
  * This class is immutable.
  */
 public class Int extends Val {
-  public Int(MerkleRoot merkleRoot, HashedDb hashedDb) {
-    super(merkleRoot, hashedDb);
+  public Int(MerkleRoot merkleRoot, ObjectDb objectDb) {
+    super(merkleRoot, objectDb);
   }
 
   public BigInteger jValue() {
-    return wrapDecodingObjectException(hash(), () -> hashedDb.readBigInteger(dataHash()));
+    return wrapDecodingObjectException(hash(), () -> hashedDb().readBigInteger(dataHash()));
   }
 
   @Override

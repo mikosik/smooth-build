@@ -16,6 +16,10 @@ public class SpecStableHashTest extends TestingContext {
     assertHash(nothingS(), "0a2b2a825165ae9742c63b0c6ddafc22f0bd3b1e");
     assertHash(strS(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(tupleS(list(blobS())), "9bac03092234be3f7226004d38df9caa21228429");
+    assertHash(constS(), "8aacfde27b33a25ea9797815353fa580f744b3cb");
+    assertHash(fieldReadS(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
+    assertHash(callS(), "ff8d3400b13491d5877a50eb5c1b84511f9df3cf");
+    assertHash(eArrayS(), "127a54cf4fbd31a588a9cf45f63b37df7dc25f16");
 
     assertHash(arrayS(blobS()), "8800c7594a868985fe01a2ab00a29083df788fc7");
     assertHash(arrayS(boolS()), "4d42bef63f74197a8780495faf97f1e6c2b9cccd");

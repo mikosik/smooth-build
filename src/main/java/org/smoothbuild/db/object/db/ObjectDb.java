@@ -6,6 +6,10 @@ import static org.smoothbuild.db.object.db.Helpers.wrapException;
 import static org.smoothbuild.db.object.spec.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.SpecKind.BOOL;
+import static org.smoothbuild.db.object.spec.SpecKind.CALL;
+import static org.smoothbuild.db.object.spec.SpecKind.CONST;
+import static org.smoothbuild.db.object.spec.SpecKind.EARRAY;
+import static org.smoothbuild.db.object.spec.SpecKind.FIELD_READ;
 import static org.smoothbuild.db.object.spec.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.SpecKind.STRING;
@@ -26,20 +30,31 @@ import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Call;
+import org.smoothbuild.db.object.base.Const;
+import org.smoothbuild.db.object.base.EArray;
+import org.smoothbuild.db.object.base.Expr;
+import org.smoothbuild.db.object.base.FieldRead;
 import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.MerkleRoot;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.base.Val;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
+import org.smoothbuild.db.object.spec.CallSpec;
+import org.smoothbuild.db.object.spec.ConstSpec;
+import org.smoothbuild.db.object.spec.EArraySpec;
+import org.smoothbuild.db.object.spec.FieldReadSpec;
 import org.smoothbuild.db.object.spec.IntSpec;
 import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.SpecKind;
 import org.smoothbuild.db.object.spec.StrSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.db.object.spec.ValSpec;
 
 import com.google.common.collect.ImmutableList;
 
@@ -60,6 +75,10 @@ public class ObjectDb {
   private IntSpec intSpec;
   private NothingSpec nothingSpec;
   private StrSpec strSpec;
+  private ConstSpec constSpec;
+  private FieldReadSpec fieldReadSpec;
+  private CallSpec callSpec;
+  private EArraySpec eArraySpec;
 
   public static ObjectDb objectDb(HashedDb hashedDb) {
       ObjectDb objectDb = new ObjectDb(hashedDb);
@@ -74,17 +93,27 @@ public class ObjectDb {
 
   private void initialize() {
     try {
-      this.blobSpec = new BlobSpec(writeBaseSpecRoot(BLOB), hashedDb, this);
-      this.boolSpec = new BoolSpec(writeBaseSpecRoot(BOOL), hashedDb, this);
-      this.intSpec = new IntSpec(writeBaseSpecRoot(INT), hashedDb, this);
-      this.nothingSpec = new NothingSpec(writeBaseSpecRoot(NOTHING), hashedDb, this);
-      this.strSpec = new StrSpec(writeBaseSpecRoot(STRING), hashedDb, this);
+      // Val-s
+      this.blobSpec = new BlobSpec(writeBaseSpecRoot(BLOB), this);
+      this.boolSpec = new BoolSpec(writeBaseSpecRoot(BOOL), this);
+      this.intSpec = new IntSpec(writeBaseSpecRoot(INT), this);
+      this.nothingSpec = new NothingSpec(writeBaseSpecRoot(NOTHING), this);
+      this.strSpec = new StrSpec(writeBaseSpecRoot(STRING), this);
+      // Expr-s
+      this.callSpec = new CallSpec(writeBaseSpecRoot(CALL), this);
+      this.constSpec = new ConstSpec(writeBaseSpecRoot(CONST), this);
+      this.eArraySpec = new EArraySpec(writeBaseSpecRoot(EARRAY), this);
+      this.fieldReadSpec = new FieldReadSpec(writeBaseSpecRoot(FIELD_READ), this);
 
       cacheSpec(blobSpec);
       cacheSpec(boolSpec);
       cacheSpec(intSpec);
       cacheSpec(nothingSpec);
       cacheSpec(strSpec);
+      cacheSpec(callSpec);
+      cacheSpec(constSpec);
+      cacheSpec(eArraySpec);
+      cacheSpec(fieldReadSpec);
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -92,7 +121,7 @@ public class ObjectDb {
 
   // methods for creating objects or object builders
 
-  public ArrayBuilder arrayBuilder(Spec elementSpec) {
+  public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
     return new ArrayBuilder(arrayS(elementSpec), this);
   }
 
@@ -108,8 +137,8 @@ public class ObjectDb {
     return wrapException(() -> newIntV(value));
   }
 
-  public Str strV(String string) {
-    return wrapException(() -> newStrV(string));
+  public Str strV(String value) {
+    return wrapException(() -> newStrV(value));
   }
 
   public Tuple tupleV(TupleSpec tupleSpec, Iterable<? extends Obj> elements) {
@@ -131,6 +160,26 @@ public class ObjectDb {
     return wrapException(() -> newTupleV(tupleSpec, elementsList));
   }
 
+  // methods for creating expr-s
+
+  public Call callExpr(Expr function, Iterable<? extends Expr> arguments) {
+    return wrapException(() -> newCallExpr(function, arguments));
+  }
+
+  public Const constExpr(Val val) {
+    return wrapException(() -> newConstExpr(val));
+  }
+
+  public EArray eArrayExpr(Iterable<? extends Expr> elements) {
+    return wrapException(() -> newEArrayExpr(elements));
+  }
+
+  public FieldRead fieldReadExpr(Expr tuple, Int index) {
+    return wrapException(() -> newFieldReadExpr(tuple, index));
+  }
+
+  // generic getter
+
   public Obj get(Hash hash) {
     try {
       List<Hash> hashes = hashedDb.readHashes(hash, 2);
@@ -145,7 +194,7 @@ public class ObjectDb {
 
   // methods for returning specs
 
-  public ArraySpec arrayS(Spec elementSpec) {
+  public ArraySpec arrayS(ValSpec elementSpec) {
     return cacheSpec(wrapException(() -> newArrayS(elementSpec)));
   }
 
@@ -169,7 +218,23 @@ public class ObjectDb {
     return strSpec;
   }
 
-  public TupleSpec tupleS(Iterable<? extends Spec> elementSpecs) {
+  public CallSpec callS() {
+    return callSpec;
+  }
+
+  public ConstSpec constS() {
+    return constSpec;
+  }
+
+  public EArraySpec eArrayS() {
+    return eArraySpec;
+  }
+
+  public FieldReadSpec fieldReadS() {
+    return fieldReadSpec;
+  }
+
+  public TupleSpec tupleS(Iterable<? extends ValSpec> elementSpecs) {
     return cacheSpec(wrapException(() -> newTupleS(elementSpecs)));
   }
 
@@ -196,7 +261,7 @@ public class ObjectDb {
             "It has illegal SpecKind marker = " + marker + ".");
       }
       return switch (specKind) {
-        case BLOB, BOOL, INT, NOTHING, STRING -> {
+        case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ -> {
           assertSize(hash, specKind, hashes, 1);
           throw new RuntimeException(
               "Internal error: Spec with kind " + specKind + " should be found in cache.");
@@ -205,7 +270,12 @@ public class ObjectDb {
           assertSize(hash, ARRAY, hashes, 2);
           Spec elementSpec = getSpecOrChainException(
               hashes.get(1), e -> new CannotDecodeSpecException(hash));
-          yield cacheSpec(newArrayS(hash, elementSpec));
+          if (elementSpec instanceof ValSpec valSpec) {
+            yield cacheSpec(newArrayS(hash, valSpec));
+          } else {
+            throw new CannotDecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
+                + elementSpec.name() + " but should be Spec of some Val.");
+          }
         }
         case TUPLE -> {
           assertSize(hash, TUPLE, hashes, 2);
@@ -256,59 +326,119 @@ public class ObjectDb {
     return result;
   }
 
-  // methods for creating Obj-s
+  // methods for creating Expr Obj-s
+
+  public Call newCallExpr(Expr function, Iterable<? extends Expr> arguments)
+      throws HashedDbException {
+    var data = writeCallData(function, arguments);
+    var root = writeRoot(callSpec, data);
+    return callSpec.newObj(root);
+  }
+
+  public Const newConstExpr(Val val) throws HashedDbException {
+    var data = writeConstData(val);
+    var root = writeRoot(this.constSpec, data);
+    return this.constSpec.newObj(root);
+  }
+
+  public EArray newEArrayExpr(Iterable<? extends Expr> elements) throws HashedDbException {
+    var data = writeEarrayData(elements);
+    var root = writeRoot(eArraySpec, data);
+    return eArraySpec.newObj(root);
+  }
+
+  public FieldRead newFieldReadExpr(Expr tuple, Int index) throws HashedDbException {
+    var data = writeFieldReadData(tuple, index);
+    var root = writeRoot(fieldReadSpec, data);
+    return fieldReadSpec.newObj(root);
+  }
+
+  // methods for creating Val Obj-s
 
   public Array newArrayV(ArraySpec spec, Iterable<? extends Obj> elements)
       throws HashedDbException {
-    return spec.newObj(writeRoot(spec, writeArrayData(elements)));
+    var data = writeArrayData(elements);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root);
   }
 
   public Blob newBlobV(Hash dataHash) throws HashedDbException {
-    return blobSpec.newObj(writeRoot(blobSpec, dataHash));
+    var root = writeRoot(blobSpec, dataHash);
+    return blobSpec.newObj(root);
   }
 
   private Bool newBoolV(boolean value) throws HashedDbException {
-    return boolSpec.newObj(writeRoot(boolSpec, writeBoolData(value)));
+    var data = writeBoolData(value);
+    var root = writeRoot(boolSpec, data);
+    return boolSpec.newObj(root);
   }
 
   private Int newIntV(BigInteger value) throws HashedDbException {
-    return intSpec.newObj(writeRoot(intSpec, writeIntData(value)));
+    var data = writeIntData(value);
+    var root = writeRoot(intSpec, data);
+    return intSpec.newObj(root);
   }
 
   private Str newStrV(String string) throws HashedDbException {
-    return strSpec.newObj(writeRoot(strSpec, writeStringData(string)));
+    var data = writeStrData(string);
+    var root = writeRoot(strSpec, data);
+    return strSpec.newObj(root);
   }
 
   private Tuple newTupleV(TupleSpec spec, List<?extends Obj> objects) throws HashedDbException {
-    return spec.newObj(writeRoot(spec, writeTupleData(objects)));
+    var data = writeTupleData(objects);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root);
   }
 
   // methods for creating Spec-s
 
-  private ArraySpec newArrayS(Spec elementSpec) throws HashedDbException {
+  private ArraySpec newArrayS(ValSpec elementSpec) throws HashedDbException {
     Hash hash = writeArraySpecRoot(elementSpec);
     return newArrayS(hash, elementSpec);
   }
 
-  private ArraySpec newArrayS(Hash hash, Spec elementSpec) {
-    return new ArraySpec(hash, elementSpec, hashedDb, this);
+  private ArraySpec newArrayS(Hash hash, ValSpec elementSpec) {
+    return new ArraySpec(hash, elementSpec, this);
   }
 
-  private TupleSpec newTupleS(Iterable<? extends Spec> elementSpecs) throws HashedDbException {
+  private TupleSpec newTupleS(Iterable<? extends ValSpec> elementSpecs) throws HashedDbException {
     Hash hash = writeTupleSpecRoot(elementSpecs);
     return newTupleS(hash, elementSpecs);
   }
 
   private TupleSpec newTupleS(Hash hash, Iterable<? extends Spec> elementSpecs) {
-    return new TupleSpec(hash, elementSpecs, hashedDb, this);
+    return new TupleSpec(hash, elementSpecs, this);
   }
 
-  // methods for writing Merkle node(s) to HashedDb
+  // method for writing Merkle-root to HashedDb
 
   private MerkleRoot writeRoot(Spec spec, Hash dataHash) throws HashedDbException {
     Hash hash = hashedDb.writeHashes(spec.hash(), dataHash);
     return new MerkleRoot(hash, spec, dataHash);
   }
+
+  // methods for writing data of Expr-s
+
+  private Hash writeCallData(Expr function, Iterable<? extends Expr> arguments)
+      throws HashedDbException {
+    Hash argumentSequenceHash = writeSequence(arguments);
+    return hashedDb.writeHashes(function.hash(), argumentSequenceHash);
+  }
+
+  private Hash writeConstData(Val val) {
+    return val.hash();
+  }
+
+  private Hash writeEarrayData(Iterable<? extends Expr> elements) throws HashedDbException {
+    return writeSequence(elements);
+  }
+
+  private Hash writeFieldReadData(Expr tuple, Int index) throws HashedDbException {
+    return hashedDb.writeHashes(tuple.hash(), index.hash());
+  }
+
+  // methods for writing data of Val-s
 
   private Hash writeArrayData(Iterable<? extends Obj> elements) throws HashedDbException {
     return writeSequence(elements);
@@ -322,7 +452,7 @@ public class ObjectDb {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeStringData(String string) throws HashedDbException {
+  private Hash writeStrData(String string) throws HashedDbException {
     return hashedDb.writeString(string);
   }
 
@@ -337,11 +467,15 @@ public class ObjectDb {
     return hashedDb.writeHashes(hashes);
   }
 
+  public ImmutableList<Hash> readSequence(Hash hash) throws HashedDbException {
+    return hashedDb().readHashes(hash);
+  }
+
   private Hash writeArraySpecRoot(Spec elementSpec) throws HashedDbException {
     return writeNonBaseSpecRoot(ARRAY, elementSpec.hash());
   }
 
-  private Hash writeTupleSpecRoot(Iterable<? extends Spec> elementSpecs)
+  private Hash writeTupleSpecRoot(Iterable<? extends ValSpec> elementSpecs)
       throws HashedDbException {
     Hash elementsHash = hashedDb.writeHashes(map(elementSpecs, Spec::hash));
     return writeNonBaseSpecRoot(TUPLE, elementsHash);
@@ -353,5 +487,11 @@ public class ObjectDb {
 
   private Hash writeBaseSpecRoot(SpecKind specKind) throws HashedDbException {
     return hashedDb.writeHashes(hashedDb.writeByte(specKind.marker()));
+  }
+
+  // TODO visible for classes from db.object package tree until creating Obj is cached and
+  // moved completely to ObjectDb class
+  public HashedDb hashedDb() {
+    return hashedDb;
   }
 }
