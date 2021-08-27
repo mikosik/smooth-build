@@ -51,7 +51,7 @@ public class IntTest extends TestingContext {
   }
 
   @Test
-  public void hash_code_of_strs_with_different_values_is_not_the_same() {
+  public void hash_code_of_ints_with_different_values_is_not_the_same() {
     assertThat(intV(123).hashCode())
         .isNotEqualTo(intV(321).hashCode());
   }
