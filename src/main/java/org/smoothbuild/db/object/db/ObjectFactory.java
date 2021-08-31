@@ -73,23 +73,23 @@ public class ObjectFactory {
   }
 
   public Bool bool(boolean value) {
-    return objectDb.boolV(value);
+    return objectDb.boolVal(value);
   }
 
-  public Int int_(BigInteger value) {
-    return objectDb.intV(value);
+  public Int intValue(BigInteger value) {
+    return objectDb.intVal(value);
   }
 
   public Tuple file(Str path, Blob content) {
-    return objectDb.tupleV(fileSpec(), list(content, path));
+    return objectDb.tupleVal(fileSpec(), list(content, path));
   }
 
   public Str string(String string) {
-    return objectDb.strV(string);
+    return objectDb.strVal(string);
   }
 
   public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> elements) {
-    return objectDb.tupleV(spec, elements);
+    return objectDb.tupleVal(spec, elements);
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
@@ -141,8 +141,8 @@ public class ObjectFactory {
   }
 
   private Tuple message(String severity, String text) {
-    Obj textObject = objectDb.strV(text);
-    Obj severityObject = objectDb.strV(severity);
-    return objectDb.tupleV(messageSpec(), list(textObject, severityObject));
+    Obj textObject = objectDb.strVal(text);
+    Obj severityObject = objectDb.strVal(severity);
+    return objectDb.tupleVal(messageSpec(), list(textObject, severityObject));
   }
 }

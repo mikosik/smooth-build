@@ -63,7 +63,7 @@ public class CorruptedObjTest extends TestingContext {
        */
       Hash objHash =
           hash(
-              hash(strS()),
+              hash(strSpec()),
               hash("aaa"));
       assertThat(((Str) objectDb().get(objHash)).jValue())
           .isEqualTo("aaa");
@@ -112,7 +112,7 @@ public class CorruptedObjTest extends TestingContext {
       ByteString byteString = ByteString.of((byte) 1, (byte) 2);
       Hash objHash =
           hash(
-              hash(blobS()),
+              hash(blobSpec()),
               hash(byteString));
       assertThat(((Blob) objectDb().get(objHash)).source().readByteString())
           .isEqualTo(byteString);
@@ -120,13 +120,13 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(blobS());
+      obj_root_without_data_hash(blobSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          blobS(),
+          blobSpec(),
           hashedDb().writeByte((byte) 1),
           (Hash objHash) -> ((Blob) objectDb().get(objHash)).source()
       );
@@ -135,7 +135,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          blobS(),
+          blobSpec(),
           (Hash objHash) -> ((Blob) objectDb().get(objHash)).source());
     }
   }
@@ -151,7 +151,7 @@ public class CorruptedObjTest extends TestingContext {
     public void learning_test(boolean value) throws Exception {
       Hash objHash =
           hash(
-              hash(boolS()),
+              hash(boolSpec()),
               hash(value));
       assertThat(((Bool) objectDb().get(objHash)).jValue())
           .isEqualTo(value);
@@ -159,13 +159,13 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(boolS());
+      obj_root_without_data_hash(boolSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          boolS(),
+          boolSpec(),
           hashedDb().writeBoolean(true),
           (Hash objHash) -> ((Bool) objectDb().get(objHash)).jValue()
       );
@@ -174,7 +174,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          boolS(),
+          boolSpec(),
           (Hash objHash) -> ((Bool) objectDb().get(objHash)).jValue());
     }
 
@@ -183,7 +183,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = hash(ByteString.of());
       Hash objHash =
           hash(
-              hash(boolS()),
+              hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
           .throwsException(new CannotDecodeObjectException(objHash))
@@ -195,7 +195,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = hash(ByteString.of((byte) 0, (byte) 0));
       Hash objHash =
           hash(
-              hash(boolS()),
+              hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
           .throwsException(new CannotDecodeObjectException(objHash))
@@ -209,7 +209,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = hash(ByteString.of(value));
       Hash objHash =
           hash(
-              hash(boolS()),
+              hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
           .throwsException(new CannotDecodeObjectException(objHash))
@@ -225,12 +225,12 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth call
        * in HashedDb.
        */
-      Const function = constE(intV(0));
-      Const arg1 = constE(intV(1));
-      Const arg2 = constE(intV(2));
+      Const function = constExpr(intVal(0));
+      Const arg1 = constExpr(intVal(1));
+      Const arg2 = constExpr(intVal(2));
       Hash objHash =
           hash(
-              hash(callS()),
+              hash(callSpec()),
               hash(
                   hash(function),
                   hash(
@@ -247,14 +247,14 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(callS());
+      obj_root_without_data_hash(callSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      Const function = constE(intV(0));
-      Const arg1 = constE(intV(1));
-      Const arg2 = constE(intV(2));
+      Const function = constExpr(intVal(0));
+      Const arg1 = constExpr(intVal(1));
+      Const arg2 = constExpr(intVal(2));
       Hash dataHash = hash(
           hash(function),
           hash(
@@ -263,7 +263,7 @@ public class CorruptedObjTest extends TestingContext {
           )
       );
       obj_root_with_two_data_hashes(
-          callS(),
+          callSpec(),
           dataHash,
           (Hash objHash) -> ((Call) objectDb().get(objHash)).function());
     }
@@ -271,19 +271,19 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          callS(),
+          callSpec(),
           (Hash objHash) -> ((Call) objectDb().get(objHash)).function());
     }
 
     @Test
     public void data_is_sequence_with_one_element() throws Exception {
-      Const function = constE(intV(0));
+      Const function = constExpr(intVal(0));
       Hash dataHash = hash(
           hash(function)
       );
       Hash objHash =
           hash(
-              hash(callS()),
+              hash(callSpec()),
               dataHash
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
@@ -293,9 +293,9 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
-      Const function = constE(intV(0));
-      Const arg1 = constE(intV(1));
-      Const arg2 = constE(intV(2));
+      Const function = constExpr(intVal(0));
+      Const arg1 = constExpr(intVal(1));
+      Const arg2 = constExpr(intVal(2));
       Hash arguments = hash(
           hash(arg1),
           hash(arg2)
@@ -307,7 +307,7 @@ public class CorruptedObjTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(callS()),
+              hash(callSpec()),
               dataHash
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
@@ -317,12 +317,12 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void function_is_val_instead_of_expr() throws Exception {
-      Int val = intV(0);
-      Const arg1 = constE(intV(1));
-      Const arg2 = constE(intV(2));
+      Int val = intVal(0);
+      Const arg1 = constExpr(intVal(1));
+      Const arg2 = constExpr(intVal(2));
       Hash objHash =
           hash(
-              hash(callS()),
+              hash(callSpec()),
               hash(
                   hash(val),
                   hash(
@@ -342,10 +342,10 @@ public class CorruptedObjTest extends TestingContext {
     public void arguments_sequence_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
-      Const function = constE(intV(0));
+      Const function = constExpr(intVal(0));
       Hash objHash =
           hash(
-              hash(callS()),
+              hash(callSpec()),
               hash(
                   hash(function),
                   notHashOfSequence
@@ -359,11 +359,11 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void arguments_sequence_element_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
-      Const function = constE(intV(0));
-      Const arg1 = constE(intV(1));
+      Const function = constExpr(intVal(0));
+      Const arg1 = constExpr(intVal(1));
       Hash objHash =
           hash(
-              hash(callS()),
+              hash(callSpec()),
               hash(
                   hash(function),
                   hash(
@@ -379,12 +379,12 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void arguments_contain_val_instead_of_expr() throws Exception {
-      Const function = constE(intV(0));
-      Const arg1 = constE(intV(1));
-      Int arg2 = intV(2);
+      Const function = constExpr(intVal(0));
+      Const arg1 = constExpr(intVal(1));
+      Int arg2 = intVal(2);
       Hash objHash =
           hash(
-              hash(callS()),
+              hash(callSpec()),
               hash(
                   hash(function),
                   hash(
@@ -407,10 +407,10 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth const
        * in HashedDb.
        */
-      Val val = objectDb().intV(BigInteger.valueOf(123));
+      Val val = objectDb().intVal(BigInteger.valueOf(123));
       Hash objHash =
           hash(
-              hash(constS()),
+              hash(constSpec()),
               hash(val));
       assertThat(((Const) objectDb().get(objHash)).value())
           .isEqualTo(val);
@@ -418,14 +418,14 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(constS());
+      obj_root_without_data_hash(constSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          constS(),
-          objectDb().intV(BigInteger.valueOf(123)).hash(),
+          constSpec(),
+          objectDb().intVal(BigInteger.valueOf(123)).hash(),
           (Hash objHash) -> ((Const) objectDb().get(objHash)).value()
       );
     }
@@ -434,20 +434,20 @@ public class CorruptedObjTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere()
         throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          constS(),
+          constSpec(),
           (Hash objHash) -> ((Const) objectDb().get(objHash)).value());
     }
 
     @Test
     public void data_hash_pointing_to_expr_instead_of_value() throws Exception {
-      Val val = objectDb().intV(BigInteger.valueOf(123));
+      Val val = objectDb().intVal(BigInteger.valueOf(123));
       Hash exprHash =
           hash(
-              hash(constS()),
+              hash(constSpec()),
               hash(val));
       Hash objHash =
           hash(
-              hash(constS()),
+              hash(constSpec()),
               exprHash);
       assertCall(() -> ((Const) objectDb().get(objHash)).value())
           .throwsException(new CannotDecodeObjectException(
@@ -463,11 +463,11 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * field_read in HashedDb.
        */
-      Val index = objectDb().intV(BigInteger.valueOf(2));
-      Const expr = objectDb().constExpr(objectDb().intV(BigInteger.valueOf(123)));
+      Val index = objectDb().intVal(BigInteger.valueOf(2));
+      Const expr = objectDb().constExpr(objectDb().intVal(BigInteger.valueOf(123)));
       Hash objHash =
           hash(
-              hash(fieldReadS()),
+              hash(fieldReadSpec()),
               hash(
                   hash(expr),
                   hash(index)
@@ -481,19 +481,19 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(fieldReadS());
+      obj_root_without_data_hash(fieldReadSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      Val index = objectDb().intV(BigInteger.valueOf(2));
-      Const expr = objectDb().constExpr(objectDb().intV(BigInteger.valueOf(123)));
+      Val index = objectDb().intVal(BigInteger.valueOf(2));
+      Const expr = objectDb().constExpr(objectDb().intVal(BigInteger.valueOf(123)));
       Hash dataHash = hash(
           hash(expr),
           hash(index)
       );
       obj_root_with_two_data_hashes(
-          fieldReadS(),
+          fieldReadSpec(),
           dataHash,
           (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).tuple());
     }
@@ -501,19 +501,19 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          fieldReadS(),
+          fieldReadSpec(),
           (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).tuple());
     }
 
     @Test
     public void data_is_sequence_with_one_element() throws Exception {
-      Const expr = objectDb().constExpr(objectDb().intV(BigInteger.valueOf(123)));
+      Const expr = objectDb().constExpr(objectDb().intVal(BigInteger.valueOf(123)));
       Hash dataHash = hash(
           hash(expr)
       );
       Hash objHash =
           hash(
-              hash(fieldReadS()),
+              hash(fieldReadSpec()),
               dataHash
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).tuple())
@@ -523,8 +523,8 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
-      Val index = objectDb().intV(BigInteger.valueOf(2));
-      Const expr = objectDb().constExpr(objectDb().intV(BigInteger.valueOf(123)));
+      Val index = objectDb().intVal(BigInteger.valueOf(2));
+      Const expr = objectDb().constExpr(objectDb().intVal(BigInteger.valueOf(123)));
       Hash dataHash = hash(
           hash(expr),
           hash(index),
@@ -532,7 +532,7 @@ public class CorruptedObjTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(fieldReadS()),
+              hash(fieldReadSpec()),
               dataHash
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).tuple())
@@ -542,11 +542,11 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void tuple_is_val_instead_of_expr() throws Exception {
-      Val val = objectDb().intV(BigInteger.valueOf(2));
-      Val index = objectDb().intV(BigInteger.valueOf(2));
+      Val val = objectDb().intVal(BigInteger.valueOf(2));
+      Val index = objectDb().intVal(BigInteger.valueOf(2));
       Hash objHash =
           hash(
-              hash(fieldReadS()),
+              hash(fieldReadSpec()),
               hash(
                   hash(val),
                   hash(index)
@@ -559,11 +559,11 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void index_is_string_instead_of_int() throws Exception {
-      Val strVal = objectDb().strV("abc");
-      Const expr = objectDb().constExpr(objectDb().intV(BigInteger.valueOf(123)));
+      Val strVal = objectDb().strVal("abc");
+      Const expr = objectDb().constExpr(objectDb().intVal(BigInteger.valueOf(123)));
       Hash objHash =
           hash(
-              hash(fieldReadS()),
+              hash(fieldReadSpec()),
               hash(
                   hash(expr),
                   hash(strVal)
@@ -586,7 +586,7 @@ public class CorruptedObjTest extends TestingContext {
       ByteString byteString = ByteString.of((byte) 3, (byte) 2);
       Hash objHash =
           hash(
-              hash(intS()),
+              hash(intSpec()),
               hash(byteString));
       assertThat(((Int) objectDb().get(objHash)).jValue())
           .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
@@ -594,13 +594,13 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(intS());
+      obj_root_without_data_hash(intSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          intS(),
+          intSpec(),
           hashedDb().writeByte((byte) 1),
           (Hash objHash) -> ((Int) objectDb().get(objHash)).jValue()
       );
@@ -609,7 +609,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          intS(),
+          intSpec(),
           (Hash objHash) -> ((Int) objectDb().get(objHash)).jValue());
     }
   }
@@ -620,7 +620,7 @@ public class CorruptedObjTest extends TestingContext {
     public void learning_test() throws Exception {
       Hash objHash =
           hash(
-              hash(nothingS()),
+              hash(nothingSpec()),
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new ObjectDbException("Cannot create java object for 'NOTHING' spec."));
@@ -637,14 +637,14 @@ public class CorruptedObjTest extends TestingContext {
        */
       Hash objHash =
           hash(
-              hash(arrayS(strS())),
+              hash(arraySpec(strSpec())),
               hash(
                   hash(
-                      hash(strS()),
+                      hash(strSpec()),
                       hash("aaa")
                   ),
                   hash(
-                      hash(strS()),
+                      hash(strSpec()),
                       hash("bbb")
                   )
               ));
@@ -659,13 +659,13 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(arrayS(intS()));
+      obj_root_without_data_hash(arraySpec(intSpec()));
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          arrayS(intS()),
+          arraySpec(intSpec()),
           hashedDb().writeHashes(),
           (Hash objHash) -> ((Array) objectDb().get(objHash)).asIterable(Int.class)
       );
@@ -675,7 +675,7 @@ public class CorruptedObjTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere()
         throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          arrayS(intS()),
+          arraySpec(intSpec()),
           (Hash objHash) -> ((Array) objectDb().get(objHash)).asIterable(Int.class));
     }
 
@@ -686,7 +686,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
-              hash(arrayS(strS())),
+              hash(arraySpec(strSpec())),
               notHashOfSequence
           );
       assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Obj.class))
@@ -702,7 +702,7 @@ public class CorruptedObjTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(arrayS(strS())),
+              hash(arraySpec(strSpec())),
               dataHash);
       assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
           .throwsException(new CannotDecodeObjectException(objHash))
@@ -713,14 +713,14 @@ public class CorruptedObjTest extends TestingContext {
     public void with_one_element_of_wrong_spec() throws Exception {
       Hash objHash =
           hash(
-              hash(arrayS(strS())),
+              hash(arraySpec(strSpec())),
               hash(
                   hash(
-                      hash(strS()),
+                      hash(strSpec()),
                       hash("aaa")
                   ),
                   hash(
-                      hash(boolS()),
+                      hash(boolSpec()),
                       hash(true)
                   )
               ));
@@ -733,13 +733,13 @@ public class CorruptedObjTest extends TestingContext {
     public void with_one_element_being_expr() throws Exception {
       Hash objHash =
           hash(
-              hash(arrayS(strS())),
+              hash(arraySpec(strSpec())),
               hash(
                   hash(
-                      hash(strS()),
+                      hash(strSpec()),
                       hash("aaa")
                   ),
-                  hash(constE())
+                  hash(constExpr())
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
           .throwsException(new CannotDecodeObjectException(objHash,
@@ -755,11 +755,11 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth eArray
        * in HashedDb.
        */
-      Const expr1 = constE(intV(1));
-      Const expr2 = constE(intV(2));
+      Const expr1 = constExpr(intVal(1));
+      Const expr2 = constExpr(intVal(2));
       Hash objHash =
           hash(
-              hash(eArrayS()),
+              hash(eArraySpec()),
               hash(
                   hash(expr1),
                   hash(expr2)
@@ -772,19 +772,19 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(eArrayS());
+      obj_root_without_data_hash(eArraySpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      Const expr1 = constE(intV(1));
-      Const expr2 = constE(intV(2));
+      Const expr1 = constExpr(intVal(1));
+      Const expr2 = constExpr(intVal(2));
       Hash dataHash = hash(
           hash(expr1),
           hash(expr2)
       );
       obj_root_with_two_data_hashes(
-          eArrayS(),
+          eArraySpec(),
           dataHash,
           (Hash objHash) -> ((EArray) objectDb().get(objHash)).elements()
       );
@@ -794,7 +794,7 @@ public class CorruptedObjTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere()
         throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          eArrayS(),
+          eArraySpec(),
           (Hash objHash) -> ((EArray) objectDb().get(objHash)).elements());
     }
 
@@ -805,7 +805,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
-              hash(eArrayS()),
+              hash(eArraySpec()),
               notHashOfSequence
           );
       assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
@@ -818,7 +818,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash nowhere = Hash.of(33);
       Hash objHash =
           hash(
-              hash(eArrayS()),
+              hash(eArraySpec()),
               hash(
                   nowhere
               )
@@ -830,11 +830,11 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void with_one_element_being_val() throws Exception {
-      Const expr1 = constE(intV(1));
-      Int val = intV(123);
+      Const expr1 = constExpr(intVal(1));
+      Int val = intVal(123);
       Hash objHash =
           hash(
-              hash(eArrayS()),
+              hash(eArraySpec()),
               hash(
                   hash(expr1),
                   hash(val)
@@ -855,7 +855,7 @@ public class CorruptedObjTest extends TestingContext {
        */
       Hash objHash =
           hash(
-              hash(strS()),
+              hash(strSpec()),
               hash("aaa"));
       assertThat(((Str) objectDb().get(objHash)).jValue())
           .isEqualTo("aaa");
@@ -863,13 +863,13 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(strS());
+      obj_root_without_data_hash(strSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          strS(),
+          strSpec(),
           hashedDb().writeBoolean(true),
           (Hash objHash) -> ((Str) objectDb().get(objHash)).jValue()
       );
@@ -879,7 +879,7 @@ public class CorruptedObjTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere()
         throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          strS(),
+          strSpec(),
           (Hash objHash) -> ((Str) objectDb().get(objHash)).jValue());
     }
 
@@ -888,7 +888,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash notStringHash = hash(ByteString.of((byte) -64));
       Hash objHash =
           hash(
-              hash(strS()),
+              hash(strSpec()),
               notStringHash);
       assertCall(() -> ((Str) objectDb().get(objHash)).jValue())
           .throwsException(new CannotDecodeObjectException(objHash))
@@ -906,22 +906,22 @@ public class CorruptedObjTest extends TestingContext {
        */
       assertThat(
           hash(
-              hash(personS()),
+              hash(personSpec()),
               hash(
-                  hash(strV("John")),
-                  hash(strV("Doe")))))
-          .isEqualTo(personV("John", "Doe").hash());
+                  hash(strVal("John")),
+                  hash(strVal("Doe")))))
+          .isEqualTo(personVal("John", "Doe").hash());
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(personS());
+      obj_root_without_data_hash(personSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          personS(),
+          personSpec(),
           hashedDb().writeBoolean(true),
           (Hash objHash) -> ((Tuple) objectDb().get(objHash)).get(0)
       );
@@ -931,7 +931,7 @@ public class CorruptedObjTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere()
         throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          personS(),
+          personSpec(),
           (Hash objHash) -> ((Tuple) objectDb().get(objHash)).get(0));
     }
 
@@ -942,7 +942,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
-              hash(personS()),
+              hash(personSpec()),
               notHashOfSequence);
       assertCall(() -> ((Tuple) objectDb().get(objHash)).get(0))
           .throwsException(new CannotDecodeObjectException(objHash))
@@ -958,7 +958,7 @@ public class CorruptedObjTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(personS()),
+              hash(personSpec()),
               dataHash
           );
       assertCall(() -> ((Tuple) objectDb().get(objHash)).get(0))
@@ -970,10 +970,10 @@ public class CorruptedObjTest extends TestingContext {
     public void with_too_few_elements() throws Exception {
       Hash elementValuesHash =
           hash(
-              hash(strV("John")));
+              hash(strVal("John")));
       Hash objHash =
           hash(
-              hash(personS()),
+              hash(personSpec()),
               elementValuesHash);
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
@@ -985,12 +985,12 @@ public class CorruptedObjTest extends TestingContext {
     public void with_too_many_elements() throws Exception {
       Hash elementValuesHash =
           hash(
-              hash(strV("John")),
-              hash(strV("Doe")),
-              hash(strV("junk")));
+              hash(strVal("John")),
+              hash(strVal("Doe")),
+              hash(strVal("junk")));
       Hash objHash =
           hash(
-              hash(personS()),
+              hash(personSpec()),
               elementValuesHash);
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
@@ -1002,10 +1002,10 @@ public class CorruptedObjTest extends TestingContext {
     public void with_element_of_wrong_spec() throws Exception {
       Hash objHash =
           hash(
-              hash(personS()),
+              hash(personSpec()),
               hash(
-                  hash(strV("John")),
-                  hash(boolV(true))));
+                  hash(strVal("John")),
+                  hash(boolVal(true))));
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new CannotDecodeObjectException(objHash,
@@ -1017,10 +1017,10 @@ public class CorruptedObjTest extends TestingContext {
     public void with_element_being_expr() throws Exception {
       Hash objHash =
           hash(
-              hash(personS()),
+              hash(personSpec()),
               hash(
-                  hash(strV("John")),
-                  hash(constE())));
+                  hash(strVal("John")),
+                  hash(constExpr())));
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new CannotDecodeObjectException(objHash,
@@ -1043,7 +1043,7 @@ public class CorruptedObjTest extends TestingContext {
             hash(STRING.marker())
         );
         assertThat(hash)
-            .isEqualTo(strS().hash());
+            .isEqualTo(strSpec().hash());
       }
 
       @Test
@@ -1054,10 +1054,10 @@ public class CorruptedObjTest extends TestingContext {
          */
         Hash hash = hash(
             hash(ARRAY.marker()),
-            hash(strS())
+            hash(strSpec())
         );
         assertThat(hash)
-            .isEqualTo(arrayS(strS()).hash());
+            .isEqualTo(arraySpec(strSpec()).hash());
       }
 
       @Test
@@ -1069,12 +1069,12 @@ public class CorruptedObjTest extends TestingContext {
         Hash hash = hash(
             hash(TUPLE.marker()),
             hash(
-                hash(strS()),
-                hash(strS())
+                hash(strSpec()),
+                hash(strSpec())
             )
         );
         assertThat(hash)
-            .isEqualTo(personS().hash());
+            .isEqualTo(personSpec().hash());
       }
     }
 
@@ -1169,8 +1169,8 @@ public class CorruptedObjTest extends TestingContext {
         Hash hash = hash(
             hash(TUPLE.marker()),
             hash(
-                hash(strS()),
-                hash(strS())
+                hash(strSpec()),
+                hash(strSpec())
             ),
             hash("corrupted")
         );
@@ -1192,7 +1192,7 @@ public class CorruptedObjTest extends TestingContext {
 
       @Test
       public void with_elements_being_array_of_non_spec_causes_exception() throws Exception {
-        Hash stringHash = hash(strV("abc"));
+        Hash stringHash = hash(strVal("abc"));
         Hash hash =
             hash(
                 hash(TUPLE.marker()),
@@ -1213,7 +1213,7 @@ public class CorruptedObjTest extends TestingContext {
                 hash(TUPLE.marker()),
                 hash(
                     notASpecHash,
-                    hash(strS())));
+                    hash(strSpec())));
         assertThatGetSpec(hash)
             .throwsException(new CannotDecodeSpecException(hash, elementReadingErrorMessage(0)))
             .withCause(new CannotDecodeSpecException(notASpecHash));
@@ -1236,7 +1236,7 @@ public class CorruptedObjTest extends TestingContext {
       public void with_additional_child() throws Exception {
         Hash hash = hash(
             hash(ARRAY.marker()),
-            hash(strS()),
+            hash(strSpec()),
             hash("corrupted")
         );
         assertThatGetSpec(hash)
@@ -1258,7 +1258,7 @@ public class CorruptedObjTest extends TestingContext {
       public void with_element_spec_being_expr_causes_exception() throws Exception {
         Hash hash = hash(
             hash(ARRAY.marker()),
-            hash(constS())
+            hash(constSpec())
         );
         assertThatGetSpec(hash)
             .throwsException(new CannotDecodeSpecException(hash,

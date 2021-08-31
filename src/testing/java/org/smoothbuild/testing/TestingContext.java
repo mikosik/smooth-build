@@ -148,76 +148,76 @@ public class TestingContext {
 
   // Obj Spec-s
 
-  public ArraySpec arrayS(ValSpec elementSpec) {
+  public ArraySpec arraySpec(ValSpec elementSpec) {
     return objectDb().arrayS(elementSpec);
   }
 
-  public BlobSpec blobS() {
+  public BlobSpec blobSpec() {
     return objectDb().blobS();
   }
 
-  public BoolSpec boolS() {
+  public BoolSpec boolSpec() {
     return objectDb().boolS();
   }
 
-  public IntSpec intS() {
+  public IntSpec intSpec() {
     return objectDb().intS();
   }
 
-  public NothingSpec nothingS() {
+  public NothingSpec nothingSpec() {
     return objectDb().nothingS();
   }
 
-  public StrSpec strS() {
+  public StrSpec strSpec() {
     return objectDb().strS();
   }
 
-  public TupleSpec tupleS(Iterable<? extends ValSpec> elementSpecs) {
+  public TupleSpec tupleSpec(Iterable<? extends ValSpec> elementSpecs) {
     return objectDb().tupleS(elementSpecs);
   }
 
-  public TupleSpec emptyTupleS() {
-    return tupleS(list());
+  public TupleSpec emptyTupleSpec() {
+    return tupleSpec(list());
   }
 
-  public TupleSpec tupleWithStrS() {
-    return tupleS(list(strS()));
+  public TupleSpec tupleWithStrSpec() {
+    return tupleSpec(list(strSpec()));
   }
 
-  public TupleSpec personS() {
-    ValSpec string = strS();
-    return tupleS(list(string, string));
+  public TupleSpec personSpec() {
+    ValSpec string = strSpec();
+    return tupleSpec(list(string, string));
   }
 
-  public TupleSpec fileS() {
-    return tupleS(list(blobS(), strS()));
+  public TupleSpec fileSpec() {
+    return tupleSpec(list(blobSpec(), strSpec()));
   }
 
   // Expr Spec-s
 
-  public CallSpec callS() {
+  public CallSpec callSpec() {
     return objectDb().callS();
   }
 
-  public ConstSpec constS() {
+  public ConstSpec constSpec() {
     return objectDb().constS();
   }
 
-  public EArraySpec eArrayS() {
+  public EArraySpec eArraySpec() {
     return objectDb().eArrayS();
   }
 
-  public FieldReadSpec fieldReadS() {
+  public FieldReadSpec fieldReadSpec() {
     return objectDb().fieldReadS();
   }
 
   // Obj-s (values)
 
-  public Array arrayV(Val... elements) {
-    return arrayV(elements[0].spec(), elements);
+  public Array arrayVal(Val... elements) {
+    return arrayVal(elements[0].spec(), elements);
   }
 
-  public Array arrayV(ValSpec elementSpec, Obj... elements) {
+  public Array arrayVal(ValSpec elementSpec, Obj... elements) {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
@@ -225,7 +225,7 @@ public class TestingContext {
     return objectDb().arrayBuilder(elemSpec);
   }
 
-  public Blob blobV(ByteString bytes) {
+  public Blob blobVal(ByteString bytes) {
     return objectFactory().blob(sink -> sink.write(bytes));
   }
 
@@ -233,44 +233,44 @@ public class TestingContext {
     return objectDb().blobBuilder();
   }
 
-  public Bool boolV(boolean value) {
-    return objectDb().boolV(value);
+  public Bool boolVal(boolean value) {
+    return objectDb().boolVal(value);
   }
 
-  public Int intV(int value) {
-    return objectDb().intV(BigInteger.valueOf(value));
+  public Int intVal(int value) {
+    return objectDb().intVal(BigInteger.valueOf(value));
   }
 
-  public Str strV(String string) {
-    return objectDb().strV(string);
+  public Str strVal(String string) {
+    return objectDb().strVal(string);
   }
 
-  public Tuple tupleV(TupleSpec spec, Iterable<? extends Obj> elements) {
-    return objectDb().tupleV(spec, elements);
+  public Tuple tupleVal(TupleSpec spec, Iterable<? extends Obj> elements) {
+    return objectDb().tupleVal(spec, elements);
   }
 
-  public Tuple emptyTupleV() {
-    return tupleV(emptyTupleS(), list());
+  public Tuple emptyTupleVal() {
+    return tupleVal(emptyTupleSpec(), list());
   }
 
-  public Tuple tupleWithStrV() {
-    return tupleV(tupleWithStrS(), list(strV("abc")));
+  public Tuple tupleWithStrVal() {
+    return tupleVal(tupleWithStrSpec(), list(strVal("abc")));
   }
 
-  public Tuple tupleWithStrV(Str str) {
-    return tupleV(tupleWithStrS(), list(str));
+  public Tuple tupleWithStrVal(Str str) {
+    return tupleVal(tupleWithStrSpec(), list(str));
   }
 
-  public Tuple personV(String firstName, String lastName) {
-    return tupleV(personS(), list(strV(firstName), strV(lastName)));
+  public Tuple personVal(String firstName, String lastName) {
+    return tupleVal(personSpec(), list(strVal(firstName), strVal(lastName)));
   }
 
   public Array messageArrayWithOneError() {
-    return arrayV(objectFactory().errorMessage("error message"));
+    return arrayVal(objectFactory().errorMessage("error message"));
   }
 
   public Array emptyMessageArray() {
-    return arrayV(objectFactory().messageSpec());
+    return arrayVal(objectFactory().messageSpec());
   }
 
   public Tuple errorMessageV(String text) {
@@ -285,38 +285,38 @@ public class TestingContext {
     return objectFactory().infoMessage(text);
   }
 
-  public Tuple fileV(Path path) {
-    return fileV(path, ByteString.encodeString(path.toString(), CHARSET));
+  public Tuple fileVal(Path path) {
+    return fileVal(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public Tuple fileV(Path path, ByteString content) {
-    return fileV(path.toString(), blobV(content));
+  public Tuple fileVal(Path path, ByteString content) {
+    return fileVal(path.toString(), blobVal(content));
   }
 
-  public Tuple fileV(String path, Blob blob) {
+  public Tuple fileVal(String path, Blob blob) {
     Str string = objectFactory().string(path);
     return objectFactory().file(string, blob);
   }
 
   // Expr-s
 
-  public Call callE(Expr function, Iterable<? extends Expr> arguments) {
+  public Call callExpr(Expr function, Iterable<? extends Expr> arguments) {
     return objectDb().callExpr(function, arguments);
   }
 
-  public Const constE() {
-    return objectDb().constExpr(intV(123));
+  public Const constExpr() {
+    return objectDb().constExpr(intVal(123));
   }
 
-  public Const constE(Val val) {
+  public Const constExpr(Val val) {
     return objectDb().constExpr(val);
   }
 
-  public EArray eArray(Iterable<? extends Expr> elements) {
+  public EArray eArrayExpr(Iterable<? extends Expr> elements) {
     return objectDb().eArrayExpr(elements);
   }
 
-  public FieldRead fieldReadE(Expr tuple, Int index) {
+  public FieldRead fieldReadExpr(Expr tuple, Int index) {
     return objectDb().fieldReadExpr(tuple, index);
   }
 }

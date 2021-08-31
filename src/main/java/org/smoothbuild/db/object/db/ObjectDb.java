@@ -129,19 +129,19 @@ public class ObjectDb {
     return wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
   }
 
-  public Bool boolV(boolean value) {
+  public Bool boolVal(boolean value) {
     return wrapException(() -> newBoolV(value));
   }
 
-  public Int intV(BigInteger value) {
+  public Int intVal(BigInteger value) {
     return wrapException(() -> newIntV(value));
   }
 
-  public Str strV(String value) {
+  public Str strVal(String value) {
     return wrapException(() -> newStrV(value));
   }
 
-  public Tuple tupleV(TupleSpec tupleSpec, Iterable<? extends Obj> elements) {
+  public Tuple tupleVal(TupleSpec tupleSpec, Iterable<? extends Obj> elements) {
     List<Obj> elementsList = ImmutableList.copyOf(elements);
     var specs = tupleSpec.elementSpecs();
     if (specs.size() != elementsList.size()) {

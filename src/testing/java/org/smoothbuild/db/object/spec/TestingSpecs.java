@@ -16,11 +16,11 @@ public class TestingSpecs {
   public static final ValSpec INT = OBJECT_DB.intS();
   public static final ValSpec NOTHING = OBJECT_DB.nothingS();
   public static final ValSpec STR = OBJECT_DB.strS();
-  public static final TupleSpec PERSON = CONTEXT.personS();
-  public static final Spec CALL = CONTEXT.callS();
-  public static final Spec CONST = CONTEXT.constS();
-  public static final Spec EARRAY = CONTEXT.eArrayS();
-  public static final Spec FIELD_READ = CONTEXT.fieldReadS();
+  public static final TupleSpec PERSON = CONTEXT.personSpec();
+  public static final Spec CALL = CONTEXT.callSpec();
+  public static final Spec CONST = CONTEXT.constSpec();
+  public static final Spec EARRAY = CONTEXT.eArraySpec();
+  public static final Spec FIELD_READ = CONTEXT.fieldReadSpec();
 
   public static final ArraySpec ARRAY_BLOB = array(BLOB);
   public static final ArraySpec ARRAY_BOOL = array(BOOL);

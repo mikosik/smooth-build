@@ -19,21 +19,21 @@ public class MessageTupleTest extends TestingContext {
 
   @Test
   public void list_with_info_message_contains_no_errors() {
-    messages = arrayV(infoMessageV("info message"));
+    messages = arrayVal(infoMessageV("info message"));
     assertThat(containsErrors(messages))
         .isFalse();
   }
 
   @Test
   public void list_with_warning_messsage_contains_no_errors() {
-    messages = arrayV(warningMessageV("warning message"));
+    messages = arrayVal(warningMessageV("warning message"));
     assertThat(containsErrors(messages))
         .isFalse();
   }
 
   @Test
   public void list_with_error_messsage_contains_errors() {
-    messages = arrayV(errorMessageV("error message"));
+    messages = arrayVal(errorMessageV("error message"));
     assertThat(containsErrors(messages))
         .isTrue();
   }

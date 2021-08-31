@@ -27,11 +27,11 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    TupleSpec constructedType = tupleS(list());
+    TupleSpec constructedType = tupleSpec(list());
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
-    hashes.add(convertAlgorithmHash(strS()));
+    hashes.add(convertAlgorithmHash(strSpec()));
     hashes.add(tupleAlgorithmHash(constructedType));
     hashes.add(readTupleElementAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
@@ -51,14 +51,14 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void convert_algorithm_has_different_hash_for_different_types() {
-    assertThat(convertAlgorithmHash(strS()))
-        .isNotEqualTo(convertAlgorithmHash(blobS()));
+    assertThat(convertAlgorithmHash(strSpec()))
+        .isNotEqualTo(convertAlgorithmHash(blobSpec()));
   }
 
   @Test
   public void create_tuple_algorithm_has_different_hash_for_different_types() {
-    TupleSpec constructedType = tupleS(list(strS()));
-    TupleSpec constructedType2 = tupleS(list(blobS()));
+    TupleSpec constructedType = tupleSpec(list(strSpec()));
+    TupleSpec constructedType2 = tupleSpec(list(blobSpec()));
 
     assertThat(tupleAlgorithmHash(constructedType))
         .isNotEqualTo(tupleAlgorithmHash(constructedType2));

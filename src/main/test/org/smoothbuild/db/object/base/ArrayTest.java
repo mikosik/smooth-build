@@ -21,7 +21,7 @@ import okio.ByteString;
 public class ArrayTest extends TestingContext {
   @Test
   public void empty_nothing_array_can_be_iterated_as_tuple() {
-    Array array = arrayBuilder(nothingS())
+    Array array = arrayBuilder(nothingSpec())
         .build();
     assertThat(array.asIterable(Tuple.class))
         .isEmpty();
@@ -29,8 +29,8 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void string_array_cannot_be_iterated_as_tuple() {
-    Array array = arrayBuilder(strS())
-        .add(strV("abc"))
+    Array array = arrayBuilder(strSpec())
+        .add(strVal("abc"))
         .build();
     assertCall(() -> array.asIterable(Tuple.class))
         .throwsException(new IllegalArgumentException(
@@ -39,7 +39,7 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void empty_array_is_empty() {
-    Array array = arrayBuilder(strS())
+    Array array = arrayBuilder(strSpec())
         .build();
     assertThat(array.asIterable(Str.class))
         .isEmpty();
@@ -47,32 +47,32 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void adding_null_is_forbidden() {
-    ArrayBuilder arrayBuilder = arrayBuilder(strS());
+    ArrayBuilder arrayBuilder = arrayBuilder(strSpec());
     assertCall(() -> arrayBuilder.add(null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void adding_element_with_wrong_smooth_spec_is_forbidden() {
-    ArrayBuilder arrayBuilder = arrayBuilder(strS());
-    assertCall(() -> arrayBuilder.add(blobV(ByteString.of())))
+    ArrayBuilder arrayBuilder = arrayBuilder(strSpec());
+    assertCall(() -> arrayBuilder.add(blobVal(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void array_contains_added_element() {
-    Array array = arrayBuilder(strS())
-        .add(strV("abc"))
+    Array array = arrayBuilder(strSpec())
+        .add(strVal("abc"))
         .build();
     assertThat(array.asIterable(Str.class))
-        .containsExactly(strV("abc"));
+        .containsExactly(strVal("abc"));
   }
 
   @Test
   public void array_contains_added_element_via_add_all_method() {
-    Str rstring = strV("abc");
-    Str rstring2 = strV("def");
-    Array array = arrayBuilder(strS())
+    Str rstring = strVal("abc");
+    Str rstring2 = strVal("def");
+    Array array = arrayBuilder(strSpec())
         .addAll(list(rstring, rstring2))
         .build();
     assertThat(array.asIterable(Str.class))
@@ -82,10 +82,10 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_contains_added_elements_in_order() {
-    Str rstring1 = strV("abc");
-    Str rstring2 = strV("def");
-    Str rstring3 = strV("ghi");
-    Array array = arrayBuilder(strS())
+    Str rstring1 = strVal("abc");
+    Str rstring2 = strVal("def");
+    Str rstring3 = strVal("ghi");
+    Array array = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .add(rstring3)
@@ -97,8 +97,8 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() {
-    Str rstring = strV("abc");
-    Array array = arrayBuilder(strS())
+    Str rstring = strVal("abc");
+    Array array = arrayBuilder(strSpec())
         .add(rstring)
         .add(rstring)
         .build();
@@ -108,13 +108,13 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void arrays_with_same_elements_have_same_hash() {
-    Str rstring1 = strV("abc");
-    Str rstring2 = strV("def");
-    Array array = arrayBuilder(strS())
+    Str rstring1 = strVal("abc");
+    Str rstring2 = strVal("def");
+    Array array = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
-    Array array2 = arrayBuilder(strS())
+    Array array2 = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -124,8 +124,8 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() {
-    Str rstring = strV("abc");
-    Array array = arrayBuilder(strS())
+    Str rstring = strVal("abc");
+    Array array = arrayBuilder(strSpec())
         .add(rstring)
         .build();
     assertThat(array.hash())
@@ -134,13 +134,13 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes() {
-    Str rstring1 = strV("abc");
-    Str rstring2 = strV("def");
-    Array array = arrayBuilder(strS())
+    Str rstring1 = strVal("abc");
+    Str rstring2 = strVal("def");
+    Array array = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
-    Array array2 = arrayBuilder(strS())
+    Array array2 = arrayBuilder(strSpec())
         .add(rstring2)
         .add(rstring1)
         .build();
@@ -150,12 +150,12 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_with_one_more_element_have_different_hash() {
-    Str rstring1 = strV("abc");
-    Str rstring2 = strV("def");
-    Array array = arrayBuilder(strS())
+    Str rstring1 = strVal("abc");
+    Str rstring2 = strVal("def");
+    Array array = arrayBuilder(strSpec())
         .add(rstring1)
         .build();
-    Array array2 = arrayBuilder(strS())
+    Array array2 = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -165,9 +165,9 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_can_be_read_by_hash() {
-    Str rstring1 = strV("abc");
-    Str rstring2 = strV("def");
-    Array array = arrayBuilder(strS())
+    Str rstring1 = strVal("abc");
+    Str rstring2 = strVal("def");
+    Array array = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -177,9 +177,9 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_read_by_hash_contains_same_elements() {
-    Str rstring1 = strV("abc");
-    Str rstring2 = strV("def");
-    Array array = arrayBuilder(strS())
+    Str rstring1 = strVal("abc");
+    Str rstring2 = strVal("def");
+    Array array = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -190,9 +190,9 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_read_by_hash_has_same_hash() {
-    Str rstring1 = strV("abc");
-    Str rstring2 = strV("def");
-    Array array = arrayBuilder(strS())
+    Str rstring1 = strVal("abc");
+    Str rstring2 = strVal("def");
+    Array array = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -205,7 +205,7 @@ public class ArrayTest extends TestingContext {
   public void spec(ValSpec spec) {
     Array array = arrayBuilder(spec).build();
     assertThat(array.spec())
-        .isEqualTo(arrayS(spec));
+        .isEqualTo(arraySpec(spec));
   }
 
   private static List<Spec> spec_test_data() {
@@ -214,9 +214,9 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void to_string() {
-    Str rstring1 = strV("abc");
-    Str rstring2 = strV("def");
-    Array array = arrayBuilder(strS())
+    Str rstring1 = strVal("abc");
+    Str rstring2 = strVal("def");
+    Array array = arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -229,34 +229,34 @@ public class ArrayTest extends TestingContext {
   class _nothing_array {
     @Test
     public void spec_of_nothing_array_is_nothing_array() {
-      Array array = emptyArrayOf(nothingS());
+      Array array = emptyArrayOf(nothingSpec());
       assertThat(array.spec())
-          .isEqualTo(arrayS(nothingS()));
+          .isEqualTo(arraySpec(nothingSpec()));
     }
 
     @Test
     public void nothing_array_is_empty() {
-      assertThat(emptyArrayOf(nothingS()).asIterable(Obj.class))
+      assertThat(emptyArrayOf(nothingSpec()).asIterable(Obj.class))
           .isEmpty();
     }
 
     @Test
     public void nothing_array_can_be_read_by_hash() {
-      Array array = emptyArrayOf(nothingS());
+      Array array = emptyArrayOf(nothingSpec());
       assertThat(objectDbOther().get(array.hash()))
           .isEqualTo(array);
     }
 
     @Test
     public void nothing_array_read_by_hash_is_empty() {
-      Array array = emptyArrayOf(nothingS());
+      Array array = emptyArrayOf(nothingSpec());
       assertThat(((Array) objectDbOther().get(array.hash())).asIterable(Obj.class))
           .isEmpty();
     }
 
     @Test
     public void nothing_array_to_string() {
-      Array array = emptyArrayOf(nothingS());
+      Array array = emptyArrayOf(nothingSpec());
       assertThat(array.toString())
           .isEqualTo("[]:" + array.hash());
     }
