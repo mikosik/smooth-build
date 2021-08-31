@@ -5,22 +5,15 @@ import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.testing.TestingContext;
 
 public class InputTest extends TestingContext{
-  private Input input1;
-  private Input input2;
-  private Str rstring1;
-  private Str rstring2;
-
   @Test
   public void different_inputs_have_different_hashes() {
-    rstring1 = strVal("abc");
-    rstring2 = strVal("def");
-    input1 = input(list(rstring1));
-    input2 = input(list(rstring2));
+    var string1 = strVal("abc");
+    var string2 = strVal("def");
+    var input1 = input(list(string1));
+    var input2 = input(list(string2));
 
     assertThat(input1.hash())
         .isNotEqualTo(input2.hash());
@@ -28,10 +21,10 @@ public class InputTest extends TestingContext{
 
   @Test
   public void inputs_with_same_values_but_in_different_order_have_different_hashes() {
-    rstring1 = strVal("abc");
-    rstring2 = strVal("def");
-    input1 = input(list(rstring1, rstring2));
-    input2 = input(list(rstring2, rstring1));
+    var string1 = strVal("abc");
+    var string2 = strVal("def");
+    var input1 = input(list(string1, string2));
+    var input2 = input(list(string2, string1));
 
     assertThat(input1.hash())
         .isNotEqualTo(input2.hash());
@@ -39,9 +32,9 @@ public class InputTest extends TestingContext{
 
   @Test
   public void equal_inputs_have_equal_hashes() {
-    rstring1 = strVal("abc");
-    input1 = input(list(rstring1));
-    input2 = input(list(rstring1));
+    var string1 = strVal("abc");
+    var input1 = input(list(string1));
+    var input2 = input(list(string1));
 
     assertThat(input1.hash())
         .isEqualTo(input2.hash());
@@ -49,9 +42,9 @@ public class InputTest extends TestingContext{
 
   @Test
   public void input_with_no_values_has_hash_different_from_input_with_one_value() {
-    rstring1 = strVal("abc");
-    input1 = input(list(rstring1));
-    input2 = input(list());
+    var string1 = strVal("abc");
+    var input1 = input(list(string1));
+    var input2 = input(list());
 
     assertThat(input1.hash())
         .isNotEqualTo(input2.hash());
