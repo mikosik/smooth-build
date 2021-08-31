@@ -270,7 +270,7 @@ public class DeclarationTest {
               .loadsWithProblems();
         }
 
-        private String structDeclaration(CharSequence string) {
+        private String structDeclaration(String string) {
           return """
               MyStruct { PLACEHOLDER }
               """.replace("PLACEHOLDER", string);
@@ -735,7 +735,7 @@ public class DeclarationTest {
               .loadsWithProblems();
         }
 
-        private String functionDeclaration(CharSequence string) {
+        private String functionDeclaration(String string) {
           return """
               String myFunction(PLACEHOLDER) = "abc";
               """.replace("PLACEHOLDER", string);
@@ -770,7 +770,7 @@ public class DeclarationTest {
               .loadsWithProblems();
         }
 
-        private String functionTypeDeclaration(CharSequence string) {
+        private String functionTypeDeclaration(String string) {
           return """
               @Native("Impl.met")
               Blob(PLACEHOLDER) myValue;
@@ -997,7 +997,7 @@ public class DeclarationTest {
               .loadsWithProblems();
         }
 
-        private String functionCall(CharSequence string) {
+        private String functionCall(String string) {
           return """
               Blob myFunction(Blob b) = b;
               result = myFunction(PLACEHOLDER);
@@ -1270,7 +1270,7 @@ public class DeclarationTest {
                 .loadsWithProblems();
           }
 
-          private String arrayLiteral(CharSequence string) {
+          private String arrayLiteral(String string) {
             return """
               result = [ PLACEHOLDER ];
               """.replace("PLACEHOLDER", string);
