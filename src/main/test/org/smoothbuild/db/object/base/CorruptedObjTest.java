@@ -102,6 +102,126 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
+  class _array {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save smooth array
+       * in HashedDb.
+       */
+      Hash objHash =
+          hash(
+              hash(arraySpec(strSpec())),
+              hash(
+                  hash(
+                      hash(strSpec()),
+                      hash("aaa")
+                  ),
+                  hash(
+                      hash(strSpec()),
+                      hash("bbb")
+                  )
+              ));
+      List<String> strings = stream(((Array) objectDb().get(objHash))
+          .asIterable(Str.class))
+          .map(Str::jValue)
+          .collect(toList());
+      assertThat(strings)
+          .containsExactly("aaa", "bbb")
+          .inOrder();
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(arraySpec(intSpec()));
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      obj_root_with_two_data_hashes(
+          arraySpec(intSpec()),
+          hashedDb().writeHashes(),
+          (Hash objHash) -> ((Array) objectDb().get(objHash)).asIterable(Int.class)
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere()
+        throws Exception {
+      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
+          arraySpec(intSpec()),
+          (Hash objHash) -> ((Array) objectDb().get(objHash)).asIterable(Int.class));
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void with_sequence_size_different_than_multiple_of_hash_size(
+        int byteCount) throws Exception {
+      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Hash objHash =
+          hash(
+              hash(arraySpec(strSpec())),
+              notHashOfSequence
+          );
+      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Val.class))
+          .throwsException(new CannotDecodeObjectException(objHash))
+          .withCause(new CannotDecodeObjectException(notHashOfSequence));
+    }
+
+    @Test
+    public void with_sequence_element_pointing_nowhere() throws Exception {
+      Hash nowhere = Hash.of(33);
+      Hash dataHash = hash(
+          nowhere
+      );
+      Hash objHash =
+          hash(
+              hash(arraySpec(strSpec())),
+              dataHash);
+      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
+          .throwsException(new CannotDecodeObjectException(objHash))
+          .withCause(new CannotDecodeObjectException(nowhere));
+    }
+
+    @Test
+    public void with_one_element_of_wrong_spec() throws Exception {
+      Hash objHash =
+          hash(
+              hash(arraySpec(strSpec())),
+              hash(
+                  hash(
+                      hash(strSpec()),
+                      hash("aaa")
+                  ),
+                  hash(
+                      hash(boolSpec()),
+                      hash(true)
+                  )
+              ));
+      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
+          .throwsException(new CannotDecodeObjectException(objHash,
+              "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
+    }
+
+    @Test
+    public void with_one_element_being_expr() throws Exception {
+      Hash objHash =
+          hash(
+              hash(arraySpec(strSpec())),
+              hash(
+                  hash(
+                      hash(strSpec()),
+                      hash("aaa")
+                  ),
+                  hash(constExpr())
+              ));
+      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
+          .throwsException(new CannotDecodeObjectException(objHash,
+              "It is array which spec == [STRING] but one of its elements has spec == CONST"));
+    }
+  }
+
+  @Nested
   class _blob {
     @Test
     public void learning_test() throws Exception {
@@ -456,6 +576,104 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
+  class _earray {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save smooth eArray
+       * in HashedDb.
+       */
+      Const expr1 = constExpr(intVal(1));
+      Const expr2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(eArraySpec()),
+              hash(
+                  hash(expr1),
+                  hash(expr2)
+              ));
+      ImmutableList<Expr> elements = ((EArray) objectDb().get(objHash)).elements();
+      assertThat(elements)
+          .containsExactly(expr1, expr2)
+          .inOrder();
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(eArraySpec());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      Const expr1 = constExpr(intVal(1));
+      Const expr2 = constExpr(intVal(2));
+      Hash dataHash = hash(
+          hash(expr1),
+          hash(expr2)
+      );
+      obj_root_with_two_data_hashes(
+          eArraySpec(),
+          dataHash,
+          (Hash objHash) -> ((EArray) objectDb().get(objHash)).elements()
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere()
+        throws Exception {
+      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
+          eArraySpec(),
+          (Hash objHash) -> ((EArray) objectDb().get(objHash)).elements());
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void with_sequence_size_different_than_multiple_of_hash_size(
+        int byteCount) throws Exception {
+      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Hash objHash =
+          hash(
+              hash(eArraySpec()),
+              notHashOfSequence
+          );
+      assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
+          .throwsException(new CannotDecodeObjectException(objHash))
+          .withCause(new CannotDecodeObjectException(notHashOfSequence));
+    }
+
+    @Test
+    public void with_sequence_element_pointing_nowhere() throws Exception {
+      Hash nowhere = Hash.of(33);
+      Hash objHash =
+          hash(
+              hash(eArraySpec()),
+              hash(
+                  nowhere
+              )
+          );
+      assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
+          .throwsException(new CannotDecodeObjectException(objHash))
+          .withCause(new CannotDecodeObjectException(nowhere));
+    }
+
+    @Test
+    public void with_one_element_being_val() throws Exception {
+      Const expr1 = constExpr(intVal(1));
+      Int val = intVal(123);
+      Hash objHash =
+          hash(
+              hash(eArraySpec()),
+              hash(
+                  hash(expr1),
+                  hash(val)
+              ));
+      assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
+          .throwsException(new CannotDecodeObjectException(
+              objHash, "It is EARRAY but one of its elements is INT instead of Expr."));
+    }
+  }
+
+  @Nested
   class _field_read {
     @Test
     public void learning_test() throws Exception {
@@ -624,224 +842,6 @@ public class CorruptedObjTest extends TestingContext {
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new ObjectDbException("Cannot create java object for 'NOTHING' spec."));
-    }
-  }
-
-  @Nested
-  class _array {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth array
-       * in HashedDb.
-       */
-      Hash objHash =
-          hash(
-              hash(arraySpec(strSpec())),
-              hash(
-                  hash(
-                      hash(strSpec()),
-                      hash("aaa")
-                  ),
-                  hash(
-                      hash(strSpec()),
-                      hash("bbb")
-                  )
-              ));
-      List<String> strings = stream(((Array) objectDb().get(objHash))
-          .asIterable(Str.class))
-          .map(Str::jValue)
-          .collect(toList());
-      assertThat(strings)
-          .containsExactly("aaa", "bbb")
-          .inOrder();
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(arraySpec(intSpec()));
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      obj_root_with_two_data_hashes(
-          arraySpec(intSpec()),
-          hashedDb().writeHashes(),
-          (Hash objHash) -> ((Array) objectDb().get(objHash)).asIterable(Int.class)
-      );
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere()
-        throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          arraySpec(intSpec()),
-          (Hash objHash) -> ((Array) objectDb().get(objHash)).asIterable(Int.class));
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_sequence_size_different_than_multiple_of_hash_size(
-        int byteCount) throws Exception {
-      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
-      Hash objHash =
-          hash(
-              hash(arraySpec(strSpec())),
-              notHashOfSequence
-          );
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Val.class))
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(notHashOfSequence));
-    }
-
-    @Test
-    public void with_sequence_element_pointing_nowhere() throws Exception {
-      Hash nowhere = Hash.of(33);
-      Hash dataHash = hash(
-          nowhere
-      );
-      Hash objHash =
-          hash(
-              hash(arraySpec(strSpec())),
-              dataHash);
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(nowhere));
-    }
-
-    @Test
-    public void with_one_element_of_wrong_spec() throws Exception {
-      Hash objHash =
-          hash(
-              hash(arraySpec(strSpec())),
-              hash(
-                  hash(
-                      hash(strSpec()),
-                      hash("aaa")
-                  ),
-                  hash(
-                      hash(boolSpec()),
-                      hash(true)
-                  )
-              ));
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
-          .throwsException(new CannotDecodeObjectException(objHash,
-              "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
-    }
-
-    @Test
-    public void with_one_element_being_expr() throws Exception {
-      Hash objHash =
-          hash(
-              hash(arraySpec(strSpec())),
-              hash(
-                  hash(
-                      hash(strSpec()),
-                      hash("aaa")
-                  ),
-                  hash(constExpr())
-              ));
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
-          .throwsException(new CannotDecodeObjectException(objHash,
-              "It is array which spec == [STRING] but one of its elements has spec == CONST"));
-    }
-  }
-
-  @Nested
-  class _earray {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth eArray
-       * in HashedDb.
-       */
-      Const expr1 = constExpr(intVal(1));
-      Const expr2 = constExpr(intVal(2));
-      Hash objHash =
-          hash(
-              hash(eArraySpec()),
-              hash(
-                  hash(expr1),
-                  hash(expr2)
-              ));
-      ImmutableList<Expr> elements = ((EArray) objectDb().get(objHash)).elements();
-      assertThat(elements)
-          .containsExactly(expr1, expr2)
-          .inOrder();
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(eArraySpec());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      Const expr1 = constExpr(intVal(1));
-      Const expr2 = constExpr(intVal(2));
-      Hash dataHash = hash(
-          hash(expr1),
-          hash(expr2)
-      );
-      obj_root_with_two_data_hashes(
-          eArraySpec(),
-          dataHash,
-          (Hash objHash) -> ((EArray) objectDb().get(objHash)).elements()
-      );
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere()
-        throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          eArraySpec(),
-          (Hash objHash) -> ((EArray) objectDb().get(objHash)).elements());
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_sequence_size_different_than_multiple_of_hash_size(
-        int byteCount) throws Exception {
-      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
-      Hash objHash =
-          hash(
-              hash(eArraySpec()),
-              notHashOfSequence
-          );
-      assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(notHashOfSequence));
-    }
-
-    @Test
-    public void with_sequence_element_pointing_nowhere() throws Exception {
-      Hash nowhere = Hash.of(33);
-      Hash objHash =
-          hash(
-              hash(eArraySpec()),
-              hash(
-                  nowhere
-              )
-          );
-      assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(nowhere));
-    }
-
-    @Test
-    public void with_one_element_being_val() throws Exception {
-      Const expr1 = constExpr(intVal(1));
-      Int val = intVal(123);
-      Hash objHash =
-          hash(
-              hash(eArraySpec()),
-              hash(
-                  hash(expr1),
-                  hash(val)
-              ));
-      assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new CannotDecodeObjectException(
-              objHash, "It is EARRAY but one of its elements is INT instead of Expr."));
     }
   }
 
