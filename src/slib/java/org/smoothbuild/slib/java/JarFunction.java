@@ -27,7 +27,7 @@ public class JarFunction {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
-      for (Tuple file : files.asIterable(Tuple.class)) {
+      for (Tuple file : files.elements(Tuple.class)) {
         String path = filePath(file).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot jar two files with the same path = " + path);

@@ -69,7 +69,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayVal(file), emptyMessageArray()));
     var arraySpec = arraySpec(objectFactory().fileSpec());
 
-    assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Tuple.class))
+    assertThat(((Array) computationCache().read(hash, arraySpec).value()).elements(Tuple.class))
         .containsExactly(file);
   }
 
@@ -79,7 +79,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayVal(blob), emptyMessageArray()));
     var arraySpec = arraySpec(blobSpec());
 
-    assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Blob.class))
+    assertThat(((Array) computationCache().read(hash, arraySpec).value()).elements(Blob.class))
         .containsExactly(blob);
   }
 
@@ -89,7 +89,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayVal(boolV), emptyMessageArray()));
     var arraySpec = arraySpec(boolSpec());
 
-    assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Bool.class))
+    assertThat(((Array) computationCache().read(hash, arraySpec).value()).elements(Bool.class))
         .containsExactly(boolV);
   }
 
@@ -99,7 +99,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayVal(intV), emptyMessageArray()));
     var arraySpec = arraySpec(intSpec());
 
-    assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Int.class))
+    assertThat(((Array) computationCache().read(hash, arraySpec).value()).elements(Int.class))
         .containsExactly(intV);
   }
 
@@ -110,7 +110,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array, emptyMessageArray()));
     var arraySpec = arraySpec(strSpec());
 
-    assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Str.class))
+    assertThat(((Array) computationCache().read(hash, arraySpec).value()).elements(Str.class))
         .containsExactly(strV);
   }
 

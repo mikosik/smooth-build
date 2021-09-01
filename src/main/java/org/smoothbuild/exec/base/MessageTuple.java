@@ -19,7 +19,7 @@ public class MessageTuple {
   private static final int SEVERITY_INDEX = 1;
 
   public static boolean containsErrors(Array messages) {
-    return stream(messages.asIterable(Tuple.class))
+    return stream(messages.elements(Tuple.class))
         .anyMatch(m -> severity(m).equals(ERROR.name()));
   }
 
@@ -28,7 +28,7 @@ public class MessageTuple {
   }
 
   public static boolean isEmpty(Array messages) {
-    return !messages.asIterable(Tuple.class).iterator().hasNext();
+    return !messages.elements(Tuple.class).iterator().hasNext();
   }
 
   public static Level level(Obj message) {

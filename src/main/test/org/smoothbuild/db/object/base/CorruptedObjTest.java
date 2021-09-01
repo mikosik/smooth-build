@@ -123,7 +123,7 @@ public class CorruptedObjTest extends TestingContext {
                   )
               ));
       List<String> strings = stream(((Array) objectDb().get(objHash))
-          .asIterable(Str.class))
+          .elements(Str.class))
           .map(Str::jValue)
           .collect(toList());
       assertThat(strings)
@@ -141,7 +141,7 @@ public class CorruptedObjTest extends TestingContext {
       obj_root_with_two_data_hashes(
           arraySpec(intSpec()),
           hashedDb().writeHashes(),
-          (Hash objHash) -> ((Array) objectDb().get(objHash)).asIterable(Int.class)
+          (Hash objHash) -> ((Array) objectDb().get(objHash)).elements(Int.class)
       );
     }
 
@@ -150,7 +150,7 @@ public class CorruptedObjTest extends TestingContext {
         throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
           arraySpec(intSpec()),
-          (Hash objHash) -> ((Array) objectDb().get(objHash)).asIterable(Int.class));
+          (Hash objHash) -> ((Array) objectDb().get(objHash)).elements(Int.class));
     }
 
     @ParameterizedTest
@@ -163,7 +163,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(arraySpec(strSpec())),
               notHashOfSequence
           );
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Val.class))
+      assertCall(() -> ((Array) objectDb().get(objHash)).elements(Val.class))
           .throwsException(new CannotDecodeObjectException(objHash))
           .withCause(new CannotDecodeObjectException(notHashOfSequence));
     }
@@ -178,7 +178,7 @@ public class CorruptedObjTest extends TestingContext {
           hash(
               hash(arraySpec(strSpec())),
               dataHash);
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
+      assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
           .throwsException(new CannotDecodeObjectException(objHash))
           .withCause(new CannotDecodeObjectException(nowhere));
     }
@@ -198,7 +198,7 @@ public class CorruptedObjTest extends TestingContext {
                       hash(true)
                   )
               ));
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
+      assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
           .throwsException(new CannotDecodeObjectException(objHash,
               "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
     }
@@ -215,7 +215,7 @@ public class CorruptedObjTest extends TestingContext {
                   ),
                   hash(constExpr())
               ));
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Str.class))
+      assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
           .throwsException(new CannotDecodeObjectException(objHash,
               "It is array which spec == [STRING] but one of its elements has spec == CONST"));
     }

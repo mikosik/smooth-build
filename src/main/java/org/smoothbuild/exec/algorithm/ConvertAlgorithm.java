@@ -51,7 +51,7 @@ public class ConvertAlgorithm extends Algorithm {
   private static Array convertArray(Spec destinationSpec, Array array, NativeApi nativeApi) {
     ValSpec elemSpec = ((ArraySpec) destinationSpec).elemSpec();
     ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elemSpec);
-    for (Val element : array.asIterable(Val.class)) {
+    for (Val element : array.elements(Val.class)) {
       arrayBuilder.add(convert(elemSpec, element, nativeApi));
     }
     return arrayBuilder.build();

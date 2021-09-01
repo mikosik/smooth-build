@@ -26,8 +26,8 @@ public class Array extends Val {
     return (ArraySpec) super.spec();
   }
 
-  public <T extends Val> Iterable<T> asIterable(Class<T> clazz) {
-    assertIsIterableAs(clazz);
+  public <T extends Val> ImmutableList<T> elements(Class<T> elementJType) {
+    assertIsIterableAs(elementJType);
     ImmutableList<Obj> elements = elements();
     for (Obj object : elements) {
       if (!object.spec().equals(spec().elemSpec())) {

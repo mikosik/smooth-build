@@ -62,13 +62,13 @@ public class JavacFunction {
       Iterable<String> options = options();
       StandardJavaFileManager fileManager1 =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      var libsClasses = classesFromJarFiles(nativeApi, libs.asIterable(Tuple.class));
+      var libsClasses = classesFromJarFiles(nativeApi, libs.elements(Tuple.class));
       if (libsClasses == null) {
         return null;
       }
       try (SandboxedJavaFileManager fileManager = new SandboxedJavaFileManager(
           fileManager1, nativeApi, libsClasses)) {
-        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.asIterable(Tuple.class));
+        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elements(Tuple.class));
 
         /*
          * Java compiler fails miserably when there's no java files.
@@ -101,7 +101,7 @@ public class JavacFunction {
     }
 
     private Iterable<String> options() {
-      return StreamSupport.stream(options.asIterable(Str.class).spliterator(), false)
+      return StreamSupport.stream(options.elements(Str.class).spliterator(), false)
           .map(Str::jValue)
           .collect(Collectors.toList());
     }

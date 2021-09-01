@@ -8,8 +8,8 @@ public class Concat {
   public static Array function(NativeApi nativeApi, Array first, Array second) {
     return nativeApi.factory()
         .arrayBuilder(first.spec().elemSpec())
-        .addAll(first.asIterable(Val.class))
-        .addAll(second.asIterable(Val.class))
+        .addAll(first.elements(Val.class))
+        .addAll(second.elements(Val.class))
         .build();
   }
 }

@@ -11,8 +11,8 @@ public class Flatten {
   public static Array function(NativeApi nativeApi, Array array) {
     ValSpec resultArrayElemSpec = ((ArraySpec) array.spec().elemSpec()).elemSpec();
     ArrayBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemSpec);
-    for (Array innerArray : array.asIterable(Array.class)) {
-      builder.addAll(innerArray.asIterable(Val.class));
+    for (Array innerArray : array.elements(Array.class)) {
+      builder.addAll(innerArray.elements(Val.class));
     }
     return builder.build();
   }

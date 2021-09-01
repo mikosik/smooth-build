@@ -78,7 +78,7 @@ public class ComputationCache {
       }
 
       Array messages = (Array) messagesObject;
-      Iterable<Tuple> structs = messages.asIterable(Tuple.class);
+      Iterable<Tuple> structs = messages.elements(Tuple.class);
       for (Tuple m : structs) {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {

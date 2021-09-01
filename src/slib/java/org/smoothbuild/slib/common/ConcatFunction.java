@@ -8,8 +8,8 @@ import org.smoothbuild.plugin.NativeApi;
 public class ConcatFunction {
   public static Array function(NativeApi nativeApi, Array array1, Array array2) {
     ArrayBuilder builder = nativeApi.factory().arrayBuilder(array1.spec().elemSpec());
-    builder.addAll(array1.asIterable(Val.class));
-    builder.addAll(array2.asIterable(Val.class));
+    builder.addAll(array1.elements(Val.class));
+    builder.addAll(array2.elements(Val.class));
     return builder.build();
   }
 }

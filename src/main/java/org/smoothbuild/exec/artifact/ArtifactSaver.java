@@ -60,12 +60,12 @@ public class ArtifactSaver {
     Type elemType = arrayType.elemType();
     if (elemType instanceof ArrayType elemArrayType) {
       int i = 0;
-      for (Array element : array.asIterable(Array.class)) {
+      for (Array element : array.elements(Array.class)) {
         saveArray(elemArrayType, artifactPath.appendPart(Integer.toString(i)), element);
         i++;
       }
     } else if (elemType.name().equals(FileStruct.NAME)) {
-      saveFileArray(artifactPath, array.asIterable(Tuple.class));
+      saveFileArray(artifactPath, array.elements(Tuple.class));
     } else {
       saveObjectArray(artifactPath, array);
     }
@@ -74,7 +74,7 @@ public class ArtifactSaver {
 
   private void saveObjectArray(Path artifactPath, Array array) throws IOException {
     int i = 0;
-    for (Val val : array.asIterable(Val.class)) {
+    for (Val val : array.elements(Val.class)) {
       Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       Path targetPath = targetPath(val);
       fileSystem.createLink(sourcePath, targetPath);

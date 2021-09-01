@@ -37,7 +37,7 @@ public class JunitFunction {
 
     try {
       Array unzipped = unzipTestFiles(nativeApi, tests);
-      Map<String, Tuple> testFiles = stream(unzipped.asIterable(Tuple.class).spliterator(), false)
+      Map<String, Tuple> testFiles = stream(unzipped.elements(Tuple.class).spliterator(), false)
           .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
       Map<String, Tuple> allFiles = buildNameFileMap(nativeApi, deps, testFiles);
 
@@ -78,7 +78,7 @@ public class JunitFunction {
 
   private static Map<String, Tuple> buildNameFileMap(NativeApi nativeApi, Array deps,
       Map<String, Tuple> testFiles) throws IOException, JunitException {
-    Iterable<Blob> libraryJars = Streams.stream(deps.asIterable(Tuple.class))
+    Iterable<Blob> libraryJars = Streams.stream(deps.elements(Tuple.class))
         .map(FileStruct::fileContent)
         .collect(toList());
     Map<String, Tuple> allFiles = binaryNameToClassFile(nativeApi, libraryJars);

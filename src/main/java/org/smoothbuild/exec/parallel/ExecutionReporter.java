@@ -52,7 +52,7 @@ public class ExecutionReporter {
   }
 
   private void print(Task task, ResultSource resultSource, Array messages) {
-    var logs = map(messages.asIterable(Tuple.class), m -> new Log(level(m), text(m)));
+    var logs = map(messages.elements(Tuple.class), m -> new Log(level(m), text(m)));
     print(task, logs, resultSource);
   }
 

@@ -22,7 +22,7 @@ public class PackagedJavaFileObjects {
     for (Tuple jar : libraryJars) {
       Blob jarBlob = FileStruct.fileContent(jar);
       Array files = unzip(nativeApi, jarBlob, isClassFilePredicate());
-      for (Tuple file : files.asIterable(Tuple.class)) {
+      for (Tuple file : files.elements(Tuple.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
           nativeApi.log().error("File " + filePath(file).jValue()

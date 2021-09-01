@@ -18,7 +18,7 @@ public class ContainerTest extends TestingContext {
   @Test
   public void messages_are_logged() {
     container().log().error("message");
-    Iterable<Tuple> iterable = container().messages().asIterable(Tuple.class);
+    Iterable<Tuple> iterable = container().messages().elements(Tuple.class);
     assertThat(iterable)
         .hasSize(1);
     Tuple tuple = iterable.iterator().next();

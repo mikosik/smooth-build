@@ -23,7 +23,7 @@ public class ArrayTest extends TestingContext {
   public void empty_nothing_array_can_be_iterated_as_tuple() {
     Array array = objectDb().arrayBuilder(nothingSpec())
         .build();
-    assertThat(array.asIterable(Tuple.class))
+    assertThat(array.elements(Tuple.class))
         .isEmpty();
   }
 
@@ -32,7 +32,7 @@ public class ArrayTest extends TestingContext {
     Array array = objectDb().arrayBuilder(strSpec())
         .add(strVal("abc"))
         .build();
-    assertCall(() -> array.asIterable(Tuple.class))
+    assertCall(() -> array.elements(Tuple.class))
         .throwsException(new IllegalArgumentException(
             "[STRING] cannot be viewed as Iterable of " + Tuple.class.getCanonicalName() + "."));
   }
@@ -41,7 +41,7 @@ public class ArrayTest extends TestingContext {
   public void empty_array_is_empty() {
     Array array = objectDb().arrayBuilder(strSpec())
         .build();
-    assertThat(array.asIterable(Str.class))
+    assertThat(array.elements(Str.class))
         .isEmpty();
   }
 
@@ -64,7 +64,7 @@ public class ArrayTest extends TestingContext {
     Array array = objectDb().arrayBuilder(strSpec())
         .add(strVal("abc"))
         .build();
-    assertThat(array.asIterable(Str.class))
+    assertThat(array.elements(Str.class))
         .containsExactly(strVal("abc"));
   }
 
@@ -75,7 +75,7 @@ public class ArrayTest extends TestingContext {
     Array array = objectDb().arrayBuilder(strSpec())
         .addAll(list(rstring, rstring2))
         .build();
-    assertThat(array.asIterable(Str.class))
+    assertThat(array.elements(Str.class))
         .containsExactly(rstring, rstring2)
         .inOrder();
   }
@@ -90,7 +90,7 @@ public class ArrayTest extends TestingContext {
         .add(rstring2)
         .add(rstring3)
         .build();
-    assertThat(array.asIterable(Str.class))
+    assertThat(array.elements(Str.class))
         .containsExactly(rstring1, rstring2, rstring3)
         .inOrder();
   }
@@ -102,7 +102,7 @@ public class ArrayTest extends TestingContext {
         .add(rstring)
         .add(rstring)
         .build();
-    assertThat(array.asIterable(Str.class))
+    assertThat(array.elements(Str.class))
         .containsExactly(rstring, rstring);
   }
 
@@ -183,7 +183,7 @@ public class ArrayTest extends TestingContext {
         .add(rstring1)
         .add(rstring2)
         .build();
-    assertThat(((Array) objectDbOther().get(array.hash())).asIterable(Str.class))
+    assertThat(((Array) objectDbOther().get(array.hash())).elements(Str.class))
         .containsExactly(rstring1, rstring2)
         .inOrder();
   }
@@ -236,7 +236,7 @@ public class ArrayTest extends TestingContext {
 
     @Test
     public void nothing_array_is_empty() {
-      assertThat(emptyArrayOf(nothingSpec()).asIterable(Val.class))
+      assertThat(emptyArrayOf(nothingSpec()).elements(Val.class))
           .isEmpty();
     }
 
@@ -250,7 +250,7 @@ public class ArrayTest extends TestingContext {
     @Test
     public void nothing_array_read_by_hash_is_empty() {
       Array array = emptyArrayOf(nothingSpec());
-      assertThat(((Array) objectDbOther().get(array.hash())).asIterable(Val.class))
+      assertThat(((Array) objectDbOther().get(array.hash())).elements(Val.class))
           .isEmpty();
     }
 

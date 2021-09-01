@@ -22,7 +22,7 @@ public class ZipFunction {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
-      for (Tuple file : files.asIterable(Tuple.class)) {
+      for (Tuple file : files.elements(Tuple.class)) {
         String path = filePath(file).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
