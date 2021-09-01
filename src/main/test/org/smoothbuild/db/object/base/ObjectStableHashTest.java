@@ -12,6 +12,63 @@ import okio.ByteString;
 
 public class ObjectStableHashTest extends TestingContext {
   @Nested
+  class _array {
+    @Test
+    public void hash_of_empty_blob_array_is_stable() {
+      assertThat(arrayVal(blobSpec()).hash())
+          .isEqualTo(Hash.decode("125abf735e023135153d0eade19b21fb2444a9cb"));
+    }
+
+    @Test
+    public void hash_of_non_empty_blob_array_is_stable() {
+      assertThat(arrayVal(blobVal(ByteString.of())).hash())
+          .isEqualTo(Hash.decode("329e4dfd95a5dcbcc2ff3d7dde3ca20f236cc0d4"));
+    }
+
+    @Test
+    public void hash_of_empty_bool_array_is_stable() {
+      assertThat(arrayVal(boolSpec()).hash())
+          .isEqualTo(Hash.decode("b9796321546d2817719aa32196a6170151a7abaa"));
+    }
+
+    @Test
+    public void hash_of_non_empty_bool_array_is_stable() {
+      assertThat(arrayVal(boolVal(true)).hash())
+          .isEqualTo(Hash.decode("fc0f1008bd3c72106e59e065fd6ba6658f2ffcba"));
+    }
+
+    @Test
+    public void hash_of_empty_nothing_array_is_stable() {
+      assertThat(arrayVal(nothingSpec()).hash())
+          .isEqualTo(Hash.decode("b739bcaa23e50d8cc43791d1f770698175916875"));
+    }
+
+    @Test
+    public void hash_of_empty_string_array_is_stable() {
+      assertThat(arrayVal(strSpec()).hash())
+          .isEqualTo(Hash.decode("89a4f1d2b4ed44ac887c7c056d54e42c50abf96e"));
+    }
+
+    @Test
+    public void hash_of_non_empty_string_array_is_stable() {
+      assertThat(arrayVal(strVal("")).hash())
+          .isEqualTo(Hash.decode("3a631e7e0e6d858454e427003cb4685791f650ab"));
+    }
+
+    @Test
+    public void hash_of_empty_tuple_array_is_stable() {
+      assertThat(arrayVal(personSpec()).hash())
+          .isEqualTo(Hash.decode("a26b682254544d9d3b34a14f44f3b40f39f8fa1e"));
+    }
+
+    @Test
+    public void hash_of_non_empty_tuple_array_is_stable() {
+      assertThat(arrayVal(personVal("John", "Doe")).hash())
+          .isEqualTo(Hash.decode("e06466885b0ff8bd31e6eb2fb5af60e35eb11888"));
+    }
+  }
+
+  @Nested
   class _blob {
     @Test
     public void hash_of_empty_blob_is_stable() {
@@ -42,6 +99,21 @@ public class ObjectStableHashTest extends TestingContext {
   }
 
   @Nested
+  class _call {
+    @Test
+    public void hash_of_call_expression_with_one_argument_is_stable() {
+      assertThat(callExpr(constExpr(intVal(1)), list(constExpr(intVal(2)))).hash())
+          .isEqualTo(Hash.decode("01f702aed0ff152251af37d7b0a1ae2bc323b930"));
+    }
+
+    @Test
+    public void hash_of_call_expression_without_arguments_is_stable() {
+      assertThat(callExpr(constExpr(intVal(1)), list()).hash())
+          .isEqualTo(Hash.decode("180fabed4d0cf3ffaa1f6fded51061c6ec9d81cd"));
+    }
+  }
+
+  @Nested
   class _const {
     @Test
     public void hash_of_const_blob_expression_is_stable() {
@@ -65,21 +137,6 @@ public class ObjectStableHashTest extends TestingContext {
     public void hash_of_const_string_expression_is_stable() {
       assertThat(constExpr(strVal("abc")).hash())
           .isEqualTo(Hash.decode("6f932b1bd1eb5a5fa55d82ee9d0c5130899bfbb7"));
-    }
-  }
-
-  @Nested
-  class _call {
-    @Test
-    public void hash_of_call_expression_with_one_argument_is_stable() {
-      assertThat(callExpr(constExpr(intVal(1)), list(constExpr(intVal(2)))).hash())
-          .isEqualTo(Hash.decode("01f702aed0ff152251af37d7b0a1ae2bc323b930"));
-    }
-
-    @Test
-    public void hash_of_call_expression_without_arguments_is_stable() {
-      assertThat(callExpr(constExpr(intVal(1)), list()).hash())
-          .isEqualTo(Hash.decode("180fabed4d0cf3ffaa1f6fded51061c6ec9d81cd"));
     }
   }
 
@@ -155,63 +212,6 @@ public class ObjectStableHashTest extends TestingContext {
     public void hash_of_some_tuple_is_stable() {
       assertThat(personVal("John", "Doe").hash())
           .isEqualTo(Hash.decode("96f78887322a24eb91f2c785b10c7a6c613a2633"));
-    }
-  }
-
-  @Nested
-  class _array {
-    @Test
-    public void hash_of_empty_blob_array_is_stable() {
-      assertThat(arrayVal(blobSpec()).hash())
-          .isEqualTo(Hash.decode("125abf735e023135153d0eade19b21fb2444a9cb"));
-    }
-
-    @Test
-    public void hash_of_non_empty_blob_array_is_stable() {
-      assertThat(arrayVal(blobVal(ByteString.of())).hash())
-          .isEqualTo(Hash.decode("329e4dfd95a5dcbcc2ff3d7dde3ca20f236cc0d4"));
-    }
-
-    @Test
-    public void hash_of_empty_bool_array_is_stable() {
-      assertThat(arrayVal(boolSpec()).hash())
-          .isEqualTo(Hash.decode("b9796321546d2817719aa32196a6170151a7abaa"));
-    }
-
-    @Test
-    public void hash_of_non_empty_bool_array_is_stable() {
-      assertThat(arrayVal(boolVal(true)).hash())
-          .isEqualTo(Hash.decode("fc0f1008bd3c72106e59e065fd6ba6658f2ffcba"));
-    }
-
-    @Test
-    public void hash_of_empty_nothing_array_is_stable() {
-      assertThat(arrayVal(nothingSpec()).hash())
-          .isEqualTo(Hash.decode("b739bcaa23e50d8cc43791d1f770698175916875"));
-    }
-
-    @Test
-    public void hash_of_empty_string_array_is_stable() {
-      assertThat(arrayVal(strSpec()).hash())
-          .isEqualTo(Hash.decode("89a4f1d2b4ed44ac887c7c056d54e42c50abf96e"));
-    }
-
-    @Test
-    public void hash_of_non_empty_string_array_is_stable() {
-      assertThat(arrayVal(strVal("")).hash())
-          .isEqualTo(Hash.decode("3a631e7e0e6d858454e427003cb4685791f650ab"));
-    }
-
-    @Test
-    public void hash_of_empty_tuple_array_is_stable() {
-      assertThat(arrayVal(personSpec()).hash())
-          .isEqualTo(Hash.decode("a26b682254544d9d3b34a14f44f3b40f39f8fa1e"));
-    }
-
-    @Test
-    public void hash_of_non_empty_tuple_array_is_stable() {
-      assertThat(arrayVal(personVal("John", "Doe")).hash())
-          .isEqualTo(Hash.decode("e06466885b0ff8bd31e6eb2fb5af60e35eb11888"));
     }
   }
 }
