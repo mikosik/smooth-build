@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.db;
 
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
-import static org.smoothbuild.db.object.db.Helpers.wrapException;
+import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.spec.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.SpecKind.BOOL;
@@ -126,19 +126,19 @@ public class ObjectDb {
   }
 
   public BlobBuilder blobBuilder() {
-    return wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
+    return wrapHashedDbExceptionAsObjectDbException(() -> new BlobBuilder(this, hashedDb.sink()));
   }
 
   public Bool boolVal(boolean value) {
-    return wrapException(() -> newBoolV(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newBoolV(value));
   }
 
   public Int intVal(BigInteger value) {
-    return wrapException(() -> newIntV(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newIntV(value));
   }
 
   public Str strVal(String value) {
-    return wrapException(() -> newStrV(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStrV(value));
   }
 
   public Tuple tupleVal(TupleSpec tupleSpec, Iterable<? extends Obj> elements) {
@@ -157,25 +157,25 @@ public class ObjectDb {
             + " at that index.");
       }
     }
-    return wrapException(() -> newTupleV(tupleSpec, elementsList));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTupleV(tupleSpec, elementsList));
   }
 
   // methods for creating expr-s
 
   public Call callExpr(Expr function, Iterable<? extends Expr> arguments) {
-    return wrapException(() -> newCallExpr(function, arguments));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCallExpr(function, arguments));
   }
 
   public Const constExpr(Val val) {
-    return wrapException(() -> newConstExpr(val));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newConstExpr(val));
   }
 
   public EArray eArrayExpr(Iterable<? extends Expr> elements) {
-    return wrapException(() -> newEArrayExpr(elements));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newEArrayExpr(elements));
   }
 
   public FieldRead fieldReadExpr(Expr tuple, Int index) {
-    return wrapException(() -> newFieldReadExpr(tuple, index));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newFieldReadExpr(tuple, index));
   }
 
   // generic getter
@@ -184,18 +184,18 @@ public class ObjectDb {
     try {
       List<Hash> hashes = hashedDb.readHashes(hash, 2);
       Spec spec = getSpecOrChainException(
-          hashes.get(0), e -> new CannotDecodeObjectException(hash, e));
+          hashes.get(0), e -> new DecodeObjException(hash, e));
       Hash dataHash = hashes.get(1);
       return spec.newObj(new MerkleRoot(hash, spec, dataHash));
     } catch (HashedDbException e) {
-      throw new CannotDecodeObjectException(hash, e);
+      throw new DecodeObjException(hash, e);
     }
   }
 
   // methods for returning specs
 
   public ArraySpec arrayS(ValSpec elementSpec) {
-    return cacheSpec(wrapException(() -> newArrayS(elementSpec)));
+    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newArrayS(elementSpec)));
   }
 
   public BlobSpec blobS() {
@@ -235,7 +235,7 @@ public class ObjectDb {
   }
 
   public TupleSpec tupleS(Iterable<? extends ValSpec> elementSpecs) {
-    return cacheSpec(wrapException(() -> newTupleS(elementSpecs)));
+    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newTupleS(elementSpecs)));
   }
 
   private Spec getSpecOrChainException(
@@ -257,7 +257,7 @@ public class ObjectDb {
       byte marker = hashedDb.readByte(hashes.get(0));
       SpecKind specKind = fromMarker(marker);
       if (specKind == null) {
-        throw new CannotDecodeSpecException(hash,
+        throw new DecodeSpecException(hash,
             "It has illegal SpecKind marker = " + marker + ".");
       }
       return switch (specKind) {
@@ -269,11 +269,11 @@ public class ObjectDb {
         case ARRAY -> {
           assertSize(hash, ARRAY, hashes, 2);
           Spec elementSpec = getSpecOrChainException(
-              hashes.get(1), e -> new CannotDecodeSpecException(hash));
+              hashes.get(1), e -> new DecodeSpecException(hash));
           if (elementSpec instanceof ValSpec valSpec) {
             yield cacheSpec(newArrayS(hash, valSpec));
           } else {
-            throw new CannotDecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
+            throw new DecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
                 + elementSpec.name() + " but should be Spec of some Val.");
           }
         }
@@ -284,14 +284,14 @@ public class ObjectDb {
         }
       };
     } catch (HashedDbException e) {
-      throw new CannotDecodeSpecException(hash, e);
+      throw new DecodeSpecException(hash, e);
     }
   }
 
   private static void assertSize(Hash hash, SpecKind specKind, List<Hash> hashes,
       int expectedSize) {
     if (hashes.size() != expectedSize) {
-      throw new CannotDecodeSpecException(hash,
+      throw new DecodeSpecException(hash,
           "Its specKind == " + specKind + " but its merkle root has "
               + hashes.size() + " children when " + expectedSize + " is expected.");
     }
@@ -304,7 +304,7 @@ public class ObjectDb {
       try {
         builder.add(getSpec(elementSpecHashes.get(i)));
       } catch (ObjectDbException e) {
-        throw new CannotDecodeSpecException(parentHash, "Its specKind == TUPLE "
+        throw new DecodeSpecException(parentHash, "Its specKind == TUPLE "
             + "but reading element spec at index " + i + " caused error.", e);
       }
     }
@@ -315,7 +315,7 @@ public class ObjectDb {
     try {
       return hashedDb.readHashes(hash);
     } catch (HashedDbException e) {
-      throw new CannotDecodeSpecException(parentHash,
+      throw new DecodeSpecException(parentHash,
           "Its specKind == TUPLE but reading its element specs caused error.", e);
     }
   }

@@ -1,12 +1,12 @@
 package org.smoothbuild.db.object.base;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodingObjectException;
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjException;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.CannotDecodeObjectException;
+import org.smoothbuild.db.object.db.DecodeObjException;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.Spec;
@@ -31,7 +31,7 @@ public class Array extends Val {
     ImmutableList<Obj> elements = elements();
     for (Obj object : elements) {
       if (!object.spec().equals(spec().elemSpec())) {
-        throw new CannotDecodeObjectException(hash(), "It is array which spec == " + spec().name()
+        throw new DecodeObjException(hash(), "It is array which spec == " + spec().name()
             + " but one of its elements has spec == " + object.spec().name());
       }
     }
@@ -50,7 +50,7 @@ public class Array extends Val {
 
   private ImmutableList<Obj> elements() {
     List<Hash> elementsHashes = getDataSequence();
-    return wrapObjectDbExceptionAsDecodingObjectException(
+    return wrapObjectDbExceptionAsDecodeObjException(
         hash(),
         () -> map(elementsHashes, h -> objectDb().get(h)));
   }

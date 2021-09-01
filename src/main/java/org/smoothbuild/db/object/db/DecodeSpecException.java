@@ -2,20 +2,20 @@ package org.smoothbuild.db.object.db;
 
 import org.smoothbuild.db.hashed.Hash;
 
-public class CannotDecodeSpecException extends ObjectDbException {
-  public CannotDecodeSpecException(Hash hash) {
+public class DecodeSpecException extends ObjectDbException {
+  public DecodeSpecException(Hash hash) {
     this(hash, null, null);
   }
 
-  public CannotDecodeSpecException(Hash hash, Exception cause) {
+  public DecodeSpecException(Hash hash, Exception cause) {
     this(hash, null, cause);
   }
 
-  public CannotDecodeSpecException(Hash hash, String message) {
+  public DecodeSpecException(Hash hash, String message) {
     this(hash, message, null);
   }
 
-  public CannotDecodeSpecException(Hash hash, String message, Throwable cause) {
+  public DecodeSpecException(Hash hash, String message, Throwable cause) {
     super(buildMessage(hash, message), cause);
   }
 
@@ -23,7 +23,7 @@ public class CannotDecodeSpecException extends ObjectDbException {
     return "Cannot read spec at " + hash + "." + (message == null ? "" : " " + message);
   }
 
-  public CannotDecodeSpecException(Throwable cause) {
+  public DecodeSpecException(Throwable cause) {
     super(cause);
   }
 }

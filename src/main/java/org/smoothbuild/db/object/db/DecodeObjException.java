@@ -2,20 +2,20 @@ package org.smoothbuild.db.object.db;
 
 import org.smoothbuild.db.hashed.Hash;
 
-public class CannotDecodeObjectException extends ObjectDbException {
-  public CannotDecodeObjectException(Hash hash) {
+public class DecodeObjException extends ObjectDbException {
+  public DecodeObjException(Hash hash) {
     this(hash, null, null);
   }
 
-  public CannotDecodeObjectException(Hash hash, Exception cause) {
+  public DecodeObjException(Hash hash, Exception cause) {
     this(hash, null, cause);
   }
 
-  public CannotDecodeObjectException(Hash hash, String message) {
+  public DecodeObjException(Hash hash, String message) {
     this(hash, message, null);
   }
 
-  public CannotDecodeObjectException(Hash hash, String message, Throwable cause) {
+  public DecodeObjException(Hash hash, String message, Throwable cause) {
     super(buildMessage(hash, message), cause);
   }
 
@@ -23,7 +23,7 @@ public class CannotDecodeObjectException extends ObjectDbException {
     return "Cannot read object at " + hash + "." + (message == null ? "" : " " + message);
   }
 
-  public CannotDecodeObjectException(Throwable cause) {
+  public DecodeObjException(Throwable cause) {
     super(cause);
   }
 }

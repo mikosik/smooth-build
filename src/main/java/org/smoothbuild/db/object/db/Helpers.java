@@ -4,7 +4,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 
 public class Helpers {
-  public static <T> T wrapException(HashedDbCallable<T> callable) {
+  public static <T> T wrapHashedDbExceptionAsObjectDbException(HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
@@ -12,11 +12,12 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapDecodingObjectException(Hash hash, HashedDbCallable<T> callable) {
+  public static <T> T wrapHashedDbExceptionAsDecodeObjException(
+      Hash hash, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new CannotDecodeObjectException(hash, e);
+      throw new DecodeObjException(hash, e);
     }
   }
 
@@ -25,12 +26,12 @@ public class Helpers {
     public T call() throws HashedDbException;
   }
 
-  public static <T> T wrapObjectDbExceptionAsDecodingObjectException(
+  public static <T> T wrapObjectDbExceptionAsDecodeObjException(
       Hash hash, ObjectDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjectDbException e) {
-      throw new CannotDecodeObjectException(hash, e);
+      throw new DecodeObjException(hash, e);
     }
   }
 
@@ -39,7 +40,7 @@ public class Helpers {
     public T call() throws ObjectDbException;
   }
 
-  public static void wrapException(HashedDbRunnable runnable) {
+  public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {
     try {
       runnable.run();
     } catch (HashedDbException e) {

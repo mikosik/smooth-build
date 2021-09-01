@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.base;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodingObjectException;
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjException;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class EArray extends Expr {
 
   private ImmutableList<Obj> getElements() {
     List<Hash> elementsHashes = getDataSequence();
-    return wrapObjectDbExceptionAsDecodingObjectException(
+    return wrapObjectDbExceptionAsDecodeObjException(
         hash(),
         () -> map(elementsHashes, h -> objectDb().get(h)));
   }

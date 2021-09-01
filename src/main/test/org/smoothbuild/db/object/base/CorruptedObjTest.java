@@ -39,8 +39,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.NoSuchDataException;
-import org.smoothbuild.db.object.db.CannotDecodeObjectException;
-import org.smoothbuild.db.object.db.CannotDecodeSpecException;
+import org.smoothbuild.db.object.db.DecodeObjException;
+import org.smoothbuild.db.object.db.DecodeSpecException;
 import org.smoothbuild.db.object.db.DecodingDataHashSequenceException;
 import org.smoothbuild.db.object.db.ObjectDbException;
 import org.smoothbuild.db.object.spec.Spec;
@@ -76,7 +76,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash objHash =
           hash(ByteString.of(new byte[byteCount]));
       assertCall(() -> objectDb().get(objHash))
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingHashSequenceException(objHash));
     }
 
@@ -88,15 +88,15 @@ public class CorruptedObjTest extends TestingContext {
               specHash,
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeSpecException(specHash));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeSpecException(specHash));
     }
 
     @Test
     public void reading_elements_from_not_stored_object_throws_exception() {
       Hash objHash = Hash.of(33);
       assertCall(() -> objectDb().get(objHash))
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new NoSuchDataException(objHash));
     }
   }
@@ -164,8 +164,8 @@ public class CorruptedObjTest extends TestingContext {
               notHashOfSequence
           );
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Val.class))
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(notHashOfSequence));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeObjException(notHashOfSequence));
     }
 
     @Test
@@ -179,8 +179,8 @@ public class CorruptedObjTest extends TestingContext {
               hash(arraySpec(strSpec())),
               dataHash);
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(nowhere));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeObjException(nowhere));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class CorruptedObjTest extends TestingContext {
                   )
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
-          .throwsException(new CannotDecodeObjectException(objHash,
+          .throwsException(new DecodeObjException(objHash,
               "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
     }
 
@@ -216,7 +216,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(constExpr())
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
-          .throwsException(new CannotDecodeObjectException(objHash,
+          .throwsException(new DecodeObjException(objHash,
               "It is array which spec == [STRING] but one of its elements has spec == CONST"));
     }
   }
@@ -306,7 +306,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
     }
 
@@ -318,7 +318,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
     }
 
@@ -332,7 +332,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingBooleanException(dataHash));
     }
   }
@@ -407,7 +407,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(dataHash, 2, 1));
     }
 
@@ -431,7 +431,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(dataHash, 2, 3));
     }
 
@@ -452,7 +452,7 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
-          .throwsException(new CannotDecodeObjectException(
+          .throwsException(new DecodeObjException(
               objHash, "Its data[0] should contain Expr but contains INT."));
     }
 
@@ -472,8 +472,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).arguments())
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(notHashOfSequence));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeObjException(notHashOfSequence));
     }
 
     @Test
@@ -493,8 +493,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).arguments())
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(nowhere));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeObjException(nowhere));
     }
 
     @Test
@@ -514,7 +514,7 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).arguments())
-          .throwsException(new CannotDecodeObjectException(
+          .throwsException(new DecodeObjException(
               objHash, "It is CALL but one of its elements is INT instead of Expr."));
     }
   }
@@ -570,7 +570,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(constSpec()),
               exprHash);
       assertCall(() -> ((Const) objectDb().get(objHash)).value())
-          .throwsException(new CannotDecodeObjectException(
+          .throwsException(new DecodeObjException(
               objHash, "Its data should contain Val but contains CONST."));
     }
   }
@@ -637,8 +637,8 @@ public class CorruptedObjTest extends TestingContext {
               notHashOfSequence
           );
       assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(notHashOfSequence));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeObjException(notHashOfSequence));
     }
 
     @Test
@@ -652,8 +652,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(nowhere));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeObjException(nowhere));
     }
 
     @Test
@@ -668,7 +668,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(val)
               ));
       assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new CannotDecodeObjectException(
+          .throwsException(new DecodeObjException(
               objHash, "It is EARRAY but one of its elements is INT instead of Expr."));
     }
   }
@@ -735,7 +735,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).tuple())
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(dataHash, 2, 1));
     }
 
@@ -754,7 +754,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).tuple())
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(dataHash, 2, 3));
     }
 
@@ -771,7 +771,7 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).tuple())
-          .throwsException(new CannotDecodeObjectException(
+          .throwsException(new DecodeObjException(
               objHash, "Its data[0] should contain Expr but contains Val."));
     }
 
@@ -788,7 +788,7 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).index())
-          .throwsException(new CannotDecodeObjectException(
+          .throwsException(new DecodeObjException(
               objHash, "Its data[1] should contain INT but contains STRING."));
     }
   }
@@ -891,7 +891,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(strSpec()),
               notStringHash);
       assertCall(() -> ((Str) objectDb().get(objHash)).jValue())
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingStringException(notStringHash, null));
     }
   }
@@ -945,8 +945,8 @@ public class CorruptedObjTest extends TestingContext {
               hash(personSpec()),
               notHashOfSequence);
       assertCall(() -> ((Tuple) objectDb().get(objHash)).get(0))
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(notHashOfSequence));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeObjException(notHashOfSequence));
     }
 
     @Test
@@ -962,8 +962,8 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((Tuple) objectDb().get(objHash)).get(0))
-          .throwsException(new CannotDecodeObjectException(objHash))
-          .withCause(new CannotDecodeObjectException(nowhere));
+          .throwsException(new DecodeObjException(objHash))
+          .withCause(new DecodeObjException(nowhere));
     }
 
     @Test
@@ -977,7 +977,7 @@ public class CorruptedObjTest extends TestingContext {
               elementValuesHash);
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(elementValuesHash, 2, 1));
     }
 
@@ -994,7 +994,7 @@ public class CorruptedObjTest extends TestingContext {
               elementValuesHash);
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new CannotDecodeObjectException(objHash))
+          .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(elementValuesHash, 2, 3));
     }
 
@@ -1008,7 +1008,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(boolVal(true))));
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new CannotDecodeObjectException(objHash,
+          .throwsException(new DecodeObjException(objHash,
               "Its TUPLE spec declares element 1 to have STRING spec but its data has object"
                   + " with BOOL spec at that index."));
     }
@@ -1023,7 +1023,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(constExpr())));
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new CannotDecodeObjectException(objHash,
+          .throwsException(new DecodeObjException(objHash,
               "Its TUPLE spec declares element 1 to have STRING spec but its data has object"
                   + " with CONST spec at that index."));
     }
@@ -1148,7 +1148,7 @@ public class CorruptedObjTest extends TestingContext {
             hash("abc")
         );
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash, brokenSpecMessage(kind, 2, 1)));
+            .throwsException(new DecodeSpecException(hash, brokenSpecMessage(kind, 2, 1)));
       }
     }
 
@@ -1161,7 +1161,7 @@ public class CorruptedObjTest extends TestingContext {
                 hash(TUPLE.marker())
             );
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash, brokenSpecMessage(TUPLE, 1, 2)));
+            .throwsException(new DecodeSpecException(hash, brokenSpecMessage(TUPLE, 1, 2)));
       }
 
       @Test
@@ -1175,7 +1175,7 @@ public class CorruptedObjTest extends TestingContext {
             hash("corrupted")
         );
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash));
+            .throwsException(new DecodeSpecException(hash));
       }
 
       @Test
@@ -1186,7 +1186,7 @@ public class CorruptedObjTest extends TestingContext {
                 hash("abc")
             );
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(
+            .throwsException(new DecodeSpecException(
                 hash, "Its specKind == TUPLE but reading its element specs caused error."));
       }
 
@@ -1201,8 +1201,8 @@ public class CorruptedObjTest extends TestingContext {
                 )
             );
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash, elementReadingErrorMessage(0)))
-            .withCause(new CannotDecodeSpecException(stringHash));
+            .throwsException(new DecodeSpecException(hash, elementReadingErrorMessage(0)))
+            .withCause(new DecodeSpecException(stringHash));
       }
 
       @Test
@@ -1215,8 +1215,8 @@ public class CorruptedObjTest extends TestingContext {
                     notASpecHash,
                     hash(strSpec())));
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash, elementReadingErrorMessage(0)))
-            .withCause(new CannotDecodeSpecException(notASpecHash));
+            .throwsException(new DecodeSpecException(hash, elementReadingErrorMessage(0)))
+            .withCause(new DecodeSpecException(notASpecHash));
       }
     }
 
@@ -1229,7 +1229,7 @@ public class CorruptedObjTest extends TestingContext {
                 hash(ARRAY.marker())
             );
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash, brokenSpecMessage(ARRAY, 1, 2)));
+            .throwsException(new DecodeSpecException(hash, brokenSpecMessage(ARRAY, 1, 2)));
       }
 
       @Test
@@ -1240,7 +1240,7 @@ public class CorruptedObjTest extends TestingContext {
             hash("corrupted")
         );
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash));
+            .throwsException(new DecodeSpecException(hash));
       }
 
       @Test
@@ -1251,7 +1251,7 @@ public class CorruptedObjTest extends TestingContext {
                 hash(ARRAY.marker()),
                 notASpecHash);
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash));
+            .throwsException(new DecodeSpecException(hash));
       }
 
       @Test
@@ -1261,7 +1261,7 @@ public class CorruptedObjTest extends TestingContext {
             hash(constSpec())
         );
         assertThatGetSpec(hash)
-            .throwsException(new CannotDecodeSpecException(hash,
+            .throwsException(new DecodeSpecException(hash,
                 "It is ARRAY Spec which element Spec is CONST but should be Spec of some Val."));
       }
     }
@@ -1279,8 +1279,8 @@ public class CorruptedObjTest extends TestingContext {
       return "Its specKind == TUPLE but reading element spec at index " + index + " caused error.";
     }
 
-    private CannotDecodeSpecException illegalSpecMarkerException(Hash hash, int marker) {
-      return new CannotDecodeSpecException(hash, "It has illegal SpecKind marker = " + marker + ".");
+    private DecodeSpecException illegalSpecMarkerException(Hash hash, int marker) {
+      return new DecodeSpecException(hash, "It has illegal SpecKind marker = " + marker + ".");
     }
   }
 
@@ -1289,7 +1289,7 @@ public class CorruptedObjTest extends TestingContext {
         hash(
             hash(spec));
     assertCall(() -> objectDb().get(objHash))
-        .throwsException(new CannotDecodeObjectException(objHash))
+        .throwsException(new DecodeObjException(objHash))
         .withCause(new DecodingHashSequenceException(objHash, 2, 1));
   }
 
@@ -1301,7 +1301,7 @@ public class CorruptedObjTest extends TestingContext {
             dataHash,
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(new CannotDecodeObjectException(objHash))
+        .throwsException(new DecodeObjException(objHash))
         .withCause(new DecodingHashSequenceException(objHash, 2, 3));
   }
 
@@ -1313,8 +1313,8 @@ public class CorruptedObjTest extends TestingContext {
             hash(spec),
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(new CannotDecodeObjectException(objHash))
-        .withCause(new CannotDecodeObjectException(dataHash));
+        .throwsException(new DecodeObjException(objHash))
+        .withCause(new DecodeObjException(dataHash));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
@@ -1325,7 +1325,7 @@ public class CorruptedObjTest extends TestingContext {
             hash(spec),
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(new CannotDecodeObjectException(objHash))
+        .throwsException(new DecodeObjException(objHash))
         .withCause(new NoSuchDataException(dataHash));
   }
 

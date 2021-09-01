@@ -1,7 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static org.smoothbuild.db.hashed.HashedDb.dataFullPath;
-import static org.smoothbuild.db.hashed.Helpers.wrapException;
+import static org.smoothbuild.db.hashed.Helpers.wrapIOExceptionAsHashedDbException;
 import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class HashingBufferedSink implements BufferedSink {
   }
 
   public void write(DataWriter dataWriter) throws HashedDbException {
-    wrapException(() -> dataWriter.writeTo(this));
+    wrapIOExceptionAsHashedDbException(() -> dataWriter.writeTo(this));
   }
 
   @Override

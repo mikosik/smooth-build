@@ -1,8 +1,8 @@
 package org.smoothbuild.db.object.base;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.db.object.db.Helpers.wrapDecodingObjectException;
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodingObjectException;
+import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjException;
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjException;
 
 import java.util.List;
 import java.util.Objects;
@@ -70,7 +70,7 @@ public abstract class Obj {
   }
 
   protected Obj getDataSequenceElementObj(int i, int expectedSize) {
-    return wrapObjectDbExceptionAsDecodingObjectException(
+    return wrapObjectDbExceptionAsDecodeObjException(
         hash(), () -> {
           Hash hash = getDataSequenceImpl(expectedSize).get(i);
           return objectDb().get(hash);
@@ -78,13 +78,13 @@ public abstract class Obj {
   }
 
   protected List<Hash> getDataSequence(int expectedSize) {
-    return wrapObjectDbExceptionAsDecodingObjectException(
+    return wrapObjectDbExceptionAsDecodeObjException(
         hash(),
         () -> getDataSequenceImpl(expectedSize));
   }
 
   protected List<Hash> getDataSequence() {
-    return wrapObjectDbExceptionAsDecodingObjectException(
+    return wrapObjectDbExceptionAsDecodeObjException(
         hash(),
         this::getDataSequenceImpl);
   }
@@ -98,6 +98,8 @@ public abstract class Obj {
   }
 
   private List<Hash> getDataSequenceImpl() {
-    return wrapDecodingObjectException(dataHash(), () -> objectDb().readSequence(dataHash()));
+    return wrapHashedDbExceptionAsDecodeObjException(
+        dataHash(),
+        () -> objectDb().readSequence(dataHash()));
   }
 }

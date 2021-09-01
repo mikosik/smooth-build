@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.base;
 
 import static com.google.common.collect.Streams.stream;
-import static org.smoothbuild.db.object.db.Helpers.wrapException;
+import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +41,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return wrapException(() -> objectDb.newArrayV(spec, elements));
+    return wrapHashedDbExceptionAsObjectDbException(() -> objectDb.newArrayV(spec, elements));
   }
 }

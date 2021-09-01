@@ -1,8 +1,8 @@
 package org.smoothbuild.db.object.base;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodingObjectException;
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjException;
 
-import org.smoothbuild.db.object.db.CannotDecodeObjectException;
+import org.smoothbuild.db.object.db.DecodeObjException;
 import org.smoothbuild.db.object.db.ObjectDb;
 
 /**
@@ -14,12 +14,12 @@ public class Const extends Expr {
   }
 
   public Obj value() {
-    Obj obj = wrapObjectDbExceptionAsDecodingObjectException(
+    Obj obj = wrapObjectDbExceptionAsDecodeObjException(
         hash(), () -> objectDb().get(merkleRoot().dataHash()));
     if (obj instanceof Val val) {
       return val;
     } else {
-      throw new CannotDecodeObjectException(
+      throw new DecodeObjException(
           hash(), "Its data should contain Val but contains " + obj.spec().name() + ".");
     }
   }

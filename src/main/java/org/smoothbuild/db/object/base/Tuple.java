@@ -1,12 +1,12 @@
 package org.smoothbuild.db.object.base;
 
 import static java.util.Objects.checkIndex;
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodingObjectException;
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjException;
 
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.CannotDecodeObjectException;
+import org.smoothbuild.db.object.db.DecodeObjException;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.TupleSpec;
@@ -50,7 +50,7 @@ public class Tuple extends Val {
         if (spec.equals(obj.spec())) {
           builder.add((Val) obj);
         } else {
-          throw new CannotDecodeObjectException(hash(), "Its TUPLE spec declares element " + i
+          throw new DecodeObjException(hash(), "Its TUPLE spec declares element " + i
               + " to have " + spec.name() + " spec but its data has object with " +
               obj.spec().name() + " spec at that index.");
         }
@@ -61,7 +61,7 @@ public class Tuple extends Val {
   }
 
   private Obj elementAt(List<Hash> hashSequence, int i) {
-    return wrapObjectDbExceptionAsDecodingObjectException(
+    return wrapObjectDbExceptionAsDecodeObjException(
         hash(),
         () -> objectDb().get(hashSequence.get(i)));
   }

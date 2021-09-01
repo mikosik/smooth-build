@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.base;
 
-import org.smoothbuild.db.object.db.CannotDecodeObjectException;
+import org.smoothbuild.db.object.db.DecodeObjException;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.ExprSpec;
 
@@ -14,7 +14,7 @@ public abstract class Expr extends Obj {
   protected ImmutableList<Expr> verifyExprList(ImmutableList<Obj> elements) {
     for (Obj element : elements) {
       if (!(element.spec() instanceof ExprSpec)) {
-        throw new CannotDecodeObjectException(hash(), "It is " + spec().name()
+        throw new DecodeObjException(hash(), "It is " + spec().name()
             + " but one of its elements is " + element.spec().name() + " instead of Expr.");
       }
     }

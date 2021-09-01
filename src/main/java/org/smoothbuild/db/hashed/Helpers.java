@@ -3,7 +3,8 @@ package org.smoothbuild.db.hashed;
 import java.io.IOException;
 
 public class Helpers {
-  public static void wrapException(IoRunnable runnable) throws HashedDbException {
+  public static void wrapIOExceptionAsHashedDbException(IoRunnable runnable)
+      throws HashedDbException {
     try {
       runnable.run();
     } catch (IOException e) {

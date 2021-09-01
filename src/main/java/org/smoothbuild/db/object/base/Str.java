@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.base;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapDecodingObjectException;
+import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjException;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.object.db.ObjectDb;
@@ -14,7 +14,9 @@ public class Str extends Val {
   }
 
   public String jValue() {
-    return wrapDecodingObjectException(hash(), () -> hashedDb().readString(dataHash()));
+    return wrapHashedDbExceptionAsDecodeObjException(
+        hash(),
+        () -> hashedDb().readString(dataHash()));
   }
 
   @Override

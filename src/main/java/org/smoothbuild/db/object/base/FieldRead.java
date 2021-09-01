@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.base;
 
-import org.smoothbuild.db.object.db.CannotDecodeObjectException;
+import org.smoothbuild.db.object.db.DecodeObjException;
 import org.smoothbuild.db.object.db.ObjectDb;
 
 /**
@@ -20,7 +20,7 @@ public class FieldRead extends Expr {
     if (tuple instanceof Expr expr) {
       return expr;
     } else {
-      throw new CannotDecodeObjectException(
+      throw new DecodeObjException(
           hash(), "Its data[0] should contain Expr but contains Val.");
     }
   }
@@ -30,7 +30,7 @@ public class FieldRead extends Expr {
     if (index instanceof Int intVal) {
       return intVal;
     } else {
-      throw new CannotDecodeObjectException(
+      throw new DecodeObjException(
           hash(), "Its data[1] should contain INT but contains STRING.");
     }
   }

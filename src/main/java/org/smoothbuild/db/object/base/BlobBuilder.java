@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.base;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapException;
+import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class BlobBuilder implements Closeable {
   }
 
   public void write(DataWriter dataWriter) {
-    wrapException(() -> sink.write(dataWriter));
+    wrapHashedDbExceptionAsObjectDbException(() -> sink.write(dataWriter));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class BlobBuilder implements Closeable {
   }
 
   public Blob build() {
-    return wrapException(this::buildImpl);
+    return wrapHashedDbExceptionAsObjectDbException(this::buildImpl);
   }
 
   private Blob buildImpl() throws HashedDbException {
