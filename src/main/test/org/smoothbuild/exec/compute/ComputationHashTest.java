@@ -10,7 +10,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -140,7 +140,7 @@ public class ComputationHashTest extends TestingContext {
       }
 
       @Override
-      public Spec outputSpec() {
+      public ValSpec outputSpec() {
         return null;
       }
 

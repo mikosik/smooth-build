@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 
@@ -14,7 +14,7 @@ public class VirtualTask extends StepTask {
   }
 
   @Override
-  protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
-    result.accept(obj);
+  protected void onCompleted(Val val, Worker worker, Consumer<Val> result) {
+    result.accept(val);
   }
 }

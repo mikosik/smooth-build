@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.compute.TaskKind.BUILDER;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.exec.base.LambdaRec;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
@@ -28,8 +28,8 @@ public class DefaultArgumentTask extends StepTask {
   }
 
   @Override
-  protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
-    String functionName = LambdaRec.name(((Rec) obj)).jValue();
+  protected void onCompleted(Val val, Worker worker, Consumer<Val> result) {
+    String functionName = LambdaRec.name(((Rec) val)).jValue();
     Task task = taskCreator.defaultArgumentEagerTask(scope, functionName, index);
     task.compute(worker).addConsumer(result);
   }

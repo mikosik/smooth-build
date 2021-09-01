@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.Computed;
@@ -21,8 +21,8 @@ import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 public class ResultHandlerTest {
   private ExecutionReporter reporter;
   private SoftTerminationExecutor executor;
-  private Consumer<Obj> consumer;
-  private Obj object;
+  private Consumer<Val> consumer;
+  private Val val;
 
   @BeforeEach
   @SuppressWarnings("unchecked")
@@ -30,7 +30,7 @@ public class ResultHandlerTest {
     reporter = mock(ExecutionReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
-    object = mock(Obj.class);
+    val = mock(Val.class);
   }
 
   @Nested
@@ -38,14 +38,14 @@ public class ResultHandlerTest {
     @Test
     public void object_is_forwarded_to_consumer() {
       ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(maybeComputed(object));
-      verify(consumer, only()).accept(object);
+      resultHandler.accept(maybeComputed(val));
+      verify(consumer, only()).accept(val);
     }
 
     @Test
     public void executor_is_not_stopped() {
       ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(maybeComputed(object));
+      resultHandler.accept(maybeComputed(val));
       verifyNoInteractions(executor);
     }
   }
@@ -84,12 +84,12 @@ public class ResultHandlerTest {
     }
   }
 
-  private Computed maybeComputed(Obj object) {
-    return new Computed(output(object), DISK);
+  private Computed maybeComputed(Val val) {
+    return new Computed(output(val), DISK);
   }
 
-  private static Output output(Obj object) {
-    return new Output(object, mock(Array.class));
+  private static Output output(Val val) {
+    return new Output(val, mock(Array.class));
   }
 
   private Task task() {

@@ -15,7 +15,7 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConvertAlgorithm extends Algorithm {
-  public ConvertAlgorithm(Spec outputSpec) {
+  public ConvertAlgorithm(ValSpec outputSpec) {
     super(outputSpec);
   }
 
@@ -26,10 +26,10 @@ public class ConvertAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    if (input.objects().size() != 1) {
-      throw newBuildBrokenException("Expected input size == 1 but was " + input.objects().size());
+    if (input.vals().size() != 1) {
+      throw newBuildBrokenException("Expected input size == 1 but was " + input.vals().size());
     }
-    Obj obj = input.objects().get(0);
+    Obj obj = input.vals().get(0);
     assertThatSpecsAreNotEqual(obj);
     return new Output(convert(outputSpec(), obj, nativeApi), nativeApi.messages());
   }
@@ -41,7 +41,7 @@ public class ConvertAlgorithm extends Algorithm {
     }
   }
 
-  private static Obj convert(Spec destinationSpec, Obj obj, NativeApi nativeApi) {
+  private static Val convert(Spec destinationSpec, Obj obj, NativeApi nativeApi) {
     if (obj instanceof Array array) {
       return convertArray(destinationSpec, array, nativeApi);
     }

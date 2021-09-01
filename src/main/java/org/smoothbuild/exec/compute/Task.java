@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.compute;
 
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.io.fs.space.Space;
 import org.smoothbuild.lang.base.define.Location;
@@ -26,5 +26,5 @@ public interface Task {
     return location().file().space();
   }
 
-  public Feeder<Obj> compute(Worker worker);
+  public Feeder<Val> compute(Worker worker);
 }

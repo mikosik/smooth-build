@@ -10,7 +10,6 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
@@ -37,8 +36,8 @@ public class MapTask extends RealTask {
   }
 
   @Override
-  public Feeder<Obj> compute(Worker worker) {
-    FeedingConsumer<Obj> result = new FeedingConsumer<>();
+  public Feeder<Val> compute(Worker worker) {
+    FeedingConsumer<Val> result = new FeedingConsumer<>();
     // functionTask is started, but we don't add any consumer waiting for it here.
     // Each task that actually maps single array element using that function will depend
     // on functionTask. We start it here to potentially so it executes in background so
@@ -51,8 +50,8 @@ public class MapTask extends RealTask {
     return result;
   }
 
-  private void onArrayCompleted(Obj obj, Consumer<Obj> result, Worker worker) {
-    Array array = (Array) obj;
+  private void onArrayCompleted(Val val, Consumer<Val> result, Worker worker) {
+    Array array = (Array) val;
     ArrayType arrayType = (ArrayType) type();
     var elemTasks = map(array.elements(Val.class), o -> mapElementTask(arrayType.elemType(), o));
     taskCreator.arrayEagerTask(MAP, arrayType, elemTasks, location())
@@ -60,12 +59,12 @@ public class MapTask extends RealTask {
         .addConsumer(result);
   }
 
-  private Task mapElementTask(Type elemType, Obj element) {
+  private Task mapElementTask(Type elemType, Val element) {
     ImmutableList<Task> argument = list(elemTask(elemType, element, arrayTask().location()));
     return taskCreator.callEagerTask(scope, functionTask(), argument, functionTask().location());
   }
 
-  private Task elemTask(Type elemType, Obj element, Location location) {
+  private Task elemTask(Type elemType, Val element, Location location) {
     return new DummyTask(BUILDER, elemType, "element-to-map", element, location);
   }
 

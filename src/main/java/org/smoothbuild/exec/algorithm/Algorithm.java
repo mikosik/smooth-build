@@ -1,25 +1,25 @@
 package org.smoothbuild.exec.algorithm;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public abstract class Algorithm {
   private final boolean isPure;
-  private final Spec outputSpec;
+  private final ValSpec outputSpec;
 
-  protected Algorithm(Spec outputSpec) {
+  protected Algorithm(ValSpec outputSpec) {
     this(outputSpec, true);
   }
 
-  protected Algorithm(Spec outputSpec, boolean isPure) {
+  protected Algorithm(ValSpec outputSpec, boolean isPure) {
     this.outputSpec = outputSpec;
     this.isPure = isPure;
   }
 
-  public Spec outputSpec() {
+  public ValSpec outputSpec() {
     return outputSpec;
   }
 

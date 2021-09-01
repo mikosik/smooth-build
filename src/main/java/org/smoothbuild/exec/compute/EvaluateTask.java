@@ -6,7 +6,7 @@ import static org.smoothbuild.util.Lists.concat;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.exec.base.LambdaRec;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
@@ -32,8 +32,8 @@ public class EvaluateTask extends StepTask {
   }
 
   @Override
-  protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
-    String name = LambdaRec.name(((Rec) obj)).jValue();
+  protected void onCompleted(Val val, Worker worker, Consumer<Val> result) {
+    String name = LambdaRec.name(((Rec) val)).jValue();
     Task task = taskCreator.evaluateLambdaEagerTask(
         scope, variables, type(), name, arguments, location());
     task.compute(worker).addConsumer(result);

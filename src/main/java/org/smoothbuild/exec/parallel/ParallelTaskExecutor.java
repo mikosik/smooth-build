@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computer;
@@ -70,7 +71,7 @@ public class ParallelTaskExecutor {
       return mapValues(results, feeder -> Optional.ofNullable(feeder.get()));
     }
 
-    public void enqueueComputation(AlgorithmTask task, Input input, Consumer<Obj> consumer) {
+    public void enqueueComputation(AlgorithmTask task, Input input, Consumer<Val> consumer) {
       jobExecutor.enqueue(() -> {
         try {
           ResultHandler resultHandler = new ResultHandler(task, consumer, reporter, jobExecutor);

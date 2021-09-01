@@ -35,7 +35,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -222,7 +222,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        String joinedArgs = input.objects()
+        String joinedArgs = input.vals()
             .stream()
             .map(o -> ((Str) o).jValue())
             .collect(joining(","));
@@ -336,7 +336,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
 
     @Override
-    public Spec outputSpec() {
+    public ValSpec outputSpec() {
       return strSpec();
     }
   }

@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.compute;
 
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
@@ -41,7 +41,7 @@ public record LazyTask(Type type, Location location, Supplier<Task> supplier) im
   }
 
   @Override
-  public Feeder<Obj> compute(Worker worker) {
+  public Feeder<Val> compute(Worker worker) {
     return task().compute(worker);
   }
 

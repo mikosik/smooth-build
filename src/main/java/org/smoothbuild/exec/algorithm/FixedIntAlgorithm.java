@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHa
 import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -26,7 +26,7 @@ public class FixedIntAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Obj obj = nativeApi.factory().intValue(bigInteger);
-    return new Output(obj, nativeApi.messages());
+    Val val = nativeApi.factory().intValue(bigInteger);
+    return new Output(val, nativeApi.messages());
   }
 }

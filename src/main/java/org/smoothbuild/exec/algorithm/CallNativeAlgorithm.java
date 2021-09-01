@@ -9,9 +9,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
@@ -24,7 +24,7 @@ public class CallNativeAlgorithm extends Algorithm {
   private final MethodLoader methodLoader;
   private final GlobalReferencable referencable;
 
-  public CallNativeAlgorithm(MethodLoader methodLoader, Spec outputSpec,
+  public CallNativeAlgorithm(MethodLoader methodLoader, ValSpec outputSpec,
       GlobalReferencable referencable, boolean isPure) {
     super(outputSpec, isPure);
     this.methodLoader = methodLoader;
@@ -38,11 +38,11 @@ public class CallNativeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    String methodPath = ((Str) input.objects().get(0)).jValue();
+    String methodPath = ((Str) input.vals().get(0)).jValue();
     Method method = methodLoader.load(referencable, methodPath);
     try {
-      ImmutableList<Obj> nativeArgs = skip(1, input.objects());
-      Obj result = (Obj) method.invoke(null, createArguments(nativeApi, nativeArgs));
+      ImmutableList<Val> nativeArgs = skip(1, input.vals());
+      Val result = (Val) method.invoke(null, createArguments(nativeApi, nativeArgs));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
           nativeApi.log().error("`" + referencable.name()
@@ -66,7 +66,7 @@ public class CallNativeAlgorithm extends Algorithm {
     }
   }
 
-  private static Object[] createArguments(NativeApi nativeApi, List<Obj> arguments) {
+  private static Object[] createArguments(NativeApi nativeApi, List<Val> arguments) {
     Object[] nativeArguments = new Object[1 + arguments.size()];
     nativeArguments[0] = nativeApi;
     for (int i = 0; i < arguments.size(); i++) {

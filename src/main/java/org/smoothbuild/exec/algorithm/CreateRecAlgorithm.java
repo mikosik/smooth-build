@@ -21,7 +21,7 @@ public class CreateRecAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Rec rec = nativeApi.factory().rec(((RecSpec) outputSpec()), input.objects());
+    Rec rec = nativeApi.factory().rec(((RecSpec) outputSpec()), input.vals());
     return new Output(rec, nativeApi.messages());
   }
 }

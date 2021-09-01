@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.base.define.IfFunction.IF_FUNCTION_NAME;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
@@ -22,8 +22,8 @@ public class IfTask extends StepTask {
   }
 
   @Override
-  protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
-    boolean condition = ((Bool) obj).jValue();
+  protected void onCompleted(Val val, Worker worker, Consumer<Val> result) {
+    boolean condition = ((Bool) val).jValue();
     Task subTaskToCompute = condition ? thenTask() : elseTask();
     new VirtualTask(CALL, IF_TASK_NAME, subTaskToCompute, location())
         .compute(worker)

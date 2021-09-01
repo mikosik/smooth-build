@@ -6,7 +6,7 @@ import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
 import java.util.List;
 
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
@@ -29,15 +29,15 @@ public class AlgorithmTask extends RealTask {
   }
 
   @Override
-  public Feeder<Obj> compute(Worker worker) {
-    FeedingConsumer<Obj> result = new FeedingConsumer<>();
+  public Feeder<Val> compute(Worker worker) {
+    FeedingConsumer<Val> result = new FeedingConsumer<>();
     var dependencyResults = map(dependencies(), d -> d.compute(worker));
     runWhenAllAvailable(dependencyResults,
         () -> worker.enqueueComputation(this, toInput(dependencyResults), result));
     return result;
   }
 
-  private static Input toInput(List<Feeder<Obj>> results) {
+  private static Input toInput(List<Feeder<Val>> results) {
     return input(map(results, Feeder::get));
   }
 
