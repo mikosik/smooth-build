@@ -26,7 +26,7 @@ public class Array extends Val {
     return (ArraySpec) super.spec();
   }
 
-  public <T extends Obj> Iterable<T> asIterable(Class<T> clazz) {
+  public <T extends Val> Iterable<T> asIterable(Class<T> clazz) {
     assertIsIterableAs(clazz);
     ImmutableList<Obj> elements = elements();
     for (Obj object : elements) {
@@ -36,11 +36,11 @@ public class Array extends Val {
       }
     }
     @SuppressWarnings("unchecked")
-    ImmutableList<T> result = (ImmutableList<T>) elements;
+    ImmutableList<T> result = (ImmutableList<T>) (Object) elements;
     return result;
   }
 
-  private <T extends Obj> void assertIsIterableAs(Class<T> clazz) {
+  private <T extends Val> void assertIsIterableAs(Class<T> clazz) {
     Spec elemSpec = spec().elemSpec();
     if (!(elemSpec.isNothing() || clazz.isAssignableFrom(elemSpec.jType()))) {
       throw new IllegalArgumentException(spec().name() + " cannot be viewed as Iterable of "

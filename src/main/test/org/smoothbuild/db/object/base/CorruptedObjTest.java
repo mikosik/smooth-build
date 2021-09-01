@@ -689,7 +689,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(arraySpec(strSpec())),
               notHashOfSequence
           );
-      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Obj.class))
+      assertCall(() -> ((Array) objectDb().get(objHash)).asIterable(Val.class))
           .throwsException(new CannotDecodeObjectException(objHash))
           .withCause(new CannotDecodeObjectException(notHashOfSequence));
     }

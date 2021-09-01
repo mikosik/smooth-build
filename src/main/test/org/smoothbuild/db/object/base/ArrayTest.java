@@ -236,7 +236,7 @@ public class ArrayTest extends TestingContext {
 
     @Test
     public void nothing_array_is_empty() {
-      assertThat(emptyArrayOf(nothingSpec()).asIterable(Obj.class))
+      assertThat(emptyArrayOf(nothingSpec()).asIterable(Val.class))
           .isEmpty();
     }
 
@@ -250,7 +250,7 @@ public class ArrayTest extends TestingContext {
     @Test
     public void nothing_array_read_by_hash_is_empty() {
       Array array = emptyArrayOf(nothingSpec());
-      assertThat(((Array) objectDbOther().get(array.hash())).asIterable(Obj.class))
+      assertThat(((Array) objectDbOther().get(array.hash())).asIterable(Val.class))
           .isEmpty();
     }
 

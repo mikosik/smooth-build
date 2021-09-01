@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.Val;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.exec.plan.TaskCreator;
 import org.smoothbuild.lang.base.define.Location;
@@ -53,7 +54,7 @@ public class MapTask extends RealTask {
   private void onArrayCompleted(Obj obj, Consumer<Obj> result, Worker worker) {
     Array array = (Array) obj;
     ArrayType arrayType = (ArrayType) type();
-    var elemTasks = map(array.asIterable(Obj.class), o -> mapElementTask(arrayType.elemType(), o));
+    var elemTasks = map(array.asIterable(Val.class), o -> mapElementTask(arrayType.elemType(), o));
     taskCreator.arrayEagerTask(MAP, arrayType, elemTasks, location())
         .compute(worker)
         .addConsumer(result);

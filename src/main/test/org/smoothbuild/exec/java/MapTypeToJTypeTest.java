@@ -22,9 +22,9 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Int;
-import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.base.Val;
 import org.smoothbuild.lang.base.type.Type;
 
 public class MapTypeToJTypeTest {
@@ -43,11 +43,11 @@ public class MapTypeToJTypeTest {
 
   private static Stream<Arguments> mapTypeToJType_test_data() {
     return Stream.of(
-        arguments(A, Obj.class),
+        arguments(A, Val.class),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
         arguments(INT, Int.class),
-        arguments(NOTHING, Obj.class),
+        arguments(NOTHING, Val.class),
         arguments(STRING, Str.class),
         arguments(PERSON, Tuple.class),
 

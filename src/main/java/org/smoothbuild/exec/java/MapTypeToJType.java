@@ -7,6 +7,7 @@ import org.smoothbuild.db.object.base.Int;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.base.Val;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.StructType;
@@ -19,7 +20,7 @@ public class MapTypeToJType {
     if (type instanceof ArrayType) {
       return Array.class;
     } else if (type instanceof Variable) {
-      return Obj.class;
+      return Val.class;
     } else if (type instanceof StructType) {
       return Tuple.class;
     } else if (type instanceof FunctionType) {
@@ -29,7 +30,7 @@ public class MapTypeToJType {
         case TypeNames.BLOB -> Blob.class;
         case TypeNames.BOOL -> Bool.class;
         case TypeNames.INT -> Int.class;
-        case TypeNames.NOTHING -> Obj.class;
+        case TypeNames.NOTHING -> Val.class;
         case TypeNames.STRING -> Str.class;
         default -> throw new IllegalArgumentException("Unknown type: " + type.q());
       };

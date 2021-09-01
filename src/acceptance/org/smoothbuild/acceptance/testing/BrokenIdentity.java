@@ -1,10 +1,10 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.Val;
 import org.smoothbuild.plugin.NativeApi;
 
 public class BrokenIdentity {
-  public static Obj function(NativeApi nativeApi, Obj value) {
+  public static Val function(NativeApi nativeApi, Val value) {
     return nativeApi.factory().string("abc");
   }
 }
