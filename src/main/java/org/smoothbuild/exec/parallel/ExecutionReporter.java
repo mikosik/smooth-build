@@ -4,8 +4,8 @@ import static com.google.common.base.Strings.padEnd;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
-import static org.smoothbuild.exec.base.MessageTuple.level;
-import static org.smoothbuild.exec.base.MessageTuple.text;
+import static org.smoothbuild.exec.base.MessageRec.level;
+import static org.smoothbuild.exec.base.MessageRec.text;
 import static org.smoothbuild.exec.compute.RealTask.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.util.Lists.list;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
@@ -52,7 +52,7 @@ public class ExecutionReporter {
   }
 
   private void print(Task task, ResultSource resultSource, Array messages) {
-    var logs = map(messages.elements(Tuple.class), m -> new Log(level(m), text(m)));
+    var logs = map(messages.elements(Rec.class), m -> new Log(level(m), text(m)));
     print(task, logs, resultSource);
   }
 

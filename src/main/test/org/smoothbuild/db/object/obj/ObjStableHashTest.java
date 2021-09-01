@@ -56,13 +56,13 @@ public class ObjStableHashTest extends TestingContext {
     }
 
     @Test
-    public void hash_of_empty_tuple_array_is_stable() {
+    public void hash_of_empty_rec_array_is_stable() {
       assertThat(arrayVal(personSpec()).hash())
           .isEqualTo(Hash.decode("a26b682254544d9d3b34a14f44f3b40f39f8fa1e"));
     }
 
     @Test
-    public void hash_of_non_empty_tuple_array_is_stable() {
+    public void hash_of_non_empty_rec_array_is_stable() {
       assertThat(arrayVal(personVal("John", "Doe")).hash())
           .isEqualTo(Hash.decode("e06466885b0ff8bd31e6eb2fb5af60e35eb11888"));
     }
@@ -201,15 +201,15 @@ public class ObjStableHashTest extends TestingContext {
   }
 
   @Nested
-  class _tuple {
+  class _rec {
     @Test
-    public void hash_of_empty_tuple_is_stable() {
-      assertThat(emptyTupleVal().hash())
+    public void hash_of_empty_rec_is_stable() {
+      assertThat(emptyRecVal().hash())
           .isEqualTo(Hash.decode("00c74cba6a50c3da116688ad977e18bc76d65ca4"));
     }
 
     @Test
-    public void hash_of_some_tuple_is_stable() {
+    public void hash_of_some_rec_is_stable() {
       assertThat(personVal("John", "Doe").hash())
           .isEqualTo(Hash.decode("96f78887322a24eb91f2c785b10c7a6c613a2633"));
     }

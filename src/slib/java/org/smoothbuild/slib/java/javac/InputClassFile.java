@@ -11,14 +11,14 @@ import java.util.Objects;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.Rec;
 
 public class InputClassFile extends SimpleJavaFileObject {
-  private final Tuple file;
+  private final Rec file;
   private final String binaryName;
   private final String aPackage;
 
-  public InputClassFile(Tuple file) {
+  public InputClassFile(Rec file) {
     super(URI.create("jar:///" + ":" + filePath(file).jValue()), Kind.CLASS);
 
     if (!filePath(file).jValue().endsWith(Kind.CLASS.extension)) {

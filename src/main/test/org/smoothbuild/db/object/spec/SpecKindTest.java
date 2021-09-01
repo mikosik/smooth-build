@@ -30,7 +30,7 @@ public class SpecKindTest {
     return list(
         Arguments.of(0, SpecKind.INT),
         Arguments.of(1, SpecKind.NOTHING),
-        Arguments.of(2, SpecKind.TUPLE),
+        Arguments.of(2, SpecKind.RECORD),
         Arguments.of(3, SpecKind.ARRAY),
         Arguments.of(4, SpecKind.BLOB),
         Arguments.of(5, SpecKind.BOOL),

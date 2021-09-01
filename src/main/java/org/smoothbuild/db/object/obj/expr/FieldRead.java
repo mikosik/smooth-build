@@ -12,16 +12,16 @@ import org.smoothbuild.db.object.obj.val.Int;
  */
 public class FieldRead extends Expr {
   private static final int DATA_HASH_LIST_SIZE = 2;
-  private static final int TUPLE_INDEX = 0;
+  private static final int REC_INDEX = 0;
   private static final int INDEX_INDEX = 1;
 
   public FieldRead(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
   }
 
-  public Expr tuple() {
-    Obj tuple = getDataSequenceElementObj(TUPLE_INDEX, DATA_HASH_LIST_SIZE);
-    if (tuple instanceof Expr expr) {
+  public Expr rec() {
+    Obj rec = getDataSequenceElementObj(REC_INDEX, DATA_HASH_LIST_SIZE);
+    if (rec instanceof Expr expr) {
       return expr;
     } else {
       throw new DecodeObjException(

@@ -17,16 +17,16 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.util.io.DataWriter;
 
 /**
@@ -36,8 +36,8 @@ import org.smoothbuild.util.io.DataWriter;
 @Singleton
 public class ObjectFactory {
   private final ObjectDb objectDb;
-  private final TupleSpec messageSpec;
-  private final TupleSpec fileSpec;
+  private final RecSpec messageSpec;
+  private final RecSpec fileSpec;
 
   @Inject
   public ObjectFactory(ObjectDb objectDb) {
@@ -46,13 +46,13 @@ public class ObjectFactory {
     this.fileSpec = createFileSpec(objectDb);
   }
 
-  private static TupleSpec createMessageSpec(ObjectDb objectDb) {
+  private static RecSpec createMessageSpec(ObjectDb objectDb) {
     StrSpec strSpec = objectDb.strS();
-    return objectDb.tupleS(list(strSpec, strSpec));
+    return objectDb.recS(list(strSpec, strSpec));
   }
 
-  private static TupleSpec createFileSpec(ObjectDb objectDb) {
-    return objectDb.tupleS(list(objectDb.blobS(), objectDb.strS()));
+  private static RecSpec createFileSpec(ObjectDb objectDb) {
+    return objectDb.recS(list(objectDb.blobS(), objectDb.strS()));
   }
 
   public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
@@ -80,16 +80,16 @@ public class ObjectFactory {
     return objectDb.intVal(value);
   }
 
-  public Tuple file(Str path, Blob content) {
-    return objectDb.tupleVal(fileSpec(), list(content, path));
+  public Rec file(Str path, Blob content) {
+    return objectDb.recVal(fileSpec(), list(content, path));
   }
 
   public Str string(String string) {
     return objectDb.strVal(string);
   }
 
-  public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> elements) {
-    return objectDb.tupleVal(spec, elements);
+  public Rec rec(RecSpec spec, Iterable<? extends Obj> elements) {
+    return objectDb.recVal(spec, elements);
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
@@ -108,11 +108,11 @@ public class ObjectFactory {
     return objectDb.intS();
   }
 
-  public TupleSpec fileSpec() {
+  public RecSpec fileSpec() {
     return fileSpec;
   }
 
-  public TupleSpec messageSpec() {
+  public RecSpec messageSpec() {
     return messageSpec;
   }
 
@@ -124,25 +124,25 @@ public class ObjectFactory {
     return objectDb.strS();
   }
 
-  public TupleSpec tupleSpec(Iterable<? extends ValSpec> elementSpecs) {
-    return objectDb.tupleS(elementSpecs);
+  public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
+    return objectDb.recS(elementSpecs);
   }
 
-  public Tuple errorMessage(String text) {
+  public Rec errorMessage(String text) {
     return message(ERROR.name(), text);
   }
 
-  public Tuple warningMessage(String text) {
+  public Rec warningMessage(String text) {
     return message(WARNING.name(), text);
   }
 
-  public Tuple infoMessage(String text) {
+  public Rec infoMessage(String text) {
     return message(INFO.name(), text);
   }
 
-  private Tuple message(String severity, String text) {
+  private Rec message(String severity, String text) {
     Obj textObject = objectDb.strVal(text);
     Obj severityObject = objectDb.strVal(severity);
-    return objectDb.tupleVal(messageSpec(), list(textObject, severityObject));
+    return objectDb.recVal(messageSpec(), list(textObject, severityObject));
   }
 }

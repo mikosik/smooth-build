@@ -16,8 +16,8 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.plugin.NativeApi;
 
 public class JavacFunction {
@@ -62,13 +62,13 @@ public class JavacFunction {
       Iterable<String> options = options();
       StandardJavaFileManager fileManager1 =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      var libsClasses = classesFromJarFiles(nativeApi, libs.elements(Tuple.class));
+      var libsClasses = classesFromJarFiles(nativeApi, libs.elements(Rec.class));
       if (libsClasses == null) {
         return null;
       }
       try (SandboxedJavaFileManager fileManager = new SandboxedJavaFileManager(
           fileManager1, nativeApi, libsClasses)) {
-        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elements(Tuple.class));
+        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elements(Rec.class));
 
         /*
          * Java compiler fails miserably when there's no java files.
@@ -106,9 +106,9 @@ public class JavacFunction {
           .collect(Collectors.toList());
     }
 
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<Tuple> sourceFiles) {
+    private static Iterable<InputSourceFile> toJavaFiles(Iterable<Rec> sourceFiles) {
       ArrayList<InputSourceFile> result = new ArrayList<>();
-      for (Tuple file : sourceFiles) {
+      for (Rec file : sourceFiles) {
         result.add(new InputSourceFile(file));
       }
       return result;

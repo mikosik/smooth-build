@@ -1,11 +1,11 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.exec.base.MessageTuple.severity;
-import static org.smoothbuild.exec.base.MessageTuple.text;
+import static org.smoothbuild.exec.base.MessageRec.severity;
+import static org.smoothbuild.exec.base.MessageRec.text;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.testing.TestingContext;
 
 public class ContainerTest extends TestingContext {
@@ -18,13 +18,13 @@ public class ContainerTest extends TestingContext {
   @Test
   public void messages_are_logged() {
     container().log().error("message");
-    Iterable<Tuple> iterable = container().messages().elements(Tuple.class);
+    Iterable<Rec> iterable = container().messages().elements(Rec.class);
     assertThat(iterable)
         .hasSize(1);
-    Tuple tuple = iterable.iterator().next();
-    assertThat(text(tuple))
+    Rec rec = iterable.iterator().next();
+    assertThat(text(rec))
         .isEqualTo("message");
-    assertThat(severity(tuple))
+    assertThat(severity(rec))
         .isEqualTo("ERROR");
   }
 }

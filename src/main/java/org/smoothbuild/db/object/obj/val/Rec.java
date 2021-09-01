@@ -12,23 +12,25 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 
 import com.google.common.collect.ImmutableList;
 
 /**
+ * Record.
+ *
  * This class is immutable.
  */
-public class Tuple extends Val {
+public class Rec extends Val {
   private ImmutableList<Val> elements;
 
-  public Tuple(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Rec(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
   }
 
   @Override
-  public TupleSpec spec() {
-    return (TupleSpec) super.spec();
+  public RecSpec spec() {
+    return (RecSpec) super.spec();
   }
 
   public Val get(int index) {
@@ -53,7 +55,7 @@ public class Tuple extends Val {
         if (spec.equals(obj.spec())) {
           builder.add((Val) obj);
         } else {
-          throw new DecodeObjException(hash(), "Its TUPLE spec declares element " + i
+          throw new DecodeObjException(hash(), "Its RECORD spec declares element " + i
               + " to have " + spec.name() + " spec but its data has object with " +
               obj.spec().name() + " spec at that index.");
         }

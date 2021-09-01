@@ -7,9 +7,9 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHas
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readRecElementAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.recAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
 import java.math.BigInteger;
@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -27,13 +27,13 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    TupleSpec constructedType = tupleSpec(list());
+    RecSpec constructedType = recSpec(list());
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
     hashes.add(convertAlgorithmHash(strSpec()));
-    hashes.add(tupleAlgorithmHash(constructedType));
-    hashes.add(readTupleElementAlgorithmHash(0));
+    hashes.add(recAlgorithmHash(constructedType));
+    hashes.add(readRecElementAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
     hashes.add(referenceAlgorithmHash(Hash.of(""), "global-referencable-name"));
@@ -56,18 +56,18 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void create_tuple_algorithm_has_different_hash_for_different_types() {
-    TupleSpec constructedType = tupleSpec(list(strSpec()));
-    TupleSpec constructedType2 = tupleSpec(list(blobSpec()));
+  public void create_rec_algorithm_has_different_hash_for_different_types() {
+    RecSpec constructedType = recSpec(list(strSpec()));
+    RecSpec constructedType2 = recSpec(list(blobSpec()));
 
-    assertThat(tupleAlgorithmHash(constructedType))
-        .isNotEqualTo(tupleAlgorithmHash(constructedType2));
+    assertThat(recAlgorithmHash(constructedType))
+        .isNotEqualTo(recAlgorithmHash(constructedType2));
   }
 
   @Test
-  public void read_tuple_element_algorithm_has_different_hash_for_different_field_indexes() {
-    assertThat(readTupleElementAlgorithmHash(0))
-        .isNotEqualTo(readTupleElementAlgorithmHash(1));
+  public void read_rec_element_algorithm_has_different_hash_for_different_field_indexes() {
+    assertThat(readRecElementAlgorithmHash(0))
+        .isNotEqualTo(readRecElementAlgorithmHash(1));
   }
 
   @Test

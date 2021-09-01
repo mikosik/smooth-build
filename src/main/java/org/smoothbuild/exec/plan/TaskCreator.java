@@ -26,15 +26,15 @@ import java.util.function.BiFunction;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.spec.val.TupleSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
-import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
+import org.smoothbuild.exec.algorithm.CreateRecAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedIntAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
+import org.smoothbuild.exec.algorithm.ReadRecElementAlgorithm;
 import org.smoothbuild.exec.algorithm.ReferenceAlgorithm;
 import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.DefaultArgumentTask;
@@ -248,7 +248,7 @@ public class TaskCreator {
   private Task fieldReadEagerTask(Scope<Task> scope, FieldReadExpression expression, Type type) {
     var structType = (StructType) expression.expression().type();
     var name = expression.field().name().get();
-    var algorithm = new ReadTupleElementAlgorithm(
+    var algorithm = new ReadRecElementAlgorithm(
         structType.fieldIndex(name), toSpecConverter.visit(type));
     var dependencies = list(eagerTaskFor(scope, expression.expression()));
     return new AlgorithmTask(
@@ -406,8 +406,8 @@ public class TaskCreator {
       return new MapTask(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof Constructor constructor) {
       var resultType = constructor.type().resultType();
-      var tupleSpec = (TupleSpec) toSpecConverter.visit(resultType);
-      return constructorCallEagerTask(resultType, tupleSpec, constructor.extendedName(),
+      var recSpec = (RecSpec) toSpecConverter.visit(resultType);
+      return constructorCallEagerTask(resultType, recSpec, constructor.extendedName(),
           arguments, location);
     } else {
       throw new IllegalArgumentException(
@@ -477,9 +477,9 @@ public class TaskCreator {
     return zip(actualTypes, arguments, this::convertIfNeededEagerTask);
   }
 
-  private Task constructorCallEagerTask(Type resultType, TupleSpec tupleSpec, String name,
+  private Task constructorCallEagerTask(Type resultType, RecSpec recSpec, String name,
       List<Task> arguments, Location location) {
-    var algorithm = new CreateTupleAlgorithm(tupleSpec);
+    var algorithm = new CreateRecAlgorithm(recSpec);
     return new AlgorithmTask(CALL, resultType, name, algorithm, arguments, location);
   }
 

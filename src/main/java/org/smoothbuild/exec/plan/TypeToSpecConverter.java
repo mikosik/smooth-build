@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
@@ -45,7 +45,7 @@ public class TypeToSpecConverter {
       return visit(stringType);
     } else if (type instanceof StructType struct) {
       Iterable<ValSpec> fieldSpecs = map(struct.fields(), f -> visit(f.type()));
-      return objectFactory.tupleSpec(fieldSpecs);
+      return objectFactory.recSpec(fieldSpecs);
     } else if (type instanceof Variable) {
       throw new UnsupportedOperationException();
     } else if (type instanceof ArrayType array) {
@@ -76,13 +76,13 @@ public class TypeToSpecConverter {
     return objectFactory.arraySpec(visit(array.elemType()));
   }
 
-  private TupleSpec nativeCodeSpec() {
-    return objectFactory.tupleSpec(
+  private RecSpec nativeCodeSpec() {
+    return objectFactory.recSpec(
         list(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }
 
-  public TupleSpec functionSpec() {
-    return objectFactory.tupleSpec(
+  public RecSpec functionSpec() {
+    return objectFactory.recSpec(
         list(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }
 }

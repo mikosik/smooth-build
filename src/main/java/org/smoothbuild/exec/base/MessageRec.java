@@ -10,16 +10,16 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 
-public class MessageTuple {
+public class MessageRec {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
   private static final int TEXT_INDEX = 0;
   private static final int SEVERITY_INDEX = 1;
 
   public static boolean containsErrors(Array messages) {
-    return stream(messages.elements(Tuple.class))
+    return stream(messages.elements(Rec.class))
         .anyMatch(m -> severity(m).equals(ERROR.name()));
   }
 
@@ -28,7 +28,7 @@ public class MessageTuple {
   }
 
   public static boolean isEmpty(Array messages) {
-    return !messages.elements(Tuple.class).iterator().hasNext();
+    return !messages.elements(Rec.class).iterator().hasNext();
   }
 
   public static Level level(Obj message) {
@@ -36,18 +36,18 @@ public class MessageTuple {
   }
 
   public static String severity(Obj message) {
-    return messageSeverity((Tuple) message).jValue();
+    return messageSeverity((Rec) message).jValue();
   }
 
   public static String text(Obj message) {
-    return messageText((Tuple) message).jValue();
+    return messageText((Rec) message).jValue();
   }
 
-  public static Str messageText(Tuple message) {
+  public static Str messageText(Rec message) {
     return (Str) message.get(TEXT_INDEX);
   }
 
-  public static Str messageSeverity(Tuple message) {
+  public static Str messageSeverity(Rec message) {
     return (Str) message.get(SEVERITY_INDEX);
   }
 }

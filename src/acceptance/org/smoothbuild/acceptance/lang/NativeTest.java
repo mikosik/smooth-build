@@ -21,15 +21,15 @@ import org.smoothbuild.acceptance.testing.ReportTwoErrors;
 import org.smoothbuild.acceptance.testing.ReportWarningAndReturnNull;
 import org.smoothbuild.acceptance.testing.ReturnAbc;
 import org.smoothbuild.acceptance.testing.ReturnNull;
-import org.smoothbuild.acceptance.testing.ReturnStringTuple;
+import org.smoothbuild.acceptance.testing.ReturnStringRec;
 import org.smoothbuild.acceptance.testing.StringIdentity;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.acceptance.testing.WithoutContainer;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NativeTest extends AcceptanceTestCase {
@@ -232,19 +232,19 @@ public class NativeTest extends AcceptanceTestCase {
 
           @Test
           public void struct_of_wrong_type() throws Exception {
-            createNativeJar(ReturnStringTuple.class);
+            createNativeJar(ReturnStringRec.class);
             createUserModule(format("""
                 Person {
                   String firstName,
                   String lastName,
                 }
                 @Native("%s.function")
-                Person returnStringTuple;
-                result = returnStringTuple;
-                """, ReturnStringTuple.class.getCanonicalName()));
+                Person returnStringRec;
+                result = returnStringRec;
+                """, ReturnStringRec.class.getCanonicalName()));
             runSmoothBuild("result");
             assertFinishedWithError();
-            assertSysOutContains("`returnStringTuple` has faulty native implementation: " +
+            assertSysOutContains("`returnStringRec` has faulty native implementation: " +
                 "Its declared result spec == {STRING,STRING} " +
                 "but it returned object with spec == {STRING}.");
           }
@@ -459,7 +459,7 @@ public class NativeTest extends AcceptanceTestCase {
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
             "`stringIdentity` declares type `File` "
-            + "so its native implementation result type must be " + Tuple.class.getCanonicalName() +
+            + "so its native implementation result type must be " + Rec.class.getCanonicalName() +
             " but it is " + Str.class.getCanonicalName() + ".\n"));
       }
 
@@ -604,20 +604,20 @@ public class NativeTest extends AcceptanceTestCase {
 
         @Test
         public void struct_of_wrong_type() throws Exception {
-          createNativeJar(ReturnStringTuple.class);
+          createNativeJar(ReturnStringRec.class);
           createUserModule(format("""
             Person {
               String firstName,
               String lastName,
             }
             @Native("%s.function")
-            Person returnStringTuple();
-            result = returnStringTuple();
-            """, ReturnStringTuple.class.getCanonicalName()));
+            Person returnStringRec();
+            result = returnStringRec();
+            """, ReturnStringRec.class.getCanonicalName()));
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains(
-              "`returnStringTuple` has faulty native implementation: Its declared " +
+              "`returnStringRec` has faulty native implementation: Its declared " +
                   "result spec == {STRING,STRING} but it returned object with spec == {STRING}.");
         }
 

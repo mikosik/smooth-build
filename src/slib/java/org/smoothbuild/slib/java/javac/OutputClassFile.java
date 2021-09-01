@@ -8,8 +8,8 @@ import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -37,7 +37,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       public void close() throws IOException {
         super.close();
         Str pathString = nativeApi.factory().string(path.toString());
-        Tuple file = nativeApi.factory().file(pathString, contentBuilder.build());
+        Rec file = nativeApi.factory().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
     }).outputStream();

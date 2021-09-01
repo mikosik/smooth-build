@@ -11,8 +11,8 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.FIELD_READ;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
+import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
-import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -54,8 +54,8 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.SpecKind;
 import org.smoothbuild.testing.TestingContext;
@@ -71,7 +71,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth value
+       * This test makes sure that other tests in this class use proper scheme to save value
        * in HashedDb.
        */
       Hash objHash =
@@ -119,7 +119,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth array
+       * This test makes sure that other tests in this class use proper scheme to save array
        * in HashedDb.
        */
       Hash objHash =
@@ -239,7 +239,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth blob
+       * This test makes sure that other tests in this class use proper scheme to save blob
        * in HashedDb.
        */
       ByteString byteString = ByteString.of((byte) 1, (byte) 2);
@@ -276,7 +276,7 @@ public class CorruptedObjTest extends TestingContext {
   @Nested
   class _bool {
     /*
-     * This test makes sure that other tests in this class use proper scheme to save smooth bool
+     * This test makes sure that other tests in this class use proper scheme to save bool
      * in HashedDb.
      */
     @ParameterizedTest
@@ -355,7 +355,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth call
+       * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
       Const function = constExpr(intVal(0));
@@ -537,7 +537,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth const
+       * This test makes sure that other tests in this class use proper scheme to save const
        * in HashedDb.
        */
       Val val = objectDb().intVal(BigInteger.valueOf(123));
@@ -593,7 +593,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth eArray
+       * This test makes sure that other tests in this class use proper scheme to save eArray
        * in HashedDb.
        */
       Const expr1 = constExpr(intVal(1));
@@ -704,7 +704,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(index)
               )
           );
-      assertThat(((FieldRead) objectDb().get(objHash)).tuple())
+      assertThat(((FieldRead) objectDb().get(objHash)).rec())
           .isEqualTo(expr);
       assertThat(((FieldRead) objectDb().get(objHash)).index())
           .isEqualTo(index);
@@ -726,14 +726,14 @@ public class CorruptedObjTest extends TestingContext {
       obj_root_with_two_data_hashes(
           fieldReadSpec(),
           dataHash,
-          (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).tuple());
+          (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).rec());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
           fieldReadSpec(),
-          (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).tuple());
+          (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).rec());
     }
 
     @Test
@@ -747,7 +747,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(fieldReadSpec()),
               dataHash
           );
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).tuple())
+      assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
           .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(dataHash, 2, 1));
     }
@@ -766,13 +766,13 @@ public class CorruptedObjTest extends TestingContext {
               hash(fieldReadSpec()),
               dataHash
           );
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).tuple())
+      assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
           .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(dataHash, 2, 3));
     }
 
     @Test
-    public void tuple_is_val_instead_of_expr() throws Exception {
+    public void rec_is_val_instead_of_expr() throws Exception {
       Val val = objectDb().intVal(BigInteger.valueOf(2));
       Val index = objectDb().intVal(BigInteger.valueOf(2));
       Hash objHash =
@@ -783,7 +783,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(index)
               )
           );
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).tuple())
+      assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
           .throwsException(new DecodeObjException(
               objHash, "Its data[0] should contain Expr but contains Val."));
     }
@@ -811,7 +811,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth blob
+       * This test makes sure that other tests in this class use proper scheme to save blob
        * in HashedDb.
        */
       ByteString byteString = ByteString.of((byte) 3, (byte) 2);
@@ -863,7 +863,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth bool
+       * This test makes sure that other tests in this class use proper scheme to save bool
        * in HashedDb.
        */
       Hash objHash =
@@ -910,11 +910,11 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
-  class _tuple {
+  class _rec {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth tuple
+       * This test makes sure that other tests in this class use proper scheme to save rec
        * in HashedDb.
        */
       assertThat(
@@ -936,7 +936,7 @@ public class CorruptedObjTest extends TestingContext {
       obj_root_with_two_data_hashes(
           personSpec(),
           hashedDb().writeBoolean(true),
-          (Hash objHash) -> ((Tuple) objectDb().get(objHash)).get(0)
+          (Hash objHash) -> ((Rec) objectDb().get(objHash)).get(0)
       );
     }
 
@@ -945,7 +945,7 @@ public class CorruptedObjTest extends TestingContext {
         throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
           personSpec(),
-          (Hash objHash) -> ((Tuple) objectDb().get(objHash)).get(0));
+          (Hash objHash) -> ((Rec) objectDb().get(objHash)).get(0));
     }
 
     @ParameterizedTest
@@ -957,7 +957,7 @@ public class CorruptedObjTest extends TestingContext {
           hash(
               hash(personSpec()),
               notHashOfSequence);
-      assertCall(() -> ((Tuple) objectDb().get(objHash)).get(0))
+      assertCall(() -> ((Rec) objectDb().get(objHash)).get(0))
           .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodeObjException(notHashOfSequence));
     }
@@ -974,7 +974,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(personSpec()),
               dataHash
           );
-      assertCall(() -> ((Tuple) objectDb().get(objHash)).get(0))
+      assertCall(() -> ((Rec) objectDb().get(objHash)).get(0))
           .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodeObjException(nowhere));
     }
@@ -988,8 +988,8 @@ public class CorruptedObjTest extends TestingContext {
           hash(
               hash(personSpec()),
               elementValuesHash);
-      Tuple tuple = (Tuple) objectDb().get(objHash);
-      assertCall(() -> tuple.get(0))
+      Rec rec = (Rec) objectDb().get(objHash);
+      assertCall(() -> rec.get(0))
           .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(elementValuesHash, 2, 1));
     }
@@ -1005,8 +1005,8 @@ public class CorruptedObjTest extends TestingContext {
           hash(
               hash(personSpec()),
               elementValuesHash);
-      Tuple tuple = (Tuple) objectDb().get(objHash);
-      assertCall(() -> tuple.get(0))
+      Rec rec = (Rec) objectDb().get(objHash);
+      assertCall(() -> rec.get(0))
           .throwsException(new DecodeObjException(objHash))
           .withCause(new DecodingDataHashSequenceException(elementValuesHash, 2, 3));
     }
@@ -1019,10 +1019,10 @@ public class CorruptedObjTest extends TestingContext {
               hash(
                   hash(strVal("John")),
                   hash(boolVal(true))));
-      Tuple tuple = (Tuple) objectDb().get(objHash);
-      assertCall(() -> tuple.get(0))
+      Rec rec = (Rec) objectDb().get(objHash);
+      assertCall(() -> rec.get(0))
           .throwsException(new DecodeObjException(objHash,
-              "Its TUPLE spec declares element 1 to have STRING spec but its data has object"
+              "Its RECORD spec declares element 1 to have STRING spec but its data has object"
                   + " with BOOL spec at that index."));
     }
 
@@ -1034,10 +1034,10 @@ public class CorruptedObjTest extends TestingContext {
               hash(
                   hash(strVal("John")),
                   hash(constExpr())));
-      Tuple tuple = (Tuple) objectDb().get(objHash);
-      assertCall(() -> tuple.get(0))
+      Rec rec = (Rec) objectDb().get(objHash);
+      assertCall(() -> rec.get(0))
           .throwsException(new DecodeObjException(objHash,
-              "Its TUPLE spec declares element 1 to have STRING spec but its data has object"
+              "Its RECORD spec declares element 1 to have STRING spec but its data has object"
                   + " with CONST spec at that index."));
     }
   }
@@ -1074,13 +1074,13 @@ public class CorruptedObjTest extends TestingContext {
       }
 
       @Test
-      public void creating_tuple_spec() throws Exception {
+      public void creating_rec_spec() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save tuple spec in HashedDb.
+         * to save rec spec in HashedDb.
          */
         Hash hash = hash(
-            hash(TUPLE.marker()),
+            hash(RECORD.marker()),
             hash(
                 hash(strSpec()),
                 hash(strSpec())
@@ -1166,21 +1166,21 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Nested
-    class tuple_spec {
+    class rec_spec {
       @Test
       public void without_elements_causes_exception() throws Exception {
         Hash hash =
             hash(
-                hash(TUPLE.marker())
+                hash(RECORD.marker())
             );
         assertThatGetSpec(hash)
-            .throwsException(new DecodeSpecException(hash, brokenSpecMessage(TUPLE, 1, 2)));
+            .throwsException(new DecodeSpecException(hash, brokenSpecMessage(RECORD, 1, 2)));
       }
 
       @Test
       public void with_additional_child() throws Exception {
         Hash hash = hash(
-            hash(TUPLE.marker()),
+            hash(RECORD.marker()),
             hash(
                 hash(strSpec()),
                 hash(strSpec())
@@ -1195,12 +1195,12 @@ public class CorruptedObjTest extends TestingContext {
       public void with_elements_not_being_sequence_of_hashes_causes_exception() throws Exception {
         Hash hash =
             hash(
-                hash(TUPLE.marker()),
+                hash(RECORD.marker()),
                 hash("abc")
             );
         assertThatGetSpec(hash)
             .throwsException(new DecodeSpecException(
-                hash, "Its specKind == TUPLE but reading its element specs caused error."));
+                hash, "Its specKind == RECORD but reading its element specs caused error."));
       }
 
       @Test
@@ -1208,7 +1208,7 @@ public class CorruptedObjTest extends TestingContext {
         Hash stringHash = hash(strVal("abc"));
         Hash hash =
             hash(
-                hash(TUPLE.marker()),
+                hash(RECORD.marker()),
                 hash(
                     stringHash
                 )
@@ -1223,7 +1223,7 @@ public class CorruptedObjTest extends TestingContext {
         Hash notASpecHash = hash("not a spec");
         Hash hash =
             hash(
-                hash(TUPLE.marker()),
+                hash(RECORD.marker()),
                 hash(
                     notASpecHash,
                     hash(strSpec())));
@@ -1289,7 +1289,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     private String elementReadingErrorMessage(int index) {
-      return "Its specKind == TUPLE but reading element spec at index " + index + " caused error.";
+      return "Its specKind == RECORD but reading element spec at index " + index + " caused error.";
     }
 
     private DecodeSpecException illegalSpecMarkerException(Hash hash, int marker) {

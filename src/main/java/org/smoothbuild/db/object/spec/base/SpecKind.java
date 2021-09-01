@@ -9,8 +9,8 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -18,7 +18,7 @@ public enum SpecKind {
   // Obj-s
   INT((byte) 0, Int.class),
   NOTHING((byte) 1, null),
-  TUPLE((byte) 2, Tuple.class),
+  RECORD((byte) 2, Rec.class),
   ARRAY((byte) 3, Array.class),
   BLOB((byte) 4, Blob.class),
   BOOL((byte) 5, Bool.class),
@@ -33,7 +33,7 @@ public enum SpecKind {
       ImmutableMap.<Byte, SpecKind>builder()
           .put((byte) 0, INT)
           .put((byte) 1, NOTHING)
-          .put((byte) 2, TUPLE)
+          .put((byte) 2, RECORD)
           .put((byte) 3, ARRAY)
           .put((byte) 4, BLOB)
           .put((byte) 5, BOOL)

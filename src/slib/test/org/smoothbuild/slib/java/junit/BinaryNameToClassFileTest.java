@@ -9,15 +9,15 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.common.JarTester;
 
 public class BinaryNameToClassFileTest extends TestingContext {
   @Test
   public void binary_names_are_mapped_to_proper_class_files() throws IOException, JunitException {
-    Tuple file1 = fileVal(path("a/Klass.class"));
-    Tuple file2 = fileVal(path("b/Klass.class"));
+    Rec file1 = fileVal(path("a/Klass.class"));
+    Rec file2 = fileVal(path("b/Klass.class"));
     Blob blob = JarTester.jar(file1, file2);
     assertThat(binaryNameToClassFile(nativeApi(), list(blob)))
         .containsExactly("a.Klass", file1, "b.Klass", file2);
@@ -25,8 +25,8 @@ public class BinaryNameToClassFileTest extends TestingContext {
 
   @Test
   public void non_class_files_are_not_mapped() throws IOException, JunitException {
-    Tuple file1 = fileVal(path("a/Klass.txt"));
-    Tuple file2 = fileVal(path("b/Klass.java"));
+    Rec file1 = fileVal(path("a/Klass.txt"));
+    Rec file2 = fileVal(path("b/Klass.java"));
     Blob blob = JarTester.jar(file1, file2);
     assertThat(binaryNameToClassFile(nativeApi(), list(blob)).entrySet())
         .isEmpty();

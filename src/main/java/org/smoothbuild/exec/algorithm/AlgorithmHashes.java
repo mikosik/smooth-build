@@ -22,11 +22,11 @@ public class AlgorithmHashes {
     return hash(2, destinationSpec.hash());
   }
 
-  public static Hash tupleAlgorithmHash(Spec type) {
+  public static Hash recAlgorithmHash(Spec type) {
     return hash(3, type.hash());
   }
 
-  public static Hash readTupleElementAlgorithmHash(int elementIndex) {
+  public static Hash readRecElementAlgorithmHash(int elementIndex) {
     return hash(4, Hash.of(elementIndex));
   }
 

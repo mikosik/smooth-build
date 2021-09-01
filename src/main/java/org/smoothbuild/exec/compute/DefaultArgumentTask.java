@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.exec.base.LambdaTuple;
+import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.exec.base.LambdaRec;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.exec.plan.TaskCreator;
 import org.smoothbuild.lang.base.define.Location;
@@ -29,7 +29,7 @@ public class DefaultArgumentTask extends StepTask {
 
   @Override
   protected void onCompleted(Obj obj, Worker worker, Consumer<Obj> result) {
-    String functionName = LambdaTuple.name(((Tuple) obj)).jValue();
+    String functionName = LambdaRec.name(((Rec) obj)).jValue();
     Task task = taskCreator.defaultArgumentEagerTask(scope, functionName, index);
     task.compute(worker).addConsumer(result);
   }

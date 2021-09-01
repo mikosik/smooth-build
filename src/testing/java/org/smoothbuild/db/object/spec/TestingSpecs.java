@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -20,7 +20,7 @@ public class TestingSpecs {
   public static final ValSpec INT = OBJECT_DB.intS();
   public static final ValSpec NOTHING = OBJECT_DB.nothingS();
   public static final ValSpec STR = OBJECT_DB.strS();
-  public static final TupleSpec PERSON = CONTEXT.personSpec();
+  public static final RecSpec PERSON = CONTEXT.personSpec();
   public static final Spec CALL = CONTEXT.callSpec();
   public static final Spec CONST = CONTEXT.constSpec();
   public static final Spec EARRAY = CONTEXT.eArraySpec();

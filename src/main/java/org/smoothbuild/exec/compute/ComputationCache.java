@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.exec.base.MessageTuple.containsErrors;
-import static org.smoothbuild.exec.base.MessageTuple.isValidSeverity;
-import static org.smoothbuild.exec.base.MessageTuple.severity;
+import static org.smoothbuild.exec.base.MessageRec.containsErrors;
+import static org.smoothbuild.exec.base.MessageRec.isValidSeverity;
+import static org.smoothbuild.exec.base.MessageRec.severity;
 import static org.smoothbuild.exec.compute.ComputationCacheException.computationCacheException;
 import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
@@ -17,7 +17,7 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.exec.base.Output;
@@ -78,8 +78,8 @@ public class ComputationCache {
       }
 
       Array messages = (Array) messagesObject;
-      Iterable<Tuple> structs = messages.elements(Tuple.class);
-      for (Tuple m : structs) {
+      Iterable<Rec> structs = messages.elements(Rec.class);
+      for (Rec m : structs) {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {
           throw corruptedValueException(taskHash,

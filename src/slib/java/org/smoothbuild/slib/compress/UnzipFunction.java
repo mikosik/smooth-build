@@ -19,8 +19,8 @@ import java.util.zip.ZipFile;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -46,7 +46,7 @@ public class UnzipFunction {
         ZipEntry entry = entries.nextElement();
         String name = entry.getName();
         if (!name.endsWith("/") && filter.test(name)) {
-          Tuple unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
+          Rec unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
           if (unzippedEntry != null) {
             String fileName = filePath(unzippedEntry).jValue();
             if (duplicatesDetector.addValue(fileName)) {
@@ -67,7 +67,7 @@ public class UnzipFunction {
     return tempFile;
   }
 
-  private static Tuple unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
+  private static Rec unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
     String fileName = entry.getName();
     try {
       path(fileName);

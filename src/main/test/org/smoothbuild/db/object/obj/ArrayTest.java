@@ -13,8 +13,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.TestingSpecs;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
@@ -25,21 +25,21 @@ import okio.ByteString;
 
 public class ArrayTest extends TestingContext {
   @Test
-  public void empty_nothing_array_can_be_iterated_as_tuple() {
+  public void empty_nothing_array_can_be_iterated_as_rec() {
     Array array = objectDb().arrayBuilder(nothingSpec())
         .build();
-    assertThat(array.elements(Tuple.class))
+    assertThat(array.elements(Rec.class))
         .isEmpty();
   }
 
   @Test
-  public void string_array_cannot_be_iterated_as_tuple() {
+  public void string_array_cannot_be_iterated_as_rec() {
     Array array = objectDb().arrayBuilder(strSpec())
         .add(strVal("abc"))
         .build();
-    assertCall(() -> array.elements(Tuple.class))
+    assertCall(() -> array.elements(Rec.class))
         .throwsException(new IllegalArgumentException(
-            "[STRING] cannot be viewed as Iterable of " + Tuple.class.getCanonicalName() + "."));
+            "[STRING] cannot be viewed as Iterable of " + Rec.class.getCanonicalName() + "."));
   }
 
   @Test

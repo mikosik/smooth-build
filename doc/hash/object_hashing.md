@@ -83,7 +83,7 @@ hash(
 )
 ```
 
-Tuple type
+Record type
 -----------
 
 ```

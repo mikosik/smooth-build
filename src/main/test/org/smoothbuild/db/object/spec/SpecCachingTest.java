@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.testing.TestingContext;
 
 public class SpecCachingTest extends TestingContext {
@@ -38,7 +38,7 @@ public class SpecCachingTest extends TestingContext {
         ObjectDb::intS,
         ObjectDb::nothingS,
         ObjectDb::strS,
-        SpecCachingTest::tupleSpec,
+        SpecCachingTest::recSpec,
         ObjectDb::callS,
         ObjectDb::constS,
         ObjectDb::eArrayS,
@@ -49,18 +49,18 @@ public class SpecCachingTest extends TestingContext {
         (objectDb) -> objectDb.arrayS(objectDb.intS()),
         (objectDb) -> objectDb.arrayS(objectDb.nothingS()),
         (objectDb) -> objectDb.arrayS(objectDb.strS()),
-        (objectDb) -> objectDb.arrayS(tupleSpec(objectDb)),
+        (objectDb) -> objectDb.arrayS(recSpec(objectDb)),
 
         (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.blobS())),
         (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.boolS())),
         (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.intS())),
         (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.nothingS())),
         (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.strS())),
-        (objectDb) -> objectDb.arrayS(objectDb.arrayS(tupleSpec(objectDb)))
+        (objectDb) -> objectDb.arrayS(objectDb.arrayS(recSpec(objectDb)))
     );
   }
 
-  private static TupleSpec tupleSpec(ObjectDb objectDb) {
-    return objectDb.tupleS(list(objectDb.strS(), objectDb.strS()));
+  private static RecSpec recSpec(ObjectDb objectDb) {
+    return objectDb.recS(list(objectDb.strS(), objectDb.strS()));
   }
 }

@@ -108,7 +108,7 @@ public class CallTest extends TestingContext {
   }
 
   @Test
-  public void call_read_back_by_hash_has_same_tuple() {
+  public void call_read_back_by_hash_has_same_rec() {
     Const function = constExpr(intVal(1));
     Call call = callExpr(function, list(constExpr(intVal(1))));
     assertThat(((Call) objectDbOther().get(call.hash())).function())

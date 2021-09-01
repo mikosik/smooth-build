@@ -6,8 +6,8 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.StructType;
@@ -22,9 +22,9 @@ public class MapTypeToJType {
     } else if (type instanceof Variable) {
       return Val.class;
     } else if (type instanceof StructType) {
-      return Tuple.class;
+      return Rec.class;
     } else if (type instanceof FunctionType) {
-      return Tuple.class;
+      return Rec.class;
     } else {
       return switch (type.name()) {
         case TypeNames.BLOB -> Blob.class;

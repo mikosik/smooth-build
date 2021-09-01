@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.reflect.Classes;
 
@@ -16,13 +16,13 @@ public class FileClassLoaderTest extends TestingContext {
   @Test
   public void loads_class_from_binary() throws Exception {
     Class<MyClass> klass = MyClass.class;
-    Tuple file = createByteCodeFile(klass);
+    Rec file = createByteCodeFile(klass);
     FileClassLoader fileClassLoader = new FileClassLoader(Map.of(klass.getName(), file));
     assertThat(fileClassLoader.findClass(klass.getName()).getClassLoader())
         .isSameInstanceAs(fileClassLoader);
   }
 
-  private Tuple createByteCodeFile(Class<?> klass) throws IOException {
+  private Rec createByteCodeFile(Class<?> klass) throws IOException {
     return fileVal(path(binaryPath(klass)), Classes.bytecode(klass));
   }
 

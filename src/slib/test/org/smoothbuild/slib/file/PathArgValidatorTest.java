@@ -2,15 +2,15 @@ package org.smoothbuild.slib.file;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.console.Level.ERROR;
-import static org.smoothbuild.exec.base.MessageTuple.messageSeverity;
-import static org.smoothbuild.exec.base.MessageTuple.messageText;
+import static org.smoothbuild.exec.base.MessageRec.messageSeverity;
+import static org.smoothbuild.exec.base.MessageRec.messageText;
 import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
@@ -46,7 +46,7 @@ public class PathArgValidatorTest extends TestingContext {
     assertThat(name)
         .isNull();
     container().messages()
-        .elements(Tuple.class)
+        .elements(Rec.class)
         .forEach(s -> {
           assertThat(messageText(s).jValue())
               .startsWith("Param `name` has illegal value.");

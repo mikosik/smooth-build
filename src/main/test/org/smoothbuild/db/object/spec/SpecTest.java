@@ -41,8 +41,8 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 
@@ -112,7 +112,7 @@ public class SpecTest {
         arguments(BOOL, Bool.class),
         arguments(INT, Int.class),
         arguments(NOTHING, null),
-        arguments(PERSON, Tuple.class),
+        arguments(PERSON, Rec.class),
         arguments(STR, Str.class),
         arguments(CALL, Call.class),
         arguments(CONST, Const.class),

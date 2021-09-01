@@ -15,8 +15,8 @@ import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
-import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
+import org.smoothbuild.exec.algorithm.CreateRecAlgorithm;
+import org.smoothbuild.exec.algorithm.ReadRecElementAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.type.TestingTypes;
@@ -102,7 +102,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
+    Algorithm algorithm = new CreateRecAlgorithm(PERSON);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("b9f0b6c1b4fbdfb9547d1d258e01e651c387a41b"));
@@ -110,7 +110,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
+    Algorithm algorithm = new CreateRecAlgorithm(PERSON);
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("b83ff59d3701bbafe020d6ce781c6379457c1a68"));
@@ -118,15 +118,15 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_two_elements_input_is_stable() {
-    Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
+    Algorithm algorithm = new CreateRecAlgorithm(PERSON);
     Input input = input(list(strVal("abc"), strVal("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("8e2cc0db36ad999d771099123fad07e0b48a75ae"));
   }
 
   @Test
-  public void hash_of_computation_with_read_tuple_element_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ReadTupleElementAlgorithm(0, STR);
+  public void hash_of_computation_with_read_rec_element_algorithm_and_one_element_input_is_stable() {
+    Algorithm algorithm = new ReadRecElementAlgorithm(0, STR);
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));

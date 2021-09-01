@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
-import static org.smoothbuild.exec.base.MessageTuple.containsErrors;
+import static org.smoothbuild.exec.base.MessageRec.containsErrors;
 import static org.smoothbuild.util.Lists.skip;
 
 import java.lang.reflect.InvocationTargetException;

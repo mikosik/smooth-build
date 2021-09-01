@@ -21,8 +21,8 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
@@ -33,8 +33,8 @@ import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
@@ -171,25 +171,25 @@ public class TestingContext {
     return objectDb().strS();
   }
 
-  public TupleSpec tupleSpec(Iterable<? extends ValSpec> elementSpecs) {
-    return objectDb().tupleS(elementSpecs);
+  public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
+    return objectDb().recS(elementSpecs);
   }
 
-  public TupleSpec emptyTupleSpec() {
-    return tupleSpec(list());
+  public RecSpec emptyRecSpec() {
+    return recSpec(list());
   }
 
-  public TupleSpec tupleWithStrSpec() {
-    return tupleSpec(list(strSpec()));
+  public RecSpec recWithStrSpec() {
+    return recSpec(list(strSpec()));
   }
 
-  public TupleSpec personSpec() {
+  public RecSpec personSpec() {
     ValSpec string = strSpec();
-    return tupleSpec(list(string, string));
+    return recSpec(list(string, string));
   }
 
-  public TupleSpec fileSpec() {
-    return tupleSpec(list(blobSpec(), strSpec()));
+  public RecSpec fileSpec() {
+    return recSpec(list(blobSpec(), strSpec()));
   }
 
   // Expr Spec-s
@@ -240,24 +240,24 @@ public class TestingContext {
     return objectDb().strVal(string);
   }
 
-  public Tuple tupleVal(TupleSpec spec, Iterable<? extends Obj> elements) {
-    return objectDb().tupleVal(spec, elements);
+  public Rec recVal(RecSpec spec, Iterable<? extends Obj> elements) {
+    return objectDb().recVal(spec, elements);
   }
 
-  public Tuple emptyTupleVal() {
-    return tupleVal(emptyTupleSpec(), list());
+  public Rec emptyRecVal() {
+    return recVal(emptyRecSpec(), list());
   }
 
-  public Tuple tupleWithStrVal() {
-    return tupleVal(tupleWithStrSpec(), list(strVal("abc")));
+  public Rec recWithStrVal() {
+    return recVal(recWithStrSpec(), list(strVal("abc")));
   }
 
-  public Tuple tupleWithStrVal(Str str) {
-    return tupleVal(tupleWithStrSpec(), list(str));
+  public Rec recWithStrVal(Str str) {
+    return recVal(recWithStrSpec(), list(str));
   }
 
-  public Tuple personVal(String firstName, String lastName) {
-    return tupleVal(personSpec(), list(strVal(firstName), strVal(lastName)));
+  public Rec personVal(String firstName, String lastName) {
+    return recVal(personSpec(), list(strVal(firstName), strVal(lastName)));
   }
 
   public Array messageArrayWithOneError() {
@@ -268,27 +268,27 @@ public class TestingContext {
     return arrayVal(objectFactory().messageSpec());
   }
 
-  public Tuple errorMessageV(String text) {
+  public Rec errorMessageV(String text) {
     return objectFactory().errorMessage(text);
   }
 
-  public Tuple warningMessageV(String text) {
+  public Rec warningMessageV(String text) {
     return objectFactory().warningMessage(text);
   }
 
-  public Tuple infoMessageV(String text) {
+  public Rec infoMessageV(String text) {
     return objectFactory().infoMessage(text);
   }
 
-  public Tuple fileVal(Path path) {
+  public Rec fileVal(Path path) {
     return fileVal(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public Tuple fileVal(Path path, ByteString content) {
+  public Rec fileVal(Path path, ByteString content) {
     return fileVal(path.toString(), blobVal(content));
   }
 
-  public Tuple fileVal(String path, Blob blob) {
+  public Rec fileVal(String path, Blob blob) {
     Str string = objectFactory().string(path);
     return objectFactory().file(string, blob);
   }
@@ -311,7 +311,7 @@ public class TestingContext {
     return objectDb().eArrayExpr(elements);
   }
 
-  public FieldRead fieldReadExpr(Expr tuple, Int index) {
-    return objectDb().fieldReadExpr(tuple, index);
+  public FieldRead fieldReadExpr(Expr rec, Int index) {
+    return objectDb().fieldReadExpr(rec, index);
   }
 }
