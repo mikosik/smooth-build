@@ -42,6 +42,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return wrapHashedDbExceptionAsObjectDbException(() -> objectDb.newArrayV(spec, elements));
+    return wrapHashedDbExceptionAsObjectDbException(() -> objectDb.newArrayVal(spec, elements));
   }
 }

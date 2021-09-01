@@ -41,7 +41,7 @@ public class BlobBuilder implements Closeable {
   private Blob buildImpl() throws HashedDbException {
     try {
       sink.close();
-      return objectDb.newBlobV(sink.hash());
+      return objectDb.newBlobVal(sink.hash());
     } catch (IOException e) {
       throw new HashedDbException(e);
     }

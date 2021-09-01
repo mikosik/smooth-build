@@ -130,15 +130,15 @@ public class ObjectDb {
   }
 
   public Bool boolVal(boolean value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newBoolV(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newBoolVal(value));
   }
 
   public Int intVal(BigInteger value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newIntV(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newIntVal(value));
   }
 
   public Str strVal(String value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStrV(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStrVal(value));
   }
 
   public Rec recVal(RecSpec recSpec, Iterable<? extends Obj> elements) {
@@ -157,7 +157,7 @@ public class ObjectDb {
             + " at that index.");
       }
     }
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRecV(recSpec, elementsList));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRecVal(recSpec, elementsList));
   }
 
   // methods for creating expr-s
@@ -195,7 +195,7 @@ public class ObjectDb {
   // methods for returning specs
 
   public ArraySpec arrayS(ValSpec elementSpec) {
-    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newArrayS(elementSpec)));
+    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec)));
   }
 
   public BlobSpec blobS() {
@@ -235,7 +235,7 @@ public class ObjectDb {
   }
 
   public RecSpec recS(Iterable<? extends ValSpec> elementSpecs) {
-    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newRecS(elementSpecs)));
+    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(elementSpecs)));
   }
 
   private Spec getSpecOrChainException(
@@ -271,7 +271,7 @@ public class ObjectDb {
           Spec elementSpec = getSpecOrChainException(
               hashes.get(1), e -> new DecodeSpecException(hash));
           if (elementSpec instanceof ValSpec valSpec) {
-            yield cacheSpec(newArrayS(hash, valSpec));
+            yield cacheSpec(newArraySpec(hash, valSpec));
           } else {
             throw new DecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
                 + elementSpec.name() + " but should be Spec of some Val.");
@@ -280,7 +280,7 @@ public class ObjectDb {
         case RECORD -> {
           assertSize(hash, RECORD, hashes, 2);
           ImmutableList<Spec> elements = readRecSpecElementSpecs(hashes.get(1), hash);
-          yield cacheSpec(newRecS(hash, elements));
+          yield cacheSpec(newRecSpec(hash, elements));
         }
       };
     } catch (HashedDbException e) {
@@ -355,37 +355,37 @@ public class ObjectDb {
 
   // methods for creating Val Obj-s
 
-  public Array newArrayV(ArraySpec spec, Iterable<? extends Obj> elements)
+  public Array newArrayVal(ArraySpec spec, Iterable<? extends Obj> elements)
       throws HashedDbException {
     var data = writeArrayData(elements);
     var root = writeRoot(spec, data);
     return spec.newObj(root);
   }
 
-  public Blob newBlobV(Hash dataHash) throws HashedDbException {
+  public Blob newBlobVal(Hash dataHash) throws HashedDbException {
     var root = writeRoot(blobSpec, dataHash);
     return blobSpec.newObj(root);
   }
 
-  private Bool newBoolV(boolean value) throws HashedDbException {
+  private Bool newBoolVal(boolean value) throws HashedDbException {
     var data = writeBoolData(value);
     var root = writeRoot(boolSpec, data);
     return boolSpec.newObj(root);
   }
 
-  private Int newIntV(BigInteger value) throws HashedDbException {
+  private Int newIntVal(BigInteger value) throws HashedDbException {
     var data = writeIntData(value);
     var root = writeRoot(intSpec, data);
     return intSpec.newObj(root);
   }
 
-  private Str newStrV(String string) throws HashedDbException {
+  private Str newStrVal(String string) throws HashedDbException {
     var data = writeStrData(string);
     var root = writeRoot(strSpec, data);
     return strSpec.newObj(root);
   }
 
-  private Rec newRecV(RecSpec spec, List<?extends Obj> objects) throws HashedDbException {
+  private Rec newRecVal(RecSpec spec, List<?extends Obj> objects) throws HashedDbException {
     var data = writeRecData(objects);
     var root = writeRoot(spec, data);
     return spec.newObj(root);
@@ -393,21 +393,21 @@ public class ObjectDb {
 
   // methods for creating Spec-s
 
-  private ArraySpec newArrayS(ValSpec elementSpec) throws HashedDbException {
+  private ArraySpec newArraySpec(ValSpec elementSpec) throws HashedDbException {
     Hash hash = writeArraySpecRoot(elementSpec);
-    return newArrayS(hash, elementSpec);
+    return newArraySpec(hash, elementSpec);
   }
 
-  private ArraySpec newArrayS(Hash hash, ValSpec elementSpec) {
+  private ArraySpec newArraySpec(Hash hash, ValSpec elementSpec) {
     return new ArraySpec(hash, elementSpec, this);
   }
 
-  private RecSpec newRecS(Iterable<? extends ValSpec> elementSpecs) throws HashedDbException {
+  private RecSpec newRecSpec(Iterable<? extends ValSpec> elementSpecs) throws HashedDbException {
     Hash hash = writeRecSpecRoot(elementSpecs);
-    return newRecS(hash, elementSpecs);
+    return newRecSpec(hash, elementSpecs);
   }
 
-  private RecSpec newRecS(Hash hash, Iterable<? extends Spec> elementSpecs) {
+  private RecSpec newRecSpec(Hash hash, Iterable<? extends Spec> elementSpecs) {
     return new RecSpec(hash, elementSpecs, this);
   }
 
