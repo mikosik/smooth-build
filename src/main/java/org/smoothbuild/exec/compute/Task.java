@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.compute;
 
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.io.fs.space.Space;
 import org.smoothbuild.lang.base.define.Location;

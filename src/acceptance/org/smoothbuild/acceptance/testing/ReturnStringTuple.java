@@ -2,9 +2,9 @@ package org.smoothbuild.acceptance.testing;
 
 import static org.smoothbuild.util.Lists.list;
 
-import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.db.ObjectFactory;
-import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReturnStringTuple {

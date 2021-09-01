@@ -20,10 +20,10 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.zip.ZipException;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;

@@ -4,8 +4,8 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.Str;
+import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ToBlobFunction {

@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.val.Tuple;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final Tuple file;

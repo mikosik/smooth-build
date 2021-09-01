@@ -7,8 +7,8 @@ import static okio.Okio.sink;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.base.ArrayBuilder;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.val.ArrayBuilder;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 

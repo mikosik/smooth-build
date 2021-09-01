@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 

@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.exec.java.MethodPath.MethodPathParsingException;
 import org.smoothbuild.io.fs.space.FilePath;

@@ -1,7 +1,7 @@
 package org.smoothbuild.plugin;
 
-import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.obj.val.Array;
 
 /**
  * Implementation of NativeApi doesn't provide any thread safety and should be used

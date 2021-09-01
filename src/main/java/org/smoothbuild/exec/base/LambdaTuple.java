@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.base;
 
-import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Tuple;
 
 public class LambdaTuple {
   private static final int NAME_INDEX = 0;

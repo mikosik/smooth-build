@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

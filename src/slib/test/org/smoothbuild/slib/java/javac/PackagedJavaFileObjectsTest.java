@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.common.JarTester.jarByteString;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 public class PackagedJavaFileObjectsTest extends TestingContext {

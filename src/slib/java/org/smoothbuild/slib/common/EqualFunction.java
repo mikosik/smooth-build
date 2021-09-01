@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.common;
 
-import org.smoothbuild.db.object.base.Bool;
-import org.smoothbuild.db.object.base.Val;
+import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.plugin.NativeApi;
 
 public class EqualFunction {

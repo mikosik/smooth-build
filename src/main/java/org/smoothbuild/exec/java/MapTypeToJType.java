@@ -1,13 +1,13 @@
 package org.smoothbuild.exec.java;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.Bool;
-import org.smoothbuild.db.object.base.Int;
-import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.db.object.base.Val;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.Bool;
+import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.StructType;

@@ -3,8 +3,8 @@ package org.smoothbuild.exec.base;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.val.Array;
 
 public record Output(Obj value, Array messages) {
 

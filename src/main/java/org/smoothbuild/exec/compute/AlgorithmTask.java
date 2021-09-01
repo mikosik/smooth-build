@@ -6,7 +6,7 @@ import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
 import java.util.List;
 
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;

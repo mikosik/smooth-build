@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.spec.base.Spec;
 
 import okio.ByteString;
 

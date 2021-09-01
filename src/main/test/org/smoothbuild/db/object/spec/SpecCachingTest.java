@@ -10,6 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.testing.TestingContext;
 
 public class SpecCachingTest extends TestingContext {

@@ -6,12 +6,12 @@ import static org.smoothbuild.util.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjectFactory;
-import org.smoothbuild.db.object.spec.ArraySpec;
-import org.smoothbuild.db.object.spec.BlobSpec;
-import org.smoothbuild.db.object.spec.IntSpec;
-import org.smoothbuild.db.object.spec.StrSpec;
-import org.smoothbuild.db.object.spec.TupleSpec;
-import org.smoothbuild.db.object.spec.ValSpec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.val.ArraySpec;
+import org.smoothbuild.db.object.spec.val.BlobSpec;
+import org.smoothbuild.db.object.spec.val.IntSpec;
+import org.smoothbuild.db.object.spec.val.StrSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;

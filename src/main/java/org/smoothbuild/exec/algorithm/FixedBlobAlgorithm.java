@@ -4,8 +4,8 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmH
 import static org.smoothbuild.exec.compute.RealTask.NAME_LENGTH_LIMIT;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.spec.BlobSpec;
+import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

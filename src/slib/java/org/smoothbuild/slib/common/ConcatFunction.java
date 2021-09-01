@@ -1,8 +1,8 @@
 package org.smoothbuild.slib.common;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.ArrayBuilder;
-import org.smoothbuild.db.object.base.Val;
+import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConcatFunction {

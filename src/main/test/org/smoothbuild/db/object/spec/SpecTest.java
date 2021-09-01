@@ -33,16 +33,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.Bool;
-import org.smoothbuild.db.object.base.Call;
-import org.smoothbuild.db.object.base.Const;
-import org.smoothbuild.db.object.base.EArray;
-import org.smoothbuild.db.object.base.FieldRead;
-import org.smoothbuild.db.object.base.Int;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.expr.Call;
+import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.EArray;
+import org.smoothbuild.db.object.obj.expr.FieldRead;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.Bool;
+import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.val.ArraySpec;
 
 import com.google.common.testing.EqualsTester;
 

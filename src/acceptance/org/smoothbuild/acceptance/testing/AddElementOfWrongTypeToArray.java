@@ -1,8 +1,8 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.ArrayBuilder;
-import org.smoothbuild.db.object.base.Str;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.ArrayBuilder;
+import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.plugin.NativeApi;
 
 public class AddElementOfWrongTypeToArray {

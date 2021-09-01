@@ -17,8 +17,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;

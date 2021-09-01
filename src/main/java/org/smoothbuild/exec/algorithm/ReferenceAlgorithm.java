@@ -4,10 +4,10 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmH
 import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.define.GlobalReferencable;

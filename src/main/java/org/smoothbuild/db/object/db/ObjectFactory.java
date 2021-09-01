@@ -11,22 +11,22 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.object.base.ArrayBuilder;
-import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.BlobBuilder;
-import org.smoothbuild.db.object.base.Bool;
-import org.smoothbuild.db.object.base.Int;
-import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.db.object.spec.ArraySpec;
-import org.smoothbuild.db.object.spec.BlobSpec;
-import org.smoothbuild.db.object.spec.BoolSpec;
-import org.smoothbuild.db.object.spec.IntSpec;
-import org.smoothbuild.db.object.spec.NothingSpec;
-import org.smoothbuild.db.object.spec.StrSpec;
-import org.smoothbuild.db.object.spec.TupleSpec;
-import org.smoothbuild.db.object.spec.ValSpec;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.val.ArrayBuilder;
+import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.BlobBuilder;
+import org.smoothbuild.db.object.obj.val.Bool;
+import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.val.ArraySpec;
+import org.smoothbuild.db.object.spec.val.BlobSpec;
+import org.smoothbuild.db.object.spec.val.BoolSpec;
+import org.smoothbuild.db.object.spec.val.IntSpec;
+import org.smoothbuild.db.object.spec.val.NothingSpec;
+import org.smoothbuild.db.object.spec.val.StrSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.util.io.DataWriter;
 
 /**

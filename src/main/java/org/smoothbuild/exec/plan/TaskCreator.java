@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;

@@ -5,8 +5,8 @@ import static org.smoothbuild.exec.compute.TaskKind.BUILDER;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.exec.base.LambdaTuple;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.exec.plan.TaskCreator;

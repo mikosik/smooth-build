@@ -13,13 +13,13 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.db.ObjectFactory;
-import org.smoothbuild.db.object.spec.ArraySpec;
-import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;

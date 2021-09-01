@@ -2,7 +2,7 @@ package org.smoothbuild.exec.parallel;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;

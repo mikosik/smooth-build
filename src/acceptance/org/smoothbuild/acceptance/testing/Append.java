@@ -1,7 +1,7 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Val;
+import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Append {

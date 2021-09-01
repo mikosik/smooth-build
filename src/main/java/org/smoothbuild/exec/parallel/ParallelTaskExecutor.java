@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computer;

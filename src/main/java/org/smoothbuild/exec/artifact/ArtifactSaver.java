@@ -14,10 +14,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.db.object.base.Val;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;

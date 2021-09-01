@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.base.MessageTuple.severity;
 import static org.smoothbuild.exec.base.MessageTuple.text;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 public class ContainerTest extends TestingContext {

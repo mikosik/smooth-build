@@ -8,8 +8,8 @@ import static org.smoothbuild.lang.base.define.IfFunction.IF_FUNCTION_NAME;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.base.Bool;
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;

@@ -8,10 +8,10 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import java.util.Set;
 
 import org.smoothbuild.cli.console.Level;
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Tuple;
 
 public class MessageTuple {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());

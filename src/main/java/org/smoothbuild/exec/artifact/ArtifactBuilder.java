@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;

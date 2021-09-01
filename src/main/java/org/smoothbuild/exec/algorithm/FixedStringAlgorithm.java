@@ -5,8 +5,8 @@ import static org.smoothbuild.exec.compute.RealTask.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.spec.StrSpec;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

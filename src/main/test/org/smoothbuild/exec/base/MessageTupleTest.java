@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.exec.base.MessageTuple.containsErrors;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.testing.TestingContext;
 
 public class MessageTupleTest extends TestingContext {

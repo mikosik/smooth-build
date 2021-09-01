@@ -6,10 +6,10 @@ import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
 import java.util.function.Predicate;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.ArrayBuilder;
-import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.val.ArrayBuilder;
+import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;

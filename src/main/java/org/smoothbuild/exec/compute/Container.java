@@ -7,9 +7,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.plugin.MessageLogger;

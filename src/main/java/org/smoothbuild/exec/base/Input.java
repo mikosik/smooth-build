@@ -3,7 +3,7 @@ package org.smoothbuild.exec.base;
 import static org.smoothbuild.util.Lists.map;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.obj.base.Obj;
 
 import com.google.common.collect.ImmutableList;
 

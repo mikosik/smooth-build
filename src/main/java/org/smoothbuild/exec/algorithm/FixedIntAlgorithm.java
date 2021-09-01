@@ -5,8 +5,8 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHa
 import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.spec.IntSpec;
+import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

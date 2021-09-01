@@ -2,7 +2,7 @@ package org.smoothbuild.acceptance.testing;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.smoothbuild.db.object.base.Str;
+import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Counter {
