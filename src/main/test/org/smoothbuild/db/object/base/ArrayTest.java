@@ -21,7 +21,7 @@ import okio.ByteString;
 public class ArrayTest extends TestingContext {
   @Test
   public void empty_nothing_array_can_be_iterated_as_tuple() {
-    Array array = arrayBuilder(nothingSpec())
+    Array array = objectDb().arrayBuilder(nothingSpec())
         .build();
     assertThat(array.asIterable(Tuple.class))
         .isEmpty();
@@ -29,7 +29,7 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void string_array_cannot_be_iterated_as_tuple() {
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(strVal("abc"))
         .build();
     assertCall(() -> array.asIterable(Tuple.class))
@@ -39,7 +39,7 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void empty_array_is_empty() {
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .build();
     assertThat(array.asIterable(Str.class))
         .isEmpty();
@@ -47,21 +47,21 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void adding_null_is_forbidden() {
-    ArrayBuilder arrayBuilder = arrayBuilder(strSpec());
+    ArrayBuilder arrayBuilder = objectDb().arrayBuilder(strSpec());
     assertCall(() -> arrayBuilder.add(null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void adding_element_with_wrong_smooth_spec_is_forbidden() {
-    ArrayBuilder arrayBuilder = arrayBuilder(strSpec());
+    ArrayBuilder arrayBuilder = objectDb().arrayBuilder(strSpec());
     assertCall(() -> arrayBuilder.add(blobVal(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void array_contains_added_element() {
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(strVal("abc"))
         .build();
     assertThat(array.asIterable(Str.class))
@@ -72,7 +72,7 @@ public class ArrayTest extends TestingContext {
   public void array_contains_added_element_via_add_all_method() {
     Str rstring = strVal("abc");
     Str rstring2 = strVal("def");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .addAll(list(rstring, rstring2))
         .build();
     assertThat(array.asIterable(Str.class))
@@ -85,7 +85,7 @@ public class ArrayTest extends TestingContext {
     Str rstring1 = strVal("abc");
     Str rstring2 = strVal("def");
     Str rstring3 = strVal("ghi");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .add(rstring3)
@@ -98,7 +98,7 @@ public class ArrayTest extends TestingContext {
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() {
     Str rstring = strVal("abc");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring)
         .add(rstring)
         .build();
@@ -110,11 +110,11 @@ public class ArrayTest extends TestingContext {
   public void arrays_with_same_elements_have_same_hash() {
     Str rstring1 = strVal("abc");
     Str rstring2 = strVal("def");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
-    Array array2 = arrayBuilder(strSpec())
+    Array array2 = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -125,7 +125,7 @@ public class ArrayTest extends TestingContext {
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() {
     Str rstring = strVal("abc");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring)
         .build();
     assertThat(array.hash())
@@ -136,11 +136,11 @@ public class ArrayTest extends TestingContext {
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes() {
     Str rstring1 = strVal("abc");
     Str rstring2 = strVal("def");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
-    Array array2 = arrayBuilder(strSpec())
+    Array array2 = objectDb().arrayBuilder(strSpec())
         .add(rstring2)
         .add(rstring1)
         .build();
@@ -152,10 +152,10 @@ public class ArrayTest extends TestingContext {
   public void array_with_one_more_element_have_different_hash() {
     Str rstring1 = strVal("abc");
     Str rstring2 = strVal("def");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .build();
-    Array array2 = arrayBuilder(strSpec())
+    Array array2 = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -167,7 +167,7 @@ public class ArrayTest extends TestingContext {
   public void array_can_be_read_by_hash() {
     Str rstring1 = strVal("abc");
     Str rstring2 = strVal("def");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -179,7 +179,7 @@ public class ArrayTest extends TestingContext {
   public void array_read_by_hash_contains_same_elements() {
     Str rstring1 = strVal("abc");
     Str rstring2 = strVal("def");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -192,7 +192,7 @@ public class ArrayTest extends TestingContext {
   public void array_read_by_hash_has_same_hash() {
     Str rstring1 = strVal("abc");
     Str rstring2 = strVal("def");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -203,7 +203,7 @@ public class ArrayTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("spec_test_data")
   public void spec(ValSpec spec) {
-    Array array = arrayBuilder(spec).build();
+    Array array = objectDb().arrayBuilder(spec).build();
     assertThat(array.spec())
         .isEqualTo(arraySpec(spec));
   }
@@ -216,7 +216,7 @@ public class ArrayTest extends TestingContext {
   public void to_string() {
     Str rstring1 = strVal("abc");
     Str rstring2 = strVal("def");
-    Array array = arrayBuilder(strSpec())
+    Array array = objectDb().arrayBuilder(strSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
@@ -262,7 +262,7 @@ public class ArrayTest extends TestingContext {
     }
 
     private Array emptyArrayOf(NothingSpec elemSpec) {
-      return arrayBuilder(elemSpec).build();
+      return objectDb().arrayBuilder(elemSpec).build();
     }
   }
 }

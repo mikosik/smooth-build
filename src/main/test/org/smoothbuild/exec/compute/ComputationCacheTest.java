@@ -66,8 +66,7 @@ public class ComputationCacheTest extends TestingContext {
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
     var file = fileVal(path("file/path"), bytes);
-    var array = arrayBuilder(objectFactory().fileSpec()).add(file).build();
-    computationCache().write(hash, new Output(array, emptyMessageArray()));
+    computationCache().write(hash, new Output(arrayVal(file), emptyMessageArray()));
     var arraySpec = arraySpec(objectFactory().fileSpec());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Tuple.class))
@@ -77,8 +76,7 @@ public class ComputationCacheTest extends TestingContext {
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
     var blob = blobVal(bytes);
-    var array = arrayBuilder(blobSpec()).add(blob).build();
-    computationCache().write(hash, new Output(array, emptyMessageArray()));
+    computationCache().write(hash, new Output(arrayVal(blob), emptyMessageArray()));
     var arraySpec = arraySpec(blobSpec());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Blob.class))
@@ -88,8 +86,7 @@ public class ComputationCacheTest extends TestingContext {
   @Test
   public void written_bool_array_can_be_read_back() throws Exception {
     var boolV = boolVal(true);
-    var array = arrayBuilder(boolSpec()).add(boolV).build();
-    computationCache().write(hash, new Output(array, emptyMessageArray()));
+    computationCache().write(hash, new Output(arrayVal(boolV), emptyMessageArray()));
     var arraySpec = arraySpec(boolSpec());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Bool.class))
@@ -99,8 +96,7 @@ public class ComputationCacheTest extends TestingContext {
   @Test
   public void written_int_array_can_be_read_back() throws Exception {
     var intV = intVal(123);
-    var array = arrayBuilder(intSpec()).add(intV).build();
-    computationCache().write(hash, new Output(array, emptyMessageArray()));
+    computationCache().write(hash, new Output(arrayVal(intV), emptyMessageArray()));
     var arraySpec = arraySpec(intSpec());
 
     assertThat(((Array) computationCache().read(hash, arraySpec).value()).asIterable(Int.class))
@@ -110,7 +106,7 @@ public class ComputationCacheTest extends TestingContext {
   @Test
   public void written_string_array_can_be_read_back() throws Exception {
     var strV = strVal("some string");
-    var array = arrayBuilder(strSpec()).add(strV).build();
+    var array = arrayVal(strV);
     computationCache().write(hash, new Output(array, emptyMessageArray()));
     var arraySpec = arraySpec(strSpec());
 

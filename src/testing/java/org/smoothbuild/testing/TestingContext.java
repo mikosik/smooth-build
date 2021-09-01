@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
@@ -219,10 +218,6 @@ public class TestingContext {
 
   public Array arrayVal(ValSpec elementSpec, Obj... elements) {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
-  }
-
-  public ArrayBuilder arrayBuilder(ValSpec elemSpec) {
-    return objectDb().arrayBuilder(elemSpec);
   }
 
   public Blob blobVal(ByteString bytes) {

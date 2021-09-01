@@ -6,7 +6,6 @@ import static org.smoothbuild.util.Lists.list;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.ValSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -163,60 +162,56 @@ public class ObjectStableHashTest extends TestingContext {
   class _array {
     @Test
     public void hash_of_empty_blob_array_is_stable() {
-      assertThat(emptyArrayOf(blobSpec()).hash())
+      assertThat(arrayVal(blobSpec()).hash())
           .isEqualTo(Hash.decode("125abf735e023135153d0eade19b21fb2444a9cb"));
     }
 
     @Test
     public void hash_of_non_empty_blob_array_is_stable() {
-      assertThat(arrayBuilder(blobSpec()).add(blobVal(ByteString.of())).build().hash())
+      assertThat(arrayVal(blobVal(ByteString.of())).hash())
           .isEqualTo(Hash.decode("329e4dfd95a5dcbcc2ff3d7dde3ca20f236cc0d4"));
     }
 
     @Test
     public void hash_of_empty_bool_array_is_stable() {
-      assertThat(emptyArrayOf(boolSpec()).hash())
+      assertThat(arrayVal(boolSpec()).hash())
           .isEqualTo(Hash.decode("b9796321546d2817719aa32196a6170151a7abaa"));
     }
 
     @Test
     public void hash_of_non_empty_bool_array_is_stable() {
-      assertThat(arrayBuilder(boolSpec()).add(boolVal(true)).build().hash())
+      assertThat(arrayVal(boolVal(true)).hash())
           .isEqualTo(Hash.decode("fc0f1008bd3c72106e59e065fd6ba6658f2ffcba"));
     }
 
     @Test
     public void hash_of_empty_nothing_array_is_stable() {
-      assertThat(emptyArrayOf(nothingSpec()).hash())
+      assertThat(arrayVal(nothingSpec()).hash())
           .isEqualTo(Hash.decode("b739bcaa23e50d8cc43791d1f770698175916875"));
     }
 
     @Test
     public void hash_of_empty_string_array_is_stable() {
-      assertThat(emptyArrayOf(strSpec()).hash())
+      assertThat(arrayVal(strSpec()).hash())
           .isEqualTo(Hash.decode("89a4f1d2b4ed44ac887c7c056d54e42c50abf96e"));
     }
 
     @Test
     public void hash_of_non_empty_string_array_is_stable() {
-      assertThat(arrayBuilder(strSpec()).add(strVal("")).build().hash())
+      assertThat(arrayVal(strVal("")).hash())
           .isEqualTo(Hash.decode("3a631e7e0e6d858454e427003cb4685791f650ab"));
     }
 
     @Test
     public void hash_of_empty_tuple_array_is_stable() {
-      assertThat(emptyArrayOf(personSpec()).hash())
+      assertThat(arrayVal(personSpec()).hash())
           .isEqualTo(Hash.decode("a26b682254544d9d3b34a14f44f3b40f39f8fa1e"));
     }
 
     @Test
     public void hash_of_non_empty_tuple_array_is_stable() {
-      assertThat(arrayBuilder(personSpec()).add(personVal("John", "Doe")).build().hash())
+      assertThat(arrayVal(personVal("John", "Doe")).hash())
           .isEqualTo(Hash.decode("e06466885b0ff8bd31e6eb2fb5af60e35eb11888"));
     }
-  }
-
-  private Array emptyArrayOf(ValSpec elemSpec) {
-    return arrayBuilder(elemSpec).build();
   }
 }

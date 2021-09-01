@@ -28,8 +28,7 @@ public class TupleTest extends TestingContext {
 
   @Test
   public void setting_element_to_object_of_wrong_spec_throws_exception() {
-    Array array = arrayBuilder(strSpec()).build();
-    assertCall(() -> tupleVal(personSpec(), list(strVal("John"), array)))
+    assertCall(() -> tupleVal(personSpec(), list(strVal("John"), intVal(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
