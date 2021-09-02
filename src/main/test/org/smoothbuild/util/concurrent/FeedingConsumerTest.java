@@ -1,10 +1,10 @@
 package org.smoothbuild.util.concurrent;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.function.Consumer;
@@ -29,12 +29,14 @@ public class FeedingConsumerTest {
 
   @Test
   public void setting_value_to_null_causes_exception() {
-    assertThrows(NullPointerException.class, () -> feedingConsumer.accept(null));
+    assertCall(() -> feedingConsumer.accept(null))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
   public void adding_null_consumer_causes_exception() {
-    assertThrows(NullPointerException.class, () -> feedingConsumer.addConsumer(null));
+    assertCall(() -> feedingConsumer.addConsumer(null))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
@@ -48,12 +50,11 @@ public class FeedingConsumerTest {
   @Test
   public void setting_value_twice_causes_exception() {
     feedingConsumer.accept("abc");
-    IllegalStateException e = assertThrows(IllegalStateException.class, () -> feedingConsumer.accept("def"));
-    assertThat(e.getMessage())
-        .isEqualTo(unlines(
+    assertCall(() -> feedingConsumer.accept("def"))
+        .throwsException(new IllegalStateException(unlines(
             "Cannot set 'value' to: def",
             "as it is already set to: abc"
-        ));
+        )));
   }
 
   @Test
@@ -107,7 +108,8 @@ public class FeedingConsumerTest {
     @Test
     public void adding_null_consumer_causes_exception() {
       Feeder<Integer> chained = feedingConsumer.chain(String::length);
-      assertThrows(NullPointerException.class, () -> chained.addConsumer(null));
+      assertCall(() -> chained.addConsumer(null))
+          .throwsException(NullPointerException.class);
     }
 
     @Test

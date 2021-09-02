@@ -1,7 +1,7 @@
 package org.smoothbuild.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -43,7 +43,8 @@ public class CommandExecutorTest {
     // linux command testing whether length of string "abc" is zero.
     // As it is not zero it will return non zero return code.
     String[] command = new String[] {"test", "-z", "abc"};
-    assertEquals(1, CommandExecutor.execute(Path.of("."), command).exitCode());
+    assertThat(CommandExecutor.execute(Path.of("."), command).exitCode())
+        .isEqualTo(1);
   }
 
   @Test
@@ -51,6 +52,7 @@ public class CommandExecutorTest {
     // linux command testing whether length of string "abc" is not zero.
     // As it is not zero it will return zero return code.
     String[] command = new String[] {"test", "-n", "abc"};
-    assertEquals(0, CommandExecutor.execute(Path.of("."), command).exitCode());
+    assertThat(CommandExecutor.execute(Path.of("."), command).exitCode())
+        .isEqualTo(0);
   }
 }
