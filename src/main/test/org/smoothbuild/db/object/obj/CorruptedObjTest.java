@@ -38,7 +38,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.NoSuchDataException;
-import org.smoothbuild.db.object.db.DecodeDataHashSequenceException;
+import org.smoothbuild.db.object.db.DecodeDataSequenceException;
 import org.smoothbuild.db.object.db.DecodeObjException;
 import org.smoothbuild.db.object.db.DecodeObjRootException;
 import org.smoothbuild.db.object.db.DecodeSpecException;
@@ -422,8 +422,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeDataHashSequenceException(dataHash, 2, 1));
+          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 1));
     }
 
     @Test
@@ -446,8 +445,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeDataHashSequenceException(dataHash, 2, 3));
+          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 3));
     }
 
     @Test
@@ -750,8 +748,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeDataHashSequenceException(dataHash, 2, 1));
+          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 1));
     }
 
     @Test
@@ -769,8 +766,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeDataHashSequenceException(dataHash, 2, 3));
+          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 3));
     }
 
     @Test
@@ -983,22 +979,21 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void with_too_few_elements() throws Exception {
-      Hash elementValuesHash =
+      Hash dataHash =
           hash(
               hash(strVal("John")));
       Hash objHash =
           hash(
               hash(personSpec()),
-              elementValuesHash);
+              dataHash);
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeDataHashSequenceException(elementValuesHash, 2, 1));
+          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 1));
     }
 
     @Test
     public void with_too_many_elements() throws Exception {
-      Hash elementValuesHash =
+      Hash dataHash =
           hash(
               hash(strVal("John")),
               hash(strVal("Doe")),
@@ -1006,11 +1001,10 @@ public class CorruptedObjTest extends TestingContext {
       Hash objHash =
           hash(
               hash(personSpec()),
-              elementValuesHash);
+              dataHash);
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeDataHashSequenceException(elementValuesHash, 2, 3));
+          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 3));
     }
 
     @Test
