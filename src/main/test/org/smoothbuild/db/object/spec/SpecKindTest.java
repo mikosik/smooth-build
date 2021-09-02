@@ -38,12 +38,13 @@ public class SpecKindTest {
         Arguments.of(7, SpecKind.CONST),
         Arguments.of(8, SpecKind.FIELD_READ),
         Arguments.of(9, SpecKind.CALL),
-        Arguments.of(10, SpecKind.EARRAY)
+        Arguments.of(10, SpecKind.EARRAY),
+        Arguments.of(11, SpecKind.NULL)
     );
   }
 
   @ParameterizedTest
-  @ValueSource(bytes = {-1, 11})
+  @ValueSource(bytes = {-1, 12})
   public void from_marker_returns_null_for_illegal_marker(int marker) {
     assertThat(SpecKind.fromMarker((byte) marker))
         .isNull();

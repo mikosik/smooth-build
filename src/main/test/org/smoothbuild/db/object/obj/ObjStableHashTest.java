@@ -186,6 +186,15 @@ public class ObjStableHashTest extends TestingContext {
   }
 
   @Nested
+  class _null {
+    @Test
+    public void hash_of_null_expression_is_stable() {
+      assertThat(nullExpr().hash())
+          .isEqualTo(Hash.decode("478390ef5ac40e11c7919fc5353d0c57f34ed2fd"));
+    }
+  }
+
+  @Nested
   class _string {
     @Test
     public void hash_of_empty_string_is_stable() {

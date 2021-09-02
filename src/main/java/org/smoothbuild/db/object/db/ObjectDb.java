@@ -2,6 +2,8 @@ package org.smoothbuild.db.object.db;
 
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
+import static org.smoothbuild.db.object.db.DecodeObjRootException.nonNullObjRootException;
+import static org.smoothbuild.db.object.db.DecodeObjRootException.nullObjRootException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
@@ -14,6 +16,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.FIELD_READ;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
+import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
@@ -35,6 +38,7 @@ import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
 import org.smoothbuild.db.object.obj.expr.FieldRead;
+import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
@@ -50,6 +54,7 @@ import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.EArraySpec;
 import org.smoothbuild.db.object.spec.expr.FieldReadSpec;
+import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
@@ -77,10 +82,11 @@ public class ObjectDb {
   private IntSpec intSpec;
   private NothingSpec nothingSpec;
   private StrSpec strSpec;
-  private ConstSpec constSpec;
-  private FieldReadSpec fieldReadSpec;
   private CallSpec callSpec;
+  private ConstSpec constSpec;
   private EArraySpec eArraySpec;
+  private FieldReadSpec fieldReadSpec;
+  private NullSpec nullSpec;
 
   public static ObjectDb objectDb(HashedDb hashedDb) {
       ObjectDb objectDb = new ObjectDb(hashedDb);
@@ -106,6 +112,7 @@ public class ObjectDb {
       this.constSpec = new ConstSpec(writeBaseSpecRoot(CONST), this);
       this.eArraySpec = new EArraySpec(writeBaseSpecRoot(EARRAY), this);
       this.fieldReadSpec = new FieldReadSpec(writeBaseSpecRoot(FIELD_READ), this);
+      this.nullSpec = new NullSpec(writeBaseSpecRoot(NULL), this);
 
       cacheSpec(blobSpec);
       cacheSpec(boolSpec);
@@ -116,6 +123,7 @@ public class ObjectDb {
       cacheSpec(constSpec);
       cacheSpec(eArraySpec);
       cacheSpec(fieldReadSpec);
+      cacheSpec(nullSpec);
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -180,19 +188,33 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newFieldReadExpr(rec, index));
   }
 
+  public Null nullExpr() {
+    return wrapHashedDbExceptionAsObjectDbException(this::newNullExpr);
+  }
+
   // generic getter
 
   public Obj get(Hash hash) {
     List<Hash> hashes = wrapHashedDbExceptionAsDecodeObjException(
         hash,
         () -> hashedDb.readSequence(hash));
-    if (hashes.size() != 2) {
+    if (hashes.size() != 1 && hashes.size() != 2) {
       throw new DecodeObjRootException(hash, hashes.size());
     }
     Spec spec = getSpecOrChainException(
         hashes.get(0), e -> new DecodeObjException(hash, e));
-    Hash dataHash = hashes.get(1);
-    return spec.newObj(new MerkleRoot(hash, spec, dataHash));
+    if (spec.equals(nullSpec)) {
+      if (hashes.size() != 1) {
+        throw nullObjRootException(hash, hashes.size());
+      }
+      return spec.newObj(new MerkleRoot(hash, spec, null));
+    } else {
+      if (hashes.size() != 2) {
+        throw nonNullObjRootException(hash, hashes.size());
+      }
+      Hash dataHash = hashes.get(1);
+      return spec.newObj(new MerkleRoot(hash, spec, dataHash));
+    }
   }
 
   // methods for returning specs
@@ -237,6 +259,10 @@ public class ObjectDb {
     return fieldReadSpec;
   }
 
+  public NullSpec nullS() {
+    return nullSpec;
+  }
+
   public RecSpec recS(Iterable<? extends ValSpec> elementSpecs) {
     return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(elementSpecs)));
   }
@@ -269,7 +295,7 @@ public class ObjectDb {
           "It has illegal SpecKind marker = " + marker + ".");
     }
     return switch (specKind) {
-      case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ -> {
+      case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ, NULL -> {
         assertSize(hash, specKind, hashes, 1);
         throw new RuntimeException(
             "Internal error: Spec with kind " + specKind + " should be found in cache.");
@@ -358,6 +384,11 @@ public class ObjectDb {
     return fieldReadSpec.newObj(root);
   }
 
+  public Null newNullExpr() throws HashedDbException {
+    var root = writeRoot(nullSpec);
+    return nullSpec.newObj(root);
+  }
+
   // methods for creating Val Obj-s
 
   public Array newArrayVal(ArraySpec spec, Iterable<? extends Obj> elements)
@@ -417,6 +448,11 @@ public class ObjectDb {
   }
 
   // method for writing Merkle-root to HashedDb
+
+  private MerkleRoot writeRoot(Spec spec) throws HashedDbException {
+    Hash hash = hashedDb.writeSequence(spec.hash());
+    return new MerkleRoot(hash, spec, null);
+  }
 
   private MerkleRoot writeRoot(Spec spec, Hash dataHash) throws HashedDbException {
     Hash hash = hashedDb.writeSequence(spec.hash(), dataHash);

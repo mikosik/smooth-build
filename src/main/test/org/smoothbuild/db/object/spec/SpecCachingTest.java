@@ -43,6 +43,7 @@ public class SpecCachingTest extends TestingContext {
         ObjectDb::constS,
         ObjectDb::eArrayS,
         ObjectDb::fieldReadS,
+        ObjectDb::nullS,
 
         (objectDb) -> objectDb.arrayS(objectDb.blobS()),
         (objectDb) -> objectDb.arrayS(objectDb.boolS()),

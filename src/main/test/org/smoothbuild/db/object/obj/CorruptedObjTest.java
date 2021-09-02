@@ -2,6 +2,8 @@ package org.smoothbuild.db.object.obj;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.db.object.db.DecodeObjRootException.nonNullObjRootException;
+import static org.smoothbuild.db.object.db.DecodeObjRootException.nullObjRootException;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
@@ -10,6 +12,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.FIELD_READ;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
+import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -161,8 +164,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void root_with_data_hash_pointing_nowhere()
-        throws Exception {
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
           arraySpec(intSpec()),
           (Hash objHash) -> ((Array) objectDb().get(objHash)).elements(Int.class));
@@ -564,8 +566,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void root_with_data_hash_pointing_nowhere()
-        throws Exception {
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
           constSpec(),
           (Hash objHash) -> ((Const) objectDb().get(objHash)).value());
@@ -632,8 +633,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void root_with_data_hash_pointing_nowhere()
-        throws Exception {
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
           eArraySpec(),
           (Hash objHash) -> ((EArray) objectDb().get(objHash)).elements());
@@ -842,6 +842,33 @@ public class CorruptedObjTest extends TestingContext {
           (Hash objHash) -> ((Int) objectDb().get(objHash)).jValue());
     }
   }
+  @Nested
+  class _null {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save null
+       * in HashedDb.
+       */
+      Hash objHash =
+          hash(
+              hash(nullSpec())
+          );
+      objectDb().get(objHash);
+    }
+
+    @Test
+    public void root_with_data_hash() throws Exception {
+      Hash dataHash = hash(intVal(33));
+      Hash objHash =
+          hash(
+              hash(nullSpec()),
+              dataHash
+          );
+      assertCall(() -> objectDb().get(objHash))
+          .throwsException(nullObjRootException(objHash, 2));
+    }
+  }
 
   @Nested
   class _nothing {
@@ -887,8 +914,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void root_with_data_hash_pointing_nowhere()
-        throws Exception {
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           strSpec(),
           (Hash objHash) -> ((Str) objectDb().get(objHash)).jValue());
@@ -939,8 +965,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void root_with_data_hash_pointing_nowhere()
-        throws Exception {
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
           personSpec(),
           (Hash objHash) -> ((Rec) objectDb().get(objHash)).get(0));
@@ -1151,6 +1176,11 @@ public class CorruptedObjTest extends TestingContext {
         do_test_with_additional_child(EARRAY);
       }
 
+      @Test
+      public void null_with_additional_child_causes_exception() throws Exception {
+        do_test_with_additional_child(NULL);
+      }
+
       private void do_test_with_additional_child(SpecKind kind) throws Exception {
         Hash hash = hash(
             hash(kind.marker()),
@@ -1298,7 +1328,7 @@ public class CorruptedObjTest extends TestingContext {
         hash(
             hash(spec));
     assertCall(() -> objectDb().get(objHash))
-        .throwsException(new DecodeObjRootException(objHash, 1));
+        .throwsException(nonNullObjRootException(objHash, 1));
   }
 
   private void obj_root_with_two_data_hashes(
