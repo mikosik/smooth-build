@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.obj;
 
-import static com.google.common.collect.Streams.stream;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
@@ -135,8 +134,9 @@ public class CorruptedObjTest extends TestingContext {
                       hash("bbb")
                   )
               ));
-      List<String> strings = stream(((Array) objectDb().get(objHash))
-          .elements(Str.class))
+      List<String> strings = ((Array) objectDb().get(objHash))
+          .elements(Str.class)
+          .stream()
           .map(Str::jValue)
           .collect(toList());
       assertThat(strings)
