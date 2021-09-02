@@ -1303,7 +1303,7 @@ public class CorruptedObjTest extends TestingContext {
             hash(spec));
     assertCall(() -> objectDb().get(objHash))
         .throwsException(new DecodeObjException(objHash))
-        .withCause(new DecodingHashSequenceException(objHash, 2, 1));
+        .withCause(new DecodingDataHashSequenceException(objHash, 2, 1));
   }
 
   private void obj_root_with_two_data_hashes(

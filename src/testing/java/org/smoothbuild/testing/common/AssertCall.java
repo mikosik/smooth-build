@@ -46,10 +46,17 @@ public class AssertCall {
       if (actual == null) {
         failWithoutActual(simpleFact("expected call to throw exception"));
       } else if (actual.getClass() != expected.getClass()) {
-        failWithActual(fact("expected call to throw", expectedClassName));
+        failWithoutActual(
+            fact("expected call to throw", expectedClassName),
+            fact("but was", actual.getClass().getCanonicalName()));
       } else {
-        Throwable actualThrowable = (Throwable) actual;
-        check("getMessage()").that(actualThrowable.getMessage()).isEqualTo(expected.getMessage());
+        String actualMessage = ((Throwable) actual).getMessage();
+        if (!Objects.equals(actualMessage, expected.getMessage())) {
+          failWithoutActual(
+              fact("expected call to throw", expectedClassName),
+              fact("with message", expected.getMessage()),
+              fact("but was message", actualMessage));
+        }
       }
       return new ExceptionCauseSubject(list(
           fact("expected call to throw", expectedClassName),
