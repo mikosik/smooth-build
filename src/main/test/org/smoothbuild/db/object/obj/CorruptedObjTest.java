@@ -91,7 +91,7 @@ public class CorruptedObjTest extends TestingContext {
           hash(ByteString.of(new byte[byteCount]));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeHashSequenceException(objHash, byteCount % Hash.hashesSize()));
+          .withCause(new DecodeHashSequenceException(objHash, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
@@ -1345,8 +1345,8 @@ public class CorruptedObjTest extends TestingContext {
   private static class IllegalArrayByteSizesProvider implements ArgumentsProvider {
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-      return IntStream.rangeClosed(1, Hash.hashesSize() * 3 + 1)
-          .filter(i -> i % Hash.hashesSize() != 0)
+      return IntStream.rangeClosed(1, Hash.lengthInBytes() * 3 + 1)
+          .filter(i -> i % Hash.lengthInBytes() != 0)
           .mapToObj(Arguments::of);
     }
   }

@@ -142,7 +142,7 @@ public class HashedDb {
     Builder<Hash> builder = ImmutableList.builder();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {
-        if (source.request(Hash.hashesSize())) {
+        if (source.request(Hash.lengthInBytes())) {
           builder.add(Hash.read(source));
         } else {
           throw new DecodeHashSequenceException(hash, source.readByteArray().length);

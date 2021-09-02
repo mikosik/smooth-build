@@ -26,7 +26,7 @@ public class HashTest {
   @Test
   public void read_from_source_having_less_bytes_than_needed_throws_eof_exception() {
     Buffer buffer = new Buffer();
-    buffer.write(new byte[Hash.hashesSize() - 1]);
+    buffer.write(new byte[Hash.lengthInBytes() - 1]);
     assertCall(() -> Hash.read(buffer))
         .throwsException(EOFException.class);
   }

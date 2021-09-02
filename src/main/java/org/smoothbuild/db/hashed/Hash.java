@@ -41,7 +41,7 @@ public class Hash {
   }
 
   public static Hash read(BufferedSource source) throws IOException {
-    return new Hash(source.readByteString(hashesSize()));
+    return new Hash(source.readByteString(lengthInBytes()));
   }
 
   private static HashingSource hashingSource(Source source) {
@@ -97,7 +97,7 @@ public class Hash {
     return new Hash(ByteString.of(hash.asBytes()));
   }
 
-  public static int hashesSize() {
+  public static int lengthInBytes() {
     return function().bits() / 8;
   }
 
