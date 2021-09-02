@@ -234,7 +234,7 @@ public class AssertCallTest {
             .isEqualTo("""
                 expected call to throw: java.lang.IllegalStateException
                 with cause            : java.lang.IllegalArgumentException
-                but was no cause""");
+                but was exception without cause""");
         return;
       }
       fail("assertCall() should report failure");
@@ -312,7 +312,7 @@ public class AssertCallTest {
                 expected call to throw: java.lang.IllegalStateException
                 with message          : main message
                 with cause            : java.lang.IllegalArgumentException
-                but was no cause""");
+                but was exception without cause""");
         return;
       }
       fail("assertCall() should report failure");

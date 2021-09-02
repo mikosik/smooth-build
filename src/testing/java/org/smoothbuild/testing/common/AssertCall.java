@@ -87,7 +87,7 @@ public class AssertCall {
           callFailWithoutActual(
               facts,
               fact("with cause", expectedCauseName),
-              simpleFact("but was no cause"));
+              simpleFact("but was exception without cause"));
         } else if (!Objects.equals(actualCause.getClass(), expectedCause.getClass())) {
           callFailWithoutActual(
               facts,
