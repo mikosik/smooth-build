@@ -155,7 +155,7 @@ public class CorruptedObjTest extends TestingContext {
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
           arraySpec(intSpec()),
-          hashedDb().writeHashes(),
+          hashedDb().writeSequence(),
           (Hash objHash) -> ((Array) objectDb().get(objHash)).elements(Int.class)
       );
     }
@@ -1395,6 +1395,6 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
-    return hashedDb().writeHashes(hashes);
+    return hashedDb().writeSequence(hashes);
   }
 }

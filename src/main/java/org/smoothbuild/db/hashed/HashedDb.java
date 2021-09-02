@@ -122,11 +122,11 @@ public class HashedDb {
     }
   }
 
-  public Hash writeHashes(Hash... hashes) throws HashedDbException {
-    return writeHashes(asList(hashes));
+  public Hash writeSequence(Hash... hashes) throws HashedDbException {
+    return writeSequence(asList(hashes));
   }
 
-  public Hash writeHashes(Iterable<Hash> hashes) throws HashedDbException {
+  public Hash writeSequence(Iterable<Hash> hashes) throws HashedDbException {
     try (HashingBufferedSink sink = sink()) {
       for (Hash hash : hashes) {
         sink.write(hash.toByteString());
@@ -138,7 +138,7 @@ public class HashedDb {
     }
   }
 
-  public ImmutableList<Hash> readHashes(Hash hash) throws HashedDbException {
+  public ImmutableList<Hash> readSequence(Hash hash) throws HashedDbException {
     Builder<Hash> builder = ImmutableList.builder();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {

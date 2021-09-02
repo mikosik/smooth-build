@@ -185,7 +185,7 @@ public class ObjectDb {
   public Obj get(Hash hash) {
     List<Hash> hashes = wrapHashedDbExceptionAsDecodeObjException(
         hash,
-        () -> hashedDb.readHashes(hash));
+        () -> hashedDb.readSequence(hash));
     if (hashes.size() != 2) {
       throw new DecodeObjRootException(hash, hashes.size());
     }
@@ -256,7 +256,7 @@ public class ObjectDb {
 
   private Spec readSpec(Hash hash) {
     List<Hash> hashes = wrapHashedDbExceptionAsDecodeSpecException(
-        hash, () -> hashedDb.readHashes(hash));
+        hash, () -> hashedDb.readSequence(hash));
     int sequenceSize = hashes.size();
     if (sequenceSize != 1 && sequenceSize != 2) {
       throw new DecodeSpecRootException(hash, sequenceSize);
@@ -318,7 +318,7 @@ public class ObjectDb {
 
   private List<Hash> readRecSpecElementSpecHashes(Hash hash, Hash parentHash) {
     try {
-      return hashedDb.readHashes(hash);
+      return hashedDb.readSequence(hash);
     } catch (HashedDbException e) {
       throw new DecodeSpecException(parentHash,
           "Its specKind == RECORD but reading its element specs caused error.", e);
@@ -419,7 +419,7 @@ public class ObjectDb {
   // method for writing Merkle-root to HashedDb
 
   private MerkleRoot writeRoot(Spec spec, Hash dataHash) throws HashedDbException {
-    Hash hash = hashedDb.writeHashes(spec.hash(), dataHash);
+    Hash hash = hashedDb.writeSequence(spec.hash(), dataHash);
     return new MerkleRoot(hash, spec, dataHash);
   }
 
@@ -428,7 +428,7 @@ public class ObjectDb {
   private Hash writeCallData(Expr function, Iterable<? extends Expr> arguments)
       throws HashedDbException {
     Hash argumentSequenceHash = writeSequence(arguments);
-    return hashedDb.writeHashes(function.hash(), argumentSequenceHash);
+    return hashedDb.writeSequence(function.hash(), argumentSequenceHash);
   }
 
   private Hash writeConstData(Val val) {
@@ -440,7 +440,7 @@ public class ObjectDb {
   }
 
   private Hash writeFieldReadData(Expr rec, Int index) throws HashedDbException {
-    return hashedDb.writeHashes(rec.hash(), index.hash());
+    return hashedDb.writeSequence(rec.hash(), index.hash());
   }
 
   // methods for writing data of Val-s
@@ -469,11 +469,11 @@ public class ObjectDb {
 
   private Hash writeSequence(Iterable<? extends Obj> objs) throws HashedDbException {
     var hashes = map(objs, Obj::hash);
-    return hashedDb.writeHashes(hashes);
+    return hashedDb.writeSequence(hashes);
   }
 
   public ImmutableList<Hash> readSequence(Hash hash) throws HashedDbException {
-    return hashedDb().readHashes(hash);
+    return hashedDb().readSequence(hash);
   }
 
   private Hash writeArraySpecRoot(Spec elementSpec) throws HashedDbException {
@@ -482,16 +482,16 @@ public class ObjectDb {
 
   private Hash writeRecSpecRoot(Iterable<? extends ValSpec> elementSpecs)
       throws HashedDbException {
-    Hash elementsHash = hashedDb.writeHashes(map(elementSpecs, Spec::hash));
+    Hash elementsHash = hashedDb.writeSequence(map(elementSpecs, Spec::hash));
     return writeNonBaseSpecRoot(RECORD, elementsHash);
   }
 
   private Hash writeNonBaseSpecRoot(SpecKind specKind, Hash elements) throws HashedDbException {
-    return hashedDb.writeHashes(hashedDb.writeByte(specKind.marker()), elements);
+    return hashedDb.writeSequence(hashedDb.writeByte(specKind.marker()), elements);
   }
 
   private Hash writeBaseSpecRoot(SpecKind specKind) throws HashedDbException {
-    return hashedDb.writeHashes(hashedDb.writeByte(specKind.marker()));
+    return hashedDb.writeSequence(hashedDb.writeByte(specKind.marker()));
   }
 
   // TODO visible for classes from db.object package tree until creating Obj is cached and

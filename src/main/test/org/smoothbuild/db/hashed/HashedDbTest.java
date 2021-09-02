@@ -223,39 +223,39 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Nested
-  class _hash_sequence {
+  class _sequence {
     @Test
     public void with_no_elements_can_be_read_back() throws Exception {
-      hash = hashedDb().writeHashes();
-      assertThat(hashedDb().readHashes(hash))
+      hash = hashedDb().writeSequence();
+      assertThat(hashedDb().readSequence(hash))
           .isEqualTo(list());
     }
 
     @Test
     public void with_one_element_can_be_read_back() throws Exception {
-      hash = hashedDb().writeHashes(Hash.of("abc"));
-      assertThat(hashedDb().readHashes(hash))
+      hash = hashedDb().writeSequence(Hash.of("abc"));
+      assertThat(hashedDb().readSequence(hash))
           .isEqualTo(list(Hash.of("abc")));
     }
 
     @Test
     public void with_two_elements_can_be_read_back() throws Exception {
-      hash = hashedDb().writeHashes(Hash.of("abc"), Hash.of("def"));
-      assertThat(hashedDb().readHashes(hash))
+      hash = hashedDb().writeSequence(Hash.of("abc"), Hash.of("def"));
+      assertThat(hashedDb().readSequence(hash))
           .isEqualTo(list(Hash.of("abc"), Hash.of("def")));
     }
 
     @Test
     public void not_written_sequence_of_hashes_cannot_be_read_back() {
       hash = Hash.of("abc");
-      assertCall(() -> hashedDb().readHashes(hash))
+      assertCall(() -> hashedDb().readSequence(hash))
           .throwsException(new NoSuchDataException(hash));
     }
 
     @Test
     public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
       hash = hashedDb().writeString("12345");
-      assertCall(() -> hashedDb().readHashes(hash))
+      assertCall(() -> hashedDb().readSequence(hash))
           .throwsException(new DecodeHashSequenceException(hash, 5));
     }
   }
