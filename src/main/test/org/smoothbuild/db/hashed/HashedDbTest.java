@@ -256,7 +256,7 @@ public class HashedDbTest extends TestingContext {
     public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
       hash = hashedDb().writeString("12345");
       assertCall(() -> hashedDb().readHashes(hash))
-          .throwsException(new DecodingHashSequenceException(hash));
+          .throwsException(new DecodingHashSequenceException(hash, 5));
     }
   }
 
@@ -309,7 +309,7 @@ public class HashedDbTest extends TestingContext {
         throws Exception {
       hash = hashedDb().writeString("12345");
       assertCall(() -> hashedDb().readHashes(hash, 0))
-          .throwsException(new DecodingHashSequenceException(hash));
+          .throwsException(new DecodingHashSequenceException(hash, 5));
     }
   }
 
@@ -355,7 +355,7 @@ public class HashedDbTest extends TestingContext {
         Exception {
       hash = hashedDb().writeString("12345");
       assertCall(() -> hashedDb().readHashes(hash, 0, 2))
-          .throwsException(new DecodingHashSequenceException(hash));
+          .throwsException(new DecodingHashSequenceException(hash, 5));
     }
   }
 }

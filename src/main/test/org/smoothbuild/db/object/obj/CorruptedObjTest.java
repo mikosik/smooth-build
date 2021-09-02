@@ -90,7 +90,7 @@ public class CorruptedObjTest extends TestingContext {
           hash(ByteString.of(new byte[byteCount]));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingHashSequenceException(objHash));
+          .withCause(new DecodingHashSequenceException(objHash, byteCount % Hash.hashesSize()));
     }
 
     @Test

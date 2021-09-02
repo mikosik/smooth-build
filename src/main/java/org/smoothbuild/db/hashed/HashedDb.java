@@ -163,7 +163,7 @@ public class HashedDb {
         if (source.request(Hash.hashesSize())) {
           builder.add(Hash.read(source));
         } else {
-          throw new DecodingHashSequenceException(hash);
+          throw new DecodingHashSequenceException(hash, source.readByteArray().length);
         }
       }
     } catch (IOException e) {
