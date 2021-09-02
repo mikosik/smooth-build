@@ -4,6 +4,20 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 
 public class Helpers {
+  public static <T> T wrapObjectDbExceptionAsDecodeObjException(
+      Hash hash, ObjectDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (ObjectDbException e) {
+      throw new DecodeObjException(hash, e);
+    }
+  }
+
+  @FunctionalInterface
+  public static interface ObjectDbCallable<T> {
+    public T call() throws ObjectDbException;
+  }
+
   public static <T> T wrapHashedDbExceptionAsObjectDbException(HashedDbCallable<T> callable) {
     try {
       return callable.call();
@@ -33,20 +47,6 @@ public class Helpers {
   @FunctionalInterface
   public static interface HashedDbCallable<T> {
     public T call() throws HashedDbException;
-  }
-
-  public static <T> T wrapObjectDbExceptionAsDecodeObjException(
-      Hash hash, ObjectDbCallable<T> callable) {
-    try {
-      return callable.call();
-    } catch (ObjectDbException e) {
-      throw new DecodeObjException(hash, e);
-    }
-  }
-
-  @FunctionalInterface
-  public static interface ObjectDbCallable<T> {
-    public T call() throws ObjectDbException;
   }
 
   public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {
