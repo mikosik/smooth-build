@@ -30,19 +30,19 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.smoothbuild.db.hashed.DecodeBooleanException;
+import org.smoothbuild.db.hashed.DecodeByteException;
 import org.smoothbuild.db.hashed.DecodeHashSequenceException;
-import org.smoothbuild.db.hashed.DecodingBooleanException;
-import org.smoothbuild.db.hashed.DecodingByteException;
-import org.smoothbuild.db.hashed.DecodingStringException;
+import org.smoothbuild.db.hashed.DecodeStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.NoSuchDataException;
+import org.smoothbuild.db.object.db.DecodeDataHashSequenceException;
 import org.smoothbuild.db.object.db.DecodeObjException;
 import org.smoothbuild.db.object.db.DecodeObjRootException;
 import org.smoothbuild.db.object.db.DecodeSpecException;
 import org.smoothbuild.db.object.db.DecodeSpecRootException;
-import org.smoothbuild.db.object.db.DecodingDataHashSequenceException;
 import org.smoothbuild.db.object.db.ObjectDbException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
@@ -322,7 +322,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
+          .withCause(new DecodeBooleanException(dataHash, new DecodeByteException(dataHash)));
     }
 
     @Test
@@ -334,7 +334,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
+          .withCause(new DecodeBooleanException(dataHash, new DecodeByteException(dataHash)));
     }
 
     @ParameterizedTest
@@ -348,7 +348,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingBooleanException(dataHash));
+          .withCause(new DecodeBooleanException(dataHash));
     }
   }
 
@@ -423,7 +423,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingDataHashSequenceException(dataHash, 2, 1));
+          .withCause(new DecodeDataHashSequenceException(dataHash, 2, 1));
     }
 
     @Test
@@ -447,7 +447,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingDataHashSequenceException(dataHash, 2, 3));
+          .withCause(new DecodeDataHashSequenceException(dataHash, 2, 3));
     }
 
     @Test
@@ -751,7 +751,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingDataHashSequenceException(dataHash, 2, 1));
+          .withCause(new DecodeDataHashSequenceException(dataHash, 2, 1));
     }
 
     @Test
@@ -770,7 +770,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingDataHashSequenceException(dataHash, 2, 3));
+          .withCause(new DecodeDataHashSequenceException(dataHash, 2, 3));
     }
 
     @Test
@@ -907,7 +907,7 @@ public class CorruptedObjTest extends TestingContext {
               notStringHash);
       assertCall(() -> ((Str) objectDb().get(objHash)).jValue())
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingStringException(notStringHash, null));
+          .withCause(new DecodeStringException(notStringHash, null));
     }
   }
 
@@ -993,7 +993,7 @@ public class CorruptedObjTest extends TestingContext {
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingDataHashSequenceException(elementValuesHash, 2, 1));
+          .withCause(new DecodeDataHashSequenceException(elementValuesHash, 2, 1));
     }
 
     @Test
@@ -1010,7 +1010,7 @@ public class CorruptedObjTest extends TestingContext {
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingDataHashSequenceException(elementValuesHash, 2, 3));
+          .withCause(new DecodeDataHashSequenceException(elementValuesHash, 2, 3));
     }
 
     @Test

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.util.DecodingHexException;
+import org.smoothbuild.util.DecodeHexException;
 import org.smoothbuild.util.Hex;
 
 import okio.ByteString;
@@ -19,7 +19,7 @@ public class BlobNode extends ExprNode {
     return literal;
   }
 
-  public void decodeByteString() throws DecodingHexException {
+  public void decodeByteString() throws DecodeHexException {
     byteString = Hex.decode(literal);
   }
 

@@ -39,7 +39,7 @@ import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.util.CountersMap;
-import org.smoothbuild.util.DecodingHexException;
+import org.smoothbuild.util.DecodeHexException;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.Sets;
 import org.smoothbuild.util.UnescapingFailedException;
@@ -70,7 +70,7 @@ public class AnalyzeSemantically {
         super.visitBlobLiteral(blob);
         try {
           blob.decodeByteString();
-        } catch (DecodingHexException e) {
+        } catch (DecodeHexException e) {
           logger.log(parseError(blob, "Illegal Blob literal. " + e.getMessage()));
         }
       }

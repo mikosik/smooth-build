@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.object.db.DecodingDataHashSequenceException;
+import org.smoothbuild.db.object.db.DecodeDataHashSequenceException;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 
@@ -92,7 +92,7 @@ public abstract class Obj {
   private List<Hash> getDataSequenceImpl(int expectedSize) {
     List<Hash> data = getDataSequenceImpl();
     if (data.size() != expectedSize) {
-      throw new DecodingDataHashSequenceException(dataHash(), expectedSize, data.size());
+      throw new DecodeDataHashSequenceException(dataHash(), expectedSize, data.size());
     }
     return data;
   }

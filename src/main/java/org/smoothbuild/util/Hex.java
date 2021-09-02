@@ -10,13 +10,13 @@ import okio.ByteString;
 public class Hex {
   private static final CharMatcher INVALID_CHAR_MATCHER = noneOf("0123456789ABCDEFabcdef");
 
-  public static ByteString decode(String string) throws DecodingHexException {
+  public static ByteString decode(String string) throws DecodeHexException {
     String retained = INVALID_CHAR_MATCHER.retainFrom(string);
     if (!retained.isEmpty()) {
-      throw DecodingHexException.invalidHexDigits(retained);
+      throw DecodeHexException.invalidHexDigits(retained);
     }
     if (string.length() % 2 != 0) {
-      throw DecodingHexException.expectedEvenNumberOfDigits();
+      throw DecodeHexException.expectedEvenNumberOfDigits();
     }
     return decodeHex(string);
   }

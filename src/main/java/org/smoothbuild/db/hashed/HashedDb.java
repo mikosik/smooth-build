@@ -49,7 +49,7 @@ public class HashedDb {
     try (BufferedSource source = source(hash)) {
       byte[] bytes = source.readByteArray();
       if (bytes.length == 0) {
-        throw new DecodingBigIntegerException(hash);
+        throw new DecodeBigIntegerException(hash);
       }
       return new BigInteger(bytes);
     } catch (IOException e) {
@@ -67,10 +67,10 @@ public class HashedDb {
       return switch (value) {
         case 0 -> false;
         case 1 -> true;
-        default -> throw new DecodingBooleanException(hash);
+        default -> throw new DecodeBooleanException(hash);
       };
-    } catch (DecodingByteException e) {
-      throw new DecodingBooleanException(hash, e);
+    } catch (DecodeByteException e) {
+      throw new DecodeBooleanException(hash, e);
     }
   }
 
@@ -87,11 +87,11 @@ public class HashedDb {
   public byte readByte(Hash hash) throws HashedDbException {
     try (BufferedSource source = source(hash)) {
       if (source.exhausted()) {
-        throw new DecodingByteException(hash);
+        throw new DecodeByteException(hash);
       }
       byte value = source.readByte();
       if (!source.exhausted()) {
-        throw new DecodingByteException(hash);
+        throw new DecodeByteException(hash);
       }
       return value;
     } catch (IOException e) {
@@ -116,7 +116,7 @@ public class HashedDb {
       charsetDecoder.onUnmappableCharacter(REPORT);
       return charsetDecoder.decode(wrap(source.readByteArray())).toString();
     } catch (CharacterCodingException e) {
-      throw new DecodingStringException(hash, e);
+      throw new DecodeStringException(hash, e);
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }

@@ -17,14 +17,14 @@ import okio.ByteString;
 
 public class HexTest {
   @Test
-  public void empty_string_is_decoded() throws DecodingHexException {
+  public void empty_string_is_decoded() throws DecodeHexException {
     assertThat(Hex.decode(""))
         .isEqualTo(ByteString.of());
   }
 
   @ParameterizedTest
   @MethodSource("one_byte_values")
-  public void one_byte_value_is_decoded(byte value, String encoded) throws DecodingHexException {
+  public void one_byte_value_is_decoded(byte value, String encoded) throws DecodeHexException {
     assertThat(Hex.decode(encoded))
         .isEqualTo(ByteString.of(value));
   }
@@ -46,7 +46,7 @@ public class HexTest {
   }
 
   @Test
-  public void two_bytes_value_is_decoded() throws DecodingHexException {
+  public void two_bytes_value_is_decoded() throws DecodeHexException {
     assertThat(Hex.decode("0102"))
         .isEqualTo(ByteString.of((byte) 1, (byte) 2));
   }
@@ -55,12 +55,12 @@ public class HexTest {
   @ValueSource(strings = {"1", "123", "12345", "1234567"})
   public void odd_count_of_digits_causes_error(String string) {
     assertCall(() -> Hex.decode(string))
-        .throwsException(DecodingHexException.expectedEvenNumberOfDigits());
+        .throwsException(DecodeHexException.expectedEvenNumberOfDigits());
   }
 
   @Test
   public void invalid_hex_digit_causes_error() {
     assertCall(() -> Hex.decode("1M"))
-        .throwsException(DecodingHexException.invalidHexDigits("M"));
+        .throwsException(DecodeHexException.invalidHexDigits("M"));
   }
 }
