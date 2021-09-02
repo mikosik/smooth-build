@@ -2,6 +2,8 @@ package org.smoothbuild.db.object.db;
 
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
+import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjException;
+import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
@@ -181,15 +183,16 @@ public class ObjectDb {
   // generic getter
 
   public Obj get(Hash hash) {
-    try {
-      List<Hash> hashes = hashedDb.readHashes(hash, 2);
-      Spec spec = getSpecOrChainException(
-          hashes.get(0), e -> new DecodeObjException(hash, e));
-      Hash dataHash = hashes.get(1);
-      return spec.newObj(new MerkleRoot(hash, spec, dataHash));
-    } catch (HashedDbException e) {
-      throw new DecodeObjException(hash, e);
+    List<Hash> hashes = wrapHashedDbExceptionAsDecodeObjException(
+        hash,
+        () -> hashedDb.readHashes(hash));
+    if (hashes.size() != 2) {
+      throw new DecodeObjRootException(hash, hashes.size());
     }
+    Spec spec = getSpecOrChainException(
+        hashes.get(0), e -> new DecodeObjException(hash, e));
+    Hash dataHash = hashes.get(1);
+    return spec.newObj(new MerkleRoot(hash, spec, dataHash));
   }
 
   // methods for returning specs
@@ -252,40 +255,42 @@ public class ObjectDb {
   }
 
   private Spec readSpec(Hash hash) {
-    try {
-      List<Hash> hashes = hashedDb.readHashes(hash, 1, 2);
-      byte marker = hashedDb.readByte(hashes.get(0));
-      SpecKind specKind = fromMarker(marker);
-      if (specKind == null) {
-        throw new DecodeSpecException(hash,
-            "It has illegal SpecKind marker = " + marker + ".");
-      }
-      return switch (specKind) {
-        case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ -> {
-          assertSize(hash, specKind, hashes, 1);
-          throw new RuntimeException(
-              "Internal error: Spec with kind " + specKind + " should be found in cache.");
-        }
-        case ARRAY -> {
-          assertSize(hash, ARRAY, hashes, 2);
-          Spec elementSpec = getSpecOrChainException(
-              hashes.get(1), e -> new DecodeSpecException(hash));
-          if (elementSpec instanceof ValSpec valSpec) {
-            yield cacheSpec(newArraySpec(hash, valSpec));
-          } else {
-            throw new DecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
-                + elementSpec.name() + " but should be Spec of some Val.");
-          }
-        }
-        case RECORD -> {
-          assertSize(hash, RECORD, hashes, 2);
-          ImmutableList<Spec> elements = readRecSpecElementSpecs(hashes.get(1), hash);
-          yield cacheSpec(newRecSpec(hash, elements));
-        }
-      };
-    } catch (HashedDbException e) {
-      throw new DecodeSpecException(hash, e);
+    List<Hash> hashes = wrapHashedDbExceptionAsDecodeSpecException(
+        hash, () -> hashedDb.readHashes(hash));
+    int sequenceSize = hashes.size();
+    if (sequenceSize != 1 && sequenceSize != 2) {
+      throw new DecodeSpecRootException(hash, sequenceSize);
     }
+    byte marker = wrapHashedDbExceptionAsDecodeSpecException(
+        hash, () -> hashedDb.readByte(hashes.get(0)));
+    SpecKind specKind = fromMarker(marker);
+    if (specKind == null) {
+      throw new DecodeSpecException(hash,
+          "It has illegal SpecKind marker = " + marker + ".");
+    }
+    return switch (specKind) {
+      case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ -> {
+        assertSize(hash, specKind, hashes, 1);
+        throw new RuntimeException(
+            "Internal error: Spec with kind " + specKind + " should be found in cache.");
+      }
+      case ARRAY -> {
+        assertSize(hash, ARRAY, hashes, 2);
+        Spec elementSpec = getSpecOrChainException(
+            hashes.get(1), e -> new DecodeSpecException(hash));
+        if (elementSpec instanceof ValSpec valSpec) {
+          yield cacheSpec(newArraySpec(hash, valSpec));
+        } else {
+          throw new DecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
+              + elementSpec.name() + " but should be Spec of some Val.");
+        }
+      }
+      case RECORD -> {
+        assertSize(hash, RECORD, hashes, 2);
+        ImmutableList<Spec> elements = readRecSpecElementSpecs(hashes.get(1), hash);
+        yield cacheSpec(newRecSpec(hash, elements));
+      }
+    };
   }
 
   private static void assertSize(Hash hash, SpecKind specKind, List<Hash> hashes,

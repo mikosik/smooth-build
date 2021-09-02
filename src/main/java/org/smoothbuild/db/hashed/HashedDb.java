@@ -138,24 +138,6 @@ public class HashedDb {
     }
   }
 
-  public ImmutableList<Hash> readHashes(Hash hash, int expectedSize) throws HashedDbException {
-    var hashes = readHashes(hash);
-    if (hashes.size() != expectedSize) {
-      throw new DecodingHashSequenceException(hash, expectedSize, hashes.size());
-    }
-    return hashes;
-  }
-
-  public ImmutableList<Hash> readHashes(Hash hash, int minExpectedSize, int maxExpectedSize)
-      throws HashedDbException {
-    var hashes = readHashes(hash);
-    if (hashes.size() < minExpectedSize || maxExpectedSize < hashes.size()) {
-      throw new DecodingHashSequenceException(
-          hash, minExpectedSize, maxExpectedSize, hashes.size());
-    }
-    return hashes;
-  }
-
   public ImmutableList<Hash> readHashes(Hash hash) throws HashedDbException {
     Builder<Hash> builder = ImmutableList.builder();
     try (BufferedSource source = source(hash)) {
@@ -163,7 +145,7 @@ public class HashedDb {
         if (source.request(Hash.hashesSize())) {
           builder.add(Hash.read(source));
         } else {
-          throw new DecodingHashSequenceException(hash, source.readByteArray().length);
+          throw new DecodeHashSequenceException(hash, source.readByteArray().length);
         }
       }
     } catch (IOException e) {

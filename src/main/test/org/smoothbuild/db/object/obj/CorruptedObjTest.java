@@ -30,16 +30,18 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.smoothbuild.db.hashed.DecodeHashSequenceException;
 import org.smoothbuild.db.hashed.DecodingBooleanException;
 import org.smoothbuild.db.hashed.DecodingByteException;
-import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.db.object.db.DecodeObjException;
+import org.smoothbuild.db.object.db.DecodeObjRootException;
 import org.smoothbuild.db.object.db.DecodeSpecException;
+import org.smoothbuild.db.object.db.DecodeSpecRootException;
 import org.smoothbuild.db.object.db.DecodingDataHashSequenceException;
 import org.smoothbuild.db.object.db.ObjectDbException;
 import org.smoothbuild.db.object.obj.base.Expr;
@@ -89,7 +91,7 @@ public class CorruptedObjTest extends TestingContext {
           hash(ByteString.of(new byte[byteCount]));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodingHashSequenceException(objHash, byteCount % Hash.hashesSize()));
+          .withCause(new DecodeHashSequenceException(objHash, byteCount % Hash.hashesSize()));
     }
 
     @Test
@@ -1188,7 +1190,7 @@ public class CorruptedObjTest extends TestingContext {
             hash("corrupted")
         );
         assertThatGetSpec(hash)
-            .throwsException(new DecodeSpecException(hash));
+            .throwsException(new DecodeSpecRootException(hash, 3));
       }
 
       @Test
@@ -1253,7 +1255,7 @@ public class CorruptedObjTest extends TestingContext {
             hash("corrupted")
         );
         assertThatGetSpec(hash)
-            .throwsException(new DecodeSpecException(hash));
+            .throwsException(new DecodeSpecRootException(hash, 3));
       }
 
       @Test
@@ -1302,8 +1304,7 @@ public class CorruptedObjTest extends TestingContext {
         hash(
             hash(spec));
     assertCall(() -> objectDb().get(objHash))
-        .throwsException(new DecodeObjException(objHash))
-        .withCause(new DecodingDataHashSequenceException(objHash, 2, 1));
+        .throwsException(new DecodeObjRootException(objHash, 1));
   }
 
   private void obj_root_with_two_data_hashes(
@@ -1314,8 +1315,7 @@ public class CorruptedObjTest extends TestingContext {
             dataHash,
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(new DecodeObjException(objHash))
-        .withCause(new DecodingHashSequenceException(objHash, 2, 3));
+        .throwsException(new DecodeObjRootException(objHash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(

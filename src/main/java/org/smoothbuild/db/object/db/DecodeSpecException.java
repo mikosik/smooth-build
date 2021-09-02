@@ -20,10 +20,6 @@ public class DecodeSpecException extends ObjectDbException {
   }
 
   private static String buildMessage(Hash hash, String message) {
-    return "Cannot read spec at " + hash + "." + (message == null ? "" : " " + message);
-  }
-
-  public DecodeSpecException(Throwable cause) {
-    super(cause);
+    return "Cannot decode spec at " + hash + "." + (message == null ? "" : " " + message);
   }
 }

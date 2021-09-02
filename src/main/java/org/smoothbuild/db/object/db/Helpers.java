@@ -21,6 +21,15 @@ public class Helpers {
     }
   }
 
+  public static <T> T wrapHashedDbExceptionAsDecodeSpecException(
+      Hash hash, HashedDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (HashedDbException e) {
+      throw new DecodeSpecException(hash, e);
+    }
+  }
+
   @FunctionalInterface
   public static interface HashedDbCallable<T> {
     public T call() throws HashedDbException;

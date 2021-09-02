@@ -20,10 +20,6 @@ public class DecodeObjException extends ObjectDbException {
   }
 
   private static String buildMessage(Hash hash, String message) {
-    return "Cannot read object at " + hash + "." + (message == null ? "" : " " + message);
-  }
-
-  public DecodeObjException(Throwable cause) {
-    super(cause);
+    return "Cannot decode object at " + hash + "." + (message == null ? "" : " " + message);
   }
 }
