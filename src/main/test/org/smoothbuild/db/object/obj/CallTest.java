@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 public class CallTest extends TestingContext {
   @Test
-  public void spec_of_call_expr_is_call_expr() {
+  public void spec_of_call_expr_is_call_spec() {
     assertThat(callExpr(constExpr(), list()).spec())
         .isEqualTo(callSpec());
   }

@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 public class EArrayTest extends TestingContext {
   @Test
-  public void spec_of_earray_is_earray() {
+  public void spec_of_earray_is_earray_spec() {
     assertThat(eArrayExpr(list()).spec())
         .isEqualTo(eArraySpec());
   }

@@ -10,7 +10,7 @@ import org.smoothbuild.testing.TestingContext;
 
 public class IntTest extends TestingContext {
   @Test
-  public void spec_of_int_is_int() {
+  public void spec_of_int_is_int_spec() {
     assertThat(intVal(123).spec())
         .isEqualTo(intSpec());
   }

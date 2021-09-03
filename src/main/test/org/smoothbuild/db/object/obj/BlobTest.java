@@ -21,7 +21,7 @@ public class BlobTest extends TestingContext {
   }
 
   @Test
-  public void spec_of_blob_is_blob() {
+  public void spec_of_blob_is_blob_spec() {
     assertThat(blobVal(bytes).spec())
         .isEqualTo(blobSpec());
   }

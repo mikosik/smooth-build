@@ -11,7 +11,7 @@ public class StringTest extends TestingContext {
   private final String otherString = "my string 2";
 
   @Test
-  public void spec_of_str_is_str() {
+  public void spec_of_str_is_str_spec() {
     assertThat(strVal(string).spec())
         .isEqualTo(strSpec());
   }

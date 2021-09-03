@@ -34,7 +34,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void spec_of_person_rec_is_person() {
+  public void spec_of_person_rec_is_person_spec() {
     Rec person = johnDoePerson();
     assertThat(person.spec())
         .isEqualTo(personSpec());

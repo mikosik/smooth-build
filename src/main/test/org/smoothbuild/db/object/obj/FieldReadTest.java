@@ -10,7 +10,7 @@ import org.smoothbuild.testing.TestingContext;
 
 public class FieldReadTest extends TestingContext {
   @Test
-  public void spec_of_field_read_expr_is_field_read_expr() {
+  public void spec_of_field_read_expr_is_field_read_spec() {
     assertThat(fieldReadExpr(constExpr(emptyRecVal()), intVal(123)).spec())
         .isEqualTo(fieldReadSpec());
   }

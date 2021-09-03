@@ -9,7 +9,7 @@ import org.smoothbuild.testing.TestingContext;
 
 public class ConstTest extends TestingContext {
   @Test
-  public void spec_of_const_expr_is_const_expr() {
+  public void spec_of_const_expr_is_const_spec() {
     assertThat(constExpr(intVal(123)).spec())
         .isEqualTo(constSpec());
   }

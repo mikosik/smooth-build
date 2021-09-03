@@ -9,7 +9,7 @@ import org.smoothbuild.testing.TestingContext;
 
 public class BoolTest extends TestingContext {
   @Test
-  public void spec_of_bool_is_bool() {
+  public void spec_of_bool_is_bool_spec() {
     assertThat(boolVal(true).spec())
         .isEqualTo(boolSpec());
   }
