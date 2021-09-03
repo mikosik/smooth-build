@@ -1,10 +1,8 @@
-package org.smoothbuild.db.object.obj;
+package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.testing.TestingContext;
 

@@ -1,11 +1,10 @@
-package org.smoothbuild.db.object.obj;
+package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.testing.TestingContext;
 
 public class RecTest extends TestingContext {

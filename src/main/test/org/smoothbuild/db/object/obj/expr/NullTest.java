@@ -1,9 +1,8 @@
-package org.smoothbuild.db.object.obj;
+package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.testing.TestingContext;
 
 public class NullTest extends TestingContext {

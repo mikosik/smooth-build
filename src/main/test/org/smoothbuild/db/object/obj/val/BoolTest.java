@@ -1,10 +1,9 @@
-package org.smoothbuild.db.object.obj;
+package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.testing.TestingContext;
 
 public class BoolTest extends TestingContext {

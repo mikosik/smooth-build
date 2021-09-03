@@ -1,4 +1,4 @@
-package org.smoothbuild.db.object.obj;
+package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.Lists.list;
@@ -6,8 +6,6 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.EArray;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
