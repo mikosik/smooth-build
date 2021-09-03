@@ -26,7 +26,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
   public void flatten_1() throws Exception {
     createNativeJar(Flatten.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [E] testFlatten([[E]] array);
             result = testFlatten(array = [ [ "aa" ], [ "bb", "cc" ] ]);
             """, Flatten.class.getCanonicalName()));
@@ -40,7 +40,7 @@ public class PolymorphismTest extends AcceptanceTestCase {
   public void flatten_sample_2() throws Exception {
     createNativeJar(Flatten.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [E] testFlatten([[E]] array);
             result = testFlatten(array = [ [ [ "aa" ], [ "bb", "cc" ] ] ]);
             """, Flatten.class.getCanonicalName()));

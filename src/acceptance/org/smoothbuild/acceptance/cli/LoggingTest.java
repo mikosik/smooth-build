@@ -50,7 +50,7 @@ public class LoggingTest extends AcceptanceTestCase {
   private static void createModuleWithError(AcceptanceTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportError.class);
     testCase.createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             Nothing reportError(String message);
             result = reportError("%s");
             """, ReportError.class.getCanonicalName(), LOG_MESSAGE));
@@ -59,7 +59,7 @@ public class LoggingTest extends AcceptanceTestCase {
   private static void createModuleWithWarning(AcceptanceTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportWarning.class);
     testCase.createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportWarning(String message);
             result = reportWarning("%s");
             """, ReportWarning.class.getCanonicalName(), LOG_MESSAGE));
@@ -68,7 +68,7 @@ public class LoggingTest extends AcceptanceTestCase {
   private static void createModuleWithInfo(AcceptanceTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportInfo.class);
     testCase.createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportInfo(String message);
             result = reportInfo("%s");
             """, ReportInfo.class.getCanonicalName(), LOG_MESSAGE));

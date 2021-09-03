@@ -53,7 +53,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_concat_function_0() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [], second = []);
             """, Concat.class.getCanonicalName()));
@@ -67,7 +67,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_concat_function_1() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [ "aaa" ], second = [ "bbb" ]);
             """, Concat.class.getCanonicalName()));
@@ -81,7 +81,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_concat_function_2() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [ "aaa" ], second = []);
             """, Concat.class.getCanonicalName()));
@@ -95,7 +95,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_concat_function_3() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [], second = [ "bbb" ]);
             """, Concat.class.getCanonicalName()));
@@ -109,7 +109,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_concat_function_5() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testConcat([A] first, [A] second);
             wrapper([Nothing] f, [[A]] s) = testConcat(first = f, second = s);
             result = wrapper(f = [], s = [ [ "aaa" ] ]);
@@ -124,7 +124,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_concat_function_6() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testConcat([A] first, [A] second);
             [A] testConcatW([A] f, [A] s) = testConcat(first = f, second = s);
             wrapper([Nothing] f, [[A]] s) = testConcatW(f = f, s = s);
@@ -142,7 +142,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_append_function_0() throws Exception {
     createNativeJar(Append.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testAppend([A] array, A element);
             result = testAppend(array = [], element = "bbb");
             """, Append.class.getCanonicalName()));
@@ -156,7 +156,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_append_function_1() throws Exception {
     createNativeJar(Append.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testAppend([A] array, A element);
             result = testAppend(array = [ "aaa" ], element = "bbb");
             """, Append.class.getCanonicalName()));
@@ -171,7 +171,7 @@ public class InferenceTest extends AcceptanceTestCase {
   public void infer_actual_type_of_parameters_in_append_function_3() throws Exception {
     createNativeJar(Append.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [A] testAppend([A] array, A element);
             StringStruct {
               String value

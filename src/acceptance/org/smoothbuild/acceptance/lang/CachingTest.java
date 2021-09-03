@@ -17,7 +17,7 @@ public class CachingTest extends AcceptanceTestCase {
     public void pure_is_cached_on_disk(String functionOrValue) throws Exception {
       createNativeJar(Random.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String cachedRandom%s;
             result = cachedRandom%s;
             """, Random.class.getCanonicalName(), functionOrValue, functionOrValue));
@@ -37,7 +37,7 @@ public class CachingTest extends AcceptanceTestCase {
     public void impure_is_cached_in_single_build(String functionOrValue) throws Exception {
       createNativeJar(Random.class);
       createUserModule(format("""
-            @Native("%s.function", IMPURE)
+            @Native("%s", IMPURE)
             String cachedInMemoryRandom%s;
             resultA = cachedInMemoryRandom%s;
             resultB = cachedInMemoryRandom%s;
@@ -56,7 +56,7 @@ public class CachingTest extends AcceptanceTestCase {
         throws Exception {
       createNativeJar(Random.class);
       createUserModule(format("""
-            @Native("%s.function", IMPURE)
+            @Native("%s", IMPURE)
             String cachedInMemoryRandom%s;
             result = cachedInMemoryRandom%s;
             """, Random.class.getCanonicalName(), functionOrValue, functionOrValue));
@@ -78,9 +78,9 @@ public class CachingTest extends AcceptanceTestCase {
       String functionOrValue) throws Exception {
     createNativeJar(Random.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String cachingRandom%s;
-            @Native("%s.function", IMPURE)
+            @Native("%s", IMPURE)
             String notCachingRandom%s;
             caching = cachingRandom%s;
             notCaching = notCachingRandom%s;

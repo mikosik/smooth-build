@@ -19,7 +19,7 @@ public abstract class LockFileTestCase extends AcceptanceTestCase {
       InterruptedException {
     createNativeJar(Sleep3s.class);
     createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String sleep3s();
             result = sleep3s();
             """, Sleep3s.class.getCanonicalName()));

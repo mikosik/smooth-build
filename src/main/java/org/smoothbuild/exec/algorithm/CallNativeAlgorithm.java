@@ -38,8 +38,8 @@ public class CallNativeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    String methodPath = ((Str) input.vals().get(0)).jValue();
-    Method method = methodLoader.load(referencable, methodPath);
+    String classBinaryName = ((Str) input.vals().get(0)).jValue();
+    Method method = methodLoader.load(referencable, classBinaryName);
     try {
       ImmutableList<Val> nativeArgs = skip(1, input.vals());
       Val result = (Val) method.invoke(null, createArguments(nativeApi, nativeArgs));

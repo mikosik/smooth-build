@@ -273,7 +273,7 @@ public class BuildCommandTest {
           myValue                                  build.smooth:2
           """;
       private static final String NATIVE_VALUE = format("""
-            @Native("%s.function")
+            @Native("%s")
             String returnAbc;
             result = returnAbc;
             """, ReturnAbc.class.getCanonicalName());
@@ -337,7 +337,7 @@ public class BuildCommandTest {
       public void then_warning_log_is_not_shown() throws IOException {
         createNativeJar(ReportWarning.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
             """, ReportWarning.class.getCanonicalName()));
@@ -350,7 +350,7 @@ public class BuildCommandTest {
       public void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
             """, ReportInfo.class.getCanonicalName()));
@@ -366,7 +366,7 @@ public class BuildCommandTest {
       public void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             Nothing reportError(String message);
             result = reportError("my-error-message");
             """, ReportError.class.getCanonicalName()));
@@ -379,7 +379,7 @@ public class BuildCommandTest {
       public void then_warning_log_is_not_shown() throws IOException {
         createNativeJar(ReportWarning.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
             """, ReportWarning.class.getCanonicalName()));
@@ -392,7 +392,7 @@ public class BuildCommandTest {
       public void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
             """, ReportInfo.class.getCanonicalName()));
@@ -408,7 +408,7 @@ public class BuildCommandTest {
       public void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             Nothing reportError(String message);
             result = reportError("my-error-message");
             """, ReportError.class.getCanonicalName()));
@@ -421,7 +421,7 @@ public class BuildCommandTest {
       public void then_warning_log_is_shown() throws IOException {
         createNativeJar(ReportWarning.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
             """, ReportWarning.class.getCanonicalName()));
@@ -434,7 +434,7 @@ public class BuildCommandTest {
       public void then_info_log_is_not_shown() throws IOException {
         createNativeJar(ReportInfo.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
             """, ReportInfo.class.getCanonicalName()));
@@ -450,7 +450,7 @@ public class BuildCommandTest {
       public void then_error_log_is_shown() throws IOException {
         createNativeJar(ReportError.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             Nothing reportError(String message);
             result = reportError("my-error-message");
             """, ReportError.class.getCanonicalName()));
@@ -463,7 +463,7 @@ public class BuildCommandTest {
       public void then_warning_log_is_shown() throws IOException {
         createNativeJar(ReportWarning.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportWarning(String message);
             result = reportWarning("my-warning-message");
             """, ReportWarning.class.getCanonicalName()));
@@ -476,7 +476,7 @@ public class BuildCommandTest {
       public void then_info_log_is_shown() throws IOException {
         createNativeJar(ReportInfo.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportInfo(String message);
             result = reportInfo("my-info-message");
             """, ReportInfo.class.getCanonicalName()));

@@ -62,7 +62,7 @@ public class FunctionTest extends AcceptanceTestCase {
       public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
         createNativeJar(StringIdentity.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String stringIdentity(String value = "abc");
             result = stringIdentity();
             """, StringIdentity.class.getCanonicalName()));
@@ -76,7 +76,7 @@ public class FunctionTest extends AcceptanceTestCase {
       public void is_ignored_when_parameter_is_assigned_in_a_call() throws Exception {
         createNativeJar(StringIdentity.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String stringIdentity(String value = "abc");
             result = stringIdentity("def");
             """, StringIdentity.class.getCanonicalName()));
@@ -90,9 +90,9 @@ public class FunctionTest extends AcceptanceTestCase {
       public void is_not_evaluated_when_not_needed() throws Exception {
         createNativeJar(StringIdentity.class, ThrowException.class);
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String stringIdentity(String value = throwException());
-            @Native("%s.function")
+            @Native("%s")
             Nothing throwException();
             result = stringIdentity("def");
             """, StringIdentity.class.getCanonicalName(), ThrowException.class.getCanonicalName()));

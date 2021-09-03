@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.DOTALL;
 
-import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +25,7 @@ import org.smoothbuild.acceptance.testing.StringIdentity;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.acceptance.testing.WithoutContainer;
+import org.smoothbuild.acceptance.testing.WrongMethodName;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Rec;
@@ -39,7 +39,7 @@ public class NativeTest extends AcceptanceTestCase {
     public void can_return_value() throws Exception {
       createNativeJar(ReturnAbc.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String returnAbc;
             result = returnAbc;
             """, ReturnAbc.class.getCanonicalName()));
@@ -52,19 +52,19 @@ public class NativeTest extends AcceptanceTestCase {
     @Test
     public void without_native_jar_file_causes_error() throws Exception {
       createUserModule("""
-            @Native("MissingClass.method")
+            @Native("MissingClass")
             String myValue;
             """);
       runSmoothBuild("myValue");
       assertFinishedWithError();
-      assertSysOutContains(fileNotFoundErrorMessage("myValue", "MissingClass.method"));
+      assertSysOutContains(fileNotFoundErrorMessage("myValue", "MissingClass"));
     }
 
     @Test
     public void without_declared_type_causes_error() throws Exception {
       createNativeJar(StringIdentity.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             stringIdentity;
             result = stringIdentity;
             """, StringIdentity.class.getCanonicalName()));
@@ -77,31 +77,16 @@ public class NativeTest extends AcceptanceTestCase {
     @Nested
     class _error_is_reported_when {
       @Test
-      public void native_path_is_illegal() throws Exception {
-        createNativeJar(ReturnAbc.class);
-        createUserModule("""
-              @Native("ending.with.dot.")
-              String returnAbc;
-              result = returnAbc;
-              """);
-        runSmoothBuild("result");
-        assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("returnAbc", "ending.with.dot.",
-            "Illegal path to java method. Expected <binary class name>.<method name>, " +
-                "but was `ending.with.dot.`."));
-      }
-
-      @Test
       public void java_class_is_missing() throws Exception {
         createNativeJar(ReturnAbc.class);
         createUserModule("""
-              @Native("org.smoothbuild.Missing.method")
+              @Native("org.smoothbuild.Missing")
               String returnAbc;
               result = returnAbc;
               """);
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(invalidNativePathMessage("returnAbc", "org.smoothbuild.Missing.method",
+        assertSysOutContains(errorLoadingMessage("returnAbc", "org.smoothbuild.Missing",
             "Class 'org.smoothbuild.Missing' does not exist in jar '{prj}/build.jar'."));
       }
 
@@ -109,17 +94,17 @@ public class NativeTest extends AcceptanceTestCase {
       class _java_method {
         @Test
         public void is_missing() throws Exception {
-          createNativeJar(ReturnAbc.class);
-          String classPath = ReturnAbc.class.getCanonicalName();
+          createNativeJar(WrongMethodName.class);
+          String classPath = WrongMethodName.class.getCanonicalName();
           createUserModule(format("""
-              @Native("%s.NON_EXISTING")
-              String returnAbc;
-              result = returnAbc;
+              @Native("%s")
+              String wrongMethodName;
+              result = wrongMethodName;
               """, classPath));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains(invalidNativePathMessage("returnAbc", classPath + ".NON_EXISTING",
-              "Class '" + classPath + "' does not have 'NON_EXISTING' method."));
+          assertSysOutContains(errorLoadingMessage("wrongMethodName", classPath,
+              "Class '" + classPath + "' does not have 'function' method."));
         }
 
         @Test
@@ -127,13 +112,13 @@ public class NativeTest extends AcceptanceTestCase {
           createNativeJar(ReturnAbc.class);
           String classPath = ReturnAbc.class.getCanonicalName();
           createUserModule(format("""
-              @Native("%s.function")
+              @Native("%s")
               Blob returnAbc;
               result = returnAbc;
               """, classPath));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains(errorLoadingMessage("returnAbc", classPath + ".function",
+          assertSysOutContains(errorLoadingMessage("returnAbc", classPath,
               "`returnAbc` declares type `Blob` so its native implementation result type must be "
                   + Blob.class.getCanonicalName() + " but it is "
                   + Str.class.getCanonicalName() + ".\n"));
@@ -144,13 +129,13 @@ public class NativeTest extends AcceptanceTestCase {
           createNativeJar(NonPublicMethod.class, ReturnAbc.class);
           String classPath = NonPublicMethod.class.getCanonicalName();
           createUserModule(format("""
-              @Native("%s.function")
+              @Native("%s")
               String returnAbc;
               result = returnAbc;
               """, classPath));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains(errorLoadingMessage("returnAbc", classPath + ".function",
+          assertSysOutContains(errorLoadingMessage("returnAbc", classPath,
               "Providing method is not public."));
         }
 
@@ -159,13 +144,13 @@ public class NativeTest extends AcceptanceTestCase {
           createNativeJar(NonStaticMethod.class, ReturnAbc.class);
           String classPath = NonStaticMethod.class.getCanonicalName();
           createUserModule(format("""
-              @Native("%s.function")
+              @Native("%s")
               String returnAbc;
               result = returnAbc;
               """, classPath));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains(errorLoadingMessage("returnAbc", classPath + ".function",
+          assertSysOutContains(errorLoadingMessage("returnAbc", classPath,
               "Providing method is not static."));
         }
 
@@ -174,13 +159,13 @@ public class NativeTest extends AcceptanceTestCase {
           createNativeJar(WithoutContainer.class, ReturnAbc.class);
           String classPath = WithoutContainer.class.getCanonicalName();
           createUserModule(format("""
-              @Native("%s.function")
+              @Native("%s")
               String returnAbc;
               result = returnAbc;
               """, classPath));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains(errorLoadingMessage("returnAbc", classPath + ".function",
+          assertSysOutContains(errorLoadingMessage("returnAbc", classPath,
               "Providing method first parameter is not of type "
               + NativeApi.class.getCanonicalName() + "."));
         }
@@ -190,13 +175,13 @@ public class NativeTest extends AcceptanceTestCase {
           createNativeJar(StringIdentity.class);
           String classPath = StringIdentity.class.getCanonicalName();
           createUserModule(format("""
-              @Native("%s.function")
+              @Native("%s")
               String stringIdentity;
               result = stringIdentity;
               """, classPath));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+          assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
               "`stringIdentity` has native implementation that has too many parameter(s) = 2"));
         }
 
@@ -206,7 +191,7 @@ public class NativeTest extends AcceptanceTestCase {
           public void null_without_logging_error() throws Exception {
             createNativeJar(ReturnNull.class);
             createUserModule(format("""
-                @Native("%s.function")
+                @Native("%s")
                 String returnNull;
                 result = returnNull;
                 """, ReturnNull.class.getCanonicalName()));
@@ -220,7 +205,7 @@ public class NativeTest extends AcceptanceTestCase {
           public void null_and_logs_only_warning() throws Exception {
             createNativeJar(ReportWarningAndReturnNull.class);
             createUserModule(format("""
-                @Native("%s.function")
+                @Native("%s")
                 String reportWarning;
                 result = reportWarning;
                 """, ReportWarningAndReturnNull.class.getCanonicalName()));
@@ -238,7 +223,7 @@ public class NativeTest extends AcceptanceTestCase {
                   String firstName,
                   String lastName,
                 }
-                @Native("%s.function")
+                @Native("%s")
                 Person returnStringRec;
                 result = returnStringRec;
                 """, ReturnStringRec.class.getCanonicalName()));
@@ -253,7 +238,7 @@ public class NativeTest extends AcceptanceTestCase {
           public void array_of_wrong_type() throws Exception {
             createNativeJar(EmptyStringArray.class);
             createUserModule(format("""
-                @Native("%s.function")
+                @Native("%s")
                 [Blob] emptyStringArray;
                 result = emptyStringArray;
                 """, EmptyStringArray.class.getCanonicalName()));
@@ -267,7 +252,7 @@ public class NativeTest extends AcceptanceTestCase {
           public void array_with_added_element_of_wrong_type() throws Exception {
             createNativeJar(AddElementOfWrongTypeToArray.class);
             createUserModule(format("""
-                @Native("%s.function")
+                @Native("%s")
                 [Blob] addElementOfWrongTypeToArray;
                 result = addElementOfWrongTypeToArray;
                 """, AddElementOfWrongTypeToArray.class.getCanonicalName()));
@@ -285,7 +270,7 @@ public class NativeTest extends AcceptanceTestCase {
     public void exception_from_native_is_reported_as_error() throws Exception {
       createNativeJar(ThrowException.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             Nothing throwException;
             result = throwException;
             """, ThrowException.class.getCanonicalName()));
@@ -299,7 +284,7 @@ public class NativeTest extends AcceptanceTestCase {
     public void errors_reported_via_native_api_are_reported() throws Exception {
       createNativeJar(ReportTwoErrors.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportTwoErrors;
             result = reportTwoErrors;
             """, ReportTwoErrors.class.getCanonicalName()));
@@ -313,7 +298,7 @@ public class NativeTest extends AcceptanceTestCase {
     public void error_wrapping_exception_from_native_is_not_cached() throws Exception {
       createNativeJar(ThrowRandomException.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String throwRandomException;
             result = throwRandomException;
             """, ThrowRandomException.class.getCanonicalName()));
@@ -331,7 +316,7 @@ public class NativeTest extends AcceptanceTestCase {
     public void error_reported_is_logged() throws Exception {
       createNativeJar(ReportFixedError.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             Nothing reportFixedError;
             result = reportFixedError;
             """, ReportFixedError.class.getCanonicalName()));
@@ -347,7 +332,7 @@ public class NativeTest extends AcceptanceTestCase {
     public void can_return_passed_argument() throws Exception {
       createNativeJar(StringIdentity.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String stringIdentity(String string);
             result = stringIdentity("token");
             """, StringIdentity.class.getCanonicalName()));
@@ -360,20 +345,20 @@ public class NativeTest extends AcceptanceTestCase {
     @Test
     public void without_native_jar_file_causes_error() throws Exception {
       createUserModule("""
-            @Native("MissingClass.method")
+            @Native("MissingClass")
             String myFunction();
             result = myFunction();
             """);
       runSmoothBuild("result");
       assertFinishedWithError();
-      assertSysOutContains(fileNotFoundErrorMessage("myFunction", "MissingClass.method"));
+      assertSysOutContains(fileNotFoundErrorMessage("myFunction", "MissingClass"));
     }
 
     @Test
     public void exception_from_native_is_reported_as_error() throws Exception {
       createNativeJar(ThrowException.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             Nothing throwException();
             result = throwException();
             """, ThrowException.class.getCanonicalName()));
@@ -387,7 +372,7 @@ public class NativeTest extends AcceptanceTestCase {
     public void error_wrapping_exception_from_native_is_not_cached() throws Exception {
       createNativeJar(ThrowRandomException.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String throwRandomException();
             result = throwRandomException();
             """, ThrowRandomException.class.getCanonicalName()));
@@ -405,7 +390,7 @@ public class NativeTest extends AcceptanceTestCase {
     public void error_reported_is_logged() throws Exception {
       createNativeJar(ReportFixedError.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             Nothing reportFixedError();
             result = reportFixedError();
             """, ReportFixedError.class.getCanonicalName()));
@@ -417,33 +402,18 @@ public class NativeTest extends AcceptanceTestCase {
     @Nested
     class _error_is_reported_when_java_method {
       @Test
-      public void native_path_is_illegal() throws Exception {
-        createNativeJar(ReturnAbc.class);
-        createUserModule("""
-              @Native("ending.with.dot.")
-              String returnAbc();
-              result = returnAbc();
-              """);
-        runSmoothBuild("result");
-        assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("returnAbc", "ending.with.dot.",
-            "Illegal path to java method. Expected <binary class name>.<method name>, " +
-                "but was `ending.with.dot.`."));
-      }
-
-      @Test
       public void is_missing() throws Exception {
-        createNativeJar(ReturnAbc.class);
-        String classPath = ReturnAbc.class.getCanonicalName();
+        createNativeJar(WrongMethodName.class);
+        String classPath = WrongMethodName.class.getCanonicalName();
         createUserModule(format("""
-            @Native("%s.NON_EXISTING")
-            String returnAbc();
-            result = returnAbc();
-            """, classPath));
+              @Native("%s")
+              String wrongMethodName();
+              result = wrongMethodName();
+              """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(invalidNativePathMessage("returnAbc", classPath + ".NON_EXISTING",
-            "Class '" + classPath + "' does not have 'NON_EXISTING' method."));
+        assertSysOutContains(errorLoadingMessage("wrongMethodName", classPath,
+            "Class '" + classPath + "' does not have 'function' method."));
       }
 
       @Test
@@ -451,13 +421,13 @@ public class NativeTest extends AcceptanceTestCase {
         createNativeJar(StringIdentity.class);
         String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             File stringIdentity(String string);
             result = stringIdentity("abc");
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "`stringIdentity` declares type `File` "
             + "so its native implementation result type must be " + Rec.class.getCanonicalName() +
             " but it is " + Str.class.getCanonicalName() + ".\n"));
@@ -468,13 +438,13 @@ public class NativeTest extends AcceptanceTestCase {
         createNativeJar(StringIdentity.class);
         String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String stringIdentity();
             result = stringIdentity();
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "Function `stringIdentity` has 0 parameter(s) but its native implementation "
                 + "has 1 parameter(s)."));
       }
@@ -484,13 +454,13 @@ public class NativeTest extends AcceptanceTestCase {
         createNativeJar(StringIdentity.class);
         String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String stringIdentity(String a, String b);
             result = stringIdentity(a="abc", b="abc");
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "Function `stringIdentity` has 2 parameter(s) but its native implementation "
                 + "has 1 parameter(s)."));
       }
@@ -500,13 +470,13 @@ public class NativeTest extends AcceptanceTestCase {
         createNativeJar(StringIdentity.class);
         String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String stringIdentity([String] string);
             result = stringIdentity([]);
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath + ".function",
+        assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "Function `stringIdentity` parameter `string` has type `[String]` "
             + "so its native implementation type must be " + Array.class.getCanonicalName()
             + " but it is " + Str.class.getCanonicalName() + "."));
@@ -517,13 +487,13 @@ public class NativeTest extends AcceptanceTestCase {
         createNativeJar(NonPublicMethod.class, ReturnAbc.class);
         String classPath = NonPublicMethod.class.getCanonicalName();
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String returnAbc;
             result = returnAbc;
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("returnAbc", classPath + ".function",
+        assertSysOutContains(errorLoadingMessage("returnAbc", classPath,
             "Providing method is not public."));
       }
 
@@ -532,13 +502,13 @@ public class NativeTest extends AcceptanceTestCase {
         createNativeJar(NonStaticMethod.class, ReturnAbc.class);
         String classPath = NonStaticMethod.class.getCanonicalName();
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String returnAbc;
             result = returnAbc;
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("returnAbc", classPath + ".function",
+        assertSysOutContains(errorLoadingMessage("returnAbc", classPath,
             "Providing method is not static."));
       }
 
@@ -547,13 +517,13 @@ public class NativeTest extends AcceptanceTestCase {
         createNativeJar(WithoutContainer.class, ReturnAbc.class);
         String classPath = WithoutContainer.class.getCanonicalName();
         createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String returnAbc;
             result = returnAbc;
             """, classPath));
         runSmoothBuild("result");
         assertFinishedWithError();
-        assertSysOutContains(errorLoadingMessage("returnAbc", classPath + ".function",
+        assertSysOutContains(errorLoadingMessage("returnAbc", classPath,
             "Providing method first parameter is not of type "
             + NativeApi.class.getCanonicalName() + ".\n"));
       }
@@ -564,7 +534,7 @@ public class NativeTest extends AcceptanceTestCase {
         public void null_without_logging_error() throws Exception {
           createNativeJar(ReturnNull.class);
           createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String returnNull();
             result = returnNull();
             """, ReturnNull.class.getCanonicalName()));
@@ -578,7 +548,7 @@ public class NativeTest extends AcceptanceTestCase {
         public void null_and_logs_only_warning() throws Exception {
           createNativeJar(ReportWarningAndReturnNull.class);
           createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             String reportWarning();
             result = reportWarning();
             """, ReportWarningAndReturnNull.class.getCanonicalName()));
@@ -592,7 +562,7 @@ public class NativeTest extends AcceptanceTestCase {
         public void object_of_wrong_type() throws Exception {
           createNativeJar(BrokenIdentity.class);
           createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             A brokenIdentity(A value);
             result = brokenIdentity(value=[]);
             """, BrokenIdentity.class.getCanonicalName()));
@@ -610,7 +580,7 @@ public class NativeTest extends AcceptanceTestCase {
               String firstName,
               String lastName,
             }
-            @Native("%s.function")
+            @Native("%s")
             Person returnStringRec();
             result = returnStringRec();
             """, ReturnStringRec.class.getCanonicalName()));
@@ -625,7 +595,7 @@ public class NativeTest extends AcceptanceTestCase {
         public void array_of_wrong_type() throws Exception {
           createNativeJar(EmptyStringArray.class);
           createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [Blob] emptyStringArray();
             result = emptyStringArray();
             """, EmptyStringArray.class.getCanonicalName()));
@@ -639,7 +609,7 @@ public class NativeTest extends AcceptanceTestCase {
         public void array_with_added_element_of_wrong_type() throws Exception {
           createNativeJar(AddElementOfWrongTypeToArray.class);
           createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s")
             [Blob] addElementOfWrongTypeToArray();
             result = addElementOfWrongTypeToArray();
             """, AddElementOfWrongTypeToArray.class.getCanonicalName()));
@@ -666,18 +636,8 @@ public class NativeTest extends AcceptanceTestCase {
     return matcher.group(1);
   }
 
-  private static String invalidNativePathMessage(
-      String referencable, String path, String message) {
-    return errorLoadingMessage(
-        referencable, path, "Invalid native path `" + path + "`: " + message);
-  }
-
   private static String errorLoadingMessage(String referencable, String path, String message) {
     return "Error loading native implementation for `" + referencable + "` specified as `" + path +
         "`: " + message;
-  }
-
-  private Path buildJarPath() {
-    return projectDirOption().resolve("build.jar").normalize();
   }
 }
