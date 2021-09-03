@@ -1147,13 +1147,8 @@ public class CorruptedObjTest extends TestingContext {
       }
 
       @Test
-      public void nothing_with_additional_child_causes_exception() throws Exception {
-        do_test_with_additional_child(NOTHING);
-      }
-
-      @Test
-      public void string_with_additional_child_causes_exception() throws Exception {
-        do_test_with_additional_child(STRING);
+      public void call_with_additional_child_causes_exception() throws Exception {
+        do_test_with_additional_child(CALL);
       }
 
       @Test
@@ -1162,23 +1157,28 @@ public class CorruptedObjTest extends TestingContext {
       }
 
       @Test
-      public void field_read_with_additional_child_causes_exception() throws Exception {
-        do_test_with_additional_child(FIELD_READ);
-      }
-
-      @Test
-      public void call_with_additional_child_causes_exception() throws Exception {
-        do_test_with_additional_child(CALL);
-      }
-
-      @Test
       public void earray_with_additional_child_causes_exception() throws Exception {
         do_test_with_additional_child(EARRAY);
       }
 
       @Test
+      public void field_read_with_additional_child_causes_exception() throws Exception {
+        do_test_with_additional_child(FIELD_READ);
+      }
+
+      @Test
       public void null_with_additional_child_causes_exception() throws Exception {
         do_test_with_additional_child(NULL);
+      }
+
+      @Test
+      public void nothing_with_additional_child_causes_exception() throws Exception {
+        do_test_with_additional_child(NOTHING);
+      }
+
+      @Test
+      public void string_with_additional_child_causes_exception() throws Exception {
+        do_test_with_additional_child(STRING);
       }
 
       private void do_test_with_additional_child(SpecKind kind) throws Exception {
