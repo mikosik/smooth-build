@@ -15,11 +15,11 @@ public class TestingSpecs {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
 
-  public static final ValSpec BLOB = OBJECT_DB.blobS();
-  public static final ValSpec BOOL = OBJECT_DB.boolS();
-  public static final ValSpec INT = OBJECT_DB.intS();
-  public static final ValSpec NOTHING = OBJECT_DB.nothingS();
-  public static final ValSpec STR = OBJECT_DB.strS();
+  public static final ValSpec BLOB = OBJECT_DB.blobSpec();
+  public static final ValSpec BOOL = OBJECT_DB.boolSpec();
+  public static final ValSpec INT = OBJECT_DB.intSpec();
+  public static final ValSpec NOTHING = OBJECT_DB.nothingSpec();
+  public static final ValSpec STR = OBJECT_DB.strSpec();
   public static final RecSpec PERSON = CONTEXT.personSpec();
   public static final Spec CALL = CONTEXT.callSpec();
   public static final Spec CONST = CONTEXT.constSpec();
@@ -65,6 +65,6 @@ public class TestingSpecs {
   );
 
   private static ArraySpec array(ValSpec elemSpec) {
-    return OBJECT_DB.arrayS(elemSpec);
+    return OBJECT_DB.arraySpec(elemSpec);
   }
 }

@@ -150,31 +150,31 @@ public class TestingContext {
   // Obj Spec-s
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
-    return objectDb().arrayS(elementSpec);
+    return objectDb().arraySpec(elementSpec);
   }
 
   public BlobSpec blobSpec() {
-    return objectDb().blobS();
+    return objectDb().blobSpec();
   }
 
   public BoolSpec boolSpec() {
-    return objectDb().boolS();
+    return objectDb().boolSpec();
   }
 
   public IntSpec intSpec() {
-    return objectDb().intS();
+    return objectDb().intSpec();
   }
 
   public NothingSpec nothingSpec() {
-    return objectDb().nothingS();
+    return objectDb().nothingSpec();
   }
 
   public StrSpec strSpec() {
-    return objectDb().strS();
+    return objectDb().strSpec();
   }
 
   public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
-    return objectDb().recS(elementSpecs);
+    return objectDb().recSpec(elementSpecs);
   }
 
   public RecSpec emptyRecSpec() {
@@ -197,23 +197,23 @@ public class TestingContext {
   // Expr Spec-s
 
   public CallSpec callSpec() {
-    return objectDb().callS();
+    return objectDb().callSpec();
   }
 
   public ConstSpec constSpec() {
-    return objectDb().constS();
+    return objectDb().constSpec();
   }
 
   public EArraySpec eArraySpec() {
-    return objectDb().eArrayS();
+    return objectDb().eArraySpec();
   }
 
   public FieldReadSpec fieldReadSpec() {
-    return objectDb().fieldReadS();
+    return objectDb().fieldReadSpec();
   }
 
   public NullSpec nullSpec() {
-    return objectDb().nullS();
+    return objectDb().nullSpec();
   }
 
   // Obj-s (values)

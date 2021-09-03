@@ -33,35 +33,35 @@ public class SpecCachingTest extends TestingContext {
 
   private static List<Function<ObjectDb, Spec>> spec_creators() {
     return list(
-        ObjectDb::blobS,
-        ObjectDb::boolS,
-        ObjectDb::intS,
-        ObjectDb::nothingS,
-        ObjectDb::strS,
+        ObjectDb::blobSpec,
+        ObjectDb::boolSpec,
+        ObjectDb::intSpec,
+        ObjectDb::nothingSpec,
+        ObjectDb::strSpec,
         SpecCachingTest::recSpec,
-        ObjectDb::callS,
-        ObjectDb::constS,
-        ObjectDb::eArrayS,
-        ObjectDb::fieldReadS,
-        ObjectDb::nullS,
+        ObjectDb::callSpec,
+        ObjectDb::constSpec,
+        ObjectDb::eArraySpec,
+        ObjectDb::fieldReadSpec,
+        ObjectDb::nullSpec,
 
-        (objectDb) -> objectDb.arrayS(objectDb.blobS()),
-        (objectDb) -> objectDb.arrayS(objectDb.boolS()),
-        (objectDb) -> objectDb.arrayS(objectDb.intS()),
-        (objectDb) -> objectDb.arrayS(objectDb.nothingS()),
-        (objectDb) -> objectDb.arrayS(objectDb.strS()),
-        (objectDb) -> objectDb.arrayS(recSpec(objectDb)),
+        (objectDb) -> objectDb.arraySpec(objectDb.blobSpec()),
+        (objectDb) -> objectDb.arraySpec(objectDb.boolSpec()),
+        (objectDb) -> objectDb.arraySpec(objectDb.intSpec()),
+        (objectDb) -> objectDb.arraySpec(objectDb.nothingSpec()),
+        (objectDb) -> objectDb.arraySpec(objectDb.strSpec()),
+        (objectDb) -> objectDb.arraySpec(recSpec(objectDb)),
 
-        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.blobS())),
-        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.boolS())),
-        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.intS())),
-        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.nothingS())),
-        (objectDb) -> objectDb.arrayS(objectDb.arrayS(objectDb.strS())),
-        (objectDb) -> objectDb.arrayS(objectDb.arrayS(recSpec(objectDb)))
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.blobSpec())),
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.boolSpec())),
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.intSpec())),
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.nothingSpec())),
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.strSpec())),
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(recSpec(objectDb)))
     );
   }
 
   private static RecSpec recSpec(ObjectDb objectDb) {
-    return objectDb.recS(list(objectDb.strS(), objectDb.strS()));
+    return objectDb.recSpec(list(objectDb.strSpec(), objectDb.strSpec()));
   }
 }

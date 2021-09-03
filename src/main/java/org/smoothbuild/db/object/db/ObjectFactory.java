@@ -47,12 +47,12 @@ public class ObjectFactory {
   }
 
   private static RecSpec createMessageSpec(ObjectDb objectDb) {
-    StrSpec strSpec = objectDb.strS();
-    return objectDb.recS(list(strSpec, strSpec));
+    StrSpec strSpec = objectDb.strSpec();
+    return objectDb.recSpec(list(strSpec, strSpec));
   }
 
   private static RecSpec createFileSpec(ObjectDb objectDb) {
-    return objectDb.recS(list(objectDb.blobS(), objectDb.strS()));
+    return objectDb.recSpec(list(objectDb.blobSpec(), objectDb.strSpec()));
   }
 
   public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
@@ -93,19 +93,19 @@ public class ObjectFactory {
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
-    return objectDb.arrayS(elementSpec);
+    return objectDb.arraySpec(elementSpec);
   }
 
   public BlobSpec blobSpec() {
-    return objectDb.blobS();
+    return objectDb.blobSpec();
   }
 
   public BoolSpec boolSpec() {
-    return objectDb.boolS();
+    return objectDb.boolSpec();
   }
 
   public IntSpec intSpec() {
-    return objectDb.intS();
+    return objectDb.intSpec();
   }
 
   public RecSpec fileSpec() {
@@ -117,15 +117,15 @@ public class ObjectFactory {
   }
 
   public NothingSpec nothingSpec() {
-    return objectDb.nothingS();
+    return objectDb.nothingSpec();
   }
 
   public StrSpec stringSpec() {
-    return objectDb.strS();
+    return objectDb.strSpec();
   }
 
   public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
-    return objectDb.recS(elementSpecs);
+    return objectDb.recSpec(elementSpecs);
   }
 
   public Rec errorMessage(String text) {

@@ -132,7 +132,7 @@ public class ObjectDb {
   // methods for creating objects or object builders
 
   public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
-    return new ArrayBuilder(arrayS(elementSpec), this);
+    return new ArrayBuilder(arraySpec(elementSpec), this);
   }
 
   public BlobBuilder blobBuilder() {
@@ -219,51 +219,51 @@ public class ObjectDb {
 
   // methods for returning specs
 
-  public ArraySpec arrayS(ValSpec elementSpec) {
+  public ArraySpec arraySpec(ValSpec elementSpec) {
     return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec)));
   }
 
-  public BlobSpec blobS() {
+  public BlobSpec blobSpec() {
     return blobSpec;
   }
 
-  public BoolSpec boolS() {
+  public BoolSpec boolSpec() {
     return boolSpec;
   }
 
-  public IntSpec intS() {
+  public IntSpec intSpec() {
     return intSpec;
   }
 
-  public NothingSpec nothingS() {
+  public NothingSpec nothingSpec() {
     return nothingSpec;
   }
 
-  public StrSpec strS() {
+  public StrSpec strSpec() {
     return strSpec;
   }
 
-  public CallSpec callS() {
+  public CallSpec callSpec() {
     return callSpec;
   }
 
-  public ConstSpec constS() {
+  public ConstSpec constSpec() {
     return constSpec;
   }
 
-  public EArraySpec eArrayS() {
+  public EArraySpec eArraySpec() {
     return eArraySpec;
   }
 
-  public FieldReadSpec fieldReadS() {
+  public FieldReadSpec fieldReadSpec() {
     return fieldReadSpec;
   }
 
-  public NullSpec nullS() {
+  public NullSpec nullSpec() {
     return nullSpec;
   }
 
-  public RecSpec recS(Iterable<? extends ValSpec> elementSpecs) {
+  public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
     return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(elementSpecs)));
   }
 
