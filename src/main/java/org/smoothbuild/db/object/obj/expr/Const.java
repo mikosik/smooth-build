@@ -17,9 +17,9 @@ public class Const extends Expr {
     super(merkleRoot, objectDb);
   }
 
-  public Obj value() {
+  public Val value() {
     Obj obj = wrapObjectDbExceptionAsDecodeObjException(
-        hash(), () -> objectDb().get(merkleRoot().dataHash()));
+        hash(), () -> objectDb().get(dataHash()));
     if (obj instanceof Val val) {
       return val;
     } else {
