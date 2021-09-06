@@ -18,6 +18,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
+import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
 import static org.smoothbuild.util.Lists.map;
@@ -39,6 +40,7 @@ import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
 import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
@@ -55,6 +57,7 @@ import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.EArraySpec;
 import org.smoothbuild.db.object.spec.expr.FieldReadSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
+import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
@@ -87,6 +90,7 @@ public class ObjectDb {
   private EArraySpec eArraySpec;
   private FieldReadSpec fieldReadSpec;
   private NullSpec nullSpec;
+  private RefSpec refSpec;
 
   public static ObjectDb objectDb(HashedDb hashedDb) {
       ObjectDb objectDb = new ObjectDb(hashedDb);
@@ -113,6 +117,7 @@ public class ObjectDb {
       this.eArraySpec = new EArraySpec(writeBaseSpecRoot(EARRAY), this);
       this.fieldReadSpec = new FieldReadSpec(writeBaseSpecRoot(FIELD_READ), this);
       this.nullSpec = new NullSpec(writeBaseSpecRoot(NULL), this);
+      this.refSpec = new RefSpec(writeBaseSpecRoot(REF), this);
 
       cacheSpec(blobSpec);
       cacheSpec(boolSpec);
@@ -124,6 +129,7 @@ public class ObjectDb {
       cacheSpec(eArraySpec);
       cacheSpec(fieldReadSpec);
       cacheSpec(nullSpec);
+      cacheSpec(refSpec);
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -190,6 +196,10 @@ public class ObjectDb {
 
   public Null nullExpr() {
     return wrapHashedDbExceptionAsObjectDbException(this::newNullExpr);
+  }
+
+  public Ref refExpr(BigInteger value) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRefExpr(value));
   }
 
   // generic getter
@@ -263,6 +273,10 @@ public class ObjectDb {
     return nullSpec;
   }
 
+  public RefSpec refSpec() {
+    return refSpec;
+  }
+
   public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
     return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(elementSpecs)));
   }
@@ -295,7 +309,7 @@ public class ObjectDb {
           "It has illegal SpecKind marker = " + marker + ".");
     }
     return switch (specKind) {
-      case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ, NULL -> {
+      case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ, NULL, REF -> {
         assertSize(hash, specKind, hashes, 1);
         throw new RuntimeException(
             "Internal error: Spec with kind " + specKind + " should be found in cache.");
@@ -368,8 +382,8 @@ public class ObjectDb {
 
   public Const newConstExpr(Val val) throws HashedDbException {
     var data = writeConstData(val);
-    var root = writeRoot(this.constSpec, data);
-    return this.constSpec.newObj(root);
+    var root = writeRoot(constSpec, data);
+    return constSpec.newObj(root);
   }
 
   public EArray newEArrayExpr(Iterable<? extends Expr> elements) throws HashedDbException {
@@ -387,6 +401,12 @@ public class ObjectDb {
   public Null newNullExpr() throws HashedDbException {
     var root = writeRoot(nullSpec);
     return nullSpec.newObj(root);
+  }
+
+  public Ref newRefExpr(BigInteger value) throws HashedDbException {
+    var data = writeRefData(value);
+    var root = writeRoot(refSpec, data);
+    return this.refSpec.newObj(root);
   }
 
   // methods for creating Val Obj-s
@@ -477,6 +497,10 @@ public class ObjectDb {
 
   private Hash writeFieldReadData(Expr rec, Int index) throws HashedDbException {
     return hashedDb.writeSequence(rec.hash(), index.hash());
+  }
+
+  private Hash writeRefData(BigInteger value) throws HashedDbException {
+    return hashedDb.writeBigInteger(value);
   }
 
   // methods for writing data of Val-s

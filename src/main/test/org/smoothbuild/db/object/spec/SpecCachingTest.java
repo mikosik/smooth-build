@@ -44,6 +44,7 @@ public class SpecCachingTest extends TestingContext {
         ObjectDb::eArraySpec,
         ObjectDb::fieldReadSpec,
         ObjectDb::nullSpec,
+        ObjectDb::refSpec,
 
         (objectDb) -> objectDb.arraySpec(objectDb.blobSpec()),
         (objectDb) -> objectDb.arraySpec(objectDb.boolSpec()),

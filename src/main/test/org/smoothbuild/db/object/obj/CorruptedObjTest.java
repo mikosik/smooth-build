@@ -14,6 +14,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.FIELD_READ;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
+import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
@@ -54,6 +55,7 @@ import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
 import org.smoothbuild.db.object.obj.expr.FieldRead;
+import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -809,7 +811,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save blob
+       * This test makes sure that other tests in this class use proper scheme to save int
        * in HashedDb.
        */
       ByteString byteString = ByteString.of((byte) 3, (byte) 2);
@@ -1064,6 +1066,45 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
+  class _ref {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save ref
+       * in HashedDb.
+       */
+      ByteString byteString = ByteString.of((byte) 3, (byte) 2);
+      Hash objHash =
+          hash(
+              hash(refSpec()),
+              hash(byteString));
+      assertThat(((Ref) objectDb().get(objHash)).value())
+          .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(refSpec());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      obj_root_with_two_data_hashes(
+          refSpec(),
+          hashedDb().writeByte((byte) 1),
+          (Hash objHash) -> ((Ref) objectDb().get(objHash)).value()
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          refSpec(),
+          (Hash objHash) -> ((Ref) objectDb().get(objHash)).value());
+    }
+  }
+
+  @Nested
   class _spec {
     @Nested
     class learn {
@@ -1179,6 +1220,11 @@ public class CorruptedObjTest extends TestingContext {
       @Test
       public void string_with_additional_child_causes_exception() throws Exception {
         do_test_with_additional_child(STRING);
+      }
+
+      @Test
+      public void ref_with_additional_child_causes_exception() throws Exception {
+        do_test_with_additional_child(REF);
       }
 
       private void do_test_with_additional_child(SpecKind kind) throws Exception {

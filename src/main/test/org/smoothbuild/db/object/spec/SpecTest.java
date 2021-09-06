@@ -24,6 +24,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NULL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
+import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
 import static org.smoothbuild.util.Lists.list;
 
@@ -39,6 +40,7 @@ import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
 import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -85,6 +87,7 @@ public class SpecTest {
         arguments(EARRAY, "EARRAY"),
         arguments(FIELD_READ, "FIELD_READ"),
         arguments(NULL, "NULL"),
+        arguments(REF, "REF"),
 
         arguments(ARRAY_BLOB, "[BLOB]"),
         arguments(ARRAY_BOOL, "[BOOL]"),
@@ -122,6 +125,7 @@ public class SpecTest {
         arguments(EARRAY, EArray.class),
         arguments(FIELD_READ, FieldRead.class),
         arguments(NULL, Null.class),
+        arguments(REF, Ref.class),
 
         arguments(ARRAY_BLOB, Array.class),
         arguments(ARRAY_BOOL, Array.class),
@@ -170,6 +174,7 @@ public class SpecTest {
     tester.addEqualityGroup(EARRAY, EARRAY);
     tester.addEqualityGroup(FIELD_READ, FIELD_READ);
     tester.addEqualityGroup(NULL, NULL);
+    tester.addEqualityGroup(REF, REF);
 
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);

@@ -6,6 +6,7 @@ import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
 import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -29,7 +30,8 @@ public enum SpecKind {
   FIELD_READ((byte) 8, FieldRead.class),
   CALL((byte) 9, Call.class),
   EARRAY((byte) 10, EArray.class),
-  NULL((byte) 11, Null.class);
+  NULL((byte) 11, Null.class),
+  REF((byte) 12, Ref.class);
 
   private static final ImmutableMap<Byte, SpecKind> markerToSpecKindMap =
       ImmutableMap.<Byte, SpecKind>builder()
@@ -45,6 +47,7 @@ public enum SpecKind {
           .put((byte) 9, CALL)
           .put((byte) 10, EARRAY)
           .put((byte) 11, NULL)
+          .put((byte) 12, REF)
           .build();
 
   private final byte marker;

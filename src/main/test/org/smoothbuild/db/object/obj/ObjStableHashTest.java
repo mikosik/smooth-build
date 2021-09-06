@@ -223,4 +223,25 @@ public class ObjStableHashTest extends TestingContext {
           .isEqualTo(Hash.decode("96f78887322a24eb91f2c785b10c7a6c613a2633"));
     }
   }
+
+  @Nested
+  class _ref {
+    @Test
+    public void hash_of_zero_ref_is_stable() {
+      assertThat(refExpr(0).hash())
+          .isEqualTo(Hash.decode("ccedb09376a4b5f61b33197fad22716da57ef853"));
+    }
+
+    @Test
+    public void hash_of_positive_ref_is_stable() {
+      assertThat(refExpr(123).hash())
+          .isEqualTo(Hash.decode("68f2d3bee8fcd5862301890e6ed21cdd46c3fbd1"));
+    }
+
+    @Test
+    public void hash_of_negative_ref_is_stable() {
+      assertThat(refExpr(-123).hash())
+          .isEqualTo(Hash.decode("e85f399d1fdef3e8663295c12a9cafbf1a0ef64f"));
+    }
+  }
 }

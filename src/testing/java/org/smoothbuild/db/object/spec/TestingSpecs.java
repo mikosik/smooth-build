@@ -26,6 +26,7 @@ public class TestingSpecs {
   public static final Spec EARRAY = CONTEXT.eArraySpec();
   public static final Spec FIELD_READ = CONTEXT.fieldReadSpec();
   public static final Spec NULL = CONTEXT.nullSpec();
+  public static final Spec REF = CONTEXT.refSpec();
 
   public static final ArraySpec ARRAY_BLOB = array(BLOB);
   public static final ArraySpec ARRAY_BOOL = array(BOOL);

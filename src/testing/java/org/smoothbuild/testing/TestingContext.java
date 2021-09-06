@@ -17,6 +17,7 @@ import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
 import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
@@ -30,6 +31,7 @@ import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.EArraySpec;
 import org.smoothbuild.db.object.spec.expr.FieldReadSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
+import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
@@ -216,6 +218,10 @@ public class TestingContext {
     return objectDb().nullSpec();
   }
 
+  public RefSpec refSpec() {
+    return objectDb().refSpec();
+  }
+
   // Obj-s (values)
 
   public Array arrayVal(Val... elements) {
@@ -323,5 +329,9 @@ public class TestingContext {
 
   public Null nullExpr() {
     return objectDb().nullExpr();
+  }
+
+  public Ref refExpr(int value) {
+    return objectDb().refExpr(BigInteger.valueOf(value));
   }
 }
