@@ -1,9 +1,8 @@
 package org.smoothbuild.db.object.obj.expr;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjException;
-
-import org.smoothbuild.db.object.db.DecodeObjException;
+import org.smoothbuild.db.object.db.Helpers;
 import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.db.UnexpectedNodeException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
@@ -18,13 +17,12 @@ public class Const extends Expr {
   }
 
   public Val value() {
-    Obj obj = wrapObjectDbExceptionAsDecodeObjException(
-        hash(), () -> objectDb().get(dataHash()));
+    Obj obj = Helpers.wrapObjectDbExceptionAsDecodeObjNodeException(
+        hash(), spec(), DATA_PATH, () -> objectDb().get(dataHash()));
     if (obj instanceof Val val) {
       return val;
     } else {
-      throw new DecodeObjException(
-          hash(), "Its data should contain Val but contains " + obj.spec().name() + ".");
+      throw new UnexpectedNodeException(hash(), spec(), DATA_PATH, Val.class, obj.getClass());
     }
   }
 

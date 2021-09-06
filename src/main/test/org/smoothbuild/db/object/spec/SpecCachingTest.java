@@ -11,6 +11,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
+import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.testing.TestingContext;
 
@@ -35,10 +37,13 @@ public class SpecCachingTest extends TestingContext {
     return list(
         ObjectDb::blobSpec,
         ObjectDb::boolSpec,
+        SpecCachingTest::definedLambdaSpec,
         ObjectDb::intSpec,
+        SpecCachingTest::nativeLambdaSpec,
         ObjectDb::nothingSpec,
         ObjectDb::strSpec,
         SpecCachingTest::recSpec,
+
         ObjectDb::callSpec,
         ObjectDb::constSpec,
         ObjectDb::eArraySpec,
@@ -52,17 +57,31 @@ public class SpecCachingTest extends TestingContext {
         (objectDb) -> objectDb.arraySpec(objectDb.nothingSpec()),
         (objectDb) -> objectDb.arraySpec(objectDb.strSpec()),
         (objectDb) -> objectDb.arraySpec(recSpec(objectDb)),
+        (objectDb) -> objectDb.arraySpec(definedLambdaSpec(objectDb)),
+        (objectDb) -> objectDb.arraySpec(nativeLambdaSpec(objectDb)),
 
         (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.blobSpec())),
         (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.boolSpec())),
         (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.intSpec())),
         (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.nothingSpec())),
         (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.strSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(recSpec(objectDb)))
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(recSpec(objectDb))),
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(definedLambdaSpec(objectDb))),
+        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(nativeLambdaSpec(objectDb)))
     );
   }
 
   private static RecSpec recSpec(ObjectDb objectDb) {
     return objectDb.recSpec(list(objectDb.strSpec(), objectDb.strSpec()));
+  }
+
+  private static DefinedLambdaSpec definedLambdaSpec(ObjectDb objectDb) {
+    RecSpec parameters = objectDb.recSpec(list(objectDb.boolSpec(), objectDb.blobSpec()));
+    return objectDb.definedLambdaSpec(objectDb.strSpec(), parameters);
+  }
+
+  private static NativeLambdaSpec nativeLambdaSpec(ObjectDb objectDb) {
+    RecSpec parameters = objectDb.recSpec(list(objectDb.boolSpec(), objectDb.blobSpec()));
+    return objectDb.nativeLambdaSpec(objectDb.strSpec(), parameters);
   }
 }

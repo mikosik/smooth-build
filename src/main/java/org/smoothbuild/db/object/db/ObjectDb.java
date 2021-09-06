@@ -2,9 +2,10 @@ package org.smoothbuild.db.object.db;
 
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
+import static org.smoothbuild.db.object.db.DecodeObjRootException.cannotReadRootException;
 import static org.smoothbuild.db.object.db.DecodeObjRootException.nonNullObjRootException;
 import static org.smoothbuild.db.object.db.DecodeObjRootException.nullObjRootException;
-import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjException;
+import static org.smoothbuild.db.object.db.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
@@ -12,9 +13,11 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
+import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.FIELD_READ;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
+import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
@@ -31,6 +34,7 @@ import java.util.function.Function;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
@@ -46,7 +50,9 @@ import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
+import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
@@ -61,7 +67,10 @@ import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
+import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
+import org.smoothbuild.db.object.spec.val.LambdaSpec;
+import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
@@ -149,8 +158,31 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBoolVal(value));
   }
 
+  public DefinedLambda definedLambdaVal(DefinedLambdaSpec spec, Expr body,
+      List<Expr> defaultArguments) {
+    checkDefaultArgumentsCountMatchParametersCount("DefinedLambdaSpec", defaultArguments, spec);
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newDefinedLambdaVal(spec, body, defaultArguments));
+  }
+
   public Int intVal(BigInteger value) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newIntVal(value));
+  }
+
+  public NativeLambda nativeLambdaVal(
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) {
+    checkDefaultArgumentsCountMatchParametersCount("NativeLambdaSpec", defaultArguments, spec);
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newNativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments));
+  }
+
+  private static void checkDefaultArgumentsCountMatchParametersCount(
+      String specName, List<Expr> defaultArguments, LambdaSpec spec) {
+    int parameterCount = spec.parameters().items().size();
+    if (parameterCount != defaultArguments.size()) {
+      throw new IllegalArgumentException(specName + " specifies " + parameterCount
+          + " parameters but defaultArguments provides " + defaultArguments.size() + " arguments.");
+    }
   }
 
   public Str strVal(String value) {
@@ -205,14 +237,12 @@ public class ObjectDb {
   // generic getter
 
   public Obj get(Hash hash) {
-    List<Hash> hashes = wrapHashedDbExceptionAsDecodeObjException(
-        hash,
-        () -> hashedDb.readSequence(hash));
+    List<Hash> hashes = decodeRootSequence(hash);
     if (hashes.size() != 1 && hashes.size() != 2) {
-      throw new DecodeObjRootException(hash, hashes.size());
+      throw wrongSizeOfRootSequenceException(hash, hashes.size());
     }
     Spec spec = getSpecOrChainException(
-        hashes.get(0), e -> new DecodeObjException(hash, e));
+        hashes.get(0), e -> new DecodeObjSpecException(hash, e));
     if (spec.equals(nullSpec)) {
       if (hashes.size() != 1) {
         throw nullObjRootException(hash, hashes.size());
@@ -227,7 +257,17 @@ public class ObjectDb {
     }
   }
 
-  // methods for returning specs
+  private List<Hash> decodeRootSequence(Hash hash) {
+    try {
+      return hashedDb.readSequence(hash);
+    } catch (NoSuchDataException e) {
+      throw new NoSuchObjException(hash, e);
+    } catch (HashedDbException e) {
+      throw cannotReadRootException(hash, e);
+    }
+  }
+
+  // methods for returning Val-s specs
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
     return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec)));
@@ -241,8 +281,18 @@ public class ObjectDb {
     return boolSpec;
   }
 
+  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters) {
+    return cacheSpec(
+        wrapHashedDbExceptionAsObjectDbException(() -> newDefinedLambdaSpec(result, parameters)));
+  }
+
   public IntSpec intSpec() {
     return intSpec;
+  }
+
+  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters) {
+    return cacheSpec(
+        wrapHashedDbExceptionAsObjectDbException(() -> newNativeLambdaSpec(result, parameters)));
   }
 
   public NothingSpec nothingSpec() {
@@ -252,6 +302,8 @@ public class ObjectDb {
   public StrSpec strSpec() {
     return strSpec;
   }
+
+  // methods for returning Expr-s specs
 
   public CallSpec callSpec() {
     return callSpec;
@@ -282,7 +334,7 @@ public class ObjectDb {
   }
 
   private Spec getSpecOrChainException(
-      Hash specHash, Function<Exception, RuntimeException> exceptionChainer) {
+      Hash specHash, Function<ObjectDbException, RuntimeException> exceptionChainer) {
     try {
       return getSpec(specHash);
     } catch (ObjectDbException e) {
@@ -324,6 +376,32 @@ public class ObjectDb {
           throw new DecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
               + elementSpec.name() + " but should be Spec of some Val.");
         }
+      }
+      case DEFINED_LAMBDA, NATIVE_LAMBDA -> {
+        assertSize(hash, specKind, hashes, 2);
+        List<Hash> data = wrapHashedDbExceptionAsDecodeSpecException(
+            hash, () -> hashedDb.readSequence(hashes.get(1)));
+        if (data.size() != 2) {
+          throw new DecodeSpecException(hash, "It is " + specKind
+              + " Spec which data sequence contains " + data.size()
+              + " elements but should contains 2.");
+        }
+        Spec result = getSpecOrChainException(data.get(0), e -> new DecodeSpecException(hash));
+        Spec parameters = getSpecOrChainException(data.get(1), e -> new DecodeSpecException(hash));
+        if (!(result instanceof ValSpec resultSpec)) {
+          throw new DecodeSpecException(hash, "It is " + specKind + " Spec which result spec is "
+              + result.name() + " but should be instance of ValSpec.");
+        }
+        if (!(parameters instanceof RecSpec parametersSpec)) {
+          throw new DecodeSpecException(hash, "It is " + specKind
+              + " Spec which parameters spec is " + parameters.name()
+              + " but should be instance of RecSpec.");
+        }
+        yield switch (specKind) {
+          case DEFINED_LAMBDA -> cacheSpec(newDefinedLambdaSpec(hash, resultSpec, parametersSpec));
+          case NATIVE_LAMBDA -> cacheSpec(newNativeLambdaSpec(hash, resultSpec, parametersSpec));
+          default -> throw new RuntimeException("Cannot happen.");
+        };
       }
       case RECORD -> {
         assertSize(hash, RECORD, hashes, 2);
@@ -429,10 +507,25 @@ public class ObjectDb {
     return boolSpec.newObj(root);
   }
 
+  private DefinedLambda newDefinedLambdaVal(
+      DefinedLambdaSpec spec, Expr body, List<Expr> defaultArguments) throws HashedDbException {
+    var data = writeDefinedLambdaData(body, defaultArguments);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root);
+  }
+
   private Int newIntVal(BigInteger value) throws HashedDbException {
     var data = writeIntData(value);
     var root = writeRoot(intSpec, data);
     return intSpec.newObj(root);
+  }
+
+  private NativeLambda newNativeLambdaVal(
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments)
+      throws HashedDbException {
+    var data = writeNativeLambdaData(classBinaryName, nativeJar, defaultArguments);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root);
   }
 
   private Str newStrVal(String string) throws HashedDbException {
@@ -456,6 +549,26 @@ public class ObjectDb {
 
   private ArraySpec newArraySpec(Hash hash, ValSpec elementSpec) {
     return new ArraySpec(hash, elementSpec, this);
+  }
+
+  private DefinedLambdaSpec newDefinedLambdaSpec(ValSpec result, RecSpec parameters)
+      throws HashedDbException {
+    Hash hash = writeLambdaSpecRoot(DEFINED_LAMBDA, result, parameters);
+    return newDefinedLambdaSpec(hash, result, parameters);
+  }
+
+  private DefinedLambdaSpec newDefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
+    return new DefinedLambdaSpec(hash, result, parameters, this);
+  }
+
+  private NativeLambdaSpec newNativeLambdaSpec(ValSpec result, RecSpec parameters)
+      throws HashedDbException {
+    Hash hash = writeLambdaSpecRoot(NATIVE_LAMBDA, result, parameters);
+    return newNativeLambdaSpec(hash, result, parameters);
+  }
+
+  private NativeLambdaSpec newNativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
+    return new NativeLambdaSpec(hash, result, parameters, this);
   }
 
   private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
@@ -513,8 +626,21 @@ public class ObjectDb {
     return hashedDb.writeBoolean(value);
   }
 
+  private Hash writeDefinedLambdaData(Expr body, List<Expr> defaultArguments)
+      throws HashedDbException {
+    Hash defaultArgumentsHash = writeSequence(defaultArguments);
+    return hashedDb.writeSequence(body.hash(), defaultArgumentsHash);
+  }
+
   private Hash writeIntData(BigInteger value) throws HashedDbException {
     return hashedDb.writeBigInteger(value);
+  }
+
+  private Hash writeNativeLambdaData(
+      Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) throws HashedDbException {
+    Hash nativeHash = hashedDb.writeSequence(classBinaryName.hash(), nativeJar.hash());
+    Hash defaultArgumentsHash = writeSequence(defaultArguments);
+    return hashedDb.writeSequence(nativeHash, defaultArgumentsHash);
   }
 
   private Hash writeStrData(String string) throws HashedDbException {
@@ -538,6 +664,12 @@ public class ObjectDb {
 
   private Hash writeArraySpecRoot(Spec elementSpec) throws HashedDbException {
     return writeNonBaseSpecRoot(ARRAY, elementSpec.hash());
+  }
+
+  private Hash writeLambdaSpecRoot(SpecKind lambdaKind, ValSpec result, RecSpec parameters)
+      throws HashedDbException {
+    Hash hash = hashedDb.writeSequence(result.hash(), parameters.hash());
+    return writeNonBaseSpecRoot(lambdaKind, hash);
   }
 
   private Hash writeRecSpecRoot(Iterable<? extends ValSpec> itemSpecs)

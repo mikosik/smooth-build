@@ -4,7 +4,6 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.db.ObjectDbException;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.spec.base.ValSpec;
@@ -19,6 +18,6 @@ public class NothingSpec extends ValSpec {
 
   @Override
   public Obj newObj(MerkleRoot merkleRoot) {
-    throw new ObjectDbException("Cannot create java object for 'NOTHING' spec.");
+    throw new UnsupportedOperationException("Cannot create object for 'NOTHING' spec.");
   }
 }

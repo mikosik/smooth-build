@@ -1,22 +1,26 @@
 package org.smoothbuild.db.object.obj.base;
 
+import static com.google.common.base.Preconditions.checkElementIndex;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjException;
+import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjNodeException;
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjNodeException;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.db.object.db.DecodeDataSequenceException;
-import org.smoothbuild.db.object.db.DecodeObjException;
+import org.smoothbuild.db.object.db.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.db.UnexpectedNodeException;
+import org.smoothbuild.db.object.db.UnexpectedSequenceException;
 import org.smoothbuild.db.object.spec.base.Spec;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 public abstract class Obj {
+  public static final String DATA_PATH = "data";
+
   private final MerkleRoot merkleRoot;
   private final ObjectDb objectDb;
 
@@ -70,25 +74,85 @@ public abstract class Obj {
     return valueToString() + ":" + hash();
   }
 
-  protected Obj getDataSequenceElementObj(int i, int expectedSize) {
-    List<Hash> dataSequence = getDataSequence(expectedSize);
-    return wrapObjectDbExceptionAsDecodeObjException(
-        hash(), () -> objectDb().get(dataSequence.get(i)));
+  protected <T> T readData(HashedDbCallable<T> reader) {
+    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), DATA_PATH, reader);
   }
 
-  protected List<Hash> getDataSequence(int expectedSize) {
-    List<Hash> data = getDataSequence();
+  protected <T> T readSequenceElementObj(String path, Hash hash, int i, int expectedSize,
+      Class<T> clazz) {
+    Hash elementHash = readSequenceElementHash(path, hash, i, expectedSize);
+    Obj obj = wrapObjectDbExceptionAsDecodeObjNodeException(
+        hash(), spec(), path, i, () -> objectDb().get(elementHash));
+    return castObj(obj, path, i, clazz);
+  }
+
+  protected Hash readSequenceElementHash(String path, Hash hash, int i, int expectedSize) {
+    checkElementIndex(i, expectedSize);
+    return readSequenceHashes(path, hash, expectedSize)
+        .get(i);
+  }
+
+  protected <T> T castObj(Obj obj, String path, int nodeIndex, Class<T> clazz) {
+    if (clazz.isInstance(obj)) {
+      @SuppressWarnings("unchecked")
+      T result = (T) obj;
+      return result;
+    } else {
+      throw new UnexpectedNodeException(hash(), spec(), path, nodeIndex, clazz, obj.getClass());
+    }
+  }
+
+  protected <T> ImmutableList<T> readSequenceObjs(String path, Hash hash, int expectedSize,
+      Class<T> clazz) {
+    var sequenceHashes = readSequenceHashes(path, hash, expectedSize);
+    var objs = readSequenceObjs(path, sequenceHashes);
+    return castSequence(objs, path, clazz);
+  }
+
+  protected <T> ImmutableList<T> readSequenceObjs(String path, Hash hash, Class<T> clazz) {
+    var objs = readSequenceObjs(path, hash);
+    return castSequence(objs, path, clazz);
+  }
+
+  protected ImmutableList<Obj> readSequenceObjs(String path, Hash hash) {
+    var sequenceHashes = readSequenceHashes(path, hash);
+    return readSequenceObjs(path, sequenceHashes);
+  }
+
+  private <T> ImmutableList<T> castSequence(
+      ImmutableList<Obj> elements, String path, Class<T> clazz) {
+    for (int i = 0; i < elements.size(); i++) {
+      Obj element = elements.get(i);
+      if (!clazz.isInstance(element)) {
+        throw new UnexpectedNodeException(hash(), spec(), path, i, clazz, element.getClass());
+      }
+    }
+    @SuppressWarnings("unchecked")
+    ImmutableList<T> result = (ImmutableList<T>) elements;
+    return result;
+  }
+
+  private ImmutableList<Obj> readSequenceObjs(String path, ImmutableList<Hash> sequence) {
+    Builder<Obj> builder = ImmutableList.builder();
+    for (int i = 0; i < sequence.size(); i++) {
+      int index = i;
+      Obj obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), spec(), path, index,
+          () -> objectDb.get(sequence.get(index)));
+      builder.add(obj);
+    }
+    return builder.build();
+  }
+
+  private ImmutableList<Hash> readSequenceHashes(String path, Hash hash, int expectedSize) {
+    ImmutableList<Hash> data = readSequenceHashes(path, hash);
     if (data.size() != expectedSize) {
-      throw new DecodeDataSequenceException(hash(), dataHash(), expectedSize, data.size());
+      throw new UnexpectedSequenceException(hash(), spec(), path, expectedSize, data.size());
     }
     return data;
   }
 
-  protected List<Hash> getDataSequence() {
-    try {
-      return objectDb().readSequence(dataHash());
-    } catch (HashedDbException e) {
-      throw new DecodeObjException(hash(), new DecodeObjException(dataHash()));
-    }
+  private ImmutableList<Hash> readSequenceHashes(String path, Hash hash) {
+    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), path,
+        () -> objectDb.readSequence(hash));
   }
 }

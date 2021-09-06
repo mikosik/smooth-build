@@ -4,6 +4,7 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Lists.list;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -22,7 +23,9 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
+import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.ValSpec;
@@ -35,7 +38,9 @@ import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
+import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
+import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
@@ -163,8 +168,32 @@ public class TestingContext {
     return objectDb().boolSpec();
   }
 
+  public DefinedLambdaSpec definedLambdaSpec() {
+    return definedLambdaSpec(intSpec(), blobSpec(), strSpec());
+  }
+
+  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, ValSpec... parameters) {
+    return definedLambdaSpec(result, recSpec(list(parameters)));
+  }
+
+  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters) {
+    return objectDb().definedLambdaSpec(result, parameters);
+  }
+
   public IntSpec intSpec() {
     return objectDb().intSpec();
+  }
+
+  public NativeLambdaSpec nativeLambdaSpec() {
+    return nativeLambdaSpec(intSpec(), blobSpec(), strSpec());
+  }
+
+  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, ValSpec... parameters) {
+    return nativeLambdaSpec(result, recSpec(list(parameters)));
+  }
+
+  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters) {
+    return objectDb().nativeLambdaSpec(result, parameters);
   }
 
   public NothingSpec nothingSpec() {
@@ -232,6 +261,10 @@ public class TestingContext {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
+  public Blob blobVal() {
+    return objectFactory().blob(sink -> sink.writeUtf8("blob data"));
+  }
+
   public Blob blobVal(ByteString bytes) {
     return objectFactory().blob(sink -> sink.write(bytes));
   }
@@ -244,8 +277,22 @@ public class TestingContext {
     return objectDb().boolVal(value);
   }
 
+  public DefinedLambda definedLambdaVal(
+      DefinedLambdaSpec spec, Expr body, List<Expr> defaultArguments) {
+    return objectDb().definedLambdaVal(spec, body, defaultArguments);
+  }
+
   public Int intVal(int value) {
     return objectDb().intVal(BigInteger.valueOf(value));
+  }
+
+  public NativeLambda nativeLambdaVal(
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) {
+    return objectDb().nativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments);
+  }
+
+  public Str strVal() {
+    return objectDb().strVal("abc");
   }
 
   public Str strVal(String string) {

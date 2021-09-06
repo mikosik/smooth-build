@@ -1,7 +1,5 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjException;
-
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -15,8 +13,7 @@ public class Bool extends Val {
   }
 
   public boolean jValue() {
-    return wrapHashedDbExceptionAsDecodeObjException(
-        hash(), () -> hashedDb().readBoolean(dataHash()));
+    return readData(() -> hashedDb().readBoolean(dataHash()));
   }
 
   @Override

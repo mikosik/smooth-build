@@ -1,13 +1,7 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjException;
-import static org.smoothbuild.util.Lists.map;
-
-import java.util.List;
-
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.DecodeObjException;
 import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.db.UnexpectedNodeException;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -31,16 +25,12 @@ public class Array extends Val {
 
   public <T extends Val> ImmutableList<T> elements(Class<T> elementJType) {
     assertIsIterableAs(elementJType);
-    ImmutableList<Obj> elements = elements();
-    for (Obj object : elements) {
-      if (!object.spec().equals(spec().element())) {
-        throw new DecodeObjException(hash(), "It is array which spec == " + spec().name()
-            + " but one of its elements has spec == " + object.spec().name());
-      }
-    }
-    @SuppressWarnings("unchecked")
-    ImmutableList<T> result = (ImmutableList<T>) (Object) elements;
-    return result;
+    var elements = elementObjs();
+    return checkSpecOfSequenceObjs(elements, spec().element());
+  }
+
+  private ImmutableList<Obj> elementObjs() {
+    return readSequenceObjs(DATA_PATH, dataHash());
   }
 
   private <T extends Val> void assertIsIterableAs(Class<T> clazz) {
@@ -51,15 +41,20 @@ public class Array extends Val {
     }
   }
 
-  private ImmutableList<Obj> elements() {
-    List<Hash> elementsHashes = getDataSequence();
-    return wrapObjectDbExceptionAsDecodeObjException(
-        hash(),
-        () -> map(elementsHashes, h -> objectDb().get(h)));
+  protected <T> ImmutableList<T> checkSpecOfSequenceObjs(ImmutableList<Obj> elements, Spec spec) {
+    for (int i = 0; i < elements.size(); i++) {
+      Spec elementSpec = elements.get(i).spec();
+      if (!(spec.equals(elementSpec))) {
+        throw new UnexpectedNodeException(hash(), spec(), DATA_PATH, i, spec, elementSpec);
+      }
+    }
+    @SuppressWarnings("unchecked")
+    ImmutableList<T> result = (ImmutableList<T>) elements;
+    return result;
   }
 
   @Override
   public String valueToString() {
-    return "[" + elementsToStringValues(elements()) + ']';
+    return "[" + elementsToStringValues(elementObjs()) + ']';
   }
 }

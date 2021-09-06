@@ -45,7 +45,7 @@ public class SpecKindTest {
   }
 
   @ParameterizedTest
-  @ValueSource(bytes = {-1, 13})
+  @ValueSource(bytes = {-1, 15})
   public void from_marker_returns_null_for_illegal_marker(int marker) {
     assertThat(SpecKind.fromMarker((byte) marker))
         .isNull();

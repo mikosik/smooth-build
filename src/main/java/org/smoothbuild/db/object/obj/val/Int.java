@@ -1,7 +1,5 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjException;
-
 import java.math.BigInteger;
 
 import org.smoothbuild.db.object.db.ObjectDb;
@@ -17,9 +15,7 @@ public class Int extends Val {
   }
 
   public BigInteger jValue() {
-    return wrapHashedDbExceptionAsDecodeObjException(
-        hash(),
-        () -> hashedDb().readBigInteger(dataHash()));
+    return readData(() -> hashedDb().readBigInteger(dataHash()));
   }
 
   @Override

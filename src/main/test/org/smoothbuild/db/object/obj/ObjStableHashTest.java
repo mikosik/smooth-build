@@ -6,6 +6,8 @@ import static org.smoothbuild.util.Lists.list;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.obj.val.DefinedLambda;
+import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -141,6 +143,42 @@ public class ObjStableHashTest extends TestingContext {
   }
 
   @Nested
+  class _defined_lambda {
+    @Test
+    public void with_no_default_arguments() {
+      DefinedLambda definedLambda =
+          definedLambdaVal(
+              definedLambdaSpec(intSpec()),
+              constExpr(intVal(1)),
+              list());
+      assertThat(definedLambda.hash())
+          .isEqualTo(Hash.decode("61439f09a617ec4fbee62bb30325e73932480f2e"));
+    }
+
+    @Test
+    public void with_one_default_argument() {
+      DefinedLambda definedLambda =
+          definedLambdaVal(
+              definedLambdaSpec(intSpec(), blobSpec()),
+              constExpr(intVal(1)),
+              list(constExpr(intVal(2))));
+      assertThat(definedLambda.hash())
+          .isEqualTo(Hash.decode("bfaa02fbd3141b5790090bd58b4b4f589bdd390c"));
+    }
+
+    @Test
+    public void with_two_default_arguments() {
+      DefinedLambda definedLambda =
+          definedLambdaVal(
+              definedLambdaSpec(intSpec(), blobSpec(), strSpec()),
+              constExpr(intVal(1)),
+              list(constExpr(intVal(2)), constExpr(intVal(3))));
+      assertThat(definedLambda.hash())
+          .isEqualTo(Hash.decode("ee0037d1ba30afb35d7d169309f60fade8bcfba9"));
+    }
+  }
+
+  @Nested
   class _earray {
     @Test
     public void hash_of_empty_earray_expression_is_stable() {
@@ -182,6 +220,45 @@ public class ObjStableHashTest extends TestingContext {
     public void hash_of_negative_int_is_stable() {
       assertThat(intVal(-123).hash())
           .isEqualTo(Hash.decode("60eeed22193aef6ae9f60990cbb7b974a7059340"));
+    }
+  }
+
+  @Nested
+  class _native_lambda {
+    @Test
+    public void with_no_default_arguments() {
+      NativeLambda nativeLambda =
+          nativeLambdaVal(
+              nativeLambdaSpec(intSpec()),
+              strVal("classBinaryName"),
+              blobVal(ByteString.encodeUtf8("native jar")),
+              list());
+      assertThat(nativeLambda.hash())
+          .isEqualTo(Hash.decode("6ebec9da3afee81df2dab1e252b1c29a590d2104"));
+    }
+
+    @Test
+    public void with_one_default_argument() {
+      NativeLambda nativeLambda =
+          nativeLambdaVal(
+              nativeLambdaSpec(intSpec(), blobSpec()),
+              strVal("classBinaryName"),
+              blobVal(ByteString.encodeUtf8("native jar")),
+              list(constExpr(intVal(2))));
+      assertThat(nativeLambda.hash())
+          .isEqualTo(Hash.decode("43cc10ffdfc3d4f7025a7ac6ed70f29c487c82dd"));
+    }
+
+    @Test
+    public void with_two_default_arguments() {
+      NativeLambda nativeLambda =
+          nativeLambdaVal(
+              nativeLambdaSpec(intSpec(), blobSpec(), strSpec()),
+              strVal("classBinaryName"),
+              blobVal(ByteString.encodeUtf8("native jar")),
+              list(constExpr(intVal(2)), constExpr(intVal(3))));
+      assertThat(nativeLambda.hash())
+          .isEqualTo(Hash.decode("094c736266c0de47ba8fe0513e421843291614b0"));
     }
   }
 

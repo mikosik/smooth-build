@@ -2,8 +2,11 @@ package org.smoothbuild.db.object.obj;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.db.object.db.DecodeObjRootException.cannotReadRootException;
 import static org.smoothbuild.db.object.db.DecodeObjRootException.nonNullObjRootException;
 import static org.smoothbuild.db.object.db.DecodeObjRootException.nullObjRootException;
+import static org.smoothbuild.db.object.db.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.db.object.obj.base.Obj.DATA_PATH;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
@@ -42,12 +45,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.NoSuchDataException;
-import org.smoothbuild.db.object.db.DecodeDataSequenceException;
-import org.smoothbuild.db.object.db.DecodeObjException;
-import org.smoothbuild.db.object.db.DecodeObjRootException;
+import org.smoothbuild.db.object.db.DecodeObjNodeException;
+import org.smoothbuild.db.object.db.DecodeObjSpecException;
 import org.smoothbuild.db.object.db.DecodeSpecException;
 import org.smoothbuild.db.object.db.DecodeSpecRootException;
-import org.smoothbuild.db.object.db.ObjectDbException;
+import org.smoothbuild.db.object.db.NoSuchObjException;
+import org.smoothbuild.db.object.db.UnexpectedNodeException;
+import org.smoothbuild.db.object.db.UnexpectedSequenceException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -59,11 +63,16 @@ import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
+import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.SpecKind;
+import org.smoothbuild.db.object.spec.val.ArraySpec;
+import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
+import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
@@ -95,7 +104,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash objHash =
           hash(ByteString.of(new byte[byteCount]));
       assertCall(() -> objectDb().get(objHash))
-          .throwsException(new DecodeObjException(objHash))
+          .throwsException(cannotReadRootException(objHash, null))
           .withCause(new DecodeHashSequenceException(objHash, byteCount % Hash.lengthInBytes()));
     }
 
@@ -107,7 +116,7 @@ public class CorruptedObjTest extends TestingContext {
               specHash,
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
-          .throwsException(new DecodeObjException(objHash))
+          .throwsException(new DecodeObjSpecException(objHash))
           .withCause(new DecodeSpecException(specHash));
     }
 
@@ -115,7 +124,7 @@ public class CorruptedObjTest extends TestingContext {
     public void reading_elements_from_not_stored_object_throws_exception() {
       Hash objHash = Hash.of(33);
       assertCall(() -> objectDb().get(objHash))
-          .throwsException(new DecodeObjException(objHash))
+          .throwsException(new NoSuchObjException(objHash))
           .withCause(new NoSuchDataException(objHash));
     }
   }
@@ -167,7 +176,7 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           arraySpec(intSpec()),
           (Hash objHash) -> ((Array) objectDb().get(objHash)).elements(Int.class));
     }
@@ -177,14 +186,16 @@ public class CorruptedObjTest extends TestingContext {
     public void with_sequence_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      ArraySpec spec = arraySpec(strSpec());
       Hash objHash =
           hash(
-              hash(arraySpec(strSpec())),
+              hash(spec),
               notHashOfSequence
           );
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Val.class))
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeObjException(notHashOfSequence));
+          .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH))
+          .withCause(new DecodeHashSequenceException(
+              notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
@@ -193,20 +204,22 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = hash(
           nowhere
       );
+      ArraySpec spec = arraySpec(strSpec());
       Hash objHash =
           hash(
-              hash(arraySpec(strSpec())),
+              hash(spec),
               dataHash);
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeObjException(nowhere));
+          .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH + "[0]"))
+          .withCause(new NoSuchObjException(nowhere));
     }
 
     @Test
     public void with_one_element_of_wrong_spec() throws Exception {
+      ArraySpec spec = arraySpec(strSpec());
       Hash objHash =
           hash(
-              hash(arraySpec(strSpec())),
+              hash(spec),
               hash(
                   hash(
                       hash(strSpec()),
@@ -218,15 +231,16 @@ public class CorruptedObjTest extends TestingContext {
                   )
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
-          .throwsException(new DecodeObjException(objHash,
-              "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
+          .throwsException(new UnexpectedNodeException(
+              objHash, spec, DATA_PATH, 1, strSpec(), boolSpec()));
     }
 
     @Test
     public void with_one_element_being_expr() throws Exception {
+      ArraySpec spec = arraySpec(strSpec());
       Hash objHash =
           hash(
-              hash(arraySpec(strSpec())),
+              hash(spec),
               hash(
                   hash(
                       hash(strSpec()),
@@ -235,8 +249,8 @@ public class CorruptedObjTest extends TestingContext {
                   hash(constExpr())
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
-          .throwsException(new DecodeObjException(objHash,
-              "It is array which spec == [STRING] but one of its elements has spec == CONST"));
+          .throwsException(new UnexpectedNodeException(
+              objHash, spec, DATA_PATH, 1, strSpec(), constSpec()));
     }
   }
 
@@ -325,7 +339,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
-          .throwsException(new DecodeObjException(objHash))
+          .throwsException(new DecodeObjNodeException(objHash, boolSpec(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash, new DecodeByteException(dataHash)));
     }
 
@@ -337,7 +351,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
-          .throwsException(new DecodeObjException(objHash))
+          .throwsException(new DecodeObjNodeException(objHash, boolSpec(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash, new DecodeByteException(dataHash)));
     }
 
@@ -351,7 +365,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(boolSpec()),
               dataHash);
       assertCall(() -> ((Bool) objectDb().get(objHash)).jValue())
-          .throwsException(new DecodeObjException(objHash))
+          .throwsException(new DecodeObjNodeException(objHash, boolSpec(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash));
     }
   }
@@ -409,7 +423,7 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           callSpec(),
           (Hash objHash) -> ((Call) objectDb().get(objHash)).function());
     }
@@ -426,7 +440,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
-          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 1));
+          .throwsException(new UnexpectedSequenceException(objHash, callSpec(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -449,7 +463,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
-          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 3));
+          .throwsException(new UnexpectedSequenceException(objHash, callSpec(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -469,8 +483,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).function())
-          .throwsException(new DecodeObjException(
-              objHash, "Its data[0] should contain Expr but contains INT."));
+          .throwsException(new UnexpectedNodeException(
+              objHash, callSpec(), DATA_PATH + "[0]", Expr.class, Int.class));
     }
 
 
@@ -489,8 +503,9 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).arguments())
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeObjException(notHashOfSequence));
+          .throwsException(new DecodeObjNodeException(objHash, callSpec(), DATA_PATH + "[1]"))
+          .withCause(new DecodeHashSequenceException(
+              notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
@@ -510,8 +525,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).arguments())
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeObjException(nowhere));
+          .throwsException(new DecodeObjNodeException(objHash, callSpec(), DATA_PATH + "[1][1]"))
+          .withCause(new NoSuchObjException(nowhere));
     }
 
     @Test
@@ -531,8 +546,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).arguments())
-          .throwsException(new DecodeObjException(
-              objHash, "It is CALL but one of its elements is INT instead of Expr."));
+          .throwsException(new UnexpectedNodeException(
+              objHash, callSpec(), DATA_PATH + "[1][1]", Expr.class, Int.class));
     }
   }
 
@@ -586,8 +601,214 @@ public class CorruptedObjTest extends TestingContext {
               hash(constSpec()),
               exprHash);
       assertCall(() -> ((Const) objectDb().get(objHash)).value())
-          .throwsException(new DecodeObjException(
-              objHash, "Its data should contain Val but contains CONST."));
+          .throwsException(new UnexpectedNodeException(
+              objHash, constSpec(), DATA_PATH, Val.class, Const.class));
+    }
+  }
+
+  @Nested
+  class _defined_lambda {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save definedLambda
+       * in HashedDb.
+       */
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(definedLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertThat(((DefinedLambda) objectDb().get(objHash)).body())
+          .isEqualTo(bodyExpr);
+      assertThat(((DefinedLambda) objectDb().get(objHash)).defaultArguments())
+          .isEqualTo(list(defaultArgument1, defaultArgument2));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(definedLambdaSpec());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash dataHash = hash(
+          hash(bodyExpr),
+          hash(
+              hash(defaultArgument1),
+              hash(defaultArgument2)
+          )
+      );
+      obj_root_with_two_data_hashes(
+          definedLambdaSpec(),
+          dataHash,
+          (Hash objHash) -> ((DefinedLambda) objectDb().get(objHash)).body());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          definedLambdaSpec(),
+          (Hash objHash) -> ((DefinedLambda) objectDb().get(objHash)).body());
+    }
+
+    @Test
+    public void data_is_sequence_with_one_element() throws Exception {
+      Const bodyExpr = constExpr(intVal(0));
+      Hash objHash =
+          hash(
+              hash(definedLambdaSpec()),
+              hash(
+                  hash(bodyExpr)
+              )
+          );
+      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).body())
+          .throwsException(new UnexpectedSequenceException(
+              objHash, definedLambdaSpec(), DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_sequence_with_three_elements() throws Exception {
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash defaultArguments = hash(
+          hash(defaultArgument1),
+          hash(defaultArgument2)
+      );
+      Hash objHash =
+          hash(
+              hash(definedLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  defaultArguments,
+                  defaultArguments
+              )
+          );
+
+      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).body())
+          .throwsException(new UnexpectedSequenceException(
+              objHash, definedLambdaSpec(), DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void body_is_val_instead_of_expr() throws Exception {
+      Int bodyExpr = intVal(0);
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(definedLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).body())
+          .throwsException(new UnexpectedNodeException(
+              objHash, definedLambdaSpec(), DATA_PATH + "[0]", Expr.class, Int.class));
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void default_arguments_sequence_size_different_than_multiple_of_hash_size(
+        int byteCount) throws Exception {
+      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Const bodyExpr = constExpr(intVal(0));
+      Hash objHash =
+          hash(
+              hash(definedLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  notHashOfSequence
+              )
+          );
+
+      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).defaultArguments())
+          .throwsException(
+              new DecodeObjNodeException(objHash, definedLambdaSpec(), DATA_PATH + "[1]"))
+          .withCause(
+              new DecodeHashSequenceException(notHashOfSequence, byteCount % Hash.lengthInBytes()));
+    }
+
+    @Test
+    public void default_arguments_sequence_element_pointing_nowhere() throws Exception {
+      Hash nowhere = Hash.of(33);
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Hash objHash =
+          hash(
+              hash(definedLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  hash(
+                      hash(defaultArgument1),
+                      nowhere
+                  )
+              )
+          );
+      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).defaultArguments())
+          .throwsException(
+              new DecodeObjNodeException(objHash, definedLambdaSpec(), DATA_PATH + "[1][1]"))
+          .withCause(new NoSuchObjException(nowhere));
+    }
+
+    @Test
+    public void default_arguments_size_different_than_spec_parameters_size() throws Exception {
+      DefinedLambdaSpec spec = definedLambdaSpec(intSpec(), blobSpec());
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(spec),
+              hash(
+                  hash(bodyExpr),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).defaultArguments())
+          .throwsException(new UnexpectedSequenceException(
+              objHash, spec, DATA_PATH + "[1]", 1, 2));
+    }
+
+    @Test
+    public void default_arguments_contain_val_instead_of_expr() throws Exception {
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Int defaultArgument2 = intVal(2);
+      Hash objHash =
+          hash(
+              hash(definedLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).defaultArguments())
+          .throwsException(new UnexpectedNodeException(
+              objHash, definedLambdaSpec(), DATA_PATH + "[1][1]", Expr.class, Int.class));
     }
   }
 
@@ -636,7 +857,7 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           eArraySpec(),
           (Hash objHash) -> ((EArray) objectDb().get(objHash)).elements());
     }
@@ -652,8 +873,9 @@ public class CorruptedObjTest extends TestingContext {
               notHashOfSequence
           );
       assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeObjException(notHashOfSequence));
+          .throwsException(new DecodeObjNodeException(objHash, eArraySpec(), DATA_PATH))
+          .withCause(new DecodeHashSequenceException(
+              notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
@@ -667,8 +889,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeObjException(nowhere));
+          .throwsException(new DecodeObjNodeException(objHash, eArraySpec(), DATA_PATH + "[0]"))
+          .withCause(new NoSuchObjException(nowhere));
     }
 
     @Test
@@ -683,8 +905,8 @@ public class CorruptedObjTest extends TestingContext {
                   hash(val)
               ));
       assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
-          .throwsException(new DecodeObjException(
-              objHash, "It is EARRAY but one of its elements is INT instead of Expr."));
+          .throwsException(new UnexpectedNodeException(
+              objHash, eArraySpec(), DATA_PATH + "[1]", Expr.class, Int.class));
     }
   }
 
@@ -733,7 +955,7 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           fieldReadSpec(),
           (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).rec());
     }
@@ -750,7 +972,8 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
-          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 1));
+          .throwsException(new UnexpectedSequenceException(
+              objHash, fieldReadSpec(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -768,7 +991,8 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
-          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 3));
+          .throwsException(new UnexpectedSequenceException(
+              objHash, fieldReadSpec(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -784,8 +1008,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).rec())
-          .throwsException(new DecodeObjException(
-              objHash, "Its data[0] should contain Expr but contains Val."));
+          .throwsException(new UnexpectedNodeException(
+              objHash, fieldReadSpec(), DATA_PATH + "[0]", Expr.class, Int.class));
     }
 
     @Test
@@ -801,8 +1025,8 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).index())
-          .throwsException(new DecodeObjException(
-              objHash, "Its data[1] should contain INT but contains STRING."));
+          .throwsException(new UnexpectedNodeException(
+              objHash, fieldReadSpec(), DATA_PATH + "[1]", Int.class, Str.class));
     }
   }
 
@@ -844,6 +1068,361 @@ public class CorruptedObjTest extends TestingContext {
           (Hash objHash) -> ((Int) objectDb().get(objHash)).jValue());
     }
   }
+
+  @Nested
+  class _native_lambda {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save definedLambda
+       * in HashedDb.
+       */
+      Str classBinaryName = strVal("classBinaryName");
+      Blob nativeJar = blobVal();
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName),
+                      hash(nativeJar)
+                  ),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertThat(((NativeLambda) objectDb().get(objHash)).classBinaryName())
+          .isEqualTo(classBinaryName);
+      assertThat(((NativeLambda) objectDb().get(objHash)).nativeJar())
+          .isEqualTo(nativeJar);
+      assertThat(((NativeLambda) objectDb().get(objHash)).defaultArguments())
+          .isEqualTo(list(defaultArgument1, defaultArgument2));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(nativeLambdaSpec());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      Str classBinaryName = strVal("classBinaryName");
+      Blob nativeJar = blobVal();
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash dataHash = hash(
+          hash(
+              hash(classBinaryName),
+              hash(nativeJar)
+          ),
+          hash(
+              hash(defaultArgument1),
+              hash(defaultArgument2)
+          )
+      );
+      obj_root_with_two_data_hashes(
+          nativeLambdaSpec(),
+          dataHash,
+          (Hash objHash) -> ((NativeLambda) objectDb().get(objHash)).nativeJar());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          nativeLambdaSpec(),
+          (Hash objHash) -> ((NativeLambda) objectDb().get(objHash)).nativeJar());
+    }
+
+    @Test
+    public void data_is_sequence_with_one_element() throws Exception {
+      Str classBinaryName = strVal("classBinaryName");
+      Blob nativeJar = blobVal();
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName),
+                      hash(nativeJar)
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).nativeJar())
+          .throwsException(new UnexpectedSequenceException(
+              objHash, nativeLambdaSpec(), DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_sequence_with_three_elements() throws Exception {
+      Str classBinaryName = strVal("classBinaryName");
+      Blob nativeJar = blobVal();
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash defaultArgumentsHash = hash(
+          hash(defaultArgument1),
+          hash(defaultArgument2)
+      );
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName),
+                      hash(nativeJar)
+                  ),
+                  defaultArgumentsHash,
+                  defaultArgumentsHash
+              )
+          );
+
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).nativeJar())
+          .throwsException(new UnexpectedSequenceException(
+              objHash, nativeLambdaSpec(), DATA_PATH, 2, 3));
+    }
+
+
+    @Test
+    public void body_is_sequence_with_one_element() throws Exception {
+      Str classBinaryName = strVal("classBinaryName");
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName)
+                  ),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedSequenceException(
+              objHash, nativeLambdaSpec(), DATA_PATH + "[0]", 2, 1));
+    }
+
+    @Test
+    public void body_is_sequence_with_three_elements() throws Exception {
+      Str classBinaryName = strVal("classBinaryName");
+      Blob nativeJar = blobVal();
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName),
+                      hash(nativeJar),
+                      hash(nativeJar)
+                  ),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedSequenceException(
+              objHash, nativeLambdaSpec(), DATA_PATH + "[0]", 2, 3));
+    }
+
+    @Test
+    public void class_binary_name_is_expr_instead_of_str() throws Exception {
+      Const classBinaryName = constExpr(strVal("classBinaryName"));
+      Blob nativeJar = blobVal();
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName),
+                      hash(nativeJar)
+                  ),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedNodeException(
+              objHash, nativeLambdaSpec(), DATA_PATH + "[0][0]", Str.class, Const.class));
+    }
+
+    @Test
+    public void class_binary_name_is_int_instead_of_str() throws Exception {
+      Int classBinaryName = intVal(3);
+      Blob nativeJar = blobVal();
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName),
+                      hash(nativeJar)
+                  ),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedNodeException(
+              objHash, nativeLambdaSpec(), DATA_PATH + "[0][0]", Str.class, Int.class));
+    }
+
+    @Test
+    public void native_jar_is_expr_instead_of_val() throws Exception {
+      Str classBinaryName = strVal("classBinaryName");
+      Const nativeJar = constExpr(blobVal());
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName),
+                      hash(nativeJar)
+                  ),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).nativeJar())
+          .throwsException(new UnexpectedNodeException(
+              objHash, nativeLambdaSpec(), DATA_PATH + "[0][1]", Blob.class, Const.class));
+    }
+
+    @Test
+    public void native_jar_is_int_instead_of_blob() throws Exception {
+      Str classBinaryName = strVal("classBinaryName");
+      Int nativeJar = intVal(3);
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(
+                      hash(classBinaryName),
+                      hash(nativeJar)
+                  ),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).nativeJar())
+          .throwsException(new UnexpectedNodeException(
+              objHash, nativeLambdaSpec(), DATA_PATH + "[0][1]", Blob.class, Int.class));
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void default_arguments_sequence_size_different_than_multiple_of_hash_size(
+        int byteCount) throws Exception {
+      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Const bodyExpr = constExpr(intVal(0));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  notHashOfSequence
+              )
+          );
+
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).defaultArguments())
+          .throwsException(
+              new DecodeObjNodeException(objHash, nativeLambdaSpec(), DATA_PATH + "[1]"))
+          .withCause(
+              new DecodeHashSequenceException(notHashOfSequence, byteCount % Hash.lengthInBytes()));
+    }
+
+    @Test
+    public void default_arguments_sequence_element_pointing_nowhere() throws Exception {
+      Hash nowhere = Hash.of(33);
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  hash(
+                      hash(defaultArgument1),
+                      nowhere
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).defaultArguments())
+          .throwsException(
+              new DecodeObjNodeException(objHash, nativeLambdaSpec(), DATA_PATH + "[1][1]"))
+          .withCause(new NoSuchObjException(nowhere));
+    }
+
+    @Test
+    public void default_arguments_size_different_than_spec_parameters_size() throws Exception {
+      NativeLambdaSpec spec = nativeLambdaSpec(intSpec(), blobSpec());
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Const defaultArgument2 = constExpr(intVal(2));
+      Hash objHash =
+          hash(
+              hash(spec),
+              hash(
+                  hash(bodyExpr),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).defaultArguments())
+          .throwsException(new UnexpectedSequenceException(
+              objHash, spec, DATA_PATH + "[1]", 1, 2));
+    }
+
+    @Test
+    public void arguments_contain_val_instead_of_expr() throws Exception {
+      Const bodyExpr = constExpr(intVal(0));
+      Const defaultArgument1 = constExpr(intVal(1));
+      Int defaultArgument2 = intVal(2);
+      Hash objHash =
+          hash(
+              hash(nativeLambdaSpec()),
+              hash(
+                  hash(bodyExpr),
+                  hash(
+                      hash(defaultArgument1),
+                      hash(defaultArgument2)
+                  )
+              )
+          );
+      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).defaultArguments())
+          .throwsException(new UnexpectedNodeException(
+              objHash, nativeLambdaSpec(), DATA_PATH + "[1][1]", Expr.class, Int.class));
+    }
+  }
+
   @Nested
   class _null {
     @Test
@@ -881,7 +1460,8 @@ public class CorruptedObjTest extends TestingContext {
               hash(nothingSpec()),
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
-          .throwsException(new ObjectDbException("Cannot create java object for 'NOTHING' spec."));
+          .throwsException(new UnsupportedOperationException(
+              "Cannot create object for 'NOTHING' spec."));
     }
   }
 
@@ -930,7 +1510,7 @@ public class CorruptedObjTest extends TestingContext {
               hash(strSpec()),
               notStringHash);
       assertCall(() -> ((Str) objectDb().get(objHash)).jValue())
-          .throwsException(new DecodeObjException(objHash))
+          .throwsException(new DecodeObjNodeException(objHash, strSpec(), DATA_PATH))
           .withCause(new DecodeStringException(notStringHash, null));
     }
   }
@@ -968,7 +1548,7 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           personSpec(),
           (Hash objHash) -> ((Rec) objectDb().get(objHash)).get(0));
     }
@@ -983,8 +1563,9 @@ public class CorruptedObjTest extends TestingContext {
               hash(personSpec()),
               notHashOfSequence);
       assertCall(() -> ((Rec) objectDb().get(objHash)).get(0))
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeObjException(notHashOfSequence));
+          .throwsException(new DecodeObjNodeException(objHash, personSpec(), DATA_PATH))
+          .withCause(new DecodeHashSequenceException(
+              notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
@@ -1000,8 +1581,8 @@ public class CorruptedObjTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((Rec) objectDb().get(objHash)).get(0))
-          .throwsException(new DecodeObjException(objHash))
-          .withCause(new DecodeObjException(nowhere));
+          .throwsException(new DecodeObjNodeException(objHash, personSpec(), DATA_PATH + "[0]"))
+          .withCause(new NoSuchObjException(nowhere));
     }
 
     @Test
@@ -1015,7 +1596,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash);
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
-          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 1));
+          .throwsException(new UnexpectedSequenceException(objHash, personSpec(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1031,7 +1612,7 @@ public class CorruptedObjTest extends TestingContext {
               dataHash);
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
-          .throwsException(new DecodeDataSequenceException(objHash, dataHash, 2, 3));
+          .throwsException(new UnexpectedSequenceException(objHash, personSpec(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1044,9 +1625,8 @@ public class CorruptedObjTest extends TestingContext {
                   hash(boolVal(true))));
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
-          .throwsException(new DecodeObjException(objHash,
-              "Its RECORD spec declares item 1 to have STRING spec but its data has object"
-                  + " with BOOL spec at that index."));
+          .throwsException(new UnexpectedNodeException(
+              objHash, personSpec(), DATA_PATH, 1, strSpec(), boolSpec()));
     }
 
     @Test
@@ -1059,9 +1639,8 @@ public class CorruptedObjTest extends TestingContext {
                   hash(constExpr())));
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
-          .throwsException(new DecodeObjException(objHash,
-              "Its RECORD spec declares item 1 to have STRING spec but its data has object"
-                  + " with CONST spec at that index."));
+          .throwsException(new UnexpectedNodeException(
+              objHash, personSpec(), DATA_PATH + "[1]", Val.class, Const.class));
     }
   }
 
@@ -1385,7 +1964,7 @@ public class CorruptedObjTest extends TestingContext {
             dataHash,
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(new DecodeObjRootException(objHash, 3));
+        .throwsException(wrongSizeOfRootSequenceException(objHash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
@@ -1396,8 +1975,8 @@ public class CorruptedObjTest extends TestingContext {
             hash(spec),
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(new DecodeObjException(objHash))
-        .withCause(new DecodeObjException(dataHash));
+        .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH))
+        .withCause(new NoSuchObjException(dataHash));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
@@ -1408,7 +1987,7 @@ public class CorruptedObjTest extends TestingContext {
             hash(spec),
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(new DecodeObjException(objHash))
+        .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH))
         .withCause(new NoSuchDataException(dataHash));
   }
 

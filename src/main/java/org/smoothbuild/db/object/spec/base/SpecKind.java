@@ -10,7 +10,9 @@ import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
+import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
+import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 
@@ -31,7 +33,12 @@ public enum SpecKind {
   CALL((byte) 9, Call.class),
   EARRAY((byte) 10, EArray.class),
   NULL((byte) 11, Null.class),
-  REF((byte) 12, Ref.class);
+  REF((byte) 12, Ref.class),
+  // Obj-s again TODO reorder markers
+  DEFINED_LAMBDA((byte) 13, DefinedLambda.class),
+  NATIVE_LAMBDA((byte) 14, NativeLambda.class);
+
+
 
   private static final ImmutableMap<Byte, SpecKind> markerToSpecKindMap =
       ImmutableMap.<Byte, SpecKind>builder()
@@ -48,6 +55,8 @@ public enum SpecKind {
           .put((byte) 10, EARRAY)
           .put((byte) 11, NULL)
           .put((byte) 12, REF)
+          .put((byte) 13, DEFINED_LAMBDA)
+          .put((byte) 14, NATIVE_LAMBDA)
           .build();
 
   private final byte marker;

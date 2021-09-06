@@ -2,14 +2,24 @@ package org.smoothbuild.db.object.db;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.object.spec.base.Spec;
 
 public class Helpers {
-  public static <T> T wrapObjectDbExceptionAsDecodeObjException(
-      Hash hash, ObjectDbCallable<T> callable) {
+  public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
+      Hash hash, Spec spec, String memberPath, ObjectDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjectDbException e) {
-      throw new DecodeObjException(hash, e);
+      throw new DecodeObjNodeException(hash, spec, memberPath, e);
+    }
+  }
+
+  public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
+      Hash hash, Spec spec, String memberPath, int pathIndex, ObjectDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (ObjectDbException e) {
+      throw new DecodeObjNodeException(hash, spec, memberPath + "[" + pathIndex + "]", e);
     }
   }
 
@@ -26,12 +36,12 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapHashedDbExceptionAsDecodeObjException(
-      Hash hash, HashedDbCallable<T> callable) {
+  public static <T> T wrapHashedDbExceptionAsDecodeObjNodeException(
+      Hash hash, Spec spec, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new DecodeObjException(hash, e);
+      throw new DecodeObjNodeException(hash, spec, path, e);
     }
   }
 
