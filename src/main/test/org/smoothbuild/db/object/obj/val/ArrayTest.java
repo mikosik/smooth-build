@@ -71,53 +71,53 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_contains_added_element_via_add_all_method() {
-    Str rstring = strVal("abc");
-    Str rstring2 = strVal("def");
+    Str str = strVal("abc");
+    Str str2 = strVal("def");
     Array array = objectDb().arrayBuilder(strSpec())
-        .addAll(list(rstring, rstring2))
+        .addAll(list(str, str2))
         .build();
     assertThat(array.elements(Str.class))
-        .containsExactly(rstring, rstring2)
+        .containsExactly(str, str2)
         .inOrder();
   }
 
   @Test
   public void array_contains_added_elements_in_order() {
-    Str rstring1 = strVal("abc");
-    Str rstring2 = strVal("def");
-    Str rstring3 = strVal("ghi");
+    Str str1 = strVal("abc");
+    Str str2 = strVal("def");
+    Str str3 = strVal("ghi");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
-        .add(rstring3)
+        .add(str1)
+        .add(str2)
+        .add(str3)
         .build();
     assertThat(array.elements(Str.class))
-        .containsExactly(rstring1, rstring2, rstring3)
+        .containsExactly(str1, str2, str3)
         .inOrder();
   }
 
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() {
-    Str rstring = strVal("abc");
+    Str str = strVal("abc");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring)
-        .add(rstring)
+        .add(str)
+        .add(str)
         .build();
     assertThat(array.elements(Str.class))
-        .containsExactly(rstring, rstring);
+        .containsExactly(str, str);
   }
 
   @Test
   public void arrays_with_same_elements_have_same_hash() {
-    Str rstring1 = strVal("abc");
-    Str rstring2 = strVal("def");
+    Str str1 = strVal("abc");
+    Str str2 = strVal("def");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
+        .add(str1)
+        .add(str2)
         .build();
     Array array2 = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
+        .add(str1)
+        .add(str2)
         .build();
     assertThat(array.hash())
         .isEqualTo(array2.hash());
@@ -125,25 +125,25 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() {
-    Str rstring = strVal("abc");
+    Str str = strVal("abc");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring)
+        .add(str)
         .build();
     assertThat(array.hash())
-        .isNotEqualTo(rstring.hash());
+        .isNotEqualTo(str.hash());
   }
 
   @Test
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes() {
-    Str rstring1 = strVal("abc");
-    Str rstring2 = strVal("def");
+    Str str1 = strVal("abc");
+    Str str2 = strVal("def");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
+        .add(str1)
+        .add(str2)
         .build();
     Array array2 = objectDb().arrayBuilder(strSpec())
-        .add(rstring2)
-        .add(rstring1)
+        .add(str2)
+        .add(str1)
         .build();
     assertThat(array.hash())
         .isNotEqualTo(array2.hash());
@@ -151,14 +151,14 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_with_one_more_element_have_different_hash() {
-    Str rstring1 = strVal("abc");
-    Str rstring2 = strVal("def");
+    Str str1 = strVal("abc");
+    Str str2 = strVal("def");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
+        .add(str1)
         .build();
     Array array2 = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
+        .add(str1)
+        .add(str2)
         .build();
     assertThat(array.hash())
         .isNotEqualTo(array2.hash());
@@ -166,11 +166,11 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_can_be_read_by_hash() {
-    Str rstring1 = strVal("abc");
-    Str rstring2 = strVal("def");
+    Str str1 = strVal("abc");
+    Str str2 = strVal("def");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
+        .add(str1)
+        .add(str2)
         .build();
     assertThat(objectDbOther().get(array.hash()))
         .isEqualTo(array);
@@ -178,24 +178,24 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_read_by_hash_contains_same_elements() {
-    Str rstring1 = strVal("abc");
-    Str rstring2 = strVal("def");
+    Str str1 = strVal("abc");
+    Str str2 = strVal("def");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
+        .add(str1)
+        .add(str2)
         .build();
     assertThat(((Array) objectDbOther().get(array.hash())).elements(Str.class))
-        .containsExactly(rstring1, rstring2)
+        .containsExactly(str1, str2)
         .inOrder();
   }
 
   @Test
   public void array_read_by_hash_has_same_hash() {
-    Str rstring1 = strVal("abc");
-    Str rstring2 = strVal("def");
+    Str str1 = strVal("abc");
+    Str str2 = strVal("def");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
+        .add(str1)
+        .add(str2)
         .build();
     assertThat(objectDbOther().get(array.hash()).hash())
         .isEqualTo(array.hash());
@@ -215,11 +215,11 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void to_string() {
-    Str rstring1 = strVal("abc");
-    Str rstring2 = strVal("def");
+    Str str1 = strVal("abc");
+    Str str2 = strVal("def");
     Array array = objectDb().arrayBuilder(strSpec())
-        .add(rstring1)
-        .add(rstring2)
+        .add(str1)
+        .add(str2)
         .build();
     assertThat(array.toString())
         .isEqualTo("""
