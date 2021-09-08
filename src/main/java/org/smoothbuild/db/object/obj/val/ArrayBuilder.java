@@ -26,18 +26,18 @@ public class ArrayBuilder {
     return this;
   }
 
-  public ArrayBuilder add(Obj elem) {
-    if (!spec.elemSpec().equals(elem.spec())) {
-      throw new IllegalArgumentException("Element spec must be " + spec.elemSpec().name()
-          + " but was " + elem.spec().name() + ".");
+  public ArrayBuilder add(Obj elements) {
+    if (!spec.element().equals(elements.spec())) {
+      throw new IllegalArgumentException("Element spec must be " + spec.element().name()
+          + " but was " + elements.spec().name() + ".");
     }
-    Class<?> required = spec.elemSpec().jType();
-    if (!required.equals(elem.getClass())) {
+    Class<?> required = spec.element().jType();
+    if (!required.equals(elements.getClass())) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "
-          + elem.getClass().getCanonicalName() + ".");
+          + elements.getClass().getCanonicalName() + ".");
     }
-    elements.add(elem);
+    this.elements.add(elements);
     return this;
   }
 

@@ -33,7 +33,7 @@ public class Array extends Val {
     assertIsIterableAs(elementJType);
     ImmutableList<Obj> elements = elements();
     for (Obj object : elements) {
-      if (!object.spec().equals(spec().elemSpec())) {
+      if (!object.spec().equals(spec().element())) {
         throw new DecodeObjException(hash(), "It is array which spec == " + spec().name()
             + " but one of its elements has spec == " + object.spec().name());
       }
@@ -44,8 +44,8 @@ public class Array extends Val {
   }
 
   private <T extends Val> void assertIsIterableAs(Class<T> clazz) {
-    Spec elemSpec = spec().elemSpec();
-    if (!(elemSpec.isNothing() || clazz.isAssignableFrom(elemSpec.jType()))) {
+    Spec element = spec().element();
+    if (!(element.isNothing() || clazz.isAssignableFrom(element.jType()))) {
       throw new IllegalArgumentException(spec().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
     }

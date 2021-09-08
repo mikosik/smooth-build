@@ -14,11 +14,11 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  * This class is immutable.
  */
 public class ArraySpec extends ValSpec {
-  private final ValSpec elemSpec;
+  private final ValSpec elements;
 
-  public ArraySpec(Hash hash, ValSpec elemSpec, ObjectDb objectDb) {
+  public ArraySpec(Hash hash, ValSpec elements, ObjectDb objectDb) {
     super(hash, ARRAY, objectDb);
-    this.elemSpec = requireNonNull(elemSpec);
+    this.elements = requireNonNull(elements);
   }
 
   @Override
@@ -29,11 +29,11 @@ public class ArraySpec extends ValSpec {
 
   @Override
   public String name() {
-    return "[" + elemSpec.name() + "]";
+    return "[" + elements.name() + "]";
   }
 
-  public ValSpec elemSpec() {
-    return elemSpec;
+  public ValSpec element() {
+    return elements;
   }
 
   @Override

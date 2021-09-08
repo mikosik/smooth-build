@@ -54,7 +54,7 @@ public class ArrayTest extends TestingContext {
   }
 
   @Test
-  public void adding_element_with_wrong_smooth_spec_is_forbidden() {
+  public void adding_element_with_wrong_spec_is_forbidden() {
     ArrayBuilder arrayBuilder = objectDb().arrayBuilder(strSpec());
     assertCall(() -> arrayBuilder.add(blobVal(ByteString.of())))
         .throwsException(IllegalArgumentException.class);

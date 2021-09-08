@@ -138,8 +138,8 @@ public class SpecTest {
 
   @ParameterizedTest
   @MethodSource("elem_spec_test_data")
-  public void elemSpec(ArraySpec spec, Spec expected) {
-    assertThat(spec.elemSpec())
+  public void array_element(ArraySpec spec, Spec expected) {
+    assertThat(spec.element())
         .isEqualTo(expected);
   }
 

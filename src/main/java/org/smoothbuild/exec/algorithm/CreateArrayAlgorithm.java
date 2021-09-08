@@ -23,7 +23,7 @@ public class CreateArrayAlgorithm extends Algorithm {
   public Output run(Input input, NativeApi nativeApi) {
     Array array = nativeApi
         .factory()
-        .arrayBuilder(((ArraySpec) outputSpec()).elemSpec())
+        .arrayBuilder(((ArraySpec) outputSpec()).element())
         .addAll(input.vals())
         .build();
     return new Output(array, nativeApi.messages());

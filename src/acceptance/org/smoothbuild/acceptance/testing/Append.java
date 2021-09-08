@@ -7,7 +7,7 @@ import org.smoothbuild.plugin.NativeApi;
 public class Append {
   public static Array function(NativeApi nativeApi, Array array, Val element) {
     return nativeApi.factory()
-        .arrayBuilder(array.spec().elemSpec())
+        .arrayBuilder(array.spec().element())
         .addAll(array.elements(Val.class))
         .add(element)
         .build();

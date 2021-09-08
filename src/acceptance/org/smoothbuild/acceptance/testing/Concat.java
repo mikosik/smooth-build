@@ -7,7 +7,7 @@ import org.smoothbuild.plugin.NativeApi;
 public class Concat {
   public static Array function(NativeApi nativeApi, Array first, Array second) {
     return nativeApi.factory()
-        .arrayBuilder(first.spec().elemSpec())
+        .arrayBuilder(first.spec().element())
         .addAll(first.elements(Val.class))
         .addAll(second.elements(Val.class))
         .build();
