@@ -19,11 +19,14 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CALL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CONST;
 import static org.smoothbuild.db.object.spec.TestingSpecs.EARRAY;
+import static org.smoothbuild.db.object.spec.TestingSpecs.EMPTY_REC;
 import static org.smoothbuild.db.object.spec.TestingSpecs.FIELD_READ;
+import static org.smoothbuild.db.object.spec.TestingSpecs.FILE;
 import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NULL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
+import static org.smoothbuild.db.object.spec.TestingSpecs.REC_WITH_STRING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
 import static org.smoothbuild.util.Lists.list;
@@ -49,6 +52,7 @@ import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 
 import com.google.common.testing.EqualsTester;
 
@@ -137,13 +141,13 @@ public class SpecTest {
   }
 
   @ParameterizedTest
-  @MethodSource("elem_spec_test_data")
+  @MethodSource("elem_spec_cases")
   public void array_element(ArraySpec spec, Spec expected) {
     assertThat(spec.element())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> elem_spec_test_data() {
+  public static List<Arguments> elem_spec_cases() {
     return list(
         arguments(ARRAY_BLOB, BLOB),
         arguments(ARRAY_BOOL, BOOL),
@@ -158,6 +162,22 @@ public class SpecTest {
         arguments(ARRAY2_NOTHING, ARRAY_NOTHING),
         arguments(ARRAY2_STR, ARRAY_STR),
         arguments(ARRAY2_PERSON, ARRAY_PERSON));
+  }
+
+  @ParameterizedTest
+  @MethodSource("record_items_cases")
+  public void record_item(RecSpec spec, List<Spec> expected) {
+    assertThat(spec.items())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> record_items_cases() {
+    return list(
+        arguments(PERSON, list(STR, STR)),
+        arguments(FILE, list(BLOB, STR)),
+        arguments(REC_WITH_STRING, list(STR)),
+        arguments(EMPTY_REC, list())
+    );
   }
 
   @Test

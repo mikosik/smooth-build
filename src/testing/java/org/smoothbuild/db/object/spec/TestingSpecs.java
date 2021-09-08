@@ -21,6 +21,9 @@ public class TestingSpecs {
   public static final ValSpec NOTHING = OBJECT_DB.nothingSpec();
   public static final ValSpec STR = OBJECT_DB.strSpec();
   public static final RecSpec PERSON = CONTEXT.personSpec();
+  public static final RecSpec FILE = CONTEXT.fileSpec();
+  public static final RecSpec EMPTY_REC = CONTEXT.emptyRecSpec();
+  public static final RecSpec REC_WITH_STRING = CONTEXT.recWithStrSpec();
   public static final Spec CALL = CONTEXT.callSpec();
   public static final Spec CONST = CONTEXT.constSpec();
   public static final Spec EARRAY = CONTEXT.eArraySpec();
