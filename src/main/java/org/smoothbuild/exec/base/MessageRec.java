@@ -1,6 +1,5 @@
 package org.smoothbuild.exec.base;
 
-import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
@@ -19,7 +18,8 @@ public class MessageRec {
   private static final int SEVERITY_INDEX = 1;
 
   public static boolean containsErrors(Array messages) {
-    return stream(messages.elements(Rec.class))
+    return messages.elements(Rec.class)
+        .stream()
         .anyMatch(m -> severity(m).equals(ERROR.name()));
   }
 
