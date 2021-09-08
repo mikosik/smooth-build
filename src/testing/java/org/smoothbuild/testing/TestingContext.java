@@ -175,8 +175,8 @@ public class TestingContext {
     return objectDb().strSpec();
   }
 
-  public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
-    return objectDb().recSpec(elementSpecs);
+  public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
+    return objectDb().recSpec(itemSpecs);
   }
 
   public RecSpec emptyRecSpec() {
@@ -252,8 +252,8 @@ public class TestingContext {
     return objectDb().strVal(string);
   }
 
-  public Rec recVal(RecSpec spec, Iterable<? extends Obj> elements) {
-    return objectDb().recVal(spec, elements);
+  public Rec recVal(RecSpec spec, Iterable<? extends Obj> items) {
+    return objectDb().recVal(spec, items);
   }
 
   public Rec emptyRecVal() {

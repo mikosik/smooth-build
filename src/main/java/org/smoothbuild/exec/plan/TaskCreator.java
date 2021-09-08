@@ -34,7 +34,7 @@ import org.smoothbuild.exec.algorithm.CreateRecAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedIntAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadRecElementAlgorithm;
+import org.smoothbuild.exec.algorithm.ReadRecItemAlgorithm;
 import org.smoothbuild.exec.algorithm.ReferenceAlgorithm;
 import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.DefaultArgumentTask;
@@ -248,7 +248,7 @@ public class TaskCreator {
   private Task fieldReadEagerTask(Scope<Task> scope, FieldReadExpression expression, Type type) {
     var structType = (StructType) expression.expression().type();
     var name = expression.field().name().get();
-    var algorithm = new ReadRecElementAlgorithm(
+    var algorithm = new ReadRecItemAlgorithm(
         structType.fieldIndex(name), toSpecConverter.visit(type));
     var dependencies = list(eagerTaskFor(scope, expression.expression()));
     return new AlgorithmTask(

@@ -157,23 +157,23 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStrVal(value));
   }
 
-  public Rec recVal(RecSpec recSpec, Iterable<? extends Obj> elements) {
-    List<Obj> elementsList = ImmutableList.copyOf(elements);
-    var specs = recSpec.elementSpecs();
-    if (specs.size() != elementsList.size()) {
+  public Rec recVal(RecSpec recSpec, Iterable<? extends Obj> items) {
+    List<Obj> itemList = ImmutableList.copyOf(items);
+    var specs = recSpec.items();
+    if (specs.size() != itemList.size()) {
       throw new IllegalArgumentException("recSpec specifies " + specs.size() +
-          " elements but provided " + elementsList.size() + ".");
+          " items but provided " + itemList.size() + ".");
     }
     for (int i = 0; i < specs.size(); i++) {
       Spec specifiedSpec = specs.get(i);
-      Spec elementSpec = elementsList.get(i).spec();
+      Spec elementSpec = itemList.get(i).spec();
       if (!specifiedSpec.equals(elementSpec)) {
-        throw new IllegalArgumentException("recSpec specifies element at index " + i
-            + " with spec " + specifiedSpec + " but provided element has spec " + elementSpec
+        throw new IllegalArgumentException("recSpec specifies item at index " + i
+            + " with spec " + specifiedSpec + " but provided item has spec " + elementSpec
             + " at that index.");
       }
     }
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRecVal(recSpec, elementsList));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRecVal(recSpec, itemList));
   }
 
   // methods for creating expr-s
@@ -277,8 +277,8 @@ public class ObjectDb {
     return refSpec;
   }
 
-  public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
-    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(elementSpecs)));
+  public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
+    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(itemSpecs)));
   }
 
   private Spec getSpecOrChainException(
@@ -327,8 +327,8 @@ public class ObjectDb {
       }
       case RECORD -> {
         assertSize(hash, RECORD, hashes, 2);
-        ImmutableList<Spec> elements = readRecSpecElementSpecs(hashes.get(1), hash);
-        yield cacheSpec(newRecSpec(hash, elements));
+        ImmutableList<Spec> items = readRecSpecItemSpecs(hashes.get(1), hash);
+        yield cacheSpec(newRecSpec(hash, items));
       }
     };
   }
@@ -342,26 +342,26 @@ public class ObjectDb {
     }
   }
 
-  private ImmutableList<Spec> readRecSpecElementSpecs(Hash hash, Hash parentHash) {
+  private ImmutableList<Spec> readRecSpecItemSpecs(Hash hash, Hash parentHash) {
     var builder = ImmutableList.<Spec>builder();
-    List<Hash> elementSpecHashes = readRecSpecElementSpecHashes(hash, parentHash);
-    for (int i = 0; i < elementSpecHashes.size(); i++) {
+    List<Hash> itemSpecHashes = readRecSpecItemSpecHashes(hash, parentHash);
+    for (int i = 0; i < itemSpecHashes.size(); i++) {
       try {
-        builder.add(getSpec(elementSpecHashes.get(i)));
+        builder.add(getSpec(itemSpecHashes.get(i)));
       } catch (ObjectDbException e) {
         throw new DecodeSpecException(parentHash, "Its specKind == RECORD "
-            + "but reading element spec at index " + i + " caused error.", e);
+            + "but reading item spec at index " + i + " caused error.", e);
       }
     }
     return builder.build();
   }
 
-  private List<Hash> readRecSpecElementSpecHashes(Hash hash, Hash parentHash) {
+  private List<Hash> readRecSpecItemSpecHashes(Hash hash, Hash parentHash) {
     try {
       return hashedDb.readSequence(hash);
     } catch (HashedDbException e) {
       throw new DecodeSpecException(parentHash,
-          "Its specKind == RECORD but reading its element specs caused error.", e);
+          "Its specKind == RECORD but reading its item specs caused error.", e);
     }
   }
 
@@ -458,13 +458,13 @@ public class ObjectDb {
     return new ArraySpec(hash, elementSpec, this);
   }
 
-  private RecSpec newRecSpec(Iterable<? extends ValSpec> elementSpecs) throws HashedDbException {
-    Hash hash = writeRecSpecRoot(elementSpecs);
-    return newRecSpec(hash, elementSpecs);
+  private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
+    Hash hash = writeRecSpecRoot(itemSpecs);
+    return newRecSpec(hash, itemSpecs);
   }
 
-  private RecSpec newRecSpec(Hash hash, Iterable<? extends Spec> elementSpecs) {
-    return new RecSpec(hash, elementSpecs, this);
+  private RecSpec newRecSpec(Hash hash, Iterable<? extends Spec> itemSpecs) {
+    return new RecSpec(hash, itemSpecs, this);
   }
 
   // method for writing Merkle-root to HashedDb
@@ -521,8 +521,8 @@ public class ObjectDb {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeRecData(List<? extends Obj> elements) throws HashedDbException {
-    return writeSequence(elements);
+  private Hash writeRecData(List<? extends Obj> items) throws HashedDbException {
+    return writeSequence(items);
   }
 
   // helpers
@@ -540,10 +540,10 @@ public class ObjectDb {
     return writeNonBaseSpecRoot(ARRAY, elementSpec.hash());
   }
 
-  private Hash writeRecSpecRoot(Iterable<? extends ValSpec> elementSpecs)
+  private Hash writeRecSpecRoot(Iterable<? extends ValSpec> itemSpecs)
       throws HashedDbException {
-    Hash elementsHash = hashedDb.writeSequence(map(elementSpecs, Spec::hash));
-    return writeNonBaseSpecRoot(RECORD, elementsHash);
+    Hash itemsHash = hashedDb.writeSequence(map(itemSpecs, Spec::hash));
+    return writeNonBaseSpecRoot(RECORD, itemsHash);
   }
 
   private Hash writeNonBaseSpecRoot(SpecKind specKind, Hash elements) throws HashedDbException {

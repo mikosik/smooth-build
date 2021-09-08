@@ -88,8 +88,8 @@ public class ObjectFactory {
     return objectDb.strVal(string);
   }
 
-  public Rec rec(RecSpec spec, Iterable<? extends Obj> elements) {
-    return objectDb.recVal(spec, elements);
+  public Rec rec(RecSpec spec, Iterable<? extends Obj> items) {
+    return objectDb.recVal(spec, items);
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
@@ -124,8 +124,8 @@ public class ObjectFactory {
     return objectDb.strSpec();
   }
 
-  public RecSpec recSpec(Iterable<? extends ValSpec> elementSpecs) {
-    return objectDb.recSpec(elementSpecs);
+  public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
+    return objectDb.recSpec(itemSpecs);
   }
 
   public Rec errorMessage(String text) {

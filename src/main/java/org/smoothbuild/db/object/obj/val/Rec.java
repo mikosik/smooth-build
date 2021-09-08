@@ -34,28 +34,28 @@ public class Rec extends Val {
   }
 
   public Val get(int index) {
-    ImmutableList<Val> elements = elements();
-    checkIndex(index, elements.size());
-    return elements.get(index);
+    ImmutableList<Val> items = items();
+    checkIndex(index, items.size());
+    return items.get(index);
   }
 
   public Val superObject() {
-    ImmutableList<Val> elements = elements();
-    return elements.size() == 0 ? null : elements.iterator().next();
+    ImmutableList<Val> items = items();
+    return items.size() == 0 ? null : items.iterator().next();
   }
 
-  private ImmutableList<Val> elements() {
+  private ImmutableList<Val> items() {
     if (elements == null) {
-      var elementSpecs = spec().elementSpecs();
-      var elementHashes = getDataSequence(elementSpecs.size());
+      var itemSpecs = spec().items();
+      var itemHashes = getDataSequence(itemSpecs.size());
       var builder = ImmutableList.<Val>builder();
-      for (int i = 0; i < elementSpecs.size(); i++) {
-        Obj obj = elementAt(elementHashes, i);
-        Spec spec = elementSpecs.get(i);
+      for (int i = 0; i < itemSpecs.size(); i++) {
+        Obj obj = itemAt(itemHashes, i);
+        Spec spec = itemSpecs.get(i);
         if (spec.equals(obj.spec())) {
           builder.add((Val) obj);
         } else {
-          throw new DecodeObjException(hash(), "Its RECORD spec declares element " + i
+          throw new DecodeObjException(hash(), "Its RECORD spec declares item " + i
               + " to have " + spec.name() + " spec but its data has object with " +
               obj.spec().name() + " spec at that index.");
         }
@@ -65,7 +65,7 @@ public class Rec extends Val {
     return elements;
   }
 
-  private Obj elementAt(List<Hash> hashSequence, int i) {
+  private Obj itemAt(List<Hash> hashSequence, int i) {
     return wrapObjectDbExceptionAsDecodeObjException(
         hash(),
         () -> objectDb().get(hashSequence.get(i)));
@@ -73,6 +73,6 @@ public class Rec extends Val {
 
   @Override
   public String valueToString() {
-    return "{" + elementsToStringValues(elements()) + '}';
+    return "{" + elementsToStringValues(items()) + '}';
   }
 }

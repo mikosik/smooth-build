@@ -1045,7 +1045,7 @@ public class CorruptedObjTest extends TestingContext {
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
           .throwsException(new DecodeObjException(objHash,
-              "Its RECORD spec declares element 1 to have STRING spec but its data has object"
+              "Its RECORD spec declares item 1 to have STRING spec but its data has object"
                   + " with BOOL spec at that index."));
     }
 
@@ -1060,7 +1060,7 @@ public class CorruptedObjTest extends TestingContext {
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
           .throwsException(new DecodeObjException(objHash,
-              "Its RECORD spec declares element 1 to have STRING spec but its data has object"
+              "Its RECORD spec declares item 1 to have STRING spec but its data has object"
                   + " with CONST spec at that index."));
     }
   }
@@ -1272,7 +1272,7 @@ public class CorruptedObjTest extends TestingContext {
             );
         assertThatGetSpec(hash)
             .throwsException(new DecodeSpecException(
-                hash, "Its specKind == RECORD but reading its element specs caused error."));
+                hash, "Its specKind == RECORD but reading its item specs caused error."));
       }
 
       @Test
@@ -1361,7 +1361,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     private String elementReadingErrorMessage(int index) {
-      return "Its specKind == RECORD but reading element spec at index " + index + " caused error.";
+      return "Its specKind == RECORD but reading item spec at index " + index + " caused error.";
     }
 
     private DecodeSpecException illegalSpecMarkerException(Hash hash, int marker) {

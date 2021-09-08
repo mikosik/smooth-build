@@ -7,7 +7,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHas
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readRecElementAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readRecItemAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.recAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
@@ -33,7 +33,7 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(callNativeAlgorithmHash("referencableName"));
     hashes.add(convertAlgorithmHash(strSpec()));
     hashes.add(recAlgorithmHash(constructedType));
-    hashes.add(readRecElementAlgorithmHash(0));
+    hashes.add(readRecItemAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
     hashes.add(referenceAlgorithmHash(Hash.of(""), "global-referencable-name"));
@@ -65,9 +65,9 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void read_rec_element_algorithm_has_different_hash_for_different_field_indexes() {
-    assertThat(readRecElementAlgorithmHash(0))
-        .isNotEqualTo(readRecElementAlgorithmHash(1));
+  public void read_rec_item_algorithm_has_different_hash_for_different_field_indexes() {
+    assertThat(readRecItemAlgorithmHash(0))
+        .isNotEqualTo(readRecItemAlgorithmHash(1));
   }
 
   @Test

@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readRecElementAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readRecItemAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -13,17 +13,17 @@ import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public class ReadRecElementAlgorithm extends Algorithm {
-  private final int elementIndex;
+public class ReadRecItemAlgorithm extends Algorithm {
+  private final int itemIndex;
 
-  public ReadRecElementAlgorithm(int elementIndex, ValSpec outputSpec) {
+  public ReadRecItemAlgorithm(int itemIndex, ValSpec outputSpec) {
     super(outputSpec);
-    this.elementIndex = elementIndex;
+    this.itemIndex = itemIndex;
   }
 
   @Override
   public Hash hash() {
-    return readRecElementAlgorithmHash(elementIndex);
+    return readRecItemAlgorithmHash(itemIndex);
   }
 
   @Override
@@ -31,6 +31,6 @@ public class ReadRecElementAlgorithm extends Algorithm {
     ImmutableList<Val> objects = input.vals();
     checkArgument(objects.size() == 1);
     Rec rec = (Rec) objects.get(0);
-    return new Output(rec.get(elementIndex), nativeApi.messages());
+    return new Output(rec.get(itemIndex), nativeApi.messages());
   }
 }

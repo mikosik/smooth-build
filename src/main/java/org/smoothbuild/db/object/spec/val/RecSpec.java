@@ -17,11 +17,11 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class RecSpec extends ValSpec {
-  private final ImmutableList<Spec> elementSpecs;
+  private final ImmutableList<Spec> itemSpecs;
 
-  public RecSpec(Hash hash, Iterable<? extends Spec> elementSpecs, ObjectDb objectDb) {
+  public RecSpec(Hash hash, Iterable<? extends Spec> itemSpecs, ObjectDb objectDb) {
     super(hash, RECORD, objectDb);
-    this.elementSpecs = ImmutableList.copyOf(elementSpecs);
+    this.itemSpecs = ImmutableList.copyOf(itemSpecs);
   }
 
   @Override
@@ -32,11 +32,11 @@ public class RecSpec extends ValSpec {
 
   @Override
   public String name() {
-    String elementNames = elementSpecs.stream().map(Spec::name).collect(joining(","));
+    String elementNames = itemSpecs.stream().map(Spec::name).collect(joining(","));
     return "{" + elementNames + "}";
   }
 
-  public ImmutableList<Spec> elementSpecs() {
-    return elementSpecs;
+  public ImmutableList<Spec> items() {
+    return itemSpecs;
   }
 }

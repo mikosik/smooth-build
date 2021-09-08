@@ -9,25 +9,25 @@ import org.smoothbuild.testing.TestingContext;
 
 public class RecTest extends TestingContext {
   @Test
-  public void creating_rec_with_less_elements_than_specified_in_its_spec_causes_exception() {
+  public void creating_rec_with_less_items_than_specified_in_its_spec_causes_exception() {
     assertCall(() -> recVal(personSpec(), list(strVal("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void creating_rec_with_more_elements_than_specified_in_its_spec_causes_exception() {
+  public void creating_rec_with_more_items_than_specified_in_its_spec_causes_exception() {
     assertCall(() -> recVal(personSpec(), list(strVal("John"), strVal("Doe"), strVal("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void setting_element_to_null_throws_exception() {
+  public void setting_item_to_null_throws_exception() {
     assertCall(() -> recVal(personSpec(), list(strVal("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void setting_element_to_object_of_wrong_spec_throws_exception() {
+  public void setting_item_to_object_of_wrong_spec_throws_exception() {
     assertCall(() -> recVal(personSpec(), list(strVal("John"), intVal(123))))
         .throwsException(IllegalArgumentException.class);
   }
@@ -40,7 +40,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void element_contains_object_passed_to_builder() {
+  public void item_contains_object_passed_to_builder() {
     Rec person = johnDoePerson();
     assertThat(person.spec())
         .isEqualTo(personSpec());
@@ -49,42 +49,42 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void reading_elements_with_negative_index_throws_exception() {
+  public void reading_items_with_negative_index_throws_exception() {
     Rec person = johnDoePerson();
     assertCall(() -> person.get(-1))
         .throwsException(IndexOutOfBoundsException.class);
   }
 
   @Test
-  public void reading_elements_with_index_greater_than_max_index_throws_exception() {
+  public void reading_items_with_index_greater_than_max_index_throws_exception() {
     Rec person = johnDoePerson();
     assertCall(() -> person.get(2))
         .throwsException(IndexOutOfBoundsException.class);
   }
 
   @Test
-  public void super_object_is_equal_to_first_element() {
+  public void super_object_is_equal_to_first_item() {
     Rec person = johnDoePerson();
     assertThat(person.superObject())
         .isEqualTo(strVal("John"));
   }
 
   @Test
-  public void super_object_is_null_when_rec_spec_has_no_elements() {
+  public void super_object_is_null_when_rec_spec_has_no_items() {
     Rec rec = recVal(emptyRecSpec(), list());
     assertThat(rec.superObject())
         .isNull();
   }
 
   @Test
-  public void rec_hash_is_different_of_its_element_hash() {
+  public void rec_hash_is_different_of_its_item_hash() {
     Rec person = johnDoePerson();
     assertThat(person.hash())
         .isNotEqualTo(person.get(0).hash());
   }
 
   @Test
-  public void recs_with_equal_elements_are_equal() {
+  public void recs_with_equal_items_are_equal() {
     Rec person1 = johnDoePerson();
     Rec person2 = johnDoePerson();
     assertThat(person1)
@@ -92,7 +92,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void recs_with_one_element_different_are_not_equal() {
+  public void recs_with_one_item_different_are_not_equal() {
     Rec person1 = johnDoePerson();
     Rec person2 = recVal(personSpec(), list(strVal("John"), strVal("Doe2")));
 
@@ -101,7 +101,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void reecs_with_equal_elements_have_equal_hashes() {
+  public void reecs_with_equal_items_have_equal_hashes() {
     Rec person1 = johnDoePerson();
     Rec person2 = johnDoePerson();
     assertThat(person1.hash())
@@ -109,7 +109,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void recs_with_different_element_have_different_hashes() {
+  public void recs_with_different_item_have_different_hashes() {
     Rec person1 = johnDoePerson();
     Rec person2 = recVal(personSpec(), list(strVal("John"), strVal("Doe2")));
     assertThat(person1.hash())
@@ -117,7 +117,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void recs_with_equal_elements_have_equal_hash_codes() {
+  public void recs_with_equal_items_have_equal_hash_codes() {
     Rec person1 = johnDoePerson();
     Rec person2 = johnDoePerson();
     assertThat(person1.hashCode())
@@ -125,7 +125,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void recs_with_different_element_have_different_hash_codes() {
+  public void recs_with_different_item_have_different_hash_codes() {
     Rec person1 = johnDoePerson();
     Rec person2 = recVal(personSpec(), list(strVal("John"), strVal("Doe2")));
         assertThat(person1.hashCode())
@@ -140,7 +140,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void recs_read_by_hash_have_equal_elements() {
+  public void recs_read_by_hash_have_equal_items() {
     Rec person = johnDoePerson();
     Rec personRead = (Rec) objectDbOther().get(person.hash());
     assertThat(personRead.get(0))

@@ -16,7 +16,7 @@ import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateRecAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadRecElementAlgorithm;
+import org.smoothbuild.exec.algorithm.ReadRecItemAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.type.TestingTypes;
@@ -125,8 +125,8 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_read_rec_element_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ReadRecElementAlgorithm(0, STR);
+  public void hash_of_computation_with_read_rec_item_algorithm_and_one_element_input_is_stable() {
+    Algorithm algorithm = new ReadRecItemAlgorithm(0, STR);
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));

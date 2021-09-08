@@ -26,8 +26,8 @@ public class AlgorithmHashes {
     return hash(3, type.hash());
   }
 
-  public static Hash readRecElementAlgorithmHash(int elementIndex) {
-    return hash(4, Hash.of(elementIndex));
+  public static Hash readRecItemAlgorithmHash(int itemIndex) {
+    return hash(4, Hash.of(itemIndex));
   }
 
   public static Hash fixedStringAlgorithmHash(String string) {
