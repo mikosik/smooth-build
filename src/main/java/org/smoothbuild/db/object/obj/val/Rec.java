@@ -62,6 +62,6 @@ public class Rec extends Val {
 
   @Override
   public String valueToString() {
-    return "{" + elementsToStringValues(items()) + '}';
+    return "{" + sequenceToString(items()) + '}';
   }
 }

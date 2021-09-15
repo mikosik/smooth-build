@@ -41,10 +41,6 @@ public abstract class Obj {
     return objectDb.hashedDb();
   }
 
-  public static String elementsToStringValues(ImmutableList<? extends Obj> objects) {
-    return objects.stream().map(Obj::valueToString).collect(joining(","));
-  }
-
   public Hash hash() {
     return merkleRoot.hash();
   }
@@ -154,5 +150,9 @@ public abstract class Obj {
   private ImmutableList<Hash> readSequenceHashes(String path, Hash hash) {
     return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), path,
         () -> objectDb.readSequence(hash));
+  }
+
+  public static String sequenceToString(ImmutableList<? extends Obj> objects) {
+    return objects.stream().map(Obj::valueToString).collect(joining(","));
   }
 }
