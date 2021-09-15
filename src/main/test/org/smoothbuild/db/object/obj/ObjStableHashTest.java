@@ -18,55 +18,55 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void empty_blob_array() {
       assertThat(arrayVal(blobSpec()).hash())
-          .isEqualTo(Hash.decode("125abf735e023135153d0eade19b21fb2444a9cb"));
+          .isEqualTo(Hash.decode("fd11e3a7a0eca23315da184c8ce90c051724e90b"));
     }
 
     @Test
     public void non_empty_blob_array() {
       assertThat(arrayVal(blobVal(ByteString.of())).hash())
-          .isEqualTo(Hash.decode("329e4dfd95a5dcbcc2ff3d7dde3ca20f236cc0d4"));
+          .isEqualTo(Hash.decode("f3515ba2d7af14cb995b07179ff3f3e9a97b52a9"));
     }
 
     @Test
     public void empty_bool_array() {
       assertThat(arrayVal(boolSpec()).hash())
-          .isEqualTo(Hash.decode("b9796321546d2817719aa32196a6170151a7abaa"));
+          .isEqualTo(Hash.decode("e4478355c1f6ea8d4a9edef0a7213cb1aa5b44d4"));
     }
 
     @Test
     public void non_empty_bool_array() {
       assertThat(arrayVal(boolVal(true)).hash())
-          .isEqualTo(Hash.decode("fc0f1008bd3c72106e59e065fd6ba6658f2ffcba"));
+          .isEqualTo(Hash.decode("20fbf2c6d0b35a92bb1552a309ef724ce722a1e4"));
     }
 
     @Test
     public void empty_nothing_array() {
       assertThat(arrayVal(nothingSpec()).hash())
-          .isEqualTo(Hash.decode("b739bcaa23e50d8cc43791d1f770698175916875"));
+          .isEqualTo(Hash.decode("fc21e8e3b2e04f46fa35cdd3fa0b932cb59c38a0"));
     }
 
     @Test
     public void empty_string_array() {
       assertThat(arrayVal(strSpec()).hash())
-          .isEqualTo(Hash.decode("89a4f1d2b4ed44ac887c7c056d54e42c50abf96e"));
+          .isEqualTo(Hash.decode("5e8edad671513a73f56c6bb216789c6f85de320f"));
     }
 
     @Test
     public void non_empty_string_array() {
       assertThat(arrayVal(strVal("")).hash())
-          .isEqualTo(Hash.decode("3a631e7e0e6d858454e427003cb4685791f650ab"));
+          .isEqualTo(Hash.decode("c4e16e36229651682138e517ed97491946e3e3b9"));
     }
 
     @Test
     public void empty_rec_array() {
       assertThat(arrayVal(personSpec()).hash())
-          .isEqualTo(Hash.decode("a26b682254544d9d3b34a14f44f3b40f39f8fa1e"));
+          .isEqualTo(Hash.decode("a9688c71bf2aae5f4a8e219ce92e8ab8e6b46e27"));
     }
 
     @Test
     public void non_empty_rec_array() {
       assertThat(arrayVal(personVal("John", "Doe")).hash())
-          .isEqualTo(Hash.decode("e06466885b0ff8bd31e6eb2fb5af60e35eb11888"));
+          .isEqualTo(Hash.decode("4f98d430a9c3b36fec6a89ad64e19bef31da7a39"));
     }
   }
 
@@ -75,13 +75,13 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void empty_blob() {
       assertThat(blobBuilder().build().hash())
-          .isEqualTo(Hash.decode("56f9a1616c2a91bd3e7c059e885ab33d3964e759"));
+          .isEqualTo(Hash.decode("080d59deb0dab374a40f4919fed3fa0cd6bcbded"));
     }
 
     @Test
     public void some_blob() {
       assertThat(blobVal(ByteString.encodeUtf8("aaa")).hash())
-          .isEqualTo(Hash.decode("44894c15dc104081f903b23b0ccc28542221ca14"));
+          .isEqualTo(Hash.decode("669cf1da5b2b0a7791089a2da12213dde61e8b8b"));
     }
   }
 
@@ -90,13 +90,13 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void true_bool() {
       assertThat(boolVal(true).hash())
-          .isEqualTo(Hash.decode("4098ba24a25839b9302d0fac6ebcd7f7aa7d5aed"));
+          .isEqualTo(Hash.decode("721efcc95000fe4bf3bb4985b456bac91c8db596"));
     }
 
     @Test
     public void false_bool() {
       assertThat(boolVal(false).hash())
-          .isEqualTo(Hash.decode("3b641feda4deab9676f58d0f62981d8593c10c08"));
+          .isEqualTo(Hash.decode("b8f423d48c90466a4ec449b70c22a526841a1bb1"));
     }
   }
 
@@ -105,13 +105,13 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void call_expression_with_one_argument() {
       assertThat(callExpr(constExpr(intVal(1)), list(constExpr(intVal(2)))).hash())
-          .isEqualTo(Hash.decode("01f702aed0ff152251af37d7b0a1ae2bc323b930"));
+          .isEqualTo(Hash.decode("e0e21ce30882fe5f2ba9072361d0583beb2814b8"));
     }
 
     @Test
     public void call_expression_without_arguments() {
       assertThat(callExpr(constExpr(intVal(1)), list()).hash())
-          .isEqualTo(Hash.decode("180fabed4d0cf3ffaa1f6fded51061c6ec9d81cd"));
+          .isEqualTo(Hash.decode("ef133b46f9d47306db02b15144c1b9e8b4198afd"));
     }
   }
 
@@ -120,25 +120,25 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void const_blob_expression() {
       assertThat(constExpr(blobVal(ByteString.of((byte) 1, (byte) 2, (byte) 3))).hash())
-          .isEqualTo(Hash.decode("efdb16653cd81c43502b42264557b3a383a348d1"));
+          .isEqualTo(Hash.decode("989ae98ed49e9e70fdddac97b5502e084d9c5d8b"));
     }
 
     @Test
     public void const_bool_expression() {
       assertThat(constExpr(boolVal(true)).hash())
-          .isEqualTo(Hash.decode("696913ab01c1488de7161d69fc7b59da61368944"));
+          .isEqualTo(Hash.decode("66ffb0169e5cb88dafda1053531c645c2dbeb34f"));
     }
 
     @Test
     public void const_int_expression() {
       assertThat(constExpr(intVal(123)).hash())
-          .isEqualTo(Hash.decode("2a7928b15367b26c71416079f93c6aa0bf37bc65"));
+          .isEqualTo(Hash.decode("bc6eec3c6bb2efbb1788bd82846855dcccec3aff"));
     }
 
     @Test
     public void const_string_expression() {
       assertThat(constExpr(strVal("abc")).hash())
-          .isEqualTo(Hash.decode("6f932b1bd1eb5a5fa55d82ee9d0c5130899bfbb7"));
+          .isEqualTo(Hash.decode("2e8735ebf379d2f06d95ef7a0f7d69766f80b943"));
     }
   }
 
@@ -152,7 +152,7 @@ public class ObjStableHashTest extends TestingContext {
               constExpr(intVal(1)),
               list());
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("61439f09a617ec4fbee62bb30325e73932480f2e"));
+          .isEqualTo(Hash.decode("ea1ca60f92be113137fce1d7d56cd22ee428afb0"));
     }
 
     @Test
@@ -163,7 +163,7 @@ public class ObjStableHashTest extends TestingContext {
               constExpr(intVal(1)),
               list(constExpr(intVal(2))));
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("bfaa02fbd3141b5790090bd58b4b4f589bdd390c"));
+          .isEqualTo(Hash.decode("baefa5d6cd1f072a9ff9ab8dd5f95ccdcf8bf758"));
     }
 
     @Test
@@ -174,7 +174,7 @@ public class ObjStableHashTest extends TestingContext {
               constExpr(intVal(1)),
               list(constExpr(intVal(2)), constExpr(intVal(3))));
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("ee0037d1ba30afb35d7d169309f60fade8bcfba9"));
+          .isEqualTo(Hash.decode("5e123797ae5c75807cbca53e9b608e1c17c84fc0"));
     }
   }
 
@@ -183,13 +183,13 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void empty_earray_expression() {
       assertThat(eArrayExpr(list()).hash())
-          .isEqualTo(Hash.decode("83f658942c9dd57f75ebf537bc9880c9e22fa85d"));
+          .isEqualTo(Hash.decode("d5f74d989d3a909fc9c07a13bdd45f12bf1d38ea"));
     }
 
     @Test
     public void earray_expression() {
       assertThat(eArrayExpr(list(constExpr(intVal(1)))).hash())
-          .isEqualTo(Hash.decode("9042b984055b94da27c36572c7dc2873c03041e3"));
+          .isEqualTo(Hash.decode("41ff0b1b274fd1c8e75b150e9b08f0ac3ab8b40b"));
     }
   }
 
@@ -198,7 +198,7 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void field_read_expression() {
       assertThat(fieldReadExpr(constExpr(intVal(1)), intVal(2)).hash())
-          .isEqualTo(Hash.decode("de8a53138bd2e0422424bc438a6732140964b966"));
+          .isEqualTo(Hash.decode("5dd765ae12bf26f6780a8a5d8027ce215ad48861"));
     }
   }
 
@@ -207,19 +207,19 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void zero_int() {
       assertThat(intVal(0).hash())
-          .isEqualTo(Hash.decode("a74ab70e73150249cbeab4a98b3724191de5b765"));
+          .isEqualTo(Hash.decode("3ce602708b7be67d736ece10605f5bccb2469b19"));
     }
 
     @Test
     public void positive_int() {
       assertThat(intVal(123).hash())
-          .isEqualTo(Hash.decode("499c2f0fa7eec7f337bb8f70eb20d66fd38b89a3"));
+          .isEqualTo(Hash.decode("1bb0ed034cf637193455b30239ba8f0dc2f2bd74"));
     }
 
     @Test
     public void negative_int() {
       assertThat(intVal(-123).hash())
-          .isEqualTo(Hash.decode("60eeed22193aef6ae9f60990cbb7b974a7059340"));
+          .isEqualTo(Hash.decode("0e29da471c4e2cc3ef8bf161a9d1406a7204709a"));
     }
   }
 
@@ -234,7 +234,7 @@ public class ObjStableHashTest extends TestingContext {
               blobVal(ByteString.encodeUtf8("native jar")),
               list());
       assertThat(nativeLambda.hash())
-          .isEqualTo(Hash.decode("6ebec9da3afee81df2dab1e252b1c29a590d2104"));
+          .isEqualTo(Hash.decode("e425765fc7b205943b2a786ac9652957e7d392f2"));
     }
 
     @Test
@@ -246,7 +246,7 @@ public class ObjStableHashTest extends TestingContext {
               blobVal(ByteString.encodeUtf8("native jar")),
               list(constExpr(intVal(2))));
       assertThat(nativeLambda.hash())
-          .isEqualTo(Hash.decode("43cc10ffdfc3d4f7025a7ac6ed70f29c487c82dd"));
+          .isEqualTo(Hash.decode("43b4e1ade9c059bb71951eba163098213a500320"));
     }
 
     @Test
@@ -258,7 +258,7 @@ public class ObjStableHashTest extends TestingContext {
               blobVal(ByteString.encodeUtf8("native jar")),
               list(constExpr(intVal(2)), constExpr(intVal(3))));
       assertThat(nativeLambda.hash())
-          .isEqualTo(Hash.decode("094c736266c0de47ba8fe0513e421843291614b0"));
+          .isEqualTo(Hash.decode("bb5176f441c035b2a62f6129a0982d10087578d9"));
     }
   }
 
@@ -267,7 +267,7 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void null_expression() {
       assertThat(nullExpr().hash())
-          .isEqualTo(Hash.decode("478390ef5ac40e11c7919fc5353d0c57f34ed2fd"));
+          .isEqualTo(Hash.decode("8d0c075d09869c59f496f145dc507d6b3f1b7c52"));
     }
   }
 
@@ -276,13 +276,13 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void empty_string() {
       assertThat(strVal("").hash())
-          .isEqualTo(Hash.decode("34964212f1c15c635971ac31efa6187e3ad19228"));
+          .isEqualTo(Hash.decode("707159057595e7c06a56fc09167364493620aa38"));
     }
 
     @Test
     public void some_string() {
       assertThat(strVal("abc").hash())
-          .isEqualTo(Hash.decode("d0d189f74c20f329bbec85979883b7cd6a0a8939"));
+          .isEqualTo(Hash.decode("2f79dcd289cb78ca01f0f24a250203987145d9fa"));
     }
   }
 
@@ -291,13 +291,13 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void empty_rec() {
       assertThat(emptyRecVal().hash())
-          .isEqualTo(Hash.decode("00c74cba6a50c3da116688ad977e18bc76d65ca4"));
+          .isEqualTo(Hash.decode("54d8451fd0f31c5111433cddf501fabd26e2a9ab"));
     }
 
     @Test
     public void some_rec() {
       assertThat(personVal("John", "Doe").hash())
-          .isEqualTo(Hash.decode("96f78887322a24eb91f2c785b10c7a6c613a2633"));
+          .isEqualTo(Hash.decode("b83eb2d3c38918c2a563c693d817c6c09589bb28"));
     }
   }
 
@@ -306,19 +306,19 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void zero_ref() {
       assertThat(refExpr(0).hash())
-          .isEqualTo(Hash.decode("ccedb09376a4b5f61b33197fad22716da57ef853"));
+          .isEqualTo(Hash.decode("c5b88a14bf94baea2c1fef9bf7eadff06eb75978"));
     }
 
     @Test
     public void positive_ref() {
       assertThat(refExpr(123).hash())
-          .isEqualTo(Hash.decode("68f2d3bee8fcd5862301890e6ed21cdd46c3fbd1"));
+          .isEqualTo(Hash.decode("f00f77e46c95a228ca6f5e4697d0928bff880555"));
     }
 
     @Test
     public void negative_ref() {
       assertThat(refExpr(-123).hash())
-          .isEqualTo(Hash.decode("e85f399d1fdef3e8663295c12a9cafbf1a0ef64f"));
+          .isEqualTo(Hash.decode("26a280fe9e61e44f3fb5ec9434266d3ccbe2552b"));
     }
   }
 }

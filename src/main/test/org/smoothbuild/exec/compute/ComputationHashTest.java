@@ -71,7 +71,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CreateArrayAlgorithm(arraySpec(strSpec()));
     Input input = input(list(strVal("abc"), strVal("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("26014fc98929cdf79a7b7c96ecbc56d495d595fe"));
+        .isEqualTo(Hash.decode("3afcc3677dc2662b5ae660ca82b6755dd89b9f6a"));
   }
 
   @Test
@@ -89,7 +89,7 @@ public class ComputationHashTest extends TestingContext {
         null, strSpec(), function(TestingTypes.STRING, "name"), true);
     Input input = input(list(strVal("abc"), strVal("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("995de0b5317252aa56dc55f49d1d2b043500e8c4"));
+        .isEqualTo(Hash.decode("6add42096c8900855b21d87a95f7e2d26b054d44"));
   }
 
   @Test
@@ -97,7 +97,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ConvertAlgorithm(strSpec());
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("f8f5cf59eec8d5ee4833d1086e21c8aa3f585234"));
+        .isEqualTo(Hash.decode("a025bfcacf9dadbc72256e41fbc60f4f5355233b"));
   }
 
   @Test
@@ -105,7 +105,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CreateRecAlgorithm(PERSON);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("b9f0b6c1b4fbdfb9547d1d258e01e651c387a41b"));
+        .isEqualTo(Hash.decode("ff45a42fc341a33b8835f873f94a083181e665a4"));
   }
 
   @Test
@@ -113,7 +113,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CreateRecAlgorithm(PERSON);
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("b83ff59d3701bbafe020d6ce781c6379457c1a68"));
+        .isEqualTo(Hash.decode("b7f6067462bee16b2bf3e9ab5c54c3e4bd1eba54"));
   }
 
   @Test
@@ -121,7 +121,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CreateRecAlgorithm(PERSON);
     Input input = input(list(strVal("abc"), strVal("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("8e2cc0db36ad999d771099123fad07e0b48a75ae"));
+        .isEqualTo(Hash.decode("b598a215e92550d41b2772ff96ba134e4b544dbf"));
   }
 
   @Test
@@ -129,7 +129,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ReadRecItemAlgorithm(0, STR);
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));
+        .isEqualTo(Hash.decode("3bcff362c86471722865738fd753e0dd567b55ee"));
   }
 
   private static Algorithm computation(Hash hash) {

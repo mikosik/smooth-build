@@ -20,43 +20,42 @@ import com.google.common.collect.ImmutableMap;
 
 public enum SpecKind {
   // Obj-s
-  INT((byte) 0, Int.class),
-  NOTHING((byte) 1, null),
-  RECORD((byte) 2, Rec.class),
-  ARRAY((byte) 3, Array.class),
-  BLOB((byte) 4, Blob.class),
-  BOOL((byte) 5, Bool.class),
-  STRING((byte) 6, Str.class),
+  ARRAY((byte) 0, Array.class),
+  BLOB((byte) 1, Blob.class),
+  BOOL((byte) 2, Bool.class),
+  DEFINED_LAMBDA((byte) 3, DefinedLambda.class),
+  INT((byte) 4, Int.class),
+  NATIVE_LAMBDA((byte) 5, NativeLambda.class),
+  NOTHING((byte) 6, null),
+  RECORD((byte) 7, Rec.class),
+  STRING((byte) 8, Str.class),
+
   // Expr-s
-  CONST((byte) 7, Const.class),
-  FIELD_READ((byte) 8, FieldRead.class),
   CALL((byte) 9, Call.class),
-  EARRAY((byte) 10, EArray.class),
-  NULL((byte) 11, Null.class),
-  REF((byte) 12, Ref.class),
-  // Obj-s again TODO reorder markers
-  DEFINED_LAMBDA((byte) 13, DefinedLambda.class),
-  NATIVE_LAMBDA((byte) 14, NativeLambda.class);
-
-
+  CONST((byte) 10, Const.class),
+  EARRAY((byte) 11, EArray.class),
+  FIELD_READ((byte) 12, FieldRead.class),
+  NULL((byte) 13, Null.class),
+  REF((byte) 14, Ref.class);
 
   private static final ImmutableMap<Byte, SpecKind> markerToSpecKindMap =
       ImmutableMap.<Byte, SpecKind>builder()
-          .put((byte) 0, INT)
-          .put((byte) 1, NOTHING)
-          .put((byte) 2, RECORD)
-          .put((byte) 3, ARRAY)
-          .put((byte) 4, BLOB)
-          .put((byte) 5, BOOL)
-          .put((byte) 6, STRING)
-          .put((byte) 7, CONST)
-          .put((byte) 8, FIELD_READ)
+          .put((byte) 0, ARRAY)
+          .put((byte) 1, BLOB)
+          .put((byte) 2, BOOL)
+          .put((byte) 3, DEFINED_LAMBDA)
+          .put((byte) 4, INT)
+          .put((byte) 5, NATIVE_LAMBDA)
+          .put((byte) 6, NOTHING)
+          .put((byte) 7, RECORD)
+          .put((byte) 8, STRING)
+
           .put((byte) 9, CALL)
-          .put((byte) 10, EARRAY)
-          .put((byte) 11, NULL)
-          .put((byte) 12, REF)
-          .put((byte) 13, DEFINED_LAMBDA)
-          .put((byte) 14, NATIVE_LAMBDA)
+          .put((byte) 10, CONST)
+          .put((byte) 11, EARRAY)
+          .put((byte) 12, FIELD_READ)
+          .put((byte) 13, NULL)
+          .put((byte) 14, REF)
           .build();
 
   private final byte marker;

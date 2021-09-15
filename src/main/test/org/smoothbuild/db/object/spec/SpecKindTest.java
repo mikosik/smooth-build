@@ -28,19 +28,22 @@ public class SpecKindTest {
 
   private static Collection<Arguments> marker_to_spec_kind_map() {
     return list(
-        Arguments.of(0, SpecKind.INT),
-        Arguments.of(1, SpecKind.NOTHING),
-        Arguments.of(2, SpecKind.RECORD),
-        Arguments.of(3, SpecKind.ARRAY),
-        Arguments.of(4, SpecKind.BLOB),
-        Arguments.of(5, SpecKind.BOOL),
-        Arguments.of(6, SpecKind.STRING),
-        Arguments.of(7, SpecKind.CONST),
-        Arguments.of(8, SpecKind.FIELD_READ),
+        Arguments.of(0, SpecKind.ARRAY),
+        Arguments.of(1, SpecKind.BLOB),
+        Arguments.of(2, SpecKind.BOOL),
+        Arguments.of(3, SpecKind.DEFINED_LAMBDA),
+        Arguments.of(4, SpecKind.INT),
+        Arguments.of(5, SpecKind.NATIVE_LAMBDA),
+        Arguments.of(6, SpecKind.NOTHING),
+        Arguments.of(7, SpecKind.RECORD),
+        Arguments.of(8, SpecKind.STRING),
+
         Arguments.of(9, SpecKind.CALL),
-        Arguments.of(10, SpecKind.EARRAY),
-        Arguments.of(11, SpecKind.NULL),
-        Arguments.of(12, SpecKind.REF)
+        Arguments.of(10, SpecKind.CONST),
+        Arguments.of(11, SpecKind.EARRAY),
+        Arguments.of(12, SpecKind.FIELD_READ),
+        Arguments.of(13, SpecKind.NULL),
+        Arguments.of(14, SpecKind.REF)
     );
   }
 
