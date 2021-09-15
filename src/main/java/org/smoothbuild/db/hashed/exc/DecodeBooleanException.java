@@ -1,4 +1,6 @@
-package org.smoothbuild.db.hashed;
+package org.smoothbuild.db.hashed.exc;
+
+import org.smoothbuild.db.hashed.Hash;
 
 public class DecodeBooleanException extends HashedDbException {
   public DecodeBooleanException(Hash hash) {

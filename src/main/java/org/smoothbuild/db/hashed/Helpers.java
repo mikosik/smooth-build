@@ -2,6 +2,8 @@ package org.smoothbuild.db.hashed;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.hashed.exc.HashedDbException;
+
 public class Helpers {
   public static void wrapIOExceptionAsHashedDbException(IoRunnable runnable)
       throws HashedDbException {

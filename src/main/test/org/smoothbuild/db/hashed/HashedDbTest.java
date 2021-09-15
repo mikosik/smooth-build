@@ -20,6 +20,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
+import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
+import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;

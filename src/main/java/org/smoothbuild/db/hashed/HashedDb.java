@@ -11,6 +11,14 @@ import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 
+import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
+import org.smoothbuild.db.hashed.exc.DecodeBigIntegerException;
+import org.smoothbuild.db.hashed.exc.DecodeBooleanException;
+import org.smoothbuild.db.hashed.exc.DecodeByteException;
+import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
+import org.smoothbuild.db.hashed.exc.DecodeStringException;
+import org.smoothbuild.db.hashed.exc.HashedDbException;
+import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;

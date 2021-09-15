@@ -5,8 +5,8 @@ import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObject
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
+import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.util.io.DataWriter;
 

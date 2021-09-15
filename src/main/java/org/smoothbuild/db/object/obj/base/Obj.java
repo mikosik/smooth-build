@@ -11,8 +11,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.db.UnexpectedNodeException;
-import org.smoothbuild.db.object.db.UnexpectedSequenceException;
+import org.smoothbuild.db.object.exc.UnexpectedNodeException;
+import org.smoothbuild.db.object.exc.UnexpectedSequenceException;
 import org.smoothbuild.db.object.spec.base.Spec;
 
 import com.google.common.collect.ImmutableList;

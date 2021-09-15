@@ -1,4 +1,4 @@
-package org.smoothbuild.db.object.db;
+package org.smoothbuild.db.object.exc;
 
 public class DecodeObjException extends ObjectDbException {
   public DecodeObjException(String message, Throwable cause) {

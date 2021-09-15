@@ -1,4 +1,6 @@
-package org.smoothbuild.db.hashed;
+package org.smoothbuild.db.hashed.exc;
+
+import org.smoothbuild.db.hashed.Hash;
 
 public class DecodeBigIntegerException extends HashedDbException {
   public DecodeBigIntegerException(Hash hash) {

@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.expr;
 
 import org.smoothbuild.db.object.db.Helpers;
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.db.UnexpectedNodeException;
+import org.smoothbuild.db.object.exc.UnexpectedNodeException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
