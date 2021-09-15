@@ -29,8 +29,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
-import com.google.common.collect.Streams;
-
 public class JunitFunction {
   public static Str function(NativeApi nativeApi, Rec tests, Array deps, Str include)
       throws IOException {
@@ -78,7 +76,8 @@ public class JunitFunction {
 
   private static Map<String, Rec> buildNameFileMap(NativeApi nativeApi, Array deps,
       Map<String, Rec> testFiles) throws IOException, JunitException {
-    Iterable<Blob> libraryJars = Streams.stream(deps.elements(Rec.class))
+    Iterable<Blob> libraryJars = deps.elements(Rec.class)
+        .stream()
         .map(FileStruct::fileContent)
         .collect(toList());
     Map<String, Rec> allFiles = binaryNameToClassFile(nativeApi, libraryJars);
