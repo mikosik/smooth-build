@@ -17,7 +17,9 @@ public class AssertCallTest {
             .throwsException(IllegalStateException.class);
       } catch (AssertionError e) {
         assertThat(e.getMessage())
-            .isEqualTo("expected call to throw exception");
+            .isEqualTo("""
+                expected call to throw: java.lang.IllegalStateException
+                but was               : nothing thrown""");
         return;
       }
       fail("assertCall() should report failure");
@@ -58,7 +60,9 @@ public class AssertCallTest {
             .throwsException(new IllegalStateException("desired message"));
       } catch (AssertionError e) {
         assertThat(e.getMessage())
-            .isEqualTo("expected call to throw exception");
+            .isEqualTo("""
+                expected call to throw: java.lang.IllegalStateException
+                but was               : nothing thrown""");
         return;
       }
       fail("assertCall() should report failure");

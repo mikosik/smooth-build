@@ -44,7 +44,9 @@ public class AssertCall {
     public ExceptionCauseSubject throwsException(Throwable expected) {
       String expectedClassName = expected.getClass().getCanonicalName();
       if (actual == null) {
-        failWithoutActual(simpleFact("expected call to throw exception"));
+        failWithoutActual(
+            fact("expected call to throw", expectedClassName),
+            fact("but was", "nothing thrown"));
       } else if (actual.getClass() != expected.getClass()) {
         failWithoutActual(
             fact("expected call to throw", expectedClassName),
@@ -65,7 +67,9 @@ public class AssertCall {
 
     public ExceptionCauseSubject throwsException(Class<? extends Throwable> expected) {
       if (actual == null) {
-        failWithoutActual(simpleFact("expected call to throw exception"));
+        failWithoutActual(
+            fact("expected call to throw", expected.getCanonicalName()),
+            fact("but was", "nothing thrown"));
       } else if (actual.getClass() != expected) {
         failWithActual(fact("expected call to throw", expected.getCanonicalName()));
       }
