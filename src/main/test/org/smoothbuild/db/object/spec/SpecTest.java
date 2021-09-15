@@ -141,12 +141,6 @@ public class SpecTest {
         arguments(NOTHING, null),
         arguments(PERSON, Rec.class),
         arguments(STR, Str.class),
-        arguments(CALL, Call.class),
-        arguments(CONST, Const.class),
-        arguments(EARRAY, EArray.class),
-        arguments(FIELD_READ, FieldRead.class),
-        arguments(NULL, Null.class),
-        arguments(REF, Ref.class),
 
         arguments(ARRAY_BLOB, Array.class),
         arguments(ARRAY_BOOL, Array.class),
@@ -155,7 +149,14 @@ public class SpecTest {
         arguments(ARRAY_NATIVE_LAMBDA, Array.class),
         arguments(ARRAY_NOTHING, Array.class),
         arguments(ARRAY_PERSON, Array.class),
-        arguments(ARRAY_STR, Array.class)
+        arguments(ARRAY_STR, Array.class),
+
+        arguments(CALL, Call.class),
+        arguments(CONST, Const.class),
+        arguments(EARRAY, EArray.class),
+        arguments(FIELD_READ, FieldRead.class),
+        arguments(NULL, Null.class),
+        arguments(REF, Ref.class)
     );
   }
 
@@ -286,12 +287,6 @@ public class SpecTest {
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STR, STR);
     tester.addEqualityGroup(PERSON, PERSON);
-    tester.addEqualityGroup(CALL, CALL);
-    tester.addEqualityGroup(CONST, CONST);
-    tester.addEqualityGroup(EARRAY, EARRAY);
-    tester.addEqualityGroup(FIELD_READ, FIELD_READ);
-    tester.addEqualityGroup(NULL, NULL);
-    tester.addEqualityGroup(REF, REF);
 
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
@@ -310,6 +305,14 @@ public class SpecTest {
     tester.addEqualityGroup(ARRAY2_NOTHING, ARRAY2_NOTHING);
     tester.addEqualityGroup(ARRAY2_STR, ARRAY2_STR);
     tester.addEqualityGroup(ARRAY2_PERSON, ARRAY2_PERSON);
+
+    tester.addEqualityGroup(CALL, CALL);
+    tester.addEqualityGroup(CONST, CONST);
+    tester.addEqualityGroup(EARRAY, EARRAY);
+    tester.addEqualityGroup(FIELD_READ, FIELD_READ);
+    tester.addEqualityGroup(NULL, NULL);
+    tester.addEqualityGroup(REF, REF);
+
     tester.testEquals();
   }
 }
