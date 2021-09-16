@@ -10,13 +10,13 @@ import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 
 public class DefinedLambdaSpec extends LambdaSpec {
-  public DefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters, ObjectDb objectDb) {
-    super(hash, DEFINED_LAMBDA, result, parameters, objectDb);
+  public DefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
+    super(hash, DEFINED_LAMBDA, result, parameters);
   }
 
   @Override
-  public DefinedLambda newObj(MerkleRoot merkleRoot) {
+  public DefinedLambda newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new DefinedLambda(merkleRoot, objectDb());
+    return new DefinedLambda(merkleRoot, objectDb);
   }
 }

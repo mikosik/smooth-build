@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  * This class is immutable.
  */
 public class BlobSpec extends ValSpec {
-  public BlobSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, BLOB, objectDb);
+  public BlobSpec(Hash hash) {
+    super(hash, BLOB);
   }
 
   @Override
-  public Blob newObj(MerkleRoot merkleRoot) {
+  public Blob newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Blob(merkleRoot, objectDb());
+    return new Blob(merkleRoot, objectDb);
   }
 }

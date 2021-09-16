@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.spec.base.ExprSpec;
  * This class is immutable.
  */
 public class FieldReadSpec extends ExprSpec {
-  public FieldReadSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, FIELD_READ, objectDb);
+  public FieldReadSpec(Hash hash) {
+    super(hash, FIELD_READ);
   }
 
   @Override
-  public FieldRead newObj(MerkleRoot merkleRoot) {
+  public FieldRead newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new FieldRead(merkleRoot, objectDb());
+    return new FieldRead(merkleRoot, objectDb);
   }
 }

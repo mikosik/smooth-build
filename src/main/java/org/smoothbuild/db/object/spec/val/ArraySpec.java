@@ -16,15 +16,15 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 public class ArraySpec extends ValSpec {
   private final ValSpec elements;
 
-  public ArraySpec(Hash hash, ValSpec elements, ObjectDb objectDb) {
-    super(hash, ARRAY, objectDb);
+  public ArraySpec(Hash hash, ValSpec elements) {
+    super(hash, ARRAY);
     this.elements = requireNonNull(elements);
   }
 
   @Override
-  public Array newObj(MerkleRoot merkleRoot) {
+  public Array newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Array(merkleRoot, objectDb());
+    return new Array(merkleRoot, objectDb);
   }
 
   @Override

@@ -10,13 +10,13 @@ import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 
 public class NativeLambdaSpec extends LambdaSpec {
-  public NativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters, ObjectDb objectDb) {
-    super(hash, NATIVE_LAMBDA, result, parameters, objectDb);
+  public NativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
+    super(hash, NATIVE_LAMBDA, result, parameters);
   }
 
   @Override
-  public NativeLambda newObj(MerkleRoot merkleRoot) {
+  public NativeLambda newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new NativeLambda(merkleRoot, objectDb());
+    return new NativeLambda(merkleRoot, objectDb);
   }
 }

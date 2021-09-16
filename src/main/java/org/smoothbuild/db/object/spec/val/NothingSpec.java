@@ -12,12 +12,12 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  * This class is immutable.
  */
 public class NothingSpec extends ValSpec {
-  public NothingSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, NOTHING, objectDb);
+  public NothingSpec(Hash hash) {
+    super(hash, NOTHING);
   }
 
   @Override
-  public Obj newObj(MerkleRoot merkleRoot) {
+  public Obj newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     throw new UnsupportedOperationException("Cannot create object for 'NOTHING' spec.");
   }
 }

@@ -3,7 +3,6 @@ package org.smoothbuild.db.object.spec.val;
 import static java.util.stream.Collectors.joining;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.SpecKind;
 import org.smoothbuild.db.object.spec.base.ValSpec;
@@ -12,9 +11,8 @@ public abstract class LambdaSpec extends ValSpec {
   private final ValSpec result;
   private final RecSpec parameters;
 
-  protected LambdaSpec(Hash hash, SpecKind kind, ValSpec result,
-      RecSpec parameters, ObjectDb objectDb) {
-    super(hash, kind, objectDb);
+  protected LambdaSpec(Hash hash, SpecKind kind, ValSpec result, RecSpec parameters) {
+    super(hash, kind);
     this.result = result;
     this.parameters = parameters;
   }

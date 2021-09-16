@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  * This class is immutable.
  */
 public class StrSpec extends ValSpec {
-  public StrSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, STRING, objectDb);
+  public StrSpec(Hash hash) {
+    super(hash, STRING);
   }
 
   @Override
-  public Str newObj(MerkleRoot merkleRoot) {
+  public Str newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Str(merkleRoot, objectDb());
+    return new Str(merkleRoot, objectDb);
   }
 }

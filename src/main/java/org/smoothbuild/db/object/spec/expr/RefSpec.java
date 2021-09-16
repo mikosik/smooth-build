@@ -10,13 +10,13 @@ import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
 
 public class RefSpec extends ExprSpec {
-  public RefSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, REF, objectDb);
+  public RefSpec(Hash hash) {
+    super(hash, REF);
   }
 
   @Override
-  public Ref newObj(MerkleRoot merkleRoot) {
+  public Ref newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Ref(merkleRoot, objectDb());
+    return new Ref(merkleRoot, objectDb);
   }
 }

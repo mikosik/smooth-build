@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.spec.base.ExprSpec;
  * This class is immutable.
  */
 public class EArraySpec extends ExprSpec {
-  public EArraySpec(Hash hash, ObjectDb objectDb) {
-    super(hash, EARRAY, objectDb);
+  public EArraySpec(Hash hash) {
+    super(hash, EARRAY);
   }
 
   @Override
-  public EArray newObj(MerkleRoot merkleRoot) {
+  public EArray newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new EArray(merkleRoot, objectDb());
+    return new EArray(merkleRoot, objectDb);
   }
 }

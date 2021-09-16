@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.spec.base.ExprSpec;
  * This class is immutable.
  */
 public class NullSpec extends ExprSpec {
-  public NullSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, NULL, objectDb);
+  public NullSpec(Hash hash) {
+    super(hash, NULL);
   }
 
   @Override
-  public Null newObj(MerkleRoot merkleRoot) {
+  public Null newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Null(merkleRoot, objectDb());
+    return new Null(merkleRoot, objectDb);
   }
 }

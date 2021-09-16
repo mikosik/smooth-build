@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.spec.base.ExprSpec;
  * This class is immutable.
  */
 public class ConstSpec extends ExprSpec {
-  public ConstSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, CONST, objectDb);
+  public ConstSpec(Hash hash) {
+    super(hash, CONST);
   }
 
   @Override
-  public Const newObj(MerkleRoot merkleRoot) {
+  public Const newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Const(merkleRoot, objectDb());
+    return new Const(merkleRoot, objectDb);
   }
 }

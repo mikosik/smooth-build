@@ -120,18 +120,18 @@ public class ObjectDb {
   private void initialize() {
     try {
       // Val-s
-      this.blobSpec = cacheSpec(new BlobSpec(writeBaseSpecRoot(BLOB), this));
-      this.boolSpec = cacheSpec(new BoolSpec(writeBaseSpecRoot(BOOL), this));
-      this.intSpec = cacheSpec(new IntSpec(writeBaseSpecRoot(INT), this));
-      this.nothingSpec = cacheSpec(new NothingSpec(writeBaseSpecRoot(NOTHING), this));
-      this.strSpec = cacheSpec(new StrSpec(writeBaseSpecRoot(STRING), this));
+      this.blobSpec = cacheSpec(new BlobSpec(writeBaseSpecRoot(BLOB)));
+      this.boolSpec = cacheSpec(new BoolSpec(writeBaseSpecRoot(BOOL)));
+      this.intSpec = cacheSpec(new IntSpec(writeBaseSpecRoot(INT)));
+      this.nothingSpec = cacheSpec(new NothingSpec(writeBaseSpecRoot(NOTHING)));
+      this.strSpec = cacheSpec(new StrSpec(writeBaseSpecRoot(STRING)));
       // Expr-s
-      this.callSpec = cacheSpec(new CallSpec(writeBaseSpecRoot(CALL), this));
-      this.constSpec = cacheSpec(new ConstSpec(writeBaseSpecRoot(CONST), this));
-      this.eArraySpec = cacheSpec(new EArraySpec(writeBaseSpecRoot(EARRAY), this));
-      this.fieldReadSpec = cacheSpec(new FieldReadSpec(writeBaseSpecRoot(FIELD_READ), this));
-      this.nullSpec = cacheSpec(new NullSpec(writeBaseSpecRoot(NULL), this));
-      this.refSpec = cacheSpec(new RefSpec(writeBaseSpecRoot(REF), this));
+      this.callSpec = cacheSpec(new CallSpec(writeBaseSpecRoot(CALL)));
+      this.constSpec = cacheSpec(new ConstSpec(writeBaseSpecRoot(CONST)));
+      this.eArraySpec = cacheSpec(new EArraySpec(writeBaseSpecRoot(EARRAY)));
+      this.fieldReadSpec = cacheSpec(new FieldReadSpec(writeBaseSpecRoot(FIELD_READ)));
+      this.nullSpec = cacheSpec(new NullSpec(writeBaseSpecRoot(NULL)));
+      this.refSpec = cacheSpec(new RefSpec(writeBaseSpecRoot(REF)));
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -240,13 +240,13 @@ public class ObjectDb {
       if (hashes.size() != 1) {
         throw nullObjRootException(hash, hashes.size());
       }
-      return spec.newObj(new MerkleRoot(hash, spec, null));
+      return spec.newObj(new MerkleRoot(hash, spec, null), this);
     } else {
       if (hashes.size() != 2) {
         throw nonNullObjRootException(hash, hashes.size());
       }
       Hash dataHash = hashes.get(1);
-      return spec.newObj(new MerkleRoot(hash, spec, dataHash));
+      return spec.newObj(new MerkleRoot(hash, spec, dataHash), this);
     }
   }
 
@@ -462,36 +462,36 @@ public class ObjectDb {
       throws HashedDbException {
     var data = writeCallData(function, arguments);
     var root = writeRoot(callSpec, data);
-    return callSpec.newObj(root);
+    return callSpec.newObj(root, this);
   }
 
   public Const newConstExpr(Val val) throws HashedDbException {
     var data = writeConstData(val);
     var root = writeRoot(constSpec, data);
-    return constSpec.newObj(root);
+    return constSpec.newObj(root, this);
   }
 
   public EArray newEArrayExpr(Iterable<? extends Expr> elements) throws HashedDbException {
     var data = writeEarrayData(elements);
     var root = writeRoot(eArraySpec, data);
-    return eArraySpec.newObj(root);
+    return eArraySpec.newObj(root, this);
   }
 
   public FieldRead newFieldReadExpr(Expr rec, Int index) throws HashedDbException {
     var data = writeFieldReadData(rec, index);
     var root = writeRoot(fieldReadSpec, data);
-    return fieldReadSpec.newObj(root);
+    return fieldReadSpec.newObj(root, this);
   }
 
   public Null newNullExpr() throws HashedDbException {
     var root = writeRoot(nullSpec);
-    return nullSpec.newObj(root);
+    return nullSpec.newObj(root, this);
   }
 
   public Ref newRefExpr(BigInteger value) throws HashedDbException {
     var data = writeRefData(value);
     var root = writeRoot(refSpec, data);
-    return this.refSpec.newObj(root);
+    return this.refSpec.newObj(root, this);
   }
 
   // methods for creating Val Obj-s
@@ -500,31 +500,31 @@ public class ObjectDb {
       throws HashedDbException {
     var data = writeArrayData(elements);
     var root = writeRoot(spec, data);
-    return spec.newObj(root);
+    return spec.newObj(root, this);
   }
 
   public Blob newBlobVal(Hash dataHash) throws HashedDbException {
     var root = writeRoot(blobSpec, dataHash);
-    return blobSpec.newObj(root);
+    return blobSpec.newObj(root, this);
   }
 
   private Bool newBoolVal(boolean value) throws HashedDbException {
     var data = writeBoolData(value);
     var root = writeRoot(boolSpec, data);
-    return boolSpec.newObj(root);
+    return boolSpec.newObj(root, this);
   }
 
   private DefinedLambda newDefinedLambdaVal(
       DefinedLambdaSpec spec, Expr body, List<Expr> defaultArguments) throws HashedDbException {
     var data = writeDefinedLambdaData(body, defaultArguments);
     var root = writeRoot(spec, data);
-    return spec.newObj(root);
+    return spec.newObj(root, this);
   }
 
   private Int newIntVal(BigInteger value) throws HashedDbException {
     var data = writeIntData(value);
     var root = writeRoot(intSpec, data);
-    return intSpec.newObj(root);
+    return intSpec.newObj(root, this);
   }
 
   private NativeLambda newNativeLambdaVal(
@@ -532,19 +532,19 @@ public class ObjectDb {
       throws HashedDbException {
     var data = writeNativeLambdaData(classBinaryName, nativeJar, defaultArguments);
     var root = writeRoot(spec, data);
-    return spec.newObj(root);
+    return spec.newObj(root, this);
   }
 
   private Str newStrVal(String string) throws HashedDbException {
     var data = writeStrData(string);
     var root = writeRoot(strSpec, data);
-    return strSpec.newObj(root);
+    return strSpec.newObj(root, this);
   }
 
   private Rec newRecVal(RecSpec spec, List<?extends Obj> objects) throws HashedDbException {
     var data = writeRecData(objects);
     var root = writeRoot(spec, data);
-    return spec.newObj(root);
+    return spec.newObj(root, this);
   }
 
   // methods for creating Spec-s
@@ -555,7 +555,7 @@ public class ObjectDb {
   }
 
   private ArraySpec newArraySpec(Hash hash, ValSpec elementSpec) {
-    return cacheSpec(new ArraySpec(hash, elementSpec, this));
+    return cacheSpec(new ArraySpec(hash, elementSpec));
   }
 
   private DefinedLambdaSpec newDefinedLambdaSpec(ValSpec result, RecSpec parameters)
@@ -565,7 +565,7 @@ public class ObjectDb {
   }
 
   private DefinedLambdaSpec newDefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
-    return cacheSpec(new DefinedLambdaSpec(hash, result, parameters, this));
+    return cacheSpec(new DefinedLambdaSpec(hash, result, parameters));
   }
 
   private NativeLambdaSpec newNativeLambdaSpec(ValSpec result, RecSpec parameters)
@@ -575,7 +575,7 @@ public class ObjectDb {
   }
 
   private NativeLambdaSpec newNativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
-    return cacheSpec(new NativeLambdaSpec(hash, result, parameters, this));
+    return cacheSpec(new NativeLambdaSpec(hash, result, parameters));
   }
 
   private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
@@ -584,7 +584,7 @@ public class ObjectDb {
   }
 
   private RecSpec newRecSpec(Hash hash, Iterable<? extends Spec> itemSpecs) {
-    return cacheSpec(new RecSpec(hash, itemSpecs, this));
+    return cacheSpec(new RecSpec(hash, itemSpecs));
   }
 
   // method for writing Merkle-root to HashedDb

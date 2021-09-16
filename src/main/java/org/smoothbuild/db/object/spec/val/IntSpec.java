@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  * This class is immutable.
  */
 public class IntSpec extends ValSpec {
-  public IntSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, INT, objectDb);
+  public IntSpec(Hash hash) {
+    super(hash, INT);
   }
 
   @Override
-  public Int newObj(MerkleRoot merkleRoot) {
+  public Int newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Int(merkleRoot, objectDb());
+    return new Int(merkleRoot, objectDb);
   }
 }

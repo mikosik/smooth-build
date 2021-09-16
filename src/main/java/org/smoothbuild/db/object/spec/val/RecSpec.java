@@ -19,15 +19,15 @@ import com.google.common.collect.ImmutableList;
 public class RecSpec extends ValSpec {
   private final ImmutableList<Spec> itemSpecs;
 
-  public RecSpec(Hash hash, Iterable<? extends Spec> itemSpecs, ObjectDb objectDb) {
-    super(hash, RECORD, objectDb);
+  public RecSpec(Hash hash, Iterable<? extends Spec> itemSpecs) {
+    super(hash, RECORD);
     this.itemSpecs = ImmutableList.copyOf(itemSpecs);
   }
 
   @Override
-  public Rec newObj(MerkleRoot merkleRoot) {
+  public Rec newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Rec(merkleRoot, objectDb());
+    return new Rec(merkleRoot, objectDb);
   }
 
   @Override

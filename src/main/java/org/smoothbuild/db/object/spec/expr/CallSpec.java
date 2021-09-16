@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.spec.base.ExprSpec;
  * This class is immutable.
  */
 public class CallSpec extends ExprSpec {
-  public CallSpec(Hash hash, ObjectDb objectDb) {
-    super(hash, CALL, objectDb);
+  public CallSpec(Hash hash) {
+    super(hash, CALL);
   }
 
   @Override
-  public Call newObj(MerkleRoot merkleRoot) {
+  public Call newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Call(merkleRoot, objectDb());
+    return new Call(merkleRoot, objectDb);
   }
 }

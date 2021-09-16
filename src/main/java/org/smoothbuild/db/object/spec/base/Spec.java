@@ -10,18 +10,16 @@ import org.smoothbuild.db.object.obj.base.Obj;
 public abstract class Spec {
   private final Hash hash;
   private final SpecKind kind;
-  private final ObjectDb objectDb;
 
-  protected Spec(Hash hash, SpecKind kind, ObjectDb objectDb) {
+  protected Spec(Hash hash, SpecKind kind) {
     this.hash = hash;
     this.kind = kind;
-    this.objectDb = objectDb;
   }
 
   /**
    * Creates new java instance of Obj represented by merkleRoot.
    */
-  public abstract Obj newObj(MerkleRoot merkleRoot);
+  public abstract Obj newObj(MerkleRoot merkleRoot, ObjectDb objectDb);
 
   public Hash hash() {
     return hash;
@@ -29,10 +27,6 @@ public abstract class Spec {
 
   public SpecKind kind() {
     return kind;
-  }
-
-  protected ObjectDb objectDb() {
-    return objectDb;
   }
 
   @Override
