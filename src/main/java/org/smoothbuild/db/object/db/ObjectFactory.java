@@ -37,23 +37,28 @@ import org.smoothbuild.util.io.DataWriter;
 @Singleton
 public class ObjectFactory {
   private final ObjectDb objectDb;
+  private final SpecDb specDb;
   private final RecSpec messageSpec;
   private final RecSpec fileSpec;
 
   @Inject
-  public ObjectFactory(ObjectDb objectDb) {
+  public ObjectFactory(ObjectDb objectDb, SpecDb specDb) {
     this.objectDb = objectDb;
-    this.messageSpec = createMessageSpec(objectDb);
-    this.fileSpec = createFileSpec(objectDb);
+    this.specDb = specDb;
+    this.messageSpec = createMessageSpec(specDb);
+    this.fileSpec = createFileSpec(specDb);
   }
 
-  private static RecSpec createMessageSpec(ObjectDb objectDb) {
-    StrSpec strSpec = objectDb.strSpec();
-    return objectDb.recSpec(list(strSpec, strSpec));
+  private static RecSpec createMessageSpec(SpecDb specDb) {
+    StrSpec strSpec = specDb.strSpec();
+    return specDb.recSpec(list(strSpec, strSpec));
   }
 
-  private static RecSpec createFileSpec(ObjectDb objectDb) {
-    return objectDb.recSpec(list(objectDb.blobSpec(), objectDb.strSpec()));
+  private static RecSpec createFileSpec(SpecDb specDb) {
+    return specDb.recSpec(list(
+        specDb.blobSpec(),
+        specDb.strSpec())
+    );
   }
 
   public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
@@ -94,19 +99,19 @@ public class ObjectFactory {
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
-    return objectDb.arraySpec(elementSpec);
+    return specDb.arraySpec(elementSpec);
   }
 
   public BlobSpec blobSpec() {
-    return objectDb.blobSpec();
+    return specDb.blobSpec();
   }
 
   public BoolSpec boolSpec() {
-    return objectDb.boolSpec();
+    return specDb.boolSpec();
   }
 
   public IntSpec intSpec() {
-    return objectDb.intSpec();
+    return specDb.intSpec();
   }
 
   public RecSpec fileSpec() {
@@ -118,15 +123,15 @@ public class ObjectFactory {
   }
 
   public NothingSpec nothingSpec() {
-    return objectDb.nothingSpec();
+    return specDb.nothingSpec();
   }
 
   public StrSpec stringSpec() {
-    return objectDb.strSpec();
+    return specDb.strSpec();
   }
 
   public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
-    return objectDb.recSpec(itemSpecs);
+    return specDb.recSpec(itemSpecs);
   }
 
   public Rec errorMessage(String text) {

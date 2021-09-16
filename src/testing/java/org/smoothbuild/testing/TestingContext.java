@@ -10,6 +10,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -65,6 +66,7 @@ public class TestingContext {
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
   private ObjectDb objectDb;
+  private SpecDb specDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
@@ -94,14 +96,21 @@ public class TestingContext {
 
   public ObjectFactory objectFactory() {
     if (objectFactory == null) {
-      objectFactory = new ObjectFactory(objectDb());
+      objectFactory = new ObjectFactory(objectDb(), specDb());
     }
     return objectFactory;
   }
 
+  public SpecDb specDb() {
+    if (specDb == null) {
+      specDb = new SpecDb(hashedDb());
+    }
+    return specDb;
+  }
+
   public ObjectDb objectDb() {
     if (objectDb == null) {
-      objectDb = ObjectDb.objectDb(hashedDb());
+      objectDb = new ObjectDb(hashedDb(), specDb());
     }
     return objectDb;
   }
@@ -122,7 +131,11 @@ public class TestingContext {
   }
 
   public ObjectDb objectDbOther() {
-    return ObjectDb.objectDb(hashedDb());
+    return new ObjectDb(hashedDb(), specDbOther());
+  }
+
+  public SpecDb specDbOther() {
+    return new SpecDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -157,15 +170,15 @@ public class TestingContext {
   // Obj Spec-s
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
-    return objectDb().arraySpec(elementSpec);
+    return specDb().arraySpec(elementSpec);
   }
 
   public BlobSpec blobSpec() {
-    return objectDb().blobSpec();
+    return specDb().blobSpec();
   }
 
   public BoolSpec boolSpec() {
-    return objectDb().boolSpec();
+    return specDb().boolSpec();
   }
 
   public DefinedLambdaSpec definedLambdaSpec() {
@@ -177,11 +190,11 @@ public class TestingContext {
   }
 
   public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters) {
-    return objectDb().definedLambdaSpec(result, parameters);
+    return specDb().definedLambdaSpec(result, parameters);
   }
 
   public IntSpec intSpec() {
-    return objectDb().intSpec();
+    return specDb().intSpec();
   }
 
   public NativeLambdaSpec nativeLambdaSpec() {
@@ -193,19 +206,19 @@ public class TestingContext {
   }
 
   public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters) {
-    return objectDb().nativeLambdaSpec(result, parameters);
+    return specDb().nativeLambdaSpec(result, parameters);
   }
 
   public NothingSpec nothingSpec() {
-    return objectDb().nothingSpec();
+    return specDb().nothingSpec();
   }
 
   public StrSpec strSpec() {
-    return objectDb().strSpec();
+    return specDb().strSpec();
   }
 
   public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
-    return objectDb().recSpec(itemSpecs);
+    return specDb().recSpec(itemSpecs);
   }
 
   public RecSpec emptyRecSpec() {
@@ -228,27 +241,27 @@ public class TestingContext {
   // Expr Spec-s
 
   public CallSpec callSpec() {
-    return objectDb().callSpec();
+    return specDb().callSpec();
   }
 
   public ConstSpec constSpec() {
-    return objectDb().constSpec();
+    return specDb().constSpec();
   }
 
   public EArraySpec eArraySpec() {
-    return objectDb().eArraySpec();
+    return specDb().eArraySpec();
   }
 
   public FieldReadSpec fieldReadSpec() {
-    return objectDb().fieldReadSpec();
+    return specDb().fieldReadSpec();
   }
 
   public NullSpec nullSpec() {
-    return objectDb().nullSpec();
+    return specDb().nullSpec();
   }
 
   public RefSpec refSpec() {
-    return objectDb().refSpec();
+    return specDb().refSpec();
   }
 
   // Obj-s (values)

@@ -9,7 +9,7 @@ import java.util.function.Function;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
@@ -19,69 +19,69 @@ import org.smoothbuild.testing.TestingContext;
 public class SpecCachingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("spec_creators")
-  public void created_spec_is_cached(Function<ObjectDb, Spec> specCreator) {
-    assertThat(specCreator.apply(objectDb()))
-        .isSameInstanceAs(specCreator.apply(objectDb()));
+  public void created_spec_is_cached(Function<SpecDb, Spec> specCreator) {
+    assertThat(specCreator.apply(specDb()))
+        .isSameInstanceAs(specCreator.apply(specDb()));
   }
 
   @ParameterizedTest
   @MethodSource("spec_creators")
-  public void read_spec_is_cached(Function<ObjectDb, Spec> specCreator) {
-    Hash hash = specCreator.apply(objectDb()).hash();
-    ObjectDb otherDb = objectDbOther();
-    assertThat(otherDb.getSpec(hash))
-        .isSameInstanceAs(otherDb.getSpec(hash));
+  public void read_spec_is_cached(Function<SpecDb, Spec> specCreator) {
+    Hash hash = specCreator.apply(specDb()).hash();
+    SpecDb specDb = specDbOther();
+    assertThat(specDb.getSpec(hash))
+        .isSameInstanceAs(specDb.getSpec(hash));
   }
 
-  private static List<Function<ObjectDb, Spec>> spec_creators() {
+  private static List<Function<SpecDb, Spec>> spec_creators() {
     return list(
-        ObjectDb::blobSpec,
-        ObjectDb::boolSpec,
+        SpecDb::blobSpec,
+        SpecDb::boolSpec,
         SpecCachingTest::definedLambdaSpec,
-        ObjectDb::intSpec,
+        SpecDb::intSpec,
         SpecCachingTest::nativeLambdaSpec,
-        ObjectDb::nothingSpec,
-        ObjectDb::strSpec,
+        SpecDb::nothingSpec,
+        SpecDb::strSpec,
         SpecCachingTest::recSpec,
 
-        ObjectDb::callSpec,
-        ObjectDb::constSpec,
-        ObjectDb::eArraySpec,
-        ObjectDb::fieldReadSpec,
-        ObjectDb::nullSpec,
-        ObjectDb::refSpec,
+        SpecDb::callSpec,
+        SpecDb::constSpec,
+        SpecDb::eArraySpec,
+        SpecDb::fieldReadSpec,
+        SpecDb::nullSpec,
+        SpecDb::refSpec,
 
-        (objectDb) -> objectDb.arraySpec(objectDb.blobSpec()),
-        (objectDb) -> objectDb.arraySpec(objectDb.boolSpec()),
-        (objectDb) -> objectDb.arraySpec(objectDb.intSpec()),
-        (objectDb) -> objectDb.arraySpec(objectDb.nothingSpec()),
-        (objectDb) -> objectDb.arraySpec(objectDb.strSpec()),
-        (objectDb) -> objectDb.arraySpec(recSpec(objectDb)),
-        (objectDb) -> objectDb.arraySpec(definedLambdaSpec(objectDb)),
-        (objectDb) -> objectDb.arraySpec(nativeLambdaSpec(objectDb)),
+        (specDb) -> specDb.arraySpec(specDb.blobSpec()),
+        (specDb) -> specDb.arraySpec(specDb.boolSpec()),
+        (specDb) -> specDb.arraySpec(specDb.intSpec()),
+        (specDb) -> specDb.arraySpec(specDb.nothingSpec()),
+        (specDb) -> specDb.arraySpec(specDb.strSpec()),
+        (specDb) -> specDb.arraySpec(recSpec(specDb)),
+        (specDb) -> specDb.arraySpec(definedLambdaSpec(specDb)),
+        (specDb) -> specDb.arraySpec(nativeLambdaSpec(specDb)),
 
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.blobSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.boolSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.intSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.nothingSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(objectDb.strSpec())),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(recSpec(objectDb))),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(definedLambdaSpec(objectDb))),
-        (objectDb) -> objectDb.arraySpec(objectDb.arraySpec(nativeLambdaSpec(objectDb)))
+        (specDb) -> specDb.arraySpec(specDb.arraySpec(specDb.blobSpec())),
+        (specDb) -> specDb.arraySpec(specDb.arraySpec(specDb.boolSpec())),
+        (specDb) -> specDb.arraySpec(specDb.arraySpec(specDb.intSpec())),
+        (specDb) -> specDb.arraySpec(specDb.arraySpec(specDb.nothingSpec())),
+        (specDb) -> specDb.arraySpec(specDb.arraySpec(specDb.strSpec())),
+        (specDb) -> specDb.arraySpec(specDb.arraySpec(recSpec(specDb))),
+        (specDb) -> specDb.arraySpec(specDb.arraySpec(definedLambdaSpec(specDb))),
+        (specDb) -> specDb.arraySpec(specDb.arraySpec(nativeLambdaSpec(specDb)))
     );
   }
 
-  private static RecSpec recSpec(ObjectDb objectDb) {
-    return objectDb.recSpec(list(objectDb.strSpec(), objectDb.strSpec()));
+  private static RecSpec recSpec(SpecDb specDb) {
+    return specDb.recSpec(list(specDb.strSpec(), specDb.strSpec()));
   }
 
-  private static DefinedLambdaSpec definedLambdaSpec(ObjectDb objectDb) {
-    RecSpec parameters = objectDb.recSpec(list(objectDb.boolSpec(), objectDb.blobSpec()));
-    return objectDb.definedLambdaSpec(objectDb.strSpec(), parameters);
+  private static DefinedLambdaSpec definedLambdaSpec(SpecDb specDb) {
+    RecSpec parameters = specDb.recSpec(list(specDb.boolSpec(), specDb.blobSpec()));
+    return specDb.definedLambdaSpec(specDb.strSpec(), parameters);
   }
 
-  private static NativeLambdaSpec nativeLambdaSpec(ObjectDb objectDb) {
-    RecSpec parameters = objectDb.recSpec(list(objectDb.boolSpec(), objectDb.blobSpec()));
-    return objectDb.nativeLambdaSpec(objectDb.strSpec(), parameters);
+  private static NativeLambdaSpec nativeLambdaSpec(SpecDb specDb) {
+    RecSpec parameters = specDb.recSpec(list(specDb.boolSpec(), specDb.blobSpec()));
+    return specDb.nativeLambdaSpec(specDb.strSpec(), parameters);
   }
 }

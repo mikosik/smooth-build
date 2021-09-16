@@ -279,7 +279,7 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     private ThrownExceptionSubject assertThatGetSpec(Hash hash) {
-      return assertCall(() -> objectDb().getSpec(hash));
+      return assertCall(() -> specDb().getSpec(hash));
     }
 
     private String brokenSpecMessage(SpecKind specKind, int actual, int expected) {

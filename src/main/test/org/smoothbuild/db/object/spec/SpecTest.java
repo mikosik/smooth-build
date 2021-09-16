@@ -29,9 +29,9 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NULL;
-import static org.smoothbuild.db.object.spec.TestingSpecs.OBJECT_DB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
+import static org.smoothbuild.db.object.spec.TestingSpecs.SPEC_DB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
 import static org.smoothbuild.util.Lists.list;
 
@@ -265,15 +265,15 @@ public class SpecTest {
   }
 
   private static ValSpec definedLambda(ValSpec result, ValSpec... parameters) {
-    return OBJECT_DB.definedLambdaSpec(result, rec(parameters));
+    return SPEC_DB.definedLambdaSpec(result, rec(parameters));
   }
 
   private static ValSpec nativeLambda(ValSpec result, ValSpec... parameters) {
-    return OBJECT_DB.nativeLambdaSpec(result, rec(parameters));
+    return SPEC_DB.nativeLambdaSpec(result, rec(parameters));
   }
 
   private static RecSpec rec(ValSpec... items) {
-    return OBJECT_DB.recSpec(list(items));
+    return SPEC_DB.recSpec(list(items));
   }
 
   @Test

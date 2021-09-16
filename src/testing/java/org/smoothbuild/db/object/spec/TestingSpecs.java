@@ -3,6 +3,7 @@ package org.smoothbuild.db.object.spec;
 import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
@@ -14,16 +15,17 @@ import com.google.common.collect.ImmutableList;
 public class TestingSpecs {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
+  public static final SpecDb SPEC_DB = CONTEXT.specDb();
 
-  public static final ValSpec BLOB = OBJECT_DB.blobSpec();
-  public static final ValSpec BOOL = OBJECT_DB.boolSpec();
+  public static final ValSpec BLOB = SPEC_DB.blobSpec();
+  public static final ValSpec BOOL = SPEC_DB.boolSpec();
   public static final ValSpec DEFINED_LAMBDA =
-      OBJECT_DB.definedLambdaSpec(BLOB, OBJECT_DB.recSpec(list(BOOL)));
-  public static final ValSpec INT = OBJECT_DB.intSpec();
+      SPEC_DB.definedLambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)));
+  public static final ValSpec INT = SPEC_DB.intSpec();
   public static final ValSpec NATIVE_LAMBDA =
-      OBJECT_DB.nativeLambdaSpec(BLOB, OBJECT_DB.recSpec(list(BOOL)));
-  public static final ValSpec NOTHING = OBJECT_DB.nothingSpec();
-  public static final ValSpec STR = OBJECT_DB.strSpec();
+      SPEC_DB.nativeLambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)));
+  public static final ValSpec NOTHING = SPEC_DB.nothingSpec();
+  public static final ValSpec STR = SPEC_DB.strSpec();
   public static final RecSpec PERSON = CONTEXT.personSpec();
   public static final RecSpec FILE = CONTEXT.fileSpec();
   public static final RecSpec EMPTY_REC = CONTEXT.emptyRecSpec();
@@ -83,6 +85,6 @@ public class TestingSpecs {
   );
 
   private static ArraySpec array(ValSpec elemSpec) {
-    return OBJECT_DB.arraySpec(elemSpec);
+    return SPEC_DB.arraySpec(elemSpec);
   }
 }
