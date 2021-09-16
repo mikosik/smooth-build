@@ -120,30 +120,18 @@ public class ObjectDb {
   private void initialize() {
     try {
       // Val-s
-      this.blobSpec = new BlobSpec(writeBaseSpecRoot(BLOB), this);
-      this.boolSpec = new BoolSpec(writeBaseSpecRoot(BOOL), this);
-      this.intSpec = new IntSpec(writeBaseSpecRoot(INT), this);
-      this.nothingSpec = new NothingSpec(writeBaseSpecRoot(NOTHING), this);
-      this.strSpec = new StrSpec(writeBaseSpecRoot(STRING), this);
+      this.blobSpec = cacheSpec(new BlobSpec(writeBaseSpecRoot(BLOB), this));
+      this.boolSpec = cacheSpec(new BoolSpec(writeBaseSpecRoot(BOOL), this));
+      this.intSpec = cacheSpec(new IntSpec(writeBaseSpecRoot(INT), this));
+      this.nothingSpec = cacheSpec(new NothingSpec(writeBaseSpecRoot(NOTHING), this));
+      this.strSpec = cacheSpec(new StrSpec(writeBaseSpecRoot(STRING), this));
       // Expr-s
-      this.callSpec = new CallSpec(writeBaseSpecRoot(CALL), this);
-      this.constSpec = new ConstSpec(writeBaseSpecRoot(CONST), this);
-      this.eArraySpec = new EArraySpec(writeBaseSpecRoot(EARRAY), this);
-      this.fieldReadSpec = new FieldReadSpec(writeBaseSpecRoot(FIELD_READ), this);
-      this.nullSpec = new NullSpec(writeBaseSpecRoot(NULL), this);
-      this.refSpec = new RefSpec(writeBaseSpecRoot(REF), this);
-
-      cacheSpec(blobSpec);
-      cacheSpec(boolSpec);
-      cacheSpec(intSpec);
-      cacheSpec(nothingSpec);
-      cacheSpec(strSpec);
-      cacheSpec(callSpec);
-      cacheSpec(constSpec);
-      cacheSpec(eArraySpec);
-      cacheSpec(fieldReadSpec);
-      cacheSpec(nullSpec);
-      cacheSpec(refSpec);
+      this.callSpec = cacheSpec(new CallSpec(writeBaseSpecRoot(CALL), this));
+      this.constSpec = cacheSpec(new ConstSpec(writeBaseSpecRoot(CONST), this));
+      this.eArraySpec = cacheSpec(new EArraySpec(writeBaseSpecRoot(EARRAY), this));
+      this.fieldReadSpec = cacheSpec(new FieldReadSpec(writeBaseSpecRoot(FIELD_READ), this));
+      this.nullSpec = cacheSpec(new NullSpec(writeBaseSpecRoot(NULL), this));
+      this.refSpec = cacheSpec(new RefSpec(writeBaseSpecRoot(REF), this));
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -275,7 +263,7 @@ public class ObjectDb {
   // methods for returning Val-s specs
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
-    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec)));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec));
   }
 
   public BlobSpec blobSpec() {
@@ -287,8 +275,7 @@ public class ObjectDb {
   }
 
   public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters) {
-    return cacheSpec(
-        wrapHashedDbExceptionAsObjectDbException(() -> newDefinedLambdaSpec(result, parameters)));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newDefinedLambdaSpec(result, parameters));
   }
 
   public IntSpec intSpec() {
@@ -296,8 +283,7 @@ public class ObjectDb {
   }
 
   public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters) {
-    return cacheSpec(
-        wrapHashedDbExceptionAsObjectDbException(() -> newNativeLambdaSpec(result, parameters)));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newNativeLambdaSpec(result, parameters));
   }
 
   public NothingSpec nothingSpec() {
@@ -335,7 +321,7 @@ public class ObjectDb {
   }
 
   public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
-    return cacheSpec(wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(itemSpecs)));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(itemSpecs));
   }
 
   private Spec getSpecOrChainException(
@@ -352,77 +338,93 @@ public class ObjectDb {
   }
 
   private Spec readSpec(Hash hash) {
+    List<Hash> rootSequence = readSpecRootSequence(hash);
+    SpecKind specKind = decodeSpecMarker(hash, rootSequence.get(0));
+    return switch (specKind) {
+      case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ, NULL, REF -> {
+        assertSpecRootSequenceSize(hash, specKind, rootSequence, 1);
+        throw new RuntimeException(
+            "Internal error: Spec with kind " + specKind + " should be found in cache.");
+      }
+      case ARRAY -> readArraySpec(hash, rootSequence);
+      case DEFINED_LAMBDA, NATIVE_LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
+      case RECORD -> readRecord(hash, rootSequence);
+    };
+  }
+
+  private List<Hash> readSpecRootSequence(Hash hash) {
     List<Hash> hashes = wrapHashedDbExceptionAsDecodeSpecException(
         hash, () -> hashedDb.readSequence(hash));
     int sequenceSize = hashes.size();
     if (sequenceSize != 1 && sequenceSize != 2) {
       throw new DecodeSpecRootException(hash, sequenceSize);
     }
+    return hashes;
+  }
+
+  private SpecKind decodeSpecMarker(Hash hash, Hash markerHash) {
     byte marker = wrapHashedDbExceptionAsDecodeSpecException(
-        hash, () -> hashedDb.readByte(hashes.get(0)));
+        hash, () -> hashedDb.readByte(markerHash));
     SpecKind specKind = fromMarker(marker);
     if (specKind == null) {
       throw new DecodeSpecException(hash,
           "It has illegal SpecKind marker = " + marker + ".");
     }
-    return switch (specKind) {
-      case BLOB, BOOL, INT, NOTHING, STRING, CALL, CONST, EARRAY, FIELD_READ, NULL, REF -> {
-        assertSize(hash, specKind, hashes, 1);
-        throw new RuntimeException(
-            "Internal error: Spec with kind " + specKind + " should be found in cache.");
-      }
-      case ARRAY -> {
-        assertSize(hash, ARRAY, hashes, 2);
-        Spec elementSpec = getSpecOrChainException(
-            hashes.get(1), e -> new DecodeSpecException(hash));
-        if (elementSpec instanceof ValSpec valSpec) {
-          yield cacheSpec(newArraySpec(hash, valSpec));
-        } else {
-          throw new DecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
-              + elementSpec.name() + " but should be Spec of some Val.");
-        }
-      }
-      case DEFINED_LAMBDA, NATIVE_LAMBDA -> {
-        assertSize(hash, specKind, hashes, 2);
-        List<Hash> data = wrapHashedDbExceptionAsDecodeSpecException(
-            hash, () -> hashedDb.readSequence(hashes.get(1)));
-        if (data.size() != 2) {
-          throw new DecodeSpecException(hash, "It is " + specKind
-              + " Spec which data sequence contains " + data.size()
-              + " elements but should contains 2.");
-        }
-        Spec result = getSpecOrChainException(data.get(0), e -> new DecodeSpecException(hash));
-        Spec parameters = getSpecOrChainException(data.get(1), e -> new DecodeSpecException(hash));
-        if (!(result instanceof ValSpec resultSpec)) {
-          throw new DecodeSpecException(hash, "It is " + specKind + " Spec which result spec is "
-              + result.name() + " but should be instance of ValSpec.");
-        }
-        if (!(parameters instanceof RecSpec parametersSpec)) {
-          throw new DecodeSpecException(hash, "It is " + specKind
-              + " Spec which parameters spec is " + parameters.name()
-              + " but should be instance of RecSpec.");
-        }
-        yield switch (specKind) {
-          case DEFINED_LAMBDA -> cacheSpec(newDefinedLambdaSpec(hash, resultSpec, parametersSpec));
-          case NATIVE_LAMBDA -> cacheSpec(newNativeLambdaSpec(hash, resultSpec, parametersSpec));
-          default -> throw new RuntimeException("Cannot happen.");
-        };
-      }
-      case RECORD -> {
-        assertSize(hash, RECORD, hashes, 2);
-        ImmutableList<Spec> items = readRecSpecItemSpecs(hashes.get(1), hash);
-        yield cacheSpec(newRecSpec(hash, items));
-      }
-    };
+    return specKind;
   }
 
-  private static void assertSize(Hash hash, SpecKind specKind, List<Hash> hashes,
-      int expectedSize) {
+  private static void assertSpecRootSequenceSize(
+      Hash hash, SpecKind specKind, List<Hash> hashes, int expectedSize) {
     if (hashes.size() != expectedSize) {
       throw new DecodeSpecException(hash,
           "Its specKind == " + specKind + " but its merkle root has "
               + hashes.size() + " children when " + expectedSize + " is expected.");
     }
+  }
+
+  private ArraySpec readArraySpec(Hash hash, List<Hash> rootSequence) {
+    assertSpecRootSequenceSize(hash, ARRAY, rootSequence, 2);
+    Spec elementSpec = getSpecOrChainException(
+        rootSequence.get(1), e -> new DecodeSpecException(hash));
+    if (elementSpec instanceof ValSpec valSpec) {
+      return newArraySpec(hash, valSpec);
+    } else {
+      throw new DecodeSpecException(hash, "It is ARRAY Spec which element Spec is "
+          + elementSpec.name() + " but should be Spec of some Val.");
+    }
+  }
+
+  private Spec readLambdaSpec(Hash hash, List<Hash> rootSequence, SpecKind specKind) {
+    assertSpecRootSequenceSize(hash, specKind, rootSequence, 2);
+    List<Hash> data = wrapHashedDbExceptionAsDecodeSpecException(
+        hash, () -> hashedDb.readSequence(rootSequence.get(1)));
+    if (data.size() != 2) {
+      throw new DecodeSpecException(hash, "It is " + specKind
+          + " Spec which data sequence contains " + data.size()
+          + " elements but should contains 2.");
+    }
+    Spec result = getSpecOrChainException(data.get(0), e -> new DecodeSpecException(hash));
+    Spec parameters = getSpecOrChainException(data.get(1), e -> new DecodeSpecException(hash));
+    if (!(result instanceof ValSpec resultSpec)) {
+      throw new DecodeSpecException(hash, "It is " + specKind + " Spec which result spec is "
+          + result.name() + " but should be instance of ValSpec.");
+    }
+    if (!(parameters instanceof RecSpec parametersSpec)) {
+      throw new DecodeSpecException(hash, "It is " + specKind
+          + " Spec which parameters spec is " + parameters.name()
+          + " but should be instance of RecSpec.");
+    }
+    return switch (specKind) {
+      case DEFINED_LAMBDA -> newDefinedLambdaSpec(hash, resultSpec, parametersSpec);
+      case NATIVE_LAMBDA -> newNativeLambdaSpec(hash, resultSpec, parametersSpec);
+      default -> throw new RuntimeException("Cannot happen.");
+    };
+  }
+
+  private RecSpec readRecord(Hash hash, List<Hash> rootSequence) {
+    assertSpecRootSequenceSize(hash, RECORD, rootSequence, 2);
+    ImmutableList<Spec> items = readRecSpecItemSpecs(rootSequence.get(1), hash);
+    return newRecSpec(hash, items);
   }
 
   private ImmutableList<Spec> readRecSpecItemSpecs(Hash hash, Hash parentHash) {
@@ -553,7 +555,7 @@ public class ObjectDb {
   }
 
   private ArraySpec newArraySpec(Hash hash, ValSpec elementSpec) {
-    return new ArraySpec(hash, elementSpec, this);
+    return cacheSpec(new ArraySpec(hash, elementSpec, this));
   }
 
   private DefinedLambdaSpec newDefinedLambdaSpec(ValSpec result, RecSpec parameters)
@@ -563,7 +565,7 @@ public class ObjectDb {
   }
 
   private DefinedLambdaSpec newDefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
-    return new DefinedLambdaSpec(hash, result, parameters, this);
+    return cacheSpec(new DefinedLambdaSpec(hash, result, parameters, this));
   }
 
   private NativeLambdaSpec newNativeLambdaSpec(ValSpec result, RecSpec parameters)
@@ -573,7 +575,7 @@ public class ObjectDb {
   }
 
   private NativeLambdaSpec newNativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
-    return new NativeLambdaSpec(hash, result, parameters, this);
+    return cacheSpec(new NativeLambdaSpec(hash, result, parameters, this));
   }
 
   private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
@@ -582,7 +584,7 @@ public class ObjectDb {
   }
 
   private RecSpec newRecSpec(Hash hash, Iterable<? extends Spec> itemSpecs) {
-    return new RecSpec(hash, itemSpecs, this);
+    return cacheSpec(new RecSpec(hash, itemSpecs, this));
   }
 
   // method for writing Merkle-root to HashedDb
