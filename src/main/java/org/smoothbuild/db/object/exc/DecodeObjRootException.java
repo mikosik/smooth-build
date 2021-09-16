@@ -14,7 +14,7 @@ public class DecodeObjRootException extends DecodeObjException {
   }
 
   public static DecodeObjRootException cannotReadRootException(Hash hash, Throwable cause) {
-    return new DecodeObjRootException(hash, "Cannot read root.", cause);
+    return new DecodeObjRootException(hash, "Cannot decode root.", cause);
   }
 
   public static DecodeObjRootException wrongSizeOfRootSequenceException(Hash hash, int actualSize) {
