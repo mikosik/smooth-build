@@ -14,6 +14,6 @@ public class Null extends Expr {
 
   @Override
   public String valueToString() {
-    return "Null(???)";
+    return "Null";
   }
 }

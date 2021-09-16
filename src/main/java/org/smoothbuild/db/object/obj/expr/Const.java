@@ -28,6 +28,6 @@ public class Const extends Expr {
 
   @Override
   public String valueToString() {
-    return "Const(???)";
+    return "Const(" + value().valueToString() + ")";
   }
 }

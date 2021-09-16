@@ -253,6 +253,6 @@ public class NativeLambdaTest extends TestingContext {
     NativeLambdaSpec lambdaSpec = nativeLambdaSpec(intSpec(), boolSpec());
     NativeLambda lambda = nativeLambdaVal(lambdaSpec, strVal(), blobVal(), asList(constExpr()));
     assertThat(lambda.toString())
-        .isEqualTo("NativeLambda(???):" + lambda.hash());
+        .isEqualTo("NativeLambda(INT(BOOL)):" + lambda.hash());
   }
 }

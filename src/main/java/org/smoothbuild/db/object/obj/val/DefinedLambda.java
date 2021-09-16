@@ -16,6 +16,6 @@ public class DefinedLambda extends Lambda {
 
   @Override
   public String valueToString() {
-    return "DefinedLambda(???)";
+    return "DefinedLambda(" + spec().name() + ")";
   }
 }

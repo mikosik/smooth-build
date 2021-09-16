@@ -16,7 +16,7 @@ public class NativeLambda extends Lambda {
 
   @Override
   public String valueToString() {
-    return "NativeLambda(???)";
+    return "NativeLambda(" + spec().name() + ")";
   }
 
   public Str classBinaryName() {

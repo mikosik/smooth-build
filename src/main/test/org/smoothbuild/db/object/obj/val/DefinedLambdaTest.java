@@ -184,6 +184,6 @@ public class DefinedLambdaTest extends TestingContext {
     DefinedLambdaSpec lambdaSpec = definedLambdaSpec(intSpec(), boolSpec());
     DefinedLambda lambda = definedLambdaVal(lambdaSpec, constExpr(), asList(constExpr()));
     assertThat(lambda.toString())
-        .isEqualTo("DefinedLambda(???):" + lambda.hash());
+        .isEqualTo("DefinedLambda(INT(BOOL)):" + lambda.hash());
   }
 }
