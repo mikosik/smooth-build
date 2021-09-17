@@ -199,7 +199,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     RuntimeException exception = new RuntimeException();
     Computer computer = new Computer(null, null, null) {
       @Override
-      public void compute(AlgorithmTask task, Input input, Consumer<Computed> consumer) {
+      public void compute(Algorithm algorithm, Input input, Consumer<Computed> consumer) {
         throw exception;
       }
     };

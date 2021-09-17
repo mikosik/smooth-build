@@ -75,7 +75,7 @@ public class ParallelTaskExecutor {
       jobExecutor.enqueue(() -> {
         try {
           ResultHandler resultHandler = new ResultHandler(task, consumer, reporter, jobExecutor);
-          computer.compute(task, input, resultHandler);
+          computer.compute(task.algorithm(), input, resultHandler);
         } catch (Throwable e) {
           reporter.reportComputerException(task, e);
           jobExecutor.terminate();

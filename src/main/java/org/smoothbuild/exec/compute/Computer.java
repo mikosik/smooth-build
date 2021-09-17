@@ -37,24 +37,24 @@ public class Computer {
     this.feeders = new ConcurrentHashMap<>();
   }
 
-  public void compute(AlgorithmTask task, Input input, Consumer<Computed> consumer)
+  public void compute(Algorithm algorithm, Input input, Consumer<Computed> consumer)
       throws ComputationCacheException, IOException {
-    Hash hash = computationHash(task.algorithm(), input);
+    Hash hash = computationHash(algorithm, input);
     FeedingConsumer<Computed> newFeeder = new FeedingConsumer<>();
     FeedingConsumer<Computed> prevFeeder = feeders.putIfAbsent(hash, newFeeder);
     if (prevFeeder != null) {
       prevFeeder
-          .chain((computed) -> computedFromCache(task.algorithm().isPure(), computed))
+          .chain((computed) -> computedFromCache(algorithm.isPure(), computed))
           .addConsumer(consumer);
     } else {
       newFeeder.addConsumer(consumer);
       if (computationCache.contains(hash)) {
-        Output output = computationCache.read(hash, task.algorithm().outputSpec());
+        Output output = computationCache.read(hash, algorithm.outputSpec());
         newFeeder.accept(new Computed(output, DISK));
         feeders.remove(hash);
       } else {
-        Computed computed = runAlgorithm(task.algorithm(), input);
-        boolean cacheOnDisk = task.algorithm().isPure() && computed.hasOutput();
+        Computed computed = runAlgorithm(algorithm, input);
+        boolean cacheOnDisk = algorithm.isPure() && computed.hasOutput();
         if (cacheOnDisk) {
           computationCache.write(hash, computed.output());
         }
