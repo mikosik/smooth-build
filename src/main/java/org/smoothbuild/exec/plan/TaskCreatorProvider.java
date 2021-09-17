@@ -15,7 +15,7 @@ public class TaskCreatorProvider {
     this.methodLoader = methodLoader;
   }
 
-  public TaskCreator get(Definitions definitions) {
-    return new TaskCreator(definitions, typeToSpecConverter, methodLoader);
+  public JobCreator get(Definitions definitions) {
+    return new JobCreator(definitions, typeToSpecConverter, methodLoader);
   }
 }

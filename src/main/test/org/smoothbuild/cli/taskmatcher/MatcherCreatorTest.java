@@ -3,8 +3,6 @@ package org.smoothbuild.cli.taskmatcher;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_ERROR;
@@ -23,6 +21,8 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.VALUE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.and;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.or;
+import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.space.FilePath.filePath;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
@@ -38,9 +38,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.exec.compute.TaskInfo;
 import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.io.fs.space.Space;
+import org.smoothbuild.lang.base.define.Location;
 
 import picocli.CommandLine.TypeConversionException;
 
@@ -54,10 +55,10 @@ public class MatcherCreatorTest {
     for (TaskKind kind : TaskKind.values()) {
       for (Space space : Space.values()) {
         for (Level level : levels()) {
-          Task task = task(kind, space);
+          TaskInfo taskInfo = taskInfo(kind, space);
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
-          boolean actual = matcher.matches(task, logs);
-          boolean expected = expectedMatcher.matches(task, logs);
+          boolean actual = matcher.matches(taskInfo, logs);
+          boolean expected = expectedMatcher.matches(taskInfo, logs);
           if (actual != expected) {
             builder
                 .append(kind)
@@ -87,11 +88,9 @@ public class MatcherCreatorTest {
     return levels;
   }
 
-  private Task task(TaskKind kind, Space space) {
-    Task task = mock(Task.class);
-    when(task.kind()).thenReturn(kind);
-    when(task.space()).thenReturn(space);
-    return task;
+  private static TaskInfo taskInfo(TaskKind kind, Space space) {
+    Location location = new Location(filePath(space, path("path")), 3);
+    return new TaskInfo(kind, "name", location);
   }
 
   public static Stream<? extends Arguments> provideArguments() {

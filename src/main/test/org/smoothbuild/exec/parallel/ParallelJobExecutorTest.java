@@ -12,14 +12,15 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
 import static org.smoothbuild.exec.compute.ResultSource.DISK;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
-import static org.smoothbuild.lang.base.define.Location.internal;
+import static org.smoothbuild.exec.parallel.ExecutionReporter.header;
+import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.Map;
@@ -39,71 +40,69 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Computer;
-import org.smoothbuild.exec.compute.LazyTask;
+import org.smoothbuild.exec.compute.Job;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.exec.compute.TaskInfo;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
-public class ParallelTaskExecutorTest extends TestingContext {
-  private ParallelTaskExecutor parallelTaskExecutor;
+public class ParallelJobExecutorTest extends TestingContext {
+  private ParallelJobExecutor parallelJobExecutor;
   private ExecutionReporter reporter;
 
   @BeforeEach
   public void before() {
     reporter = mock(ExecutionReporter.class);
-    parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 4);
+    parallelJobExecutor = new ParallelJobExecutor(computer(), reporter, 4);
   }
 
   @Test
   public void tasks_are_executed() throws Exception {
-    Task task = concat(
+    var job = concat(
         concat(
-            task(valueAlgorithm("A")),
-            task(valueAlgorithm("B"))),
+            job(valueAlgorithm("A")),
+            job(valueAlgorithm("B"))),
         concat(
-            task(valueAlgorithm("C")),
-            task(valueAlgorithm("D"))));
+            job(valueAlgorithm("C")),
+            job(valueAlgorithm("D"))));
 
-    assertThat(executeSingleTask(task))
+    assertThat(executeSingleJob(job))
         .isEqualTo(strVal("((A,B),(C,D))"));
   }
 
   @Test
   public void tasks_are_executed_in_parallel() throws Exception {
-    AtomicInteger counterA = new AtomicInteger(10);
-    AtomicInteger counterB = new AtomicInteger(20);
-    Task task = concat(
-        task(sleepyWriteReadAlgorithm(Hash.of(102), counterB, counterA)),
-        task(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
+    var counterA = new AtomicInteger(10);
+    var counterB = new AtomicInteger(20);
+    var job = concat(
+        job(sleepyWriteReadAlgorithm(Hash.of(102), counterB, counterA)),
+        job(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
 
-    assertThat(executeSingleTask(task))
+    assertThat(executeSingleJob(job))
         .isEqualTo(strVal("(11,21)"));
   }
 
   @Test
   public void task_execution_waits_and_reuses_result_of_task_with_equal_hash_that_is_being_executed()
       throws Exception {
-    parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 4);
-    AtomicInteger counter = new AtomicInteger();
-    Task task1 = task(sleepGetIncrementAlgorithm(counter));
-    Task task2 = task(sleepGetIncrementAlgorithm(counter));
-    Task task3 = task(sleepGetIncrementAlgorithm(counter));
-    Task task4 = task(sleepGetIncrementAlgorithm(counter));
-    Task task = concat(task1, task2, task3, task4);
+    parallelJobExecutor = new ParallelJobExecutor(computer(), reporter, 4);
+    var counter = new AtomicInteger();
+    var job1 = job(sleepGetIncrementAlgorithm(counter));
+    var job2 = job(sleepGetIncrementAlgorithm(counter));
+    var job3 = job(sleepGetIncrementAlgorithm(counter));
+    var job4 = job(sleepGetIncrementAlgorithm(counter));
+    var job = concat(job1, job2, job3, job4);
 
-    assertThat(executeSingleTask(task))
+    assertThat(executeSingleJob(job))
         .isEqualTo(strVal("(0,0,0,0)"));
 
     ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
-    verify(reporter, times(1)).report(eq(task1), captor.capture());
-    verify(reporter, times(1)).report(eq(task2), captor.capture());
-    verify(reporter, times(1)).report(eq(task3), captor.capture());
-    verify(reporter, times(1)).report(eq(task4), captor.capture());
+    ExecutionReporter reporter = this.reporter;
+    verify(reporter, times(4)).report(eq(job1.info()), captor.capture());
     List<ResultSource> reportedSources = captor.getAllValues()
         .stream()
         .map(Computed::resultSource)
@@ -118,18 +117,17 @@ public class ParallelTaskExecutorTest extends TestingContext {
     @Test
     public void impure_function_is_memory()
         throws Exception {
-      parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
-      AtomicInteger counter = new AtomicInteger();
-      Task task1 = task(sleepGetIncrementAlgorithm(counter, false));
-      Task task2 = task(sleepGetIncrementAlgorithm(counter, false));
-      Task task = concat(task1, task2);
+      parallelJobExecutor = new ParallelJobExecutor(computer(), reporter, 2);
+      var counter = new AtomicInteger();
+      var job1 = job(sleepGetIncrementAlgorithm(counter, false));
+      var job2 = job(sleepGetIncrementAlgorithm(counter, false));
+      var job = concat(job1, job2);
 
-      assertThat(executeSingleTask(task))
+      assertThat(executeSingleJob(job))
           .isEqualTo(strVal("(0,0)"));
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
-      verify(reporter, times(1)).report(eq(task1), captor.capture());
-      verify(reporter, times(1)).report(eq(task2), captor.capture());
+      verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
       List<ResultSource> reportedSources = captor.getAllValues()
           .stream()
           .map(Computed::resultSource)
@@ -142,18 +140,17 @@ public class ParallelTaskExecutorTest extends TestingContext {
     @Test
     public void pure_function_is_disk()
         throws Exception {
-      parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
+      parallelJobExecutor = new ParallelJobExecutor(computer(), reporter, 2);
       AtomicInteger counter = new AtomicInteger();
-      Task task1 = task(sleepGetIncrementAlgorithm(counter));
-      Task task2 = task(sleepGetIncrementAlgorithm(counter));
-      Task task = concat(task1, task2);
+      var job1 = job(sleepGetIncrementAlgorithm(counter));
+      var job2 = job(sleepGetIncrementAlgorithm(counter));
+      var job = concat(job1, job2);
 
-      assertThat(executeSingleTask(task))
+      assertThat(executeSingleJob(job))
           .isEqualTo(strVal("(0,0)"));
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
-      verify(reporter, times(1)).report(eq(task1), captor.capture());
-      verify(reporter, times(1)).report(eq(task2), captor.capture());
+      verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
       List<ResultSource> reportedSources = captor.getAllValues()
           .stream()
           .map(Computed::resultSource)
@@ -167,30 +164,30 @@ public class ParallelTaskExecutorTest extends TestingContext {
   @Test
   public void waiting_for_result_of_other_task_with_equal_hash_doesnt_block_executor_thread()
       throws Exception {
-    parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
-    AtomicInteger counter = new AtomicInteger();
-    Task task = concat(
-        task(sleepGetIncrementAlgorithm(counter)),
-        task(sleepGetIncrementAlgorithm(counter)),
-        task(getIncrementAlgorithm(counter)));
+    parallelJobExecutor = new ParallelJobExecutor(computer(), reporter, 2);
+    var counter = new AtomicInteger();
+    var job = concat(
+        job(sleepGetIncrementAlgorithm(counter)),
+        job(sleepGetIncrementAlgorithm(counter)),
+        job(getIncrementAlgorithm(counter)));
 
-    assertThat(executeSingleTask(task))
+    assertThat(executeSingleJob(job))
         .isEqualTo(strVal("(1,1,0)"));
   }
 
   @Test
   public void task_throwing_runtime_exception_causes_error() throws Exception {
     Reporter reporter = mock(Reporter.class);
-    parallelTaskExecutor = new ParallelTaskExecutor(computer(), new ExecutionReporter(reporter), 4);
+    parallelJobExecutor = new ParallelJobExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
-    Task task = task(throwingAlgorithm(exception));
-    Value value = mock(Value.class);
+    var job = job(throwingAlgorithm(exception));
+    var value = mock(Value.class);
 
-    assertThat(parallelTaskExecutor.executeAll(Map.of(value, task)).get(value).isEmpty())
+    assertThat(parallelJobExecutor.executeAll(Map.of(value, job)).get(value).isEmpty())
         .isTrue();
     verify(reporter).report(
-        eq(task),
-        eq("task-name                                smooth internal                exec"),
+        eq(job.info()),
+        eq(header(job.info(), "exec")),
         eq(list(error("Execution failed with:\n" + getStackTraceAsString(exception)))));
   }
 
@@ -203,22 +200,23 @@ public class ParallelTaskExecutorTest extends TestingContext {
         throw exception;
       }
     };
-    parallelTaskExecutor = new ParallelTaskExecutor(computer, reporter);
-    Value value = mock(Value.class);
-    Task task = task(valueAlgorithm("A"));
+    parallelJobExecutor = new ParallelJobExecutor(computer, reporter);
+    var value = mock(Value.class);
+    var job = job(valueAlgorithm("A"));
 
-    Optional<Obj> object = parallelTaskExecutor.executeAll(Map.of(value, task)).get(value);
+    Optional<Obj> object = parallelJobExecutor.executeAll(Map.of(value, job)).get(value);
 
-    verify(reporter, only()).reportComputerException(same(task), same(exception));
+    verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
     assertThat(object.isEmpty())
         .isTrue();
   }
 
-  private Task concat(Task... dependencies) {
-    return task(concatAlgorithm(), list(dependencies));
+  private static Task concat(Job... dependencies) {
+    var algorithm = concatAlgorithm();
+    return job("concat", algorithm, dependencies);
   }
 
-  private Algorithm concatAlgorithm() {
+  private static Algorithm concatAlgorithm() {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
@@ -230,6 +228,15 @@ public class ParallelTaskExecutorTest extends TestingContext {
         return new Output(result, nativeApi.messages());
       }
     };
+  }
+
+  private static Task job(Algorithm algorithm, Job... dependencies) {
+    return job("task_name", algorithm, dependencies);
+  }
+
+  private static Task job(String name, Algorithm algorithm, Job... dependencies) {
+    TaskInfo info = new TaskInfo(CALL, name, loc());
+    return new Task(STRING, list(dependencies), info, algorithm);
   }
 
   private Algorithm valueAlgorithm(String value) {
@@ -274,8 +281,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     };
   }
 
-  private Algorithm sleepyWriteReadAlgorithm(
-      Hash hash, AtomicInteger write, AtomicInteger read) {
+  private Algorithm sleepyWriteReadAlgorithm(Hash hash, AtomicInteger write, AtomicInteger read) {
     return new TestAlgorithm(hash) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
@@ -286,24 +292,14 @@ public class ParallelTaskExecutorTest extends TestingContext {
     };
   }
 
-  private Obj executeSingleTask(Task task) throws InterruptedException {
-    return executeSingleTask(parallelTaskExecutor, task);
+  private Obj executeSingleJob(Job job) throws InterruptedException {
+    return executeSingleJob(parallelJobExecutor, job);
   }
 
-  private static Obj executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
+  private static Obj executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
     Value value = mock(Value.class);
-    return parallelTaskExecutor.executeAll(Map.of(value, task)).get(value).get();
-  }
-
-  private static Task task(Algorithm algorithm) {
-    return task(algorithm, list());
-  }
-
-  private static Task task(Algorithm algorithm, List<Task> dependencies) {
-    var suppliers = map(
-        dependencies, d -> (Task) new LazyTask(d.type(), d.location(), () -> d));
-    return new AlgorithmTask(CALL, STRING, "task-name", algorithm, suppliers, internal());
+    return parallelJobExecutor.executeAll(Map.of(value, job)).get(value).get();
   }
 
   private static Output toStr(NativeApi nativeApi, int i) {
@@ -318,7 +314,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
   }
 
-  private abstract class TestAlgorithm extends Algorithm {
+  private static abstract class TestAlgorithm extends Algorithm {
     private final Hash hash;
 
     protected TestAlgorithm(Hash hash) {
@@ -326,7 +322,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
 
     protected TestAlgorithm(Hash hash, boolean isPure) {
-      super(strSpec(), isPure);
+      super(STR, isPure);
       this.hash = hash;
     }
 
@@ -337,7 +333,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
     @Override
     public ValSpec outputSpec() {
-      return strSpec();
+      return STR;
     }
   }
 }

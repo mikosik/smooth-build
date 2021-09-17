@@ -16,8 +16,8 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.exec.compute.Task;
-import org.smoothbuild.exec.parallel.ParallelTaskExecutor;
+import org.smoothbuild.exec.compute.Job;
+import org.smoothbuild.exec.parallel.ParallelJobExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.define.Definitions;
@@ -26,13 +26,13 @@ import org.smoothbuild.lang.base.define.Value;
 public class ArtifactBuilder {
   private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";
 
-  private final ParallelTaskExecutor parallelExecutor;
+  private final ParallelJobExecutor parallelExecutor;
   private final ArtifactSaver artifactSaver;
   private final ExecutionPlanner executionPlanner;
   private final Reporter reporter;
 
   @Inject
-  public ArtifactBuilder(ParallelTaskExecutor parallelExecutor, ArtifactSaver artifactSaver,
+  public ArtifactBuilder(ParallelJobExecutor parallelExecutor, ArtifactSaver artifactSaver,
       ExecutionPlanner executionPlanner, Reporter reporter) {
     this.parallelExecutor = parallelExecutor;
     this.artifactSaver = artifactSaver;
@@ -41,7 +41,7 @@ public class ArtifactBuilder {
   }
 
   public void buildArtifacts(Definitions definitions, List<Value> values) {
-    Map<Value, Task> plans = executionPlanner.createPlans(definitions, values);
+    Map<Value, Job> plans = executionPlanner.createPlans(definitions, values);
     if (reporter.isProblemReported()) {
       return;
     }

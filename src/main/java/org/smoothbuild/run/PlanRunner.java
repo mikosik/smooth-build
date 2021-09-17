@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.exec.compute.Job;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Value;
@@ -59,13 +59,13 @@ public class PlanRunner {
           .forEach(this::print);
     }
 
-    private void print(Task task) {
-      print("", task);
+    private void print(Job job) {
+      print("", job);
     }
 
-    private void print(String indent, Task task) {
-      reporter.printlnRaw(indent + task.description());
-      task.dependencies().forEach(d -> print(indent + "  ", d));
+    private void print(String indent, Job job) {
+      reporter.printlnRaw(indent + job.type().name() + " " + job.name());
+      job.dependencies().forEach(d -> print(indent + "  ", d));
     }
   }
 }

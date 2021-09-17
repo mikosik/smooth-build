@@ -96,7 +96,7 @@ public class TaskMatchers {
   }
 
   private static TaskMatcher spaceMatcher(Space user) {
-    return (task, logs) -> Objects.equals(task.space(), user);
+    return (task, logs) -> Objects.equals(task.location().file().space(), user);
   }
 
   private static TaskMatcher kindMatcher(TaskKind buildingCall) {

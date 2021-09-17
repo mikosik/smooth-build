@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.exec.plan.TaskCreator.Handler;
+import org.smoothbuild.exec.plan.JobCreator.Handler;
 import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
@@ -29,7 +29,7 @@ import org.smoothbuild.util.Scope;
 
 import com.google.common.collect.ImmutableMap;
 
-public class TaskCreatorTest extends TestingContext {
+public class JobCreatorTest extends TestingContext {
   @Test
   public void lazy_task_is_created_for_parameter() {
     var functionBody = TestingLang.blob(0x33);
@@ -39,7 +39,7 @@ public class TaskCreatorTest extends TestingContext {
     var call = call(11, BLOB, reference(function), argument);
 
     taskCreator(oneLazyCallAllowed(), function)
-        .eagerTaskFor(new Scope<>(Map.of()), call);
+        .eagerJobFor(new Scope<>(Map.of()), call);
   }
 
   @Test
@@ -54,7 +54,7 @@ public class TaskCreatorTest extends TestingContext {
     CallExpression myFunctionCall = call(BLOB, reference(myFunction), new MyExpression());
 
     taskCreator(oneLazyCallAllowed(), myFunction, twoBlobsEater)
-        .eagerTaskFor(new Scope<>(Map.of()), myFunctionCall);
+        .eagerJobFor(new Scope<>(Map.of()), myFunctionCall);
   }
 
   private static  ImmutableMap<Class<?>, Handler<?>> oneLazyCallAllowed() {
@@ -71,10 +71,10 @@ public class TaskCreatorTest extends TestingContext {
         }));
   }
 
-  private TaskCreator taskCreator(
+  private JobCreator taskCreator(
       Map<Class<?>, Handler<?>> additionalHandlers, Function... functions) {
     var definitions = definitions(functions);
-    return new TaskCreator(definitions, new TypeToSpecConverter(objectFactory()), null,
+    return new JobCreator(definitions, new TypeToSpecConverter(objectFactory()), null,
         additionalHandlers);
   }
 

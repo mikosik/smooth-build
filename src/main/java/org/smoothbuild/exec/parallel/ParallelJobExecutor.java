@@ -3,6 +3,7 @@ package org.smoothbuild.exec.parallel;
 import static org.smoothbuild.util.Maps.mapValues;
 import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -11,11 +12,13 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
-import org.smoothbuild.exec.compute.AlgorithmTask;
 import org.smoothbuild.exec.compute.Computer;
-import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.exec.compute.Job;
+import org.smoothbuild.exec.compute.TaskInfo;
 import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 /**
@@ -23,26 +26,26 @@ import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
  *
  * This class is thread-safe.
  */
-public class ParallelTaskExecutor {
+public class ParallelJobExecutor {
   private final Computer computer;
   private final ExecutionReporter reporter;
   private final int threadCount;
 
   @Inject
-  public ParallelTaskExecutor(Computer computer, ExecutionReporter reporter) {
+  public ParallelJobExecutor(Computer computer, ExecutionReporter reporter) {
     this(computer, reporter, Runtime.getRuntime().availableProcessors());
   }
 
-  public ParallelTaskExecutor(Computer computer, ExecutionReporter reporter,
+  public ParallelJobExecutor(Computer computer, ExecutionReporter reporter,
       int threadCount) {
     this.computer = computer;
     this.reporter = reporter;
     this.threadCount = threadCount;
   }
 
-  public Map<Value, Optional<Obj>> executeAll(Map<Value, Task> tasks) throws InterruptedException {
+  public Map<Value, Optional<Obj>> executeAll(Map<Value, Job> jobs) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
-    return new Worker(computer, reporter, executor).executeAll(tasks);
+    return new Worker(computer, reporter, executor).executeAll(jobs);
   }
 
   public static class Worker {
@@ -62,22 +65,24 @@ public class ParallelTaskExecutor {
       return reporter;
     }
 
-    public Map<Value, Optional<Obj>> executeAll(Map<Value, Task> tasks)
+    public Map<Value, Optional<Obj>> executeAll(Map<Value, Job> jobs)
         throws InterruptedException {
-      var results = mapValues(tasks, task -> task.compute(this));
+      var results = mapValues(jobs, job -> job.schedule(this));
       runWhenAllAvailable(results.values(), jobExecutor::terminate);
 
       jobExecutor.awaitTermination();
       return mapValues(results, feeder -> Optional.ofNullable(feeder.get()));
     }
 
-    public void enqueueComputation(AlgorithmTask task, Input input, Consumer<Val> consumer) {
+    public void enqueue(TaskInfo info, Algorithm algorithm, List<Feeder<Val>> dependencies,
+        Consumer<Val> consumer) {
       jobExecutor.enqueue(() -> {
         try {
-          ResultHandler resultHandler = new ResultHandler(task, consumer, reporter, jobExecutor);
-          computer.compute(task.algorithm(), input, resultHandler);
+          var resultHandler = new ResultHandler(info, consumer, reporter, jobExecutor);
+          Input input = Input.fromFeeders(dependencies);
+          computer.compute(algorithm, input, resultHandler);
         } catch (Throwable e) {
-          reporter.reportComputerException(task, e);
+          reporter.reportComputerException(info, e);
           jobExecutor.terminate();
         }
       });

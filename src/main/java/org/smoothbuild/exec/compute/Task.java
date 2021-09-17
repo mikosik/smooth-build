@@ -1,30 +1,40 @@
 package org.smoothbuild.exec.compute;
 
+import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
+
+import java.util.List;
+
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.io.fs.space.Space;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.exec.algorithm.Algorithm;
+import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.FeedingConsumer;
 
-import com.google.common.collect.ImmutableList;
+public class Task extends AbstractJob {
+  private final TaskInfo info;
+  private final Algorithm algorithm;
 
-public interface Task {
-  public TaskKind kind();
-
-  public Type type();
-
-  public String name();
-
-  public ImmutableList<Task> dependencies();
-
-  public String description();
-
-  public Location location();
-
-  public default Space space() {
-    return location().file().space();
+  public Task(Type type, List<Job> dependencies, TaskInfo info, Algorithm algorithm) {
+    super(type, dependencies, info);
+    this.info = info;
+    this.algorithm = algorithm;
   }
 
-  public Feeder<Val> compute(Worker worker);
+  public TaskInfo info() {
+    return info;
+  }
+
+  public Algorithm algorithm() {
+    return algorithm;
+  }
+
+  @Override
+  public Feeder<Val> schedule(Worker worker) {
+    FeedingConsumer<Val> result = new FeedingConsumer<>();
+    var input = map(dependencies(), d -> d.schedule(worker));
+    runWhenAllAvailable(input, () -> worker.enqueue(info, algorithm, input, result));
+    return result;
+  }
 }

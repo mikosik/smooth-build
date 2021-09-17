@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
-import static org.smoothbuild.exec.compute.RealTask.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.exec.compute.TaskInfo.NAME_LENGTH_LIMIT;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.Blob;

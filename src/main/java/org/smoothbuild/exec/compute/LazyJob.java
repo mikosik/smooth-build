@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
+import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -13,8 +13,8 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public record LazyTask(Type type, Location location, Supplier<Task> supplier) implements Task {
-  public LazyTask(Type type, Location location, Supplier<Task> supplier) {
+public record LazyJob(Type type, Location location, Supplier<Job> supplier) implements Job {
+  public LazyJob(Type type, Location location, Supplier<Job> supplier) {
     this.type = type;
     this.location = location;
     this.supplier = Suppliers.memoize(supplier);
@@ -22,30 +22,20 @@ public record LazyTask(Type type, Location location, Supplier<Task> supplier) im
 
   @Override
   public String name() {
-    return task().name();
+    return job().name();
   }
 
   @Override
-  public ImmutableList<Task> dependencies() {
-    return task().dependencies();
+  public ImmutableList<Job> dependencies() {
+    return job().dependencies();
   }
 
   @Override
-  public String description() {
-    return task().description();
+  public Feeder<Val> schedule(Worker worker) {
+    return job().schedule(worker);
   }
 
-  @Override
-  public TaskKind kind() {
-    return task().kind();
-  }
-
-  @Override
-  public Feeder<Val> compute(Worker worker) {
-    return task().compute(worker);
-  }
-
-  private Task task() {
+  private Job job() {
     return supplier.get();
   }
 }

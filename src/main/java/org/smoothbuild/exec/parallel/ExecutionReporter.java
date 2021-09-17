@@ -6,8 +6,8 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
 import static org.smoothbuild.exec.base.MessageRec.level;
 import static org.smoothbuild.exec.base.MessageRec.text;
-import static org.smoothbuild.exec.compute.RealTask.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.exec.compute.TaskInfo.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -21,7 +21,7 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResultSource;
-import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.exec.compute.TaskInfo;
 
 /**
  * This class is thread-safe.
@@ -34,43 +34,44 @@ public class ExecutionReporter {
     this.reporter = reporter;
   }
 
-  public void report(Task task, Computed computed) {
+  public void report(TaskInfo taskInfo, Computed computed) {
     ResultSource resultSource = computed.resultSource();
     if (computed.hasOutput()) {
-      print(task, resultSource, computed.output().messages());
+      print(taskInfo, resultSource, computed.output().messages());
     } else {
       Log error = error(
           "Execution failed with:\n" + getStackTraceAsString(computed.exception()));
-      print(task, list(error), resultSource);
+      print(taskInfo, list(error), resultSource);
     }
   }
 
-  public void reportComputerException(Task task, Throwable throwable) {
+  public void reportComputerException(TaskInfo taskInfo, Throwable throwable) {
     Log fatal = fatal(
         "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
-    ExecutionReporter.this.print(task, list(fatal), EXECUTION.toString());
+    ExecutionReporter.this.print(taskInfo, list(fatal), EXECUTION.toString());
   }
 
-  private void print(Task task, ResultSource resultSource, Array messages) {
+  private void print(TaskInfo taskInfo, ResultSource resultSource, Array messages) {
     var logs = map(messages.elements(Rec.class), m -> new Log(level(m), text(m)));
-    print(task, logs, resultSource);
+    print(taskInfo, logs, resultSource);
   }
 
-  public void print(Task task, List<Log> logs) {
-    print(task, logs, "");
+  public void print(TaskInfo taskInfo, List<Log> logs) {
+    print(taskInfo, logs, "");
   }
 
-  public void print(Task task, List<Log> logs, ResultSource resultSource) {
-    print(task, logs, resultSource.toString());
+  public void print(TaskInfo taskInfo, List<Log> logs, ResultSource resultSource) {
+    print(taskInfo, logs, resultSource.toString());
   }
 
-  private void print(Task task, List<Log> logs, String resultSource) {
-    reporter.report(task, header(task, resultSource), logs);
+  private void print(TaskInfo taskInfo, List<Log> logs, String resultSource) {
+    reporter.report(taskInfo, header(taskInfo, resultSource), logs);
   }
 
-  private static String header(Task task, String resultSource) {
-    String nameString = task.name();
-    String locationString = task.location().toString();
+  // Visible for testing
+  static String header(TaskInfo taskInfo, String resultSource) {
+    String nameString = taskInfo.name();
+    String locationString = taskInfo.location().toString();
 
     String nameColumn = padEnd(nameString, NAME_LENGTH_LIMIT + 1, ' ');
     String locationColumn = resultSource.isEmpty()

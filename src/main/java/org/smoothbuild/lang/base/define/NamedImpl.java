@@ -6,6 +6,10 @@ public class NamedImpl implements Named {
   private final String name;
   private final Location location;
 
+  public NamedImpl(Named named) {
+    this(named.name(), named.location());
+  }
+
   public NamedImpl(String name, Location location) {
     this.name = requireNonNull(name);
     this.location = requireNonNull(location);
