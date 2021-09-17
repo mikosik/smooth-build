@@ -46,11 +46,11 @@ public class MapTask extends RealTask {
 
     arrayTask()
         .compute(worker)
-        .addConsumer(obj -> onArrayCompleted(obj, result, worker));
+        .addConsumer(obj -> onArrayCompleted(obj, worker, result));
     return result;
   }
 
-  private void onArrayCompleted(Val val, Consumer<Val> result, Worker worker) {
+  private void onArrayCompleted(Val val, Worker worker, Consumer<Val> result) {
     Array array = (Array) val;
     ArrayType arrayType = (ArrayType) type();
     var elemTasks = map(array.elements(Val.class), o -> mapElementTask(arrayType.elemType(), o));
