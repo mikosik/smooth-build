@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Named;
 
 public class NamedNode extends Node implements Named {
   private final String name;
