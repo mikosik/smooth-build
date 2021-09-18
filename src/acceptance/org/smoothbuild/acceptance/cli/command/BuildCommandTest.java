@@ -125,11 +125,17 @@ public class BuildCommandTest {
       private static final String NATIVE_CALL_TASK_HEADER = """
           concat()                                 build.smooth:1                 exec
           """;
-      private static final String  INTERNAL_FUNCTION_CALL = """
+      private static final String IF_FUNCTION_CALL = """
             result = if(true, "true", "false");
             """;
-      private static final String INTERNAL_CALL_TASK_HEADER = """
+      private static final String IF_CALL_TASK_HEADER = """
           if()                                     build.smooth:1
+          """;
+      private static final String MAP_FUNCTION_CALL = """
+            result = map([false, true], not);
+            """;
+      private static final String MAP_CALL_TASK_HEADER = """
+          map()                                    build.smooth:1                 exec
           """;
 
       @Test
@@ -166,18 +172,34 @@ public class BuildCommandTest {
 
       @Test
       public void shows_call_to_internal_if_function_when_enabled() throws IOException {
-        createUserModule(INTERNAL_FUNCTION_CALL);
+        createUserModule(IF_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(INTERNAL_CALL_TASK_HEADER);
+        assertSysOutContains(IF_CALL_TASK_HEADER);
       }
 
       @Test
-      public void shows_call_to_internal_if_function_when_not_enabled() throws IOException {
-        createUserModule(INTERNAL_FUNCTION_CALL);
+      public void hides_call_to_internal_if_function_when_not_enabled() throws IOException {
+        createUserModule(IF_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(INTERNAL_CALL_TASK_HEADER);
+        assertSysOutDoesNotContain(IF_CALL_TASK_HEADER);
+      }
+
+      @Test
+      public void shows_call_to_internal_map_function_when_enabled() throws IOException {
+        createUserModule(MAP_FUNCTION_CALL);
+        runSmooth(buildCommand("--show-tasks=call", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(MAP_CALL_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_call_to_internal_map_function_when_not_enabled() throws IOException {
+        createUserModule(MAP_FUNCTION_CALL);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(MAP_CALL_TASK_HEADER);
       }
     }
 

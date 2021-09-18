@@ -315,13 +315,13 @@ public class TaskCreator {
   private Task arrayEagerTask(ArrayLiteralExpression expression, List<Task> elements,
       ArrayType actualType) {
     var convertedElements = map(elements, e -> convertIfNeededEagerTask(actualType.elemType(), e));
-    return arrayEagerTask(LITERAL, actualType, convertedElements, expression.location());
+    return arrayEagerTask(LITERAL, "[]", actualType, convertedElements, expression.location());
   }
 
-  public AlgorithmTask arrayEagerTask(TaskKind taskKind, ArrayType type,
+  public AlgorithmTask arrayEagerTask(TaskKind taskKind, String name, ArrayType type,
       ImmutableList<Task> elements, Location location) {
     var algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(type));
-    return new AlgorithmTask(taskKind, type, "[]", algorithm, elements, location);
+    return new AlgorithmTask(taskKind, type, name, algorithm, elements, location);
   }
 
   // BlobLiteralExpression

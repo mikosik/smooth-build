@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import static org.smoothbuild.exec.compute.TaskKind.BUILDER;
-import static org.smoothbuild.exec.compute.TaskKind.MAP;
+import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
 import static org.smoothbuild.lang.base.define.MapFunction.MAP_FUNCTION_NAME;
 import static org.smoothbuild.util.Lists.list;
@@ -54,7 +54,7 @@ public class MapTask extends RealTask {
     Array array = (Array) val;
     ArrayType arrayType = (ArrayType) type();
     var elemTasks = map(array.elements(Val.class), o -> mapElementTask(arrayType.elemType(), o));
-    taskCreator.arrayEagerTask(MAP, arrayType, elemTasks, location())
+    taskCreator.arrayEagerTask(CALL, MAP_TASK_NAME, arrayType, elemTasks, location())
         .compute(worker)
         .addConsumer(result);
   }
