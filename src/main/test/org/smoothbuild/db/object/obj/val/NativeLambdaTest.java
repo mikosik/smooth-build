@@ -2,6 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -53,7 +54,7 @@ public class NativeLambdaTest extends TestingContext {
   @Test
   public void setting_default_argument_to_null_throws_exception() {
     NativeLambdaSpec lambdaSpec = nativeLambdaSpec(intSpec(), boolSpec());
-    assertCall(() -> nativeLambdaVal(lambdaSpec, strVal(), blobVal(), asList(null)))
+    assertCall(() -> nativeLambdaVal(lambdaSpec, strVal(), blobVal(), singletonList(null)))
         .throwsException(NullPointerException.class);
   }
 
