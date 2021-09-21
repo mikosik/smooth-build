@@ -1,13 +1,10 @@
 package org.smoothbuild.cli.console;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.FATAL;
 import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
-
-import java.util.List;
 
 public record Log(Level level, String message) {
   public Log(Level level, String message) {
@@ -29,12 +26,6 @@ public record Log(Level level, String message) {
 
   public static Log info(String log) {
     return new Log(INFO, log);
-  }
-
-  public static List<Log> asLogs(Level level, List<String> messages) {
-    return messages.stream()
-        .map(m -> new Log(level, m))
-        .collect(toList());
   }
 
   @Override
