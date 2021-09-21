@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.compute;
+package org.smoothbuild.exec.job;
 
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;

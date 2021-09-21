@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.compute.Computed;
-import org.smoothbuild.exec.compute.TaskInfo;
+import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResultHandler implements Consumer<Computed> {

@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.exec.compute.Job;
+import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Value;

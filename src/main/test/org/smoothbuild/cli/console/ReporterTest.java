@@ -14,7 +14,7 @@ import static org.smoothbuild.cli.console.Log.warning;
 import static org.smoothbuild.cli.console.Reporter.toText;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
-import static org.smoothbuild.exec.compute.TaskKind.CALL;
+import static org.smoothbuild.exec.job.TaskKind.CALL;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.exec.compute.TaskInfo;
+import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.lang.base.define.TestingLocation;
 import org.smoothbuild.testing.TestingContext;
 

@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.exec.compute.Job;
-import org.smoothbuild.exec.compute.LazyJob;
+import org.smoothbuild.exec.job.Job;
+import org.smoothbuild.exec.job.LazyJob;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 
 import com.google.common.base.Supplier;

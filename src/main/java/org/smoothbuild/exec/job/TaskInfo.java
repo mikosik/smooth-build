@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.compute;
+package org.smoothbuild.exec.job;
 
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Named;

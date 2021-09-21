@@ -5,7 +5,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.exec.compute.ResultSource.DISK;
-import static org.smoothbuild.exec.compute.TaskKind.CALL;
+import static org.smoothbuild.exec.job.TaskKind.CALL;
 
 import java.util.function.Consumer;
 
@@ -16,7 +16,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.Computed;
-import org.smoothbuild.exec.compute.TaskInfo;
+import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.lang.base.define.TestingLocation;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 

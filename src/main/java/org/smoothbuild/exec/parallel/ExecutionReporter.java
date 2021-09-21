@@ -7,7 +7,7 @@ import static org.smoothbuild.cli.console.Log.fatal;
 import static org.smoothbuild.exec.base.MessageRec.level;
 import static org.smoothbuild.exec.base.MessageRec.text;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.exec.compute.TaskInfo.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.exec.job.TaskInfo.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -21,7 +21,7 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResultSource;
-import org.smoothbuild.exec.compute.TaskInfo;
+import org.smoothbuild.exec.job.TaskInfo;
 
 /**
  * This class is thread-safe.

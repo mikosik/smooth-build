@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.compute;
+package org.smoothbuild.exec.job;
 
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;

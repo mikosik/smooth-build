@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.compute;
+package org.smoothbuild.exec.job;
 
 import java.util.List;
 
