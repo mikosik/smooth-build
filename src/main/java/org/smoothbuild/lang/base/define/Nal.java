@@ -2,15 +2,18 @@ package org.smoothbuild.lang.base.define;
 
 import static java.util.Objects.requireNonNull;
 
-public class NamedImpl implements Named {
+/**
+ * Name and location.
+ */
+public class Nal implements Named {
   private final String name;
   private final Location location;
 
-  public NamedImpl(Named named) {
+  public Nal(Named named) {
     this(named.name(), named.location());
   }
 
-  public NamedImpl(String name, Location location) {
+  public Nal(String name, Location location) {
     this.name = requireNonNull(name);
     this.location = requireNonNull(location);
   }

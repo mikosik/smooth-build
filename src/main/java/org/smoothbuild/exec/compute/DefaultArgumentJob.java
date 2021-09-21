@@ -10,7 +10,7 @@ import org.smoothbuild.exec.base.LambdaRec;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.NamedImpl;
+import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -23,7 +23,7 @@ public class DefaultArgumentJob extends AbstractJob {
 
   public DefaultArgumentJob(Type type, String name, Job function, int index,
       Location location, Scope<Job> scope, JobCreator jobCreator) {
-    super(type, list(function), new NamedImpl("building: " + name, location));
+    super(type, list(function), new Nal("building: " + name, location));
     this.index = index;
     this.scope = scope;
     this.jobCreator = jobCreator;
