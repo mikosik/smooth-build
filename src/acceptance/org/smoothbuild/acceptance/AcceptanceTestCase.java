@@ -146,14 +146,9 @@ public abstract class AcceptanceTestCase {
 
   private void runSmoothInProperJvm(CommandWithArgs command, String... additionalArguments) {
     switch (AcceptanceUtils.TEST_MODE) {
-      case SINGLE_JVM:
-        runSmoothInCurrentJvm(command, additionalArguments);
-        break;
-      case FULL_BINARY:
-        runSmoothInForkedJvm(command);
-        break;
-      default:
-        fail("Unknown mode: " + AcceptanceUtils.TEST_MODE);
+      case SINGLE_JVM -> runSmoothInCurrentJvm(command, additionalArguments);
+      case FULL_BINARY -> runSmoothInForkedJvm(command);
+      default -> fail("Unknown mode: " + AcceptanceUtils.TEST_MODE);
     }
   }
 
@@ -286,13 +281,13 @@ public abstract class AcceptanceTestCase {
       return readAndClose(buffer(source(artifactAbsolutePath(name))), s -> {
         ByteString value = s.readByteString();
         if (value.size() != 1) {
-          throw new RuntimeException("Expected boolean artifact but got " + value.toString());
+          throw new RuntimeException("Expected boolean artifact but got " + value);
         }
         return switch (value.getByte(0)) {
           case 0 -> false;
           case 1 -> true;
           default -> throw new RuntimeException(
-              "Expected boolean artifact but got " + value.toString());
+              "Expected boolean artifact but got " + value);
         };
       });
     } catch (IOException e) {
