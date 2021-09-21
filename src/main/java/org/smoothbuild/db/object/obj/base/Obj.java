@@ -11,6 +11,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedSequenceException;
 import org.smoothbuild.db.object.spec.base.Spec;
@@ -53,6 +54,14 @@ public abstract class Obj {
     return merkleRoot.spec();
   }
 
+  private String valueToStringSafe() {
+    try {
+      return valueToString();
+    } catch (DecodeObjNodeException e) {
+      return "?Exception?:" + hash();
+    }
+  }
+
   public abstract String valueToString();
 
   @Override
@@ -67,7 +76,7 @@ public abstract class Obj {
 
   @Override
   public String toString() {
-    return valueToString() + ":" + hash();
+    return valueToStringSafe() + ":" + hash();
   }
 
   protected <T> T readData(HashedDbCallable<T> reader) {
@@ -153,6 +162,6 @@ public abstract class Obj {
   }
 
   public static String sequenceToString(ImmutableList<? extends Obj> objects) {
-    return objects.stream().map(Obj::valueToString).collect(joining(","));
+    return objects.stream().map(Obj::valueToStringSafe).collect(joining(","));
   }
 }
