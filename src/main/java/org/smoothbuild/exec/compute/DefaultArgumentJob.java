@@ -13,8 +13,8 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.Scope;
-import org.smoothbuild.util.concurrent.Feeder;
-import org.smoothbuild.util.concurrent.FeedingConsumer;
+import org.smoothbuild.util.concurrent.Promise;
+import org.smoothbuild.util.concurrent.PromisedValue;
 
 public class DefaultArgumentJob extends AbstractJob {
   private final int index;
@@ -30,8 +30,8 @@ public class DefaultArgumentJob extends AbstractJob {
   }
 
   @Override
-  public Feeder<Val> schedule(Worker worker) {
-    FeedingConsumer<Val> result = new FeedingConsumer<>();
+  public Promise<Val> schedule(Worker worker) {
+    PromisedValue<Val> result = new PromisedValue<>();
     dependencies().get(0)
         .schedule(worker)
         .addConsumer(obj -> onCompleted(obj, worker, result));

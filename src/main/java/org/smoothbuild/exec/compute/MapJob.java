@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
 import static org.smoothbuild.lang.base.define.MapFunction.MAP_FUNCTION_NAME;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
+import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -20,8 +20,8 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.Scope;
-import org.smoothbuild.util.concurrent.Feeder;
-import org.smoothbuild.util.concurrent.FeedingConsumer;
+import org.smoothbuild.util.concurrent.Promise;
+import org.smoothbuild.util.concurrent.PromisedValue;
 
 public class MapJob extends AbstractJob {
   private static final String MAP_TASK_NAME = MAP_FUNCTION_NAME + PARENTHESES;
@@ -36,10 +36,10 @@ public class MapJob extends AbstractJob {
   }
 
   @Override
-  public Feeder<Val> schedule(Worker worker) {
-    FeedingConsumer<Val> result = new FeedingConsumer<>();
-    Feeder<Val> array = arrayJob().schedule(worker);
-    Feeder<Val> function = functionJob().schedule(worker);
+  public Promise<Val> schedule(Worker worker) {
+    PromisedValue<Val> result = new PromisedValue<>();
+    Promise<Val> array = arrayJob().schedule(worker);
+    Promise<Val> function = functionJob().schedule(worker);
     runWhenAllAvailable(list(array, function),
         () -> onArrayCompleted((Array) array.get(), (Rec) function.get(), worker, result));
     return result;

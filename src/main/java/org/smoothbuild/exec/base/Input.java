@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.Promise;
 
 import com.google.common.collect.ImmutableList;
 
 public record Input(ImmutableList<Val> vals, Hash hash) {
-  public static Input fromFeeders(List<Feeder<Val>> results) {
-    return input(map(results, Feeder::get));
+  public static Input fromPromises(List<Promise<Val>> results) {
+    return input(map(results, Promise::get));
   }
 
   public static Input input(Iterable<? extends Val> vals) {

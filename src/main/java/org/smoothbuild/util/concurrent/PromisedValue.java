@@ -12,7 +12,7 @@ import java.util.function.Function;
  * This class is thread-safe.
  * Consumers registered with {@link #addConsumer(Consumer)} are called without any lock held.
  */
-public class FeedingConsumer<T> implements Consumer<T>, Feeder<T> {
+public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   private final Object lock = new Object();
   private final List<Consumer<T>> consumers = new ArrayList<>();
   private T value;
@@ -24,7 +24,7 @@ public class FeedingConsumer<T> implements Consumer<T>, Feeder<T> {
       assertValueIsNotSetYet(value);
       this.value = value;
     }
-    // From this point 'consumers' is effectively immutable as Feeder code doesn't change it
+    // From this point 'consumers' is effectively immutable as we don't change it
     // once 'value' is set so we can read its state outside of synchronized block to ensure
     // outside code is not called with lock held.
     consumers.forEach(listener -> listener.accept(value));
@@ -69,8 +69,8 @@ public class FeedingConsumer<T> implements Consumer<T>, Feeder<T> {
   }
 
   @Override
-  public <U> Feeder<U> chain(Function<T, U> function) {
-    FeedingConsumer<U> chained = new FeedingConsumer<>();
+  public <U> Promise<U> chain(Function<T, U> function) {
+    PromisedValue<U> chained = new PromisedValue<>();
     addConsumer(v -> chained.accept(function.apply(v)));
     return chained;
   }

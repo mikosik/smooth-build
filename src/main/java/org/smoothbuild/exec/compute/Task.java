@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
+import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.util.concurrent.Feeder;
-import org.smoothbuild.util.concurrent.FeedingConsumer;
+import org.smoothbuild.util.concurrent.Promise;
+import org.smoothbuild.util.concurrent.PromisedValue;
 
 public class Task extends AbstractJob {
   private final TaskInfo info;
@@ -31,8 +31,8 @@ public class Task extends AbstractJob {
   }
 
   @Override
-  public Feeder<Val> schedule(Worker worker) {
-    FeedingConsumer<Val> result = new FeedingConsumer<>();
+  public Promise<Val> schedule(Worker worker) {
+    PromisedValue<Val> result = new PromisedValue<>();
     var input = map(dependencies(), d -> d.schedule(worker));
     runWhenAllAvailable(input, () -> worker.enqueue(info, algorithm, input, result));
     return result;

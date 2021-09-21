@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Named;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.Promise;
 
 import com.google.common.collect.ImmutableList;
 
@@ -13,5 +13,5 @@ public interface Job extends Named {
 
   public ImmutableList<Job> dependencies();
 
-  public Feeder<Val> schedule(Worker worker);
+  public Promise<Val> schedule(Worker worker);
 }

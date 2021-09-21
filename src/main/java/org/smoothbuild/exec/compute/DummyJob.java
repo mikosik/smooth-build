@@ -6,8 +6,8 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Named;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.util.concurrent.Feeder;
-import org.smoothbuild.util.concurrent.FeedingConsumer;
+import org.smoothbuild.util.concurrent.Promise;
+import org.smoothbuild.util.concurrent.PromisedValue;
 
 /**
  * Subclasses of this class must be immutable.
@@ -21,8 +21,8 @@ public class DummyJob extends AbstractJob {
   }
 
   @Override
-  public Feeder<Val> schedule(Worker worker) {
-    FeedingConsumer<Val> result = new FeedingConsumer<>();
+  public Promise<Val> schedule(Worker worker) {
+    PromisedValue<Val> result = new PromisedValue<>();
     result.accept(val);
     return result;
   }

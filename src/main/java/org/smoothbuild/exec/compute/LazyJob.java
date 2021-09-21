@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.Promise;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -31,7 +31,7 @@ public record LazyJob(Type type, Location location, Supplier<Job> supplier) impl
   }
 
   @Override
-  public Feeder<Val> schedule(Worker worker) {
+  public Promise<Val> schedule(Worker worker) {
     return job().schedule(worker);
   }
 

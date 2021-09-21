@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.parallel;
 
 import static org.smoothbuild.util.Maps.mapValues;
-import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
+import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Job;
 import org.smoothbuild.exec.compute.TaskInfo;
 import org.smoothbuild.lang.base.define.Value;
-import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 /**
@@ -71,15 +71,15 @@ public class ParallelJobExecutor {
       runWhenAllAvailable(results.values(), jobExecutor::terminate);
 
       jobExecutor.awaitTermination();
-      return mapValues(results, feeder -> Optional.ofNullable(feeder.get()));
+      return mapValues(results, promise -> Optional.ofNullable(promise.get()));
     }
 
-    public void enqueue(TaskInfo info, Algorithm algorithm, List<Feeder<Val>> dependencies,
+    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<Val>> dependencies,
         Consumer<Val> consumer) {
       jobExecutor.enqueue(() -> {
         try {
           var resultHandler = new ResultHandler(info, consumer, reporter, jobExecutor);
-          Input input = Input.fromFeeders(dependencies);
+          Input input = Input.fromPromises(dependencies);
           computer.compute(algorithm, input, resultHandler);
         } catch (Throwable e) {
           reporter.reportComputerException(info, e);

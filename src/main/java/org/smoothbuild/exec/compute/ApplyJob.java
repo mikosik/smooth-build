@@ -15,8 +15,8 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.Scope;
-import org.smoothbuild.util.concurrent.Feeder;
-import org.smoothbuild.util.concurrent.FeedingConsumer;
+import org.smoothbuild.util.concurrent.Promise;
+import org.smoothbuild.util.concurrent.PromisedValue;
 
 public class ApplyJob extends AbstractJob {
   private final List<Job> arguments;
@@ -34,8 +34,8 @@ public class ApplyJob extends AbstractJob {
   }
 
   @Override
-  public Feeder<Val> schedule(Worker worker) {
-    FeedingConsumer<Val> result = new FeedingConsumer<>();
+  public Promise<Val> schedule(Worker worker) {
+    PromisedValue<Val> result = new PromisedValue<>();
     lambdaJob()
         .schedule(worker)
         .addConsumer(obj -> onLambdaCompleted(obj, worker, result));
