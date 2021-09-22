@@ -8,13 +8,14 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
+import org.smoothbuild.db.object.spec.val.NothingSpec;
 
 /**
  * This class is immutable.
  */
 public class NullSpec extends ExprSpec {
-  public NullSpec(Hash hash) {
-    super(hash, NULL);
+  public NullSpec(Hash hash, NothingSpec evaluationSpec) {
+    super(hash, NULL, evaluationSpec);
   }
 
   @Override

@@ -1,14 +1,19 @@
 package org.smoothbuild.db.object.db;
 
+import static com.google.common.base.Preconditions.checkElementIndex;
+import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.cannotReadRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nonNullObjRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nullObjRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -39,6 +44,7 @@ import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.expr.FieldReadSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
@@ -75,7 +81,11 @@ public class ObjectDb {
 
   public DefinedLambda definedLambdaVal(DefinedLambdaSpec spec, Expr body,
       List<Expr> defaultArguments) {
-    checkDefaultArgumentsCountMatchParametersCount("DefinedLambdaSpec", defaultArguments, spec);
+    if (!Objects.equals(spec.result(), body.evaluationSpec())) {
+      throw new IllegalArgumentException("`spec` specifies result as " + spec.result().name()
+          + " but body.evaluationSpec() is " + body.evaluationSpec().name() + ".");
+    }
+    validateDefaultArguments(defaultArguments, spec);
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newDefinedLambdaVal(spec, body, defaultArguments));
   }
@@ -86,17 +96,26 @@ public class ObjectDb {
 
   public NativeLambda nativeLambdaVal(
       NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) {
-    checkDefaultArgumentsCountMatchParametersCount("NativeLambdaSpec", defaultArguments, spec);
+    validateDefaultArguments(defaultArguments, spec);
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newNativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments));
   }
 
-  private static void checkDefaultArgumentsCountMatchParametersCount(
-      String specName, List<Expr> defaultArguments, LambdaSpec spec) {
-    int parameterCount = spec.parameters().items().size();
+  private static void validateDefaultArguments(List<Expr> defaultArguments, LambdaSpec spec) {
+    ImmutableList<ValSpec> paramSpecs = spec.parameters().items();
+    int parameterCount = paramSpecs.size();
     if (parameterCount != defaultArguments.size()) {
-      throw new IllegalArgumentException(specName + " specifies " + parameterCount
-          + " parameters but defaultArguments provides " + defaultArguments.size() + " arguments.");
+      throw new IllegalArgumentException("`spec` specifies " + parameterCount
+          + " parameter(s) but defaultArguments provides " + defaultArguments.size()
+          + " argument(s).");
+    }
+    for (int i = 0; i < defaultArguments.size(); i++) {
+      ValSpec evaluationSpec = defaultArguments.get(i).evaluationSpec();
+      if (!Objects.equals(paramSpecs.get(i), evaluationSpec)) {
+        throw new IllegalArgumentException("Default argument at index " + i + " has spec "
+            + evaluationSpec.name() + " while spec specifies that parameter as "
+            + paramSpecs.get(i).name() + ".");
+      }
     }
   }
 
@@ -116,8 +135,8 @@ public class ObjectDb {
       Spec elementSpec = itemList.get(i).spec();
       if (!specifiedSpec.equals(elementSpec)) {
         throw new IllegalArgumentException("recSpec specifies item at index " + i
-            + " with spec " + specifiedSpec + " but provided item has spec " + elementSpec
-            + " at that index.");
+            + " with spec " + specifiedSpec.name() + " but provided item has spec "
+            + elementSpec.name() + " at that index.");
       }
     }
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecVal(recSpec, itemList));
@@ -125,7 +144,7 @@ public class ObjectDb {
 
   // methods for creating expr-s
 
-  public Call callExpr(Expr function, Iterable<? extends Expr> arguments) {
+  public Call callExpr(Expr function, List<? extends Expr> arguments) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCallExpr(function, arguments));
   }
 
@@ -145,8 +164,8 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(this::newNullExpr);
   }
 
-  public Ref refExpr(BigInteger value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRefExpr(value));
+  public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRefExpr(evaluationSpec, value));
   }
 
   // generic getter
@@ -191,40 +210,104 @@ public class ObjectDb {
 
   // methods for creating Expr Obj-s
 
-  public Call newCallExpr(Expr function, Iterable<? extends Expr> arguments)
+  private Call newCallExpr(Expr function, List<? extends Expr> arguments)
       throws HashedDbException {
+    var lambdaSpec = functionEvaluationSpec(function);
+    verifyArguments(lambdaSpec, arguments);
+    var spec = specDb.callSpec(lambdaSpec.result());
     var data = writeCallData(function, arguments);
-    var root = writeRoot(specDb.callSpec(), data);
-    return specDb.callSpec().newObj(root, this);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
   }
 
-  public Const newConstExpr(Val val) throws HashedDbException {
+  private void verifyArguments(LambdaSpec lambdaSpec, List<? extends Expr> arguments) {
+    ImmutableList<ValSpec> parameters = lambdaSpec.parameters().items();
+    int parametersSize = parameters.size();
+    if (parametersSize != arguments.size()) {
+      throw new IllegalArgumentException(
+          "Arguments size (%d) should be equal to parameters size (%d)."
+              .formatted(arguments.size(), parametersSize));
+    }
+    ImmutableList<ValSpec> argumentSpecs = map(arguments, Expr::evaluationSpec);
+    if (!allMatch(parameters, argumentSpecs, Objects::equals)) {
+      throw new IllegalArgumentException(
+          "Arguments spec (%s) does not match function parameter specs (%s)."
+              .formatted(map(argumentSpecs, Spec::name), map(parameters, Spec::name)));
+    }
+  }
+
+  private LambdaSpec functionEvaluationSpec(Expr function) {
+    if (function.evaluationSpec() instanceof LambdaSpec lambdaSpec) {
+      return lambdaSpec;
+    } else {
+      throw new IllegalArgumentException("`function` component doesn't evaluate to Function.");
+    }
+  }
+
+  private Const newConstExpr(Val val) throws HashedDbException {
+    var spec = specDb.constSpec(val.spec());
     var data = writeConstData(val);
-    var root = writeRoot(specDb.constSpec(), data);
-    return specDb.constSpec().newObj(root, this);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
   }
 
-  public EArray newEArrayExpr(Iterable<? extends Expr> elements) throws HashedDbException {
+  private EArray newEArrayExpr(Iterable<? extends Expr> elements) throws HashedDbException {
+    ValSpec elementSpec = elementSpec(elements);
+    var spec = specDb.eArraySpec(elementSpec);
     var data = writeEarrayData(elements);
-    var root = writeRoot(specDb.eArraySpec(), data);
-    return specDb.eArraySpec().newObj(root, this);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
   }
 
-  public FieldRead newFieldReadExpr(Expr rec, Int index) throws HashedDbException {
+  private ValSpec elementSpec(Iterable<? extends Expr> elements) {
+    Optional<ValSpec> elementSpec = stream(elements)
+        .map(expr -> expr.spec().evaluationSpec())
+        .reduce((spec1, spec2) -> {
+          if (spec1.equals(spec2)) {
+            return spec1;
+          } else {
+            throw new IllegalArgumentException("Element evaluation specs are not equal "
+                + spec1.name() + " != " + spec2.name() + ".");
+          }
+        });
+    Spec spec = elementSpec.orElse(specDb.nothingSpec());
+    if (spec instanceof ValSpec valSpec) {
+      return valSpec;
+    } else {
+      throw new IllegalArgumentException(
+          "Element specs should be ValSpec but was " + spec.getClass().getCanonicalName());
+    }
+  }
+
+  private FieldRead newFieldReadExpr(Expr rec, Int index) throws HashedDbException {
+    var spec = fieldReadSpec(rec, index);
     var data = writeFieldReadData(rec, index);
-    var root = writeRoot(specDb.fieldReadSpec(), data);
-    return specDb.fieldReadSpec().newObj(root, this);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
   }
 
-  public Null newNullExpr() throws HashedDbException {
+  private FieldReadSpec fieldReadSpec(Expr rec, Int index) {
+    if (rec.spec().evaluationSpec() instanceof RecSpec recSpec) {
+      var items = recSpec.items();
+      int intIndex = index.jValue().intValue();
+      checkElementIndex(intIndex, items.size());
+      var fieldSpec = items.get(intIndex);
+      return specDb.fieldReadSpec(fieldSpec);
+    } else {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  private Null newNullExpr() throws HashedDbException {
     var root = writeRoot(specDb.nullSpec());
     return specDb.nullSpec().newObj(root, this);
   }
 
-  public Ref newRefExpr(BigInteger value) throws HashedDbException {
-    var data = writeRefData(value);
-    var root = writeRoot(specDb.refSpec(), data);
-    return specDb.refSpec().newObj(root, this);
+  private Ref newRefExpr(ValSpec evaluationSpec, BigInteger index) throws HashedDbException {
+    var data = writeRefData(index);
+    var spec = specDb.refSpec(evaluationSpec);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
   }
 
   // methods for creating Val Obj-s
@@ -274,7 +357,7 @@ public class ObjectDb {
     return specDb.strSpec().newObj(root, this);
   }
 
-  private Rec newRecVal(RecSpec spec, List<?extends Obj> objects) throws HashedDbException {
+  private Rec newRecVal(RecSpec spec, List<? extends Obj> objects) throws HashedDbException {
     var data = writeRecData(objects);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);

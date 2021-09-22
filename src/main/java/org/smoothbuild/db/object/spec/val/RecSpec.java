@@ -17,9 +17,9 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class RecSpec extends ValSpec {
-  private final ImmutableList<Spec> itemSpecs;
+  private final ImmutableList<ValSpec> itemSpecs;
 
-  public RecSpec(Hash hash, Iterable<? extends Spec> itemSpecs) {
+  public RecSpec(Hash hash, Iterable<? extends ValSpec> itemSpecs) {
     super(hash, RECORD);
     this.itemSpecs = ImmutableList.copyOf(itemSpecs);
   }
@@ -36,7 +36,7 @@ public class RecSpec extends ValSpec {
     return "{" + elementNames + "}";
   }
 
-  public ImmutableList<Spec> items() {
+  public ImmutableList<ValSpec> items() {
     return itemSpecs;
   }
 }

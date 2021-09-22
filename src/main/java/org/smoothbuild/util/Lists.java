@@ -71,8 +71,8 @@ public class Lists {
     return builder.build();
   }
 
-  public static <T> boolean allMatch(List<T> listA, List<T> listB,
-      BiFunction<T, T, Boolean> predicate) {
+  public static <T, S> boolean allMatch(List<T> listA, List<S> listB,
+      BiFunction<T, S, Boolean> predicate) {
     if (listA.size() != listB.size()) {
       return false;
     }

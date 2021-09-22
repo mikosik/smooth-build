@@ -3,13 +3,13 @@ package org.smoothbuild.db.object.exc;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.base.Spec;
 
-public class UnexpectedNodeException extends DecodeObjNodeException {
-  public UnexpectedNodeException(Hash hash, Spec spec, String path, int pathIndex, Spec expected,
+public class UnexpectedObjNodeException extends DecodeObjNodeException {
+  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, int pathIndex, Spec expected,
       Spec actual) {
     this(hash, spec, indexedPath(path, pathIndex), expected, actual);
   }
 
-  public UnexpectedNodeException(Hash hash, Spec spec, String path, Spec expected, Spec actual) {
+  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, Spec expected, Spec actual) {
     super(hash, spec, path, buildMessage(expected, actual));
   }
 
@@ -18,7 +18,7 @@ public class UnexpectedNodeException extends DecodeObjNodeException {
         + ".";
   }
 
-  public UnexpectedNodeException(Hash hash, Spec spec, String memberPath, int pathIndex,
+  public UnexpectedObjNodeException(Hash hash, Spec spec, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, spec, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -27,7 +27,7 @@ public class UnexpectedNodeException extends DecodeObjNodeException {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public UnexpectedNodeException(Hash hash, Spec spec, String path, Class<?> expected,
+  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, spec, path, buildMessage(expected, actual));
   }

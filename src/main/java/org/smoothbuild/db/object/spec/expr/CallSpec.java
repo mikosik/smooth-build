@@ -8,13 +8,14 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 
 /**
  * This class is immutable.
  */
 public class CallSpec extends ExprSpec {
-  public CallSpec(Hash hash) {
-    super(hash, CALL);
+  public CallSpec(Hash hash, ValSpec evaluationSpec) {
+    super(hash, CALL, evaluationSpec);
   }
 
   @Override

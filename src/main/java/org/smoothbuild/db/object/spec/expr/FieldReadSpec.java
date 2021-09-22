@@ -8,13 +8,14 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 
 /**
  * This class is immutable.
  */
 public class FieldReadSpec extends ExprSpec {
-  public FieldReadSpec(Hash hash) {
-    super(hash, FIELD_READ);
+  public FieldReadSpec(Hash hash, ValSpec evaluationSpec) {
+    super(hash, FIELD_READ, evaluationSpec);
   }
 
   @Override

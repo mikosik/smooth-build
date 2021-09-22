@@ -31,11 +31,11 @@ public class TestingSpecs {
   public static final RecSpec EMPTY_REC = CONTEXT.emptyRecSpec();
   public static final RecSpec REC_WITH_STRING = CONTEXT.recWithStrSpec();
   public static final Spec CALL = CONTEXT.callSpec();
-  public static final Spec CONST = CONTEXT.constSpec();
+  public static final Spec CONST = CONTEXT.constSpec(STR);
   public static final Spec EARRAY = CONTEXT.eArraySpec();
-  public static final Spec FIELD_READ = CONTEXT.fieldReadSpec();
+  public static final Spec FIELD_READ = CONTEXT.fieldReadSpec(INT);
   public static final Spec NULL = CONTEXT.nullSpec();
-  public static final Spec REF = CONTEXT.refSpec();
+  public static final Spec REF = CONTEXT.refSpec(INT);
 
   public static final ArraySpec ARRAY_BLOB = array(BLOB);
   public static final ArraySpec ARRAY_BOOL = array(BOOL);

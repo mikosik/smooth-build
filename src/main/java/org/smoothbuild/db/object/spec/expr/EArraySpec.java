@@ -8,13 +8,19 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.EArray;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
+import org.smoothbuild.db.object.spec.val.ArraySpec;
 
 /**
  * This class is immutable.
  */
 public class EArraySpec extends ExprSpec {
-  public EArraySpec(Hash hash) {
-    super(hash, EARRAY);
+  public EArraySpec(Hash hash, ArraySpec evaluationSpec) {
+    super(hash, EARRAY, evaluationSpec);
+  }
+
+  @Override
+  public ArraySpec evaluationSpec() {
+    return (ArraySpec) super.evaluationSpec();
   }
 
   @Override

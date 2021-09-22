@@ -8,10 +8,11 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 
 public class RefSpec extends ExprSpec {
-  public RefSpec(Hash hash) {
-    super(hash, REF);
+  public RefSpec(Hash hash, ValSpec evaluationSpec) {
+    super(hash, REF, evaluationSpec);
   }
 
   @Override

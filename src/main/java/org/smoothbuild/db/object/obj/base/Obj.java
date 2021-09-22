@@ -12,8 +12,8 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.exc.DecodeObjNodeException;
-import org.smoothbuild.db.object.exc.UnexpectedNodeException;
-import org.smoothbuild.db.object.exc.UnexpectedSequenceException;
+import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
+import org.smoothbuild.db.object.exc.UnexpectedObjSequenceException;
 import org.smoothbuild.db.object.spec.base.Spec;
 
 import com.google.common.collect.ImmutableList;
@@ -103,7 +103,7 @@ public abstract class Obj {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedNodeException(hash(), spec(), path, nodeIndex, clazz, obj.getClass());
+      throw new UnexpectedObjNodeException(hash(), spec(), path, nodeIndex, clazz, obj.getClass());
     }
   }
 
@@ -129,7 +129,7 @@ public abstract class Obj {
     for (int i = 0; i < elements.size(); i++) {
       Obj element = elements.get(i);
       if (!clazz.isInstance(element)) {
-        throw new UnexpectedNodeException(hash(), spec(), path, i, clazz, element.getClass());
+        throw new UnexpectedObjNodeException(hash(), spec(), path, i, clazz, element.getClass());
       }
     }
     @SuppressWarnings("unchecked")
@@ -151,7 +151,7 @@ public abstract class Obj {
   private ImmutableList<Hash> readSequenceHashes(String path, Hash hash, int expectedSize) {
     ImmutableList<Hash> data = readSequenceHashes(path, hash);
     if (data.size() != expectedSize) {
-      throw new UnexpectedSequenceException(hash(), spec(), path, expectedSize, data.size());
+      throw new UnexpectedObjSequenceException(hash(), spec(), path, expectedSize, data.size());
     }
     return data;
   }

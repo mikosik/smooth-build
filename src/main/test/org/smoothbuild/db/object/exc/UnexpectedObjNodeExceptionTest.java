@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.testing.TestingContext;
 
-public class UnexpectedNodeExceptionTest extends TestingContext {
+public class UnexpectedObjNodeExceptionTest extends TestingContext {
   @Test
   public void message_with_specs() {
-    var exception = new UnexpectedNodeException(
+    var exception = new UnexpectedObjNodeException(
         Hash.of(123), intSpec(), "node-path", boolSpec(), strSpec());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode INT object at 1959893f68220459cbd800396e1eae7bfc382e97. "
@@ -19,7 +19,7 @@ public class UnexpectedNodeExceptionTest extends TestingContext {
 
   @Test
   public void message_with_index_and_specs() {
-    var exception = new UnexpectedNodeException(
+    var exception = new UnexpectedObjNodeException(
         Hash.of(123), intSpec(), "node-path", 7, boolSpec(), strSpec());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode INT object at 1959893f68220459cbd800396e1eae7bfc382e97. "
@@ -29,7 +29,7 @@ public class UnexpectedNodeExceptionTest extends TestingContext {
 
   @Test
   public void message_with_classes() {
-    var exception = new UnexpectedNodeException(
+    var exception = new UnexpectedObjNodeException(
         Hash.of(123), intSpec(), "node-path", Integer.class, Double.class);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode INT object at 1959893f68220459cbd800396e1eae7bfc382e97. "

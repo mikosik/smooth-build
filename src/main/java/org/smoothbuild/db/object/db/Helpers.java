@@ -4,10 +4,14 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.object.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.exc.DecodeSpecException;
+import org.smoothbuild.db.object.exc.DecodeSpecNodeException;
 import org.smoothbuild.db.object.exc.ObjectDbException;
 import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.base.SpecKind;
 
 public class Helpers {
+  // wrapping Callables
+
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
       Hash hash, Spec spec, String memberPath, ObjectDbCallable<T> callable) {
     try {
@@ -57,10 +61,21 @@ public class Helpers {
     }
   }
 
+  public static <T> T wrapHashedDbExceptionAsDecodeSpecNodeException(
+      Hash hash, SpecKind specKind, String path, HashedDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (HashedDbException e) {
+      throw new DecodeSpecNodeException(hash, specKind, path, e);
+    }
+  }
+
   @FunctionalInterface
   public static interface HashedDbCallable<T> {
     public T call() throws HashedDbException;
   }
+
+  // wrapping Runnable
 
   public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {
     try {

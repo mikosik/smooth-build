@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.NativeLambda;
+import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -104,14 +105,16 @@ public class ObjStableHashTest extends TestingContext {
   class _call {
     @Test
     public void call_expression_with_one_argument() {
-      assertThat(callExpr(constExpr(intVal(1)), list(constExpr(intVal(2)))).hash())
-          .isEqualTo(Hash.decode("e0e21ce30882fe5f2ba9072361d0583beb2814b8"));
+      assertThat(callExpr(constExpr(definedLambdaVal()), list(strExpr("abc"))).hash())
+          .isEqualTo(Hash.decode("289846076054bb56b8275d3d00c22c9959b87c70"));
     }
 
     @Test
     public void call_expression_without_arguments() {
-      assertThat(callExpr(constExpr(intVal(1)), list()).hash())
-          .isEqualTo(Hash.decode("ef133b46f9d47306db02b15144c1b9e8b4198afd"));
+      DefinedLambdaSpec spec = definedLambdaSpec(intSpec(), strSpec());
+      DefinedLambda lambda = definedLambdaVal(spec, intExpr(), list(strExpr()));
+      assertThat(callExpr(constExpr(lambda), list(strExpr("abc"))).hash())
+          .isEqualTo(Hash.decode("289846076054bb56b8275d3d00c22c9959b87c70"));
     }
   }
 
@@ -120,61 +123,61 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void const_blob_expression() {
       assertThat(constExpr(blobVal(ByteString.of((byte) 1, (byte) 2, (byte) 3))).hash())
-          .isEqualTo(Hash.decode("989ae98ed49e9e70fdddac97b5502e084d9c5d8b"));
+          .isEqualTo(Hash.decode("086b9fcca29ced11d99315ea6ab3a77e5940f63e"));
     }
 
     @Test
     public void const_bool_expression() {
       assertThat(constExpr(boolVal(true)).hash())
-          .isEqualTo(Hash.decode("66ffb0169e5cb88dafda1053531c645c2dbeb34f"));
+          .isEqualTo(Hash.decode("abf2750c6950dd0e09cb7773aacec9cb9b6c6898"));
     }
 
     @Test
     public void const_int_expression() {
-      assertThat(constExpr(intVal(123)).hash())
-          .isEqualTo(Hash.decode("bc6eec3c6bb2efbb1788bd82846855dcccec3aff"));
+      assertThat(intExpr(123).hash())
+          .isEqualTo(Hash.decode("3c511a9e2051727c550ff2b28b6664ed9a8b0fa5"));
     }
 
     @Test
     public void const_string_expression() {
-      assertThat(constExpr(strVal("abc")).hash())
-          .isEqualTo(Hash.decode("2e8735ebf379d2f06d95ef7a0f7d69766f80b943"));
+      assertThat(strExpr("abc").hash())
+          .isEqualTo(Hash.decode("165ef0a60178c065ddb83a209a7d4c6a6f2ed779"));
     }
   }
 
   @Nested
   class _defined_lambda {
     @Test
-    public void with_no_default_arguments() {
+    public void with_no_parameters() {
       DefinedLambda definedLambda =
           definedLambdaVal(
               definedLambdaSpec(intSpec()),
-              constExpr(intVal(1)),
+              intExpr(1),
               list());
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("ea1ca60f92be113137fce1d7d56cd22ee428afb0"));
+          .isEqualTo(Hash.decode("e0ddcc9e8173f24086754d41c34c8ada4ba7bee5"));
     }
 
     @Test
-    public void with_one_default_argument() {
+    public void with_one_parameter() {
       DefinedLambda definedLambda =
           definedLambdaVal(
-              definedLambdaSpec(intSpec(), blobSpec()),
-              constExpr(intVal(1)),
-              list(constExpr(intVal(2))));
+              definedLambdaSpec(intSpec(), intSpec()),
+              intExpr(1),
+              list(intExpr(2)));
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("baefa5d6cd1f072a9ff9ab8dd5f95ccdcf8bf758"));
+          .isEqualTo(Hash.decode("ab16b99f2ec237c10412bcd35fa1f69e6ddc7504"));
     }
 
     @Test
-    public void with_two_default_arguments() {
+    public void with_two_parameters() {
       DefinedLambda definedLambda =
           definedLambdaVal(
-              definedLambdaSpec(intSpec(), blobSpec(), strSpec()),
-              constExpr(intVal(1)),
-              list(constExpr(intVal(2)), constExpr(intVal(3))));
+              definedLambdaSpec(intSpec(), intSpec(), strSpec()),
+              intExpr(1),
+              list(intExpr(2), strExpr("abc")));
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("5e123797ae5c75807cbca53e9b608e1c17c84fc0"));
+          .isEqualTo(Hash.decode("5dfac35b7d2d78d2c4d7e2d514e4501c58c4aff4"));
     }
   }
 
@@ -183,13 +186,13 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void empty_earray_expression() {
       assertThat(eArrayExpr(list()).hash())
-          .isEqualTo(Hash.decode("d5f74d989d3a909fc9c07a13bdd45f12bf1d38ea"));
+          .isEqualTo(Hash.decode("a0b82433f715eef1e275af8702914efa74c1bffe"));
     }
 
     @Test
     public void earray_expression() {
-      assertThat(eArrayExpr(list(constExpr(intVal(1)))).hash())
-          .isEqualTo(Hash.decode("41ff0b1b274fd1c8e75b150e9b08f0ac3ab8b40b"));
+      assertThat(eArrayExpr(list(intExpr(1))).hash())
+          .isEqualTo(Hash.decode("f80cf6e3c5af6de49d7253a0bd31ba802d75ce09"));
     }
   }
 
@@ -197,8 +200,8 @@ public class ObjStableHashTest extends TestingContext {
   class _field_read {
     @Test
     public void field_read_expression() {
-      assertThat(fieldReadExpr(constExpr(intVal(1)), intVal(2)).hash())
-          .isEqualTo(Hash.decode("5dd765ae12bf26f6780a8a5d8027ce215ad48861"));
+      assertThat(fieldReadExpr(constExpr(recVal(list(strVal()))), intVal(0)).hash())
+          .isEqualTo(Hash.decode("5b98a211bd964c55589d3e8c0b7d2b3dd09e0a0e"));
     }
   }
 
@@ -241,24 +244,24 @@ public class ObjStableHashTest extends TestingContext {
     public void with_one_default_argument() {
       NativeLambda nativeLambda =
           nativeLambdaVal(
-              nativeLambdaSpec(intSpec(), blobSpec()),
+              nativeLambdaSpec(intSpec(), strSpec()),
               strVal("classBinaryName"),
               blobVal(ByteString.encodeUtf8("native jar")),
-              list(constExpr(intVal(2))));
+              list(strExpr("abc")));
       assertThat(nativeLambda.hash())
-          .isEqualTo(Hash.decode("43b4e1ade9c059bb71951eba163098213a500320"));
+          .isEqualTo(Hash.decode("1e9b156069f6527a15e742babb4f594db4d649bd"));
     }
 
     @Test
     public void with_two_default_arguments() {
       NativeLambda nativeLambda =
           nativeLambdaVal(
-              nativeLambdaSpec(intSpec(), blobSpec(), strSpec()),
+              nativeLambdaSpec(intSpec(), intSpec(), strSpec()),
               strVal("classBinaryName"),
               blobVal(ByteString.encodeUtf8("native jar")),
-              list(constExpr(intVal(2)), constExpr(intVal(3))));
+              list(intExpr(2), strExpr("abc")));
       assertThat(nativeLambda.hash())
-          .isEqualTo(Hash.decode("bb5176f441c035b2a62f6129a0982d10087578d9"));
+          .isEqualTo(Hash.decode("fca8f5b4c66b7ea2a44d325f910f869905c670b4"));
     }
   }
 
@@ -305,20 +308,20 @@ public class ObjStableHashTest extends TestingContext {
   class _ref {
     @Test
     public void zero_ref() {
-      assertThat(refExpr(0).hash())
-          .isEqualTo(Hash.decode("c5b88a14bf94baea2c1fef9bf7eadff06eb75978"));
+      assertThat(refExpr(intSpec(), 0).hash())
+          .isEqualTo(Hash.decode("c41708244b3367007e1a216c7712cb2235371707"));
     }
 
     @Test
     public void positive_ref() {
-      assertThat(refExpr(123).hash())
-          .isEqualTo(Hash.decode("f00f77e46c95a228ca6f5e4697d0928bff880555"));
+      assertThat(refExpr(intSpec(), 123).hash())
+          .isEqualTo(Hash.decode("130112c820a58abd4b90086ff7abfcf29f39a8e8"));
     }
 
     @Test
     public void negative_ref() {
-      assertThat(refExpr(-123).hash())
-          .isEqualTo(Hash.decode("26a280fe9e61e44f3fb5ec9434266d3ccbe2552b"));
+      assertThat(refExpr(intSpec(), -123).hash())
+          .isEqualTo(Hash.decode("f7ccbc4c95d78604753662395b5c5357f833fd64"));
     }
   }
 }

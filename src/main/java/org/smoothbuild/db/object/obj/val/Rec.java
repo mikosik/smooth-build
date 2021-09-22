@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.obj.val;
 import static java.util.Objects.checkIndex;
 
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.exc.UnexpectedNodeException;
+import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.spec.base.Spec;
@@ -54,7 +54,8 @@ public class Rec extends Val {
       Spec expectedSpec = itemSpecs.get(i);
       Spec actualSpec = obj.spec();
       if (!expectedSpec.equals(actualSpec)) {
-        throw new UnexpectedNodeException(hash(), spec(), DATA_PATH, i, expectedSpec, actualSpec);
+        throw new UnexpectedObjNodeException(
+            hash(), spec(), DATA_PATH, i, expectedSpec, actualSpec);
       }
     }
     return objs;

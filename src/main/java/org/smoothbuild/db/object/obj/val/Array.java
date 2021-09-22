@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.obj.val;
 
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.exc.UnexpectedNodeException;
+import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -45,7 +45,7 @@ public class Array extends Val {
     for (int i = 0; i < elements.size(); i++) {
       Spec elementSpec = elements.get(i).spec();
       if (!(spec.equals(elementSpec))) {
-        throw new UnexpectedNodeException(hash(), spec(), DATA_PATH, i, spec, elementSpec);
+        throw new UnexpectedObjNodeException(hash(), spec(), DATA_PATH, i, spec, elementSpec);
       }
     }
     @SuppressWarnings("unchecked")

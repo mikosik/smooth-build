@@ -62,6 +62,7 @@ import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.testing.EqualsTester;
 
@@ -88,6 +89,7 @@ public class SpecTest {
   }
 
   public static Stream<Arguments> names() {
+    TestingContext tc = new TestingContext();
     return Stream.of(
         arguments(BLOB, "BLOB"),
         arguments(BOOL, "BOOL"),
@@ -97,12 +99,12 @@ public class SpecTest {
         arguments(NOTHING, "NOTHING"),
         arguments(STR, "STRING"),
         arguments(PERSON, "{STRING,STRING}"),
-        arguments(CALL, "CALL"),
-        arguments(CONST, "CONST"),
-        arguments(EARRAY, "EARRAY"),
-        arguments(FIELD_READ, "FIELD_READ"),
-        arguments(NULL, "NULL"),
-        arguments(REF, "REF"),
+        arguments(tc.callSpec(tc.intSpec()), "CALL:INT"),
+        arguments(tc.constSpec(tc.intSpec()), "CONST:INT"),
+        arguments(tc.eArraySpec(tc.strSpec()), "EARRAY:[STRING]"),
+        arguments(tc.fieldReadSpec(tc.intSpec()), "FIELD_READ:INT"),
+        arguments(NULL, "NULL:NOTHING"),
+        arguments(tc.refSpec(tc.intSpec()), "REF:INT"),
 
         arguments(ARRAY_BLOB, "[BLOB]"),
         arguments(ARRAY_BOOL, "[BOOL]"),

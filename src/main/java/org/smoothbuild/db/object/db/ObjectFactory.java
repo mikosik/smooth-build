@@ -3,7 +3,6 @@ package org.smoothbuild.db.object.db;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
-import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
@@ -126,7 +125,7 @@ public class ObjectFactory {
     return objectDb.constExpr(val);
   }
 
-  public Call callExpr(Expr function, Iterable<? extends Expr> arguments) {
+  public Call callExpr(Expr function, List<? extends Expr> arguments) {
     return objectDb.callExpr(function, arguments);
   }
 
@@ -142,8 +141,8 @@ public class ObjectFactory {
     return objectDb.nullExpr();
   }
 
-  public Ref refExpr(BigInteger value) {
-    return objectDb.refExpr(value);
+  public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {
+    return objectDb.refExpr(value, evaluationSpec);
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {

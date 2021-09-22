@@ -8,13 +8,14 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 
 /**
  * This class is immutable.
  */
 public class ConstSpec extends ExprSpec {
-  public ConstSpec(Hash hash) {
-    super(hash, CONST);
+  public ConstSpec(Hash hash, ValSpec evaluationSpec) {
+    super(hash, CONST, evaluationSpec);
   }
 
   @Override

@@ -2,6 +2,7 @@ package org.smoothbuild.testing;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.map;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -241,19 +242,35 @@ public class TestingContext {
   // Expr Spec-s
 
   public CallSpec callSpec() {
-    return specDb().callSpec();
+    return callSpec(intSpec());
+  }
+
+  public CallSpec callSpec(ValSpec evaluationSpec) {
+    return specDb().callSpec(evaluationSpec);
   }
 
   public ConstSpec constSpec() {
-    return specDb().constSpec();
+    return constSpec(intSpec());
+  }
+
+  public ConstSpec constSpec(ValSpec evaluationSpec) {
+    return specDb().constSpec(evaluationSpec);
   }
 
   public EArraySpec eArraySpec() {
-    return specDb().eArraySpec();
+    return eArraySpec(intSpec());
+  }
+
+  public EArraySpec eArraySpec(ValSpec elementSpec) {
+    return specDb().eArraySpec(elementSpec);
   }
 
   public FieldReadSpec fieldReadSpec() {
-    return specDb().fieldReadSpec();
+    return fieldReadSpec(intSpec());
+  }
+
+  public FieldReadSpec fieldReadSpec(ValSpec evaluationSpec) {
+    return specDb().fieldReadSpec(evaluationSpec);
   }
 
   public NullSpec nullSpec() {
@@ -261,7 +278,11 @@ public class TestingContext {
   }
 
   public RefSpec refSpec() {
-    return specDb().refSpec();
+    return refSpec(intSpec());
+  }
+
+  public RefSpec refSpec(ValSpec evaluationSpec) {
+    return specDb().refSpec(evaluationSpec);
   }
 
   // Obj-s (values)
@@ -290,9 +311,22 @@ public class TestingContext {
     return objectDb().boolVal(value);
   }
 
+  public DefinedLambda definedLambdaVal() {
+    return definedLambdaVal(intExpr());
+  }
+
+  public DefinedLambda definedLambdaVal(Expr body) {
+    DefinedLambdaSpec spec = definedLambdaSpec(body.evaluationSpec(), strSpec());
+    return definedLambdaVal(spec, body, list(strExpr()));
+  }
+
   public DefinedLambda definedLambdaVal(
       DefinedLambdaSpec spec, Expr body, List<Expr> defaultArguments) {
     return objectDb().definedLambdaVal(spec, body, defaultArguments);
+  }
+
+  public Int intVal() {
+    return intVal(17);
   }
 
   public Int intVal(int value) {
@@ -314,6 +348,11 @@ public class TestingContext {
 
   public Rec recVal(RecSpec spec, Iterable<? extends Obj> items) {
     return objectDb().recVal(spec, items);
+  }
+
+  public Rec recVal(List<? extends Val> items) {
+    var recSpec = recSpec(map(items, Val::spec));
+    return objectDb().recVal(recSpec, items);
   }
 
   public Rec emptyRecVal() {
@@ -367,12 +406,12 @@ public class TestingContext {
 
   // Expr-s
 
-  public Call callExpr(Expr function, Iterable<? extends Expr> arguments) {
-    return objectDb().callExpr(function, arguments);
+  public Const boolExpr() {
+    return constExpr(boolVal(true));
   }
 
-  public Const constExpr() {
-    return objectDb().constExpr(intVal(123));
+  public Call callExpr(Expr function, List<? extends Expr> arguments) {
+    return objectDb().callExpr(function, arguments);
   }
 
   public Const constExpr(Val val) {
@@ -387,11 +426,31 @@ public class TestingContext {
     return objectDb().fieldReadExpr(rec, index);
   }
 
+  public Const intExpr() {
+    return intExpr(17);
+  }
+
+  public Const intExpr(int i) {
+    return constExpr(intVal(i));
+  }
+
   public Null nullExpr() {
     return objectDb().nullExpr();
   }
 
   public Ref refExpr(int value) {
-    return objectDb().refExpr(BigInteger.valueOf(value));
+    return objectDb().refExpr(BigInteger.valueOf(value), intSpec());
+  }
+
+  public Ref refExpr(ValSpec evaluationSpec, int pointer) {
+    return objectDb().refExpr(BigInteger.valueOf(pointer), evaluationSpec);
+  }
+
+  public Const strExpr() {
+    return strExpr("abc");
+  }
+
+  public Const strExpr(String string) {
+    return constExpr(strVal(string));
   }
 }

@@ -2,7 +2,10 @@ package org.smoothbuild.db.object.obj.val;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
+
+import com.google.common.collect.ImmutableList;
 
 public class NativeLambda extends Lambda {
   private static final int NATIVE_BODY_SEQUENCE_SIZE = 2;
@@ -19,19 +22,16 @@ public class NativeLambda extends Lambda {
     return "NativeLambda(" + spec().name() + ")";
   }
 
-  public Str classBinaryName() {
-    Hash bodyHash = bodyHash();
-    return readSequenceElementObj(
-        BODY_PATH, bodyHash, CLASS_BINARY_NAME_INDEX, NATIVE_BODY_SEQUENCE_SIZE, Str.class);
-  }
 
-  public Blob nativeJar() {
-    Hash bodyHash = bodyHash();
-    return readSequenceElementObj(
+  public NativeLambdaData data() {
+    Hash bodyHash = readSequenceElementHash(DATA_PATH, dataHash(), BODY_INDEX, DATA_SEQUENCE_SIZE);
+    Blob nativeJar = readSequenceElementObj(
         BODY_PATH, bodyHash, NATIVE_JAR_INDEX, NATIVE_BODY_SEQUENCE_SIZE, Blob.class);
+    Str classBinaryName = readSequenceElementObj(
+        BODY_PATH, bodyHash, CLASS_BINARY_NAME_INDEX, NATIVE_BODY_SEQUENCE_SIZE, Str.class);
+    return new NativeLambdaData(classBinaryName, nativeJar, defaultArguments());
   }
 
-  protected Hash bodyHash() {
-    return readSequenceElementHash(DATA_PATH, dataHash(), BODY_INDEX, DATA_SEQUENCE_SIZE);
-  }
+  public record NativeLambdaData(
+      Str classBinaryName, Blob nativeJar, ImmutableList<Expr> defaultArguments) {}
 }
