@@ -10,25 +10,26 @@ import org.smoothbuild.testing.TestingContext;
 public class RecTest extends TestingContext {
   @Test
   public void creating_rec_with_less_items_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> recVal(personSpec(), list(strVal("John"))))
+    assertCall(() -> objectDb().recVal(personSpec(), list(strVal("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_rec_with_more_items_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> recVal(personSpec(), list(strVal("John"), strVal("Doe"), strVal("abc"))))
+    assertCall(() -> objectDb().recVal(
+        personSpec(), list(strVal("John"), strVal("Doe"), strVal("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> recVal(personSpec(), list(strVal("John"), null)))
+    assertCall(() -> objectDb().recVal(personSpec(), list(strVal("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_item_to_object_of_wrong_spec_throws_exception() {
-    assertCall(() -> recVal(personSpec(), list(strVal("John"), intVal(123))))
+    assertCall(() -> objectDb().recVal(personSpec(), list(strVal("John"), intVal(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -71,7 +72,7 @@ public class RecTest extends TestingContext {
 
   @Test
   public void super_object_is_null_when_rec_spec_has_no_items() {
-    Rec rec = recVal(emptyRecSpec(), list());
+    Rec rec = recVal(list());
     assertThat(rec.superObject())
         .isNull();
   }
@@ -94,7 +95,7 @@ public class RecTest extends TestingContext {
   @Test
   public void recs_with_one_item_different_are_not_equal() {
     Rec person1 = johnDoePerson();
-    Rec person2 = recVal(personSpec(), list(strVal("John"), strVal("Doe2")));
+    Rec person2 = recVal(list(strVal("John"), strVal("Doe2")));
 
     assertThat(person1)
         .isNotEqualTo(person2);
@@ -111,7 +112,7 @@ public class RecTest extends TestingContext {
   @Test
   public void recs_with_different_item_have_different_hashes() {
     Rec person1 = johnDoePerson();
-    Rec person2 = recVal(personSpec(), list(strVal("John"), strVal("Doe2")));
+    Rec person2 = recVal(list(strVal("John"), strVal("Doe2")));
     assertThat(person1.hash())
         .isNotEqualTo(person2.hash());
   }
@@ -127,7 +128,7 @@ public class RecTest extends TestingContext {
   @Test
   public void recs_with_different_item_have_different_hash_codes() {
     Rec person1 = johnDoePerson();
-    Rec person2 = recVal(personSpec(), list(strVal("John"), strVal("Doe2")));
+    Rec person2 = recVal(list(strVal("John"), strVal("Doe2")));
         assertThat(person1.hashCode())
             .isNotEqualTo(person2.hashCode());
   }
@@ -158,6 +159,6 @@ public class RecTest extends TestingContext {
   }
 
   private Rec johnDoePerson() {
-    return recVal(personSpec(), list(strVal("John"), strVal("Doe")));
+    return recVal(list(strVal("John"), strVal("Doe")));
   }
 }

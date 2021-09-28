@@ -346,29 +346,25 @@ public class TestingContext {
     return objectDb().strVal(string);
   }
 
-  public Rec recVal(RecSpec spec, Iterable<? extends Obj> items) {
-    return objectDb().recVal(spec, items);
-  }
-
   public Rec recVal(List<? extends Val> items) {
     var recSpec = recSpec(map(items, Val::spec));
     return objectDb().recVal(recSpec, items);
   }
 
   public Rec emptyRecVal() {
-    return recVal(emptyRecSpec(), list());
+    return recVal(list());
   }
 
   public Rec recWithStrVal() {
-    return recVal(recWithStrSpec(), list(strVal("abc")));
+    return recVal(list(strVal("abc")));
   }
 
   public Rec recWithStrVal(Str str) {
-    return recVal(recWithStrSpec(), list(str));
+    return recVal(list(str));
   }
 
   public Rec personVal(String firstName, String lastName) {
-    return recVal(personSpec(), list(strVal(firstName), strVal(lastName)));
+    return recVal(list(strVal(firstName), strVal(lastName)));
   }
 
   public Array messageArrayWithOneError() {
