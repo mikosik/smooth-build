@@ -13,20 +13,20 @@ public class Helpers {
   // wrapping Callables
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, Spec spec, String memberPath, ObjectDbCallable<T> callable) {
+      Hash hash, Spec spec, String nodePath, ObjectDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjectDbException e) {
-      throw new DecodeObjNodeException(hash, spec, memberPath, e);
+      throw new DecodeObjNodeException(hash, spec, nodePath, e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, Spec spec, String memberPath, int pathIndex, ObjectDbCallable<T> callable) {
+      Hash hash, Spec spec, String nodePath, int pathIndex, ObjectDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjectDbException e) {
-      throw new DecodeObjNodeException(hash, spec, memberPath + "[" + pathIndex + "]", e);
+      throw new DecodeObjNodeException(hash, spec, nodePath + "[" + pathIndex + "]", e);
     }
   }
 
@@ -44,11 +44,11 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeObjNodeException(
-      Hash hash, Spec spec, String path, HashedDbCallable<T> callable) {
+      Hash hash, Spec spec, String nodePath, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new DecodeObjNodeException(hash, spec, path, e);
+      throw new DecodeObjNodeException(hash, spec, nodePath, e);
     }
   }
 
@@ -62,11 +62,11 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeSpecNodeException(
-      Hash hash, SpecKind specKind, String path, HashedDbCallable<T> callable) {
+      Hash hash, SpecKind specKind, String nodePath, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new DecodeSpecNodeException(hash, specKind, path, e);
+      throw new DecodeSpecNodeException(hash, specKind, nodePath, e);
     }
   }
 
