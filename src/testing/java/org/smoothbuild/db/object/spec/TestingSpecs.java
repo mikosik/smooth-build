@@ -33,7 +33,7 @@ public class TestingSpecs {
   public static final Spec CALL = CONTEXT.callSpec();
   public static final Spec CONST = CONTEXT.constSpec(STR);
   public static final Spec EARRAY = CONTEXT.eArraySpec();
-  public static final Spec FIELD_READ = CONTEXT.fieldReadSpec(INT);
+  public static final Spec SELECT = CONTEXT.selectSpec(INT);
   public static final Spec NULL = CONTEXT.nullSpec();
   public static final Spec REF = CONTEXT.refSpec(INT);
 

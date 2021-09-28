@@ -1007,7 +1007,7 @@ public class DeclarationTest {
     }
 
     @Nested
-    class _field_read {
+    class _select {
       @Test
       public void reading_field() {
         String code = """

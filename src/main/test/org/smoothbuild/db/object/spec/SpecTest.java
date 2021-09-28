@@ -24,13 +24,13 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.CALL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CONST;
 import static org.smoothbuild.db.object.spec.TestingSpecs.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.EARRAY;
-import static org.smoothbuild.db.object.spec.TestingSpecs.FIELD_READ;
 import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NULL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
+import static org.smoothbuild.db.object.spec.TestingSpecs.SELECT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SPEC_DB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
 import static org.smoothbuild.util.Lists.list;
@@ -45,9 +45,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.Ref;
+import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -102,7 +102,7 @@ public class SpecTest {
         arguments(tc.callSpec(tc.intSpec()), "CALL:INT"),
         arguments(tc.constSpec(tc.intSpec()), "CONST:INT"),
         arguments(tc.eArraySpec(tc.strSpec()), "EARRAY:[STRING]"),
-        arguments(tc.fieldReadSpec(tc.intSpec()), "FIELD_READ:INT"),
+        arguments(tc.selectSpec(tc.intSpec()), "SELECT:INT"),
         arguments(NULL, "NULL:NOTHING"),
         arguments(tc.refSpec(tc.intSpec()), "REF:INT"),
 
@@ -156,7 +156,7 @@ public class SpecTest {
         arguments(CALL, Call.class),
         arguments(CONST, Const.class),
         arguments(EARRAY, EArray.class),
-        arguments(FIELD_READ, FieldRead.class),
+        arguments(SELECT, Select.class),
         arguments(NULL, Null.class),
         arguments(REF, Ref.class)
     );
@@ -311,7 +311,7 @@ public class SpecTest {
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(CONST, CONST);
     tester.addEqualityGroup(EARRAY, EARRAY);
-    tester.addEqualityGroup(FIELD_READ, FIELD_READ);
+    tester.addEqualityGroup(SELECT, SELECT);
     tester.addEqualityGroup(NULL, NULL);
     tester.addEqualityGroup(REF, REF);
 

@@ -41,7 +41,7 @@ public class SpecKindTest {
         Arguments.of(9, SpecKind.CALL),
         Arguments.of(10, SpecKind.CONST),
         Arguments.of(11, SpecKind.EARRAY),
-        Arguments.of(12, SpecKind.FIELD_READ),
+        Arguments.of(12, SpecKind.SELECT),
         Arguments.of(13, SpecKind.NULL),
         Arguments.of(14, SpecKind.REF)
     );

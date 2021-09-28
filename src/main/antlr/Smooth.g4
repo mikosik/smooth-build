@@ -16,12 +16,12 @@ literal      : array
              | STRING
              ;
 chain        : NAME ( chainPart )* ;
-chainCall    : NAME ( fieldRead )* argList ( chainPart )* ;
-chainPart    : argList | fieldRead ;
+chainCall    : NAME ( select )* argList ( chainPart )* ;
+chainPart    : argList | select ;
 argList      : '(' ( arg ( ',' arg )* ','? )? ')' ;
 arg          : ( NAME '=' )? expr ;
 array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
-fieldRead    : '.' NAME ;
+select       : '.' NAME ;
 type         : TNAME                        # typeName
              | '[' type ']'                 # arrayType
              | type '(' typeList ')'        # functionType

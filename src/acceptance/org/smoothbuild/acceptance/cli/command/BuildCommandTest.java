@@ -230,32 +230,32 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class field_read_matcher extends AcceptanceTestCase {
-      private static final String FIELD_READ = """
+    class select_matcher extends AcceptanceTestCase {
+      private static final String SELECT = """
             MyStruct {
               String myField
             }
             aStruct = myStruct("abc");
             result = aStruct.myField;
             """;
-      private static final String FIELD_READ_TASK_HEADER = """
+      private static final String SELECT_TASK_HEADER = """
           .myField                                 build.smooth:5                 exec
           """;
 
       @Test
-      public void shows_field_read_when_enabled() throws IOException {
-        createUserModule(FIELD_READ);
-        runSmooth(buildCommand("--show-tasks=field", "result"));
+      public void shows_select_when_enabled() throws IOException {
+        createUserModule(SELECT);
+        runSmooth(buildCommand("--show-tasks=select", "result"));
         assertFinishedWithSuccess();
-        assertSysOutContains(FIELD_READ_TASK_HEADER);
+        assertSysOutContains(SELECT_TASK_HEADER);
       }
 
       @Test
       public void hides_literals_when_not_enabled() throws IOException {
-        createUserModule(FIELD_READ);
+        createUserModule(SELECT);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(FIELD_READ_TASK_HEADER);
+        assertSysOutDoesNotContain(SELECT_TASK_HEADER);
       }
     }
 
@@ -537,7 +537,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void field_read() throws IOException {
+    public void select() throws IOException {
       createUserModule("""
           MyStruct {
             String myField

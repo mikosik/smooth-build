@@ -12,13 +12,13 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
-import static org.smoothbuild.db.object.spec.base.SpecKind.FIELD_READ;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
+import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
 import static org.smoothbuild.util.Lists.map;
@@ -41,9 +41,9 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.EArraySpec;
-import org.smoothbuild.db.object.spec.expr.FieldReadSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
+import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
@@ -144,8 +144,8 @@ public class SpecDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newEArraySpec(elementSpec));
   }
 
-  public FieldReadSpec fieldReadSpec(ValSpec evaluationSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newFieldReadSpec(evaluationSpec));
+  public SelectSpec selectSpec(ValSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelectSpec(evaluationSpec));
   }
 
   public NullSpec nullSpec() {
@@ -197,7 +197,7 @@ public class SpecDb {
       case CALL -> newCallSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CONST -> newConstSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case EARRAY -> newEArraySpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
-      case FIELD_READ -> newFieldReadSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
+      case SELECT -> newSelectSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case DEFINED_LAMBDA, NATIVE_LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
       case RECORD -> readRecord(hash, rootSequence);
@@ -374,13 +374,13 @@ public class SpecDb {
     return cacheSpec(new EArraySpec(hash, evaluationSpec));
   }
 
-  private FieldReadSpec newFieldReadSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeExprSpecRoot(FIELD_READ, evaluationSpec);
-    return newFieldReadSpec(hash, evaluationSpec);
+  private SelectSpec newSelectSpec(ValSpec evaluationSpec) throws HashedDbException {
+    var hash = writeExprSpecRoot(SELECT, evaluationSpec);
+    return newSelectSpec(hash, evaluationSpec);
   }
 
-  private FieldReadSpec newFieldReadSpec(Hash hash, ValSpec evaluationSpec) {
-    return cacheSpec(new FieldReadSpec(hash, evaluationSpec));
+  private SelectSpec newSelectSpec(Hash hash, ValSpec evaluationSpec) {
+    return cacheSpec(new SelectSpec(hash, evaluationSpec));
   }
 
   private RefSpec newRefSpec(ValSpec evaluationSpec) throws HashedDbException {

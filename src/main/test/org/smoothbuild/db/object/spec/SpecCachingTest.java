@@ -47,7 +47,7 @@ public class SpecCachingTest extends TestingContext {
         specDb -> specDb.callSpec(specDb.intSpec()),
         specDb -> specDb.constSpec(specDb.intSpec()),
         specDb -> specDb.eArraySpec(specDb.intSpec()),
-        specDb -> specDb.fieldReadSpec(specDb.intSpec()),
+        specDb -> specDb.selectSpec(specDb.intSpec()),
         SpecDb::nullSpec,
         specDb -> specDb.refSpec(specDb.intSpec()),
 

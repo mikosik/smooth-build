@@ -90,8 +90,8 @@ public class AstVisitor {
       visitBlobLiteral(blobNode);
     } else if (expr instanceof CallNode callNode) {
       visitCall(callNode);
-    } else if (expr instanceof FieldReadNode fieldReadNode) {
-      visitFieldRead(fieldReadNode);
+    } else if (expr instanceof SelectNode selectNode) {
+      visitSelect(selectNode);
     } else if (expr instanceof IntNode intNode) {
       visitIntLiteral(intNode);
     } else if (expr instanceof RefNode refNode) {
@@ -123,7 +123,7 @@ public class AstVisitor {
     visitExpr(arg.expr());
   }
 
-  public void visitFieldRead(FieldReadNode expr) {
+  public void visitSelect(SelectNode expr) {
     visitExpr(expr.expr());
   }
 

@@ -42,7 +42,6 @@ import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
-import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FunctionNode;
 import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
 import org.smoothbuild.lang.parse.ast.IntNode;
@@ -50,6 +49,7 @@ import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
+import org.smoothbuild.lang.parse.ast.SelectNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
@@ -206,8 +206,8 @@ public class InferTypes {
       }
 
       @Override
-      public void visitFieldRead(FieldReadNode expr) {
-        super.visitFieldRead(expr);
+      public void visitSelect(SelectNode expr) {
+        super.visitSelect(expr);
         expr.expr().type().ifPresentOrElse(
             t -> {
               if (!(t instanceof StructType st)) {

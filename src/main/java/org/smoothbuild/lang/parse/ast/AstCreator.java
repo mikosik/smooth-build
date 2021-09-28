@@ -25,7 +25,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.FieldReadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FunctionTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
@@ -33,6 +32,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.NatContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ReferencableContext;
+import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
@@ -186,8 +186,8 @@ public class AstCreator {
 
       private ExprNode createChainCallExpr(ArgNode pipedArg, ChainCallContext chainCall) {
         ExprNode result = newRefNode(chainCall.NAME());
-        for (FieldReadContext fieldRead : chainCall.fieldRead()) {
-          result = createFieldRead(result, fieldRead);
+        for (SelectContext fieldRead : chainCall.select()) {
+          result = createSelect(result, fieldRead);
         }
 
         var args = createArgList(chainCall.argList());
@@ -200,10 +200,10 @@ public class AstCreator {
         return new RefNode(name.getText(), locationOf(filePath, name));
       }
 
-      private FieldReadNode createFieldRead(ExprNode result, FieldReadContext fieldRead) {
+      private SelectNode createSelect(ExprNode result, SelectContext fieldRead) {
         String name = fieldRead.NAME().getText();
         Location location = locationOf(filePath, fieldRead);
-        return new FieldReadNode(result, name, location);
+        return new SelectNode(result, name, location);
       }
 
       private ExprNode createChainParts(ExprNode expr, List<ChainPartContext> chainParts) {
@@ -212,8 +212,8 @@ public class AstCreator {
           if (chainPart.argList() != null) {
             var args = createArgList(chainPart.argList());
             result = createCall(result, args, chainPart.argList());
-          } else if (chainPart.fieldRead() != null) {
-            result = createFieldRead(result, chainPart.fieldRead());
+          } else if (chainPart.select() != null) {
+            result = createSelect(result, chainPart.select());
           } else {
             throw newRuntimeException(ChainContext.class);
           }

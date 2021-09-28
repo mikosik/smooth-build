@@ -11,13 +11,13 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
-import static org.smoothbuild.db.object.spec.base.SpecKind.FIELD_READ;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
+import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
@@ -548,7 +548,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class field_read_spec {
+  class select_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -556,36 +556,36 @@ public class CorruptedSpecTest extends TestingContext {
        * to save call spec in HashedDb.
        */
       Hash hash = hash(
-          hash(FIELD_READ.marker()),
+          hash(SELECT.marker()),
           hash(intSpec())
       );
       assertThat(hash)
-          .isEqualTo(fieldReadSpec(intSpec()).hash());
+          .isEqualTo(selectSpec(intSpec()).hash());
     }
 
     @Test
     public void without_data() throws Exception {
-      test_spec_without_data(FIELD_READ);
+      test_spec_without_data(SELECT);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(FIELD_READ);
+      test_spec_with_additional_data(SELECT);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(FIELD_READ);
+      test_data_hash_pointing_nowhere_instead_of_being_spec(SELECT);
     }
 
     @Test
     public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(FIELD_READ);
+      test_spec_with_corrupted_spec_as_data(SELECT);
     }
 
     @Test
     public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(FIELD_READ, ValSpec.class);
+      test_spec_with_data_spec_being_expr_spec(SELECT, ValSpec.class);
     }
   }
 

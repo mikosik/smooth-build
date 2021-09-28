@@ -19,9 +19,9 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.Ref;
+import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
@@ -133,8 +133,8 @@ public class ObjectFactory {
     return objectDb.eArrayExpr(elements);
   }
 
-  public FieldRead fieldReadExpr(Expr rec, Int index) {
-    return objectDb.fieldReadExpr(rec, index);
+  public Select selectExpr(Expr rec, Int index) {
+    return objectDb.selectExpr(rec, index);
   }
 
   public Null nullExpr() {

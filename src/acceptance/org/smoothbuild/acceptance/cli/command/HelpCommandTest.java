@@ -95,12 +95,12 @@ public class HelpCommandTest extends AcceptanceTestCase {
                    
                                       p, prj, project  - evaluates expression from
                                       project module
-                                      s, sdk           - evaluates expression from
+                                      sdk              - evaluates expression from
                                       smooth SDK module
                    
                                       c, call          - evaluates function call
                                       conv, conversion - evaluates automatic conversion
-                                      fr, field        - evaluates field read
+                                      s, select        - evaluates field selection
                                       l, literal       - evaluates compile time literal
                                       m, map           - evaluates single call to a
                                       function in evaluation of `map` function call

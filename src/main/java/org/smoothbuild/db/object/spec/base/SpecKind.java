@@ -4,9 +4,9 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.Ref;
+import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -34,7 +34,7 @@ public enum SpecKind {
   CALL((byte) 9, Call.class),
   CONST((byte) 10, Const.class),
   EARRAY((byte) 11, EArray.class),
-  FIELD_READ((byte) 12, FieldRead.class),
+  SELECT((byte) 12, Select.class),
   NULL((byte) 13, Null.class),
   REF((byte) 14, Ref.class);
 
@@ -53,7 +53,7 @@ public enum SpecKind {
           .put((byte) 9, CALL)
           .put((byte) 10, CONST)
           .put((byte) 11, EARRAY)
-          .put((byte) 12, FIELD_READ)
+          .put((byte) 12, SELECT)
           .put((byte) 13, NULL)
           .put((byte) 14, REF)
           .build();

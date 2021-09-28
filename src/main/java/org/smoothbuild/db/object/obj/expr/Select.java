@@ -12,25 +12,25 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.FieldReadSpec;
+import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 
 /**
  * This class is immutable.
  */
-public class FieldRead extends Expr {
+public class Select extends Expr {
   private static final int DATA_SEQUENCE_SIZE = 2;
   private static final int REC_INDEX = 0;
   private static final int INDEX_INDEX = 1;
 
-  public FieldRead(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Select(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof FieldReadSpec);
+    checkArgument(merkleRoot.spec() instanceof SelectSpec);
   }
 
   @Override
-  public FieldReadSpec spec() {
-    return (FieldReadSpec) super.spec();
+  public SelectSpec spec() {
+    return (SelectSpec) super.spec();
   }
 
   public SelectData data() {
@@ -66,6 +66,6 @@ public class FieldRead extends Expr {
 
   @Override
   public String valueToString() {
-    return "FieldRead(???)";
+    return "Select(???)";
   }
 }

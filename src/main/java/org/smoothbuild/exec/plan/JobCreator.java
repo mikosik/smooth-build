@@ -2,9 +2,9 @@ package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.exec.job.TaskKind.CALL;
 import static org.smoothbuild.exec.job.TaskKind.CONVERSION;
-import static org.smoothbuild.exec.job.TaskKind.FIELD_READ;
 import static org.smoothbuild.exec.job.TaskKind.LITERAL;
 import static org.smoothbuild.exec.job.TaskKind.REFERENCE;
+import static org.smoothbuild.exec.job.TaskKind.SELECT;
 import static org.smoothbuild.exec.job.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
@@ -68,11 +68,11 @@ import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.IntLiteralExpression;
 import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
+import org.smoothbuild.lang.expr.SelectExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.util.Scope;
 
@@ -107,8 +107,8 @@ public class JobCreator {
             new Handler<>(this::nativeLazy, this::nativeEager))
         .put(CallExpression.class,
             new Handler<>(this::callLazy, this::callEager))
-        .put(FieldReadExpression.class,
-            new Handler<>(this::fieldReadLazy, this::fieldReadEager))
+        .put(SelectExpression.class,
+            new Handler<>(this::selectLazy, this::selectReadEager))
         .put(ParameterReferenceExpression.class,
             new Handler<>(this::paramReferenceLazy, this::paramReferenceLazy))
         .put(ReferenceExpression.class,
@@ -234,24 +234,24 @@ public class JobCreator {
 
   // FieldReadExpression
 
-  private Job fieldReadLazy(Scope<Job> scope, FieldReadExpression fieldRead) {
-    var type = fieldRead.field().type();
-    var location = fieldRead.location();
-    return new LazyJob(type, location, () -> fieldReadEager(scope, fieldRead, type));
+  private Job selectLazy(Scope<Job> scope, SelectExpression select) {
+    var type = select.field().type();
+    var location = select.location();
+    return new LazyJob(type, location, () -> selectReadEager(scope, select, type));
   }
 
-  private Job fieldReadEager(Scope<Job> scope, FieldReadExpression fieldRead) {
-    var type = fieldRead.field().type();
-    return fieldReadEager(scope, fieldRead, type);
+  private Job selectReadEager(Scope<Job> scope, SelectExpression select) {
+    var type = select.field().type();
+    return selectReadEager(scope, select, type);
   }
 
-  private Job fieldReadEager(Scope<Job> scope, FieldReadExpression expression, Type type) {
+  private Job selectReadEager(Scope<Job> scope, SelectExpression expression, Type type) {
     var structType = (StructType) expression.expression().type();
     var name = expression.field().name().get();
     var algorithm = new ReadRecItemAlgorithm(
         structType.fieldIndex(name), toSpecConverter.visit(type));
     var dependencies = list(eagerJobFor(scope, expression.expression()));
-    var info = new TaskInfo(FIELD_READ, "." + name, expression.location());
+    var info = new TaskInfo(SELECT, "." + name, expression.location());
     return new Task(type, dependencies, info, algorithm);
   }
 

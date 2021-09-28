@@ -25,11 +25,11 @@ import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.IntLiteralExpression;
 import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
+import org.smoothbuild.lang.expr.SelectExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 
 import com.google.common.collect.ImmutableList;
@@ -78,9 +78,9 @@ public class TestingLang {
     return new ParameterReferenceExpression(type, name, loc(line));
   }
 
-  public static FieldReadExpression fieldRead(
+  public static SelectExpression select(
       int line, ItemSignature field, Expression expression) {
-    return new FieldReadExpression(field, expression, loc(line));
+    return new SelectExpression(field, expression, loc(line));
   }
 
   public static CallExpression call(Type type, Expression expression, Expression... arguments) {

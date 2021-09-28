@@ -50,9 +50,9 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.FieldRead;
-import org.smoothbuild.db.object.obj.expr.FieldRead.SelectData;
 import org.smoothbuild.db.object.obj.expr.Ref;
+import org.smoothbuild.db.object.obj.expr.Select;
+import org.smoothbuild.db.object.obj.expr.Select.SelectData;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -1024,12 +1024,12 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
-  class _field_read {
+  class _select {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save smooth
-       * field_read in HashedDb.
+       * select in HashedDb.
        */
       var recSpec = recSpec(list(strSpec()));
       var rec = objectDb().recVal(recSpec, list(objectDb().strVal("abc")));
@@ -1037,19 +1037,19 @@ public class CorruptedObjTest extends TestingContext {
       var index = objectDb().intVal(BigInteger.valueOf(0));
       Hash objHash =
           hash(
-              hash(fieldReadSpec(strSpec())),
+              hash(selectSpec(strSpec())),
               hash(
                   hash(expr),
                   hash(index)
               )
           );
-      assertThat(((FieldRead) objectDb().get(objHash)).data())
+      assertThat(((Select) objectDb().get(objHash)).data())
           .isEqualTo(new SelectData(expr, index));
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(fieldReadSpec(intSpec()));
+      obj_root_without_data_hash(selectSpec(intSpec()));
     }
 
     @Test
@@ -1061,16 +1061,16 @@ public class CorruptedObjTest extends TestingContext {
           hash(index)
       );
       obj_root_with_two_data_hashes(
-          fieldReadSpec(),
+          selectSpec(),
           dataHash,
-          (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).data());
+          (Hash objHash) -> ((Select) objectDb().get(objHash)).data());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          fieldReadSpec(),
-          (Hash objHash) -> ((FieldRead) objectDb().get(objHash)).data());
+          selectSpec(),
+          (Hash objHash) -> ((Select) objectDb().get(objHash)).data());
     }
 
     @Test
@@ -1081,12 +1081,12 @@ public class CorruptedObjTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(fieldReadSpec()),
+              hash(selectSpec()),
               dataHash
           );
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).data())
+      assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjSequenceException(
-              objHash, fieldReadSpec(), DATA_PATH, 2, 1));
+              objHash, selectSpec(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1100,12 +1100,12 @@ public class CorruptedObjTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(fieldReadSpec()),
+              hash(selectSpec()),
               dataHash
           );
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).data())
+      assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjSequenceException(
-              objHash, fieldReadSpec(), DATA_PATH, 2, 3));
+              objHash, selectSpec(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1114,22 +1114,22 @@ public class CorruptedObjTest extends TestingContext {
       Val index = objectDb().intVal(BigInteger.valueOf(2));
       Hash objHash =
           hash(
-              hash(fieldReadSpec()),
+              hash(selectSpec()),
               hash(
                   hash(val),
                   hash(index)
               )
           );
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).data())
+      assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, fieldReadSpec(), DATA_PATH + "[0]", Expr.class, Int.class));
+              objHash, selectSpec(), DATA_PATH + "[0]", Expr.class, Int.class));
     }
 
     @Test
     public void rec_is_not_rec_expr() throws Exception {
       var expr = intExpr(3);
       var index = objectDb().intVal(BigInteger.valueOf(0));
-      var spec = fieldReadSpec(strSpec());
+      var spec = selectSpec(strSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -1139,7 +1139,7 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).data())
+      assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
               objHash, spec, "rec", RecSpec.class, intSpec()));
     }
@@ -1150,7 +1150,7 @@ public class CorruptedObjTest extends TestingContext {
       var rec = objectDb().recVal(recSpec, list(objectDb().strVal("abc")));
       var expr = objectDb().constExpr(rec);
       var index = objectDb().intVal(BigInteger.valueOf(1));
-      var spec = fieldReadSpec(strSpec());
+      var spec = selectSpec(strSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -1160,7 +1160,7 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).data())
+      assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new DecodeSelectIndexOutOfBoundsException(objHash, spec, 1, 1));
     }
 
@@ -1171,7 +1171,7 @@ public class CorruptedObjTest extends TestingContext {
       var rec = objectDb().recVal(recSpec, list(objectDb().strVal("abc")));
       var expr = objectDb().constExpr(rec);
       var index = objectDb().intVal(BigInteger.valueOf(0));
-      var spec = fieldReadSpec(intSpec());
+      var spec = selectSpec(intSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -1181,13 +1181,13 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).data())
+      assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new DecodeSelectWrongEvaluationSpec(objHash, spec, strSpec()));
     }
 
     @Test
     public void index_is_string_instead_of_int() throws Exception {
-      var spec = fieldReadSpec(strSpec());
+      var spec = selectSpec(strSpec());
       var recSpec = recSpec(list(strSpec()));
       var rec = objectDb().recVal(recSpec, list(objectDb().strVal("abc")));
       var expr = objectDb().constExpr(rec);
@@ -1200,7 +1200,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(strVal)
               )
           );
-      assertCall(() -> ((FieldRead) objectDb().get(objHash)).data())
+      assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
               objHash, spec, DATA_PATH + "[1]", Int.class, Str.class));
     }

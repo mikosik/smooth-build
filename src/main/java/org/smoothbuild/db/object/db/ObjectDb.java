@@ -29,9 +29,9 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.Ref;
+import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
@@ -44,7 +44,7 @@ import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.FieldReadSpec;
+import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
@@ -156,8 +156,8 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newEArrayExpr(elements));
   }
 
-  public FieldRead fieldReadExpr(Expr rec, Int index) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newFieldReadExpr(rec, index));
+  public Select selectExpr(Expr rec, Int index) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelectExpr(rec, index));
   }
 
   public Null nullExpr() {
@@ -279,20 +279,20 @@ public class ObjectDb {
     }
   }
 
-  private FieldRead newFieldReadExpr(Expr rec, Int index) throws HashedDbException {
-    var spec = fieldReadSpec(rec, index);
-    var data = writeFieldReadData(rec, index);
+  private Select newSelectExpr(Expr rec, Int index) throws HashedDbException {
+    var spec = selectSpec(rec, index);
+    var data = writeSelectData(rec, index);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
-  private FieldReadSpec fieldReadSpec(Expr rec, Int index) {
+  private SelectSpec selectSpec(Expr rec, Int index) {
     if (rec.spec().evaluationSpec() instanceof RecSpec recSpec) {
       var items = recSpec.items();
       int intIndex = index.jValue().intValue();
       checkElementIndex(intIndex, items.size());
       var fieldSpec = items.get(intIndex);
-      return specDb.fieldReadSpec(fieldSpec);
+      return specDb.selectSpec(fieldSpec);
     } else {
       throw new IllegalArgumentException();
     }
@@ -391,7 +391,7 @@ public class ObjectDb {
     return writeSequence(elements);
   }
 
-  private Hash writeFieldReadData(Expr rec, Int index) throws HashedDbException {
+  private Hash writeSelectData(Expr rec, Int index) throws HashedDbException {
     return hashedDb.writeSequence(rec.hash(), index.hash());
   }
 

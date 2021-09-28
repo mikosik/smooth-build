@@ -26,24 +26,24 @@ import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.IntLiteralExpression;
 import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
+import org.smoothbuild.lang.expr.SelectExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
-import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.NativeNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
+import org.smoothbuild.lang.parse.ast.SelectNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 
 import com.google.common.collect.ImmutableList;
@@ -125,8 +125,8 @@ public class LoadReferencable {
       if (expr instanceof CallNode callNode) {
         return createCall(callNode);
       }
-      if (expr instanceof FieldReadNode fieldReadNode) {
-        return createFieldRead(fieldReadNode);
+      if (expr instanceof SelectNode selectNode) {
+        return createSelect(selectNode);
       }
       if (expr instanceof IntNode intNode) {
         return createIntLiteral(intNode);
@@ -174,11 +174,11 @@ public class LoadReferencable {
       return resultBuilder.build();
     }
 
-    private Expression createFieldRead(FieldReadNode fieldReadNode) {
-      StructType type = (StructType) fieldReadNode.expr().type().get();
-      ItemSignature field = type.fieldWithName(fieldReadNode.fieldName());
-      Expression expression = createExpression(fieldReadNode.expr());
-      return new FieldReadExpression(field, expression, fieldReadNode.location());
+    private Expression createSelect(SelectNode selectNode) {
+      StructType type = (StructType) selectNode.expr().type().get();
+      ItemSignature field = type.fieldWithName(selectNode.fieldName());
+      Expression expression = createExpression(selectNode.expr());
+      return new SelectExpression(field, expression, selectNode.location());
     }
 
     private Expression createReference(RefNode ref) {

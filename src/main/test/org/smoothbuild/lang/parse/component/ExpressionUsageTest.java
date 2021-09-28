@@ -62,7 +62,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression_fails() {
+    public void struct_in_select_expression_fails() {
       module(
           """
           result = 0x01.accessedField;
@@ -129,7 +129,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression_fails() {
+    public void struct_in_select_expression_fails() {
       module(
           """
           result = 123.accessedField;
@@ -196,7 +196,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression_fails() {
+    public void struct_in_select_expression_fails() {
       module(
           """
           result = "abc".accessedField;
@@ -263,7 +263,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression_fails() {
+    public void struct_in_select_expression_fails() {
       module(
           """
           result = ["abc"].accessedField;
@@ -276,7 +276,7 @@ public class ExpressionUsageTest {
   }
 
   @Nested
-  class _field_read_used_as {
+  class _select_used_as {
     @Test
     public void function_argument() {
       module("""
@@ -362,7 +362,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression() {
+    public void struct_in_select_expression() {
       String code = """
             S1 {
               S2 f1,
@@ -377,7 +377,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression_fails_when_field_type_is_not_a_struct() {
+    public void struct_in_select_expression_fails_when_field_type_is_not_a_struct() {
       String code = """
             MyStruct {
               String myField,
@@ -499,7 +499,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression() {
+    public void struct_in_select_expression() {
       String code = """
             MyStruct {
               String myField
@@ -570,7 +570,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression_fails() {
+    public void struct_in_select_expression_fails() {
       String code = """
             myFunction() = "abc";
             result = myFunction.myField;
@@ -624,7 +624,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression() {
+    public void struct_in_select_expression() {
       String code = """
             MyStruct {
               String myField
@@ -636,7 +636,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression_fails_when_parameter_type_is_not_a_struct() {
+    public void struct_in_select_expression_fails_when_parameter_type_is_not_a_struct() {
       String code = """
             myFunction(String param) = param.myField;
             """;
@@ -713,7 +713,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression() {
+    public void struct_in_select_expression() {
       String code = """
             MyStruct {
               String myField
@@ -726,7 +726,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression_fails_when_its_type_is_not_struct() {
+    public void struct_in_select_expression_fails_when_its_type_is_not_struct() {
       module("""
           myValue = "abc";
           result = myValue.someField;
@@ -817,7 +817,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression() {
+    public void struct_in_select_expression() {
       String code = """
             MyStruct {
               String myField
@@ -987,7 +987,7 @@ public class ExpressionUsageTest {
     }
 
     @Test
-    public void struct_in_field_read_expression() {
+    public void struct_in_select_expression() {
       String code = """
             result = A.myField;
             """;

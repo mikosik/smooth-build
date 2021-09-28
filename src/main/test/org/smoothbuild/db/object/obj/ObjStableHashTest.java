@@ -197,10 +197,10 @@ public class ObjStableHashTest extends TestingContext {
   }
 
   @Nested
-  class _field_read {
+  class _select {
     @Test
-    public void field_read_expression() {
-      assertThat(fieldReadExpr(constExpr(recVal(list(strVal()))), intVal(0)).hash())
+    public void select_expression() {
+      assertThat(selectExpr(constExpr(recVal(list(strVal()))), intVal(0)).hash())
           .isEqualTo(Hash.decode("5b98a211bd964c55589d3e8c0b7d2b3dd09e0a0e"));
     }
   }

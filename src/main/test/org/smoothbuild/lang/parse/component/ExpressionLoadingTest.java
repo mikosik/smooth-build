@@ -4,12 +4,12 @@ import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.TestingLang.arrayE;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.constr;
-import static org.smoothbuild.lang.TestingLang.fieldRead;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.nativ;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.parameterRef;
 import static org.smoothbuild.lang.TestingLang.reference;
+import static org.smoothbuild.lang.TestingLang.select;
 import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
@@ -177,7 +177,7 @@ public class ExpressionLoadingTest {
   }
 
   @Test
-  public void field_read_expression() {
+  public void select_expression() {
     ItemSignature field = itemSignature(STRING, "field");
     StructType myStruct = struct("MyStruct", field);
     module("""
@@ -190,7 +190,7 @@ public class ExpressionLoadingTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(
-            value(5, STRING, "result", fieldRead(6, field, reference(5, myStruct, "struct"))));
+            value(5, STRING, "result", select(6, field, reference(5, myStruct, "struct"))));
   }
 
   @Nested

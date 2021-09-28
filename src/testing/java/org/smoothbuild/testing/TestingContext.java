@@ -18,9 +18,9 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.FieldRead;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.Ref;
+import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
@@ -34,9 +34,9 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.EArraySpec;
-import org.smoothbuild.db.object.spec.expr.FieldReadSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
+import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
@@ -265,12 +265,12 @@ public class TestingContext {
     return specDb().eArraySpec(elementSpec);
   }
 
-  public FieldReadSpec fieldReadSpec() {
-    return fieldReadSpec(intSpec());
+  public SelectSpec selectSpec() {
+    return selectSpec(intSpec());
   }
 
-  public FieldReadSpec fieldReadSpec(ValSpec evaluationSpec) {
-    return specDb().fieldReadSpec(evaluationSpec);
+  public SelectSpec selectSpec(ValSpec evaluationSpec) {
+    return specDb().selectSpec(evaluationSpec);
   }
 
   public NullSpec nullSpec() {
@@ -418,8 +418,8 @@ public class TestingContext {
     return objectDb().eArrayExpr(elements);
   }
 
-  public FieldRead fieldReadExpr(Expr rec, Int index) {
-    return objectDb().fieldReadExpr(rec, index);
+  public Select selectExpr(Expr rec, Int index) {
+    return objectDb().selectExpr(rec, index);
   }
 
   public Const intExpr() {

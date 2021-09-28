@@ -11,13 +11,13 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_INFO;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_WARNING;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CONVERSION;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.FIELD;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.LITERAL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.MAP;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PRJ;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.REFERENCE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
+import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SELECT;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.VALUE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.and;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.or;
@@ -97,8 +97,8 @@ public class MatcherCreatorTest {
     return Stream.of(
         arguments("all", ALL),
         arguments("a", ALL),
-        arguments("default", or(and(PRJ, or(or(CALL, VALUE), FIELD)), AT_LEAST_INFO)),
-        arguments("d", or(and(PRJ, or(or(CALL, VALUE), FIELD)), AT_LEAST_INFO)),
+        arguments("default", or(and(PRJ, or(or(CALL, VALUE), SELECT)), AT_LEAST_INFO)),
+        arguments("d", or(and(PRJ, or(or(CALL, VALUE), SELECT)), AT_LEAST_INFO)),
         arguments("none", NONE),
         arguments("n", NONE),
 
@@ -115,14 +115,13 @@ public class MatcherCreatorTest {
         arguments("prj", PRJ),
         arguments("p", PRJ),
         arguments("sdk", SDK),
-        arguments("s", SDK),
 
         arguments("call", CALL),
         arguments("c", CALL),
         arguments("conversion", CONVERSION),
         arguments("conv", CONVERSION),
-        arguments("fr", FIELD),
-        arguments("field", FIELD),
+        arguments("select", SELECT),
+        arguments("s", SELECT),
         arguments("literal", LITERAL),
         arguments("l", LITERAL),
         arguments("map", MAP),

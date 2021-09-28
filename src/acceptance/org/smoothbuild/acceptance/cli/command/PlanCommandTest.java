@@ -120,7 +120,7 @@ public class PlanCommandTest {
     }
 
     @Test
-    public void field_read() throws Exception {
+    public void select() throws Exception {
       createUserModule("""
               MyStruct {
                 String field
