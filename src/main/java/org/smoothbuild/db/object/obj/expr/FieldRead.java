@@ -49,7 +49,7 @@ public class FieldRead extends Expr {
       return new SelectData(rec, index);
     } else {
       throw new DecodeExprWrongEvaluationSpecOfComponentException(
-          hash(), spec(), "rec", rec.evaluationSpec(), RecSpec.class);
+          hash(), spec(), "rec", RecSpec.class, rec.evaluationSpec());
     }
   }
 

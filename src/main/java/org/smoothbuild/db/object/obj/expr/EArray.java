@@ -34,7 +34,7 @@ public class EArray extends Expr {
       ValSpec actualSpec = elements.get(i).evaluationSpec();
       if (!Objects.equals(expectedElementSpec, actualSpec)) {
         throw new DecodeExprWrongEvaluationSpecOfComponentException(
-            hash(), spec(), "elements[" + i + "]", actualSpec, expectedElementSpec);
+            hash(), spec(), "elements[" + i + "]", expectedElementSpec, actualSpec);
       }
     }
     return elements;

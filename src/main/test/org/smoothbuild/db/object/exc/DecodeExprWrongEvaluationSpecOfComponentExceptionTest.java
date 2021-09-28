@@ -10,7 +10,7 @@ public class DecodeExprWrongEvaluationSpecOfComponentExceptionTest extends Testi
   @Test
   public void message() {
     var exception = new DecodeExprWrongEvaluationSpecOfComponentException(
-        Hash.of(13), fieldReadSpec(intSpec()), "rec", strSpec(), intSpec());
+        Hash.of(13), fieldReadSpec(intSpec()), "rec", intSpec(), strSpec());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode FIELD_READ:INT "
             + "object at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "

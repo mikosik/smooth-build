@@ -6,17 +6,17 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 
 public class DecodeExprWrongEvaluationSpecOfComponentException extends DecodeObjException {
   public DecodeExprWrongEvaluationSpecOfComponentException(Hash hash, Spec spec, String component,
-      ValSpec actual, Class<?> expected) {
-    super(buildMessage(hash, spec, component, actual, expected.getCanonicalName()));
+      Class<?> expected, ValSpec actual) {
+    super(buildMessage(hash, spec, component, expected.getCanonicalName(), actual));
   }
 
   public DecodeExprWrongEvaluationSpecOfComponentException(Hash hash, Spec spec, String component,
-      ValSpec actual, ValSpec expected) {
-    super(buildMessage(hash, spec, component, actual, expected.name()));
+      ValSpec expected, ValSpec actual) {
+    super(buildMessage(hash, spec, component, expected.name(), actual));
   }
 
   private static String buildMessage(Hash hash, Spec spec, String component,
-      ValSpec actual, String expected) {
+      String expected, ValSpec actual) {
     return ("Cannot decode %s object at %s. Its `%s` component evaluation spec is %s while "
         + "expected %s.")
         .formatted(spec.name(), hash, component, actual.name(), expected);

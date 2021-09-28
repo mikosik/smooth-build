@@ -52,7 +52,7 @@ public class Call extends Expr {
     if (functionEvaluationSpec instanceof LambdaSpec lambdaSpec) {
       if (!Objects.equals(evaluationSpec(), lambdaSpec.result())) {
         throw new DecodeExprWrongEvaluationSpecOfComponentException(
-            hash(), spec(), "function.result", lambdaSpec.result(), evaluationSpec());
+            hash(), spec(), "function.result", evaluationSpec(), lambdaSpec.result());
       }
       var parameters = lambdaSpec.parameters().items();
       int parametersCount = parameters.size();
@@ -66,11 +66,11 @@ public class Call extends Expr {
         // TODO replace workaround with RecSpec once arguments are RecExpr
         RecSpec workaround = lambdaSpec.parameters();
         throw new DecodeExprWrongEvaluationSpecOfComponentException(
-            hash(), spec(), "arguments", workaround, lambdaSpec.parameters());
+            hash(), spec(), "arguments", lambdaSpec.parameters(), workaround);
       }
     } else {
       throw new DecodeExprWrongEvaluationSpecOfComponentException(
-          hash(), spec(), "function", functionEvaluationSpec, LambdaSpec.class);
+          hash(), spec(), "function", LambdaSpec.class, functionEvaluationSpec);
     }
   }
 

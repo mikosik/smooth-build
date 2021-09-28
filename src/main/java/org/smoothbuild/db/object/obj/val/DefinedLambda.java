@@ -19,7 +19,7 @@ public class DefinedLambda extends Lambda {
         DATA_PATH, dataHash(), BODY_INDEX, DATA_SEQUENCE_SIZE, Expr.class);
     if (!Objects.equals(expr.evaluationSpec(), spec().result())) {
       throw new DecodeExprWrongEvaluationSpecOfComponentException(
-          hash(), spec(), BODY_PATH, spec().result(), expr.evaluationSpec());
+          hash(), spec(), BODY_PATH, expr.evaluationSpec(), spec().result());
     }
     return new DefinedLambdaData(expr, defaultArguments());
   }

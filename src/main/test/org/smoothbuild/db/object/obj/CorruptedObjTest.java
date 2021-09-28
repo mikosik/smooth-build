@@ -568,7 +568,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-              objHash, spec, "function", intSpec(), LambdaSpec.class));
+              objHash, spec, "function", LambdaSpec.class, intSpec()));
     }
 
     @Test
@@ -592,7 +592,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "function.result", intSpec(), strSpec()));
+                  objHash, spec, "function.result", strSpec(), intSpec()));
     }
 
     @Test
@@ -855,7 +855,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-              objHash, spec, DATA_PATH + "[0]", boolSpec(), intSpec()));
+              objHash, spec, DATA_PATH + "[0]", intSpec(), boolSpec()));
     }
 
     @ParameterizedTest
@@ -1019,7 +1019,7 @@ public class CorruptedObjTest extends TestingContext {
       assertCall(() -> ((EArray) objectDb().get(objHash)).elements())
           .throwsException(
               new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "elements[1]", strSpec(), intSpec()));
+                  objHash, spec, "elements[1]", intSpec(), strSpec()));
     }
   }
 
@@ -1141,7 +1141,7 @@ public class CorruptedObjTest extends TestingContext {
 
       assertCall(() -> ((FieldRead) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-              objHash, spec, "rec", intSpec(), RecSpec.class));
+              objHash, spec, "rec", RecSpec.class, intSpec()));
     }
 
     @Test
@@ -1988,7 +1988,7 @@ public class CorruptedObjTest extends TestingContext {
         );
     assertCall(() -> consumer.accept(objHash))
         .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-            objHash, spec, DATA_PATH + "[1][1]", intSpec(), strSpec()));
+            objHash, spec, DATA_PATH + "[1][1]", strSpec(), intSpec()));
   }
 
   // helper methods

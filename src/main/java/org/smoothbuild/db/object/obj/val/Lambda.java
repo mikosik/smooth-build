@@ -38,7 +38,7 @@ public abstract class Lambda extends Val {
       ValSpec actual = arguments.get(i).evaluationSpec();
       if (!Objects.equals(expected, actual)) {
         throw new DecodeExprWrongEvaluationSpecOfComponentException(
-            hash(), spec(), DEFAULT_ARGUMENTS_PATH + "[" + i + "]", actual, expected);
+            hash(), spec(), DEFAULT_ARGUMENTS_PATH + "[" + i + "]", expected, actual);
       }
     }
     return arguments;
