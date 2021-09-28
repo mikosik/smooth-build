@@ -791,11 +791,6 @@ public class CorruptedSpecTest extends TestingContext {
       return assertCall(() -> specDb().getSpec(hash));
   }
 
-  private String brokenSpecMessage(SpecKind specKind, int actual, int expected) {
-    return "Its specKind == " + specKind + " but its merkle root has " + actual
-        + " children when " + expected + " is expected.";
-  }
-
   private DecodeSpecException illegalSpecMarkerException(Hash hash, int marker) {
     return new DecodeSpecIllegalKindException(hash, (byte) marker);
   }
