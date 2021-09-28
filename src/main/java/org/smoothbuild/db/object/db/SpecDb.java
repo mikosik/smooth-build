@@ -291,7 +291,7 @@ public class SpecDb {
 
   private ImmutableList<ValSpec> readRecSpecItemSpecs(Hash hash, Hash itemSpecsHash) {
     var builder = ImmutableList.<ValSpec>builder();
-    var itemSpecHashes = readRecSpecItemSpecHashes(hash, itemSpecsHash);
+    var itemSpecHashes = readSequenceHashes(hash, itemSpecsHash, RECORD, DATA_PATH);
     for (int i = 0; i < itemSpecHashes.size(); i++) {
       Spec spec = getSpecOrChainException(hash, RECORD, itemSpecHashes.get(i), DATA_PATH, i);
       if (spec instanceof ValSpec valSpec) {
@@ -302,14 +302,6 @@ public class SpecDb {
       }
     }
     return builder.build();
-  }
-
-  private List<Hash> readRecSpecItemSpecHashes(Hash hash, Hash itemSpecsHash) {
-    try {
-      return hashedDb.readSequence(itemSpecsHash);
-    } catch (HashedDbException e) {
-      throw new DecodeSpecNodeException(hash, RECORD, DATA_PATH, e);
-    }
   }
 
   // methods for creating Val Spec-s
