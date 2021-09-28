@@ -29,7 +29,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.exc.DecodeSpecException;
 import org.smoothbuild.db.object.exc.DecodeSpecIllegalKindException;
 import org.smoothbuild.db.object.exc.DecodeSpecNodeException;
 import org.smoothbuild.db.object.exc.DecodeSpecRootException;
@@ -356,7 +355,7 @@ public class SpecDb {
   // methods for creating Expr Spec-s
 
   private CallSpec newCallSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeCallSpecRoot(evaluationSpec);
+    var hash = writeExprSpecRoot(CALL, evaluationSpec);
     return newCallSpec(hash, evaluationSpec);
   }
 
@@ -365,7 +364,7 @@ public class SpecDb {
   }
 
   private ConstSpec newConstSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeConstSpecRoot(evaluationSpec);
+    var hash = writeExprSpecRoot(CONST, evaluationSpec);
     return newConstSpec(hash, evaluationSpec);
   }
 
@@ -375,7 +374,7 @@ public class SpecDb {
 
   private EArraySpec newEArraySpec(ValSpec elementSpec) throws HashedDbException {
     var evaluationSpec = arraySpec(elementSpec);
-    var hash = writeEArraySpecRoot(evaluationSpec);
+    var hash = writeExprSpecRoot(EARRAY, evaluationSpec);
     return newEArraySpec(hash, evaluationSpec);
   }
 
@@ -384,7 +383,7 @@ public class SpecDb {
   }
 
   private FieldReadSpec newFieldReadSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeFieldReadSpecRoot(evaluationSpec);
+    var hash = writeExprSpecRoot(FIELD_READ, evaluationSpec);
     return newFieldReadSpec(hash, evaluationSpec);
   }
 
@@ -393,7 +392,7 @@ public class SpecDb {
   }
 
   private RefSpec newRefSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeRefSpecRoot(evaluationSpec);
+    var hash = writeExprSpecRoot(REF, evaluationSpec);
     return newRefSpec(hash, evaluationSpec);
   }
 
@@ -425,29 +424,11 @@ public class SpecDb {
     return writeNonBaseSpecRoot(RECORD, itemsHash);
   }
 
-  // Methods for writing Expr spec root
-
-  private Hash writeCallSpecRoot(Spec evaluationSpec) throws HashedDbException {
-    return writeNonBaseSpecRoot(CALL, evaluationSpec.hash());
-  }
-
-  private Hash writeConstSpecRoot(Spec evaluationSpec) throws HashedDbException {
-    return writeNonBaseSpecRoot(CONST, evaluationSpec.hash());
-  }
-
-  private Hash writeEArraySpecRoot(Spec evaluationSpec) throws HashedDbException {
-    return writeNonBaseSpecRoot(EARRAY, evaluationSpec.hash());
-  }
-
-  private Hash writeFieldReadSpecRoot(Spec evaluationSpec) throws HashedDbException {
-    return writeNonBaseSpecRoot(FIELD_READ, evaluationSpec.hash());
-  }
-
-  private Hash writeRefSpecRoot(Spec evaluationSpec) throws HashedDbException {
-    return writeNonBaseSpecRoot(REF, evaluationSpec.hash());
-  }
-
   // Helper methods for writing roots
+
+  private Hash writeExprSpecRoot(SpecKind specKind, Spec evaluationSpec) throws HashedDbException {
+    return writeNonBaseSpecRoot(specKind, evaluationSpec.hash());
+  }
 
   private Hash writeNonBaseSpecRoot(SpecKind specKind, Hash elements) throws HashedDbException {
     return hashedDb.writeSequence(hashedDb.writeByte(specKind.marker()), elements);
