@@ -54,14 +54,6 @@ public abstract class Obj {
     return merkleRoot.spec();
   }
 
-  private String valueToStringSafe() {
-    try {
-      return valueToString();
-    } catch (DecodeObjNodeException e) {
-      return "?Exception?:" + hash();
-    }
-  }
-
   public abstract String valueToString();
 
   @Override
@@ -163,5 +155,13 @@ public abstract class Obj {
 
   public static String sequenceToString(ImmutableList<? extends Obj> objects) {
     return objects.stream().map(Obj::valueToStringSafe).collect(joining(","));
+  }
+
+  private String valueToStringSafe() {
+    try {
+      return valueToString();
+    } catch (DecodeObjNodeException e) {
+      return "?Exception?:" + hash();
+    }
   }
 }
