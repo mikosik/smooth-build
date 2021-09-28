@@ -285,30 +285,30 @@ public class SpecDb {
 
   private RecSpec readRecord(Hash hash, List<Hash> rootSequence) {
     assertSpecRootSequenceSize(hash, RECORD, rootSequence, 2);
-    ImmutableList<ValSpec> items = readRecSpecItemSpecs(rootSequence.get(DATA_INDEX), hash);
+    ImmutableList<ValSpec> items = readRecSpecItemSpecs(hash, rootSequence.get(DATA_INDEX));
     return newRecSpec(hash, items);
   }
 
-  private ImmutableList<ValSpec> readRecSpecItemSpecs(Hash hash, Hash parentHash) {
+  private ImmutableList<ValSpec> readRecSpecItemSpecs(Hash hash, Hash itemSpecsHash) {
     var builder = ImmutableList.<ValSpec>builder();
-    var itemSpecHashes = readRecSpecItemSpecHashes(hash, parentHash);
+    var itemSpecHashes = readRecSpecItemSpecHashes(hash, itemSpecsHash);
     for (int i = 0; i < itemSpecHashes.size(); i++) {
-      Spec spec = getSpecOrChainException(parentHash, RECORD, itemSpecHashes.get(i), DATA_PATH, i);
+      Spec spec = getSpecOrChainException(hash, RECORD, itemSpecHashes.get(i), DATA_PATH, i);
       if (spec instanceof ValSpec valSpec) {
         builder.add(valSpec);
       } else {
         throw new UnexpectedSpecNodeException(
-            parentHash, RECORD, "data", i, ValSpec.class, spec.getClass());
+            hash, RECORD, "data", i, ValSpec.class, spec.getClass());
       }
     }
     return builder.build();
   }
 
-  private List<Hash> readRecSpecItemSpecHashes(Hash hash, Hash parentHash) {
+  private List<Hash> readRecSpecItemSpecHashes(Hash hash, Hash itemSpecsHash) {
     try {
-      return hashedDb.readSequence(hash);
+      return hashedDb.readSequence(itemSpecsHash);
     } catch (HashedDbException e) {
-      throw new DecodeSpecNodeException(parentHash, RECORD, DATA_PATH, e);
+      throw new DecodeSpecNodeException(hash, RECORD, DATA_PATH, e);
     }
   }
 
