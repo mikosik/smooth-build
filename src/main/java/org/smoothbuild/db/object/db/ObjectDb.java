@@ -29,6 +29,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
+import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -156,6 +157,10 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newEArrayExpr(elements));
   }
 
+  public ERec eRecExpr(Iterable<? extends Expr> items) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newERecExpr(items));
+  }
+
   public Select selectExpr(Expr rec, Int index) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectExpr(rec, index));
   }
@@ -279,6 +284,14 @@ public class ObjectDb {
     }
   }
 
+  private ERec newERecExpr(Iterable<? extends Expr> items) throws HashedDbException {
+    var itemSpecs = map(items, Expr::evaluationSpec);
+    var spec = specDb.eRecSpec(itemSpecs);
+    var data = writeERecData(items);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
+  }
+
   private Select newSelectExpr(Expr rec, Int index) throws HashedDbException {
     var spec = selectSpec(rec, index);
     var data = writeSelectData(rec, index);
@@ -389,6 +402,10 @@ public class ObjectDb {
 
   private Hash writeEarrayData(Iterable<? extends Expr> elements) throws HashedDbException {
     return writeSequence(elements);
+  }
+
+  private Hash writeERecData(Iterable<? extends Expr> items) throws HashedDbException {
+    return writeSequence(items);
   }
 
   private Hash writeSelectData(Expr rec, Int index) throws HashedDbException {

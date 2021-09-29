@@ -39,7 +39,7 @@ public class EArrayTest extends TestingContext {
   }
 
   @Test
-  public void earrays_with_equal_values_are_equal() {
+  public void earrays_with_equal_elements_are_equal() {
     List<Const> elements = list(intExpr(2)) ;
     assertThat(eArrayExpr(elements))
         .isEqualTo(eArrayExpr(elements));

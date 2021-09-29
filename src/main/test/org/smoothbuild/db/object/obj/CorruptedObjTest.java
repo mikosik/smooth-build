@@ -35,6 +35,7 @@ import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.exc.DecodeCallWrongArgumentsSizeException;
+import org.smoothbuild.db.object.exc.DecodeERecWrongItemsSizeException;
 import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentException;
 import org.smoothbuild.db.object.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.exc.DecodeObjSpecException;
@@ -50,6 +51,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
+import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.Select.SelectData;
@@ -65,6 +67,7 @@ import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.EArraySpec;
+import org.smoothbuild.db.object.spec.expr.ERecSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
@@ -1020,6 +1023,141 @@ public class CorruptedObjTest extends TestingContext {
           .throwsException(
               new DecodeExprWrongEvaluationSpecOfComponentException(
                   objHash, spec, "elements[1]", intSpec(), strSpec()));
+    }
+  }
+
+  @Nested
+  class _erecord {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save eRecord
+       * in HashedDb.
+       */
+      Const expr1 = intExpr(1);
+      Const expr2 = strExpr("abc");
+      Hash objHash =
+          hash(
+              hash(eRecSpec(list(intSpec(), strSpec()))),
+              hash(
+                  hash(expr1),
+                  hash(expr2)
+              ));
+      ImmutableList<Expr> items = ((ERec) objectDb().get(objHash)).items();
+      assertThat(items)
+          .containsExactly(expr1, expr2)
+          .inOrder();
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(eRecSpec());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      Const expr1 = intExpr(1);
+      Const expr2 = strExpr("abc");
+      Hash dataHash = hash(
+          hash(expr1),
+          hash(expr2)
+      );
+      obj_root_with_two_data_hashes(
+          eArraySpec(),
+          dataHash,
+          (Hash objHash) -> ((ERec) objectDb().get(objHash)).items()
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          eRecSpec(),
+          (Hash objHash) -> ((ERec) objectDb().get(objHash)).items());
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void with_sequence_size_different_than_multiple_of_hash_size(
+        int byteCount) throws Exception {
+      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Hash objHash =
+          hash(
+              hash(eRecSpec()),
+              notHashOfSequence
+          );
+      assertCall(() -> ((ERec) objectDb().get(objHash)).items())
+          .throwsException(new DecodeObjNodeException(objHash, eRecSpec(), DATA_PATH))
+          .withCause(new DecodeHashSequenceException(
+              notHashOfSequence, byteCount % Hash.lengthInBytes()));
+    }
+
+    @Test
+    public void with_sequence_element_pointing_nowhere() throws Exception {
+      Hash nowhere = Hash.of(33);
+      Hash objHash =
+          hash(
+              hash(eRecSpec()),
+              hash(
+                  nowhere
+              )
+          );
+      assertCall(() -> ((ERec) objectDb().get(objHash)).items())
+          .throwsException(new DecodeObjNodeException(objHash, eRecSpec(), DATA_PATH + "[0]"))
+          .withCause(new NoSuchObjException(nowhere));
+    }
+
+    @Test
+    public void with_one_element_being_val() throws Exception {
+      Const expr1 = intExpr(1);
+      Int val = intVal(123);
+      Hash objHash =
+          hash(
+              hash(eRecSpec(list(intSpec(), strSpec()))),
+              hash(
+                  hash(expr1),
+                  hash(val)
+              ));
+
+      assertCall(() -> ((ERec) objectDb().get(objHash)).items())
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, eRecSpec(), DATA_PATH + "[1]", Expr.class, Int.class));
+    }
+
+    @Test
+    public void evaluation_spec_items_size_is_different_than_actual_items_size()
+        throws Exception {
+      Const expr1 = intExpr(1);
+      ERecSpec spec = eRecSpec(list(intSpec(), strSpec()));
+      Hash objHash =
+          hash(
+              hash(spec),
+              hash(
+                  hash(expr1)
+              ));
+
+      assertCall(() -> ((ERec) objectDb().get(objHash)).items())
+          .throwsException(new DecodeERecWrongItemsSizeException(objHash, spec, 1));
+    }
+
+    @Test
+    public void evaluation_spec_item_is_different_than_evaluation_spec_of_one_of_items()
+        throws Exception {
+      Const expr1 = intExpr(1);
+      Const expr2 = strExpr("abc");
+      ERecSpec spec = eRecSpec(list(intSpec(), boolSpec()));
+      Hash objHash =
+          hash(
+              hash(spec),
+              hash(
+                  hash(expr1),
+                  hash(expr2)
+              ));
+
+      assertCall(() -> ((ERec) objectDb().get(objHash)).items())
+          .throwsException(
+              new DecodeExprWrongEvaluationSpecOfComponentException(
+                  objHash, spec, "items[1]", boolSpec(), strSpec()));
     }
   }
 

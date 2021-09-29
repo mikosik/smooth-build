@@ -12,6 +12,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ERECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
@@ -41,6 +42,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.EArraySpec;
+import org.smoothbuild.db.object.spec.expr.ERecSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
@@ -144,6 +146,10 @@ public class SpecDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newEArraySpec(elementSpec));
   }
 
+  public ERecSpec eRecSpec(Iterable<? extends ValSpec> itemSpecs) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newERecSpec(itemSpecs));
+  }
+
   public SelectSpec selectSpec(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectSpec(evaluationSpec));
   }
@@ -197,6 +203,7 @@ public class SpecDb {
       case CALL -> newCallSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CONST -> newConstSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case EARRAY -> newEArraySpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
+      case ERECORD -> newERecSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
       case SELECT -> newSelectSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case DEFINED_LAMBDA, NATIVE_LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
@@ -237,6 +244,10 @@ public class SpecDb {
 
   private ArraySpec getDataAsArraySpec(Hash hash, List<Hash> rootSequence, SpecKind specKind) {
     return getDataAsSpecCastedTo(hash, rootSequence, specKind, ArraySpec.class);
+  }
+
+  private RecSpec getDataAsRecSpec(Hash hash, List<Hash> rootSequence, SpecKind specKind) {
+    return getDataAsSpecCastedTo(hash, rootSequence, specKind, RecSpec.class);
   }
 
   private <T extends Spec> T getDataAsSpecCastedTo(Hash hash, List<Hash> rootSequence,
@@ -372,6 +383,16 @@ public class SpecDb {
 
   private EArraySpec newEArraySpec(Hash hash, ArraySpec evaluationSpec) {
     return cacheSpec(new EArraySpec(hash, evaluationSpec));
+  }
+
+  private ERecSpec newERecSpec(Iterable<? extends ValSpec> elementSpec) throws HashedDbException {
+    var evaluationSpec = recSpec(elementSpec);
+    var hash = writeExprSpecRoot(ERECORD, evaluationSpec);
+    return newERecSpec(hash, evaluationSpec);
+  }
+
+  private ERecSpec newERecSpec(Hash hash, RecSpec evaluationSpec) {
+    return cacheSpec(new ERecSpec(hash, evaluationSpec));
   }
 
   private SelectSpec newSelectSpec(ValSpec evaluationSpec) throws HashedDbException {

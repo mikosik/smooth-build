@@ -18,6 +18,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
+import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -34,6 +35,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.EArraySpec;
+import org.smoothbuild.db.object.spec.expr.ERecSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
@@ -265,6 +267,14 @@ public class TestingContext {
     return specDb().eArraySpec(elementSpec);
   }
 
+  public ERecSpec eRecSpec() {
+    return eRecSpec(list(intSpec(), strSpec()));
+  }
+
+  public ERecSpec eRecSpec(Iterable<? extends ValSpec> itemSpecs) {
+    return specDb().eRecSpec(itemSpecs);
+  }
+
   public SelectSpec selectSpec() {
     return selectSpec(intSpec());
   }
@@ -416,6 +426,10 @@ public class TestingContext {
 
   public EArray eArrayExpr(Iterable<? extends Expr> elements) {
     return objectDb().eArrayExpr(elements);
+  }
+
+  public ERec eRecExpr(Iterable<? extends Expr> items) {
+    return objectDb().eRecExpr(items);
   }
 
   public Select selectExpr(Expr rec, Int index) {

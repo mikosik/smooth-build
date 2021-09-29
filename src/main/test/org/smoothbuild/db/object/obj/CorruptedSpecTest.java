@@ -11,6 +11,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ERECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
@@ -493,7 +494,7 @@ public class CorruptedSpecTest extends TestingContext {
     public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save array spec in HashedDb.
+       * to save earray spec in HashedDb.
        */
       Hash hash = hash(
           hash(EARRAY.marker()),
@@ -537,6 +538,59 @@ public class CorruptedSpecTest extends TestingContext {
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecNodeException(
               hash, EARRAY, DATA_PATH, ArraySpec.class, IntSpec.class));
+    }
+  }
+
+  @Nested
+  class erecord_spec {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save erecord spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(ERECORD.marker()),
+          hash(recSpec(list(intSpec(), strSpec())))
+      );
+      assertThat(hash)
+          .isEqualTo(eRecSpec(list(intSpec(), strSpec())).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(ERECORD);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(ERECORD);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_spec(ERECORD);
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      test_spec_with_corrupted_spec_as_data(ERECORD);
+    }
+
+    @Test
+    public void with_evaluation_spec_being_expr_spec() throws Exception {
+      test_spec_with_data_spec_being_expr_spec(ERECORD, RecSpec.class);
+    }
+
+    @Test
+    public void with_evaluation_spec_not_being_rec_spec() throws Exception {
+      Hash hash = hash(
+          hash(ERECORD.marker()),
+          hash(intSpec())
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new UnexpectedSpecNodeException(
+              hash, ERECORD, DATA_PATH, RecSpec.class, IntSpec.class));
     }
   }
 
