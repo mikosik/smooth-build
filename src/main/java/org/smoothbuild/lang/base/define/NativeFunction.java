@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.joining;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.NativeExpression;
+import org.smoothbuild.lang.expr.AnnotationExpression;
 
 import com.google.common.collect.ImmutableList;
 
@@ -13,15 +13,15 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class NativeFunction extends Function {
-  private final NativeExpression nativ;
+  private final AnnotationExpression nativ;
 
   public NativeFunction(Type resultType, ModulePath modulePath, String name,
-      ImmutableList<Item> parameters, NativeExpression nativ, Location location) {
+      ImmutableList<Item> parameters, AnnotationExpression nativ, Location location) {
     super(resultType, modulePath, name, parameters, location);
     this.nativ = nativ;
   }
 
-  public NativeExpression nativ() {
+  public AnnotationExpression nativ() {
     return nativ;
   }
 

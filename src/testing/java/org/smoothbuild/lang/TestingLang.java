@@ -26,7 +26,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.IntLiteralExpression;
-import org.smoothbuild.lang.expr.NativeExpression;
+import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.SelectExpression;
@@ -98,8 +98,8 @@ public class TestingLang {
     return function(1, type, name, nativ(1, string(1, "Impl.met")), parameters);
   }
 
-  public static NativeFunction function(int line, Type type, String name, NativeExpression nativ,
-      Item... parameters) {
+  public static NativeFunction function(int line, Type type, String name,
+      AnnotationExpression nativ, Item... parameters) {
     return new NativeFunction(type, modulePath(), name, list(parameters), nativ, loc(line));
   }
 
@@ -117,17 +117,17 @@ public class TestingLang {
     return new DefinedValue(type, modulePath(), name, expression, loc(line));
   }
 
-  public static NativeValue value(int line, Type type, String name, NativeExpression nativ) {
+  public static NativeValue value(int line, Type type, String name, AnnotationExpression nativ) {
     return new NativeValue(type, modulePath(), name, nativ, loc(line));
   }
 
-  public static NativeExpression nativ(int line, StringLiteralExpression implementedBy) {
+  public static AnnotationExpression nativ(int line, StringLiteralExpression implementedBy) {
     return nativ(line, implementedBy, true);
   }
 
-  public static NativeExpression nativ(
+  public static AnnotationExpression nativ(
       int line, StringLiteralExpression implementedBy, boolean pure) {
-    return new NativeExpression(implementedBy, pure, loc(line));
+    return new AnnotationExpression(implementedBy, pure, loc(line));
   }
 
   public static StructType struct(String name, ItemSignature... fields) {

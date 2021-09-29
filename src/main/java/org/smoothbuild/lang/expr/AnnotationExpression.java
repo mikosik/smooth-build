@@ -11,7 +11,8 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 
-public record NativeExpression(StringLiteralExpression path, boolean isPure, Location location)
+public record AnnotationExpression(
+    StringLiteralExpression path, boolean isPure, Location location)
     implements Expression {
   private static final Type TYPE = structT("Native", list(
       new ItemSignature(stringT(), "path", Optional.empty()),

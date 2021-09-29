@@ -3,21 +3,21 @@ package org.smoothbuild.lang.base.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.NativeExpression;
+import org.smoothbuild.lang.expr.AnnotationExpression;
 
 /**
  * This class is immutable.
  */
 public class NativeValue extends Value {
-  private final NativeExpression nativ;
+  private final AnnotationExpression nativ;
 
-  public NativeValue(Type type, ModulePath modulePath, String name, NativeExpression nativ,
+  public NativeValue(Type type, ModulePath modulePath, String name, AnnotationExpression nativ,
       Location location) {
     super(type, modulePath, name, location);
     this.nativ = nativ;
   }
 
-  public NativeExpression nativ() {
+  public AnnotationExpression nativ() {
     return nativ;
   }
 

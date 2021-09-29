@@ -27,7 +27,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.IntLiteralExpression;
-import org.smoothbuild.lang.expr.NativeExpression;
+import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.SelectExpression;
@@ -88,9 +88,9 @@ public class LoadReferencable {
     }
   }
 
-  private static NativeExpression loadNative(NativeNode nativeNode) {
+  private static AnnotationExpression loadNative(NativeNode nativeNode) {
     var path = createStringLiteral(nativeNode.path());
-    return new NativeExpression(path, nativeNode.isPure(), nativeNode.location());
+    return new AnnotationExpression(path, nativeNode.isPure(), nativeNode.location());
   }
 
   private static ImmutableList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {

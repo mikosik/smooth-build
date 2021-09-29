@@ -69,7 +69,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.IntLiteralExpression;
-import org.smoothbuild.lang.expr.NativeExpression;
+import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.SelectExpression;
@@ -103,7 +103,7 @@ public class JobCreator {
   private ImmutableMap<Class<?>, Handler<?>> constructHandlers(
       Map<Class<?>, Handler<?>> additionalHandlers) {
     return ImmutableMap.<Class<?>, Handler<?>>builder()
-        .put(NativeExpression.class,
+        .put(AnnotationExpression.class,
             new Handler<>(this::nativeLazy, this::nativeEager))
         .put(CallExpression.class,
             new Handler<>(this::callLazy, this::callEager))
@@ -148,19 +148,19 @@ public class JobCreator {
 
   // NativeExpression
 
-  private Job nativeLazy(Scope<Job> scope, NativeExpression nativ) {
+  private Job nativeLazy(Scope<Job> scope, AnnotationExpression nativ) {
     return nativeLazyJob(nativ);
   }
 
-  private Job nativeEager(Scope<Job> scope, NativeExpression nativ) {
+  private Job nativeEager(Scope<Job> scope, AnnotationExpression nativ) {
     return stringEagerJob(nativ.path());
   }
 
-  private Job nativeLazyJob(NativeExpression nativ) {
+  private Job nativeLazyJob(AnnotationExpression nativ) {
     return stringLazyJob(nativ.path());
   }
 
-  private Job nativeEagerJob(NativeExpression nativ) {
+  private Job nativeEagerJob(AnnotationExpression nativ) {
     return stringEagerJob(nativ.path());
   }
 
@@ -439,7 +439,7 @@ public class JobCreator {
   }
 
   private Job callNativeValueEagerJob(NativeValue nativeValue, Location location) {
-    NativeExpression nativ = nativeValue.nativ();
+    AnnotationExpression nativ = nativeValue.nativ();
     var algorithm = new CallNativeAlgorithm(
         methodLoader, toSpecConverter.visit(nativeValue.type()), nativeValue, nativ.isPure());
     var nativeCode = nativeEagerJob(nativ);
@@ -463,7 +463,7 @@ public class JobCreator {
   }
 
   private Job callNativeFunctionEagerJob(Scope<Job> scope, List<Job> arguments,
-      NativeFunction function, NativeExpression nativ, BoundsMap variables,
+      NativeFunction function, AnnotationExpression nativ, BoundsMap variables,
       Type actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(
         methodLoader, toSpecConverter.visit(actualResultType), function, nativ.isPure());
