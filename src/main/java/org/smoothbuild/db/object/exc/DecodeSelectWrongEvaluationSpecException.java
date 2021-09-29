@@ -4,8 +4,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 
-public class DecodeSelectWrongEvaluationSpec extends DecodeObjException {
-  public DecodeSelectWrongEvaluationSpec(Hash hash, SelectSpec spec, ValSpec actual) {
+public class DecodeSelectWrongEvaluationSpecException extends DecodeObjException {
+  public DecodeSelectWrongEvaluationSpecException(Hash hash, SelectSpec spec, ValSpec actual) {
     super(buildMessage(hash, spec, actual));
   }
 

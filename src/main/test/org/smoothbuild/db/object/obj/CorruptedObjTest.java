@@ -39,7 +39,7 @@ import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentExc
 import org.smoothbuild.db.object.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.exc.DecodeObjSpecException;
 import org.smoothbuild.db.object.exc.DecodeSelectIndexOutOfBoundsException;
-import org.smoothbuild.db.object.exc.DecodeSelectWrongEvaluationSpec;
+import org.smoothbuild.db.object.exc.DecodeSelectWrongEvaluationSpecException;
 import org.smoothbuild.db.object.exc.DecodeSpecException;
 import org.smoothbuild.db.object.exc.NoSuchObjException;
 import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
@@ -1182,7 +1182,7 @@ public class CorruptedObjTest extends TestingContext {
           );
 
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
-          .throwsException(new DecodeSelectWrongEvaluationSpec(objHash, spec, strSpec()));
+          .throwsException(new DecodeSelectWrongEvaluationSpecException(objHash, spec, strSpec()));
     }
 
     @Test

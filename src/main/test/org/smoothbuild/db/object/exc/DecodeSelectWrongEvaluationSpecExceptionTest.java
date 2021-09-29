@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.testing.TestingContext;
 
-public class DecodeSelectWrongEvaluationSpecTest extends TestingContext {
+public class DecodeSelectWrongEvaluationSpecExceptionTest extends TestingContext {
   @Test
   public void message() {
-    var exception = new DecodeSelectWrongEvaluationSpec(
+    var exception = new DecodeSelectWrongEvaluationSpecException(
         Hash.of(13), selectSpec(intSpec()), strSpec());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode SELECT:INT object"
