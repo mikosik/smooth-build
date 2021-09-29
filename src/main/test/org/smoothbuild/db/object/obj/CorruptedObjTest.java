@@ -34,7 +34,6 @@ import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
 import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
-import org.smoothbuild.db.object.exc.DecodeCallWrongArgumentsSizeException;
 import org.smoothbuild.db.object.exc.DecodeERecWrongItemsSizeException;
 import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentException;
 import org.smoothbuild.db.object.exc.DecodeObjNodeException;
@@ -380,24 +379,20 @@ public class CorruptedObjTest extends TestingContext {
       var lambdaSpec = definedLambdaSpec(intSpec(), strSpec(), intSpec());
       var definedLambda = definedLambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
       Const function = constExpr(definedLambda);
-      Const arg1 = strExpr();
-      Const arg2 = intExpr();
+      ERec arguments = eRecExpr(list(strExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callSpec()),
               hash(
                   hash(function),
-                  hash(
-                      hash(arg1),
-                      hash(arg2)
-                  )
+                  hash(arguments)
               )
           );
 
       assertThat(((Call) objectDb().get(objHash)).data().function())
           .isEqualTo(function);
       assertThat(((Call) objectDb().get(objHash)).data().arguments())
-          .isEqualTo(list(arg1, arg2));
+          .isEqualTo(arguments);
     }
 
     @Test
@@ -408,14 +403,10 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const function = intExpr(0);
-      Const arg1 = intExpr(1);
-      Const arg2 = intExpr(2);
+      ERec arguments = eRecExpr(list(strExpr(), intExpr()));
       Hash dataHash = hash(
           hash(function),
-          hash(
-              hash(arg1),
-              hash(arg2)
-          )
+          hash(arguments)
       );
       obj_root_with_two_data_hashes(
           callSpec(),
@@ -448,16 +439,11 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
       Const function = intExpr(0);
-      Const arg1 = intExpr(1);
-      Const arg2 = intExpr(2);
-      Hash arguments = hash(
-          hash(arg1),
-          hash(arg2)
-      );
+      ERec arguments = eRecExpr(list(strExpr(), intExpr()));
       Hash dataHash = hash(
           hash(function),
-          arguments,
-          arguments
+          hash(arguments),
+          hash(arguments)
       );
       Hash objHash =
           hash(
@@ -471,17 +457,13 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void function_is_val_instead_of_expr() throws Exception {
       Int val = intVal(0);
-      Const arg1 = intExpr(1);
-      Const arg2 = intExpr(2);
+      ERec arguments = eRecExpr(list(strExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callSpec()),
               hash(
                   hash(val),
-                  hash(
-                      hash(arg1),
-                      hash(arg2)
-                  )
+                  hash(arguments)
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
@@ -489,84 +471,17 @@ public class CorruptedObjTest extends TestingContext {
               objHash, callSpec(), DATA_PATH + "[0]", Expr.class, Int.class));
     }
 
-
-    @ParameterizedTest
-    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void arguments_sequence_size_different_than_multiple_of_hash_size(
-        int byteCount) throws Exception {
-      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
-      Const function = intExpr(0);
-      Hash objHash =
-          hash(
-              hash(callSpec()),
-              hash(
-                  hash(function),
-                  notHashOfSequence
-              )
-          );
-      assertCall(() -> ((Call) objectDb().get(objHash)).data())
-          .throwsException(new DecodeObjNodeException(objHash, callSpec(), DATA_PATH + "[1]"))
-          .withCause(new DecodeHashSequenceException(
-              notHashOfSequence, byteCount % Hash.lengthInBytes()));
-    }
-
-    @Test
-    public void arguments_sequence_element_pointing_nowhere() throws Exception {
-      Hash nowhere = Hash.of(33);
-      Const function = intExpr(0);
-      Const arg1 = intExpr(1);
-      Hash objHash =
-          hash(
-              hash(callSpec()),
-              hash(
-                  hash(function),
-                  hash(
-                      hash(arg1),
-                      nowhere
-                  )
-              )
-          );
-      assertCall(() -> ((Call) objectDb().get(objHash)).data())
-          .throwsException(new DecodeObjNodeException(objHash, callSpec(), DATA_PATH + "[1][1]"))
-          .withCause(new NoSuchObjException(nowhere));
-    }
-
-    @Test
-    public void arguments_contain_val_instead_of_expr() throws Exception {
-      Const function = intExpr(0);
-      Const arg1 = intExpr(1);
-      Int arg2 = intVal(2);
-      Hash objHash =
-          hash(
-              hash(callSpec()),
-              hash(
-                  hash(function),
-                  hash(
-                      hash(arg1),
-                      hash(arg2)
-                  )
-              )
-          );
-      assertCall(() -> ((Call) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, callSpec(), DATA_PATH + "[1][1]", Expr.class, Int.class));
-    }
-
     @Test
     public void function_component_evaluation_spec_is_not_lambda() throws Exception {
       Const function = intExpr(3);
-      Const arg1 = intExpr(1);
-      Const arg2 = intExpr(2);
+      ERec arguments = eRecExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(strSpec());
       Hash objHash =
           hash(
               hash(spec),
               hash(
                   hash(function),
-                  hash(
-                      hash(arg1),
-                      hash(arg2)
-                  )
+                  hash(arguments)
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
@@ -575,22 +490,56 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
+    public void arguments_is_val_instead_of_expr() throws Exception {
+      var lambdaSpec = definedLambdaSpec(intSpec(), strSpec(), intSpec());
+      var definedLambda = definedLambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
+      Const function = constExpr(definedLambda);
+      Hash objHash =
+          hash(
+              hash(callSpec()),
+              hash(
+                  hash(function),
+                  hash(intVal())
+              )
+          );
+      assertCall(() -> ((Call) objectDb().get(objHash)).data())
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, callSpec(), DATA_PATH + "[1]", ERec.class, Int.class));
+    }
+
+    @Test
+    public void arguments_component_evaluation_spec_is_not_erecord_but_different_expr()
+        throws Exception {
+      var lambdaSpec = definedLambdaSpec(intSpec(), strSpec(), intSpec());
+      var definedLambda = definedLambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
+      Const function = constExpr(definedLambda);
+      CallSpec spec = callSpec();
+      Hash objHash =
+          hash(
+              hash(spec),
+              hash(
+                  hash(function),
+                  hash(intExpr())
+              )
+          );
+      assertCall(() -> ((Call) objectDb().get(objHash)).data())
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, spec, DATA_PATH + "[1]", ERec.class, Const.class));
+    }
+
+    @Test
     public void evaluation_spec_is_different_than_function_evaluation_spec_result()
         throws Exception {
       Const function = constExpr(definedLambdaVal(
           definedLambdaSpec(intSpec(), strSpec()), intExpr(), list(strExpr())));
-      Const arg1 = intExpr(1);
-      Const arg2 = intExpr(2);
+      ERec arguments = eRecExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(strSpec());
       Hash objHash =
           hash(
               hash(spec),
               hash(
                   hash(function),
-                  hash(
-                      hash(arg1),
-                      hash(arg2)
-                  )
+                  hash(arguments)
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
@@ -599,52 +548,26 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void function_evaluation_spec_parameter_count_does_not_match_arguments_count()
-        throws Exception {
-      DefinedLambdaSpec lambdaSpec = definedLambdaSpec(intSpec(), strSpec(), intSpec());
-      Const function = constExpr(definedLambdaVal(
-          lambdaSpec, intExpr(), list(strExpr(), intExpr())));
-      Const arg1 = strExpr();
-      CallSpec spec = callSpec(intSpec());
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(function),
-                  hash(
-                      hash(arg1)
-                  )
-              )
-          );
-      assertCall(() -> ((Call) objectDb().get(objHash)).data())
-          .throwsException(new DecodeCallWrongArgumentsSizeException(objHash, spec, 2, 1));
-    }
-
-    @Test
     public void function_evaluation_spec_parameters_does_not_match_arguments_evaluation_specs()
         throws Exception {
       DefinedLambdaSpec lambdaSpec = definedLambdaSpec(intSpec(), strSpec(), boolSpec());
       Const function = constExpr(definedLambdaVal(
           lambdaSpec, intExpr(), list(strExpr(), boolExpr())));
-      Const arg1 = strExpr();
-      Const arg2 = intExpr();
+      ERec arguments = eRecExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(intSpec());
       Hash objHash =
           hash(
               hash(spec),
               hash(
                   hash(function),
-                  hash(
-                      hash(arg1),
-                      hash(arg2)
-                  )
+                  hash(arguments)
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "arguments", recSpec(list(strSpec(), boolSpec())),
-              recSpec(list(strSpec(), boolSpec()))
-              // TODO this is workaround until Call.arguments are kept as RecExpr
+              objHash, spec, "arguments",
+              recSpec(list(strSpec(), boolSpec())),
+              recSpec(list(strSpec(), intSpec()))
           ));
     }
   }
@@ -1093,7 +1016,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void with_sequence_element_pointing_nowhere() throws Exception {
+    public void with_sequence_item_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash objHash =
           hash(
@@ -1108,7 +1031,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void with_one_element_being_val() throws Exception {
+    public void with_one_item_being_val() throws Exception {
       Const expr1 = intExpr(1);
       Int val = intVal(123);
       Hash objHash =

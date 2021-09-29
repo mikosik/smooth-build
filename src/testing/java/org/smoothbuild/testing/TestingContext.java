@@ -417,7 +417,7 @@ public class TestingContext {
   }
 
   public Call callExpr(Expr function, List<? extends Expr> arguments) {
-    return objectDb().callExpr(function, arguments);
+    return objectDb().callExpr(function, eRecExpr(arguments));
   }
 
   public Const constExpr(Val val) {

@@ -7,7 +7,6 @@ import static org.smoothbuild.db.object.exc.DecodeObjRootException.cannotReadRoo
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nonNullObjRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nullObjRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
-import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 
 import java.math.BigInteger;
@@ -145,7 +144,7 @@ public class ObjectDb {
 
   // methods for creating expr-s
 
-  public Call callExpr(Expr function, List<? extends Expr> arguments) {
+  public Call callExpr(Expr function, ERec arguments) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCallExpr(function, arguments));
   }
 
@@ -215,7 +214,7 @@ public class ObjectDb {
 
   // methods for creating Expr Obj-s
 
-  private Call newCallExpr(Expr function, List<? extends Expr> arguments)
+  private Call newCallExpr(Expr function, ERec arguments)
       throws HashedDbException {
     var lambdaSpec = functionEvaluationSpec(function);
     verifyArguments(lambdaSpec, arguments);
@@ -225,19 +224,11 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private void verifyArguments(LambdaSpec lambdaSpec, List<? extends Expr> arguments) {
-    ImmutableList<ValSpec> parameters = lambdaSpec.parameters().items();
-    int parametersSize = parameters.size();
-    if (parametersSize != arguments.size()) {
-      throw new IllegalArgumentException(
-          "Arguments size (%d) should be equal to parameters size (%d)."
-              .formatted(arguments.size(), parametersSize));
-    }
-    ImmutableList<ValSpec> argumentSpecs = map(arguments, Expr::evaluationSpec);
-    if (!allMatch(parameters, argumentSpecs, Objects::equals)) {
-      throw new IllegalArgumentException(
-          "Arguments spec (%s) does not match function parameter specs (%s)."
-              .formatted(map(argumentSpecs, Spec::name), map(parameters, Spec::name)));
+  private void verifyArguments(LambdaSpec lambdaSpec, ERec arguments) {
+    if (!Objects.equals(lambdaSpec.parameters(), arguments.evaluationSpec())) {
+      throw new IllegalArgumentException(("Arguments evaluation spec %s should be equal to "
+          + "function evaluation spec parameters %s.")
+              .formatted(arguments.evaluationSpec().name(), lambdaSpec.parameters().name()));
     }
   }
 
@@ -390,10 +381,8 @@ public class ObjectDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(Expr function, Iterable<? extends Expr> arguments)
-      throws HashedDbException {
-    Hash argumentSequenceHash = writeSequence(arguments);
-    return hashedDb.writeSequence(function.hash(), argumentSequenceHash);
+  private Hash writeCallData(Expr function, ERec arguments) throws HashedDbException {
+    return hashedDb.writeSequence(function.hash(), arguments.hash());
   }
 
   private Hash writeConstData(Val val) {

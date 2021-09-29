@@ -31,22 +31,22 @@ public class CallTest extends TestingContext {
   @Test
   public void creating_call_with_too_few_arguments_causes_exception() {
     assertCall(() -> callExpr(constExpr(definedLambdaVal()), list()))
-        .throwsException(new IllegalArgumentException(
-            "Arguments size (0) should be equal to parameters size (1)."));
+        .throwsException(new IllegalArgumentException("Arguments evaluation spec {} should be "
+            + "equal to function evaluation spec parameters {STRING}."));
   }
 
   @Test
   public void creating_call_with_too_many_arguments_causes_exception() {
     assertCall(() -> callExpr(constExpr(definedLambdaVal()), list(intExpr(), intExpr())))
-        .throwsException(new IllegalArgumentException(
-            "Arguments size (2) should be equal to parameters size (1)."));
+        .throwsException(new IllegalArgumentException("Arguments evaluation spec {INT,INT}"
+            + " should be equal to function evaluation spec parameters {STRING}."));
   }
 
   @Test
   public void creating_call_with_argument_not_matching_parameter_spec_causes_exception() {
     assertCall(() -> callExpr(constExpr(definedLambdaVal()), list(intExpr(3))))
-        .throwsException(new IllegalArgumentException(
-            "Arguments spec ([INT]) does not match function parameter specs ([STRING])."));
+        .throwsException(new IllegalArgumentException("Arguments evaluation spec {INT} should be"
+            + " equal to function evaluation spec parameters {STRING}."));
   }
 
   @Test
@@ -61,7 +61,7 @@ public class CallTest extends TestingContext {
     Const function = constExpr(definedLambdaVal());
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).data().arguments())
-        .isEqualTo(arguments);
+        .isEqualTo(eRecExpr(arguments));
   }
 
   @Test
@@ -150,7 +150,7 @@ public class CallTest extends TestingContext {
     ImmutableList<Expr> arguments = list(strExpr());
     Call call = callExpr(function, arguments);
     assertThat(((Call) objectDbOther().get(call.hash())).data())
-        .isEqualTo(new CallData(function, arguments));
+        .isEqualTo(new CallData(function, eRecExpr(arguments)));
   }
 
   @Test

@@ -19,6 +19,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.EArray;
+import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -125,7 +126,7 @@ public class ObjectFactory {
     return objectDb.constExpr(val);
   }
 
-  public Call callExpr(Expr function, List<? extends Expr> arguments) {
+  public Call callExpr(Expr function, ERec arguments) {
     return objectDb.callExpr(function, arguments);
   }
 
