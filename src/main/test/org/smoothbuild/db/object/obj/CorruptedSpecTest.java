@@ -56,7 +56,7 @@ import okio.ByteString;
 
 public class CorruptedSpecTest extends TestingContext {
   @Nested
-  class illegal_spec_marker {
+  class _illegal_spec_marker {
     @Test
     public void causes_exception() throws Exception {
       Hash hash = hash(
@@ -78,7 +78,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class base_spec {
+  class _base_spec {
     @Test
     public void creating_base_spec() throws Exception {
       /*
@@ -133,7 +133,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class array_spec {
+  class _array_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -181,7 +181,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class call_spec {
+  class _call_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -223,7 +223,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class const_spec {
+  class _const_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -265,7 +265,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class defined_lambda_spec extends abstract_lambda_spec_test {
+  class _defined_lambda_spec extends _abstract_lambda_spec_test {
     @Override
     protected SpecKind specKind() {
       return DEFINED_LAMBDA;
@@ -278,7 +278,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class native_lambda_spec extends abstract_lambda_spec_test {
+  class _native_lambda_spec extends _abstract_lambda_spec_test {
     @Override
     protected SpecKind specKind() {
       return NATIVE_LAMBDA;
@@ -290,7 +290,7 @@ public class CorruptedSpecTest extends TestingContext {
     }
   }
 
-  abstract class abstract_lambda_spec_test {
+  abstract class _abstract_lambda_spec_test {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -489,7 +489,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class earray_spec {
+  class _earray_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -542,7 +542,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class erecord_spec {
+  class _erecord_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -595,7 +595,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class select_spec {
+  class _select_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -637,7 +637,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class rec_spec {
+  class _rec_spec {
     @Test
     public void creating_rec_spec() throws Exception {
       /*
@@ -726,7 +726,7 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class ref_spec {
+  class _ref_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
