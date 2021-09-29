@@ -5,27 +5,27 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.Objects;
 
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.exc.DecodeERecWrongItemsSizeException;
 import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentException;
+import org.smoothbuild.db.object.exc.DecodeRecExprWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.ERecSpec;
+import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class ERec extends Expr {
-  public ERec(MerkleRoot merkleRoot, ObjectDb objectDb) {
+public class RecExpr extends Expr {
+  public RecExpr(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof ERecSpec);
+    checkArgument(merkleRoot.spec() instanceof RecExprSpec);
   }
 
   @Override
-  public ERecSpec spec() {
-    return (ERecSpec) super.spec();
+  public RecExprSpec spec() {
+    return (RecExprSpec) super.spec();
   }
 
   public ImmutableList<Expr> items() {
@@ -33,7 +33,7 @@ public class ERec extends Expr {
     var expectedItemSpecs = spec().evaluationSpec().items();
 
     if (expectedItemSpecs.size() != items.size()) {
-      throw new DecodeERecWrongItemsSizeException(hash(), spec(), items.size());
+      throw new DecodeRecExprWrongItemsSizeException(hash(), spec(), items.size());
     }
     for (int i = 0; i < items.size(); i++) {
       ValSpec expectedSpec = expectedItemSpecs.get(i);
@@ -48,6 +48,6 @@ public class ERec extends Expr {
 
   @Override
   public String valueToString() {
-    return "ERec(???)";
+    return "RecExpr(???)";
   }
 }

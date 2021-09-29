@@ -9,22 +9,22 @@ import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentExc
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.EArraySpec;
+import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class EArray extends Expr {
-  public EArray(MerkleRoot merkleRoot, ObjectDb objectDb) {
+public class ArrayExpr extends Expr {
+  public ArrayExpr(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof EArraySpec);
+    checkArgument(merkleRoot.spec() instanceof ArrayExprSpec);
   }
 
   @Override
-  public EArraySpec spec() {
-    return (EArraySpec) super.spec();
+  public ArrayExprSpec spec() {
+    return (ArrayExprSpec) super.spec();
   }
 
   public ImmutableList<Expr> elements() {
@@ -42,6 +42,6 @@ public class EArray extends Expr {
 
   @Override
   public String valueToString() {
-    return "EArray(???)";
+    return "ArrayExpr(???)";
   }
 }

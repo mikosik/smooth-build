@@ -25,11 +25,11 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
@@ -79,7 +79,7 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBoolVal(value));
   }
 
-  public DefinedLambda definedLambdaVal(DefinedLambdaSpec spec, Expr body, ERec defaultArguments) {
+  public DefinedLambda definedLambdaVal(DefinedLambdaSpec spec, Expr body, RecExpr defaultArguments) {
     if (!Objects.equals(spec.result(), body.evaluationSpec())) {
       throw new IllegalArgumentException("`spec` specifies result as " + spec.result().name()
           + " but body.evaluationSpec() is " + body.evaluationSpec().name() + ".");
@@ -94,7 +94,7 @@ public class ObjectDb {
   }
 
   public NativeLambda nativeLambdaVal(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, ERec defaultArguments) {
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, RecExpr defaultArguments) {
     verifyArguments(spec, defaultArguments, "Default arguments");
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newNativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments));
@@ -125,7 +125,7 @@ public class ObjectDb {
 
   // methods for creating expr-s
 
-  public Call callExpr(Expr function, ERec arguments) {
+  public Call callExpr(Expr function, RecExpr arguments) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCallExpr(function, arguments));
   }
 
@@ -133,11 +133,11 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstExpr(val));
   }
 
-  public EArray eArrayExpr(Iterable<? extends Expr> elements) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newEArrayExpr(elements));
+  public ArrayExpr arrayExpr(Iterable<? extends Expr> elements) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExpr(elements));
   }
 
-  public ERec eRecExpr(Iterable<? extends Expr> items) {
+  public RecExpr eRecExpr(Iterable<? extends Expr> items) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newERecExpr(items));
   }
 
@@ -195,7 +195,7 @@ public class ObjectDb {
 
   // methods for creating Expr Obj-s
 
-  private Call newCallExpr(Expr function, ERec arguments)
+  private Call newCallExpr(Expr function, RecExpr arguments)
       throws HashedDbException {
     var lambdaSpec = functionEvaluationSpec(function);
     verifyArguments(lambdaSpec, arguments, "Arguments");
@@ -205,7 +205,7 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private static void verifyArguments(LambdaSpec lambdaSpec, ERec arguments, String name) {
+  private static void verifyArguments(LambdaSpec lambdaSpec, RecExpr arguments, String name) {
     if (!Objects.equals(lambdaSpec.parameters(), arguments.evaluationSpec())) {
       throw new IllegalArgumentException((name + " evaluation spec %s should be equal to "
           + "function evaluation spec parameters %s.")
@@ -228,10 +228,10 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private EArray newEArrayExpr(Iterable<? extends Expr> elements) throws HashedDbException {
+  private ArrayExpr newArrayExpr(Iterable<? extends Expr> elements) throws HashedDbException {
     ValSpec elementSpec = elementSpec(elements);
-    var spec = specDb.eArraySpec(elementSpec);
-    var data = writeEarrayData(elements);
+    var spec = specDb.arrayExprSpec(elementSpec);
+    var data = writeArrayExprData(elements);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -256,9 +256,9 @@ public class ObjectDb {
     }
   }
 
-  private ERec newERecExpr(Iterable<? extends Expr> items) throws HashedDbException {
+  private RecExpr newERecExpr(Iterable<? extends Expr> items) throws HashedDbException {
     var itemSpecs = map(items, Expr::evaluationSpec);
-    var spec = specDb.eRecSpec(itemSpecs);
+    var spec = specDb.recExprSpec(itemSpecs);
     var data = writeERecData(items);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
@@ -316,7 +316,7 @@ public class ObjectDb {
   }
 
   private DefinedLambda newDefinedLambdaVal(
-      DefinedLambdaSpec spec, Expr body, ERec defaultArguments) throws HashedDbException {
+      DefinedLambdaSpec spec, Expr body, RecExpr defaultArguments) throws HashedDbException {
     var data = writeDefinedLambdaData(body, defaultArguments);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
@@ -329,7 +329,7 @@ public class ObjectDb {
   }
 
   private NativeLambda newNativeLambdaVal(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, ERec defaultArguments)
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, RecExpr defaultArguments)
       throws HashedDbException {
     var data = writeNativeLambdaData(classBinaryName, nativeJar, defaultArguments);
     var root = writeRoot(spec, data);
@@ -362,7 +362,7 @@ public class ObjectDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(Expr function, ERec arguments) throws HashedDbException {
+  private Hash writeCallData(Expr function, RecExpr arguments) throws HashedDbException {
     return hashedDb.writeSequence(function.hash(), arguments.hash());
   }
 
@@ -370,7 +370,7 @@ public class ObjectDb {
     return val.hash();
   }
 
-  private Hash writeEarrayData(Iterable<? extends Expr> elements) throws HashedDbException {
+  private Hash writeArrayExprData(Iterable<? extends Expr> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 
@@ -396,7 +396,7 @@ public class ObjectDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeDefinedLambdaData(Expr body, ERec defaultArguments) throws HashedDbException {
+  private Hash writeDefinedLambdaData(Expr body, RecExpr defaultArguments) throws HashedDbException {
     return hashedDb.writeSequence(body.hash(), defaultArguments.hash());
   }
 
@@ -405,7 +405,7 @@ public class ObjectDb {
   }
 
   private Hash writeNativeLambdaData(
-      Str classBinaryName, Blob nativeJar, ERec defaultArguments) throws HashedDbException {
+      Str classBinaryName, Blob nativeJar, RecExpr defaultArguments) throws HashedDbException {
     Hash nativeHash = hashedDb.writeSequence(classBinaryName.hash(), nativeJar.hash());
     return hashedDb.writeSequence(nativeHash, defaultArguments.hash());
   }

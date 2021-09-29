@@ -32,8 +32,8 @@ public class TestingSpecs {
   public static final RecSpec REC_WITH_STRING = CONTEXT.recWithStrSpec();
   public static final Spec CALL = CONTEXT.callSpec();
   public static final Spec CONST = CONTEXT.constSpec(STR);
-  public static final Spec EARRAY = CONTEXT.eArraySpec();
-  public static final Spec ERECORD = CONTEXT.eRecSpec(list(INT, STR));
+  public static final Spec ARRAY_EXPR = CONTEXT.arrayExprSpec();
+  public static final Spec ERECORD = CONTEXT.recExprSpec(list(INT, STR));
   public static final Spec SELECT = CONTEXT.selectSpec(INT);
   public static final Spec NULL = CONTEXT.nullSpec();
   public static final Spec REF = CONTEXT.refSpec(INT);

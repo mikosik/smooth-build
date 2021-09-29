@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.obj.val;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.expr.ERec;
+import org.smoothbuild.db.object.obj.expr.RecExpr;
 
 public class NativeLambda extends Lambda {
   private static final int NATIVE_BODY_SEQUENCE_SIZE = 2;
@@ -31,5 +31,5 @@ public class NativeLambda extends Lambda {
   }
 
   public record NativeLambdaData(
-      Str classBinaryName, Blob nativeJar, ERec defaultArguments) {}
+      Str classBinaryName, Blob nativeJar, RecExpr defaultArguments) {}
 }

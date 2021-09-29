@@ -6,18 +6,18 @@ import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecode
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecNodeException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
-import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
-import static org.smoothbuild.db.object.spec.base.SpecKind.ERECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
+import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
@@ -39,11 +39,11 @@ import org.smoothbuild.db.object.exc.UnexpectedSpecSequenceException;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.SpecKind;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
-import org.smoothbuild.db.object.spec.expr.EArraySpec;
-import org.smoothbuild.db.object.spec.expr.ERecSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
+import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
@@ -142,12 +142,12 @@ public class SpecDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstSpec(evaluationSpec));
   }
 
-  public EArraySpec eArraySpec(ValSpec elementSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newEArraySpec(elementSpec));
+  public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExprSpec(elementSpec));
   }
 
-  public ERecSpec eRecSpec(Iterable<? extends ValSpec> itemSpecs) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newERecSpec(itemSpecs));
+  public RecExprSpec recExprSpec(Iterable<? extends ValSpec> itemSpecs) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(itemSpecs));
   }
 
   public SelectSpec selectSpec(ValSpec evaluationSpec) {
@@ -202,8 +202,8 @@ public class SpecDb {
       case ARRAY -> newArraySpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CALL -> newCallSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CONST -> newConstSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
-      case EARRAY -> newEArraySpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
-      case ERECORD -> newERecSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
+      case ARRAY_EXPR -> newArrayExprSpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
+      case RECORD_EXPR -> newRecExprSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
       case SELECT -> newSelectSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case DEFINED_LAMBDA, NATIVE_LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
@@ -375,24 +375,25 @@ public class SpecDb {
     return cacheSpec(new ConstSpec(hash, evaluationSpec));
   }
 
-  private EArraySpec newEArraySpec(ValSpec elementSpec) throws HashedDbException {
+  private ArrayExprSpec newArrayExprSpec(ValSpec elementSpec) throws HashedDbException {
     var evaluationSpec = arraySpec(elementSpec);
-    var hash = writeExprSpecRoot(EARRAY, evaluationSpec);
-    return newEArraySpec(hash, evaluationSpec);
+    var hash = writeExprSpecRoot(ARRAY_EXPR, evaluationSpec);
+    return newArrayExprSpec(hash, evaluationSpec);
   }
 
-  private EArraySpec newEArraySpec(Hash hash, ArraySpec evaluationSpec) {
-    return cacheSpec(new EArraySpec(hash, evaluationSpec));
+  private ArrayExprSpec newArrayExprSpec(Hash hash, ArraySpec evaluationSpec) {
+    return cacheSpec(new ArrayExprSpec(hash, evaluationSpec));
   }
 
-  private ERecSpec newERecSpec(Iterable<? extends ValSpec> elementSpec) throws HashedDbException {
+  private RecExprSpec newRecExprSpec(Iterable<? extends ValSpec> elementSpec)
+      throws HashedDbException {
     var evaluationSpec = recSpec(elementSpec);
-    var hash = writeExprSpecRoot(ERECORD, evaluationSpec);
-    return newERecSpec(hash, evaluationSpec);
+    var hash = writeExprSpecRoot(RECORD_EXPR, evaluationSpec);
+    return newRecExprSpec(hash, evaluationSpec);
   }
 
-  private ERecSpec newERecSpec(Hash hash, RecSpec evaluationSpec) {
-    return cacheSpec(new ERecSpec(hash, evaluationSpec));
+  private RecExprSpec newRecExprSpec(Hash hash, RecSpec evaluationSpec) {
+    return cacheSpec(new RecExprSpec(hash, evaluationSpec));
   }
 
   private SelectSpec newSelectSpec(ValSpec evaluationSpec) throws HashedDbException {

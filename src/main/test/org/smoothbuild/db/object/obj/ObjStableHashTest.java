@@ -182,16 +182,16 @@ public class ObjStableHashTest extends TestingContext {
   }
 
   @Nested
-  class _earray {
+  class _array_expr {
     @Test
-    public void empty_earray_expression() {
-      assertThat(eArrayExpr(list()).hash())
+    public void empty_array_expression() {
+      assertThat(arrayExpr(list()).hash())
           .isEqualTo(Hash.decode("a0b82433f715eef1e275af8702914efa74c1bffe"));
     }
 
     @Test
-    public void earray_expression() {
-      assertThat(eArrayExpr(list(intExpr(1))).hash())
+    public void array_expression() {
+      assertThat(arrayExpr(list(intExpr(1))).hash())
           .isEqualTo(Hash.decode("f80cf6e3c5af6de49d7253a0bd31ba802d75ce09"));
     }
   }

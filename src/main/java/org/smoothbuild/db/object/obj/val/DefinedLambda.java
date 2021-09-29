@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.expr.ERec;
+import org.smoothbuild.db.object.obj.expr.RecExpr;
 
 public class DefinedLambda extends Lambda {
   public DefinedLambda(MerkleRoot merkleRoot, ObjectDb objectDb) {
@@ -23,7 +23,7 @@ public class DefinedLambda extends Lambda {
     return new DefinedLambdaData(expr, defaultArguments());
   }
 
-  public record DefinedLambdaData(Expr body, ERec defaultArguments) {}
+  public record DefinedLambdaData(Expr body, RecExpr defaultArguments) {}
 
   @Override
   public String valueToString() {

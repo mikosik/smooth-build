@@ -1,11 +1,11 @@
 package org.smoothbuild.db.object.spec.base;
 
 import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
@@ -34,11 +34,11 @@ public enum SpecKind {
   // Expr-s
   CALL((byte) 9, Call.class),
   CONST((byte) 10, Const.class),
-  EARRAY((byte) 11, EArray.class),
+  ARRAY_EXPR((byte) 11, ArrayExpr.class),
   SELECT((byte) 12, Select.class),
   NULL((byte) 13, Null.class),
   REF((byte) 14, Ref.class),
-  ERECORD((byte) 15, ERec.class);
+  RECORD_EXPR((byte) 15, RecExpr.class);
 
   private static final ImmutableMap<Byte, SpecKind> markerToSpecKindMap =
       ImmutableMap.<Byte, SpecKind>builder()
@@ -54,11 +54,11 @@ public enum SpecKind {
 
           .put((byte) 9, CALL)
           .put((byte) 10, CONST)
-          .put((byte) 11, EARRAY)
+          .put((byte) 11, ARRAY_EXPR)
           .put((byte) 12, SELECT)
           .put((byte) 13, NULL)
           .put((byte) 14, REF)
-          .put((byte) 15, ERECORD)
+          .put((byte) 15, RECORD_EXPR)
           .build();
 
   private final byte marker;

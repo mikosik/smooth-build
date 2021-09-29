@@ -6,17 +6,17 @@ import static org.smoothbuild.util.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
-public class ERecTest extends TestingContext {
+public class RecExprTest extends TestingContext {
   @Test
   public void spec_of_empty_erecord_is_inferred_correctly() {
     assertThat(eRecExpr(list()).spec())
-        .isEqualTo(eRecSpec(list()));
+        .isEqualTo(recExprSpec(list()));
   }
 
   @Test
   public void spec_of_erecord_is_inferred_correctly() {
     assertThat(eRecExpr(list(intExpr(3))).spec())
-        .isEqualTo(eRecSpec(list(intSpec())));
+        .isEqualTo(recExprSpec(list(intSpec())));
   }
 
   @Test
@@ -67,7 +67,7 @@ public class ERecTest extends TestingContext {
 
   @Test
   public void erecord_can_be_read_back_by_hash() {
-    ERec record = eRecExpr(list(intExpr(1)));
+    RecExpr record = eRecExpr(list(intExpr(1)));
     assertThat(objectDbOther().get(record.hash()))
         .isEqualTo(record);
   }
@@ -75,15 +75,15 @@ public class ERecTest extends TestingContext {
   @Test
   public void erecord_read_back_by_hash_has_same_items() {
     var items = list(intExpr(), strExpr());
-    ERec record = eRecExpr(items);
-    assertThat(((ERec) objectDbOther().get(record.hash())).items())
+    RecExpr record = eRecExpr(items);
+    assertThat(((RecExpr) objectDbOther().get(record.hash())).items())
         .isEqualTo(items);
   }
 
   @Test
   public void to_string() {
-    ERec record = eRecExpr(list(intExpr(1)));
+    RecExpr record = eRecExpr(list(intExpr(1)));
     assertThat(record.toString())
-        .isEqualTo("ERec(???)@" + record.hash());
+        .isEqualTo("RecExpr(???)@" + record.hash());
   }
 }

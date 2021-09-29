@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentException;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.expr.ERec;
+import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 
 public abstract class Lambda extends Val {
@@ -25,9 +25,9 @@ public abstract class Lambda extends Val {
     return (LambdaSpec) super.spec();
   }
 
-  protected ERec defaultArguments() {
-    ERec defaultArguments = readSequenceElementObj(
-        DATA_PATH, dataHash(), DEFAULT_ARGUMENTS_INDEX, DATA_SEQUENCE_SIZE, ERec.class);
+  protected RecExpr defaultArguments() {
+    RecExpr defaultArguments = readSequenceElementObj(
+        DATA_PATH, dataHash(), DEFAULT_ARGUMENTS_INDEX, DATA_SEQUENCE_SIZE, RecExpr.class);
     if (!Objects.equals(spec().parameters(), defaultArguments.evaluationSpec())) {
       throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(),
           DEFAULT_ARGUMENTS_PATH, spec().parameters(), defaultArguments.evaluationSpec());

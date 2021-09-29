@@ -15,11 +15,11 @@ import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
@@ -32,11 +32,11 @@ import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
-import org.smoothbuild.db.object.spec.expr.EArraySpec;
-import org.smoothbuild.db.object.spec.expr.ERecSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
+import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
@@ -259,20 +259,20 @@ public class TestingContext {
     return specDb().constSpec(evaluationSpec);
   }
 
-  public EArraySpec eArraySpec() {
-    return eArraySpec(intSpec());
+  public ArrayExprSpec arrayExprSpec() {
+    return arrayExprSpec(intSpec());
   }
 
-  public EArraySpec eArraySpec(ValSpec elementSpec) {
-    return specDb().eArraySpec(elementSpec);
+  public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
+    return specDb().arrayExprSpec(elementSpec);
   }
 
-  public ERecSpec eRecSpec() {
-    return eRecSpec(list(intSpec(), strSpec()));
+  public RecExprSpec recExprSpec() {
+    return recExprSpec(list(intSpec(), strSpec()));
   }
 
-  public ERecSpec eRecSpec(Iterable<? extends ValSpec> itemSpecs) {
-    return specDb().eRecSpec(itemSpecs);
+  public RecExprSpec recExprSpec(Iterable<? extends ValSpec> itemSpecs) {
+    return specDb().recExprSpec(itemSpecs);
   }
 
   public SelectSpec selectSpec() {
@@ -424,11 +424,11 @@ public class TestingContext {
     return objectDb().constExpr(val);
   }
 
-  public EArray eArrayExpr(Iterable<? extends Expr> elements) {
-    return objectDb().eArrayExpr(elements);
+  public ArrayExpr arrayExpr(Iterable<? extends Expr> elements) {
+    return objectDb().arrayExpr(elements);
   }
 
-  public ERec eRecExpr(Iterable<? extends Expr> items) {
+  public RecExpr eRecExpr(Iterable<? extends Expr> items) {
     return objectDb().eRecExpr(items);
   }
 

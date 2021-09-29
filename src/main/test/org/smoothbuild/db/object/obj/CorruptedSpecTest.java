@@ -5,18 +5,18 @@ import static org.smoothbuild.db.object.db.SpecDb.DATA_PATH;
 import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_PARAMS_PATH;
 import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_RESULT_PATH;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
-import static org.smoothbuild.db.object.spec.base.SpecKind.EARRAY;
-import static org.smoothbuild.db.object.spec.base.SpecKind.ERECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
+import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
@@ -489,108 +489,108 @@ public class CorruptedSpecTest extends TestingContext {
   }
 
   @Nested
-  class _earray_spec {
+  class _array_expr_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save earray spec in HashedDb.
+       * to save ArrayExpr spec in HashedDb.
        */
       Hash hash = hash(
-          hash(EARRAY.marker()),
+          hash(ARRAY_EXPR.marker()),
           hash(arraySpec(intSpec()))
       );
       assertThat(hash)
-          .isEqualTo(eArraySpec(intSpec()).hash());
+          .isEqualTo(arrayExprSpec(intSpec()).hash());
     }
 
     @Test
     public void without_data() throws Exception {
-      test_spec_without_data(EARRAY);
+      test_spec_without_data(ARRAY_EXPR);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(EARRAY);
+      test_spec_with_additional_data(ARRAY_EXPR);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(EARRAY);
+      test_data_hash_pointing_nowhere_instead_of_being_spec(ARRAY_EXPR);
     }
 
     @Test
     public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(EARRAY);
+      test_spec_with_corrupted_spec_as_data(ARRAY_EXPR);
     }
 
     @Test
     public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(EARRAY, ArraySpec.class);
+      test_spec_with_data_spec_being_expr_spec(ARRAY_EXPR, ArraySpec.class);
     }
 
     @Test
     public void with_evaluation_spec_not_being_array_spec() throws Exception {
       Hash hash = hash(
-          hash(EARRAY.marker()),
+          hash(ARRAY_EXPR.marker()),
           hash(intSpec())
       );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecNodeException(
-              hash, EARRAY, DATA_PATH, ArraySpec.class, IntSpec.class));
+              hash, ARRAY_EXPR, DATA_PATH, ArraySpec.class, IntSpec.class));
     }
   }
 
   @Nested
-  class _erecord_spec {
+  class _record_expr_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save erecord spec in HashedDb.
+       * to save recordExpr spec in HashedDb.
        */
       Hash hash = hash(
-          hash(ERECORD.marker()),
+          hash(RECORD_EXPR.marker()),
           hash(recSpec(list(intSpec(), strSpec())))
       );
       assertThat(hash)
-          .isEqualTo(eRecSpec(list(intSpec(), strSpec())).hash());
+          .isEqualTo(recExprSpec(list(intSpec(), strSpec())).hash());
     }
 
     @Test
     public void without_data() throws Exception {
-      test_spec_without_data(ERECORD);
+      test_spec_without_data(RECORD_EXPR);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(ERECORD);
+      test_spec_with_additional_data(RECORD_EXPR);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(ERECORD);
+      test_data_hash_pointing_nowhere_instead_of_being_spec(RECORD_EXPR);
     }
 
     @Test
     public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(ERECORD);
+      test_spec_with_corrupted_spec_as_data(RECORD_EXPR);
     }
 
     @Test
     public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(ERECORD, RecSpec.class);
+      test_spec_with_data_spec_being_expr_spec(RECORD_EXPR, RecSpec.class);
     }
 
     @Test
     public void with_evaluation_spec_not_being_rec_spec() throws Exception {
       Hash hash = hash(
-          hash(ERECORD.marker()),
+          hash(RECORD_EXPR.marker()),
           hash(intSpec())
       );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecNodeException(
-              hash, ERECORD, DATA_PATH, RecSpec.class, IntSpec.class));
+              hash, RECORD_EXPR, DATA_PATH, RecSpec.class, IntSpec.class));
     }
   }
 

@@ -15,11 +15,11 @@ import org.smoothbuild.db.object.exc.ObjectDbException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
@@ -95,7 +95,7 @@ public class ObjectFactory {
     return objectDb.boolVal(value);
   }
 
-  public DefinedLambda definedLambda(DefinedLambdaSpec spec, Expr body, ERec defaultArguments) {
+  public DefinedLambda definedLambda(DefinedLambdaSpec spec, Expr body, RecExpr defaultArguments) {
     return objectDb.definedLambdaVal(spec, body, defaultArguments);
   }
 
@@ -104,7 +104,7 @@ public class ObjectFactory {
   }
 
   public NativeLambda nativeLambda(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, ERec defaultArguments) {
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, RecExpr defaultArguments) {
     return objectDb.nativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments);
   }
 
@@ -124,12 +124,12 @@ public class ObjectFactory {
     return objectDb.constExpr(val);
   }
 
-  public Call callExpr(Expr function, ERec arguments) {
+  public Call callExpr(Expr function, RecExpr arguments) {
     return objectDb.callExpr(function, arguments);
   }
 
-  public EArray eArrayExpr(Iterable<? extends Expr> elements) {
-    return objectDb.eArrayExpr(elements);
+  public ArrayExpr arrayExpr(Iterable<? extends Expr> elements) {
+    return objectDb.arrayExpr(elements);
   }
 
   public Select selectExpr(Expr rec, Int index) {

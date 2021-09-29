@@ -13,6 +13,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_STR;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_DEFINED_LAMBDA;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_NOTHING;
@@ -23,7 +24,6 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CALL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CONST;
 import static org.smoothbuild.db.object.spec.TestingSpecs.DEFINED_LAMBDA;
-import static org.smoothbuild.db.object.spec.TestingSpecs.EARRAY;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ERECORD;
 import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NATIVE_LAMBDA;
@@ -43,11 +43,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.EArray;
-import org.smoothbuild.db.object.obj.expr.ERec;
 import org.smoothbuild.db.object.obj.expr.Null;
+import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
@@ -60,7 +60,7 @@ import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.ERecSpec;
+import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
@@ -104,8 +104,8 @@ public class SpecTest {
         arguments(PERSON, "{STRING,STRING}"),
         arguments(tc.callSpec(tc.intSpec()), "CALL:INT"),
         arguments(tc.constSpec(tc.intSpec()), "CONST:INT"),
-        arguments(tc.eArraySpec(tc.strSpec()), "EARRAY:[STRING]"),
-        arguments(tc.eRecSpec(list(tc.strSpec(), tc.intSpec())), "ERECORD:{STRING,INT}"),
+        arguments(tc.arrayExprSpec(tc.strSpec()), "ARRAY_EXPR:[STRING]"),
+        arguments(tc.recExprSpec(list(tc.strSpec(), tc.intSpec())), "RECORD_EXPR:{STRING,INT}"),
         arguments(tc.selectSpec(tc.intSpec()), "SELECT:INT"),
         arguments(NULL, "NULL:NOTHING"),
         arguments(tc.refSpec(tc.intSpec()), "REF:INT"),
@@ -159,8 +159,8 @@ public class SpecTest {
 
         arguments(CALL, Call.class),
         arguments(CONST, Const.class),
-        arguments(EARRAY, EArray.class),
-        arguments(ERECORD, ERec.class),
+        arguments(ARRAY_EXPR, ArrayExpr.class),
+        arguments(ERECORD, RecExpr.class),
         arguments(SELECT, Select.class),
         arguments(NULL, Null.class),
         arguments(REF, Ref.class)
@@ -213,7 +213,7 @@ public class SpecTest {
 
   @ParameterizedTest
   @MethodSource("erecord_items_cases")
-  public void erecord_item(ERecSpec spec, RecSpec expected) {
+  public void erecord_item(RecExprSpec spec, RecSpec expected) {
     assertThat(spec.evaluationSpec())
         .isEqualTo(expected);
   }
@@ -299,8 +299,8 @@ public class SpecTest {
     return SPEC_DB.recSpec(list(items));
   }
 
-  private static ERecSpec erec(ValSpec... items) {
-    return SPEC_DB.eRecSpec(list(items));
+  private static RecExprSpec erec(ValSpec... items) {
+    return SPEC_DB.recExprSpec(list(items));
   }
 
   @Test
@@ -335,7 +335,7 @@ public class SpecTest {
 
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(CONST, CONST);
-    tester.addEqualityGroup(EARRAY, EARRAY);
+    tester.addEqualityGroup(ARRAY_EXPR, ARRAY_EXPR);
     tester.addEqualityGroup(ERECORD, ERECORD);
     tester.addEqualityGroup(SELECT, SELECT);
     tester.addEqualityGroup(NULL, NULL);

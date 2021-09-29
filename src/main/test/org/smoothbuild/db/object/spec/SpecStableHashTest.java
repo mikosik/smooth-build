@@ -31,7 +31,7 @@ public class SpecStableHashTest extends TestingContext {
 
     assertHash(callSpec(intSpec()), "f8e8b1d061fcdfb8be52b97cf80e50bc908e59ef");
     assertHash(constSpec(intSpec()), "dd2a014b3764aa9ab8875ff924449ee241cb5e7c");
-    assertHash(eArraySpec(intSpec()), "04c4786e96bdac890b5089eee99173cd41cecb33");
+    assertHash(arrayExprSpec(intSpec()), "04c4786e96bdac890b5089eee99173cd41cecb33");
     assertHash(selectSpec(intSpec()), "bc511a321ba8a722155574c39f0cb5f58ee84a71");
     assertHash(nullSpec(), "e43dd13c440350f8543c90ec6d90deb36dfdbedc");
     assertHash(refSpec(intSpec()), "fca4f7c553d3189b050352933410a5b8b6ceadb6");
