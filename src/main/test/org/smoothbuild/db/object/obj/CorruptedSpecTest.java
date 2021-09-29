@@ -328,11 +328,6 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Test
-    public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(specKind());
-    }
-
-    @Test
     public void with_data_not_being_sequence_of_hashes() throws Exception {
       Hash notSequence = hash("abc");
       Hash hash =
@@ -422,11 +417,10 @@ public class CorruptedSpecTest extends TestingContext {
     @Test
     public void with_result_spec_corrupted() throws Exception {
       RecSpec argumentSpecs = recSpec(list(strSpec(), boolSpec()));
-      Hash resultHash = corruptedArraySpecHash();
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
-              resultHash,
+              corruptedArraySpecHash(),
               hash(argumentSpecs)
           )
       );
@@ -480,12 +474,11 @@ public class CorruptedSpecTest extends TestingContext {
 
     @Test
     public void with_arguments_spec_corrupted() throws Exception {
-      Hash corrutpedArgumentHash = corruptedArraySpecHash();
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               hash(intSpec()),
-              corrutpedArgumentHash
+              corruptedArraySpecHash()
           )
       );
       assertCall(() -> specDb().getSpec(specHash))
@@ -666,16 +659,15 @@ public class CorruptedSpecTest extends TestingContext {
 
     @Test
     public void with_corrupted_element_spec() throws Exception {
-      Hash notASpecHash = hash("not a spec");
       Hash hash =
           hash(
               hash(RECORD.marker()),
               hash(
-                  notASpecHash,
+                  corruptedArraySpecHash(),
                   hash(strSpec())));
       assertThatGetSpec(hash)
           .throwsException(new DecodeSpecNodeException(hash, RECORD, "data[0]"))
-          .withCause(new DecodeSpecException(notASpecHash));
+          .withCause(corruptedArraySpecException());
     }
   }
 
@@ -764,15 +756,14 @@ public class CorruptedSpecTest extends TestingContext {
         .withCause(new NoSuchDataException(dataHash));
   }
 
-  private void test_spec_with_corrupted_spec_as_data(SpecKind specKind)
-      throws Exception {
-    Hash notASpecHash = hash("not a type");
+  private void test_spec_with_corrupted_spec_as_data(SpecKind specKind) throws Exception {
     Hash hash =
         hash(
             hash(specKind.marker()),
-            notASpecHash);
+            corruptedArraySpecHash());
     assertThatGetSpec(hash)
-        .throwsException(new DecodeSpecNodeException(hash, specKind, DATA_PATH));
+        .throwsException(new DecodeSpecNodeException(hash, specKind, DATA_PATH))
+        .withCause(corruptedArraySpecException());
   }
 
   private void test_spec_with_data_spec_being_expr_spec(
