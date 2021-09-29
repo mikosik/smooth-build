@@ -96,7 +96,7 @@ public class NativeLambdaTest extends TestingContext {
     NativeLambdaSpec spec = nativeLambdaSpec(intSpec(), strSpec());
     List<Expr> defaultArguments = asList(strExpr());
     assertThat(nativeLambdaVal(spec, strVal(), blobVal(), defaultArguments).defaultArguments())
-        .isEqualTo(defaultArguments);
+        .isEqualTo(eRecExpr(defaultArguments));
   }
 
   @Test

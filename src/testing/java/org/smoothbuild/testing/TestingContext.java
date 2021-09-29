@@ -332,7 +332,7 @@ public class TestingContext {
 
   public DefinedLambda definedLambdaVal(
       DefinedLambdaSpec spec, Expr body, List<Expr> defaultArguments) {
-    return objectDb().definedLambdaVal(spec, body, defaultArguments);
+    return objectDb().definedLambdaVal(spec, body, eRecExpr(defaultArguments));
   }
 
   public Int intVal() {
@@ -345,7 +345,7 @@ public class TestingContext {
 
   public NativeLambda nativeLambdaVal(
       NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) {
-    return objectDb().nativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments);
+    return objectDb().nativeLambdaVal(spec, classBinaryName, nativeJar, eRecExpr(defaultArguments));
   }
 
   public Str strVal() {

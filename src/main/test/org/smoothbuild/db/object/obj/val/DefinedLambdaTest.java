@@ -84,7 +84,7 @@ public class DefinedLambdaTest extends TestingContext {
     DefinedLambdaSpec lambdaSpec = definedLambdaSpec(intSpec(), strSpec());
     List<Expr> defaultArguments = asList(strExpr());
     assertThat(definedLambdaVal(lambdaSpec, intExpr(), defaultArguments).defaultArguments())
-        .isEqualTo(defaultArguments);
+        .isEqualTo(eRecExpr(defaultArguments));
   }
 
   @Test

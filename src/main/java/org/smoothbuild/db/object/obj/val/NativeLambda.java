@@ -2,10 +2,8 @@ package org.smoothbuild.db.object.obj.val;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.db.object.obj.expr.ERec;
 
 public class NativeLambda extends Lambda {
   private static final int NATIVE_BODY_SEQUENCE_SIZE = 2;
@@ -33,5 +31,5 @@ public class NativeLambda extends Lambda {
   }
 
   public record NativeLambdaData(
-      Str classBinaryName, Blob nativeJar, ImmutableList<Expr> defaultArguments) {}
+      Str classBinaryName, Blob nativeJar, ERec defaultArguments) {}
 }

@@ -79,13 +79,12 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBoolVal(value));
   }
 
-  public DefinedLambda definedLambdaVal(DefinedLambdaSpec spec, Expr body,
-      List<Expr> defaultArguments) {
+  public DefinedLambda definedLambdaVal(DefinedLambdaSpec spec, Expr body, ERec defaultArguments) {
     if (!Objects.equals(spec.result(), body.evaluationSpec())) {
       throw new IllegalArgumentException("`spec` specifies result as " + spec.result().name()
           + " but body.evaluationSpec() is " + body.evaluationSpec().name() + ".");
     }
-    validateDefaultArguments(defaultArguments, spec);
+    verifyArguments(spec, defaultArguments, "Default arguments");
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newDefinedLambdaVal(spec, body, defaultArguments));
   }
@@ -95,28 +94,10 @@ public class ObjectDb {
   }
 
   public NativeLambda nativeLambdaVal(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) {
-    validateDefaultArguments(defaultArguments, spec);
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, ERec defaultArguments) {
+    verifyArguments(spec, defaultArguments, "Default arguments");
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newNativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments));
-  }
-
-  private static void validateDefaultArguments(List<Expr> defaultArguments, LambdaSpec spec) {
-    ImmutableList<ValSpec> paramSpecs = spec.parameters().items();
-    int parameterCount = paramSpecs.size();
-    if (parameterCount != defaultArguments.size()) {
-      throw new IllegalArgumentException("`spec` specifies " + parameterCount
-          + " parameter(s) but defaultArguments provides " + defaultArguments.size()
-          + " argument(s).");
-    }
-    for (int i = 0; i < defaultArguments.size(); i++) {
-      ValSpec evaluationSpec = defaultArguments.get(i).evaluationSpec();
-      if (!Objects.equals(paramSpecs.get(i), evaluationSpec)) {
-        throw new IllegalArgumentException("Default argument at index " + i + " has spec "
-            + evaluationSpec.name() + " while spec specifies that parameter as "
-            + paramSpecs.get(i).name() + ".");
-      }
-    }
   }
 
   public Str strVal(String value) {
@@ -217,16 +198,16 @@ public class ObjectDb {
   private Call newCallExpr(Expr function, ERec arguments)
       throws HashedDbException {
     var lambdaSpec = functionEvaluationSpec(function);
-    verifyArguments(lambdaSpec, arguments);
+    verifyArguments(lambdaSpec, arguments, "Arguments");
     var spec = specDb.callSpec(lambdaSpec.result());
     var data = writeCallData(function, arguments);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
-  private void verifyArguments(LambdaSpec lambdaSpec, ERec arguments) {
+  private static void verifyArguments(LambdaSpec lambdaSpec, ERec arguments, String name) {
     if (!Objects.equals(lambdaSpec.parameters(), arguments.evaluationSpec())) {
-      throw new IllegalArgumentException(("Arguments evaluation spec %s should be equal to "
+      throw new IllegalArgumentException((name + " evaluation spec %s should be equal to "
           + "function evaluation spec parameters %s.")
               .formatted(arguments.evaluationSpec().name(), lambdaSpec.parameters().name()));
     }
@@ -335,7 +316,7 @@ public class ObjectDb {
   }
 
   private DefinedLambda newDefinedLambdaVal(
-      DefinedLambdaSpec spec, Expr body, List<Expr> defaultArguments) throws HashedDbException {
+      DefinedLambdaSpec spec, Expr body, ERec defaultArguments) throws HashedDbException {
     var data = writeDefinedLambdaData(body, defaultArguments);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
@@ -348,7 +329,7 @@ public class ObjectDb {
   }
 
   private NativeLambda newNativeLambdaVal(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments)
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, ERec defaultArguments)
       throws HashedDbException {
     var data = writeNativeLambdaData(classBinaryName, nativeJar, defaultArguments);
     var root = writeRoot(spec, data);
@@ -415,10 +396,8 @@ public class ObjectDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeDefinedLambdaData(Expr body, List<Expr> defaultArguments)
-      throws HashedDbException {
-    Hash defaultArgumentsHash = writeSequence(defaultArguments);
-    return hashedDb.writeSequence(body.hash(), defaultArgumentsHash);
+  private Hash writeDefinedLambdaData(Expr body, ERec defaultArguments) throws HashedDbException {
+    return hashedDb.writeSequence(body.hash(), defaultArguments.hash());
   }
 
   private Hash writeIntData(BigInteger value) throws HashedDbException {
@@ -426,10 +405,9 @@ public class ObjectDb {
   }
 
   private Hash writeNativeLambdaData(
-      Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) throws HashedDbException {
+      Str classBinaryName, Blob nativeJar, ERec defaultArguments) throws HashedDbException {
     Hash nativeHash = hashedDb.writeSequence(classBinaryName.hash(), nativeJar.hash());
-    Hash defaultArgumentsHash = writeSequence(defaultArguments);
-    return hashedDb.writeSequence(nativeHash, defaultArgumentsHash);
+    return hashedDb.writeSequence(nativeHash, defaultArguments.hash());
   }
 
   private Hash writeStrData(String string) throws HashedDbException {

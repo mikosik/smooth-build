@@ -7,7 +7,6 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -96,8 +95,7 @@ public class ObjectFactory {
     return objectDb.boolVal(value);
   }
 
-  public DefinedLambda definedLambda(
-      DefinedLambdaSpec spec, Expr body, List<Expr> defaultArguments) {
+  public DefinedLambda definedLambda(DefinedLambdaSpec spec, Expr body, ERec defaultArguments) {
     return objectDb.definedLambdaVal(spec, body, defaultArguments);
   }
 
@@ -106,7 +104,7 @@ public class ObjectFactory {
   }
 
   public NativeLambda nativeLambda(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) {
+      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, ERec defaultArguments) {
     return objectDb.nativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments);
   }
 
