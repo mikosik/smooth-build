@@ -158,6 +158,6 @@ public class CallTest extends TestingContext {
     Const function = constExpr(definedLambdaVal());
     Call call = callExpr(function, list(strExpr()));
     assertThat(call.toString())
-        .isEqualTo("Call(???):" + call.hash());
+        .isEqualTo("Call(???)@" + call.hash());
   }
 }

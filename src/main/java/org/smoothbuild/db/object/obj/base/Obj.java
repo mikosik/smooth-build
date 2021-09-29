@@ -68,7 +68,7 @@ public abstract class Obj {
 
   @Override
   public String toString() {
-    return valueToStringSafe() + ":" + hash();
+    return valueToStringSafe() + "@" + hash();
   }
 
   protected <T> T readData(HashedDbCallable<T> reader) {

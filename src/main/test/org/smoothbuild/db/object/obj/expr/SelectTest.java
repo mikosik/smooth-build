@@ -134,6 +134,6 @@ public class SelectTest extends TestingContext {
   public void to_string() {
     Select select = selectExpr(constExpr(recWithStrVal()), intVal(0));
     assertThat(select.toString())
-        .isEqualTo("Select(???):" + select.hash());
+        .isEqualTo("Select(???)@" + select.hash());
   }
 }

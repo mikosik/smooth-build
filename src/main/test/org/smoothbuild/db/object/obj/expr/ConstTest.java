@@ -74,6 +74,6 @@ public class ConstTest extends TestingContext {
   public void to_string() {
     Const constE = intExpr(1);
     assertThat(constE.toString())
-        .isEqualTo("Const(1):" + constE.hash());
+        .isEqualTo("Const(1)@" + constE.hash());
   }
 }

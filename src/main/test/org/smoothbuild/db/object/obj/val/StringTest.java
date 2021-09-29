@@ -82,7 +82,7 @@ public class StringTest extends TestingContext {
     Str str = strVal(string);
     assertThat(str.toString())
         .isEqualTo("""
-            "my string":""" + str.hash());
+            "my string"@""" + str.hash());
   }
 
   @Test
@@ -90,7 +90,7 @@ public class StringTest extends TestingContext {
     Str str = strVal("123456789012345678901234567890");
     assertThat(str.toString())
         .isEqualTo("""
-            "1234567890123456789012345"...:""" + str.hash());
+            "1234567890123456789012345"...@""" + str.hash());
   }
 
   @Test
@@ -98,6 +98,6 @@ public class StringTest extends TestingContext {
     Str str = strVal("\t \b \n \r \f \" \\");
     assertThat(str.toString())
         .isEqualTo("""
-            "\\t \\b \\n \\r \\f \\" \\\\":""" + str.hash());
+            "\\t \\b \\n \\r \\f \\" \\\\"@""" + str.hash());
   }
 }

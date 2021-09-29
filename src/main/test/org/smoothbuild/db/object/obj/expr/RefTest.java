@@ -92,6 +92,6 @@ public class RefTest extends TestingContext {
   public void to_string() {
     Ref ref = refExpr(intSpec(), 123);
     assertThat(ref.toString())
-        .isEqualTo("Ref(123):" + ref.hash());
+        .isEqualTo("Ref(123)@" + ref.hash());
   }
 }

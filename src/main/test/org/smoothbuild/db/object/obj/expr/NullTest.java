@@ -47,6 +47,6 @@ public class NullTest extends TestingContext {
   public void to_string() {
     Null nullExpr = nullExpr();
     assertThat(nullExpr.toString())
-        .isEqualTo("Null:" + nullExpr.hash());
+        .isEqualTo("Null@" + nullExpr.hash());
   }
 }

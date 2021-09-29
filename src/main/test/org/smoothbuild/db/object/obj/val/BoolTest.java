@@ -94,6 +94,6 @@ public class BoolTest extends TestingContext {
   public void to_string_contains_value() {
     Bool bool = boolVal(true);
     assertThat(bool.toString())
-        .isEqualTo("true:" + bool.hash());
+        .isEqualTo("true@" + bool.hash());
   }
 }

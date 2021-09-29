@@ -223,7 +223,7 @@ public class ArrayTest extends TestingContext {
         .build();
     assertThat(array.toString())
         .isEqualTo("""
-            ["abc","def"]:""" + array.hash());
+            ["abc","def"]@""" + array.hash());
   }
 
   @Nested
@@ -259,7 +259,7 @@ public class ArrayTest extends TestingContext {
     public void nothing_array_to_string() {
       Array array = emptyArrayOf(nothingSpec());
       assertThat(array.toString())
-          .isEqualTo("[]:" + array.hash());
+          .isEqualTo("[]@" + array.hash());
     }
 
     private Array emptyArrayOf(NothingSpec elemSpec) {

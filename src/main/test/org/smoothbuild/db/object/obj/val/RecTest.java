@@ -155,7 +155,7 @@ public class RecTest extends TestingContext {
     Rec person = johnDoePerson();
     assertThat(person.toString())
         .isEqualTo("""
-            {"John","Doe"}:""" + person.hash());
+            {"John","Doe"}@""" + person.hash());
   }
 
   private Rec johnDoePerson() {

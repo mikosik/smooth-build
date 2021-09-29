@@ -96,6 +96,6 @@ public class EArrayTest extends TestingContext {
   public void to_string() {
     EArray array = eArrayExpr(list(intExpr(1)));
     assertThat(array.toString())
-        .isEqualTo("EArray(???):" + array.hash());
+        .isEqualTo("EArray(???)@" + array.hash());
   }
 }

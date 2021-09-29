@@ -74,6 +74,6 @@ public class IntTest extends TestingContext {
   public void to_string_contains_int_value() {
     Int i = intVal(123);
     assertThat(i.toString())
-        .isEqualTo("123:" + i.hash());
+        .isEqualTo("123@" + i.hash());
   }
 }

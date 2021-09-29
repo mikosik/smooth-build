@@ -84,6 +84,6 @@ public class ERecTest extends TestingContext {
   public void to_string() {
     ERec record = eRecExpr(list(intExpr(1)));
     assertThat(record.toString())
-        .isEqualTo("ERec(???):" + record.hash());
+        .isEqualTo("ERec(???)@" + record.hash());
   }
 }
