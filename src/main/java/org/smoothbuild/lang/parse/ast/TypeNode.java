@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
-import static org.smoothbuild.lang.base.type.Types.nothingT;
 
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.CountersMap;
@@ -11,10 +10,6 @@ import com.google.common.collect.ImmutableList;
 public class TypeNode extends NamedNode {
   public TypeNode(String name, Location location) {
     super(name, location);
-  }
-
-  public boolean isNothing() {
-    return name().equals(nothingT().name());
   }
 
   public boolean isPolytype() {
