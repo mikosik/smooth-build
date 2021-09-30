@@ -7,6 +7,7 @@ import static org.smoothbuild.db.object.exc.DecodeObjRootException.cannotReadRoo
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nonNullObjRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nullObjRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.util.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.Lists.map;
 
 import java.math.BigInteger;
@@ -107,19 +108,19 @@ public class ObjectDb {
   public Rec recVal(RecSpec recSpec, Iterable<? extends Obj> items) {
     List<Obj> itemList = ImmutableList.copyOf(items);
     var specs = recSpec.items();
-    if (specs.size() != itemList.size()) {
-      throw new IllegalArgumentException("recSpec specifies " + specs.size() +
-          " items but provided " + itemList.size() + ".");
-    }
-    for (int i = 0; i < specs.size(); i++) {
-      Spec specifiedSpec = specs.get(i);
-      Spec elementSpec = itemList.get(i).spec();
-      if (!specifiedSpec.equals(elementSpec)) {
-        throw new IllegalArgumentException("recSpec specifies item at index " + i
-            + " with spec " + specifiedSpec.name() + " but provided item has spec "
-            + elementSpec.name() + " at that index.");
-      }
-    }
+
+    allMatchOtherwise(specs, itemList, (s, i) -> Objects.equals(s, i.spec()),
+        (i, j) -> {
+          throw new IllegalArgumentException(
+              "recSpec specifies " + i + " items but provided " + j + ".");
+        },
+        (i) -> {
+          throw new IllegalArgumentException("recSpec specifies item at index " + i
+              + " with spec " + specs.get(i).name() + " but provided item has spec "
+              + itemList.get(i).spec().name() + " at that index.");
+        }
+    );
+
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecVal(recSpec, itemList));
   }
 

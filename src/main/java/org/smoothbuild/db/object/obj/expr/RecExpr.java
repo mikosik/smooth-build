@@ -1,6 +1,7 @@
 package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.util.Lists.allMatchOtherwise;
 
 import java.util.Objects;
 
@@ -9,7 +10,6 @@ import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentExc
 import org.smoothbuild.db.object.exc.DecodeRecExprWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 
 import com.google.common.collect.ImmutableList;
@@ -29,20 +29,21 @@ public class RecExpr extends Expr {
   }
 
   public ImmutableList<Expr> items() {
-    var items = readSequenceObjs(DATA_PATH, dataHash(), Expr.class);
     var expectedItemSpecs = spec().evaluationSpec().items();
+    var items = readSequenceObjs(DATA_PATH, dataHash(), Expr.class);
 
-    if (expectedItemSpecs.size() != items.size()) {
-      throw new DecodeRecExprWrongItemsSizeException(hash(), spec(), items.size());
-    }
-    for (int i = 0; i < items.size(); i++) {
-      ValSpec expectedSpec = expectedItemSpecs.get(i);
-      ValSpec actualSpec = items.get(i).evaluationSpec();
-      if (!Objects.equals(expectedSpec, actualSpec)) {
-        throw new DecodeExprWrongEvaluationSpecOfComponentException(
-            hash(), spec(), "items[" + i + "]", expectedSpec, actualSpec);
-      }
-    }
+    allMatchOtherwise(
+        expectedItemSpecs,
+        items,
+        (s, i) -> Objects.equals(s, i.evaluationSpec()),
+        (i, j) -> {
+          throw new DecodeRecExprWrongItemsSizeException(hash(), spec(), j);
+        },
+        (i) -> {
+          throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(),
+              "items[" + i + "]", expectedItemSpecs.get(i), items.get(i).evaluationSpec());
+        }
+    );
     return items;
   }
 
