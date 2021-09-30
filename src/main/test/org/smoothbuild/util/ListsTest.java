@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 public class ListsTest {
   @Nested
-  class list {
+  class _list {
     @Test
     public void with_no_elements(){
       assertThat(list())
@@ -51,7 +51,7 @@ public class ListsTest {
   }
 
   @Nested
-  class concat {
+  class _concat {
     @Nested
     class _single_first {
       @Test
@@ -165,7 +165,7 @@ public class ListsTest {
   }
 
   @Nested
-  class filter {
+  class _filter {
     @Test
     public void returns_empty_for_empty_list(){
       assertThat(filter(new ArrayList<>(), x -> true))
@@ -194,7 +194,7 @@ public class ListsTest {
   }
 
   @Nested
-  class map {
+  class _map {
     @Test
     public void returns_empty_list_for_empty_argument(){
       assertThat(map(new ArrayList<String>(), String::toUpperCase))
@@ -215,7 +215,7 @@ public class ListsTest {
   }
 
   @Nested
-  class mapM {
+  class _mapM {
     @Test
     public void returns_empty_list_for_empty_argument(){
       assertThat(mapM(new ArrayList<String>(), String::toUpperCase))
@@ -310,7 +310,7 @@ public class ListsTest {
   }
 
   @Nested
-  class sane {
+  class _sane {
     @Test
     public void converts_null_to_empty_list(){
       assertThat(sane(null))
