@@ -3,7 +3,6 @@ package org.smoothbuild.lang.parse;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
-import static org.smoothbuild.lang.parse.LoadReferencable.loadReferencable;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.util.Lists.map;
@@ -35,10 +34,12 @@ import com.google.common.collect.ImmutableMap;
 
 public class ModuleLoader {
   private final TypeInferrer typeInferrer;
+  private final ReferencableLoader referencableLoader;
 
   @Inject
-  public ModuleLoader(TypeInferrer typeInferrer) {
+  public ModuleLoader(TypeInferrer typeInferrer, ReferencableLoader referencableLoader) {
     this.typeInferrer = typeInferrer;
+    this.referencableLoader = referencableLoader;
   }
 
   public Maybe<SModule> loadModule(ModulePath path, Hash hash, ModuleFiles moduleFiles,
@@ -85,7 +86,7 @@ public class ModuleLoader {
     return new Struct(type, path, name, items, location);
   }
 
-  private static ImmutableMap<String, GlobalReferencable> loadReferencables(
+  private ImmutableMap<String, GlobalReferencable> loadReferencables(
       ModulePath path, Ast ast) {
     var local = new HashMap<String, GlobalReferencable>();
     for (StructNode struct : ast.structs()) {
@@ -93,7 +94,7 @@ public class ModuleLoader {
       local.put(constructor.name(), constructor);
     }
     for (ReferencableNode referencable : ast.referencable()) {
-      local.put(referencable.name(), loadReferencable(path, referencable));
+      local.put(referencable.name(), referencableLoader.loadReferencable(path, referencable));
     }
     return ImmutableMap.copyOf(local);
   }

@@ -20,6 +20,7 @@ import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.parse.ModuleLoader;
+import org.smoothbuild.lang.parse.ReferencableLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
 
 import com.google.common.collect.ImmutableMap;
@@ -129,11 +130,14 @@ public class TestModuleLoader {
   }
 
   private Maybe<SModule> load() {
-    return new ModuleLoader(new TypeInferrer(new Typing())).loadModule(
+    Typing typing = new Typing();
+    ModuleLoader moduleLoader = new ModuleLoader(
+        new TypeInferrer(typing), new ReferencableLoader(typing));
+    return moduleLoader.loadModule(
         ModulePath.of(moduleFiles.smoothFile()), Hash.of(13) , moduleFiles, sourceCode, imported);
   }
 
   public static Log err(int line, String message) {
-    return error(BUILD_FILE_PATH.toString() + ":" + line + ": " + message);
+    return error(BUILD_FILE_PATH + ":" + line + ": " + message);
   }
 }

@@ -1,10 +1,13 @@
 package org.smoothbuild.lang.parse;
 
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maps.toMap;
 
 import java.util.List;
 import java.util.Optional;
+
+import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
@@ -22,6 +25,7 @@ import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -50,8 +54,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
-public class LoadReferencable {
-  public static GlobalReferencable loadReferencable(ModulePath path,
+public class ReferencableLoader {
+  private final Typing typing;
+
+  @Inject
+  public ReferencableLoader(Typing typing) {
+    this.typing = typing;
+  }
+
+  public GlobalReferencable loadReferencable(ModulePath path,
       ReferencableNode referencableNode) {
     if (referencableNode instanceof RealFuncNode realFuncNode) {
       return loadFunction(path, realFuncNode);
@@ -60,7 +71,7 @@ public class LoadReferencable {
     }
   }
 
-  private static Value loadValue(ModulePath path, ReferencableNode valueNode) {
+  private Value loadValue(ModulePath path, ReferencableNode valueNode) {
     Type type = valueNode.type().get();
     String name = valueNode.name();
     Location location = valueNode.location();
@@ -73,7 +84,7 @@ public class LoadReferencable {
     }
   }
 
-  private static Function loadFunction(ModulePath path, RealFuncNode realFuncNode) {
+  private Function loadFunction(ModulePath path, RealFuncNode realFuncNode) {
     ImmutableList<Item> parameters = loadParameters(path, realFuncNode);
     Type resultType = realFuncNode.resultType().get();
     String name = realFuncNode.name();
@@ -82,27 +93,32 @@ public class LoadReferencable {
       return new NativeFunction(
           resultType, path, name, parameters, loadNative(realFuncNode.nativ().get()), location);
     } else {
-      var expressionLoader = new ExpressionLoader(path, toMap(parameters, Item::name, Item::type));
+      var expressionLoader = new ExpressionLoader(
+          path, toMap(parameters, Item::name, Item::type));
       return new DefinedFunction(resultType, path, name, parameters,
           expressionLoader.createExpression(realFuncNode.body().get()), location);
     }
   }
 
-  private static AnnotationExpression loadNative(NativeNode nativeNode) {
+  private AnnotationExpression loadNative(NativeNode nativeNode) {
+    StructType type = typing.structT("Native", list(
+        new ItemSignature(typing.stringT(), "path", Optional.empty()),
+        new ItemSignature(typing.blobT(), "content", Optional.empty())));
     var path = createStringLiteral(nativeNode.path());
-    return new AnnotationExpression(path, nativeNode.isPure(), nativeNode.location());
+    return new AnnotationExpression(type, path, nativeNode.isPure(), nativeNode.location());
   }
 
-  private static ImmutableList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
+  private ImmutableList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
     ExpressionLoader parameterLoader = new ExpressionLoader(path, ImmutableMap.of());
     return map(realFuncNode.params(), parameterLoader::createParameter);
   }
 
-  private static class ExpressionLoader {
+  private class ExpressionLoader {
     private final ModulePath modulePath;
     private final ImmutableMap<String, Type> functionParameters;
 
-    public ExpressionLoader(ModulePath modulePath, ImmutableMap<String, Type> functionParameters) {
+    public ExpressionLoader(ModulePath modulePath,
+        ImmutableMap<String, Type> functionParameters) {
       this.modulePath = modulePath;
       this.functionParameters = functionParameters;
     }
@@ -187,24 +203,27 @@ public class LoadReferencable {
         String name = ref.name();
         return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
       }
-      return new ReferenceExpression(ref.name(), referenced.inferredType().get(), ref.location());
+      return new ReferenceExpression(referenced.inferredType().get(), ref.name(), ref.location());
     }
   }
 
-  public static BlobLiteralExpression createBlobLiteral(BlobNode blob) {
+  public BlobLiteralExpression createBlobLiteral(BlobNode blob) {
     return new BlobLiteralExpression(
+        typing.blobT(),
         blob.byteString(),
         blob.location());
   }
 
-  public static IntLiteralExpression createIntLiteral(IntNode intNode) {
+  public IntLiteralExpression createIntLiteral(IntNode intNode) {
     return new IntLiteralExpression(
+        typing.intT(),
         intNode.bigInteger(),
         intNode.location());
   }
 
-  public static StringLiteralExpression createStringLiteral(StringNode string) {
+  public StringLiteralExpression createStringLiteral(StringNode string) {
     return new StringLiteralExpression(
+        typing.stringT(),
         string.unescapedValue(),
         string.location());
   }

@@ -4,6 +4,10 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
+import static org.smoothbuild.lang.base.type.Types.blobT;
+import static org.smoothbuild.lang.base.type.Types.intT;
+import static org.smoothbuild.lang.base.type.Types.stringT;
+import static org.smoothbuild.lang.base.type.Types.structT;
 import static org.smoothbuild.util.Lists.list;
 
 import java.math.BigInteger;
@@ -42,7 +46,7 @@ public class TestingLang {
   }
 
   public static BlobLiteralExpression blob(int line, int data) {
-    return new BlobLiteralExpression(ByteString.of((byte) data), loc(line));
+    return new BlobLiteralExpression(blobT(), ByteString.of((byte) data), loc(line));
   }
 
   public static IntLiteralExpression int_(int value) {
@@ -50,11 +54,11 @@ public class TestingLang {
   }
 
   public static IntLiteralExpression int_(int line, int value) {
-    return new IntLiteralExpression(BigInteger.valueOf(value), loc(line));
+    return new IntLiteralExpression(intT(), BigInteger.valueOf(value), loc(line));
   }
 
   public static StringLiteralExpression string(int line, String data) {
-    return new StringLiteralExpression(data, loc(line));
+    return new StringLiteralExpression(stringT(), data, loc(line));
   }
 
   public static ArrayLiteralExpression arrayE(int line, Type elemType, Expression... expressions) {
@@ -67,7 +71,7 @@ public class TestingLang {
   }
 
   public static ReferenceExpression reference(int line, Type type, String name) {
-    return new ReferenceExpression(name, type, loc(line));
+    return new ReferenceExpression(type, name, loc(line));
   }
 
   public static ParameterReferenceExpression parameterRef(Type type, String name) {
@@ -127,7 +131,10 @@ public class TestingLang {
 
   public static AnnotationExpression nativ(
       int line, StringLiteralExpression implementedBy, boolean pure) {
-    return new AnnotationExpression(implementedBy, pure, loc(line));
+    StructType type = structT("Native", list(
+        new ItemSignature(stringT(), "path", Optional.empty()),
+        new ItemSignature(blobT(), "content", Optional.empty())));
+    return new AnnotationExpression(type, implementedBy, pure, loc(line));
   }
 
   public static StructType struct(String name, ItemSignature... fields) {

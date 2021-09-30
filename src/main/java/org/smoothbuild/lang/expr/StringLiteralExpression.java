@@ -1,12 +1,8 @@
 package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.Types;
+import org.smoothbuild.lang.base.type.StringType;
 
-public record StringLiteralExpression(String string, Location location) implements Expression {
-  @Override
-  public Type type() {
-    return Types.stringT();
-  }
+public record StringLiteralExpression(StringType type, String string, Location location)
+    implements Expression {
 }

@@ -1,16 +1,10 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.base.type.Types.intT;
-
 import java.math.BigInteger;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.IntType;
 
-public record IntLiteralExpression(BigInteger bigInteger, Location location)
+public record IntLiteralExpression(IntType type, BigInteger bigInteger, Location location)
     implements Expression {
-  @Override
-  public Type type() {
-    return intT();
-  }
 }
