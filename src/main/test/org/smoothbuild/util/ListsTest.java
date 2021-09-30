@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.allMatch;
+import static org.smoothbuild.util.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Lists.list;
@@ -299,13 +300,55 @@ public class ListsTest {
       assertThat(allMatch(list(), list("aaa"), alwaysTruePredicate()))
           .isFalse();
     }
+  }
 
-    private <T> BiFunction<T, T, Boolean> alwaysFalsePredicate() {
-      return (a, b) -> false;
+  @Nested
+  class _all_match_otherwise {
+    @Test
+    public void handlers_are_not_called_when_lists_are_equal() {
+      allMatchOtherwise(
+          list("aaa"),
+          list("aaa"),
+          String::equals,
+          (i, j) -> { throw new IllegalArgumentException(); },
+          i -> { throw new IllegalStateException(); }
+      );
     }
 
-    private <T> BiFunction<T, T, Boolean> alwaysTruePredicate() {
-      return (a, b) -> true;
+    @Test
+    public void different_size_handler_is_called_when_listA_size_is_greater() {
+      assertCall(() ->
+          allMatchOtherwise(
+              list("aaa", "bbb"),
+              list("aaa"),
+              String::equals,
+              (i, j) -> { throw new IllegalArgumentException("" + i + ", " + j); },
+              i -> { throw new IllegalStateException(); }
+          )).throwsException(new IllegalArgumentException("2, 1"));
+    }
+
+    @Test
+    public void different_size_handler_is_called_when_listB_size_is_greater() {
+      assertCall(() ->
+          allMatchOtherwise(
+              list("aaa"),
+              list("aaa", "bbb"),
+              String::equals,
+              (i, j) -> { throw new IllegalArgumentException("" + i + ", " + j); },
+              i -> { throw new IllegalStateException(); }
+          )).throwsException(new IllegalArgumentException("1, 2"));
+    }
+
+    @Test
+    public void elements_dont_match_handler_is_called_when_elements_differ() {
+      assertCall(() ->
+          allMatchOtherwise(
+              list("aaa", "bbb"),
+              list("aaa", "ccc"),
+              String::equals,
+              (i, j) -> { throw new IllegalArgumentException(); },
+              i -> { throw new IllegalStateException(Integer.toString(i)); }
+          )).throwsException(new IllegalStateException("1"));
     }
   }
 
@@ -329,5 +372,13 @@ public class ListsTest {
           .containsExactly("abc", "def")
           .inOrder();
     }
+  }
+
+  private static <T> BiFunction<T, T, Boolean> alwaysFalsePredicate() {
+    return (a, b) -> false;
+  }
+
+  private static <T> BiFunction<T, T, Boolean> alwaysTruePredicate() {
+    return (a, b) -> true;
   }
 }

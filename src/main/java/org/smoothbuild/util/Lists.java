@@ -6,7 +6,9 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -82,6 +84,24 @@ public class Lists {
       }
     }
     return true;
+  }
+
+  public static <T, U> void allMatchOtherwise(
+      List<T> listA,
+      List<U> listB,
+      BiFunction<T, U, Boolean> comparator,
+      BiConsumer<Integer, Integer> differentSizeHandler,
+      Consumer<Integer> elementsDontMatchHandler) {
+    int sizeA = listA.size();
+    int sizeB = listB.size();
+    if (sizeA != sizeB) {
+      differentSizeHandler.accept(sizeA, sizeB);
+    }
+    for (int i = 0; i < listA.size(); i++) {
+      if (!comparator.apply(listA.get(i), listB.get(i))) {
+        elementsDontMatchHandler.accept(i);
+      }
+    }
   }
 
   public static <E> List<E> sane(List<E> list) {
