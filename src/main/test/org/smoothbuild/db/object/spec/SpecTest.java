@@ -39,6 +39,7 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -60,6 +61,7 @@ import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
@@ -67,6 +69,7 @@ import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.testing.TestingContext;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
 public class SpecTest {
@@ -204,27 +207,75 @@ public class SpecTest {
 
   public static List<Arguments> record_items_cases() {
     return list(
-        arguments(rec(), list()),
-        arguments(rec(STR), list(STR)),
-        arguments(rec(STR, INT), list(STR, INT)),
-        arguments(rec(STR, INT, BLOB), list(STR, INT, BLOB))
+        arguments(recSpec(), list()),
+        arguments(recSpec(STR), list(STR)),
+        arguments(recSpec(STR, INT), list(STR, INT)),
+        arguments(recSpec(STR, INT, BLOB), list(STR, INT, BLOB))
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("rec_expr_items_cases")
-  public void rec_expr_item(RecExprSpec spec, RecSpec expected) {
-    assertThat(spec.evaluationSpec())
-        .isEqualTo(expected);
-  }
+  @Nested
+  class _evaluation_spec {
+    @ParameterizedTest
+    @MethodSource("specs")
+    public void arrayExpr(ValSpec spec) {
+      assertThat(SPEC_DB.arrayExprSpec(spec).evaluationSpec())
+          .isEqualTo(SPEC_DB.arraySpec(spec));
+    }
 
-  public static List<Arguments> rec_expr_items_cases() {
-    return list(
-        arguments(recExpr(), rec()),
-        arguments(recExpr(STR), rec(STR)),
-        arguments(recExpr(STR, INT), rec(STR, INT)),
-        arguments(recExpr(STR, INT, BLOB), rec(STR, INT, BLOB))
-    );
+    @ParameterizedTest
+    @MethodSource("specs")
+    public void call(ValSpec spec) {
+      assertThat(SPEC_DB.callSpec(spec).evaluationSpec())
+          .isEqualTo(spec);
+    }
+
+    @ParameterizedTest
+    @MethodSource("specs")
+    public void const_(ValSpec spec) {
+      assertThat(SPEC_DB.constSpec(spec).evaluationSpec())
+          .isEqualTo(spec);
+    }
+
+    @Test
+    public void null_() {
+      assertThat(SPEC_DB.nullSpec().evaluationSpec())
+          .isEqualTo(NOTHING);
+    }
+
+    @ParameterizedTest
+    @MethodSource("rec_expr_cases")
+    public void rec_expr(RecExprSpec spec, RecSpec expected) {
+      assertThat(spec.evaluationSpec())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> rec_expr_cases() {
+      return list(
+          arguments(recExprSpec(), recSpec()),
+          arguments(recExprSpec(STR), recSpec(STR)),
+          arguments(recExprSpec(STR, INT), recSpec(STR, INT)),
+          arguments(recExprSpec(STR, INT, BLOB), recSpec(STR, INT, BLOB))
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("specs")
+    public void ref(ValSpec spec) {
+      assertThat(SPEC_DB.refSpec(spec).evaluationSpec())
+          .isEqualTo(spec);
+    }
+
+    @ParameterizedTest
+    @MethodSource("specs")
+    public void select(ValSpec spec) {
+      assertThat(SPEC_DB.selectSpec(spec).evaluationSpec())
+          .isEqualTo(spec);
+    }
+
+    public static ImmutableList<Spec> specs() {
+      return TestingSpecs.VAL_SPECS_TO_TEST;
+    }
   }
 
   @ParameterizedTest
@@ -236,9 +287,9 @@ public class SpecTest {
 
   public static List<Arguments> defined_lambda_result_cases() {
     return list(
-        arguments(definedLambda(INT), INT),
-        arguments(definedLambda(BLOB, BOOL), BLOB),
-        arguments(definedLambda(BLOB, BOOL, INT), BLOB)
+        arguments(definedLambdaSpec(INT), INT),
+        arguments(definedLambdaSpec(BLOB, BOOL), BLOB),
+        arguments(definedLambdaSpec(BLOB, BOOL, INT), BLOB)
     );
   }
 
@@ -251,9 +302,9 @@ public class SpecTest {
 
   public static List<Arguments> defined_lambda_parameters_cases() {
     return list(
-        arguments(definedLambda(INT), rec()),
-        arguments(definedLambda(BLOB, BOOL), rec(BOOL)),
-        arguments(definedLambda(BLOB, BOOL, INT), rec(BOOL, INT))
+        arguments(definedLambdaSpec(INT), recSpec()),
+        arguments(definedLambdaSpec(BLOB, BOOL), recSpec(BOOL)),
+        arguments(definedLambdaSpec(BLOB, BOOL, INT), recSpec(BOOL, INT))
     );
   }
 
@@ -266,9 +317,9 @@ public class SpecTest {
 
   public static List<Arguments> native_lambda_result_cases() {
     return list(
-        arguments(nativeLambda(INT), INT),
-        arguments(nativeLambda(BLOB, BOOL), BLOB),
-        arguments(nativeLambda(BLOB, BOOL, INT), BLOB)
+        arguments(nativeLambdaSpec(INT), INT),
+        arguments(nativeLambdaSpec(BLOB, BOOL), BLOB),
+        arguments(nativeLambdaSpec(BLOB, BOOL, INT), BLOB)
     );
   }
 
@@ -281,26 +332,30 @@ public class SpecTest {
 
   public static List<Arguments> native_lambda_parameters_cases() {
     return list(
-        arguments(nativeLambda(INT), rec()),
-        arguments(nativeLambda(BLOB, BOOL), rec(BOOL)),
-        arguments(nativeLambda(BLOB, BOOL, INT), rec(BOOL, INT))
+        arguments(nativeLambdaSpec(INT), recSpec()),
+        arguments(nativeLambdaSpec(BLOB, BOOL), recSpec(BOOL)),
+        arguments(nativeLambdaSpec(BLOB, BOOL, INT), recSpec(BOOL, INT))
     );
   }
 
-  private static ValSpec definedLambda(ValSpec result, ValSpec... parameters) {
-    return SPEC_DB.definedLambdaSpec(result, rec(parameters));
+  private static ValSpec definedLambdaSpec(ValSpec result, ValSpec... parameters) {
+    return SPEC_DB.definedLambdaSpec(result, recSpec(parameters));
   }
 
-  private static ValSpec nativeLambda(ValSpec result, ValSpec... parameters) {
-    return SPEC_DB.nativeLambdaSpec(result, rec(parameters));
+  private static ValSpec nativeLambdaSpec(ValSpec result, ValSpec... parameters) {
+    return SPEC_DB.nativeLambdaSpec(result, recSpec(parameters));
   }
 
-  private static RecSpec rec(ValSpec... items) {
+  private static RecSpec recSpec(ValSpec... items) {
     return SPEC_DB.recSpec(list(items));
   }
 
-  private static RecExprSpec recExpr(ValSpec... items) {
+  private static RecExprSpec recExprSpec(ValSpec... items) {
     return SPEC_DB.recExprSpec(list(items));
+  }
+
+  private static ConstSpec constSpec(ValSpec evaluationSpec) {
+    return SPEC_DB.constSpec(evaluationSpec);
   }
 
   @Test
