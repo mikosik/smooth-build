@@ -168,13 +168,13 @@ public class SpecTest {
   }
 
   @ParameterizedTest
-  @MethodSource("elem_spec_cases")
+  @MethodSource("array_element_cases")
   public void array_element(ArraySpec spec, Spec expected) {
     assertThat(spec.element())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> elem_spec_cases() {
+  public static List<Arguments> array_element_cases() {
     return list(
         arguments(ARRAY_BLOB, BLOB),
         arguments(ARRAY_BOOL, BOOL),
@@ -212,18 +212,18 @@ public class SpecTest {
   }
 
   @ParameterizedTest
-  @MethodSource("erecord_items_cases")
-  public void erecord_item(RecExprSpec spec, RecSpec expected) {
+  @MethodSource("rec_expr_items_cases")
+  public void rec_expr_item(RecExprSpec spec, RecSpec expected) {
     assertThat(spec.evaluationSpec())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> erecord_items_cases() {
+  public static List<Arguments> rec_expr_items_cases() {
     return list(
-        arguments(erec(), rec()),
-        arguments(erec(STR), rec(STR)),
-        arguments(erec(STR, INT), rec(STR, INT)),
-        arguments(erec(STR, INT, BLOB), rec(STR, INT, BLOB))
+        arguments(recExpr(), rec()),
+        arguments(recExpr(STR), rec(STR)),
+        arguments(recExpr(STR, INT), rec(STR, INT)),
+        arguments(recExpr(STR, INT, BLOB), rec(STR, INT, BLOB))
     );
   }
 
@@ -299,7 +299,7 @@ public class SpecTest {
     return SPEC_DB.recSpec(list(items));
   }
 
-  private static RecExprSpec erec(ValSpec... items) {
+  private static RecExprSpec recExpr(ValSpec... items) {
     return SPEC_DB.recExprSpec(list(items));
   }
 
