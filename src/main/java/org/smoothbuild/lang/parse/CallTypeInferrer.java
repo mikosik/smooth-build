@@ -6,7 +6,6 @@ import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.base.type.FunctionType.inferVariableBoundsInCall;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
-import static org.smoothbuild.lang.base.type.Types.anyT;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
@@ -21,13 +20,20 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
 import com.google.common.collect.ImmutableList;
 
-public class InferCallType {
-  public static Maybe<Type> inferCallType(CallNode call, Type resultType,
+public class CallTypeInferrer {
+  private final Typing typing;
+
+  public CallTypeInferrer(Typing typing) {
+    this.typing = typing;
+  }
+
+  public Maybe<Type> inferCallType(CallNode call, Type resultType,
       List<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
@@ -92,10 +98,10 @@ public class InferCallType {
     return assigned.stream().allMatch(Optional::isPresent);
   }
 
-  private static ImmutableList<Log> findVariableProblems(
+  private ImmutableList<Log> findVariableProblems(
       CallNode call, BoundsMap boundedVariables) {
     return boundedVariables.map().values().stream()
-        .filter(b -> b.bounds().get(LOWER).contains(anyT()))
+        .filter(b -> b.bounds().get(LOWER).contains(typing.anyT()))
         .map(b -> parseError(call, "Cannot infer actual type for type variable "
             + b.variable().q() + "."))
         .collect(toImmutableList());

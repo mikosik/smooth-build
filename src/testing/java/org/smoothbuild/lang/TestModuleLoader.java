@@ -18,7 +18,9 @@ import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.parse.LoadModule;
+import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.parse.ModuleLoader;
+import org.smoothbuild.lang.parse.TypeInferrer;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -127,7 +129,7 @@ public class TestModuleLoader {
   }
 
   private Maybe<SModule> load() {
-    return LoadModule.loadModule(
+    return new ModuleLoader(new TypeInferrer(new Typing())).loadModule(
         ModulePath.of(moduleFiles.smoothFile()), Hash.of(13) , moduleFiles, sourceCode, imported);
   }
 

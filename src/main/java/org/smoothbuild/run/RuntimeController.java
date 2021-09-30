@@ -11,7 +11,6 @@ import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
 import static org.smoothbuild.lang.base.define.InternalModule.internalModule;
 import static org.smoothbuild.lang.base.define.SModule.calculateModuleHash;
-import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -33,6 +32,7 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
+import org.smoothbuild.lang.parse.ModuleLoader;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -44,15 +44,18 @@ public class RuntimeController {
           .add(PRJ_MODULE_FILE_PATH)
           .build();
 
+
   private final FileResolver fileResolver;
   private final ModuleFilesDetector moduleFilesDetector;
+  private final ModuleLoader moduleLoader;
   private final Reporter reporter;
 
   @Inject
   public RuntimeController(FileResolver fileResolver, ModuleFilesDetector moduleFilesDetector,
-      Reporter reporter) {
+      ModuleLoader moduleLoader, Reporter reporter) {
     this.fileResolver = fileResolver;
     this.moduleFilesDetector = moduleFilesDetector;
+    this.moduleLoader = moduleLoader;
     this.reporter = reporter;
   }
 
@@ -86,7 +89,8 @@ public class RuntimeController {
       if (hash.containsProblem()) {
         return maybeLogs(hash.logs());
       } else {
-        return loadModule(path, hash.value(), moduleFiles, sourceCode.value(), imported);
+        return moduleLoader.loadModule(
+            path, hash.value(), moduleFiles, sourceCode.value(), imported);
       }
     }
   }

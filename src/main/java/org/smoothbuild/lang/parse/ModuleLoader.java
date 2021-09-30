@@ -3,7 +3,6 @@ package org.smoothbuild.lang.parse;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
-import static org.smoothbuild.lang.parse.InferTypes.inferTypes;
 import static org.smoothbuild.lang.parse.LoadReferencable.loadReferencable;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
@@ -11,6 +10,8 @@ import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maps.toMap;
 
 import java.util.HashMap;
+
+import javax.inject.Inject;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.LogBuffer;
@@ -30,8 +31,15 @@ import org.smoothbuild.lang.parse.ast.StructNode;
 
 import com.google.common.collect.ImmutableMap;
 
-public class LoadModule {
-  public static Maybe<SModule> loadModule(ModulePath path, Hash hash, ModuleFiles moduleFiles,
+public class ModuleLoader {
+  private final TypeInferrer typeInferrer;
+
+  @Inject
+  public ModuleLoader(TypeInferrer typeInferrer) {
+    this.typeInferrer = typeInferrer;
+  }
+
+  public Maybe<SModule> loadModule(ModulePath path, Hash hash, ModuleFiles moduleFiles,
       String sourceCode, Definitions imported) {
     var logBuffer = new LogBuffer();
     FilePath filePath = moduleFiles.smoothFile();
@@ -54,7 +62,7 @@ public class LoadModule {
     }
     Ast sortedAst = maybeSortedAst.value();
 
-    logBuffer.logAll(inferTypes(path, sortedAst, imported));
+    logBuffer.logAll(typeInferrer.inferTypes(path, sortedAst, imported));
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }

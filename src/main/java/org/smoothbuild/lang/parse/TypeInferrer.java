@@ -5,22 +5,15 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
 import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
-import static org.smoothbuild.lang.base.type.Types.anyT;
-import static org.smoothbuild.lang.base.type.Types.arrayT;
-import static org.smoothbuild.lang.base.type.Types.blobT;
-import static org.smoothbuild.lang.base.type.Types.functionT;
-import static org.smoothbuild.lang.base.type.Types.intT;
-import static org.smoothbuild.lang.base.type.Types.nothingT;
-import static org.smoothbuild.lang.base.type.Types.stringT;
-import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
-import static org.smoothbuild.lang.parse.InferCallType.inferCallType;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Strings.q;
 
 import java.util.List;
 import java.util.Optional;
+
+import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
@@ -34,6 +27,7 @@ import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
+import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
@@ -57,8 +51,17 @@ import org.smoothbuild.lang.parse.ast.ValueNode;
 
 import com.google.common.collect.ImmutableList;
 
-public class InferTypes {
-  public static List<Log> inferTypes(ModulePath path, Ast ast, Definitions imported) {
+public class TypeInferrer {
+  private final Typing typing;
+  private final CallTypeInferrer callTypeInferrer;
+
+  @Inject
+  public TypeInferrer(Typing typing) {
+    this.typing = typing;
+    this.callTypeInferrer = new CallTypeInferrer(typing);
+  }
+
+  public List<Log> inferTypes(ModulePath path, Ast ast, Definitions imported) {
     var logBuffer = new LogBuffer();
     new AstVisitor() {
       @Override
@@ -89,7 +92,7 @@ public class InferTypes {
         var resultType = bodyType(func);
         var parameterSignatures = func.optParameterSignatures();
         if (resultType.isPresent() && parameterSignatures.isPresent()) {
-          return Optional.of(functionT(resultType.get(), parameterSignatures.get()));
+          return Optional.of(typing.functionT(resultType.get(), parameterSignatures.get()));
         } else {
           return empty();
         }
@@ -171,7 +174,7 @@ public class InferTypes {
 
       private Optional<Type> createType(TypeNode type) {
         if (isVariableName(type.name())) {
-          return Optional.of(variable(type.name()));
+          return Optional.of(typing.variable(type.name()));
         } else if (type instanceof ArrayTypeNode array) {
           TypeNode elementType = array.elementType();
           return createType(elementType).map(Types::arrayT);
@@ -179,7 +182,7 @@ public class InferTypes {
           Optional<Type> result = createType(function.resultType());
           var parameters = map(function.parameterTypes(), this::createType);
           if (result.isPresent() && parameters.stream().allMatch(Optional::isPresent)) {
-            return Optional.of(functionT(
+            return Optional.of(typing.functionT(
                 result.get(), toItemSignatures(map(parameters, Optional::get))));
           } else {
             return empty();
@@ -235,7 +238,7 @@ public class InferTypes {
       private Optional<Type> findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return Optional.of(arrayT(nothingT()));
+          return Optional.of(typing.arrayT(typing.nothingT()));
         }
         Optional<Type> firstType = expressions.get(0).type();
         if (firstType.isEmpty()) {
@@ -250,7 +253,7 @@ public class InferTypes {
             return empty();
           }
           type = type.mergeWith(elemType.get(), UPPER);
-          if (type.contains(anyT())) {
+          if (type.contains(typing.anyT())) {
             logBuffer.log(parseError(elem.location(),
                 "Array elements at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
@@ -258,7 +261,7 @@ public class InferTypes {
             return empty();
           }
         }
-        return Optional.of(arrayT(type));
+        return Optional.of(typing.arrayT(type));
       }
 
       @Override
@@ -278,7 +281,8 @@ public class InferTypes {
             call.setType(empty());
           } else {
             call.setAssignedArgs(args.value());
-            Maybe<Type> type = inferCallType(call, functionType.resultType(), parameters);
+            Maybe<Type> type = callTypeInferrer.inferCallType(
+                call, functionType.resultType(), parameters);
             logBuffer.logAll(type.logs());
             call.setType(type.valueOptional());
           }
@@ -317,19 +321,19 @@ public class InferTypes {
       @Override
       public void visitStringLiteral(StringNode string) {
         super.visitStringLiteral(string);
-        string.setType(stringT());
+        string.setType(typing.stringT());
       }
 
       @Override
       public void visitBlobLiteral(BlobNode blob) {
         super.visitBlobLiteral(blob);
-        blob.setType(blobT());
+        blob.setType(typing.blobT());
       }
 
       @Override
       public void visitIntLiteral(IntNode intNode) {
         super.visitIntLiteral(intNode);
-        intNode.setType(intT());
+        intNode.setType(typing.intT());
       }
     }.visitAst(ast);
     return logBuffer.toList();
