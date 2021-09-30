@@ -38,4 +38,8 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
     checkState(body().isEmpty());
     return new Item(type().get(), path, name(), Optional.empty(), location());
   }
+
+  public ItemSignature toItemSignature() {
+    return new ItemSignature(type().get(), Optional.of(name()), Optional.empty());
+  }
 }

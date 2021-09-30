@@ -25,6 +25,8 @@ import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
+import org.smoothbuild.lang.base.define.Struct;
+import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
@@ -68,11 +70,19 @@ public class ModuleLoader {
     }
 
     var referencables = loadReferencables(path, sortedAst);
-    var structs = map(sortedAst.structs(), s -> s.struct().get());
+    var structs = map(sortedAst.structs(), s -> loadStruct(path, s));
     var definedStructs = toMap(structs, Defined::name, d -> (Defined) d);
     SModule module = new SModule(path, hash, moduleFiles, imported.modules().values().asList(),
         definedStructs, referencables);
     return maybeValueAndLogs(module, logBuffer);
+  }
+
+  private Struct loadStruct(ModulePath path, StructNode struct) {
+    var type = (StructType) struct.type().get();
+    var name = struct.name();
+    var items = map(struct.fields(), f -> f.toItem(path));
+    var location = struct.location();
+    return new Struct(type, path, name, items, location);
   }
 
   private static ImmutableMap<String, GlobalReferencable> loadReferencables(

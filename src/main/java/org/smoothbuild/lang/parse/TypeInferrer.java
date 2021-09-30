@@ -1,9 +1,7 @@
 package org.smoothbuild.lang.parse;
 
-import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
-import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
 import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -21,7 +19,6 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.Struct;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -68,11 +65,14 @@ public class TypeInferrer {
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
         if (struct.fields().stream().anyMatch(f -> f.type().isEmpty())) {
-          struct.setStruct(empty());
+          struct.setType(empty());
+          struct.constructor().setType(empty());
           return;
         }
-        var fields = map(struct.fields(), f -> f.toItem(path));
-        struct.setStruct(Optional.of(new Struct(path, struct.name(), fields, struct.location())));
+        var fieldSignatures = map(struct.fields(), ItemNode::toItemSignature);
+        struct.setType(typing.structT(struct.name(), fieldSignatures));
+        struct.constructor().setType(
+            typing.functionT(typing.structT(struct.name(), fieldSignatures), fieldSignatures));
       }
 
       @Override
@@ -183,27 +183,31 @@ public class TypeInferrer {
           var parameters = map(function.parameterTypes(), this::createType);
           if (result.isPresent() && parameters.stream().allMatch(Optional::isPresent)) {
             return Optional.of(typing.functionT(
-                result.get(), toItemSignatures(map(parameters, Optional::get))));
+                result.get(), Type.toItemSignatures(map(parameters, Optional::get))));
           } else {
             return empty();
           }
         } else {
-          return Optional.of(findType(type.name()).type());
+          return Optional.of(findType(type.name()));
         }
       }
 
-      private Defined findType(String name) {
+      private Type findType(String name) {
         Defined type = imported.types().get(name);
-        return requireNonNullElseGet(type, () -> findStruct(name));
+        if (type != null) {
+          return type.type();
+        } else {
+          return findStruct(name);
+        }
       }
 
-      private Defined findStruct(String name) {
+      private Type findStruct(String name) {
         StructNode structNode = ast.structsMap().get(name);
         if (structNode == null) {
           throw new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structsMap());
         } else {
-          return structNode.struct().orElseThrow(() -> new RuntimeException(
+          return structNode.type().orElseThrow(() -> new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structsMap()));
         }
       }
