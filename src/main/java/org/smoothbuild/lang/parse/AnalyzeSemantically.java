@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.lang.String.join;
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.lang.base.type.Types.isVariableName;
+import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.lang.parse.ast.FunctionTypeNode.countFunctionVariables;
 import static org.smoothbuild.util.Lists.map;

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static java.lang.Character.isUpperCase;
+import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -74,9 +74,5 @@ public class Types {
 
   public static FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
     return new FunctionType(resultType, ImmutableList.copyOf(parameters));
-  }
-
-  public static boolean isVariableName(String name) {
-    return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 }

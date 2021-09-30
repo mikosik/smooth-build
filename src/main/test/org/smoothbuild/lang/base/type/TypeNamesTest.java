@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.Types.isVariableName;
+import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
 
 import org.junit.jupiter.api.Test;
 
-public class TypesTest {
+public class TypeNamesTest {
   @Test
   public void empty_string_is_not_type_variable_name() {
     assertThat(isVariableName(""))
