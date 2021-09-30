@@ -35,9 +35,4 @@ public class ArraySpec extends ValSpec {
   public ValSpec element() {
     return elements;
   }
-
-  @Override
-  public String toString() {
-    return  name() + ":" + hash();
-  }
 }

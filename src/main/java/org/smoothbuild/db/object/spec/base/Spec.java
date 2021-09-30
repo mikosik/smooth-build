@@ -41,7 +41,7 @@ public abstract class Spec {
 
   @Override
   public String toString() {
-    return name() + ":" + hash();
+    return name() + "@" + hash();
   }
 
   public String name() {

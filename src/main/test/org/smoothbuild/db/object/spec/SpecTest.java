@@ -88,7 +88,7 @@ public class SpecTest {
   @MethodSource("names")
   public void to_string(Spec spec, String name) {
     assertThat(spec.toString())
-        .isEqualTo(name + ":" + spec.hash());
+        .isEqualTo(name + "@" + spec.hash());
   }
 
   public static Stream<Arguments> names() {
