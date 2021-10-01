@@ -1,7 +1,11 @@
 package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
+import static org.smoothbuild.util.Lists.map;
+
 import javax.inject.Singleton;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 @Singleton
@@ -52,5 +56,46 @@ public class Typing {
 
   public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
     return Types.functionT(resultType, parameters);
+  }
+
+  public Type strip(Type type) {
+    // TODO in java 17 use pattern matching switch
+    if (type instanceof ArrayType arrayType) {
+      return stripArrayType(arrayType);
+    } else if (type instanceof FunctionType functionType) {
+      return stripFunctionType(functionType);
+    } else {
+      return type;
+    }
+  }
+
+  private Type stripArrayType(ArrayType arrayType) {
+    Type elemType = arrayType.elemType();
+    Type newElemType = strip(elemType);
+    if (elemType == newElemType) {
+      return arrayType;
+    } else {
+      return newArrayType(newElemType);
+    }
+  }
+
+  private Type stripFunctionType(FunctionType functionType) {
+    var oldResultType = functionType.resultType();
+    var newResultType = strip(oldResultType);
+    var oldParameters = functionType.parameters();
+    var newParameters = map(oldParameters, i -> itemSignature(strip(i.type())));
+    if (oldResultType == newResultType && oldParameters.equals(newParameters)) {
+      return functionType;
+    }
+    return newFunctionType(newResultType, newParameters);
+  }
+
+  private static ArrayType newArrayType(Type elemType) {
+    return Types.arrayT(elemType);
+  }
+
+  private static FunctionType newFunctionType(
+      Type result, ImmutableList<ItemSignature> parameters) {
+    return Types.functionT(result, parameters);
   }
 }

@@ -63,7 +63,7 @@ public class FunctionType extends Type {
     return parameters;
   }
 
-  public List<Type> parameterTypes() {
+  public ImmutableList<Type> parameterTypes() {
     return map(parameters, ItemSignature::type);
   }
 

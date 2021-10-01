@@ -56,6 +56,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
+import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.inject.util.Providers;
@@ -69,6 +70,7 @@ public class TestingContext {
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
   private ObjectDb objectDb;
+  private Typing typing;
   private SpecDb specDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -102,6 +104,13 @@ public class TestingContext {
       objectFactory = new ObjectFactory(objectDb(), specDb());
     }
     return objectFactory;
+  }
+
+  public Typing typing() {
+    if (typing == null) {
+      typing = new Typing();
+    }
+    return typing;
   }
 
   public SpecDb specDb() {

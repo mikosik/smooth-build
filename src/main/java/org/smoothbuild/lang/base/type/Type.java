@@ -12,7 +12,6 @@ import static org.smoothbuild.util.Lists.zip;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -203,6 +202,6 @@ public abstract class Type {
   }
 
   public static ImmutableList<ItemSignature> toItemSignatures(List<Type> types) {
-    return map(types, t -> new ItemSignature(t, Optional.empty(), Optional.empty()));
+    return map(types, ItemSignature::itemSignature);
   }
 }
