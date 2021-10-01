@@ -166,7 +166,7 @@ public class ReferencableLoader {
       Expression called = createExpression(call.function());
       var argumentExpressions = createArgumentExpressions(call);
       var functionType = ((FunctionType) called.type());
-      var resultType = functionType.inferResultType(createArgumentTypes(call));
+      var resultType = typing.inferResultType(functionType, createArgumentTypes(call));
       return new CallExpression(resultType, called, argumentExpressions, call.location());
     }
 

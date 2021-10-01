@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.collect.Iterables.concat;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
+import static org.smoothbuild.lang.base.type.Bounds.unbounded;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.BoundsMap.merge;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.db.SpecDb;
+import org.smoothbuild.util.Sets;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -192,4 +194,16 @@ public class Typing {
         map(type.contravariants(), t -> inferVariableBounds(t, reversed.edge(), reversed))));
   }
 
+  public Type inferResultType(FunctionType functionType, List<Type> argumentTypes) {
+    var boundedVariables = inferVariableBoundsInCall(functionType.resultType(),
+        functionType.parameterTypes(), argumentTypes);
+    return functionType.resultType().mapVariables(boundedVariables, LOWER);
+  }
+
+  public BoundsMap inferVariableBoundsInCall(Type resultTypes,
+      List<Type> parameterTypes, List<Type> argumentTypes) {
+    var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, LOWER);
+    var resultVariables = Sets.map(resultTypes.variables(), v -> new Bounded(v, unbounded()));
+    return boundedVariables.mergeWith(resultVariables);
+  }
 }

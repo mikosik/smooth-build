@@ -4,7 +4,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
-import static org.smoothbuild.lang.base.type.FunctionType.inferVariableBoundsInCall;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
@@ -43,7 +42,7 @@ public class CallTypeInferrer {
     }
     List<Optional<Type>> assignedTypes = assignedTypes(parameters, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
-      var boundedVariables = inferVariableBoundsInCall(
+      var boundedVariables = typing.inferVariableBoundsInCall(
           resultType,
           map(parameters, ItemSignature::type),
           map(assignedTypes, Optional::get));

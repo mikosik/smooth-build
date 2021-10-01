@@ -4,16 +4,11 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.lang.base.type.Bounds.unbounded;
-import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.Collection;
-import java.util.List;
-
-import org.smoothbuild.util.Sets;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -65,18 +60,6 @@ public class FunctionType extends Type {
 
   public ImmutableList<Type> parameterTypes() {
     return map(parameters, ItemSignature::type);
-  }
-
-  public Type inferResultType(List<Type> argumentTypes) {
-    var boundedVariables = inferVariableBoundsInCall(resultType(), parameterTypes(), argumentTypes);
-    return resultType().mapVariables(boundedVariables, LOWER);
-  }
-
-  public static BoundsMap inferVariableBoundsInCall(Type resultTypes,
-      List<Type> parameterTypes, List<Type> argumentTypes) {
-    var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, LOWER);
-    var resultVariables = Sets.map(resultTypes.variables(), v -> new Bounded(v, unbounded()));
-    return boundedVariables.mergeWith(resultVariables);
   }
 
   @Override
