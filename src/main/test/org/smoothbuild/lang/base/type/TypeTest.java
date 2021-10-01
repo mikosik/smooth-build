@@ -394,17 +394,6 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("isParamAssignableFrom_test_data")
-  public void isParamAssignableFrom(TestedAssignmentSpec spec) {
-    assertThat(spec.target().strippedType().isParamAssignableFrom(spec.source().strippedType()))
-        .isEqualTo(spec.allowed());
-  }
-
-  public static List<TestedAssignmentSpec> isParamAssignableFrom_test_data() {
-    return TestedAssignmentSpec.parameter_assignment_test_specs(true);
-  }
-
-  @ParameterizedTest
   @MethodSource("inferVariableBounds_test_data")
   public void inferVariableBounds(Type type, Type assigned, BoundsMap expected) {
     assertThat(type.inferVariableBounds(assigned, LOWER))

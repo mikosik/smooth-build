@@ -85,17 +85,8 @@ public abstract class Type {
     return inequal(type, LOWER);
   }
 
-  public boolean isParamAssignableFrom(Type type) {
-    return inequalParam(type, LOWER) && inferVariableBounds(type, LOWER).areConsistent();
-  }
-
   private boolean inequal(Type that, Side side) {
     return inequalImpl(that, side, (a, b) -> s -> a.inequal(b, s));
-  }
-
-  private boolean inequalParam(Type that, Side side) {
-    return (this instanceof Variable)
-        || inequalImpl(that, side, (a, b) -> s -> a.inequalParam(b, s));
   }
 
   private boolean inequalImpl(Type that, Side side,

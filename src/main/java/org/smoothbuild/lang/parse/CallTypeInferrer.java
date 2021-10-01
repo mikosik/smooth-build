@@ -57,7 +57,7 @@ public class CallTypeInferrer {
     return maybeLogs(logBuffer);
   }
 
-  private static void findIllegalTypeAssignmentErrors(CallNode call,
+  private void findIllegalTypeAssignmentErrors(CallNode call,
       List<Optional<ArgNode>> assignedList, List<ItemSignature> parameters, Logger logger) {
     range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isPresent())
@@ -66,8 +66,8 @@ public class CallTypeInferrer {
         .forEach(logger::log);
   }
 
-  private static boolean isAssignable(ItemSignature parameter, ArgNode arg) {
-    return parameter.type().isParamAssignableFrom(arg.type().get());
+  private boolean isAssignable(ItemSignature parameter, ArgNode arg) {
+    return typing.isParamAssignable(parameter.type(), arg.type().get());
   }
 
   private static Log illegalAssignmentError(CallNode call, ItemSignature parameter, ArgNode arg) {

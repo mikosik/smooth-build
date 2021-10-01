@@ -122,7 +122,7 @@ public class TypeInferrer {
         if (referencable.typeNode().isPresent()) {
           Optional<Type> type = createType(referencable.typeNode().get());
           type.ifPresent(t -> exprType.ifPresent(et -> {
-            if (!t.isAssignableFrom(et)) {
+            if (!typing.isAssignable(t, et)) {
               logBuffer.log(parseError(referencable, "`" + referencable.name()
                   + "` has body which type is " + et.q()
                   + " and it is not convertible to its declared type " + t.q()
@@ -157,7 +157,7 @@ public class TypeInferrer {
             var optDefaultArgumentType = optDefaultArgument.get().type();
             if (optDefaultArgumentType.isPresent()) {
               Type dt = optDefaultArgumentType.get();
-              if (!type.isParamAssignableFrom(dt)) {
+              if (!typing.isParamAssignable(type, dt)) {
                 logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + type.q()
                     + " so it cannot have default argument of type " + dt.q() + "."));
               }

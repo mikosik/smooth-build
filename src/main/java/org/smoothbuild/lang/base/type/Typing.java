@@ -123,36 +123,36 @@ public class Typing {
         && target.inferVariableBounds(source, LOWER).areConsistent();
   }
 
-  private boolean inequal(Type target, Type source, Side side) {
-    return inequalImpl(target, source, side, (a, b) -> s -> inequal(a, b, s));
+  private boolean inequal(Type typeA, Type typeB, Side side) {
+    return inequalImpl(typeA, typeB, side, (a, b) -> s -> inequal(a, b, s));
   }
 
-  private boolean inequalParam(Type target, Type source, Side side) {
-    return (target instanceof Variable)
-        || inequalImpl(target, source, side, (a, b) -> s -> inequalParam(a, b, s));
+  private boolean inequalParam(Type TypeA, Type typeB, Side side) {
+    return (TypeA instanceof Variable)
+        || inequalImpl(TypeA, typeB, side, (a, b) -> s -> inequalParam(a, b, s));
   }
 
-  private boolean inequalImpl(Type target, Type source, Side side,
+  private boolean inequalImpl(Type typeA, Type typeB, Side side,
       BiFunction<Type, Type, Function<Side, Boolean>> inequalityFunction) {
-    return inequalByEdgeCases(target, source, side)
-        || inequalByConstruction(target, source, side, inequalityFunction);
+    return inequalByEdgeCases(typeA, typeB, side)
+        || inequalByConstruction(typeA, typeB, side, inequalityFunction);
   }
 
-  private boolean inequalByEdgeCases(Type target, Type source, Side side) {
-    return source.equals(side.edge())
-        || target.equals(side.reversed().edge());
+  private boolean inequalByEdgeCases(Type typeA, Type typeB, Side side) {
+    return typeB.equals(side.edge())
+        || typeA.equals(side.reversed().edge());
   }
 
-  private boolean inequalByConstruction(Type target, Type that, Side s,
+  private boolean inequalByConstruction(Type typeA, Type typeB, Side s,
       BiFunction<Type, Type, Function<Side, Boolean>> f) {
-    return target.typeConstructor().equals(that.typeConstructor())
+    return typeA.typeConstructor().equals(typeB.typeConstructor())
         && allMatch(
-            target.covariants(),
-            that.covariants(),
+            typeA.covariants(),
+            typeB.covariants(),
             (a, b) -> f.apply(a, b).apply(s))
         && allMatch(
-            target.contravariants(),
-            that.contravariants(),
+            typeA.contravariants(),
+            typeB.contravariants(),
             (a, b) -> f.apply(a, b).apply(s.reversed()));
   }
 }
