@@ -1,10 +1,16 @@
 package org.smoothbuild.lang.base.type;
 
+import static com.google.common.collect.Iterables.concat;
+import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
+import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
+import static org.smoothbuild.lang.base.type.BoundsMap.merge;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Lists.zip;
 
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -120,7 +126,7 @@ public class Typing {
 
   public boolean isParamAssignable(Type target, Type source) {
     return inequalParam(target, source, LOWER)
-        && target.inferVariableBounds(source, LOWER).areConsistent();
+        && inferVariableBounds(target, source, LOWER).areConsistent();
   }
 
   private boolean inequal(Type typeA, Type typeB, Side side) {
@@ -155,4 +161,35 @@ public class Typing {
             typeB.contravariants(),
             (a, b) -> f.apply(a, b).apply(s.reversed()));
   }
+
+  public BoundsMap inferVariableBounds(
+      List<Type> typesA, List<Type> typesB, Side side) {
+    return BoundsMap.merge(zip(typesA, typesB, inferFunction(side)));
+  }
+
+  public BoundsMap inferVariableBounds(Type typeA, Type typeB, Side side) {
+    if (typeA instanceof Variable variable) {
+      return boundsMap(new Bounded(variable, oneSideBound(side, typeB)));
+    } else if (typeB.equals(side.edge())) {
+      return inferVariableBoundFromEdge(typeA, side);
+    } else if (typeA.typeConstructor().equals(typeB.typeConstructor())) {
+      return merge(concat(
+          zip(typeA.covariants(), typeB.covariants(), inferFunction(side)),
+          zip(typeA.contravariants(), typeB.contravariants(), inferFunction(side.reversed()))));
+    } else {
+      return boundsMap();
+    }
+  }
+
+  private BiFunction<Type, Type, BoundsMap> inferFunction(Side side) {
+    return (Type a, Type b) -> inferVariableBounds(a, b, side);
+  }
+
+  private BoundsMap inferVariableBoundFromEdge(Type type, Side side) {
+    Side reversed = side.reversed();
+    return merge(concat(
+        map(type.covariants(), t -> inferVariableBounds(t, side.edge(), side)),
+        map(type.contravariants(), t -> inferVariableBounds(t, reversed.edge(), reversed))));
+  }
+
 }
