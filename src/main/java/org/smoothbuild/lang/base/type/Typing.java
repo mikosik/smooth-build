@@ -164,8 +164,7 @@ public class Typing {
             (a, b) -> f.apply(a, b).apply(s.reversed()));
   }
 
-  public BoundsMap inferVariableBounds(
-      List<Type> typesA, List<Type> typesB, Side side) {
+  public BoundsMap inferVariableBounds(List<Type> typesA, List<Type> typesB, Side side) {
     return BoundsMap.merge(zip(typesA, typesB, inferFunction(side)));
   }
 
