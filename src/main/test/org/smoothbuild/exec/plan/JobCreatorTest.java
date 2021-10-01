@@ -74,7 +74,7 @@ public class JobCreatorTest extends TestingContext {
   private JobCreator taskCreator(
       Map<Class<?>, Handler<?>> additionalHandlers, Function... functions) {
     var definitions = definitions(functions);
-    return new JobCreator(definitions, new TypeToSpecConverter(objectFactory()), null,
+    return new JobCreator(definitions, new TypeToSpecConverter(objectFactory()), null, typing(),
         additionalHandlers);
   }
 

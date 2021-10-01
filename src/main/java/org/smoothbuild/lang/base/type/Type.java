@@ -1,9 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static com.google.common.collect.Iterables.concat;
-import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
-import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
-import static org.smoothbuild.lang.base.type.BoundsMap.merge;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.list;
@@ -119,36 +115,6 @@ public abstract class Type {
     } else {
       return this;
     }
-  }
-
-  public static BoundsMap inferVariableBounds(
-      List<Type> typesA, List<Type> typesB, Side side) {
-    return BoundsMap.merge(zip(typesA, typesB, inferFunction(side)));
-  }
-
-  public BoundsMap inferVariableBounds(Type that, Side side) {
-    if (this instanceof Variable variable) {
-      return boundsMap(new Bounded(variable, oneSideBound(side, that)));
-    } else if (that.equals(side.edge())) {
-      return inferVariableBoundFromEdge(side);
-    } else if (this.typeConstructor.equals(that.typeConstructor)) {
-      return merge(concat(
-          zip(covariants, that.covariants, inferFunction(side)),
-          zip(contravariants, that.contravariants, inferFunction(side.reversed()))));
-    } else {
-      return boundsMap();
-    }
-  }
-
-  private static BiFunction<Type, Type, BoundsMap> inferFunction(Side side) {
-    return (Type a, Type b) -> a.inferVariableBounds(b, side);
-  }
-
-  private BoundsMap inferVariableBoundFromEdge(Side side) {
-    Side reversed = side.reversed();
-    return merge(concat(
-        map(covariants, t -> t.inferVariableBounds(side.edge(), side)),
-        map(contravariants, t1 -> t1.inferVariableBounds(reversed.edge(), reversed))));
   }
 
   public Type mergeWith(Type that, Side direction) {

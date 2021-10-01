@@ -10,7 +10,6 @@ import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
-import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.base.type.Types.blobT;
 import static org.smoothbuild.lang.base.type.Types.intT;
 import static org.smoothbuild.lang.base.type.Types.stringT;
@@ -64,6 +63,7 @@ import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
+import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -83,20 +83,22 @@ public class JobCreator {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final MethodLoader methodLoader;
+  private final Typing typing;
   private final Map<Class<?>, Handler<?>> map;
 
   @Inject
   public JobCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
-      MethodLoader methodLoader) {
-    this(definitions, toSpecConverter, methodLoader, ImmutableMap.of());
+      MethodLoader methodLoader, Typing typing) {
+    this(definitions, toSpecConverter, methodLoader, typing, ImmutableMap.of());
   }
 
   // Visible for testing
   JobCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
-      MethodLoader methodLoader, Map<Class<?>, Handler<?>> additionalHandlers) {
+      MethodLoader methodLoader, Typing typing, Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;
     this.toSpecConverter = toSpecConverter;
     this.methodLoader = methodLoader;
+    this.typing = typing;
     this.map = constructHandlers(additionalHandlers);
   }
 
@@ -208,10 +210,10 @@ public class JobCreator {
         actualResultType, function, arguments, location, variables, scope, JobCreator.this);
   }
 
-  private static BoundsMap inferVariablesInFunctionCall(Job function, List<Job> arguments) {
+  private BoundsMap inferVariablesInFunctionCall(Job function, List<Job> arguments) {
     var functionType = (FunctionType) function.type();
     var argumentTypes = map(arguments, Job::type);
-    return inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
+    return typing.inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
   }
 
   private List<Job> argumentLazyJobs(Scope<Job> scope, Job function,
