@@ -108,7 +108,7 @@ public class TestingContext {
 
   public Typing typing() {
     if (typing == null) {
-      typing = new Typing();
+      typing = new Typing(specDb());
     }
     return typing;
   }

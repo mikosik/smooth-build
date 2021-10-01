@@ -3,13 +3,23 @@ package org.smoothbuild.lang.base.type;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
 import static org.smoothbuild.util.Lists.map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import org.smoothbuild.db.object.db.SpecDb;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 @Singleton
 public class Typing {
+  private final SpecDb specDb;
+
+  @Inject
+  public Typing(SpecDb specDb) {
+    this.specDb = specDb;
+  }
+
   public ImmutableSet<BaseType> baseTypes() {
     return Types.BASE_TYPES;
   }

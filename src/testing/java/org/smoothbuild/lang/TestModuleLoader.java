@@ -22,6 +22,7 @@ import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.parse.ModuleLoader;
 import org.smoothbuild.lang.parse.ReferencableLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -130,7 +131,7 @@ public class TestModuleLoader {
   }
 
   private Maybe<SModule> load() {
-    Typing typing = new Typing();
+    Typing typing = new Typing(new TestingContext().specDb());
     ModuleLoader moduleLoader = new ModuleLoader(
         new TypeInferrer(typing), new ReferencableLoader(typing));
     return moduleLoader.loadModule(
