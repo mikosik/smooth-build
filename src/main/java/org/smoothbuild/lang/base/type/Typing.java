@@ -1,7 +1,12 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
+import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
+
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -107,5 +112,47 @@ public class Typing {
   private static FunctionType newFunctionType(
       Type result, ImmutableList<ItemSignature> parameters) {
     return Types.functionT(result, parameters);
+  }
+
+  public boolean isAssignable(Type target, Type source) {
+    return inequal(target, source, LOWER);
+  }
+
+  public boolean isParamAssignable(Type target, Type source) {
+    return inequalParam(target, source, LOWER)
+        && target.inferVariableBounds(source, LOWER).areConsistent();
+  }
+
+  private boolean inequal(Type target, Type source, Side side) {
+    return inequalImpl(target, source, side, (a, b) -> s -> inequal(a, b, s));
+  }
+
+  private boolean inequalParam(Type target, Type source, Side side) {
+    return (target instanceof Variable)
+        || inequalImpl(target, source, side, (a, b) -> s -> inequalParam(a, b, s));
+  }
+
+  private boolean inequalImpl(Type target, Type source, Side side,
+      BiFunction<Type, Type, Function<Side, Boolean>> inequalityFunction) {
+    return inequalByEdgeCases(target, source, side)
+        || inequalByConstruction(target, source, side, inequalityFunction);
+  }
+
+  private boolean inequalByEdgeCases(Type target, Type source, Side side) {
+    return source.equals(side.edge())
+        || target.equals(side.reversed().edge());
+  }
+
+  private boolean inequalByConstruction(Type target, Type that, Side s,
+      BiFunction<Type, Type, Function<Side, Boolean>> f) {
+    return target.typeConstructor().equals(that.typeConstructor())
+        && allMatch(
+            target.covariants(),
+            that.covariants(),
+            (a, b) -> f.apply(a, b).apply(s))
+        && allMatch(
+            target.contravariants(),
+            that.contravariants(),
+            (a, b) -> f.apply(a, b).apply(s.reversed()));
   }
 }

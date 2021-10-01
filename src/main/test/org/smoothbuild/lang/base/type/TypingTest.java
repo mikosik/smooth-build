@@ -49,4 +49,30 @@ public class TypingTest extends TestingContext {
         .add(Arguments.of(a(f(BLOB, item(BLOB, "p"))), a(f(BLOB, BLOB))))
         .build();
   }
+
+  @ParameterizedTest
+  @MethodSource("isAssignable_test_data")
+  public void isAssignable(TestedAssignmentSpec spec) {
+    Type target = spec.target().strippedType();
+    Type source = spec.source().strippedType();
+    assertThat(typing().isAssignable(target, source))
+        .isEqualTo(spec.allowed());
+  }
+
+  public static List<TestedAssignmentSpec> isAssignable_test_data() {
+    return TestedAssignmentSpec.assignment_test_specs(true);
+  }
+
+  @ParameterizedTest
+  @MethodSource("isParamAssignable_test_data")
+  public void isParamAssignable(TestedAssignmentSpec spec) {
+    Type target = spec.target().strippedType();
+    Type source = spec.source().strippedType();
+    assertThat(typing().isParamAssignable(target, source))
+        .isEqualTo(spec.allowed());
+  }
+
+  public static List<TestedAssignmentSpec> isParamAssignable_test_data() {
+    return TestedAssignmentSpec.parameter_assignment_test_specs(true);
+  }
 }

@@ -45,6 +45,18 @@ public abstract class Type {
     return name;
   }
 
+  public TypeConstructor typeConstructor() {
+    return typeConstructor;
+  }
+
+  public ImmutableList<Type> covariants() {
+    return covariants;
+  }
+
+  public ImmutableList<Type> contravariants() {
+    return contravariants;
+  }
+
   public String q() {
     return "`" + name + "`";
   }
