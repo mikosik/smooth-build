@@ -1,14 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.Types.lower;
-import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -74,32 +70,6 @@ public abstract class Type {
    */
   public ImmutableSet<Variable> variables() {
       return variables;
-  }
-
-  public boolean isAssignableFrom(Type type) {
-    return inequal(type, lower());
-  }
-
-  private boolean inequal(Type that, Sides.Side side) {
-    return inequalImpl(that, side, (a, b) -> s -> a.inequal(b, s));
-  }
-
-  private boolean inequalImpl(Type that, Sides.Side side,
-      BiFunction<Type, Type, Function<Sides.Side, Boolean>> inequalityFunction) {
-    return inequalByEdgeCases(that, side)
-        || inequalByConstruction(that, side, inequalityFunction);
-  }
-
-  private boolean inequalByEdgeCases(Type that, Sides.Side side) {
-    return that.equals(side.edge())
-        || this.equals(side.reversed().edge());
-  }
-
-  private boolean inequalByConstruction(Type that, Sides.Side s,
-      BiFunction<Type, Type, Function<Sides.Side, Boolean>> f) {
-    return this.typeConstructor.equals(that.typeConstructor)
-        && allMatch(covariants, that.covariants, (a, b) -> f.apply(a, b).apply(s))
-        && allMatch(contravariants, that.contravariants, (a, b) -> f.apply(a, b).apply(s.reversed()));
   }
 
   public Type strip() {

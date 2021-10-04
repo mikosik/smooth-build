@@ -330,17 +330,6 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("isAssignableFrom_test_data")
-  public void isAssignableFrom(TestedAssignmentSpec spec) {
-    assertThat(spec.target().strippedType().isAssignableFrom(spec.source().strippedType()))
-        .isEqualTo(spec.allowed());
-  }
-
-  public static List<TestedAssignmentSpec> isAssignableFrom_test_data() {
-    return TestedAssignmentSpec.assignment_test_specs(true);
-  }
-
-  @ParameterizedTest
   @MethodSource("elemType_test_data")
   public void elemType(ArrayType type, Type expected) {
     assertThat(type.elemType())
