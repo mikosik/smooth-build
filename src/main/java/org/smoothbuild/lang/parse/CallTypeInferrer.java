@@ -51,7 +51,8 @@ public class CallTypeInferrer {
         logBuffer.logAll(variableProblems);
         return maybeLogs(logBuffer);
       }
-      return maybeValueAndLogs(resultType.mapVariables(boundedVariables, LOWER), logBuffer);
+      Type mapped = typing.mapVariables(resultType, boundedVariables, LOWER);
+      return maybeValueAndLogs(mapped, logBuffer);
     }
     return maybeLogs(logBuffer);
   }

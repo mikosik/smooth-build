@@ -180,7 +180,7 @@ public class Typing {
   public Type inferResultType(FunctionType functionType, List<Type> argumentTypes) {
     var boundedVariables = inferVariableBoundsInCall(functionType.resultType(),
         functionType.parameterTypes(), argumentTypes);
-    return functionType.resultType().mapVariables(boundedVariables, LOWER);
+    return mapVariables(functionType.resultType(), boundedVariables, LOWER);
   }
 
   public BoundsMap inferVariableBoundsInCall(Type resultTypes,

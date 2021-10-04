@@ -190,7 +190,7 @@ public class JobCreator {
       return callEagerJob(scope, function, arguments, location, variables);
     } else {
       var functionType = (FunctionType) function.type();
-      var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
+      var actualResultType = typing.mapVariables(functionType.resultType(), variables, LOWER);
       return new LazyJob(actualResultType, location,
           () -> callEagerJob(scope, function, arguments, location, variables));
     }
@@ -205,7 +205,7 @@ public class JobCreator {
   private Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
       Location location, BoundsMap variables) {
     var functionType = (FunctionType) function.type();
-    var actualResultType = functionType.resultType().mapVariables(variables, LOWER);
+    var actualResultType = typing.mapVariables(functionType.resultType(), variables, LOWER);
     return new ApplyJob(
         actualResultType, function, arguments, location, variables, scope, JobCreator.this);
   }
@@ -479,7 +479,9 @@ public class JobCreator {
 
   private ImmutableList<Job> convertedArgumentEagerJob(
       List<Job> arguments, NativeFunction function, BoundsMap variables) {
-    var actualTypes = map(function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
+    var actualTypes = map(
+        function.type().parameterTypes(),
+        t -> typing.mapVariables(t, variables, LOWER));
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }
 
