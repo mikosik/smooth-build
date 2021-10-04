@@ -95,11 +95,7 @@ public class Typing {
   private Type stripArrayType(ArrayType arrayType) {
     Type elemType = arrayType.elemType();
     Type newElemType = strip(elemType);
-    if (elemType == newElemType) {
-      return arrayType;
-    } else {
-      return newArrayType(newElemType);
-    }
+    return createArrayType(arrayType, newElemType);
   }
 
   private Type stripFunctionType(FunctionType functionType) {
@@ -107,19 +103,7 @@ public class Typing {
     var newResultType = strip(oldResultType);
     var oldParameters = functionType.parameters();
     var newParameters = map(oldParameters, i -> itemSignature(strip(i.type())));
-    if (oldResultType == newResultType && oldParameters.equals(newParameters)) {
-      return functionType;
-    }
-    return newFunctionType(newResultType, newParameters);
-  }
-
-  private static ArrayType newArrayType(Type elemType) {
-    return Types.arrayT(elemType);
-  }
-
-  private static FunctionType newFunctionType(
-      Type result, ImmutableList<ItemSignature> parameters) {
-    return Types.functionT(result, parameters);
+    return createFunctionType(functionType, newResultType, newParameters);
   }
 
   public boolean isAssignable(Type target, Type source) {
@@ -204,5 +188,56 @@ public class Typing {
     var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, LOWER);
     var resultVariables = Sets.map(resultTypes.variables(), v -> new Bounded(v, unbounded()));
     return boundedVariables.mergeWith(resultVariables);
+  }
+
+  public Type mapVariables(Type type, BoundsMap boundsMap, Side side) {
+    if (type.isPolytype()) {
+      if (type instanceof Variable) {
+        return boundsMap.map().get(type).bounds().get(side);
+      } else if (type instanceof ArrayType oldArrayType) {
+        Type elemType = oldArrayType.elemType();
+        Type newElemType = mapVariables(elemType, boundsMap, side);
+        return createArrayType(oldArrayType, newElemType);
+      } else if (type instanceof FunctionType functionType) {
+        var oldResultType = functionType.resultType();
+        var newResultType = mapVariables(oldResultType, boundsMap, side);
+        var oldParameters = functionType.parameters();
+        var newParameters = map(
+            oldParameters,
+            i -> itemSignature(mapVariables(i.type(), boundsMap, side.reversed())));
+        return createFunctionType(functionType, newResultType, newParameters);
+      } else {
+        throw new RuntimeException(
+            "Unexpected Type subclass: " + type.getClass().getCanonicalName());
+      }
+    } else {
+      return type;
+    }
+  }
+
+  private static FunctionType createFunctionType(FunctionType functionType, Type newResultType,
+      ImmutableList<ItemSignature> newParameters) {
+    if (functionType.resultType() == newResultType && functionType
+        .parameters().equals(newParameters)) {
+      return functionType;
+    }
+    return newFunctionType(newResultType, newParameters);
+  }
+
+  private static FunctionType newFunctionType(
+      Type result, ImmutableList<ItemSignature> parameters) {
+    return Types.functionT(result, parameters);
+  }
+
+  private ArrayType createArrayType(ArrayType arrayType, Type newElemType) {
+    if (arrayType.elemType() == newElemType) {
+      return arrayType;
+    } else {
+      return newArrayType(newElemType);
+    }
+  }
+
+  private static ArrayType newArrayType(Type elemType) {
+    return Types.arrayT(elemType);
   }
 }

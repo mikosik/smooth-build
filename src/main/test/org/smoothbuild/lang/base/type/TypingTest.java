@@ -5,7 +5,9 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
+import static org.smoothbuild.lang.base.type.TestingTypes.ALL_TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
+import static org.smoothbuild.lang.base.type.TestingTypes.B;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_TYPES;
@@ -180,5 +182,35 @@ public class TypingTest extends TestingContext {
       }
     }
     return r;
+  }
+
+  @ParameterizedTest
+  @MethodSource("mapVariables_test_data")
+  public void mapVariables(Type type, BoundsMap boundsMap, Type expected) {
+    assertThat(typing().mapVariables(type, boundsMap, LOWER))
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> mapVariables_test_data() {
+    var result = new ArrayList<Arguments>();
+    for (Type type : ALL_TESTED_TYPES) {
+      result.add(arguments(X, bm(X, LOWER, type), type));
+      result.add(arguments(a(X), bm(X, LOWER, type), a(type)));
+      result.add(arguments(X, bm(X, LOWER, a(type)), a(type)));
+      result.add(arguments(a(X), bm(X, LOWER, a(type)), a(a(type))));
+    }
+    for (Type newA : ALL_TESTED_TYPES) {
+      for (Type newB : ALL_TESTED_TYPES) {
+        result.add(arguments(f(A, B), bm(A, LOWER, newA, B, UPPER, newB), f(newA, newB)));
+      }
+    }
+    for (Type type : ELEMENTARY_TYPES) {
+      result.add(arguments(type, bm(), type));
+      result.add(arguments(a(a(type)), bm(), a(a(type))));
+
+      result.add(arguments(f(type), bm(), f(type)));
+      result.add(arguments(f(BOOL, type), bm(), f(BOOL, type)));
+    }
+    return result;
   }
 }
