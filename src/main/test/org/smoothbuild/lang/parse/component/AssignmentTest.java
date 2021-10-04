@@ -69,6 +69,8 @@ public class AssignmentTest {
     }
   }
 
+  private static final Typing TYPING = new TestingContext().typing();
+
   @ParameterizedTest
   @MethodSource("parameter_assignment_test_data")
   public void argument_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
@@ -82,7 +84,7 @@ public class AssignmentTest {
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      Type type = targetType.type().strip();
+      Type type = TYPING.strip(targetType.type());
       FunctionType functionType =
           new FunctionType(type, list(new ItemSignature(type, "target", empty())));
       module.loadsWithError(3, "In call to function with type " + functionType.q()
@@ -104,7 +106,7 @@ public class AssignmentTest {
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      Type type = targetType.type().strip();
+      Type type = TYPING.strip(targetType.type());
       FunctionType functionType =
           new FunctionType(type, list(new ItemSignature(type, "target", empty())));
       module.loadsWithError(3,

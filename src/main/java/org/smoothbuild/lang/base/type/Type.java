@@ -72,18 +72,6 @@ public abstract class Type {
       return variables;
   }
 
-  public Type strip() {
-    if (this instanceof FunctionType || this instanceof ArrayType) {
-      return typeConstructor.construct(stripTypes(covariants), stripTypes(contravariants));
-    } else {
-      return this;
-    }
-  }
-
-  private ImmutableList<Type> stripTypes(ImmutableList<Type> types) {
-    return map(types, Type::strip);
-  }
-
   @Override
   public boolean equals(Object object) {
     if (this == object) {

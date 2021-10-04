@@ -266,13 +266,13 @@ public class JobCreator {
   // ReferenceExpression
 
   private Job referenceLazy(Scope<Job> scope, ReferenceExpression reference) {
-    var type = reference.type().strip();
+    var type = typing.strip(reference.type());
     return new LazyJob(type, reference.location(),
         () -> referenceEager(scope, reference, type));
   }
 
   private Job referenceEager(Scope<Job> scope, ReferenceExpression reference) {
-    return referenceEager(scope, reference, reference.type().strip());
+    return referenceEager(scope, reference, typing.strip(reference.type()));
   }
 
   private Job referenceEager(Scope<Job> scope, ReferenceExpression reference, Type type) {

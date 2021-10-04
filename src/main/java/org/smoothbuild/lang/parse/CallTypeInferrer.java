@@ -80,13 +80,13 @@ public class CallTypeInferrer {
     return "In call to function with type " + call.function().type().get().q() + ": ";
   }
 
-  private static List<Optional<Type>> assignedTypes(
+  private List<Optional<Type>> assignedTypes(
       List<ItemSignature> parameters, List<Optional<ArgNode>> arguments) {
     List<Optional<Type>> assigned = new ArrayList<>();
     for (int i = 0; i < parameters.size(); i++) {
       Optional<ArgNode> arg = arguments.get(i);
       if (arg.isPresent()) {
-        assigned.add(arg.get().type().map(Type::strip));
+        assigned.add(arg.get().type().map(typing::strip));
       } else {
         assigned.add(parameters.get(i).defaultValueType());
       }

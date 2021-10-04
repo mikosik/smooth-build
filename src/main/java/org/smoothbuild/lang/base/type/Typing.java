@@ -247,7 +247,7 @@ public class Typing {
     } else if (reversedEdge.equals(typeA)) {
       return typeB;
     } else if (typeA.equals(typeB)) {
-      return typeA.strip();
+      return strip(typeA);
     } else if (typeA instanceof ArrayType arrayA && typeB instanceof ArrayType arrayB) {
       var elemA = arrayA.elemType();
       var elemB = arrayB.elemType();
