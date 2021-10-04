@@ -103,20 +103,6 @@ public abstract class Type {
         && allMatch(contravariants, that.contravariants, (a, b) -> f.apply(a, b).apply(s.reversed()));
   }
 
-  public Type mapVariables(BoundsMap boundsMap, Side side) {
-    if (isPolytype()) {
-      if (this instanceof Variable) {
-        return boundsMap.map().get(this).bounds().get(side);
-      } else {
-        return typeConstructor.construct(
-            map(covariants, c -> c.mapVariables(boundsMap, side)),
-            map(contravariants, c -> c.mapVariables(boundsMap, side.reversed())));
-      }
-    } else {
-      return this;
-    }
-  }
-
   public Type mergeWith(Type that, Side direction) {
     Side reversed = direction.reversed();
     Type reversedEdge = reversed.edge();
