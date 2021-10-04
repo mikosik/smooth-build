@@ -24,6 +24,8 @@ import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.testing.TestingContext;
 
 public class AssignmentTest {
   @ParameterizedTest
@@ -150,10 +152,11 @@ public class AssignmentTest {
   }
 
   private static List<Arguments> array_element_assignment_test_specs() {
+    Typing typing = new TestingContext().typing();
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        Type commonSuperType = type1.strippedType().mergeWith(type2.strippedType(), upper());
+        Type commonSuperType = typing.merge(type1.strippedType(), type2.strippedType(), upper());
         if (!commonSuperType.contains(anyT())) {
           result.add(Arguments.of(type1, type2, commonSuperType));
         }

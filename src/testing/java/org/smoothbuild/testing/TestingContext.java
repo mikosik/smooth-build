@@ -2,7 +2,6 @@ package org.smoothbuild.testing;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
-
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 

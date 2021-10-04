@@ -4,14 +4,11 @@ import static org.smoothbuild.lang.base.type.Types.lower;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Lists.zip;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
-import org.smoothbuild.lang.base.type.Sides.Side;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -103,28 +100,6 @@ public abstract class Type {
     return this.typeConstructor.equals(that.typeConstructor)
         && allMatch(covariants, that.covariants, (a, b) -> f.apply(a, b).apply(s))
         && allMatch(contravariants, that.contravariants, (a, b) -> f.apply(a, b).apply(s.reversed()));
-  }
-
-  public Type mergeWith(Type that, Sides.Side direction) {
-    Side reversed = direction.reversed();
-    Type reversedEdge = reversed.edge();
-    if (reversedEdge.equals(that)) {
-      return this;
-    } else if (reversedEdge.equals(this)) {
-      return that;
-    } else if (this.equals(that)) {
-      return this.strip();
-    } else if (this.typeConstructor.equals(that.typeConstructor)) {
-      var covar = zip(covariants, that.covariants, mergeWithFunction(direction));
-      var contravar = zip(contravariants, that.contravariants, mergeWithFunction(reversed));
-      return typeConstructor.construct(covar, contravar);
-    } else {
-      return direction.edge();
-    }
-  }
-
-  private static BiFunction<Type, Type, Type> mergeWithFunction(Sides.Side direction) {
-    return (a, b) -> a.mergeWith(b, direction);
   }
 
   public Type strip() {

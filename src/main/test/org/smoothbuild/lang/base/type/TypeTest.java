@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
-import static org.smoothbuild.lang.base.type.TestingTypeGraph.buildGraph;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_HEAD_FUNCTION;
@@ -13,9 +12,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.C;
 import static org.smoothbuild.lang.base.type.TestingTypes.D;
-import static org.smoothbuild.lang.base.type.TestingTypes.DATA;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_TYPES;
-import static org.smoothbuild.lang.base.type.TestingTypes.FLAG;
 import static org.smoothbuild.lang.base.type.TestingTypes.IDENTITY_FUNCTION;
 import static org.smoothbuild.lang.base.type.TestingTypes.INT;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
@@ -32,16 +29,13 @@ import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.functionT;
-import static org.smoothbuild.lang.base.type.Types.lower;
 import static org.smoothbuild.lang.base.type.Types.structT;
-import static org.smoothbuild.lang.base.type.Types.upper;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Sets.set;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -344,66 +338,6 @@ public class TypeTest {
 
   public static List<TestedAssignmentSpec> isAssignableFrom_test_data() {
     return TestedAssignmentSpec.assignment_test_specs(true);
-  }
-
-  @ParameterizedTest
-  @MethodSource("mergeWith_upper_direction_wide_graph_cases")
-  public void mergeWith_upper_direction_wide_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, upper());
-  }
-
-  public static Collection<Arguments> mergeWith_upper_direction_wide_graph_cases() {
-    return buildWideGraph()
-        .buildTestCases(NOTHING);
-  }
-
-  @ParameterizedTest
-  @MethodSource("mergeWith_upper_direction_deep_graph_cases")
-  public void mergeWith_upper_direction_deep_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, upper());
-  }
-
-  public static Collection<Arguments> mergeWith_upper_direction_deep_graph_cases() {
-    return buildGraph(list(BLOB), 2)
-        .buildTestCases(NOTHING);
-  }
-
-  @ParameterizedTest
-  @MethodSource("mergeWith_lower_direction_wide_graph_cases")
-  public void mergeWith_lower_direction_wide_graph_cases(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, lower());
-  }
-
-  public static Collection<Arguments> mergeWith_lower_direction_wide_graph_cases() {
-    return buildWideGraph()
-        .inverse()
-        .buildTestCases(ANY);
-  }
-
-  @ParameterizedTest
-  @MethodSource("mergeWith_lower_direction_deep_graph_cases")
-  public void mergeWith_lower_direction_deep_graph_cases(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, lower());
-  }
-
-  public static Collection<Arguments> mergeWith_lower_direction_deep_graph_cases() {
-    return buildGraph(list(BLOB), 2)
-        .inverse()
-        .buildTestCases(ANY);
-  }
-
-  private static void testMergeBothWays(Type type1, Type type2, Type expected, Sides.Side upper) {
-    assertThat(type1.mergeWith(type2, upper))
-        .isEqualTo(expected);
-    assertThat(type2.mergeWith(type1, upper))
-        .isEqualTo(expected);
-  }
-
-  private static TestingTypeGraph buildWideGraph() {
-    if (BASE_TYPES.size() != 5) {
-      throw new RuntimeException("Add missing type to list below.");
-    }
-    return buildGraph(list(A, B, BLOB, BOOL, DATA, INT, FLAG, PERSON, STRING), 1);
   }
 
   @ParameterizedTest
