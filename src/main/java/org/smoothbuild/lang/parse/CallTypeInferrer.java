@@ -101,7 +101,7 @@ public class CallTypeInferrer {
   private ImmutableList<Log> findVariableProblems(
       CallNode call, BoundsMap boundedVariables) {
     return boundedVariables.map().values().stream()
-        .filter(b -> b.bounds().get(lower()).contains(typing.anyT()))
+        .filter(b -> b.bounds().lower().contains(typing.anyT()))
         .map(b -> parseError(call, "Cannot infer actual type for type variable "
             + b.variable().q() + "."))
         .collect(toImmutableList());

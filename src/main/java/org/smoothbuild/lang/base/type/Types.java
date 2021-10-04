@@ -78,7 +78,6 @@ public class Types {
     return new FunctionType(resultType, ImmutableList.copyOf(parameters));
   }
 
-
   public static Sides.Side upper() {
     return SIDES.upper();
   }

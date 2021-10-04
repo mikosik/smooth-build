@@ -1,6 +1,8 @@
 package org.smoothbuild.testing;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
+
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -56,8 +58,13 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
+import org.smoothbuild.lang.base.type.Bounded;
+import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.Sides;
+import org.smoothbuild.lang.base.type.Sides.Side;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.Variable;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.inject.util.Providers;
@@ -480,5 +487,22 @@ public class TestingContext {
 
   public Sides.Side upper() {
     return typing().upper();
+  }
+
+  public BoundsMap bm(
+      Variable var1, Side side1, Type bound1,
+      Variable var2, Side side2, Type bound2) {
+    return
+        typing().mergeWith(
+            bm(var1, side1, bound1),
+            list(new Bounded(var2, typing().oneSideBound(side2, bound2))));
+  }
+
+  public BoundsMap bm(Variable var, Side side, Type bound) {
+    return boundsMap(new Bounded(var, typing().oneSideBound(side, bound)));
+  }
+
+  public BoundsMap bm() {
+    return boundsMap();
   }
 }

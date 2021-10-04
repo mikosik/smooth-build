@@ -1,14 +1,15 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.collect.Iterables.concat;
-import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -20,6 +21,7 @@ import org.smoothbuild.lang.base.type.Sides.Side;
 import org.smoothbuild.util.Sets;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 @Singleton
@@ -91,6 +93,13 @@ public class Typing {
     return new Bounds(nothingT(), anyT());
   }
 
+  public Bounds oneSideBound(Side side, Type type) {
+    return side.dispatch(
+        () -> new Bounds(type, anyT()),
+        () -> new Bounds(nothingT(), type)
+    );
+  }
+
   public Type strip(Type type) {
     // TODO in java 17 use pattern matching switch
     if (type instanceof ArrayType arrayType) {
@@ -122,7 +131,12 @@ public class Typing {
 
   public boolean isParamAssignable(Type target, Type source) {
     return inequalParam(target, source, lower())
-        && inferVariableBounds(target, source, lower()).areConsistent();
+        && areConsistent(inferVariableBounds(target, source, lower()));
+  }
+
+  private boolean areConsistent(BoundsMap boundsMap) {
+    return boundsMap.map().values().stream()
+        .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
   private boolean inequal(Type typeA, Type typeB, Side side) {
@@ -159,7 +173,7 @@ public class Typing {
   }
 
   public BoundsMap inferVariableBounds(List<Type> typesA, List<Type> typesB, Side side) {
-    return BoundsMap.merge(zip(typesA, typesB, inferFunction(side)));
+    return merge(zip(typesA, typesB, inferFunction(side)));
   }
 
   public BoundsMap inferVariableBounds(Type typeA, Type typeB, Side side) {
@@ -168,7 +182,7 @@ public class Typing {
     } else if (typeB.equals(side.edge())) {
       return inferVariableBoundFromEdge(typeA, side);
     } else if (typeA.typeConstructor().equals(typeB.typeConstructor())) {
-      return BoundsMap.merge(concat(
+      return merge(concat(
           zip(typeA.covariants(), typeB.covariants(), inferFunction(side)),
           zip(typeA.contravariants(), typeB.contravariants(), inferFunction(side.reversed()))));
     } else {
@@ -182,7 +196,7 @@ public class Typing {
 
   private BoundsMap inferVariableBoundFromEdge(Type type, Side side) {
     Side reversed = side.reversed();
-    return BoundsMap.merge(concat(
+    return merge(concat(
         map(type.covariants(), t -> inferVariableBounds(t, side.edge(), side)),
         map(type.contravariants(), t -> inferVariableBounds(t, reversed.edge(), reversed))));
   }
@@ -197,7 +211,7 @@ public class Typing {
       List<Type> parameterTypes, List<Type> argumentTypes) {
     var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, lower());
     var resultVariables = Sets.map(resultTypes.variables(), v -> new Bounded(v, unbounded()));
-    return boundedVariables.mergeWith(resultVariables);
+    return mergeWith(boundedVariables, resultVariables);
   }
 
   public Type mapVariables(Type type, BoundsMap boundsMap, Side side) {
@@ -297,5 +311,32 @@ public class Typing {
 
   private static ArrayType newArrayType(Type elemType) {
     return Types.arrayT(elemType);
+  }
+
+  public BoundsMap merge(Iterable<BoundsMap> iterable) {
+    var result = new HashMap<Variable, Bounded>();
+    for (BoundsMap boundsMap : iterable) {
+      mergeToMap(result, boundsMap.map().values());
+    }
+    return new BoundsMap(ImmutableMap.copyOf(result));
+  }
+
+  public BoundsMap mergeWith(BoundsMap boundsMap, Iterable<Bounded> boundeds) {
+    var result = new HashMap<>(boundsMap.map());
+    mergeToMap(result, boundeds);
+    return new BoundsMap(ImmutableMap.copyOf(result));
+  }
+
+  private void mergeToMap(Map<Variable, Bounded> map, Iterable<Bounded> boundeds) {
+    for (Bounded bounded : boundeds) {
+      map.merge(bounded.variable(), bounded,
+          (a, b) -> new Bounded(a.variable(), merge(a.bounds(), b.bounds())));
+    }
+  }
+
+  public Bounds merge(Bounds boundsA, Bounds boundsB) {
+    return new Bounds(
+        merge(boundsA.lower(), boundsB.lower(), upper()),
+        merge(boundsA.upper(), boundsB.upper(), lower()));
   }
 }
