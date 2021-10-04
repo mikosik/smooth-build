@@ -56,6 +56,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
+import org.smoothbuild.lang.base.type.Sides;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -471,5 +472,13 @@ public class TestingContext {
 
   public Const strExpr(String string) {
     return constExpr(strVal(string));
+  }
+
+  public Sides.Side lower() {
+    return typing().lower();
+  }
+
+  public Sides.Side upper() {
+    return typing().upper();
   }
 }

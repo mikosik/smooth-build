@@ -8,10 +8,9 @@ import static org.smoothbuild.exec.job.TaskKind.SELECT;
 import static org.smoothbuild.exec.job.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
-import static org.smoothbuild.lang.base.type.Side.LOWER;
-import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Types.blobT;
 import static org.smoothbuild.lang.base.type.Types.intT;
+import static org.smoothbuild.lang.base.type.Types.lower;
 import static org.smoothbuild.lang.base.type.Types.stringT;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
@@ -190,7 +189,7 @@ public class JobCreator {
       return callEagerJob(scope, function, arguments, location, variables);
     } else {
       var functionType = (FunctionType) function.type();
-      var actualResultType = typing.mapVariables(functionType.resultType(), variables, LOWER);
+      var actualResultType = typing.mapVariables(functionType.resultType(), variables, lower());
       return new LazyJob(actualResultType, location,
           () -> callEagerJob(scope, function, arguments, location, variables));
     }
@@ -205,7 +204,7 @@ public class JobCreator {
   private Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
       Location location, BoundsMap variables) {
     var functionType = (FunctionType) function.type();
-    var actualResultType = typing.mapVariables(functionType.resultType(), variables, LOWER);
+    var actualResultType = typing.mapVariables(functionType.resultType(), variables, lower());
     return new ApplyJob(
         actualResultType, function, arguments, location, variables, scope, JobCreator.this);
   }
@@ -213,7 +212,7 @@ public class JobCreator {
   private BoundsMap inferVariablesInFunctionCall(Job function, List<Job> arguments) {
     var functionType = (FunctionType) function.type();
     var argumentTypes = map(arguments, Job::type);
-    return typing.inferVariableBounds(functionType.parameterTypes(), argumentTypes, LOWER);
+    return typing.inferVariableBounds(functionType.parameterTypes(), argumentTypes, lower());
   }
 
   private List<Job> argumentLazyJobs(Scope<Job> scope, Job function,
@@ -306,11 +305,11 @@ public class JobCreator {
     return arrayEager(arrayLiteral, elements, actualType);
   }
 
-  private static Optional<ArrayType> arrayType(List<Job> elements) {
+  private Optional<ArrayType> arrayType(List<Job> elements) {
     return elements
         .stream()
         .map(Job::type)
-        .reduce((typeA, typeB) -> typeA.mergeWith(typeB, UPPER))
+        .reduce((typeA, typeB) -> typeA.mergeWith(typeB, typing.upper()))
         .map(Types::arrayT);
   }
 
@@ -481,7 +480,7 @@ public class JobCreator {
       List<Job> arguments, NativeFunction function, BoundsMap variables) {
     var actualTypes = map(
         function.type().parameterTypes(),
-        t -> typing.mapVariables(t, variables, LOWER));
+        t -> typing.mapVariables(t, variables, lower()));
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }
 

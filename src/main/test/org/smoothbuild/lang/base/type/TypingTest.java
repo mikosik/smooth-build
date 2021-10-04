@@ -2,8 +2,6 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.Side.LOWER;
-import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TestingTypeGraph.buildGraph;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ALL_TESTED_TYPES;
@@ -35,6 +33,7 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.lang.base.type.Sides.Side;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -97,15 +96,16 @@ public class TypingTest extends TestingContext {
     return TestedAssignmentSpec.parameter_assignment_test_specs(true);
   }
 
-
   @ParameterizedTest
   @MethodSource("inferVariableBounds_test_data")
   public void inferVariableBounds(Type type, Type assigned, BoundsMap expected) {
-    assertThat(typing().inferVariableBounds(type, assigned, LOWER))
+    assertThat(typing().inferVariableBounds(type, assigned, lower()))
         .isEqualTo(expected);
   }
 
   public static List<Arguments> inferVariableBounds_test_data() {
+    Side LOWER = new TestingContext().lower();
+    Side UPPER = new TestingContext().upper();
     var r = new ArrayList<Arguments>();
     for (Type type : concat(ELEMENTARY_TYPES, X)) {
       if (type instanceof NothingType) {
@@ -193,11 +193,14 @@ public class TypingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("mapVariables_test_data")
   public void mapVariables(Type type, BoundsMap boundsMap, Type expected) {
-    assertThat(typing().mapVariables(type, boundsMap, LOWER))
+    assertThat(typing().mapVariables(type, boundsMap, lower()))
         .isEqualTo(expected);
   }
 
   public static List<Arguments> mapVariables_test_data() {
+    Side LOWER = new TestingContext().lower();
+    Side UPPER = new TestingContext().upper();
+
     var result = new ArrayList<Arguments>();
     for (Type type : ALL_TESTED_TYPES) {
       result.add(arguments(X, bm(X, LOWER, type), type));
@@ -223,7 +226,7 @@ public class TypingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("merge_up_wide_graph_cases")
   public void merge_up_wide_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, UPPER);
+    testMergeBothWays(type1, type2, expected, upper());
   }
 
   public static Collection<Arguments> merge_up_wide_graph_cases() {
@@ -234,7 +237,7 @@ public class TypingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("merge_up_deep_graph_cases")
   public void merge_up_deep_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, UPPER);
+    testMergeBothWays(type1, type2, expected, upper());
   }
 
   public static Collection<Arguments> merge_up_deep_graph_cases() {
@@ -245,7 +248,7 @@ public class TypingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("merge_down_wide_graph_cases")
   public void merge_down_wide_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, LOWER);
+    testMergeBothWays(type1, type2, expected, lower());
   }
 
   public static Collection<Arguments> merge_down_wide_graph_cases() {
@@ -257,7 +260,7 @@ public class TypingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("merge_down_deep_graph_cases")
   public void merge_down_deep_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, LOWER);
+    testMergeBothWays(type1, type2, expected, lower());
   }
 
   public static Collection<Arguments> merge_down_deep_graph_cases() {

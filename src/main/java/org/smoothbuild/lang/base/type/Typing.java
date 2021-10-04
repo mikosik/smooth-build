@@ -2,10 +2,8 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.collect.Iterables.concat;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
-import static org.smoothbuild.lang.base.type.Bounds.unbounded;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
-import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
@@ -18,6 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.db.SpecDb;
+import org.smoothbuild.lang.base.type.Sides.Side;
 import org.smoothbuild.util.Sets;
 
 import com.google.common.collect.ImmutableList;
@@ -80,6 +79,18 @@ public class Typing {
     return Types.functionT(resultType, parameters);
   }
 
+  public Sides.Side upper() {
+    return Types.upper();
+  }
+
+  public Sides.Side lower() {
+    return Types.lower();
+  }
+
+  public Bounds unbounded() {
+    return new Bounds(nothingT(), anyT());
+  }
+
   public Type strip(Type type) {
     // TODO in java 17 use pattern matching switch
     if (type instanceof ArrayType arrayType) {
@@ -106,12 +117,12 @@ public class Typing {
   }
 
   public boolean isAssignable(Type target, Type source) {
-    return inequal(target, source, LOWER);
+    return inequal(target, source, lower());
   }
 
   public boolean isParamAssignable(Type target, Type source) {
-    return inequalParam(target, source, LOWER)
-        && inferVariableBounds(target, source, LOWER).areConsistent();
+    return inequalParam(target, source, lower())
+        && inferVariableBounds(target, source, lower()).areConsistent();
   }
 
   private boolean inequal(Type typeA, Type typeB, Side side) {
@@ -179,12 +190,12 @@ public class Typing {
   public Type inferResultType(FunctionType functionType, List<Type> argumentTypes) {
     var boundedVariables = inferVariableBoundsInCall(functionType.resultType(),
         functionType.parameterTypes(), argumentTypes);
-    return mapVariables(functionType.resultType(), boundedVariables, LOWER);
+    return mapVariables(functionType.resultType(), boundedVariables, lower());
   }
 
   public BoundsMap inferVariableBoundsInCall(Type resultTypes,
       List<Type> parameterTypes, List<Type> argumentTypes) {
-    var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, LOWER);
+    var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, lower());
     var resultVariables = Sets.map(resultTypes.variables(), v -> new Bounded(v, unbounded()));
     return boundedVariables.mergeWith(resultVariables);
   }

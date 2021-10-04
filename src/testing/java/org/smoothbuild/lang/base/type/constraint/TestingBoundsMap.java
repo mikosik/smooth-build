@@ -6,7 +6,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.lang.base.type.Bounded;
 import org.smoothbuild.lang.base.type.BoundsMap;
-import org.smoothbuild.lang.base.type.Side;
+import org.smoothbuild.lang.base.type.Sides.Side;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Variable;
 

@@ -2,12 +2,9 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.Side.LOWER;
-import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypeGraph.buildGraph;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
-import static org.smoothbuild.lang.base.type.TestingTypes.ALL_TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_HEAD_FUNCTION;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_LENGTH_FUNCTION;
@@ -35,9 +32,9 @@ import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.functionT;
+import static org.smoothbuild.lang.base.type.Types.lower;
 import static org.smoothbuild.lang.base.type.Types.structT;
-import static org.smoothbuild.lang.base.type.constraint.TestingBoundsMap.bm;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.lang.base.type.Types.upper;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -352,7 +349,7 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("mergeWith_upper_direction_wide_graph_cases")
   public void mergeWith_upper_direction_wide_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, UPPER);
+    testMergeBothWays(type1, type2, expected, upper());
   }
 
   public static Collection<Arguments> mergeWith_upper_direction_wide_graph_cases() {
@@ -363,7 +360,7 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("mergeWith_upper_direction_deep_graph_cases")
   public void mergeWith_upper_direction_deep_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, UPPER);
+    testMergeBothWays(type1, type2, expected, upper());
   }
 
   public static Collection<Arguments> mergeWith_upper_direction_deep_graph_cases() {
@@ -374,7 +371,7 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("mergeWith_lower_direction_wide_graph_cases")
   public void mergeWith_lower_direction_wide_graph_cases(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, LOWER);
+    testMergeBothWays(type1, type2, expected, lower());
   }
 
   public static Collection<Arguments> mergeWith_lower_direction_wide_graph_cases() {
@@ -386,7 +383,7 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("mergeWith_lower_direction_deep_graph_cases")
   public void mergeWith_lower_direction_deep_graph_cases(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, LOWER);
+    testMergeBothWays(type1, type2, expected, lower());
   }
 
   public static Collection<Arguments> mergeWith_lower_direction_deep_graph_cases() {
@@ -395,7 +392,7 @@ public class TypeTest {
         .buildTestCases(ANY);
   }
 
-  private static void testMergeBothWays(Type type1, Type type2, Type expected, Side upper) {
+  private static void testMergeBothWays(Type type1, Type type2, Type expected, Sides.Side upper) {
     assertThat(type1.mergeWith(type2, upper))
         .isEqualTo(expected);
     assertThat(type2.mergeWith(type1, upper))

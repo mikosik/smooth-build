@@ -5,10 +5,10 @@ import static java.lang.String.join;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
 import static org.smoothbuild.lang.base.type.Types.anyT;
+import static org.smoothbuild.lang.base.type.Types.upper;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -153,7 +153,7 @@ public class AssignmentTest {
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        Type commonSuperType = type1.strippedType().mergeWith(type2.strippedType(), UPPER);
+        Type commonSuperType = type1.strippedType().mergeWith(type2.strippedType(), upper());
         if (!commonSuperType.contains(anyT())) {
           result.add(Arguments.of(type1, type2, commonSuperType));
         }

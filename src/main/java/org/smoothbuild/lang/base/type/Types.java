@@ -35,6 +35,8 @@ public class Types {
           .add(ANY)
           .build();
 
+  private static final Sides SIDES = new Sides(anyT(), nothingT());
+
   public static Variable variable(String name) {
     checkArgument(isVariableName(name), "Illegal type variable name '%s'", name);
     return new Variable(name);
@@ -74,5 +76,14 @@ public class Types {
 
   public static FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
     return new FunctionType(resultType, ImmutableList.copyOf(parameters));
+  }
+
+
+  public static Sides.Side upper() {
+    return SIDES.upper();
+  }
+
+  public static Sides.Side lower() {
+    return SIDES.lower();
   }
 }

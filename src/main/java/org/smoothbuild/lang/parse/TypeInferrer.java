@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -256,7 +255,7 @@ public class TypeInferrer {
           if (elemType.isEmpty()) {
             return empty();
           }
-          type = type.mergeWith(elemType.get(), UPPER);
+          type = type.mergeWith(elemType.get(), typing.upper());
           if (type.contains(typing.anyT())) {
             logBuffer.log(parseError(elem.location(),
                 "Array elements at indexes 0 and " + i + " doesn't have common super type."

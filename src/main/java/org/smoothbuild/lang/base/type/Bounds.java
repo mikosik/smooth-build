@@ -1,36 +1,29 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.Side.LOWER;
-import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Types.anyT;
 import static org.smoothbuild.lang.base.type.Types.nothingT;
 
 public record Bounds(Type lower, Type upper) {
-  public static Bounds oneSideBound(Side side, Type type) {
-    return switch (side) {
-      case UPPER -> new Bounds(nothingT(), type);
-      case LOWER -> new Bounds(type, anyT());
-    };
-  }
-
-  public static Bounds unbounded() {
-    return new Bounds(nothingT(), anyT());
+  public static Bounds oneSideBound(Sides.Side side, Type type) {
+    return side.dispatch(
+        () -> new Bounds(type, anyT()),
+        () -> new Bounds(nothingT(), type)
+    );
   }
 
   public Bounds mergeWith(Bounds bounds) {
     return new Bounds(
-        lower.mergeWith(bounds.lower, UPPER),
-        upper.mergeWith(bounds.upper, LOWER));
+        lower.mergeWith(bounds.lower, Types.upper()),
+        upper.mergeWith(bounds.upper, Types.lower()));
   }
 
-  public Type get(Side side) {
-    return switch (side) {
-      case UPPER -> upper;
-      case LOWER -> lower;
-    };
+  public Type get(Sides.Side side) {
+    return side.dispatch(
+        () -> lower,
+        () -> upper);
   }
 
   public boolean areConsistent() {
-    return get(UPPER).isAssignableFrom(get(LOWER));
+    return get(Types.upper()).isAssignableFrom(get(Types.lower()));
   }
 }

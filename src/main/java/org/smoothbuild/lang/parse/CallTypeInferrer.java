@@ -4,7 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
-import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.lang.base.type.Types.lower;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
@@ -51,7 +51,7 @@ public class CallTypeInferrer {
         logBuffer.logAll(variableProblems);
         return maybeLogs(logBuffer);
       }
-      Type mapped = typing.mapVariables(resultType, boundedVariables, LOWER);
+      Type mapped = typing.mapVariables(resultType, boundedVariables, lower());
       return maybeValueAndLogs(mapped, logBuffer);
     }
     return maybeLogs(logBuffer);
@@ -101,7 +101,7 @@ public class CallTypeInferrer {
   private ImmutableList<Log> findVariableProblems(
       CallNode call, BoundsMap boundedVariables) {
     return boundedVariables.map().values().stream()
-        .filter(b -> b.bounds().get(LOWER).contains(typing.anyT()))
+        .filter(b -> b.bounds().get(lower()).contains(typing.anyT()))
         .map(b -> parseError(call, "Cannot infer actual type for type variable "
             + b.variable().q() + "."))
         .collect(toImmutableList());
