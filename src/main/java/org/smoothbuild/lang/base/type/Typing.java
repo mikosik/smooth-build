@@ -4,7 +4,6 @@ import static com.google.common.collect.Iterables.concat;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 import static org.smoothbuild.lang.base.type.Bounds.unbounded;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
-import static org.smoothbuild.lang.base.type.BoundsMap.merge;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
@@ -158,7 +157,7 @@ public class Typing {
     } else if (typeB.equals(side.edge())) {
       return inferVariableBoundFromEdge(typeA, side);
     } else if (typeA.typeConstructor().equals(typeB.typeConstructor())) {
-      return merge(concat(
+      return BoundsMap.merge(concat(
           zip(typeA.covariants(), typeB.covariants(), inferFunction(side)),
           zip(typeA.contravariants(), typeB.contravariants(), inferFunction(side.reversed()))));
     } else {
@@ -172,7 +171,7 @@ public class Typing {
 
   private BoundsMap inferVariableBoundFromEdge(Type type, Side side) {
     Side reversed = side.reversed();
-    return merge(concat(
+    return BoundsMap.merge(concat(
         map(type.covariants(), t -> inferVariableBounds(t, side.edge(), side)),
         map(type.contravariants(), t -> inferVariableBounds(t, reversed.edge(), reversed))));
   }
@@ -215,13 +214,61 @@ public class Typing {
     }
   }
 
-  private static FunctionType createFunctionType(FunctionType functionType, Type newResultType,
-      ImmutableList<ItemSignature> newParameters) {
-    if (functionType.resultType() == newResultType && functionType
-        .parameters().equals(newParameters)) {
+  public Type merge(Type typeA, Type typeB, Side direction) {
+    Side reversed = direction.reversed();
+    Type reversedEdge = reversed.edge();
+    if (reversedEdge.equals(typeB)) {
+      return typeA;
+    } else if (reversedEdge.equals(typeA)) {
+      return typeB;
+    } else if (typeA.equals(typeB)) {
+      return typeA.strip();
+    } else if (typeA instanceof ArrayType arrayA && typeB instanceof ArrayType arrayB) {
+      var elemA = arrayA.elemType();
+      var elemB = arrayB.elemType();
+      var elemM = merge(elemA, elemB, direction);
+      if (arrayA.elemType() == elemM) {
+        return arrayA;
+      } else if (arrayB.elemType() == elemM) {
+        return arrayB;
+      } else {
+        return newArrayType(elemM);
+      }
+    } else if (typeA instanceof FunctionType functionA && typeB instanceof FunctionType functionB) {
+      if (functionA.parameters().size() == functionB.parameters().size()) {
+        var resultA = functionA.resultType();
+        var resultB = functionB.resultType();
+        var resultM = merge(resultA, resultB, direction);
+        var parameterTypesA = functionA.parameterTypes();
+        var parametersTypesB = functionB.parameterTypes();
+        var parametersM = zip(parameterTypesA, parametersTypesB,
+            (a, b) -> itemSignature(merge(a, b, reversed)));
+        if (isFunctionTypeEqual(functionA, resultM, parametersM)) {
+          return functionA;
+        } else if (isFunctionTypeEqual(functionB, resultM, parametersM)){
+          return functionB;
+        } else {
+          return newFunctionType(resultM, parametersM);
+        }
+      } else {
+        return direction.edge();
+      }
+    } else {
+      return direction.edge();
+    }
+  }
+
+  private static FunctionType createFunctionType(FunctionType functionType, Type resultType,
+      ImmutableList<ItemSignature> parameters) {
+    if (isFunctionTypeEqual(functionType, resultType, parameters)) {
       return functionType;
     }
-    return newFunctionType(newResultType, newParameters);
+    return newFunctionType(resultType, parameters);
+  }
+
+  private static boolean isFunctionTypeEqual(FunctionType functionType, Type resultType,
+      ImmutableList<ItemSignature> parameters) {
+    return functionType.resultType() == resultType && functionType.parameters().equals(parameters);
   }
 
   private static FunctionType newFunctionType(
@@ -229,11 +276,11 @@ public class Typing {
     return Types.functionT(result, parameters);
   }
 
-  private ArrayType createArrayType(ArrayType arrayType, Type newElemType) {
-    if (arrayType.elemType() == newElemType) {
+  private ArrayType createArrayType(ArrayType arrayType, Type elemType) {
+    if (arrayType.elemType() == elemType) {
       return arrayType;
     } else {
-      return newArrayType(newElemType);
+      return newArrayType(elemType);
     }
   }
 
