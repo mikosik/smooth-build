@@ -60,9 +60,7 @@ public abstract class Type {
   }
 
   public boolean contains(Type that) {
-    return this.equals(that)
-        || covariants.stream().anyMatch(c -> c.contains(that))
-        || contravariants.stream().anyMatch(c -> c.contains(that));
+    return this.equals(that);
   }
 
   /**

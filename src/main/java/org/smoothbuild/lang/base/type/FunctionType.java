@@ -63,6 +63,13 @@ public class FunctionType extends Type {
   }
 
   @Override
+  public boolean contains(Type that) {
+    return this.equals(that)
+        || result.contains(that)
+        || parameters.stream().anyMatch(p -> p.type().contains(that));
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;

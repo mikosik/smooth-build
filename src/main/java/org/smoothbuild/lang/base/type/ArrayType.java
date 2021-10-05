@@ -25,6 +25,11 @@ public class ArrayType extends Type {
   }
 
   @Override
+  public boolean contains(Type that) {
+    return this.equals(that) || elemType.contains(that);
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;
