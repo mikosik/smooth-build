@@ -6,26 +6,20 @@ import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
-import static org.smoothbuild.lang.base.type.Types.anyT;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModuleLoader;
@@ -161,7 +155,7 @@ public class AssignmentTest extends TestingContext {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
         Type commonSuperType = typing.merge(type1.strippedType(), type2.strippedType(),
             typing.upper());
-        if (!commonSuperType.contains(anyT())) {
+        if (!commonSuperType.contains(typing.anyT())) {
           result.add(Arguments.of(type1, type2, commonSuperType));
         }
       }

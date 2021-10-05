@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.io.fs.base.TestingFilePath.BUILD_FILE_PATH;
-import static org.smoothbuild.lang.base.define.InternalModule.internalModule;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.importedModuleFiles;
 import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
 
@@ -91,7 +90,7 @@ public class TestingModuleLoader {
 
   public Definitions getModuleAsDefinitions() {
     return Definitions.empty()
-        .withModule(internalModule())
+        .withModule(testingContext.internalModule())
         .withModule(module.value());
   }
 
@@ -128,8 +127,8 @@ public class TestingModuleLoader {
     Typing typing = testingContext.typing();
     ModuleLoader moduleLoader = new ModuleLoader(
         new TypeInferrer(typing), new ReferencableLoader(typing));
-    Definitions importedSane =
-        imported != null ? imported : Definitions.empty().withModule(internalModule());
+    Definitions importedSane = imported != null ? imported
+        : Definitions.empty().withModule(testingContext.internalModule());
     ModuleFiles moduleFilesSane = this.moduleFiles != null ? moduleFiles : moduleFiles();
     return moduleLoader.loadModule(ModulePath.of(moduleFilesSane.smoothFile()), Hash.of(13),
         moduleFilesSane, sourceCode, importedSane);

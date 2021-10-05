@@ -9,7 +9,6 @@ import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
-import static org.smoothbuild.lang.base.define.InternalModule.internalModule;
 import static org.smoothbuild.lang.base.define.SModule.calculateModuleHash;
 
 import java.io.IOException;
@@ -29,6 +28,7 @@ import org.smoothbuild.install.ModuleFilesDetector;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
@@ -48,21 +48,24 @@ public class RuntimeController {
   private final FileResolver fileResolver;
   private final ModuleFilesDetector moduleFilesDetector;
   private final ModuleLoader moduleLoader;
+  private final InternalModuleLoader internalModuleLoader;
   private final Reporter reporter;
 
   @Inject
   public RuntimeController(FileResolver fileResolver, ModuleFilesDetector moduleFilesDetector,
-      ModuleLoader moduleLoader, Reporter reporter) {
+      ModuleLoader moduleLoader, InternalModuleLoader internalModuleLoader, Reporter reporter) {
     this.fileResolver = fileResolver;
     this.moduleFilesDetector = moduleFilesDetector;
     this.moduleLoader = moduleLoader;
+    this.internalModuleLoader = internalModuleLoader;
     this.reporter = reporter;
   }
 
   public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
     reporter.startNewPhase("Parsing");
 
-    Definitions allDefinitions = Definitions.empty().withModule(internalModule());
+    SModule internalModule = internalModuleLoader.loadModule();
+    Definitions allDefinitions = Definitions.empty().withModule(internalModule);
     ImmutableMap<ModulePath, ModuleFiles> files = moduleFilesDetector.detect(MODULES);
     for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
       ModuleFiles moduleFiles = entry.getValue();

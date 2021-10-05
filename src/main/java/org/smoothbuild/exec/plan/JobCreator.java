@@ -8,9 +8,6 @@ import static org.smoothbuild.exec.job.TaskKind.SELECT;
 import static org.smoothbuild.exec.job.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
-import static org.smoothbuild.lang.base.type.Types.blobT;
-import static org.smoothbuild.lang.base.type.Types.intT;
-import static org.smoothbuild.lang.base.type.Types.stringT;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -60,7 +57,6 @@ import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -311,7 +307,7 @@ public class JobCreator {
         .stream()
         .map(Job::type)
         .reduce((typeA, typeB) -> typing.merge(typeA, typeB, typing.upper()))
-        .map(Types::arrayT);
+        .map(typing::arrayT);
   }
 
   private Job arrayEager(ArrayLiteralExpression expression, List<Job> elements,
@@ -329,24 +325,24 @@ public class JobCreator {
   // BlobLiteralExpression
 
   private Job blobLazy(Scope<Job> scope, BlobLiteralExpression blobLiteral) {
-    return new LazyJob(blobT(), blobLiteral.location(), () -> blogEagerJob(blobLiteral));
+    return new LazyJob(typing.blobT(), blobLiteral.location(), () -> blobEagerJob(blobLiteral));
   }
 
   private Job blobEager(Scope<Job> scope, BlobLiteralExpression expression) {
-    return blogEagerJob(expression);
+    return blobEagerJob(expression);
   }
 
-  private Job blogEagerJob(BlobLiteralExpression expression) {
-    var blobSpec = toSpecConverter.visit(blobT());
+  private Job blobEagerJob(BlobLiteralExpression expression) {
+    var blobSpec = toSpecConverter.visit(typing.blobT());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     var info = new TaskInfo(LITERAL, algorithm.shortedLiteral(), expression.location());
-    return new Task(blobT(), list(), info, algorithm);
+    return new Task(typing.blobT(), list(), info, algorithm);
   }
 
   // IntLiteralExpression
 
   private Job intLazy(Scope<Job> scope, IntLiteralExpression intLiteral) {
-    return new LazyJob(intT(), intLiteral.location(), () -> intEager(intLiteral));
+    return new LazyJob(typing.intT(), intLiteral.location(), () -> intEager(intLiteral));
   }
 
   private Job intEager(Scope<Job> scope, IntLiteralExpression intLiteral) {
@@ -354,11 +350,11 @@ public class JobCreator {
   }
 
   private Job intEager(IntLiteralExpression expression) {
-    var intSpec = toSpecConverter.visit(intT());
+    var intSpec = toSpecConverter.visit(typing.intT());
     var bigInteger = expression.bigInteger();
     var algorithm = new FixedIntAlgorithm(intSpec, bigInteger);
     var info = new TaskInfo(LITERAL, bigInteger.toString(), expression.location());
-    return new Task(intT(), list(), info, algorithm);
+    return new Task(typing.intT(), list(), info, algorithm);
   }
 
   // StringLiteralExpression
@@ -372,16 +368,16 @@ public class JobCreator {
   }
 
   private Job stringLazyJob(StringLiteralExpression stringLiteral) {
-    return new LazyJob(stringT(), stringLiteral.location(),
+    return new LazyJob(typing.stringT(), stringLiteral.location(),
         () -> stringEagerJob(stringLiteral));
   }
 
   private Job stringEagerJob(StringLiteralExpression stringLiteral) {
-    var stringType = toSpecConverter.visit(stringT());
+    var stringType = toSpecConverter.visit(typing.stringT());
     var algorithm = new FixedStringAlgorithm(stringType, stringLiteral.string());
     var name = algorithm.shortedString();
     var info = new TaskInfo(LITERAL, name, stringLiteral.location());
-    return new Task(stringT(), list(), info, algorithm);
+    return new Task(typing.stringT(), list(), info, algorithm);
   }
 
   // helper methods

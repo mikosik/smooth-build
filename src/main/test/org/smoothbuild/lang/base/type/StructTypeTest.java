@@ -2,19 +2,17 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
-import static org.smoothbuild.lang.base.type.TestingTypes.a;
-import static org.smoothbuild.lang.base.type.Types.nothingT;
-import static org.smoothbuild.lang.base.type.Types.stringT;
-import static org.smoothbuild.lang.base.type.Types.structT;
 import static org.smoothbuild.util.Lists.list;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.testing.TestingContext;
 
-public class StructTypeTest {
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+
+public class StructTypeTest extends TestingContext {
   @Test
   public void struct_type_without_fields_can_be_created() {
     structT("Struct", list());
@@ -27,7 +25,7 @@ public class StructTypeTest {
 
   @Test
   public void first_field_type_can_be_nothing_array() {
-    structT("Struct", fields(a(nothingT())));
+    structT("Struct", fields(arrayT(nothingT())));
   }
 
   @Test
@@ -52,11 +50,11 @@ public class StructTypeTest {
         .isFalse();
   }
 
-  private static List<ItemSignature> fields(Type... types) {
-    List<ItemSignature> result = new ArrayList<>();
+  private static ImmutableList<ItemSignature> fields(Type... types) {
+    Builder<ItemSignature> builder = ImmutableList.builder();
     for (int i = 0; i < types.length; i++) {
-      result.add(new ItemSignature(types[i], "name" + i, Optional.empty()));
+      builder.add(new ItemSignature(types[i], "name" + i, Optional.empty()));
     }
-    return result;
+    return builder.build();
   }
 }

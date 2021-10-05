@@ -3,6 +3,7 @@ package org.smoothbuild.exec.java;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
+import static org.smoothbuild.lang.base.type.TestingTypes.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.INT;
@@ -10,7 +11,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
-import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 
 import java.util.stream.Stream;
 
@@ -26,8 +26,9 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.testing.TestingContext;
 
-public class MapTypeToJTypeTest {
+public class MapTypeToJTypeTest extends TestingContext {
   @Test
   public void verify_all_types_are_tested_below() {
     assertThat(BASE_TYPES.size())

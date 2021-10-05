@@ -22,7 +22,6 @@ import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
@@ -176,7 +175,7 @@ public class TypeInferrer {
           return Optional.of(typing.variable(type.name()));
         } else if (type instanceof ArrayTypeNode array) {
           TypeNode elementType = array.elementType();
-          return createType(elementType).map(Types::arrayT);
+          return createType(elementType).map(typing::arrayT);
         } else if (type instanceof FunctionTypeNode function) {
           Optional<Type> result = createType(function.resultType());
           var parameters = map(function.parameterTypes(), this::createType);

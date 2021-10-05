@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -14,7 +13,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
 
@@ -31,7 +29,7 @@ public class FunctionTest extends TestingContext {
 
   @Test
   public void params_returns_signature_params() {
-    List<Item> parameters = list(parameter(1, Types.stringT(), "name"));
+    List<Item> parameters = list(parameterExpression(1, stringT(), "name"));
     Function function = myFunction(STRING, parameters);
     assertThat(function.parameters())
         .isEqualTo(parameters);

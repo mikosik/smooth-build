@@ -5,7 +5,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
-import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.smoothbuild.exec.algorithm.CreateRecAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadRecItemAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.lang.base.type.TestingTypes;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -77,7 +76,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
     Algorithm algorithm = new CallNativeAlgorithm(
-        null, strSpec(), function(TestingTypes.STRING, "name"), true);
+        null, strSpec(), functionExpression(STRING, "name"), true);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("fa404053c470625cc32d666d02acd1cc634e2bb5"));
@@ -86,7 +85,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
     Algorithm algorithm = new CallNativeAlgorithm(
-        null, strSpec(), function(TestingTypes.STRING, "name"), true);
+        null, strSpec(), functionExpression(STRING, "name"), true);
     Input input = input(list(strVal("abc"), strVal("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("6add42096c8900855b21d87a95f7e2d26b054d44"));

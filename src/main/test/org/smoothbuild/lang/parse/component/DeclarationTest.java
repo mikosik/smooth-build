@@ -2,15 +2,6 @@ package org.smoothbuild.lang.parse.component;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.TestingLang.arrayE;
-import static org.smoothbuild.lang.TestingLang.call;
-import static org.smoothbuild.lang.TestingLang.function;
-import static org.smoothbuild.lang.TestingLang.nativ;
-import static org.smoothbuild.lang.TestingLang.parameter;
-import static org.smoothbuild.lang.TestingLang.reference;
-import static org.smoothbuild.lang.TestingLang.string;
-import static org.smoothbuild.lang.TestingLang.struct;
-import static org.smoothbuild.lang.TestingLang.value;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_SINGLE_VARIABLE_POLYTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_VALID_POLYTYPES;
@@ -33,7 +24,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModuleLoader;
@@ -249,7 +239,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
               .loadsSuccessfully()
-              .containsType(struct("MyStruct", itemSignature(STRING, "field")));
+              .containsType(structExpression("MyStruct", itemSignature(STRING, "field")));
         }
 
         @Test
@@ -683,10 +673,10 @@ public class DeclarationTest extends TestingContext {
               String nonDefault);
             """)
               .loadsSuccessfully()
-              .containsReferencable(function(2, STRING, "myFunction",
-                  nativ(1, string(1, "Impl.met")),
-                  parameter(3, STRING, "default", string(3, "value")),
-                  parameter(4, STRING, "nonDefault")));
+              .containsReferencable(functionExpression(2, STRING, "myFunction",
+                  annotationExpression(1, stringExpression(1, "Impl.met")),
+                  parameterExpression(3, STRING, "default", stringExpression(3, "value")),
+                  parameterExpression(4, STRING, "nonDefault")));
         }
 
         @Test
@@ -713,8 +703,8 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(functionDeclaration("String param1,"))
               .loadsSuccessfully()
-              .containsReferencable(
-                  function(1, STRING, "myFunction", string(1, "abc"), parameter(1, STRING, "param1")));
+              .containsReferencable(functionExpression(1, STRING, "myFunction",
+                  stringExpression(1, "abc"), parameterExpression(1, STRING, "param1")));
         }
 
         @Test
@@ -748,8 +738,8 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(functionTypeDeclaration("String,"))
               .loadsSuccessfully()
-              .containsReferencable(
-                  value(2, f(BLOB, STRING), "myValue", nativ(1, string(1, "Impl.met"))));
+              .containsReferencable(valueExpression(2, f(BLOB, STRING), "myValue",
+                  annotationExpression(1, stringExpression(1, "Impl.met"))));
         }
 
         @Test
@@ -974,9 +964,10 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(functionCall("0x07,"))
               .loadsSuccessfully()
-              .containsReferencable(value(2, BLOB, "result",
-                  call(2, BLOB, reference(2, f(BLOB, item(BLOB, "b")), "myFunction"), TestingLang
-                      .blob(2, 7))));
+              .containsReferencable(valueExpression(2, BLOB, "result",
+                  callExpression(2, BLOB,
+                      referenceExpression(2, f(BLOB, item(BLOB, "b")), "myFunction"),
+                      blobExpression(2, 7))));
         }
 
         @Test
@@ -1248,8 +1239,8 @@ public class DeclarationTest extends TestingContext {
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
                 .loadsSuccessfully()
-                .containsReferencable(value(1, a(BLOB), "result", arrayE(1, BLOB, TestingLang
-                    .blob(1, 7))));
+                .containsReferencable(valueExpression(1, a(BLOB), "result",
+                    arrayExpression(1, BLOB, blobExpression(1, 7))));
           }
 
           @Test

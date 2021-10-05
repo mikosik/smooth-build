@@ -1,8 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.concat;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
+import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
@@ -26,8 +28,36 @@ import com.google.common.collect.ImmutableSet;
 
 @Singleton
 public class Typing {
-  private static final Sides SIDES = new Sides(Types.anyT(), Types.nothingT());
+  private static final AnyType ANY = new AnyType();
+  private static final BlobType BLOB = new BlobType();
+  private static final BoolType BOOL = new BoolType();
+  private static final IntType INT = new IntType();
+  private static final NothingType NOTHING = new NothingType();
+  private static final StringType STRING = new StringType();
+
+  private static final Sides SIDES = new Sides(ANY, NOTHING);
   private final SpecDb specDb;
+
+  /**
+   * Base types that are legal in smooth language.
+   */
+  public static final ImmutableSet<BaseType> BASE_TYPES = ImmutableSet.of(
+      BLOB,
+      BOOL,
+      INT,
+      NOTHING,
+      STRING
+  );
+
+  /**
+   * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
+   * language.
+   */
+  public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES =
+      ImmutableSet.<BaseType>builder()
+          .addAll(BASE_TYPES)
+          .add(ANY)
+          .build();
 
   @Inject
   public Typing(SpecDb specDb) {
@@ -35,51 +65,52 @@ public class Typing {
   }
 
   public ImmutableSet<BaseType> baseTypes() {
-    return Types.BASE_TYPES;
+    return BASE_TYPES;
   }
 
   public ImmutableSet<BaseType> inferableBaseTypes() {
-    return Types.INFERABLE_BASE_TYPES;
+    return INFERABLE_BASE_TYPES;
   }
 
   public Variable variable(String name) {
-    return Types.variable(name);
+    checkArgument(isVariableName(name), "Illegal type variable name '%s'", name);
+    return new Variable(name);
   }
 
   public AnyType anyT() {
-    return Types.anyT();
+    return ANY;
   }
 
   public ArrayType arrayT(Type elemType) {
-    return Types.arrayT(elemType);
+    return new ArrayType(elemType);
   }
 
   public BlobType blobT() {
-    return Types.blobT();
+    return BLOB;
   }
 
   public BoolType boolT() {
-    return Types.boolT();
+    return BOOL;
   }
 
   public IntType intT() {
-    return Types.intT();
+    return INT;
   }
 
   public NothingType nothingT() {
-    return Types.nothingT();
+    return NOTHING;
   }
 
   public StringType stringT() {
-    return Types.stringT();
+    return STRING;
   }
 
-  public StructType structT(String name, Iterable<ItemSignature> fields) {
-    return Types.structT(name, fields);
+  public StructType structT(String name, ImmutableList<ItemSignature> fields) {
+    return new StructType(name, ImmutableList.copyOf(fields));
   }
 
   public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
-    return Types.functionT(resultType, parameters);
+    return new FunctionType(resultType, ImmutableList.copyOf(parameters));
   }
 
   public Sides.Side upper() {
@@ -258,7 +289,7 @@ public class Typing {
       } else if (arrayB.elemType() == elemM) {
         return arrayB;
       } else {
-        return newArrayType(elemM);
+        return arrayT(elemM);
       }
     } else if (typeA instanceof FunctionType functionA && typeB instanceof FunctionType functionB) {
       if (functionA.parameters().size() == functionB.parameters().size()) {
@@ -274,7 +305,7 @@ public class Typing {
         } else if (isFunctionTypeEqual(functionB, resultM, parametersM)){
           return functionB;
         } else {
-          return newFunctionType(resultM, parametersM);
+          return functionT(resultM, parametersM);
         }
       } else {
         return direction.edge();
@@ -284,12 +315,12 @@ public class Typing {
     }
   }
 
-  private static FunctionType createFunctionType(FunctionType functionType, Type resultType,
+  private FunctionType createFunctionType(FunctionType functionType, Type resultType,
       ImmutableList<ItemSignature> parameters) {
     if (isFunctionTypeEqual(functionType, resultType, parameters)) {
       return functionType;
     }
-    return newFunctionType(resultType, parameters);
+    return functionT(resultType, parameters);
   }
 
   private static boolean isFunctionTypeEqual(FunctionType functionType, Type resultType,
@@ -297,21 +328,12 @@ public class Typing {
     return functionType.resultType() == resultType && functionType.parameters().equals(parameters);
   }
 
-  private static FunctionType newFunctionType(
-      Type result, ImmutableList<ItemSignature> parameters) {
-    return Types.functionT(result, parameters);
-  }
-
   private ArrayType createArrayType(ArrayType arrayType, Type elemType) {
     if (arrayType.elemType() == elemType) {
       return arrayType;
     } else {
-      return newArrayType(elemType);
+      return arrayT(elemType);
     }
-  }
-
-  private static ArrayType newArrayType(Type elemType) {
-    return Types.arrayT(elemType);
   }
 
   public BoundsMap merge(Iterable<BoundsMap> iterable) {

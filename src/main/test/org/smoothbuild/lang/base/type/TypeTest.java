@@ -14,6 +14,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.C;
 import static org.smoothbuild.lang.base.type.TestingTypes.D;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.IDENTITY_FUNCTION;
+import static org.smoothbuild.lang.base.type.TestingTypes.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.INT;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
@@ -25,9 +26,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING_MAP_FUNCTION;
 import static org.smoothbuild.lang.base.type.TestingTypes.X;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
-import static org.smoothbuild.lang.base.type.Types.INFERABLE_BASE_TYPES;
-import static org.smoothbuild.lang.base.type.Types.functionT;
-import static org.smoothbuild.lang.base.type.Types.structT;
+import static org.smoothbuild.lang.base.type.TestingTypes.struct;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Sets.set;
@@ -110,8 +109,8 @@ public class TypeTest {
         arguments(PERSON_MAP_FUNCTION, "Person(Person)"),
         arguments(STRING_GETTER_FUNCTION, "String()"),
         arguments(STRING_MAP_FUNCTION, "String(String)"),
-        arguments(functionT(BOOL, list(
-            new ItemSignature(BLOB, Optional.of("name"), Optional.empty()))), "Bool(Blob name)")
+        arguments(f(BOOL, new ItemSignature(BLOB, Optional.of("name"), Optional.empty())),
+            "Bool(Blob name)")
     );
   }
 
@@ -350,11 +349,11 @@ public class TypeTest {
         .addAll(ELEMENTARY_TYPES)
         .add(A)
         .add(B)
-        .add(structT("MyStruct", list()))
-        .add(structT("MyStruct", list(itemSignature(BOOL, "field"))))
-        .add(structT("MyStruct2", list(itemSignature(BOOL, "field"))))
-        .add(structT("MyStruct", list(itemSignature(STRING, "field"))))
-        .add(structT("MyStruct", list(itemSignature(BOOL, "field2"))))
+        .add(struct("MyStruct", list()))
+        .add(struct("MyStruct", list(itemSignature(BOOL, "field"))))
+        .add(struct("MyStruct2", list(itemSignature(BOOL, "field"))))
+        .add(struct("MyStruct", list(itemSignature(STRING, "field"))))
+        .add(struct("MyStruct", list(itemSignature(BOOL, "field2"))))
         .build();
     for (Type type : types) {
       equalsTester.addEqualityGroup(type, type);

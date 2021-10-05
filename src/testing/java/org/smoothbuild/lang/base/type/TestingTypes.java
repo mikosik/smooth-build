@@ -1,34 +1,33 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
-import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
-import static org.smoothbuild.lang.base.type.Types.anyT;
-import static org.smoothbuild.lang.base.type.Types.blobT;
-import static org.smoothbuild.lang.base.type.Types.boolT;
-import static org.smoothbuild.lang.base.type.Types.intT;
-import static org.smoothbuild.lang.base.type.Types.nothingT;
-import static org.smoothbuild.lang.base.type.Types.stringT;
-import static org.smoothbuild.lang.base.type.Types.structT;
-import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;
 
+import org.smoothbuild.testing.TestingContext;
+
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class TestingTypes {
-  public static final AnyType ANY = anyT();
-  public static final BlobType BLOB = blobT();
-  public static final BoolType BOOL = boolT();
-  public static final IntType INT = intT();
-  public static final NothingType NOTHING = nothingT();
-  public static final StringType STRING = stringT();
-  public static final StructType PERSON = structT("Person", list(
-          new ItemSignature(STRING, "firstName", Optional.empty()),
-          new ItemSignature(STRING, "lastName", Optional.empty())));
-  public static final StructType FLAG = structT("Flag", list(
+  private static final Typing TYPING = new TestingContext().typing();
+
+  public static final ImmutableSet<BaseType> BASE_TYPES = TYPING.baseTypes();
+  public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = TYPING.inferableBaseTypes();
+
+  public static final AnyType ANY = TYPING.anyT();
+  public static final BlobType BLOB = TYPING.blobT();
+  public static final BoolType BOOL = TYPING.boolT();
+  public static final IntType INT = TYPING.intT();
+  public static final NothingType NOTHING = TYPING.nothingT();
+  public static final StringType STRING = TYPING.stringT();
+  public static final StructType PERSON = struct("Person", list(
+      new ItemSignature(STRING, "firstName", Optional.empty()),
+      new ItemSignature(STRING, "lastName", Optional.empty())));
+  public static final StructType FLAG = struct("Flag", list(
           new ItemSignature(BOOL, "flag", Optional.empty())));
-  public static final StructType DATA = structT("Data", list(
+  public static final StructType DATA = struct("Data", list(
           new ItemSignature(BLOB, "data", Optional.empty())));
   public static final Variable A = variable("A");
   public static final Variable B = variable("B");
@@ -67,19 +66,31 @@ public class TestingTypes {
           .build();
 
   public static ArrayType a(Type elemType) {
-    return Types.arrayT(elemType);
+    return TYPING.arrayT(elemType);
   }
 
   public static FunctionType f(Type resultType) {
-    return Types.functionT(resultType, list());
+    return TYPING.functionT(resultType, list());
   }
 
   public static FunctionType f(Type resultType, Type... paramTypes) {
-    return Types.functionT(resultType, toItemSignatures(list(paramTypes)));
+    return TYPING.functionT(resultType, toItemSignatures(list(paramTypes)));
   }
 
   public static FunctionType f(Type resultType, ItemSignature... params) {
-    return Types.functionT(resultType, list(params));
+    return f(resultType, list(params));
+  }
+
+  public static FunctionType f(Type resultType, ImmutableList<ItemSignature> params) {
+    return TYPING.functionT(resultType, params);
+  }
+
+  public static Variable variable(String a) {
+    return TYPING.variable(a);
+  }
+
+  public static StructType struct(String name, ImmutableList<ItemSignature> fields) {
+    return TYPING.structT(name, fields);
   }
 
   public static ItemSignature item(Type type, String name) {

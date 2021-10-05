@@ -1,10 +1,5 @@
 package org.smoothbuild.exec.plan;
 
-import static org.smoothbuild.lang.TestingLang.call;
-import static org.smoothbuild.lang.TestingLang.function;
-import static org.smoothbuild.lang.TestingLang.parameter;
-import static org.smoothbuild.lang.TestingLang.parameterRef;
-import static org.smoothbuild.lang.TestingLang.reference;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -16,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.plan.JobCreator.Handler;
-import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
@@ -32,11 +26,12 @@ import com.google.common.collect.ImmutableMap;
 public class JobCreatorTest extends TestingContext {
   @Test
   public void lazy_task_is_created_for_parameter() {
-    var functionBody = TestingLang.blob(0x33);
-    var function = function(BLOB, "myFunction", functionBody, parameter(BLOB, "p"));
+    var functionBody = blobExpression(0x33);
+    var function = functionExpression(
+        BLOB, "myFunction", functionBody, parameterExpression(BLOB, "p"));
 
     var argument = new MyExpression();
-    var call = call(11, BLOB, reference(function), argument);
+    var call = callExpression(11, BLOB, referenceExpression(function), argument);
 
     taskCreator(oneLazyCallAllowed(), function)
         .eagerJobFor(new Scope<>(Map.of()), call);
@@ -44,14 +39,16 @@ public class JobCreatorTest extends TestingContext {
 
   @Test
   public void only_one_lazy_task_is_created_for_argument_assigned_to_parameter_that_is_used_twice() {
-    Function twoBlobsEater = function(
-        BLOB, "twoBlobsEater", parameter(BLOB, "a"), parameter(BLOB, "b"));
+    Function twoBlobsEater = functionExpression(
+        BLOB, "twoBlobsEater", parameterExpression(BLOB, "a"), parameterExpression(BLOB, "b"));
 
-    CallExpression twoBlobsEaterCall = call(
-        BLOB, reference(twoBlobsEater), parameterRef(BLOB, "param"), parameterRef(BLOB, "param"));
-    Function myFunction = function(BLOB, "myFunction", twoBlobsEaterCall, parameter(BLOB, "param"));
+    CallExpression twoBlobsEaterCall = callExpression(BLOB, referenceExpression(twoBlobsEater),
+        parameterRefExpression(BLOB, "param"), parameterRefExpression(BLOB, "param"));
+    Function myFunction = functionExpression(BLOB, "myFunction", twoBlobsEaterCall,
+        parameterExpression(BLOB, "param"));
 
-    CallExpression myFunctionCall = call(BLOB, reference(myFunction), new MyExpression());
+    CallExpression myFunctionCall = callExpression(BLOB, referenceExpression(myFunction),
+        new MyExpression());
 
     taskCreator(oneLazyCallAllowed(), myFunction, twoBlobsEater)
         .eagerJobFor(new Scope<>(Map.of()), myFunctionCall);
