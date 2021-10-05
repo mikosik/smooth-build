@@ -87,6 +87,7 @@ import org.smoothbuild.lang.base.type.Sides.Side;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.TypeFactory;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.Variable;
 import org.smoothbuild.lang.expr.AnnotationExpression;
@@ -163,7 +164,7 @@ public class TestingContext {
 
   public Typing typing() {
     if (typing == null) {
-      typing = new Typing(specDb());
+      typing = new Typing(new TypeFactory(specDb()));
     }
     return typing;
   }

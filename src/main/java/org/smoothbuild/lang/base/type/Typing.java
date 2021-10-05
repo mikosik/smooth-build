@@ -18,7 +18,6 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.lang.base.type.Sides.Side;
 import org.smoothbuild.util.Sets;
 
@@ -28,48 +27,44 @@ import com.google.common.collect.ImmutableSet;
 
 @Singleton
 public class Typing {
-  private static final AnyType ANY = new AnyType();
-  private static final BlobType BLOB = new BlobType();
-  private static final BoolType BOOL = new BoolType();
-  private static final IntType INT = new IntType();
-  private static final NothingType NOTHING = new NothingType();
-  private static final StringType STRING = new StringType();
-
-  private static final Sides SIDES = new Sides(ANY, NOTHING);
-  private final SpecDb specDb;
+  private final Sides sides;
 
   /**
    * Base types that are legal in smooth language.
    */
-  public static final ImmutableSet<BaseType> BASE_TYPES = ImmutableSet.of(
-      BLOB,
-      BOOL,
-      INT,
-      NOTHING,
-      STRING
-  );
+  private final ImmutableSet<BaseType> baseTypes;
 
   /**
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
    */
-  public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES =
-      ImmutableSet.<BaseType>builder()
-          .addAll(BASE_TYPES)
-          .add(ANY)
-          .build();
+  private final ImmutableSet<BaseType> inferableBaseTypes;
+
+  private final TypeFactory typeFactory;
 
   @Inject
-  public Typing(SpecDb specDb) {
-    this.specDb = specDb;
+  public Typing(TypeFactory typeFactory) {
+    this.typeFactory = typeFactory;
+    this.sides = new Sides(typeFactory.any(), typeFactory.nothing());
+    this.baseTypes = ImmutableSet.of(
+        typeFactory.blob(),
+        typeFactory.bool(),
+        typeFactory.int_(),
+        typeFactory.nothing(),
+        typeFactory.string()
+    );
+    this.inferableBaseTypes = ImmutableSet.<BaseType>builder()
+            .addAll(baseTypes)
+            .add(typeFactory.any())
+            .build();
   }
 
   public ImmutableSet<BaseType> baseTypes() {
-    return BASE_TYPES;
+    return baseTypes;
   }
 
   public ImmutableSet<BaseType> inferableBaseTypes() {
-    return INFERABLE_BASE_TYPES;
+    return inferableBaseTypes;
   }
 
   public Variable variable(String name) {
@@ -78,47 +73,47 @@ public class Typing {
   }
 
   public AnyType anyT() {
-    return ANY;
+    return typeFactory.any();
   }
 
   public ArrayType arrayT(Type elemType) {
-    return new ArrayType(elemType);
+    return typeFactory.array(elemType);
   }
 
   public BlobType blobT() {
-    return BLOB;
+    return typeFactory.blob();
   }
 
   public BoolType boolT() {
-    return BOOL;
+    return typeFactory.bool();
   }
 
   public IntType intT() {
-    return INT;
+    return typeFactory.int_();
   }
 
   public NothingType nothingT() {
-    return NOTHING;
+    return typeFactory.nothing();
   }
 
   public StringType stringT() {
-    return STRING;
+    return typeFactory.string();
   }
 
   public StructType structT(String name, ImmutableList<ItemSignature> fields) {
-    return new StructType(name, ImmutableList.copyOf(fields));
+    return typeFactory.struct(name, fields);
   }
 
   public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
-    return new FunctionType(resultType, ImmutableList.copyOf(parameters));
+    return typeFactory.function(resultType, parameters);
   }
 
   public Sides.Side upper() {
-    return SIDES.upper();
+    return sides.upper();
   }
 
   public Sides.Side lower() {
-    return SIDES.lower();
+    return sides.lower();
   }
 
   public Bounds unbounded() {
