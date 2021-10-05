@@ -3,13 +3,12 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
-import static org.smoothbuild.lang.base.type.Types.lower;
-import static org.smoothbuild.lang.base.type.Types.upper;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.testing.TestingContext;
 
-public class SideTest {
+public class SideTest extends TestingContext {
   @Nested
   class _reverse_of {
     @Test

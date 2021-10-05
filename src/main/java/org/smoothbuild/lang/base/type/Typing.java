@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableSet;
 
 @Singleton
 public class Typing {
+  private static final Sides SIDES = new Sides(Types.anyT(), Types.nothingT());
   private final SpecDb specDb;
 
   @Inject
@@ -82,11 +83,11 @@ public class Typing {
   }
 
   public Sides.Side upper() {
-    return Types.upper();
+    return SIDES.upper();
   }
 
   public Sides.Side lower() {
-    return Types.lower();
+    return SIDES.lower();
   }
 
   public Bounds unbounded() {

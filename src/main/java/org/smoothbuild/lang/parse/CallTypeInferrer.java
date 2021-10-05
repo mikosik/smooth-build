@@ -4,7 +4,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
-import static org.smoothbuild.lang.base.type.Types.lower;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
@@ -51,7 +50,7 @@ public class CallTypeInferrer {
         logBuffer.logAll(variableProblems);
         return maybeLogs(logBuffer);
       }
-      Type mapped = typing.mapVariables(resultType, boundedVariables, lower());
+      Type mapped = typing.mapVariables(resultType, boundedVariables, typing.lower());
       return maybeValueAndLogs(mapped, logBuffer);
     }
     return maybeLogs(logBuffer);
