@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.INT;
@@ -13,8 +12,9 @@ import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.testing.TestingContext;
 
-public class InferenceTest {
+public class InferenceTest extends TestingContext {
   @Nested
   class _inferring_value_type_from {
     @Test

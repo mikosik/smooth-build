@@ -4,30 +4,33 @@ import static com.google.common.collect.Sets.union;
 import static java.lang.String.join;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
 import static org.smoothbuild.lang.base.type.Types.anyT;
-import static org.smoothbuild.lang.base.type.Types.upper;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.TestModuleLoader;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingModuleLoader;
 
-public class AssignmentTest {
+public class AssignmentTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
   public void value_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
@@ -69,14 +72,12 @@ public class AssignmentTest {
     }
   }
 
-  private static final Typing TYPING = new TestingContext().typing();
-
   @ParameterizedTest
   @MethodSource("parameter_assignment_test_data")
   public void argument_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
-    TestModuleLoader module = module(unlines(
+    TestingModuleLoader module = module(unlines(
         "@Native(\"impl\")",
         targetType.name() + " innerFunction(" + targetType.name() + " target);     ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(source);  ",
@@ -84,7 +85,7 @@ public class AssignmentTest {
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      Type type = TYPING.strip(targetType.type());
+      Type type = typing().strip(targetType.type());
       FunctionType functionType =
           new FunctionType(type, list(new ItemSignature(type, "target", empty())));
       module.loadsWithError(3, "In call to function with type " + functionType.q()
@@ -98,7 +99,7 @@ public class AssignmentTest {
   public void argument_type_is_assignable_to_named_parameter_type(TestedAssignmentSpec testSpec) {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
-    TestModuleLoader module = module(unlines(
+    TestingModuleLoader module = module(unlines(
         "@Native(\"impl\")",
         targetType.name() + " innerFunction(" + targetType.name() + " target);            ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(target=source);  ",
@@ -106,7 +107,7 @@ public class AssignmentTest {
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      Type type = TYPING.strip(targetType.type());
+      Type type = typing().strip(targetType.type());
       FunctionType functionType =
           new FunctionType(type, list(new ItemSignature(type, "target", empty())));
       module.loadsWithError(3,
@@ -158,7 +159,8 @@ public class AssignmentTest {
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        Type commonSuperType = typing.merge(type1.strippedType(), type2.strippedType(), upper());
+        Type commonSuperType = typing.merge(type1.strippedType(), type2.strippedType(),
+            Types.upper());
         if (!commonSuperType.contains(anyT())) {
           result.add(Arguments.of(type1, type2, commonSuperType));
         }

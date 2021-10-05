@@ -1,4 +1,4 @@
-package org.smoothbuild.lang;
+package org.smoothbuild.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
@@ -22,38 +22,32 @@ import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.parse.ModuleLoader;
 import org.smoothbuild.lang.parse.ReferencableLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
-import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableMap;
 
-public class TestModuleLoader {
+public class TestingModuleLoader {
+  private final TestingContext testingContext;
   private final String sourceCode;
   private ModuleFiles moduleFiles;
   private Definitions imported;
   private Maybe<SModule> module;
 
-  public static TestModuleLoader module(String code) {
-    return new TestModuleLoader(
-        code, moduleFiles(), Definitions.empty().withModule(internalModule()));
-  }
-
-  public TestModuleLoader(String sourceCode, ModuleFiles moduleFiles, Definitions imported) {
+  TestingModuleLoader(TestingContext testingContext, String sourceCode) {
+    this.testingContext = testingContext;
     this.sourceCode = sourceCode;
-    this.moduleFiles = moduleFiles;
-    this.imported = imported;
   }
 
-  public TestModuleLoader withImportedModuleFiles() {
+  public TestingModuleLoader withImportedModuleFiles() {
     this.moduleFiles = importedModuleFiles();
     return this;
   }
 
-  public TestModuleLoader withImported(Definitions imported) {
+  public TestingModuleLoader withImported(Definitions imported) {
     this.imported = imported;
     return this;
   }
 
-  public TestModuleLoader loadsSuccessfully() {
+  public TestingModuleLoader loadsSuccessfully() {
     module = load();
     assertWithMessage(messageWithSourceCode())
         .that(module.logs().toList())
@@ -131,11 +125,14 @@ public class TestModuleLoader {
   }
 
   private Maybe<SModule> load() {
-    Typing typing = new Typing(new TestingContext().specDb());
+    Typing typing = testingContext.typing();
     ModuleLoader moduleLoader = new ModuleLoader(
         new TypeInferrer(typing), new ReferencableLoader(typing));
-    return moduleLoader.loadModule(
-        ModulePath.of(moduleFiles.smoothFile()), Hash.of(13) , moduleFiles, sourceCode, imported);
+    Definitions importedSane =
+        imported != null ? imported : Definitions.empty().withModule(internalModule());
+    ModuleFiles moduleFilesSane = this.moduleFiles != null ? moduleFiles : moduleFiles();
+    return moduleLoader.loadModule(ModulePath.of(moduleFilesSane.smoothFile()), Hash.of(13),
+        moduleFilesSane, sourceCode, importedSane);
   }
 
   public static Log err(int line, String message) {

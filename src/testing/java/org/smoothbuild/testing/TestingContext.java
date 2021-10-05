@@ -88,6 +88,10 @@ public class TestingContext {
     return container();
   }
 
+  public TestingModuleLoader module(String sourceCode) {
+    return new TestingModuleLoader(this, sourceCode);
+  }
+
   public Computer computer() {
     if (computer == null) {
       computer = new Computer(computationCache(), Hash.of(123), Providers.of(newContainer()));

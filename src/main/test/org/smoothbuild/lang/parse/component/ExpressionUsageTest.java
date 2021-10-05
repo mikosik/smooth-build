@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.TestModuleLoader.err;
-import static org.smoothbuild.lang.TestModuleLoader.module;
+import static org.smoothbuild.testing.TestingModuleLoader.err;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.testing.TestingContext;
 
-public class ExpressionUsageTest {
+public class ExpressionUsageTest extends TestingContext {
   @Nested
   class _blob_literal_used_as {
     @Test

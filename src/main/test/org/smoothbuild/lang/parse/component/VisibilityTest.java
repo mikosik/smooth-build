@@ -2,15 +2,15 @@ package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.io.fs.base.TestingFilePath.importedFilePath;
-import static org.smoothbuild.lang.TestModuleLoader.err;
-import static org.smoothbuild.lang.TestModuleLoader.module;
+import static org.smoothbuild.testing.TestingModuleLoader.err;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.testing.TestingContext;
 
-public class VisibilityTest {
+public class VisibilityTest extends TestingContext {
   @Nested
   class _visibility {
     @Nested

@@ -2,8 +2,6 @@ package org.smoothbuild.lang.parse.component;
 
 import static java.lang.String.format;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.TestModuleLoader.err;
-import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.TestingLang.arrayE;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.function;
@@ -22,6 +20,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.lang.base.type.TestingTypes.item;
+import static org.smoothbuild.testing.TestingModuleLoader.err;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.stream.Stream;
@@ -34,11 +33,12 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.lang.TestModuleLoader;
 import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.type.TestedType;
+import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingModuleLoader;
 
-public class DeclarationTest {
+public class DeclarationTest extends TestingContext {
   @Nested
   class _members {
     @Nested
@@ -131,7 +131,7 @@ public class DeclarationTest {
           @ParameterizedTest
           @ArgumentsSource(TestedSingleVariablePolytypes.class)
           public void cannot_be_single_variable_polytype(TestedType testedType) {
-            TestModuleLoader module = module(unlines(
+            TestingModuleLoader module = module(unlines(
                 testedType.typeDeclarationsAsString(),
                 "MyStruct {",
                 "  " + testedType.name() + " field,",

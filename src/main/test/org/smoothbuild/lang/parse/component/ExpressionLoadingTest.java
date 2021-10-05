@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.TestingLang.arrayE;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.constr;
@@ -27,8 +26,9 @@ import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
+import org.smoothbuild.testing.TestingContext;
 
-public class ExpressionLoadingTest {
+public class ExpressionLoadingTest extends TestingContext {
   @Test
   public void array_literal_expression() {
     module("""
