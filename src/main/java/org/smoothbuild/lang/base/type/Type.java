@@ -6,6 +6,8 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Objects;
 
+import org.smoothbuild.lang.base.type.Sides.Side;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -68,6 +70,11 @@ public abstract class Type {
    */
   public ImmutableSet<Variable> variables() {
       return variables;
+  }
+
+  Type mapVariables(BoundsMap boundsMap, Side side,
+      TypeFactory typeFactory) {
+    return this;
   }
 
   Type strip(TypeFactory typeFactory) {

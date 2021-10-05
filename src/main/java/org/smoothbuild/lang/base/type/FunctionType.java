@@ -11,6 +11,8 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.Collection;
 
+import org.smoothbuild.lang.base.type.Sides.Side;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -68,6 +70,18 @@ public class FunctionType extends Type {
     return this.equals(that)
         || result.contains(that)
         || parameters.stream().anyMatch(p -> p.type().contains(that));
+  }
+
+  @Override
+  Type mapVariables(BoundsMap boundsMap, Side side, TypeFactory typeFactory) {
+    if (isPolytype()) {
+      var newResultType = result.mapVariables(boundsMap, side, typeFactory);
+      var newParameters = map(parameters,
+          i -> itemSignature(i.type().mapVariables(boundsMap, side.reversed(), typeFactory)));
+      return createFunctionType(newResultType, newParameters, typeFactory);
+    } else {
+      return this;
+    }
   }
 
   @Override

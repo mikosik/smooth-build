@@ -3,6 +3,8 @@ package org.smoothbuild.lang.base.type;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Lists.list;
 
+import org.smoothbuild.lang.base.type.Sides.Side;
+
 /**
  * This class is immutable.
  */
@@ -27,6 +29,16 @@ public class ArrayType extends Type {
   @Override
   public boolean contains(Type that) {
     return this.equals(that) || elemType.contains(that);
+  }
+
+  @Override
+  Type mapVariables(BoundsMap boundsMap, Side side, TypeFactory typeFactory) {
+    if (isPolytype()) {
+      Type elemTypeMapped = elemType.mapVariables(boundsMap, side, typeFactory);
+      return createArrayType(elemTypeMapped, typeFactory);
+    } else {
+      return this;
+    }
   }
 
   @Override

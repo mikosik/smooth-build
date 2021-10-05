@@ -221,28 +221,7 @@ public class Typing {
   }
 
   public Type mapVariables(Type type, BoundsMap boundsMap, Side side) {
-    if (type.isPolytype()) {
-      if (type instanceof Variable) {
-        return boundsMap.map().get(type).bounds().get(side);
-      } else if (type instanceof ArrayType oldArrayType) {
-        Type elemType = oldArrayType.elemType();
-        Type newElemType = mapVariables(elemType, boundsMap, side);
-        return createArrayType(oldArrayType, newElemType);
-      } else if (type instanceof FunctionType functionType) {
-        var oldResultType = functionType.resultType();
-        var newResultType = mapVariables(oldResultType, boundsMap, side);
-        var oldParameters = functionType.parameters();
-        var newParameters = map(
-            oldParameters,
-            i -> itemSignature(mapVariables(i.type(), boundsMap, side.reversed())));
-        return createFunctionType(functionType, newResultType, newParameters);
-      } else {
-        throw new RuntimeException(
-            "Unexpected Type subclass: " + type.getClass().getCanonicalName());
-      }
-    } else {
-      return type;
-    }
+    return type.mapVariables(boundsMap, side, typeFactory);
   }
 
   public Type merge(Type typeA, Type typeB, Side direction) {
