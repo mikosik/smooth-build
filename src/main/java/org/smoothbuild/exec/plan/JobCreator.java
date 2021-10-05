@@ -306,7 +306,7 @@ public class JobCreator {
     return elements
         .stream()
         .map(Job::type)
-        .reduce((typeA, typeB) -> typing.merge(typeA, typeB, typing.upper()))
+        .reduce(typing::mergeUp)
         .map(typing::arrayT);
   }
 

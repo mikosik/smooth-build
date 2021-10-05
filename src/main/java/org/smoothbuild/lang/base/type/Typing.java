@@ -224,6 +224,14 @@ public class Typing {
     return type.mapVariables(boundsMap, side, typeFactory);
   }
 
+  public Type mergeUp(Type typeA, Type typeB) {
+    return merge(typeA, typeB, upper());
+  }
+
+  public Type mergeDown(Type typeA, Type typeB) {
+    return merge(typeA, typeB, lower());
+  }
+
   public Type merge(Type typeA, Type typeB, Side direction) {
     Side reversed = direction.reversed();
     Type reversedEdge = reversed.edge();
@@ -312,7 +320,7 @@ public class Typing {
 
   public Bounds merge(Bounds boundsA, Bounds boundsB) {
     return new Bounds(
-        merge(boundsA.lower(), boundsB.lower(), upper()),
-        merge(boundsA.upper(), boundsB.upper(), lower()));
+        mergeUp(boundsA.lower(), boundsB.lower()),
+        mergeDown(boundsA.upper(), boundsB.upper()));
   }
 }
