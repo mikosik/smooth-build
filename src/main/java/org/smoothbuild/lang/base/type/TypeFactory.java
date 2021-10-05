@@ -17,10 +17,12 @@ public class TypeFactory {
   private static final StringType STRING = new StringType();
 
   private final SpecDb specDb;
+  private final Sides sides;
 
   @Inject
   public TypeFactory(SpecDb specDb) {
     this.specDb = specDb;
+    this.sides = new Sides(any(), nothing());
   }
 
   public AnyType any() {
@@ -57,5 +59,13 @@ public class TypeFactory {
 
   public FunctionType function(Type resultType, Iterable<ItemSignature> parameters) {
     return new FunctionType(resultType, ImmutableList.copyOf(parameters));
+  }
+
+  public Sides.Side upper() {
+    return sides.upper();
+  }
+
+  public Sides.Side lower() {
+    return sides.lower();
   }
 }

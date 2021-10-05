@@ -27,8 +27,6 @@ import com.google.common.collect.ImmutableSet;
 
 @Singleton
 public class Typing {
-  private final Sides sides;
-
   /**
    * Base types that are legal in smooth language.
    */
@@ -45,7 +43,6 @@ public class Typing {
   @Inject
   public Typing(TypeFactory typeFactory) {
     this.typeFactory = typeFactory;
-    this.sides = new Sides(typeFactory.any(), typeFactory.nothing());
     this.baseTypes = ImmutableSet.of(
         typeFactory.blob(),
         typeFactory.bool(),
@@ -109,11 +106,11 @@ public class Typing {
   }
 
   public Sides.Side upper() {
-    return sides.upper();
+    return typeFactory.upper();
   }
 
   public Sides.Side lower() {
-    return sides.lower();
+    return typeFactory.lower();
   }
 
   public Bounds unbounded() {
