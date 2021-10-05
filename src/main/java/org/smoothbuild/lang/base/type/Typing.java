@@ -128,28 +128,7 @@ public class Typing {
   }
 
   public Type strip(Type type) {
-    // TODO in java 17 use pattern matching switch
-    if (type instanceof ArrayType arrayType) {
-      return stripArrayType(arrayType);
-    } else if (type instanceof FunctionType functionType) {
-      return stripFunctionType(functionType);
-    } else {
-      return type;
-    }
-  }
-
-  private Type stripArrayType(ArrayType arrayType) {
-    Type elemType = arrayType.elemType();
-    Type newElemType = strip(elemType);
-    return createArrayType(arrayType, newElemType);
-  }
-
-  private Type stripFunctionType(FunctionType functionType) {
-    var oldResultType = functionType.resultType();
-    var newResultType = strip(oldResultType);
-    var oldParameters = functionType.parameters();
-    var newParameters = map(oldParameters, i -> itemSignature(strip(i.type())));
-    return createFunctionType(functionType, newResultType, newParameters);
+    return type.strip(typeFactory);
   }
 
   public boolean isAssignable(Type target, Type source) {

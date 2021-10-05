@@ -70,6 +70,10 @@ public abstract class Type {
       return variables;
   }
 
+  Type strip(TypeFactory typeFactory) {
+    return this;
+  }
+
   @Override
   public boolean equals(Object object) {
     if (this == object) {

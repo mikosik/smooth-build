@@ -30,6 +30,19 @@ public class ArrayType extends Type {
   }
 
   @Override
+  Type strip(TypeFactory typeFactory) {
+    return createArrayType(elemType.strip(typeFactory), typeFactory);
+  }
+
+  private ArrayType createArrayType(Type elemType, TypeFactory typeFactory) {
+    if (elemType() == elemType) {
+      return this;
+    } else {
+      return typeFactory.array(elemType);
+    }
+  }
+
+  @Override
   public boolean equals(Object object) {
     if (this == object) {
       return true;

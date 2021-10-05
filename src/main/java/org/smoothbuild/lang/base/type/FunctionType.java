@@ -4,6 +4,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -67,6 +68,26 @@ public class FunctionType extends Type {
     return this.equals(that)
         || result.contains(that)
         || parameters.stream().anyMatch(p -> p.type().contains(that));
+  }
+
+  @Override
+  Type strip(TypeFactory typeFactory) {
+    var resultTypeStripped = result.strip(typeFactory);
+    var parametersStripped = map(parameters, i -> itemSignature(i.type().strip(typeFactory)));
+    return createFunctionType(resultTypeStripped, parametersStripped, typeFactory);
+  }
+
+  private FunctionType createFunctionType(Type resultType, ImmutableList<ItemSignature> parameters,
+      TypeFactory typeFactory) {
+    if (isFunctionTypeEqual(resultType, parameters)) {
+      return this;
+    }
+    return typeFactory.function(resultType, parameters);
+  }
+
+  private boolean isFunctionTypeEqual(Type resultType,
+      ImmutableList<ItemSignature> parameters) {
+    return result == resultType && this.parameters.equals(parameters);
   }
 
   @Override
