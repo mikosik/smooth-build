@@ -14,7 +14,7 @@ public class IfFunction extends Function {
   public static final String IF_FUNCTION_NAME = "if";
 
   public IfFunction(Typing typing, ModulePath modulePath) {
-    this(typing.variable("A"), typing.boolT(), modulePath);
+    this(typing.variable("A"), typing.bool(), modulePath);
   }
 
   private IfFunction(Type resultType, Type boolType, ModulePath modulePath) {

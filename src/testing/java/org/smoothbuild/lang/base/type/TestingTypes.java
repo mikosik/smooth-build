@@ -16,12 +16,12 @@ public class TestingTypes {
   public static final ImmutableSet<BaseType> BASE_TYPES = TYPING.baseTypes();
   public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = TYPING.inferableBaseTypes();
 
-  public static final AnyType ANY = TYPING.anyT();
-  public static final BlobType BLOB = TYPING.blobT();
-  public static final BoolType BOOL = TYPING.boolT();
-  public static final IntType INT = TYPING.intT();
-  public static final NothingType NOTHING = TYPING.nothingT();
-  public static final StringType STRING = TYPING.stringT();
+  public static final AnyType ANY = TYPING.any();
+  public static final BlobType BLOB = TYPING.blob();
+  public static final BoolType BOOL = TYPING.bool();
+  public static final IntType INT = TYPING.int_();
+  public static final NothingType NOTHING = TYPING.nothing();
+  public static final StringType STRING = TYPING.string();
   public static final StructType PERSON = struct("Person", list(
       new ItemSignature(STRING, "firstName", Optional.empty()),
       new ItemSignature(STRING, "lastName", Optional.empty())));
@@ -66,15 +66,15 @@ public class TestingTypes {
           .build();
 
   public static ArrayType a(Type elemType) {
-    return TYPING.arrayT(elemType);
+    return TYPING.array(elemType);
   }
 
   public static FunctionType f(Type resultType) {
-    return TYPING.functionT(resultType, list());
+    return TYPING.function(resultType, list());
   }
 
   public static FunctionType f(Type resultType, Type... paramTypes) {
-    return TYPING.functionT(resultType, toItemSignatures(list(paramTypes)));
+    return TYPING.function(resultType, toItemSignatures(list(paramTypes)));
   }
 
   public static FunctionType f(Type resultType, ItemSignature... params) {
@@ -82,7 +82,7 @@ public class TestingTypes {
   }
 
   public static FunctionType f(Type resultType, ImmutableList<ItemSignature> params) {
-    return TYPING.functionT(resultType, params);
+    return TYPING.function(resultType, params);
   }
 
   public static Variable variable(String a) {
@@ -90,7 +90,7 @@ public class TestingTypes {
   }
 
   public static StructType struct(String name, ImmutableList<ItemSignature> fields) {
-    return TYPING.structT(name, fields);
+    return TYPING.struct(name, fields);
   }
 
   public static ItemSignature item(Type type, String name) {

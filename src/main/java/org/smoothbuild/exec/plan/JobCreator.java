@@ -307,7 +307,7 @@ public class JobCreator {
         .stream()
         .map(Job::type)
         .reduce(typing::mergeUp)
-        .map(typing::arrayT);
+        .map(typing::array);
   }
 
   private Job arrayEager(ArrayLiteralExpression expression, List<Job> elements,
@@ -325,7 +325,7 @@ public class JobCreator {
   // BlobLiteralExpression
 
   private Job blobLazy(Scope<Job> scope, BlobLiteralExpression blobLiteral) {
-    return new LazyJob(typing.blobT(), blobLiteral.location(), () -> blobEagerJob(blobLiteral));
+    return new LazyJob(typing.blob(), blobLiteral.location(), () -> blobEagerJob(blobLiteral));
   }
 
   private Job blobEager(Scope<Job> scope, BlobLiteralExpression expression) {
@@ -333,16 +333,16 @@ public class JobCreator {
   }
 
   private Job blobEagerJob(BlobLiteralExpression expression) {
-    var blobSpec = toSpecConverter.visit(typing.blobT());
+    var blobSpec = toSpecConverter.visit(typing.blob());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     var info = new TaskInfo(LITERAL, algorithm.shortedLiteral(), expression.location());
-    return new Task(typing.blobT(), list(), info, algorithm);
+    return new Task(typing.blob(), list(), info, algorithm);
   }
 
   // IntLiteralExpression
 
   private Job intLazy(Scope<Job> scope, IntLiteralExpression intLiteral) {
-    return new LazyJob(typing.intT(), intLiteral.location(), () -> intEager(intLiteral));
+    return new LazyJob(typing.int_(), intLiteral.location(), () -> intEager(intLiteral));
   }
 
   private Job intEager(Scope<Job> scope, IntLiteralExpression intLiteral) {
@@ -350,11 +350,11 @@ public class JobCreator {
   }
 
   private Job intEager(IntLiteralExpression expression) {
-    var intSpec = toSpecConverter.visit(typing.intT());
+    var intSpec = toSpecConverter.visit(typing.int_());
     var bigInteger = expression.bigInteger();
     var algorithm = new FixedIntAlgorithm(intSpec, bigInteger);
     var info = new TaskInfo(LITERAL, bigInteger.toString(), expression.location());
-    return new Task(typing.intT(), list(), info, algorithm);
+    return new Task(typing.int_(), list(), info, algorithm);
   }
 
   // StringLiteralExpression
@@ -368,16 +368,16 @@ public class JobCreator {
   }
 
   private Job stringLazyJob(StringLiteralExpression stringLiteral) {
-    return new LazyJob(typing.stringT(), stringLiteral.location(),
+    return new LazyJob(typing.string(), stringLiteral.location(),
         () -> stringEagerJob(stringLiteral));
   }
 
   private Job stringEagerJob(StringLiteralExpression stringLiteral) {
-    var stringType = toSpecConverter.visit(typing.stringT());
+    var stringType = toSpecConverter.visit(typing.string());
     var algorithm = new FixedStringAlgorithm(stringType, stringLiteral.string());
     var name = algorithm.shortedString();
     var info = new TaskInfo(LITERAL, name, stringLiteral.location());
-    return new Task(typing.stringT(), list(), info, algorithm);
+    return new Task(typing.string(), list(), info, algorithm);
   }
 
   // helper methods

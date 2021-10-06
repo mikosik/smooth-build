@@ -60,39 +60,39 @@ public class Typing {
     return new Variable(name);
   }
 
-  public AnyType anyT() {
+  public AnyType any() {
     return typeFactory.any();
   }
 
-  public ArrayType arrayT(Type elemType) {
+  public ArrayType array(Type elemType) {
     return typeFactory.array(elemType);
   }
 
-  public BlobType blobT() {
+  public BlobType blob() {
     return typeFactory.blob();
   }
 
-  public BoolType boolT() {
+  public BoolType bool() {
     return typeFactory.bool();
   }
 
-  public IntType intT() {
+  public IntType int_() {
     return typeFactory.int_();
   }
 
-  public NothingType nothingT() {
+  public NothingType nothing() {
     return typeFactory.nothing();
   }
 
-  public StringType stringT() {
+  public StringType string() {
     return typeFactory.string();
   }
 
-  public StructType structT(String name, ImmutableList<ItemSignature> fields) {
+  public StructType struct(String name, ImmutableList<ItemSignature> fields) {
     return typeFactory.struct(name, fields);
   }
 
-  public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
+  public FunctionType function(Type resultType, Iterable<ItemSignature> parameters) {
     return typeFactory.function(resultType, parameters);
   }
 

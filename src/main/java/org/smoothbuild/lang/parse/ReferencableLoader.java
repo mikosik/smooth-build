@@ -101,9 +101,9 @@ public class ReferencableLoader {
   }
 
   private AnnotationExpression loadNative(NativeNode nativeNode) {
-    StructType type = typing.structT("Native", list(
-        new ItemSignature(typing.stringT(), "path", Optional.empty()),
-        new ItemSignature(typing.blobT(), "content", Optional.empty())));
+    StructType type = typing.struct("Native", list(
+        new ItemSignature(typing.string(), "path", Optional.empty()),
+        new ItemSignature(typing.blob(), "content", Optional.empty())));
     var path = createStringLiteral(nativeNode.path());
     return new AnnotationExpression(type, path, nativeNode.isPure(), nativeNode.location());
   }
@@ -209,21 +209,21 @@ public class ReferencableLoader {
 
   public BlobLiteralExpression createBlobLiteral(BlobNode blob) {
     return new BlobLiteralExpression(
-        typing.blobT(),
+        typing.blob(),
         blob.byteString(),
         blob.location());
   }
 
   public IntLiteralExpression createIntLiteral(IntNode intNode) {
     return new IntLiteralExpression(
-        typing.intT(),
+        typing.int_(),
         intNode.bigInteger(),
         intNode.location());
   }
 
   public StringLiteralExpression createStringLiteral(StringNode string) {
     return new StringLiteralExpression(
-        typing.stringT(),
+        typing.string(),
         string.unescapedValue(),
         string.location());
   }

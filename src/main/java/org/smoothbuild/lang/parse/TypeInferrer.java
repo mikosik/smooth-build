@@ -68,9 +68,9 @@ public class TypeInferrer {
           return;
         }
         var fieldSignatures = map(struct.fields(), ItemNode::toItemSignature);
-        struct.setType(typing.structT(struct.name(), fieldSignatures));
+        struct.setType(typing.struct(struct.name(), fieldSignatures));
         struct.constructor().setType(
-            typing.functionT(typing.structT(struct.name(), fieldSignatures), fieldSignatures));
+            typing.function(typing.struct(struct.name(), fieldSignatures), fieldSignatures));
       }
 
       @Override
@@ -90,7 +90,7 @@ public class TypeInferrer {
         var resultType = bodyType(func);
         var parameterSignatures = func.optParameterSignatures();
         if (resultType.isPresent() && parameterSignatures.isPresent()) {
-          return Optional.of(typing.functionT(resultType.get(), parameterSignatures.get()));
+          return Optional.of(typing.function(resultType.get(), parameterSignatures.get()));
         } else {
           return empty();
         }
@@ -175,12 +175,12 @@ public class TypeInferrer {
           return Optional.of(typing.variable(type.name()));
         } else if (type instanceof ArrayTypeNode array) {
           TypeNode elementType = array.elementType();
-          return createType(elementType).map(typing::arrayT);
+          return createType(elementType).map(typing::array);
         } else if (type instanceof FunctionTypeNode function) {
           Optional<Type> result = createType(function.resultType());
           var parameters = map(function.parameterTypes(), this::createType);
           if (result.isPresent() && parameters.stream().allMatch(Optional::isPresent)) {
-            return Optional.of(typing.functionT(
+            return Optional.of(typing.function(
                 result.get(), Type.toItemSignatures(map(parameters, Optional::get))));
           } else {
             return empty();
@@ -240,7 +240,7 @@ public class TypeInferrer {
       private Optional<Type> findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return Optional.of(typing.arrayT(typing.nothingT()));
+          return Optional.of(typing.array(typing.nothing()));
         }
         Optional<Type> firstType = expressions.get(0).type();
         if (firstType.isEmpty()) {
@@ -255,7 +255,7 @@ public class TypeInferrer {
             return empty();
           }
           type = typing.mergeUp(type, elemType.get());
-          if (type.contains(typing.anyT())) {
+          if (type.contains(typing.any())) {
             logBuffer.log(parseError(elem.location(),
                 "Array elements at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
@@ -263,7 +263,7 @@ public class TypeInferrer {
             return empty();
           }
         }
-        return Optional.of(typing.arrayT(type));
+        return Optional.of(typing.array(type));
       }
 
       @Override
@@ -323,19 +323,19 @@ public class TypeInferrer {
       @Override
       public void visitStringLiteral(StringNode string) {
         super.visitStringLiteral(string);
-        string.setType(typing.stringT());
+        string.setType(typing.string());
       }
 
       @Override
       public void visitBlobLiteral(BlobNode blob) {
         super.visitBlobLiteral(blob);
-        blob.setType(typing.blobT());
+        blob.setType(typing.blob());
       }
 
       @Override
       public void visitIntLiteral(IntNode intNode) {
         super.visitIntLiteral(intNode);
-        intNode.setType(typing.intT());
+        intNode.setType(typing.int_());
       }
     }.visitAst(ast);
     return logBuffer.toList();

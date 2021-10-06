@@ -21,9 +21,9 @@ public class MapFunction extends Function {
 
   public MapFunction(
       Typing typing, ModulePath modulePath, Type inputElemType, Type resultElemType) {
-    this(typing.arrayT(resultElemType),
-        typing.arrayT(inputElemType),
-        typing.functionT(resultElemType, list(itemSignature(inputElemType))),
+    this(typing.array(resultElemType),
+        typing.array(inputElemType),
+        typing.function(resultElemType, list(itemSignature(inputElemType))),
         modulePath);
   }
 

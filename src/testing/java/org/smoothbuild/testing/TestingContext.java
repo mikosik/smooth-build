@@ -542,39 +542,39 @@ public class TestingContext {
   }
 
   public AnyType anyT() {
-    return typing().anyT();
+    return typing().any();
   }
 
   public ArrayType arrayT(Type elemType) {
-    return typing().arrayT(elemType);
+    return typing().array(elemType);
   }
 
   public BlobType blobT() {
-    return typing().blobT();
+    return typing().blob();
   }
 
   public BoolType boolT() {
-    return typing().boolT();
+    return typing().bool();
   }
 
   public IntType intT() {
-    return typing().intT();
+    return typing().int_();
   }
 
   public NothingType nothingT() {
-    return typing().nothingT();
+    return typing().nothing();
   }
 
   public StringType stringT() {
-    return typing().stringT();
+    return typing().string();
   }
 
   public StructType structT(String name, ImmutableList<ItemSignature> fields) {
-    return typing().structT(name, fields);
+    return typing().struct(name, fields);
   }
 
   public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
-    return typing().functionT(resultType, parameters);
+    return typing().function(resultType, parameters);
   }
 
   public Sides.Side lower() {
@@ -607,7 +607,7 @@ public class TestingContext {
   }
 
   public BlobLiteralExpression blobExpression(int line, int data) {
-    return new BlobLiteralExpression(typing().blobT(), ByteString.of((byte) data), loc(line));
+    return new BlobLiteralExpression(typing().blob(), ByteString.of((byte) data), loc(line));
   }
 
   public IntLiteralExpression intExpression(int value) {
@@ -615,17 +615,17 @@ public class TestingContext {
   }
 
   public IntLiteralExpression intExpression(int line, int value) {
-    return new IntLiteralExpression(typing().intT(), BigInteger.valueOf(value), loc(line));
+    return new IntLiteralExpression(typing().int_(), BigInteger.valueOf(value), loc(line));
   }
 
   public StringLiteralExpression stringExpression(int line, String data) {
-    return new StringLiteralExpression(typing().stringT(), data, loc(line));
+    return new StringLiteralExpression(typing().string(), data, loc(line));
   }
 
   public ArrayLiteralExpression arrayExpression(
       int line, Type elemType, Expression... expressions) {
     return new ArrayLiteralExpression(
-        typing().arrayT(elemType), ImmutableList.copyOf(expressions), loc(line));
+        typing().array(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
   public ReferenceExpression referenceExpression(GlobalReferencable referencable) {
@@ -699,14 +699,14 @@ public class TestingContext {
 
   public AnnotationExpression annotationExpression(
       int line, StringLiteralExpression implementedBy, boolean pure) {
-    StructType type = typing().structT("Native", list(
-        new ItemSignature(typing().stringT(), "path", Optional.empty()),
-        new ItemSignature(typing().blobT(), "content", Optional.empty())));
+    StructType type = typing().struct("Native", list(
+        new ItemSignature(typing().string(), "path", Optional.empty()),
+        new ItemSignature(typing().blob(), "content", Optional.empty())));
     return new AnnotationExpression(type, implementedBy, pure, loc(line));
   }
 
   public StructType structExpression(String name, ItemSignature... fields) {
-    return typing().structT(name, list(fields));
+    return typing().struct(name, list(fields));
   }
 
   public Constructor constrExpression(
