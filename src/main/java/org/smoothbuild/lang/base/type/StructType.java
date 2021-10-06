@@ -17,7 +17,7 @@ public class StructType extends Type {
   private final ImmutableMap<String, Integer> fieldNameToIndex;
 
   public StructType(String name, ImmutableList<ItemSignature> fields) {
-    super(name, new TypeConstructor(name), set());
+    super(name, set());
     this.fields = fields;
     this.fieldNameToIndex = fieldsMap(fields);
   }

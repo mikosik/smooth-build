@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -17,38 +16,15 @@ import com.google.common.collect.ImmutableSet;
  */
 public abstract class Type {
   private final String name;
-  private final TypeConstructor typeConstructor;
-  private final ImmutableList<Type> covariants;
-  private final ImmutableList<Type> contravariants;
   private final ImmutableSet<Variable> variables;
 
-  protected Type(String name, TypeConstructor typeConstructor, ImmutableSet<Variable> variables) {
-    this(name, typeConstructor, list(), list(), variables);
-  }
-
-  protected Type(String name, TypeConstructor typeConstructor, ImmutableList<Type> covariants,
-      ImmutableList<Type> contravariants, ImmutableSet<Variable> variables) {
+  protected Type(String name, ImmutableSet<Variable> variables) {
     this.name = name;
-    this.typeConstructor = typeConstructor;
-    this.covariants = covariants;
-    this.contravariants = contravariants;
     this.variables = variables;
   }
 
   public String name() {
     return name;
-  }
-
-  public TypeConstructor typeConstructor() {
-    return typeConstructor;
-  }
-
-  public ImmutableList<Type> covariants() {
-    return covariants;
-  }
-
-  public ImmutableList<Type> contravariants() {
-    return contravariants;
   }
 
   public String q() {

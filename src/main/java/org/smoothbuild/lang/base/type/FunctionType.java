@@ -7,7 +7,6 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.concat;
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
 
@@ -32,19 +31,9 @@ public class FunctionType extends Type {
 
   private FunctionType(
       Type result, ImmutableList<ItemSignature> parameters, ImmutableList<Type> parameterTypes) {
-    super(
-        createName(result, parameters),
-        createTypeConstructor(parameterTypes),
-        list(result),
-        parameterTypes,
-        calculateVariables(result, parameterTypes));
+    super(createName(result, parameters), calculateVariables(result, parameterTypes));
     this.result = requireNonNull(result);
     this.parameters = requireNonNull(parameters);
-  }
-
-  private static TypeConstructor createTypeConstructor(ImmutableList<Type> parameters) {
-    return new TypeConstructor("()", 1, parameters.size(),
-        (covar, contravar) -> new FunctionType(covar.get(0), toItemSignatures(contravar)));
   }
 
   private static ImmutableSet<Variable> calculateVariables(Type resultType,

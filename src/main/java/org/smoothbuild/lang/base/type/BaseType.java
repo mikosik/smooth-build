@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Sets.set;
  */
 public abstract class BaseType extends Type {
   public BaseType(String name) {
-    super(name, new TypeConstructor(name), set());
+    super(name, set());
   }
 }
 
