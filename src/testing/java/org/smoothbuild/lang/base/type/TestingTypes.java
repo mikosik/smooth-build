@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
+import static org.smoothbuild.lang.base.type.ItemSignature.toItemSignatures;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;

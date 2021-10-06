@@ -4,8 +4,12 @@ import static com.google.common.base.Strings.padEnd;
 import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.util.Lists.map;
 
+import java.util.List;
 import java.util.Optional;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Item is a function parameter or a struct field.
@@ -25,6 +29,10 @@ public record ItemSignature(Type type, Optional<String> name, Optional<Type> def
 
   public static ItemSignature itemSignature(Type type) {
     return new ItemSignature(type, Optional.empty(), Optional.empty());
+  }
+
+  public static ImmutableList<ItemSignature> toItemSignatures(List<Type> types) {
+    return map(types, ItemSignature::itemSignature);
   }
 
   public boolean hasDefaultValue() {

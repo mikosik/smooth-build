@@ -181,7 +181,7 @@ public class TypeInferrer {
           var parameters = map(function.parameterTypes(), this::createType);
           if (result.isPresent() && parameters.stream().allMatch(Optional::isPresent)) {
             return Optional.of(typing.function(
-                result.get(), Type.toItemSignatures(map(parameters, Optional::get))));
+                result.get(), ItemSignature.toItemSignatures(map(parameters, Optional::get))));
           } else {
             return empty();
           }
@@ -255,7 +255,7 @@ public class TypeInferrer {
             return empty();
           }
           type = typing.mergeUp(type, elemType.get());
-          if (type.contains(typing.any())) {
+          if (typing.contains(type, typing.any())) {
             logBuffer.log(parseError(elem.location(),
                 "Array elements at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()

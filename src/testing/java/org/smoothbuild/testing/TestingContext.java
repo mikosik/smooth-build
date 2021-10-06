@@ -593,7 +593,7 @@ public class TestingContext {
     Bounds bounds1 = typing().oneSideBound(side1, bound1);
     Bounds bounds2 = typing().oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
-      return boundsMap(new Bounded(var1, typeFactory().merge(bounds1, bounds2)));
+      return boundsMap(new Bounded(var1, typing().merge(bounds1, bounds2)));
     } else {
       return new BoundsMap(ImmutableMap.of(
           var1, new Bounded(var1, bounds1),

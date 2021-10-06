@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,6 +40,139 @@ import org.smoothbuild.testing.TestingContext;
 import com.google.common.collect.ImmutableList;
 
 public class TypingTest extends TestingContext {
+  @ParameterizedTest
+  @MethodSource("contains_test_data")
+  public void contains(Type type, Type contained, boolean expected) {
+    assertThat(typing().contains(type, contained))
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> contains_test_data() {
+    return list(
+        arguments(ANY, ANY, true),
+        arguments(ANY, BLOB, false),
+        arguments(ANY, BOOL, false),
+        arguments(ANY, INT, false),
+        arguments(ANY, NOTHING, false),
+        arguments(ANY, STRING, false),
+        arguments(ANY, PERSON, false),
+
+        arguments(ANY, a(ANY), false),
+        arguments(ANY, a(BLOB), false),
+        arguments(ANY, a(BOOL), false),
+        arguments(ANY, a(INT), false),
+        arguments(ANY, a(NOTHING), false),
+        arguments(ANY, a(STRING), false),
+        arguments(ANY, a(PERSON), false),
+
+        arguments(ANY, f(ANY), false),
+        arguments(ANY, f(BLOB), false),
+        arguments(ANY, f(BOOL), false),
+        arguments(ANY, f(INT), false),
+        arguments(ANY, f(NOTHING), false),
+        arguments(ANY, f(STRING), false),
+        arguments(ANY, f(PERSON), false),
+
+        arguments(BLOB, ANY, false),
+        arguments(BLOB, BLOB, true),
+        arguments(BLOB, BOOL, false),
+        arguments(BLOB, INT, false),
+        arguments(BLOB, NOTHING, false),
+        arguments(BLOB, STRING, false),
+        arguments(BLOB, PERSON, false),
+
+        arguments(BLOB, a(ANY), false),
+        arguments(BLOB, a(BLOB), false),
+        arguments(BLOB, a(BOOL), false),
+        arguments(BLOB, a(INT), false),
+        arguments(BLOB, a(NOTHING), false),
+        arguments(BLOB, a(STRING), false),
+        arguments(BLOB, a(PERSON), false),
+
+        arguments(BLOB, f(ANY), false),
+        arguments(BLOB, f(BLOB), false),
+        arguments(BLOB, f(BOOL), false),
+        arguments(BLOB, f(INT), false),
+        arguments(BLOB, f(NOTHING), false),
+        arguments(BLOB, f(STRING), false),
+        arguments(BLOB, f(PERSON), false),
+
+        arguments(a(BLOB), ANY, false),
+        arguments(a(BLOB), BLOB, true),
+        arguments(a(BLOB), BOOL, false),
+        arguments(a(BLOB), INT, false),
+        arguments(a(BLOB), NOTHING, false),
+        arguments(a(BLOB), STRING, false),
+        arguments(a(BLOB), PERSON, false),
+
+        arguments(a(BLOB), a(ANY), false),
+        arguments(a(BLOB), a(BLOB), true),
+        arguments(a(BLOB), a(BOOL), false),
+        arguments(a(BLOB), a(INT), false),
+        arguments(a(BLOB), a(NOTHING), false),
+        arguments(a(BLOB), a(STRING), false),
+        arguments(a(BLOB), a(PERSON), false),
+
+        arguments(a(BLOB), f(ANY), false),
+        arguments(a(BLOB), f(BLOB), false),
+        arguments(a(BLOB), f(BOOL), false),
+        arguments(a(BLOB), f(INT), false),
+        arguments(a(BLOB), f(NOTHING), false),
+        arguments(a(BLOB), f(STRING), false),
+        arguments(a(BLOB), f(PERSON), false),
+
+        arguments(f(BLOB), ANY, false),
+        arguments(f(BLOB), BLOB, true),
+        arguments(f(BLOB), BOOL, false),
+        arguments(f(BLOB), INT, false),
+        arguments(f(BLOB), NOTHING, false),
+        arguments(f(BLOB), STRING, false),
+        arguments(f(BLOB), PERSON, false),
+
+        arguments(f(BLOB), a(ANY), false),
+        arguments(f(BLOB), a(BLOB), false),
+        arguments(f(BLOB), a(BOOL), false),
+        arguments(f(BLOB), a(INT), false),
+        arguments(f(BLOB), a(NOTHING), false),
+        arguments(f(BLOB), a(STRING), false),
+        arguments(f(BLOB), a(PERSON), false),
+
+        arguments(f(BLOB), f(ANY), false),
+        arguments(f(BLOB), f(BLOB), true),
+        arguments(f(BLOB), f(BOOL), false),
+        arguments(f(BLOB), f(INT), false),
+        arguments(f(BLOB), f(NOTHING), false),
+        arguments(f(BLOB), f(STRING), false),
+        arguments(f(BLOB), f(PERSON), false),
+
+        arguments(f(STRING, BLOB), ANY, false),
+        arguments(f(STRING, BLOB), BLOB, true),
+        arguments(f(STRING, BLOB), BOOL, false),
+        arguments(f(STRING, BLOB), INT, false),
+        arguments(f(STRING, BLOB), NOTHING, false),
+        arguments(f(STRING, BLOB), STRING, true),
+        arguments(f(STRING, BLOB), PERSON, false),
+
+        arguments(f(STRING, BLOB), a(ANY), false),
+        arguments(f(STRING, BLOB), a(BLOB), false),
+        arguments(f(STRING, BLOB), a(BOOL), false),
+        arguments(f(STRING, BLOB), a(INT), false),
+        arguments(f(STRING, BLOB), a(NOTHING), false),
+        arguments(f(STRING, BLOB), a(STRING), false),
+        arguments(f(STRING, BLOB), a(PERSON), false),
+
+        arguments(f(STRING, BLOB), f(ANY), false),
+        arguments(f(STRING, BLOB), f(BLOB), false),
+        arguments(f(STRING, BLOB), f(BOOL), false),
+        arguments(f(STRING, BLOB), f(INT), false),
+        arguments(f(STRING, BLOB), f(NOTHING), false),
+        arguments(f(STRING, BLOB), f(STRING), false),
+        arguments(f(STRING, BLOB), f(PERSON), false),
+
+        arguments(f(STRING, BLOB), f(STRING, BLOB), true)
+    );
+  }
+
   @ParameterizedTest
   @MethodSource("strip_test_data")
   public void strip(Type type, Type expected) {
@@ -282,5 +417,39 @@ public class TypingTest extends TestingContext {
       throw new RuntimeException("Add missing type to list below.");
     }
     return buildGraph(list(A, B, BLOB, BOOL, DATA, INT, FLAG, PERSON, STRING), 1);
+  }
+  @Nested
+  class _merge_bounds {
+    @Test
+    public void variable_with_one_lower_bound() {
+      var bounds = typing().oneSideBound(lower(), STRING);
+      assertThat(bounds.upper()).isEqualTo(ANY);
+      assertThat(bounds.lower()).isEqualTo(STRING);
+    }
+
+    @Test
+    public void variable_with_one_upper_bound() {
+      var bounds = typing().oneSideBound(upper(), STRING);
+      assertThat(bounds.upper()).isEqualTo(STRING);
+      assertThat(bounds.lower()).isEqualTo(NOTHING);
+    }
+
+    @Test
+    public void variable_with_two_lower_bounds() {
+      var bounds = typing().merge(
+          typeFactory().oneSideBound(lower(), STRING),
+          typeFactory().oneSideBound(lower(), BOOL));
+      assertThat(bounds.upper()).isEqualTo(ANY);
+      assertThat(bounds.lower()).isEqualTo(ANY);
+    }
+
+    @Test
+    public void variable_with_two_upper_bounds() {
+      var bounds = typing().merge(
+          typeFactory().oneSideBound(upper(), STRING),
+          typeFactory().oneSideBound(upper(), BOOL));
+      assertThat(bounds.upper()).isEqualTo(NOTHING);
+      assertThat(bounds.lower()).isEqualTo(NOTHING);
+    }
   }
 }

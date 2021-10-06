@@ -154,7 +154,7 @@ public class AssignmentTest extends TestingContext {
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
         Type commonSuperType = typing.mergeUp(type1.strippedType(), type2.strippedType());
-        if (!commonSuperType.contains(typing.any())) {
+        if (!typing.contains(commonSuperType, typing.any())) {
           result.add(Arguments.of(type1, type2, commonSuperType));
         }
       }

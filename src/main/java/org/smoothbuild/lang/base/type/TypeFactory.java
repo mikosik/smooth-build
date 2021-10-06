@@ -80,14 +80,4 @@ public class TypeFactory {
         () -> new Bounds(NOTHING, type)
     );
   }
-
-  public Bounded merge(Bounded a, Bounded b) {
-    return new Bounded(a.variable(), merge(a.bounds(), b.bounds()));
-  }
-
-  public Bounds merge(Bounds boundsA, Bounds boundsB) {
-    return new Bounds(
-        boundsA.lower().merge(boundsB.lower(), this.upper(), this),
-        boundsA.upper().merge(boundsB.upper(), this.lower(), this));
-  }
 }
