@@ -3,6 +3,8 @@ package org.smoothbuild.lang.base.type;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Lists.list;
 
+import java.util.Map;
+
 import org.smoothbuild.lang.base.type.Sides.Side;
 
 /**
@@ -69,6 +71,16 @@ public class ArrayType extends Type {
       return this;
     } else {
       return typeFactory.array(elemType);
+    }
+  }
+
+  @Override
+  public void inferVariableBounds(Type source, Side side, TypeFactory typeFactory,
+      Map<Variable, Bounded> result) {
+    if (source.equals(side.edge())) {
+      this.elemType.inferVariableBounds(side.edge(), side, typeFactory, result);
+    } else if (source instanceof ArrayType that) {
+      this.elemType.inferVariableBounds(that.elemType, side, typeFactory, result);
     }
   }
 

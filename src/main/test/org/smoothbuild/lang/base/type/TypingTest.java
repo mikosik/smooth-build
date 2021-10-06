@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -284,42 +282,5 @@ public class TypingTest extends TestingContext {
       throw new RuntimeException("Add missing type to list below.");
     }
     return buildGraph(list(A, B, BLOB, BOOL, DATA, INT, FLAG, PERSON, STRING), 1);
-  }
-
-  @Nested
-  class _merge_bounds_maps {
-    @Test
-    public void bounds_for_the_same_type_variable_are_merged() {
-      BoundsMap bv1 = bm(A, lower(), STRING);
-      BoundsMap bv2 = bm(A, upper(), BOOL);
-
-      BoundsMap merged = typing().merge(list(bv2, bv1));
-      assertThat(merged.map().get(A).bounds())
-          .isEqualTo(new Bounds(STRING, BOOL));
-    }
-
-    @Test
-    public void bounds_for_different_type_variables_are_not_merged() {
-      BoundsMap bv1 = bm(B, lower(), STRING);
-      BoundsMap bv2 = bm(A, upper(), BOOL);
-
-      BoundsMap merged = typing().merge(list(bv1, bv2));
-      assertThat(merged.map().get(A).bounds())
-          .isEqualTo(typing().oneSideBound(upper(), BOOL));
-      assertThat(merged.map().get(B).bounds())
-          .isEqualTo(typing().oneSideBound(lower(), STRING));
-    }
-
-    @Test
-    public void two_bounded_variables_are_merged_even_when_vars_were_added_in_different_order() {
-      BoundsMap bv1 = bm(A, lower(), STRING, B, lower(), STRING);
-      BoundsMap bv2 = bm(B, upper(), BOOL, A, upper(), BOOL);
-
-      BoundsMap merged = typing().merge(list(bv1, bv2));
-      assertThat(merged.map().get(A).bounds())
-          .isEqualTo(new Bounds(STRING, BOOL));
-      assertThat(merged.map().get(B).bounds())
-          .isEqualTo(new Bounds(STRING, BOOL));
-    }
   }
 }

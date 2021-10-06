@@ -12,6 +12,7 @@ import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.smoothbuild.lang.base.type.Sides.Side;
 
@@ -136,6 +137,25 @@ public class FunctionType extends Type {
             this.parameterTypes(),
             thatFunction.parameterTypes(),
             (a, b) -> isInequal.apply(a, b, side.reversed()));
+  }
+
+  @Override
+  public void inferVariableBounds(Type source, Side side, TypeFactory typeFactory,
+      Map<Variable, Bounded> result) {
+    if (source.equals(side.edge())) {
+      Side reversed = side.reversed();
+      this.result.inferVariableBounds(side.edge(), side, typeFactory, result);
+      this.parameters.forEach(
+          p -> p.type().inferVariableBounds(reversed.edge(), reversed, typeFactory, result));
+    } else if (source instanceof FunctionType that && parameters.size() == that.parameters.size()) {
+      Side reversed = side.reversed();
+      this.result.inferVariableBounds(that.result, side, typeFactory, result);
+      for (int i = 0; i < this.parameters.size(); i++) {
+        Type thisParamType = parameters.get(i).type();
+        Type thatParamType = that.parameters.get(i).type();
+        thisParamType.inferVariableBounds(thatParamType, reversed, typeFactory, result);
+      }
+    }
   }
 
   @Override

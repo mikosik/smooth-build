@@ -4,6 +4,7 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.Sides.Side;
@@ -96,6 +97,10 @@ public abstract class Type {
 
   protected Type mergeImpl(Type that, Side direction, TypeFactory typeFactory) {
     return direction.edge();
+  }
+
+  public void inferVariableBounds(Type source, Side side, TypeFactory typeFactory,
+      Map<Variable, Bounded> result) {
   }
 
   public boolean inequal(Type that, Side side) {

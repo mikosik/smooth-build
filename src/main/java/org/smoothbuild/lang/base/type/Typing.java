@@ -1,22 +1,16 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.Iterables.concat;
-import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
-import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Lists.zip;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.lang.base.type.Sides.Side;
-import org.smoothbuild.util.Sets;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -136,47 +130,39 @@ public class Typing {
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public BoundsMap inferVariableBounds(List<Type> typesA, List<Type> typesB, Side side) {
-    return merge(zip(typesA, typesB, inferFunction(side)));
-  }
-
-  public BoundsMap inferVariableBounds(Type typeA, Type typeB, Side side) {
-    if (typeA instanceof Variable variable) {
-      return boundsMap(new Bounded(variable, typeFactory.oneSideBound(side, typeB)));
-    } else if (typeB.equals(side.edge())) {
-      return inferVariableBoundFromEdge(typeA, side);
-    } else if (typeA.typeConstructor().equals(typeB.typeConstructor())) {
-      return merge(concat(
-          zip(typeA.covariants(), typeB.covariants(), inferFunction(side)),
-          zip(typeA.contravariants(), typeB.contravariants(), inferFunction(side.reversed()))));
-    } else {
-      return boundsMap();
-    }
-  }
-
-  private BiFunction<Type, Type, BoundsMap> inferFunction(Side side) {
-    return (Type a, Type b) -> inferVariableBounds(a, b, side);
-  }
-
-  private BoundsMap inferVariableBoundFromEdge(Type type, Side side) {
-    Side reversed = side.reversed();
-    return merge(concat(
-        map(type.covariants(), t -> inferVariableBounds(t, side.edge(), side)),
-        map(type.contravariants(), t -> inferVariableBounds(t, reversed.edge(), reversed))));
-  }
-
   public Type inferResultType(FunctionType functionType, List<Type> argumentTypes) {
     var boundedVariables = inferVariableBoundsInCall(functionType.resultType(),
         functionType.parameterTypes(), argumentTypes);
     return mapVariables(functionType.resultType(), boundedVariables, lower());
   }
 
-  public BoundsMap inferVariableBoundsInCall(Type resultTypes,
-      List<Type> parameterTypes, List<Type> argumentTypes) {
-    var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, lower());
-    var resultVariables = Sets.map(
-        resultTypes.variables(), v -> new Bounded(v, typeFactory.unbounded()));
-    return mergeWith(boundedVariables, resultVariables);
+  public BoundsMap inferVariableBoundsInCall(
+      Type resultTypes, List<Type> parameterTypes, List<Type> argumentTypes) {
+    var result = new HashMap<Variable, Bounded>();
+    inferVariableBounds(parameterTypes, argumentTypes, lower(), result);
+    resultTypes.variables().forEach(v -> result.merge(
+        v, new Bounded(v, typeFactory.unbounded()), typeFactory::merge));
+    return new BoundsMap(ImmutableMap.copyOf(result));
+  }
+
+  public BoundsMap inferVariableBounds(List<Type> typesA, List<Type> typesB, Side side) {
+    var result = new HashMap<Variable, Bounded>();
+    inferVariableBounds(typesA, typesB, side, result);
+    return new BoundsMap(ImmutableMap.copyOf(result));
+  }
+
+  private void inferVariableBounds(List<Type> typesA, List<Type> typesB, Side side,
+      HashMap<Variable, Bounded> result) {
+    checkArgument(typesA.size() == typesB.size());
+    for (int i = 0; i < typesA.size(); i++) {
+      typesA.get(i).inferVariableBounds(typesB.get(i), side, typeFactory, result);
+    }
+  }
+
+  public BoundsMap inferVariableBounds(Type typeA, Type typeB, Side side) {
+    var result = new HashMap<Variable, Bounded>();
+    typeA.inferVariableBounds(typeB, side, typeFactory, result);
+    return new BoundsMap(ImmutableMap.copyOf(result));
   }
 
   public Type mapVariables(Type type, BoundsMap boundsMap, Side side) {
@@ -193,14 +179,6 @@ public class Typing {
 
   public Type merge(Type typeA, Type typeB, Side direction) {
     return typeA.merge(typeB, direction, typeFactory);
-  }
-
-  public BoundsMap merge(Iterable<BoundsMap> iterable) {
-    var result = new HashMap<Variable, Bounded>();
-    for (BoundsMap boundsMap : iterable) {
-      mergeToMap(result, boundsMap.map().values());
-    }
-    return new BoundsMap(ImmutableMap.copyOf(result));
   }
 
   public BoundsMap mergeWith(BoundsMap boundsMap, Iterable<Bounded> boundeds) {
