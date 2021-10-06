@@ -179,8 +179,4 @@ public class Typing {
   public Type merge(Type typeA, Type typeB, Side direction) {
     return typeA.merge(typeB, direction, typeFactory);
   }
-
-  public Bounds merge(Bounds boundsA, Bounds boundsB) {
-    return typeFactory.merge(boundsA, boundsB);
-  }
 }
