@@ -17,41 +17,35 @@ import com.google.common.collect.ImmutableSet;
 
 @Singleton
 public class Typing {
-  /**
-   * Base types that are legal in smooth language.
-   */
-  private final ImmutableSet<BaseType> baseTypes;
-
-  /**
-   * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
-   * language.
-   */
-  private final ImmutableSet<BaseType> inferableBaseTypes;
-
   private final TypeFactory typeFactory;
 
   @Inject
   public Typing(TypeFactory typeFactory) {
     this.typeFactory = typeFactory;
-    this.baseTypes = ImmutableSet.of(
+  }
+
+  /**
+   * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
+   * language.
+   */
+  public ImmutableSet<BaseType> inferableBaseTypes() {
+    return ImmutableSet.<BaseType>builder()
+        .addAll(baseTypes())
+        .add(typeFactory.any())
+        .build();
+  }
+
+  /**
+   * Base types that are legal in smooth language.
+   */
+  public ImmutableSet<BaseType> baseTypes() {
+    return ImmutableSet.of(
         typeFactory.blob(),
         typeFactory.bool(),
         typeFactory.int_(),
         typeFactory.nothing(),
         typeFactory.string()
     );
-    this.inferableBaseTypes = ImmutableSet.<BaseType>builder()
-            .addAll(baseTypes)
-            .add(typeFactory.any())
-            .build();
-  }
-
-  public ImmutableSet<BaseType> baseTypes() {
-    return baseTypes;
-  }
-
-  public ImmutableSet<BaseType> inferableBaseTypes() {
-    return inferableBaseTypes;
   }
 
   public Variable variable(String name) {
