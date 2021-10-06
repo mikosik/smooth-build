@@ -77,6 +77,7 @@ import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
 import org.smoothbuild.lang.base.type.Bounded;
+import org.smoothbuild.lang.base.type.Bounds;
 import org.smoothbuild.lang.base.type.BoundsMap;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.IntType;
@@ -103,6 +104,7 @@ import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.util.Providers;
 
 import okio.ByteString;
@@ -588,10 +590,16 @@ public class TestingContext {
   public BoundsMap bm(
       Variable var1, Side side1, Type bound1,
       Variable var2, Side side2, Type bound2) {
-    return
-        typing().mergeWith(
-            bm(var1, side1, bound1),
-            list(new Bounded(var2, typing().oneSideBound(side2, bound2))));
+    Bounds bounds1 = typing().oneSideBound(side1, bound1);
+    Bounds bounds2 = typing().oneSideBound(side2, bound2);
+    if (var1.equals(var2)) {
+      return boundsMap(new Bounded(var1, typing().merge(bounds1, bounds2)));
+    } else {
+      return new BoundsMap(ImmutableMap.of(
+          var1, new Bounded(var1, bounds1),
+          var2, new Bounded(var2, bounds2)
+      ));
+    }
   }
 
   public BoundsMap bm(Variable var, Side side, Type bound) {

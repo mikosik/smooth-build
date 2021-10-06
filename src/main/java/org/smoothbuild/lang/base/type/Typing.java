@@ -181,19 +181,6 @@ public class Typing {
     return typeA.merge(typeB, direction, typeFactory);
   }
 
-  public BoundsMap mergeWith(BoundsMap boundsMap, Iterable<Bounded> boundeds) {
-    var result = new HashMap<>(boundsMap.map());
-    mergeToMap(result, boundeds);
-    return new BoundsMap(ImmutableMap.copyOf(result));
-  }
-
-  private void mergeToMap(Map<Variable, Bounded> map, Iterable<Bounded> boundeds) {
-    for (Bounded bounded : boundeds) {
-      map.merge(bounded.variable(), bounded,
-          (a, b) -> new Bounded(a.variable(), merge(a.bounds(), b.bounds())));
-    }
-  }
-
   public Bounds merge(Bounds boundsA, Bounds boundsB) {
     return typeFactory.merge(boundsA, boundsB);
   }
