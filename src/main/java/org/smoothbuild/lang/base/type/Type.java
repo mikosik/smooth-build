@@ -49,8 +49,7 @@ public abstract class Type {
       return variables;
   }
 
-  Type mapVariables(BoundsMap boundsMap, Side side,
-      TypeFactory typeFactory) {
+  Type mapVariables(BoundsMap boundsMap, Side side, TypeFactory typeFactory) {
     return this;
   }
 
@@ -88,8 +87,7 @@ public abstract class Type {
         || inequalImpl(that, side, Type::inequalParam);
   }
 
-  private boolean inequalImpl(Type that, Side side,
-      InequalFunction inequalityFunction) {
+  private boolean inequalImpl(Type that, Side side, InequalFunction inequalityFunction) {
     return inequalByEdgeCases(that, side)
         || inequalByConstruction(that, side, inequalityFunction);
   }
