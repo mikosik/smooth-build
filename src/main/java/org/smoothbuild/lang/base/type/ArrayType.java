@@ -3,9 +3,6 @@ package org.smoothbuild.lang.base.type;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Lists.list;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 import org.smoothbuild.lang.base.type.Sides.Side;
 
 /**
@@ -58,10 +55,9 @@ public class ArrayType extends Type {
   }
 
   @Override
-  protected boolean inequalByConstruction(Type that, Side side,
-      BiFunction<Type, Type, Function<Side, Boolean>> f) {
+  protected boolean inequalByConstruction(Type that, Side side, InequalFunction isInequal) {
     return that instanceof ArrayType thatArray
-        && f.apply(this.elemType, thatArray.elemType).apply(side);
+        && isInequal.apply(this.elemType, thatArray.elemType, side);
   }
 
   @Override

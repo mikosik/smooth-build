@@ -5,8 +5,6 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import org.smoothbuild.lang.base.type.Sides.Side;
 
@@ -84,16 +82,16 @@ public abstract class Type {
   }
 
   public boolean inequal(Type that, Side side) {
-    return inequalImpl(that, side, (a, b) -> s -> a.inequal(b, s));
+    return inequalImpl(that, side, Type::inequal);
   }
 
   public boolean inequalParam(Type that, Side side) {
     return (this instanceof Variable)
-        || inequalImpl(that, side, (a, b) -> s -> a.inequalParam(b, s));
+        || inequalImpl(that, side, Type::inequalParam);
   }
 
   private boolean inequalImpl(Type that, Side side,
-      BiFunction<Type, Type, Function<Side, Boolean>> inequalityFunction) {
+      InequalFunction inequalityFunction) {
     return inequalByEdgeCases(that, side)
         || inequalByConstruction(that, side, inequalityFunction);
   }
@@ -103,9 +101,12 @@ public abstract class Type {
         || this.equals(side.reversed().edge());
   }
 
-  protected boolean inequalByConstruction(Type that, Side side,
-      BiFunction<Type, Type, Function<Side, Boolean>> f) {
+  protected boolean inequalByConstruction(Type that, Side side, InequalFunction isInequal) {
     return this.name.equals(that.name);
+  }
+
+  public static interface InequalFunction {
+    public boolean apply(Type typeA, Type typeB, Side side);
   }
 
   @Override

@@ -11,8 +11,6 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import org.smoothbuild.lang.base.type.Sides.Side;
 
@@ -108,14 +106,13 @@ public class FunctionType extends Type {
   }
 
   @Override
-  protected boolean inequalByConstruction(Type that, Side side,
-      BiFunction<Type, Type, Function<Side, Boolean>> f) {
+  protected boolean inequalByConstruction(Type that, Side side, InequalFunction isInequal) {
     return that instanceof FunctionType thatFunction
-        && f.apply(this.result, thatFunction.result).apply(side)
+        && isInequal.apply(this.result, thatFunction.result, side)
         && allMatch(
             this.parameterTypes(),
             thatFunction.parameterTypes(),
-            (a, b) -> f.apply(a, b).apply(side.reversed()));
+            (a, b) -> isInequal.apply(a, b, side.reversed()));
   }
 
   @Override
