@@ -5,7 +5,6 @@ import static com.google.common.collect.Iterables.concat;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
-import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
 
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -129,50 +127,17 @@ public class Typing {
   }
 
   public boolean isAssignable(Type target, Type source) {
-    return inequal(target, source, lower());
+    return target.inequal(source, lower());
   }
 
   public boolean isParamAssignable(Type target, Type source) {
-    return inequalParam(target, source, lower())
+    return target.inequalParam(source, lower())
         && areConsistent(inferVariableBounds(target, source, lower()));
   }
 
   private boolean areConsistent(BoundsMap boundsMap) {
     return boundsMap.map().values().stream()
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
-  }
-
-  private boolean inequal(Type typeA, Type typeB, Side side) {
-    return inequalImpl(typeA, typeB, side, (a, b) -> s -> inequal(a, b, s));
-  }
-
-  private boolean inequalParam(Type TypeA, Type typeB, Side side) {
-    return (TypeA instanceof Variable)
-        || inequalImpl(TypeA, typeB, side, (a, b) -> s -> inequalParam(a, b, s));
-  }
-
-  private boolean inequalImpl(Type typeA, Type typeB, Side side,
-      BiFunction<Type, Type, Function<Side, Boolean>> inequalityFunction) {
-    return inequalByEdgeCases(typeA, typeB, side)
-        || inequalByConstruction(typeA, typeB, side, inequalityFunction);
-  }
-
-  private boolean inequalByEdgeCases(Type typeA, Type typeB, Side side) {
-    return typeB.equals(side.edge())
-        || typeA.equals(side.reversed().edge());
-  }
-
-  private boolean inequalByConstruction(Type typeA, Type typeB, Side s,
-      BiFunction<Type, Type, Function<Side, Boolean>> f) {
-    return typeA.typeConstructor().equals(typeB.typeConstructor())
-        && allMatch(
-            typeA.covariants(),
-            typeB.covariants(),
-            (a, b) -> f.apply(a, b).apply(s))
-        && allMatch(
-            typeA.contravariants(),
-            typeB.contravariants(),
-            (a, b) -> f.apply(a, b).apply(s.reversed()));
   }
 
   public BoundsMap inferVariableBounds(List<Type> typesA, List<Type> typesB, Side side) {

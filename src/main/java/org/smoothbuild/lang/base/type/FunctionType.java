@@ -5,11 +5,14 @@ import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
+import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.Collection;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import org.smoothbuild.lang.base.type.Sides.Side;
 
@@ -102,6 +105,17 @@ public class FunctionType extends Type {
   private boolean isFunctionTypeEqual(Type resultType,
       ImmutableList<ItemSignature> parameters) {
     return result == resultType && this.parameters.equals(parameters);
+  }
+
+  @Override
+  protected boolean inequalByConstruction(Type that, Side side,
+      BiFunction<Type, Type, Function<Side, Boolean>> f) {
+    return that instanceof FunctionType thatFunction
+        && f.apply(this.result, thatFunction.result).apply(side)
+        && allMatch(
+            this.parameterTypes(),
+            thatFunction.parameterTypes(),
+            (a, b) -> f.apply(a, b).apply(side.reversed()));
   }
 
   @Override
