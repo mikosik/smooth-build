@@ -81,6 +81,23 @@ public abstract class Type {
     return this;
   }
 
+  Type merge(Type that, Side direction, TypeFactory typeFactory) {
+    Type reversedEdge = direction.reversed().edge();
+    if (reversedEdge.equals(that)) {
+      return this;
+    } else if (reversedEdge.equals(this)) {
+      return that;
+    } else if (this.equals(that)) {
+      return strip(typeFactory);
+    } else {
+      return mergeImpl(that, direction, typeFactory);
+    }
+  }
+
+  protected Type mergeImpl(Type that, Side direction, TypeFactory typeFactory) {
+    return direction.edge();
+  }
+
   public boolean inequal(Type that, Side side) {
     return inequalImpl(that, side, Type::inequal);
   }

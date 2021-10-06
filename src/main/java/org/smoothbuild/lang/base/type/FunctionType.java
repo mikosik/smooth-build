@@ -9,6 +9,7 @@ import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Lists.zip;
 
 import java.util.Collection;
 
@@ -92,6 +93,29 @@ public class FunctionType extends Type {
     return createFunctionType(resultTypeStripped, parametersStripped, typeFactory);
   }
 
+  @Override
+  protected Type mergeImpl(Type other, Side direction, TypeFactory typeFactory) {
+    if (other instanceof FunctionType that) {
+      if (parameters().size() == that.parameters().size()) {
+        var resultA = this.resultType();
+        var resultB = that.resultType();
+        var resultM = resultA.merge(resultB, direction, typeFactory);
+        var parameterTypesA = this.parameterTypes();
+        var parametersTypesB = that.parameterTypes();
+        var parametersM = zip(parameterTypesA, parametersTypesB,
+            (a, b) -> itemSignature(a.merge(b, direction.reversed(), typeFactory)));
+        if (isFunctionTypeEqual(resultM, parametersM)) {
+          return this;
+        } else if (that.isFunctionTypeEqual(resultM, parametersM)){
+          return that;
+        } else {
+          return typeFactory.function(resultM, parametersM);
+        }
+      }
+    }
+    return direction.edge();
+  }
+
   private FunctionType createFunctionType(Type resultType, ImmutableList<ItemSignature> parameters,
       TypeFactory typeFactory) {
     if (isFunctionTypeEqual(resultType, parameters)) {
@@ -100,8 +124,7 @@ public class FunctionType extends Type {
     return typeFactory.function(resultType, parameters);
   }
 
-  private boolean isFunctionTypeEqual(Type resultType,
-      ImmutableList<ItemSignature> parameters) {
+  private boolean isFunctionTypeEqual(Type resultType, ImmutableList<ItemSignature> parameters) {
     return result == resultType && this.parameters.equals(parameters);
   }
 

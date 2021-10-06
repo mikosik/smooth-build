@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.concat;
 import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
-import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
@@ -195,68 +194,7 @@ public class Typing {
   }
 
   public Type merge(Type typeA, Type typeB, Side direction) {
-    Side reversed = direction.reversed();
-    Type reversedEdge = reversed.edge();
-    if (reversedEdge.equals(typeB)) {
-      return typeA;
-    } else if (reversedEdge.equals(typeA)) {
-      return typeB;
-    } else if (typeA.equals(typeB)) {
-      return strip(typeA);
-    } else if (typeA instanceof ArrayType arrayA && typeB instanceof ArrayType arrayB) {
-      var elemA = arrayA.elemType();
-      var elemB = arrayB.elemType();
-      var elemM = merge(elemA, elemB, direction);
-      if (arrayA.elemType() == elemM) {
-        return arrayA;
-      } else if (arrayB.elemType() == elemM) {
-        return arrayB;
-      } else {
-        return arrayT(elemM);
-      }
-    } else if (typeA instanceof FunctionType functionA && typeB instanceof FunctionType functionB) {
-      if (functionA.parameters().size() == functionB.parameters().size()) {
-        var resultA = functionA.resultType();
-        var resultB = functionB.resultType();
-        var resultM = merge(resultA, resultB, direction);
-        var parameterTypesA = functionA.parameterTypes();
-        var parametersTypesB = functionB.parameterTypes();
-        var parametersM = zip(parameterTypesA, parametersTypesB,
-            (a, b) -> itemSignature(merge(a, b, reversed)));
-        if (isFunctionTypeEqual(functionA, resultM, parametersM)) {
-          return functionA;
-        } else if (isFunctionTypeEqual(functionB, resultM, parametersM)){
-          return functionB;
-        } else {
-          return functionT(resultM, parametersM);
-        }
-      } else {
-        return direction.edge();
-      }
-    } else {
-      return direction.edge();
-    }
-  }
-
-  private FunctionType createFunctionType(FunctionType functionType, Type resultType,
-      ImmutableList<ItemSignature> parameters) {
-    if (isFunctionTypeEqual(functionType, resultType, parameters)) {
-      return functionType;
-    }
-    return functionT(resultType, parameters);
-  }
-
-  private static boolean isFunctionTypeEqual(FunctionType functionType, Type resultType,
-      ImmutableList<ItemSignature> parameters) {
-    return functionType.resultType() == resultType && functionType.parameters().equals(parameters);
-  }
-
-  private ArrayType createArrayType(ArrayType arrayType, Type elemType) {
-    if (arrayType.elemType() == elemType) {
-      return arrayType;
-    } else {
-      return arrayT(elemType);
-    }
+    return typeA.merge(typeB, direction, typeFactory);
   }
 
   public BoundsMap merge(Iterable<BoundsMap> iterable) {

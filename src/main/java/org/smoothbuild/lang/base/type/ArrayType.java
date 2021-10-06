@@ -46,6 +46,24 @@ public class ArrayType extends Type {
     return createArrayType(elemType.strip(typeFactory), typeFactory);
   }
 
+  @Override
+  protected Type mergeImpl(Type other, Side direction, TypeFactory typeFactory) {
+    if (other instanceof ArrayType that) {
+      var elemA = this.elemType();
+      var elemB = that.elemType();
+      var elemM = elemA.merge(elemB, direction, typeFactory);
+      if (elemA == elemM) {
+        return this;
+      } else if (elemB == elemM) {
+        return that;
+      } else {
+        return typeFactory.array(elemM);
+      }
+    } else {
+      return direction.edge();
+    }
+  }
+
   private ArrayType createArrayType(Type elemType, TypeFactory typeFactory) {
     if (elemType() == elemType) {
       return this;
