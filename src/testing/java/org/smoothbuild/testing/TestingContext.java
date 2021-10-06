@@ -115,6 +115,7 @@ public class TestingContext {
   private FileSystem computationCacheFileSystem;
   private ObjectDb objectDb;
   private Typing typing;
+  private TypeFactory typeFactory;
   private SpecDb specDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -164,9 +165,16 @@ public class TestingContext {
 
   public Typing typing() {
     if (typing == null) {
-      typing = new Typing(new TypeFactory(specDb()));
+      typing = new Typing(typeFactory());
     }
     return typing;
+  }
+
+  public TypeFactory typeFactory() {
+    if (typeFactory == null) {
+      typeFactory = new TypeFactory(specDb());
+    }
+    return typeFactory;
   }
 
   public SpecDb specDb() {

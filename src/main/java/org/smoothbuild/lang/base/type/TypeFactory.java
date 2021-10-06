@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.db.SpecDb;
+import org.smoothbuild.lang.base.type.Sides.Side;
 
 import com.google.common.collect.ImmutableList;
 
@@ -67,5 +68,22 @@ public class TypeFactory {
 
   public Sides.Side lower() {
     return sides.lower();
+  }
+
+  public Bounds unbounded() {
+    return new Bounds(NOTHING, ANY);
+  }
+
+  public Bounds oneSideBound(Side side, Type type) {
+    return side.dispatch(
+        () -> new Bounds(type, ANY),
+        () -> new Bounds(NOTHING, type)
+    );
+  }
+
+  public Bounds merge(Bounds boundsA, Bounds boundsB) {
+    return new Bounds(
+        boundsA.lower().merge(boundsB.lower(), this.upper(), this),
+        boundsA.upper().merge(boundsB.upper(), this.lower(), this));
   }
 }

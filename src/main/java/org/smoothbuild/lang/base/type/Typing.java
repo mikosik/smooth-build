@@ -111,14 +111,11 @@ public class Typing {
   }
 
   public Bounds unbounded() {
-    return new Bounds(nothingT(), anyT());
+    return typeFactory.unbounded();
   }
 
   public Bounds oneSideBound(Side side, Type type) {
-    return side.dispatch(
-        () -> new Bounds(type, anyT()),
-        () -> new Bounds(nothingT(), type)
-    );
+    return typeFactory.oneSideBound(side, type);
   }
 
   public Type strip(Type type) {
@@ -145,7 +142,7 @@ public class Typing {
 
   public BoundsMap inferVariableBounds(Type typeA, Type typeB, Side side) {
     if (typeA instanceof Variable variable) {
-      return boundsMap(new Bounded(variable, oneSideBound(side, typeB)));
+      return boundsMap(new Bounded(variable, typeFactory.oneSideBound(side, typeB)));
     } else if (typeB.equals(side.edge())) {
       return inferVariableBoundFromEdge(typeA, side);
     } else if (typeA.typeConstructor().equals(typeB.typeConstructor())) {
@@ -177,7 +174,8 @@ public class Typing {
   public BoundsMap inferVariableBoundsInCall(Type resultTypes,
       List<Type> parameterTypes, List<Type> argumentTypes) {
     var boundedVariables = inferVariableBounds(parameterTypes, argumentTypes, lower());
-    var resultVariables = Sets.map(resultTypes.variables(), v -> new Bounded(v, unbounded()));
+    var resultVariables = Sets.map(
+        resultTypes.variables(), v -> new Bounded(v, typeFactory.unbounded()));
     return mergeWith(boundedVariables, resultVariables);
   }
 
@@ -219,8 +217,6 @@ public class Typing {
   }
 
   public Bounds merge(Bounds boundsA, Bounds boundsB) {
-    return new Bounds(
-        mergeUp(boundsA.lower(), boundsB.lower()),
-        mergeDown(boundsA.upper(), boundsB.upper()));
+    return typeFactory.merge(boundsA, boundsB);
   }
 }
