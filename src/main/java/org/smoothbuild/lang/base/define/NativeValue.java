@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.AnnotationExpression;
 
 /**

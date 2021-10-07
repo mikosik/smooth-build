@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
@@ -18,11 +18,11 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.ItemSignature;
-import org.smoothbuild.lang.base.type.StructType;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;

@@ -1,10 +1,23 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.ItemSignature.toItemSignatures;
+import static org.smoothbuild.lang.base.type.api.ItemSignature.toItemSignatures;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.type.api.AnyType;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.BaseType;
+import org.smoothbuild.lang.base.type.api.BlobType;
+import org.smoothbuild.lang.base.type.api.BoolType;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.IntType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.NothingType;
+import org.smoothbuild.lang.base.type.api.StringType;
+import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;

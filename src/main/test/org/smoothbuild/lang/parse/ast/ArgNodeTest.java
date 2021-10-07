@@ -10,7 +10,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.Type;
 
 public class ArgNodeTest {
   @Test

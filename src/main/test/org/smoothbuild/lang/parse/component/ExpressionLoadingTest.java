@@ -11,8 +11,8 @@ import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Constructor;
-import org.smoothbuild.lang.base.type.ItemSignature;
-import org.smoothbuild.lang.base.type.StructType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.testing.TestingContext;
 
 public class ExpressionLoadingTest extends TestingContext {

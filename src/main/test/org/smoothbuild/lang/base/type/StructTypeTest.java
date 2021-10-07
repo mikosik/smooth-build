@@ -7,6 +7,9 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;

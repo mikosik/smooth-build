@@ -41,6 +41,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.Variable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;

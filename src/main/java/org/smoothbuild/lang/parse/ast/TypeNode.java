@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.CountersMap;

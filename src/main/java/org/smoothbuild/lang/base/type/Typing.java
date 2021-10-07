@@ -1,8 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
-import static org.smoothbuild.lang.base.type.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.ItemSignature.itemSignature;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
@@ -14,7 +13,25 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.base.type.Sides.Side;
+import org.smoothbuild.lang.base.type.api.AnyType;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.BaseType;
+import org.smoothbuild.lang.base.type.api.BlobType;
+import org.smoothbuild.lang.base.type.api.BoolType;
+import org.smoothbuild.lang.base.type.api.Bounded;
+import org.smoothbuild.lang.base.type.api.Bounds;
+import org.smoothbuild.lang.base.type.api.BoundsMap;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.IntType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.NothingType;
+import org.smoothbuild.lang.base.type.api.Sides;
+import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.StringType;
+import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.api.Variable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -55,8 +72,7 @@ public class Typing {
   }
 
   public Variable variable(String name) {
-    checkArgument(isVariableName(name), "Illegal type variable name '%s'", name);
-    return new Variable(name);
+    return typeFactory.variable(name);
   }
 
   public AnyType any() {

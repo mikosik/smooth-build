@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.ItemSignature;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.Expression;
 
 import com.google.common.collect.ImmutableList;

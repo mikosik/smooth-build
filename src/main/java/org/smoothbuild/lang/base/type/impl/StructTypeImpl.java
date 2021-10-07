@@ -1,9 +1,12 @@
-package org.smoothbuild.lang.base.type;
+package org.smoothbuild.lang.base.type.impl;
 
 import static org.smoothbuild.util.Sets.set;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.StructType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -12,11 +15,11 @@ import com.google.common.collect.ImmutableMap.Builder;
 /**
  * This class is immutable.
  */
-public class StructType extends Type {
+public class StructTypeImpl extends AbstractType implements StructType {
   private final ImmutableList<ItemSignature> fields;
   private final ImmutableMap<String, Integer> fieldNameToIndex;
 
-  public StructType(String name, ImmutableList<ItemSignature> fields) {
+  public StructTypeImpl(String name, ImmutableList<ItemSignature> fields) {
     super(name, set());
     this.fields = fields;
     this.fieldNameToIndex = fieldsMap(fields);
@@ -33,18 +36,22 @@ public class StructType extends Type {
     return builder.build();
   }
 
+  @Override
   public ImmutableList<ItemSignature> fields() {
     return fields;
   }
 
+  @Override
   public boolean containsFieldWithName(String name) {
     return fieldNameToIndex.containsKey(name);
   }
 
+  @Override
   public ItemSignature fieldWithName(String name) {
     return fields.get(fieldIndex(name));
   }
 
+  @Override
   public int fieldIndex(String name) {
     return fieldNameToIndex.get(name);
   }
@@ -54,7 +61,7 @@ public class StructType extends Type {
     if (this == object) {
       return true;
     }
-    return object instanceof StructType thatStruct
+    return object instanceof StructTypeImpl thatStruct
         && this.name().equals(thatStruct.name())
         && this.fields.equals(thatStruct.fields);
   }

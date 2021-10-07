@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.Named;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 

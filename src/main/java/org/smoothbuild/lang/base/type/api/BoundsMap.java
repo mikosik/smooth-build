@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base.type;
+package org.smoothbuild.lang.base.type.api;
 
 import static java.util.stream.Collectors.joining;
 

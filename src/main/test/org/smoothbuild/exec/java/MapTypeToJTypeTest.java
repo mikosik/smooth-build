@@ -25,7 +25,7 @@ import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.testing.TestingContext;
 
 public class MapTypeToJTypeTest extends TestingContext {

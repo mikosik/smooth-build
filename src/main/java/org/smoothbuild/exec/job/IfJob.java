@@ -12,7 +12,7 @@ import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Nal;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 

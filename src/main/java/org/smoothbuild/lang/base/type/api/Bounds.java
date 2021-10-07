@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base.type;
+package org.smoothbuild.lang.base.type.api;
 
 public record Bounds(Type lower, Type upper) {
   public Type get(Sides.Side side) {

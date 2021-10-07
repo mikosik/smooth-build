@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
-import org.smoothbuild.lang.base.type.StructType;
+import org.smoothbuild.lang.base.type.api.StructType;
 
 import com.google.common.collect.ImmutableList;
 

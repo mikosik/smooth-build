@@ -7,8 +7,8 @@ import static org.smoothbuild.util.Maps.toMap;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -28,8 +28,8 @@ public class InternalModuleLoader {
   }
 
   private ImmutableMap<String, GlobalReferencable> referencables(ModulePath modulePath) {
-    Function ifFunction = new IfFunction(typing, modulePath);
-    Function mapFunction = new MapFunction(typing, modulePath);
+    Function ifFunction = new IfFunction(modulePath, typing);
+    Function mapFunction = new MapFunction(modulePath, typing);
     return toMap(list(ifFunction, mapFunction), Defined::name, f -> f);
   }
 }

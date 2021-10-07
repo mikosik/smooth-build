@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
@@ -15,9 +15,9 @@ import com.google.common.collect.ImmutableList;
 public class DefinedFunction extends Function {
   private final Expression body;
 
-  public DefinedFunction(Type resultType, ModulePath modulePath, String name,
+  public DefinedFunction(FunctionType type, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Expression body, Location location) {
-    super(resultType, modulePath, name, parameters, location);
+    super(type, modulePath, name, parameters, location);
     this.body = body;
   }
 

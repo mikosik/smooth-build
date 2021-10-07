@@ -8,8 +8,8 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.like.ReferencableLike;
-import org.smoothbuild.lang.base.type.ItemSignature;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.Type;
 
 public class ItemNode extends ReferencableNode implements ReferencableLike {
   private Optional<ItemSignature> signature;

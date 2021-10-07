@@ -15,12 +15,13 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeImpl;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModuleLoader;
 
@@ -81,7 +82,7 @@ public class AssignmentTest extends TestingContext {
     } else {
       Type type = typing().strip(targetType.type());
       FunctionType functionType =
-          new FunctionType(type, list(new ItemSignature(type, "target", empty())));
+          new FunctionTypeImpl(type, list(new ItemSignature(type, "target", empty())));
       module.loadsWithError(3, "In call to function with type " + functionType.q()
           + ": Cannot assign argument of type " + sourceType.qStripped()
           + " to parameter `target` of type " + targetType.qStripped() + ".");
@@ -103,7 +104,7 @@ public class AssignmentTest extends TestingContext {
     } else {
       Type type = typing().strip(targetType.type());
       FunctionType functionType =
-          new FunctionType(type, list(new ItemSignature(type, "target", empty())));
+          new FunctionTypeImpl(type, list(new ItemSignature(type, "target", empty())));
       module.loadsWithError(3,
           "In call to function with type " + functionType.q() +
               ": Cannot assign argument of type " + sourceType.qStripped()

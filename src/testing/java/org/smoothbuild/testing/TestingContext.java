@@ -3,9 +3,10 @@ package org.smoothbuild.testing;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
-import static org.smoothbuild.lang.base.type.BoundsMap.boundsMap;
+import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -72,25 +73,26 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.SModule;
-import org.smoothbuild.lang.base.type.AnyType;
-import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.BlobType;
-import org.smoothbuild.lang.base.type.BoolType;
-import org.smoothbuild.lang.base.type.Bounded;
-import org.smoothbuild.lang.base.type.Bounds;
-import org.smoothbuild.lang.base.type.BoundsMap;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.IntType;
-import org.smoothbuild.lang.base.type.ItemSignature;
-import org.smoothbuild.lang.base.type.NothingType;
-import org.smoothbuild.lang.base.type.Sides;
-import org.smoothbuild.lang.base.type.Sides.Side;
-import org.smoothbuild.lang.base.type.StringType;
-import org.smoothbuild.lang.base.type.StructType;
-import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.TypeFactory;
 import org.smoothbuild.lang.base.type.Typing;
-import org.smoothbuild.lang.base.type.Variable;
+import org.smoothbuild.lang.base.type.api.AnyType;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.BlobType;
+import org.smoothbuild.lang.base.type.api.BoolType;
+import org.smoothbuild.lang.base.type.api.Bounded;
+import org.smoothbuild.lang.base.type.api.Bounds;
+import org.smoothbuild.lang.base.type.api.BoundsMap;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.IntType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.NothingType;
+import org.smoothbuild.lang.base.type.api.Sides;
+import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.StringType;
+import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryImpl;
 import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -174,7 +176,7 @@ public class TestingContext {
 
   public TypeFactory typeFactory() {
     if (typeFactory == null) {
-      typeFactory = new TypeFactory(specDb());
+      typeFactory = new TypeFactoryImpl(specDb());
     }
     return typeFactory;
   }
@@ -575,6 +577,10 @@ public class TestingContext {
     return typing().struct(name, fields);
   }
 
+  public FunctionType functionT(Type resultType, Item... parameters) {
+    return typing().function(resultType, toItemSignatures(list(parameters)));
+  }
+
   public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
     return typing().function(resultType, parameters);
   }
@@ -677,7 +683,9 @@ public class TestingContext {
 
   public NativeFunction functionExpression(int line, Type type, String name,
       AnnotationExpression nativ, Item... parameters) {
-    return new NativeFunction(type, modulePath(), name, list(parameters), nativ, loc(line));
+    return new NativeFunction(functionT(type, parameters), modulePath(), name, list(parameters),
+        nativ, loc(line)
+    );
   }
 
   public DefinedFunction functionExpression(Type type, String name, Expression body,
@@ -687,7 +695,9 @@ public class TestingContext {
 
   public DefinedFunction functionExpression(
       int line, Type type, String name, Expression body, Item... parameters) {
-    return new DefinedFunction(type, modulePath(), name, list(parameters), body, loc(line));
+    return new DefinedFunction(functionT(type, parameters), modulePath(), name, list(parameters),
+        body, loc(line)
+    );
   }
 
   public DefinedValue valueExpression(
@@ -719,8 +729,8 @@ public class TestingContext {
 
   public Constructor constrExpression(
       int line, Type resultType, String name, Item... parameters) {
-    return new Constructor(
-        resultType, modulePath(), name, ImmutableList.copyOf(parameters), loc(line));
+    return new Constructor(functionT(resultType, parameters), modulePath(), name, list(parameters),
+        loc(line));
   }
 
   public Item parameterExpression(Type type, String name) {

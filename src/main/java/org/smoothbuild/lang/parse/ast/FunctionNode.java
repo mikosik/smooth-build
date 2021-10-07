@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.ItemSignature;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 

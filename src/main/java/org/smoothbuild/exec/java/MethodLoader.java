@@ -27,7 +27,7 @@ import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Value;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.plugin.NativeApi;
 
 /**

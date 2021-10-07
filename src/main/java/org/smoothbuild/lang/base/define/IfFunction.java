@@ -1,25 +1,31 @@
 package org.smoothbuild.lang.base.define;
 
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 
 public class IfFunction extends Function {
   public static final String IF_FUNCTION_NAME = "if";
 
-  public IfFunction(Typing typing, ModulePath modulePath) {
-    this(typing.variable("A"), typing.bool(), modulePath);
+  public IfFunction(ModulePath modulePath, Typing typing) {
+    this(typing.variable("A"), typing.bool(), modulePath, typing);
   }
 
-  private IfFunction(Type resultType, Type boolType, ModulePath modulePath) {
-    super(resultType, modulePath, IF_FUNCTION_NAME,
-        createParameters(resultType, boolType, modulePath), internal());
+  private IfFunction(Type resultType, Type boolType, ModulePath modulePath, Typing typing) {
+    this(resultType, createParameters(resultType, boolType, modulePath), modulePath, typing);
+  }
+
+  private IfFunction(Type resultType, ImmutableList<Item> parameters, ModulePath modulePath,
+      Typing typing) {
+    super(typing.function(resultType, toItemSignatures(parameters)),
+        modulePath, IF_FUNCTION_NAME, parameters, internal());
   }
 
   private static ImmutableList<Item> createParameters(

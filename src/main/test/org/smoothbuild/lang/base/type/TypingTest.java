@@ -34,7 +34,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.type.Sides.Side;
+import org.smoothbuild.lang.base.type.api.BoundsMap;
+import org.smoothbuild.lang.base.type.api.NothingType;
+import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;

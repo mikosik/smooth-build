@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse;
 
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
@@ -25,7 +26,8 @@ import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.define.Struct;
-import org.smoothbuild.lang.base.type.StructType;
+import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
@@ -35,11 +37,14 @@ import com.google.common.collect.ImmutableMap;
 public class ModuleLoader {
   private final TypeInferrer typeInferrer;
   private final ReferencableLoader referencableLoader;
+  private final Typing typing;
 
   @Inject
-  public ModuleLoader(TypeInferrer typeInferrer, ReferencableLoader referencableLoader) {
+  public ModuleLoader(TypeInferrer typeInferrer, ReferencableLoader referencableLoader,
+      Typing typing) {
     this.typeInferrer = typeInferrer;
     this.referencableLoader = referencableLoader;
+    this.typing = typing;
   }
 
   public Maybe<SModule> loadModule(ModulePath path, Hash hash, ModuleFiles moduleFiles,
@@ -99,10 +104,12 @@ public class ModuleLoader {
     return ImmutableMap.copyOf(local);
   }
 
-  private static Constructor loadConstructor(ModulePath path, StructNode struct) {
+  private Constructor loadConstructor(ModulePath path, StructNode struct) {
     var resultType = struct.type().get();
     var name = struct.constructor().name();
     var parameters = map(struct.fields(), f -> f.toItem(path));
-    return new Constructor(resultType, path, name, parameters, struct.location());
+    var type = typing.function(resultType, toItemSignatures(parameters));
+    return new Constructor(type, path, name, parameters, struct.location()
+    );
   }
 }

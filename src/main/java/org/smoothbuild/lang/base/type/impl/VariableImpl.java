@@ -1,6 +1,8 @@
-package org.smoothbuild.lang.base.type;
+package org.smoothbuild.lang.base.type.impl;
 
 import static org.smoothbuild.util.Sets.set;
+
+import org.smoothbuild.lang.base.type.api.Variable;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -9,10 +11,10 @@ import com.google.common.collect.ImmutableSet;
  *
  * This class is immutable.
  */
-public class Variable extends Type {
+public class VariableImpl extends AbstractType implements Variable {
   private final ImmutableSet<Variable> variables;
 
-  public Variable(String name) {
+  public VariableImpl(String name) {
     super(name, null);
     this.variables = set(this);
   }

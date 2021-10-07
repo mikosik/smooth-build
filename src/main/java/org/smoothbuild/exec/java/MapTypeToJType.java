@@ -8,12 +8,12 @@ import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.StructType;
-import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.TypeNames;
-import org.smoothbuild.lang.base.type.Variable;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeNames;
+import org.smoothbuild.lang.base.type.api.Variable;
 
 public class MapTypeToJType {
   public static Class<? extends Obj> mapTypeToJType(Type type) {

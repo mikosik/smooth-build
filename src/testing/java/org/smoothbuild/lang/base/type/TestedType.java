@@ -18,6 +18,12 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.NothingType;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeImpl;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -366,7 +372,7 @@ public class TestedType {
           .stream()
           .map(p -> new ItemSignature(strip(p), Optional.empty(), Optional.empty()))
           .collect(toImmutableList());
-      return new FunctionType(strip(functionType.resultType()), params);
+      return new FunctionTypeImpl(strip(functionType.resultType()), params);
     } else {
       return type;
     }

@@ -16,8 +16,8 @@ import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.parse.ModuleLoader;
 import org.smoothbuild.lang.parse.ReferencableLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
@@ -126,7 +126,7 @@ public class TestingModuleLoader {
   private Maybe<SModule> load() {
     Typing typing = testingContext.typing();
     ModuleLoader moduleLoader = new ModuleLoader(
-        new TypeInferrer(typing), new ReferencableLoader(typing));
+        new TypeInferrer(typing), new ReferencableLoader(typing), typing);
     Definitions importedSane = imported != null ? imported
         : Definitions.empty().withModule(testingContext.internalModule());
     ModuleFiles moduleFilesSane = this.moduleFiles != null ? moduleFiles : moduleFiles();

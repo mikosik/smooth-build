@@ -23,8 +23,8 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.lang.base.define.Value;
-import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.DuplicatesDetector;
 
 /**

@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse;
 
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maps.toMap;
@@ -20,12 +21,12 @@ import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
-import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.ItemSignature;
-import org.smoothbuild.lang.base.type.StructType;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -90,13 +91,14 @@ public class ReferencableLoader {
     String name = realFuncNode.name();
     Location location = realFuncNode.location();
     if (realFuncNode.nativ().isPresent()) {
-      return new NativeFunction(
-          resultType, path, name, parameters, loadNative(realFuncNode.nativ().get()), location);
+      return new NativeFunction(typing.function(resultType, toItemSignatures(parameters)),
+          path, name, parameters, loadNative(realFuncNode.nativ().get()), location
+      );
     } else {
       var expressionLoader = new ExpressionLoader(
           path, toMap(parameters, Item::name, Item::type));
-      return new DefinedFunction(resultType, path, name, parameters,
-          expressionLoader.createExpression(realFuncNode.body().get()), location);
+      return new DefinedFunction(typing.function(resultType, toItemSignatures(parameters)), path,
+          name, parameters, expressionLoader.createExpression(realFuncNode.body().get()), location);
     }
   }
 

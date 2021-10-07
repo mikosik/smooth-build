@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -11,30 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
 public class FunctionTest extends TestingContext {
-
-  @Test
-  public void type_returns_function_type() {
-    Function function = myFunction(STRING, list());
-    assertThat(function.type())
-        .isEqualTo(new FunctionType(STRING, list()));
-  }
-
-  @Test
-  public void params_returns_signature_params() {
-    List<Item> parameters = list(parameterExpression(1, stringT(), "name"));
-    Function function = myFunction(STRING, parameters);
-    assertThat(function.parameters())
-        .isEqualTo(parameters);
-  }
-
   @Test
   public void function_without_params_can_be_called_without_args() {
     Function function = myFunction(STRING, list());
@@ -70,8 +54,10 @@ public class FunctionTest extends TestingContext {
     return new Item(STRING, modulePath(), "a", defaultArgument, loc());
   }
 
-  private static Function myFunction(Type type, List<Item> parameters) {
-    return new DefinedFunction(type, modulePath(), "name", ImmutableList.copyOf(parameters),
-        mock(Expression.class), loc(1));
+  private Function myFunction(Type resultType, List<Item> parameters) {
+    return new DefinedFunction(functionT(resultType, toItemSignatures(parameters)),
+        modulePath(), "name", ImmutableList.copyOf(parameters),
+        mock(Expression.class), loc(1)
+    );
   }
 }

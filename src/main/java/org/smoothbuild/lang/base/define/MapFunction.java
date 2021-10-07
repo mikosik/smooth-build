@@ -1,38 +1,49 @@
 package org.smoothbuild.lang.base.define;
 
 import static org.smoothbuild.lang.base.define.IfFunction.parameter;
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.base.define.Location.internal;
-import static org.smoothbuild.lang.base.type.ItemSignature.itemSignature;
+import static org.smoothbuild.lang.base.type.api.ItemSignature.itemSignature;
 import static org.smoothbuild.util.Lists.list;
 
-import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Typing;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 
 public class MapFunction extends Function {
   public static final String MAP_FUNCTION_NAME = "map";
 
-  public MapFunction(Typing typing, ModulePath modulePath) {
-    this(typing, modulePath, typing.variable("E"), typing.variable("R"));
+  public MapFunction(ModulePath modulePath, Typing typing) {
+    this(modulePath, typing.variable("E"), typing.variable("R"), typing);
   }
 
   public MapFunction(
-      Typing typing, ModulePath modulePath, Type inputElemType, Type resultElemType) {
+      ModulePath modulePath, Type inputElemType, Type resultElemType, Typing typing) {
     this(typing.array(resultElemType),
         typing.array(inputElemType),
         typing.function(resultElemType, list(itemSignature(inputElemType))),
-        modulePath);
+        modulePath,
+        typing);
   }
 
   private MapFunction(ArrayType resultType, ArrayType inputArrayType,
-      FunctionType mappingFunctionType, ModulePath modulePath) {
-    super(resultType,
+      FunctionType mappingFunctionType, ModulePath modulePath, Typing typing) {
+    this(resultType, createParameters(modulePath, inputArrayType, mappingFunctionType), modulePath,
+        typing);
+  }
+
+  private MapFunction(ArrayType resultType, ImmutableList<Item> parameters, ModulePath modulePath,
+      Typing typing) {
+    super(
+        typing.function(resultType, toItemSignatures(parameters)),
         modulePath,
         MAP_FUNCTION_NAME,
-        createParameters(modulePath, inputArrayType, mappingFunctionType), internal());
+        parameters,
+        internal()
+    );
   }
 
   private static ImmutableList<Item> createParameters(ModulePath modulePath,

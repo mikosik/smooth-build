@@ -12,16 +12,16 @@ import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
-import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.BlobType;
-import org.smoothbuild.lang.base.type.BoolType;
-import org.smoothbuild.lang.base.type.FunctionType;
-import org.smoothbuild.lang.base.type.IntType;
-import org.smoothbuild.lang.base.type.NothingType;
-import org.smoothbuild.lang.base.type.StringType;
-import org.smoothbuild.lang.base.type.StructType;
-import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.Variable;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.BlobType;
+import org.smoothbuild.lang.base.type.api.BoolType;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.IntType;
+import org.smoothbuild.lang.base.type.api.NothingType;
+import org.smoothbuild.lang.base.type.api.StringType;
+import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.Variable;
 
 public class TypeToSpecConverter {
   private final ObjectFactory objectFactory;
