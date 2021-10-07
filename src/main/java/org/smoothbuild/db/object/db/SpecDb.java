@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecNodeException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ABSENT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
@@ -39,6 +40,7 @@ import org.smoothbuild.db.object.exc.UnexpectedSpecSequenceException;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.SpecKind;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.expr.AbsentSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
@@ -73,6 +75,7 @@ public class SpecDb {
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, Spec> specCache;
 
+  private final AbsentSpec absentSpec;
   private final BlobSpec blobSpec;
   private final BoolSpec boolSpec;
   private final IntSpec intSpec;
@@ -93,6 +96,8 @@ public class SpecDb {
       this.strSpec = cacheSpec(new StrSpec(writeBaseSpecRoot(STRING)));
       // Expr-s
       this.nullSpec = cacheSpec(new NullSpec(writeBaseSpecRoot(NULL), nothingSpec));
+      // Absent
+      this.absentSpec = cacheSpec(new AbsentSpec(writeBaseSpecRoot(ABSENT)));
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -102,6 +107,10 @@ public class SpecDb {
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec));
+  }
+
+  public AbsentSpec absentSpec() {
+    return absentSpec;
   }
 
   public BlobSpec blobSpec() {
@@ -194,7 +203,7 @@ public class SpecDb {
     List<Hash> rootSequence = readSpecRootSequence(hash);
     SpecKind specKind = decodeSpecMarker(hash, rootSequence.get(0));
     return switch (specKind) {
-      case BLOB, BOOL, INT, NOTHING, STRING, NULL -> {
+      case BLOB, BOOL, INT, NOTHING, STRING, NULL, ABSENT -> {
         assertSpecRootSequenceSize(hash, specKind, rootSequence, 1);
         throw new RuntimeException(
             "Internal error: Spec with kind " + specKind + " should be found in cache.");
