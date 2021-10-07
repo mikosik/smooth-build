@@ -106,15 +106,15 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void call_expression_with_one_argument() {
       assertThat(callExpr(constExpr(definedLambdaVal()), list(strExpr("abc"))).hash())
-          .isEqualTo(Hash.decode("f4b7bc2125ffa4571067bfd85390bcf46584da07"));
+          .isEqualTo(Hash.decode("9f9d4152c7bf1e895dbc491cb5956f64e5e9be41"));
     }
 
     @Test
     public void call_expression_without_arguments() {
-      DefinedLambdaSpec spec = definedLambdaSpec(intSpec(), strSpec());
+      DefinedLambdaSpec spec = definedLambdaSpec(intSpec(), list(strSpec()));
       DefinedLambda lambda = definedLambdaVal(spec, intExpr(), list(strExpr()));
       assertThat(callExpr(constExpr(lambda), list(strExpr("abc"))).hash())
-          .isEqualTo(Hash.decode("f4b7bc2125ffa4571067bfd85390bcf46584da07"));
+          .isEqualTo(Hash.decode("9f9d4152c7bf1e895dbc491cb5956f64e5e9be41"));
     }
   }
 
@@ -151,33 +151,33 @@ public class ObjStableHashTest extends TestingContext {
     public void with_no_parameters() {
       DefinedLambda definedLambda =
           definedLambdaVal(
-              definedLambdaSpec(intSpec()),
+              definedLambdaSpec(intSpec(), list()),
               intExpr(1),
               list());
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("e1c7825345302089d7e28e815eac72245200b795"));
+          .isEqualTo(Hash.decode("9042b902ebdd3177d0f9015565bab03c688f7856"));
     }
 
     @Test
     public void with_one_parameter() {
       DefinedLambda definedLambda =
           definedLambdaVal(
-              definedLambdaSpec(intSpec(), intSpec()),
+              definedLambdaSpec(intSpec(), list(intSpec())),
               intExpr(1),
               list(intExpr(2)));
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("ff158bd0763f8c71e1d86765c412da59fb2610c3"));
+          .isEqualTo(Hash.decode("773d182ffee1bb89acaaf655f90abb093cc4c3b1"));
     }
 
     @Test
     public void with_two_parameters() {
       DefinedLambda definedLambda =
           definedLambdaVal(
-              definedLambdaSpec(intSpec(), intSpec(), strSpec()),
+              definedLambdaSpec(intSpec(), list(intSpec(), strSpec())),
               intExpr(1),
               list(intExpr(2), strExpr("abc")));
       assertThat(definedLambda.hash())
-          .isEqualTo(Hash.decode("c4dc7e349abd8e3bd85e4cccad58a7343db5b2ab"));
+          .isEqualTo(Hash.decode("592b30314f7f016697ffb29bfc616aa2d2db32b8"));
     }
   }
 
@@ -232,36 +232,36 @@ public class ObjStableHashTest extends TestingContext {
     public void with_no_default_arguments() {
       NativeLambda nativeLambda =
           nativeLambdaVal(
-              nativeLambdaSpec(intSpec()),
+              nativeLambdaSpec(intSpec(), list()),
               strVal("classBinaryName"),
               blobVal(ByteString.encodeUtf8("native jar")),
               list());
       assertThat(nativeLambda.hash())
-          .isEqualTo(Hash.decode("5a970169e0d427d40f8f84e64c585ce76bf486b5"));
+          .isEqualTo(Hash.decode("079ed230597e307cf1b0ae905625829bf5bfec03"));
     }
 
     @Test
     public void with_one_default_argument() {
       NativeLambda nativeLambda =
           nativeLambdaVal(
-              nativeLambdaSpec(intSpec(), strSpec()),
+              nativeLambdaSpec(intSpec(), list(strSpec())),
               strVal("classBinaryName"),
               blobVal(ByteString.encodeUtf8("native jar")),
               list(strExpr("abc")));
       assertThat(nativeLambda.hash())
-          .isEqualTo(Hash.decode("c5bc5f5a1e0a3b807132d8f5b2a23e8e459b4faa"));
+          .isEqualTo(Hash.decode("b2d632259f77e2b65e56a9460886ea528a9b2602"));
     }
 
     @Test
     public void with_two_default_arguments() {
       NativeLambda nativeLambda =
           nativeLambdaVal(
-              nativeLambdaSpec(intSpec(), intSpec(), strSpec()),
+              nativeLambdaSpec(intSpec(), list(intSpec(), strSpec())),
               strVal("classBinaryName"),
               blobVal(ByteString.encodeUtf8("native jar")),
               list(intExpr(2), strExpr("abc")));
       assertThat(nativeLambda.hash())
-          .isEqualTo(Hash.decode("3d3aa1963e877d6aa27774cc72a490521fba6037"));
+          .isEqualTo(Hash.decode("51b7718235116979cb1c4220ecf9be3eafbfe0e3"));
     }
   }
 

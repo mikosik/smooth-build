@@ -98,7 +98,7 @@ public class CallTest extends TestingContext {
 
   @Test
   public void hash_of_calls_with_different_function_is_not_the_same() {
-    DefinedLambdaSpec spec = definedLambdaSpec(intSpec(), strSpec());
+    DefinedLambdaSpec spec = definedLambdaSpec(intSpec(), list(strSpec()));
     Const function1 = constExpr(definedLambdaVal(spec, intExpr(1), list(strExpr())));
     Const function2 = constExpr(definedLambdaVal(spec, intExpr(2), list(strExpr())));
     List<Const> arguments = list(strExpr()) ;

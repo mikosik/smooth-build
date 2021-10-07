@@ -77,11 +77,11 @@ public class SpecCachingTest extends TestingContext {
 
   private static DefinedLambdaSpec definedLambdaSpec(SpecDb specDb) {
     RecSpec parameters = specDb.recSpec(list(specDb.boolSpec(), specDb.blobSpec()));
-    return specDb.definedLambdaSpec(specDb.strSpec(), parameters);
+    return specDb.definedLambdaSpec(specDb.strSpec(), parameters, parameters);
   }
 
   private static NativeLambdaSpec nativeLambdaSpec(SpecDb specDb) {
     RecSpec parameters = specDb.recSpec(list(specDb.boolSpec(), specDb.blobSpec()));
-    return specDb.nativeLambdaSpec(specDb.strSpec(), parameters);
+    return specDb.nativeLambdaSpec(specDb.strSpec(), parameters, parameters);
   }
 }

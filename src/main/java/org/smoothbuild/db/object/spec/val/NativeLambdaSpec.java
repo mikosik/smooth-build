@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 
 public class NativeLambdaSpec extends LambdaSpec {
-  public NativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
-    super(hash, NATIVE_LAMBDA, result, parameters);
+  public NativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters, RecSpec defaultArguments) {
+    super(hash, NATIVE_LAMBDA, result, parameters, defaultArguments);
   }
 
   @Override

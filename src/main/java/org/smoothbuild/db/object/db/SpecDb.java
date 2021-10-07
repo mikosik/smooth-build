@@ -70,6 +70,9 @@ public class SpecDb {
   public static final String LAMBDA_RESULT_PATH = DATA_PATH + "[" + LAMBDA_RESULT_INDEX + "]";
   private static final int LAMBDA_PARAMS_INDEX = 1;
   public static final String LAMBDA_PARAMS_PATH = DATA_PATH + "[" + LAMBDA_PARAMS_INDEX + "]";
+  public static final int LAMBDA_DEF_ARGUMENTS_INDEX = 2;
+  public static final String LAMBDA_DEF_ARGUMENTS_PATH =
+      DATA_PATH + "[" + LAMBDA_DEF_ARGUMENTS_INDEX + "]";
 
 
   private final HashedDb hashedDb;
@@ -121,16 +124,20 @@ public class SpecDb {
     return boolSpec;
   }
 
-  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newDefinedLambdaSpec(result, parameters));
+  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) {
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newDefinedLambdaSpec(result, parameters, defaultArguments));
   }
 
   public IntSpec intSpec() {
     return intSpec;
   }
 
-  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newNativeLambdaSpec(result, parameters));
+  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) {
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newNativeLambdaSpec(result, parameters, defaultArguments   ));
   }
 
   public NothingSpec nothingSpec() {
@@ -281,13 +288,15 @@ public class SpecDb {
     assertSpecRootSequenceSize(hash, specKind, rootSequence, 2);
     Hash dataHash = rootSequence.get(DATA_INDEX);
     List<Hash> data = readSequenceHashes(hash, dataHash, specKind, DATA_PATH);
-    if (data.size() != 2) {
-      throw new UnexpectedSpecSequenceException(hash, specKind, DATA_PATH, 2, data.size());
+    if (data.size() != 3) {
+      throw new UnexpectedSpecSequenceException(hash, specKind, DATA_PATH, 3, data.size());
     }
     Spec result = getSpecOrChainException(
         hash, specKind, data.get(LAMBDA_RESULT_INDEX), LAMBDA_RESULT_PATH);
     Spec parameters = getSpecOrChainException(
         hash, specKind, data.get(LAMBDA_PARAMS_INDEX), LAMBDA_PARAMS_PATH);
+    Spec defaultArguments = getSpecOrChainException(
+        hash, specKind, data.get(LAMBDA_DEF_ARGUMENTS_INDEX), LAMBDA_DEF_ARGUMENTS_PATH);
     if (!(result instanceof ValSpec resultSpec)) {
       throw new UnexpectedSpecNodeException(
           hash, specKind, LAMBDA_RESULT_PATH, ValSpec.class, result.getClass());
@@ -296,9 +305,13 @@ public class SpecDb {
       throw new UnexpectedSpecNodeException(
           hash, specKind, LAMBDA_PARAMS_PATH, RecSpec.class, parameters.getClass());
     }
+    if (!(defaultArguments instanceof RecSpec argumentSpecs)) {
+      throw new UnexpectedSpecNodeException(
+          hash, specKind, LAMBDA_DEF_ARGUMENTS_PATH, RecSpec.class, defaultArguments.getClass());
+    }
     return switch (specKind) {
-      case DEFINED_LAMBDA -> newDefinedLambdaSpec(hash, resultSpec, parametersSpec);
-      case NATIVE_LAMBDA -> newNativeLambdaSpec(hash, resultSpec, parametersSpec);
+      case DEFINED_LAMBDA -> newDefinedLambdaSpec(hash, resultSpec, parametersSpec, argumentSpecs);
+      case NATIVE_LAMBDA -> newNativeLambdaSpec(hash, resultSpec, parametersSpec, argumentSpecs);
       default -> throw new RuntimeException("Cannot happen.");
     };
   }
@@ -335,24 +348,26 @@ public class SpecDb {
     return cacheSpec(new ArraySpec(hash, elementSpec));
   }
 
-  private DefinedLambdaSpec newDefinedLambdaSpec(ValSpec result, RecSpec parameters)
-      throws HashedDbException {
-    var hash = writeLambdaSpecRoot(DEFINED_LAMBDA, result, parameters);
-    return newDefinedLambdaSpec(hash, result, parameters);
+  private DefinedLambdaSpec newDefinedLambdaSpec(ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) throws HashedDbException {
+    var hash = writeLambdaSpecRoot(DEFINED_LAMBDA, result, parameters, defaultArguments);
+    return newDefinedLambdaSpec(hash, result, parameters, defaultArguments);
   }
 
-  private DefinedLambdaSpec newDefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
-    return cacheSpec(new DefinedLambdaSpec(hash, result, parameters));
+  private DefinedLambdaSpec newDefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) {
+    return cacheSpec(new DefinedLambdaSpec(hash, result, parameters, defaultArguments));
   }
 
-  private NativeLambdaSpec newNativeLambdaSpec(ValSpec result, RecSpec parameters)
-      throws HashedDbException {
-    var hash = writeLambdaSpecRoot(NATIVE_LAMBDA, result, parameters);
-    return newNativeLambdaSpec(hash, result, parameters);
+  private NativeLambdaSpec newNativeLambdaSpec(ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) throws HashedDbException {
+    var hash = writeLambdaSpecRoot(NATIVE_LAMBDA, result, parameters, defaultArguments);
+    return newNativeLambdaSpec(hash, result, parameters, defaultArguments);
   }
 
-  private NativeLambdaSpec newNativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
-    return cacheSpec(new NativeLambdaSpec(hash, result, parameters));
+  private NativeLambdaSpec newNativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) {
+    return cacheSpec(new NativeLambdaSpec(hash, result, parameters, defaultArguments));
   }
 
   private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
@@ -435,9 +450,9 @@ public class SpecDb {
     return writeNonBaseSpecRoot(ARRAY, elementSpec.hash());
   }
 
-  private Hash writeLambdaSpecRoot(SpecKind lambdaKind, ValSpec result, RecSpec parameters)
-      throws HashedDbException {
-    var hash = hashedDb.writeSequence(result.hash(), parameters.hash());
+  private Hash writeLambdaSpecRoot(SpecKind lambdaKind, ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) throws HashedDbException {
+    var hash = hashedDb.writeSequence(result.hash(), parameters.hash(), defaultArguments.hash());
     return writeNonBaseSpecRoot(lambdaKind, hash);
   }
 

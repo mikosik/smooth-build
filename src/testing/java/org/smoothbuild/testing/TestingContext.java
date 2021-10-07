@@ -2,6 +2,7 @@ package org.smoothbuild.testing;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.stream;
+import static java.util.Collections.nCopies;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
@@ -39,6 +40,7 @@ import org.smoothbuild.db.object.obj.val.NativeLambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.expr.AbsentSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
@@ -253,6 +255,10 @@ public class TestingContext {
     return specDb().arraySpec(elementSpec);
   }
 
+  public AbsentSpec absentSpec() {
+    return specDb().absentSpec();
+  }
+
   public BlobSpec blobSpec() {
     return specDb().blobSpec();
   }
@@ -262,15 +268,17 @@ public class TestingContext {
   }
 
   public DefinedLambdaSpec definedLambdaSpec() {
-    return definedLambdaSpec(intSpec(), blobSpec(), strSpec());
+    return definedLambdaSpec(intSpec(), list(blobSpec(), strSpec()));
   }
 
-  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, ValSpec... parameters) {
-    return definedLambdaSpec(result, recSpec(list(parameters)));
+  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+    return definedLambdaSpec(
+        result, recSpec(parameters), recSpecWithAbsents(parameters.size()));
   }
 
-  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters) {
-    return specDb().definedLambdaSpec(result, parameters);
+  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) {
+    return specDb().definedLambdaSpec(result, parameters, defaultArguments);
   }
 
   public IntSpec intSpec() {
@@ -278,15 +286,16 @@ public class TestingContext {
   }
 
   public NativeLambdaSpec nativeLambdaSpec() {
-    return nativeLambdaSpec(intSpec(), blobSpec(), strSpec());
+    return nativeLambdaSpec(intSpec(), list(blobSpec(), strSpec()));
   }
 
-  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, ValSpec... parameters) {
-    return nativeLambdaSpec(result, recSpec(list(parameters)));
+  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+    return nativeLambdaSpec(result, recSpec(parameters), recSpecWithAbsents(parameters.size()));
   }
 
-  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters) {
-    return specDb().nativeLambdaSpec(result, parameters);
+  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) {
+    return specDb().nativeLambdaSpec(result, parameters, defaultArguments);
   }
 
   public NothingSpec nothingSpec() {
@@ -299,6 +308,10 @@ public class TestingContext {
 
   public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
     return specDb().recSpec(itemSpecs);
+  }
+
+  public RecSpec recSpecWithAbsents(int size) {
+    return specDb().recSpec(nCopies(size, absentSpec()));
   }
 
   public RecSpec emptyRecSpec() {
@@ -403,7 +416,7 @@ public class TestingContext {
   }
 
   public DefinedLambda definedLambdaVal(Expr body) {
-    DefinedLambdaSpec spec = definedLambdaSpec(body.evaluationSpec(), strSpec());
+    DefinedLambdaSpec spec = definedLambdaSpec(body.evaluationSpec(), list(strSpec()));
     return definedLambdaVal(spec, body, list(strExpr()));
   }
 

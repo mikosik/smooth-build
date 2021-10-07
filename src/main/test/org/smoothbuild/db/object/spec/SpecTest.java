@@ -2,6 +2,7 @@ package org.smoothbuild.db.object.spec;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ABSENT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_DEFINED_LAMBDA;
@@ -287,9 +288,9 @@ public class SpecTest {
 
   public static List<Arguments> defined_lambda_result_cases() {
     return list(
-        arguments(definedLambdaSpec(INT), INT),
-        arguments(definedLambdaSpec(BLOB, BOOL), BLOB),
-        arguments(definedLambdaSpec(BLOB, BOOL, INT), BLOB)
+        arguments(definedLambdaSpec(INT, list()), INT),
+        arguments(definedLambdaSpec(BLOB, list(BOOL)), BLOB),
+        arguments(definedLambdaSpec(BLOB, list(BOOL, INT)), BLOB)
     );
   }
 
@@ -302,9 +303,25 @@ public class SpecTest {
 
   public static List<Arguments> defined_lambda_parameters_cases() {
     return list(
-        arguments(definedLambdaSpec(INT), recSpec()),
-        arguments(definedLambdaSpec(BLOB, BOOL), recSpec(BOOL)),
-        arguments(definedLambdaSpec(BLOB, BOOL, INT), recSpec(BOOL, INT))
+        arguments(definedLambdaSpec(INT, list()), recSpec()),
+        arguments(definedLambdaSpec(BLOB, list(BOOL)), recSpec(BOOL)),
+        arguments(definedLambdaSpec(BLOB, list(BOOL, INT)), recSpec(BOOL, INT))
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("defined_lambda_default_arguments_cases")
+  public void defined_lambda_default_arguments(DefinedLambdaSpec spec, RecSpec expected) {
+    assertThat(spec.defaultArguments())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> defined_lambda_default_arguments_cases() {
+    return list(
+        arguments(definedLambdaSpec(INT, list(), list()), recSpec()),
+        arguments(definedLambdaSpec(BLOB, list(BOOL), list(ABSENT)), recSpec(ABSENT)),
+        arguments(definedLambdaSpec(
+            BLOB, list(BOOL, INT), list(BOOL, ABSENT)), recSpec(BOOL, ABSENT))
     );
   }
 
@@ -317,9 +334,9 @@ public class SpecTest {
 
   public static List<Arguments> native_lambda_result_cases() {
     return list(
-        arguments(nativeLambdaSpec(INT), INT),
-        arguments(nativeLambdaSpec(BLOB, BOOL), BLOB),
-        arguments(nativeLambdaSpec(BLOB, BOOL, INT), BLOB)
+        arguments(nativeLambdaSpec(INT, list()), INT),
+        arguments(nativeLambdaSpec(BLOB, list(BOOL)), BLOB),
+        arguments(nativeLambdaSpec(BLOB, list(BOOL, INT)), BLOB)
     );
   }
 
@@ -332,22 +349,52 @@ public class SpecTest {
 
   public static List<Arguments> native_lambda_parameters_cases() {
     return list(
-        arguments(nativeLambdaSpec(INT), recSpec()),
-        arguments(nativeLambdaSpec(BLOB, BOOL), recSpec(BOOL)),
-        arguments(nativeLambdaSpec(BLOB, BOOL, INT), recSpec(BOOL, INT))
+        arguments(nativeLambdaSpec(INT, list()), recSpec()),
+        arguments(nativeLambdaSpec(BLOB, list(BOOL)), recSpec(BOOL)),
+        arguments(nativeLambdaSpec(BLOB, list(BOOL, INT)), recSpec(BOOL, INT))
     );
   }
 
-  private static ValSpec definedLambdaSpec(ValSpec result, ValSpec... parameters) {
-    return SPEC_DB.definedLambdaSpec(result, recSpec(parameters));
+  @ParameterizedTest
+  @MethodSource("native_lambda_default_arguments_cases")
+  public void native_lambda_default_arguments(NativeLambdaSpec spec, RecSpec expected) {
+    assertThat(spec.defaultArguments())
+        .isEqualTo(expected);
   }
 
-  private static ValSpec nativeLambdaSpec(ValSpec result, ValSpec... parameters) {
-    return SPEC_DB.nativeLambdaSpec(result, recSpec(parameters));
+  public static List<Arguments> native_lambda_default_arguments_cases() {
+    return list(
+        arguments(nativeLambdaSpec(INT, list(), list()), recSpec()),
+        arguments(nativeLambdaSpec(BLOB, list(BOOL), list(ABSENT)), recSpec(ABSENT)),
+        arguments(nativeLambdaSpec(
+            BLOB, list(BOOL, INT), list(BOOL, ABSENT)), recSpec(BOOL, ABSENT))
+    );
+  }
+
+  private static ValSpec definedLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+    return definedLambdaSpec(result, parameters, parameters);
+  }
+
+  private static DefinedLambdaSpec definedLambdaSpec(ValSpec result,
+      ImmutableList<ValSpec> parameters, ImmutableList<ValSpec> defaultArguments) {
+    return SPEC_DB.definedLambdaSpec(result, recSpec(parameters), recSpec(defaultArguments));
+  }
+
+  private static ValSpec nativeLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+    return nativeLambdaSpec(result, parameters, parameters);
+  }
+
+  private static NativeLambdaSpec nativeLambdaSpec(ValSpec result,
+      ImmutableList<ValSpec> parameters, ImmutableList<ValSpec> defaultArguments) {
+    return SPEC_DB.nativeLambdaSpec(result, recSpec(parameters), recSpec(defaultArguments));
   }
 
   private static RecSpec recSpec(ValSpec... items) {
-    return SPEC_DB.recSpec(list(items));
+    return recSpec(list(items));
+  }
+
+  private static RecSpec recSpec(List<ValSpec> items) {
+    return SPEC_DB.recSpec(items);
   }
 
   private static RecExprSpec recExprSpec(ValSpec... items) {

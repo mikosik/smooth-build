@@ -10,11 +10,14 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 public abstract class LambdaSpec extends ValSpec {
   private final ValSpec result;
   private final RecSpec parameters;
+  private final RecSpec defaultArguments;
 
-  protected LambdaSpec(Hash hash, SpecKind kind, ValSpec result, RecSpec parameters) {
+  protected LambdaSpec(Hash hash, SpecKind kind, ValSpec result, RecSpec parameters,
+      RecSpec defaultArguments) {
     super(hash, kind);
     this.result = result;
     this.parameters = parameters;
+    this.defaultArguments = defaultArguments;
   }
 
   public ValSpec result() {
@@ -23,6 +26,10 @@ public abstract class LambdaSpec extends ValSpec {
 
   public RecSpec parameters() {
     return parameters;
+  }
+
+  public RecSpec defaultArguments() {
+    return defaultArguments;
   }
 
   @Override

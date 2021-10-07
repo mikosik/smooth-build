@@ -2,6 +2,8 @@ package org.smoothbuild.db.object.obj;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.db.SpecDb.DATA_PATH;
+import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_DEF_ARGUMENTS_INDEX;
+import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_DEF_ARGUMENTS_PATH;
 import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_PARAMS_PATH;
 import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_RESULT_PATH;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ABSENT;
@@ -278,8 +280,8 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Override
-    protected LambdaSpec newSpec(ValSpec result, RecSpec arguments) {
-      return definedLambdaSpec(result, arguments);
+    protected LambdaSpec newSpec(ValSpec result, RecSpec arguments, RecSpec defaultArguments) {
+      return definedLambdaSpec(result, arguments, defaultArguments);
     }
   }
 
@@ -291,8 +293,8 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Override
-    protected LambdaSpec newSpec(ValSpec result, RecSpec arguments) {
-      return nativeLambdaSpec(result, arguments);
+    protected LambdaSpec newSpec(ValSpec result, RecSpec arguments, RecSpec defaultArguments) {
+      return nativeLambdaSpec(result, arguments, defaultArguments);
     }
   }
 
@@ -303,19 +305,22 @@ public class CorruptedSpecTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme
        * to save defined-lambda spec in HashedDb.
        */
-      RecSpec argumentSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               hash(intSpec()),
-              hash(argumentSpecs)
+              hash(parameterSpecs),
+              hash(defaultArgumentSpecs)
           )
       );
       assertThat(specHash)
-          .isEqualTo(newSpec(intSpec(), argumentSpecs).hash());
+          .isEqualTo(newSpec(intSpec(), parameterSpecs, defaultArgumentSpecs).hash());
     }
 
-    protected abstract LambdaSpec newSpec(ValSpec result, RecSpec arguments);
+    protected abstract LambdaSpec newSpec(
+        ValSpec result, RecSpec parameters, RecSpec defaultArguments);
 
     protected abstract SpecKind specKind();
 
@@ -347,32 +352,36 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Test
-    public void with_data_having_three_elements() throws Exception {
-      RecSpec argumentSpecs = recSpec(list(strSpec(), boolSpec()));
+    public void with_data_having_four_elements() throws Exception {
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash hash = hash(
           hash(specKind().marker()),
           hash(
               hash(intSpec()),
-              hash(argumentSpecs),
-              hash(argumentSpecs)
+              hash(parameterSpecs),
+              hash(defaultArgumentSpecs),
+              hash(parameterSpecs)
           )
       );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecSequenceException(
-              hash, specKind(), DATA_PATH, 2, 3));
+              hash, specKind(), DATA_PATH, 3, 4));
     }
 
     @Test
-    public void with_data_having_one_elements() throws Exception {
+    public void with_data_having_two_elements() throws Exception {
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash hash = hash(
           hash(specKind().marker()),
           hash(
-              hash(intSpec())
+              hash(intSpec()),
+              hash(parameterSpecs)
           )
       );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecSequenceException(
-              hash, specKind(), DATA_PATH, 2, 1));
+              hash, specKind(), DATA_PATH, 3, 2));
     }
 
     @ParameterizedTest
@@ -392,13 +401,15 @@ public class CorruptedSpecTest extends TestingContext {
 
     @Test
     public void with_result_pointing_nowhere() throws Exception {
-      RecSpec argumentSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash nowhere = Hash.of(33);
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               nowhere,
-              hash(argumentSpecs)
+              hash(parameterSpecs),
+              hash(defaultArgumentSpecs)
           )
       );
       assertCall(() -> specDb().getSpec(specHash))
@@ -408,12 +419,14 @@ public class CorruptedSpecTest extends TestingContext {
 
     @Test
     public void with_result_being_expr_spec() throws Exception {
-      RecSpec argumentSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               hash(constSpec()),
-              hash(argumentSpecs)
+              hash(parameterSpecs),
+              hash(defaultArgumentSpecs)
           )
       );
       assertCall(() -> specDb().getSpec(specHash))
@@ -423,12 +436,14 @@ public class CorruptedSpecTest extends TestingContext {
 
     @Test
     public void with_result_spec_corrupted() throws Exception {
-      RecSpec argumentSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               corruptedArraySpecHash(),
-              hash(argumentSpecs)
+              hash(parameterSpecs),
+              hash(defaultArgumentSpecs)
           )
       );
       assertCall(() -> specDb().getSpec(specHash))
@@ -437,13 +452,15 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Test
-    public void with_arguments_pointing_nowhere() throws Exception {
+    public void with_parameters_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               hash(intSpec()),
-              nowhere
+              nowhere,
+              hash(defaultArgumentSpecs)
           )
       );
       assertCall(() -> specDb().getSpec(specHash))
@@ -452,12 +469,14 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Test
-    public void with_arguments_not_being_rec() throws Exception {
+    public void with_parameters_not_being_rec() throws Exception {
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               hash(intSpec()),
-              hash(strSpec())
+              hash(strSpec()),
+              hash(defaultArgumentSpecs)
           )
       );
       assertThatGetSpec(specHash)
@@ -466,12 +485,14 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Test
-    public void with_arguments_being_expr_spec() throws Exception {
+    public void with_parameters_being_expr_spec() throws Exception {
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               hash(intSpec()),
-              hash(constSpec())
+              hash(constSpec()),
+              hash(defaultArgumentSpecs)
           )
       );
       assertCall(() -> specDb().getSpec(specHash))
@@ -480,16 +501,85 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Test
-    public void with_arguments_spec_corrupted() throws Exception {
+    public void with_parameters_spec_corrupted() throws Exception {
+      RecSpec defaultArgumentSpecs = recSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(specKind().marker()),
           hash(
               hash(intSpec()),
-              corruptedArraySpecHash()
+              corruptedArraySpecHash(),
+              hash(defaultArgumentSpecs)
           )
       );
       assertCall(() -> specDb().getSpec(specHash))
           .throwsException(new DecodeSpecNodeException(specHash, specKind(), LAMBDA_PARAMS_PATH))
+          .withCause(corruptedArraySpecException());
+    }
+
+    @Test
+    public void with_default_arguments_pointing_nowhere() throws Exception {
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      Hash nowhere = Hash.of(33);
+      Hash specHash = hash(
+          hash(specKind().marker()),
+          hash(
+              hash(intSpec()),
+              hash(parameterSpecs),
+              nowhere
+          )
+      );
+      assertCall(() -> specDb().getSpec(specHash))
+          .throwsException(new DecodeSpecNodeException(
+              specHash, specKind(), LAMBDA_DEF_ARGUMENTS_PATH))
+          .withCause(new DecodeSpecException(nowhere));
+    }
+
+    @Test
+    public void with_default_arguments_not_being_rec() throws Exception {
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      Hash specHash = hash(
+          hash(specKind().marker()),
+          hash(
+              hash(intSpec()),
+              hash(parameterSpecs),
+              hash(strSpec())
+          )
+      );
+      assertThatGetSpec(specHash)
+          .throwsException(new UnexpectedSpecNodeException(specHash, specKind(), DATA_PATH,
+              LAMBDA_DEF_ARGUMENTS_INDEX, RecSpec.class, StrSpec.class));
+    }
+
+    @Test
+    public void with_default_arguments_being_expr_spec() throws Exception {
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      Hash specHash = hash(
+          hash(specKind().marker()),
+          hash(
+              hash(intSpec()),
+              hash(parameterSpecs),
+              hash(constSpec())
+          )
+      );
+      assertCall(() -> specDb().getSpec(specHash))
+          .throwsException(new UnexpectedSpecNodeException(
+              specHash, specKind(), LAMBDA_DEF_ARGUMENTS_PATH, RecSpec.class, ConstSpec.class));
+    }
+
+    @Test
+    public void with_default_arguments_spec_corrupted() throws Exception {
+      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      Hash specHash = hash(
+          hash(specKind().marker()),
+          hash(
+              hash(intSpec()),
+              hash(parameterSpecs),
+              corruptedArraySpecHash()
+          )
+      );
+      assertCall(() -> specDb().getSpec(specHash))
+          .throwsException(new DecodeSpecNodeException(
+              specHash, specKind(), LAMBDA_DEF_ARGUMENTS_PATH))
           .withCause(corruptedArraySpecException());
     }
   }

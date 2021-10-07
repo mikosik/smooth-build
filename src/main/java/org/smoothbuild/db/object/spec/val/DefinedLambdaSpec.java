@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 
 public class DefinedLambdaSpec extends LambdaSpec {
-  public DefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
-    super(hash, DEFINED_LAMBDA, result, parameters);
+  public DefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters, RecSpec defaultArguments) {
+    super(hash, DEFINED_LAMBDA, result, parameters, defaultArguments);
   }
 
   @Override

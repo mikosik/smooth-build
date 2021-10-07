@@ -17,13 +17,14 @@ public class TestingSpecs {
   public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
   public static final SpecDb SPEC_DB = CONTEXT.specDb();
 
+  public static final ValSpec ABSENT = SPEC_DB.absentSpec();
   public static final ValSpec BLOB = SPEC_DB.blobSpec();
   public static final ValSpec BOOL = SPEC_DB.boolSpec();
   public static final ValSpec DEFINED_LAMBDA =
-      SPEC_DB.definedLambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)));
+      SPEC_DB.definedLambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)), SPEC_DB.recSpec(list(ABSENT)));
   public static final ValSpec INT = SPEC_DB.intSpec();
   public static final ValSpec NATIVE_LAMBDA =
-      SPEC_DB.nativeLambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)));
+      SPEC_DB.nativeLambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)), SPEC_DB.recSpec(list(ABSENT)));
   public static final ValSpec NOTHING = SPEC_DB.nothingSpec();
   public static final ValSpec STR = SPEC_DB.strSpec();
   public static final RecSpec PERSON = CONTEXT.personSpec();
