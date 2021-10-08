@@ -1,5 +1,6 @@
 package org.smoothbuild.db.object.db;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecException;
@@ -22,7 +23,9 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
+import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -34,6 +37,7 @@ import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.object.exc.DecodeSpecIllegalKindException;
 import org.smoothbuild.db.object.exc.DecodeSpecNodeException;
 import org.smoothbuild.db.object.exc.DecodeSpecRootException;
+import org.smoothbuild.db.object.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.exc.ObjectDbException;
 import org.smoothbuild.db.object.exc.UnexpectedSpecNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedSpecSequenceException;
@@ -57,6 +61,7 @@ import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
+import org.smoothbuild.db.object.spec.val.VariableSpec;
 
 import com.google.common.collect.ImmutableList;
 
@@ -108,12 +113,12 @@ public class SpecDb {
 
   // methods for getting Val-s specs
 
-  public ArraySpec arraySpec(ValSpec elementSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec));
-  }
-
   public AbsentSpec absentSpec() {
     return absentSpec;
+  }
+
+  public ArraySpec arraySpec(ValSpec elementSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec));
   }
 
   public BlobSpec blobSpec() {
@@ -146,6 +151,12 @@ public class SpecDb {
 
   public StrSpec strSpec() {
     return strSpec;
+  }
+
+  public VariableSpec variableSpec(String name) {
+    checkArgument(isVariableName(name));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newVariableSpec(name));
+
   }
 
   // methods for getting Expr-s specs
@@ -224,6 +235,7 @@ public class SpecDb {
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case DEFINED_LAMBDA, NATIVE_LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
       case RECORD -> readRecord(hash, rootSequence);
+      case VARIABLE -> readVariable(hash, rootSequence);
     };
   }
 
@@ -337,6 +349,16 @@ public class SpecDb {
     return builder.build();
   }
 
+  private VariableSpec readVariable(Hash hash, List<Hash> rootSequence) {
+    assertSpecRootSequenceSize(hash, VARIABLE, rootSequence, 2);
+    String name = wrapHashedDbExceptionAsDecodeSpecNodeException(
+        hash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSequence.get(1)));
+    if (!isVariableName(name)) {
+      throw new DecodeVariableIllegalNameException(hash, name);
+    }
+    return newVariableSpec(hash, name);
+  }
+
   // methods for creating Val Spec-s
 
   private ArraySpec newArraySpec(ValSpec elementSpec) throws HashedDbException {
@@ -377,6 +399,15 @@ public class SpecDb {
 
   private RecSpec newRecSpec(Hash hash, Iterable<? extends ValSpec> itemSpecs) {
     return cacheSpec(new RecSpec(hash, itemSpecs));
+  }
+
+  private VariableSpec newVariableSpec(String name) throws HashedDbException {
+    var hash = writeVariableSpecRoot(name);
+    return newVariableSpec(hash, name);
+  }
+
+  private VariableSpec newVariableSpec(Hash hash, String name) {
+    return cacheSpec(new VariableSpec(hash, name));
   }
 
   // methods for creating Expr Spec-s
@@ -456,10 +487,14 @@ public class SpecDb {
     return writeNonBaseSpecRoot(lambdaKind, hash);
   }
 
-  private Hash writeRecSpecRoot(Iterable<? extends ValSpec> itemSpecs)
-      throws HashedDbException {
+  private Hash writeRecSpecRoot(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
     var itemsHash = hashedDb.writeSequence(map(itemSpecs, Spec::hash));
     return writeNonBaseSpecRoot(RECORD, itemsHash);
+  }
+
+  private Hash writeVariableSpecRoot(String name) throws HashedDbException {
+    var nameHash = hashedDb.writeString(name);
+    return writeNonBaseSpecRoot(VARIABLE, nameHash);
   }
 
   // Helper methods for writing roots

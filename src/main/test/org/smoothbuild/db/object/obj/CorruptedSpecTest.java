@@ -23,6 +23,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
+import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -33,12 +34,14 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
+import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.exc.DecodeSpecException;
 import org.smoothbuild.db.object.exc.DecodeSpecIllegalKindException;
 import org.smoothbuild.db.object.exc.DecodeSpecNodeException;
 import org.smoothbuild.db.object.exc.DecodeSpecRootException;
+import org.smoothbuild.db.object.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.exc.UnexpectedSpecNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedSpecSequenceException;
 import org.smoothbuild.db.object.obj.base.Obj;
@@ -981,5 +984,65 @@ public class CorruptedSpecTest extends TestingContext {
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
     return hashedDb().writeSequence(hashes);
+  }
+
+  @Nested
+  class _variable_spec {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save variable spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(VARIABLE.marker()),
+          hash("A")
+      );
+      assertThat(hash)
+          .isEqualTo(variableSpec("A").hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(VARIABLE);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(VARIABLE);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      Hash dataHash = Hash.of(33);
+      Hash specHash = hash(
+          hash(VARIABLE.marker()),
+          dataHash
+      );
+      assertCall(() -> specDb().getSpec(specHash))
+          .throwsException(new DecodeSpecNodeException(specHash, VARIABLE, DATA_PATH))
+          .withCause(new NoSuchDataException(dataHash));
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      Hash hash =
+          hash(
+              hash(VARIABLE.marker()),
+              corruptedArraySpecHash());
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeSpecNodeException(hash, VARIABLE, DATA_PATH))
+          .withCause(DecodeStringException.class);
+    }
+
+    @Test
+    public void with_illegal_name() throws Exception {
+      Hash hash = hash(
+          hash(VARIABLE.marker()),
+          hash("a")
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeVariableIllegalNameException(hash, "a"));
+    }
   }
 }

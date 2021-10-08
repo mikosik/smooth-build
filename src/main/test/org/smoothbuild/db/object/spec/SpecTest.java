@@ -35,6 +35,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SELECT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SPEC_DB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -68,6 +69,7 @@ import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -369,6 +371,22 @@ public class SpecTest {
         arguments(nativeLambdaSpec(
             BLOB, list(BOOL, INT), list(BOOL, ABSENT)), recSpec(BOOL, ABSENT))
     );
+  }
+
+  @Nested
+  class _variable {
+    @Test
+    public void name() {
+      VariableSpec variableSpec = SPEC_DB.variableSpec("A");
+      assertThat(variableSpec.name())
+          .isEqualTo("A");
+    }
+
+    @Test
+    public void illegal_name() {
+      assertCall(() -> SPEC_DB.variableSpec("a"))
+          .throwsException(new IllegalArgumentException());
+    }
   }
 
   private static ValSpec definedLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {

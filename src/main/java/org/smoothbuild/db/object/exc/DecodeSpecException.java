@@ -19,6 +19,10 @@ public class DecodeSpecException extends ObjectDbException {
     super(message, e);
   }
 
+  public DecodeSpecException(Hash hash, String message) {
+    this(hash, message, null);
+  }
+
   public DecodeSpecException(Hash hash, String message, Throwable cause) {
     super(buildMessage(hash, message), cause);
   }
