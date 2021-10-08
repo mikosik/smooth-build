@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.base.type.api;
 
-import org.smoothbuild.lang.base.type.api.Sides.Side;
-
 import com.google.common.collect.ImmutableList;
 
 public interface TypeFactory {
@@ -24,12 +22,4 @@ public interface TypeFactory {
   public StructType struct(String name, ImmutableList<ItemSignature> fields);
 
   public Variable variable(String name);
-
-  public Side upper();
-
-  public Side lower();
-
-  public Bounds unbounded();
-
-  public Bounds oneSideBound(Side side, Type type);
 }

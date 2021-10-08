@@ -440,8 +440,8 @@ public class TypingTest extends TestingContext {
     @Test
     public void variable_with_two_lower_bounds() {
       var bounds = typing().merge(
-          typeFactory().oneSideBound(lower(), STRING),
-          typeFactory().oneSideBound(lower(), BOOL));
+          typing().oneSideBound(lower(), STRING),
+          typing().oneSideBound(lower(), BOOL));
       assertThat(bounds.upper()).isEqualTo(ANY);
       assertThat(bounds.lower()).isEqualTo(ANY);
     }
@@ -449,8 +449,8 @@ public class TypingTest extends TestingContext {
     @Test
     public void variable_with_two_upper_bounds() {
       var bounds = typing().merge(
-          typeFactory().oneSideBound(upper(), STRING),
-          typeFactory().oneSideBound(upper(), BOOL));
+          typing().oneSideBound(upper(), STRING),
+          typing().oneSideBound(upper(), BOOL));
       assertThat(bounds.upper()).isEqualTo(NOTHING);
       assertThat(bounds.lower()).isEqualTo(NOTHING);
     }

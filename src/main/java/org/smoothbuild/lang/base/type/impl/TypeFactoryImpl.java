@@ -8,13 +8,10 @@ import org.smoothbuild.lang.base.type.api.AnyType;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BlobType;
 import org.smoothbuild.lang.base.type.api.BoolType;
-import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
 import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
-import org.smoothbuild.lang.base.type.api.Sides;
-import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
@@ -32,11 +29,9 @@ public class TypeFactoryImpl implements TypeFactory {
   private static final StringType STRING = new StringTypeImpl();
 
   private final SpecDb specDb;
-  private final Sides sides;
 
   public TypeFactoryImpl(SpecDb specDb) {
     this.specDb = specDb;
-    this.sides = new Sides(any(), nothing());
   }
 
   @Override
@@ -88,28 +83,5 @@ public class TypeFactoryImpl implements TypeFactory {
   public Variable variable(String name) {
     checkArgument(isVariableName(name), "Illegal type variable name '%s'", name);
     return new VariableImpl(name);
-  }
-
-  @Override
-  public Side upper() {
-    return sides.upper();
-  }
-
-  @Override
-  public Side lower() {
-    return sides.lower();
-  }
-
-  @Override
-  public Bounds unbounded() {
-    return new Bounds(NOTHING, ANY);
-  }
-
-  @Override
-  public Bounds oneSideBound(Side side, Type type) {
-    return side.dispatch(
-        () -> new Bounds(type, ANY),
-        () -> new Bounds(NOTHING, type)
-    );
   }
 }

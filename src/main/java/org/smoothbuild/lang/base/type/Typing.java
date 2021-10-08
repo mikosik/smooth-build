@@ -41,10 +41,12 @@ import com.google.common.collect.ImmutableSet;
 @Singleton
 public class Typing {
   private final TypeFactory typeFactory;
+  private final Sides sides;
 
   @Inject
   public Typing(TypeFactory typeFactory) {
     this.typeFactory = typeFactory;
+    this.sides = new Sides(any(), nothing());
   }
 
   /**
@@ -111,20 +113,23 @@ public class Typing {
     return typeFactory.function(resultType, parameters);
   }
 
-  public Sides.Side upper() {
-    return typeFactory.upper();
+  public Side upper() {
+    return sides.upper();
   }
 
-  public Sides.Side lower() {
-    return typeFactory.lower();
+  public Side lower() {
+    return sides.lower();
   }
 
   public Bounds unbounded() {
-    return typeFactory.unbounded();
+    return new Bounds(nothing(), any());
   }
 
   public Bounds oneSideBound(Side side, Type type) {
-    return typeFactory.oneSideBound(side, type);
+    return side.dispatch(
+        () -> new Bounds(type, any()),
+        () -> new Bounds(nothing(), type)
+    );
   }
 
   public boolean contains(Type type, Type inner) {
@@ -208,7 +213,7 @@ public class Typing {
     var result = new HashMap<Variable, Bounded>();
     inferVariableBounds(parameterTypes, argumentTypes, lower(), result);
     resultTypes.variables().forEach(v -> result.merge(
-        v, new Bounded(v, typeFactory.unbounded()), this::merge));
+        v, new Bounded(v, unbounded()), this::merge));
     return new BoundsMap(ImmutableMap.copyOf(result));
   }
 
@@ -234,7 +239,7 @@ public class Typing {
 
   private void inferImpl(Type typeA, Type typeB, Side side, Map<Variable, Bounded> result) {
     if (typeA instanceof Variable variable) {
-      Bounded bounded = new Bounded(variable, typeFactory.oneSideBound(side, typeB));
+      Bounded bounded = new Bounded(variable, oneSideBound(side, typeB));
       result.merge(variable, bounded, this::merge);
     } else if (typeA instanceof ArrayType arrayA) {
       if (typeB.equals(side.edge())) {
