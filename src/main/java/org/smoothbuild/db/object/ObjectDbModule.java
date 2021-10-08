@@ -29,8 +29,8 @@ public class ObjectDbModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public TypeFactory provideTypeFactory(SpecDb specDb) {
-    return new TypeFactoryImpl(specDb);
+  public TypeFactory provideTypeFactory() {
+    return new TypeFactoryImpl();
   }
 
   @Provides

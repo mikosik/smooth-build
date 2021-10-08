@@ -10,10 +10,11 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.lang.base.type.api.FunctionType;
 
 import com.google.common.collect.ImmutableList;
 
-public class LambdaSpec extends ValSpec {
+public class LambdaSpec extends ValSpec implements FunctionType {
   private final ValSpec result;
   private final RecSpec parametersRec;
 
@@ -23,10 +24,12 @@ public class LambdaSpec extends ValSpec {
     this.parametersRec = parametersRec;
   }
 
+  @Override
   public ValSpec result() {
     return result;
   }
 
+  @Override
   public ImmutableList<ValSpec> parameters() {
     return parametersRec.items();
   }

@@ -61,14 +61,14 @@ public class ObjectFactory {
   }
 
   private static RecSpec createMessageSpec(SpecDb specDb) {
-    StrSpec strSpec = specDb.strSpec();
+    StrSpec strSpec = specDb.string();
     return specDb.recSpec(list(strSpec, strSpec));
   }
 
   private static RecSpec createFileSpec(SpecDb specDb) {
     return specDb.recSpec(list(
-        specDb.blobSpec(),
-        specDb.strSpec())
+        specDb.blob(),
+        specDb.string())
     );
   }
 
@@ -138,19 +138,19 @@ public class ObjectFactory {
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
-    return specDb.arraySpec(elementSpec);
+    return specDb.array(elementSpec);
   }
 
   public BlobSpec blobSpec() {
-    return specDb.blobSpec();
+    return specDb.blob();
   }
 
   public BoolSpec boolSpec() {
-    return specDb.boolSpec();
+    return specDb.bool();
   }
 
   public IntSpec intSpec() {
-    return specDb.intSpec();
+    return specDb.int_();
   }
 
   public RecSpec fileSpec() {
@@ -162,11 +162,11 @@ public class ObjectFactory {
   }
 
   public NothingSpec nothingSpec() {
-    return specDb.nothingSpec();
+    return specDb.nothing();
   }
 
   public StrSpec stringSpec() {
-    return specDb.strSpec();
+    return specDb.string();
   }
 
   public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {

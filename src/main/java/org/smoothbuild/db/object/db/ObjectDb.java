@@ -70,7 +70,7 @@ public class ObjectDb {
   // methods for creating objects or object builders
 
   public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
-    return new ArrayBuilder(specDb.arraySpec(elementSpec), this);
+    return new ArrayBuilder(specDb.array(elementSpec), this);
   }
 
   public BlobBuilder blobBuilder() {
@@ -252,7 +252,7 @@ public class ObjectDb {
                 + spec1.name() + " != " + spec2.name() + ".");
           }
         });
-    Spec spec = elementSpec.orElse(specDb.nothingSpec());
+    Spec spec = elementSpec.orElse(specDb.nothing());
     if (spec instanceof ValSpec valSpec) {
       return valSpec;
     } else {
@@ -318,14 +318,14 @@ public class ObjectDb {
   }
 
   public Blob newBlobVal(Hash dataHash) throws HashedDbException {
-    var root = writeRoot(specDb.blobSpec(), dataHash);
-    return specDb.blobSpec().newObj(root, this);
+    var root = writeRoot(specDb.blob(), dataHash);
+    return specDb.blob().newObj(root, this);
   }
 
   private Bool newBoolVal(boolean value) throws HashedDbException {
     var data = writeBoolData(value);
-    var root = writeRoot(specDb.boolSpec(), data);
-    return specDb.boolSpec().newObj(root, this);
+    var root = writeRoot(specDb.bool(), data);
+    return specDb.bool().newObj(root, this);
   }
 
   private Lambda newLambdaVal(LambdaSpec spec, Expr body, RecExpr defaultArguments)
@@ -337,14 +337,14 @@ public class ObjectDb {
 
   private Int newIntVal(BigInteger value) throws HashedDbException {
     var data = writeIntData(value);
-    var root = writeRoot(specDb.intSpec(), data);
-    return specDb.intSpec().newObj(root, this);
+    var root = writeRoot(specDb.int_(), data);
+    return specDb.int_().newObj(root, this);
   }
 
   private Str newStrVal(String string) throws HashedDbException {
     var data = writeStrData(string);
-    var root = writeRoot(specDb.strSpec(), data);
-    return specDb.strSpec().newObj(root, this);
+    var root = writeRoot(specDb.string(), data);
+    return specDb.string().newObj(root, this);
   }
 
   private Struc_ newStructVal(StructSpec spec, Rec rec) throws HashedDbException {

@@ -8,11 +8,12 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.lang.base.type.api.BoolType;
 
 /**
  * This class is immutable.
  */
-public class BoolSpec extends ValSpec {
+public class BoolSpec extends ValSpec implements BoolType {
   public BoolSpec(Hash hash) {
     super(hash, BOOL);
   }

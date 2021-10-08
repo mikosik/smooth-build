@@ -11,7 +11,7 @@ public interface TypeFactory {
 
   public BoolType bool();
 
-  public FunctionType function(Type result, Iterable<Type> parameters);
+  public FunctionType function(Type result, ImmutableList<? extends Type> parameters);
 
   public IntType int_();
 
@@ -19,7 +19,8 @@ public interface TypeFactory {
 
   public StringType string();
 
-  public StructType struct(String name, ImmutableList<Type> fields, ImmutableList<String> names);
+  public StructType struct(
+      String name, ImmutableList<? extends Type> fields, ImmutableList<String> names);
 
   public Variable variable(String name);
 }

@@ -8,32 +8,24 @@ import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 
 /**
  * This class is immutable.
  */
 public class StructTypeImpl extends AbstractType implements StructType {
-  private final ImmutableList<Type> fields;
+  private final ImmutableList<? extends Type> fields;
   private final ImmutableMap<String, Integer> nameToIndex;
 
-  public StructTypeImpl(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
+  public StructTypeImpl(String name, ImmutableList<? extends Type> fields,
+      ImmutableList<String> names) {
     super(name, set());
     checkArgument(fields.size() == names.size(), "fields and names must have equal sizes");
     this.fields = fields;
-    this.nameToIndex = fieldsMap(names);
-  }
-
-  private static ImmutableMap<String, Integer> fieldsMap(ImmutableList<String> names) {
-    Builder<String, Integer> builder = ImmutableMap.builder();
-    for (int i = 0; i < names.size(); i++) {
-      builder.put(names.get(i), i);
-    }
-    return builder.build();
+    this.nameToIndex = StructType.fieldsMap(names);
   }
 
   @Override
-  public ImmutableList<Type> fields() {
+  public ImmutableList<? extends Type> fields() {
     return fields;
   }
 

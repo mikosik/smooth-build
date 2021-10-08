@@ -92,7 +92,7 @@ public class StructTest extends TestingContext {
   }
 
   private StructSpec animalSpec() {
-    return structSpec(recSpec(list(strSpec(), intSpec())), list("name", "speed"));
+    return structSpec(list(strSpec(), intSpec()), list("name", "speed"));
   }
 
   private Rec animalRecVal() {

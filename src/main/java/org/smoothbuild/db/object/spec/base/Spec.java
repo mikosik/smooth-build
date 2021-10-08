@@ -6,14 +6,29 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.Variable;
 
-public abstract class Spec {
+import com.google.common.collect.ImmutableSet;
+
+public abstract class Spec implements Type {
   private final Hash hash;
   private final SpecKind kind;
+  private final ImmutableSet<Variable> variables;
 
   protected Spec(Hash hash, SpecKind kind) {
+    this(hash, kind, ImmutableSet.of());
+  }
+
+  protected Spec(Hash hash, SpecKind kind, ImmutableSet<Variable> variables) {
     this.hash = hash;
     this.kind = kind;
+    this.variables = variables;
+  }
+
+  @Override
+  public ImmutableSet<Variable> variables() {
+    return variables;
   }
 
   /**
@@ -44,6 +59,7 @@ public abstract class Spec {
     return name() + "@" + hash();
   }
 
+  @Override
   public String name() {
     return kind.name();
   }

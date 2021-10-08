@@ -18,14 +18,14 @@ public class TestingSpecs {
   public static final SpecDb SPEC_DB = CONTEXT.specDb();
 
   public static final ValSpec ABSENT = SPEC_DB.absentSpec();
-  public static final ValSpec ANY = SPEC_DB.anySpec();
-  public static final ValSpec BLOB = SPEC_DB.blobSpec();
-  public static final ValSpec BOOL = SPEC_DB.boolSpec();
-  public static final ValSpec LAMBDA = SPEC_DB.lambdaSpec(BLOB, list(BOOL));
-  public static final ValSpec VARIABLE = SPEC_DB.variableSpec("A");
-  public static final ValSpec INT = SPEC_DB.intSpec();
-  public static final ValSpec NOTHING = SPEC_DB.nothingSpec();
-  public static final ValSpec STR = SPEC_DB.strSpec();
+  public static final ValSpec ANY = SPEC_DB.any();
+  public static final ValSpec BLOB = SPEC_DB.blob();
+  public static final ValSpec BOOL = SPEC_DB.bool();
+  public static final ValSpec LAMBDA = SPEC_DB.function(BLOB, list(BOOL));
+  public static final ValSpec VARIABLE = SPEC_DB.variable("A");
+  public static final ValSpec INT = SPEC_DB.int_();
+  public static final ValSpec NOTHING = SPEC_DB.nothing();
+  public static final ValSpec STR = SPEC_DB.string();
   public static final RecSpec PERSON = CONTEXT.personSpec();
   public static final RecSpec FILE = CONTEXT.fileSpec();
   public static final RecSpec EMPTY_REC = CONTEXT.emptyRecSpec();
@@ -87,6 +87,6 @@ public class TestingSpecs {
   );
 
   private static ArraySpec array(ValSpec elemSpec) {
-    return SPEC_DB.arraySpec(elemSpec);
+    return SPEC_DB.array(elemSpec);
   }
 }

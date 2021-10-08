@@ -184,7 +184,7 @@ public class TestingContext {
 
   public TypeFactory typeFactory() {
     if (typeFactory == null) {
-      typeFactory = new TypeFactoryImpl(specDb());
+      typeFactory = new TypeFactoryImpl();
     }
     return typeFactory;
   }
@@ -258,7 +258,7 @@ public class TestingContext {
   // Obj Spec-s
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
-    return specDb().arraySpec(elementSpec);
+    return specDb().array(elementSpec);
   }
 
   public AbsentSpec absentSpec() {
@@ -266,35 +266,35 @@ public class TestingContext {
   }
 
   public AnySpec anySpec() {
-    return specDb().anySpec();
+    return specDb().any();
   }
 
   public BlobSpec blobSpec() {
-    return specDb().blobSpec();
+    return specDb().blob();
   }
 
   public BoolSpec boolSpec() {
-    return specDb().boolSpec();
+    return specDb().bool();
   }
 
   public LambdaSpec lambdaSpec() {
     return lambdaSpec(intSpec(), list(blobSpec(), strSpec()));
   }
 
-  public LambdaSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return specDb().lambdaSpec(result, parameters);
+  public LambdaSpec lambdaSpec(ValSpec result, ImmutableList<? extends Type> parameters) {
+    return specDb().function(result, parameters);
   }
 
   public IntSpec intSpec() {
-    return specDb().intSpec();
+    return specDb().int_();
   }
 
   public NothingSpec nothingSpec() {
-    return specDb().nothingSpec();
+    return specDb().nothing();
   }
 
   public StrSpec strSpec() {
-    return specDb().strSpec();
+    return specDb().string();
   }
 
   public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
@@ -322,19 +322,21 @@ public class TestingContext {
   }
 
   public StructSpec structSpec() {
-    return structSpec(recSpec(list(intSpec())), list("field"));
+    return structSpec(list(intSpec()), list("field"));
   }
 
-  public StructSpec structSpec(RecSpec recSpec, ImmutableList<String> names) {
-    return structSpec("MyStruct", recSpec, names);
+  public StructSpec structSpec(
+      ImmutableList<? extends ValSpec> fields, ImmutableList<String> names) {
+    return structSpec("MyStruct", fields, names);
   }
 
-  public StructSpec structSpec(String name, RecSpec recSpec, ImmutableList<String> names) {
-    return specDb().structSpec(name, recSpec, names);
+  public StructSpec structSpec(String name, ImmutableList<? extends ValSpec> fields,
+      ImmutableList<String> names) {
+    return specDb().struct(name, fields, names);
   }
 
   public VariableSpec variableSpec(String name) {
-    return specDb().variableSpec(name);
+    return specDb().variable(name);
   }
 
   // Expr Spec-s

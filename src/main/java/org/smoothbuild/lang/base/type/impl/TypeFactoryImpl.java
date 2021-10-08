@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.type.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 
-import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.lang.base.type.api.AnyType;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BlobType;
@@ -11,6 +10,7 @@ import org.smoothbuild.lang.base.type.api.BoolType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
 import org.smoothbuild.lang.base.type.api.NothingType;
+import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
@@ -27,10 +27,10 @@ public class TypeFactoryImpl implements TypeFactory {
   private static final NothingType NOTHING = new NothingTypeImpl();
   private static final StringType STRING = new StringTypeImpl();
 
-  private final SpecDb specDb;
+  private final Sides sides;
 
-  public TypeFactoryImpl(SpecDb specDb) {
-    this.specDb = specDb;
+  public TypeFactoryImpl() {
+    this.sides = new Sides(any(), nothing());
   }
 
   @Override
@@ -54,7 +54,7 @@ public class TypeFactoryImpl implements TypeFactory {
   }
 
   @Override
-  public FunctionType function(Type result, Iterable<Type> parameters) {
+  public FunctionType function(Type result, ImmutableList<? extends Type> parameters) {
     return new FunctionTypeImpl(result, ImmutableList.copyOf(parameters));
   }
 
@@ -74,7 +74,8 @@ public class TypeFactoryImpl implements TypeFactory {
   }
 
   @Override
-  public StructType struct(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
+  public StructType struct(String name, ImmutableList<? extends Type> fields,
+      ImmutableList<String> names) {
     return new StructTypeImpl(name, fields, names);
   }
 

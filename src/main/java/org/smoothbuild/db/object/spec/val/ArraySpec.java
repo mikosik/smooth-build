@@ -9,16 +9,23 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.Type;
 
 /**
  * This class is immutable.
  */
-public class ArraySpec extends ValSpec {
-  private final ValSpec elements;
+public class ArraySpec extends ValSpec implements ArrayType {
+  private final ValSpec elemType;
 
-  public ArraySpec(Hash hash, ValSpec elements) {
+  public ArraySpec(Hash hash, ValSpec elemType) {
     super(hash, ARRAY);
-    this.elements = requireNonNull(elements);
+    this.elemType = requireNonNull(elemType);
+  }
+
+  @Override
+  public Type elemType() {
+    return elemType;
   }
 
   @Override
@@ -29,10 +36,10 @@ public class ArraySpec extends ValSpec {
 
   @Override
   public String name() {
-    return "[" + elements.name() + "]";
+    return "[" + elemType.name() + "]";
   }
 
   public ValSpec element() {
-    return elements;
+    return elemType;
   }
 }

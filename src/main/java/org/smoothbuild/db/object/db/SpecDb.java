@@ -68,6 +68,8 @@ import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -75,7 +77,7 @@ import com.google.common.collect.ImmutableList.Builder;
 /**
  * This class is thread-safe.
  */
-public class SpecDb {
+public class SpecDb implements TypeFactory {
   public static final String DATA_PATH = "data";
   private static final int DATA_INDEX = 1;
   private static final int LAMBDA_RESULT_INDEX = 0;
@@ -124,7 +126,8 @@ public class SpecDb {
 
   // methods for getting Val-s specs
 
-  public AnySpec anySpec() {
+  @Override
+  public AnySpec any() {
     return anySpec;
   }
 
@@ -132,41 +135,53 @@ public class SpecDb {
     return absentSpec;
   }
 
-  public ArraySpec arraySpec(ValSpec elementSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec(elementSpec));
+  @Override
+  public ArraySpec array(Type elementSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newArraySpec((ValSpec) elementSpec));
   }
 
-  public BlobSpec blobSpec() {
+  @Override
+  public BlobSpec blob() {
     return blobSpec;
   }
 
-  public BoolSpec boolSpec() {
+  @Override
+  public BoolSpec bool() {
     return boolSpec;
   }
 
-  public LambdaSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+  @Override
+  public LambdaSpec function(Type result, ImmutableList<? extends Type> parameters) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newLambdaSpec(result, recSpec(parameters)));
+        () -> newLambdaSpec((ValSpec) result,
+            recSpec((ImmutableList<ValSpec>) (Object) parameters)));
   }
 
-  public IntSpec intSpec() {
+  @Override
+  public IntSpec int_() {
     return intSpec;
   }
 
-  public NothingSpec nothingSpec() {
+  @Override
+  public NothingSpec nothing() {
     return nothingSpec;
   }
 
-  public StrSpec strSpec() {
+  @Override
+  public StrSpec string() {
     return strSpec;
   }
 
-  public StructSpec structSpec(String name, RecSpec recSpec, ImmutableList<String> names) {
-    checkArgument(recSpec.items().size() == names.size());
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStructSpec(name, recSpec, names));
+  @Override
+  public StructSpec struct(String name, ImmutableList<? extends Type> fields,
+      ImmutableList<String> names) {
+    checkArgument(fields.size() == names.size());
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newStructSpec(name, recSpec((Iterable<? extends ValSpec>) fields), names));
   }
 
-  public VariableSpec variableSpec(String name) {
+  @Override
+  public VariableSpec variable(String name) {
     checkArgument(isVariableName(name));
     return wrapHashedDbExceptionAsObjectDbException(() -> newVariableSpec(name));
   }
@@ -435,7 +450,7 @@ public class SpecDb {
   // methods for creating Expr Spec-s
 
   private ArrayExprSpec newArrayExprSpec(ValSpec elementSpec) throws HashedDbException {
-    var evaluationSpec = arraySpec(elementSpec);
+    var evaluationSpec = array(elementSpec);
     var rootHash = writeExprSpecRoot(ARRAY_EXPR, evaluationSpec);
     return newArrayExprSpec(rootHash, evaluationSpec);
   }

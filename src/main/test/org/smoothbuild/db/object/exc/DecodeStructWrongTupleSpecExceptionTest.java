@@ -11,7 +11,7 @@ import org.smoothbuild.testing.TestingContext;
 public class DecodeStructWrongTupleSpecExceptionTest extends TestingContext {
   @Test
   public void message() {
-    StructSpec structSpec = structSpec("MyStruct", recSpec(list(intSpec())), list("field"));
+    StructSpec structSpec = structSpec("MyStruct", list(intSpec()), list("field"));
     var exception = new DecodeStructWrongTupleSpecException(
         Hash.of(13), structSpec, recSpec(list(strSpec())));
     assertThat(exception.getMessage())

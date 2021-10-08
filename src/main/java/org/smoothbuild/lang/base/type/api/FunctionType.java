@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableSet;
 public interface FunctionType extends Type {
   public Type result();
 
-  public ImmutableList<Type> parameters();
+  public ImmutableList<? extends Type> parameters();
 
   public static ImmutableSet<Variable> calculateVariables(
       Type resultType, ImmutableList<Type> parameters) {

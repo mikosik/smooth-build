@@ -29,7 +29,7 @@ public record ItemSignature(Type type, Optional<String> name, Optional<Type> def
     return new ItemSignature(type, Optional.empty(), Optional.empty());
   }
 
-  public static ImmutableList<ItemSignature> toItemSignatures(List<Type> types) {
+  public static ImmutableList<ItemSignature> toItemSignatures(List<? extends Type> types) {
     return map(types, ItemSignature::itemSignature);
   }
 

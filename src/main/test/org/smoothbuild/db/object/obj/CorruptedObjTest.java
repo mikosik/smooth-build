@@ -1540,8 +1540,9 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * struct in HashedDb.
        */
-      var recSpec = recSpec(list(strSpec(), intSpec()));
-      var structSpec = structSpec(recSpec, list("name1", "name2"));
+      var fields = list(strSpec(), intSpec());
+      var recSpec = recSpec(fields);
+      var structSpec = structSpec(fields, list("name1", "name2"));
       var rec = recVal(recSpec, list(strVal(), intVal()));
       Hash objHash =
           hash(
@@ -1562,8 +1563,9 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var recSpec = recSpec(list(strSpec(), intSpec()));
-      var structSpec = structSpec(recSpec, list("name1", "name2"));
+      var fields = list(strSpec(), intSpec());
+      var recSpec = recSpec(fields);
+      var structSpec = structSpec(fields, list("name1", "name2"));
       var rec = recVal(recSpec, list(strVal(), intVal()));
       Hash dataHash = hash(rec);
       obj_root_with_two_data_hashes(
@@ -1580,8 +1582,8 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void rec_is_not_rec() throws Exception {
-      var recSpec = recSpec(list(strSpec(), intSpec()));
-      var structSpec = structSpec(recSpec, list("name1", "name2"));
+      var fields = list(strSpec(), intSpec());
+      var structSpec = structSpec(fields, list("name1", "name2"));
       var rec = intVal();
       Hash objHash =
           hash(
@@ -1595,9 +1597,9 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void rec_has_different_spec_than_struct_rec_spec() throws Exception {
-      var recSpec = recSpec(list(strSpec(), intSpec()));
+      var fields = list(strSpec(), intSpec());
       var recSpecWrong = recSpec(list(strSpec()));
-      var structSpec = structSpec(recSpec, list("name1", "name2"));
+      var structSpec = structSpec(fields, list("name1", "name2"));
       var rec = recVal(recSpecWrong, list(strVal()));
       Hash objHash =
           hash(

@@ -7,11 +7,12 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.lang.base.type.api.AnyType;
 
 /**
  * This class is immutable.
  */
-public class AnySpec extends ValSpec {
+public class AnySpec extends ValSpec implements AnyType {
   public AnySpec(Hash hash) {
     super(hash, ANY);
   }

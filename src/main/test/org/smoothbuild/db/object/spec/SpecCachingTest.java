@@ -34,44 +34,44 @@ public class SpecCachingTest extends TestingContext {
 
   private static List<Function<SpecDb, Spec>> spec_creators() {
     return list(
-        SpecDb::blobSpec,
-        SpecDb::boolSpec,
+        SpecDb::blob,
+        SpecDb::bool,
         SpecCachingTest::lambdaSpec,
-        SpecDb::intSpec,
-        SpecDb::nothingSpec,
-        SpecDb::strSpec,
+        SpecDb::int_,
+        SpecDb::nothing,
+        SpecDb::string,
         SpecCachingTest::recSpec,
 
-        specDb -> specDb.callSpec(specDb.intSpec()),
-        specDb -> specDb.constSpec(specDb.intSpec()),
-        specDb -> specDb.arrayExprSpec(specDb.intSpec()),
-        specDb -> specDb.selectSpec(specDb.intSpec()),
+        specDb -> specDb.callSpec(specDb.int_()),
+        specDb -> specDb.constSpec(specDb.int_()),
+        specDb -> specDb.arrayExprSpec(specDb.int_()),
+        specDb -> specDb.selectSpec(specDb.int_()),
         SpecDb::nullSpec,
-        specDb -> specDb.refSpec(specDb.intSpec()),
+        specDb -> specDb.refSpec(specDb.int_()),
 
-        specDb -> specDb.arraySpec(specDb.blobSpec()),
-        specDb -> specDb.arraySpec(specDb.boolSpec()),
-        specDb -> specDb.arraySpec(specDb.intSpec()),
-        specDb -> specDb.arraySpec(specDb.nothingSpec()),
-        specDb -> specDb.arraySpec(specDb.strSpec()),
-        specDb -> specDb.arraySpec(recSpec(specDb)),
-        specDb -> specDb.arraySpec(lambdaSpec(specDb)),
+        specDb -> specDb.array(specDb.blob()),
+        specDb -> specDb.array(specDb.bool()),
+        specDb -> specDb.array(specDb.int_()),
+        specDb -> specDb.array(specDb.nothing()),
+        specDb -> specDb.array(specDb.string()),
+        specDb -> specDb.array(recSpec(specDb)),
+        specDb -> specDb.array(lambdaSpec(specDb)),
 
-        specDb -> specDb.arraySpec(specDb.arraySpec(specDb.blobSpec())),
-        specDb -> specDb.arraySpec(specDb.arraySpec(specDb.boolSpec())),
-        specDb -> specDb.arraySpec(specDb.arraySpec(specDb.intSpec())),
-        specDb -> specDb.arraySpec(specDb.arraySpec(specDb.nothingSpec())),
-        specDb -> specDb.arraySpec(specDb.arraySpec(specDb.strSpec())),
-        specDb -> specDb.arraySpec(specDb.arraySpec(recSpec(specDb))),
-        specDb -> specDb.arraySpec(specDb.arraySpec(lambdaSpec(specDb)))
+        specDb -> specDb.array(specDb.array(specDb.blob())),
+        specDb -> specDb.array(specDb.array(specDb.bool())),
+        specDb -> specDb.array(specDb.array(specDb.int_())),
+        specDb -> specDb.array(specDb.array(specDb.nothing())),
+        specDb -> specDb.array(specDb.array(specDb.string())),
+        specDb -> specDb.array(specDb.array(recSpec(specDb))),
+        specDb -> specDb.array(specDb.array(lambdaSpec(specDb)))
     );
   }
 
   private static RecSpec recSpec(SpecDb specDb) {
-    return specDb.recSpec(list(specDb.strSpec(), specDb.strSpec()));
+    return specDb.recSpec(list(specDb.string(), specDb.string()));
   }
 
   private static LambdaSpec lambdaSpec(SpecDb specDb) {
-    return specDb.lambdaSpec(specDb.strSpec(), list(specDb.boolSpec(), specDb.blobSpec()));
+    return specDb.function(specDb.string(), list(specDb.bool(), specDb.blob()));
   }
 }

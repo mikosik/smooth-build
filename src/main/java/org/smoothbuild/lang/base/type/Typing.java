@@ -107,7 +107,7 @@ public class Typing {
     return typeFactory.struct(name, fields, names);
   }
 
-  public FunctionType function(Type resultType, Iterable<Type> parameters) {
+  public FunctionType function(Type resultType, ImmutableList<Type> parameters) {
     return typeFactory.function(resultType, parameters);
   }
 
@@ -207,7 +207,7 @@ public class Typing {
   }
 
   public BoundsMap inferVariableBoundsInCall(
-      Type resultTypes, List<Type> parameterTypes, List<Type> argumentTypes) {
+      Type resultTypes, List<? extends Type> parameterTypes, List<? extends Type> argumentTypes) {
     var result = new HashMap<Variable, Bounded>();
     inferVariableBounds(parameterTypes, argumentTypes, lower(), result);
     resultTypes.variables().forEach(v -> result.merge(
@@ -215,14 +215,15 @@ public class Typing {
     return new BoundsMap(ImmutableMap.copyOf(result));
   }
 
-  public BoundsMap inferVariableBounds(List<Type> typesA, List<Type> typesB, Side side) {
+  public BoundsMap inferVariableBounds(List<? extends Type> typesA, List<? extends Type> typesB,
+      Side side) {
     var result = new HashMap<Variable, Bounded>();
     inferVariableBounds(typesA, typesB, side, result);
     return new BoundsMap(ImmutableMap.copyOf(result));
   }
 
-  private void inferVariableBounds(List<Type> typesA, List<Type> typesB, Side side,
-      Map<Variable, Bounded> result) {
+  private void inferVariableBounds(List<? extends Type> typesA, List<? extends Type> typesB,
+      Side side, Map<Variable, Bounded> result) {
     checkArgument(typesA.size() == typesB.size());
     for (int i = 0; i < typesA.size(); i++) {
       inferImpl(typesA.get(i), typesB.get(i), side, result);

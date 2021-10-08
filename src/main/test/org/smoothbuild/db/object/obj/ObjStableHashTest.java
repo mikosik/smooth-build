@@ -262,7 +262,7 @@ public class ObjStableHashTest extends TestingContext {
   class _struct {
     @Test
     public void empty_struct() {
-      assertThat(structVal(structSpec(recSpec(list()), list()), recVal(list())).hash())
+      assertThat(structVal(structSpec(list(), list()), recVal(list())).hash())
           .isEqualTo(Hash.decode("3071aafdf5ad6f14e503f68fe90f9457b86292e2"));
     }
 

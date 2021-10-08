@@ -924,7 +924,8 @@ public class CorruptedSpecTest extends TestingContext {
        * to save struct spec in HashedDb.
        */
       String name = "MyStruct";
-      RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
+      var fields = list(intSpec(), strSpec());
+      RecSpec itemsSpec = recSpec(fields);
       String field1 = "field1";
       String field2 = "field2";
       Hash hash = hash(
@@ -936,7 +937,7 @@ public class CorruptedSpecTest extends TestingContext {
           )
       );
       assertThat(hash)
-          .isEqualTo(structSpec(itemsSpec, list(field1, field2)).hash());
+          .isEqualTo(structSpec(fields, list(field1, field2)).hash());
     }
 
     @Test

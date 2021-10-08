@@ -7,8 +7,9 @@ import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.lang.base.type.api.Variable;
 
-public class VariableSpec extends ValSpec {
+public class VariableSpec extends ValSpec implements Variable {
   private final String name;
 
   public VariableSpec(Hash hash, String name) {

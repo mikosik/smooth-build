@@ -236,7 +236,7 @@ public class SpecTest {
     @MethodSource("specs")
     public void arrayExpr(ValSpec spec) {
       assertThat(SPEC_DB.arrayExprSpec(spec).evaluationSpec())
-          .isEqualTo(SPEC_DB.arraySpec(spec));
+          .isEqualTo(SPEC_DB.array(spec));
     }
 
     @ParameterizedTest
@@ -342,8 +342,8 @@ public class SpecTest {
 
     public static List<Arguments> struct_name_cases() {
       return list(
-          arguments(structSpec("MyStruct", recSpec(), list()), "MyStruct"),
-          arguments(structSpec("", recSpec(), list()), "")
+          arguments(structSpec("MyStruct", list(), list()), "MyStruct"),
+          arguments(structSpec("", list(), list()), "")
       );
     }
 
@@ -356,9 +356,9 @@ public class SpecTest {
 
     public static List<Arguments> struct_items_cases() {
       return list(
-          arguments(structSpec(recSpec(), list()), recSpec()),
-          arguments(structSpec(recSpec(STR), list("field")), recSpec(STR)),
-          arguments(structSpec(recSpec(STR, INT), list("field", "field2")), recSpec(STR, INT))
+          arguments(structSpec(list(), list()), recSpec()),
+          arguments(structSpec(list(STR), list("field")), recSpec(STR)),
+          arguments(structSpec(list(STR, INT), list("field", "field2")), recSpec(STR, INT))
       );
     }
 
@@ -371,15 +371,15 @@ public class SpecTest {
 
     public static List<Arguments> struct_names_cases() {
       return list(
-          arguments(structSpec(recSpec(), list()), list()),
-          arguments(structSpec(recSpec(STR), list("field")), list("field")),
-          arguments(structSpec(recSpec(STR, INT), list("field", "field2")), list("field", "field2"))
+          arguments(structSpec(list(), list()), list()),
+          arguments(structSpec(list(STR), list("field")), list("field")),
+          arguments(structSpec(list(STR, INT), list("field", "field2")), list("field", "field2"))
       );
     }
 
     @Test
     public void different_size_of_items_and_names_causes_exception() {
-      assertCall(() -> structSpec(recSpec(INT), list("field", "field2")))
+      assertCall(() -> structSpec(list(INT), list("field", "field2")))
           .throwsException(IllegalArgumentException.class);
     }
   }
@@ -388,20 +388,20 @@ public class SpecTest {
   class _variable {
     @Test
     public void name() {
-      VariableSpec variableSpec = SPEC_DB.variableSpec("A");
+      VariableSpec variableSpec = SPEC_DB.variable("A");
       assertThat(variableSpec.name())
           .isEqualTo("A");
     }
 
     @Test
     public void illegal_name() {
-      assertCall(() -> SPEC_DB.variableSpec("a"))
+      assertCall(() -> SPEC_DB.variable("a"))
           .throwsException(new IllegalArgumentException());
     }
   }
 
   private static LambdaSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return SPEC_DB.lambdaSpec(result, parameters);
+    return SPEC_DB.function(result, parameters);
   }
 
   private static RecSpec recSpec(ValSpec... items) {
@@ -416,12 +416,13 @@ public class SpecTest {
     return SPEC_DB.recExprSpec(list(items));
   }
 
-  private static StructSpec structSpec(RecSpec items, ImmutableList<String> names) {
-    return structSpec("MyStruct", items, names);
+  private static StructSpec structSpec(ImmutableList<ValSpec> fields, ImmutableList<String> names) {
+    return structSpec("MyStruct", fields, names);
   }
 
-  private static StructSpec structSpec(String name, RecSpec items, ImmutableList<String> names) {
-    return SPEC_DB.structSpec(name, items, names);
+  private static StructSpec structSpec(String name, ImmutableList<ValSpec> fields,
+      ImmutableList<String> names) {
+    return SPEC_DB.struct(name, fields, names);
   }
 
   private static ConstSpec constSpec(ValSpec evaluationSpec) {
