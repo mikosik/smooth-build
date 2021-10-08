@@ -40,9 +40,9 @@ public enum SpecKind {
   REF((byte) 14, Ref.class),
   RECORD_EXPR((byte) 15, RecExpr.class),
 
-  // Absent
   ABSENT((byte) 16, null),
-  VARIABLE((byte) 17, null);
+  VARIABLE((byte) 17, null),
+  ANY((byte) 18, null);
 
   private static final ImmutableMap<Byte, SpecKind> markerToSpecKindMap =
       ImmutableMap.<Byte, SpecKind>builder()
@@ -65,6 +65,7 @@ public enum SpecKind {
           .put((byte) 15, RECORD_EXPR)
           .put((byte) 16, ABSENT)
           .put((byte) 17, VARIABLE)
+          .put((byte) 18, ANY)
           .build();
 
   private final byte marker;

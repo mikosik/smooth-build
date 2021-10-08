@@ -3,6 +3,9 @@ package org.smoothbuild.db.object.spec;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ABSENT;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ANY;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_ABSENT;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_ANY;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_DEFINED_LAMBDA;
@@ -11,6 +14,9 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_STR;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_VARIABLE;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_ABSENT;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_ANY;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_DEFINED_LAMBDA;
@@ -20,6 +26,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_STR;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_VARIABLE;
 import static org.smoothbuild.db.object.spec.TestingSpecs.BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CALL;
@@ -35,6 +42,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SELECT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SPEC_DB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
+import static org.smoothbuild.db.object.spec.TestingSpecs.VARIABLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -100,6 +108,8 @@ public class SpecTest {
   public static Stream<Arguments> names() {
     TestingContext tc = new TestingContext();
     return Stream.of(
+        arguments(ABSENT, "ABSENT"),
+        arguments(ANY, "ANY"),
         arguments(BLOB, "BLOB"),
         arguments(BOOL, "BOOL"),
         arguments(DEFINED_LAMBDA, "BLOB(BOOL)"),
@@ -116,6 +126,8 @@ public class SpecTest {
         arguments(NULL, "NULL:NOTHING"),
         arguments(tc.refSpec(tc.intSpec()), "REF:INT"),
 
+        arguments(ARRAY_ABSENT, "[ABSENT]"),
+        arguments(ARRAY_ANY, "[ANY]"),
         arguments(ARRAY_BLOB, "[BLOB]"),
         arguments(ARRAY_BOOL, "[BOOL]"),
         arguments(ARRAY_DEFINED_LAMBDA, "[BLOB(BOOL)]"),
@@ -125,6 +137,8 @@ public class SpecTest {
         arguments(ARRAY_STR, "[STRING]"),
         arguments(ARRAY_PERSON, "[{STRING,STRING}]"),
 
+        arguments(ARRAY2_ABSENT, "[[ABSENT]]"),
+        arguments(ARRAY2_ANY, "[[ANY]]"),
         arguments(ARRAY2_BLOB, "[[BLOB]]"),
         arguments(ARRAY2_BOOL, "[[BOOL]]"),
         arguments(ARRAY2_DEFINED_LAMBDA, "[[BLOB(BOOL)]]"),
@@ -145,6 +159,8 @@ public class SpecTest {
 
   public static List<Arguments> jType_test_data() {
     return list(
+        arguments(ANY, null),
+        arguments(ABSENT, null),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
         arguments(DEFINED_LAMBDA, DefinedLambda.class),
@@ -153,7 +169,10 @@ public class SpecTest {
         arguments(NOTHING, null),
         arguments(PERSON, Rec.class),
         arguments(STR, Str.class),
+        arguments(VARIABLE, null),
 
+        arguments(ARRAY_ANY, Array.class),
+        arguments(ARRAY_ABSENT, Array.class),
         arguments(ARRAY_BLOB, Array.class),
         arguments(ARRAY_BOOL, Array.class),
         arguments(ARRAY_DEFINED_LAMBDA, Array.class),
@@ -162,6 +181,7 @@ public class SpecTest {
         arguments(ARRAY_NOTHING, Array.class),
         arguments(ARRAY_PERSON, Array.class),
         arguments(ARRAY_STR, Array.class),
+        arguments(ARRAY_VARIABLE, Array.class),
 
         arguments(CALL, Call.class),
         arguments(CONST, Const.class),
@@ -182,6 +202,8 @@ public class SpecTest {
 
   public static List<Arguments> array_element_cases() {
     return list(
+        arguments(ARRAY_ABSENT, ABSENT),
+        arguments(ARRAY_ANY, ANY),
         arguments(ARRAY_BLOB, BLOB),
         arguments(ARRAY_BOOL, BOOL),
         arguments(ARRAY_DEFINED_LAMBDA, DEFINED_LAMBDA),
@@ -191,6 +213,8 @@ public class SpecTest {
         arguments(ARRAY_STR, STR),
         arguments(ARRAY_PERSON, PERSON),
 
+        arguments(ARRAY2_ABSENT, ARRAY_ABSENT),
+        arguments(ARRAY2_ANY, ARRAY_ANY),
         arguments(ARRAY2_BLOB, ARRAY_BLOB),
         arguments(ARRAY2_BOOL, ARRAY_BOOL),
         arguments(ARRAY2_DEFINED_LAMBDA, ARRAY_DEFINED_LAMBDA),
@@ -426,6 +450,8 @@ public class SpecTest {
   @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
+    tester.addEqualityGroup(ANY, ANY);
+    tester.addEqualityGroup(ABSENT, ABSENT);
     tester.addEqualityGroup(BLOB, BLOB);
     tester.addEqualityGroup(BOOL, BOOL);
     tester.addEqualityGroup(DEFINED_LAMBDA, DEFINED_LAMBDA);
@@ -434,7 +460,10 @@ public class SpecTest {
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STR, STR);
     tester.addEqualityGroup(PERSON, PERSON);
+    tester.addEqualityGroup(VARIABLE, VARIABLE);
 
+    tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);
+    tester.addEqualityGroup(ARRAY_ABSENT, ARRAY_ABSENT);
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
     tester.addEqualityGroup(ARRAY_DEFINED_LAMBDA, ARRAY_DEFINED_LAMBDA);
@@ -443,7 +472,11 @@ public class SpecTest {
     tester.addEqualityGroup(ARRAY_NOTHING, ARRAY_NOTHING);
     tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
     tester.addEqualityGroup(ARRAY_PERSON, ARRAY_PERSON);
+    tester.addEqualityGroup(ARRAY_VARIABLE, ARRAY_VARIABLE);
 
+    tester.addEqualityGroup(ARRAY2_VARIABLE, ARRAY2_VARIABLE);
+    tester.addEqualityGroup(ARRAY2_ANY, ARRAY2_ANY);
+    tester.addEqualityGroup(ARRAY2_ABSENT, ARRAY2_ABSENT);
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
     tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
     tester.addEqualityGroup(ARRAY2_DEFINED_LAMBDA, ARRAY2_DEFINED_LAMBDA);

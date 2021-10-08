@@ -48,6 +48,7 @@ import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
+import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
@@ -258,6 +259,10 @@ public class TestingContext {
 
   public AbsentSpec absentSpec() {
     return specDb().absentSpec();
+  }
+
+  public AnySpec anySpec() {
+    return specDb().anySpec();
   }
 
   public BlobSpec blobSpec() {

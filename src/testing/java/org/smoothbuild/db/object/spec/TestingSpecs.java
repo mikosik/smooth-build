@@ -18,10 +18,12 @@ public class TestingSpecs {
   public static final SpecDb SPEC_DB = CONTEXT.specDb();
 
   public static final ValSpec ABSENT = SPEC_DB.absentSpec();
+  public static final ValSpec ANY = SPEC_DB.anySpec();
   public static final ValSpec BLOB = SPEC_DB.blobSpec();
   public static final ValSpec BOOL = SPEC_DB.boolSpec();
   public static final ValSpec DEFINED_LAMBDA =
       SPEC_DB.definedLambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)), SPEC_DB.recSpec(list(ABSENT)));
+  public static final ValSpec VARIABLE = SPEC_DB.variableSpec("A");
   public static final ValSpec INT = SPEC_DB.intSpec();
   public static final ValSpec NATIVE_LAMBDA =
       SPEC_DB.nativeLambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)), SPEC_DB.recSpec(list(ABSENT)));
@@ -39,6 +41,8 @@ public class TestingSpecs {
   public static final Spec NULL = CONTEXT.nullSpec();
   public static final Spec REF = CONTEXT.refSpec(INT);
 
+  public static final ArraySpec ARRAY_ANY = array(ANY);
+  public static final ArraySpec ARRAY_ABSENT = array(ABSENT);
   public static final ArraySpec ARRAY_BLOB = array(BLOB);
   public static final ArraySpec ARRAY_BOOL = array(BOOL);
   public static final ArraySpec ARRAY_DEFINED_LAMBDA = array(DEFINED_LAMBDA);
@@ -47,7 +51,10 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY_NOTHING = array(NOTHING);
   public static final ArraySpec ARRAY_STR = array(STR);
   public static final ArraySpec ARRAY_PERSON = array(PERSON);
+  public static final ArraySpec ARRAY_VARIABLE = array(VARIABLE);
 
+  public static final ArraySpec ARRAY2_ANY = array(ARRAY_ANY);
+  public static final ArraySpec ARRAY2_ABSENT = array(ARRAY_ABSENT);
   public static final ArraySpec ARRAY2_BLOB = array(ARRAY_BLOB);
   public static final ArraySpec ARRAY2_BOOL = array(ARRAY_BOOL);
   public static final ArraySpec ARRAY2_DEFINED_LAMBDA = array(ARRAY_DEFINED_LAMBDA);
@@ -56,6 +63,7 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY2_NOTHING = array(ARRAY_NOTHING);
   public static final ArraySpec ARRAY2_STR = array(ARRAY_STR);
   public static final ArraySpec ARRAY2_PERSON = array(ARRAY_PERSON);
+  public static final ArraySpec ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
   public static final ImmutableList<Spec> VAL_SPECS_TO_TEST = list(
       BLOB,

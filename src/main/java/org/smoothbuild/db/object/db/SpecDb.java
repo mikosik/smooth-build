@@ -7,6 +7,7 @@ import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecode
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecNodeException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ABSENT;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
@@ -52,6 +53,7 @@ import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
+import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
@@ -84,6 +86,7 @@ public class SpecDb {
   private final ConcurrentHashMap<Hash, Spec> specCache;
 
   private final AbsentSpec absentSpec;
+  private final AnySpec anySpec;
   private final BlobSpec blobSpec;
   private final BoolSpec boolSpec;
   private final IntSpec intSpec;
@@ -97,6 +100,8 @@ public class SpecDb {
 
     try {
       // Val-s
+      this.anySpec = cacheSpec(new AnySpec(writeBaseSpecRoot(ANY)));
+      this.absentSpec = cacheSpec(new AbsentSpec(writeBaseSpecRoot(ABSENT)));
       this.blobSpec = cacheSpec(new BlobSpec(writeBaseSpecRoot(BLOB)));
       this.boolSpec = cacheSpec(new BoolSpec(writeBaseSpecRoot(BOOL)));
       this.intSpec = cacheSpec(new IntSpec(writeBaseSpecRoot(INT)));
@@ -104,14 +109,16 @@ public class SpecDb {
       this.strSpec = cacheSpec(new StrSpec(writeBaseSpecRoot(STRING)));
       // Expr-s
       this.nullSpec = cacheSpec(new NullSpec(writeBaseSpecRoot(NULL), nothingSpec));
-      // Absent
-      this.absentSpec = cacheSpec(new AbsentSpec(writeBaseSpecRoot(ABSENT)));
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
   }
 
   // methods for getting Val-s specs
+
+  public AnySpec anySpec() {
+    return anySpec;
+  }
 
   public AbsentSpec absentSpec() {
     return absentSpec;
@@ -221,7 +228,7 @@ public class SpecDb {
     List<Hash> rootSequence = readSpecRootSequence(hash);
     SpecKind specKind = decodeSpecMarker(hash, rootSequence.get(0));
     return switch (specKind) {
-      case BLOB, BOOL, INT, NOTHING, STRING, NULL, ABSENT -> {
+      case ABSENT, ANY, BLOB, BOOL, INT, NOTHING, STRING, NULL -> {
         assertSpecRootSequenceSize(hash, specKind, rootSequence, 1);
         throw new RuntimeException(
             "Internal error: Spec with kind " + specKind + " should be found in cache.");

@@ -128,6 +128,34 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
+  class _absent {
+    @Test
+    public void learning_test() throws Exception {
+      Hash objHash =
+          hash(
+              hash(absentSpec()),
+              hash("aaa"));
+      assertCall(() -> objectDb().get(objHash))
+          .throwsException(new UnsupportedOperationException(
+              "Cannot create object for ABSENT spec."));
+    }
+  }
+
+  @Nested
+  class _any {
+    @Test
+    public void learning_test() throws Exception {
+      Hash objHash =
+          hash(
+              hash(anySpec()),
+              hash("aaa"));
+      assertCall(() -> objectDb().get(objHash))
+          .throwsException(new UnsupportedOperationException(
+              "Cannot create object for ANY spec."));
+    }
+  }
+
+  @Nested
   class _array {
     @Test
     public void learning_test() throws Exception {
@@ -1588,7 +1616,7 @@ public class CorruptedObjTest extends TestingContext {
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new UnsupportedOperationException(
-              "Cannot create object for 'NOTHING' spec."));
+              "Cannot create object for NOTHING spec."));
     }
   }
 
@@ -1924,6 +1952,20 @@ public class CorruptedObjTest extends TestingContext {
     assertCall(() -> consumer.accept(objHash))
         .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(objHash, spec,
             DATA_PATH + "[1]", spec.parameters(), arguments.spec().evaluationSpec()));
+  }
+
+  @Nested
+  class _variable {
+    @Test
+    public void learning_test() throws Exception {
+      Hash objHash =
+          hash(
+              hash(variableSpec("A")),
+              hash("aaa"));
+      assertCall(() -> objectDb().get(objHash))
+          .throwsException(new UnsupportedOperationException(
+              "Cannot create object for VARIABLE spec."));
+    }
   }
 
   // helper methods

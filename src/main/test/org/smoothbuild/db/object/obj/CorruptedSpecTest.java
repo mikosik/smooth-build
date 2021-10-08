@@ -7,6 +7,7 @@ import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_DEF_ARGUMENTS_PATH;
 import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_PARAMS_PATH;
 import static org.smoothbuild.db.object.db.SpecDb.LAMBDA_RESULT_PATH;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ABSENT;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
@@ -101,6 +102,11 @@ public class CorruptedSpecTest extends TestingContext {
     @Test
     public void absent_with_additional_child() throws Exception {
       test_base_spec_with_additional_child(ABSENT);
+    }
+
+    @Test
+    public void any_with_additional_child() throws Exception {
+      test_base_spec_with_additional_child(ANY);
     }
 
     @Test

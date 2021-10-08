@@ -18,6 +18,6 @@ public class AbsentSpec extends ValSpec {
 
   @Override
   public Null newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    throw new UnsupportedOperationException("Cannot create object for " + kind() + " spec.");
+    throw new UnsupportedOperationException("Cannot create object for " + ABSENT + " spec.");
   }
 }
