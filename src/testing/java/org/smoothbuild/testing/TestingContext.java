@@ -35,9 +35,8 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
-import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.NativeLambda;
+import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.ValSpec;
@@ -54,9 +53,8 @@ import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
-import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
-import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
+import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
@@ -275,35 +273,22 @@ public class TestingContext {
     return specDb().boolSpec();
   }
 
-  public DefinedLambdaSpec definedLambdaSpec() {
-    return definedLambdaSpec(intSpec(), list(blobSpec(), strSpec()));
+  public LambdaSpec lambdaSpec() {
+    return lambdaSpec(intSpec(), list(blobSpec(), strSpec()));
   }
 
-  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return definedLambdaSpec(
+  public LambdaSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+    return lambdaSpec(
         result, recSpec(parameters), recSpecWithAbsents(parameters.size()));
   }
 
-  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters,
+  public LambdaSpec lambdaSpec(ValSpec result, RecSpec parameters,
       RecSpec defaultArguments) {
-    return specDb().definedLambdaSpec(result, parameters, defaultArguments);
+    return specDb().lambdaSpec(result, parameters, defaultArguments);
   }
 
   public IntSpec intSpec() {
     return specDb().intSpec();
-  }
-
-  public NativeLambdaSpec nativeLambdaSpec() {
-    return nativeLambdaSpec(intSpec(), list(blobSpec(), strSpec()));
-  }
-
-  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return nativeLambdaSpec(result, recSpec(parameters), recSpecWithAbsents(parameters.size()));
-  }
-
-  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters,
-      RecSpec defaultArguments) {
-    return specDb().nativeLambdaSpec(result, parameters, defaultArguments);
   }
 
   public NothingSpec nothingSpec() {
@@ -431,18 +416,17 @@ public class TestingContext {
     return objectDb().boolVal(value);
   }
 
-  public DefinedLambda definedLambdaVal() {
-    return definedLambdaVal(intExpr());
+  public Lambda lambdaVal() {
+    return lambdaVal(intExpr());
   }
 
-  public DefinedLambda definedLambdaVal(Expr body) {
-    DefinedLambdaSpec spec = definedLambdaSpec(body.evaluationSpec(), list(strSpec()));
-    return definedLambdaVal(spec, body, list(strExpr()));
+  public Lambda lambdaVal(Expr body) {
+    LambdaSpec spec = lambdaSpec(body.evaluationSpec(), list(strSpec()));
+    return lambdaVal(spec, body, list(strExpr()));
   }
 
-  public DefinedLambda definedLambdaVal(
-      DefinedLambdaSpec spec, Expr body, List<Expr> defaultArguments) {
-    return objectDb().definedLambdaVal(spec, body, eRecExpr(defaultArguments));
+  public Lambda lambdaVal(LambdaSpec spec, Expr body, List<Expr> defaultArguments) {
+    return objectDb().lambdaVal(spec, body, eRecExpr(defaultArguments));
   }
 
   public Int intVal() {
@@ -451,11 +435,6 @@ public class TestingContext {
 
   public Int intVal(int value) {
     return objectDb().intVal(BigInteger.valueOf(value));
-  }
-
-  public NativeLambda nativeLambdaVal(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, List<Expr> defaultArguments) {
-    return objectDb().nativeLambdaVal(spec, classBinaryName, nativeJar, eRecExpr(defaultArguments));
   }
 
   public Str strVal() {

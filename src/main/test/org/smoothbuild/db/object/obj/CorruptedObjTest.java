@@ -58,9 +58,8 @@ import org.smoothbuild.db.object.obj.expr.Select.SelectData;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
-import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.NativeLambda;
+import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
@@ -69,9 +68,7 @@ import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.testing.TestingContext;
 
@@ -405,9 +402,9 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var lambdaSpec = definedLambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var definedLambda = definedLambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
-      Const function = constExpr(definedLambda);
+      var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
+      var lambda = lambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
+      Const function = constExpr(lambda);
       RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
       Hash objHash =
           hash(
@@ -520,9 +517,9 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void arguments_is_val_instead_of_expr() throws Exception {
-      var lambdaSpec = definedLambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var definedLambda = definedLambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
-      Const function = constExpr(definedLambda);
+      var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
+      var lambda = lambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
+      Const function = constExpr(lambda);
       Hash objHash =
           hash(
               hash(callSpec()),
@@ -539,9 +536,9 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void arguments_component_evaluation_spec_is_not_erecord_but_different_expr()
         throws Exception {
-      var lambdaSpec = definedLambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var definedLambda = definedLambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
-      Const function = constExpr(definedLambda);
+      var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
+      var lambda = lambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
+      Const function = constExpr(lambda);
       CallSpec spec = callSpec();
       Hash objHash =
           hash(
@@ -559,8 +556,8 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void evaluation_spec_is_different_than_function_evaluation_spec_result()
         throws Exception {
-      Const function = constExpr(definedLambdaVal(
-          definedLambdaSpec(intSpec(), list(strSpec())), intExpr(), list(strExpr())));
+      Const function = constExpr(lambdaVal(
+          lambdaSpec(intSpec(), list(strSpec())), intExpr(), list(strExpr())));
       RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(strSpec());
       Hash objHash =
@@ -579,8 +576,8 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void function_evaluation_spec_parameters_does_not_match_arguments_evaluation_specs()
         throws Exception {
-      DefinedLambdaSpec lambdaSpec = definedLambdaSpec(intSpec(), list(strSpec(), boolSpec()));
-      Const function = constExpr(definedLambdaVal(
+      LambdaSpec lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), boolSpec()));
+      Const function = constExpr(lambdaVal(
           lambdaSpec, intExpr(), list(strExpr(), boolExpr())));
       RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(intSpec());
@@ -671,18 +668,18 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
-  class _defined_lambda {
+  class _lambda {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save definedLambda
+       * This test makes sure that other tests in this class use proper scheme to save Lambda
        * in HashedDb.
        */
       Const bodyExpr = boolExpr();
       Const defaultArgument1 = intExpr(1);
       Const defaultArgument2 = strExpr("abc");
       RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      DefinedLambdaSpec spec = definedLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -691,15 +688,15 @@ public class CorruptedObjTest extends TestingContext {
                   hash(arguments)
               )
           );
-      assertThat(((DefinedLambda) objectDb().get(objHash)).data().body())
+      assertThat(((Lambda) objectDb().get(objHash)).data().body())
           .isEqualTo(bodyExpr);
-      assertThat(((DefinedLambda) objectDb().get(objHash)).data().defaultArguments())
+      assertThat(((Lambda) objectDb().get(objHash)).data().defaultArguments())
           .isEqualTo(arguments);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(definedLambdaSpec());
+      obj_root_without_data_hash(lambdaSpec());
     }
 
     @Test
@@ -708,7 +705,7 @@ public class CorruptedObjTest extends TestingContext {
       Const defaultArgument1 = intExpr(1);
       Const defaultArgument2 = strExpr("abc");
       RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      DefinedLambdaSpec spec = definedLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash dataHash = hash(
           hash(bodyExpr),
           hash(arguments)
@@ -716,20 +713,20 @@ public class CorruptedObjTest extends TestingContext {
       obj_root_with_two_data_hashes(
           spec,
           dataHash,
-          (Hash objHash) -> ((DefinedLambda) objectDb().get(objHash)).data());
+          (Hash objHash) -> ((Lambda) objectDb().get(objHash)).data());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          definedLambdaSpec(),
-          (Hash objHash) -> ((DefinedLambda) objectDb().get(objHash)).data());
+          lambdaSpec(),
+          (Hash objHash) -> ((Lambda) objectDb().get(objHash)).data());
     }
 
     @Test
     public void data_is_sequence_with_one_element() throws Exception {
       Const bodyExpr = boolExpr();
-      DefinedLambdaSpec spec = definedLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -737,7 +734,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(bodyExpr)
               )
           );
-      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).data())
+      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjSequenceException(objHash, spec, DATA_PATH, 2, 1));
     }
 
@@ -747,7 +744,7 @@ public class CorruptedObjTest extends TestingContext {
       Const defaultArgument1 = intExpr(1);
       Const defaultArgument2 = strExpr("abc");
       RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      DefinedLambdaSpec spec = definedLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash defaultArguments = hash(arguments);
       Hash objHash =
           hash(
@@ -759,7 +756,7 @@ public class CorruptedObjTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).data())
+      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjSequenceException(objHash, spec, DATA_PATH, 2, 3));
     }
 
@@ -769,7 +766,7 @@ public class CorruptedObjTest extends TestingContext {
       Const defaultArgument1 = intExpr(1);
       Const defaultArgument2 = strExpr("abc");
       RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      DefinedLambdaSpec spec = definedLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -778,7 +775,7 @@ public class CorruptedObjTest extends TestingContext {
                   hash(arguments)
               )
           );
-      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).data())
+      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
               objHash, spec, DATA_PATH + "[0]", Expr.class, Bool.class));
     }
@@ -789,7 +786,7 @@ public class CorruptedObjTest extends TestingContext {
       Const defaultArgument1 = intExpr(1);
       Const defaultArgument2 = strExpr("abc");
       RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      DefinedLambdaSpec spec = definedLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -798,28 +795,48 @@ public class CorruptedObjTest extends TestingContext {
                   hash(arguments)
               )
           );
-      assertCall(() -> ((DefinedLambda) objectDb().get(objHash)).data())
+      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
               objHash, spec, DATA_PATH + "[0]", intSpec(), boolSpec()));
     }
 
     @Test
     public void default_arguments_is_val_instead_of_expr() throws Exception {
-      DefinedLambdaSpec spec = definedLambdaSpec(boolSpec(), list(intSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec()));
       Hash bodyHash = hash(boolExpr());
-      test_default_arguments_is_val_instead_of_expr(spec,
-          bodyHash, (objHash) -> ((DefinedLambda) objectDb().get(objHash)).data()
-      );
+      Hash objHash =
+          hash(
+              hash(spec),
+              hash(
+                  bodyHash,
+                  hash(intVal())
+              )
+          );
+      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, spec, DATA_PATH, 1, RecExpr.class, Int.class));
     }
 
     @Test
     public void default_argument_evaluation_spec_is_not_equal_function_eval_spec_parameter()
         throws Exception {
-      DefinedLambdaSpec spec = definedLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash bodyHash = hash(boolExpr());
 
-      test_default_argument_evaluation_spec_is_not_equal_function_eval_spec_parameter(spec, bodyHash,
-          (objHash) -> ((DefinedLambda) objectDb().get(objHash)).data());
+      Const defaultArgument1 = intExpr(1);
+      Const defaultArgument2 = boolExpr();
+      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
+      Hash objHash =
+          hash(
+              hash(spec),
+              hash(
+                  bodyHash,
+                  hash(arguments)
+              )
+          );
+      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
+          .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(objHash, spec,
+              DATA_PATH + "[1]", spec.parameters(), arguments.spec().evaluationSpec()));
     }
   }
 
@@ -1422,288 +1439,6 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
-  class _native_lambda {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save definedLambda
-       * in HashedDb.
-       */
-      Str classBinaryName = strVal("classBinaryName");
-      Blob nativeJar = blobVal();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName),
-                      hash(nativeJar)
-                  ),
-                  hash(arguments)
-              )
-          );
-      assertThat(((NativeLambda) objectDb().get(objHash)).data().classBinaryName())
-          .isEqualTo(classBinaryName);
-      assertThat(((NativeLambda) objectDb().get(objHash)).data().nativeJar())
-          .isEqualTo(nativeJar);
-      assertThat(((NativeLambda) objectDb().get(objHash)).data().defaultArguments())
-          .isEqualTo(arguments);
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(nativeLambdaSpec());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      Str classBinaryName = strVal("classBinaryName");
-      Blob nativeJar = blobVal();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash dataHash = hash(
-          hash(
-              hash(classBinaryName),
-              hash(nativeJar)
-          ),
-          hash(arguments)
-      );
-      obj_root_with_two_data_hashes(
-          spec,
-          dataHash,
-          (Hash objHash) -> ((NativeLambda) objectDb().get(objHash)).data().nativeJar());
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          nativeLambdaSpec(),
-          (Hash objHash) -> ((NativeLambda) objectDb().get(objHash)).data().nativeJar());
-    }
-
-    @Test
-    public void data_is_sequence_with_one_element() throws Exception {
-      Str classBinaryName = strVal("classBinaryName");
-      Blob nativeJar = blobVal();
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName),
-                      hash(nativeJar)
-                  )
-              )
-          );
-      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(objHash, spec, DATA_PATH, 2, 1));
-    }
-
-    @Test
-    public void data_is_sequence_with_three_elements() throws Exception {
-      Str classBinaryName = strVal("classBinaryName");
-      Blob nativeJar = blobVal();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName),
-                      hash(nativeJar)
-                  ),
-                  hash(arguments),
-                  hash(arguments)
-              )
-          );
-
-      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(objHash, spec, DATA_PATH, 2, 3));
-    }
-
-
-    @Test
-    public void body_is_sequence_with_one_element() throws Exception {
-      Str classBinaryName = strVal("classBinaryName");
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName)
-                  ),
-                  hash(arguments)
-              )
-          );
-      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(objHash, spec, DATA_PATH + "[0]", 2, 1));
-    }
-
-    @Test
-    public void body_is_sequence_with_three_elements() throws Exception {
-      Str classBinaryName = strVal("classBinaryName");
-      Blob nativeJar = blobVal();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName),
-                      hash(nativeJar),
-                      hash(nativeJar)
-                  ),
-                  hash(arguments)
-              )
-          );
-
-      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(objHash, spec, DATA_PATH + "[0]", 2, 3));
-    }
-
-    @Test
-    public void class_binary_name_is_expr_instead_of_str() throws Exception {
-      Const classBinaryName = strExpr("classBinaryName");
-      Blob nativeJar = blobVal();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName),
-                      hash(nativeJar)
-                  ),
-                  hash(arguments)
-              )
-          );
-      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH + "[0][0]", Str.class, Const.class));
-    }
-
-    @Test
-    public void class_binary_name_is_int_instead_of_str() throws Exception {
-      Int classBinaryName = intVal(3);
-      Blob nativeJar = blobVal();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName),
-                      hash(nativeJar)
-                  ),
-                  hash(arguments)
-              )
-          );
-      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH + "[0][0]", Str.class, Int.class));
-    }
-
-    @Test
-    public void native_jar_is_expr_instead_of_val() throws Exception {
-      Const nativeJar = constExpr(blobVal());
-      Str classBinaryName = strVal("classBinaryName");
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName),
-                      hash(nativeJar)
-                  ),
-                  hash(arguments)
-              )
-          );
-      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH + "[0][1]", Blob.class, Const.class));
-    }
-
-    @Test
-    public void native_jar_is_int_instead_of_blob() throws Exception {
-      Int nativeJar = intVal(3);
-      Str classBinaryName = strVal("classBinaryName");
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(
-                      hash(classBinaryName),
-                      hash(nativeJar)
-                  ),
-                  hash(arguments)
-              )
-          );
-      assertCall(() -> ((NativeLambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH + "[0][1]", Blob.class, Int.class));
-    }
-
-    @Test
-    public void default_arguments_is_val_instead_of_expr() throws Exception {
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec()));
-      Str classBinaryName = strVal("classBinaryName");
-      Blob nativeJar = blobVal();
-      Hash bodyHash = hash(
-          hash(classBinaryName),
-          hash(nativeJar)
-      );
-      test_default_arguments_is_val_instead_of_expr(spec,
-          bodyHash, (objHash) -> ((NativeLambda) objectDb().get(objHash)).data()
-      );
-    }
-
-    @Test
-    public void default_argument_evaluation_spec_is_not_equal_function_eval_spec_parameter()
-        throws Exception {
-      NativeLambdaSpec spec = nativeLambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Str classBinaryName = strVal("classBinaryName");
-      Blob nativeJar = blobVal();
-      Hash bodyHash = hash(
-          hash(classBinaryName),
-          hash(nativeJar)
-      );
-      test_default_argument_evaluation_spec_is_not_equal_function_eval_spec_parameter(
-          spec, bodyHash, (objHash) -> ((NativeLambda) objectDb().get(objHash)).data());
-    }
-  }
-
-  @Nested
   class _null {
     @Test
     public void learning_test() throws Exception {
@@ -2004,79 +1739,6 @@ public class CorruptedObjTest extends TestingContext {
     assertCall(() -> readClosure.accept(objHash))
         .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH))
         .withCause(new NoSuchDataException(dataHash));
-  }
-
-  // helper methods for testing functionality common to DefinedLambda and NativeLambda
-
-  private void test_default_arguments_sequence_size_different_than_multiple_of_hash_size(
-      LambdaSpec spec, Hash bodyHash, int byteCount, Consumer<Hash> consumer)
-      throws IOException, HashedDbException {
-    Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
-    Hash objHash =
-        hash(
-            hash(spec),
-            hash(
-                bodyHash,
-                notHashOfSequence
-            )
-        );
-    assertCall(() -> consumer.accept(objHash))
-        .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH + "[1]"))
-        .withCause(
-            new DecodeHashSequenceException(notHashOfSequence, byteCount % Hash.lengthInBytes()));
-  }
-
-  private void test_default_arguments_sequence_element_pointing_nowhere(
-      LambdaSpec spec, Hash bodyHash, Consumer<Hash> consumer) throws HashedDbException {
-    Const defaultArgument1 = intExpr(1);
-    Hash nowhere = Hash.of(33);
-    Hash objHash =
-        hash(
-            hash(spec),
-            hash(
-                bodyHash,
-                hash(
-                    hash(defaultArgument1),
-                    nowhere
-                )
-            )
-        );
-    assertCall(() -> consumer.accept(objHash))
-        .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH + "[1][1]"))
-        .withCause(new NoSuchObjException(nowhere));
-  }
-
-  private void test_default_arguments_is_val_instead_of_expr(
-      LambdaSpec spec, Hash bodyHash, Consumer<Hash> consumer) throws HashedDbException {
-    Hash objHash =
-        hash(
-            hash(spec),
-            hash(
-                bodyHash,
-                hash(intVal())
-            )
-        );
-    assertCall(() -> consumer.accept(objHash))
-        .throwsException(new UnexpectedObjNodeException(
-            objHash, spec, DATA_PATH, 1, RecExpr.class, Int.class));
-  }
-
-  private void test_default_argument_evaluation_spec_is_not_equal_function_eval_spec_parameter(
-      LambdaSpec spec, Hash bodyHash, Consumer<Hash> consumer) throws HashedDbException {
-    Const defaultArgument1 = intExpr(1);
-    Const defaultArgument2 = boolExpr();
-    RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-    Hash objHash =
-        hash(
-            hash(spec),
-            hash(
-                bodyHash,
-                hash(arguments)
-            )
-        );
-    assertCall(() -> consumer.accept(objHash))
-        .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(objHash, spec,
-            DATA_PATH + "[1]", spec.parameters(), arguments.spec().evaluationSpec()));
   }
 
   @Nested

@@ -39,18 +39,15 @@ import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
-import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.NativeLambda;
+import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 
 import com.google.common.collect.ImmutableList;
@@ -81,25 +78,18 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBoolVal(value));
   }
 
-  public DefinedLambda definedLambdaVal(DefinedLambdaSpec spec, Expr body, RecExpr defaultArguments) {
+  public Lambda lambdaVal(LambdaSpec spec, Expr body, RecExpr defaultArguments) {
     if (!Objects.equals(spec.result(), body.evaluationSpec())) {
       throw new IllegalArgumentException("`spec` specifies result as " + spec.result().name()
           + " but body.evaluationSpec() is " + body.evaluationSpec().name() + ".");
     }
     verifyArguments(spec, defaultArguments, "Default arguments");
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newDefinedLambdaVal(spec, body, defaultArguments));
+        () -> newLambdaVal(spec, body, defaultArguments));
   }
 
   public Int intVal(BigInteger value) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newIntVal(value));
-  }
-
-  public NativeLambda nativeLambdaVal(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, RecExpr defaultArguments) {
-    verifyArguments(spec, defaultArguments, "Default arguments");
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newNativeLambdaVal(spec, classBinaryName, nativeJar, defaultArguments));
   }
 
   public Str strVal(String value) {
@@ -330,9 +320,9 @@ public class ObjectDb {
     return specDb.boolSpec().newObj(root, this);
   }
 
-  private DefinedLambda newDefinedLambdaVal(
-      DefinedLambdaSpec spec, Expr body, RecExpr defaultArguments) throws HashedDbException {
-    var data = writeDefinedLambdaData(body, defaultArguments);
+  private Lambda newLambdaVal(LambdaSpec spec, Expr body, RecExpr defaultArguments)
+      throws HashedDbException {
+    var data = writeLambdaData(body, defaultArguments);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -341,14 +331,6 @@ public class ObjectDb {
     var data = writeIntData(value);
     var root = writeRoot(specDb.intSpec(), data);
     return specDb.intSpec().newObj(root, this);
-  }
-
-  private NativeLambda newNativeLambdaVal(
-      NativeLambdaSpec spec, Str classBinaryName, Blob nativeJar, RecExpr defaultArguments)
-      throws HashedDbException {
-    var data = writeNativeLambdaData(classBinaryName, nativeJar, defaultArguments);
-    var root = writeRoot(spec, data);
-    return spec.newObj(root, this);
   }
 
   private Str newStrVal(String string) throws HashedDbException {
@@ -415,18 +397,12 @@ public class ObjectDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeDefinedLambdaData(Expr body, RecExpr defaultArguments) throws HashedDbException {
+  private Hash writeLambdaData(Expr body, RecExpr defaultArguments) throws HashedDbException {
     return hashedDb.writeSequence(body.hash(), defaultArguments.hash());
   }
 
   private Hash writeIntData(BigInteger value) throws HashedDbException {
     return hashedDb.writeBigInteger(value);
-  }
-
-  private Hash writeNativeLambdaData(
-      Str classBinaryName, Blob nativeJar, RecExpr defaultArguments) throws HashedDbException {
-    Hash nativeHash = hashedDb.writeSequence(classBinaryName.hash(), nativeJar.hash());
-    return hashedDb.writeSequence(nativeHash, defaultArguments.hash());
   }
 
   private Hash writeStrData(String string) throws HashedDbException {

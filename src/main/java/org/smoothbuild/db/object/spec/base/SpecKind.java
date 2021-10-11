@@ -11,9 +11,8 @@ import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
-import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.NativeLambda;
+import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 
@@ -24,9 +23,9 @@ public enum SpecKind {
   ARRAY((byte) 0, Array.class),
   BLOB((byte) 1, Blob.class),
   BOOL((byte) 2, Bool.class),
-  DEFINED_LAMBDA((byte) 3, DefinedLambda.class),
+  LAMBDA((byte) 3, Lambda.class),
   INT((byte) 4, Int.class),
-  NATIVE_LAMBDA((byte) 5, NativeLambda.class),
+  // 5 - unused TODO
   NOTHING((byte) 6, null),
   RECORD((byte) 7, Rec.class),
   STRING((byte) 8, Str.class),
@@ -50,9 +49,8 @@ public enum SpecKind {
           .put((byte) 0, ARRAY)
           .put((byte) 1, BLOB)
           .put((byte) 2, BOOL)
-          .put((byte) 3, DEFINED_LAMBDA)
+          .put((byte) 3, LAMBDA)
           .put((byte) 4, INT)
-          .put((byte) 5, NATIVE_LAMBDA)
           .put((byte) 6, NOTHING)
           .put((byte) 7, RECORD)
           .put((byte) 8, STRING)

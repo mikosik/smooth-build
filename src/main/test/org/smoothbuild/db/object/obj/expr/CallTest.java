@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.expr.Call.CallData;
-import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
+import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 public class CallTest extends TestingContext {
   @Test
   public void spec_of_call_expr_is_inferred_correctly() {
-    assertThat(callExpr(constExpr(definedLambdaVal()), list(strExpr())).spec())
+    assertThat(callExpr(constExpr(lambdaVal()), list(strExpr())).spec())
         .isEqualTo(callSpec(intSpec()));
   }
 
@@ -30,35 +30,35 @@ public class CallTest extends TestingContext {
 
   @Test
   public void creating_call_with_too_few_arguments_causes_exception() {
-    assertCall(() -> callExpr(constExpr(definedLambdaVal()), list()))
+    assertCall(() -> callExpr(constExpr(lambdaVal()), list()))
         .throwsException(new IllegalArgumentException("Arguments evaluation spec {} should be "
             + "equal to function evaluation spec parameters {STRING}."));
   }
 
   @Test
   public void creating_call_with_too_many_arguments_causes_exception() {
-    assertCall(() -> callExpr(constExpr(definedLambdaVal()), list(intExpr(), intExpr())))
+    assertCall(() -> callExpr(constExpr(lambdaVal()), list(intExpr(), intExpr())))
         .throwsException(new IllegalArgumentException("Arguments evaluation spec {INT,INT}"
             + " should be equal to function evaluation spec parameters {STRING}."));
   }
 
   @Test
   public void creating_call_with_argument_not_matching_parameter_spec_causes_exception() {
-    assertCall(() -> callExpr(constExpr(definedLambdaVal()), list(intExpr(3))))
+    assertCall(() -> callExpr(constExpr(lambdaVal()), list(intExpr(3))))
         .throwsException(new IllegalArgumentException("Arguments evaluation spec {INT} should be"
             + " equal to function evaluation spec parameters {STRING}."));
   }
 
   @Test
   public void function_returns_function_expr() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     assertThat(callExpr(function, list(strExpr())).data().function())
         .isEqualTo(function);
   }
 
   @Test
   public void arguments_returns_argument_exprs() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).data().arguments())
         .isEqualTo(eRecExpr(arguments));
@@ -66,7 +66,7 @@ public class CallTest extends TestingContext {
 
   @Test
   public void call_with_equal_values_are_equal() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments))
         .isEqualTo(callExpr(function, arguments));
@@ -74,8 +74,8 @@ public class CallTest extends TestingContext {
 
   @Test
   public void call_with_different_functions_are_not_equal() {
-    Const function1 = constExpr(definedLambdaVal(intExpr(1)));
-    Const function2 = constExpr(definedLambdaVal(intExpr(2)));
+    Const function1 = constExpr(lambdaVal(intExpr(1)));
+    Const function2 = constExpr(lambdaVal(intExpr(2)));
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function1, arguments))
         .isNotEqualTo(callExpr(function2, arguments));
@@ -83,14 +83,14 @@ public class CallTest extends TestingContext {
 
   @Test
   public void call_with_different_arguments_are_not_equal() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     assertThat(callExpr(function, list(strExpr("abc"))))
         .isNotEqualTo(callExpr(function, list(strExpr("def"))));
   }
 
   @Test
   public void hash_of_calls_with_equal_values_is_the_same() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).hash())
         .isEqualTo(callExpr(function, arguments).hash());
@@ -98,9 +98,9 @@ public class CallTest extends TestingContext {
 
   @Test
   public void hash_of_calls_with_different_function_is_not_the_same() {
-    DefinedLambdaSpec spec = definedLambdaSpec(intSpec(), list(strSpec()));
-    Const function1 = constExpr(definedLambdaVal(spec, intExpr(1), list(strExpr())));
-    Const function2 = constExpr(definedLambdaVal(spec, intExpr(2), list(strExpr())));
+    LambdaSpec spec = lambdaSpec(intSpec(), list(strSpec()));
+    Const function1 = constExpr(lambdaVal(spec, intExpr(1), list(strExpr())));
+    Const function2 = constExpr(lambdaVal(spec, intExpr(2), list(strExpr())));
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function1, arguments).hash())
         .isNotEqualTo(callExpr(function2, arguments).hash());
@@ -108,14 +108,14 @@ public class CallTest extends TestingContext {
 
   @Test
   public void hash_of_calls_with_different_arguments_is_not_the_same() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     assertThat(callExpr(function, list(strExpr("abc"))).hash())
         .isNotEqualTo(callExpr(function, list(strExpr("def"))).hash());
   }
 
   @Test
   public void hash_code_of_calls_with_equal_values_is_the_same() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).hashCode())
         .isEqualTo(callExpr(function, arguments).hashCode());
@@ -123,8 +123,8 @@ public class CallTest extends TestingContext {
 
   @Test
   public void hash_code_of_calls_with_different_function_is_not_the_same() {
-    Const function1 = constExpr(definedLambdaVal(intExpr(1)));
-    Const function2 = constExpr(definedLambdaVal(intExpr(2)));
+    Const function1 = constExpr(lambdaVal(intExpr(1)));
+    Const function2 = constExpr(lambdaVal(intExpr(2)));
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function1, arguments).hashCode())
         .isNotEqualTo(callExpr(function2, arguments).hashCode());
@@ -132,21 +132,21 @@ public class CallTest extends TestingContext {
 
   @Test
   public void hash_code_of_calls_with_different_arguments_is_not_the_same() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     assertThat(callExpr(function, list(strExpr("abc"))).hashCode())
         .isNotEqualTo(callExpr(function, list(strExpr("def"))).hashCode());
   }
 
   @Test
   public void call_can_be_read_back_by_hash() {
-    Call call = callExpr(constExpr(definedLambdaVal()), list(strExpr()));
+    Call call = callExpr(constExpr(lambdaVal()), list(strExpr()));
     assertThat(objectDbOther().get(call.hash()))
         .isEqualTo(call);
   }
 
   @Test
   public void call_read_back_by_hash_has_same_data() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     ImmutableList<Expr> arguments = list(strExpr());
     Call call = callExpr(function, arguments);
     assertThat(((Call) objectDbOther().get(call.hash())).data())
@@ -155,7 +155,7 @@ public class CallTest extends TestingContext {
 
   @Test
   public void to_string() {
-    Const function = constExpr(definedLambdaVal());
+    Const function = constExpr(lambdaVal());
     Call call = callExpr(function, list(strExpr()));
     assertThat(call.toString())
         .isEqualTo("Call(???)@" + call.hash());

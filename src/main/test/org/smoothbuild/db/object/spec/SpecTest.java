@@ -8,9 +8,8 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_ABSENT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_ANY;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_BOOL;
-import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_INT;
-import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_NATIVE_LAMBDA;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_STR;
@@ -19,10 +18,9 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_ABSENT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_ANY;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BOOL;
-import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_INT;
-import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_NATIVE_LAMBDA;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_STR;
@@ -31,10 +29,9 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CALL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CONST;
-import static org.smoothbuild.db.object.spec.TestingSpecs.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ERECORD;
 import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
-import static org.smoothbuild.db.object.spec.TestingSpecs.NATIVE_LAMBDA;
+import static org.smoothbuild.db.object.spec.TestingSpecs.LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NULL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
@@ -64,9 +61,8 @@ import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
-import org.smoothbuild.db.object.obj.val.DefinedLambda;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.NativeLambda;
+import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.Spec;
@@ -74,8 +70,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
-import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
+import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.testing.TestingContext;
@@ -112,9 +107,8 @@ public class SpecTest {
         arguments(ANY, "ANY"),
         arguments(BLOB, "BLOB"),
         arguments(BOOL, "BOOL"),
-        arguments(DEFINED_LAMBDA, "BLOB(BOOL)"),
+        arguments(LAMBDA, "BLOB(BOOL)"),
         arguments(INT, "INT"),
-        arguments(NATIVE_LAMBDA, "BLOB(BOOL)"),
         arguments(NOTHING, "NOTHING"),
         arguments(STR, "STRING"),
         arguments(PERSON, "{STRING,STRING}"),
@@ -130,9 +124,8 @@ public class SpecTest {
         arguments(ARRAY_ANY, "[ANY]"),
         arguments(ARRAY_BLOB, "[BLOB]"),
         arguments(ARRAY_BOOL, "[BOOL]"),
-        arguments(ARRAY_DEFINED_LAMBDA, "[BLOB(BOOL)]"),
+        arguments(ARRAY_LAMBDA, "[BLOB(BOOL)]"),
         arguments(ARRAY_INT, "[INT]"),
-        arguments(ARRAY_NATIVE_LAMBDA, "[BLOB(BOOL)]"),
         arguments(ARRAY_NOTHING, "[NOTHING]"),
         arguments(ARRAY_STR, "[STRING]"),
         arguments(ARRAY_PERSON, "[{STRING,STRING}]"),
@@ -141,9 +134,8 @@ public class SpecTest {
         arguments(ARRAY2_ANY, "[[ANY]]"),
         arguments(ARRAY2_BLOB, "[[BLOB]]"),
         arguments(ARRAY2_BOOL, "[[BOOL]]"),
-        arguments(ARRAY2_DEFINED_LAMBDA, "[[BLOB(BOOL)]]"),
+        arguments(ARRAY2_LAMBDA, "[[BLOB(BOOL)]]"),
         arguments(ARRAY2_INT, "[[INT]]"),
-        arguments(ARRAY2_NATIVE_LAMBDA, "[[BLOB(BOOL)]]"),
         arguments(ARRAY2_NOTHING, "[[NOTHING]]"),
         arguments(ARRAY2_STR, "[[STRING]]"),
         arguments(ARRAY2_PERSON, "[[{STRING,STRING}]]")
@@ -163,9 +155,8 @@ public class SpecTest {
         arguments(ABSENT, null),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
-        arguments(DEFINED_LAMBDA, DefinedLambda.class),
+        arguments(LAMBDA, Lambda.class),
         arguments(INT, Int.class),
-        arguments(NATIVE_LAMBDA, NativeLambda.class),
         arguments(NOTHING, null),
         arguments(PERSON, Rec.class),
         arguments(STR, Str.class),
@@ -175,9 +166,8 @@ public class SpecTest {
         arguments(ARRAY_ABSENT, Array.class),
         arguments(ARRAY_BLOB, Array.class),
         arguments(ARRAY_BOOL, Array.class),
-        arguments(ARRAY_DEFINED_LAMBDA, Array.class),
+        arguments(ARRAY_LAMBDA, Array.class),
         arguments(ARRAY_INT, Array.class),
-        arguments(ARRAY_NATIVE_LAMBDA, Array.class),
         arguments(ARRAY_NOTHING, Array.class),
         arguments(ARRAY_PERSON, Array.class),
         arguments(ARRAY_STR, Array.class),
@@ -206,9 +196,8 @@ public class SpecTest {
         arguments(ARRAY_ANY, ANY),
         arguments(ARRAY_BLOB, BLOB),
         arguments(ARRAY_BOOL, BOOL),
-        arguments(ARRAY_DEFINED_LAMBDA, DEFINED_LAMBDA),
+        arguments(ARRAY_LAMBDA, LAMBDA),
         arguments(ARRAY_INT, INT),
-        arguments(ARRAY_NATIVE_LAMBDA, NATIVE_LAMBDA),
         arguments(ARRAY_NOTHING, NOTHING),
         arguments(ARRAY_STR, STR),
         arguments(ARRAY_PERSON, PERSON),
@@ -217,9 +206,8 @@ public class SpecTest {
         arguments(ARRAY2_ANY, ARRAY_ANY),
         arguments(ARRAY2_BLOB, ARRAY_BLOB),
         arguments(ARRAY2_BOOL, ARRAY_BOOL),
-        arguments(ARRAY2_DEFINED_LAMBDA, ARRAY_DEFINED_LAMBDA),
+        arguments(ARRAY2_LAMBDA, ARRAY_LAMBDA),
         arguments(ARRAY2_INT, ARRAY_INT),
-        arguments(ARRAY2_NATIVE_LAMBDA, ARRAY_NATIVE_LAMBDA),
         arguments(ARRAY2_NOTHING, ARRAY_NOTHING),
         arguments(ARRAY2_STR, ARRAY_STR),
         arguments(ARRAY2_PERSON, ARRAY_PERSON));
@@ -313,93 +301,47 @@ public class SpecTest {
   }
 
   @ParameterizedTest
-  @MethodSource("defined_lambda_result_cases")
-  public void defined_lambda_result(DefinedLambdaSpec spec, ValSpec expected) {
+  @MethodSource("lambda_result_cases")
+  public void lambda_result(LambdaSpec spec, ValSpec expected) {
     assertThat(spec.result())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> defined_lambda_result_cases() {
+  public static List<Arguments> lambda_result_cases() {
     return list(
-        arguments(definedLambdaSpec(INT, list()), INT),
-        arguments(definedLambdaSpec(BLOB, list(BOOL)), BLOB),
-        arguments(definedLambdaSpec(BLOB, list(BOOL, INT)), BLOB)
+        arguments(lambdaSpec(INT, list()), INT),
+        arguments(lambdaSpec(BLOB, list(BOOL)), BLOB),
+        arguments(lambdaSpec(BLOB, list(BOOL, INT)), BLOB)
     );
   }
 
   @ParameterizedTest
-  @MethodSource("defined_lambda_parameters_cases")
-  public void defined_lambda_parameters(DefinedLambdaSpec spec, RecSpec expected) {
+  @MethodSource("lambda_parameters_cases")
+  public void lambda_parameters(LambdaSpec spec, RecSpec expected) {
     assertThat(spec.parameters())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> defined_lambda_parameters_cases() {
+  public static List<Arguments> lambda_parameters_cases() {
     return list(
-        arguments(definedLambdaSpec(INT, list()), recSpec()),
-        arguments(definedLambdaSpec(BLOB, list(BOOL)), recSpec(BOOL)),
-        arguments(definedLambdaSpec(BLOB, list(BOOL, INT)), recSpec(BOOL, INT))
+        arguments(lambdaSpec(INT, list()), recSpec()),
+        arguments(lambdaSpec(BLOB, list(BOOL)), recSpec(BOOL)),
+        arguments(lambdaSpec(BLOB, list(BOOL, INT)), recSpec(BOOL, INT))
     );
   }
 
   @ParameterizedTest
-  @MethodSource("defined_lambda_default_arguments_cases")
-  public void defined_lambda_default_arguments(DefinedLambdaSpec spec, RecSpec expected) {
+  @MethodSource("lambda_default_arguments_cases")
+  public void lambda_default_arguments(LambdaSpec spec, RecSpec expected) {
     assertThat(spec.defaultArguments())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> defined_lambda_default_arguments_cases() {
+  public static List<Arguments> lambda_default_arguments_cases() {
     return list(
-        arguments(definedLambdaSpec(INT, list(), list()), recSpec()),
-        arguments(definedLambdaSpec(BLOB, list(BOOL), list(ABSENT)), recSpec(ABSENT)),
-        arguments(definedLambdaSpec(
-            BLOB, list(BOOL, INT), list(BOOL, ABSENT)), recSpec(BOOL, ABSENT))
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("native_lambda_result_cases")
-  public void native_lambda_result(NativeLambdaSpec spec, ValSpec expected) {
-    assertThat(spec.result())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> native_lambda_result_cases() {
-    return list(
-        arguments(nativeLambdaSpec(INT, list()), INT),
-        arguments(nativeLambdaSpec(BLOB, list(BOOL)), BLOB),
-        arguments(nativeLambdaSpec(BLOB, list(BOOL, INT)), BLOB)
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("native_lambda_parameters_cases")
-  public void native_lambda_parameters(NativeLambdaSpec spec, RecSpec expected) {
-    assertThat(spec.parameters())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> native_lambda_parameters_cases() {
-    return list(
-        arguments(nativeLambdaSpec(INT, list()), recSpec()),
-        arguments(nativeLambdaSpec(BLOB, list(BOOL)), recSpec(BOOL)),
-        arguments(nativeLambdaSpec(BLOB, list(BOOL, INT)), recSpec(BOOL, INT))
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("native_lambda_default_arguments_cases")
-  public void native_lambda_default_arguments(NativeLambdaSpec spec, RecSpec expected) {
-    assertThat(spec.defaultArguments())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> native_lambda_default_arguments_cases() {
-    return list(
-        arguments(nativeLambdaSpec(INT, list(), list()), recSpec()),
-        arguments(nativeLambdaSpec(BLOB, list(BOOL), list(ABSENT)), recSpec(ABSENT)),
-        arguments(nativeLambdaSpec(
+        arguments(lambdaSpec(INT, list(), list()), recSpec()),
+        arguments(lambdaSpec(BLOB, list(BOOL), list(ABSENT)), recSpec(ABSENT)),
+        arguments(lambdaSpec(
             BLOB, list(BOOL, INT), list(BOOL, ABSENT)), recSpec(BOOL, ABSENT))
     );
   }
@@ -420,22 +362,13 @@ public class SpecTest {
     }
   }
 
-  private static ValSpec definedLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return definedLambdaSpec(result, parameters, parameters);
+  private static ValSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+    return lambdaSpec(result, parameters, parameters);
   }
 
-  private static DefinedLambdaSpec definedLambdaSpec(ValSpec result,
+  private static LambdaSpec lambdaSpec(ValSpec result,
       ImmutableList<ValSpec> parameters, ImmutableList<ValSpec> defaultArguments) {
-    return SPEC_DB.definedLambdaSpec(result, recSpec(parameters), recSpec(defaultArguments));
-  }
-
-  private static ValSpec nativeLambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return nativeLambdaSpec(result, parameters, parameters);
-  }
-
-  private static NativeLambdaSpec nativeLambdaSpec(ValSpec result,
-      ImmutableList<ValSpec> parameters, ImmutableList<ValSpec> defaultArguments) {
-    return SPEC_DB.nativeLambdaSpec(result, recSpec(parameters), recSpec(defaultArguments));
+    return SPEC_DB.lambdaSpec(result, recSpec(parameters), recSpec(defaultArguments));
   }
 
   private static RecSpec recSpec(ValSpec... items) {
@@ -461,9 +394,8 @@ public class SpecTest {
     tester.addEqualityGroup(ABSENT, ABSENT);
     tester.addEqualityGroup(BLOB, BLOB);
     tester.addEqualityGroup(BOOL, BOOL);
-    tester.addEqualityGroup(DEFINED_LAMBDA, DEFINED_LAMBDA);
+    tester.addEqualityGroup(LAMBDA, LAMBDA);
     tester.addEqualityGroup(INT, INT);
-    tester.addEqualityGroup(NATIVE_LAMBDA, NATIVE_LAMBDA);
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STR, STR);
     tester.addEqualityGroup(PERSON, PERSON);
@@ -473,9 +405,8 @@ public class SpecTest {
     tester.addEqualityGroup(ARRAY_ABSENT, ARRAY_ABSENT);
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
-    tester.addEqualityGroup(ARRAY_DEFINED_LAMBDA, ARRAY_DEFINED_LAMBDA);
+    tester.addEqualityGroup(ARRAY_LAMBDA, ARRAY_LAMBDA);
     tester.addEqualityGroup(ARRAY_INT, ARRAY_INT);
-    tester.addEqualityGroup(ARRAY_NATIVE_LAMBDA, ARRAY_NATIVE_LAMBDA);
     tester.addEqualityGroup(ARRAY_NOTHING, ARRAY_NOTHING);
     tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
     tester.addEqualityGroup(ARRAY_PERSON, ARRAY_PERSON);
@@ -486,8 +417,7 @@ public class SpecTest {
     tester.addEqualityGroup(ARRAY2_ABSENT, ARRAY2_ABSENT);
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
     tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
-    tester.addEqualityGroup(ARRAY2_DEFINED_LAMBDA, ARRAY2_DEFINED_LAMBDA);
-    tester.addEqualityGroup(ARRAY2_NATIVE_LAMBDA, ARRAY2_NATIVE_LAMBDA);
+    tester.addEqualityGroup(ARRAY2_LAMBDA, ARRAY2_LAMBDA);
     tester.addEqualityGroup(ARRAY2_INT, ARRAY2_INT);
     tester.addEqualityGroup(ARRAY2_NOTHING, ARRAY2_NOTHING);
     tester.addEqualityGroup(ARRAY2_STR, ARRAY2_STR);

@@ -11,8 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
-import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
+import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.testing.TestingContext;
 
@@ -37,9 +36,8 @@ public class SpecCachingTest extends TestingContext {
     return list(
         SpecDb::blobSpec,
         SpecDb::boolSpec,
-        SpecCachingTest::definedLambdaSpec,
+        SpecCachingTest::lambdaSpec,
         SpecDb::intSpec,
-        SpecCachingTest::nativeLambdaSpec,
         SpecDb::nothingSpec,
         SpecDb::strSpec,
         SpecCachingTest::recSpec,
@@ -57,8 +55,7 @@ public class SpecCachingTest extends TestingContext {
         specDb -> specDb.arraySpec(specDb.nothingSpec()),
         specDb -> specDb.arraySpec(specDb.strSpec()),
         specDb -> specDb.arraySpec(recSpec(specDb)),
-        specDb -> specDb.arraySpec(definedLambdaSpec(specDb)),
-        specDb -> specDb.arraySpec(nativeLambdaSpec(specDb)),
+        specDb -> specDb.arraySpec(lambdaSpec(specDb)),
 
         specDb -> specDb.arraySpec(specDb.arraySpec(specDb.blobSpec())),
         specDb -> specDb.arraySpec(specDb.arraySpec(specDb.boolSpec())),
@@ -66,8 +63,7 @@ public class SpecCachingTest extends TestingContext {
         specDb -> specDb.arraySpec(specDb.arraySpec(specDb.nothingSpec())),
         specDb -> specDb.arraySpec(specDb.arraySpec(specDb.strSpec())),
         specDb -> specDb.arraySpec(specDb.arraySpec(recSpec(specDb))),
-        specDb -> specDb.arraySpec(specDb.arraySpec(definedLambdaSpec(specDb))),
-        specDb -> specDb.arraySpec(specDb.arraySpec(nativeLambdaSpec(specDb)))
+        specDb -> specDb.arraySpec(specDb.arraySpec(lambdaSpec(specDb)))
     );
   }
 
@@ -75,13 +71,8 @@ public class SpecCachingTest extends TestingContext {
     return specDb.recSpec(list(specDb.strSpec(), specDb.strSpec()));
   }
 
-  private static DefinedLambdaSpec definedLambdaSpec(SpecDb specDb) {
+  private static LambdaSpec lambdaSpec(SpecDb specDb) {
     RecSpec parameters = specDb.recSpec(list(specDb.boolSpec(), specDb.blobSpec()));
-    return specDb.definedLambdaSpec(specDb.strSpec(), parameters, parameters);
-  }
-
-  private static NativeLambdaSpec nativeLambdaSpec(SpecDb specDb) {
-    RecSpec parameters = specDb.recSpec(list(specDb.boolSpec(), specDb.blobSpec()));
-    return specDb.nativeLambdaSpec(specDb.strSpec(), parameters, parameters);
+    return specDb.lambdaSpec(specDb.strSpec(), parameters, parameters);
   }
 }

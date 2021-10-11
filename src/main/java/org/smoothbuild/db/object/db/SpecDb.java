@@ -14,10 +14,9 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
-import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INVOKE;
-import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
+import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
@@ -59,9 +58,8 @@ import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
-import org.smoothbuild.db.object.spec.val.DefinedLambdaSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
-import org.smoothbuild.db.object.spec.val.NativeLambdaSpec;
+import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
@@ -138,20 +136,13 @@ public class SpecDb {
     return boolSpec;
   }
 
-  public DefinedLambdaSpec definedLambdaSpec(ValSpec result, RecSpec parameters,
-      RecSpec defaultArguments) {
+  public LambdaSpec lambdaSpec(ValSpec result, RecSpec parameters, RecSpec defaultArguments) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newDefinedLambdaSpec(result, parameters, defaultArguments));
+        () -> newLambdaSpec(result, parameters, defaultArguments));
   }
 
   public IntSpec intSpec() {
     return intSpec;
-  }
-
-  public NativeLambdaSpec nativeLambdaSpec(ValSpec result, RecSpec parameters,
-      RecSpec defaultArguments) {
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newNativeLambdaSpec(result, parameters, defaultArguments   ));
   }
 
   public NothingSpec nothingSpec() {
@@ -243,7 +234,7 @@ public class SpecDb {
       case ARRAY_EXPR -> newArrayExprSpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
       case CALL -> newCallSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CONST -> newConstSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
-      case DEFINED_LAMBDA, NATIVE_LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
+      case LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
       case INVOKE -> newInvokeSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case RECORD_EXPR -> newRecExprSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
@@ -335,11 +326,7 @@ public class SpecDb {
       throw new UnexpectedSpecNodeException(
           hash, specKind, LAMBDA_DEF_ARGUMENTS_PATH, RecSpec.class, defaultArguments.getClass());
     }
-    return switch (specKind) {
-      case DEFINED_LAMBDA -> newDefinedLambdaSpec(hash, resultSpec, parametersSpec, argumentSpecs);
-      case NATIVE_LAMBDA -> newNativeLambdaSpec(hash, resultSpec, parametersSpec, argumentSpecs);
-      default -> throw new RuntimeException("Cannot happen.");
-    };
+    return newLambdaSpec(hash, resultSpec, parametersSpec, argumentSpecs);
   }
 
   private RecSpec readRecord(Hash hash, List<Hash> rootSequence) {
@@ -384,26 +371,15 @@ public class SpecDb {
     return cacheSpec(new ArraySpec(hash, elementSpec));
   }
 
-  private DefinedLambdaSpec newDefinedLambdaSpec(ValSpec result, RecSpec parameters,
+  private LambdaSpec newLambdaSpec(ValSpec result, RecSpec parameters,
       RecSpec defaultArguments) throws HashedDbException {
-    var hash = writeLambdaSpecRoot(DEFINED_LAMBDA, result, parameters, defaultArguments);
-    return newDefinedLambdaSpec(hash, result, parameters, defaultArguments);
+    var hash = writeLambdaSpecRoot(LAMBDA, result, parameters, defaultArguments);
+    return newLambdaSpec(hash, result, parameters, defaultArguments);
   }
 
-  private DefinedLambdaSpec newDefinedLambdaSpec(Hash hash, ValSpec result, RecSpec parameters,
+  private LambdaSpec newLambdaSpec(Hash hash, ValSpec result, RecSpec parameters,
       RecSpec defaultArguments) {
-    return cacheSpec(new DefinedLambdaSpec(hash, result, parameters, defaultArguments));
-  }
-
-  private NativeLambdaSpec newNativeLambdaSpec(ValSpec result, RecSpec parameters,
-      RecSpec defaultArguments) throws HashedDbException {
-    var hash = writeLambdaSpecRoot(NATIVE_LAMBDA, result, parameters, defaultArguments);
-    return newNativeLambdaSpec(hash, result, parameters, defaultArguments);
-  }
-
-  private NativeLambdaSpec newNativeLambdaSpec(Hash hash, ValSpec result, RecSpec parameters,
-      RecSpec defaultArguments) {
-    return cacheSpec(new NativeLambdaSpec(hash, result, parameters, defaultArguments));
+    return cacheSpec(new LambdaSpec(hash, result, parameters, defaultArguments));
   }
 
   private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
