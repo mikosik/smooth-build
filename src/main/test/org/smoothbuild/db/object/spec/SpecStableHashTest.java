@@ -19,8 +19,8 @@ public class SpecStableHashTest extends TestingContext {
     assertHash(intSpec(), "8be891c7170d4d1bbca0ffcb3fce71285c55aee4");
     assertHash(nativeLambdaSpec(), "d47e3d353022725ed799cea636a8880a664372a7");
     assertHash(nothingSpec(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
-    assertHash(strSpec(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
     assertHash(recSpec(list(blobSpec())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
+    assertHash(strSpec(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
     assertHash(variableSpec("A"), "99f61661c131c5db3723bdaa5ad26229d06dc6ce");
 
     assertHash(arraySpec(absentSpec()), "e340097d1be4cc94bcecc4d91781a3de55c1efc1");
@@ -35,12 +35,13 @@ public class SpecStableHashTest extends TestingContext {
     assertHash(arraySpec(recSpec(list(blobSpec()))), "e843737d83eb150a51a81d9e43a00142982bd959");
     assertHash(arraySpec(variableSpec("A")), "5eae2a05ffe2fee34c07a74779e5eecde3521849");
 
+    assertHash(arrayExprSpec(intSpec()), "04c4786e96bdac890b5089eee99173cd41cecb33");
     assertHash(callSpec(intSpec()), "f8e8b1d061fcdfb8be52b97cf80e50bc908e59ef");
     assertHash(constSpec(intSpec()), "dd2a014b3764aa9ab8875ff924449ee241cb5e7c");
-    assertHash(arrayExprSpec(intSpec()), "04c4786e96bdac890b5089eee99173cd41cecb33");
-    assertHash(selectSpec(intSpec()), "bc511a321ba8a722155574c39f0cb5f58ee84a71");
+    assertHash(invokeSpec(intSpec()), "63c26541edaea9f891f5276f8d125cdad97f5ac7");
     assertHash(nullSpec(), "e43dd13c440350f8543c90ec6d90deb36dfdbedc");
     assertHash(refSpec(intSpec()), "fca4f7c553d3189b050352933410a5b8b6ceadb6");
+    assertHash(selectSpec(intSpec()), "bc511a321ba8a722155574c39f0cb5f58ee84a71");
   }
 
   private static void assertHash(Spec spec, String hash) {

@@ -16,6 +16,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
+import static org.smoothbuild.db.object.spec.base.SpecKind.INVOKE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
@@ -49,6 +50,7 @@ import org.smoothbuild.db.object.spec.expr.AbsentSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
+import org.smoothbuild.db.object.spec.expr.InvokeSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
@@ -168,6 +170,10 @@ public class SpecDb {
 
   // methods for getting Expr-s specs
 
+  public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExprSpec(elementSpec));
+  }
+
   public CallSpec callSpec(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCallSpec(evaluationSpec));
   }
@@ -176,8 +182,12 @@ public class SpecDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstSpec(evaluationSpec));
   }
 
-  public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExprSpec(elementSpec));
+  public InvokeSpec invokeSpec(ValSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newInvokeSpec(evaluationSpec));
+  }
+
+  public NullSpec nullSpec() {
+    return nullSpec;
   }
 
   public RecExprSpec recExprSpec(Iterable<? extends ValSpec> itemSpecs) {
@@ -186,10 +196,6 @@ public class SpecDb {
 
   public SelectSpec selectSpec(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectSpec(evaluationSpec));
-  }
-
-  public NullSpec nullSpec() {
-    return nullSpec;
   }
 
   public RefSpec refSpec(ValSpec evaluationSpec) {
@@ -234,14 +240,15 @@ public class SpecDb {
             "Internal error: Spec with kind " + specKind + " should be found in cache.");
       }
       case ARRAY -> newArraySpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
+      case ARRAY_EXPR -> newArrayExprSpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
       case CALL -> newCallSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CONST -> newConstSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
-      case ARRAY_EXPR -> newArrayExprSpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
-      case RECORD_EXPR -> newRecExprSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
-      case SELECT -> newSelectSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
-      case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case DEFINED_LAMBDA, NATIVE_LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
+      case INVOKE -> newInvokeSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
+      case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
+      case RECORD_EXPR -> newRecExprSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
       case RECORD -> readRecord(hash, rootSequence);
+      case SELECT -> newSelectSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case VARIABLE -> readVariable(hash, rootSequence);
     };
   }
@@ -419,6 +426,16 @@ public class SpecDb {
 
   // methods for creating Expr Spec-s
 
+  private ArrayExprSpec newArrayExprSpec(ValSpec elementSpec) throws HashedDbException {
+    var evaluationSpec = arraySpec(elementSpec);
+    var hash = writeExprSpecRoot(ARRAY_EXPR, evaluationSpec);
+    return newArrayExprSpec(hash, evaluationSpec);
+  }
+
+  private ArrayExprSpec newArrayExprSpec(Hash hash, ArraySpec evaluationSpec) {
+    return cacheSpec(new ArrayExprSpec(hash, evaluationSpec));
+  }
+
   private CallSpec newCallSpec(ValSpec evaluationSpec) throws HashedDbException {
     var hash = writeExprSpecRoot(CALL, evaluationSpec);
     return newCallSpec(hash, evaluationSpec);
@@ -437,14 +454,13 @@ public class SpecDb {
     return cacheSpec(new ConstSpec(hash, evaluationSpec));
   }
 
-  private ArrayExprSpec newArrayExprSpec(ValSpec elementSpec) throws HashedDbException {
-    var evaluationSpec = arraySpec(elementSpec);
-    var hash = writeExprSpecRoot(ARRAY_EXPR, evaluationSpec);
-    return newArrayExprSpec(hash, evaluationSpec);
+  private InvokeSpec newInvokeSpec(ValSpec evaluationSpec) throws HashedDbException {
+    var hash = writeExprSpecRoot(INVOKE, evaluationSpec);
+    return newInvokeSpec(hash, evaluationSpec);
   }
 
-  private ArrayExprSpec newArrayExprSpec(Hash hash, ArraySpec evaluationSpec) {
-    return cacheSpec(new ArrayExprSpec(hash, evaluationSpec));
+  private InvokeSpec newInvokeSpec(Hash hash, ValSpec evaluationSpec) {
+    return cacheSpec(new InvokeSpec(hash, evaluationSpec));
   }
 
   private RecExprSpec newRecExprSpec(Iterable<? extends ValSpec> elementSpec)
@@ -458,15 +474,6 @@ public class SpecDb {
     return cacheSpec(new RecExprSpec(hash, evaluationSpec));
   }
 
-  private SelectSpec newSelectSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeExprSpecRoot(SELECT, evaluationSpec);
-    return newSelectSpec(hash, evaluationSpec);
-  }
-
-  private SelectSpec newSelectSpec(Hash hash, ValSpec evaluationSpec) {
-    return cacheSpec(new SelectSpec(hash, evaluationSpec));
-  }
-
   private RefSpec newRefSpec(ValSpec evaluationSpec) throws HashedDbException {
     var hash = writeExprSpecRoot(REF, evaluationSpec);
     return newRefSpec(hash, evaluationSpec);
@@ -474,6 +481,15 @@ public class SpecDb {
 
   private RefSpec newRefSpec(Hash hash, ValSpec evaluationSpec) {
     return cacheSpec(new RefSpec(hash, evaluationSpec));
+  }
+
+  private SelectSpec newSelectSpec(ValSpec evaluationSpec) throws HashedDbException {
+    var hash = writeExprSpecRoot(SELECT, evaluationSpec);
+    return newSelectSpec(hash, evaluationSpec);
+  }
+
+  private SelectSpec newSelectSpec(Hash hash, ValSpec evaluationSpec) {
+    return cacheSpec(new SelectSpec(hash, evaluationSpec));
   }
 
   private <T extends Spec> T cacheSpec(T spec) {

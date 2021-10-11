@@ -264,6 +264,13 @@ public class SpecTest {
           .isEqualTo(spec);
     }
 
+    @ParameterizedTest
+    @MethodSource("specs")
+    public void invoke(ValSpec spec) {
+      assertThat(SPEC_DB.invokeSpec(spec).evaluationSpec())
+          .isEqualTo(spec);
+    }
+
     @Test
     public void null_() {
       assertThat(SPEC_DB.nullSpec().evaluationSpec())

@@ -26,6 +26,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Invoke;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
@@ -44,6 +45,7 @@ import org.smoothbuild.db.object.spec.expr.AbsentSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
+import org.smoothbuild.db.object.spec.expr.InvokeSpec;
 import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
@@ -343,6 +345,14 @@ public class TestingContext {
 
   // Expr Spec-s
 
+  public ArrayExprSpec arrayExprSpec() {
+    return arrayExprSpec(intSpec());
+  }
+
+  public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
+    return specDb().arrayExprSpec(elementSpec);
+  }
+
   public CallSpec callSpec() {
     return callSpec(intSpec());
   }
@@ -359,12 +369,16 @@ public class TestingContext {
     return specDb().constSpec(evaluationSpec);
   }
 
-  public ArrayExprSpec arrayExprSpec() {
-    return arrayExprSpec(intSpec());
+  public InvokeSpec invokeSpec() {
+    return invokeSpec(intSpec());
   }
 
-  public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
-    return specDb().arrayExprSpec(elementSpec);
+  public InvokeSpec invokeSpec(ValSpec evaluationSpec) {
+    return specDb().invokeSpec(evaluationSpec);
+  }
+
+  public NullSpec nullSpec() {
+    return specDb().nullSpec();
   }
 
   public RecExprSpec recExprSpec() {
@@ -381,10 +395,6 @@ public class TestingContext {
 
   public SelectSpec selectSpec(ValSpec evaluationSpec) {
     return specDb().selectSpec(evaluationSpec);
-  }
-
-  public NullSpec nullSpec() {
-    return specDb().nullSpec();
   }
 
   public RefSpec refSpec() {
@@ -542,6 +552,10 @@ public class TestingContext {
 
   public Const intExpr(int i) {
     return constExpr(intVal(i));
+  }
+
+  public Invoke invokeExpr(Blob jarFile, Str classBinaryName, ValSpec evaluationSpec) {
+    return objectDb().invokeExpr(jarFile, classBinaryName, evaluationSpec);
   }
 
   public Null nullExpr() {

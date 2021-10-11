@@ -16,6 +16,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.DEFINED_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
+import static org.smoothbuild.db.object.spec.base.SpecKind.INVOKE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
@@ -291,6 +292,48 @@ public class CorruptedSpecTest extends TestingContext {
     @Override
     protected LambdaSpec newSpec(ValSpec result, RecSpec arguments, RecSpec defaultArguments) {
       return definedLambdaSpec(result, arguments, defaultArguments);
+    }
+  }
+
+  @Nested
+  class _invoke_spec {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save invoke spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(INVOKE.marker()),
+          hash(intSpec())
+      );
+      assertThat(hash)
+          .isEqualTo(invokeSpec(intSpec()).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(INVOKE);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(INVOKE);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_spec(INVOKE);
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      test_spec_with_corrupted_spec_as_data(INVOKE);
+    }
+
+    @Test
+    public void with_evaluation_spec_being_expr_spec() throws Exception {
+      test_spec_with_data_spec_being_expr_spec(INVOKE, ValSpec.class);
     }
   }
 

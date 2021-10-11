@@ -50,6 +50,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Invoke;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -1293,6 +1294,130 @@ public class CorruptedObjTest extends TestingContext {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           intSpec(),
           (Hash objHash) -> ((Int) objectDb().get(objHash)).jValue());
+    }
+  }
+
+  @Nested
+  class _invoke {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save invoke
+       * in HashedDb.
+       */
+      Blob jarFile = blobVal();
+      Str classBinaryName = strVal();
+      Hash objHash =
+          hash(
+              hash(invokeSpec()),
+              hash(
+                  hash(jarFile),
+                  hash(classBinaryName)
+              )
+          );
+
+      assertThat(((Invoke) objectDb().get(objHash)).jarFile())
+          .isEqualTo(jarFile);
+      assertThat(((Invoke) objectDb().get(objHash)).classBinaryName())
+          .isEqualTo(classBinaryName);
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(invokeSpec());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      Blob jarFile = blobVal();
+      Str classBinaryName = strVal();
+      Hash dataHash = hash(
+          hash(jarFile),
+          hash(classBinaryName)
+      );
+      obj_root_with_two_data_hashes(
+          invokeSpec(),
+          dataHash,
+          (Hash objHash) -> ((Invoke) objectDb().get(objHash)).classBinaryName());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          invokeSpec(),
+          (Hash objHash) -> ((Invoke) objectDb().get(objHash)).classBinaryName());
+    }
+
+    @Test
+    public void data_is_sequence_with_one_element() throws Exception {
+      Blob jarFile = blobVal();
+      Hash dataHash = hash(
+          hash(jarFile)
+      );
+      Hash objHash =
+          hash(
+              hash(invokeSpec()),
+              dataHash
+          );
+
+      assertCall(() -> ((Invoke) objectDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedObjSequenceException(
+              objHash, invokeSpec(), DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_sequence_with_three_elements() throws Exception {
+      Blob jarFile = blobVal();
+      Str classBinaryName = strVal();
+      Hash dataHash = hash(
+          hash(jarFile),
+          hash(classBinaryName),
+          hash(classBinaryName)
+      );
+      Hash objHash =
+          hash(
+              hash(invokeSpec()),
+              dataHash
+          );
+
+      assertCall(() -> ((Invoke) objectDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedObjSequenceException(
+              objHash, invokeSpec(), DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void jar_file_is_not_blob_value() throws Exception {
+      Str jarFile = strVal();
+      Str classBinaryName = strVal();
+      Hash objHash =
+          hash(
+              hash(invokeSpec()),
+              hash(
+                  hash(jarFile),
+                  hash(classBinaryName)
+              )
+          );
+      assertCall(() -> ((Invoke) objectDb().get(objHash)).jarFile())
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, invokeSpec(), DATA_PATH + "[0]", Blob.class, Str.class));
+    }
+
+    @Test
+    public void class_binary_name_is_not_string_value() throws Exception {
+      Blob jarFile = blobVal();
+      Int classBinaryName = intVal();
+      Hash objHash =
+          hash(
+              hash(invokeSpec()),
+              hash(
+                  hash(jarFile),
+                  hash(classBinaryName)
+              )
+          );
+
+      assertCall(() -> ((Invoke) objectDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, invokeSpec(), DATA_PATH + "[1]", Str.class, Int.class));
     }
   }
 

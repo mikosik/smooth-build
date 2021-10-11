@@ -29,6 +29,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Invoke;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
@@ -144,6 +145,11 @@ public class ObjectDb {
 
   public Select selectExpr(Expr rec, Int index) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectExpr(rec, index));
+  }
+
+  public Invoke invokeExpr(Blob jarFile, Str classBinaryName, ValSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newInvokeExpr(jarFile, classBinaryName, evaluationSpec));
   }
 
   public Null nullExpr() {
@@ -284,6 +290,14 @@ public class ObjectDb {
     }
   }
 
+  private Invoke newInvokeExpr(Blob jarFile, Str classBinaryName, ValSpec evaluationSpec)
+      throws HashedDbException {
+    var spec = specDb.invokeSpec(evaluationSpec);
+    var data = writeInvokeData(jarFile, classBinaryName);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
+  }
+
   private Null newNullExpr() throws HashedDbException {
     var root = writeRoot(specDb.nullSpec());
     return specDb.nullSpec().newObj(root, this);
@@ -373,6 +387,10 @@ public class ObjectDb {
 
   private Hash writeArrayExprData(Iterable<? extends Expr> elements) throws HashedDbException {
     return writeSequence(elements);
+  }
+
+  private Hash writeInvokeData(Blob jarFile, Str classBinaryName) throws HashedDbException {
+    return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash());
   }
 
   private Hash writeERecData(Iterable<? extends Expr> items) throws HashedDbException {

@@ -42,7 +42,8 @@ public enum SpecKind {
 
   ABSENT((byte) 16, null),
   VARIABLE((byte) 17, null),
-  ANY((byte) 18, null);
+  ANY((byte) 18, null),
+  INVOKE((byte) 19, null);
 
   private static final ImmutableMap<Byte, SpecKind> markerToSpecKindMap =
       ImmutableMap.<Byte, SpecKind>builder()
@@ -66,6 +67,7 @@ public enum SpecKind {
           .put((byte) 16, ABSENT)
           .put((byte) 17, VARIABLE)
           .put((byte) 18, ANY)
+          .put((byte) 19, INVOKE)
           .build();
 
   private final byte marker;

@@ -227,6 +227,15 @@ public class ObjStableHashTest extends TestingContext {
   }
 
   @Nested
+  class _invoke {
+    @Test
+    public void invoke_expression() {
+      assertThat(invokeExpr(blobVal(), strVal(), intSpec()).hash())
+          .isEqualTo(Hash.decode("d4bb2cdcf619918e9d5372d68075a3b8ec6495de"));
+    }
+  }
+
+  @Nested
   class _native_lambda {
     @Test
     public void with_no_default_arguments() {
