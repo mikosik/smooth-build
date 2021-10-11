@@ -7,8 +7,8 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.util.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
@@ -25,13 +25,8 @@ public class FunctionNode extends ReferencableNode {
     return params;
   }
 
-  public Optional<ImmutableList<ItemSignature>> optParameterSignatures() {
-    var signatures = map(params(), ItemNode::itemSignature);
-    if (signatures.stream().anyMatch(Optional::isEmpty)) {
-      return Optional.empty();
-    } else {
-      return Optional.of(map(signatures, Optional::get));
-    }
+  public Optional<ImmutableList<Type>> optParameterTypes() {
+    return Optionals.pullUp(map(params(), ItemNode::type));
   }
 
   public Optional<Type> resultType() {

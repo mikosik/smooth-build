@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.INT;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
-import static org.smoothbuild.lang.base.type.TestingTypes.item;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -74,7 +73,7 @@ public class ExpressionLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(valueExpression(2, STRING, "result",
-              callExpression(2, STRING, referenceExpression(2, f(STRING, item(BLOB, "b")),
+              callExpression(2, STRING, referenceExpression(2, f(STRING, BLOB),
                   "myFunction"), blobExpression(3, 7))));
     }
 
@@ -87,7 +86,7 @@ public class ExpressionLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(valueExpression(2, STRING, "result",
-              callExpression(2, STRING, referenceExpression(2, f(STRING, item(BLOB, "b")),
+              callExpression(2, STRING, referenceExpression(2, f(STRING, BLOB),
                   "myFunction"), blobExpression(3, 7))));
     }
 
@@ -114,7 +113,7 @@ public class ExpressionLoadingTest extends TestingContext {
           .loadsSuccessfully()
           .containsReferencable(
               valueExpression(3, STRING, "result", callExpression(3, STRING,
-              referenceExpression(3, f(STRING, item(BLOB)), "myValue"), blobExpression(4, 7))));
+              referenceExpression(3, f(STRING, BLOB), "myValue"), blobExpression(4, 7))));
     }
 
     @Test
@@ -143,7 +142,7 @@ public class ExpressionLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(valueExpression(4, struct, "result",
-              callExpression(4, struct, referenceExpression(4, f(struct, item(STRING, "field")),
+              callExpression(4, struct, referenceExpression(4, f(struct, STRING),
                   "myStruct"), stringExpression(5, "aaa"))));
     }
 

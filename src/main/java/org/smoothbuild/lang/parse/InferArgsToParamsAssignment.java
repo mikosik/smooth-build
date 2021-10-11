@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.lang.String.join;
 import static java.util.Collections.nCopies;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
@@ -10,6 +11,7 @@ import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
+import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
@@ -34,9 +37,9 @@ public class InferArgsToParamsAssignment {
     var nameToIndex = nameToIndex(parameters);
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
 
-    logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call));
+    logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call, parameters));
     logBuffer.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, parameters));
-    logBuffer.logAll(findUnknownParameterNameErrors(call, nameToIndex));
+    logBuffer.logAll(findUnknownParameterNameErrors(call, nameToIndex, parameters));
     logBuffer.logAll(findDuplicateAssignmentErrors(call, positionalArguments, parameters));
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
@@ -71,12 +74,13 @@ public class InferArgsToParamsAssignment {
     return assignedList;
   }
 
-  private static List<Log> findPositionalArgumentAfterNamedArgumentError(CallNode call) {
+  private static List<Log> findPositionalArgumentAfterNamedArgumentError(
+      CallNode call, List<ItemSignature> parameters) {
     return call.args()
         .stream()
         .dropWhile(not(ArgNode::declaresName))
         .dropWhile(ArgNode::declaresName)
-        .map(a -> parseError(a, inCallToPrefix(call)
+        .map(a -> parseError(a, inCallToPrefix(call, parameters)
             + "Positional arguments must be placed before named arguments."))
         .collect(toList());
   }
@@ -84,18 +88,20 @@ public class InferArgsToParamsAssignment {
   private static List<Log> findTooManyPositionalArgumentsError(
       CallNode call, List<ArgNode> positionalArguments, List<ItemSignature> parameters) {
     if (parameters.size() < positionalArguments.size()) {
-      return list(parseError(call, inCallToPrefix(call) + "Too many positional arguments."));
+      return list(parseError(
+          call, inCallToPrefix(call, parameters) + "Too many positional arguments."));
     }
     return list();
   }
 
   private static List<Log> findUnknownParameterNameErrors(
-      CallNode call, Map<String, Integer> nameToIndex) {
+      CallNode call, Map<String, Integer> nameToIndex, List<ItemSignature> parameters) {
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)
         .filter(a -> !nameToIndex.containsKey(a.name()))
-        .map(a -> parseError(a, inCallToPrefix(call) + "Unknown parameter " + a.q() + "."))
+        .map(a -> parseError(a,
+            inCallToPrefix(call, parameters) + "Unknown parameter " + a.q() + "."))
         .collect(toList());
   }
 
@@ -106,7 +112,7 @@ public class InferArgsToParamsAssignment {
         .stream()
         .filter(ArgNode::declaresName)
         .filter(a -> !names.add(a.name()))
-        .map(a -> parseError(a, inCallToPrefix(call) + a.q() + " is already assigned."))
+        .map(a -> parseError(a, inCallToPrefix(call, parameters) + a.q() + " is already assigned."))
         .collect(toList());
   }
 
@@ -123,14 +129,15 @@ public class InferArgsToParamsAssignment {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())
         .filter(i -> !parameters.get(i).hasDefaultValue())
-        .mapToObj(i -> parameterMustBeSpecifiedError(call, i, parameters.get(i)))
+        .mapToObj(i -> parameterMustBeSpecifiedError(call, i, parameters.get(i), parameters))
         .collect(toList());
   }
 
-  private static Log parameterMustBeSpecifiedError(CallNode call, int i, ItemSignature param) {
+  private static Log parameterMustBeSpecifiedError(CallNode call, int i, ItemSignature param,
+      List<ItemSignature> parameters) {
     String paramName = param.name().map(n -> "`" + n + "`").orElse("#" + (i + 1));
     return parseError(call,
-        inCallToPrefix(call) + "Parameter " + paramName + " must be specified.");
+        inCallToPrefix(call, parameters) + "Parameter " + paramName + " must be specified.");
   }
 
   private static Map<String, Integer> nameToIndex(List<ItemSignature> parameters) {
@@ -144,7 +151,9 @@ public class InferArgsToParamsAssignment {
     return builder.build();
   }
 
-  private static String inCallToPrefix(CallNode call) {
-    return "In call to function with type " + call.function().type().get().q() + ": ";
+  private static String inCallToPrefix(CallNode call, List<ItemSignature> parameters) {
+    String result = ((FunctionType) call.function().type().get()).resultType().name();
+    String params = join(", ", map(parameters, ItemSignature::typeAndName));
+    return "In call to function with type `" + result + "(" + params + ")`: ";
   }
 }

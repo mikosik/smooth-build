@@ -33,7 +33,6 @@ import static org.smoothbuild.util.Sets.set;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -42,7 +41,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 
@@ -113,8 +111,7 @@ public class TypeTest {
         arguments(PERSON_MAP_FUNCTION, "Person(Person)"),
         arguments(STRING_GETTER_FUNCTION, "String()"),
         arguments(STRING_MAP_FUNCTION, "String(String)"),
-        arguments(f(BOOL, new ItemSignature(BLOB, Optional.of("name"), Optional.empty())),
-            "Bool(Blob name)")
+        arguments(f(BOOL, BLOB), "Bool(Blob)")
     );
   }
 

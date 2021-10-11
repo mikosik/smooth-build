@@ -20,7 +20,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.X;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
-import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -200,10 +199,10 @@ public class TypingTest extends TestingContext {
 
     return ImmutableList.<Arguments>builder()
         .addAll(map(unchanged, t -> Arguments.of(t, t)))
-        .add(Arguments.of(f(BLOB, item(BLOB, "p")), f(BLOB, BLOB)))
-        .add(Arguments.of(f(f(BLOB, item(BLOB, "p")), BLOB), f(f(BLOB, BLOB), BLOB)))
-        .add(Arguments.of(f(BLOB, f(BLOB, item(BLOB, "p"))), f(BLOB, f(BLOB, BLOB))))
-        .add(Arguments.of(a(f(BLOB, item(BLOB, "p"))), a(f(BLOB, BLOB))))
+        .add(Arguments.of(f(BLOB, BLOB), f(BLOB, BLOB)))
+        .add(Arguments.of(f(f(BLOB, BLOB), BLOB), f(f(BLOB, BLOB), BLOB)))
+        .add(Arguments.of(f(BLOB, f(BLOB, BLOB)), f(BLOB, f(BLOB, BLOB))))
+        .add(Arguments.of(a(f(BLOB, BLOB)), a(f(BLOB, BLOB))))
         .build();
   }
 

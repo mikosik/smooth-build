@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.api.ItemSignature.toItemSignatures;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.Optional;
@@ -86,15 +85,11 @@ public class TestingTypes {
     return TYPING.function(resultType, list());
   }
 
-  public static FunctionType f(Type resultType, Type... paramTypes) {
-    return TYPING.function(resultType, toItemSignatures(list(paramTypes)));
-  }
-
-  public static FunctionType f(Type resultType, ItemSignature... params) {
+  public static FunctionType f(Type resultType, Type... params) {
     return f(resultType, list(params));
   }
 
-  public static FunctionType f(Type resultType, ImmutableList<ItemSignature> params) {
+  public static FunctionType f(Type resultType, ImmutableList<Type> params) {
     return TYPING.function(resultType, params);
   }
 

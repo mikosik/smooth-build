@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.base.type.api.ItemSignature.itemSignature;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
@@ -109,7 +108,7 @@ public class Typing {
     return typeFactory.struct(name, fields);
   }
 
-  public FunctionType function(Type resultType, Iterable<ItemSignature> parameters) {
+  public FunctionType function(Type resultType, Iterable<Type> parameters) {
     return typeFactory.function(resultType, parameters);
   }
 
@@ -139,7 +138,7 @@ public class Typing {
       return contains(arrayType.elemType(), inner);
     } else if (type instanceof FunctionType functionType) {
         return contains(functionType.resultType(), inner)
-            || functionType.parameters().stream().anyMatch(p -> contains(p.type(), inner));
+            || functionType.parameters().stream().anyMatch(t -> contains(t, inner));
     }
     return false;
   }
@@ -183,8 +182,8 @@ public class Typing {
       if (that instanceof FunctionType functionB) {
         return isInequal.apply(functionA.resultType(), functionB.resultType(), side)
             && allMatch(
-                functionA.parameterTypes(),
-                functionB.parameterTypes(),
+                functionA.parameters(),
+                functionB.parameters(),
                 (a, b) -> isInequal.apply(a, b, side.reversed()));
       }
     } else {
@@ -204,7 +203,7 @@ public class Typing {
 
   public Type inferResultType(FunctionType functionType, List<Type> argumentTypes) {
     var boundedVariables = inferVariableBoundsInCall(functionType.resultType(),
-        functionType.parameterTypes(), argumentTypes);
+        functionType.parameters(), argumentTypes);
     return mapVariables(functionType.resultType(), boundedVariables, lower());
   }
 
@@ -251,14 +250,14 @@ public class Typing {
       if (typeB.equals(side.edge())) {
         Side reversed = side.reversed();
         inferImpl(functionA.resultType(), side.edge(), side, result);
-        functionA.parameters().forEach(p -> inferImpl(p.type(), reversed.edge(), reversed, result));
+        functionA.parameters().forEach(t -> inferImpl(t, reversed.edge(), reversed, result));
       } else if (typeB instanceof FunctionType functionB
           && functionA.parameters().size() == functionB.parameters().size()) {
         Side reversed = side.reversed();
         inferImpl(functionA.resultType(), functionB.resultType(), side, result);
         for (int i = 0; i < functionA.parameters().size(); i++) {
-          Type thisParamType = functionA.parameters().get(i).type();
-          Type thatParamType = functionB.parameters().get(i).type();
+          Type thisParamType = functionA.parameters().get(i);
+          Type thatParamType = functionB.parameters().get(i);
           inferImpl(thisParamType, thatParamType, reversed, result);
         }
       }
@@ -271,7 +270,7 @@ public class Typing {
       return createArrayType(arrayType, elemS);
     } else if (type instanceof FunctionType functionType) {
       var resultS = strip(functionType.resultType());
-      var parametersS = map(functionType.parameters(), p -> itemSignature(strip(p.type())));
+      var parametersS = map(functionType.parameters(), this::strip);
       return createFunctionType(functionType, resultS, parametersS);
     }
     return type;
@@ -286,8 +285,9 @@ public class Typing {
         return createArrayType(arrayType, elemTypeM);
       } else if (type instanceof FunctionType functionType){
         var resultTypeM = mapVariables(functionType.resultType(), boundsMap, side);
-        var parametersM = map(functionType.parameters(),
-            p -> itemSignature(mapVariables(p.type(), boundsMap, side.reversed())));
+        var parametersM = map(
+            functionType.parameters(),
+            p -> mapVariables(p, boundsMap, side.reversed()));
         return createFunctionType(functionType, resultTypeM, parametersM);
       }
     }
@@ -332,7 +332,7 @@ public class Typing {
           var parameterTypesA = functionA.parameters();
           var parametersTypesB = functionB.parameters();
           var parametersM = zip(parameterTypesA, parametersTypesB,
-              (a, b) -> itemSignature(merge(a.type(), b.type(), direction.reversed())));
+              (a, b) -> merge(a, b, direction.reversed()));
           if (isFunctionTypeEqual(functionA, resultM, parametersM)) {
             return functionA;
           } else if (isFunctionTypeEqual(functionB, resultM, parametersM)){
@@ -364,8 +364,8 @@ public class Typing {
     }
   }
 
-  private FunctionType createFunctionType(FunctionType type, Type resultType,
-      ImmutableList<ItemSignature> parameters) {
+  private FunctionType createFunctionType(
+      FunctionType type, Type resultType, ImmutableList<Type> parameters) {
     if (isFunctionTypeEqual(type, resultType, parameters)) {
       return type;
     }
@@ -373,7 +373,7 @@ public class Typing {
   }
 
   private boolean isFunctionTypeEqual(FunctionType type,
-      Type resultType, ImmutableList<ItemSignature> parameters) {
+      Type resultType, ImmutableList<Type> parameters) {
     return type.resultType() == resultType && type.parameters().equals(parameters);
   }
 }

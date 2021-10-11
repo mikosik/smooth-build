@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse.component;
 
 import static com.google.common.collect.Sets.union;
 import static java.lang.String.join;
-import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
@@ -19,7 +18,6 @@ import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeImpl;
 import org.smoothbuild.testing.TestingContext;
@@ -81,8 +79,7 @@ public class AssignmentTest extends TestingContext {
       module.loadsSuccessfully();
     } else {
       Type type = typing().strip(targetType.type());
-      FunctionType functionType =
-          new FunctionTypeImpl(type, list(new ItemSignature(type, "target", empty())));
+      FunctionType functionType = new FunctionTypeImpl(type, list(type));
       module.loadsWithError(3, "In call to function with type " + functionType.q()
           + ": Cannot assign argument of type " + sourceType.qStripped()
           + " to parameter `target` of type " + targetType.qStripped() + ".");
@@ -103,8 +100,7 @@ public class AssignmentTest extends TestingContext {
       module.loadsSuccessfully();
     } else {
       Type type = typing().strip(targetType.type());
-      FunctionType functionType =
-          new FunctionTypeImpl(type, list(new ItemSignature(type, "target", empty())));
+      FunctionType functionType = new FunctionTypeImpl(type, list(type));
       module.loadsWithError(3,
           "In call to function with type " + functionType.q() +
               ": Cannot assign argument of type " + sourceType.qStripped()

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
+import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.util.Lists.list;
 
@@ -24,7 +24,7 @@ public class IfFunction extends Function {
 
   private IfFunction(Type resultType, ImmutableList<Item> parameters, ModulePath modulePath,
       Typing typing) {
-    super(typing.function(resultType, toItemSignatures(parameters)),
+    super(typing.function(resultType, toTypes(parameters)),
         modulePath, IF_FUNCTION_NAME, parameters, internal());
   }
 

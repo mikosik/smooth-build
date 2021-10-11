@@ -1,9 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.US_ASCII;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.type.TestingTypes.struct;
@@ -22,7 +20,6 @@ import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeImpl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -314,68 +311,36 @@ public class TestedType {
   }
 
   public static TestedType f(TestedType resultType, TestedType... paramTestedTypes2) {
-    TestedType strippedResultType = strip(resultType);
-    var strippedParams = stream(paramTestedTypes2)
-        .map(TestedType::strip)
-        .collect(toImmutableList());
-    var parameters = toSignatures(strippedParams);
+    ImmutableList<TestedType> paramTestedTypes3 = list(paramTestedTypes2);
+    var paramSignatures = toSignatures(paramTestedTypes3);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
     String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
-        strippedResultType.strippedType.name(),
+        resultType.strippedType.name(),
         name,
-        join(",", map(parameters, ItemSignature::toString)));
+        join(",", map(paramSignatures, ItemSignature::toString)));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
-        .addAll(strippedResultType.declarations())
-        .addAll(strippedParams.stream()
+        .addAll(resultType.declarations())
+        .addAll(paramTestedTypes3.stream()
             .flatMap(t -> t.declarations().stream())
             .collect(toList()))
         .build();
     Set<String> typeDeclarations = ImmutableSet.<String>builder()
-        .addAll(strippedResultType.typeDeclarations())
-        .addAll(strippedParams.stream()
+        .addAll(resultType.typeDeclarations())
+        .addAll(paramTestedTypes3.stream()
             .flatMap(t -> t.typeDeclarations().stream())
             .collect(toList()))
         .build();
     return new TestedFunctionType(
-        strippedResultType,
-        ImmutableList.copyOf(strippedParams),
-        TestingTypes.f(resultType.strippedType, parameters),
-        TestingTypes.f(strippedResultType.strippedType, toUnnamedSignatures(strippedParams)),
+        resultType,
+        ImmutableList.copyOf(paramTestedTypes2),
+        TestingTypes.f(resultType.strippedType, map(paramSignatures, ItemSignature::type)),
+        TestingTypes.f(resultType.strippedType, map(paramSignatures, ItemSignature::type)),
         name,
         null,
         typeDeclarations,
         declarations
     );
-  }
-
-  private static TestedType strip(TestedType testedType) {
-    if (testedType instanceof TestedFunctionType function) {
-      FunctionType strippedType = (FunctionType) strip(function.strippedType());
-      return new TestedFunctionType(
-          function.resultType,
-          function.parameters.stream().map(TestedType::strip).collect(toImmutableList()),
-          strippedType, strippedType,
-          function.literal(),
-          function.value(),
-          function.typeDeclarations(),
-          function.declarations()
-      );
-    } else {
-      return testedType;
-    }
-  }
-
-  private static Type strip(Type type) {
-    if (type instanceof FunctionType functionType) {
-      ImmutableList<ItemSignature> params = functionType.parameterTypes()
-          .stream()
-          .map(p -> new ItemSignature(strip(p), Optional.empty(), Optional.empty()))
-          .collect(toImmutableList());
-      return new FunctionTypeImpl(strip(functionType.resultType()), params);
-    } else {
-      return type;
-    }
   }
 
   private static ImmutableList<ItemSignature> toSignatures(List<TestedType> paramTestedTypes) {

@@ -11,7 +11,7 @@ public interface TypeFactory {
 
   public BoolType bool();
 
-  public FunctionType function(Type resultType, Iterable<ItemSignature> parameters);
+  public FunctionType function(Type result, Iterable<Type> parameters);
 
   public IntType int_();
 

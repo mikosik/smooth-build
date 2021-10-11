@@ -55,8 +55,8 @@ public class TypeFactoryImpl implements TypeFactory {
   }
 
   @Override
-  public FunctionType function(Type resultType, Iterable<ItemSignature> parameters) {
-    return new FunctionTypeImpl(resultType, ImmutableList.copyOf(parameters));
+  public FunctionType function(Type result, Iterable<Type> parameters) {
+    return new FunctionTypeImpl(result, ImmutableList.copyOf(parameters));
   }
 
   @Override

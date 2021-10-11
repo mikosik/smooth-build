@@ -1,11 +1,10 @@
 package org.smoothbuild.lang.parse;
 
-import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
+import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maps.toMap;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -37,7 +36,6 @@ import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.SelectExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
-import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
@@ -52,7 +50,6 @@ import org.smoothbuild.lang.parse.ast.SelectNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class ReferencableLoader {
@@ -90,14 +87,14 @@ public class ReferencableLoader {
     Type resultType = realFuncNode.resultType().get();
     String name = realFuncNode.name();
     Location location = realFuncNode.location();
+    FunctionType type = typing.function(resultType, toTypes(parameters));
     if (realFuncNode.nativ().isPresent()) {
-      return new NativeFunction(typing.function(resultType, toItemSignatures(parameters)),
+      return new NativeFunction(type,
           path, name, parameters, loadNative(realFuncNode.nativ().get()), location
       );
     } else {
-      var expressionLoader = new ExpressionLoader(
-          path, toMap(parameters, Item::name, Item::type));
-      return new DefinedFunction(typing.function(resultType, toItemSignatures(parameters)), path,
+      var expressionLoader = new ExpressionLoader(path, toMap(parameters, Item::name, Item::type));
+      return new DefinedFunction(type, path,
           name, parameters, expressionLoader.createExpression(realFuncNode.body().get()), location);
     }
   }
@@ -167,29 +164,13 @@ public class ReferencableLoader {
     private Expression createCall(CallNode call) {
       Expression called = createExpression(call.function());
       var argumentExpressions = createArgumentExpressions(call);
-      var functionType = ((FunctionType) called.type());
-      var resultType = typing.inferResultType(functionType, createArgumentTypes(call));
+      var resultType = call.type().get();
       return new CallExpression(resultType, called, argumentExpressions, call.location());
     }
 
     private ImmutableList<Optional<Expression>> createArgumentExpressions(CallNode call) {
       return map(call.assignedArgs(),
           optionalArg -> optionalArg.map(a -> createExpression(a.expr())));
-    }
-
-    private ImmutableList<Type> createArgumentTypes(CallNode call) {
-      FunctionType functionType = ((FunctionType) call.function().type().get());
-      List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
-      ImmutableList<ItemSignature> parameters = functionType.parameters();
-      Builder<Type> resultBuilder = ImmutableList.builder();
-      for (int i = 0; i < parameters.size(); i++) {
-        if (assignedArgs.get(i).isPresent()) {
-          resultBuilder.add(assignedArgs.get(i).get().type().get());
-        } else {
-          resultBuilder.add(parameters.get(i).defaultValueType().get());
-        }
-      }
-      return resultBuilder.build();
     }
 
     private Expression createSelect(SelectNode selectNode) {

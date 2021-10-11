@@ -7,7 +7,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
-import static org.smoothbuild.lang.base.type.TestingTypes.item;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -173,7 +172,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(STRING, item(STRING, "param")));
+          .containsReferencableWithType("myFunction", f(STRING, STRING));
     }
 
     @Test
@@ -183,7 +182,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(A, item(A, "param")));
+          .containsReferencableWithType("myFunction", f(A, A));
     }
   }
 

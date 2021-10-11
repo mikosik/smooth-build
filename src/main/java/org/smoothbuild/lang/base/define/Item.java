@@ -50,6 +50,10 @@ public class Item extends Referencable {
     return map(items, Item::signature);
   }
 
+  public static ImmutableList<Type> toTypes(List<Item> items) {
+    return map(items, Item::type);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

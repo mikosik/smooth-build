@@ -1,10 +1,8 @@
 package org.smoothbuild.lang.base.type.impl;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.util.Lists.map;
 
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
@@ -15,16 +13,11 @@ import com.google.common.collect.ImmutableList;
  */
 public class FunctionTypeImpl extends AbstractType implements FunctionType {
   private final Type result;
-  private final ImmutableList<ItemSignature> parameters;
+  private final ImmutableList<Type> parameters;
 
-  public FunctionTypeImpl(Type result, ImmutableList<ItemSignature> parameters) {
-    this(result, parameters, map(parameters, ItemSignature::type));
-  }
-
-  private FunctionTypeImpl(
-      Type result, ImmutableList<ItemSignature> parameters, ImmutableList<Type> parameterTypes) {
+  public FunctionTypeImpl(Type result, ImmutableList<Type> parameters) {
     super(TypeNames.functionTypeName(result, parameters),
-        FunctionType.calculateVariables(result, parameterTypes));
+        FunctionType.calculateVariables(result, parameters));
     this.result = requireNonNull(result);
     this.parameters = requireNonNull(parameters);
   }
@@ -35,7 +28,7 @@ public class FunctionTypeImpl extends AbstractType implements FunctionType {
   }
 
   @Override
-  public ImmutableList<ItemSignature> parameters() {
+  public ImmutableList<Type> parameters() {
     return parameters;
   }
 

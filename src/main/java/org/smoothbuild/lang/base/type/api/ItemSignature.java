@@ -85,4 +85,8 @@ public record ItemSignature(Type type, Optional<String> name, Optional<Type> def
     }
     return result;
   }
+
+  public String typeAndName() {
+    return name.map(n -> type.name() + " " + n).orElseGet(type::name);
+  }
 }

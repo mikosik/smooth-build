@@ -10,7 +10,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
-import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import static org.smoothbuild.testing.TestingModuleLoader.err;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -966,7 +965,7 @@ public class DeclarationTest extends TestingContext {
               .loadsSuccessfully()
               .containsReferencable(valueExpression(2, BLOB, "result",
                   callExpression(2, BLOB,
-                      referenceExpression(2, f(BLOB, item(BLOB, "b")), "myFunction"),
+                      referenceExpression(2, f(BLOB, BLOB), "myFunction"),
                       blobExpression(2, 7))));
         }
 

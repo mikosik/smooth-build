@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.api.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.functionTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
@@ -9,7 +8,6 @@ import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.impl.BaseTypeImpl;
 
 public class TypeNamesTest {
@@ -71,13 +69,9 @@ public class TypeNamesTest {
   class _function_type_name {
     @Test
     public void function_type_name() {
-      assertThat(functionTypeName(type("ResultType"), list(itemSig("Type1"), itemSig("Type2"))))
+      assertThat(functionTypeName(type("ResultType"), list(type("Type1"), type("Type2"))))
           .isEqualTo("ResultType(Type1, Type2)");
     }
-  }
-
-  private ItemSignature itemSig(String name) {
-    return itemSignature(type(name));
   }
 
   private BaseTypeImpl type(String resultType) {

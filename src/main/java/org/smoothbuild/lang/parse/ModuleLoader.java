@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse;
 
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
-import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
@@ -107,8 +106,9 @@ public class ModuleLoader {
   private Constructor loadConstructor(ModulePath path, StructNode struct) {
     var resultType = struct.type().get();
     var name = struct.constructor().name();
+    var parameterTypes = map(struct.fields(), f -> f.type().get());
+    var type = typing.function(resultType, parameterTypes);
     var parameters = map(struct.fields(), f -> f.toItem(path));
-    var type = typing.function(resultType, toItemSignatures(parameters));
     return new Constructor(type, path, name, parameters, struct.location()
     );
   }

@@ -21,10 +21,10 @@ public class TypeNames {
     return "[" + elemType.name() + "]";
   }
 
-  public static String functionTypeName(Type resultType, List<? extends ItemSignature> parameters) {
+  public static String functionTypeName(Type resultType, List<Type> parameters) {
     String parametersString = parameters
         .stream()
-        .map(ItemSignature::toString)
+        .map(Type::name)
         .collect(joining(", "));
     return resultType.name() + "(" + parametersString + ")";
   }

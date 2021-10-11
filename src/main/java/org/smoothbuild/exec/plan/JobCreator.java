@@ -209,7 +209,7 @@ public class JobCreator {
   private BoundsMap inferVariablesInFunctionCall(Job function, List<Job> arguments) {
     var functionType = (FunctionType) function.type();
     var argumentTypes = map(arguments, Job::type);
-    return typing.inferVariableBounds(functionType.parameterTypes(), argumentTypes, typing.lower());
+    return typing.inferVariableBounds(functionType.parameters(), argumentTypes, typing.lower());
   }
 
   private List<Job> argumentLazyJobs(Scope<Job> scope, Job function,
@@ -225,7 +225,7 @@ public class JobCreator {
 
   private Job defaultArgumentLazyJob(Job function, int index, Scope<Job> scope,
       Location location) {
-    var type = ((FunctionType) function.type()).parameterTypes().get(index);
+    var type = ((FunctionType) function.type()).parameters().get(index);
     return new LazyJob(type, location, () -> new DefaultArgumentJob(type,
         "default parameter value", function, index, location, scope, JobCreator.this));
   }
@@ -476,7 +476,7 @@ public class JobCreator {
   private ImmutableList<Job> convertedArgumentEagerJob(
       List<Job> arguments, NativeFunction function, BoundsMap variables) {
     var actualTypes = map(
-        function.type().parameterTypes(),
+        function.type().parameters(),
         t -> typing.mapVariables(t, variables, typing.lower()));
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }

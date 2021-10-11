@@ -4,7 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.nCopies;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
+import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
@@ -594,11 +594,11 @@ public class TestingContext {
   }
 
   public FunctionType functionT(Type resultType, Item... parameters) {
-    return typing().function(resultType, toItemSignatures(list(parameters)));
+    return typing().function(resultType, toTypes(list(parameters)));
   }
 
   public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
-    return typing().function(resultType, parameters);
+    return typing().function(resultType, map(parameters, ItemSignature::type));
   }
 
   public Sides.Side lower() {

@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Optional.empty;
+import static org.smoothbuild.lang.base.type.api.ItemSignature.toItemSignatures;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -17,7 +18,10 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
+import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.ItemSignature;
@@ -43,6 +47,7 @@ import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
+import org.smoothbuild.util.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
@@ -68,9 +73,10 @@ public class TypeInferrer {
           return;
         }
         var fieldSignatures = map(struct.fields(), ItemNode::toItemSignature);
-        struct.setType(typing.struct(struct.name(), fieldSignatures));
-        struct.constructor().setType(
-            typing.function(typing.struct(struct.name(), fieldSignatures), fieldSignatures));
+        StructType structType = typing.struct(struct.name(), fieldSignatures);
+        struct.setType(structType);
+        var fieldTypes = Optionals.pullUp(map(struct.fields(), ItemNode::type));
+        struct.constructor().setType(fieldTypes.map(types -> typing.function(structType, types)));
       }
 
       @Override
@@ -88,9 +94,9 @@ public class TypeInferrer {
 
       private Optional<Type> functionType(RealFuncNode func) {
         var resultType = bodyType(func);
-        var parameterSignatures = func.optParameterSignatures();
-        if (resultType.isPresent() && parameterSignatures.isPresent()) {
-          return Optional.of(typing.function(resultType.get(), parameterSignatures.get()));
+        var parameterTypes = func.optParameterTypes();
+        if (resultType.isPresent() && parameterTypes.isPresent()) {
+          return Optional.of(typing.function(resultType.get(), parameterTypes.get()));
         } else {
           return empty();
         }
@@ -178,10 +184,9 @@ public class TypeInferrer {
           return createType(elementType).map(typing::array);
         } else if (type instanceof FunctionTypeNode function) {
           Optional<Type> result = createType(function.resultType());
-          var parameters = map(function.parameterTypes(), this::createType);
-          if (result.isPresent() && parameters.stream().allMatch(Optional::isPresent)) {
-            return Optional.of(typing.function(
-                result.get(), ItemSignature.toItemSignatures(map(parameters, Optional::get))));
+          var parameters = Optionals.pullUp(map(function.parameterTypes(), this::createType));
+          if (result.isPresent() && parameters.isPresent()) {
+            return Optional.of(typing.function(result.get(), parameters.get()));
           } else {
             return empty();
           }
@@ -273,25 +278,46 @@ public class TypeInferrer {
         Optional<Type> calledType = called.type();
         if (calledType.isEmpty()) {
           call.setType(empty());
-        } else if (calledType.get() instanceof FunctionType functionType) {
-          ImmutableList<ItemSignature> parameters = functionType.parameters();
-          Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, parameters);
-          if (args.containsProblem()) {
-            logBuffer.logAll(args.logs());
-            call.setType(empty());
-          } else if (someArgumentHasNotInferredType(args.value())) {
-            call.setType(empty());
-          } else {
-            call.setAssignedArgs(args.value());
-            Maybe<Type> type = callTypeInferrer.inferCallType(
-                call, functionType.resultType(), parameters);
-            logBuffer.logAll(type.logs());
-            call.setType(type.valueOptional());
-          }
-        } else {
+        } else if (!(calledType.get() instanceof FunctionType functionType)) {
           logBuffer.log(parseError(call.location(), description(called)
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
+        } else {
+          var functionParameters = functionParameters(called);
+          if (functionParameters.isEmpty()) {
+            call.setType(empty());
+          } else {
+            var parameters = functionParameters.get();
+            Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, parameters);
+            if (args.containsProblem()) {
+              logBuffer.logAll(args.logs());
+              call.setType(empty());
+            } else if (someArgumentHasNotInferredType(args.value())) {
+              call.setType(empty());
+            } else {
+              call.setAssignedArgs(args.value());
+              Maybe<Type> type = callTypeInferrer.inferCallType(
+                  call, functionType.resultType(), parameters);
+              logBuffer.logAll(type.logs());
+              call.setType(type.valueOptional());
+            }
+          }
+        }
+      }
+
+      public static Optional<ImmutableList<ItemSignature>> functionParameters(ExprNode called) {
+        if (called instanceof RefNode refNode) {
+          ReferencableLike referenced = refNode.referenced();
+          if (referenced instanceof Function function) {
+            return Optional.of(map(function.parameters(), Item::signature));
+          } else if (referenced instanceof FunctionNode functionNode) {
+            return Optionals.pullUp(map(functionNode.params(), ItemNode::itemSignature));
+          } else {
+            return Optional.of(map(((FunctionType) referenced.inferredType().get()).parameters(),
+                ItemSignature::itemSignature));
+          }
+        } else {
+          return called.type().map(t -> toItemSignatures(((FunctionType) t).parameters()));
         }
       }
 
