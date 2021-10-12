@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public interface FunctionType extends Type {
-  public Type resultType();
+  public Type result();
 
   public ImmutableList<Type> parameters();
 

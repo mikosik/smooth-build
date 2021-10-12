@@ -152,7 +152,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static String inCallToPrefix(CallNode call, List<ItemSignature> parameters) {
-    String result = ((FunctionType) call.function().type().get()).resultType().name();
+    String result = ((FunctionType) call.function().type().get()).result().name();
     String params = join(", ", map(parameters, ItemSignature::typeAndName));
     return "In call to function with type `" + result + "(" + params + ")`: ";
   }

@@ -23,7 +23,7 @@ public class FunctionTypeImpl extends AbstractType implements FunctionType {
   }
 
   @Override
-  public Type resultType() {
+  public Type result() {
     return result;
   }
 

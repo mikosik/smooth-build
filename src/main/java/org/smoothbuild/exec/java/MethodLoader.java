@@ -129,7 +129,7 @@ public class MethodLoader {
   private void assertMethodMatchesFunctionRequirements(Function function, Method method,
       String classBinaryName) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(
-        function, method, function.type().resultType(), classBinaryName);
+        function, method, function.type().result(), classBinaryName);
     assertNativeParameterTypesMatchesFuncParameters(method, function, classBinaryName);
   }
 

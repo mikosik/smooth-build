@@ -184,8 +184,7 @@ public class JobCreator {
       return callEagerJob(scope, function, arguments, location, variables);
     } else {
       var functionType = (FunctionType) function.type();
-      var actualResultType = typing.mapVariables(
-          functionType.resultType(), variables, typing.lower());
+      var actualResultType = typing.mapVariables(functionType.result(), variables, typing.lower());
       return new LazyJob(actualResultType, location,
           () -> callEagerJob(scope, function, arguments, location, variables));
     }
@@ -200,8 +199,7 @@ public class JobCreator {
   private Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
       Location location, BoundsMap variables) {
     var functionType = (FunctionType) function.type();
-    var actualResultType = typing.mapVariables(
-        functionType.resultType(), variables, typing.lower());
+    var actualResultType = typing.mapVariables(functionType.result(), variables, typing.lower());
     return new ApplyJob(
         actualResultType, function, arguments, location, variables, scope, JobCreator.this);
   }
@@ -403,7 +401,7 @@ public class JobCreator {
     } else if (referencable instanceof MapFunction) {
       return new MapJob(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof Constructor constructor) {
-      var resultType = constructor.type().resultType();
+      var resultType = constructor.type().result();
       var recSpec = (RecSpec) toSpecConverter.visit(resultType);
       return constructorCallEagerJob(resultType, recSpec, constructor.extendedName(),
           arguments, location);

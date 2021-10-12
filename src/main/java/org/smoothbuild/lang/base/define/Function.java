@@ -31,7 +31,7 @@ public abstract class Function extends GlobalReferencable {
   }
 
   public Type resultType() {
-    return type().resultType();
+    return type().result();
   }
 
   public ImmutableList<Item> parameters() {

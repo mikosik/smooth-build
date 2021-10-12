@@ -30,6 +30,6 @@ public class FunctionNode extends ReferencableNode {
   }
 
   public Optional<Type> resultType() {
-    return type().map(f -> ((FunctionType) f).resultType());
+    return type().map(f -> ((FunctionType) f).result());
   }
 }
