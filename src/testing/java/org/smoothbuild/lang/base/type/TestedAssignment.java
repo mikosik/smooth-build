@@ -5,7 +5,7 @@ import static java.lang.String.join;
 
 public record TestedAssignment(TestedType target, TestedType source) {
   public String declarations() {
-    return join("\n", union(target.declarations(), source.declarations()));
+    return join("\n", union(target.allDeclarations(), source.allDeclarations()));
   }
 
   public String typeDeclarations() {

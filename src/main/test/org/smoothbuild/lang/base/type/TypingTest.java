@@ -209,8 +209,8 @@ public class TypingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("isAssignable_test_data")
   public void isAssignable(TestedAssignmentSpec spec) {
-    Type target = spec.target().strippedType();
-    Type source = spec.source().strippedType();
+    Type target = spec.target().type();
+    Type source = spec.source().type();
     assertThat(typing().isAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
@@ -222,8 +222,8 @@ public class TypingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("isParamAssignable_test_data")
   public void isParamAssignable(TestedAssignmentSpec spec) {
-    Type target = spec.target().strippedType();
-    Type source = spec.source().strippedType();
+    Type target = spec.target().type();
+    Type source = spec.source().type();
     assertThat(typing().isParamAssignable(target, source))
         .isEqualTo(spec.allowed());
   }

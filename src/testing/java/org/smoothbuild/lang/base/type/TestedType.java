@@ -76,21 +76,21 @@ public class TestedType {
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
-      Set.of()
+      Set.of("Person{ String name }")
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
       struct("Data", list(new ItemSignature(TestingTypes.BLOB, "value", Optional.empty()))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
-      Set.of()
+      Set.of("Data{ Blob value }")
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
       struct("Flag", list(new ItemSignature(TestingTypes.BOOL, "value", Optional.empty()))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),
-      Set.of()
+      Set.of("Flag{ Bool value }")
   );
 
   public static final ImmutableList<TestedType> ELEMENTARY_TYPES = list(
@@ -168,7 +168,6 @@ public class TestedType {
       return new TestedArrayType(
           type,
           TestingTypes.a(TestingTypes.NOTHING),
-          TestingTypes.a(TestingTypes.NOTHING),
           "[]",
           list(),
           Set.of(),
@@ -184,29 +183,30 @@ public class TestedType {
     return new TestedArrayType(
         type,
         TestingTypes.a(type.type),
-        TestingTypes.a(type.strippedType),
         "[" + type.literal + "]",
         value,
         type.typeDeclarations(),
-        type.declarations()
+        type.allDeclarations()
     );
   }
 
   private final Type type;
-  private final Type strippedType;
   private final String literal;
   private final Object value;
   private final Set<String> typeDeclarations;
   private final Set<String> allDeclarations;
 
   public TestedType(Type type, String literal, Object value) {
-    this(type, type, literal, value, Set.of(), Set.of());
+    this(type, literal, value, Set.of(), Set.of());
   }
 
   public TestedType(Type type, String literal, Object value, Set<String> typeDeclarations,
-      Set<String> instanceDeclarations) {
-    this(type, type, literal, value, typeDeclarations,
-        unionOf(typeDeclarations, instanceDeclarations));
+      Set<String> allDeclarations) {
+    this.type = type;
+    this.literal = literal;
+    this.value = value;
+    this.typeDeclarations = typeDeclarations;
+    this.allDeclarations = allDeclarations;
   }
 
   private static ImmutableSet<String> unionOf(Set<String> typeDeclarations,
@@ -215,22 +215,8 @@ public class TestedType {
         .addAll(typeDeclarations).addAll(instanceDeclarations).build();
   }
 
-  public TestedType(Type type, Type strippedType, String literal, Object value,
-      Set<String> typeDeclarations, Set<String> allDeclarations) {
-    this.type = type;
-    this.strippedType = strippedType;
-    this.literal = literal;
-    this.value = value;
-    this.typeDeclarations = typeDeclarations;
-    this.allDeclarations = allDeclarations;
-  }
-
   public Type type() {
     return type;
-  }
-
-  public Type strippedType() {
-    return strippedType;
   }
 
   public String literal() {
@@ -241,7 +227,7 @@ public class TestedType {
     return value;
   }
 
-  public Set<String> declarations() {
+  public Set<String> allDeclarations() {
     return allDeclarations;
   }
 
@@ -250,11 +236,7 @@ public class TestedType {
   }
 
   public String name() {
-    return strippedType.name();
-  }
-
-  public String qStripped() {
-    return "`" + strippedType.name() + "`";
+    return type.name();
   }
 
   public String q() {
@@ -315,14 +297,14 @@ public class TestedType {
     var paramSignatures = toSignatures(paramTestedTypes3);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
     String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
-        resultType.strippedType.name(),
+        resultType.name(),
         name,
         join(",", map(paramSignatures, ItemSignature::toString)));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
-        .addAll(resultType.declarations())
+        .addAll(resultType.allDeclarations())
         .addAll(paramTestedTypes3.stream()
-            .flatMap(t -> t.declarations().stream())
+            .flatMap(t -> t.allDeclarations().stream())
             .collect(toList()))
         .build();
     Set<String> typeDeclarations = ImmutableSet.<String>builder()
@@ -334,8 +316,7 @@ public class TestedType {
     return new TestedFunctionType(
         resultType,
         ImmutableList.copyOf(paramTestedTypes2),
-        TestingTypes.f(resultType.strippedType, map(paramSignatures, ItemSignature::type)),
-        TestingTypes.f(resultType.strippedType, map(paramSignatures, ItemSignature::type)),
+        TestingTypes.f(resultType.type, map(paramSignatures, ItemSignature::type)),
         name,
         null,
         typeDeclarations,
@@ -346,15 +327,9 @@ public class TestedType {
   private static ImmutableList<ItemSignature> toSignatures(List<TestedType> paramTestedTypes) {
     Builder<ItemSignature> builder = ImmutableList.builder();
     for (int i = 0; i < paramTestedTypes.size(); i++) {
-      builder.add(new ItemSignature(paramTestedTypes.get(i).strippedType(), "p" + i, Optional.empty()));
+      builder.add(new ItemSignature(paramTestedTypes.get(i).type(), "p" + i, Optional.empty()));
     }
     return builder.build();
-  }
-
-  private static ImmutableList<ItemSignature> toUnnamedSignatures(
-      List<TestedType> paramTestedTypes) {
-    return map(paramTestedTypes,
-        p -> new ItemSignature(p.strippedType(), Optional.empty(), Optional.empty()));
   }
 
   public static class TestedFunctionType extends TestedType {
@@ -362,9 +337,9 @@ public class TestedType {
     public final ImmutableList<TestedType> parameters;
 
     public TestedFunctionType(TestedType resultType, ImmutableList<TestedType> parameters,
-        FunctionType type, FunctionType strippedType, String literal,
+        FunctionType type, String literal,
         Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
-      super(type, strippedType, literal, value, typeDeclarations, allDeclarations);
+      super(type, literal, value, typeDeclarations, allDeclarations);
       this.resultType = resultType;
       this.parameters = parameters;
     }
@@ -387,9 +362,9 @@ public class TestedType {
   public static class TestedArrayType extends TestedType {
     public final TestedType elemType;
 
-    public TestedArrayType(TestedType elemType, Type type, Type strippedType, String literal,
+    public TestedArrayType(TestedType elemType, Type type, String literal,
         Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
-      super(type, strippedType, literal, value, typeDeclarations, allDeclarations);
+      super(type, literal, value, typeDeclarations, allDeclarations);
       this.elemType = elemType;
     }
 

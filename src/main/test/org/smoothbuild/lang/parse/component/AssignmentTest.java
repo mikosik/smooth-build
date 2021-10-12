@@ -39,8 +39,8 @@ public class AssignmentTest extends TestingContext {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`result` has body which type is " + source.qStripped()
-               + " and it is not convertible to its declared type " + target.qStripped() + ".");
+          .loadsWithError(1, "`result` has body which type is " + source.q()
+               + " and it is not convertible to its declared type " + target.q() + ".");
     }
   }
 
@@ -60,8 +60,8 @@ public class AssignmentTest extends TestingContext {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`myFunction` has body which type is " + source.qStripped()
-               + " and it is not convertible to its declared type " + target.qStripped() + ".");
+          .loadsWithError(1, "`myFunction` has body which type is " + source.q()
+               + " and it is not convertible to its declared type " + target.q() + ".");
     }
   }
 
@@ -81,8 +81,8 @@ public class AssignmentTest extends TestingContext {
       Type type = typing().strip(targetType.type());
       FunctionType functionType = new FunctionTypeImpl(type, list(type));
       module.loadsWithError(3, "In call to function with type " + functionType.q()
-          + ": Cannot assign argument of type " + sourceType.qStripped()
-          + " to parameter `target` of type " + targetType.qStripped() + ".");
+          + ": Cannot assign argument of type " + sourceType.q()
+          + " to parameter `target` of type " + targetType.q() + ".");
     }
   }
 
@@ -103,8 +103,8 @@ public class AssignmentTest extends TestingContext {
       FunctionType functionType = new FunctionTypeImpl(type, list(type));
       module.loadsWithError(3,
           "In call to function with type " + functionType.q() +
-              ": Cannot assign argument of type " + sourceType.qStripped()
-              + " to parameter `target` of type " + targetType.qStripped() + ".");
+              ": Cannot assign argument of type " + sourceType.q()
+              + " to parameter `target` of type " + targetType.q() + ".");
     }
   }
 
@@ -127,7 +127,7 @@ public class AssignmentTest extends TestingContext {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "Parameter `param` is of type " + target.qStripped()
+          .loadsWithError(1, "Parameter `param` is of type " + target.q()
                + " so it cannot have default argument of type " + source.q() + ".");
     }
   }
@@ -138,7 +138,7 @@ public class AssignmentTest extends TestingContext {
       TestedType type1, TestedType type2, Type joinType) {
     String sourceCode = unlines(
         "[" + joinType.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
-        join("\n", union(type1.declarations(), type2.declarations())),
+        join("\n", union(type1.allDeclarations(), type2.allDeclarations())),
         "@Native(\"impl\")",
         "Bool true;");
     module(sourceCode)
@@ -150,7 +150,7 @@ public class AssignmentTest extends TestingContext {
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        Type commonSuperType = typing.mergeUp(type1.strippedType(), type2.strippedType());
+        Type commonSuperType = typing.mergeUp(type1.type(), type2.type());
         if (!typing.contains(commonSuperType, typing.any())) {
           result.add(Arguments.of(type1, type2, commonSuperType));
         }
