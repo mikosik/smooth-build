@@ -85,7 +85,7 @@ public class CallTypeInferrer {
     for (int i = 0; i < parameters.size(); i++) {
       Optional<ArgNode> arg = arguments.get(i);
       if (arg.isPresent()) {
-        assigned.add(arg.get().type().map(typing::strip));
+        assigned.add(arg.get().type());
       } else {
         assigned.add(parameters.get(i).defaultValueType());
       }

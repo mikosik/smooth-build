@@ -22,7 +22,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,8 +37,6 @@ import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.testing.TestingContext;
-
-import com.google.common.collect.ImmutableList;
 
 public class TypingTest extends TestingContext {
   @ParameterizedTest
@@ -173,37 +170,6 @@ public class TypingTest extends TestingContext {
 
         arguments(f(STRING, BLOB), f(STRING, BLOB), true)
     );
-  }
-
-  @ParameterizedTest
-  @MethodSource("strip_test_data")
-  public void strip(Type type, Type expected) {
-    assertThat(typing().strip(type))
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> strip_test_data() {
-    ImmutableList<Type> unchangedByStripping = ImmutableList.<Type>builder()
-        .addAll(BASE_TYPES)
-        .add(PERSON)
-        .add(f(BLOB))
-        .add(f(BLOB, BLOB))
-        .add(f(f(BLOB), BLOB))
-        .add(f(BLOB, f(BLOB)))
-        .build();
-    ImmutableList<Type> unchanged = ImmutableList.<Type>builder()
-        .addAll(map(unchangedByStripping, t -> t))
-        .addAll(map(unchangedByStripping, t -> a(t)))
-        .addAll(map(unchangedByStripping, t -> a(a(t))))
-        .build();
-
-    return ImmutableList.<Arguments>builder()
-        .addAll(map(unchanged, t -> Arguments.of(t, t)))
-        .add(Arguments.of(f(BLOB, BLOB), f(BLOB, BLOB)))
-        .add(Arguments.of(f(f(BLOB, BLOB), BLOB), f(f(BLOB, BLOB), BLOB)))
-        .add(Arguments.of(f(BLOB, f(BLOB, BLOB)), f(BLOB, f(BLOB, BLOB))))
-        .add(Arguments.of(a(f(BLOB, BLOB)), a(f(BLOB, BLOB))))
-        .build();
   }
 
   @ParameterizedTest

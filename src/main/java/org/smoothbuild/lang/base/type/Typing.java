@@ -264,18 +264,6 @@ public class Typing {
     }
   }
 
-  public Type strip(Type type) {
-    if (type instanceof ArrayType arrayType) {
-      var elemS = strip(arrayType.elemType());
-      return createArrayType(arrayType, elemS);
-    } else if (type instanceof FunctionType functionType) {
-      var resultS = strip(functionType.resultType());
-      var parametersS = map(functionType.parameters(), this::strip);
-      return createFunctionType(functionType, resultS, parametersS);
-    }
-    return type;
-  }
-
   public Type mapVariables(Type type, BoundsMap boundsMap, Side side) {
     if (type.isPolytype()) {
       if (type instanceof Variable variable) {
@@ -309,7 +297,7 @@ public class Typing {
     } else if (reversedEdge.equals(typeA)) {
       return typeB;
     } else if (typeA.equals(typeB)) {
-      return strip(typeA);
+      return typeA;
     } else if (typeA instanceof ArrayType arrayA) {
       if (typeB instanceof ArrayType arrayB) {
         var elemA = arrayA.elemType();
