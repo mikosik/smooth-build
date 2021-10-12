@@ -9,10 +9,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Strings.unlines;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -89,20 +86,5 @@ public class ItemSignatureTest {
     item = new ItemSignature(STRING, Optional.empty(), Optional.of(STRING));
     assertThat(item.toString())
         .isEqualTo("String");
-  }
-
-  @Test
-  public void params_to_string() {
-    List<ItemSignature> names = new ArrayList<>();
-    names.add(new ItemSignature(STRING, "param1", Optional.of(STRING)));
-    names.add(new ItemSignature(STRING, "param2-with-very-long", Optional.of(STRING)));
-    names.add(new ItemSignature(a(BLOB), "param3", Optional.of(STRING)));
-
-    assertThat(ItemSignature.iterableToString(names))
-        .isEqualTo(unlines(
-            "  String: param1               ",
-            "  String: param2-with-very-long",
-            "  [Blob]: param3               ",
-            ""));
   }
 }

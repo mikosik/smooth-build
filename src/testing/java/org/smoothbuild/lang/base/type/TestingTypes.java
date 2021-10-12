@@ -100,12 +100,4 @@ public class TestingTypes {
   public static StructType struct(String name, ImmutableList<ItemSignature> fields) {
     return TYPING.struct(name, fields);
   }
-
-  public static ItemSignature item(Type type, String name) {
-    return new ItemSignature(type, name, Optional.empty());
-  }
-
-  public static ItemSignature item(Type type) {
-    return new ItemSignature(type, Optional.empty(), Optional.empty());
-  }
 }

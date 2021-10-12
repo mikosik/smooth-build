@@ -61,31 +61,6 @@ public record ItemSignature(Type type, Optional<String> name, Optional<Type> def
     return type.name() + name.map(n -> " " + n).orElse("");
   }
 
-  public static String iterableToString(Iterable<ItemSignature> items) {
-    int typeLength = longestType(items);
-    int nameLength = longestName(items);
-    return stream(items)
-        .map(p -> "  " + p.toPaddedString(typeLength, nameLength) + "\n")
-        .sorted()
-        .collect(joining());
-  }
-
-  public static int longestType(Iterable<ItemSignature> items) {
-    int result = 0;
-    for (ItemSignature item : items) {
-      result = Math.max(result, item.type.name().length());
-    }
-    return result;
-  }
-
-  public static int longestName(Iterable<ItemSignature> items) {
-    int result = 0;
-    for (ItemSignature item : items) {
-      result = Math.max(result, item.saneName().length());
-    }
-    return result;
-  }
-
   public String typeAndName() {
     return name.map(n -> type.name() + " " + n).orElseGet(type::name);
   }
