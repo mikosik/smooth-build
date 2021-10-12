@@ -89,17 +89,7 @@ public class TypeInferrer {
       public void visitFunc(RealFuncNode func) {
         visitParams(func.params());
         func.body().ifPresent(this::visitExpr);
-        func.setType(functionType(func));
-      }
-
-      private Optional<Type> functionType(RealFuncNode func) {
-        var resultType = bodyType(func);
-        var parameterTypes = func.optParameterTypes();
-        if (resultType.isPresent() && parameterTypes.isPresent()) {
-          return Optional.of(typing.function(resultType.get(), parameterTypes.get()));
-        } else {
-          return empty();
-        }
+        func.setType(optionalFunctionType(bodyType(func), func.optParameterTypes()));
       }
 
       @Override
@@ -185,13 +175,18 @@ public class TypeInferrer {
         } else if (type instanceof FunctionTypeNode function) {
           Optional<Type> result = createType(function.resultType());
           var parameters = Optionals.pullUp(map(function.parameterTypes(), this::createType));
-          if (result.isPresent() && parameters.isPresent()) {
-            return Optional.of(typing.function(result.get(), parameters.get()));
-          } else {
-            return empty();
-          }
+          return optionalFunctionType(result, parameters);
         } else {
           return Optional.of(findType(type.name()));
+        }
+      }
+
+      private Optional<Type> optionalFunctionType(
+          Optional<Type> result, Optional<ImmutableList<Type>> parameters) {
+        if (result.isPresent() && parameters.isPresent()) {
+          return Optional.of(typing.function(result.get(), parameters.get()));
+        } else {
+          return empty();
         }
       }
 
