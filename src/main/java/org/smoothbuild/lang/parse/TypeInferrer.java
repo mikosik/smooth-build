@@ -10,6 +10,7 @@ import static org.smoothbuild.util.Strings.q;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import javax.inject.Inject;
 
@@ -89,13 +90,13 @@ public class TypeInferrer {
       public void visitFunc(RealFuncNode func) {
         visitParams(func.params());
         func.body().ifPresent(this::visitExpr);
-        func.setType(optionalFunctionType(bodyType(func), func.optParameterTypes()));
+        func.setType(optionalFunctionType(evaluationTypeOfGlobalReferencable(func), func.optParameterTypes()));
       }
 
       @Override
       public void visitValue(ValueNode value) {
         value.body().ifPresent(this::visitExpr);
-        value.setType(bodyType(value));
+        value.setType(evaluationTypeOfGlobalReferencable(value));
       }
 
       @Override
@@ -103,59 +104,51 @@ public class TypeInferrer {
         super.visitFunction(function);
       }
 
-      private Optional<Type> bodyType(ReferencableNode referencable) {
-        if (referencable.body().isPresent()) {
-          return typeOfDeclaredBody(referencable, referencable.body().get());
-        } else {
-          return typeOfNativeBody(referencable);
-        }
-      }
-
-      private Optional<Type> typeOfDeclaredBody(ReferencableNode referencable, ExprNode exprNode) {
-        Optional<Type> exprType = exprNode.type();
-        if (referencable.typeNode().isPresent()) {
-          Optional<Type> type = createType(referencable.typeNode().get());
-          type.ifPresent(t -> exprType.ifPresent(et -> {
-            if (!typing.isAssignable(t, et)) {
-              logBuffer.log(parseError(referencable, "`" + referencable.name()
-                  + "` has body which type is " + et.q()
-                  + " and it is not convertible to its declared type " + t.q()
-                  + "."));
-            }
-          }));
-          return type;
-        } else {
-          return exprType;
-        }
-      }
-
-      private Optional<Type> typeOfNativeBody(ReferencableNode referencable) {
-        if (referencable.typeNode().isPresent()) {
-          return createType(referencable.typeNode().get());
-        } else {
-          logBuffer.log(parseError(referencable, referencable.q()
-              + " is native so it should have declared result type."));
-          return empty();
-        }
-      }
-
       @Override
       public void visitParam(int index, ItemNode param) {
         super.visitParam(index, param);
-        Optional<Type> optType = param.typeNode().get().type();
-        param.setType(optType);
-        if (optType.isPresent()) {
-          Type type = optType.get();
-          var optDefaultArgument = param.body();
-          if (optDefaultArgument.isPresent()) {
-            var optDefaultArgumentType = optDefaultArgument.get().type();
-            if (optDefaultArgumentType.isPresent()) {
-              Type dt = optDefaultArgumentType.get();
-              if (!typing.isParamAssignable(type, dt)) {
-                logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + type.q()
-                    + " so it cannot have default argument of type " + dt.q() + "."));
-              }
-            }
+        param.setType(typeOfParameter(param));
+      }
+
+      private Optional<Type> typeOfParameter(ItemNode param) {
+        return evaluationTypeOf(param, (target, source) -> {
+          if (!typing.isParamAssignable(target, source)) {
+            logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + target.q()
+                + " so it cannot have default argument of type " + source.q() + "."));
+          }
+        });
+      }
+
+      private Optional<Type> evaluationTypeOfGlobalReferencable(ReferencableNode referencable) {
+        return evaluationTypeOf(referencable, (target, source) -> {
+          if (!typing.isAssignable(target, source)) {
+            logBuffer.log(parseError(referencable, "`" + referencable.name()
+                + "` has body which type is " + source.q()
+                + " and it is not convertible to its declared type " + target.q()
+                + "."));
+          }
+        });
+      }
+
+      private Optional<Type> evaluationTypeOf(ReferencableNode referencable,
+          BiConsumer<Type, Type> assignmentChecker) {
+        if (referencable.body().isPresent()) {
+          Optional<Type> exprType = referencable.body().get().type();
+          if (referencable.typeNode().isPresent()) {
+            Optional<Type> type = createType(referencable.typeNode().get());
+            type.ifPresent(target -> exprType.ifPresent(
+                source -> assignmentChecker.accept(target, source)));
+            return type;
+          } else {
+            return exprType;
+          }
+        } else {
+          if (referencable.typeNode().isPresent()) {
+            return createType(referencable.typeNode().get());
+          } else {
+            logBuffer.log(parseError(referencable, referencable.q()
+                + " is native so it should have declared result type."));
+            return empty();
           }
         }
       }
