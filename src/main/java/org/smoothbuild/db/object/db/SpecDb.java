@@ -397,7 +397,7 @@ public class SpecDb {
 
   private LambdaSpec newLambdaSpec(ValSpec result, RecSpec parameters,
       RecSpec defaultArguments) throws HashedDbException {
-    var rootHash = writeLambdaSpecRoot(LAMBDA, result, parameters, defaultArguments);
+    var rootHash = writeLambdaSpecRoot(result, parameters, defaultArguments);
     return newLambdaSpec(rootHash, result, parameters, defaultArguments);
   }
 
@@ -514,10 +514,10 @@ public class SpecDb {
     return writeNonBaseSpecRoot(ARRAY, elementSpec.hash());
   }
 
-  private Hash writeLambdaSpecRoot(SpecKind lambdaKind, ValSpec result, RecSpec parameters,
-      RecSpec defaultArguments) throws HashedDbException {
+  private Hash writeLambdaSpecRoot(ValSpec result, RecSpec parameters, RecSpec defaultArguments)
+      throws HashedDbException {
     var hash = hashedDb.writeSequence(result.hash(), parameters.hash(), defaultArguments.hash());
-    return writeNonBaseSpecRoot(lambdaKind, hash);
+    return writeNonBaseSpecRoot(LAMBDA, hash);
   }
 
   private Hash writeRecSpecRoot(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
