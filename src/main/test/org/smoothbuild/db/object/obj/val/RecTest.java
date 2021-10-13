@@ -15,6 +15,12 @@ public class RecTest extends TestingContext {
   }
 
   @Test
+  public void creating_rec_with_item_with_different_spec_than_specified_in_rec_spec_causes_exception() {
+    assertCall(() -> objectDb().recVal(personSpec(), list(strVal(), intVal())))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
   public void creating_rec_with_more_items_than_specified_in_its_spec_causes_exception() {
     assertCall(() -> objectDb().recVal(
         personSpec(), list(strVal("John"), strVal("Doe"), strVal("abc"))))
@@ -102,7 +108,7 @@ public class RecTest extends TestingContext {
   }
 
   @Test
-  public void reecs_with_equal_items_have_equal_hashes() {
+  public void recs_with_equal_items_have_equal_hashes() {
     Rec person1 = johnDoePerson();
     Rec person2 = johnDoePerson();
     assertThat(person1.hash())

@@ -39,6 +39,7 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.AbsentSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
@@ -317,12 +318,15 @@ public class TestingContext {
   }
 
   public RecSpec personSpec() {
-    ValSpec string = strSpec();
-    return recSpec(list(string, string));
+    return recSpec(list(strSpec(), strSpec()));
   }
 
   public RecSpec fileSpec() {
     return recSpec(list(blobSpec(), strSpec()));
+  }
+
+  public StructSpec structSpec() {
+    return structSpec(recSpec(list(intSpec())), list("field"));
   }
 
   public StructSpec structSpec(RecSpec recSpec, ImmutableList<String> names) {
@@ -450,8 +454,16 @@ public class TestingContext {
     return objectDb().strVal(string);
   }
 
+  public Struc_ structVal(StructSpec recSpec, Rec items) {
+    return objectDb().structVal(recSpec, items);
+  }
+
   public Rec recVal(List<? extends Val> items) {
     var recSpec = recSpec(map(items, Val::spec));
+    return recVal(recSpec, items);
+  }
+
+  public Rec recVal(RecSpec recSpec, List<? extends Val> items) {
     return objectDb().recVal(recSpec, items);
   }
 

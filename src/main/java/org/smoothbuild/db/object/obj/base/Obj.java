@@ -178,7 +178,7 @@ public abstract class Obj {
     try {
       return valueToString();
     } catch (DecodeObjNodeException e) {
-      return "?Exception?:" + hash();
+      return "?Exception?@" + hash();
     }
   }
 }

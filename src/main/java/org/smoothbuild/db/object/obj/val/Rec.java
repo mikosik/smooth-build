@@ -39,7 +39,7 @@ public class Rec extends Val {
     return items.size() == 0 ? null : items.iterator().next();
   }
 
-  private ImmutableList<Val> items() {
+  public ImmutableList<Val> items() {
     if (items == null) {
       items = instantiateItems();
     }

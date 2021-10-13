@@ -352,7 +352,7 @@ public class SpecTest {
     @ParameterizedTest
     @MethodSource("struct_items_cases")
     public void struct_items(StructSpec spec, RecSpec expected) {
-      assertThat(spec.items())
+      assertThat(spec.rec())
           .isEqualTo(expected);
     }
 

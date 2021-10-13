@@ -21,7 +21,6 @@ import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;

@@ -41,6 +41,7 @@ import org.smoothbuild.db.object.exc.DecodeRecExprWrongItemsSizeException;
 import org.smoothbuild.db.object.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.db.object.exc.DecodeSelectWrongEvaluationSpecException;
 import org.smoothbuild.db.object.exc.DecodeSpecException;
+import org.smoothbuild.db.object.exc.DecodeStructWrongTupleSpecException;
 import org.smoothbuild.db.object.exc.NoSuchObjException;
 import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedObjSequenceException;
@@ -62,6 +63,7 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
@@ -1527,6 +1529,84 @@ public class CorruptedObjTest extends TestingContext {
       assertCall(() -> ((Str) objectDb().get(objHash)).jValue())
           .throwsException(new DecodeObjNodeException(objHash, strSpec(), DATA_PATH))
           .withCause(new DecodeStringException(notStringHash, null));
+    }
+  }
+
+  @Nested
+  class _struct {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save smooth
+       * struct in HashedDb.
+       */
+      var recSpec = recSpec(list(strSpec(), intSpec()));
+      var structSpec = structSpec(recSpec, list("name1", "name2"));
+      var rec = recVal(recSpec, list(strVal(), intVal()));
+      Hash objHash =
+          hash(
+              hash(structSpec),
+              hash(rec)
+          );
+      Struc_ readStruct = (Struc_) objectDb().get(objHash);
+      assertThat(readStruct.rec())
+          .isEqualTo(rec);
+      assertThat(readStruct.spec())
+          .isEqualTo(structSpec);
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(structSpec());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var recSpec = recSpec(list(strSpec(), intSpec()));
+      var structSpec = structSpec(recSpec, list("name1", "name2"));
+      var rec = recVal(recSpec, list(strVal(), intVal()));
+      Hash dataHash = hash(rec);
+      obj_root_with_two_data_hashes(
+          structSpec,
+          dataHash,
+          (Hash objHash) -> ((Struc_) objectDb().get(objHash)).rec());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
+          structSpec(), (Hash objHash) -> ((Struc_) objectDb().get(objHash)).rec());
+    }
+
+    @Test
+    public void rec_is_not_rec() throws Exception {
+      var recSpec = recSpec(list(strSpec(), intSpec()));
+      var structSpec = structSpec(recSpec, list("name1", "name2"));
+      var rec = intVal();
+      Hash objHash =
+          hash(
+              hash(structSpec),
+              hash(rec)
+          );
+      assertCall(() -> ((Struc_) objectDb().get(objHash)).rec())
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, structSpec, DATA_PATH, Rec.class, Int.class));
+    }
+
+    @Test
+    public void rec_has_different_spec_than_struct_rec_spec() throws Exception {
+      var recSpec = recSpec(list(strSpec(), intSpec()));
+      var recSpecWrong = recSpec(list(strSpec()));
+      var structSpec = structSpec(recSpec, list("name1", "name2"));
+      var rec = recVal(recSpecWrong, list(strVal()));
+      Hash objHash =
+          hash(
+              hash(structSpec),
+              hash(rec)
+          );
+      assertCall(() -> ((Struc_) objectDb().get(objHash)).rec())
+          .throwsException(new DecodeStructWrongTupleSpecException(
+              objHash, structSpec, recSpecWrong));
     }
   }
 

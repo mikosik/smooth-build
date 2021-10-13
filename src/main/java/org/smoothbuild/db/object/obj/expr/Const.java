@@ -1,17 +1,13 @@
 package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjNodeException;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.Helpers;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 

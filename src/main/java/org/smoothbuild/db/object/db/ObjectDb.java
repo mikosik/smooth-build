@@ -1,5 +1,6 @@
 package org.smoothbuild.db.object.db;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
@@ -43,12 +44,14 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 
 import com.google.common.collect.ImmutableList;
 
@@ -94,6 +97,11 @@ public class ObjectDb {
 
   public Str strVal(String value) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStrVal(value));
+  }
+
+  public Struc_ structVal(StructSpec structSpec, Rec rec) {
+    checkArgument(Objects.equals(structSpec.rec(), rec.spec()));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStructVal(structSpec, rec));
   }
 
   public Rec recVal(RecSpec recSpec, Iterable<? extends Obj> items) {
@@ -337,6 +345,11 @@ public class ObjectDb {
     var data = writeStrData(string);
     var root = writeRoot(specDb.strSpec(), data);
     return specDb.strSpec().newObj(root, this);
+  }
+
+  private Struc_ newStructVal(StructSpec spec, Rec rec) throws HashedDbException {
+    var root = writeRoot(spec, rec.hash());
+    return spec.newObj(root, this);
   }
 
   private Rec newRecVal(RecSpec spec, List<? extends Obj> objects) throws HashedDbException {

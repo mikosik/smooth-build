@@ -8,7 +8,7 @@ import static org.smoothbuild.util.Lists.zip;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.val.Lambda;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 
 import com.google.common.collect.ImmutableList;
@@ -26,10 +26,10 @@ public class StructSpec extends ValSpec {
   }
 
   private String calculateName(RecSpec items, ImmutableList<String> names) {
-    return join(", ", zip(items.items(), names, (i, n) -> i.name() + " " + n));
+    return "{" + join(", ", zip(items.items(), names, (i, n) -> i.name() + " " + n)) + "}";
   }
 
-  public RecSpec items() {
+  public RecSpec rec() {
     return items;
   }
 
@@ -43,8 +43,8 @@ public class StructSpec extends ValSpec {
   }
 
   @Override
-  public Lambda newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Struc_ newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new Lambda(merkleRoot, objectDb);
+    return new Struc_(merkleRoot, objectDb);
   }
 }

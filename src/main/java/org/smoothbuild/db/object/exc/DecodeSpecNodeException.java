@@ -1,7 +1,6 @@
 package org.smoothbuild.db.object.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.SpecKind;
 
 public class DecodeSpecNodeException extends DecodeSpecException {
