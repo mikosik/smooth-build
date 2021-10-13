@@ -33,6 +33,7 @@ public class SpecKindTest {
         Arguments.of(2, SpecKind.BOOL),
         Arguments.of(3, SpecKind.LAMBDA),
         Arguments.of(4, SpecKind.INT),
+        Arguments.of(5, SpecKind.STRUCT),
         Arguments.of(6, SpecKind.NOTHING),
         Arguments.of(7, SpecKind.RECORD),
         Arguments.of(8, SpecKind.STRING),

@@ -58,6 +58,7 @@ import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
@@ -322,6 +323,10 @@ public class TestingContext {
 
   public RecSpec fileSpec() {
     return recSpec(list(blobSpec(), strSpec()));
+  }
+
+  public StructSpec structSpec(RecSpec recSpec, ImmutableList<String> names) {
+    return specDb().structSpec(recSpec, names);
   }
 
   public VariableSpec variableSpec(String name) {

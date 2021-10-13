@@ -20,6 +20,8 @@ public class SpecStableHashTest extends TestingContext {
     assertHash(nothingSpec(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(recSpec(list(blobSpec())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
     assertHash(strSpec(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
+    assertHash(structSpec(recSpec(list(intSpec())), list("field")),
+        "1a24ffbb700b0f79f08ce2875a266a29b0b2ff84");
     assertHash(variableSpec("A"), "99f61661c131c5db3723bdaa5ad26229d06dc6ce");
 
     assertHash(arraySpec(absentSpec()), "e340097d1be4cc94bcecc4d91781a3de55c1efc1");

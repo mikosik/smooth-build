@@ -70,6 +70,15 @@ public class Helpers {
     }
   }
 
+  public static <T> T wrapHashedDbExceptionAsDecodeSpecNodeException(
+      Hash hash, SpecKind specKind, String nodePath, int index, HashedDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (HashedDbException e) {
+      throw new DecodeSpecNodeException(hash, specKind, nodePath, index, e);
+    }
+  }
+
   @FunctionalInterface
   public static interface HashedDbCallable<T> {
     public T call() throws HashedDbException;

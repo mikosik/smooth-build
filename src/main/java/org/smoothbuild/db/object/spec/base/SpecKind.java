@@ -15,6 +15,7 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -25,7 +26,7 @@ public enum SpecKind {
   BOOL((byte) 2, Bool.class),
   LAMBDA((byte) 3, Lambda.class),
   INT((byte) 4, Int.class),
-  // 5 - unused TODO
+  STRUCT((byte) 5, Struc_.class),
   NOTHING((byte) 6, null),
   RECORD((byte) 7, Rec.class),
   STRING((byte) 8, Str.class),
@@ -51,6 +52,7 @@ public enum SpecKind {
           .put((byte) 2, BOOL)
           .put((byte) 3, LAMBDA)
           .put((byte) 4, INT)
+          .put((byte) 5, STRUCT)
           .put((byte) 6, NOTHING)
           .put((byte) 7, RECORD)
           .put((byte) 8, STRING)

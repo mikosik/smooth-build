@@ -24,6 +24,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
+import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
@@ -42,6 +43,7 @@ import org.smoothbuild.db.object.exc.DecodeSpecException;
 import org.smoothbuild.db.object.exc.DecodeSpecIllegalKindException;
 import org.smoothbuild.db.object.exc.DecodeSpecNodeException;
 import org.smoothbuild.db.object.exc.DecodeSpecRootException;
+import org.smoothbuild.db.object.exc.DecodeStructSpecWrongNamesSizeException;
 import org.smoothbuild.db.object.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.exc.UnexpectedSpecNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedSpecSequenceException;
@@ -86,7 +88,7 @@ public class CorruptedSpecTest extends TestingContext {
   @Nested
   class _base_spec {
     @Test
-    public void creating_base_spec() throws Exception {
+    public void learn_creating_base_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
        * to save base spec in HashedDb.
@@ -751,7 +753,7 @@ public class CorruptedSpecTest extends TestingContext {
   @Nested
   class _rec_spec {
     @Test
-    public void creating_rec_spec() throws Exception {
+    public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
        * to save rec spec in HashedDb.
@@ -997,6 +999,109 @@ public class CorruptedSpecTest extends TestingContext {
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
     return hashedDb().writeSequence(hashes);
+  }
+
+  @Nested
+  class _struct_spec {
+    @Test
+    public void learng_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save struct spec in HashedDb.
+       */
+      RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
+      String name1 = "field1";
+      String name2 = "field2";
+      Hash hash = hash(
+          hash(STRUCT.marker()),
+          hash(
+              hash(itemsSpec),
+              hash(hash(name1), hash(name2))
+          )
+      );
+      assertThat(hash)
+          .isEqualTo(structSpec(itemsSpec, list(name1, name2)).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(STRUCT);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(STRUCT);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_sequence(STRUCT);
+    }
+
+    @Test
+    public void with_items_pointing_nowhere() throws Exception {
+      Hash itemsHash = Hash.of(33);
+      String name1 = "field1";
+      String name2 = "field2";
+      Hash hash = hash(
+          hash(STRUCT.marker()),
+          hash(
+              itemsHash,
+              hash(hash(name1), hash(name2))
+          )
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeSpecNodeException(hash, STRUCT, DATA_PATH + "[0]"));
+    }
+
+    @Test
+    public void with_items_not_being_rec_spec() throws Exception {
+      IntSpec itemsSpec = intSpec();
+      String name1 = "field1";
+      String name2 = "field2";
+      Hash hash = hash(
+          hash(STRUCT.marker()),
+          hash(
+              hash(itemsSpec),
+              hash(hash(name1), hash(name2))
+          )
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new UnexpectedSpecNodeException(
+              hash, STRUCT, DATA_PATH, 0, RecSpec.class, IntSpec.class));
+    }
+
+    @Test
+    public void with_names_size_different_than_items_size() throws Exception {
+      RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
+      String name1 = "field1";
+      Hash hash = hash(
+          hash(STRUCT.marker()),
+          hash(
+              hash(itemsSpec),
+              hash(hash(name1))
+          )
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeStructSpecWrongNamesSizeException(hash, 2, 1));
+    }
+
+    @Test
+    public void with_names_containing_illegal_string() throws Exception {
+      RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
+      String name1 = "field1";
+      Hash name2Hash = hash(ByteString.of((byte) -64));
+      Hash hash = hash(
+          hash(STRUCT.marker()),
+          hash(
+              hash(itemsSpec),
+              hash(hash(name1), name2Hash)
+          )
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeSpecNodeException(hash, STRUCT, "data[1][1]"))
+          .withCause(DecodeStringException.class);
+    }
   }
 
   @Nested

@@ -72,6 +72,7 @@ import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.testing.TestingContext;
 
@@ -347,6 +348,45 @@ public class SpecTest {
   }
 
   @Nested
+  class _struct {
+    @ParameterizedTest
+    @MethodSource("struct_items_cases")
+    public void struct_items(StructSpec spec, RecSpec expected) {
+      assertThat(spec.items())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> struct_items_cases() {
+      return list(
+          arguments(structSpec(recSpec(), list()), recSpec()),
+          arguments(structSpec(recSpec(STR), list("field")), recSpec(STR)),
+          arguments(structSpec(recSpec(STR, INT), list("field", "field2")), recSpec(STR, INT))
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("struct_names_cases")
+    public void struct_names(StructSpec spec, List<String> expected) {
+      assertThat(spec.names())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> struct_names_cases() {
+      return list(
+          arguments(structSpec(recSpec(), list()), list()),
+          arguments(structSpec(recSpec(STR), list("field")), list("field")),
+          arguments(structSpec(recSpec(STR, INT), list("field", "field2")), list("field", "field2"))
+      );
+    }
+
+    @Test
+    public void different_size_of_items_and_names_causes_exception() {
+      assertCall(() -> structSpec(recSpec(INT), list("field", "field2")))
+          .throwsException(IllegalArgumentException.class);
+    }
+  }
+
+  @Nested
   class _variable {
     @Test
     public void name() {
@@ -381,6 +421,10 @@ public class SpecTest {
 
   private static RecExprSpec recExprSpec(ValSpec... items) {
     return SPEC_DB.recExprSpec(list(items));
+  }
+
+  private static StructSpec structSpec(RecSpec items, ImmutableList<String> names) {
+    return SPEC_DB.structSpec(items, names);
   }
 
   private static ConstSpec constSpec(ValSpec evaluationSpec) {

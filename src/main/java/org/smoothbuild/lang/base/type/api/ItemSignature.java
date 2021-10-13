@@ -1,9 +1,7 @@
 package org.smoothbuild.lang.base.type.api;
 
 import static com.google.common.base.Strings.padEnd;
-import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
