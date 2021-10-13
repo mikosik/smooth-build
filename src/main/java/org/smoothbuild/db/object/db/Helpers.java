@@ -30,6 +30,24 @@ public class Helpers {
     }
   }
 
+  public static <T> T wrapObjectDbExceptionAsDecodeSpecNodeException(
+      SpecKind specKind, Hash hash, String nodePath, ObjectDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (ObjectDbException e) {
+      throw new DecodeSpecNodeException(hash, specKind, nodePath, e);
+    }
+  }
+
+  public static <T> T wrapObjectDbExceptionAsDecodeSpecNodeException(
+      SpecKind specKind, Hash hash, String nodePath, int index, ObjectDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (ObjectDbException e) {
+      throw new DecodeSpecNodeException(hash, specKind, nodePath, index, e);
+    }
+  }
+
   @FunctionalInterface
   public static interface ObjectDbCallable<T> {
     public T call() throws ObjectDbException;

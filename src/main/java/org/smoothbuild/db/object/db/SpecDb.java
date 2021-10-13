@@ -6,6 +6,7 @@ import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeSpecNodeException;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeSpecNodeException;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ABSENT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
@@ -38,7 +39,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.object.exc.DecodeSpecIllegalKindException;
-import org.smoothbuild.db.object.exc.DecodeSpecNodeException;
 import org.smoothbuild.db.object.exc.DecodeSpecRootException;
 import org.smoothbuild.db.object.exc.DecodeStructSpecWrongNamesSizeException;
 import org.smoothbuild.db.object.exc.DecodeVariableIllegalNameException;
@@ -358,7 +358,8 @@ public class SpecDb {
 
   private <T> T readInnerSpec(SpecKind specKind, Hash rootHash, Hash hash, String path,
       Class<T> expectedClass) {
-    Spec result = readInnerSpec(specKind, rootHash, hash, path);
+    Spec result = wrapObjectDbExceptionAsDecodeSpecNodeException(
+        specKind, rootHash, path, () -> getSpec(hash));
     if (expectedClass.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
@@ -369,17 +370,10 @@ public class SpecDb {
     }
   }
 
-  private Spec readInnerSpec(SpecKind specKind, Hash outerHash, Hash hash, String path) {
-    try {
-      return getSpec(hash);
-    } catch (ObjectDbException e) {
-      throw new DecodeSpecNodeException(outerHash, specKind, path, e);
-    }
-  }
-
   private <T> T readInnerSpec(SpecKind specKind, Hash rootHash, Hash hash, String path, int index,
       Class<T> expectedClass) {
-    Spec result = readInnerSpec(specKind, rootHash, hash, path, index);
+    Spec result = wrapObjectDbExceptionAsDecodeSpecNodeException(
+        specKind, rootHash, path, index, () -> getSpec(hash));
     if (expectedClass.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
@@ -387,14 +381,6 @@ public class SpecDb {
     } else {
       throw new UnexpectedSpecNodeException(
           rootHash, specKind, path, index, expectedClass, result.getClass());
-    }
-  }
-
-  private Spec readInnerSpec(SpecKind specKind, Hash outerSpec, Hash hash, String path, int index) {
-    try {
-      return getSpec(hash);
-    } catch (ObjectDbException e) {
-      throw new DecodeSpecNodeException(outerSpec, specKind, path, index, e);
     }
   }
 
