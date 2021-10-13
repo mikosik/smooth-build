@@ -75,6 +75,12 @@ public abstract class Obj {
     return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), DATA_PATH, reader);
   }
 
+  protected <T> T readObj(String path, Hash hash, Class<T> clazz) {
+    Obj obj = wrapObjectDbExceptionAsDecodeObjNodeException(
+        hash(), spec(), path, () -> objectDb().get(hash));
+    return castObj(obj, path, clazz);
+  }
+
   protected <T> T readSequenceElementObj(String path, Hash hash, int i, int expectedSize,
       Class<T> clazz) {
     Hash elementHash = readSequenceElementHash(path, hash, i, expectedSize);
@@ -87,16 +93,6 @@ public abstract class Obj {
     checkElementIndex(i, expectedSize);
     return readSequenceHashes(path, hash, expectedSize)
         .get(i);
-  }
-
-  protected <T> T castObj(Obj obj, String path, int nodeIndex, Class<T> clazz) {
-    if (clazz.isInstance(obj)) {
-      @SuppressWarnings("unchecked")
-      T result = (T) obj;
-      return result;
-    } else {
-      throw new UnexpectedObjNodeException(hash(), spec(), path, nodeIndex, clazz, obj.getClass());
-    }
   }
 
   protected <T> ImmutableList<T> readSequenceObjs(String path, Hash hash, int expectedSize,
@@ -114,19 +110,6 @@ public abstract class Obj {
   protected ImmutableList<Obj> readSequenceObjs(String path, Hash hash) {
     var sequenceHashes = readSequenceHashes(path, hash);
     return readSequenceObjs(path, sequenceHashes);
-  }
-
-  private <T> ImmutableList<T> castSequence(
-      ImmutableList<Obj> elements, String path, Class<T> clazz) {
-    for (int i = 0; i < elements.size(); i++) {
-      Obj element = elements.get(i);
-      if (!clazz.isInstance(element)) {
-        throw new UnexpectedObjNodeException(hash(), spec(), path, i, clazz, element.getClass());
-      }
-    }
-    @SuppressWarnings("unchecked")
-    ImmutableList<T> result = (ImmutableList<T>) elements;
-    return result;
   }
 
   private ImmutableList<Obj> readSequenceObjs(String path, ImmutableList<Hash> sequence) {
@@ -153,8 +136,42 @@ public abstract class Obj {
         () -> objectDb.readSequence(hash));
   }
 
-  public static String sequenceToString(ImmutableList<? extends Obj> objects) {
+  protected static String sequenceToString(ImmutableList<? extends Obj> objects) {
     return objects.stream().map(Obj::valueToStringSafe).collect(joining(","));
+  }
+
+  private <T> T castObj(Obj obj, String path, Class<T> clazz) {
+    if (clazz.isInstance(obj)) {
+      @SuppressWarnings("unchecked")
+      T result = (T) obj;
+      return result;
+    } else {
+      throw new UnexpectedObjNodeException(hash(), spec(), path, clazz, obj.getClass());
+    }
+  }
+
+
+  private <T> T castObj(Obj obj, String path, int index, Class<T> clazz) {
+    if (clazz.isInstance(obj)) {
+      @SuppressWarnings("unchecked")
+      T result = (T) obj;
+      return result;
+    } else {
+      throw new UnexpectedObjNodeException(hash(), spec(), path, index, clazz, obj.getClass());
+    }
+  }
+
+  private <T> ImmutableList<T> castSequence(
+      ImmutableList<Obj> elements, String path, Class<T> clazz) {
+    for (int i = 0; i < elements.size(); i++) {
+      Obj element = elements.get(i);
+      if (!clazz.isInstance(element)) {
+        throw new UnexpectedObjNodeException(hash(), spec(), path, i, clazz, element.getClass());
+      }
+    }
+    @SuppressWarnings("unchecked")
+    ImmutableList<T> result = (ImmutableList<T>) elements;
+    return result;
   }
 
   private String valueToStringSafe() {

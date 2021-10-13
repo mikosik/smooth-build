@@ -1,9 +1,11 @@
 package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjNodeException;
 
 import java.util.Objects;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.Helpers;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
@@ -28,16 +30,12 @@ public class Const extends Expr {
   }
 
   public Val value() {
-    Obj obj = Helpers.wrapObjectDbExceptionAsDecodeObjNodeException(
-        hash(), spec(), DATA_PATH, () -> objectDb().get(dataHash()));
-    if (obj instanceof Val val) {
-      if (!Objects.equals(evaluationSpec(), obj.spec())) {
-        throw new UnexpectedObjNodeException(hash(), spec(), DATA_PATH, evaluationSpec(), val.spec());
-      }
-      return val;
-    } else {
-      throw new UnexpectedObjNodeException(hash(), spec(), DATA_PATH, Val.class, obj.getClass());
+    Val val = readObj(DATA_PATH, dataHash(), Val.class);
+    if (!Objects.equals(evaluationSpec(), val.spec())) {
+      throw new UnexpectedObjNodeException(
+          hash(), spec(), DATA_PATH, evaluationSpec(), val.spec());
     }
+    return val;
   }
 
   @Override
