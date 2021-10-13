@@ -13,38 +13,38 @@ public class Helpers {
   // wrapping Callables
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, Spec spec, String nodePath, ObjectDbCallable<T> callable) {
+      Hash hash, Spec spec, String path, ObjectDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjectDbException e) {
-      throw new DecodeObjNodeException(hash, spec, nodePath, e);
+      throw new DecodeObjNodeException(hash, spec, path, e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, Spec spec, String nodePath, int pathIndex, ObjectDbCallable<T> callable) {
+      Hash hash, Spec spec, String path, int pathIndex, ObjectDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjectDbException e) {
-      throw new DecodeObjNodeException(hash, spec, nodePath + "[" + pathIndex + "]", e);
+      throw new DecodeObjNodeException(hash, spec, path + "[" + pathIndex + "]", e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeSpecNodeException(
-      SpecKind specKind, Hash hash, String nodePath, ObjectDbCallable<T> callable) {
+      SpecKind specKind, Hash hash, String path, ObjectDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjectDbException e) {
-      throw new DecodeSpecNodeException(hash, specKind, nodePath, e);
+      throw new DecodeSpecNodeException(hash, specKind, path, e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeSpecNodeException(
-      SpecKind specKind, Hash hash, String nodePath, int index, ObjectDbCallable<T> callable) {
+      SpecKind specKind, Hash hash, String path, int index, ObjectDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjectDbException e) {
-      throw new DecodeSpecNodeException(hash, specKind, nodePath, index, e);
+      throw new DecodeSpecNodeException(hash, specKind, path, index, e);
     }
   }
 
@@ -62,11 +62,11 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeObjNodeException(
-      Hash hash, Spec spec, String nodePath, HashedDbCallable<T> callable) {
+      Hash hash, Spec spec, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new DecodeObjNodeException(hash, spec, nodePath, e);
+      throw new DecodeObjNodeException(hash, spec, path, e);
     }
   }
 
@@ -80,20 +80,20 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeSpecNodeException(
-      Hash hash, SpecKind specKind, String nodePath, HashedDbCallable<T> callable) {
+      Hash hash, SpecKind specKind, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new DecodeSpecNodeException(hash, specKind, nodePath, e);
+      throw new DecodeSpecNodeException(hash, specKind, path, e);
     }
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeSpecNodeException(
-      Hash hash, SpecKind specKind, String nodePath, int index, HashedDbCallable<T> callable) {
+      Hash hash, SpecKind specKind, String path, int index, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new DecodeSpecNodeException(hash, specKind, nodePath, index, e);
+      throw new DecodeSpecNodeException(hash, specKind, path, index, e);
     }
   }
 
