@@ -69,7 +69,7 @@ public class ModuleLoader {
     }
     Ast sortedAst = maybeSortedAst.value();
 
-    logBuffer.logAll(typeInferrer.inferTypes(path, sortedAst, imported));
+    logBuffer.logAll(typeInferrer.inferTypes(sortedAst, imported));
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }

@@ -62,7 +62,7 @@ public class TypeInferrer {
     this.callTypeInferrer = new CallTypeInferrer(typing);
   }
 
-  public List<Log> inferTypes(ModulePath path, Ast ast, Definitions imported) {
+  public List<Log> inferTypes(Ast ast, Definitions imported) {
     var logBuffer = new LogBuffer();
     new AstVisitor() {
       @Override
