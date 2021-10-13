@@ -261,22 +261,22 @@ public class SpecDb {
   }
 
   private static void assertSpecRootSequenceSize(
-      Hash hash, SpecKind specKind, List<Hash> hashes, int expectedSize) {
+      Hash rootHash, SpecKind specKind, List<Hash> hashes, int expectedSize) {
     if (hashes.size() != expectedSize) {
-      throw new DecodeSpecRootException(hash, specKind, hashes.size(), expectedSize);
+      throw new DecodeSpecRootException(rootHash, specKind, hashes.size(), expectedSize);
     }
   }
 
-  private ValSpec getDataAsValSpec(Hash hash, List<Hash> rootSequence, SpecKind specKind) {
-    return getDataAsSpecCastedTo(hash, rootSequence, specKind, ValSpec.class);
+  private ValSpec getDataAsValSpec(Hash rootHash, List<Hash> rootSequence, SpecKind specKind) {
+    return getDataAsSpecCastedTo(rootHash, rootSequence, specKind, ValSpec.class);
   }
 
-  private ArraySpec getDataAsArraySpec(Hash hash, List<Hash> rootSequence, SpecKind specKind) {
-    return getDataAsSpecCastedTo(hash, rootSequence, specKind, ArraySpec.class);
+  private ArraySpec getDataAsArraySpec(Hash rootHash, List<Hash> rootSequence, SpecKind specKind) {
+    return getDataAsSpecCastedTo(rootHash, rootSequence, specKind, ArraySpec.class);
   }
 
-  private RecSpec getDataAsRecSpec(Hash hash, List<Hash> rootSequence, SpecKind specKind) {
-    return getDataAsSpecCastedTo(hash, rootSequence, specKind, RecSpec.class);
+  private RecSpec getDataAsRecSpec(Hash rootHash, List<Hash> rootSequence, SpecKind specKind) {
+    return getDataAsSpecCastedTo(rootHash, rootSequence, specKind, RecSpec.class);
   }
 
   private <T extends Spec> T getDataAsSpecCastedTo(Hash rootHash, List<Hash> rootSequence,
@@ -286,124 +286,124 @@ public class SpecDb {
     return readInnerSpec(specKind, rootHash, hash, DATA_PATH, expectedSpecClass);
   }
 
-  private Spec readLambdaSpec(Hash hash, List<Hash> rootSequence, SpecKind specKind) {
-    assertSpecRootSequenceSize(hash, specKind, rootSequence, 2);
+  private Spec readLambdaSpec(Hash rootHash, List<Hash> rootSequence, SpecKind specKind) {
+    assertSpecRootSequenceSize(rootHash, specKind, rootSequence, 2);
     Hash dataHash = rootSequence.get(DATA_INDEX);
-    List<Hash> data = readSequenceHashes(hash, dataHash, specKind, DATA_PATH);
+    List<Hash> data = readSequenceHashes(rootHash, dataHash, specKind, DATA_PATH);
     if (data.size() != 3) {
-      throw new UnexpectedSpecSequenceException(hash, specKind, DATA_PATH, 3, data.size());
+      throw new UnexpectedSpecSequenceException(rootHash, specKind, DATA_PATH, 3, data.size());
     }
-    ValSpec result = readInnerSpec(specKind, hash, data.get(LAMBDA_RESULT_INDEX),
+    ValSpec result = readInnerSpec(specKind, rootHash, data.get(LAMBDA_RESULT_INDEX),
         LAMBDA_RESULT_PATH, ValSpec.class);
-    RecSpec parameters = readInnerSpec(specKind, hash, data.get(LAMBDA_PARAMS_INDEX),
+    RecSpec parameters = readInnerSpec(specKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
         LAMBDA_PARAMS_PATH, RecSpec.class);
-    RecSpec defaultArguments = readInnerSpec(specKind, hash, data.get(LAMBDA_DEF_ARGUMENTS_INDEX),
+    RecSpec defaultArguments = readInnerSpec(specKind, rootHash, data.get(LAMBDA_DEF_ARGUMENTS_INDEX),
         LAMBDA_DEF_ARGUMENTS_PATH, RecSpec.class);
-    return newLambdaSpec(hash, result, parameters, defaultArguments);
+    return newLambdaSpec(rootHash, result, parameters, defaultArguments);
   }
 
-  private RecSpec readRecord(Hash hash, List<Hash> rootSequence) {
-    assertSpecRootSequenceSize(hash, RECORD, rootSequence, 2);
-    ImmutableList<ValSpec> items = readRecSpecItemSpecs(hash, rootSequence.get(DATA_INDEX));
-    return newRecSpec(hash, items);
+  private RecSpec readRecord(Hash rootHash, List<Hash> rootSequence) {
+    assertSpecRootSequenceSize(rootHash, RECORD, rootSequence, 2);
+    ImmutableList<ValSpec> items = readRecSpecItemSpecs(rootHash, rootSequence.get(DATA_INDEX));
+    return newRecSpec(rootHash, items);
   }
 
-  private ImmutableList<ValSpec> readRecSpecItemSpecs(Hash hash, Hash itemSpecsHash) {
+  private ImmutableList<ValSpec> readRecSpecItemSpecs(Hash rootHash, Hash hash) {
     var builder = ImmutableList.<ValSpec>builder();
-    var itemSpecHashes = readSequenceHashes(hash, itemSpecsHash, RECORD, DATA_PATH);
+    var itemSpecHashes = readSequenceHashes(rootHash, hash, RECORD, DATA_PATH);
     for (int i = 0; i < itemSpecHashes.size(); i++) {
-      builder.add(readInnerSpec(RECORD, hash, itemSpecHashes.get(i), DATA_PATH, i, ValSpec.class));
+      builder.add(readInnerSpec(RECORD, rootHash, itemSpecHashes.get(i), DATA_PATH, i, ValSpec.class));
     }
     return builder.build();
   }
 
-  private StructSpec readStructSpec(Hash hash, List<Hash> rootSequence) {
-    assertSpecRootSequenceSize(hash, STRUCT, rootSequence, 2);
+  private StructSpec readStructSpec(Hash rootHash, List<Hash> rootSequence) {
+    assertSpecRootSequenceSize(rootHash, STRUCT, rootSequence, 2);
     Hash dataHash = rootSequence.get(DATA_INDEX);
-    List<Hash> data = readSequenceHashes(hash, dataHash, STRUCT, DATA_PATH);
+    List<Hash> data = readSequenceHashes(rootHash, dataHash, STRUCT, DATA_PATH);
     if (data.size() != 2) {
-      throw new UnexpectedSpecSequenceException(hash, STRUCT, DATA_PATH, 2, data.size());
+      throw new UnexpectedSpecSequenceException(rootHash, STRUCT, DATA_PATH, 2, data.size());
     }
     RecSpec recSpec = readInnerSpec(
-        STRUCT, hash, data.get(STRUCT_ITEMS_INDEX), STRUCT_ITEMS_PATH, RecSpec.class);
-    var names = readItemNames(hash, data, recSpec);
-    return newStructSpec(hash, recSpec, names);
+        STRUCT, rootHash, data.get(STRUCT_ITEMS_INDEX), STRUCT_ITEMS_PATH, RecSpec.class);
+    var names = readItemNames(rootHash, data, recSpec);
+    return newStructSpec(rootHash, recSpec, names);
   }
 
-  private ImmutableList<String> readItemNames(Hash hash, List<Hash> data, RecSpec recSpec) {
+  private ImmutableList<String> readItemNames(Hash rootHash, List<Hash> data, RecSpec recSpec) {
     var nameHashes = readSequenceHashes(
-        hash, data.get(STRUCT_NAMES_INDEX), STRUCT, STRUCT_NAMES_PATH);
+        rootHash, data.get(STRUCT_NAMES_INDEX), STRUCT, STRUCT_NAMES_PATH);
     if (nameHashes.size() != recSpec.items().size()) {
       throw new DecodeStructSpecWrongNamesSizeException(
-          hash, recSpec.items().size(), nameHashes.size());
+          rootHash, recSpec.items().size(), nameHashes.size());
     }
     Builder<String> builder = ImmutableList.builder();
     for (int i = 0; i < nameHashes.size(); i++) {
       final int index = i;
-      builder.add(wrapHashedDbExceptionAsDecodeSpecNodeException(
-          hash, STRUCT, STRUCT_NAMES_PATH, index, () -> hashedDb.readString(nameHashes.get(index))));
+      builder.add(wrapHashedDbExceptionAsDecodeSpecNodeException(rootHash, STRUCT,
+          STRUCT_NAMES_PATH, index, () -> hashedDb.readString(nameHashes.get(index))));
     }
     return builder.build();
   }
 
-  private VariableSpec readVariable(Hash hash, List<Hash> rootSequence) {
-    assertSpecRootSequenceSize(hash, VARIABLE, rootSequence, 2);
+  private VariableSpec readVariable(Hash rootHash, List<Hash> rootSequence) {
+    assertSpecRootSequenceSize(rootHash, VARIABLE, rootSequence, 2);
     String name = wrapHashedDbExceptionAsDecodeSpecNodeException(
-        hash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSequence.get(1)));
+        rootHash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSequence.get(1)));
     if (!isVariableName(name)) {
-      throw new DecodeVariableIllegalNameException(hash, name);
+      throw new DecodeVariableIllegalNameException(rootHash, name);
     }
-    return newVariableSpec(hash, name);
+    return newVariableSpec(rootHash, name);
   }
 
-  private <T> T readInnerSpec(SpecKind specKind, Hash rootHash, Hash hash, String path,
+  private <T> T readInnerSpec(SpecKind specKind, Hash outerHash, Hash hash, String path,
       Class<T> expectedClass) {
     Spec result = wrapObjectDbExceptionAsDecodeSpecNodeException(
-        specKind, rootHash, path, () -> getSpec(hash));
+        specKind, outerHash, path, () -> getSpec(hash));
     if (expectedClass.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
       return castResult;
     } else {
       throw new UnexpectedSpecNodeException(
-          rootHash, specKind, path, expectedClass, result.getClass());
+          outerHash, specKind, path, expectedClass, result.getClass());
     }
   }
 
-  private <T> T readInnerSpec(SpecKind specKind, Hash rootHash, Hash hash, String path, int index,
+  private <T> T readInnerSpec(SpecKind specKind, Hash outerHash, Hash hash, String path, int index,
       Class<T> expectedClass) {
     Spec result = wrapObjectDbExceptionAsDecodeSpecNodeException(
-        specKind, rootHash, path, index, () -> getSpec(hash));
+        specKind, outerHash, path, index, () -> getSpec(hash));
     if (expectedClass.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
       return castResult;
     } else {
       throw new UnexpectedSpecNodeException(
-          rootHash, specKind, path, index, expectedClass, result.getClass());
+          outerHash, specKind, path, index, expectedClass, result.getClass());
     }
   }
 
   // methods for creating Val Spec-s
 
   private ArraySpec newArraySpec(ValSpec elementSpec) throws HashedDbException {
-    var hash = writeArraySpecRoot(elementSpec);
-    return newArraySpec(hash, elementSpec);
+    var rootHash = writeArraySpecRoot(elementSpec);
+    return newArraySpec(rootHash, elementSpec);
   }
 
-  private ArraySpec newArraySpec(Hash hash, ValSpec elementSpec) {
-    return cacheSpec(new ArraySpec(hash, elementSpec));
+  private ArraySpec newArraySpec(Hash rootHash, ValSpec elementSpec) {
+    return cacheSpec(new ArraySpec(rootHash, elementSpec));
   }
 
   private LambdaSpec newLambdaSpec(ValSpec result, RecSpec parameters,
       RecSpec defaultArguments) throws HashedDbException {
-    var hash = writeLambdaSpecRoot(LAMBDA, result, parameters, defaultArguments);
-    return newLambdaSpec(hash, result, parameters, defaultArguments);
+    var rootHash = writeLambdaSpecRoot(LAMBDA, result, parameters, defaultArguments);
+    return newLambdaSpec(rootHash, result, parameters, defaultArguments);
   }
 
-  private LambdaSpec newLambdaSpec(Hash hash, ValSpec result, RecSpec parameters,
+  private LambdaSpec newLambdaSpec(Hash rootHash, ValSpec result, RecSpec parameters,
       RecSpec defaultArguments) {
-    return cacheSpec(new LambdaSpec(hash, result, parameters, defaultArguments));
+    return cacheSpec(new LambdaSpec(rootHash, result, parameters, defaultArguments));
   }
 
   private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
@@ -411,95 +411,95 @@ public class SpecDb {
     return newRecSpec(hash, itemSpecs);
   }
 
-  private RecSpec newRecSpec(Hash hash, Iterable<? extends ValSpec> itemSpecs) {
-    return cacheSpec(new RecSpec(hash, itemSpecs));
+  private RecSpec newRecSpec(Hash rootHash, Iterable<? extends ValSpec> itemSpecs) {
+    return cacheSpec(new RecSpec(rootHash, itemSpecs));
   }
 
   private StructSpec newStructSpec(RecSpec recSpec, ImmutableList<String> names)
       throws HashedDbException {
-    var hash = writeStructSpecRoot(recSpec, names);
-    return newStructSpec(hash, recSpec, names);
+    var rootHash = writeStructSpecRoot(recSpec, names);
+    return newStructSpec(rootHash, recSpec, names);
   }
 
-  private StructSpec newStructSpec(Hash hash, RecSpec recSpec, ImmutableList<String> names) {
-    return cacheSpec(new StructSpec(hash, recSpec, names));
+  private StructSpec newStructSpec(Hash rootHash, RecSpec recSpec, ImmutableList<String> names) {
+    return cacheSpec(new StructSpec(rootHash, recSpec, names));
   }
 
   private VariableSpec newVariableSpec(String name) throws HashedDbException {
-    var hash = writeVariableSpecRoot(name);
-    return newVariableSpec(hash, name);
+    var rootHash = writeVariableSpecRoot(name);
+    return newVariableSpec(rootHash, name);
   }
 
-  private VariableSpec newVariableSpec(Hash hash, String name) {
-    return cacheSpec(new VariableSpec(hash, name));
+  private VariableSpec newVariableSpec(Hash rootHash, String name) {
+    return cacheSpec(new VariableSpec(rootHash, name));
   }
 
   // methods for creating Expr Spec-s
 
   private ArrayExprSpec newArrayExprSpec(ValSpec elementSpec) throws HashedDbException {
     var evaluationSpec = arraySpec(elementSpec);
-    var hash = writeExprSpecRoot(ARRAY_EXPR, evaluationSpec);
-    return newArrayExprSpec(hash, evaluationSpec);
+    var rootHash = writeExprSpecRoot(ARRAY_EXPR, evaluationSpec);
+    return newArrayExprSpec(rootHash, evaluationSpec);
   }
 
-  private ArrayExprSpec newArrayExprSpec(Hash hash, ArraySpec evaluationSpec) {
-    return cacheSpec(new ArrayExprSpec(hash, evaluationSpec));
+  private ArrayExprSpec newArrayExprSpec(Hash rootHash, ArraySpec evaluationSpec) {
+    return cacheSpec(new ArrayExprSpec(rootHash, evaluationSpec));
   }
 
   private CallSpec newCallSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeExprSpecRoot(CALL, evaluationSpec);
-    return newCallSpec(hash, evaluationSpec);
+    var rootHash = writeExprSpecRoot(CALL, evaluationSpec);
+    return newCallSpec(rootHash, evaluationSpec);
   }
 
-  private CallSpec newCallSpec(Hash hash, ValSpec evaluationSpec) {
-    return cacheSpec(new CallSpec(hash, evaluationSpec));
+  private CallSpec newCallSpec(Hash rootHash, ValSpec evaluationSpec) {
+    return cacheSpec(new CallSpec(rootHash, evaluationSpec));
   }
 
   private ConstSpec newConstSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeExprSpecRoot(CONST, evaluationSpec);
-    return newConstSpec(hash, evaluationSpec);
+    var rootHash = writeExprSpecRoot(CONST, evaluationSpec);
+    return newConstSpec(rootHash, evaluationSpec);
   }
 
-  private ConstSpec newConstSpec(Hash hash, ValSpec evaluationSpec) {
-    return cacheSpec(new ConstSpec(hash, evaluationSpec));
+  private ConstSpec newConstSpec(Hash rootHash, ValSpec evaluationSpec) {
+    return cacheSpec(new ConstSpec(rootHash, evaluationSpec));
   }
 
   private InvokeSpec newInvokeSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeExprSpecRoot(INVOKE, evaluationSpec);
-    return newInvokeSpec(hash, evaluationSpec);
+    var rootHash = writeExprSpecRoot(INVOKE, evaluationSpec);
+    return newInvokeSpec(rootHash, evaluationSpec);
   }
 
-  private InvokeSpec newInvokeSpec(Hash hash, ValSpec evaluationSpec) {
-    return cacheSpec(new InvokeSpec(hash, evaluationSpec));
+  private InvokeSpec newInvokeSpec(Hash rootHash, ValSpec evaluationSpec) {
+    return cacheSpec(new InvokeSpec(rootHash, evaluationSpec));
   }
 
   private RecExprSpec newRecExprSpec(Iterable<? extends ValSpec> elementSpec)
       throws HashedDbException {
     var evaluationSpec = recSpec(elementSpec);
-    var hash = writeExprSpecRoot(RECORD_EXPR, evaluationSpec);
-    return newRecExprSpec(hash, evaluationSpec);
+    var rootHash = writeExprSpecRoot(RECORD_EXPR, evaluationSpec);
+    return newRecExprSpec(rootHash, evaluationSpec);
   }
 
-  private RecExprSpec newRecExprSpec(Hash hash, RecSpec evaluationSpec) {
-    return cacheSpec(new RecExprSpec(hash, evaluationSpec));
+  private RecExprSpec newRecExprSpec(Hash rootHash, RecSpec evaluationSpec) {
+    return cacheSpec(new RecExprSpec(rootHash, evaluationSpec));
   }
 
   private RefSpec newRefSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeExprSpecRoot(REF, evaluationSpec);
-    return newRefSpec(hash, evaluationSpec);
+    var rootHash = writeExprSpecRoot(REF, evaluationSpec);
+    return newRefSpec(rootHash, evaluationSpec);
   }
 
-  private RefSpec newRefSpec(Hash hash, ValSpec evaluationSpec) {
-    return cacheSpec(new RefSpec(hash, evaluationSpec));
+  private RefSpec newRefSpec(Hash rootHash, ValSpec evaluationSpec) {
+    return cacheSpec(new RefSpec(rootHash, evaluationSpec));
   }
 
   private SelectSpec newSelectSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var hash = writeExprSpecRoot(SELECT, evaluationSpec);
-    return newSelectSpec(hash, evaluationSpec);
+    var rootHash = writeExprSpecRoot(SELECT, evaluationSpec);
+    return newSelectSpec(rootHash, evaluationSpec);
   }
 
-  private SelectSpec newSelectSpec(Hash hash, ValSpec evaluationSpec) {
-    return cacheSpec(new SelectSpec(hash, evaluationSpec));
+  private SelectSpec newSelectSpec(Hash rootHash, ValSpec evaluationSpec) {
+    return cacheSpec(new SelectSpec(rootHash, evaluationSpec));
   }
 
   private <T extends Spec> T cacheSpec(T spec) {
@@ -551,8 +551,8 @@ public class SpecDb {
     return writeNonBaseSpecRoot(specKind, evaluationSpec.hash());
   }
 
-  private Hash writeNonBaseSpecRoot(SpecKind specKind, Hash data) throws HashedDbException {
-    return hashedDb.writeSequence(hashedDb.writeByte(specKind.marker()), data);
+  private Hash writeNonBaseSpecRoot(SpecKind specKind, Hash dataHash) throws HashedDbException {
+    return hashedDb.writeSequence(hashedDb.writeByte(specKind.marker()), dataHash);
   }
 
   private Hash writeBaseSpecRoot(SpecKind specKind) throws HashedDbException {
@@ -561,9 +561,9 @@ public class SpecDb {
 
   // Helper methods for reading
 
-  private ImmutableList<Hash> readSequenceHashes(Hash hash, Hash sequenceHash, SpecKind specKind,
-      String path) {
+  private ImmutableList<Hash> readSequenceHashes(
+      Hash rootHash, Hash sequenceHash, SpecKind specKind, String path) {
     return wrapHashedDbExceptionAsDecodeSpecNodeException(
-        hash, specKind, path, () -> hashedDb.readSequence(sequenceHash));
+        rootHash, specKind, path, () -> hashedDb.readSequence(sequenceHash));
   }
 }
