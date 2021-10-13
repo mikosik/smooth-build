@@ -216,24 +216,6 @@ public class SpecDb {
     return requireNonNullElseGet(specCache.get(hash), () -> readSpec(hash));
   }
 
-  private Spec getSpecOrChainException(Hash outerSpec, SpecKind specKind, Hash nodeHash,
-      String path) {
-    try {
-      return getSpec(nodeHash);
-    } catch (ObjectDbException e) {
-      throw new DecodeSpecNodeException(outerSpec, specKind, path, e);
-    }
-  }
-
-  private Spec getSpecOrChainException(Hash outerSpec, SpecKind specKind, Hash nodeHash,
-      String path, int index) {
-    try {
-      return getSpec(nodeHash);
-    } catch (ObjectDbException e) {
-      throw new DecodeSpecNodeException(outerSpec, specKind, path, index, e);
-    }
-  }
-
   private Spec readSpec(Hash hash) {
     List<Hash> rootSequence = readSpecRootSequence(hash);
     SpecKind specKind = decodeSpecMarker(hash, rootSequence.get(0));
@@ -297,22 +279,11 @@ public class SpecDb {
     return getDataAsSpecCastedTo(hash, rootSequence, specKind, RecSpec.class);
   }
 
-  private <T extends Spec> T getDataAsSpecCastedTo(Hash hash, List<Hash> rootSequence,
+  private <T extends Spec> T getDataAsSpecCastedTo(Hash rootHash, List<Hash> rootSequence,
       SpecKind specKind, Class<T> expectedSpecClass) {
-    Spec dataAsSpec = getDataAsSpec(hash, specKind, rootSequence);
-    if (expectedSpecClass.isInstance(dataAsSpec)) {
-      @SuppressWarnings("unchecked")
-      T result = (T) dataAsSpec;
-      return result;
-    } else {
-      throw new UnexpectedSpecNodeException(
-          hash, specKind, DATA_PATH, expectedSpecClass, dataAsSpec.getClass());
-    }
-  }
-
-  private Spec getDataAsSpec(Hash hash, SpecKind specKind, List<Hash> rootSequence) {
-    assertSpecRootSequenceSize(hash, specKind, rootSequence, 2);
-    return getSpecOrChainException(hash, specKind, rootSequence.get(DATA_INDEX), DATA_PATH);
+    assertSpecRootSequenceSize(rootHash, specKind, rootSequence, 2);
+    Hash hash = rootSequence.get(DATA_INDEX);
+    return readInnerSpec(specKind, rootHash, hash, DATA_PATH, expectedSpecClass);
   }
 
   private Spec readLambdaSpec(Hash hash, List<Hash> rootSequence, SpecKind specKind) {
@@ -322,27 +293,13 @@ public class SpecDb {
     if (data.size() != 3) {
       throw new UnexpectedSpecSequenceException(hash, specKind, DATA_PATH, 3, data.size());
     }
-    Spec result = getSpecOrChainException(
-        hash, specKind, data.get(LAMBDA_RESULT_INDEX), LAMBDA_RESULT_PATH);
-    if (!(result instanceof ValSpec resultSpec)) {
-      throw new UnexpectedSpecNodeException(
-          hash, specKind, LAMBDA_RESULT_PATH, ValSpec.class, result.getClass());
-    }
-
-    Spec parameters = getSpecOrChainException(
-        hash, specKind, data.get(LAMBDA_PARAMS_INDEX), LAMBDA_PARAMS_PATH);
-    if (!(parameters instanceof RecSpec parametersSpec)) {
-      throw new UnexpectedSpecNodeException(
-          hash, specKind, LAMBDA_PARAMS_PATH, RecSpec.class, parameters.getClass());
-    }
-
-    Spec defaultArguments = getSpecOrChainException(
-        hash, specKind, data.get(LAMBDA_DEF_ARGUMENTS_INDEX), LAMBDA_DEF_ARGUMENTS_PATH);
-    if (!(defaultArguments instanceof RecSpec argumentSpecs)) {
-      throw new UnexpectedSpecNodeException(
-          hash, specKind, LAMBDA_DEF_ARGUMENTS_PATH, RecSpec.class, defaultArguments.getClass());
-    }
-    return newLambdaSpec(hash, resultSpec, parametersSpec, argumentSpecs);
+    ValSpec result = readInnerSpec(specKind, hash, data.get(LAMBDA_RESULT_INDEX),
+        LAMBDA_RESULT_PATH, ValSpec.class);
+    RecSpec parameters = readInnerSpec(specKind, hash, data.get(LAMBDA_PARAMS_INDEX),
+        LAMBDA_PARAMS_PATH, RecSpec.class);
+    RecSpec defaultArguments = readInnerSpec(specKind, hash, data.get(LAMBDA_DEF_ARGUMENTS_INDEX),
+        LAMBDA_DEF_ARGUMENTS_PATH, RecSpec.class);
+    return newLambdaSpec(hash, result, parameters, defaultArguments);
   }
 
   private RecSpec readRecord(Hash hash, List<Hash> rootSequence) {
@@ -355,13 +312,7 @@ public class SpecDb {
     var builder = ImmutableList.<ValSpec>builder();
     var itemSpecHashes = readSequenceHashes(hash, itemSpecsHash, RECORD, DATA_PATH);
     for (int i = 0; i < itemSpecHashes.size(); i++) {
-      Spec spec = getSpecOrChainException(hash, RECORD, itemSpecHashes.get(i), DATA_PATH, i);
-      if (spec instanceof ValSpec valSpec) {
-        builder.add(valSpec);
-      } else {
-        throw new UnexpectedSpecNodeException(
-            hash, RECORD, "data", i, ValSpec.class, spec.getClass());
-      }
+      builder.add(readInnerSpec(RECORD, hash, itemSpecHashes.get(i), DATA_PATH, i, ValSpec.class));
     }
     return builder.build();
   }
@@ -373,28 +324,24 @@ public class SpecDb {
     if (data.size() != 2) {
       throw new UnexpectedSpecSequenceException(hash, STRUCT, DATA_PATH, 2, data.size());
     }
-    Spec itemsSpec = getSpecOrChainException(
-        hash, STRUCT, data.get(STRUCT_ITEMS_INDEX), STRUCT_ITEMS_PATH);
-    if (!(itemsSpec instanceof RecSpec recSpec)) {
-      throw new UnexpectedSpecNodeException(
-          hash, STRUCT, STRUCT_ITEMS_PATH, RecSpec.class, itemsSpec.getClass());
-    }
+    RecSpec recSpec = readInnerSpec(
+        STRUCT, hash, data.get(STRUCT_ITEMS_INDEX), STRUCT_ITEMS_PATH, RecSpec.class);
+    var names = readItemNames(hash, data, recSpec);
+    return newStructSpec(hash, recSpec, names);
+  }
+
+  private ImmutableList<String> readItemNames(Hash hash, List<Hash> data, RecSpec recSpec) {
     var nameHashes = readSequenceHashes(
         hash, data.get(STRUCT_NAMES_INDEX), STRUCT, STRUCT_NAMES_PATH);
     if (nameHashes.size() != recSpec.items().size()) {
       throw new DecodeStructSpecWrongNamesSizeException(
           hash, recSpec.items().size(), nameHashes.size());
     }
-    var names = readNames(hash, nameHashes);
-    return newStructSpec(hash, recSpec, names);
-  }
-
-  private ImmutableList<String> readNames(Hash hash, ImmutableList<Hash> sequence) {
     Builder<String> builder = ImmutableList.builder();
-    for (int i = 0; i < sequence.size(); i++) {
+    for (int i = 0; i < nameHashes.size(); i++) {
       final int index = i;
       builder.add(wrapHashedDbExceptionAsDecodeSpecNodeException(
-          hash, STRUCT, STRUCT_NAMES_PATH, index, () -> hashedDb.readString(sequence.get(index))));
+          hash, STRUCT, STRUCT_NAMES_PATH, index, () -> hashedDb.readString(nameHashes.get(index))));
     }
     return builder.build();
   }
@@ -407,6 +354,48 @@ public class SpecDb {
       throw new DecodeVariableIllegalNameException(hash, name);
     }
     return newVariableSpec(hash, name);
+  }
+
+  private <T> T readInnerSpec(SpecKind specKind, Hash rootHash, Hash hash, String path,
+      Class<T> expectedClass) {
+    Spec result = readInnerSpec(specKind, rootHash, hash, path);
+    if (expectedClass.isInstance(result)) {
+      @SuppressWarnings("unchecked")
+      T castResult = (T) result;
+      return castResult;
+    } else {
+      throw new UnexpectedSpecNodeException(
+          rootHash, specKind, path, expectedClass, result.getClass());
+    }
+  }
+
+  private Spec readInnerSpec(SpecKind specKind, Hash outerHash, Hash hash, String path) {
+    try {
+      return getSpec(hash);
+    } catch (ObjectDbException e) {
+      throw new DecodeSpecNodeException(outerHash, specKind, path, e);
+    }
+  }
+
+  private <T> T readInnerSpec(SpecKind specKind, Hash rootHash, Hash hash, String path, int index,
+      Class<T> expectedClass) {
+    Spec result = readInnerSpec(specKind, rootHash, hash, path, index);
+    if (expectedClass.isInstance(result)) {
+      @SuppressWarnings("unchecked")
+      T castResult = (T) result;
+      return castResult;
+    } else {
+      throw new UnexpectedSpecNodeException(
+          rootHash, specKind, path, index, expectedClass, result.getClass());
+    }
+  }
+
+  private Spec readInnerSpec(SpecKind specKind, Hash outerSpec, Hash hash, String path, int index) {
+    try {
+      return getSpec(hash);
+    } catch (ObjectDbException e) {
+      throw new DecodeSpecNodeException(outerSpec, specKind, path, index, e);
+    }
   }
 
   // methods for creating Val Spec-s
