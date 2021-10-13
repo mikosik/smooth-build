@@ -152,41 +152,41 @@ public class ObjectDb {
 
   // generic getter
 
-  public Obj get(Hash hash) {
-    List<Hash> hashes = decodeRootSequence(hash);
+  public Obj get(Hash rootHash) {
+    List<Hash> hashes = decodeRootSequence(rootHash);
     if (hashes.size() != 1 && hashes.size() != 2) {
-      throw wrongSizeOfRootSequenceException(hash, hashes.size());
+      throw wrongSizeOfRootSequenceException(rootHash, hashes.size());
     }
-    Spec spec = getSpecOrChainException(hash, hashes.get(0));
+    Spec spec = getSpecOrChainException(rootHash, hashes.get(0));
     if (spec.equals(specDb.nullSpec())) {
       if (hashes.size() != 1) {
-        throw nullObjRootException(hash, hashes.size());
+        throw nullObjRootException(rootHash, hashes.size());
       }
-      return spec.newObj(new MerkleRoot(hash, spec, null), this);
+      return spec.newObj(new MerkleRoot(rootHash, spec, null), this);
     } else {
       if (hashes.size() != 2) {
-        throw nonNullObjRootException(hash, hashes.size());
+        throw nonNullObjRootException(rootHash, hashes.size());
       }
       Hash dataHash = hashes.get(1);
-      return spec.newObj(new MerkleRoot(hash, spec, dataHash), this);
+      return spec.newObj(new MerkleRoot(rootHash, spec, dataHash), this);
     }
   }
 
-  private Spec getSpecOrChainException(Hash hash, Hash specHash) {
+  private Spec getSpecOrChainException(Hash rootHash, Hash specHash) {
     try {
       return specDb.getSpec(specHash);
     } catch (ObjectDbException e) {
-      throw new DecodeObjSpecException(hash, e);
+      throw new DecodeObjSpecException(rootHash, e);
     }
   }
 
-  private List<Hash> decodeRootSequence(Hash hash) {
+  private List<Hash> decodeRootSequence(Hash rootHash) {
     try {
-      return hashedDb.readSequence(hash);
+      return hashedDb.readSequence(rootHash);
     } catch (NoSuchDataException e) {
-      throw new NoSuchObjException(hash, e);
+      throw new NoSuchObjException(rootHash, e);
     } catch (HashedDbException e) {
-      throw cannotReadRootException(hash, e);
+      throw cannotReadRootException(rootHash, e);
     }
   }
 
@@ -348,13 +348,13 @@ public class ObjectDb {
   // method for writing Merkle-root to HashedDb
 
   private MerkleRoot writeRoot(Spec spec) throws HashedDbException {
-    Hash hash = hashedDb.writeSequence(spec.hash());
-    return new MerkleRoot(hash, spec, null);
+    Hash rootHash = hashedDb.writeSequence(spec.hash());
+    return new MerkleRoot(rootHash, spec, null);
   }
 
   private MerkleRoot writeRoot(Spec spec, Hash dataHash) throws HashedDbException {
-    Hash hash = hashedDb.writeSequence(spec.hash(), dataHash);
-    return new MerkleRoot(hash, spec, dataHash);
+    Hash rootHash = hashedDb.writeSequence(spec.hash(), dataHash);
+    return new MerkleRoot(rootHash, spec, dataHash);
   }
 
   // methods for writing data of Expr-s
