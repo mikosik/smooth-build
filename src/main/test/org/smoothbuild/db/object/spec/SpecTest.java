@@ -387,7 +387,7 @@ public class SpecTest {
   }
 
   private static LambdaSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return SPEC_DB.lambdaSpec(result, recSpec(parameters));
+    return SPEC_DB.lambdaSpec(result, parameters);
   }
 
   private static RecSpec recSpec(ValSpec... items) {

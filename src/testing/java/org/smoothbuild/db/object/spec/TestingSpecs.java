@@ -21,7 +21,7 @@ public class TestingSpecs {
   public static final ValSpec ANY = SPEC_DB.anySpec();
   public static final ValSpec BLOB = SPEC_DB.blobSpec();
   public static final ValSpec BOOL = SPEC_DB.boolSpec();
-  public static final ValSpec LAMBDA = SPEC_DB.lambdaSpec(BLOB, SPEC_DB.recSpec(list(BOOL)));
+  public static final ValSpec LAMBDA = SPEC_DB.lambdaSpec(BLOB, list(BOOL));
   public static final ValSpec VARIABLE = SPEC_DB.variableSpec("A");
   public static final ValSpec INT = SPEC_DB.intSpec();
   public static final ValSpec NOTHING = SPEC_DB.nothingSpec();

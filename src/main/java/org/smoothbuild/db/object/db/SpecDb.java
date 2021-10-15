@@ -142,8 +142,9 @@ public class SpecDb {
     return boolSpec;
   }
 
-  public LambdaSpec lambdaSpec(ValSpec result, RecSpec parameters) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newLambdaSpec(result, parameters));
+  public LambdaSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newLambdaSpec(result, recSpec(parameters)));
   }
 
   public IntSpec intSpec() {

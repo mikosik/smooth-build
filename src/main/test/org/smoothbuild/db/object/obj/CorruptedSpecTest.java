@@ -288,12 +288,13 @@ public class CorruptedSpecTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme
        * to save lambda spec in HashedDb.
        */
-      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      var parameterSpecs = list(strSpec(), boolSpec());
+      RecSpec parameterRec = recSpec(parameterSpecs);
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
               hash(intSpec()),
-              hash(parameterSpecs)
+              hash(parameterRec)
           )
       );
       assertThat(specHash)

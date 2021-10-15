@@ -282,10 +282,6 @@ public class TestingContext {
   }
 
   public LambdaSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return lambdaSpec(result, recSpec(parameters));
-  }
-
-  public LambdaSpec lambdaSpec(ValSpec result, RecSpec parameters) {
     return specDb().lambdaSpec(result, parameters);
   }
 
