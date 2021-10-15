@@ -319,7 +319,7 @@ public class SpecTest {
   @ParameterizedTest
   @MethodSource("lambda_parameters_cases")
   public void lambda_parameters(LambdaSpec spec, RecSpec expected) {
-    assertThat(spec.parameters())
+    assertThat(spec.parametersRec())
         .isEqualTo(expected);
   }
 

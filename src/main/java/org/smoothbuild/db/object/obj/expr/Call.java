@@ -44,9 +44,9 @@ public class Call extends Expr {
         throw new DecodeExprWrongEvaluationSpecOfComponentException(
             hash(), spec(), "function.result", evaluationSpec(), lambdaSpec.result());
       }
-      if (!Objects.equals(lambdaSpec.parameters(), arguments.spec().evaluationSpec())) {
-        throw new DecodeExprWrongEvaluationSpecOfComponentException(
-            hash(), spec(), "arguments", lambdaSpec.parameters(), arguments.spec().evaluationSpec());
+      if (!Objects.equals(lambdaSpec.parametersRec(), arguments.spec().evaluationSpec())) {
+        throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(), "arguments",
+            lambdaSpec.parametersRec(), arguments.spec().evaluationSpec());
       }
     } else {
       throw new DecodeExprWrongEvaluationSpecOfComponentException(

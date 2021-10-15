@@ -211,10 +211,10 @@ public class ObjectDb {
   }
 
   private static void verifyArguments(LambdaSpec lambdaSpec, RecExpr arguments, String name) {
-    if (!Objects.equals(lambdaSpec.parameters(), arguments.evaluationSpec())) {
+    if (!Objects.equals(lambdaSpec.parametersRec(), arguments.evaluationSpec())) {
       throw new IllegalArgumentException((name + " evaluation spec %s should be equal to "
           + "function evaluation spec parameters %s.")
-              .formatted(arguments.evaluationSpec().name(), lambdaSpec.parameters().name()));
+              .formatted(arguments.evaluationSpec().name(), lambdaSpec.parametersRec().name()));
     }
   }
 

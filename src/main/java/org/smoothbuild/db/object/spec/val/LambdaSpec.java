@@ -11,27 +11,33 @@ import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 
+import com.google.common.collect.ImmutableList;
+
 public class LambdaSpec extends ValSpec {
   private final ValSpec result;
-  private final RecSpec parameters;
+  private final RecSpec parametersRec;
 
-  public LambdaSpec(Hash hash, ValSpec result, RecSpec parameters) {
+  public LambdaSpec(Hash hash, ValSpec result, RecSpec parametersRec) {
     super(hash, LAMBDA);
     this.result = result;
-    this.parameters = parameters;
+    this.parametersRec = parametersRec;
   }
 
   public ValSpec result() {
     return result;
   }
 
-  public RecSpec parameters() {
-    return parameters;
+  public ImmutableList<ValSpec> parameters() {
+    return parametersRec.items();
+  }
+
+  public RecSpec parametersRec() {
+    return parametersRec;
   }
 
   @Override
   public String name() {
-    String map = parameters.items()
+    String map = parametersRec.items()
         .stream()
         .map(Spec::name)
         .collect(joining(","));

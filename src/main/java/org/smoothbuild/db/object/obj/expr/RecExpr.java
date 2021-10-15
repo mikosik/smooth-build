@@ -11,6 +11,7 @@ import org.smoothbuild.db.object.exc.DecodeRecExprWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
+import org.smoothbuild.db.object.spec.val.RecSpec;
 
 import com.google.common.collect.ImmutableList;
 
@@ -26,6 +27,11 @@ public class RecExpr extends Expr {
   @Override
   public RecExprSpec spec() {
     return (RecExprSpec) super.spec();
+  }
+
+  @Override
+  public RecSpec evaluationSpec() {
+    return spec().evaluationSpec();
   }
 
   public ImmutableList<Expr> items() {

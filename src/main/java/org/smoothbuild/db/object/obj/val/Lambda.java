@@ -29,9 +29,9 @@ public class Lambda extends Val {
   protected RecExpr defaultArguments() {
     RecExpr defaultArguments = readSequenceElementObj(
         DATA_PATH, dataHash(), DEFAULT_ARGUMENTS_INDEX, DATA_SEQUENCE_SIZE, RecExpr.class);
-    if (!Objects.equals(spec().parameters(), defaultArguments.evaluationSpec())) {
+    if (!Objects.equals(spec().parametersRec(), defaultArguments.evaluationSpec())) {
       throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(),
-          DEFAULT_ARGUMENTS_PATH, spec().parameters(), defaultArguments.evaluationSpec());
+          DEFAULT_ARGUMENTS_PATH, spec().parametersRec(), defaultArguments.evaluationSpec());
     }
     return defaultArguments;
   }

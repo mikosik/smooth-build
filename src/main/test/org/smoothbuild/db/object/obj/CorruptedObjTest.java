@@ -838,7 +838,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(objHash, spec,
-              DATA_PATH + "[1]", spec.parameters(), arguments.spec().evaluationSpec()));
+              DATA_PATH + "[1]", spec.parametersRec(), arguments.spec().evaluationSpec()));
     }
   }
 
