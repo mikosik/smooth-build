@@ -43,8 +43,8 @@ public class TypeToSpecConverter {
       return objectFactory.nothingSpec();
     } else if (type instanceof StringType stringType) {
       return visit(stringType);
-    } else if (type instanceof StructType struct) {
-      Iterable<ValSpec> fieldSpecs = map(struct.fields(), f -> visit(f.type()));
+    } else if (type instanceof StructType structType) {
+      Iterable<ValSpec> fieldSpecs = map(structType.fields(), this::visit);
       return objectFactory.recSpec(fieldSpecs);
     } else if (type instanceof Variable) {
       throw new UnsupportedOperationException();

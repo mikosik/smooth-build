@@ -19,7 +19,7 @@ public interface TypeFactory {
 
   public StringType string();
 
-  public StructType struct(String name, ImmutableList<ItemSignature> fields);
+  public StructType struct(String name, ImmutableList<Type> fields, ImmutableList<String> names);
 
   public Variable variable(String name);
 }

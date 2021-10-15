@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_HEAD_FUNCTION;
@@ -217,11 +216,11 @@ public class TypeTest {
         .addAll(ELEMENTARY_TYPES)
         .add(A)
         .add(B)
-        .add(struct("MyStruct", list()))
-        .add(struct("MyStruct", list(itemSignature(BOOL, "field"))))
-        .add(struct("MyStruct2", list(itemSignature(BOOL, "field"))))
-        .add(struct("MyStruct", list(itemSignature(STRING, "field"))))
-        .add(struct("MyStruct", list(itemSignature(BOOL, "field2"))))
+        .add(struct("MyStruct", list(), list()))
+        .add(struct("MyStruct", list(BOOL), list("field")))
+        .add(struct("MyStruct2", list(BOOL), list("field")))
+        .add(struct("MyStruct", list(STRING), list("field")))
+        .add(struct("MyStruct", list(BOOL), list("field2")))
         .build();
     for (Type type : types) {
       equalsTester.addEqualityGroup(type, type);

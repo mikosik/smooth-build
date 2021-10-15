@@ -5,12 +5,12 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_SINGLE_VARIABLE_POLYTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_VALID_POLYTYPES;
-import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.testing.TestingModuleLoader.err;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.stream.Stream;
@@ -238,7 +238,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
               .loadsSuccessfully()
-              .containsType(structExpression("MyStruct", itemSignature(STRING, "field")));
+              .containsType(structT("MyStruct", list(STRING), list("field")));
         }
 
         @Test

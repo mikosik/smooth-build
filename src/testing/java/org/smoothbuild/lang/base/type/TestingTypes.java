@@ -2,8 +2,6 @@ package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.util.Lists.list;
 
-import java.util.Optional;
-
 import org.smoothbuild.lang.base.type.api.AnyType;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BaseType;
@@ -11,7 +9,6 @@ import org.smoothbuild.lang.base.type.api.BlobType;
 import org.smoothbuild.lang.base.type.api.BoolType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
@@ -34,13 +31,10 @@ public class TestingTypes {
   public static final IntType INT = TYPING.int_();
   public static final NothingType NOTHING = TYPING.nothing();
   public static final StringType STRING = TYPING.string();
-  public static final StructType PERSON = struct("Person", list(
-      new ItemSignature(STRING, "firstName", Optional.empty()),
-      new ItemSignature(STRING, "lastName", Optional.empty())));
-  public static final StructType FLAG = struct("Flag", list(
-          new ItemSignature(BOOL, "flag", Optional.empty())));
-  public static final StructType DATA = struct("Data", list(
-          new ItemSignature(BLOB, "data", Optional.empty())));
+  public static final StructType PERSON = struct(
+      "Person", list(STRING, STRING), list("firstName", "lastName"));
+  public static final StructType FLAG = struct("Flag", list(BOOL), list("flag"));
+  public static final StructType DATA = struct("Data", list(BLOB), list("data"));
   public static final Variable A = variable("A");
   public static final Variable B = variable("B");
   public static final Variable C = variable("C");
@@ -97,7 +91,8 @@ public class TestingTypes {
     return TYPING.variable(a);
   }
 
-  public static StructType struct(String name, ImmutableList<ItemSignature> fields) {
-    return TYPING.struct(name, fields);
+  public static StructType struct(String name, ImmutableList<Type> fields,
+      ImmutableList<String> names) {
+    return TYPING.struct(name, fields, names);
   }
 }

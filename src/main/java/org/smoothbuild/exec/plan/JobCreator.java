@@ -56,7 +56,6 @@ import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.AnnotationExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -231,23 +230,21 @@ public class JobCreator {
   // FieldReadExpression
 
   private Job selectLazy(Scope<Job> scope, SelectExpression select) {
-    var type = select.field().type();
+    var type = select.type();
     var location = select.location();
     return new LazyJob(type, location, () -> selectReadEager(scope, select, type));
   }
 
   private Job selectReadEager(Scope<Job> scope, SelectExpression select) {
-    var type = select.field().type();
+    var type = select.type();
     return selectReadEager(scope, select, type);
   }
 
   private Job selectReadEager(Scope<Job> scope, SelectExpression expression, Type type) {
-    var structType = (StructType) expression.expression().type();
-    var name = expression.field().name().get();
-    var algorithm = new ReadRecItemAlgorithm(
-        structType.fieldIndex(name), toSpecConverter.visit(type));
+    var index = expression.index();
+    var algorithm = new ReadRecItemAlgorithm(index, toSpecConverter.visit(type));
     var dependencies = list(eagerJobFor(scope, expression.expression()));
-    var info = new TaskInfo(SELECT, "." + name, expression.location());
+    var info = new TaskInfo(SELECT, "." + index, expression.location());
     return new Task(type, dependencies, info, algorithm);
   }
 

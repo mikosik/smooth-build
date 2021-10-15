@@ -69,9 +69,16 @@ public class TypeInferrer {
         super.visitStruct(struct);
         var signatures = Optionals.pullUp(
             map(struct.fields(), f -> f.type().map(t -> f.toItemSignature())));
-        struct.setType(signatures.map(s -> typing.struct(struct.name(), s)));
-        struct.constructor().setType(signatures.map(isig -> typing.function(struct.type().get(),
-            map(isig, ItemSignature::type))));
+        struct.setType(signatures.map(s -> structType(struct, s)));
+        struct.constructor().setType(
+            signatures.map(s -> typing.function(struct.type().get(), map(s, ItemSignature::type))));
+      }
+
+      private StructType structType(StructNode struct, ImmutableList<ItemSignature> signatures) {
+        var name = struct.name();
+        var types = map(signatures, ItemSignature::type);
+        var names = map(signatures, ItemSignature::saneName);
+        return typing.struct(name, types, names);
       }
 
       @Override
@@ -211,7 +218,7 @@ public class TypeInferrer {
                 logBuffer.log(parseError(expr.location(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               } else {
-                expr.setType(((StructType) t).fieldWithName(expr.fieldName()).type());
+                expr.setType(((StructType) t).fieldWithName(expr.fieldName()));
               }
             },
             () -> expr.setType(empty())

@@ -1,12 +1,10 @@
 package org.smoothbuild.lang.base.type.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.util.Sets.set;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -16,44 +14,46 @@ import com.google.common.collect.ImmutableMap.Builder;
  * This class is immutable.
  */
 public class StructTypeImpl extends AbstractType implements StructType {
-  private final ImmutableList<ItemSignature> fields;
-  private final ImmutableMap<String, Integer> fieldNameToIndex;
+  private final ImmutableList<Type> fields;
+  private final ImmutableMap<String, Integer> nameToIndex;
 
-  public StructTypeImpl(String name, ImmutableList<ItemSignature> fields) {
+  public StructTypeImpl(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
     super(name, set());
+    checkArgument(fields.size() == names.size(), "fields and names must have equal sizes");
     this.fields = fields;
-    this.fieldNameToIndex = fieldsMap(fields);
+    this.nameToIndex = fieldsMap(names);
   }
 
-  private static ImmutableMap<String, Integer> fieldsMap(List<ItemSignature> fields) {
+  private static ImmutableMap<String, Integer> fieldsMap(ImmutableList<String> names) {
     Builder<String, Integer> builder = ImmutableMap.builder();
-    for (int i = 0; i < fields.size(); i++) {
-      Optional<String> name = fields.get(i).name();
-      if (name.isPresent()) {
-        builder.put(name.get(), i);
-      }
+    for (int i = 0; i < names.size(); i++) {
+      builder.put(names.get(i), i);
     }
     return builder.build();
   }
 
   @Override
-  public ImmutableList<ItemSignature> fields() {
+  public ImmutableList<Type> fields() {
     return fields;
+  }
+
+  public ImmutableMap<String, Integer> nameToIndex() {
+    return nameToIndex;
   }
 
   @Override
   public boolean containsFieldWithName(String name) {
-    return fieldNameToIndex.containsKey(name);
+    return nameToIndex.containsKey(name);
   }
 
   @Override
-  public ItemSignature fieldWithName(String name) {
+  public Type fieldWithName(String name) {
     return fields.get(fieldIndex(name));
   }
 
   @Override
   public int fieldIndex(String name) {
-    return fieldNameToIndex.get(name);
+    return nameToIndex.get(name);
   }
 
   @Override
@@ -63,6 +63,7 @@ public class StructTypeImpl extends AbstractType implements StructType {
     }
     return object instanceof StructTypeImpl thatStruct
         && this.name().equals(thatStruct.name())
-        && this.fields.equals(thatStruct.fields);
+        && this.fields.equals(thatStruct.fields)
+        && this.nameToIndex.equals(thatStruct.nameToIndex);
   }
 }

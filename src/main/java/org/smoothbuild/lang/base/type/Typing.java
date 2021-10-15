@@ -22,7 +22,6 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -104,8 +103,8 @@ public class Typing {
     return typeFactory.string();
   }
 
-  public StructType struct(String name, ImmutableList<ItemSignature> fields) {
-    return typeFactory.struct(name, fields);
+  public StructType struct(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
+    return typeFactory.struct(name, fields, names);
   }
 
   public FunctionType function(Type resultType, Iterable<Type> parameters) {

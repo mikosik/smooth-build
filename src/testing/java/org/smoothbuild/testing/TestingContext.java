@@ -13,7 +13,9 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -604,8 +606,15 @@ public class TestingContext {
     return typing().string();
   }
 
-  public StructType structT(String name, ImmutableList<ItemSignature> fields) {
-    return typing().struct(name, fields);
+  public StructType structT(String name, ImmutableList<Type> fields) {
+    var names = IntStream.range(0, fields.size())
+        .mapToObj(Objects::toString)
+        .collect(toImmutableList());
+    return typing().struct(name, fields, names);
+  }
+
+  public StructType structT(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
+    return typing().struct(name, fields, names);
   }
 
   public FunctionType functionT(Type resultType, Item... parameters) {
@@ -691,8 +700,8 @@ public class TestingContext {
   }
 
   public SelectExpression selectExpression(
-      int line, ItemSignature field, Expression expression) {
-    return new SelectExpression(field, expression, loc(line));
+      int line, Type field, int index, Expression expression) {
+    return new SelectExpression(field, index, expression, loc(line));
   }
 
   public CallExpression callExpression(
@@ -748,14 +757,10 @@ public class TestingContext {
 
   public AnnotationExpression annotationExpression(
       int line, StringLiteralExpression implementedBy, boolean pure) {
-    StructType type = typing().struct("Native", list(
-        new ItemSignature(typing().string(), "path", Optional.empty()),
-        new ItemSignature(typing().blob(), "content", Optional.empty())));
+    StructType type = typing().struct("Native",
+        list(typing().string(), typing().blob()),
+        list("path", "content"));
     return new AnnotationExpression(type, implementedBy, pure, loc(line));
-  }
-
-  public StructType structExpression(String name, ItemSignature... fields) {
-    return typing().struct(name, list(fields));
   }
 
   public Constructor constrExpression(

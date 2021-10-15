@@ -71,22 +71,21 @@ public class TestedType {
       "abc"
   );
   public static final TestedType STRUCT = new TestedType(
-      struct("Person", list(
-          new ItemSignature(TestingTypes.STRING, "name", Optional.empty()))),
+      struct("Person", list(TestingTypes.STRING), list("name")),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", list(new ItemSignature(TestingTypes.BLOB, "value", Optional.empty()))),
+      struct("Data", list(TestingTypes.BLOB), list("value")),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", list(new ItemSignature(TestingTypes.BOOL, "value", Optional.empty()))),
+      struct("Flag", list(TestingTypes.BOOL), list("value")),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),

@@ -1,16 +1,15 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.INT;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
+import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Constructor;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.testing.TestingContext;
 
@@ -118,7 +117,7 @@ public class ExpressionLoadingTest extends TestingContext {
 
     @Test
     public void with_constructor_reference() {
-      StructType struct = structExpression("MyStruct", itemSignature(STRING, "field"));
+      StructType struct = structT("MyStruct", list(STRING), list("field"));
       Constructor constr = constrExpression(1, struct, "myStruct",
           parameterExpression(2, STRING, "field"));
       module("""
@@ -132,7 +131,7 @@ public class ExpressionLoadingTest extends TestingContext {
 
     @Test
     public void with_constructor_reference_and_argument() {
-      StructType struct = structExpression("MyStruct", itemSignature(STRING, "field"));
+      StructType struct = structT("MyStruct", list(STRING), list("field"));
       module("""
           MyStruct {
             String field
@@ -171,8 +170,7 @@ public class ExpressionLoadingTest extends TestingContext {
 
   @Test
   public void select_expression() {
-    ItemSignature field = itemSignature(STRING, "field");
-    StructType myStruct = structExpression("MyStruct", field);
+    StructType myStruct = structT("MyStruct", list(STRING), list("field"));
     module("""
           MyStruct {
             String field,
@@ -183,7 +181,8 @@ public class ExpressionLoadingTest extends TestingContext {
           """)
         .loadsSuccessfully()
         .containsReferencable(
-            valueExpression(5, STRING, "result", selectExpression(6, field, referenceExpression(5, myStruct, "struct"))));
+            valueExpression(5, STRING, "result",
+                selectExpression(6, STRING, 0, referenceExpression(5, myStruct, "struct"))));
   }
 
   @Nested
@@ -294,14 +293,15 @@ public class ExpressionLoadingTest extends TestingContext {
 
     @Test
     public void to_constructor() {
+      StructType structType = structT("MyStruct", list(), list());
       module("""
           MyStruct {}
           MyStruct() result =
             myStruct;
           """)
           .loadsSuccessfully()
-          .containsReferencable(valueExpression(2, f(structExpression("MyStruct")), "result",
-              referenceExpression(3, f(structExpression("MyStruct")), "myStruct")));
+          .containsReferencable(valueExpression(2, f(structType), "result",
+              referenceExpression(3, f(structType), "myStruct")));
     }
   }
 
@@ -373,7 +373,7 @@ public class ExpressionLoadingTest extends TestingContext {
           }
           """)
           .loadsSuccessfully()
-          .containsType(structExpression("MyStruct", itemSignature(STRING, "field")));
+          .containsType(structT("MyStruct", list(STRING), list("field")));
     }
   }
 }

@@ -10,7 +10,6 @@ import org.smoothbuild.lang.base.type.api.BlobType;
 import org.smoothbuild.lang.base.type.api.BoolType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
@@ -75,8 +74,8 @@ public class TypeFactoryImpl implements TypeFactory {
   }
 
   @Override
-  public StructType struct(String name, ImmutableList<ItemSignature> fields) {
-    return new StructTypeImpl(name, fields);
+  public StructType struct(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
+    return new StructTypeImpl(name, fields, names);
   }
 
   @Override

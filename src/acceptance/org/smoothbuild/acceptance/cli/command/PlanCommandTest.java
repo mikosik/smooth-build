@@ -131,7 +131,7 @@ public class PlanCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
-            String .field
+            String .0
               MyStruct building-evaluation
                 MyStruct(String) :myStruct
                 String "abc"

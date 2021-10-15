@@ -23,7 +23,6 @@ import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.AnnotationExpression;
@@ -100,9 +99,8 @@ public class ReferencableLoader {
   }
 
   private AnnotationExpression loadNative(NativeNode nativeNode) {
-    StructType type = typing.struct("Native", list(
-        new ItemSignature(typing.string(), "path", Optional.empty()),
-        new ItemSignature(typing.blob(), "content", Optional.empty())));
+    StructType type = typing.struct(
+        "Native", list(typing.string(), typing.blob()), list("path", "content"));
     var path = createStringLiteral(nativeNode.path());
     return new AnnotationExpression(type, path, nativeNode.isPure(), nativeNode.location());
   }
@@ -174,10 +172,11 @@ public class ReferencableLoader {
     }
 
     private Expression createSelect(SelectNode selectNode) {
-      StructType type = (StructType) selectNode.expr().type().get();
-      ItemSignature field = type.fieldWithName(selectNode.fieldName());
+      StructType structType = (StructType) selectNode.expr().type().get();
+      int index = structType.fieldIndex(selectNode.fieldName());
+      Type itemType = structType.fields().get(index);
       Expression expression = createExpression(selectNode.expr());
-      return new SelectExpression(field, expression, selectNode.location());
+      return new SelectExpression(itemType, index, expression, selectNode.location());
     }
 
     private Expression createReference(RefNode ref) {
