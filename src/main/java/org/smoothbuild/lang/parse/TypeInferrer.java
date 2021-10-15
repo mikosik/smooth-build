@@ -67,16 +67,11 @@ public class TypeInferrer {
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
-        if (struct.fields().stream().anyMatch(f -> f.type().isEmpty())) {
-          struct.setType(empty());
-          struct.constructor().setType(empty());
-          return;
-        }
-        var fieldSignatures = map(struct.fields(), ItemNode::toItemSignature);
-        StructType structType = typing.struct(struct.name(), fieldSignatures);
-        struct.setType(structType);
-        var fieldTypes = Optionals.pullUp(map(struct.fields(), ItemNode::type));
-        struct.constructor().setType(fieldTypes.map(types -> typing.function(structType, types)));
+        var signatures = Optionals.pullUp(
+            map(struct.fields(), f -> f.type().map(t -> f.toItemSignature())));
+        struct.setType(signatures.map(s -> typing.struct(struct.name(), s)));
+        struct.constructor().setType(signatures.map(isig -> typing.function(struct.type().get(),
+            map(isig, ItemSignature::type))));
       }
 
       @Override
