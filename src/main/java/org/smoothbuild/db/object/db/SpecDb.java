@@ -82,9 +82,6 @@ public class SpecDb {
   public static final String LAMBDA_RESULT_PATH = DATA_PATH + "[" + LAMBDA_RESULT_INDEX + "]";
   private static final int LAMBDA_PARAMS_INDEX = 1;
   public static final String LAMBDA_PARAMS_PATH = DATA_PATH + "[" + LAMBDA_PARAMS_INDEX + "]";
-  public static final int LAMBDA_DEF_ARGUMENTS_INDEX = 2;
-  public static final String LAMBDA_DEF_ARGUMENTS_PATH =
-      DATA_PATH + "[" + LAMBDA_DEF_ARGUMENTS_INDEX + "]";
   private static final int STRUCT_ITEMS_INDEX = 0;
   public static final String STRUCT_ITEMS_PATH = DATA_PATH + "[" + STRUCT_ITEMS_INDEX + "]";
   private static final int STRUCT_NAMES_INDEX = 1;
@@ -145,9 +142,8 @@ public class SpecDb {
     return boolSpec;
   }
 
-  public LambdaSpec lambdaSpec(ValSpec result, RecSpec parameters, RecSpec defaultArguments) {
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newLambdaSpec(result, parameters, defaultArguments));
+  public LambdaSpec lambdaSpec(ValSpec result, RecSpec parameters) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newLambdaSpec(result, parameters));
   }
 
   public IntSpec intSpec() {
@@ -290,16 +286,14 @@ public class SpecDb {
     assertSpecRootSequenceSize(rootHash, specKind, rootSequence, 2);
     Hash dataHash = rootSequence.get(DATA_INDEX);
     List<Hash> data = readSequenceHashes(rootHash, dataHash, specKind, DATA_PATH);
-    if (data.size() != 3) {
-      throw new UnexpectedSpecSequenceException(rootHash, specKind, DATA_PATH, 3, data.size());
+    if (data.size() != 2) {
+      throw new UnexpectedSpecSequenceException(rootHash, specKind, DATA_PATH, 2, data.size());
     }
     ValSpec result = readInnerSpec(specKind, rootHash, data.get(LAMBDA_RESULT_INDEX),
         LAMBDA_RESULT_PATH, ValSpec.class);
     RecSpec parameters = readInnerSpec(specKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
         LAMBDA_PARAMS_PATH, RecSpec.class);
-    RecSpec defaultArguments = readInnerSpec(specKind, rootHash, data.get(LAMBDA_DEF_ARGUMENTS_INDEX),
-        LAMBDA_DEF_ARGUMENTS_PATH, RecSpec.class);
-    return newLambdaSpec(rootHash, result, parameters, defaultArguments);
+    return newLambdaSpec(rootHash, result, parameters);
   }
 
   private RecSpec readRecord(Hash rootHash, List<Hash> rootSequence) {
@@ -395,15 +389,13 @@ public class SpecDb {
     return cacheSpec(new ArraySpec(rootHash, elementSpec));
   }
 
-  private LambdaSpec newLambdaSpec(ValSpec result, RecSpec parameters,
-      RecSpec defaultArguments) throws HashedDbException {
-    var rootHash = writeLambdaSpecRoot(result, parameters, defaultArguments);
-    return newLambdaSpec(rootHash, result, parameters, defaultArguments);
+  private LambdaSpec newLambdaSpec(ValSpec result, RecSpec parameters) throws HashedDbException {
+    var rootHash = writeLambdaSpecRoot(result, parameters);
+    return newLambdaSpec(rootHash, result, parameters);
   }
 
-  private LambdaSpec newLambdaSpec(Hash rootHash, ValSpec result, RecSpec parameters,
-      RecSpec defaultArguments) {
-    return cacheSpec(new LambdaSpec(rootHash, result, parameters, defaultArguments));
+  private LambdaSpec newLambdaSpec(Hash rootHash, ValSpec result, RecSpec parameters) {
+    return cacheSpec(new LambdaSpec(rootHash, result, parameters));
   }
 
   private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
@@ -514,9 +506,8 @@ public class SpecDb {
     return writeNonBaseSpecRoot(ARRAY, elementSpec.hash());
   }
 
-  private Hash writeLambdaSpecRoot(ValSpec result, RecSpec parameters, RecSpec defaultArguments)
-      throws HashedDbException {
-    var hash = hashedDb.writeSequence(result.hash(), parameters.hash(), defaultArguments.hash());
+  private Hash writeLambdaSpecRoot(ValSpec result, RecSpec parameters) throws HashedDbException {
+    var hash = hashedDb.writeSequence(result.hash(), parameters.hash());
     return writeNonBaseSpecRoot(LAMBDA, hash);
   }
 

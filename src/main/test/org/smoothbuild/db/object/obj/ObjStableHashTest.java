@@ -105,7 +105,7 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void call_expression_with_one_argument() {
       assertThat(callExpr(constExpr(lambdaVal()), list(strExpr("abc"))).hash())
-          .isEqualTo(Hash.decode("9f9d4152c7bf1e895dbc491cb5956f64e5e9be41"));
+          .isEqualTo(Hash.decode("f4b7bc2125ffa4571067bfd85390bcf46584da07"));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class ObjStableHashTest extends TestingContext {
       LambdaSpec spec = lambdaSpec(intSpec(), list(strSpec()));
       Lambda lambda = lambdaVal(spec, intExpr(), list(strExpr()));
       assertThat(callExpr(constExpr(lambda), list(strExpr("abc"))).hash())
-          .isEqualTo(Hash.decode("9f9d4152c7bf1e895dbc491cb5956f64e5e9be41"));
+          .isEqualTo(Hash.decode("f4b7bc2125ffa4571067bfd85390bcf46584da07"));
     }
   }
 
@@ -154,7 +154,7 @@ public class ObjStableHashTest extends TestingContext {
               intExpr(1),
               list());
       assertThat(lambda.hash())
-          .isEqualTo(Hash.decode("9042b902ebdd3177d0f9015565bab03c688f7856"));
+          .isEqualTo(Hash.decode("e1c7825345302089d7e28e815eac72245200b795"));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class ObjStableHashTest extends TestingContext {
               intExpr(1),
               list(intExpr(2)));
       assertThat(lambda.hash())
-          .isEqualTo(Hash.decode("773d182ffee1bb89acaaf655f90abb093cc4c3b1"));
+          .isEqualTo(Hash.decode("ff158bd0763f8c71e1d86765c412da59fb2610c3"));
     }
 
     @Test
@@ -176,7 +176,7 @@ public class ObjStableHashTest extends TestingContext {
               intExpr(1),
               list(intExpr(2), strExpr("abc")));
       assertThat(lambda.hash())
-          .isEqualTo(Hash.decode("592b30314f7f016697ffb29bfc616aa2d2db32b8"));
+          .isEqualTo(Hash.decode("c4dc7e349abd8e3bd85e4cccad58a7343db5b2ab"));
     }
   }
 

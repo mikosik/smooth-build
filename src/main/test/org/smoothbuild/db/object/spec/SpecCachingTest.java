@@ -73,6 +73,6 @@ public class SpecCachingTest extends TestingContext {
 
   private static LambdaSpec lambdaSpec(SpecDb specDb) {
     RecSpec parameters = specDb.recSpec(list(specDb.boolSpec(), specDb.blobSpec()));
-    return specDb.lambdaSpec(specDb.strSpec(), parameters, parameters);
+    return specDb.lambdaSpec(specDb.strSpec(), parameters);
   }
 }

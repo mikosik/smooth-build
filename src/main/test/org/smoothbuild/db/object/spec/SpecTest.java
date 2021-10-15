@@ -331,22 +331,6 @@ public class SpecTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("lambda_default_arguments_cases")
-  public void lambda_default_arguments(LambdaSpec spec, RecSpec expected) {
-    assertThat(spec.defaultArguments())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> lambda_default_arguments_cases() {
-    return list(
-        arguments(lambdaSpec(INT, list(), list()), recSpec()),
-        arguments(lambdaSpec(BLOB, list(BOOL), list(ABSENT)), recSpec(ABSENT)),
-        arguments(lambdaSpec(
-            BLOB, list(BOOL, INT), list(BOOL, ABSENT)), recSpec(BOOL, ABSENT))
-    );
-  }
-
   @Nested
   class _struct {
     @ParameterizedTest
@@ -402,13 +386,8 @@ public class SpecTest {
     }
   }
 
-  private static ValSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
-    return lambdaSpec(result, parameters, parameters);
-  }
-
-  private static LambdaSpec lambdaSpec(ValSpec result,
-      ImmutableList<ValSpec> parameters, ImmutableList<ValSpec> defaultArguments) {
-    return SPEC_DB.lambdaSpec(result, recSpec(parameters), recSpec(defaultArguments));
+  private static LambdaSpec lambdaSpec(ValSpec result, ImmutableList<ValSpec> parameters) {
+    return SPEC_DB.lambdaSpec(result, recSpec(parameters));
   }
 
   private static RecSpec recSpec(ValSpec... items) {

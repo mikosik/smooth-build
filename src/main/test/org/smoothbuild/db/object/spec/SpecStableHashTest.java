@@ -15,7 +15,7 @@ public class SpecStableHashTest extends TestingContext {
     assertHash(anySpec(), "b35d79d5718f7bba2cda55c29e2408c13ffc8cd5");
     assertHash(blobSpec(), "0a2b2a825165ae9742c63b0c6ddafc22f0bd3b1e");
     assertHash(boolSpec(), "47f9cc533a5f0c6f650ff0528c0d54d6d2d9d9ab");
-    assertHash(lambdaSpec(), "d544e7163e43d4c81f530518c02fee1aeb6f7643");
+    assertHash(lambdaSpec(), "72f4e3d7262b25cf65222b035b02e520c32f7a30");
     assertHash(intSpec(), "8be891c7170d4d1bbca0ffcb3fce71285c55aee4");
     assertHash(nothingSpec(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(recSpec(list(blobSpec())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
@@ -28,7 +28,7 @@ public class SpecStableHashTest extends TestingContext {
     assertHash(arraySpec(anySpec()), "2dfdcb5ccf6df3057cb84565af5b67f64c685e9c");
     assertHash(arraySpec(blobSpec()), "7fbebe7b9e6730b6b49fbd19811677bbd1d8880b");
     assertHash(arraySpec(boolSpec()), "b2d929df4b382081405170f09fbe0febb32f547d");
-    assertHash(arraySpec(lambdaSpec()), "af8cc230d0308447f54838e7551fe029c9f6b13d");
+    assertHash(arraySpec(lambdaSpec()), "35f599db587ed8b7b52bb0ce3a07a2d4d9c1c223");
     assertHash(arraySpec(intSpec()), "ff10a58462549d6f2a55c51be139ae52b62bf801");
     assertHash(arraySpec(nothingSpec()), "223052eec1e2f74ed0234fd1ba43f4d49e7e43db");
     assertHash(arraySpec(strSpec()), "dfeac8190688130683d51d719055d46c47cec4d2");
