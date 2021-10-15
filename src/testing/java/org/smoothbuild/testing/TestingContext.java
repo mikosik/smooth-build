@@ -326,7 +326,11 @@ public class TestingContext {
   }
 
   public StructSpec structSpec(RecSpec recSpec, ImmutableList<String> names) {
-    return specDb().structSpec(recSpec, names);
+    return structSpec("MyStruct", recSpec, names);
+  }
+
+  public StructSpec structSpec(String name, RecSpec recSpec, ImmutableList<String> names) {
+    return specDb().structSpec(name, recSpec, names);
   }
 
   public VariableSpec variableSpec(String name) {

@@ -82,9 +82,11 @@ public class SpecDb {
   public static final String LAMBDA_RESULT_PATH = DATA_PATH + "[" + LAMBDA_RESULT_INDEX + "]";
   private static final int LAMBDA_PARAMS_INDEX = 1;
   public static final String LAMBDA_PARAMS_PATH = DATA_PATH + "[" + LAMBDA_PARAMS_INDEX + "]";
-  private static final int STRUCT_ITEMS_INDEX = 0;
+  private static final int STRUCT_NAME_INDEX = 0;
+  public static final String STRUCT_NAME_PATH = DATA_PATH + "[" + STRUCT_NAME_INDEX + "]";
+  private static final int STRUCT_ITEMS_INDEX = 1;
   public static final String STRUCT_ITEMS_PATH = DATA_PATH + "[" + STRUCT_ITEMS_INDEX + "]";
-  private static final int STRUCT_NAMES_INDEX = 1;
+  private static final int STRUCT_NAMES_INDEX = 2;
   public static final String STRUCT_NAMES_PATH = DATA_PATH + "[" + STRUCT_NAMES_INDEX + "]";
 
 
@@ -159,9 +161,9 @@ public class SpecDb {
     return strSpec;
   }
 
-  public StructSpec structSpec(RecSpec recSpec, ImmutableList<String> names) {
+  public StructSpec structSpec(String name, RecSpec recSpec, ImmutableList<String> names) {
     checkArgument(recSpec.items().size() == names.size());
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStructSpec(recSpec, names));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStructSpec(name, recSpec, names));
   }
 
   public VariableSpec variableSpec(String name) {
@@ -316,13 +318,15 @@ public class SpecDb {
     assertSpecRootSequenceSize(rootHash, STRUCT, rootSequence, 2);
     Hash dataHash = rootSequence.get(DATA_INDEX);
     List<Hash> data = readSequenceHashes(rootHash, dataHash, STRUCT, DATA_PATH);
-    if (data.size() != 2) {
+    if (data.size() != 3) {
       throw new UnexpectedSpecSequenceException(rootHash, STRUCT, DATA_PATH, 2, data.size());
     }
+    String name = wrapHashedDbExceptionAsDecodeSpecNodeException(
+        rootHash, STRUCT, STRUCT_NAME_PATH, () -> hashedDb.readString(data.get(STRUCT_NAME_INDEX)));
     RecSpec recSpec = readInnerSpec(
         STRUCT, rootHash, data.get(STRUCT_ITEMS_INDEX), STRUCT_ITEMS_PATH, RecSpec.class);
     var names = readItemNames(rootHash, data, recSpec);
-    return newStructSpec(rootHash, recSpec, names);
+    return newStructSpec(rootHash, name, recSpec, names);
   }
 
   private ImmutableList<String> readItemNames(Hash rootHash, List<Hash> data, RecSpec recSpec) {
@@ -408,14 +412,15 @@ public class SpecDb {
     return cacheSpec(new RecSpec(rootHash, itemSpecs));
   }
 
-  private StructSpec newStructSpec(RecSpec recSpec, ImmutableList<String> names)
-      throws HashedDbException {
-    var rootHash = writeStructSpecRoot(recSpec, names);
-    return newStructSpec(rootHash, recSpec, names);
+  private StructSpec newStructSpec(
+      String name, RecSpec recSpec, ImmutableList<String> names) throws HashedDbException {
+    var rootHash = writeStructSpecRoot(name, recSpec, names);
+    return newStructSpec(rootHash, name, recSpec, names);
   }
 
-  private StructSpec newStructSpec(Hash rootHash, RecSpec recSpec, ImmutableList<String> names) {
-    return cacheSpec(new StructSpec(rootHash, recSpec, names));
+  private StructSpec newStructSpec(
+      Hash rootHash, String name, RecSpec recSpec, ImmutableList<String> names) {
+    return cacheSpec(new StructSpec(rootHash, name, recSpec, names));
   }
 
   private VariableSpec newVariableSpec(String name) throws HashedDbException {
@@ -517,10 +522,11 @@ public class SpecDb {
     return writeNonBaseSpecRoot(RECORD, itemsHash);
   }
 
-  private Hash writeStructSpecRoot(RecSpec recSpec, ImmutableList<String> names)
+  private Hash writeStructSpecRoot(String name, RecSpec recSpec, ImmutableList<String> names)
       throws HashedDbException {
+    var nameHash = hashedDb.writeString(name);
     var namesSequenceHash = writeNamesSequence(names);
-    var specData = hashedDb.writeSequence(recSpec.hash(), namesSequenceHash);
+    var specData = hashedDb.writeSequence(nameHash, recSpec.hash(), namesSequenceHash);
     return writeNonBaseSpecRoot(STRUCT, specData);
   }
 

@@ -918,23 +918,25 @@ public class CorruptedSpecTest extends TestingContext {
   @Nested
   class _struct_spec {
     @Test
-    public void learng_creating_spec() throws Exception {
+    public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
        * to save struct spec in HashedDb.
        */
+      String name = "MyStruct";
       RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
-      String name1 = "field1";
-      String name2 = "field2";
+      String field1 = "field1";
+      String field2 = "field2";
       Hash hash = hash(
           hash(STRUCT.marker()),
           hash(
+              hash(name),
               hash(itemsSpec),
-              hash(hash(name1), hash(name2))
+              hash(hash(field1), hash(field2))
           )
       );
       assertThat(hash)
-          .isEqualTo(structSpec(itemsSpec, list(name1, name2)).hash());
+          .isEqualTo(structSpec(itemsSpec, list(field1, field2)).hash());
     }
 
     @Test
@@ -953,15 +955,17 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Test
-    public void with_items_pointing_nowhere() throws Exception {
-      Hash itemsHash = Hash.of(33);
-      String name1 = "field1";
-      String name2 = "field2";
+    public void with_name_pointing_nowhere() throws Exception {
+      Hash nameHash = Hash.of(33);
+      RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
+      String field1 = "field1";
+      String field2 = "field2";
       Hash hash = hash(
           hash(STRUCT.marker()),
           hash(
-              itemsHash,
-              hash(hash(name1), hash(name2))
+              nameHash,
+              hash(itemsSpec),
+              hash(hash(field1), hash(field2))
           )
       );
       assertThatGetSpec(hash)
@@ -969,31 +973,72 @@ public class CorruptedSpecTest extends TestingContext {
     }
 
     @Test
-    public void with_items_not_being_rec_spec() throws Exception {
-      IntSpec itemsSpec = intSpec();
-      String name1 = "field1";
-      String name2 = "field2";
+    public void with_illegal_name() throws Exception {
+      Hash nameHash = hash(ByteString.of((byte) -64));
+      RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
+      String field1 = "field1";
+      String field2 = "field2";
       Hash hash = hash(
           hash(STRUCT.marker()),
           hash(
+              nameHash,
               hash(itemsSpec),
-              hash(hash(name1), hash(name2))
+              hash(hash(field1), hash(field2))
+          )
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeSpecNodeException(hash, STRUCT, DATA_PATH + "[0]"))
+          .withCause(DecodeStringException.class);
+    }
+
+    @Test
+    public void with_items_pointing_nowhere() throws Exception {
+      Hash itemsHash = Hash.of(33);
+      String name = "MyStruct";
+      String field1 = "field1";
+      String field2 = "field2";
+      Hash hash = hash(
+          hash(STRUCT.marker()),
+          hash(
+              hash(name),
+              itemsHash,
+              hash(hash(field1), hash(field2))
+          )
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeSpecNodeException(hash, STRUCT, DATA_PATH + "[1]"));
+    }
+
+    @Test
+    public void with_items_not_being_rec_spec() throws Exception {
+      String name = "MyStruct";
+      IntSpec itemsSpec = intSpec();
+      String field1 = "field1";
+      String field2 = "field2";
+      Hash hash = hash(
+          hash(STRUCT.marker()),
+          hash(
+              hash(name),
+              hash(itemsSpec),
+              hash(hash(field1), hash(field2))
           )
       );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecNodeException(
-              hash, STRUCT, DATA_PATH, 0, RecSpec.class, IntSpec.class));
+              hash, STRUCT, DATA_PATH, 1, RecSpec.class, IntSpec.class));
     }
 
     @Test
     public void with_names_size_different_than_items_size() throws Exception {
+      String name = "MyStruct";
       RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
-      String name1 = "field1";
+      String field1 = "field1";
       Hash hash = hash(
           hash(STRUCT.marker()),
           hash(
+              hash(name),
               hash(itemsSpec),
-              hash(hash(name1))
+              hash(hash(field1))
           )
       );
       assertThatGetSpec(hash)
@@ -1002,18 +1047,20 @@ public class CorruptedSpecTest extends TestingContext {
 
     @Test
     public void with_names_containing_illegal_string() throws Exception {
+      String name = "MyStruct";
       RecSpec itemsSpec = recSpec(list(intSpec(), strSpec()));
-      String name1 = "field1";
-      Hash name2Hash = hash(ByteString.of((byte) -64));
+      String field1 = "field1";
+      Hash field2Hash = hash(ByteString.of((byte) -64));
       Hash hash = hash(
           hash(STRUCT.marker()),
           hash(
+              hash(name),
               hash(itemsSpec),
-              hash(hash(name1), name2Hash)
+              hash(hash(field1), field2Hash)
           )
       );
       assertThatGetSpec(hash)
-          .throwsException(new DecodeSpecNodeException(hash, STRUCT, "data[1][1]"))
+          .throwsException(new DecodeSpecNodeException(hash, STRUCT, "data[2][1]"))
           .withCause(DecodeStringException.class);
     }
   }

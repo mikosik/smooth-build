@@ -334,6 +334,20 @@ public class SpecTest {
   @Nested
   class _struct {
     @ParameterizedTest
+    @MethodSource("struct_name_cases")
+    public void struct_name(StructSpec spec, String expected) {
+      assertThat(spec.name())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> struct_name_cases() {
+      return list(
+          arguments(structSpec("MyStruct", recSpec(), list()), "MyStruct"),
+          arguments(structSpec("", recSpec(), list()), "")
+      );
+    }
+
+    @ParameterizedTest
     @MethodSource("struct_items_cases")
     public void struct_items(StructSpec spec, RecSpec expected) {
       assertThat(spec.rec())
@@ -403,7 +417,11 @@ public class SpecTest {
   }
 
   private static StructSpec structSpec(RecSpec items, ImmutableList<String> names) {
-    return SPEC_DB.structSpec(items, names);
+    return structSpec("MyStruct", items, names);
+  }
+
+  private static StructSpec structSpec(String name, RecSpec items, ImmutableList<String> names) {
+    return SPEC_DB.structSpec(name, items, names);
   }
 
   private static ConstSpec constSpec(ValSpec evaluationSpec) {
