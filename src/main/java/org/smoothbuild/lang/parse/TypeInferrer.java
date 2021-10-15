@@ -213,12 +213,12 @@ public class TypeInferrer {
                 expr.setType(empty());
                 logBuffer.log(parseError(expr.location(), "Type " + t.q()
                     + " is not a struct so it doesn't have " + q(expr.fieldName()) + " field."));
-              } else if (!st.containsFieldWithName(expr.fieldName())) {
+              } else if (!StructType.containsField(st, expr.fieldName())) {
                 expr.setType(empty());
                 logBuffer.log(parseError(expr.location(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               } else {
-                expr.setType(((StructType) t).fieldWithName(expr.fieldName()));
+                expr.setType(StructType.fieldGet((StructType) t, expr.fieldName()));
               }
             },
             () -> expr.setType(empty())

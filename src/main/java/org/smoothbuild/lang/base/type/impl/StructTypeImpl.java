@@ -37,23 +37,9 @@ public class StructTypeImpl extends AbstractType implements StructType {
     return fields;
   }
 
+  @Override
   public ImmutableMap<String, Integer> nameToIndex() {
     return nameToIndex;
-  }
-
-  @Override
-  public boolean containsFieldWithName(String name) {
-    return nameToIndex.containsKey(name);
-  }
-
-  @Override
-  public Type fieldWithName(String name) {
-    return fields.get(fieldIndex(name));
-  }
-
-  @Override
-  public int fieldIndex(String name) {
-    return nameToIndex.get(name);
   }
 
   @Override

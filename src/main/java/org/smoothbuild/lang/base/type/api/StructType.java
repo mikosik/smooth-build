@@ -1,13 +1,18 @@
 package org.smoothbuild.lang.base.type.api;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public interface StructType extends Type {
   public ImmutableList<Type> fields();
 
-  public boolean containsFieldWithName(String name);
+  public ImmutableMap<String, Integer> nameToIndex();
 
-  public Type fieldWithName(String name);
+  public static Type fieldGet(StructType type, String name) {
+    return type.fields().get(type.nameToIndex().get(name));
+  }
 
-  public int fieldIndex(String name);
+  public static boolean containsField(StructType type, String name) {
+    return type.nameToIndex().containsKey(name);
+  }
 }
