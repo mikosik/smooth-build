@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.spec.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
-import static org.smoothbuild.lang.base.type.api.StructType.fieldsMap;
+import static org.smoothbuild.lang.base.type.api.StructTypes.fieldsMap;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;

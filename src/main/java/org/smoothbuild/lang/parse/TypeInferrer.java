@@ -2,6 +2,8 @@ package org.smoothbuild.lang.parse;
 
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.api.ItemSignature.toItemSignatures;
+import static org.smoothbuild.lang.base.type.api.StructTypes.containsField;
+import static org.smoothbuild.lang.base.type.api.StructTypes.fieldGet;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -213,12 +215,12 @@ public class TypeInferrer {
                 expr.setType(empty());
                 logBuffer.log(parseError(expr.location(), "Type " + t.q()
                     + " is not a struct so it doesn't have " + q(expr.fieldName()) + " field."));
-              } else if (!StructType.containsField(st, expr.fieldName())) {
+              } else if (!containsField(st, expr.fieldName())) {
                 expr.setType(empty());
                 logBuffer.log(parseError(expr.location(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               } else {
-                expr.setType(StructType.fieldGet((StructType) t, expr.fieldName()));
+                expr.setType(fieldGet((StructType) t, expr.fieldName()));
               }
             },
             () -> expr.setType(empty())

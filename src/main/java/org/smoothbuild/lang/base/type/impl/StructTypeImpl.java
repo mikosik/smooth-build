@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.type.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.lang.base.type.api.StructTypes.fieldsMap;
 import static org.smoothbuild.util.Sets.set;
 
 import org.smoothbuild.lang.base.type.api.StructType;
@@ -21,7 +22,7 @@ public class StructTypeImpl extends AbstractType implements StructType {
     super(name, set());
     checkArgument(fields.size() == names.size(), "fields and names must have equal sizes");
     this.fields = fields;
-    this.nameToIndex = StructType.fieldsMap(names);
+    this.nameToIndex = fieldsMap(names);
   }
 
   @Override
