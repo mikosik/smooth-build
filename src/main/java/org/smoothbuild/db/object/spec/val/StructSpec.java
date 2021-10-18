@@ -39,6 +39,7 @@ public class StructSpec extends ValSpec implements StructType {
     return nameToIndex;
   }
 
+  @Override
   public ImmutableList<String> names() {
     return names;
   }

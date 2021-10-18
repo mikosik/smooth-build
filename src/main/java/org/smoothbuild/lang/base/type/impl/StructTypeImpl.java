@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class StructTypeImpl extends AbstractType implements StructType {
   private final ImmutableList<? extends Type> fields;
+  private final ImmutableList<String> names;
   private final ImmutableMap<String, Integer> nameToIndex;
 
   public StructTypeImpl(String name, ImmutableList<? extends Type> fields,
@@ -22,12 +23,18 @@ public class StructTypeImpl extends AbstractType implements StructType {
     super(name, set());
     checkArgument(fields.size() == names.size(), "fields and names must have equal sizes");
     this.fields = fields;
+    this.names = names;
     this.nameToIndex = fieldsMap(names);
   }
 
   @Override
   public ImmutableList<? extends Type> fields() {
     return fields;
+  }
+
+  @Override
+  public ImmutableList<String> names() {
+    return names;
   }
 
   @Override
