@@ -404,7 +404,7 @@ public class CorruptedObjTest extends TestingContext {
        * in HashedDb.
        */
       var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var lambda = lambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
+      var lambda = lambdaVal(lambdaSpec, intExpr());
       Const function = constExpr(lambda);
       RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
       Hash objHash =
@@ -519,7 +519,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void arguments_is_val_instead_of_expr() throws Exception {
       var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var lambda = lambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
+      var lambda = lambdaVal(lambdaSpec, intExpr());
       Const function = constExpr(lambda);
       Hash objHash =
           hash(
@@ -538,7 +538,7 @@ public class CorruptedObjTest extends TestingContext {
     public void arguments_component_evaluation_spec_is_not_erecord_but_different_expr()
         throws Exception {
       var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var lambda = lambdaVal(lambdaSpec, intExpr(), list(strExpr(), intExpr()));
+      var lambda = lambdaVal(lambdaSpec, intExpr());
       Const function = constExpr(lambda);
       CallSpec spec = callSpec();
       Hash objHash =
@@ -557,8 +557,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void evaluation_spec_is_different_than_function_evaluation_spec_result()
         throws Exception {
-      Const function = constExpr(lambdaVal(
-          lambdaSpec(intSpec(), list(strSpec())), intExpr(), list(strExpr())));
+      Const function = constExpr(lambdaVal(lambdaSpec(intSpec(), list(strSpec())), intExpr()));
       RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(strSpec());
       Hash objHash =
@@ -578,8 +577,7 @@ public class CorruptedObjTest extends TestingContext {
     public void function_evaluation_spec_parameters_does_not_match_arguments_evaluation_specs()
         throws Exception {
       LambdaSpec lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), boolSpec()));
-      Const function = constExpr(lambdaVal(
-          lambdaSpec, intExpr(), list(strExpr(), boolExpr())));
+      Const function = constExpr(lambdaVal(lambdaSpec, intExpr()));
       RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(intSpec());
       Hash objHash =
@@ -677,22 +675,14 @@ public class CorruptedObjTest extends TestingContext {
        * in HashedDb.
        */
       Const bodyExpr = boolExpr();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
       LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash objHash =
           hash(
               hash(spec),
-              hash(
-                  hash(bodyExpr),
-                  hash(arguments)
-              )
+              hash(bodyExpr)
           );
-      assertThat(((Lambda) objectDb().get(objHash)).data().body())
+      assertThat(((Lambda) objectDb().get(objHash)).body())
           .isEqualTo(bodyExpr);
-      assertThat(((Lambda) objectDb().get(objHash)).data().defaultArguments())
-          .isEqualTo(arguments);
     }
 
     @Test
@@ -703,141 +693,47 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const bodyExpr = boolExpr();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
       LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash dataHash = hash(
-          hash(bodyExpr),
-          hash(arguments)
-      );
+      Hash dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           spec,
           dataHash,
-          (Hash objHash) -> ((Lambda) objectDb().get(objHash)).data());
+          (Hash objHash) -> ((Lambda) objectDb().get(objHash)).body());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
           lambdaSpec(),
-          (Hash objHash) -> ((Lambda) objectDb().get(objHash)).data());
-    }
-
-    @Test
-    public void data_is_sequence_with_one_element() throws Exception {
-      Const bodyExpr = boolExpr();
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(bodyExpr)
-              )
-          );
-      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(objHash, spec, DATA_PATH, 2, 1));
-    }
-
-    @Test
-    public void data_is_sequence_with_three_elements() throws Exception {
-      Const bodyExpr = boolExpr();
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash defaultArguments = hash(arguments);
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  hash(bodyExpr),
-                  defaultArguments,
-                  defaultArguments
-              )
-          );
-
-      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(objHash, spec, DATA_PATH, 2, 3));
+          (Hash objHash) -> ((Lambda) objectDb().get(objHash)).body());
     }
 
     @Test
     public void body_is_val_instead_of_expr() throws Exception {
       Bool bodyExpr = boolVal(true);
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
       LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash objHash =
           hash(
               hash(spec),
-              hash(
-                  hash(bodyExpr),
-                  hash(arguments)
-              )
+              hash(bodyExpr)
           );
-      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
+      assertCall(() -> ((Lambda) objectDb().get(objHash)).body())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH + "[0]", Expr.class, Bool.class));
+              objHash, spec, DATA_PATH, Expr.class, Bool.class));
     }
 
     @Test
     public void body_evaluation_spec_is_not_equal_function_spec_result() throws Exception {
       Const bodyExpr = intExpr(3);
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = strExpr("abc");
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
       LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
       Hash objHash =
           hash(
               hash(spec),
-              hash(
-                  hash(bodyExpr),
-                  hash(arguments)
-              )
+              hash(bodyExpr)
           );
-      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
+      assertCall(() -> ((Lambda) objectDb().get(objHash)).body())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-              objHash, spec, DATA_PATH + "[0]", intSpec(), boolSpec()));
-    }
-
-    @Test
-    public void default_arguments_is_val_instead_of_expr() throws Exception {
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec()));
-      Hash bodyHash = hash(boolExpr());
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  bodyHash,
-                  hash(intVal())
-              )
-          );
-      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH, 1, RecExpr.class, Int.class));
-    }
-
-    @Test
-    public void default_argument_evaluation_spec_is_not_equal_function_eval_spec_parameter()
-        throws Exception {
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
-      Hash bodyHash = hash(boolExpr());
-
-      Const defaultArgument1 = intExpr(1);
-      Const defaultArgument2 = boolExpr();
-      RecExpr arguments = eRecExpr(list(defaultArgument1, defaultArgument2));
-      Hash objHash =
-          hash(
-              hash(spec),
-              hash(
-                  bodyHash,
-                  hash(arguments)
-              )
-          );
-      assertCall(() -> ((Lambda) objectDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(objHash, spec,
-              DATA_PATH + "[1]", spec.parametersRec(), arguments.spec().evaluationSpec()));
+              objHash, spec, DATA_PATH, intSpec(), boolSpec()));
     }
   }
 

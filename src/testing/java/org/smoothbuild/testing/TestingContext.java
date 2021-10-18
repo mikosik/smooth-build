@@ -453,11 +453,11 @@ public class TestingContext {
 
   public Lambda lambdaVal(Expr body) {
     LambdaSpec spec = lambdaSpec(body.evaluationSpec(), list(strSpec()));
-    return lambdaVal(spec, body, list(strExpr()));
+    return lambdaVal(spec, body);
   }
 
-  public Lambda lambdaVal(LambdaSpec spec, Expr body, List<Expr> defaultArguments) {
-    return objectDb().lambdaVal(spec, body, eRecExpr(defaultArguments));
+  public Lambda lambdaVal(LambdaSpec spec, Expr body) {
+    return objectDb().lambdaVal(spec, body);
   }
 
   public Int intVal() {

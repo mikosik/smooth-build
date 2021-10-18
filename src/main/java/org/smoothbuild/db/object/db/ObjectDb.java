@@ -80,14 +80,12 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBoolVal(value));
   }
 
-  public Lambda lambdaVal(LambdaSpec spec, Expr body, RecExpr defaultArguments) {
+  public Lambda lambdaVal(LambdaSpec spec, Expr body) {
     if (!Objects.equals(spec.result(), body.evaluationSpec())) {
       throw new IllegalArgumentException("`spec` specifies result as " + spec.result().name()
           + " but body.evaluationSpec() is " + body.evaluationSpec().name() + ".");
     }
-    verifyArguments(spec, defaultArguments, "Default arguments");
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newLambdaVal(spec, body, defaultArguments));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newLambdaVal(spec, body));
   }
 
   public Int intVal(BigInteger value) {
@@ -338,9 +336,9 @@ public class ObjectDb {
     return specDb.bool().newObj(root, this);
   }
 
-  private Lambda newLambdaVal(LambdaSpec spec, Expr body, RecExpr defaultArguments)
+  private Lambda newLambdaVal(LambdaSpec spec, Expr body)
       throws HashedDbException {
-    var data = writeLambdaData(body, defaultArguments);
+    var data = writeLambdaData(body);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -421,8 +419,8 @@ public class ObjectDb {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeLambdaData(Expr body, RecExpr defaultArguments) throws HashedDbException {
-    return hashedDb.writeSequence(body.hash(), defaultArguments.hash());
+  private Hash writeLambdaData(Expr body) {
+    return body.hash();
   }
 
   private Hash writeIntData(BigInteger value) throws HashedDbException {

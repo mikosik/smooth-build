@@ -105,15 +105,15 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void call_expression_with_one_argument() {
       assertThat(callExpr(constExpr(lambdaVal()), list(strExpr("abc"))).hash())
-          .isEqualTo(Hash.decode("f4b7bc2125ffa4571067bfd85390bcf46584da07"));
+          .isEqualTo(Hash.decode("dcc7713d99ef11f816501e79c7539b800ebeddd3"));
     }
 
     @Test
     public void call_expression_without_arguments() {
       LambdaSpec spec = lambdaSpec(intSpec(), list(strSpec()));
-      Lambda lambda = lambdaVal(spec, intExpr(), list(strExpr()));
+      Lambda lambda = lambdaVal(spec, intExpr());
       assertThat(callExpr(constExpr(lambda), list(strExpr("abc"))).hash())
-          .isEqualTo(Hash.decode("f4b7bc2125ffa4571067bfd85390bcf46584da07"));
+          .isEqualTo(Hash.decode("dcc7713d99ef11f816501e79c7539b800ebeddd3"));
     }
   }
 
@@ -149,34 +149,25 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void with_no_parameters() {
       Lambda lambda =
-          lambdaVal(
-              lambdaSpec(intSpec(), list()),
-              intExpr(1),
-              list());
+          lambdaVal(lambdaSpec(intSpec(), list()), intExpr(1));
       assertThat(lambda.hash())
-          .isEqualTo(Hash.decode("e1c7825345302089d7e28e815eac72245200b795"));
+          .isEqualTo(Hash.decode("337bd07ddf18547d72c6ad93705ef00ae087cc3b"));
     }
 
     @Test
     public void with_one_parameter() {
       Lambda lambda =
-          lambdaVal(
-              lambdaSpec(intSpec(), list(intSpec())),
-              intExpr(1),
-              list(intExpr(2)));
+          lambdaVal(lambdaSpec(intSpec(), list(intSpec())), intExpr(1));
       assertThat(lambda.hash())
-          .isEqualTo(Hash.decode("ff158bd0763f8c71e1d86765c412da59fb2610c3"));
+          .isEqualTo(Hash.decode("f5ab6c8ecc79081d233c4b1df33cdd5ad5e3e937"));
     }
 
     @Test
     public void with_two_parameters() {
       Lambda lambda =
-          lambdaVal(
-              lambdaSpec(intSpec(), list(intSpec(), strSpec())),
-              intExpr(1),
-              list(intExpr(2), strExpr("abc")));
+          lambdaVal(lambdaSpec(intSpec(), list(intSpec(), strSpec())), intExpr(1));
       assertThat(lambda.hash())
-          .isEqualTo(Hash.decode("c4dc7e349abd8e3bd85e4cccad58a7343db5b2ab"));
+          .isEqualTo(Hash.decode("004270e88a71120738cc7c9a6283b10bc92a0b57"));
     }
   }
 

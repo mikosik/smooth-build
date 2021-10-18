@@ -24,8 +24,6 @@ import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 
-import com.google.common.collect.ImmutableList;
-
 public class TypeToSpecConverter {
   private final ObjectFactory objectFactory;
 

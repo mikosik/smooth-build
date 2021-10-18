@@ -99,8 +99,8 @@ public class CallTest extends TestingContext {
   @Test
   public void hash_of_calls_with_different_function_is_not_the_same() {
     LambdaSpec spec = lambdaSpec(intSpec(), list(strSpec()));
-    Const function1 = constExpr(lambdaVal(spec, intExpr(1), list(strExpr())));
-    Const function2 = constExpr(lambdaVal(spec, intExpr(2), list(strExpr())));
+    Const function1 = constExpr(lambdaVal(spec, intExpr(1)));
+    Const function2 = constExpr(lambdaVal(spec, intExpr(2)));
     List<Const> arguments = list(strExpr()) ;
     assertThat(callExpr(function1, arguments).hash())
         .isNotEqualTo(callExpr(function2, arguments).hash());

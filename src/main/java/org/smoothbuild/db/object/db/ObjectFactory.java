@@ -99,8 +99,8 @@ public class ObjectFactory {
     return objectDb.boolVal(value);
   }
 
-  public Lambda lambda(LambdaSpec spec, Expr body, RecExpr defaultArguments) {
-    return objectDb.lambdaVal(spec, body, defaultArguments);
+  public Lambda lambda(LambdaSpec spec, Expr body) {
+    return objectDb.lambdaVal(spec, body);
   }
 
   public Int intValue(BigInteger value) {
