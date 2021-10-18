@@ -10,8 +10,14 @@ import org.smoothbuild.testing.TestingContext;
 
 public class StructTest extends TestingContext {
   @Test
-  public void creating_struct_with_rec_different_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> animalVal(recVal(list(strVal()))))
+  public void creating_struct_with_item_spec_different_than_specified_in_its_spec_causes_exception() {
+    assertCall(() -> structVal(animalSpec(), list(strVal("rabbit"), strVal("7"))))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void creating_struct_with_item_count_different_than_specified_in_its_spec_causes_exception() {
+    assertCall(() -> structVal(animalSpec(), list(strVal("rabbit"))))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -22,18 +28,21 @@ public class StructTest extends TestingContext {
   }
 
   @Test
-  public void rec_contains_object_passed_to_builder() {
-    Rec rec = animalRecVal();
-    Struc_ struct = animalVal(rec);
-    assertThat(struct.rec())
-        .isEqualTo(rec);
+  public void items_contains_object_passed_to_builder() {
+    Str species = strVal("rabbit");
+    Int speed = intVal(7);
+    Struc_ struct = structVal(animalSpec(), list(species, speed));
+    assertThat(struct.items())
+        .isEqualTo(list(species, speed));
   }
 
   @Test
-  public void struct_hash_is_different_of_its_rec_hash() {
-    Struc_ struct = animalVal(animalRecVal());
+  public void struct_hash_is_different_than_its_item_hash() {
+    Str species = strVal("rabbit");
+    Int speed = intVal(7);
+    Struc_ struct = structVal(animalSpec(), list(species, speed));
     assertThat(struct.hash())
-        .isNotEqualTo(animalRecVal().hash());
+        .isNotEqualTo(species.hash());
   }
 
   @Test
@@ -80,27 +89,15 @@ public class StructTest extends TestingContext {
   }
 
   private Struc_ animalVal() {
-    return animalVal("abc", 7);
+    return animalVal("rabbit", 7);
   }
 
   private Struc_ animalVal(String name, int speed) {
-    return animalVal(animalRecVal(name, speed));
-  }
-
-  private Struc_ animalVal(Rec rec) {
-    return structVal(animalSpec(), rec);
+    return structVal(animalSpec(), list(strVal(name), intVal(speed)));
   }
 
   private StructSpec animalSpec() {
-    return structSpec(list(strSpec(), intSpec()), list("name", "speed"));
-  }
-
-  private Rec animalRecVal() {
-    return animalRecVal("rabbit", 7);
-  }
-
-  private Rec animalRecVal(String name, int speed) {
-    return recVal(list(strVal(name), intVal(speed)));
+    return structSpec(list(strSpec(), intSpec()), list("species", "speed"));
   }
 
   @Test
@@ -108,6 +105,6 @@ public class StructTest extends TestingContext {
     Struc_ struct = animalVal("rabbit", 7);
     assertThat(struct.toString())
         .isEqualTo("""
-            {name="rabbit",speed=7}@""" + struct.hash());
+            {species="rabbit",speed=7}@""" + struct.hash());
   }
 }

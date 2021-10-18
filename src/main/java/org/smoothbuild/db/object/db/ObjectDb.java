@@ -99,9 +99,20 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStrVal(value));
   }
 
-  public Struc_ structVal(StructSpec structSpec, Rec rec) {
-    checkArgument(Objects.equals(structSpec.rec(), rec.spec()));
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStructVal(structSpec, rec));
+  public Struc_ structVal(StructSpec structSpec, ImmutableList<Val> items) {
+    var specs = structSpec.fields();
+    allMatchOtherwise(specs, items, (s, i) -> Objects.equals(s, i.spec()),
+        (i, j) -> {
+          throw new IllegalArgumentException(
+              "structSpec specifies " + i + " items but provided " + j + ".");
+        },
+        (i) -> {
+          throw new IllegalArgumentException("structSpec specifies field at index " + i
+              + " with spec " + specs.get(i).name() + " but provided item has spec "
+              + items.get(i).spec().name() + " at that index.");
+        }
+    );
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStructVal(structSpec, items));
   }
 
   public Rec recVal(RecSpec recSpec, Iterable<? extends Obj> items) {
@@ -347,8 +358,9 @@ public class ObjectDb {
     return specDb.string().newObj(root, this);
   }
 
-  private Struc_ newStructVal(StructSpec spec, Rec rec) throws HashedDbException {
-    var root = writeRoot(spec, rec.hash());
+  private Struc_ newStructVal(StructSpec spec, ImmutableList<Val> items) throws HashedDbException {
+    var data = writeStructData(items);
+    var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
@@ -423,6 +435,10 @@ public class ObjectDb {
   }
 
   private Hash writeRecData(List<? extends Obj> items) throws HashedDbException {
+    return writeSequence(items);
+  }
+
+  private Hash writeStructData(List<? extends Val> items) throws HashedDbException {
     return writeSequence(items);
   }
 

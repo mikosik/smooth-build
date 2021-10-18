@@ -41,7 +41,6 @@ import org.smoothbuild.db.object.exc.DecodeRecExprWrongItemsSizeException;
 import org.smoothbuild.db.object.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.db.object.exc.DecodeSelectWrongEvaluationSpecException;
 import org.smoothbuild.db.object.exc.DecodeSpecException;
-import org.smoothbuild.db.object.exc.DecodeStructWrongTupleSpecException;
 import org.smoothbuild.db.object.exc.NoSuchObjException;
 import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedObjSequenceException;
@@ -1540,18 +1539,20 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * struct in HashedDb.
        */
-      var fields = list(strSpec(), intSpec());
-      var recSpec = recSpec(fields);
-      var structSpec = structSpec(fields, list("name1", "name2"));
-      var rec = recVal(recSpec, list(strVal(), intVal()));
+      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var item1 = strVal();
+      var item2 = intVal();
       Hash objHash =
           hash(
               hash(structSpec),
-              hash(rec)
+              hash(
+                  hash(item1),
+                  hash(item2)
+              )
           );
       Struc_ readStruct = (Struc_) objectDb().get(objHash);
-      assertThat(readStruct.rec())
-          .isEqualTo(rec);
+      assertThat(readStruct.items())
+          .isEqualTo(list(item1, item2));
       assertThat(readStruct.spec())
           .isEqualTo(structSpec);
     }
@@ -1563,52 +1564,97 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var fields = list(strSpec(), intSpec());
-      var recSpec = recSpec(fields);
-      var structSpec = structSpec(fields, list("name1", "name2"));
-      var rec = recVal(recSpec, list(strVal(), intVal()));
-      Hash dataHash = hash(rec);
+      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var item1 = strVal();
+      var item2 = intVal();
+      Hash dataHash = hash(
+          hash(item1),
+          hash(item2)
+      );
       obj_root_with_two_data_hashes(
           structSpec,
           dataHash,
-          (Hash objHash) -> ((Struc_) objectDb().get(objHash)).rec());
+          (Hash objHash) -> ((Struc_) objectDb().get(objHash)).items());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          structSpec(), (Hash objHash) -> ((Struc_) objectDb().get(objHash)).rec());
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          structSpec(), (Hash objHash) -> ((Struc_) objectDb().get(objHash)).items());
     }
 
     @Test
-    public void rec_is_not_rec() throws Exception {
-      var fields = list(strSpec(), intSpec());
-      var structSpec = structSpec(fields, list("name1", "name2"));
-      var rec = intVal();
+    public void with_too_few_elements() throws Exception {
+      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var item1 = strVal();
+      var item2 = intVal();
       Hash objHash =
           hash(
               hash(structSpec),
-              hash(rec)
+              hash(
+                  hash(item1)
+              )
           );
-      assertCall(() -> ((Struc_) objectDb().get(objHash)).rec())
+      Struc_ rec = (Struc_) objectDb().get(objHash);
+      assertCall(() -> rec.get(0))
+          .throwsException(new UnexpectedObjSequenceException(
+              objHash, structSpec(), DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void with_too_many_elements() throws Exception {
+      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var item1 = strVal();
+      var item2 = intVal();
+      Hash objHash =
+          hash(
+              hash(structSpec),
+              hash(
+                  hash(item1),
+                  hash(item2),
+                  hash(item2)
+              )
+          );
+      Struc_ readStruct = (Struc_) objectDb().get(objHash);
+      assertCall(() -> readStruct.get(0))
+          .throwsException(new UnexpectedObjSequenceException(
+              objHash, structSpec, DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void with_element_of_wrong_spec() throws Exception {
+      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var item1 = strVal();
+      Hash objHash =
+          hash(
+              hash(structSpec),
+              hash(
+                  hash(item1),
+                  hash(boolVal(true))
+              )
+          );
+      Struc_ readStruct = (Struc_) objectDb().get(objHash);
+      assertCall(() -> readStruct.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, structSpec, DATA_PATH, Rec.class, Int.class));
+              objHash, structSpec, DATA_PATH, 1, intSpec(), boolSpec()));
     }
 
     @Test
-    public void rec_has_different_spec_than_struct_rec_spec() throws Exception {
-      var fields = list(strSpec(), intSpec());
-      var recSpecWrong = recSpec(list(strSpec()));
-      var structSpec = structSpec(fields, list("name1", "name2"));
-      var rec = recVal(recSpecWrong, list(strVal()));
+    public void with_element_being_expr() throws Exception {
+      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var item1 = strVal();
       Hash objHash =
           hash(
               hash(structSpec),
-              hash(rec)
+              hash(
+                  hash(item1),
+                  hash(intExpr())
+              )
           );
-      assertCall(() -> ((Struc_) objectDb().get(objHash)).rec())
-          .throwsException(new DecodeStructWrongTupleSpecException(
-              objHash, structSpec, recSpecWrong));
+      Struc_ readStruct = (Struc_) objectDb().get(objHash);
+      assertCall(() -> readStruct.get(0))
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, structSpec, DATA_PATH + "[1]", Val.class, Const.class));
     }
   }
 

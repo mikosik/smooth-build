@@ -348,17 +348,17 @@ public class SpecTest {
     }
 
     @ParameterizedTest
-    @MethodSource("struct_items_cases")
-    public void struct_items(StructSpec spec, RecSpec expected) {
-      assertThat(spec.rec())
+    @MethodSource("struct_fields_cases")
+    public void struct_fields(StructSpec spec, List<ValSpec> expected) {
+      assertThat(spec.fields())
           .isEqualTo(expected);
     }
 
-    public static List<Arguments> struct_items_cases() {
+    public static List<Arguments> struct_fields_cases() {
       return list(
-          arguments(structSpec(list(), list()), recSpec()),
-          arguments(structSpec(list(STR), list("field")), recSpec(STR)),
-          arguments(structSpec(list(STR, INT), list("field", "field2")), recSpec(STR, INT))
+          arguments(structSpec(list(), list()), list()),
+          arguments(structSpec(list(STR), list("field")), list(STR)),
+          arguments(structSpec(list(STR, INT), list("field", "field2")), list(STR, INT))
       );
     }
 

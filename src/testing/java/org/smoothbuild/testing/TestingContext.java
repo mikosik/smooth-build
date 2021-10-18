@@ -456,7 +456,7 @@ public class TestingContext {
     return objectDb().strVal(string);
   }
 
-  public Struc_ structVal(StructSpec recSpec, Rec items) {
+  public Struc_ structVal(StructSpec recSpec, ImmutableList<Val> items) {
     return objectDb().structVal(recSpec, items);
   }
 
