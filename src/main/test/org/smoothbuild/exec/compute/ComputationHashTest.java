@@ -15,8 +15,8 @@ import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
-import org.smoothbuild.exec.algorithm.CreateRecAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadRecItemAlgorithm;
+import org.smoothbuild.exec.algorithm.CreateStructAlgorithm;
+import org.smoothbuild.exec.algorithm.ReadStructItemAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -101,31 +101,31 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CreateRecAlgorithm(PERSON);
+    Algorithm algorithm = new CreateStructAlgorithm(PERSON);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("ff45a42fc341a33b8835f873f94a083181e665a4"));
+        .isEqualTo(Hash.decode("606fdfce6e1478e3a1ef29cb1c277b783a3bf21b"));
   }
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new CreateRecAlgorithm(PERSON);
+    Algorithm algorithm = new CreateStructAlgorithm(PERSON);
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("b7f6067462bee16b2bf3e9ab5c54c3e4bd1eba54"));
+        .isEqualTo(Hash.decode("93a33cd6d34d4ab923e8361ea72986f572df115c"));
   }
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_two_elements_input_is_stable() {
-    Algorithm algorithm = new CreateRecAlgorithm(PERSON);
+    Algorithm algorithm = new CreateStructAlgorithm(PERSON);
     Input input = input(list(strVal("abc"), strVal("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("b598a215e92550d41b2772ff96ba134e4b544dbf"));
+        .isEqualTo(Hash.decode("f47d8f5311ba853dda53ca41b5fce371295dfa73"));
   }
 
   @Test
   public void hash_of_computation_with_read_rec_item_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ReadRecItemAlgorithm(0, STR);
+    Algorithm algorithm = new ReadStructItemAlgorithm(0, STR);
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("3bcff362c86471722865738fd753e0dd567b55ee"));

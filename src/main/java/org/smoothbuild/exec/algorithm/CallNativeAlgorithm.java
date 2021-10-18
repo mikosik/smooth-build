@@ -53,8 +53,8 @@ public class CallNativeAlgorithm extends Algorithm {
       if (!outputSpec().equals(result.spec())) {
         nativeApi.log().error("`" + referencable.name()
             + "` has faulty native implementation: Its declared result spec == "
-            + outputSpec().name()
-            + " but it returned object with spec == " + result.spec().name() + ".");
+            + outputSpec().q()
+            + " but it returned object with spec == " + result.spec().q() + ".");
         return new Output(null, nativeApi.messages());
       }
       return new Output(result, nativeApi.messages());

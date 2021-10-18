@@ -11,18 +11,18 @@ import java.util.zip.ZipException;
 
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.plugin.NativeApi;
 
 public class PackagedJavaFileObjects {
   public static Iterable<InputClassFile> classesFromJarFiles(NativeApi nativeApi,
-      Iterable<Rec> libraryJars) throws IOException, ZipException {
+      Iterable<Struc_> libraryJars) throws IOException, ZipException {
     Set<InputClassFile> result = new HashSet<>();
-    for (Rec jar : libraryJars) {
+    for (Struc_ jar : libraryJars) {
       Blob jarBlob = FileStruct.fileContent(jar);
       Array files = unzip(nativeApi, jarBlob, isClassFilePredicate());
-      for (Rec file : files.elements(Rec.class)) {
+      for (Struc_ file : files.elements(Struc_.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
           nativeApi.log().error("File " + filePath(file).jValue()

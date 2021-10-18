@@ -7,15 +7,15 @@ import static org.smoothbuild.testing.common.JarTester.jarByteString;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.testing.TestingContext;
 
 public class PackagedJavaFileObjectsTest extends TestingContext {
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
-    Rec file1 = fileVal(path("my/package/MyKlass.class"));
-    Rec file2 = fileVal(path("my/package/MyKlass2.class"));
-    Rec jar = fileVal("myFile.jar", blobVal(jarByteString(file1, file2)));
+    Struc_ file1 = fileVal(path("my/package/MyKlass.class"));
+    Struc_ file2 = fileVal(path("my/package/MyKlass2.class"));
+    Struc_ jar = fileVal("myFile.jar", blobVal(jarByteString(file1, file2)));
     assertThat(classesFromJarFiles(nativeApi(), list(jar)))
         .containsExactly(new InputClassFile(file1), new InputClassFile(file2));
   }
@@ -23,8 +23,8 @@ public class PackagedJavaFileObjectsTest extends TestingContext {
   @Test
   public void duplicate_class_file_exception() throws Exception {
     String name = "my/package/MyKlass.class";
-    Rec file1 = fileVal(path(name));
-    Rec jar = fileVal("myFile.jar", blobVal(jarByteString(file1)));
+    Struc_ file1 = fileVal(path(name));
+    Struc_ jar = fileVal("myFile.jar", blobVal(jarByteString(file1)));
     assertThat(classesFromJarFiles(nativeApi(), list(jar, jar)))
         .isNull();
     assertThat(nativeApi().messages())

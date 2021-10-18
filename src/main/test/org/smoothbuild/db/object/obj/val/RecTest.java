@@ -10,32 +10,32 @@ import org.smoothbuild.testing.TestingContext;
 public class RecTest extends TestingContext {
   @Test
   public void creating_rec_with_less_items_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> objectDb().recVal(personSpec(), list(strVal("John"))))
+    assertCall(() -> objectDb().recVal(perso_Spec(), list(strVal("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_rec_with_item_with_different_spec_than_specified_in_rec_spec_causes_exception() {
-    assertCall(() -> objectDb().recVal(personSpec(), list(strVal(), intVal())))
+    assertCall(() -> objectDb().recVal(perso_Spec(), list(strVal(), intVal())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_rec_with_more_items_than_specified_in_its_spec_causes_exception() {
     assertCall(() -> objectDb().recVal(
-        personSpec(), list(strVal("John"), strVal("Doe"), strVal("abc"))))
+        perso_Spec(), list(strVal("John"), strVal("Doe"), strVal("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> objectDb().recVal(personSpec(), list(strVal("John"), null)))
+    assertCall(() -> objectDb().recVal(perso_Spec(), list(strVal("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_item_to_object_of_wrong_spec_throws_exception() {
-    assertCall(() -> objectDb().recVal(personSpec(), list(strVal("John"), intVal(123))))
+    assertCall(() -> objectDb().recVal(perso_Spec(), list(strVal("John"), intVal(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -43,14 +43,14 @@ public class RecTest extends TestingContext {
   public void spec_of_person_rec_is_person_spec() {
     Rec person = johnDoePerson();
     assertThat(person.spec())
-        .isEqualTo(personSpec());
+        .isEqualTo(perso_Spec());
   }
 
   @Test
   public void item_contains_object_passed_to_builder() {
     Rec person = johnDoePerson();
     assertThat(person.spec())
-        .isEqualTo(personSpec());
+        .isEqualTo(perso_Spec());
     assertThat(person.get(0))
         .isEqualTo(strVal("John"));
   }

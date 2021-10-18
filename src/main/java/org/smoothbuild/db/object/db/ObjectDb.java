@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.db;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
@@ -287,13 +286,13 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private SelectSpec selectSpec(Expr rec, Int index) {
-    if (rec.spec().evaluationSpec() instanceof RecSpec recSpec) {
-      var items = recSpec.items();
+  private SelectSpec selectSpec(Expr expr, Int index) {
+    if (expr.spec().evaluationSpec() instanceof StructSpec struct) {
+      var fields = struct.fields();
       int intIndex = index.jValue().intValue();
-      checkElementIndex(intIndex, items.size());
-      var fieldSpec = items.get(intIndex);
-      return specDb.selectSpec(fieldSpec);
+      checkElementIndex(intIndex, fields.size());
+      var field = fields.get(intIndex);
+      return specDb.selectSpec(field);
     } else {
       throw new IllegalArgumentException();
     }

@@ -20,15 +20,15 @@ import java.util.function.BiFunction;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
-import org.smoothbuild.exec.algorithm.CreateRecAlgorithm;
+import org.smoothbuild.exec.algorithm.CreateStructAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedIntAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadRecItemAlgorithm;
+import org.smoothbuild.exec.algorithm.ReadStructItemAlgorithm;
 import org.smoothbuild.exec.algorithm.ReferenceAlgorithm;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.exec.job.ApplyJob;
@@ -242,7 +242,7 @@ public class JobCreator {
 
   private Job selectReadEager(Scope<Job> scope, SelectExpression expression, Type type) {
     var index = expression.index();
-    var algorithm = new ReadRecItemAlgorithm(index, toSpecConverter.visit(type));
+    var algorithm = new ReadStructItemAlgorithm(index, toSpecConverter.visit(type));
     var dependencies = list(eagerJobFor(scope, expression.expression()));
     var info = new TaskInfo(SELECT, "." + index, expression.location());
     return new Task(type, dependencies, info, algorithm);
@@ -399,8 +399,8 @@ public class JobCreator {
       return new MapJob(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof Constructor constructor) {
       var resultType = constructor.type().result();
-      var recSpec = (RecSpec) toSpecConverter.visit(resultType);
-      return constructorCallEagerJob(resultType, recSpec, constructor.extendedName(),
+      var structSpec = (StructSpec) toSpecConverter.visit(resultType);
+      return constructorCallEagerJob(resultType, structSpec, constructor.extendedName(),
           arguments, location);
     } else {
       throw new IllegalArgumentException(
@@ -476,9 +476,9 @@ public class JobCreator {
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }
 
-  private Job constructorCallEagerJob(Type resultType, RecSpec recSpec, String name,
+  private Job constructorCallEagerJob(Type resultType, StructSpec structSpec, String name,
       List<Job> arguments, Location location) {
-    var algorithm = new CreateRecAlgorithm(recSpec);
+    var algorithm = new CreateStructAlgorithm(structSpec);
     var info = new TaskInfo(CALL, name, location);
     return new Task(resultType, arguments, info, algorithm);
   }

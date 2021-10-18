@@ -5,7 +5,7 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.base.LambdaRec;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
@@ -39,7 +39,7 @@ public class DefaultArgumentJob extends AbstractJob {
   }
 
   private void onCompleted(Val val, Worker worker, Consumer<Val> result) {
-    String functionName = LambdaRec.name(((Rec) val)).jValue();
+    String functionName = LambdaRec.name(((Struc_) val)).jValue();
     jobCreator.defaultArgumentEagerJob(scope, functionName, index)
         .schedule(worker)
         .addConsumer(result);

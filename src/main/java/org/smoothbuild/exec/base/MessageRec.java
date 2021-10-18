@@ -9,8 +9,8 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 
 public class MessageRec {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
@@ -18,7 +18,7 @@ public class MessageRec {
   private static final int SEVERITY_INDEX = 1;
 
   public static boolean containsErrors(Array messages) {
-    return messages.elements(Rec.class)
+    return messages.elements(Struc_.class)
         .stream()
         .anyMatch(m -> severity(m).equals(ERROR.name()));
   }
@@ -28,7 +28,7 @@ public class MessageRec {
   }
 
   public static boolean isEmpty(Array messages) {
-    return !messages.elements(Rec.class).iterator().hasNext();
+    return !messages.elements(Struc_.class).iterator().hasNext();
   }
 
   public static Level level(Obj message) {
@@ -36,18 +36,18 @@ public class MessageRec {
   }
 
   public static String severity(Obj message) {
-    return messageSeverity((Rec) message).jValue();
+    return messageSeverity((Struc_) message).jValue();
   }
 
   public static String text(Obj message) {
-    return messageText((Rec) message).jValue();
+    return messageText((Struc_) message).jValue();
   }
 
-  public static Str messageText(Rec message) {
+  public static Str messageText(Struc_ message) {
     return (Str) message.get(TEXT_INDEX);
   }
 
-  public static Str messageSeverity(Rec message) {
+  public static Str messageSeverity(Struc_ message) {
     return (Str) message.get(SEVERITY_INDEX);
   }
 }

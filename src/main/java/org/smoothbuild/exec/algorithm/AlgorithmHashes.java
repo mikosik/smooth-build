@@ -6,6 +6,7 @@ import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 
 import okio.ByteString;
 
@@ -22,11 +23,11 @@ public class AlgorithmHashes {
     return hash(2, destinationSpec.hash());
   }
 
-  public static Hash recAlgorithmHash(Spec type) {
+  public static Hash createStructAlgorithmHash(StructSpec type) {
     return hash(3, type.hash());
   }
 
-  public static Hash readRecItemAlgorithmHash(int itemIndex) {
+  public static Hash readStructItemAlgorithmHash(int itemIndex) {
     return hash(4, Hash.of(itemIndex));
   }
 

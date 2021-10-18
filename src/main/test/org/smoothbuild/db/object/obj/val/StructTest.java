@@ -5,7 +5,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.testing.TestingContext;
 
 public class StructTest extends TestingContext {
@@ -86,18 +85,6 @@ public class StructTest extends TestingContext {
     Struc_ struct = animalVal();
     assertThat(objectDbOther().get(struct.hash()))
         .isEqualTo(struct);
-  }
-
-  private Struc_ animalVal() {
-    return animalVal("rabbit", 7);
-  }
-
-  private Struc_ animalVal(String name, int speed) {
-    return structVal(animalSpec(), list(strVal(name), intVal(speed)));
-  }
-
-  private StructSpec animalSpec() {
-    return structSpec(list(strSpec(), intSpec()), list("species", "speed"));
   }
 
   @Test

@@ -13,8 +13,8 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
@@ -69,7 +69,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayVal(file), emptyMessageArray()));
     var arraySpec = arraySpec(objectFactory().fileSpec());
 
-    assertThat(((Array) computationCache().read(hash, arraySpec).value()).elements(Rec.class))
+    assertThat(((Array) computationCache().read(hash, arraySpec).value()).elements(Struc_.class))
         .containsExactly(file);
   }
 

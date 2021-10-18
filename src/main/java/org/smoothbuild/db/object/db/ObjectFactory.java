@@ -30,6 +30,7 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
@@ -39,7 +40,11 @@ import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.util.io.DataWriter;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -49,8 +54,8 @@ import org.smoothbuild.util.io.DataWriter;
 public class ObjectFactory {
   private final ObjectDb objectDb;
   private final SpecDb specDb;
-  private final RecSpec messageSpec;
-  private final RecSpec fileSpec;
+  private final StructSpec messageSpec;
+  private final StructSpec fileSpec;
 
   @Inject
   public ObjectFactory(ObjectDb objectDb, SpecDb specDb) {
@@ -60,15 +65,16 @@ public class ObjectFactory {
     this.fileSpec = createFileSpec(specDb);
   }
 
-  private static RecSpec createMessageSpec(SpecDb specDb) {
+  private static StructSpec createMessageSpec(SpecDb specDb) {
     StrSpec strSpec = specDb.string();
-    return specDb.recSpec(list(strSpec, strSpec));
+    return specDb.struct("", list(strSpec, strSpec), list("", ""));
   }
 
-  private static RecSpec createFileSpec(SpecDb specDb) {
-    return specDb.recSpec(list(
-        specDb.blob(),
-        specDb.string())
+  private static StructSpec createFileSpec(SpecDb specDb) {
+    return specDb.struct(
+        FileStruct.NAME,
+        list(specDb.blob(), specDb.string()),
+        FileStruct.FIELD_NAMES
     );
   }
 
@@ -101,12 +107,16 @@ public class ObjectFactory {
     return objectDb.intVal(value);
   }
 
-  public Rec file(Str path, Blob content) {
-    return objectDb.recVal(fileSpec(), list(content, path));
+  public Struc_ file(Str path, Blob content) {
+    return objectDb.structVal(fileSpec(), list(content, path));
   }
 
   public Str string(String string) {
     return objectDb.strVal(string);
+  }
+
+  public Struc_ struct(StructSpec structSpec, ImmutableList<Val> items) {
+    return objectDb.structVal(structSpec, items);
   }
 
   public Rec rec(RecSpec spec, Iterable<? extends Obj> items) {
@@ -153,11 +163,11 @@ public class ObjectFactory {
     return specDb.int_();
   }
 
-  public RecSpec fileSpec() {
+  public StructSpec fileSpec() {
     return fileSpec;
   }
 
-  public RecSpec messageSpec() {
+  public StructSpec messageSpec() {
     return messageSpec;
   }
 
@@ -173,21 +183,26 @@ public class ObjectFactory {
     return specDb.recSpec(itemSpecs);
   }
 
-  public Rec errorMessage(String text) {
+  public StructSpec structSpec(
+      String name, ImmutableList<? extends ValSpec> itemSpecs, ImmutableList<String> names) {
+    return specDb.struct(name, itemSpecs, names);
+  }
+
+  public Struc_ errorMessage(String text) {
     return message(ERROR.name(), text);
   }
 
-  public Rec warningMessage(String text) {
+  public Struc_ warningMessage(String text) {
     return message(WARNING.name(), text);
   }
 
-  public Rec infoMessage(String text) {
+  public Struc_ infoMessage(String text) {
     return message(INFO.name(), text);
   }
 
-  private Rec message(String severity, String text) {
-    Obj textObject = objectDb.strVal(text);
-    Obj severityObject = objectDb.strVal(severity);
-    return objectDb.recVal(messageSpec(), list(textObject, severityObject));
+  private Struc_ message(String severity, String text) {
+    Val textObject = objectDb.strVal(text);
+    Val severityObject = objectDb.strVal(severity);
+    return objectDb.structVal(messageSpec(), list(textObject, severityObject));
   }
 }

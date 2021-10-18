@@ -11,17 +11,17 @@ import java.util.zip.ZipException;
 
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.compress.UnzipFunction;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, Rec> binaryNameToClassFile(NativeApi nativeApi,
+  public static Map<String, Struc_> binaryNameToClassFile(NativeApi nativeApi,
       Iterable<Blob> libraryJars) throws IOException, JunitException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    Map<String, Rec> binaryNameToClassFile = new HashMap<>();
+    Map<String, Struc_> binaryNameToClassFile = new HashMap<>();
     for (Blob jarBlob : libraryJars) {
       Array fileArray;
       try {
@@ -29,7 +29,7 @@ public class BinaryNameToClassFile {
       } catch (ZipException e) {
         throw new JunitException("Cannot read archive. Corrupted data?", e);
       }
-      for (Rec classFile : fileArray.elements(Rec.class)) {
+      for (Struc_ classFile : fileArray.elements(Struc_.class)) {
         String classFilePath = (filePath(classFile)).jValue();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {

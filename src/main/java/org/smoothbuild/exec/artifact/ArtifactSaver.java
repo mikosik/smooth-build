@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -43,13 +43,14 @@ public class ArtifactSaver {
     if (value.type() instanceof ArrayType arrayType) {
       return saveArray(arrayType, artifactPath, (Array) obj);
     } else if (value.type().name().equals(FileStruct.NAME)) {
-      return saveFile(artifactPath, (Rec) obj);
+      return saveFile(artifactPath, (Struc_) obj);
     } else {
       return saveBaseObject(artifactPath, obj);
     }
   }
 
-  private Path saveFile(Path artifactPath, Rec file) throws IOException, DuplicatedPathsException {
+  private Path saveFile(Path artifactPath, Struc_ file)
+      throws IOException, DuplicatedPathsException {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileObjectPath(file));
   }
@@ -65,7 +66,7 @@ public class ArtifactSaver {
         i++;
       }
     } else if (elemType.name().equals(FileStruct.NAME)) {
-      saveFileArray(artifactPath, array.elements(Rec.class));
+      saveFileArray(artifactPath, array.elements(Struc_.class));
     } else {
       saveObjectArray(artifactPath, array);
     }
@@ -82,10 +83,10 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveFileArray(Path artifactPath, Iterable<Rec> files) throws IOException,
+  private void saveFileArray(Path artifactPath, Iterable<Struc_> files) throws IOException,
       DuplicatedPathsException {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    for (Rec file : files) {
+    for (Struc_ file : files) {
       Path filePath = fileObjectPath(file);
       Path sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
@@ -117,7 +118,7 @@ public class ArtifactSaver {
     return artifactPath;
   }
 
-  private static Path fileObjectPath(Rec file) {
+  private static Path fileObjectPath(Struc_ file) {
     return path(filePath(file).jValue());
   }
 }

@@ -59,7 +59,7 @@ public class ObjStableHashTest extends TestingContext {
 
     @Test
     public void empty_rec_array() {
-      assertThat(arrayVal(personSpec()).hash())
+      assertThat(arrayVal(perso_Spec()).hash())
           .isEqualTo(Hash.decode("a9688c71bf2aae5f4a8e219ce92e8ab8e6b46e27"));
     }
 
@@ -199,8 +199,8 @@ public class ObjStableHashTest extends TestingContext {
   class _select {
     @Test
     public void select_expression() {
-      assertThat(selectExpr(constExpr(recVal(list(strVal()))), intVal(0)).hash())
-          .isEqualTo(Hash.decode("5b98a211bd964c55589d3e8c0b7d2b3dd09e0a0e"));
+      assertThat(selectExpr(constExpr(animalVal()), intVal(0)).hash())
+          .isEqualTo(Hash.decode("ab8f773b5ba544efcddbe2460f1e2dada4d82054"));
     }
   }
 

@@ -680,7 +680,7 @@ public class CorruptedSpecTest extends TestingContext {
           )
       );
       assertThat(hash)
-          .isEqualTo(personSpec().hash());
+          .isEqualTo(perso_Spec().hash());
     }
 
     @Test

@@ -28,8 +28,8 @@ import org.smoothbuild.acceptance.testing.WithoutContainer;
 import org.smoothbuild.acceptance.testing.WrongMethodName;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NativeTest extends AcceptanceTestCase {
@@ -230,8 +230,8 @@ public class NativeTest extends AcceptanceTestCase {
             runSmoothBuild("result");
             assertFinishedWithError();
             assertSysOutContains("`returnStringRec` has faulty native implementation: " +
-                "Its declared result spec == {STRING,STRING} " +
-                "but it returned object with spec == {STRING}.");
+                "Its declared result spec == `Person` " +
+                "but it returned object with spec == `StringHolder`.");
           }
 
           @Test
@@ -244,8 +244,9 @@ public class NativeTest extends AcceptanceTestCase {
                 """, EmptyStringArray.class.getCanonicalName()));
             runSmoothBuild("result");
             assertFinishedWithError();
-            assertSysOutContains("`emptyStringArray` has faulty native implementation: " +
-                "Its declared result spec == [BLOB] but it returned object with spec == [STRING].");
+            assertSysOutContains("`emptyStringArray` has faulty native implementation: "
+                + "Its declared result spec == `[BLOB]` but it returned"
+                + " object with spec == `[STRING]`.");
           }
 
           @Test
@@ -429,8 +430,9 @@ public class NativeTest extends AcceptanceTestCase {
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "`stringIdentity` declares type `File` "
-            + "so its native implementation result type must be " + Rec.class.getCanonicalName() +
-            " but it is " + Str.class.getCanonicalName() + ".\n"));
+                + "so its native implementation result type must be "
+                + Struc_.class.getCanonicalName()
+                + " but it is " + Str.class.getCanonicalName() + ".\n"));
       }
 
       @Test
@@ -568,8 +570,9 @@ public class NativeTest extends AcceptanceTestCase {
             """, BrokenIdentity.class.getCanonicalName()));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains("`brokenIdentity` has faulty native implementation: " +
-              "Its declared result spec == [NOTHING] but it returned object with spec == STRING.");
+          assertSysOutContains("`brokenIdentity` has faulty native implementation: "
+              + "Its declared result spec == `[NOTHING]` but it returned "
+              + "object with spec == `STRING`.");
         }
 
         @Test
@@ -588,7 +591,7 @@ public class NativeTest extends AcceptanceTestCase {
           assertFinishedWithError();
           assertSysOutContains(
               "`returnStringRec` has faulty native implementation: Its declared " +
-                  "result spec == {STRING,STRING} but it returned object with spec == {STRING}.");
+                  "result spec == `Person` but it returned object with spec == `StringHolder`.");
         }
 
         @Test
@@ -602,7 +605,8 @@ public class NativeTest extends AcceptanceTestCase {
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains("`emptyStringArray` has faulty native implementation: "
-              + "Its declared result spec == [BLOB] but it returned object with spec == [STRING].");
+              + "Its declared result spec == `[BLOB]` but it returned object with "
+              + "spec == `[STRING]`.");
         }
 
         @Test

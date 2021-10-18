@@ -4,11 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createStructAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readRecItemAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.recAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readStructItemAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -27,13 +27,13 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    RecSpec constructedType = recSpec(list());
+    StructSpec constructedType = structSpec();
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
     hashes.add(convertAlgorithmHash(strSpec()));
-    hashes.add(recAlgorithmHash(constructedType));
-    hashes.add(readRecItemAlgorithmHash(0));
+    hashes.add(createStructAlgorithmHash(constructedType));
+    hashes.add(readStructItemAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
     hashes.add(referenceAlgorithmHash(Hash.of(""), "global-referencable-name"));
@@ -56,18 +56,18 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void create_rec_algorithm_has_different_hash_for_different_types() {
-    RecSpec constructedType = recSpec(list(strSpec()));
-    RecSpec constructedType2 = recSpec(list(blobSpec()));
+  public void create_struct_algorithm_has_different_hash_for_different_types() {
+    StructSpec constructedType = structSpec(list(), list());
+    StructSpec constructedType2 = structSpec(list(blobSpec()), list("field"));
 
-    assertThat(recAlgorithmHash(constructedType))
-        .isNotEqualTo(recAlgorithmHash(constructedType2));
+    assertThat(createStructAlgorithmHash(constructedType))
+        .isNotEqualTo(createStructAlgorithmHash(constructedType2));
   }
 
   @Test
-  public void read_rec_item_algorithm_has_different_hash_for_different_field_indexes() {
-    assertThat(readRecItemAlgorithmHash(0))
-        .isNotEqualTo(readRecItemAlgorithmHash(1));
+  public void read_struct_item_algorithm_has_different_hash_for_different_field_indexes() {
+    assertThat(readStructItemAlgorithmHash(0))
+        .isNotEqualTo(readStructItemAlgorithmHash(1));
   }
 
   @Test

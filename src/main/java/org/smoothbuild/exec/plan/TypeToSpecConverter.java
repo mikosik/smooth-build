@@ -12,6 +12,7 @@ import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BlobType;
 import org.smoothbuild.lang.base.type.api.BoolType;
@@ -22,6 +23,8 @@ import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
+
+import com.google.common.collect.ImmutableList;
 
 public class TypeToSpecConverter {
   private final ObjectFactory objectFactory;
@@ -44,8 +47,10 @@ public class TypeToSpecConverter {
     } else if (type instanceof StringType stringType) {
       return visit(stringType);
     } else if (type instanceof StructType structType) {
-      Iterable<ValSpec> fieldSpecs = map(structType.fields(), this::visit);
-      return objectFactory.recSpec(fieldSpecs);
+      return objectFactory.structSpec(
+          structType.name(),
+          map(structType.fields(), this::visit),
+          structType.names());
     } else if (type instanceof Variable) {
       throw new UnsupportedOperationException();
     } else if (type instanceof ArrayType array) {
@@ -81,8 +86,10 @@ public class TypeToSpecConverter {
         list(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }
 
-  public RecSpec functionSpec() {
-    return objectFactory.recSpec(
-        list(objectFactory.stringSpec(), objectFactory.blobSpec()));
+  public StructSpec functionSpec() {
+    return objectFactory.structSpec(
+        "",
+        list(objectFactory.stringSpec(), objectFactory.blobSpec()),
+        list("", ""));
   }
 }

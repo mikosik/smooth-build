@@ -257,6 +257,10 @@ public class TestingContext {
 
   // Obj Spec-s
 
+  public StructSpec animalSpec() {
+    return specDb().struct("Animal", list(strSpec(), intSpec()), list("species", "speed"));
+  }
+
   public ArraySpec arraySpec(ValSpec elementSpec) {
     return specDb().array(elementSpec);
   }
@@ -313,8 +317,12 @@ public class TestingContext {
     return recSpec(list(strSpec()));
   }
 
-  public RecSpec personSpec() {
+  public RecSpec perso_Spec() {
     return recSpec(list(strSpec(), strSpec()));
+  }
+
+  public StructSpec personSpec() {
+    return structSpec("Person", list(strSpec(), strSpec()), list("firstName", "lastName"));
   }
 
   public RecSpec fileSpec() {
@@ -402,6 +410,18 @@ public class TestingContext {
   }
 
   // Obj-s (values)
+
+  public Struc_ animalVal() {
+    return animalVal("rabbit", 7);
+  }
+
+  public Struc_ animalVal(String species, int speed) {
+    return animalVal(strVal(species), intVal(speed));
+  }
+
+  public Struc_ animalVal(Str species, Int speed) {
+    return structVal(animalSpec(), list(species, speed));
+  }
 
   public Array arrayVal(Val... elements) {
     return arrayVal(elements[0].spec(), elements);
@@ -493,27 +513,27 @@ public class TestingContext {
     return arrayVal(objectFactory().messageSpec());
   }
 
-  public Rec errorMessageV(String text) {
+  public Struc_ errorMessageV(String text) {
     return objectFactory().errorMessage(text);
   }
 
-  public Rec warningMessageV(String text) {
+  public Struc_ warningMessageV(String text) {
     return objectFactory().warningMessage(text);
   }
 
-  public Rec infoMessageV(String text) {
+  public Struc_ infoMessageV(String text) {
     return objectFactory().infoMessage(text);
   }
 
-  public Rec fileVal(Path path) {
+  public Struc_ fileVal(Path path) {
     return fileVal(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public Rec fileVal(Path path, ByteString content) {
+  public Struc_ fileVal(Path path, ByteString content) {
     return fileVal(path.toString(), blobVal(content));
   }
 
-  public Rec fileVal(String path, Blob blob) {
+  public Struc_ fileVal(String path, Blob blob) {
     Str string = objectFactory().string(path);
     return objectFactory().file(string, blob);
   }

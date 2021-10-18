@@ -8,7 +8,10 @@ public class StructTypes {
   public static ImmutableMap<String, Integer> fieldsMap(ImmutableList<String> names) {
     Builder<String, Integer> builder = ImmutableMap.builder();
     for (int i = 0; i < names.size(); i++) {
-      builder.put(names.get(i), i);
+      String name = names.get(i);
+      if (!name.isEmpty()) {
+        builder.put(name, i);
+      }
     }
     return builder.build();
   }

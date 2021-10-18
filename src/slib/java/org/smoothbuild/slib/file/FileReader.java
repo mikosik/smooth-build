@@ -3,8 +3,8 @@ package org.smoothbuild.slib.file;
 import java.io.IOException;
 
 import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.Path;
 
@@ -17,7 +17,7 @@ public class FileReader {
     this.container = container;
   }
 
-  public Rec createFile(Path path, Path projectPath) throws IOException {
+  public Struc_ createFile(Path path, Path projectPath) throws IOException {
     return container.factory().file(createPath(path), createContent(projectPath));
   }
 

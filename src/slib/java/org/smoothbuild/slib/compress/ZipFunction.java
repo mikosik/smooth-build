@@ -11,7 +11,7 @@ import java.util.zip.ZipOutputStream;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -22,7 +22,7 @@ public class ZipFunction {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
-      for (Rec file : files.elements(Rec.class)) {
+      for (Struc_ file : files.elements(Struc_.class)) {
         String path = filePath(file).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
@@ -34,7 +34,7 @@ public class ZipFunction {
     return blobBuilder.build();
   }
 
-  private static void zipFile(Rec file, ZipOutputStream zipOutputStream)
+  private static void zipFile(Struc_ file, ZipOutputStream zipOutputStream)
       throws IOException {
     ZipEntry entry = new ZipEntry(filePath(file).jValue());
     zipOutputStream.putNextEntry(entry);

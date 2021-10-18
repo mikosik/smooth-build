@@ -70,7 +70,7 @@ import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -1101,9 +1101,9 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * select in HashedDb.
        */
-      var recSpec = recSpec(list(strSpec()));
-      var rec = objectDb().recVal(recSpec, list(objectDb().strVal("abc")));
-      var expr = objectDb().constExpr(rec);
+      var structSpec = structSpec(list(strSpec()), list("field"));
+      var struct = objectDb().structVal(structSpec, list(objectDb().strVal("abc")));
+      var expr = objectDb().constExpr(struct);
       var index = objectDb().intVal(BigInteger.valueOf(0));
       Hash objHash =
           hash(
@@ -1196,7 +1196,8 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void rec_is_not_rec_expr() throws Exception {
+    public void struct_is_not_struct_expr() throws Exception {
+      var structSpec = structSpec(list(strSpec()), list("field"));
       var expr = intExpr(3);
       var index = objectDb().intVal(BigInteger.valueOf(0));
       var spec = selectSpec(strSpec());
@@ -1211,14 +1212,14 @@ public class CorruptedObjTest extends TestingContext {
 
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-              objHash, spec, "rec", RecSpec.class, intSpec()));
+              objHash, spec, "struct", StructSpec.class, intSpec()));
     }
 
     @Test
     public void index_is_out_of_bounds() throws Exception {
-      var recSpec = recSpec(list(strSpec()));
-      var rec = objectDb().recVal(recSpec, list(objectDb().strVal("abc")));
-      var expr = objectDb().constExpr(rec);
+      var structSpec = structSpec(list(strSpec()), list("field"));
+      var struct = objectDb().structVal(structSpec, list(objectDb().strVal("abc")));
+      var expr = objectDb().constExpr(struct);
       var index = objectDb().intVal(BigInteger.valueOf(1));
       var spec = selectSpec(strSpec());
       Hash objHash =
@@ -1237,9 +1238,9 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void evaluation_spec_is_different_than_spec_of_item_pointed_to_by_index()
         throws Exception {
-      var recSpec = recSpec(list(strSpec()));
-      var rec = objectDb().recVal(recSpec, list(objectDb().strVal("abc")));
-      var expr = objectDb().constExpr(rec);
+      var structSpec = structSpec(list(strSpec()), list("field"));
+      var struct = objectDb().structVal(structSpec, list(objectDb().strVal("abc")));
+      var expr = objectDb().constExpr(struct);
       var index = objectDb().intVal(BigInteger.valueOf(0));
       var spec = selectSpec(intSpec());
       Hash objHash =
@@ -1258,9 +1259,9 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void index_is_string_instead_of_int() throws Exception {
       var spec = selectSpec(strSpec());
-      var recSpec = recSpec(list(strSpec()));
-      var rec = objectDb().recVal(recSpec, list(objectDb().strVal("abc")));
-      var expr = objectDb().constExpr(rec);
+      var structSpec = structSpec(list(strSpec()), list("field"));
+      var struct = objectDb().structVal(structSpec, list(objectDb().strVal("abc")));
+      var expr = objectDb().constExpr(struct);
       var strVal = objectDb().strVal("abc");
       Hash objHash =
           hash(
@@ -1668,7 +1669,7 @@ public class CorruptedObjTest extends TestingContext {
        */
       assertThat(
           hash(
-              hash(personSpec()),
+              hash(perso_Spec()),
               hash(
                   hash(strVal("John")),
                   hash(strVal("Doe")))))
@@ -1677,13 +1678,13 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(personSpec());
+      obj_root_without_data_hash(perso_Spec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          personSpec(),
+          perso_Spec(),
           hashedDb().writeBoolean(true),
           (Hash objHash) -> ((Rec) objectDb().get(objHash)).get(0)
       );
@@ -1692,7 +1693,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          personSpec(),
+          perso_Spec(),
           (Hash objHash) -> ((Rec) objectDb().get(objHash)).get(0));
     }
 
@@ -1703,10 +1704,10 @@ public class CorruptedObjTest extends TestingContext {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
-              hash(personSpec()),
+              hash(perso_Spec()),
               notHashOfSequence);
       assertCall(() -> ((Rec) objectDb().get(objHash)).get(0))
-          .throwsException(new DecodeObjNodeException(objHash, personSpec(), DATA_PATH))
+          .throwsException(new DecodeObjNodeException(objHash, perso_Spec(), DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
@@ -1720,11 +1721,11 @@ public class CorruptedObjTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(personSpec()),
+              hash(perso_Spec()),
               dataHash
           );
       assertCall(() -> ((Rec) objectDb().get(objHash)).get(0))
-          .throwsException(new DecodeObjNodeException(objHash, personSpec(), DATA_PATH + "[0]"))
+          .throwsException(new DecodeObjNodeException(objHash, perso_Spec(), DATA_PATH + "[0]"))
           .withCause(new NoSuchObjException(nowhere));
     }
 
@@ -1735,11 +1736,11 @@ public class CorruptedObjTest extends TestingContext {
               hash(strVal("John")));
       Hash objHash =
           hash(
-              hash(personSpec()),
+              hash(perso_Spec()),
               dataHash);
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
-          .throwsException(new UnexpectedObjSequenceException(objHash, personSpec(), DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedObjSequenceException(objHash, perso_Spec(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1751,39 +1752,39 @@ public class CorruptedObjTest extends TestingContext {
               hash(strVal("junk")));
       Hash objHash =
           hash(
-              hash(personSpec()),
+              hash(perso_Spec()),
               dataHash);
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
-          .throwsException(new UnexpectedObjSequenceException(objHash, personSpec(), DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedObjSequenceException(objHash, perso_Spec(), DATA_PATH, 2, 3));
     }
 
     @Test
     public void with_element_of_wrong_spec() throws Exception {
       Hash objHash =
           hash(
-              hash(personSpec()),
+              hash(perso_Spec()),
               hash(
                   hash(strVal("John")),
                   hash(boolVal(true))));
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, personSpec(), DATA_PATH, 1, strSpec(), boolSpec()));
+              objHash, perso_Spec(), DATA_PATH, 1, strSpec(), boolSpec()));
     }
 
     @Test
     public void with_element_being_expr() throws Exception {
       Hash objHash =
           hash(
-              hash(personSpec()),
+              hash(perso_Spec()),
               hash(
                   hash(strVal("John")),
                   hash(intExpr())));
       Rec rec = (Rec) objectDb().get(objHash);
       assertCall(() -> rec.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, personSpec(), DATA_PATH + "[1]", Val.class, Const.class));
+              objHash, perso_Spec(), DATA_PATH + "[1]", Val.class, Const.class));
     }
   }
 

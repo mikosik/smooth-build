@@ -5,21 +5,21 @@ import static org.smoothbuild.exec.base.FileStruct.fileContent;
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 
 import okio.BufferedSource;
 
 public class FileClassLoader extends ClassLoader {
-  private final Map<String, Rec> binaryNameToFile;
+  private final Map<String, Struc_> binaryNameToFile;
 
-  public FileClassLoader(Map<String, Rec> binaryNameToFile) {
+  public FileClassLoader(Map<String, Struc_> binaryNameToFile) {
     super(FileClassLoader.class.getClassLoader());
     this.binaryNameToFile = binaryNameToFile;
   }
 
   @Override
   public Class<?> findClass(String name) throws ClassNotFoundException {
-    Rec file = binaryNameToFile.get(name);
+    Struc_ file = binaryNameToFile.get(name);
     if (file == null) {
       throw new ClassNotFoundException(name);
     }
@@ -32,7 +32,7 @@ public class FileClassLoader extends ClassLoader {
     }
   }
 
-  private byte[] fileToByteArray(Rec file) throws IOException {
+  private byte[] fileToByteArray(Struc_ file) throws IOException {
     try (BufferedSource source = fileContent(file).source()) {
       return source.readByteArray();
     }

@@ -8,6 +8,7 @@ import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -26,7 +27,8 @@ public class TestingSpecs {
   public static final ValSpec INT = SPEC_DB.int_();
   public static final ValSpec NOTHING = SPEC_DB.nothing();
   public static final ValSpec STR = SPEC_DB.string();
-  public static final RecSpec PERSON = CONTEXT.personSpec();
+  public static final RecSpec PERSO_ = CONTEXT.perso_Spec();
+  public static final StructSpec PERSON = CONTEXT.personSpec();
   public static final RecSpec FILE = CONTEXT.fileSpec();
   public static final RecSpec EMPTY_REC = CONTEXT.emptyRecSpec();
   public static final RecSpec REC_WITH_STRING = CONTEXT.recWithStrSpec();
@@ -46,7 +48,7 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY_INT = array(INT);
   public static final ArraySpec ARRAY_NOTHING = array(NOTHING);
   public static final ArraySpec ARRAY_STR = array(STR);
-  public static final ArraySpec ARRAY_PERSON = array(PERSON);
+  public static final ArraySpec ARRAY_PERSON = array(PERSO_);
   public static final ArraySpec ARRAY_VARIABLE = array(VARIABLE);
 
   public static final ArraySpec ARRAY2_ANY = array(ARRAY_ANY);
@@ -67,7 +69,7 @@ public class TestingSpecs {
       INT,
       NOTHING,
       STR,
-      PERSON,
+      PERSO_,
 
       ARRAY_BLOB,
       ARRAY_BOOL,

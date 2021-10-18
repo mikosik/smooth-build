@@ -11,14 +11,14 @@ import java.util.Objects;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 
 public class InputClassFile extends SimpleJavaFileObject {
-  private final Rec file;
+  private final Struc_ file;
   private final String binaryName;
   private final String aPackage;
 
-  public InputClassFile(Rec file) {
+  public InputClassFile(Struc_ file) {
     super(URI.create("jar:///" + ":" + filePath(file).jValue()), Kind.CLASS);
 
     if (!filePath(file).jValue().endsWith(Kind.CLASS.extension)) {

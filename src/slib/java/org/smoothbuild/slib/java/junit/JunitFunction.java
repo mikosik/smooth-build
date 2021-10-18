@@ -22,22 +22,22 @@ import java.util.zip.ZipException;
 
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class JunitFunction {
-  public static Str function(NativeApi nativeApi, Rec tests, Array deps, Str include)
+  public static Str function(NativeApi nativeApi, Struc_ tests, Array deps, Str include)
       throws IOException {
 
     try {
       Array unzipped = unzipTestFiles(nativeApi, tests);
-      Map<String, Rec> testFiles = stream(unzipped.elements(Rec.class).spliterator(), false)
+      Map<String, Struc_> testFiles = stream(unzipped.elements(Struc_.class).spliterator(), false)
           .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
-      Map<String, Rec> allFiles = buildNameFileMap(nativeApi, deps, testFiles);
+      Map<String, Struc_> allFiles = buildNameFileMap(nativeApi, deps, testFiles);
 
       FileClassLoader classLoader = new FileClassLoader(allFiles);
       ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
@@ -74,14 +74,14 @@ public class JunitFunction {
     }
   }
 
-  private static Map<String, Rec> buildNameFileMap(NativeApi nativeApi, Array deps,
-      Map<String, Rec> testFiles) throws IOException, JunitException {
-    Iterable<Blob> libraryJars = deps.elements(Rec.class)
+  private static Map<String, Struc_> buildNameFileMap(NativeApi nativeApi, Array deps,
+      Map<String, Struc_> testFiles) throws IOException, JunitException {
+    Iterable<Blob> libraryJars = deps.elements(Struc_.class)
         .stream()
         .map(FileStruct::fileContent)
         .collect(toList());
-    Map<String, Rec> allFiles = binaryNameToClassFile(nativeApi, libraryJars);
-    for (Entry<String, Rec> entry : testFiles.entrySet()) {
+    Map<String, Struc_> allFiles = binaryNameToClassFile(nativeApi, libraryJars);
+    for (Entry<String, Struc_> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
         throw new JunitException("Both 'tests' and 'deps' contains class " + entry.getValue());
       } else {
@@ -91,7 +91,7 @@ public class JunitFunction {
     return allFiles;
   }
 
-  private static Array unzipTestFiles(NativeApi nativeApi, Rec tests) throws IOException,
+  private static Array unzipTestFiles(NativeApi nativeApi, Struc_ tests) throws IOException,
       JunitException {
     try {
       return unzip(nativeApi, fileContent(tests), isClassFilePredicate());
@@ -101,7 +101,7 @@ public class JunitFunction {
   }
 
   private static JUnitCoreWrapper createJUnitCore(NativeApi nativeApi,
-      Map<String, Rec> binaryNameToClassFile, FileClassLoader classLoader) throws
+      Map<String, Struc_> binaryNameToClassFile, FileClassLoader classLoader) throws
       JunitException {
     if (binaryNameToClassFile.containsKey("org.junit.runner.JUnitCore")) {
       return newInstance(

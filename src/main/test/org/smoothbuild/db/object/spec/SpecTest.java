@@ -35,6 +35,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NULL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
+import static org.smoothbuild.db.object.spec.TestingSpecs.PERSO_;
 import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SELECT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SPEC_DB;
@@ -63,8 +64,8 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
@@ -112,7 +113,7 @@ public class SpecTest {
         arguments(INT, "INT"),
         arguments(NOTHING, "NOTHING"),
         arguments(STR, "STRING"),
-        arguments(PERSON, "{STRING,STRING}"),
+        arguments(PERSO_, "{STRING,STRING}"),
         arguments(tc.callSpec(tc.intSpec()), "CALL:INT"),
         arguments(tc.constSpec(tc.intSpec()), "CONST:INT"),
         arguments(tc.arrayExprSpec(tc.strSpec()), "ARRAY_EXPR:[STRING]"),
@@ -159,7 +160,7 @@ public class SpecTest {
         arguments(LAMBDA, Lambda.class),
         arguments(INT, Int.class),
         arguments(NOTHING, null),
-        arguments(PERSON, Rec.class),
+        arguments(PERSON, Struc_.class),
         arguments(STR, Str.class),
         arguments(VARIABLE, null),
 
@@ -201,7 +202,7 @@ public class SpecTest {
         arguments(ARRAY_INT, INT),
         arguments(ARRAY_NOTHING, NOTHING),
         arguments(ARRAY_STR, STR),
-        arguments(ARRAY_PERSON, PERSON),
+        arguments(ARRAY_PERSON, PERSO_),
 
         arguments(ARRAY2_ABSENT, ARRAY_ABSENT),
         arguments(ARRAY2_ANY, ARRAY_ANY),
@@ -440,7 +441,7 @@ public class SpecTest {
     tester.addEqualityGroup(INT, INT);
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STR, STR);
-    tester.addEqualityGroup(PERSON, PERSON);
+    tester.addEqualityGroup(PERSO_, PERSO_);
     tester.addEqualityGroup(VARIABLE, VARIABLE);
 
     tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);

@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Rec;
+import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
@@ -41,11 +41,11 @@ public class MapJob extends AbstractJob {
     Promise<Val> array = arrayJob().schedule(worker);
     Promise<Val> function = functionJob().schedule(worker);
     runWhenAllAvailable(list(array, function),
-        () -> onArrayCompleted((Array) array.get(), (Rec) function.get(), worker, result));
+        () -> onArrayCompleted((Array) array.get(), (Struc_) function.get(), worker, result));
     return result;
   }
 
-  private void onArrayCompleted(Array array, Rec lambda, Worker worker,
+  private void onArrayCompleted(Array array, Struc_ lambda, Worker worker,
       Consumer<Val> result) {
     var outputArrayType = (ArrayType) type();
     var outputElemType = outputArrayType.element();
@@ -59,7 +59,7 @@ public class MapJob extends AbstractJob {
         .addConsumer(result);
   }
 
-  private Job getJob(Rec lambda) {
+  private Job getJob(Struc_ lambda) {
     return new DummyJob(functionJob().type(), lambda, functionJob());
   }
 
