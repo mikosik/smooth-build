@@ -153,8 +153,7 @@ public class SpecDb implements TypeFactory {
   @Override
   public LambdaSpec function(Type result, ImmutableList<? extends Type> parameters) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newLambdaSpec((ValSpec) result,
-            recSpec((ImmutableList<ValSpec>) (Object) parameters)));
+        () -> newLambdaSpec((ValSpec) result, recSpec((ImmutableList<ValSpec>) parameters)));
   }
 
   @Override
