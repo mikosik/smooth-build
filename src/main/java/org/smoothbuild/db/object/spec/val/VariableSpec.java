@@ -24,6 +24,6 @@ public class VariableSpec extends ValSpec implements Variable {
 
   @Override
   public Obj newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    throw new UnsupportedOperationException("Cannot create object for " + kind() + " spec.");
+    throw new UnsupportedOperationException("Cannot create object for " + VARIABLE + " spec.");
   }
 }

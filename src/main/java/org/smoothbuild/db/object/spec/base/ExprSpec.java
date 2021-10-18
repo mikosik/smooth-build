@@ -16,10 +16,6 @@ public abstract class ExprSpec extends Spec {
 
   @Override
   public String name() {
-    return expressionSpecName(kind(), evaluationSpec);
-  }
-
-  public static String expressionSpecName(SpecKind kind, Spec evaluationSpec) {
-    return kind.name() + ":" + evaluationSpec.name();
+    return kind().name() + ":" + evaluationSpec.name();
   }
 }
