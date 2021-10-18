@@ -40,6 +40,6 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
   }
 
   public ItemSignature toItemSignature() {
-    return new ItemSignature(type().get(), Optional.of(name()), Optional.empty());
+    return new ItemSignature(type().get(), name(), Optional.empty());
   }
 }

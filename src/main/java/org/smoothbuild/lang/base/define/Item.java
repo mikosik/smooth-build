@@ -25,8 +25,7 @@ public class Item extends Referencable {
       Location location) {
     super(type, modulePath, name, location);
     this.defaultValue = defaultValue;
-    this.signature =
-        new ItemSignature(type(), Optional.of(name()), defaultValue.map(Expression::type));
+    this.signature = new ItemSignature(type(), name(), defaultValue.map(Expression::type));
   }
 
   public ItemSignature signature() {
