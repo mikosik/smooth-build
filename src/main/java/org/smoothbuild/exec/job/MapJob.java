@@ -48,7 +48,7 @@ public class MapJob extends AbstractJob {
   private void onArrayCompleted(Array array, Rec lambda, Worker worker,
       Consumer<Val> result) {
     var outputArrayType = (ArrayType) type();
-    var outputElemType = outputArrayType.elemType();
+    var outputElemType = outputArrayType.element();
     Job lambdaJob = getJob(lambda);
     var mapElemJobs = map(
         array.elements(Val.class),

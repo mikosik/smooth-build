@@ -57,7 +57,7 @@ public class ArtifactSaver {
   private Path saveArray(ArrayType arrayType, Path artifactPath,
       Array array) throws IOException, DuplicatedPathsException {
     fileSystem.createDir(artifactPath);
-    Type elemType = arrayType.elemType();
+    Type elemType = arrayType.element();
     if (elemType instanceof ArrayType elemArrayType) {
       int i = 0;
       for (Array element : array.elements(Array.class)) {

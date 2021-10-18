@@ -195,7 +195,7 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("elemType_test_data")
   public void elemType(ArrayType type, Type expected) {
-    assertThat(type.elemType())
+    assertThat(type.element())
         .isEqualTo(expected);
   }
 

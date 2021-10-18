@@ -73,7 +73,7 @@ public class TypeToSpecConverter {
     if (array.isPolytype()) {
       throw new UnsupportedOperationException();
     }
-    return objectFactory.arraySpec(visit(array.elemType()));
+    return objectFactory.arraySpec(visit(array.element()));
   }
 
   private RecSpec nativeCodeSpec() {

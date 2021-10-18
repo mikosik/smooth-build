@@ -307,7 +307,7 @@ public class JobCreator {
 
   private Job arrayEager(ArrayLiteralExpression expression, List<Job> elements,
       ArrayType actualType) {
-    var convertedElements = map(elements, e -> convertIfNeededEagerJob(actualType.elemType(), e));
+    var convertedElements = map(elements, e -> convertIfNeededEagerJob(actualType.element(), e));
     var info = new TaskInfo(LITERAL, "[]", expression.location());
     return arrayEager(actualType, convertedElements, info);
   }

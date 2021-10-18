@@ -10,22 +10,21 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.Type;
 
 /**
  * This class is immutable.
  */
 public class ArraySpec extends ValSpec implements ArrayType {
-  private final ValSpec elemType;
+  private final ValSpec element;
 
-  public ArraySpec(Hash hash, ValSpec elemType) {
+  public ArraySpec(Hash hash, ValSpec element) {
     super(hash, ARRAY);
-    this.elemType = requireNonNull(elemType);
+    this.element = requireNonNull(element);
   }
 
   @Override
-  public Type elemType() {
-    return elemType;
+  public ValSpec element() {
+    return element;
   }
 
   @Override
@@ -36,10 +35,6 @@ public class ArraySpec extends ValSpec implements ArrayType {
 
   @Override
   public String name() {
-    return "[" + elemType.name() + "]";
-  }
-
-  public ValSpec element() {
-    return elemType;
+    return "[" + element.name() + "]";
   }
 }

@@ -18,7 +18,7 @@ public class ArrayTypeImpl extends AbstractType implements ArrayType {
   }
 
   @Override
-  public Type elemType() {
+  public Type element() {
     return elemType;
   }
 
@@ -28,6 +28,6 @@ public class ArrayTypeImpl extends AbstractType implements ArrayType {
       return true;
     }
     return object instanceof ArrayTypeImpl thatArray
-        && this.elemType().equals(thatArray.elemType());
+        && this.element().equals(thatArray.element());
   }
 }
