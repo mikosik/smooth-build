@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base.type;
+package org.smoothbuild.lang.base.type.api;
 
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.B;

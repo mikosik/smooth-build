@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base.type;
+package org.smoothbuild.lang.base.type.api;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
@@ -13,8 +13,6 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
-import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.testing.EqualsTester;
 

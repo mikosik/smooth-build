@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.base.type;
+package org.smoothbuild.lang.base.type.impl;
 
+import org.smoothbuild.lang.base.type.AbstractTypeTest;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryImpl;
 
 public class TypeTest extends AbstractTypeTest {
   @Override
