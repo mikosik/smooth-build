@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class RefTest extends TestingContext {
+public class RefTest extends TestingContextImpl {
   @Test
   public void spec_of_ref_expr_is_ref_spec() {
     assertThat(refExpr(intSpec(), 123).spec())

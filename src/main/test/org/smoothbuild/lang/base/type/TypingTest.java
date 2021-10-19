@@ -36,9 +36,9 @@ import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class TypingTest extends TestingContext {
+public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("contains_test_data")
   public void contains(Type type, Type contained, boolean expected) {
@@ -206,7 +206,7 @@ public class TypingTest extends TestingContext {
   }
 
   public static List<Arguments> inferVariableBounds_test_data() {
-    TestingContext tc = new TestingContext();
+    TestingContextImpl tc = new TestingContextImpl();
     Side LOWER = tc.lower();
     Side UPPER = tc.upper();
     var r = new ArrayList<Arguments>();
@@ -301,7 +301,7 @@ public class TypingTest extends TestingContext {
   }
 
   public static List<Arguments> mapVariables_test_data() {
-    TestingContext tc = new TestingContext();
+    TestingContextImpl tc = new TestingContextImpl();
     Side LOWER = tc.lower();
     Side UPPER = tc.upper();
 

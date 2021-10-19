@@ -4,11 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
 
-public class BlobTest extends TestingContext {
+public class BlobTest extends TestingContextImpl {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
   private final ByteString otherBytes = ByteString.encodeUtf8("bbb");
 

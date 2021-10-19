@@ -7,9 +7,9 @@ import static org.smoothbuild.util.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class LambdaTest extends TestingContext {
+public class LambdaTest extends TestingContextImpl {
   @Test
   public void creating_lambda_with_body_evaluation_spec_not_equal_result_spec_causes_exception() {
     LambdaSpec lambdaSpec = lambdaSpec(intSpec(), list(strSpec()));

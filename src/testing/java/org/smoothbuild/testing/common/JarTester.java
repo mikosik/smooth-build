@@ -10,7 +10,7 @@ import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.Buffer;
 import okio.BufferedSource;
@@ -18,7 +18,7 @@ import okio.ByteString;
 
 public class JarTester {
   public static Blob jar(Struc_... files) throws IOException {
-    return new TestingContext().blobVal(jarByteString(files));
+    return new TestingContextImpl().blobVal(jarByteString(files));
   }
 
   public static ByteString jarByteString(Struc_... files) throws IOException {

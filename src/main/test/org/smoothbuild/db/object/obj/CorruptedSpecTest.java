@@ -55,14 +55,14 @@ import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
 import com.google.common.collect.ImmutableList;
 
 import okio.ByteString;
 
-public class CorruptedSpecTest extends TestingContext {
+public class CorruptedSpecTest extends TestingContextImpl {
   @Nested
   class _illegal_spec_marker {
     @Test

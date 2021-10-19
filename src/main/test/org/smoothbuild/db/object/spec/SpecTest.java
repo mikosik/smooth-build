@@ -75,7 +75,7 @@ import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
@@ -103,7 +103,7 @@ public class SpecTest {
   }
 
   public static Stream<Arguments> names() {
-    TestingContext tc = new TestingContext();
+    TestingContextImpl tc = new TestingContextImpl();
     return Stream.of(
         arguments(ABSENT, "!Absent"),
         arguments(ANY, "!Any"),

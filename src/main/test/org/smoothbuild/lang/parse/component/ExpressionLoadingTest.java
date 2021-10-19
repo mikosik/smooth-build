@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.type.api.StructType;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class ExpressionLoadingTest extends TestingContext {
+public class ExpressionLoadingTest extends TestingContextImpl {
   @Test
   public void array_literal_expression() {
     module("""

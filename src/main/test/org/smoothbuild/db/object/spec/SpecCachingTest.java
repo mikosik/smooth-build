@@ -13,9 +13,9 @@ import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class SpecCachingTest extends TestingContext {
+public class SpecCachingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("spec_creators")
   public void created_spec_is_cached(Function<SpecDb, Spec> specCreator) {

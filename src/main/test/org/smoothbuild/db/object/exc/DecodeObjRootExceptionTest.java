@@ -8,9 +8,9 @@ import static org.smoothbuild.db.object.exc.DecodeObjRootException.wrongSizeOfRo
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class DecodeObjRootExceptionTest extends TestingContext {
+public class DecodeObjRootExceptionTest extends TestingContextImpl {
   @Test
   public void cannot_read_root_exception() {
     var exception = cannotReadRootException(Hash.of(123), new RuntimeException());

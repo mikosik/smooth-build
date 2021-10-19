@@ -19,11 +19,11 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.val.StructSpec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
 
-public class AlgorithmHashesTest extends TestingContext {
+public class AlgorithmHashesTest extends TestingContextImpl {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();

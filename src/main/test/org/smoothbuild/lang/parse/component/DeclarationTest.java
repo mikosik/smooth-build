@@ -24,10 +24,10 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.lang.base.type.TestedType;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.testing.TestingModuleLoader;
 
-public class DeclarationTest extends TestingContext {
+public class DeclarationTest extends TestingContextImpl {
   @Nested
   class _members {
     @Nested

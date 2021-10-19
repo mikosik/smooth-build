@@ -93,7 +93,6 @@ import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
 import org.smoothbuild.lang.base.type.api.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
-import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
@@ -119,7 +118,7 @@ import com.google.inject.util.Providers;
 
 import okio.ByteString;
 
-public class TestingContext {
+public abstract class AbstractTestingContext {
   private Computer computer;
   private Container container;
   private ObjectFactory objectFactory;
@@ -127,7 +126,6 @@ public class TestingContext {
   private FileSystem computationCacheFileSystem;
   private ObjectDb objectDb;
   private Typing typing;
-  private TypeFactory typeFactory;
   private SpecDb specDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -182,12 +180,7 @@ public class TestingContext {
     return typing;
   }
 
-  public TypeFactory typeFactory() {
-    if (typeFactory == null) {
-      typeFactory = new TypeFactoryImpl();
-    }
-    return typeFactory;
-  }
+  public abstract TypeFactory typeFactory();
 
   public SpecDb specDb() {
     if (specDb == null) {
@@ -647,11 +640,11 @@ public class TestingContext {
     return typing().function(resultType, map(parameters, ItemSignature::type));
   }
 
-  public Sides.Side lower() {
+  public Side lower() {
     return typing().lower();
   }
 
-  public Sides.Side upper() {
+  public Side upper() {
     return typing().upper();
   }
 

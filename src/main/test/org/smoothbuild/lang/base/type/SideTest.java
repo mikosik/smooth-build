@@ -6,9 +6,9 @@ import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class SideTest extends TestingContext {
+public class SideTest extends TestingContextImpl {
   @Nested
   class _reverse_of {
     @Test

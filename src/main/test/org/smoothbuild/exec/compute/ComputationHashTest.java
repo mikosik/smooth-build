@@ -20,9 +20,9 @@ import org.smoothbuild.exec.algorithm.ReadStructItemAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class ComputationHashTest extends TestingContext {
+public class ComputationHashTest extends TestingContextImpl {
   @Test
   public void hashes_of_computations_with_same_algorithm_runtime_and_input_are_equal() {
     Algorithm algorithm = computation(Hash.of(1));

@@ -20,10 +20,10 @@ import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeImpl;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.testing.TestingModuleLoader;
 
-public class AssignmentTest extends TestingContext {
+public class AssignmentTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
   public void value_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
@@ -146,7 +146,7 @@ public class AssignmentTest extends TestingContext {
   }
 
   private static List<Arguments> array_element_assignment_test_specs() {
-    Typing typing = new TestingContext().typing();
+    Typing typing = new TestingContextImpl().typing();
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {

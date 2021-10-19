@@ -16,11 +16,11 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
 
-public class ComputationCacheTest extends TestingContext {
+public class ComputationCacheTest extends TestingContextImpl {
   private final Hash hash = Hash.of("abc");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 

@@ -5,9 +5,9 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class RecTest extends TestingContext {
+public class RecTest extends TestingContextImpl {
   @Test
   public void creating_rec_with_less_items_than_specified_in_its_spec_causes_exception() {
     assertCall(() -> objectDb().recVal(perso_Spec(), list(strVal("John"))))

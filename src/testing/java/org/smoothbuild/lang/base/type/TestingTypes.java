@@ -14,13 +14,13 @@ import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class TestingTypes {
-  private static final Typing TYPING = new TestingContext().typing();
+  private static final Typing TYPING = new TestingContextImpl().typing();
 
   public static final ImmutableSet<BaseType> BASE_TYPES = TYPING.baseTypes();
   public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = TYPING.inferableBaseTypes();

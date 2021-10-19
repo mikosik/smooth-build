@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class RecExprTest extends TestingContext {
+public class RecExprTest extends TestingContextImpl {
   @Test
   public void spec_of_empty_erecord_is_inferred_correctly() {
     assertThat(recExpr(list()).spec())

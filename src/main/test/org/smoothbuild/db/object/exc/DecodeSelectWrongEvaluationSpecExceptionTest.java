@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class DecodeSelectWrongEvaluationSpecExceptionTest extends TestingContext {
+public class DecodeSelectWrongEvaluationSpecExceptionTest extends TestingContextImpl {
   @Test
   public void message() {
     var exception = new DecodeSelectWrongEvaluationSpecException(

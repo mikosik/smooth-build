@@ -3,9 +3,9 @@ package org.smoothbuild.db.object.obj.expr;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class NullTest extends TestingContext {
+public class NullTest extends TestingContextImpl {
   @Test
   public void spec_of_null_expr_is_null_spec() {
     assertThat(nullExpr().spec())

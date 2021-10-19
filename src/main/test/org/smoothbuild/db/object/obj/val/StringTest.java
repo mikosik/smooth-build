@@ -3,9 +3,9 @@ package org.smoothbuild.db.object.obj.val;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class StringTest extends TestingContext {
+public class StringTest extends TestingContextImpl {
   private final String string = "my string";
   private final String otherString = "my string 2";
 

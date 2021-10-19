@@ -5,11 +5,11 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
 
-public class InvokeTest extends TestingContext {
+public class InvokeTest extends TestingContextImpl {
   @Test
   public void spec_of_invoke_expr_is_calculated_correctly() {
     assertThat(invokeExpr(blobVal(), strVal(), intSpec()).spec())

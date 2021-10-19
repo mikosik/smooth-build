@@ -15,11 +15,11 @@ import org.smoothbuild.db.object.spec.TestingSpecs;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
 
-public class ArrayTest extends TestingContext {
+public class ArrayTest extends TestingContextImpl {
   @Test
   public void empty_nothing_array_can_be_iterated_as_struct() {
     Array array = objectDb().arrayBuilder(nothingSpec())

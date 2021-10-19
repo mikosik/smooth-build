@@ -6,9 +6,9 @@ import static org.smoothbuild.util.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class SpecStableHashTest extends TestingContext {
+public class SpecStableHashTest extends TestingContextImpl {
   @Test
   public void hashes_of_specs_are_stable() {
     assertHash(absentSpec(), "852627551364cf8b374507d5a63093a0cb26fb6b");

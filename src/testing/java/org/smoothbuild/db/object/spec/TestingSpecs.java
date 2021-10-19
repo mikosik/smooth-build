@@ -9,12 +9,12 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.collect.ImmutableList;
 
 public class TestingSpecs {
-  private static final TestingContext CONTEXT = new TestingContext();
+  private static final TestingContextImpl CONTEXT = new TestingContextImpl();
   public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
   public static final SpecDb SPEC_DB = CONTEXT.specDb();
 

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.expr.Select.SelectData;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class SelectTest extends TestingContext {
+public class SelectTest extends TestingContextImpl {
   @Test
   public void spec_of_select_is_inferred_correctly() {
     Struc_ struct = animalVal("rabbit", 7);

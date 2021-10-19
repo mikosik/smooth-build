@@ -25,13 +25,13 @@ import org.smoothbuild.lang.parse.TypeInferrer;
 import com.google.common.collect.ImmutableMap;
 
 public class TestingModuleLoader {
-  private final TestingContext testingContext;
+  private final AbstractTestingContext testingContext;
   private final String sourceCode;
   private ModuleFiles moduleFiles;
   private Definitions imported;
   private Maybe<SModule> module;
 
-  TestingModuleLoader(TestingContext testingContext, String sourceCode) {
+  TestingModuleLoader(AbstractTestingContext testingContext, String sourceCode) {
     this.testingContext = testingContext;
     this.sourceCode = sourceCode;
   }

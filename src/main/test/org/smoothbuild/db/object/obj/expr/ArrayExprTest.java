@@ -7,11 +7,11 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.collect.ImmutableList;
 
-public class ArrayExprTest extends TestingContext {
+public class ArrayExprTest extends TestingContextImpl {
   @Test
   public void spec_of_empty_array_is_inferred_correctly() {
     assertThat(arrayExpr(list()).spec())

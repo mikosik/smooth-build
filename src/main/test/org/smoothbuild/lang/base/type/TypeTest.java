@@ -22,11 +22,11 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.testing.EqualsTester;
 
-public class TypeTest extends TestingContext {
+public class TypeTest extends TestingContextImpl {
   @Test
   public void verify_all_base_types_are_tested() {
     assertThat(INFERABLE_BASE_TYPES)

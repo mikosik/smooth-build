@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class ConstTest extends TestingContext {
+public class ConstTest extends TestingContextImpl {
   @Test
   public void spec_of_const_expr_is_inferred_correctly() {
     assertThat(intExpr(1).spec())

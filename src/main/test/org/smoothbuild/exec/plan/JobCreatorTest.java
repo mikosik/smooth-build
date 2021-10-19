@@ -18,12 +18,12 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.util.Scope;
 
 import com.google.common.collect.ImmutableMap;
 
-public class JobCreatorTest extends TestingContext {
+public class JobCreatorTest extends TestingContextImpl {
   @Test
   public void lazy_task_is_created_for_parameter() {
     var functionBody = blobExpression(0x33);

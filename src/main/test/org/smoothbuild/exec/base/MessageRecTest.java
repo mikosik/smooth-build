@@ -5,9 +5,9 @@ import static org.smoothbuild.exec.base.MessageRec.containsErrors;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class MessageRecTest extends TestingContext {
+public class MessageRecTest extends TestingContextImpl {
   private Array messages;
 
   @Test

@@ -6,11 +6,11 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.testing.EqualsTester;
 
-public class BoundsMapTest extends TestingContext {
+public class BoundsMapTest extends TestingContextImpl {
   @Test
   public void equality() {
     new EqualsTester()

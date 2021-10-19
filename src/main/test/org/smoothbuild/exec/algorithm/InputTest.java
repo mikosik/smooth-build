@@ -5,9 +5,9 @@ import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class InputTest extends TestingContext{
+public class InputTest extends TestingContextImpl {
   @Test
   public void different_inputs_have_different_hashes() {
     var string1 = strVal("abc");

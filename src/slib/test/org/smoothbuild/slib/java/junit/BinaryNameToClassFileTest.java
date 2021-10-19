@@ -10,10 +10,10 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.testing.common.JarTester;
 
-public class BinaryNameToClassFileTest extends TestingContext {
+public class BinaryNameToClassFileTest extends TestingContextImpl {
   @Test
   public void binary_names_are_mapped_to_proper_class_files() throws IOException, JunitException {
     Struc_ file1 = fileVal(path("a/Klass.class"));

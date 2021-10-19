@@ -23,11 +23,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
 
-public class HashedDbTest extends TestingContext {
+public class HashedDbTest extends TestingContextImpl {
   private final ByteString bytes1 = ByteString.encodeUtf8("aaa");
   private final ByteString bytes2 = ByteString.encodeUtf8("bbb");
   private HashingBufferedSink sink;

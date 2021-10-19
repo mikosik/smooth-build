@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.lang.base.define.TestingLocation;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class ReporterTest extends TestingContext {
+public class ReporterTest extends TestingContextImpl {
   private static final String HEADER = "TASK NAME";
   private static final Log FATAL_LOG = fatal("message");
   private static final Log ERROR_LOG = error("message");

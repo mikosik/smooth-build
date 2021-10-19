@@ -4,9 +4,9 @@ import static org.smoothbuild.testing.TestingModuleLoader.err;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.TestingContextImpl;
 
-public class ExpressionUsageTest extends TestingContext {
+public class ExpressionUsageTest extends TestingContextImpl {
   @Nested
   class _blob_literal_used_as {
     @Test
