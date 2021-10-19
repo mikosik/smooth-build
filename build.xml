@@ -181,6 +181,7 @@
     <path id="classpath-for.testing.java">
         <path refid="classpath-with.main.java"/>
         <path refid="classpath-with.junit-platform"/>
+        <pathelement location="${lib.guava-testlib}"/>
         <pathelement location="${lib.hamcrest}"/>
         <pathelement location="${lib.truth}"/>
     </path>
