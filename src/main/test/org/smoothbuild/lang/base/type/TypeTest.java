@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestingTypes.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Sets.set;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -247,6 +249,30 @@ public class TypeTest extends TestingContext {
       equalsTester.addEqualityGroup(a(a(type)), a(a(type)));
     }
     equalsTester.testEquals();
+  }
+
+  @Nested
+  class _struct {
+    @Test
+    public void _without_fields_can_be_created() {
+      structT("Struct", list());
+    }
+
+    @Test
+    public void first_field_type_can_be_nothing() {
+      structT("Struct", list(nothingT()));
+    }
+
+    @Test
+    public void first_field_type_can_be_nothing_array() {
+      structT("Struct", list(arrayT(nothingT())));
+    }
+
+    @Test
+    public void different_size_of_fields_and_names_causes_exception() {
+      assertCall(() -> structT("Struct", list(stringT()), list("name1", "name2")))
+          .throwsException(IllegalArgumentException.class);
+    }
   }
 
   private <T> T invoke(Function<TypeFactory, T> f) {
