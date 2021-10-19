@@ -50,6 +50,6 @@ public class StructTypeImpl extends AbstractTypeImpl implements StructType {
     return object instanceof StructTypeImpl thatStruct
         && this.name().equals(thatStruct.name())
         && this.fields.equals(thatStruct.fields)
-        && this.nameToIndex.equals(thatStruct.nameToIndex);
+        && this.names.equals(thatStruct.names);
   }
 }
