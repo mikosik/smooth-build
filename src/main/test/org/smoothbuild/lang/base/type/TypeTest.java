@@ -184,39 +184,6 @@ public class TypeTest extends TestingContext {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("elemType_test_data")
-  public void elemType(Function<TypeFactory, Type> factoryCall) {
-    Type element = invoke(factoryCall);
-    ArrayType array = typeFactory().array(element);
-    assertThat(array.element())
-        .isEqualTo(element);
-  }
-
-  public static List<Arguments> elemType_test_data() {
-    return asList(
-        args(f -> f.any()),
-        args(f -> f.blob()),
-        args(f -> f.bool()),
-        args(f -> f.function(f.string(), list())),
-        args(f -> f.int_()),
-        args(f -> f.nothing()),
-        args(f -> f.string()),
-        args(f -> f.struct("Person", list(f.string()), list("name"))),
-        args(f -> f.variable("A")),
-
-        args(f -> f.array(f.any())),
-        args(f -> f.array(f.blob())),
-        args(f -> f.array(f.bool())),
-        args(f -> f.array(f.function(f.string(), list()))),
-        args(f -> f.array(f.int_())),
-        args(f -> f.array(f.nothing())),
-        args(f -> f.array(f.string())),
-        args(f -> f.array(f.struct("Person", list(f.string()), list("name")))),
-        args(f -> f.array(f.variable("A")))
-    );
-  }
-
   @Test
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
@@ -251,6 +218,41 @@ public class TypeTest extends TestingContext {
     equalsTester.testEquals();
   }
 
+  @Nested
+  class _array {
+    @ParameterizedTest
+    @MethodSource("elemType_test_data")
+    public void elemType(Function<TypeFactory, Type> factoryCall) {
+      Type element = invoke(factoryCall);
+      ArrayType array = typeFactory().array(element);
+      assertThat(array.element())
+          .isEqualTo(element);
+    }
+
+    public static List<Arguments> elemType_test_data() {
+      return asList(
+          args(f -> f.any()),
+          args(f -> f.blob()),
+          args(f -> f.bool()),
+          args(f -> f.function(f.string(), list())),
+          args(f -> f.int_()),
+          args(f -> f.nothing()),
+          args(f -> f.string()),
+          args(f -> f.struct("Person", list(f.string()), list("name"))),
+          args(f -> f.variable("A")),
+
+          args(f -> f.array(f.any())),
+          args(f -> f.array(f.blob())),
+          args(f -> f.array(f.bool())),
+          args(f -> f.array(f.function(f.string(), list()))),
+          args(f -> f.array(f.int_())),
+          args(f -> f.array(f.nothing())),
+          args(f -> f.array(f.string())),
+          args(f -> f.array(f.struct("Person", list(f.string()), list("name")))),
+          args(f -> f.array(f.variable("A")))
+      );
+    }
+  }
   @Nested
   class _struct {
     @Test
