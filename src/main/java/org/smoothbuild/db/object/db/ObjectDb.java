@@ -144,8 +144,8 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExpr(elements));
   }
 
-  public RecExpr eRecExpr(ImmutableList<? extends Expr> items) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newERecExpr(items));
+  public RecExpr recExpr(ImmutableList<? extends Expr> items) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRecExpr(items));
   }
 
   public Select selectExpr(Expr rec, Int index) {
@@ -268,10 +268,10 @@ public class ObjectDb {
     }
   }
 
-  private RecExpr newERecExpr(List<? extends Expr> items) throws HashedDbException {
+  private RecExpr newRecExpr(List<? extends Expr> items) throws HashedDbException {
     var itemSpecs = map(items, Expr::evaluationSpec);
     var spec = specDb.recExprSpec(itemSpecs);
-    var data = writeERecData(items);
+    var data = writeRecExprData(items);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -396,7 +396,7 @@ public class ObjectDb {
     return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash());
   }
 
-  private Hash writeERecData(List<? extends Expr> items) throws HashedDbException {
+  private Hash writeRecExprData(List<? extends Expr> items) throws HashedDbException {
     return writeSequence(items);
   }
 

@@ -545,7 +545,7 @@ public class TestingContext {
   }
 
   public Call callExpr(Expr function, ImmutableList<? extends Expr> arguments) {
-    return objectDb().callExpr(function, eRecExpr(arguments));
+    return objectDb().callExpr(function, recExpr(arguments));
   }
 
   public Const constExpr(Val val) {
@@ -556,8 +556,8 @@ public class TestingContext {
     return objectDb().arrayExpr(elements);
   }
 
-  public RecExpr eRecExpr(ImmutableList<? extends Expr> items) {
-    return objectDb().eRecExpr(items);
+  public RecExpr recExpr(ImmutableList<? extends Expr> items) {
+    return objectDb().recExpr(items);
   }
 
   public Select selectExpr(Expr rec, Int index) {

@@ -406,7 +406,7 @@ public class CorruptedObjTest extends TestingContext {
       var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
       var lambda = lambdaVal(lambdaSpec, intExpr());
       Const function = constExpr(lambda);
-      RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
+      RecExpr arguments = recExpr(list(strExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callSpec()),
@@ -430,7 +430,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const function = intExpr(0);
-      RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
+      RecExpr arguments = recExpr(list(strExpr(), intExpr()));
       Hash dataHash = hash(
           hash(function),
           hash(arguments)
@@ -466,7 +466,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
       Const function = intExpr(0);
-      RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
+      RecExpr arguments = recExpr(list(strExpr(), intExpr()));
       Hash dataHash = hash(
           hash(function),
           hash(arguments),
@@ -484,7 +484,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void function_is_val_instead_of_expr() throws Exception {
       Int val = intVal(0);
-      RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
+      RecExpr arguments = recExpr(list(strExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callSpec()),
@@ -501,7 +501,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void function_component_evaluation_spec_is_not_lambda() throws Exception {
       Const function = intExpr(3);
-      RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
+      RecExpr arguments = recExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(strSpec());
       Hash objHash =
           hash(
@@ -558,7 +558,7 @@ public class CorruptedObjTest extends TestingContext {
     public void evaluation_spec_is_different_than_function_evaluation_spec_result()
         throws Exception {
       Const function = constExpr(lambdaVal(lambdaSpec(intSpec(), list(strSpec())), intExpr()));
-      RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
+      RecExpr arguments = recExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(strSpec());
       Hash objHash =
           hash(
@@ -578,7 +578,7 @@ public class CorruptedObjTest extends TestingContext {
         throws Exception {
       LambdaSpec lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), boolSpec()));
       Const function = constExpr(lambdaVal(lambdaSpec, intExpr()));
-      RecExpr arguments = eRecExpr(list(strExpr(), intExpr()));
+      RecExpr arguments = recExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(intSpec());
       Hash objHash =
           hash(

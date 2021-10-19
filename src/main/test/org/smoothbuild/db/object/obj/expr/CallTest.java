@@ -4,8 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.expr.Call.CallData;
@@ -61,7 +59,7 @@ public class CallTest extends TestingContext {
     var function = constExpr(lambdaVal());
     var arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).data().arguments())
-        .isEqualTo(eRecExpr(arguments));
+        .isEqualTo(recExpr(arguments));
   }
 
   @Test
@@ -150,7 +148,7 @@ public class CallTest extends TestingContext {
     ImmutableList<Expr> arguments = list(strExpr());
     Call call = callExpr(function, arguments);
     assertThat(((Call) objectDbOther().get(call.hash())).data())
-        .isEqualTo(new CallData(function, eRecExpr(arguments)));
+        .isEqualTo(new CallData(function, recExpr(arguments)));
   }
 
   @Test
