@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.base.type.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.lang.base.type.api.StructType.calculateVariables;
 import static org.smoothbuild.lang.base.type.api.StructTypes.fieldsMap;
-import static org.smoothbuild.util.Sets.set;
 
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
@@ -20,7 +20,7 @@ public class StructTypeImpl extends AbstractTypeImpl implements StructType {
 
   public StructTypeImpl(String name, ImmutableList<? extends Type> fields,
       ImmutableList<String> names) {
-    super(name, set());
+    super(name, calculateVariables(fields));
     checkArgument(fields.size() == names.size(), "fields and names must have equal sizes");
     this.fields = fields;
     this.names = names;
