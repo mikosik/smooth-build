@@ -1,21 +1,6 @@
 package org.smoothbuild.lang.base.type.api;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-
 public class StructTypes {
-  public static ImmutableMap<String, Integer> fieldsMap(ImmutableList<String> names) {
-    Builder<String, Integer> builder = ImmutableMap.builder();
-    for (int i = 0; i < names.size(); i++) {
-      String name = names.get(i);
-      if (!name.isEmpty()) {
-        builder.put(name, i);
-      }
-    }
-    return builder.build();
-  }
-
   public static boolean containsField(StructType type, String name) {
     return type.nameToIndex().containsKey(name);
   }
