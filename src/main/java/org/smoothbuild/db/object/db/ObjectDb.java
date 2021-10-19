@@ -1,7 +1,6 @@
 package org.smoothbuild.db.object.db;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.cannotReadRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nonNullObjRootException;
@@ -141,11 +140,11 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstExpr(val));
   }
 
-  public ArrayExpr arrayExpr(Iterable<? extends Expr> elements) {
+  public ArrayExpr arrayExpr(List<? extends Expr> elements) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExpr(elements));
   }
 
-  public RecExpr eRecExpr(Iterable<? extends Expr> items) {
+  public RecExpr eRecExpr(ImmutableList<? extends Expr> items) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newERecExpr(items));
   }
 
@@ -241,7 +240,7 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private ArrayExpr newArrayExpr(Iterable<? extends Expr> elements) throws HashedDbException {
+  private ArrayExpr newArrayExpr(List<? extends Expr> elements) throws HashedDbException {
     ValSpec elementSpec = elementSpec(elements);
     var spec = specDb.arrayExprSpec(elementSpec);
     var data = writeArrayExprData(elements);
@@ -249,8 +248,8 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private ValSpec elementSpec(Iterable<? extends Expr> elements) {
-    Optional<ValSpec> elementSpec = stream(elements)
+  private ValSpec elementSpec(List<? extends Expr> elements) {
+    Optional<ValSpec> elementSpec = elements.stream()
         .map(expr -> expr.spec().evaluationSpec())
         .reduce((spec1, spec2) -> {
           if (spec1.equals(spec2)) {
@@ -269,7 +268,7 @@ public class ObjectDb {
     }
   }
 
-  private RecExpr newERecExpr(Iterable<? extends Expr> items) throws HashedDbException {
+  private RecExpr newERecExpr(List<? extends Expr> items) throws HashedDbException {
     var itemSpecs = map(items, Expr::evaluationSpec);
     var spec = specDb.recExprSpec(itemSpecs);
     var data = writeERecData(items);
@@ -318,7 +317,7 @@ public class ObjectDb {
 
   // methods for creating Val Obj-s
 
-  public Array newArrayVal(ArraySpec spec, Iterable<? extends Obj> elements)
+  public Array newArrayVal(ArraySpec spec, List<? extends Obj> elements)
       throws HashedDbException {
     var data = writeArrayData(elements);
     var root = writeRoot(spec, data);
@@ -389,7 +388,7 @@ public class ObjectDb {
     return val.hash();
   }
 
-  private Hash writeArrayExprData(Iterable<? extends Expr> elements) throws HashedDbException {
+  private Hash writeArrayExprData(List<? extends Expr> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 
@@ -397,7 +396,7 @@ public class ObjectDb {
     return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash());
   }
 
-  private Hash writeERecData(Iterable<? extends Expr> items) throws HashedDbException {
+  private Hash writeERecData(List<? extends Expr> items) throws HashedDbException {
     return writeSequence(items);
   }
 
@@ -411,7 +410,7 @@ public class ObjectDb {
 
   // methods for writing data of Val-s
 
-  private Hash writeArrayData(Iterable<? extends Obj> elements) throws HashedDbException {
+  private Hash writeArrayData(List<? extends Obj> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 
@@ -441,7 +440,7 @@ public class ObjectDb {
 
   // helpers
 
-  private Hash writeSequence(Iterable<? extends Obj> objs) throws HashedDbException {
+  private Hash writeSequence(List<? extends Obj> objs) throws HashedDbException {
     var hashes = map(objs, Obj::hash);
     return hashedDb.writeSequence(hashes);
   }

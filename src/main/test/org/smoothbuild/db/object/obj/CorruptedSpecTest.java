@@ -58,6 +58,8 @@ import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
+import com.google.common.collect.ImmutableList;
+
 import okio.ByteString;
 
 public class CorruptedSpecTest extends TestingContext {
@@ -288,7 +290,7 @@ public class CorruptedSpecTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme
        * to save lambda spec in HashedDb.
        */
-      var parameterSpecs = list(strSpec(), boolSpec());
+      ImmutableList<ValSpec> parameterSpecs = list(strSpec(), boolSpec());
       RecSpec parameterRec = recSpec(parameterSpecs);
       Hash specHash = hash(
           hash(LAMBDA.marker()),

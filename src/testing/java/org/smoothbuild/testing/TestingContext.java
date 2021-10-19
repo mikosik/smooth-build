@@ -301,12 +301,12 @@ public class TestingContext {
     return specDb().string();
   }
 
-  public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
+  public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
     return specDb().recSpec(itemSpecs);
   }
 
   public RecSpec recSpecWithAbsents(int size) {
-    return specDb().recSpec(nCopies(size, absentSpec()));
+    return specDb().recSpec(ImmutableList.copyOf(nCopies(size, absentSpec())));
   }
 
   public RecSpec emptyRecSpec() {
@@ -389,7 +389,7 @@ public class TestingContext {
     return recExprSpec(list(intSpec(), strSpec()));
   }
 
-  public RecExprSpec recExprSpec(Iterable<? extends ValSpec> itemSpecs) {
+  public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
     return specDb().recExprSpec(itemSpecs);
   }
 
@@ -544,7 +544,7 @@ public class TestingContext {
     return constExpr(boolVal(true));
   }
 
-  public Call callExpr(Expr function, List<? extends Expr> arguments) {
+  public Call callExpr(Expr function, ImmutableList<? extends Expr> arguments) {
     return objectDb().callExpr(function, eRecExpr(arguments));
   }
 
@@ -552,11 +552,11 @@ public class TestingContext {
     return objectDb().constExpr(val);
   }
 
-  public ArrayExpr arrayExpr(Iterable<? extends Expr> elements) {
+  public ArrayExpr arrayExpr(List<? extends Expr> elements) {
     return objectDb().arrayExpr(elements);
   }
 
-  public RecExpr eRecExpr(Iterable<? extends Expr> items) {
+  public RecExpr eRecExpr(ImmutableList<? extends Expr> items) {
     return objectDb().eRecExpr(items);
   }
 

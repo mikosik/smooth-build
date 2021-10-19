@@ -7,6 +7,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -131,7 +132,7 @@ public class ObjectFactory {
     return objectDb.callExpr(function, arguments);
   }
 
-  public ArrayExpr arrayExpr(Iterable<? extends Expr> elements) {
+  public ArrayExpr arrayExpr(List<? extends Expr> elements) {
     return objectDb.arrayExpr(elements);
   }
 
@@ -179,7 +180,7 @@ public class ObjectFactory {
     return specDb.string();
   }
 
-  public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
+  public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
     return specDb.recSpec(itemSpecs);
   }
 

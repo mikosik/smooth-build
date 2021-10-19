@@ -58,8 +58,8 @@ public class CallTest extends TestingContext {
 
   @Test
   public void arguments_returns_argument_exprs() {
-    Const function = constExpr(lambdaVal());
-    List<Const> arguments = list(strExpr()) ;
+    var function = constExpr(lambdaVal());
+    var arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).data().arguments())
         .isEqualTo(eRecExpr(arguments));
   }
@@ -67,7 +67,7 @@ public class CallTest extends TestingContext {
   @Test
   public void call_with_equal_values_are_equal() {
     Const function = constExpr(lambdaVal());
-    List<Const> arguments = list(strExpr()) ;
+    var arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments))
         .isEqualTo(callExpr(function, arguments));
   }
@@ -76,7 +76,7 @@ public class CallTest extends TestingContext {
   public void call_with_different_functions_are_not_equal() {
     Const function1 = constExpr(lambdaVal(intExpr(1)));
     Const function2 = constExpr(lambdaVal(intExpr(2)));
-    List<Const> arguments = list(strExpr()) ;
+    var arguments = list(strExpr()) ;
     assertThat(callExpr(function1, arguments))
         .isNotEqualTo(callExpr(function2, arguments));
   }
@@ -91,7 +91,7 @@ public class CallTest extends TestingContext {
   @Test
   public void hash_of_calls_with_equal_values_is_the_same() {
     Const function = constExpr(lambdaVal());
-    List<Const> arguments = list(strExpr()) ;
+    var arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).hash())
         .isEqualTo(callExpr(function, arguments).hash());
   }
@@ -101,7 +101,7 @@ public class CallTest extends TestingContext {
     LambdaSpec spec = lambdaSpec(intSpec(), list(strSpec()));
     Const function1 = constExpr(lambdaVal(spec, intExpr(1)));
     Const function2 = constExpr(lambdaVal(spec, intExpr(2)));
-    List<Const> arguments = list(strExpr()) ;
+    var arguments = list(strExpr()) ;
     assertThat(callExpr(function1, arguments).hash())
         .isNotEqualTo(callExpr(function2, arguments).hash());
   }
@@ -116,7 +116,7 @@ public class CallTest extends TestingContext {
   @Test
   public void hash_code_of_calls_with_equal_values_is_the_same() {
     Const function = constExpr(lambdaVal());
-    List<Const> arguments = list(strExpr()) ;
+    var arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).hashCode())
         .isEqualTo(callExpr(function, arguments).hashCode());
   }
@@ -125,7 +125,7 @@ public class CallTest extends TestingContext {
   public void hash_code_of_calls_with_different_function_is_not_the_same() {
     Const function1 = constExpr(lambdaVal(intExpr(1)));
     Const function2 = constExpr(lambdaVal(intExpr(2)));
-    List<Const> arguments = list(strExpr()) ;
+    var arguments = list(strExpr()) ;
     assertThat(callExpr(function1, arguments).hashCode())
         .isNotEqualTo(callExpr(function2, arguments).hashCode());
   }

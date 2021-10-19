@@ -207,7 +207,7 @@ public class SpecDb implements TypeFactory {
     return nullSpec;
   }
 
-  public RecExprSpec recExprSpec(Iterable<? extends ValSpec> itemSpecs) {
+  public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(itemSpecs));
   }
 
@@ -219,7 +219,7 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRefSpec(evaluationSpec));
   }
 
-  public RecSpec recSpec(Iterable<? extends ValSpec> itemSpecs) {
+  public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(itemSpecs));
   }
 
@@ -426,12 +426,12 @@ public class SpecDb implements TypeFactory {
     return cacheSpec(new LambdaSpec(rootHash, result, parameters));
   }
 
-  private RecSpec newRecSpec(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
+  private RecSpec newRecSpec(ImmutableList<ValSpec> itemSpecs) throws HashedDbException {
     var hash = writeRecSpecRoot(itemSpecs);
     return newRecSpec(hash, itemSpecs);
   }
 
-  private RecSpec newRecSpec(Hash rootHash, Iterable<? extends ValSpec> itemSpecs) {
+  private RecSpec newRecSpec(Hash rootHash, ImmutableList<? extends ValSpec> itemSpecs) {
     return cacheSpec(new RecSpec(rootHash, itemSpecs));
   }
 
@@ -495,8 +495,7 @@ public class SpecDb implements TypeFactory {
     return cacheSpec(new InvokeSpec(rootHash, evaluationSpec));
   }
 
-  private RecExprSpec newRecExprSpec(Iterable<? extends ValSpec> elementSpec)
-      throws HashedDbException {
+  private RecExprSpec newRecExprSpec(ImmutableList<ValSpec> elementSpec) throws HashedDbException {
     var evaluationSpec = recSpec(elementSpec);
     var rootHash = writeExprSpecRoot(RECORD_EXPR, evaluationSpec);
     return newRecExprSpec(rootHash, evaluationSpec);
@@ -541,7 +540,7 @@ public class SpecDb implements TypeFactory {
     return writeNonBaseSpecRoot(LAMBDA, hash);
   }
 
-  private Hash writeRecSpecRoot(Iterable<? extends ValSpec> itemSpecs) throws HashedDbException {
+  private Hash writeRecSpecRoot(ImmutableList<? extends Spec> itemSpecs) throws HashedDbException {
     var itemsHash = hashedDb.writeSequence(map(itemSpecs, Spec::hash));
     return writeNonBaseSpecRoot(RECORD, itemsHash);
   }

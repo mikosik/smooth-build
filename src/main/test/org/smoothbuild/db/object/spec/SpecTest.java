@@ -410,7 +410,7 @@ public class SpecTest {
     return recSpec(list(items));
   }
 
-  private static RecSpec recSpec(List<ValSpec> items) {
+  private static RecSpec recSpec(ImmutableList<ValSpec> items) {
     return SPEC_DB.recSpec(items);
   }
 
