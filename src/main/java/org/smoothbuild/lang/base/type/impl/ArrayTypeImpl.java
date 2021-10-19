@@ -9,7 +9,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class ArrayTypeImpl extends AbstractType implements ArrayType {
+public class ArrayTypeImpl extends AbstractTypeImpl implements ArrayType {
   private final Type elemType;
 
   public ArrayTypeImpl(Type elemType) {

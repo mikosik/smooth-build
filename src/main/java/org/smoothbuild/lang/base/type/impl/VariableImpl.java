@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableSet;
  *
  * This class is immutable.
  */
-public class VariableImpl extends AbstractType implements Variable {
+public class VariableImpl extends AbstractTypeImpl implements Variable {
   private final ImmutableSet<Variable> variables;
 
   public VariableImpl(String name) {

@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * This class is immutable.
  */
-public class StructTypeImpl extends AbstractType implements StructType {
+public class StructTypeImpl extends AbstractTypeImpl implements StructType {
   private final ImmutableList<? extends Type> fields;
   private final ImmutableList<String> names;
   private final ImmutableMap<String, Integer> nameToIndex;

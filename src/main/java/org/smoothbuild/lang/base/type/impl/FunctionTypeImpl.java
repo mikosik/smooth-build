@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class FunctionTypeImpl extends AbstractType implements FunctionType {
+public class FunctionTypeImpl extends AbstractTypeImpl implements FunctionType {
   private final Type result;
   private final ImmutableList<Type> parameters;
 
