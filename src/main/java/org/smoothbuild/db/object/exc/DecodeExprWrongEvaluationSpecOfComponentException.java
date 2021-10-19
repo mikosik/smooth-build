@@ -12,13 +12,13 @@ public class DecodeExprWrongEvaluationSpecOfComponentException extends DecodeObj
 
   public DecodeExprWrongEvaluationSpecOfComponentException(Hash hash, Spec spec, String component,
       ValSpec expected, ValSpec actual) {
-    super(buildMessage(hash, spec, component, expected.name(), actual));
+    super(buildMessage(hash, spec, component, expected.q(), actual));
   }
 
   private static String buildMessage(Hash hash, Spec spec, String component,
       String expected, ValSpec actual) {
     return ("Cannot decode %s object at %s. Its `%s` component evaluation spec is %s while "
         + "expected %s.")
-        .formatted(spec.name(), hash, component, actual.name(), expected);
+        .formatted(spec.q(), hash, component, actual.q(), expected);
   }
 }

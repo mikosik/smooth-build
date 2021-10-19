@@ -9,13 +9,14 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.lang.base.type.api.IntType;
+import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
 public class IntSpec extends ValSpec implements IntType {
   public IntSpec(Hash hash) {
-    super(hash, INT);
+    super(TypeNames.INT, hash, INT);
   }
 
   @Override

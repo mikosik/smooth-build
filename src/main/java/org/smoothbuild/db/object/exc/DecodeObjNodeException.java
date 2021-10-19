@@ -17,7 +17,7 @@ public class DecodeObjNodeException extends DecodeObjException {
   }
 
   private static String buildMessage(Hash hash, Spec spec, String path, String message) {
-    return "Cannot decode " + spec.name() + " object at " + hash + ". Cannot decode its node at `"
+    return "Cannot decode " + spec.q() + " object at " + hash + ". Cannot decode its node at `"
         + path + "` path in Merkle tree. " + (message != null ? message : "");
   }
 }

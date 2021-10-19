@@ -12,7 +12,7 @@ public class DecodeObjNodeExceptionTest extends TestingContext {
     var exception = new DecodeObjNodeException(
         Hash.of(13), intSpec(), "node-path", "Detailed message.");
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode INT object at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "
+        .isEqualTo("Cannot decode `Int` object at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "
             + "Cannot decode its node at `node-path` path in Merkle tree. Detailed message.");
   }
 }

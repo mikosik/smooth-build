@@ -245,8 +245,8 @@ public class NativeTest extends AcceptanceTestCase {
             runSmoothBuild("result");
             assertFinishedWithError();
             assertSysOutContains("`emptyStringArray` has faulty native implementation: "
-                + "Its declared result spec == `[BLOB]` but it returned"
-                + " object with spec == `[STRING]`.");
+                + "Its declared result spec == `[Blob]` but it returned"
+                + " object with spec == `[String]`.");
           }
 
           @Test
@@ -261,7 +261,7 @@ public class NativeTest extends AcceptanceTestCase {
             assertFinishedWithError();
             assertSysOutContains(
                 "`addElementOfWrongTypeToArray` threw java exception from its native code.");
-            assertSysOutContains("Element spec must be BLOB but was STRING.");
+            assertSysOutContains("Element spec must be Blob but was String.");
           }
         }
       }
@@ -571,8 +571,8 @@ public class NativeTest extends AcceptanceTestCase {
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains("`brokenIdentity` has faulty native implementation: "
-              + "Its declared result spec == `[NOTHING]` but it returned "
-              + "object with spec == `STRING`.");
+              + "Its declared result spec == `[Nothing]` but it returned "
+              + "object with spec == `String`.");
         }
 
         @Test
@@ -605,8 +605,8 @@ public class NativeTest extends AcceptanceTestCase {
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains("`emptyStringArray` has faulty native implementation: "
-              + "Its declared result spec == `[BLOB]` but it returned object with "
-              + "spec == `[STRING]`.");
+              + "Its declared result spec == `[Blob]` but it returned object with "
+              + "spec == `[String]`.");
         }
 
         @Test
@@ -621,7 +621,7 @@ public class NativeTest extends AcceptanceTestCase {
           assertFinishedWithError();
           assertSysOutContains(
               "`addElementOfWrongTypeToArray` threw java exception from its native code.");
-          assertSysOutContains("Element spec must be BLOB but was STRING.");
+          assertSysOutContains("Element spec must be Blob but was String.");
         }
       }
     }

@@ -15,7 +15,7 @@ import org.smoothbuild.db.object.spec.val.RecSpec;
  */
 public class RecExprSpec extends ExprSpec {
   public RecExprSpec(Hash hash, RecSpec evaluationSpec) {
-    super(hash, RECORD_EXPR, evaluationSpec);
+    super("RECORD", hash, RECORD_EXPR, evaluationSpec);
   }
 
   @Override

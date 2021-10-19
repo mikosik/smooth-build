@@ -13,7 +13,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  */
 public class AbsentSpec extends ValSpec {
   public AbsentSpec(Hash hash) {
-    super(hash, ABSENT);
+    super("!Absent", hash, ABSENT);
   }
 
   @Override

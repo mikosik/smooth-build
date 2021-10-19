@@ -12,8 +12,8 @@ public class DecodeExprWrongEvaluationSpecOfComponentExceptionTest extends Testi
     var exception = new DecodeExprWrongEvaluationSpecOfComponentException(
         Hash.of(13), selectSpec(intSpec()), "rec", intSpec(), strSpec());
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode SELECT:INT "
+        .isEqualTo("Cannot decode `SELECT:Int` "
             + "object at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "
-            + "Its `rec` component evaluation spec is STRING while expected INT.");
+            + "Its `rec` component evaluation spec is `String` while expected `Int`.");
   }
 }

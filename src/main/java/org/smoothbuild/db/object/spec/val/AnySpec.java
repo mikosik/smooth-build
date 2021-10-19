@@ -14,7 +14,7 @@ import org.smoothbuild.lang.base.type.api.AnyType;
  */
 public class AnySpec extends ValSpec implements AnyType {
   public AnySpec(Hash hash) {
-    super(hash, ANY);
+    super("!Any", hash, ANY);
   }
 
   @Override

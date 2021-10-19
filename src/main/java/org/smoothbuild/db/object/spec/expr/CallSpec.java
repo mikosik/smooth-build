@@ -15,7 +15,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  */
 public class CallSpec extends ExprSpec {
   public CallSpec(Hash hash, ValSpec evaluationSpec) {
-    super(hash, CALL, evaluationSpec);
+    super("CALL", hash, CALL, evaluationSpec);
   }
 
   @Override

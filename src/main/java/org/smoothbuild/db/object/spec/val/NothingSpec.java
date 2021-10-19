@@ -8,13 +8,14 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.lang.base.type.api.NothingType;
+import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
 public class NothingSpec extends ValSpec implements NothingType {
   public NothingSpec(Hash hash) {
-    super(hash, NOTHING);
+    super(TypeNames.NOTHING, hash, NOTHING);
   }
 
   @Override

@@ -32,21 +32,21 @@ public class CallTest extends TestingContext {
   public void creating_call_with_too_few_arguments_causes_exception() {
     assertCall(() -> callExpr(constExpr(lambdaVal()), list()))
         .throwsException(new IllegalArgumentException("Arguments evaluation spec {} should be "
-            + "equal to function evaluation spec parameters {STRING}."));
+            + "equal to function evaluation spec parameters {String}."));
   }
 
   @Test
   public void creating_call_with_too_many_arguments_causes_exception() {
     assertCall(() -> callExpr(constExpr(lambdaVal()), list(intExpr(), intExpr())))
-        .throwsException(new IllegalArgumentException("Arguments evaluation spec {INT,INT}"
-            + " should be equal to function evaluation spec parameters {STRING}."));
+        .throwsException(new IllegalArgumentException("Arguments evaluation spec {Int,Int}"
+            + " should be equal to function evaluation spec parameters {String}."));
   }
 
   @Test
   public void creating_call_with_argument_not_matching_parameter_spec_causes_exception() {
     assertCall(() -> callExpr(constExpr(lambdaVal()), list(intExpr(3))))
-        .throwsException(new IllegalArgumentException("Arguments evaluation spec {INT} should be"
-            + " equal to function evaluation spec parameters {STRING}."));
+        .throwsException(new IllegalArgumentException("Arguments evaluation spec {Int} should be"
+            + " equal to function evaluation spec parameters {String}."));
   }
 
   @Test

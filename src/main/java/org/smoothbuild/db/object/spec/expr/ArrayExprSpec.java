@@ -15,7 +15,7 @@ import org.smoothbuild.db.object.spec.val.ArraySpec;
  */
 public class ArrayExprSpec extends ExprSpec {
   public ArrayExprSpec(Hash hash, ArraySpec evaluationSpec) {
-    super(hash, ARRAY_EXPR, evaluationSpec);
+    super("ARRAY", hash, ARRAY_EXPR, evaluationSpec);
   }
 
   @Override

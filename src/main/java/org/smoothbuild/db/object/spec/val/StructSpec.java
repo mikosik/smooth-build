@@ -15,15 +15,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class StructSpec extends ValSpec implements StructType {
-  private final String name;
   private final ImmutableList<ValSpec> fields;
   private final ImmutableList<String> names;
   private final ImmutableMap<String, Integer> nameToIndex;
 
   public StructSpec(Hash hash, String name, ImmutableList<ValSpec> fields,
       ImmutableList<String> names) {
-    super(hash, STRUCT);
-    this.name = name;
+    super(name, hash, STRUCT);
     this.fields = fields;
     this.names = names;
     this.nameToIndex = fieldsMap(names);
@@ -42,11 +40,6 @@ public class StructSpec extends ValSpec implements StructType {
   @Override
   public ImmutableList<String> names() {
     return names;
-  }
-
-  @Override
-  public String name() {
-    return name;
   }
 
   @Override

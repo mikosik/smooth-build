@@ -15,7 +15,7 @@ import org.smoothbuild.db.object.spec.val.NothingSpec;
  */
 public class NullSpec extends ExprSpec {
   public NullSpec(Hash hash, NothingSpec evaluationSpec) {
-    super(hash, NULL, evaluationSpec);
+    super("NULL", hash, NULL, evaluationSpec);
   }
 
   @Override

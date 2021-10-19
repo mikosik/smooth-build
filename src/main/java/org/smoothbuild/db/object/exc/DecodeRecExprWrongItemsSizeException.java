@@ -12,7 +12,7 @@ public class DecodeRecExprWrongItemsSizeException extends DecodeObjException {
     return ("Cannot decode %s object at %s. Evaluation spec items size (%s)"
         + " is not equal to actual items size (%s).")
         .formatted(
-            spec.name(),
+            spec.q(),
             hash,
             spec.evaluationSpec().items().size(),
             actual);

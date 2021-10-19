@@ -12,6 +12,6 @@ public class DecodeSelectWrongEvaluationSpecException extends DecodeObjException
   private static String buildMessage(Hash hash, SelectSpec spec, ValSpec actual) {
     return ("Cannot decode %s object at %s. Its index points to item with %s spec while this "
         + "expression defines its evaluation spec as %s.")
-        .formatted(spec.name(), hash, actual.name(), spec.evaluationSpec().name());
+        .formatted(spec.q(), hash, actual.q(), spec.evaluationSpec().q());
   }
 }

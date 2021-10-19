@@ -15,7 +15,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  */
 public class InvokeSpec extends ExprSpec {
   public InvokeSpec(Hash hash, ValSpec evaluationSpec) {
-    super(hash, INVOKE, evaluationSpec);
+    super("INVOKE", hash, INVOKE, evaluationSpec);
   }
 
   @Override

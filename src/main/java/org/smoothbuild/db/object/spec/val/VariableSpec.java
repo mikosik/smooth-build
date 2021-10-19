@@ -1,6 +1,7 @@
 package org.smoothbuild.db.object.spec.val;
 
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
+import static org.smoothbuild.util.Sets.set;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
@@ -9,17 +10,21 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.lang.base.type.api.Variable;
 
+import com.google.common.collect.ImmutableSet;
+
 public class VariableSpec extends ValSpec implements Variable {
   private final String name;
+  private final ImmutableSet<Variable> variables;
 
   public VariableSpec(Hash hash, String name) {
-    super(hash, VARIABLE);
+    super(name, hash, VARIABLE);
     this.name = name;
+    this.variables = set(this);
   }
 
   @Override
-  public String name() {
-    return name;
+  public ImmutableSet<Variable> variables() {
+    return variables;
   }
 
   @Override

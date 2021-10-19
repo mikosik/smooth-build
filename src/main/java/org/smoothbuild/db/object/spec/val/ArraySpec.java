@@ -3,6 +3,7 @@ package org.smoothbuild.db.object.spec.val;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
+import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
@@ -18,7 +19,7 @@ public class ArraySpec extends ValSpec implements ArrayType {
   private final ValSpec element;
 
   public ArraySpec(Hash hash, ValSpec element) {
-    super(hash, ARRAY);
+    super(arrayTypeName(element), hash, ARRAY);
     this.element = requireNonNull(element);
   }
 
@@ -31,10 +32,5 @@ public class ArraySpec extends ValSpec implements ArrayType {
   public Array newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
     return new Array(merkleRoot, objectDb);
-  }
-
-  @Override
-  public String name() {
-    return "[" + element.name() + "]";
   }
 }

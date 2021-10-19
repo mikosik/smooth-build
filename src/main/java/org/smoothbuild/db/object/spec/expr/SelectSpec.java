@@ -15,7 +15,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  */
 public class SelectSpec extends ExprSpec {
   public SelectSpec(Hash hash, ValSpec evaluationSpec) {
-    super(hash, SELECT, evaluationSpec);
+    super("SELECT", hash, SELECT, evaluationSpec);
   }
 
   @Override

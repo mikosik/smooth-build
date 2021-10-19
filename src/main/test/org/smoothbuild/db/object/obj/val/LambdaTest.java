@@ -138,6 +138,6 @@ public class LambdaTest extends TestingContext {
     strExpr();
     Lambda lambda = lambdaVal(lambdaSpec, intExpr());
     assertThat(lambda.toString())
-        .isEqualTo("Lambda(INT(STRING))@" + lambda.hash());
+        .isEqualTo("Lambda(Int(String))@" + lambda.hash());
   }
 }

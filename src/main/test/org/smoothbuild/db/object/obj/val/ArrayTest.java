@@ -35,7 +35,7 @@ public class ArrayTest extends TestingContext {
         .build();
     assertCall(() -> array.elements(Struc_.class))
         .throwsException(new IllegalArgumentException(
-            "[STRING] cannot be viewed as Iterable of " + Struc_.class.getCanonicalName() + "."));
+            "[String] cannot be viewed as Iterable of " + Struc_.class.getCanonicalName() + "."));
   }
 
   @Test

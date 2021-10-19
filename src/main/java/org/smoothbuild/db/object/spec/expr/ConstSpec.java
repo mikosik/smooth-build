@@ -15,7 +15,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
  */
 public class ConstSpec extends ExprSpec {
   public ConstSpec(Hash hash, ValSpec evaluationSpec) {
-    super(hash, CONST, evaluationSpec);
+    super("CONST", hash, CONST, evaluationSpec);
   }
 
   @Override

@@ -9,13 +9,14 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.lang.base.type.api.StringType;
+import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
 public class StrSpec extends ValSpec implements StringType {
   public StrSpec(Hash hash) {
-    super(hash, STRING);
+    super(TypeNames.STRING, hash, STRING);
   }
 
   @Override

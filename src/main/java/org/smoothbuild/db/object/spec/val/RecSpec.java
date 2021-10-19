@@ -1,6 +1,7 @@
 package org.smoothbuild.db.object.spec.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.Streams.stream;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 
@@ -20,7 +21,7 @@ public class RecSpec extends ValSpec {
   private final ImmutableList<ValSpec> itemSpecs;
 
   public RecSpec(Hash hash, Iterable<? extends ValSpec> itemSpecs) {
-    super(hash, RECORD);
+    super(calculateName(itemSpecs), hash, RECORD);
     this.itemSpecs = ImmutableList.copyOf(itemSpecs);
   }
 
@@ -30,13 +31,11 @@ public class RecSpec extends ValSpec {
     return new Rec(merkleRoot, objectDb);
   }
 
-  @Override
-  public String name() {
-    String elementNames = itemSpecs.stream().map(Spec::name).collect(joining(","));
-    return "{" + elementNames + "}";
-  }
-
   public ImmutableList<ValSpec> items() {
     return itemSpecs;
+  }
+
+  private static String calculateName(Iterable<? extends ValSpec> itemSpecs) {
+    return "{" + stream(itemSpecs).map(Spec::name).collect(joining(",")) + "}";
   }
 }

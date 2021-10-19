@@ -14,8 +14,7 @@ public class UnexpectedObjNodeException extends DecodeObjNodeException {
   }
 
   private static String buildMessage(Spec expected, Spec actual) {
-    return "Node has unexpected spec. Expected " + expected.name() + " but was " + actual.name()
-        + ".";
+    return "Node has unexpected spec. Expected " + expected.q() + " but was " + actual.q() + ".";
   }
 
   public UnexpectedObjNodeException(Hash hash, Spec spec, String memberPath, int pathIndex,
