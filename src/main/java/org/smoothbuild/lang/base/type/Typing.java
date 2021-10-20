@@ -91,6 +91,10 @@ public class Typing {
     return typeFactory.bool();
   }
 
+  public FunctionType function(Type resultType, ImmutableList<Type> parameters) {
+    return typeFactory.function(resultType, parameters);
+  }
+
   public IntType int_() {
     return typeFactory.int_();
   }
@@ -105,10 +109,6 @@ public class Typing {
 
   public StructType struct(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
     return typeFactory.struct(name, fields, names);
-  }
-
-  public FunctionType function(Type resultType, ImmutableList<Type> parameters) {
-    return typeFactory.function(resultType, parameters);
   }
 
   public Side upper() {
