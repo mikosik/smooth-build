@@ -605,7 +605,7 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save const
        * in HashedDb.
        */
-      Val val = objectDb().intVal(BigInteger.valueOf(123));
+      Val val = intVal(123);
       Hash objHash =
           hash(
               hash(constSpec()),
@@ -623,7 +623,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
           constSpec(),
-          objectDb().intVal(BigInteger.valueOf(123)).hash(),
+          intVal(123).hash(),
           (Hash objHash) -> ((Const) objectDb().get(objHash)).value()
       );
     }
@@ -637,7 +637,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_hash_pointing_to_expr_instead_of_value() throws Exception {
-      Val val = objectDb().intVal(BigInteger.valueOf(123));
+      Val val = intVal(123);
       Hash exprHash =
           hash(
               hash(constSpec()),
@@ -654,7 +654,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void evaluation_spec_is_different_than_spec_of_wrapped_value()
         throws Exception {
-      Val val = objectDb().intVal(BigInteger.valueOf(123));
+      Val val = intVal(123);
       ConstSpec spec = constSpec(strSpec());
       Hash objHash =
           hash(
@@ -998,9 +998,9 @@ public class CorruptedObjTest extends TestingContextImpl {
        * select in HashedDb.
        */
       var structSpec = structSpec(list(strSpec()), list("field"));
-      var struct = objectDb().structVal(structSpec, list(objectDb().strVal("abc")));
-      var expr = objectDb().constExpr(struct);
-      var index = objectDb().intVal(BigInteger.valueOf(0));
+      var struct = structVal(structSpec, list(strVal("abc")));
+      var expr = constExpr(struct);
+      var index = intVal(0);
       Hash objHash =
           hash(
               hash(selectSpec(strSpec())),
@@ -1020,8 +1020,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      Val index = objectDb().intVal(BigInteger.valueOf(2));
-      Const expr = objectDb().constExpr(objectDb().intVal(BigInteger.valueOf(123)));
+      Val index = intVal(2);
+      Const expr = constExpr(intVal(123));
       Hash dataHash = hash(
           hash(expr),
           hash(index)
@@ -1041,7 +1041,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_is_sequence_with_one_element() throws Exception {
-      Const expr = objectDb().constExpr(objectDb().intVal(BigInteger.valueOf(123)));
+      Const expr = constExpr(intVal(123));
       Hash dataHash = hash(
           hash(expr)
       );
@@ -1057,8 +1057,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
-      Val index = objectDb().intVal(BigInteger.valueOf(2));
-      Const expr = objectDb().constExpr(objectDb().intVal(BigInteger.valueOf(123)));
+      Val index = intVal(2);
+      Const expr = constExpr(intVal(123));
       Hash dataHash = hash(
           hash(expr),
           hash(index),
@@ -1076,8 +1076,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void rec_is_val_instead_of_expr() throws Exception {
-      Val val = objectDb().intVal(BigInteger.valueOf(2));
-      Val index = objectDb().intVal(BigInteger.valueOf(2));
+      Val val = intVal(2);
+      Val index = intVal(2);
       Hash objHash =
           hash(
               hash(selectSpec()),
@@ -1093,9 +1093,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void struct_is_not_struct_expr() throws Exception {
-      var structSpec = structSpec(list(strSpec()), list("field"));
       var expr = intExpr(3);
-      var index = objectDb().intVal(BigInteger.valueOf(0));
+      var index = intVal(0);
       var spec = selectSpec(strSpec());
       Hash objHash =
           hash(
@@ -1114,9 +1113,9 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void index_is_out_of_bounds() throws Exception {
       var structSpec = structSpec(list(strSpec()), list("field"));
-      var struct = objectDb().structVal(structSpec, list(objectDb().strVal("abc")));
-      var expr = objectDb().constExpr(struct);
-      var index = objectDb().intVal(BigInteger.valueOf(1));
+      var struct = structVal(structSpec, list(strVal("abc")));
+      var expr = constExpr(struct);
+      var index = intVal(1);
       var spec = selectSpec(strSpec());
       Hash objHash =
           hash(
@@ -1135,9 +1134,9 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void evaluation_spec_is_different_than_spec_of_item_pointed_to_by_index()
         throws Exception {
       var structSpec = structSpec(list(strSpec()), list("field"));
-      var struct = objectDb().structVal(structSpec, list(objectDb().strVal("abc")));
-      var expr = objectDb().constExpr(struct);
-      var index = objectDb().intVal(BigInteger.valueOf(0));
+      var struct = structVal(structSpec, list(strVal("abc")));
+      var expr = constExpr(struct);
+      var index = intVal(0);
       var spec = selectSpec(intSpec());
       Hash objHash =
           hash(
@@ -1156,9 +1155,9 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void index_is_string_instead_of_int() throws Exception {
       var spec = selectSpec(strSpec());
       var structSpec = structSpec(list(strSpec()), list("field"));
-      var struct = objectDb().structVal(structSpec, list(objectDb().strVal("abc")));
-      var expr = objectDb().constExpr(struct);
-      var strVal = objectDb().strVal("abc");
+      var struct = structVal(structSpec, list(strVal("abc")));
+      var expr = constExpr(struct);
+      var strVal = strVal("abc");
       Hash objHash =
           hash(
               hash(spec),
