@@ -44,7 +44,7 @@ public class AstVisitor {
 
   public void visitReferencable(ReferencableNode referencable) {
     if (referencable instanceof RealFuncNode func) {
-      visitFunc(func);
+      visitRealFunc(func);
     } else if (referencable instanceof ValueNode value) {
       visitValue(value);
     } else if (referencable instanceof ConstructorNode constructor) {
@@ -61,7 +61,7 @@ public class AstVisitor {
     value.body().ifPresent(this::visitExpr);
   }
 
-  public void visitFunc(RealFuncNode func) {
+  public void visitRealFunc(RealFuncNode func) {
     func.annotation().ifPresent(this::visitNative);
     func.typeNode().ifPresent(this::visitType);
     func.body().ifPresent(this::visitExpr);

@@ -112,7 +112,7 @@ public class AnalyzeSemantically {
     new AstVisitor() {
       Scope<ReferencableLike> scope = localScope;
       @Override
-      public void visitFunc(RealFuncNode func) {
+      public void visitRealFunc(RealFuncNode func) {
         func.typeNode().ifPresent(this::visitType);
 
         var nameToParam = func.params()
@@ -149,8 +149,8 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitFunc(RealFuncNode func) {
-        super.visitFunc(func);
+      public void visitRealFunc(RealFuncNode func) {
+        super.visitRealFunc(func);
         func.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
@@ -279,8 +279,8 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitFunc(RealFuncNode func) {
-        super.visitFunc(func);
+      public void visitRealFunc(RealFuncNode func) {
+        super.visitRealFunc(func);
         if (func.typeNode().isPresent()) {
           var counters = new CountersMap<String>();
           countFunctionVariables(counters, func.typeNode().get(),
@@ -317,8 +317,8 @@ public class AnalyzeSemantically {
   private static void detectNativesWithBodyAndNonNativesWithoutBody(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitFunc(RealFuncNode func) {
-        super.visitFunc(func);
+      public void visitRealFunc(RealFuncNode func) {
+        super.visitRealFunc(func);
         check(func, "function");
       }
 

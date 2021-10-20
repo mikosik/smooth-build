@@ -90,7 +90,7 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitFunc(RealFuncNode func) {
+      public void visitRealFunc(RealFuncNode func) {
         visitParams(func.params());
         func.body().ifPresent(this::visitExpr);
         func.setType(optionalFunctionType(evaluationTypeOfGlobalReferencable(func), func.optParameterTypes()));
