@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
+import org.smoothbuild.antlr.lang.SmoothParser.AnnotationContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
@@ -28,7 +29,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FunctionTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
-import org.smoothbuild.antlr.lang.SmoothParser.NatContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ReferencableContext;
@@ -81,30 +81,30 @@ public class AstCreator {
         Optional<TypeNode> type = createTypeSane(referencable.type());
         String name = nameNode.getText();
         Optional<ExprNode> expr = createExprSane(referencable.expr());
-        Optional<NativeNode> nativ = createNativeSane(referencable.nat());
+        Optional<AnnotationNode> annotation = createNativeSane(referencable.annotation());
         Location location = locationOf(filePath, nameNode);
         if (referencable.paramList() == null) {
-          referencables.add(new ValueNode(type, name, expr, nativ, location));
+          referencables.add(new ValueNode(type, name, expr, annotation, location));
         } else {
           List<ItemNode> params = createParams(referencable.paramList());
-          referencables.add(new RealFuncNode(type, name, params, expr, nativ, location));
+          referencables.add(new RealFuncNode(type, name, params, expr, annotation, location));
         }
         return null;
       }
 
-      private Optional<NativeNode> createNativeSane(NatContext nativ) {
-        if (nativ == null) {
+      private Optional<AnnotationNode> createNativeSane(AnnotationContext annotation) {
+        if (annotation == null) {
           return Optional.empty();
         } else {
-          return Optional.of(new NativeNode(
-              createStringNode(nativ, nativ.STRING()),
-              isPure(nativ),
-              locationOf(filePath, nativ)));
+          return Optional.of(new AnnotationNode(
+              createStringNode(annotation, annotation.STRING()),
+              isPure(annotation),
+              locationOf(filePath, annotation)));
         }
       }
 
-      private boolean isPure(NatContext atNative) {
-        return atNative.pure != null || atNative.impure == null;
+      private boolean isPure(AnnotationContext annotation) {
+        return annotation.pure != null || annotation.impure == null;
       }
 
       private List<ItemNode> createParams(ParamListContext paramList) {

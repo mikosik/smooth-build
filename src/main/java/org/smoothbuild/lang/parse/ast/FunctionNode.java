@@ -16,8 +16,8 @@ public class FunctionNode extends ReferencableNode {
   private final ImmutableList<ItemNode> params;
 
   public FunctionNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> body,
-      List<ItemNode> params, Optional<NativeNode> nativ, Location location) {
-    super(typeNode, name, body, nativ, location);
+      List<ItemNode> params, Optional<AnnotationNode> annotation, Location location) {
+    super(typeNode, name, body, annotation, location);
     this.params = ImmutableList.copyOf(params);
   }
 

@@ -56,20 +56,20 @@ public class AstVisitor {
   }
 
   public void visitValue(ValueNode value) {
-    value.nativ().ifPresent(this::visitNative);
+    value.annotation().ifPresent(this::visitNative);
     value.typeNode().ifPresent(this::visitType);
     value.body().ifPresent(this::visitExpr);
   }
 
   public void visitFunc(RealFuncNode func) {
-    func.nativ().ifPresent(this::visitNative);
+    func.annotation().ifPresent(this::visitNative);
     func.typeNode().ifPresent(this::visitType);
     func.body().ifPresent(this::visitExpr);
     visitFunction(func);
   }
 
-  public void visitNative(NativeNode nativ) {
-    visitStringLiteral(nativ.path());
+  public void visitNative(AnnotationNode annotation) {
+    visitStringLiteral(annotation.path());
   }
 
   public void visitParams(List<ItemNode> params) {

@@ -35,13 +35,13 @@ import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.SelectExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
+import org.smoothbuild.lang.parse.ast.AnnotationNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
-import org.smoothbuild.lang.parse.ast.NativeNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
@@ -72,8 +72,8 @@ public class ReferencableLoader {
     Type type = valueNode.type().get();
     String name = valueNode.name();
     Location location = valueNode.location();
-    if (valueNode.nativ().isPresent()) {
-      return new NativeValue(type, path, name, loadNative(valueNode.nativ().get()), location);
+    if (valueNode.annotation().isPresent()) {
+      return new NativeValue(type, path, name, loadAnnotation(valueNode.annotation().get()), location);
     } else {
       ExpressionLoader loader = new ExpressionLoader(path, ImmutableMap.of());
       return new DefinedValue(
@@ -87,9 +87,9 @@ public class ReferencableLoader {
     String name = realFuncNode.name();
     Location location = realFuncNode.location();
     FunctionType type = typing.function(resultType, toTypes(parameters));
-    if (realFuncNode.nativ().isPresent()) {
+    if (realFuncNode.annotation().isPresent()) {
       return new NativeFunction(type,
-          path, name, parameters, loadNative(realFuncNode.nativ().get()), location
+          path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
       );
     } else {
       var expressionLoader = new ExpressionLoader(path, toMap(parameters, Item::name, Item::type));
@@ -98,11 +98,11 @@ public class ReferencableLoader {
     }
   }
 
-  private AnnotationExpression loadNative(NativeNode nativeNode) {
+  private AnnotationExpression loadAnnotation(AnnotationNode annotationNode) {
     StructType type = typing.struct(
         "Native", list(typing.string(), typing.blob()), list("path", "content"));
-    var path = createStringLiteral(nativeNode.path());
-    return new AnnotationExpression(type, path, nativeNode.isPure(), nativeNode.location());
+    var path = createStringLiteral(annotationNode.path());
+    return new AnnotationExpression(type, path, annotationNode.isPure(), annotationNode.location());
   }
 
   private ImmutableList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {

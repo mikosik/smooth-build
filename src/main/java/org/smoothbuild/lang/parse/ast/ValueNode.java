@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.define.Location;
 
 public class ValueNode extends ReferencableNode {
   public ValueNode(Optional<TypeNode> type, String name, Optional<ExprNode> body,
-      Optional<NativeNode> nativ, Location location) {
-    super(type, name, body, nativ, location);
+      Optional<AnnotationNode> annotation, Location location) {
+    super(type, name, body, annotation, location);
   }
 }
