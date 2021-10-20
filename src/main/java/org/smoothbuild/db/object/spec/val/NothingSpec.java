@@ -19,6 +19,11 @@ public class NothingSpec extends ValSpec implements NothingType {
   }
 
   @Override
+  public boolean isNothing() {
+    return true;
+  }
+
+  @Override
   public Obj newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     throw new UnsupportedOperationException("Cannot create object for " + NOTHING + " spec.");
   }

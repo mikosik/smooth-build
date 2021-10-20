@@ -34,10 +34,6 @@ public abstract class Spec extends AbstractType {
     return hash;
   }
 
-  public SpecKind kind() {
-    return kind;
-  }
-
   @Override
   public boolean equals(Object object) {
     return (object instanceof Spec that) && Objects.equals(hash(), that.hash());
@@ -53,6 +49,6 @@ public abstract class Spec extends AbstractType {
   }
 
   public boolean isNothing() {
-    return kind == SpecKind.NOTHING;
+    return false;
   }
 }
