@@ -44,7 +44,7 @@ public class Typing {
   @Inject
   public Typing(TypeFactory typeFactory) {
     this.typeFactory = typeFactory;
-    this.sides = new Sides(any(), nothing());
+    this.sides = new Sides(typeFactory.any(), typeFactory.nothing());
   }
 
   /**
