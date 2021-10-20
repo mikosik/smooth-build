@@ -290,8 +290,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
 
     for (Type type : types) {
       equalsTester.addEqualityGroup(type, type);
-      equalsTester.addEqualityGroup(a(type), a(type));
-      equalsTester.addEqualityGroup(a(a(type)), a(a(type)));
+      equalsTester.addEqualityGroup(f.array(type), f.array(type));
+      equalsTester.addEqualityGroup(f.array(f.array(type)), f.array(f.array(type)));
     }
     equalsTester.testEquals();
   }
