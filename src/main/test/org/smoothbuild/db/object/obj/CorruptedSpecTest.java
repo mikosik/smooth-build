@@ -151,6 +151,59 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
+  class _array_expr_spec {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save ArrayExpr spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(ARRAY_EXPR.marker()),
+          hash(arraySpec(intSpec()))
+      );
+      assertThat(hash)
+          .isEqualTo(arrayExprSpec(intSpec()).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(ARRAY_EXPR);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(ARRAY_EXPR);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_spec(ARRAY_EXPR);
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      test_spec_with_corrupted_spec_as_data(ARRAY_EXPR);
+    }
+
+    @Test
+    public void with_evaluation_spec_being_expr_spec() throws Exception {
+      test_spec_with_data_spec_being_expr_spec(ARRAY_EXPR, ArraySpec.class);
+    }
+
+    @Test
+    public void with_evaluation_spec_not_being_array_spec() throws Exception {
+      Hash hash = hash(
+          hash(ARRAY_EXPR.marker()),
+          hash(intSpec())
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new UnexpectedSpecNodeException(
+              hash, ARRAY_EXPR, DATA_PATH, ArraySpec.class, IntSpec.class));
+    }
+  }
+
+  @Nested
   class _array_spec {
     @Test
     public void learn_creating_spec() throws Exception {
@@ -279,6 +332,48 @@ public class CorruptedSpecTest extends TestingContextImpl {
     @Test
     public void with_evaluation_spec_being_expr_spec() throws Exception {
       test_spec_with_data_spec_being_expr_spec(CONST, ValSpec.class);
+    }
+  }
+
+  @Nested
+  class _invoke_spec {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save invoke spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(INVOKE.marker()),
+          hash(intSpec())
+      );
+      assertThat(hash)
+          .isEqualTo(invokeSpec(intSpec()).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(INVOKE);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(INVOKE);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_spec(INVOKE);
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      test_spec_with_corrupted_spec_as_data(INVOKE);
+    }
+
+    @Test
+    public void with_evaluation_spec_being_expr_spec() throws Exception {
+      test_spec_with_data_spec_being_expr_spec(INVOKE, ValSpec.class);
     }
   }
 
@@ -477,196 +572,6 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _invoke_spec {
-    @Test
-    public void learn_creating_spec() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save invoke spec in HashedDb.
-       */
-      Hash hash = hash(
-          hash(INVOKE.marker()),
-          hash(intSpec())
-      );
-      assertThat(hash)
-          .isEqualTo(invokeSpec(intSpec()).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_spec_without_data(INVOKE);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(INVOKE);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(INVOKE);
-    }
-
-    @Test
-    public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(INVOKE);
-    }
-
-    @Test
-    public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(INVOKE, ValSpec.class);
-    }
-  }
-
-  @Nested
-  class _array_expr_spec {
-    @Test
-    public void learn_creating_spec() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save ArrayExpr spec in HashedDb.
-       */
-      Hash hash = hash(
-          hash(ARRAY_EXPR.marker()),
-          hash(arraySpec(intSpec()))
-      );
-      assertThat(hash)
-          .isEqualTo(arrayExprSpec(intSpec()).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_spec_without_data(ARRAY_EXPR);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(ARRAY_EXPR);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(ARRAY_EXPR);
-    }
-
-    @Test
-    public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(ARRAY_EXPR);
-    }
-
-    @Test
-    public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(ARRAY_EXPR, ArraySpec.class);
-    }
-
-    @Test
-    public void with_evaluation_spec_not_being_array_spec() throws Exception {
-      Hash hash = hash(
-          hash(ARRAY_EXPR.marker()),
-          hash(intSpec())
-      );
-      assertThatGetSpec(hash)
-          .throwsException(new UnexpectedSpecNodeException(
-              hash, ARRAY_EXPR, DATA_PATH, ArraySpec.class, IntSpec.class));
-    }
-  }
-
-  @Nested
-  class _record_expr_spec {
-    @Test
-    public void learn_creating_spec() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save recordExpr spec in HashedDb.
-       */
-      Hash hash = hash(
-          hash(RECORD_EXPR.marker()),
-          hash(recSpec(list(intSpec(), strSpec())))
-      );
-      assertThat(hash)
-          .isEqualTo(recExprSpec(list(intSpec(), strSpec())).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_spec_without_data(RECORD_EXPR);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(RECORD_EXPR);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(RECORD_EXPR);
-    }
-
-    @Test
-    public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(RECORD_EXPR);
-    }
-
-    @Test
-    public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(RECORD_EXPR, RecSpec.class);
-    }
-
-    @Test
-    public void with_evaluation_spec_not_being_rec_spec() throws Exception {
-      Hash hash = hash(
-          hash(RECORD_EXPR.marker()),
-          hash(intSpec())
-      );
-      assertThatGetSpec(hash)
-          .throwsException(new UnexpectedSpecNodeException(
-              hash, RECORD_EXPR, DATA_PATH, RecSpec.class, IntSpec.class));
-    }
-  }
-
-  @Nested
-  class _select_spec {
-    @Test
-    public void learn_creating_spec() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save call spec in HashedDb.
-       */
-      Hash hash = hash(
-          hash(SELECT.marker()),
-          hash(intSpec())
-      );
-      assertThat(hash)
-          .isEqualTo(selectSpec(intSpec()).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_spec_without_data(SELECT);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(SELECT);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(SELECT);
-    }
-
-    @Test
-    public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(SELECT);
-    }
-
-    @Test
-    public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(SELECT, ValSpec.class);
-    }
-  }
-
-  @Nested
   class _rec_spec {
     @Test
     public void learn_creating_spec() throws Exception {
@@ -752,6 +657,59 @@ public class CorruptedSpecTest extends TestingContextImpl {
       assertThatGetSpec(hash)
           .throwsException(new DecodeSpecNodeException(hash, RECORD, "data[0]"))
           .withCause(corruptedArraySpecException());
+    }
+  }
+
+  @Nested
+  class _record_expr_spec {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save recordExpr spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(RECORD_EXPR.marker()),
+          hash(recSpec(list(intSpec(), strSpec())))
+      );
+      assertThat(hash)
+          .isEqualTo(recExprSpec(list(intSpec(), strSpec())).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(RECORD_EXPR);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(RECORD_EXPR);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_spec(RECORD_EXPR);
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      test_spec_with_corrupted_spec_as_data(RECORD_EXPR);
+    }
+
+    @Test
+    public void with_evaluation_spec_being_expr_spec() throws Exception {
+      test_spec_with_data_spec_being_expr_spec(RECORD_EXPR, RecSpec.class);
+    }
+
+    @Test
+    public void with_evaluation_spec_not_being_rec_spec() throws Exception {
+      Hash hash = hash(
+          hash(RECORD_EXPR.marker()),
+          hash(intSpec())
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new UnexpectedSpecNodeException(
+              hash, RECORD_EXPR, DATA_PATH, RecSpec.class, IntSpec.class));
     }
   }
 
@@ -915,6 +873,48 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
     return hashedDb().writeSequence(hashes);
+  }
+
+  @Nested
+  class _select_spec {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save call spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(SELECT.marker()),
+          hash(intSpec())
+      );
+      assertThat(hash)
+          .isEqualTo(selectSpec(intSpec()).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(SELECT);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(SELECT);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_spec(SELECT);
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      test_spec_with_corrupted_spec_as_data(SELECT);
+    }
+
+    @Test
+    public void with_evaluation_spec_being_expr_spec() throws Exception {
+      test_spec_with_data_spec_being_expr_spec(SELECT, ValSpec.class);
+    }
   }
 
   @Nested
