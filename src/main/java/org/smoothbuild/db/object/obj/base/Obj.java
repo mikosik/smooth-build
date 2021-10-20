@@ -9,11 +9,11 @@ import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.object.exc.DecodeObjNodeException;
-import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.exc.UnexpectedObjSequenceException;
 import org.smoothbuild.db.object.obj.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
+import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
+import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
 import org.smoothbuild.db.object.spec.base.Spec;
 
 import com.google.common.collect.ImmutableList;

@@ -1,4 +1,4 @@
-package org.smoothbuild.db.object.exc;
+package org.smoothbuild.db.object.spec.exc;
 
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.db.object.exc;
+package org.smoothbuild.db.object.db;
 
 public class ObjectDbException extends RuntimeException {
   public ObjectDbException(String message, Throwable cause) {

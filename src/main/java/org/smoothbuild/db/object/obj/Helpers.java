@@ -2,8 +2,8 @@ package org.smoothbuild.db.object.obj;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.exc.DecodeObjNodeException;
-import org.smoothbuild.db.object.exc.ObjectDbException;
+import org.smoothbuild.db.object.db.ObjectDbException;
+import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.spec.base.Spec;
 
 public class Helpers {

@@ -1,10 +1,10 @@
 package org.smoothbuild.db.object.exc;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.object.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.exc.DecodeObjRootException.nonNullObjRootException;
-import static org.smoothbuild.db.object.exc.DecodeObjRootException.nullObjRootException;
-import static org.smoothbuild.db.object.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.nonNullObjRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.nullObjRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;

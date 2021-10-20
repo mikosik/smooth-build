@@ -5,6 +5,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.spec.exc.UnexpectedSpecSequenceException;
 import org.smoothbuild.testing.TestingContextImpl;
 
 public class UnexpectedSpecSequenceExceptionTest extends TestingContextImpl {

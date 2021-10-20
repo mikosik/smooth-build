@@ -1,11 +1,11 @@
 package org.smoothbuild.db.object.obj;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.db.object.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.exc.DecodeObjRootException.nonNullObjRootException;
-import static org.smoothbuild.db.object.exc.DecodeObjRootException.nullObjRootException;
-import static org.smoothbuild.db.object.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.nonNullObjRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.nullObjRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.util.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.Lists.map;
 
@@ -18,13 +18,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
-import org.smoothbuild.db.object.exc.DecodeObjSpecException;
-import org.smoothbuild.db.object.exc.NoSuchObjException;
-import org.smoothbuild.db.object.exc.ObjectDbException;
+import org.smoothbuild.db.object.db.ObjectDbException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.exc.DecodeObjSpecException;
+import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;

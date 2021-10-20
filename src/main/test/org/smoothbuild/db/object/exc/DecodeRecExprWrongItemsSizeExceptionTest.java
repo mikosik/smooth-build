@@ -5,6 +5,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.obj.exc.DecodeRecExprWrongItemsSizeException;
 import org.smoothbuild.testing.TestingContextImpl;
 
 public class DecodeRecExprWrongItemsSizeExceptionTest extends TestingContextImpl {

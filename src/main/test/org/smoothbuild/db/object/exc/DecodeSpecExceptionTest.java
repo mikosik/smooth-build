@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.spec.exc.DecodeSpecException;
 
 public class DecodeSpecExceptionTest {
   @Test

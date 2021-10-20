@@ -4,12 +4,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.exc.DecodeExprWrongEvaluationSpecOfComponentException;
-import org.smoothbuild.db.object.exc.DecodeSelectIndexOutOfBoundsException;
-import org.smoothbuild.db.object.exc.DecodeSelectWrongEvaluationSpecException;
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationSpecOfComponentException;
+import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
+import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationSpecException;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;

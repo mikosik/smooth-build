@@ -2,10 +2,10 @@ package org.smoothbuild.db.object.spec;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.exc.DecodeSpecException;
-import org.smoothbuild.db.object.exc.DecodeSpecNodeException;
-import org.smoothbuild.db.object.exc.ObjectDbException;
+import org.smoothbuild.db.object.db.ObjectDbException;
 import org.smoothbuild.db.object.spec.base.SpecKind;
+import org.smoothbuild.db.object.spec.exc.DecodeSpecException;
+import org.smoothbuild.db.object.spec.exc.DecodeSpecNodeException;
 
 public class Helpers {
   public static <T> T wrapHashedDbExceptionAsDecodeSpecException(

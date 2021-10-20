@@ -1,4 +1,4 @@
-package org.smoothbuild.db.object.exc;
+package org.smoothbuild.db.object.obj.exc;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.base.Spec;

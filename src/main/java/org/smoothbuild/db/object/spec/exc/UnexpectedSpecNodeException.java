@@ -1,23 +1,26 @@
-package org.smoothbuild.db.object.exc;
+package org.smoothbuild.db.object.spec.exc;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.base.SpecKind;
 
-public class UnexpectedObjNodeException extends DecodeObjNodeException {
-  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, int pathIndex, Spec expected,
-      Spec actual) {
+public class UnexpectedSpecNodeException extends DecodeSpecNodeException {
+  public UnexpectedSpecNodeException(Hash hash, SpecKind spec, String path, int pathIndex,
+      Spec expected, Spec actual) {
     this(hash, spec, indexedPath(path, pathIndex), expected, actual);
   }
 
-  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, Spec expected, Spec actual) {
+  public UnexpectedSpecNodeException(Hash hash, SpecKind spec, String path, Spec expected,
+      Spec actual) {
     super(hash, spec, path, buildMessage(expected, actual));
   }
 
   private static String buildMessage(Spec expected, Spec actual) {
-    return "Node has unexpected spec. Expected " + expected.q() + " but was " + actual.q() + ".";
+    return "Node has unexpected spec. Expected " + expected.name() + " but was " + actual.name()
+        + ".";
   }
 
-  public UnexpectedObjNodeException(Hash hash, Spec spec, String memberPath, int pathIndex,
+  public UnexpectedSpecNodeException(Hash hash, SpecKind spec, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, spec, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -26,7 +29,7 @@ public class UnexpectedObjNodeException extends DecodeObjNodeException {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, Class<?> expected,
+  public UnexpectedSpecNodeException(Hash hash, SpecKind spec, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, spec, path, buildMessage(expected, actual));
   }

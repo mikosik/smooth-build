@@ -1,6 +1,7 @@
-package org.smoothbuild.db.object.exc;
+package org.smoothbuild.db.object.spec.exc;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.db.ObjectDbException;
 
 public class DecodeSpecException extends ObjectDbException {
   public DecodeSpecException(Hash hash) {

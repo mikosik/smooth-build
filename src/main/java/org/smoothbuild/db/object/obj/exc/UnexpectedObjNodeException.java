@@ -1,26 +1,23 @@
-package org.smoothbuild.db.object.exc;
+package org.smoothbuild.db.object.obj.exc;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.base.SpecKind;
 
-public class UnexpectedSpecNodeException extends DecodeSpecNodeException {
-  public UnexpectedSpecNodeException(Hash hash, SpecKind spec, String path, int pathIndex,
-      Spec expected, Spec actual) {
+public class UnexpectedObjNodeException extends DecodeObjNodeException {
+  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, int pathIndex, Spec expected,
+      Spec actual) {
     this(hash, spec, indexedPath(path, pathIndex), expected, actual);
   }
 
-  public UnexpectedSpecNodeException(Hash hash, SpecKind spec, String path, Spec expected,
-      Spec actual) {
+  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, Spec expected, Spec actual) {
     super(hash, spec, path, buildMessage(expected, actual));
   }
 
   private static String buildMessage(Spec expected, Spec actual) {
-    return "Node has unexpected spec. Expected " + expected.name() + " but was " + actual.name()
-        + ".";
+    return "Node has unexpected spec. Expected " + expected.q() + " but was " + actual.q() + ".";
   }
 
-  public UnexpectedSpecNodeException(Hash hash, SpecKind spec, String memberPath, int pathIndex,
+  public UnexpectedObjNodeException(Hash hash, Spec spec, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, spec, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -29,7 +26,7 @@ public class UnexpectedSpecNodeException extends DecodeSpecNodeException {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public UnexpectedSpecNodeException(Hash hash, SpecKind spec, String path, Class<?> expected,
+  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, spec, path, buildMessage(expected, actual));
   }
