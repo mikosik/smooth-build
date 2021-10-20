@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 

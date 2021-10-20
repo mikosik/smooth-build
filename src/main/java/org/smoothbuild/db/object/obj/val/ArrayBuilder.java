@@ -1,12 +1,12 @@
 package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.collect.Streams.stream;
-import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 

@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 

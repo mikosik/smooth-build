@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.spec.base.ExprSpec;

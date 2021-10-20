@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.base.type.api.TypeNames.functionTypeName;
 import static org.smoothbuild.lang.base.type.help.FunctionTypeImplHelper.calculateVariables;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.spec.base.ValSpec;

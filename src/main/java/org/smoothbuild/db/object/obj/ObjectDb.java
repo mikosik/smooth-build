@@ -1,11 +1,11 @@
-package org.smoothbuild.db.object.db;
+package org.smoothbuild.db.object.obj;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.cannotReadRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nonNullObjRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.nullObjRootException;
 import static org.smoothbuild.db.object.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.util.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.Lists.map;
 

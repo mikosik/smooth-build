@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.expr;
 
 import java.math.BigInteger;
 
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 

@@ -13,8 +13,8 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;

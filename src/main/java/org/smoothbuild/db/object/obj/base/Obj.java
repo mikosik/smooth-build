@@ -2,18 +2,18 @@ package org.smoothbuild.db.object.obj.base;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsDecodeObjNodeException;
-import static org.smoothbuild.db.object.db.Helpers.wrapObjectDbExceptionAsDecodeObjNodeException;
+import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsDecodeObjNodeException;
+import static org.smoothbuild.db.object.obj.Helpers.wrapObjectDbExceptionAsDecodeObjNodeException;
 
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.object.db.Helpers.HashedDbCallable;
-import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.exc.UnexpectedObjSequenceException;
+import org.smoothbuild.db.object.obj.Helpers.HashedDbCallable;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 
 import com.google.common.collect.ImmutableList;

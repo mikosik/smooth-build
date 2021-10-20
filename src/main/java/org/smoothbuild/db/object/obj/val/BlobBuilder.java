@@ -1,13 +1,13 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static org.smoothbuild.db.object.db.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
 
 import java.io.Closeable;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.util.io.DataWriter;
 
 import okio.BufferedSink;

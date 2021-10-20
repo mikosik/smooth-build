@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 

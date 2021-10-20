@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.spec.expr;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ABSENT;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.spec.base.ValSpec;

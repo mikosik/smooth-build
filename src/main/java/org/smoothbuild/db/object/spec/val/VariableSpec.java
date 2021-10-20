@@ -4,7 +4,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.util.Sets.set;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.spec.base.ValSpec;
