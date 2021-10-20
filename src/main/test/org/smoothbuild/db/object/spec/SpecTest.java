@@ -99,7 +99,7 @@ public class SpecTest {
   @MethodSource("names")
   public void to_string(Spec spec, String name) {
     assertThat(spec.toString())
-        .isEqualTo(name + "@" + spec.hash());
+        .isEqualTo("Type(`" + name + "`)");
   }
 
   public static Stream<Arguments> names() {

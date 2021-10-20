@@ -48,11 +48,6 @@ public abstract class Spec extends AbstractType {
     return hash().hashCode();
   }
 
-  @Override
-  public String toString() {
-    return name() + "@" + hash();
-  }
-
   public Class<? extends Obj> jType() {
     return kind.jType();
   }
