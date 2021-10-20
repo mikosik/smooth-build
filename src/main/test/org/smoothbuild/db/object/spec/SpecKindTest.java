@@ -42,7 +42,6 @@ public class SpecKindTest {
         Arguments.of(10, SpecKind.CONST),
         Arguments.of(11, SpecKind.ARRAY_EXPR),
         Arguments.of(12, SpecKind.SELECT),
-        Arguments.of(13, SpecKind.NULL),
         Arguments.of(14, SpecKind.REF),
         Arguments.of(15, SpecKind.RECORD_EXPR),
         Arguments.of(17, SpecKind.VARIABLE),

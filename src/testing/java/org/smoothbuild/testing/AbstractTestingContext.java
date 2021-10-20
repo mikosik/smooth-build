@@ -2,7 +2,6 @@ package org.smoothbuild.testing;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.stream;
-import static java.util.Collections.nCopies;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
@@ -28,7 +27,6 @@ import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Invoke;
-import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -47,7 +45,6 @@ import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.InvokeSpec;
-import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
@@ -364,10 +361,6 @@ public abstract class AbstractTestingContext {
     return specDb().invokeSpec(evaluationSpec);
   }
 
-  public NullSpec nullSpec() {
-    return specDb().nullSpec();
-  }
-
   public RecExprSpec recExprSpec() {
     return recExprSpec(list(intSpec(), strSpec()));
   }
@@ -557,10 +550,6 @@ public abstract class AbstractTestingContext {
 
   public Invoke invokeExpr(Blob jarFile, Str classBinaryName, ValSpec evaluationSpec) {
     return objectDb().invokeExpr(jarFile, classBinaryName, evaluationSpec);
-  }
-
-  public Null nullExpr() {
-    return objectDb().nullExpr();
   }
 
   public Ref refExpr(int value) {

@@ -35,7 +35,6 @@ public class TestingSpecs {
   public static final Spec ARRAY_EXPR = CONTEXT.arrayExprSpec();
   public static final Spec ERECORD = CONTEXT.recExprSpec(list(INT, STR));
   public static final Spec SELECT = CONTEXT.selectSpec(INT);
-  public static final Spec NULL = CONTEXT.nullSpec();
   public static final Spec REF = CONTEXT.refSpec(INT);
 
   public static final ArraySpec ARRAY_ANY = array(ANY);

@@ -3,8 +3,7 @@ package org.smoothbuild.db.object.obj;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.nonNullObjRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.nullObjRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.objRootException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.util.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.Lists.map;
@@ -29,7 +28,6 @@ import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Invoke;
-import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -158,10 +156,6 @@ public class ObjectDb {
         () -> newInvokeExpr(jarFile, classBinaryName, evaluationSpec));
   }
 
-  public Null nullExpr() {
-    return wrapHashedDbExceptionAsObjectDbException(this::newNullExpr);
-  }
-
   public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRefExpr(evaluationSpec, value));
   }
@@ -174,18 +168,11 @@ public class ObjectDb {
       throw wrongSizeOfRootSequenceException(rootHash, hashes.size());
     }
     Spec spec = getSpecOrChainException(rootHash, hashes.get(0));
-    if (spec.equals(specDb.nullSpec())) {
-      if (hashes.size() != 1) {
-        throw nullObjRootException(rootHash, hashes.size());
-      }
-      return spec.newObj(new MerkleRoot(rootHash, spec, null), this);
-    } else {
-      if (hashes.size() != 2) {
-        throw nonNullObjRootException(rootHash, hashes.size());
-      }
-      Hash dataHash = hashes.get(1);
-      return spec.newObj(new MerkleRoot(rootHash, spec, dataHash), this);
+    if (hashes.size() != 2) {
+      throw objRootException(rootHash, hashes.size());
     }
+    Hash dataHash = hashes.get(1);
+    return spec.newObj(new MerkleRoot(rootHash, spec, dataHash), this);
   }
 
   private Spec getSpecOrChainException(Hash rootHash, Hash specHash) {
@@ -302,11 +289,6 @@ public class ObjectDb {
     var data = writeInvokeData(jarFile, classBinaryName);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
-  }
-
-  private Null newNullExpr() throws HashedDbException {
-    var root = writeRoot(specDb.nullSpec());
-    return specDb.nullSpec().newObj(root, this);
   }
 
   private Ref newRefExpr(ValSpec evaluationSpec, BigInteger index) throws HashedDbException {

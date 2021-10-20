@@ -226,15 +226,6 @@ public class ObjStableHashTest extends TestingContextImpl {
   }
 
   @Nested
-  class _null {
-    @Test
-    public void null_expression() {
-      assertThat(nullExpr().hash())
-          .isEqualTo(Hash.decode("8d0c075d09869c59f496f145dc507d6b3f1b7c52"));
-    }
-  }
-
-  @Nested
   class _string {
     @Test
     public void empty_string() {

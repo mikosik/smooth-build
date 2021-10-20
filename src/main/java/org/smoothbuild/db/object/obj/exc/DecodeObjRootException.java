@@ -3,12 +3,7 @@ package org.smoothbuild.db.object.obj.exc;
 import org.smoothbuild.db.hashed.Hash;
 
 public class DecodeObjRootException extends DecodeObjException {
-  public static DecodeObjRootException nullObjRootException(Hash hash, int actualSize) {
-    return new DecodeObjRootException(hash, "Its root points to hash sequence with " + actualSize
-        + " elements when it should point to sequence with 1 element as its spec is NULL.");
-  }
-
-  public static DecodeObjRootException nonNullObjRootException(Hash hash, int actualSize) {
+  public static DecodeObjRootException objRootException(Hash hash, int actualSize) {
     return new DecodeObjRootException(hash, "Its root points to hash sequence with " + actualSize
         + " elements when it should point to sequence with 2 elements as its spec is not NULL.");
   }

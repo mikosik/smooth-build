@@ -19,7 +19,6 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -139,10 +138,6 @@ public class ObjectFactory {
 
   public Select selectExpr(Expr rec, Int index) {
     return objectDb.selectExpr(rec, index);
-  }
-
-  public Null nullExpr() {
-    return objectDb.nullExpr();
   }
 
   public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {

@@ -30,7 +30,6 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ERECORD;
 import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
-import static org.smoothbuild.db.object.spec.TestingSpecs.NULL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON_REC;
 import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
@@ -51,7 +50,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.Null;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -107,7 +105,6 @@ public class SpecTest {
         arguments(tc.arrayExprSpec(tc.strSpec()), "ARRAY:[String]"),
         arguments(tc.recExprSpec(list(tc.strSpec(), tc.intSpec())), "RECORD:{String,Int}"),
         arguments(tc.selectSpec(tc.intSpec()), "SELECT:Int"),
-        arguments(NULL, "NULL:Nothing"),
         arguments(tc.refSpec(tc.intSpec()), "REF:Int"),
 
         arguments(ARRAY_PERSON_REC, "[{String,String}]"),
@@ -149,7 +146,6 @@ public class SpecTest {
         arguments(ARRAY_EXPR, ArrayExpr.class),
         arguments(ERECORD, RecExpr.class),
         arguments(SELECT, Select.class),
-        arguments(NULL, Null.class),
         arguments(REF, Ref.class)
     );
   }
@@ -211,12 +207,6 @@ public class SpecTest {
     public void invoke(ValSpec spec) {
       assertThat(SPEC_DB.invokeSpec(spec).evaluationSpec())
           .isEqualTo(spec);
-    }
-
-    @Test
-    public void null_() {
-      assertThat(SPEC_DB.nullSpec().evaluationSpec())
-          .isEqualTo(NOTHING);
     }
 
     @ParameterizedTest
@@ -304,7 +294,6 @@ public class SpecTest {
     tester.addEqualityGroup(ARRAY_EXPR, ARRAY_EXPR);
     tester.addEqualityGroup(ERECORD, ERECORD);
     tester.addEqualityGroup(SELECT, SELECT);
-    tester.addEqualityGroup(NULL, NULL);
     tester.addEqualityGroup(REF, REF);
 
     tester.testEquals();

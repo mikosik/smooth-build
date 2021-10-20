@@ -15,7 +15,6 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INVOKE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
-import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
@@ -117,11 +116,6 @@ public class CorruptedSpecTest extends TestingContextImpl {
     @Test
     public void int_with_additional_child() throws Exception {
       test_base_spec_with_additional_child(INT);
-    }
-
-    @Test
-    public void null_with_additional_child() throws Exception {
-      test_base_spec_with_additional_child(NULL);
     }
 
     @Test

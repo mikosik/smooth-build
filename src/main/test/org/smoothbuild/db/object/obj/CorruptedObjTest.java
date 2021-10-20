@@ -4,8 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.db.object.obj.base.Obj.DATA_PATH;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.nonNullObjRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.nullObjRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.objRootException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
@@ -1322,34 +1321,6 @@ public class CorruptedObjTest extends TestingContextImpl {
   }
 
   @Nested
-  class _null {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save null
-       * in HashedDb.
-       */
-      Hash objHash =
-          hash(
-              hash(nullSpec())
-          );
-      objectDb().get(objHash);
-    }
-
-    @Test
-    public void root_with_data_hash() throws Exception {
-      Hash dataHash = hash(intVal(33));
-      Hash objHash =
-          hash(
-              hash(nullSpec()),
-              dataHash
-          );
-      assertCall(() -> objectDb().get(objHash))
-          .throwsException(nullObjRootException(objHash, 2));
-    }
-  }
-
-  @Nested
   class _nothing {
     @Test
     public void learning_test() throws Exception {
@@ -1713,7 +1684,7 @@ public class CorruptedObjTest extends TestingContextImpl {
         hash(
             hash(spec));
     assertCall(() -> objectDb().get(objHash))
-        .throwsException(nonNullObjRootException(objHash, 1));
+        .throwsException(objRootException(objHash, 1));
   }
 
   private void obj_root_with_two_data_hashes(

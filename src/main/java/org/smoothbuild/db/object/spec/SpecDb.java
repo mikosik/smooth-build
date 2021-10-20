@@ -18,7 +18,6 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INVOKE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
-import static org.smoothbuild.db.object.spec.base.SpecKind.NULL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
@@ -51,7 +50,6 @@ import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.InvokeSpec;
-import org.smoothbuild.db.object.spec.expr.NullSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
@@ -99,22 +97,18 @@ public class SpecDb implements TypeFactory {
   private final IntSpec intSpec;
   private final NothingSpec nothingSpec;
   private final StrSpec strSpec;
-  private final NullSpec nullSpec;
 
   public SpecDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.specCache = new ConcurrentHashMap<>();
 
     try {
-      // Val-s
       this.anySpec = cacheSpec(new AnySpec(writeBaseSpecRoot(ANY)));
       this.blobSpec = cacheSpec(new BlobSpec(writeBaseSpecRoot(BLOB)));
       this.boolSpec = cacheSpec(new BoolSpec(writeBaseSpecRoot(BOOL)));
       this.intSpec = cacheSpec(new IntSpec(writeBaseSpecRoot(INT)));
       this.nothingSpec = cacheSpec(new NothingSpec(writeBaseSpecRoot(NOTHING)));
       this.strSpec = cacheSpec(new StrSpec(writeBaseSpecRoot(STRING)));
-      // Expr-s
-      this.nullSpec = cacheSpec(new NullSpec(writeBaseSpecRoot(NULL), nothingSpec));
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -195,10 +189,6 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvokeSpec(evaluationSpec));
   }
 
-  public NullSpec nullSpec() {
-    return nullSpec;
-  }
-
   public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(itemSpecs));
   }
@@ -225,7 +215,7 @@ public class SpecDb implements TypeFactory {
     List<Hash> rootSequence = readSpecRootSequence(hash);
     SpecKind specKind = decodeSpecMarker(hash, rootSequence.get(0));
     return switch (specKind) {
-      case ANY, BLOB, BOOL, INT, NOTHING, STRING, NULL -> {
+      case ANY, BLOB, BOOL, INT, NOTHING, STRING -> {
         assertSpecRootSequenceSize(hash, specKind, rootSequence, 1);
         throw new RuntimeException(
             "Internal error: Spec with kind " + specKind + " should be found in cache.");
@@ -315,7 +305,7 @@ public class SpecDb implements TypeFactory {
     var builder = ImmutableList.<ValSpec>builder();
     var itemSpecHashes = readSequenceHashes(rootHash, hash, RECORD, DATA_PATH);
     for (int i = 0; i < itemSpecHashes.size(); i++) {
-      builder.add(readInnerSpec(RECORD, rootHash, itemSpecHashes.get(i), DATA_PATH, i, ValSpec.class));
+      builder.add(readInnerSpec(RECORD, rootHash, itemSpecHashes.get(i), DATA_PATH, i));
     }
     return builder.build();
   }
@@ -339,7 +329,7 @@ public class SpecDb implements TypeFactory {
     var itemSpecHashes = readSequenceHashes(rootHash, hash, STRUCT, STRUCT_FIELDS_PATH);
     for (int i = 0; i < itemSpecHashes.size(); i++) {
       builder.add(readInnerSpec(
-          STRUCT, rootHash, itemSpecHashes.get(i), STRUCT_FIELDS_PATH, i, ValSpec.class));
+          STRUCT, rootHash, itemSpecHashes.get(i), STRUCT_FIELDS_PATH, i));
     }
     return builder.build();
   }
@@ -384,17 +374,15 @@ public class SpecDb implements TypeFactory {
     }
   }
 
-  private <T> T readInnerSpec(SpecKind specKind, Hash outerHash, Hash hash, String path, int index,
-      Class<T> expectedClass) {
+  private ValSpec readInnerSpec(SpecKind specKind, Hash outerHash, Hash hash, String path,
+      int index) {
     Spec result = wrapObjectDbExceptionAsDecodeSpecNodeException(
         specKind, outerHash, path, index, () -> getSpec(hash));
-    if (expectedClass.isInstance(result)) {
-      @SuppressWarnings("unchecked")
-      T castResult = (T) result;
-      return castResult;
+    if (result instanceof ValSpec valSpec) {
+      return valSpec;
     } else {
       throw new UnexpectedSpecNodeException(
-          outerHash, specKind, path, index, expectedClass, result.getClass());
+          outerHash, specKind, path, index, ValSpec.class, result.getClass());
     }
   }
 
