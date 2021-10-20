@@ -6,8 +6,10 @@ import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.io.Okios.writeAndClose;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -22,6 +24,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
+import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.testing.TestingContextImpl;
 
@@ -222,6 +225,14 @@ public class HashedDbTest extends TestingContextImpl {
       hash = hashedDb().writeString("abc");
       assertThat(hashedDb().readString(hash))
           .isEqualTo("abc");
+    }
+
+    @Test
+    public void illegal_string_causes_decode_exception() throws Exception {
+      hash = Hash.of("abc");
+      writeAndClose(hashedDbFileSystem().sink(path(hash.toHexString())), s -> s.write(illegalString()));
+      assertCall(() -> hashedDb().readString(hash))
+          .throwsException(new DecodeStringException(hash, null));
     }
   }
 
