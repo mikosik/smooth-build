@@ -45,7 +45,6 @@ public class SpecKindTest {
         Arguments.of(13, SpecKind.NULL),
         Arguments.of(14, SpecKind.REF),
         Arguments.of(15, SpecKind.RECORD_EXPR),
-        Arguments.of(16, SpecKind.ABSENT),
         Arguments.of(17, SpecKind.VARIABLE),
         Arguments.of(18, SpecKind.ANY),
         Arguments.of(19, SpecKind.INVOKE)

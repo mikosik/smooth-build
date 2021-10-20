@@ -7,7 +7,6 @@ import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjec
 import static org.smoothbuild.db.object.spec.Helpers.wrapHashedDbExceptionAsDecodeSpecException;
 import static org.smoothbuild.db.object.spec.Helpers.wrapHashedDbExceptionAsDecodeSpecNodeException;
 import static org.smoothbuild.db.object.spec.Helpers.wrapObjectDbExceptionAsDecodeSpecNodeException;
-import static org.smoothbuild.db.object.spec.base.SpecKind.ABSENT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
@@ -48,7 +47,6 @@ import org.smoothbuild.db.object.spec.exc.DecodeStructSpecWrongNamesSizeExceptio
 import org.smoothbuild.db.object.spec.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.spec.exc.UnexpectedSpecNodeException;
 import org.smoothbuild.db.object.spec.exc.UnexpectedSpecSequenceException;
-import org.smoothbuild.db.object.spec.expr.AbsentSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
@@ -95,7 +93,6 @@ public class SpecDb implements TypeFactory {
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, Spec> specCache;
 
-  private final AbsentSpec absentSpec;
   private final AnySpec anySpec;
   private final BlobSpec blobSpec;
   private final BoolSpec boolSpec;
@@ -111,7 +108,6 @@ public class SpecDb implements TypeFactory {
     try {
       // Val-s
       this.anySpec = cacheSpec(new AnySpec(writeBaseSpecRoot(ANY)));
-      this.absentSpec = cacheSpec(new AbsentSpec(writeBaseSpecRoot(ABSENT)));
       this.blobSpec = cacheSpec(new BlobSpec(writeBaseSpecRoot(BLOB)));
       this.boolSpec = cacheSpec(new BoolSpec(writeBaseSpecRoot(BOOL)));
       this.intSpec = cacheSpec(new IntSpec(writeBaseSpecRoot(INT)));
@@ -129,10 +125,6 @@ public class SpecDb implements TypeFactory {
   @Override
   public AnySpec any() {
     return anySpec;
-  }
-
-  public AbsentSpec absentSpec() {
-    return absentSpec;
   }
 
   @Override
@@ -233,7 +225,7 @@ public class SpecDb implements TypeFactory {
     List<Hash> rootSequence = readSpecRootSequence(hash);
     SpecKind specKind = decodeSpecMarker(hash, rootSequence.get(0));
     return switch (specKind) {
-      case ABSENT, ANY, BLOB, BOOL, INT, NOTHING, STRING, NULL -> {
+      case ANY, BLOB, BOOL, INT, NOTHING, STRING, NULL -> {
         assertSpecRootSequenceSize(hash, specKind, rootSequence, 1);
         throw new RuntimeException(
             "Internal error: Spec with kind " + specKind + " should be found in cache.");

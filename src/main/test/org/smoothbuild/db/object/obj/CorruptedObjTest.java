@@ -127,20 +127,6 @@ public class CorruptedObjTest extends TestingContextImpl {
   }
 
   @Nested
-  class _absent {
-    @Test
-    public void learning_test() throws Exception {
-      Hash objHash =
-          hash(
-              hash(absentSpec()),
-              hash("aaa"));
-      assertCall(() -> objectDb().get(objHash))
-          .throwsException(new UnsupportedOperationException(
-              "Cannot create object for ABSENT spec."));
-    }
-  }
-
-  @Nested
   class _any {
     @Test
     public void learning_test() throws Exception {

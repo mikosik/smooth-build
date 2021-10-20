@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.spec.SpecDb.DATA_PATH;
 import static org.smoothbuild.db.object.spec.SpecDb.LAMBDA_PARAMS_PATH;
 import static org.smoothbuild.db.object.spec.SpecDb.LAMBDA_RESULT_PATH;
-import static org.smoothbuild.db.object.spec.base.SpecKind.ABSENT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
@@ -98,11 +97,6 @@ public class CorruptedSpecTest extends TestingContextImpl {
       );
       assertThat(hash)
           .isEqualTo(strSpec().hash());
-    }
-
-    @Test
-    public void absent_with_additional_child() throws Exception {
-      test_base_spec_with_additional_child(ABSENT);
     }
 
     @Test

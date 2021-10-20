@@ -2,9 +2,7 @@ package org.smoothbuild.db.object.spec;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.db.object.spec.TestingSpecs.ABSENT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ANY;
-import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_ABSENT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_ANY;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_BOOL;
@@ -14,7 +12,6 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_NOTHING;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_PERSON_REC;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_STR;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_VARIABLE;
-import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_ABSENT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_ANY;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BOOL;
@@ -104,7 +101,6 @@ public class SpecTest {
   public static Stream<Arguments> names() {
     TestingContextImpl tc = new TestingContextImpl();
     return Stream.of(
-        arguments(ABSENT, "!Absent"),
         arguments(PERSON_REC, "{String,String}"),
         arguments(tc.callSpec(tc.intSpec()), "CALL:Int"),
         arguments(tc.constSpec(tc.intSpec()), "CONST:Int"),
@@ -114,10 +110,7 @@ public class SpecTest {
         arguments(NULL, "NULL:Nothing"),
         arguments(tc.refSpec(tc.intSpec()), "REF:Int"),
 
-        arguments(ARRAY_ABSENT, "[!Absent]"),
         arguments(ARRAY_PERSON_REC, "[{String,String}]"),
-
-        arguments(ARRAY2_ABSENT, "[[!Absent]]"),
         arguments(ARRAY2_PERSON_REC, "[[{String,String}]]")
     );
   }
@@ -132,7 +125,6 @@ public class SpecTest {
   public static List<Arguments> jType_test_data() {
     return list(
         arguments(ANY, null),
-        arguments(ABSENT, null),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
         arguments(LAMBDA, Lambda.class),
@@ -143,7 +135,6 @@ public class SpecTest {
         arguments(VARIABLE, null),
 
         arguments(ARRAY_ANY, Array.class),
-        arguments(ARRAY_ABSENT, Array.class),
         arguments(ARRAY_BLOB, Array.class),
         arguments(ARRAY_BOOL, Array.class),
         arguments(ARRAY_LAMBDA, Array.class),
@@ -172,10 +163,7 @@ public class SpecTest {
 
   public static List<Arguments> array_element_cases() {
     return list(
-        arguments(ARRAY_ABSENT, ABSENT),
         arguments(ARRAY_PERSON_REC, PERSON_REC),
-
-        arguments(ARRAY2_ABSENT, ARRAY_ABSENT),
         arguments(ARRAY2_PERSON_REC, ARRAY_PERSON_REC));
   }
 
@@ -282,7 +270,6 @@ public class SpecTest {
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(ANY, ANY);
-    tester.addEqualityGroup(ABSENT, ABSENT);
     tester.addEqualityGroup(BLOB, BLOB);
     tester.addEqualityGroup(BOOL, BOOL);
     tester.addEqualityGroup(LAMBDA, LAMBDA);
@@ -293,7 +280,6 @@ public class SpecTest {
     tester.addEqualityGroup(VARIABLE, VARIABLE);
 
     tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);
-    tester.addEqualityGroup(ARRAY_ABSENT, ARRAY_ABSENT);
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
     tester.addEqualityGroup(ARRAY_LAMBDA, ARRAY_LAMBDA);
@@ -305,7 +291,6 @@ public class SpecTest {
 
     tester.addEqualityGroup(ARRAY2_VARIABLE, ARRAY2_VARIABLE);
     tester.addEqualityGroup(ARRAY2_ANY, ARRAY2_ANY);
-    tester.addEqualityGroup(ARRAY2_ABSENT, ARRAY2_ABSENT);
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
     tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
     tester.addEqualityGroup(ARRAY2_LAMBDA, ARRAY2_LAMBDA);

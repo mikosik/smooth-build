@@ -40,7 +40,6 @@ public enum SpecKind {
   REF((byte) 14, Ref.class),
   RECORD_EXPR((byte) 15, RecExpr.class),
 
-  ABSENT((byte) 16, null),
   VARIABLE((byte) 17, null),
   ANY((byte) 18, null),
   INVOKE((byte) 19, null);
@@ -64,7 +63,6 @@ public enum SpecKind {
           .put((byte) 13, NULL)
           .put((byte) 14, REF)
           .put((byte) 15, RECORD_EXPR)
-          .put((byte) 16, ABSENT)
           .put((byte) 17, VARIABLE)
           .put((byte) 18, ANY)
           .put((byte) 19, INVOKE)

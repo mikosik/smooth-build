@@ -43,7 +43,6 @@ import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.SpecDb;
 import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.AbsentSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
@@ -257,10 +256,6 @@ public abstract class AbstractTestingContext {
     return specDb().array(elementSpec);
   }
 
-  public AbsentSpec absentSpec() {
-    return specDb().absentSpec();
-  }
-
   public AnySpec anySpec() {
     return specDb().any();
   }
@@ -295,10 +290,6 @@ public abstract class AbstractTestingContext {
 
   public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
     return specDb().recSpec(itemSpecs);
-  }
-
-  public RecSpec recSpecWithAbsents(int size) {
-    return specDb().recSpec(ImmutableList.copyOf(nCopies(size, absentSpec())));
   }
 
   public RecSpec emptyRecSpec() {

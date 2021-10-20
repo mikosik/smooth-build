@@ -17,7 +17,6 @@ public class TestingSpecs {
   public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
   public static final SpecDb SPEC_DB = CONTEXT.specDb();
 
-  public static final ValSpec ABSENT = SPEC_DB.absentSpec();
   public static final ValSpec ANY = SPEC_DB.any();
   public static final ValSpec BLOB = SPEC_DB.blob();
   public static final ValSpec BOOL = SPEC_DB.bool();
@@ -40,7 +39,6 @@ public class TestingSpecs {
   public static final Spec REF = CONTEXT.refSpec(INT);
 
   public static final ArraySpec ARRAY_ANY = array(ANY);
-  public static final ArraySpec ARRAY_ABSENT = array(ABSENT);
   public static final ArraySpec ARRAY_BLOB = array(BLOB);
   public static final ArraySpec ARRAY_BOOL = array(BOOL);
   public static final ArraySpec ARRAY_LAMBDA = array(LAMBDA);
@@ -52,7 +50,6 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY_VARIABLE = array(VARIABLE);
 
   public static final ArraySpec ARRAY2_ANY = array(ARRAY_ANY);
-  public static final ArraySpec ARRAY2_ABSENT = array(ARRAY_ABSENT);
   public static final ArraySpec ARRAY2_BLOB = array(ARRAY_BLOB);
   public static final ArraySpec ARRAY2_BOOL = array(ARRAY_BOOL);
   public static final ArraySpec ARRAY2_LAMBDA = array(ARRAY_LAMBDA);
