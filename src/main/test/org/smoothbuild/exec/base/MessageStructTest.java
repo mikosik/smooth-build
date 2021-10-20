@@ -1,13 +1,13 @@
 package org.smoothbuild.exec.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.exec.base.MessageRec.containsErrors;
+import static org.smoothbuild.exec.base.MessageStruct.containsErrors;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.testing.TestingContextImpl;
 
-public class MessageRecTest extends TestingContextImpl {
+public class MessageStructTest extends TestingContextImpl {
   private Array messages;
 
   @Test

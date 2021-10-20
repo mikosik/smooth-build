@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 
-public class LambdaRec {
+public class LambdaStruct {
   private static final int NAME_INDEX = 0;
   private static final int MODULE_HASH_INDEX = 1;
 

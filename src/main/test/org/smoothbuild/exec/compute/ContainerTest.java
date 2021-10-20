@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.exec.base.MessageRec.severity;
-import static org.smoothbuild.exec.base.MessageRec.text;
+import static org.smoothbuild.exec.base.MessageStruct.severity;
+import static org.smoothbuild.exec.base.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Struc_;

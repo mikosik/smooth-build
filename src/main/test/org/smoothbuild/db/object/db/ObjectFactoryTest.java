@@ -6,7 +6,7 @@ import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.exec.base.MessageRec;
+import org.smoothbuild.exec.base.MessageStruct;
 import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
@@ -22,25 +22,25 @@ public class ObjectFactoryTest extends TestingContextImpl {
 
   @Test
   public void error_severity_is_error() {
-    assertThat(MessageRec.severity(objectFactory().errorMessage("text")))
+    assertThat(MessageStruct.severity(objectFactory().errorMessage("text")))
         .isEqualTo(ERROR.name());
   }
 
   @Test
   public void warning_severity_is_warning() {
-    assertThat(MessageRec.severity(objectFactory().warningMessage("text")))
+    assertThat(MessageStruct.severity(objectFactory().warningMessage("text")))
         .isEqualTo(WARNING.name());
   }
 
   @Test
   public void info_severity_is_info() {
-    assertThat(MessageRec.severity(objectFactory().infoMessage("text")))
+    assertThat(MessageStruct.severity(objectFactory().infoMessage("text")))
         .isEqualTo(INFO.name());
   }
 
   @Test
   public void text_returns_text() {
-    assertThat(MessageRec.text(objectFactory().errorMessage("text")))
+    assertThat(MessageStruct.text(objectFactory().errorMessage("text")))
         .isEqualTo("text");
   }
 }

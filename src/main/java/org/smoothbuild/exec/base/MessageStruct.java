@@ -12,7 +12,7 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 
-public class MessageRec {
+public class MessageStruct {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
   private static final int TEXT_INDEX = 0;
   private static final int SEVERITY_INDEX = 1;

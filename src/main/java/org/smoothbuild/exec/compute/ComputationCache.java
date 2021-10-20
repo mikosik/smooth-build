@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.exec.base.MessageRec.containsErrors;
-import static org.smoothbuild.exec.base.MessageRec.isValidSeverity;
-import static org.smoothbuild.exec.base.MessageRec.severity;
+import static org.smoothbuild.exec.base.MessageStruct.containsErrors;
+import static org.smoothbuild.exec.base.MessageStruct.isValidSeverity;
+import static org.smoothbuild.exec.base.MessageStruct.severity;
 import static org.smoothbuild.exec.compute.ComputationCacheException.computationCacheException;
 import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
