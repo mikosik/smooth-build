@@ -211,16 +211,16 @@ public class ObjectDb {
   private Call newCallExpr(Expr function, RecExpr arguments)
       throws HashedDbException {
     var lambdaSpec = functionEvaluationSpec(function);
-    verifyArguments(lambdaSpec, arguments, "Arguments");
+    verifyArguments(lambdaSpec, arguments);
     var spec = specDb.callSpec(lambdaSpec.result());
     var data = writeCallData(function, arguments);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
-  private static void verifyArguments(LambdaSpec lambdaSpec, RecExpr arguments, String name) {
+  private static void verifyArguments(LambdaSpec lambdaSpec, RecExpr arguments) {
     if (!Objects.equals(lambdaSpec.parametersRec(), arguments.evaluationSpec())) {
-      throw new IllegalArgumentException((name + " evaluation spec %s should be equal to "
+      throw new IllegalArgumentException(("Arguments evaluation spec %s should be equal to "
           + "function evaluation spec parameters %s.")
               .formatted(arguments.evaluationSpec().name(), lambdaSpec.parametersRec().name()));
     }
