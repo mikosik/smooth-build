@@ -9,7 +9,6 @@ import java.util.function.Function;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;

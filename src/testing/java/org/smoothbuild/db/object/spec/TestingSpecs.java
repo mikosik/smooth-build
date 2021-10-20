@@ -3,7 +3,6 @@ package org.smoothbuild.db.object.spec;
 import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.db.SpecDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;

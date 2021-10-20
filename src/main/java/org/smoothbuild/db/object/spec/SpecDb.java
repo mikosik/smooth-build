@@ -1,4 +1,4 @@
-package org.smoothbuild.db.object.db;
+package org.smoothbuild.db.object.spec;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNullElse;

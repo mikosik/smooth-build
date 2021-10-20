@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjectDb;
-import org.smoothbuild.db.object.db.SpecDb;
+import org.smoothbuild.db.object.spec.SpecDb;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.space.ForSpace;
