@@ -1,9 +1,9 @@
 package org.smoothbuild.db.object.obj.base;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsDecodeObjNodeException;
 import static org.smoothbuild.db.object.obj.Helpers.wrapObjectDbExceptionAsDecodeObjNodeException;
+import static org.smoothbuild.util.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
 
@@ -137,7 +137,7 @@ public abstract class Obj {
   }
 
   protected static String sequenceToString(ImmutableList<? extends Obj> objects) {
-    return objects.stream().map(Obj::valueToStringSafe).collect(joining(","));
+    return toCommaSeparatedString(objects, Obj::valueToStringSafe);
   }
 
   private <T> T castObj(Obj obj, String path, Class<T> clazz) {

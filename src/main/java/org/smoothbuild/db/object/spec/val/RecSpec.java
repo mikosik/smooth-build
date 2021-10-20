@@ -1,9 +1,8 @@
 package org.smoothbuild.db.object.spec.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.Streams.stream;
-import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
+import static org.smoothbuild.util.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectDb;
@@ -36,6 +35,6 @@ public class RecSpec extends ValSpec {
   }
 
   private static String calculateName(Iterable<? extends ValSpec> itemSpecs) {
-    return "{" + stream(itemSpecs).map(Spec::name).collect(joining(",")) + "}";
+    return "{" + toCommaSeparatedString(itemSpecs, Spec::name) + "}";
   }
 }

@@ -2,8 +2,8 @@ package org.smoothbuild.cli.console;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -69,6 +69,6 @@ public class Maybe<V> {
   }
 
   private String logsToString() {
-    return "[" + logs.toList().stream().map(Object::toString).collect(joining(",")) + "]";
+    return "[" + toCommaSeparatedString(logs.toList()) + "]";
   }
 }

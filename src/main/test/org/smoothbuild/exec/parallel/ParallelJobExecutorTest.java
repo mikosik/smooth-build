@@ -3,7 +3,6 @@ package org.smoothbuild.exec.parallel;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
@@ -21,6 +20,7 @@ import static org.smoothbuild.exec.parallel.ExecutionReporter.header;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.toCommaSeparatedString;
 
 import java.util.List;
 import java.util.Map;
@@ -220,10 +220,7 @@ public class ParallelJobExecutorTest extends TestingContextImpl {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        String joinedArgs = input.vals()
-            .stream()
-            .map(o -> ((Str) o).jValue())
-            .collect(joining(","));
+        String joinedArgs = toCommaSeparatedString(input.vals(), v -> ((Str) v).jValue());
         Str result = nativeApi.factory().string("(" + joinedArgs + ")");
         return new Output(result, nativeApi.messages());
       }
