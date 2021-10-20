@@ -19,6 +19,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
@@ -212,6 +214,54 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         .inOrder();
   }
 
+  @ParameterizedTest
+  @MethodSource("function_result_cases")
+  public void function_result(Function<TypeFactory, FunctionType> factoryCall,
+      Function<TypeFactory, List<Type>> expected) {
+    assertThat(invoke(factoryCall).result())
+        .isEqualTo(invoke(expected));
+  }
+
+  public static List<Arguments> function_result_cases() {
+    return asList(
+        args(f -> f.function(f.int_(), list()), f -> f.int_()),
+        args(f -> f.function(f.blob(), list(f.bool())), f -> f.blob()),
+        args(f -> f.function(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("function_parameters_cases")
+  public void function_parameters(Function<TypeFactory, FunctionType> factoryCall,
+      Function<TypeFactory, List<Type>> expected) {
+    assertThat(invoke(factoryCall).parameters())
+        .isEqualTo(invoke(expected));
+  }
+
+  public static List<Arguments> function_parameters_cases() {
+    return asList(
+        args(f -> f.function(f.int_(), list()), f -> list()),
+        args(f -> f.function(f.blob(), list(f.bool())), f -> list(f.bool())),
+        args(f -> f.function(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+    );
+  }
+
+  @Nested
+  class _variable {
+    @Test
+    public void name() {
+      assertThat(variable("A").name())
+          .isEqualTo("A");
+    }
+
+    @Test
+    public void illegal_name() {
+      assertCall(() -> variable("a"))
+          .throwsException(new IllegalArgumentException("Illegal type variable name 'a'."));
+    }
+  }
+
+
   @Test
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
@@ -307,6 +357,53 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
     public void different_size_of_fields_and_names_causes_exception() {
       assertCall(() -> structT("Struct", list(stringT()), list("name1", "name2")))
           .throwsException(IllegalArgumentException.class);
+    }
+    @ParameterizedTest
+    @MethodSource("struct_name_cases")
+    public void struct_name(Function<TypeFactory, StructType> factoryCall, String expected) {
+      assertThat(invoke(factoryCall).name())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> struct_name_cases() {
+      return asList(
+          args(f -> f.struct("MyStruct", list(), list()), "MyStruct"),
+          args(f -> f.struct("", list(), list()), "")
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("struct_fields_cases")
+    public void struct_fields(Function<TypeFactory, StructType> factoryCall,
+        Function<TypeFactory, List<Type>> expected) {
+      assertThat(invoke(factoryCall).fields())
+          .isEqualTo(invoke(expected));
+    }
+
+    public static List<Arguments> struct_fields_cases() {
+      return asList(
+          args(f -> f.struct("Person", list(), list()), f -> list()),
+          args(f -> f.struct("Person", list(f.string()), list("field")), f -> list(f.string())),
+          args(f -> f.struct("Person", list(f.string(), f.int_()), list("field", "field2")),
+              f -> list(f.string(), f.int_()))
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("struct_names_cases")
+    public void struct_names(Function<TypeFactory, StructType> factoryCall,
+        List<String> expected) {
+      assertThat(invoke(factoryCall).names())
+          .isEqualTo(expected);
+    }
+
+    public static List<Arguments> struct_names_cases() {
+      return list(
+          args(f -> f.struct("Person", list(), list()), list()),
+          args(f -> f.struct("Person", list(f.string()), list("field")), list("field")),
+          args(f -> f.struct("Person", list(f.string(), f.int_()), list("field", "field2")),
+              list("field", "field2"))
+      );
     }
   }
 }

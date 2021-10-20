@@ -181,7 +181,7 @@ public class SpecDb implements TypeFactory {
 
   @Override
   public VariableSpec variable(String name) {
-    checkArgument(isVariableName(name));
+    checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
     return wrapHashedDbExceptionAsObjectDbException(() -> newVariableSpec(name));
   }
 

@@ -81,7 +81,7 @@ public class TypeFactoryImpl implements TypeFactory {
 
   @Override
   public Variable variable(String name) {
-    checkArgument(isVariableName(name), "Illegal type variable name '%s'", name);
+    checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
     return new VariableImpl(name);
   }
 }

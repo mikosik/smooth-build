@@ -26,7 +26,7 @@ public class TestingSpecs {
   public static final ValSpec INT = SPEC_DB.int_();
   public static final ValSpec NOTHING = SPEC_DB.nothing();
   public static final ValSpec STR = SPEC_DB.string();
-  public static final RecSpec PERSO_ = CONTEXT.perso_Spec();
+  public static final RecSpec PERSON_REC = CONTEXT.perso_Spec();
   public static final StructSpec PERSON = CONTEXT.personSpec();
   public static final RecSpec FILE = CONTEXT.fileSpec();
   public static final RecSpec EMPTY_REC = CONTEXT.emptyRecSpec();
@@ -47,7 +47,8 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY_INT = array(INT);
   public static final ArraySpec ARRAY_NOTHING = array(NOTHING);
   public static final ArraySpec ARRAY_STR = array(STR);
-  public static final ArraySpec ARRAY_PERSON = array(PERSO_);
+  public static final ArraySpec ARRAY_PERSON_REC = array(PERSON_REC);
+  public static final ArraySpec ARRAY_PERSON = array(PERSON);
   public static final ArraySpec ARRAY_VARIABLE = array(VARIABLE);
 
   public static final ArraySpec ARRAY2_ANY = array(ARRAY_ANY);
@@ -58,6 +59,7 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY2_INT = array(ARRAY_INT);
   public static final ArraySpec ARRAY2_NOTHING = array(ARRAY_NOTHING);
   public static final ArraySpec ARRAY2_STR = array(ARRAY_STR);
+  public static final ArraySpec ARRAY2_PERSON_REC = array(ARRAY_PERSON_REC);
   public static final ArraySpec ARRAY2_PERSON = array(ARRAY_PERSON);
   public static final ArraySpec ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
@@ -68,7 +70,7 @@ public class TestingSpecs {
       INT,
       NOTHING,
       STR,
-      PERSO_,
+      PERSON_REC,
 
       ARRAY_BLOB,
       ARRAY_BOOL,
@@ -76,7 +78,7 @@ public class TestingSpecs {
       ARRAY_INT,
       ARRAY_NOTHING,
       ARRAY_STR,
-      ARRAY_PERSON,
+      ARRAY_PERSON_REC,
 
       ARRAY2_BLOB,
       ARRAY2_BOOL,
@@ -84,7 +86,7 @@ public class TestingSpecs {
       ARRAY2_INT,
       ARRAY2_NOTHING,
       ARRAY2_STR,
-      ARRAY2_PERSON
+      ARRAY2_PERSON_REC
   );
 
   private static ArraySpec array(ValSpec elemSpec) {
