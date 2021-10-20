@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.type.api.ItemSignature.toItemSignatures;
+import static org.smoothbuild.lang.base.define.ItemSignature.toItemSignatures;
 import static org.smoothbuild.lang.base.type.api.StructTypes.containsField;
 import static org.smoothbuild.lang.base.type.api.StructTypes.fieldGet;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
@@ -26,7 +26,7 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.parse.ast.ArgNode;

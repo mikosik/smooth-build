@@ -87,7 +87,7 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.StringType;

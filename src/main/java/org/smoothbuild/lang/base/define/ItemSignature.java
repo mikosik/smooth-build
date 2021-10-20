@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base.type.api;
+package org.smoothbuild.lang.base.define;
 
 import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
@@ -6,6 +6,8 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 

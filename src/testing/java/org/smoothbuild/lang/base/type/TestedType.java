@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Type;
 
