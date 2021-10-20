@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type.api;
 
-import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.util.Lists.toCommaSeparatedString;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -15,9 +15,8 @@ public record BoundsMap(ImmutableMap<Variable, Bounded> map) {
     return new BoundsMap(ImmutableMap.of(bounded.variable(), bounded));
   }
 
-  public String toFormattedString() {
-    return map.values().stream()
-        .map(Bounded::toFormattedString)
-        .collect(joining("\n"));
+  @Override
+  public String toString() {
+    return toCommaSeparatedString(map.values());
   }
 }
