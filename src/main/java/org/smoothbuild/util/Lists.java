@@ -2,6 +2,7 @@ package org.smoothbuild.util;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -106,5 +107,14 @@ public class Lists {
 
   public static <E> List<E> sane(List<E> list) {
     return list == null ? new ArrayList<>() : list;
+  }
+
+  public static <T> String toCommaSeparatedString(Iterable<T> list) {
+    return toCommaSeparatedString(list, Object::toString);
+  }
+
+  public static <T> String toCommaSeparatedString(
+      Iterable<T> list, Function<? super T, String> function) {
+    return stream(list).map(function).collect(joining(","));
   }
 }
