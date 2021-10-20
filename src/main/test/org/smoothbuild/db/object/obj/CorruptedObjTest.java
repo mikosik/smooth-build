@@ -6,6 +6,7 @@ import static org.smoothbuild.db.object.obj.base.Obj.DATA_PATH;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.objRootException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -1373,7 +1374,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_being_invalid_utf8_sequence() throws Exception {
-      Hash notStringHash = hash(ByteString.of((byte) -64));
+      Hash notStringHash = hash(illegalString());
       Hash objHash =
           hash(
               hash(strSpec()),

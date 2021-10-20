@@ -22,6 +22,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
+import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -978,7 +979,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_illegal_name() throws Exception {
-      Hash nameHash = hash(ByteString.of((byte) -64));
+      Hash nameHash = hash(illegalString());
       var field1 = intSpec();
       var field2 = strSpec();
       var name1 = "field1";
@@ -1125,7 +1126,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
       var name = "MyStruct";
       var field1 = intSpec();
       var field2 = strSpec();
-      Hash illegalString = hash(ByteString.of((byte) -64));
+      Hash illegalString = hash(illegalString());
       var name1 = "field1";
       Hash hash = hash(
           hash(STRUCT.marker()),
