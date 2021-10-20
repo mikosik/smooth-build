@@ -106,7 +106,7 @@ public class SpecTest {
     TestingContextImpl tc = new TestingContextImpl();
     return Stream.of(
         arguments(ABSENT, "!Absent"),
-        arguments(ANY, "!Any"),
+        arguments(ANY, "Any"),
         arguments(BLOB, "Blob"),
         arguments(BOOL, "Bool"),
         arguments(LAMBDA, "Blob(Bool)"),
@@ -124,7 +124,7 @@ public class SpecTest {
         arguments(tc.refSpec(tc.intSpec()), "REF:Int"),
 
         arguments(ARRAY_ABSENT, "[!Absent]"),
-        arguments(ARRAY_ANY, "[!Any]"),
+        arguments(ARRAY_ANY, "[Any]"),
         arguments(ARRAY_BLOB, "[Blob]"),
         arguments(ARRAY_BOOL, "[Bool]"),
         arguments(ARRAY_LAMBDA, "[Blob(Bool)]"),
@@ -134,7 +134,7 @@ public class SpecTest {
         arguments(ARRAY_PERSON, "[{String,String}]"),
 
         arguments(ARRAY2_ABSENT, "[[!Absent]]"),
-        arguments(ARRAY2_ANY, "[[!Any]]"),
+        arguments(ARRAY2_ANY, "[[Any]]"),
         arguments(ARRAY2_BLOB, "[[Blob]]"),
         arguments(ARRAY2_BOOL, "[[Bool]]"),
         arguments(ARRAY2_LAMBDA, "[[Blob(Bool)]]"),
