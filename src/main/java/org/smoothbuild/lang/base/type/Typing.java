@@ -200,12 +200,6 @@ public class Typing {
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public Type inferResultType(FunctionType functionType, List<Type> argumentTypes) {
-    var boundedVariables = inferVariableBoundsInCall(functionType.result(),
-        functionType.parameters(), argumentTypes);
-    return mapVariables(functionType.result(), boundedVariables, lower());
-  }
-
   public BoundsMap inferVariableBoundsInCall(
       Type resultTypes, List<? extends Type> parameterTypes, List<? extends Type> argumentTypes) {
     var result = new HashMap<Variable, Bounded>();
