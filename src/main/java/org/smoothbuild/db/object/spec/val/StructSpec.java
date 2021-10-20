@@ -2,6 +2,7 @@ package org.smoothbuild.db.object.spec.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
+import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.calculateVariables;
 import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.fieldsMap;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -10,6 +11,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.help.StructTypeImplHelper;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -21,7 +23,7 @@ public class StructSpec extends ValSpec implements StructType {
 
   public StructSpec(Hash hash, String name, ImmutableList<ValSpec> fields,
       ImmutableList<String> names) {
-    super(name, hash, STRUCT);
+    super(name, hash, STRUCT, calculateVariables(fields));
     this.fields = fields;
     this.names = names;
     this.nameToIndex = fieldsMap(names);

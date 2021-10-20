@@ -19,7 +19,7 @@ public class ArraySpec extends ValSpec implements ArrayType {
   private final ValSpec element;
 
   public ArraySpec(Hash hash, ValSpec element) {
-    super(arrayTypeName(element), hash, ARRAY);
+    super(arrayTypeName(element), hash, ARRAY, element.variables());
     this.element = requireNonNull(element);
   }
 

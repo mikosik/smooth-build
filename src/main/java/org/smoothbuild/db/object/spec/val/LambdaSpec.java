@@ -3,6 +3,7 @@ package org.smoothbuild.db.object.spec.val;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.lang.base.type.api.TypeNames.functionTypeName;
+import static org.smoothbuild.lang.base.type.help.FunctionTypeImplHelper.calculateVariables;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjectDb;
@@ -18,7 +19,8 @@ public class LambdaSpec extends ValSpec implements FunctionType {
   private final RecSpec parametersRec;
 
   public LambdaSpec(Hash hash, ValSpec result, RecSpec parametersRec) {
-    super(functionTypeName(result, parametersRec.items()), hash, LAMBDA);
+    super(functionTypeName(result, parametersRec.items()), hash, LAMBDA,
+        calculateVariables(result, parametersRec.items()));
     this.result = result;
     this.parametersRec = parametersRec;
   }

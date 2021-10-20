@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableSet;
 
 public class FunctionTypeImplHelper {
   public static ImmutableSet<Variable> calculateVariables(
-      Type resultType, ImmutableList<Type> parameters) {
+      Type resultType, ImmutableList<? extends Type> parameters) {
     return concat(resultType, parameters).stream()
         .map(Type::variables)
         .flatMap(Collection::stream)
