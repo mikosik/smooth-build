@@ -5,6 +5,7 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maps.toMap;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -36,10 +37,12 @@ import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.SelectExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.parse.ast.AnnotationNode;
+import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
+import org.smoothbuild.lang.parse.ast.FunctionNode;
 import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
@@ -166,9 +169,38 @@ public class ReferencableLoader {
       return new CallExpression(resultType, called, argumentExpressions, call.location());
     }
 
-    private ImmutableList<Optional<Expression>> createArgumentExpressions(CallNode call) {
-      return map(call.assignedArgs(),
-          optionalArg -> optionalArg.map(a -> createExpression(a.expr())));
+    private ImmutableList<Expression> createArgumentExpressions(CallNode call) {
+      var builder = ImmutableList.<Expression>builder();
+      List<Optional<ArgNode>> args = call.assignedArgs();
+      for (int i = 0; i < args.size(); i++) {
+        builder.add(createArgumentExpression(call, args, i));
+      }
+      return builder.build();
+    }
+
+    private Expression createArgumentExpression(
+        CallNode call, List<Optional<ArgNode>> args, int i) {
+      Optional<ArgNode> arg = args.get(i);
+      if (arg.isPresent()) {
+        return createExpression(arg.get().expr());
+      } else {
+        return createDefaultArgumentExpression(call, i);
+      }
+    }
+
+    private Expression createDefaultArgumentExpression(CallNode call, int i) {
+      // Argument is not present so we have to use function default argument.
+      // This means that this call is made on reference to actual function and that function
+      // has default argument for given parameter, otherwise checkers that ran so far would
+      // report an error.
+      ReferencableLike referenced = ((RefNode) call.function()).referenced();
+      if (referenced instanceof Function function) {
+        return function.parameters().get(i).defaultValue().get();
+      } else if (referenced instanceof FunctionNode functionNode) {
+        return createExpression(functionNode.params().get(i).body().get());
+      } else {
+        throw new RuntimeException("Unexpected case");
+      }
     }
 
     private Expression createSelect(SelectNode selectNode) {

@@ -10,17 +10,23 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.exec.job.Job;
+import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator.Handler;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.TestingLocation;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.util.Scope;
+import org.smoothbuild.util.concurrent.Promise;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class JobCreatorTest extends TestingContextImpl {
@@ -61,7 +67,32 @@ public class JobCreatorTest extends TestingContextImpl {
           if (counter.getAndDecrement() != 1) {
             throw new RuntimeException();
           }
-          return null;
+          return new Job() {
+            @Override
+            public Type type() {
+              return STRING;
+            }
+
+            @Override
+            public ImmutableList<Job> dependencies() {
+              return list();
+            }
+
+            @Override
+            public Promise<Val> schedule(Worker worker) {
+              return null;
+            }
+
+            @Override
+            public String name() {
+              return "name";
+            }
+
+            @Override
+            public Location location() {
+              return TestingLocation.loc();
+            }
+          };
         },
         (scope, o) -> {
           throw new RuntimeException();

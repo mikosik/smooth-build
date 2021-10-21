@@ -32,7 +32,6 @@ import org.smoothbuild.exec.algorithm.ReadStructItemAlgorithm;
 import org.smoothbuild.exec.algorithm.ReferenceAlgorithm;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.exec.job.ApplyJob;
-import org.smoothbuild.exec.job.DefaultArgumentJob;
 import org.smoothbuild.exec.job.IfJob;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.job.LazyJob;
@@ -44,7 +43,6 @@ import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.IfFunction;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
@@ -171,7 +169,7 @@ public class JobCreator {
 
   private Job callJob(Scope<Job> scope, CallExpression call, boolean eager) {
     var function = jobFor(scope, call.function(), eager);
-    var arguments = argumentLazyJobs(scope, function, call.arguments(), call.location());
+    var arguments = map(call.arguments(), a -> lazyJobFor(scope, a));
     Location location = call.location();
     var variables = inferVariablesInFunctionCall(function, arguments);
     return callJob(scope, function, arguments, location, variables, eager);
@@ -207,24 +205,6 @@ public class JobCreator {
     var functionType = (FunctionType) function.type();
     var argumentTypes = map(arguments, Job::type);
     return typing.inferVariableBounds(functionType.parameters(), argumentTypes, typing.lower());
-  }
-
-  private List<Job> argumentLazyJobs(Scope<Job> scope, Job function,
-      List<Optional<Expression>> arguments, Location location) {
-    var builder = ImmutableList.<Job>builder();
-    for (int i = 0; i < arguments.size(); i++) {
-      builder.add(arguments.get(i)
-          .map(a -> lazyJobFor(scope, a))
-          .orElse(defaultArgumentLazyJob(function, i, scope, location)));
-    }
-    return builder.build();
-  }
-
-  private Job defaultArgumentLazyJob(Job function, int index, Scope<Job> scope,
-      Location location) {
-    var type = ((FunctionType) function.type()).parameters().get(index);
-    return new LazyJob(type, location, () -> new DefaultArgumentJob(type,
-        "default parameter value", function, index, location, scope, JobCreator.this));
   }
 
   // FieldReadExpression
@@ -376,12 +356,6 @@ public class JobCreator {
   }
 
   // helper methods
-
-  public Job defaultArgumentEagerJob(Scope<Job> scope, String functionName, int index) {
-    var function = (Function) definitions.referencables().get(functionName);
-    var defaultArgumentExpression = function.parameters().get(index).defaultValue().get();
-    return eagerJobFor(scope, defaultArgumentExpression);
-  }
 
   public Job evaluateLambdaEagerJob(Scope<Job> scope, BoundsMap variables,
       Type actualResultType, String name, List<Job> arguments, Location location) {

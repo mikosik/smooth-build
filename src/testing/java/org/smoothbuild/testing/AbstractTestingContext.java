@@ -704,9 +704,7 @@ public abstract class AbstractTestingContext {
 
   public CallExpression callExpression(
       int line, Type type, Expression expression, Expression... arguments) {
-    Location loc = loc(line);
-    var args = stream(arguments).map(Optional::of).collect(toImmutableList());
-    return new CallExpression(type, expression, args, loc);
+    return new CallExpression(type, expression, list(arguments), loc(line));
   }
 
   public NativeFunction functionExpression(Type type, String name, Item... parameters) {
