@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Struc_ extends Val {
+  // Should be accessed only through synchronized items() method.
   private ImmutableList<Val> items;
 
   public Struc_(MerkleRoot merkleRoot, ObjectDb objectDb) {
@@ -32,7 +33,7 @@ public class Struc_ extends Val {
     return items.get(index);
   }
 
-  public ImmutableList<Val> items() {
+  public synchronized ImmutableList<Val> items() {
     if (items == null) {
       items = instantiateItems();
     }
