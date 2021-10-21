@@ -22,8 +22,8 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 

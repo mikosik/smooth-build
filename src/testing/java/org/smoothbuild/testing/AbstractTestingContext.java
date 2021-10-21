@@ -1,7 +1,6 @@
 package org.smoothbuild.testing;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.Arrays.stream;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
@@ -73,6 +72,7 @@ import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
@@ -87,7 +87,6 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.StringType;
