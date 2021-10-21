@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.base.type.TestedType.A;
 import static org.smoothbuild.lang.base.type.TestedType.ANY;
 import static org.smoothbuild.lang.base.type.TestedType.B;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
+import static org.smoothbuild.lang.base.type.TestedType.INT;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
@@ -113,6 +114,8 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     gen(r, f(NOTHING, NOTHING), includeAny, mNothing(), mFunc(oneOf(NOTHING), mAll()));
 
     r.addAll(list(
+        illegalAssignment(f(BLOB, STRING), f(BLOB, STRING, INT)),
+
         // functions
         illegalAssignment(f(a(BLOB)), a(BLOB)),
         illegalAssignment(f(a(NOTHING)), a(NOTHING)),
