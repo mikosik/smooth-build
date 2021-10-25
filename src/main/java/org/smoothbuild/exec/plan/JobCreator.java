@@ -435,7 +435,7 @@ public class JobCreator {
     var algorithm = new CallNativeAlgorithm(
         methodLoader, toSpecConverter.visit(actualResultType), function, nativ.isPure());
     var dependencies = concat(
-        eagerJobFor(scope, nativ),
+        nativeEager(scope, nativ),
         convertedArgumentEagerJob(arguments, function, variables));
     var info = new TaskInfo(CALL, function.extendedName(), location);
     return new Task(actualResultType, dependencies, info, algorithm
