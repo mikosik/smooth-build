@@ -49,6 +49,7 @@ import org.smoothbuild.db.object.spec.exc.UnexpectedSpecSequenceException;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
+import org.smoothbuild.db.object.spec.expr.InvokeSpec;
 import org.smoothbuild.db.object.spec.expr.NativeMethodSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
@@ -193,6 +194,10 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstSpec(evaluationSpec));
   }
 
+  public InvokeSpec invokeSpec(ValSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newInvokeSpec(evaluationSpec));
+  }
+
   public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(itemSpecs));
   }
@@ -228,6 +233,7 @@ public class SpecDb implements TypeFactory {
       case ARRAY_EXPR -> newArrayExprSpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
       case CALL -> newCallSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CONST -> newConstSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
+      case INVOKE -> newInvokeSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case RECORD_EXPR -> newRecExprSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
@@ -467,6 +473,15 @@ public class SpecDb implements TypeFactory {
 
   private ConstSpec newConstSpec(Hash rootHash, ValSpec evaluationSpec) {
     return cacheSpec(new ConstSpec(rootHash, evaluationSpec));
+  }
+
+  private InvokeSpec newInvokeSpec(ValSpec evaluationSpec) throws HashedDbException {
+    var rootHash = writeExprSpecRoot(CONST, evaluationSpec);
+    return newInvokeSpec(rootHash, evaluationSpec);
+  }
+
+  private InvokeSpec newInvokeSpec(Hash rootHash, ValSpec evaluationSpec) {
+    return cacheSpec(new InvokeSpec(rootHash, evaluationSpec));
   }
 
   private RecExprSpec newRecExprSpec(ImmutableList<ValSpec> elementSpec) throws HashedDbException {
