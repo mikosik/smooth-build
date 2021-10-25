@@ -27,6 +27,7 @@ import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Invoke;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -144,6 +145,12 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstExpr(val));
   }
 
+  public Invoke invokeExpr(
+      ValSpec evaluationSpec, NativeMethod nativeMethod, Bool isPure, Int argumentCount) {
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newInvokeExpr(evaluationSpec, nativeMethod, isPure, argumentCount));
+  }
+
   public ArrayExpr arrayExpr(List<? extends Expr> elements) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExpr(elements));
   }
@@ -224,6 +231,14 @@ public class ObjectDb {
   private Const newConstExpr(Val val) throws HashedDbException {
     var spec = specDb.constSpec(val.spec());
     var data = writeConstData(val);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
+  }
+
+  private Invoke newInvokeExpr(ValSpec evaluationSpec, NativeMethod nativeMethod, Bool isPure,
+      Int argumentCount) throws HashedDbException {
+    var data = writeInvokeData(nativeMethod, isPure, argumentCount);
+    var spec = specDb.invokeSpec(evaluationSpec);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -369,6 +384,11 @@ public class ObjectDb {
 
   private Hash writeConstData(Val val) {
     return val.hash();
+  }
+
+  private Hash writeInvokeData(NativeMethod nativeMethod,
+      Bool isPure, Int argumentCount) throws HashedDbException {
+    return hashedDb.writeSequence(nativeMethod.hash(), isPure.hash(), argumentCount.hash());
   }
 
   private Hash writeArrayExprData(List<? extends Expr> elements) throws HashedDbException {
