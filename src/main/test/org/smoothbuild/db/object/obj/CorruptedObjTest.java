@@ -49,7 +49,7 @@ import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.Invoke;
+import org.smoothbuild.db.object.obj.expr.NativeMethod;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -1198,33 +1198,33 @@ public class CorruptedObjTest extends TestingContextImpl {
   }
 
   @Nested
-  class _invoke {
+  class _native_method {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save invoke
+       * This test makes sure that other tests in this class use proper scheme to save native_method
        * in HashedDb.
        */
       Blob jarFile = blobVal();
       Str classBinaryName = strVal();
       Hash objHash =
           hash(
-              hash(invokeSpec()),
+              hash(nativeMethodSpec()),
               hash(
                   hash(jarFile),
                   hash(classBinaryName)
               )
           );
 
-      assertThat(((Invoke) objectDb().get(objHash)).jarFile())
+      assertThat(((NativeMethod) objectDb().get(objHash)).jarFile())
           .isEqualTo(jarFile);
-      assertThat(((Invoke) objectDb().get(objHash)).classBinaryName())
+      assertThat(((NativeMethod) objectDb().get(objHash)).classBinaryName())
           .isEqualTo(classBinaryName);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(invokeSpec());
+      obj_root_without_data_hash(nativeMethodSpec());
     }
 
     @Test
@@ -1236,16 +1236,16 @@ public class CorruptedObjTest extends TestingContextImpl {
           hash(classBinaryName)
       );
       obj_root_with_two_data_hashes(
-          invokeSpec(),
+          nativeMethodSpec(),
           dataHash,
-          (Hash objHash) -> ((Invoke) objectDb().get(objHash)).classBinaryName());
+          (Hash objHash) -> ((NativeMethod) objectDb().get(objHash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          invokeSpec(),
-          (Hash objHash) -> ((Invoke) objectDb().get(objHash)).classBinaryName());
+          nativeMethodSpec(),
+          (Hash objHash) -> ((NativeMethod) objectDb().get(objHash)).classBinaryName());
     }
 
     @Test
@@ -1256,13 +1256,13 @@ public class CorruptedObjTest extends TestingContextImpl {
       );
       Hash objHash =
           hash(
-              hash(invokeSpec()),
+              hash(nativeMethodSpec()),
               dataHash
           );
 
-      assertCall(() -> ((Invoke) objectDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((NativeMethod) objectDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjSequenceException(
-              objHash, invokeSpec(), DATA_PATH, 2, 1));
+              objHash, nativeMethodSpec(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1276,13 +1276,13 @@ public class CorruptedObjTest extends TestingContextImpl {
       );
       Hash objHash =
           hash(
-              hash(invokeSpec()),
+              hash(nativeMethodSpec()),
               dataHash
           );
 
-      assertCall(() -> ((Invoke) objectDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((NativeMethod) objectDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjSequenceException(
-              objHash, invokeSpec(), DATA_PATH, 2, 3));
+              objHash, nativeMethodSpec(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1291,15 +1291,15 @@ public class CorruptedObjTest extends TestingContextImpl {
       Str classBinaryName = strVal();
       Hash objHash =
           hash(
-              hash(invokeSpec()),
+              hash(nativeMethodSpec()),
               hash(
                   hash(jarFile),
                   hash(classBinaryName)
               )
           );
-      assertCall(() -> ((Invoke) objectDb().get(objHash)).jarFile())
+      assertCall(() -> ((NativeMethod) objectDb().get(objHash)).jarFile())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, invokeSpec(), DATA_PATH + "[0]", Blob.class, Str.class));
+              objHash, nativeMethodSpec(), DATA_PATH + "[0]", Blob.class, Str.class));
     }
 
     @Test
@@ -1308,16 +1308,16 @@ public class CorruptedObjTest extends TestingContextImpl {
       Int classBinaryName = intVal();
       Hash objHash =
           hash(
-              hash(invokeSpec()),
+              hash(nativeMethodSpec()),
               hash(
                   hash(jarFile),
                   hash(classBinaryName)
               )
           );
 
-      assertCall(() -> ((Invoke) objectDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((NativeMethod) objectDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, invokeSpec(), DATA_PATH + "[1]", Str.class, Int.class));
+              objHash, nativeMethodSpec(), DATA_PATH + "[1]", Str.class, Int.class));
     }
   }
 

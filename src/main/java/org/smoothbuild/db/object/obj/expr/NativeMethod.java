@@ -3,28 +3,23 @@ package org.smoothbuild.db.object.obj.expr;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.db.object.obj.ObjectDb;
-import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.spec.expr.InvokeSpec;
+import org.smoothbuild.db.object.spec.expr.NativeMethodSpec;
 
 /**
  * This class is immutable.
  */
-public class Invoke extends Expr {
+public class NativeMethod extends Val {
   private static final int DATA_SEQUENCE_SIZE = 2;
   private static final int JAR_FILE_INDEX = 0;
   private static final int CLASS_BINARY_NAME_INDEX = 1;
 
-  public Invoke(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public NativeMethod(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof InvokeSpec);
-  }
-
-  @Override
-  public InvokeSpec spec() {
-    return (InvokeSpec) super.spec();
+    checkArgument(merkleRoot.spec() instanceof NativeMethodSpec);
   }
 
   public Blob jarFile() {
@@ -39,6 +34,6 @@ public class Invoke extends Expr {
 
   @Override
   public String valueToString() {
-    return "Invoke(???)";
+    return "NativeMethod(???)";
   }
 }

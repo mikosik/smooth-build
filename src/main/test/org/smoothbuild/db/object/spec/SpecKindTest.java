@@ -46,7 +46,7 @@ public class SpecKindTest {
         Arguments.of(15, SpecKind.RECORD_EXPR),
         Arguments.of(17, SpecKind.VARIABLE),
         Arguments.of(18, SpecKind.ANY),
-        Arguments.of(19, SpecKind.INVOKE)
+        Arguments.of(19, SpecKind.NATIVE_METHOD)
     );
   }
 

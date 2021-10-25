@@ -12,8 +12,8 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
-import static org.smoothbuild.db.object.spec.base.SpecKind.INVOKE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
+import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
@@ -117,6 +117,11 @@ public class CorruptedSpecTest extends TestingContextImpl {
     @Test
     public void int_with_additional_child() throws Exception {
       test_base_spec_with_additional_child(INT);
+    }
+
+    @Test
+    public void native_method_with_additional_child() throws Exception {
+      test_base_spec_with_additional_child(NATIVE_METHOD);
     }
 
     @Test
@@ -321,48 +326,6 @@ public class CorruptedSpecTest extends TestingContextImpl {
     @Test
     public void with_evaluation_spec_being_expr_spec() throws Exception {
       test_spec_with_data_spec_being_expr_spec(CONST, ValSpec.class);
-    }
-  }
-
-  @Nested
-  class _invoke_spec {
-    @Test
-    public void learn_creating_spec() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save invoke spec in HashedDb.
-       */
-      Hash hash = hash(
-          hash(INVOKE.marker()),
-          hash(intSpec())
-      );
-      assertThat(hash)
-          .isEqualTo(invokeSpec(intSpec()).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_spec_without_data(INVOKE);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(INVOKE);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(INVOKE);
-    }
-
-    @Test
-    public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(INVOKE);
-    }
-
-    @Test
-    public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(INVOKE, ValSpec.class);
     }
   }
 

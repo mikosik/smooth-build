@@ -25,7 +25,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.Invoke;
+import org.smoothbuild.db.object.obj.expr.NativeMethod;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -43,7 +43,7 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
-import org.smoothbuild.db.object.spec.expr.InvokeSpec;
+import org.smoothbuild.db.object.spec.expr.NativeMethodSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
@@ -73,7 +73,6 @@ import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.SModule;
@@ -276,6 +275,10 @@ public abstract class AbstractTestingContext {
     return specDb().int_();
   }
 
+  public NativeMethodSpec nativeMethodSpec() {
+    return specDb().nativeMethodSpec();
+  }
+
   public NothingSpec nothingSpec() {
     return specDb().nothing();
   }
@@ -350,14 +353,6 @@ public abstract class AbstractTestingContext {
 
   public ConstSpec constSpec(ValSpec evaluationSpec) {
     return specDb().constSpec(evaluationSpec);
-  }
-
-  public InvokeSpec invokeSpec() {
-    return invokeSpec(intSpec());
-  }
-
-  public InvokeSpec invokeSpec(ValSpec evaluationSpec) {
-    return specDb().invokeSpec(evaluationSpec);
   }
 
   public RecExprSpec recExprSpec() {
@@ -441,6 +436,10 @@ public abstract class AbstractTestingContext {
 
   public Int intVal(int value) {
     return objectDb().intVal(BigInteger.valueOf(value));
+  }
+
+  public NativeMethod nativeMethodVal(Blob jarFile, Str classBinaryName) {
+    return objectDb().nativeMethodVal(jarFile, classBinaryName);
   }
 
   public Str strVal() {
@@ -545,10 +544,6 @@ public abstract class AbstractTestingContext {
 
   public Const intExpr(int i) {
     return constExpr(intVal(i));
-  }
-
-  public Invoke invokeExpr(Blob jarFile, Str classBinaryName, ValSpec evaluationSpec) {
-    return objectDb().invokeExpr(jarFile, classBinaryName, evaluationSpec);
   }
 
   public Ref refExpr(int value) {

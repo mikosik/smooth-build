@@ -27,7 +27,7 @@ import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.Invoke;
+import org.smoothbuild.db.object.obj.expr.NativeMethod;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
@@ -90,6 +90,11 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newIntVal(value));
   }
 
+  public NativeMethod nativeMethodVal(Blob jarFile, Str classBinaryName) {
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newNativeMethodVal(jarFile, classBinaryName));
+  }
+
   public Str strVal(String value) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStrVal(value));
   }
@@ -149,11 +154,6 @@ public class ObjectDb {
 
   public Select selectExpr(Expr rec, Int index) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectExpr(rec, index));
-  }
-
-  public Invoke invokeExpr(Blob jarFile, Str classBinaryName, ValSpec evaluationSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newInvokeExpr(jarFile, classBinaryName, evaluationSpec));
   }
 
   public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {
@@ -283,14 +283,6 @@ public class ObjectDb {
     }
   }
 
-  private Invoke newInvokeExpr(Blob jarFile, Str classBinaryName, ValSpec evaluationSpec)
-      throws HashedDbException {
-    var spec = specDb.invokeSpec(evaluationSpec);
-    var data = writeInvokeData(jarFile, classBinaryName);
-    var root = writeRoot(spec, data);
-    return spec.newObj(root, this);
-  }
-
   private Ref newRefExpr(ValSpec evaluationSpec, BigInteger index) throws HashedDbException {
     var data = writeRefData(index);
     var spec = specDb.refSpec(evaluationSpec);
@@ -329,6 +321,14 @@ public class ObjectDb {
     var data = writeIntData(value);
     var root = writeRoot(specDb.int_(), data);
     return specDb.int_().newObj(root, this);
+  }
+
+  private NativeMethod newNativeMethodVal(Blob jarFile, Str classBinaryName)
+      throws HashedDbException {
+    var spec = specDb.nativeMethodSpec();
+    var data = writeNativeMethodData(jarFile, classBinaryName);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
   }
 
   private Str newStrVal(String string) throws HashedDbException {
@@ -375,7 +375,7 @@ public class ObjectDb {
     return writeSequence(elements);
   }
 
-  private Hash writeInvokeData(Blob jarFile, Str classBinaryName) throws HashedDbException {
+  private Hash writeNativeMethodData(Blob jarFile, Str classBinaryName) throws HashedDbException {
     return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash());
   }
 

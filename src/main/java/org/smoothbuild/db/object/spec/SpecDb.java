@@ -15,8 +15,8 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
-import static org.smoothbuild.db.object.spec.base.SpecKind.INVOKE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
+import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
@@ -49,7 +49,7 @@ import org.smoothbuild.db.object.spec.exc.UnexpectedSpecSequenceException;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
-import org.smoothbuild.db.object.spec.expr.InvokeSpec;
+import org.smoothbuild.db.object.spec.expr.NativeMethodSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
@@ -97,6 +97,7 @@ public class SpecDb implements TypeFactory {
   private final IntSpec intSpec;
   private final NothingSpec nothingSpec;
   private final StrSpec strSpec;
+  private final NativeMethodSpec nativeMethodSpec;
 
   public SpecDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -109,6 +110,9 @@ public class SpecDb implements TypeFactory {
       this.intSpec = cacheSpec(new IntSpec(writeBaseSpecRoot(INT)));
       this.nothingSpec = cacheSpec(new NothingSpec(writeBaseSpecRoot(NOTHING)));
       this.strSpec = cacheSpec(new StrSpec(writeBaseSpecRoot(STRING)));
+
+      // expr
+      this.nativeMethodSpec = cacheSpec(new NativeMethodSpec(writeBaseSpecRoot(NATIVE_METHOD)));
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -145,6 +149,10 @@ public class SpecDb implements TypeFactory {
   @Override
   public IntSpec int_() {
     return intSpec;
+  }
+
+  public NativeMethodSpec nativeMethodSpec() {
+    return nativeMethodSpec;
   }
 
   @Override
@@ -185,10 +193,6 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstSpec(evaluationSpec));
   }
 
-  public InvokeSpec invokeSpec(ValSpec evaluationSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newInvokeSpec(evaluationSpec));
-  }
-
   public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(itemSpecs));
   }
@@ -215,7 +219,7 @@ public class SpecDb implements TypeFactory {
     List<Hash> rootSequence = readSpecRootSequence(hash);
     SpecKind specKind = decodeSpecMarker(hash, rootSequence.get(0));
     return switch (specKind) {
-      case ANY, BLOB, BOOL, INT, NOTHING, STRING -> {
+      case ANY, BLOB, BOOL, INT, NATIVE_METHOD, NOTHING, STRING -> {
         assertSpecRootSequenceSize(hash, specKind, rootSequence, 1);
         throw new RuntimeException(
             "Internal error: Spec with kind " + specKind + " should be found in cache.");
@@ -225,7 +229,6 @@ public class SpecDb implements TypeFactory {
       case CALL -> newCallSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CONST -> newConstSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
-      case INVOKE -> newInvokeSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case RECORD_EXPR -> newRecExprSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
       case RECORD -> readRecord(hash, rootSequence);
@@ -464,15 +467,6 @@ public class SpecDb implements TypeFactory {
 
   private ConstSpec newConstSpec(Hash rootHash, ValSpec evaluationSpec) {
     return cacheSpec(new ConstSpec(rootHash, evaluationSpec));
-  }
-
-  private InvokeSpec newInvokeSpec(ValSpec evaluationSpec) throws HashedDbException {
-    var rootHash = writeExprSpecRoot(INVOKE, evaluationSpec);
-    return newInvokeSpec(rootHash, evaluationSpec);
-  }
-
-  private InvokeSpec newInvokeSpec(Hash rootHash, ValSpec evaluationSpec) {
-    return cacheSpec(new InvokeSpec(rootHash, evaluationSpec));
   }
 
   private RecExprSpec newRecExprSpec(ImmutableList<ValSpec> elementSpec) throws HashedDbException {

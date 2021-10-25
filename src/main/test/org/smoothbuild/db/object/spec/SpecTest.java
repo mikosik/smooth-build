@@ -102,6 +102,7 @@ public class SpecTest {
         arguments(PERSON_REC, "{String,String}"),
         arguments(tc.callSpec(tc.intSpec()), "CALL:Int"),
         arguments(tc.constSpec(tc.intSpec()), "CONST:Int"),
+        arguments(tc.nativeMethodSpec(), "NATIVE_METHOD"),
         arguments(tc.arrayExprSpec(tc.strSpec()), "ARRAY:[String]"),
         arguments(tc.recExprSpec(list(tc.strSpec(), tc.intSpec())), "RECORD:{String,Int}"),
         arguments(tc.selectSpec(tc.intSpec()), "SELECT:Int"),
@@ -199,13 +200,6 @@ public class SpecTest {
     @MethodSource("specs")
     public void const_(ValSpec spec) {
       assertThat(SPEC_DB.constSpec(spec).evaluationSpec())
-          .isEqualTo(spec);
-    }
-
-    @ParameterizedTest
-    @MethodSource("specs")
-    public void invoke(ValSpec spec) {
-      assertThat(SPEC_DB.invokeSpec(spec).evaluationSpec())
           .isEqualTo(spec);
     }
 
