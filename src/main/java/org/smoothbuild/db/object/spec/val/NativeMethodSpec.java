@@ -1,4 +1,4 @@
-package org.smoothbuild.db.object.spec.expr;
+package org.smoothbuild.db.object.spec.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
@@ -6,7 +6,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.expr.NativeMethod;
+import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 
 /**

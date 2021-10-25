@@ -1,13 +1,11 @@
-package org.smoothbuild.db.object.obj.expr;
+package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.spec.expr.NativeMethodSpec;
+import org.smoothbuild.db.object.spec.val.NativeMethodSpec;
 
 /**
  * This class is immutable.

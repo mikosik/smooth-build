@@ -1,10 +1,8 @@
-package org.smoothbuild.db.object.obj.expr;
+package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
