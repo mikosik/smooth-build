@@ -90,8 +90,7 @@ public class ModuleLoader {
     return new Struct(type, path, name, items, location);
   }
 
-  private ImmutableMap<String, GlobalReferencable> loadReferencables(
-      ModulePath path, Ast ast) {
+  private ImmutableMap<String, GlobalReferencable> loadReferencables(ModulePath path, Ast ast) {
     var local = new HashMap<String, GlobalReferencable>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(path, struct);
@@ -109,7 +108,6 @@ public class ModuleLoader {
     var parameterTypes = map(struct.fields(), f -> f.type().get());
     var type = typing.function(resultType, parameterTypes);
     var parameters = map(struct.fields(), f -> f.toItem(path));
-    return new Constructor(type, path, name, parameters, struct.location()
-    );
+    return new Constructor(type, path, name, parameters, struct.location());
   }
 }
