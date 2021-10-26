@@ -11,7 +11,7 @@ import org.smoothbuild.exec.base.LambdaStruct;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.Nal;
+import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.Scope;
@@ -26,7 +26,7 @@ public class ApplyJob extends AbstractJob {
 
   public ApplyJob(Type type, Job referencable, List<Job> arguments, Location location,
       BoundsMap variables, Scope<Job> scope, JobCreator jobCreator) {
-    super(type, concat(referencable, arguments), new Nal("building-evaluation", location));
+    super(type, concat(referencable, arguments), new NalImpl("building-evaluation", location));
     this.arguments = arguments;
     this.variables = variables;
     this.scope = scope;

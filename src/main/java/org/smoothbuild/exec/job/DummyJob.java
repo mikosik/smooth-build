@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
-import org.smoothbuild.lang.base.define.Named;
+import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -15,8 +15,8 @@ import org.smoothbuild.util.concurrent.PromisedValue;
 public class DummyJob extends AbstractJob {
   private final Val val;
 
-  public DummyJob(Type type, Val val, Named named) {
-    super(type, list(), named);
+  public DummyJob(Type type, Val val, Nal nal) {
+    super(type, list(), nal);
     this.val = val;
   }
 

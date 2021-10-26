@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.type.api.Type;
 /**
  * This class and all its subclasses are immutable.
  */
-public class Defined extends Nal {
+public class Defined extends NalImpl {
   private final Type type;
   private final ModulePath modulePath;
 

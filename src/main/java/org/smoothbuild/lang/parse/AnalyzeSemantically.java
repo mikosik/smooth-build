@@ -20,7 +20,7 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.Named;
+import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
@@ -190,30 +190,30 @@ public class AnalyzeSemantically {
   }
 
   private static void detectDuplicateGlobalNames(Logger logger, Definitions imported, Ast ast) {
-    List<Named> nameds = new ArrayList<>();
-    nameds.addAll(ast.structs());
-    nameds.addAll(map(ast.structs(), StructNode::constructor));
-    nameds.addAll(ast.referencable());
-    nameds.sort(comparing(n -> n.location().line()));
+    List<Nal> nals = new ArrayList<>();
+    nals.addAll(ast.structs());
+    nals.addAll(map(ast.structs(), StructNode::constructor));
+    nals.addAll(ast.referencable());
+    nals.sort(comparing(n -> n.location().line()));
 
-    for (Named named : nameds) {
-      logIfDuplicate(logger, imported.types(), named);
-      logIfDuplicate(logger, imported.referencables(), named);
+    for (Nal nal : nals) {
+      logIfDuplicate(logger, imported.types(), nal);
+      logIfDuplicate(logger, imported.referencables(), nal);
     }
-    Map<String, Named> checked = new HashMap<>();
-    for (Named named : nameds) {
-      logIfDuplicate(logger, checked, named);
-      checked.put(named.name(), named);
+    Map<String, Nal> checked = new HashMap<>();
+    for (Nal nal : nals) {
+      logIfDuplicate(logger, checked, nal);
+      checked.put(nal.name(), nal);
     }
   }
 
   private static void logIfDuplicate(
-      Logger logger, Map<String, ? extends Named> others, Named named) {
-    String name = named.name();
+      Logger logger, Map<String, ? extends Nal> others, Nal nal) {
+    String name = nal.name();
     if (others.containsKey(name)) {
-      Named otherDefinition = others.get(name);
-      Location location = otherDefinition.location();
-      logger.log(alreadyDefinedError(named, location));
+      Nal otherNal = others.get(name);
+      Location location = otherNal.location();
+      logger.log(alreadyDefinedError(nal, location));
     }
   }
 
@@ -340,10 +340,10 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static Log alreadyDefinedError(Named named, Location location) {
+  private static Log alreadyDefinedError(Nal nal, Location location) {
     String atLocation = location.equals(Location.internal())
         ? " internally."
         : " at " + location + ".";
-    return parseError(named.location(), "`" + named.name() + "` is already defined" + atLocation);
+    return parseError(nal.location(), "`" + nal.name() + "` is already defined" + atLocation);
   }
 }

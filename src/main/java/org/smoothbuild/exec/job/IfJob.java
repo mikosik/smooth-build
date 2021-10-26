@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.Nal;
+import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -20,7 +20,7 @@ public class IfJob extends AbstractJob {
   private static final String IF_TASK_NAME = IF_FUNCTION_NAME + PARENTHESES;
 
   public IfJob(Type type, List<Job> dependencies, Location location) {
-    super(type, dependencies, new Nal("building:" + IF_TASK_NAME, location));
+    super(type, dependencies, new NalImpl("building:" + IF_TASK_NAME, location));
   }
 
   @Override

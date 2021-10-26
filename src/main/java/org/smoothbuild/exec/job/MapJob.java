@@ -16,7 +16,7 @@ import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.Nal;
+import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.Scope;
@@ -30,7 +30,7 @@ public class MapJob extends AbstractJob {
 
   public MapJob(Type type, List<Job> dependencies, Location location, Scope<Job> scope,
       JobCreator jobCreator) {
-    super(type, dependencies, new Nal("building:" + MAP_TASK_NAME, location));
+    super(type, dependencies, new NalImpl("building:" + MAP_TASK_NAME, location));
     this.scope = scope;
     this.jobCreator = jobCreator;
   }
@@ -69,7 +69,7 @@ public class MapJob extends AbstractJob {
   }
 
   private Job elemJob(Type elemType, Val element, Location location) {
-    return new DummyJob(elemType, element, new Nal("element-to-map", location));
+    return new DummyJob(elemType, element, new NalImpl("element-to-map", location));
   }
 
   private Job arrayJob() {
