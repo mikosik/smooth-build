@@ -41,7 +41,7 @@ public class Struc_ extends Val {
   }
 
   private ImmutableList<Val> instantiateItems() {
-    var itemSpecs = spec().fields();
+    var itemSpecs = spec().fields().objectList();
     var objs = readSequenceObjs(DATA_PATH, dataHash(), itemSpecs.size(), Val.class);
     for (int i = 0; i < itemSpecs.size(); i++) {
       Val obj = objs.get(i);
@@ -58,10 +58,10 @@ public class Struc_ extends Val {
   @Override
   public String valueToString() {
     StringBuilder builder = new StringBuilder("{");
-    var names = spec().names();
-    var values = items();
+    var typeFields = spec().fields().list();
+    ImmutableList<Val> values = items();
     for (int i = 0; i < values.size(); i++) {
-      builder.append(names.get(i).orElse(""));
+      builder.append(typeFields.get(i).saneName());
       builder.append("=");
       builder.append(values.get(i).valueToString());
       if (i != values.size() - 1) {

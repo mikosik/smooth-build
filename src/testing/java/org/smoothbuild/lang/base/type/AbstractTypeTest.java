@@ -7,10 +7,10 @@ import static org.smoothbuild.lang.base.type.TestingTypes.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -26,6 +26,7 @@ import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.AbstractTestingContext;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.testing.EqualsTester;
 
@@ -371,35 +372,18 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
     @ParameterizedTest
     @MethodSource("struct_fields_cases")
     public void struct_fields(Function<TypeFactory, StructType> factoryCall,
-        Function<TypeFactory, List<Type>> expected) {
+        Function<TypeFactory, NamedList<Type>> expected) {
       assertThat(invoke(factoryCall).fields())
           .isEqualTo(invoke(expected));
     }
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
-          args(f -> f.struct("Person", list()), f -> list()),
-          args(f -> f.struct("Person", list(named("field", f.string()))), f -> list(f.string())),
-          args(f -> f.struct("Person", list(named("field", f.string()), named("field2", f.int_()))),
-              f -> list(f.string(), f.int_()))
-      );
-    }
-
-    @ParameterizedTest
-    @MethodSource("struct_names_cases")
-    public void struct_names(Function<TypeFactory, StructType> factoryCall,
-        List<String> expected) {
-      assertThat(invoke(factoryCall).names())
-          .isEqualTo(expected);
-    }
-
-    public static List<Arguments> struct_names_cases() {
-      return list(
-          args(f -> f.struct("Person", list()), list()),
+          args(f -> f.struct("Person", list()), f -> namedList(list())),
           args(f -> f.struct("Person", list(named("field", f.string()))),
-              list(Optional.of("field"))),
+              f -> namedList(list(named("field", f.string())))),
           args(f -> f.struct("Person", list(named("field", f.string()), named("field2", f.int_()))),
-              list(Optional.of("field"), Optional.of("field2")))
+              f -> namedList(list(named("field", f.string()), named("field2", f.int_()))))
       );
     }
   }

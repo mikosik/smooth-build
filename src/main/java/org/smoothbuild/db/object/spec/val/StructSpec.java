@@ -3,10 +3,7 @@ package org.smoothbuild.db.object.spec.val;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.calculateVariables;
-import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.fieldsMap;
-import static org.smoothbuild.util.collect.Lists.map;
-
-import java.util.Optional;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectDb;
@@ -15,35 +12,21 @@ import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class StructSpec extends ValSpec implements StructType {
-  private final ImmutableList<ValSpec> fields;
-  private final ImmutableList<Optional<String>> names;
-  private final ImmutableMap<String, Integer> nameToIndex;
+  private final NamedList<ValSpec> fields;
 
   public StructSpec(Hash hash, String name, ImmutableList<Named<ValSpec>> fields) {
     super(name, hash, STRUCT, calculateVariables(fields));
-    this.fields = map(fields, Named::object);
-    this.names = map(fields, Named::name);
-    this.nameToIndex = fieldsMap(names);
+    this.fields = namedList(fields);
   }
 
   @Override
-  public ImmutableList<ValSpec> fields() {
+  public NamedList<ValSpec> fields() {
     return fields;
-  }
-
-  @Override
-  public ImmutableMap<String, Integer> nameToIndex() {
-    return nameToIndex;
-  }
-
-  @Override
-  public ImmutableList<Optional<String>> names() {
-    return names;
   }
 
   @Override

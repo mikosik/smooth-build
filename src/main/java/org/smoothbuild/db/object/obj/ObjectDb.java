@@ -101,15 +101,15 @@ public class ObjectDb {
   }
 
   public Struc_ structVal(StructSpec structSpec, ImmutableList<Val> items) {
-    var specs = structSpec.fields();
-    allMatchOtherwise(specs, items, (s, i) -> Objects.equals(s, i.spec()),
+    var fieldTypes = structSpec.fields().objectList();
+    allMatchOtherwise(fieldTypes, items, (f, i) -> Objects.equals(f, i.spec()),
         (i, j) -> {
           throw new IllegalArgumentException(
               "structSpec specifies " + i + " items but provided " + j + ".");
         },
         (i) -> {
           throw new IllegalArgumentException("structSpec specifies field at index " + i
-              + " with spec " + specs.get(i).name() + " but provided item has spec "
+              + " with spec " + fieldTypes.get(i).name() + " but provided item has spec "
               + items.get(i).spec().name() + " at that index.");
         }
     );
@@ -288,7 +288,7 @@ public class ObjectDb {
 
   private SelectSpec selectSpec(Expr expr, Int index) {
     if (expr.spec().evaluationSpec() instanceof StructSpec struct) {
-      var fields = struct.fields();
+      var fields = struct.fields().objectList();
       int intIndex = index.jValue().intValue();
       checkElementIndex(intIndex, fields.size());
       var field = fields.get(intIndex);

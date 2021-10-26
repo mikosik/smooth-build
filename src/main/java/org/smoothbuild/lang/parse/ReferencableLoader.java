@@ -206,10 +206,10 @@ public class ReferencableLoader {
 
     private Expression createSelect(SelectNode selectNode) {
       StructType structType = (StructType) selectNode.expr().type().get();
-      int index = structType.nameToIndex().get(selectNode.fieldName());
-      Type itemType = structType.fields().get(index);
+      int index = structType.fields().indexMap().get(selectNode.fieldName());
+      Type fieldType = structType.fields().objectList().get(index);
       Expression expression = createExpression(selectNode.expr());
-      return new SelectExpression(itemType, index, expression, selectNode.location());
+      return new SelectExpression(fieldType, index, expression, selectNode.location());
     }
 
     private Expression createReference(RefNode ref) {

@@ -62,11 +62,11 @@ public class ItemSignature extends Named<Type> {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
+  public boolean equals(Object object) {
+    if (object == this) {
       return true;
     }
-    return obj instanceof ItemSignature that
+    return object instanceof ItemSignature that
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.name(), that.name())
         && Objects.equals(this.defaultValueType, that.defaultValueType);

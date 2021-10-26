@@ -1,46 +1,32 @@
 package org.smoothbuild.lang.base.type.impl;
 
 import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.calculateVariables;
-import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.fieldsMap;
-import static org.smoothbuild.util.collect.Lists.map;
-
-import java.util.Optional;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * This class is immutable.
  */
 public class StructTypeImpl extends AbstractTypeImpl implements StructType {
-  private final ImmutableList<? extends Type> fields;
-  private final ImmutableList<Optional<String>> names;
-  private final ImmutableMap<String, Integer> nameToIndex;
+  private final NamedList<Type> fields;
 
   public StructTypeImpl(String name, ImmutableList<? extends Named<? extends Type>> fields) {
     super(name, calculateVariables(fields));
-    this.fields = map(fields, Named::object);
-    this.names = map(fields, Named::name);
-    this.nameToIndex = fieldsMap(names);
+    @SuppressWarnings("unchecked") // safe because both ImmutableList and Named are immutable
+    var castFields = (ImmutableList<Named<Type>>) fields;
+    this.fields = namedList(castFields);
   }
 
+
   @Override
-  public ImmutableList<? extends Type> fields() {
+  public NamedList<Type> fields() {
     return fields;
-  }
-
-  @Override
-  public ImmutableList<Optional<String>> names() {
-    return names;
-  }
-
-  @Override
-  public ImmutableMap<String, Integer> nameToIndex() {
-    return nameToIndex;
   }
 
   @Override
@@ -50,7 +36,6 @@ public class StructTypeImpl extends AbstractTypeImpl implements StructType {
     }
     return object instanceof StructTypeImpl thatStruct
         && this.name().equals(thatStruct.name())
-        && this.fields.equals(thatStruct.fields)
-        && this.names.equals(thatStruct.names);
+        && this.fields.equals(thatStruct.fields);
   }
 }

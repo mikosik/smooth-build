@@ -42,7 +42,7 @@ public class Select extends Expr {
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsException(hash(), spec(), i, size);
       }
-      ValSpec fieldSpec = structEvaluationSpec.fields().get(i);
+      ValSpec fieldSpec = structEvaluationSpec.fields().objectList().get(i);
       if (!Objects.equals(evaluationSpec(), fieldSpec)) {
         throw new DecodeSelectWrongEvaluationSpecException(hash(), spec(), fieldSpec);
       }
