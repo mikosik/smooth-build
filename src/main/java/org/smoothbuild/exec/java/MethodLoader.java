@@ -160,14 +160,14 @@ public class MethodLoader {
           + (nativeParams.length - 1) + " parameter(s).");
     }
     for (int i = 0; i < params.size(); i++) {
-      String declaredName = params.get(i).name();
+      Item param = params.get(i);
       Parameter nativeParam = nativeParams[i + 1];
-      Type paramType = params.get(i).type();
+      Type paramType = param.type();
       Class<?> paramJType = nativeParam.getType();
       Class<? extends Obj> expectedParamJType = mapTypeToJType(paramType);
       if (!expectedParamJType.equals(paramJType)) {
-        throw newLoadingException(function, classBinaryName, "Function " + function.q() + " parameter `"
-            + declaredName + "` has type " + paramType.q()
+        throw newLoadingException(function, classBinaryName, "Function " + function.q()
+            + " parameter `" + param.name() + "` has type " + paramType.q()
             + " so its native implementation type must be " + expectedParamJType.getCanonicalName()
             + " but it is " + paramJType.getCanonicalName() + ".");
       }
