@@ -5,9 +5,11 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 
@@ -16,14 +18,15 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public record ItemSignature(Type type, Optional<String> name, Optional<Type> defaultValueType) {
+public class ItemSignature extends Named<Type> {
+  private final Optional<Type> defaultValueType;
+
   public ItemSignature(Type type, String name, Optional<Type> defaultValueType) {
     this(type, Optional.of(name), defaultValueType);
   }
 
   public ItemSignature(Type type, Optional<String> name, Optional<Type> defaultValueType) {
-    this.type = requireNonNull(type);
-    this.name = requireNonNull(name);
+    super(name, type);
     this.defaultValueType = requireNonNull(defaultValueType);
   }
 
@@ -35,33 +38,42 @@ public record ItemSignature(Type type, Optional<String> name, Optional<Type> def
     return map(types, ItemSignature::itemSignature);
   }
 
-  public boolean hasDefaultValue() {
-    return defaultValueType.isPresent();
+  public Type type() {
+    return object();
   }
 
-  /**
-   * @return name of this parameter inside backticks.
-   */
-  public String q() {
-    return "`" + saneName() + "`";
+  public Optional<Type> defaultValueType() {
+    return defaultValueType;
   }
 
-  public String saneName() {
-    return name.orElse("");
+  public String typeAndName() {
+    return name().map(n -> type().name() + " " + n).orElseGet(() -> type().name());
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
-    String typePart = padEnd(type.name(), minTypeLength, ' ') + ": ";
+    String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
     String namePart = padEnd(saneName(), minNameLength, ' ');
     return typePart + namePart;
   }
 
   @Override
   public String toString() {
-    return type.name() + name.map(n -> " " + n).orElse("");
+    return type().name() + name().map(n -> " " + n).orElse("");
   }
 
-  public String typeAndName() {
-    return name.map(n -> type.name() + " " + n).orElseGet(type::name);
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+    return obj instanceof ItemSignature that
+        && Objects.equals(this.type(), that.type())
+        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.defaultValueType, that.defaultValueType);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type(), name(), defaultValueType);
   }
 }
