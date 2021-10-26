@@ -3,6 +3,8 @@ package org.smoothbuild.util;
 import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSequenceException;
 import static org.smoothbuild.util.UnescapingFailedException.missingEscapeCodeException;
 
+import java.util.Optional;
+
 public class Strings {
 
   private static final char TAB = '\t';
@@ -144,5 +146,9 @@ public class Strings {
       case '\\' -> BACKSLASH;
       default -> throw illegalEscapeSequenceException(charIndex);
     };
+  }
+
+  public static Optional<String> stringToOptionalString(String string) {
+    return string.isEmpty() ?  Optional.empty() : Optional.of(string);
   }
 }

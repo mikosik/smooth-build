@@ -4,12 +4,14 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.escaped;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
+import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.Strings.unescaped;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSequenceException;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -165,5 +167,19 @@ public class StringsTest {
         .put("\\", "\\\\")
         .put("", "")
         .build();
+  }
+
+  @Nested
+  class _string_to_optional_string {
+    @Test
+    public void empty_string_converts_to_optional_empty() {
+      assertThat(stringToOptionalString(""))
+          .isEqualTo(Optional.empty());
+    }
+    @Test
+    public void non_empty_string_converts_to_optional_of() {
+      assertThat(stringToOptionalString("abc"))
+          .isEqualTo(Optional.of("abc"));
+    }
   }
 }
