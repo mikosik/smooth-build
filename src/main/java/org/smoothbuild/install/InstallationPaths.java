@@ -3,7 +3,7 @@ package org.smoothbuild.install;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.space.FilePath.filePath;
 import static org.smoothbuild.io.fs.space.Space.SDK;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.nio.file.Path;
 

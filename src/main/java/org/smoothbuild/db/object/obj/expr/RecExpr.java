@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.util.Lists.allMatchOtherwise;
+import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.Objects;
 

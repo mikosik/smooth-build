@@ -6,7 +6,7 @@ import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.lang.parse.ast.FunctionTypeNode.countFunctionVariables;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,11 +38,11 @@ import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
-import org.smoothbuild.util.CountersMap;
 import org.smoothbuild.util.DecodeHexException;
 import org.smoothbuild.util.Scope;
-import org.smoothbuild.util.Sets;
 import org.smoothbuild.util.UnescapingFailedException;
+import org.smoothbuild.util.collect.CountersMap;
+import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.collect.ImmutableList;
 

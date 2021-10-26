@@ -3,7 +3,7 @@ package org.smoothbuild.install;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.util.Map.Entry;

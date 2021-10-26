@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.parse;
 
 import static org.smoothbuild.lang.base.define.Item.toTypes;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Maps.toMap;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.List;
 import java.util.Optional;

@@ -3,7 +3,7 @@ package org.smoothbuild.acceptance.slib.common;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.BooleanCreators.falseByteString;
 import static org.smoothbuild.testing.BooleanCreators.trueByteString;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;

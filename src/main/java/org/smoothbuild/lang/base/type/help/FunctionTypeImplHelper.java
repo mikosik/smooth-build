@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.type.help;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.util.Lists.concat;
+import static org.smoothbuild.util.collect.Lists.concat;
 
 import java.util.Collection;
 

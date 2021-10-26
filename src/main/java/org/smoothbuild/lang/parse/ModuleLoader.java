@@ -5,8 +5,8 @@ import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
-import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Maps.toMap;
+import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.HashMap;
 

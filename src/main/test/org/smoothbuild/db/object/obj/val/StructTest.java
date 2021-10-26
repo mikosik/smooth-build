@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContextImpl;

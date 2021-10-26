@@ -3,7 +3,7 @@ package org.smoothbuild.io.fs.base;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.quote;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;

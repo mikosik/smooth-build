@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.db;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.math.BigInteger;

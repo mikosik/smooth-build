@@ -20,8 +20,8 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.X;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
-import static org.smoothbuild.util.Lists.concat;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.concat;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
 import java.util.Collection;

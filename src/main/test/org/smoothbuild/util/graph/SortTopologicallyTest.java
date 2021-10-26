@@ -5,8 +5,8 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
 import java.time.Duration;

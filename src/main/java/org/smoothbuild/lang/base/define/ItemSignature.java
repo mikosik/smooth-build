@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.Optional;

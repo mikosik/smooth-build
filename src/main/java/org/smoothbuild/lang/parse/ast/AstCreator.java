@@ -2,10 +2,10 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.util.Lists.concat;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Lists.sane;
+import static org.smoothbuild.util.collect.Lists.concat;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.sane;
 
 import java.util.ArrayList;
 import java.util.List;

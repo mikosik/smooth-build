@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type.api;
 
-import static org.smoothbuild.util.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import com.google.common.collect.ImmutableMap;
 

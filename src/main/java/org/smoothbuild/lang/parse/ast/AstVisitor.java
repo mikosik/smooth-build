@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.function.BiConsumer;

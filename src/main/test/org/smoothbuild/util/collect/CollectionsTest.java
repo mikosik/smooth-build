@@ -1,7 +1,7 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
 

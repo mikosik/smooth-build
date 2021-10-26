@@ -6,7 +6,7 @@ import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.run.FindReferencables.findReferencables;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.util.List;

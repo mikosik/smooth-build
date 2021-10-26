@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.lang.base.type.api.AnyType;
 import org.smoothbuild.lang.base.type.api.ArrayType;

@@ -7,8 +7,8 @@ import static org.smoothbuild.lang.base.type.api.StructTypes.fieldGet;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
-import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +49,7 @@ import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
-import org.smoothbuild.util.Optionals;
+import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 

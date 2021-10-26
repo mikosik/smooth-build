@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.collect;
 
 import java.util.HashSet;
 import java.util.Set;

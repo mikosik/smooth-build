@@ -1,19 +1,19 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.Lists.allMatch;
-import static org.smoothbuild.util.Lists.allMatchOtherwise;
-import static org.smoothbuild.util.Lists.concat;
-import static org.smoothbuild.util.Lists.filter;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Lists.mapM;
-import static org.smoothbuild.util.Lists.sane;
-import static org.smoothbuild.util.Lists.skip;
-import static org.smoothbuild.util.Lists.toCommaSeparatedString;
-import static org.smoothbuild.util.Lists.zip;
+import static org.smoothbuild.util.collect.Lists.allMatch;
+import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
+import static org.smoothbuild.util.collect.Lists.concat;
+import static org.smoothbuild.util.collect.Lists.filter;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.mapM;
+import static org.smoothbuild.util.collect.Lists.sane;
+import static org.smoothbuild.util.collect.Lists.skip;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Lists.zip;
 
 import java.util.ArrayList;
 import java.util.List;

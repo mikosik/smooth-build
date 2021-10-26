@@ -8,10 +8,10 @@ import static org.smoothbuild.exec.job.TaskKind.SELECT;
 import static org.smoothbuild.exec.job.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
-import static org.smoothbuild.util.Lists.concat;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Lists.zip;
+import static org.smoothbuild.util.collect.Lists.concat;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.zip;
 
 import java.util.List;
 import java.util.Map;

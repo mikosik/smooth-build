@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.plan;
 
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import javax.inject.Inject;
 

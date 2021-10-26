@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.collect;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;

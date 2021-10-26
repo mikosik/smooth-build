@@ -8,7 +8,7 @@ import static okio.ByteString.encodeUtf8;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.io.Okios.writeAndClose;
 
 import java.io.IOException;

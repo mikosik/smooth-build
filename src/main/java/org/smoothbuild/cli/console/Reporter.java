@@ -5,8 +5,8 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.FATAL;
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
 import java.util.Locale;

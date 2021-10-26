@@ -1,7 +1,7 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import org.smoothbuild.db.hashed.Hash;
 

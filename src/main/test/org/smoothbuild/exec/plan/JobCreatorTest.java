@@ -3,8 +3,8 @@ package org.smoothbuild.exec.plan;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Maps.toMap;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;

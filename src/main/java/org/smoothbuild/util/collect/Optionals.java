@@ -1,6 +1,6 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.collect;
 
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Optional;
 

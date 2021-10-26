@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type.impl;
 
-import static org.smoothbuild.util.Sets.set;
+import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.lang.base.type.api.Variable;
 

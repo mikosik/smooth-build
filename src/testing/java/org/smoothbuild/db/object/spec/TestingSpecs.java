@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.spec;
 
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.spec.base.Spec;

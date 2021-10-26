@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

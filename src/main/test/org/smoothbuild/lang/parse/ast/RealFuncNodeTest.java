@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 

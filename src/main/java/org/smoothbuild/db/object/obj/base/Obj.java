@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.obj.base;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsDecodeObjNodeException;
 import static org.smoothbuild.db.object.obj.Helpers.wrapObjectDbExceptionAsDecodeObjNodeException;
-import static org.smoothbuild.util.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
 

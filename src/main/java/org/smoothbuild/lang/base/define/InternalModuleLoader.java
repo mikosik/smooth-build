@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.base.define;
 
 import static org.smoothbuild.lang.base.define.SModule.calculateModuleHash;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Maps.toMap;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Maps.toMap;
 
 import javax.inject.Inject;
 

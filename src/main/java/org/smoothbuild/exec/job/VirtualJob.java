@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.job;
 
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.function.Consumer;
 

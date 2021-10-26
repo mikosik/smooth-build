@@ -5,8 +5,8 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.stream.Stream;

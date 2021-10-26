@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.job;
 
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.List;

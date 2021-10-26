@@ -2,7 +2,7 @@ package org.smoothbuild.io.fs;
 
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.io.fs.space.Space.SDK;
-import static org.smoothbuild.util.Maps.mapValues;
+import static org.smoothbuild.util.collect.Maps.mapValues;
 
 import java.nio.file.Path;
 

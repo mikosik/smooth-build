@@ -6,8 +6,8 @@ import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.type.TestingTypes.struct;
 import static org.smoothbuild.lang.base.type.TestingTypes.variable;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.Objects;

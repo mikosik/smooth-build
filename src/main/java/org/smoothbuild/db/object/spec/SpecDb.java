@@ -27,7 +27,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;

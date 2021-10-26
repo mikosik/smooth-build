@@ -23,7 +23,7 @@ import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.DuplicatesDetector;
+import org.smoothbuild.util.collect.DuplicatesDetector;
 
 public class UnzipFunction {
   public static Array function(NativeApi nativeApi, Blob blob) throws IOException {

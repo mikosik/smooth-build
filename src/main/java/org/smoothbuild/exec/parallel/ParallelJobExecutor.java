@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.parallel;
 
-import static org.smoothbuild.util.Maps.mapValues;
+import static org.smoothbuild.util.collect.Maps.mapValues;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.List;

@@ -7,7 +7,7 @@ import static org.smoothbuild.exec.base.FileStruct.fileContent;
 import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.util.Set;
@@ -25,7 +25,7 @@ import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.util.DuplicatesDetector;
+import org.smoothbuild.util.collect.DuplicatesDetector;
 
 /**
  * This class is NOT thread-safe.

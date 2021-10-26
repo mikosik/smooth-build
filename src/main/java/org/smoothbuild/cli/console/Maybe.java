@@ -2,8 +2,8 @@ package org.smoothbuild.cli.console;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
 import java.util.Optional;

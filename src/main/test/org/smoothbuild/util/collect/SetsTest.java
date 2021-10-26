@@ -1,9 +1,9 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.Sets.filter;
-import static org.smoothbuild.util.Sets.map;
-import static org.smoothbuild.util.Sets.set;
+import static org.smoothbuild.util.collect.Sets.filter;
+import static org.smoothbuild.util.collect.Sets.map;
+import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.HashSet;
 

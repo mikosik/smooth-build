@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.spec.val;
 
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
-import static org.smoothbuild.util.Sets.set;
+import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectDb;

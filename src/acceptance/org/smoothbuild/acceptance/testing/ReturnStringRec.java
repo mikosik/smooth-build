@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.testing;
 
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.obj.val.Struc_;

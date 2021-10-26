@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.define;
 import static org.smoothbuild.lang.base.define.IfFunction.parameter;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.Location.internal;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.ArrayType;

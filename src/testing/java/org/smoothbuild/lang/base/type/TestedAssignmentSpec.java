@@ -12,7 +12,7 @@ import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
 import static org.smoothbuild.lang.base.type.TestedType.a;
 import static org.smoothbuild.lang.base.type.TestedType.a2;
 import static org.smoothbuild.lang.base.type.TestedType.f;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;

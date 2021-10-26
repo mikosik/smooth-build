@@ -8,7 +8,7 @@ import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.objRootEx
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.math.BigInteger;

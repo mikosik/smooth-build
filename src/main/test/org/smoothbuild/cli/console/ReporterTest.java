@@ -15,8 +15,8 @@ import static org.smoothbuild.cli.console.Reporter.toText;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.exec.job.TaskKind.CALL;
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;

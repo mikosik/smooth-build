@@ -4,7 +4,7 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.exec.artifact.ArtifactPaths.artifactPath;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.util.List;

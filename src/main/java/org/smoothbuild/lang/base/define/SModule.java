@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 

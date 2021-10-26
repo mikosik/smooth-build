@@ -2,11 +2,11 @@ package org.smoothbuild.run;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.base.define.Names.isLegalName;
-import static org.smoothbuild.util.Sets.map;
+import static org.smoothbuild.util.collect.Sets.map;
 
 import java.util.List;
 
-import org.smoothbuild.util.DuplicatesDetector;
+import org.smoothbuild.util.collect.DuplicatesDetector;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

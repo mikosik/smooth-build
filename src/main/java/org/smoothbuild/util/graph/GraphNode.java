@@ -1,7 +1,7 @@
 package org.smoothbuild.util.graph;
 
 import static java.lang.String.join;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.Collection;
 

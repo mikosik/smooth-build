@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Optional;
 

@@ -37,7 +37,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.SELECT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SPEC_DB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
 import static org.smoothbuild.db.object.spec.TestingSpecs.VARIABLE;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
 import java.util.stream.Stream;

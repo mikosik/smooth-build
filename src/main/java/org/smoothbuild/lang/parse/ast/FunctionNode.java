@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.util.Optionals;
+import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 

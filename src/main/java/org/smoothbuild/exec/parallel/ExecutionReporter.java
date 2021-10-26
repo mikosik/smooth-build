@@ -8,8 +8,8 @@ import static org.smoothbuild.exec.base.MessageStruct.level;
 import static org.smoothbuild.exec.base.MessageStruct.text;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.job.TaskInfo.NAME_LENGTH_LIMIT;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 

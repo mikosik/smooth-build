@@ -17,7 +17,7 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.DuplicatesDetector;
+import org.smoothbuild.util.collect.DuplicatesDetector;
 
 import okio.BufferedSink;
 import okio.BufferedSource;

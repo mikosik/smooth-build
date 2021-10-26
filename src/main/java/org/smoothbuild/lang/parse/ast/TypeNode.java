@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.util.CountersMap;
+import org.smoothbuild.util.collect.CountersMap;
 
 import com.google.common.collect.ImmutableList;
 

@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.functionTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

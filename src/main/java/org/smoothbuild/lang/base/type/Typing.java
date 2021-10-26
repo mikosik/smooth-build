@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.util.Lists.allMatch;
-import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Lists.zip;
+import static org.smoothbuild.util.collect.Lists.allMatch;
+import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.zip;
 
 import java.util.HashMap;
 import java.util.List;

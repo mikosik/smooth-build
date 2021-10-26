@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.base;
 
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Optionals.pullUp;
+import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Optionals.pullUp;
 
 import java.util.Optional;
 

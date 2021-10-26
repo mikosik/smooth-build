@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.Blob;

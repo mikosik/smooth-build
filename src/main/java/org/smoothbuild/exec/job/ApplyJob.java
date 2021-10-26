@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.job;
 
-import static org.smoothbuild.util.Lists.concat;
+import static org.smoothbuild.util.collect.Lists.concat;
 
 import java.util.List;
 import java.util.function.Consumer;

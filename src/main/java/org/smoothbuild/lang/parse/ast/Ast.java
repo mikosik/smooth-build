@@ -7,7 +7,7 @@ import static org.smoothbuild.cli.console.ImmutableLogs.logs;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValue;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
 import java.util.ArrayList;

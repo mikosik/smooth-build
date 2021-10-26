@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.spec.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
-import static org.smoothbuild.util.Lists.toCommaSeparatedString;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectDb;
