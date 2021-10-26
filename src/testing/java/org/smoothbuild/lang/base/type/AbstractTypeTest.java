@@ -6,9 +6,11 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestingTypes.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -37,8 +39,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.int_(), "Int"),
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
-        args(f -> f.struct("Person", list(), list()), "Person"),
-        args(f -> f.struct("Person", list(f.string()), list("name")), "Person"),
+        args(f -> f.struct("Person", list()), "Person"),
+        args(f -> f.struct("Person", list(named("name", f.string()))), "Person"),
 
         args(f -> f.array(f.variable("A")), "[A]"),
         args(f -> f.array(f.any()), "[Any]"),
@@ -47,8 +49,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.array(f.int_()), "[Int]"),
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
-        args(f -> f.array(f.struct("Person", list(), list())), "[Person]"),
-        args(f -> f.array(f.struct("Person", list(f.string()), list("n"))), "[Person]"),
+        args(f -> f.array(f.struct("Person", list())), "[Person]"),
+        args(f -> f.array(f.struct("Person", list(named("name", f.string())))), "[Person]"),
 
         args(f -> f.array(f.array(f.variable("A"))), "[[A]]"),
         args(f -> f.array(f.array(f.any())), "[[Any]]"),
@@ -57,14 +59,14 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
-        args(f -> f.array(f.array(f.struct("Person", list(), list()))), "[[Person]]"),
-        args(f -> f.array(f.array(f.struct("Person", list(f.string()), list("n")))),
+        args(f -> f.array(f.array(f.struct("Person", list()))), "[[Person]]"),
+        args(f -> f.array(f.array(f.struct("Person", list(named("name", f.string()))))),
                 "[[Person]]"),
 
         args(f -> f.function(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
         args(f -> f.function(f.string(), list(f.array(f.variable("A")))), "String([A])"),
         args(f -> f.function(f.variable("A"), list(f.variable("A"))), "A(A)"),
-        args(f -> f.function(f.struct("Person", list(), list()), list()), "Person()"),
+        args(f -> f.function(f.struct("Person", list()), list()), "Person()"),
         args(f -> f.function(f.string(), list()), "String()"),
         args(f -> f.function(f.string(), list(f.string())), "String(String)")
     );
@@ -96,7 +98,7 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.int_(), false),
         args(f -> f.nothing(), false),
         args(f -> f.string(), false),
-        args(f -> f.struct("Person", list(f.string()), list("name")), false)
+        args(f -> f.struct("Person", list(named("name", f.string()))), false)
     );
   }
 
@@ -108,8 +110,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.int_(), f -> set()),
         args(f -> f.nothing(), f -> set()),
         args(f -> f.string(), f -> set()),
-        args(f -> f.struct("Person", list(), list()), f -> set()),
-        args(f -> f.struct("Person", list(f.string()), list("name")), f -> set()),
+        args(f -> f.struct("Person", list()), f -> set()),
+        args(f -> f.struct("Person", list(named(f.string()))), f -> set()),
 
         args(f -> f.array(f.any()), f -> set()),
         args(f -> f.array(f.blob()), f -> set()),
@@ -117,14 +119,14 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.array(f.int_()), f -> set()),
         args(f -> f.array(f.nothing()), f -> set()),
         args(f -> f.array(f.string()), f -> set()),
-        args(f -> f.array(f.struct("Person", list(), list())), f -> set()),
-        args(f -> f.array(f.struct("Person", list(f.string()), list("name"))), f -> set()),
+        args(f -> f.array(f.struct("Person", list())), f -> set()),
+        args(f -> f.array(f.struct("Person", list(named(f.string())))), f -> set()),
         args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
 
         args(f -> f.function(f.string(), list()), f -> set()),
         args(f -> f.function(f.string(), list(f.bool())), f -> set()),
 
-        args(f -> f.struct("Data", list(f.variable("A")), list("payload")),
+        args(f -> f.struct("Data", list(named(f.variable("A")))),
             f -> set(f.variable("A"))),
 
         args(f -> f.variable("A"), f -> set(f.variable("A"))),
@@ -280,11 +282,11 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         f.function(f.blob(), list(f.string())),
         f.function(f.blob(), list(f.blob())),
 
-        f.struct("Person", list(), list()),
-        f.struct("Person2", list(), list()),
-        f.struct("Person", list(f.blob()), list("name")),
-        f.struct("Person", list(f.string()), list("name")),
-        f.struct("Person", list(f.blob()), list("name2"))
+        f.struct("Person", list()),
+        f.struct("Person2", list()),
+        f.struct("Person", list(named("name", f.blob()))),
+        f.struct("Person", list(named("name", f.string()))),
+        f.struct("Person", list(named("name2", f.blob())))
     );
 
     for (Type type : types) {
@@ -319,7 +321,7 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
           args(f -> f.int_()),
           args(f -> f.nothing()),
           args(f -> f.string()),
-          args(f -> f.struct("Person", list(f.string()), list("name"))),
+          args(f -> f.struct("Person", list(named("name", f.string())))),
           args(f -> f.variable("A")),
 
           args(f -> f.array(f.any())),
@@ -329,7 +331,7 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),
-          args(f -> f.array(f.struct("Person", list(f.string()), list("name")))),
+          args(f -> f.array(f.struct("Person", list(named("name", f.string()))))),
           args(f -> f.array(f.variable("A")))
       );
     }
@@ -344,19 +346,14 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structT("Struct", list(nothingT()));
+      structT("Struct", list(named("fieldName", nothingT())));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structT("Struct", list(arrayT(nothingT())));
+      structT("Struct", list(named("fieldName", arrayT(nothingT()))));
     }
 
-    @Test
-    public void different_size_of_fields_and_names_causes_exception() {
-      assertCall(() -> structT("Struct", list(stringT()), list("name1", "name2")))
-          .throwsException(IllegalArgumentException.class);
-    }
     @ParameterizedTest
     @MethodSource("struct_name_cases")
     public void struct_name(Function<TypeFactory, StructType> factoryCall, String expected) {
@@ -366,8 +363,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
 
     public static List<Arguments> struct_name_cases() {
       return asList(
-          args(f -> f.struct("MyStruct", list(), list()), "MyStruct"),
-          args(f -> f.struct("", list(), list()), "")
+          args(f -> f.struct("MyStruct", list()), "MyStruct"),
+          args(f -> f.struct("", list()), "")
       );
     }
 
@@ -381,9 +378,9 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
-          args(f -> f.struct("Person", list(), list()), f -> list()),
-          args(f -> f.struct("Person", list(f.string()), list("field")), f -> list(f.string())),
-          args(f -> f.struct("Person", list(f.string(), f.int_()), list("field", "field2")),
+          args(f -> f.struct("Person", list()), f -> list()),
+          args(f -> f.struct("Person", list(named("field", f.string()))), f -> list(f.string())),
+          args(f -> f.struct("Person", list(named("field", f.string()), named("field2", f.int_()))),
               f -> list(f.string(), f.int_()))
       );
     }
@@ -398,10 +395,11 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
 
     public static List<Arguments> struct_names_cases() {
       return list(
-          args(f -> f.struct("Person", list(), list()), list()),
-          args(f -> f.struct("Person", list(f.string()), list("field")), list("field")),
-          args(f -> f.struct("Person", list(f.string(), f.int_()), list("field", "field2")),
-              list("field", "field2"))
+          args(f -> f.struct("Person", list()), list()),
+          args(f -> f.struct("Person", list(named("field", f.string()))),
+              list(Optional.of("field"))),
+          args(f -> f.struct("Person", list(named("field", f.string()), named("field2", f.int_()))),
+              list(Optional.of("field"), Optional.of("field2")))
       );
     }
   }

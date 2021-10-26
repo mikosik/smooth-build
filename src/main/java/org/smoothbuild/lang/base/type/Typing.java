@@ -30,6 +30,7 @@ import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -107,8 +108,8 @@ public class Typing {
     return typeFactory.string();
   }
 
-  public StructType struct(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
-    return typeFactory.struct(name, fields, names);
+  public StructType struct(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+    return typeFactory.struct(name, fields);
   }
 
   public Side upper() {

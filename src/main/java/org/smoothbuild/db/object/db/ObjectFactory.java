@@ -3,7 +3,10 @@ package org.smoothbuild.db.object.db;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
+import static org.smoothbuild.exec.base.FileStruct.CONTENT_FIELD_NAME;
+import static org.smoothbuild.exec.base.FileStruct.PATH_FIELD_NAME;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Named.named;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -43,6 +46,8 @@ import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.exec.base.FileStruct;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -68,14 +73,13 @@ public class ObjectFactory {
 
   private static StructSpec createMessageSpec(SpecDb specDb) {
     StrSpec strSpec = specDb.string();
-    return specDb.struct("", list(strSpec, strSpec), list("", ""));
+    return specDb.struct("", list(named(strSpec), named(strSpec)));
   }
 
   private static StructSpec createFileSpec(SpecDb specDb) {
     return specDb.struct(
         FileStruct.NAME,
-        list(specDb.blob(), specDb.string()),
-        FileStruct.FIELD_NAMES
+        list(named(CONTENT_FIELD_NAME, specDb.blob()), named(PATH_FIELD_NAME, specDb.string()))
     );
   }
 
@@ -180,9 +184,8 @@ public class ObjectFactory {
     return specDb.recSpec(itemSpecs);
   }
 
-  public StructSpec structSpec(
-      String name, ImmutableList<? extends ValSpec> itemSpecs, ImmutableList<String> names) {
-    return specDb.struct(name, itemSpecs, names);
+  public StructSpec structSpec(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+    return specDb.struct(name, fields);
   }
 
   public Struc_ errorMessage(String text) {

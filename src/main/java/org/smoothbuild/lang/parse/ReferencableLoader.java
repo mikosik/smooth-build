@@ -4,6 +4,7 @@ import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.toMap;
+import static org.smoothbuild.util.collect.Named.named;
 
 import java.util.List;
 import java.util.Optional;
@@ -102,8 +103,8 @@ public class ReferencableLoader {
   }
 
   private AnnotationExpression loadAnnotation(AnnotationNode annotationNode) {
-    StructType type = typing.struct(
-        "Native", list(typing.string(), typing.blob()), list("path", "content"));
+    StructType type = typing.struct("Native",
+        list(named("path", typing.string()), named("content", typing.blob())));
     var path = createStringLiteral(annotationNode.path());
     return new AnnotationExpression(type, path, annotationNode.isPure(), annotationNode.location());
   }

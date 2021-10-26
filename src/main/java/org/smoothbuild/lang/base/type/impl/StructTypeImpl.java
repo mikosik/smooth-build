@@ -1,11 +1,14 @@
 package org.smoothbuild.lang.base.type.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.calculateVariables;
 import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.fieldsMap;
+import static org.smoothbuild.util.collect.Lists.map;
+
+import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -15,15 +18,13 @@ import com.google.common.collect.ImmutableMap;
  */
 public class StructTypeImpl extends AbstractTypeImpl implements StructType {
   private final ImmutableList<? extends Type> fields;
-  private final ImmutableList<String> names;
+  private final ImmutableList<Optional<String>> names;
   private final ImmutableMap<String, Integer> nameToIndex;
 
-  public StructTypeImpl(String name, ImmutableList<? extends Type> fields,
-      ImmutableList<String> names) {
+  public StructTypeImpl(String name, ImmutableList<? extends Named<? extends Type>> fields) {
     super(name, calculateVariables(fields));
-    checkArgument(fields.size() == names.size(), "fields and names must have equal sizes");
-    this.fields = fields;
-    this.names = names;
+    this.fields = map(fields, Named::object);
+    this.names = map(fields, Named::name);
     this.nameToIndex = fieldsMap(names);
   }
 
@@ -33,7 +34,7 @@ public class StructTypeImpl extends AbstractTypeImpl implements StructType {
   }
 
   @Override
-  public ImmutableList<String> names() {
+  public ImmutableList<Optional<String>> names() {
     return names;
   }
 

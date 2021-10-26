@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base.type.api;
 
+import org.smoothbuild.util.collect.Named;
+
 import com.google.common.collect.ImmutableList;
 
 public interface TypeFactory {
@@ -19,8 +21,7 @@ public interface TypeFactory {
 
   public StringType string();
 
-  public StructType struct(
-      String name, ImmutableList<? extends Type> fields, ImmutableList<String> names);
+  public StructType struct(String name, ImmutableList<? extends Named<? extends Type>> fields);
 
   public Variable variable(String name);
 }

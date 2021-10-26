@@ -1,6 +1,5 @@
 package org.smoothbuild.testing;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
@@ -8,12 +7,11 @@ import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Named.named;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -104,6 +102,7 @@ import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.SelectExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -244,7 +243,7 @@ public abstract class AbstractTestingContext {
   // Obj Spec-s
 
   public StructSpec animalSpec() {
-    return specDb().struct("Animal", list(strSpec(), intSpec()), list("species", "speed"));
+    return specDb().struct("Animal", list(named("species", strSpec()), named("speed", intSpec())));
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
@@ -304,7 +303,7 @@ public abstract class AbstractTestingContext {
   }
 
   public StructSpec personSpec() {
-    return structSpec("Person", list(strSpec(), strSpec()), list("firstName", "lastName"));
+    return structSpec("Person", list(named("firstName", strSpec()), named("lastName", strSpec())));
   }
 
   public RecSpec fileSpec() {
@@ -312,17 +311,15 @@ public abstract class AbstractTestingContext {
   }
 
   public StructSpec structSpec() {
-    return structSpec(list(intSpec()), list("field"));
+    return structSpec(list(named("field", intSpec())));
   }
 
-  public StructSpec structSpec(
-      ImmutableList<? extends ValSpec> fields, ImmutableList<String> names) {
-    return structSpec("MyStruct", fields, names);
+  public StructSpec structSpec(ImmutableList<? extends Named<? extends Type>> fields) {
+    return structSpec("MyStruct", fields);
   }
 
-  public StructSpec structSpec(String name, ImmutableList<? extends ValSpec> fields,
-      ImmutableList<String> names) {
-    return specDb().struct(name, fields, names);
+  public StructSpec structSpec(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+    return specDb().struct(name, fields);
   }
 
   public VariableSpec variableSpec(String name) {
@@ -594,15 +591,8 @@ public abstract class AbstractTestingContext {
     return typing().string();
   }
 
-  public StructType structT(String name, ImmutableList<Type> fields) {
-    var names = IntStream.range(0, fields.size())
-        .mapToObj(Objects::toString)
-        .collect(toImmutableList());
-    return typing().struct(name, fields, names);
-  }
-
-  public StructType structT(String name, ImmutableList<Type> fields, ImmutableList<String> names) {
-    return typing().struct(name, fields, names);
+  public StructType structT(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+    return typing().struct(name, fields);
   }
 
   public FunctionType functionT(Type resultType, Item... parameters) {
@@ -744,8 +734,7 @@ public abstract class AbstractTestingContext {
   public AnnotationExpression annotationExpression(
       int line, StringLiteralExpression implementedBy, boolean pure) {
     StructType type = typing().struct("Native",
-        list(typing().string(), typing().blob()),
-        list("path", "content"));
+        list(named("path", typing().string()), named("content", typing().blob())));
     return new AnnotationExpression(type, implementedBy, pure, loc(line));
   }
 

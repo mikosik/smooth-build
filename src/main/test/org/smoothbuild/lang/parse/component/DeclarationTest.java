@@ -12,6 +12,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.testing.TestingModuleLoader.err;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Named.named;
 
 import java.util.stream.Stream;
 
@@ -238,7 +239,7 @@ public class DeclarationTest extends TestingContextImpl {
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
               .loadsSuccessfully()
-              .containsType(structT("MyStruct", list(STRING), list("field")));
+              .containsType(structT("MyStruct", list(named("field", STRING))));
         }
 
         @Test

@@ -27,7 +27,10 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
+import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.zip;
+import static org.smoothbuild.util.collect.Named.named;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +70,7 @@ import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -167,11 +171,9 @@ public class SpecDb implements TypeFactory {
   }
 
   @Override
-  public StructSpec struct(String name, ImmutableList<? extends Type> fields,
-      ImmutableList<String> names) {
-    checkArgument(fields.size() == names.size());
+  public StructSpec struct(String name, ImmutableList<? extends Named<? extends Type>> fields) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newStructSpec(name, (ImmutableList<ValSpec>) fields, names));
+        () -> newStructSpec(name, (ImmutableList<Named<ValSpec>>) fields));
   }
 
   @Override
@@ -329,8 +331,16 @@ public class SpecDb implements TypeFactory {
     String name = wrapHashedDbExceptionAsDecodeSpecNodeException(
         rootHash, STRUCT, STRUCT_NAME_PATH, () -> hashedDb.readString(data.get(STRUCT_NAME_INDEX)));
     ImmutableList<ValSpec> fields = readStructFields(rootHash, data.get(STRUCT_FIELDS_INDEX));
-    var names = readFieldNames(rootHash, data, fields);
-    return newStructSpec(rootHash, name, fields, names);
+    var names = readFieldNames(rootHash, data);
+    return newStructSpec(rootHash, name, mergeFieldWithNames(rootHash, names, fields));
+  }
+
+  private ImmutableList<Named<ValSpec>> mergeFieldWithNames(Hash rootHash,
+      ImmutableList<String> names, ImmutableList<ValSpec> fields) {
+    if (names.size() != fields.size()) {
+      throw new DecodeStructSpecWrongNamesSizeException(rootHash, fields.size(), names.size());
+    }
+    return zip(names, fields, (n, f) -> named(stringToOptionalString(n), f));
   }
 
   private ImmutableList<ValSpec> readStructFields(Hash rootHash, Hash hash) {
@@ -343,13 +353,9 @@ public class SpecDb implements TypeFactory {
     return builder.build();
   }
 
-  private ImmutableList<String> readFieldNames(
-      Hash rootHash, List<Hash> data, ImmutableList<ValSpec> fields) {
+  private ImmutableList<String> readFieldNames(Hash rootHash, List<Hash> data) {
     var nameHashes = readSequenceHashes(
         rootHash, data.get(STRUCT_NAMES_INDEX), STRUCT, STRUCT_NAMES_PATH);
-    if (nameHashes.size() != fields.size()) {
-      throw new DecodeStructSpecWrongNamesSizeException(rootHash, fields.size(), nameHashes.size());
-    }
     Builder<String> builder = ImmutableList.builder();
     for (int i = 0; i < nameHashes.size(); i++) {
       final int index = i;
@@ -424,16 +430,15 @@ public class SpecDb implements TypeFactory {
     return cacheSpec(new RecSpec(rootHash, itemSpecs));
   }
 
-  private StructSpec newStructSpec(
-      String name, ImmutableList<ValSpec> fields, ImmutableList<String> names)
+  private StructSpec newStructSpec(String name, ImmutableList<Named<ValSpec>> fields)
       throws HashedDbException {
-    var rootHash = writeStructSpecRoot(name, fields, names);
-    return newStructSpec(rootHash, name, fields, names);
+    var rootHash = writeStructSpecRoot(name, fields);
+    return newStructSpec(rootHash, name, fields);
   }
 
   private StructSpec newStructSpec(
-      Hash rootHash, String name, ImmutableList<ValSpec> fields, ImmutableList<String> names) {
-    return cacheSpec(new StructSpec(rootHash, name, fields, names));
+      Hash rootHash, String name, ImmutableList<Named<ValSpec>> fields) {
+    return cacheSpec(new StructSpec(rootHash, name, fields));
   }
 
   private VariableSpec newVariableSpec(String name) throws HashedDbException {
@@ -535,23 +540,23 @@ public class SpecDb implements TypeFactory {
   }
 
   private Hash writeStructSpecRoot(
-      String name, ImmutableList<ValSpec> fields, ImmutableList<String> names)
+      String name, ImmutableList<Named<ValSpec>> fields)
       throws HashedDbException {
     var nameHash = hashedDb.writeString(name);
     var fieldsSequenceHash = writeFieldsSequence(fields);
-    var namesSequenceHash = writeNamesSequence(names);
+    var namesSequenceHash = writeNamesSequence(fields);
     var specData = hashedDb.writeSequence(nameHash, fieldsSequenceHash, namesSequenceHash);
     return writeNonBaseSpecRoot(STRUCT, specData);
   }
 
-  private Hash writeFieldsSequence(ImmutableList<ValSpec> fields) throws HashedDbException {
-    return hashedDb.writeSequence(map(fields, Spec::hash));
+  private Hash writeFieldsSequence(ImmutableList<Named<ValSpec>> fields) throws HashedDbException {
+    return hashedDb.writeSequence(map(fields, f -> f.object().hash()));
   }
 
-  private Hash writeNamesSequence(ImmutableList<String> names) throws HashedDbException {
-    var nameHashes = new ArrayList<Hash>(names.size());
-    for (String name : names) {
-      nameHashes.add(hashedDb.writeString(name));
+  private Hash writeNamesSequence(ImmutableList<Named<ValSpec>> fields) throws HashedDbException {
+    var nameHashes = new ArrayList<Hash>(fields.size());
+    for (Named<ValSpec> field : fields) {
+      nameHashes.add(hashedDb.writeString(field.name().orElse("")));
     }
     return hashedDb.writeSequence(nameHashes);
   }

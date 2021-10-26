@@ -2,6 +2,8 @@ package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.zip;
+import static org.smoothbuild.util.collect.Named.named;
 
 import javax.inject.Inject;
 
@@ -45,10 +47,9 @@ public class TypeToSpecConverter {
     } else if (type instanceof StringType stringType) {
       return visit(stringType);
     } else if (type instanceof StructType structType) {
-      return objectFactory.structSpec(
-          structType.name(),
-          map(structType.fields(), this::visit),
-          structType.names());
+      var types = map(structType.fields(), this::visit);
+      var fields = zip(types, structType.names(), (t, n) -> named(n, t));
+      return objectFactory.structSpec(structType.name(), fields);
     } else if (type instanceof Variable) {
       throw new UnsupportedOperationException();
     } else if (type instanceof ArrayType array) {
@@ -86,8 +87,6 @@ public class TypeToSpecConverter {
 
   public StructSpec functionSpec() {
     return objectFactory.structSpec(
-        "",
-        list(objectFactory.stringSpec(), objectFactory.blobSpec()),
-        list("", ""));
+        "", list(named(objectFactory.stringSpec()), named(objectFactory.blobSpec())));
   }
 }

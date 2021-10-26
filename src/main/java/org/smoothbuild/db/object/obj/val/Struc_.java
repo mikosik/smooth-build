@@ -58,10 +58,10 @@ public class Struc_ extends Val {
   @Override
   public String valueToString() {
     StringBuilder builder = new StringBuilder("{");
-    ImmutableList<String> names = spec().names();
-    ImmutableList<Val> values = items();
+    var names = spec().names();
+    var values = items();
     for (int i = 0; i < values.size(); i++) {
-      builder.append(names.get(i));
+      builder.append(names.get(i).orElse(""));
       builder.append("=");
       builder.append(values.get(i).valueToString());
       if (i != values.size() - 1) {

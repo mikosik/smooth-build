@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Named.named;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -117,7 +118,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
 
     @Test
     public void with_constructor_reference() {
-      StructType struct = structT("MyStruct", list(STRING), list("field"));
+      StructType struct = structT("MyStruct", list(named("field", STRING)));
       Constructor constr = constrExpression(1, struct, "myStruct",
           parameterExpression(2, STRING, "field"));
       module("""
@@ -131,7 +132,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
 
     @Test
     public void with_constructor_reference_and_argument() {
-      StructType struct = structT("MyStruct", list(STRING), list("field"));
+      StructType struct = structT("MyStruct", list(named("field", STRING)));
       module("""
           MyStruct {
             String field
@@ -170,7 +171,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
 
   @Test
   public void select_expression() {
-    StructType myStruct = structT("MyStruct", list(STRING), list("field"));
+    StructType myStruct = structT("MyStruct", list(named("field", STRING)));
     module("""
           MyStruct {
             String field,
@@ -293,7 +294,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
 
     @Test
     public void to_constructor() {
-      StructType structType = structT("MyStruct", list(), list());
+      StructType structType = structT("MyStruct", list());
       module("""
           MyStruct {}
           MyStruct() result =
@@ -373,7 +374,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
           }
           """)
           .loadsSuccessfully()
-          .containsType(structT("MyStruct", list(STRING), list("field")));
+          .containsType(structT("MyStruct", list(named("field", STRING))));
     }
   }
 }

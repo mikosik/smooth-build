@@ -77,10 +77,7 @@ public class TypeInferrer {
       }
 
       private StructType structType(StructNode struct, ImmutableList<ItemSignature> signatures) {
-        var name = struct.name();
-        var types = map(signatures, ItemSignature::type);
-        var names = map(signatures, ItemSignature::saneName);
-        return typing.struct(name, types, names);
+        return typing.struct(struct.name(), signatures);
       }
 
       @Override

@@ -12,7 +12,9 @@ public class FileStruct {
   public static final String NAME = "File";
   private static final int CONTENT_INDEX = 0;
   private static final int PATH_INDEX = 1;
-  public static final ImmutableList<String> FIELD_NAMES = list("content", "path");
+  public static final String CONTENT_FIELD_NAME = "content";
+  public static final String PATH_FIELD_NAME = "path";
+  public static final ImmutableList<String> FIELD_NAMES = list(CONTENT_FIELD_NAME, PATH_FIELD_NAME);
 
   public static Str filePath(Struc_ file) {
     return (Str) file.get(PATH_INDEX);

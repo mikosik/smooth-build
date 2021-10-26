@@ -9,6 +9,7 @@ import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSize
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Named.named;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -983,7 +984,7 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * select in HashedDb.
        */
-      var structSpec = structSpec(list(strSpec()), list("field"));
+      var structSpec = structSpec(list(named("field", strSpec())));
       var struct = structVal(structSpec, list(strVal("abc")));
       var expr = constExpr(struct);
       var index = intVal(0);
@@ -1098,7 +1099,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void index_is_out_of_bounds() throws Exception {
-      var structSpec = structSpec(list(strSpec()), list("field"));
+      var structSpec = structSpec(list(named("field", strSpec())));
       var struct = structVal(structSpec, list(strVal("abc")));
       var expr = constExpr(struct);
       var index = intVal(1);
@@ -1119,7 +1120,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void evaluation_spec_is_different_than_spec_of_item_pointed_to_by_index()
         throws Exception {
-      var structSpec = structSpec(list(strSpec()), list("field"));
+      var structSpec = structSpec(list(named("field", strSpec())));
       var struct = structVal(structSpec, list(strVal("abc")));
       var expr = constExpr(struct);
       var index = intVal(0);
@@ -1140,7 +1141,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void index_is_string_instead_of_int() throws Exception {
       var spec = selectSpec(strSpec());
-      var structSpec = structSpec(list(strSpec()), list("field"));
+      var structSpec = structSpec(list(named("field", strSpec())));
       var struct = structVal(structSpec, list(strVal("abc")));
       var expr = constExpr(struct);
       var strVal = strVal("abc");
@@ -1393,7 +1394,7 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * struct in HashedDb.
        */
-      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var structSpec = structSpec(list(named("name1", strSpec()), named("name2", intSpec())));
       var item1 = strVal();
       var item2 = intVal();
       Hash objHash =
@@ -1418,7 +1419,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var structSpec = structSpec(list(named("name1", strSpec()), named("name2", intSpec())));
       var item1 = strVal();
       var item2 = intVal();
       Hash dataHash = hash(
@@ -1439,7 +1440,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void with_too_few_elements() throws Exception {
-      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var structSpec = structSpec(list(named("name1", strSpec()), named("name2", intSpec())));
       var item1 = strVal();
       var item2 = intVal();
       Hash objHash =
@@ -1457,7 +1458,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void with_too_many_elements() throws Exception {
-      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var structSpec = structSpec(list(named("name1", strSpec()), named("name2", intSpec())));
       var item1 = strVal();
       var item2 = intVal();
       Hash objHash =
@@ -1477,7 +1478,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void with_element_of_wrong_spec() throws Exception {
-      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var structSpec = structSpec(list(named("name1", strSpec()), named("name2", intSpec())));
       var item1 = strVal();
       Hash objHash =
           hash(
@@ -1495,7 +1496,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void with_element_being_expr() throws Exception {
-      var structSpec = structSpec(list(strSpec(), intSpec()), list("name1", "name2"));
+      var structSpec = structSpec(list(named("name1", strSpec()), named("name2", intSpec())));
       var item1 = strVal();
       Hash objHash =
           hash(

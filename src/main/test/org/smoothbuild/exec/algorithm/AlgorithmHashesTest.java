@@ -11,6 +11,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorith
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readStructItemAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Named.named;
 
 import java.math.BigInteger;
 import java.util.HashSet;
@@ -56,9 +57,9 @@ public class AlgorithmHashesTest extends TestingContextImpl {
   }
 
   @Test
-  public void create_struct_algorithm_has_different_hash_for_different_types() {
-    StructSpec constructedType = structSpec(list(), list());
-    StructSpec constructedType2 = structSpec(list(blobSpec()), list("field"));
+  public void create_struct_algorithm_has_different_hash_for_different_fields() {
+    StructSpec constructedType = structSpec(list());
+    StructSpec constructedType2 = structSpec(list(named("field", blobSpec())));
 
     assertThat(createStructAlgorithmHash(constructedType))
         .isNotEqualTo(createStructAlgorithmHash(constructedType2));

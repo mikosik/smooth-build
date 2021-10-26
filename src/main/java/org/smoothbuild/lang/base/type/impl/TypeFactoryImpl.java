@@ -16,6 +16,7 @@ import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 
@@ -74,9 +75,8 @@ public class TypeFactoryImpl implements TypeFactory {
   }
 
   @Override
-  public StructType struct(String name, ImmutableList<? extends Type> fields,
-      ImmutableList<String> names) {
-    return new StructTypeImpl(name, fields, names);
+  public StructType struct(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+    return new StructTypeImpl(name, fields);
   }
 
   @Override
