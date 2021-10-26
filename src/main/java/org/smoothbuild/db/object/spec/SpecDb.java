@@ -31,6 +31,7 @@ import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,7 @@ import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -171,9 +173,9 @@ public class SpecDb implements TypeFactory {
   }
 
   @Override
-  public StructSpec struct(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+  public StructSpec struct(String name, NamedList<? extends Type> fields) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newStructSpec(name, (ImmutableList<Named<ValSpec>>) fields));
+        () -> newStructSpec(name, (NamedList<ValSpec>) fields));
   }
 
   @Override
@@ -335,12 +337,12 @@ public class SpecDb implements TypeFactory {
     return newStructSpec(rootHash, name, mergeFieldWithNames(rootHash, names, fields));
   }
 
-  private ImmutableList<Named<ValSpec>> mergeFieldWithNames(Hash rootHash,
+  private NamedList<ValSpec> mergeFieldWithNames(Hash rootHash,
       ImmutableList<String> names, ImmutableList<ValSpec> fields) {
     if (names.size() != fields.size()) {
       throw new DecodeStructSpecWrongNamesSizeException(rootHash, fields.size(), names.size());
     }
-    return zip(names, fields, (n, f) -> named(stringToOptionalString(n), f));
+    return namedList(zip(names, fields, (n, f) -> named(stringToOptionalString(n), f)));
   }
 
   private ImmutableList<ValSpec> readStructFields(Hash rootHash, Hash hash) {
@@ -430,14 +432,13 @@ public class SpecDb implements TypeFactory {
     return cacheSpec(new RecSpec(rootHash, itemSpecs));
   }
 
-  private StructSpec newStructSpec(String name, ImmutableList<Named<ValSpec>> fields)
+  private StructSpec newStructSpec(String name, NamedList<ValSpec> fields)
       throws HashedDbException {
     var rootHash = writeStructSpecRoot(name, fields);
     return newStructSpec(rootHash, name, fields);
   }
 
-  private StructSpec newStructSpec(
-      Hash rootHash, String name, ImmutableList<Named<ValSpec>> fields) {
+  private StructSpec newStructSpec(Hash rootHash, String name, NamedList<ValSpec> fields) {
     return cacheSpec(new StructSpec(rootHash, name, fields));
   }
 
@@ -539,8 +540,7 @@ public class SpecDb implements TypeFactory {
     return writeNonBaseSpecRoot(RECORD, itemsHash);
   }
 
-  private Hash writeStructSpecRoot(
-      String name, ImmutableList<Named<ValSpec>> fields)
+  private Hash writeStructSpecRoot(String name, NamedList<ValSpec> fields)
       throws HashedDbException {
     var nameHash = hashedDb.writeString(name);
     var fieldsSequenceHash = writeFieldsSequence(fields);
@@ -549,14 +549,14 @@ public class SpecDb implements TypeFactory {
     return writeNonBaseSpecRoot(STRUCT, specData);
   }
 
-  private Hash writeFieldsSequence(ImmutableList<Named<ValSpec>> fields) throws HashedDbException {
-    return hashedDb.writeSequence(map(fields, f -> f.object().hash()));
+  private Hash writeFieldsSequence(NamedList<ValSpec> fields) throws HashedDbException {
+    return hashedDb.writeSequence(map(fields.list(), f -> f.object().hash()));
   }
 
-  private Hash writeNamesSequence(ImmutableList<Named<ValSpec>> fields) throws HashedDbException {
+  private Hash writeNamesSequence(NamedList<ValSpec> fields) throws HashedDbException {
     var nameHashes = new ArrayList<Hash>(fields.size());
-    for (Named<ValSpec> field : fields) {
-      nameHashes.add(hashedDb.writeString(field.name().orElse("")));
+    for (Named<ValSpec> field : fields.list()) {
+      nameHashes.add(hashedDb.writeString(field.saneName()));
     }
     return hashedDb.writeSequence(nameHashes);
   }

@@ -40,8 +40,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.int_(), "Int"),
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
-        args(f -> f.struct("Person", list()), "Person"),
-        args(f -> f.struct("Person", list(named("name", f.string()))), "Person"),
+        args(f -> f.struct("Person", namedList(list())), "Person"),
+        args(f -> f.struct("Person", namedList(list(named("name", f.string())))), "Person"),
 
         args(f -> f.array(f.variable("A")), "[A]"),
         args(f -> f.array(f.any()), "[Any]"),
@@ -50,8 +50,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.array(f.int_()), "[Int]"),
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
-        args(f -> f.array(f.struct("Person", list())), "[Person]"),
-        args(f -> f.array(f.struct("Person", list(named("name", f.string())))), "[Person]"),
+        args(f -> f.array(f.struct("Person", namedList(list()))), "[Person]"),
+        args(f -> f.array(f.struct("Person", namedList(list(named("name", f.string()))))), "[Person]"),
 
         args(f -> f.array(f.array(f.variable("A"))), "[[A]]"),
         args(f -> f.array(f.array(f.any())), "[[Any]]"),
@@ -60,14 +60,14 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
-        args(f -> f.array(f.array(f.struct("Person", list()))), "[[Person]]"),
-        args(f -> f.array(f.array(f.struct("Person", list(named("name", f.string()))))),
+        args(f -> f.array(f.array(f.struct("Person", namedList(list())))), "[[Person]]"),
+        args(f -> f.array(f.array(f.struct("Person", namedList(list(named("name", f.string())))))),
                 "[[Person]]"),
 
         args(f -> f.function(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
         args(f -> f.function(f.string(), list(f.array(f.variable("A")))), "String([A])"),
         args(f -> f.function(f.variable("A"), list(f.variable("A"))), "A(A)"),
-        args(f -> f.function(f.struct("Person", list()), list()), "Person()"),
+        args(f -> f.function(f.struct("Person", namedList(list())), list()), "Person()"),
         args(f -> f.function(f.string(), list()), "String()"),
         args(f -> f.function(f.string(), list(f.string())), "String(String)")
     );
@@ -99,7 +99,7 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.int_(), false),
         args(f -> f.nothing(), false),
         args(f -> f.string(), false),
-        args(f -> f.struct("Person", list(named("name", f.string()))), false)
+        args(f -> f.struct("Person", namedList(list(named("name", f.string())))), false)
     );
   }
 
@@ -111,8 +111,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.int_(), f -> set()),
         args(f -> f.nothing(), f -> set()),
         args(f -> f.string(), f -> set()),
-        args(f -> f.struct("Person", list()), f -> set()),
-        args(f -> f.struct("Person", list(named(f.string()))), f -> set()),
+        args(f -> f.struct("Person", namedList(list())), f -> set()),
+        args(f -> f.struct("Person", namedList(list(named(f.string())))), f -> set()),
 
         args(f -> f.array(f.any()), f -> set()),
         args(f -> f.array(f.blob()), f -> set()),
@@ -120,14 +120,14 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         args(f -> f.array(f.int_()), f -> set()),
         args(f -> f.array(f.nothing()), f -> set()),
         args(f -> f.array(f.string()), f -> set()),
-        args(f -> f.array(f.struct("Person", list())), f -> set()),
-        args(f -> f.array(f.struct("Person", list(named(f.string())))), f -> set()),
+        args(f -> f.array(f.struct("Person", namedList(list()))), f -> set()),
+        args(f -> f.array(f.struct("Person", namedList(list(named(f.string()))))), f -> set()),
         args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
 
         args(f -> f.function(f.string(), list()), f -> set()),
         args(f -> f.function(f.string(), list(f.bool())), f -> set()),
 
-        args(f -> f.struct("Data", list(named(f.variable("A")))),
+        args(f -> f.struct("Data", namedList(list(named(f.variable("A"))))),
             f -> set(f.variable("A"))),
 
         args(f -> f.variable("A"), f -> set(f.variable("A"))),
@@ -283,11 +283,11 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
         f.function(f.blob(), list(f.string())),
         f.function(f.blob(), list(f.blob())),
 
-        f.struct("Person", list()),
-        f.struct("Person2", list()),
-        f.struct("Person", list(named("name", f.blob()))),
-        f.struct("Person", list(named("name", f.string()))),
-        f.struct("Person", list(named("name2", f.blob())))
+        f.struct("Person", namedList(list())),
+        f.struct("Person2", namedList(list())),
+        f.struct("Person", namedList(list(named("name", f.blob())))),
+        f.struct("Person", namedList(list(named("name", f.string())))),
+        f.struct("Person", namedList(list(named("name2", f.blob()))))
     );
 
     for (Type type : types) {
@@ -322,7 +322,7 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
           args(f -> f.int_()),
           args(f -> f.nothing()),
           args(f -> f.string()),
-          args(f -> f.struct("Person", list(named("name", f.string())))),
+          args(f -> f.struct("Person", namedList(list(named("name", f.string()))))),
           args(f -> f.variable("A")),
 
           args(f -> f.array(f.any())),
@@ -332,7 +332,7 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),
-          args(f -> f.array(f.struct("Person", list(named("name", f.string()))))),
+          args(f -> f.array(f.struct("Person", namedList(list(named("name", f.string())))))),
           args(f -> f.array(f.variable("A")))
       );
     }
@@ -342,17 +342,17 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
   class _struct {
     @Test
     public void _without_fields_can_be_created() {
-      structT("Struct", list());
+      structT("Struct", namedList(list()));
     }
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structT("Struct", list(named("fieldName", nothingT())));
+      structT("Struct", namedList(list(named("fieldName", nothingT()))));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structT("Struct", list(named("fieldName", arrayT(nothingT()))));
+      structT("Struct", namedList(list(named("fieldName", arrayT(nothingT())))));
     }
 
     @ParameterizedTest
@@ -364,8 +364,8 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
 
     public static List<Arguments> struct_name_cases() {
       return asList(
-          args(f -> f.struct("MyStruct", list()), "MyStruct"),
-          args(f -> f.struct("", list()), "")
+          args(f -> f.struct("MyStruct", namedList(list())), "MyStruct"),
+          args(f -> f.struct("", namedList(list())), "")
       );
     }
 
@@ -379,10 +379,11 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
-          args(f -> f.struct("Person", list()), f -> namedList(list())),
-          args(f -> f.struct("Person", list(named("field", f.string()))),
+          args(f -> f.struct("Person", namedList(list())), f -> namedList(list())),
+          args(f -> f.struct("Person", namedList(list(named("field", f.string())))),
               f -> namedList(list(named("field", f.string())))),
-          args(f -> f.struct("Person", list(named("field", f.string()), named("field2", f.int_()))),
+          args(f -> f.struct("Person",
+              namedList(list(named("field", f.string()), named("field2", f.int_())))),
               f -> namedList(list(named("field", f.string()), named("field2", f.int_()))))
       );
     }

@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.lang.base.type.api.AnyType;
 import org.smoothbuild.lang.base.type.api.ArrayType;
@@ -16,7 +17,7 @@ import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContextImpl;
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -34,9 +35,9 @@ public class TestingTypes {
   public static final NothingType NOTHING = TYPING.nothing();
   public static final StringType STRING = TYPING.string();
   public static final StructType PERSON = struct(
-      "Person", list(named("firstName", STRING), named("lastName", STRING)));
-  public static final StructType FLAG = struct("Flag", list(named("flab", BOOL)));
-  public static final StructType DATA = struct("Data", list(named("data", BLOB)));
+      "Person", namedList(list(named("firstName", STRING), named("lastName", STRING))));
+  public static final StructType FLAG = struct("Flag", namedList(list(named("flab", BOOL))));
+  public static final StructType DATA = struct("Data", namedList(list(named("data", BLOB))));
   public static final Variable A = variable("A");
   public static final Variable B = variable("B");
   public static final Variable C = variable("C");
@@ -93,8 +94,7 @@ public class TestingTypes {
     return TYPING.variable(a);
   }
 
-  public static StructType struct(
-      String name, ImmutableList<? extends Named<? extends Type>> fields) {
+  public static StructType struct(String name, NamedList<? extends Type> fields) {
     return TYPING.struct(name, fields);
   }
 }

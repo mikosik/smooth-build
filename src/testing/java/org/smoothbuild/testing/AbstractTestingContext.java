@@ -8,6 +8,7 @@ import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -102,7 +103,7 @@ import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.SelectExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -243,7 +244,8 @@ public abstract class AbstractTestingContext {
   // Obj Spec-s
 
   public StructSpec animalSpec() {
-    return specDb().struct("Animal", list(named("species", strSpec()), named("speed", intSpec())));
+    return specDb().struct(
+        "Animal", namedList(list(named("species", strSpec()), named("speed", intSpec()))));
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
@@ -303,7 +305,8 @@ public abstract class AbstractTestingContext {
   }
 
   public StructSpec personSpec() {
-    return structSpec("Person", list(named("firstName", strSpec()), named("lastName", strSpec())));
+    return structSpec("Person",
+        namedList(list(named("firstName", strSpec()), named("lastName", strSpec()))));
   }
 
   public RecSpec fileSpec() {
@@ -311,14 +314,14 @@ public abstract class AbstractTestingContext {
   }
 
   public StructSpec structSpec() {
-    return structSpec(list(named("field", intSpec())));
+    return structSpec(namedList(list(named("field", intSpec()))));
   }
 
-  public StructSpec structSpec(ImmutableList<? extends Named<? extends Type>> fields) {
+  public StructSpec structSpec(NamedList<? extends Type> fields) {
     return structSpec("MyStruct", fields);
   }
 
-  public StructSpec structSpec(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+  public StructSpec structSpec(String name, NamedList<? extends Type> fields) {
     return specDb().struct(name, fields);
   }
 
@@ -591,7 +594,7 @@ public abstract class AbstractTestingContext {
     return typing().string();
   }
 
-  public StructType structT(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+  public StructType structT(String name, NamedList<? extends Type> fields) {
     return typing().struct(name, fields);
   }
 
@@ -734,7 +737,7 @@ public abstract class AbstractTestingContext {
   public AnnotationExpression annotationExpression(
       int line, StringLiteralExpression implementedBy, boolean pure) {
     StructType type = typing().struct("Native",
-        list(named("path", typing().string()), named("content", typing().blob())));
+        namedList(list(named("path", typing().string()), named("content", typing().blob()))));
     return new AnnotationExpression(type, implementedBy, pure, loc(line));
   }
 

@@ -7,6 +7,7 @@ import static org.smoothbuild.exec.base.FileStruct.CONTENT_FIELD_NAME;
 import static org.smoothbuild.exec.base.FileStruct.PATH_FIELD_NAME;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -47,7 +48,7 @@ import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -73,13 +74,12 @@ public class ObjectFactory {
 
   private static StructSpec createMessageSpec(SpecDb specDb) {
     StrSpec strSpec = specDb.string();
-    return specDb.struct("", list(named(strSpec), named(strSpec)));
+    return specDb.struct("", namedList(list(named(strSpec), named(strSpec))));
   }
 
   private static StructSpec createFileSpec(SpecDb specDb) {
-    return specDb.struct(
-        FileStruct.NAME,
-        list(named(CONTENT_FIELD_NAME, specDb.blob()), named(PATH_FIELD_NAME, specDb.string()))
+    return specDb.struct(FileStruct.NAME, namedList(list(
+        named(CONTENT_FIELD_NAME, specDb.blob()), named(PATH_FIELD_NAME, specDb.string())))
     );
   }
 
@@ -184,7 +184,7 @@ public class ObjectFactory {
     return specDb.recSpec(itemSpecs);
   }
 
-  public StructSpec structSpec(String name, ImmutableList<? extends Named<? extends Type>> fields) {
+  public StructSpec structSpec(String name, NamedList<? extends Type> fields) {
     return specDb.struct(name, fields);
   }
 

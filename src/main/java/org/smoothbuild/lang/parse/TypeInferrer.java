@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsTo
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,7 @@ import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
+import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
@@ -67,15 +69,11 @@ public class TypeInferrer {
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
-        var signatures = Optionals.pullUp(
-            map(struct.fields(), f -> f.type().map(t -> f.toItemSignature())));
-        struct.setType(signatures.map(s -> structType(struct, s)));
+        var fields = Optionals.pullUp(
+            map(struct.fields(), f -> f.type().map(t -> f.toNamedType())));
+        struct.setType(fields.map(s -> typing.struct(struct.name(), namedList(s))));
         struct.constructor().setType(
-            signatures.map(s -> typing.function(struct.type().get(), map(s, ItemSignature::type))));
-      }
-
-      private StructType structType(StructNode struct, ImmutableList<ItemSignature> signatures) {
-        return typing.struct(struct.name(), signatures);
+            fields.map(s -> typing.function(struct.type().get(), map(s, Named::object))));
       }
 
       @Override

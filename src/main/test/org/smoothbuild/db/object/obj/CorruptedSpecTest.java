@@ -26,6 +26,7 @@ import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -897,8 +898,8 @@ public class CorruptedSpecTest extends TestingContextImpl {
               )
           )
       );
-      assertThat(hash)
-          .isEqualTo(structSpec(list(named(name1, field1), named(name2, field2))).hash());
+      assertThat(hash).isEqualTo(
+          structSpec(namedList(list(named(name1, field1), named(name2, field2)))).hash());
     }
 
     @Test

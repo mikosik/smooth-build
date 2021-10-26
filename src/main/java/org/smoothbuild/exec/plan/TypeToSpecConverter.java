@@ -2,6 +2,7 @@ package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import javax.inject.Inject;
 
@@ -46,7 +47,7 @@ public class TypeToSpecConverter {
       return visit(stringType);
     } else if (type instanceof StructType structType) {
       var fields = structType.fields().mapObjects(this::visit);
-      return objectFactory.structSpec(structType.name(), fields.list());
+      return objectFactory.structSpec(structType.name(), fields);
     } else if (type instanceof Variable) {
       throw new UnsupportedOperationException();
     } else if (type instanceof ArrayType array) {
@@ -84,6 +85,6 @@ public class TypeToSpecConverter {
 
   public StructSpec functionSpec() {
     return objectFactory.structSpec(
-        "", list(named(objectFactory.stringSpec()), named(objectFactory.blobSpec())));
+        "", namedList(list(named(objectFactory.stringSpec()), named(objectFactory.blobSpec()))));
   }
 }

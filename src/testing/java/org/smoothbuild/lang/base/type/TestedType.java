@@ -9,6 +9,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.variable;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,21 +73,21 @@ public class TestedType {
       "abc"
   );
   public static final TestedType STRUCT = new TestedType(
-      struct("Person", list(named("name", TestingTypes.STRING))),
+      struct("Person", namedList(list(named("name", TestingTypes.STRING)))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", list(named("value", TestingTypes.BLOB))),
+      struct("Data", namedList(list(named("value", TestingTypes.BLOB)))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", list(named("value", TestingTypes.BOOL))),
+      struct("Flag", namedList(list(named("value", TestingTypes.BOOL)))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),

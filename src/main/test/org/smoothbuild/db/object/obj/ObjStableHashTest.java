@@ -2,6 +2,7 @@ package org.smoothbuild.db.object.obj;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -244,7 +245,7 @@ public class ObjStableHashTest extends TestingContextImpl {
   class _struct {
     @Test
     public void empty_struct() {
-      assertThat(structVal(structSpec(list()), list()).hash())
+      assertThat(structVal(structSpec(namedList(list())), list()).hash())
           .isEqualTo(Hash.decode("8c2c19d776a34cc6258dc97c7ef844bf843415c4"));
     }
 

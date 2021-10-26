@@ -3,6 +3,7 @@ package org.smoothbuild.db.object.spec;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
@@ -20,7 +21,7 @@ public class SpecStableHashTest extends TestingContextImpl {
     assertHash(nothingSpec(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(recSpec(list(blobSpec())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
     assertHash(strSpec(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
-    assertHash(structSpec("MyStruct", list(named("field", intSpec()))),
+    assertHash(structSpec("MyStruct", namedList(list(named("field", intSpec())))),
         "8a4a8dba1b7ae414b16fb6a75889d93bd92cab6f");
     assertHash(variableSpec("A"), "99f61661c131c5db3723bdaa5ad26229d06dc6ce");
 
