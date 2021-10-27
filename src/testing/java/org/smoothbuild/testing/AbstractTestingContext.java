@@ -563,47 +563,47 @@ public abstract class AbstractTestingContext {
   }
 
   public Variable variable(String name) {
-    return typing().variable(name);
+    return typeFactory().variable(name);
   }
 
   public AnyType anyT() {
-    return typing().any();
+    return typeFactory().any();
   }
 
   public ArrayType arrayT(Type elemType) {
-    return typing().array(elemType);
+    return typeFactory().array(elemType);
   }
 
   public BlobType blobT() {
-    return typing().blob();
+    return typeFactory().blob();
   }
 
   public BoolType boolT() {
-    return typing().bool();
+    return typeFactory().bool();
   }
 
   public IntType intT() {
-    return typing().int_();
+    return typeFactory().int_();
   }
 
   public NothingType nothingT() {
-    return typing().nothing();
+    return typeFactory().nothing();
   }
 
   public StringType stringT() {
-    return typing().string();
+    return typeFactory().string();
   }
 
   public StructType structT(String name, NamedList<? extends Type> fields) {
-    return typing().struct(name, fields);
+    return typeFactory().struct(name, fields);
   }
 
   public FunctionType functionT(Type resultType, Item... parameters) {
-    return typing().function(resultType, toTypes(list(parameters)));
+    return typeFactory().function(resultType, toTypes(list(parameters)));
   }
 
   public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
-    return typing().function(resultType, map(parameters, ItemSignature::type));
+    return typeFactory().function(resultType, map(parameters, ItemSignature::type));
   }
 
   public Side lower() {
@@ -642,7 +642,7 @@ public abstract class AbstractTestingContext {
   }
 
   public BlobLiteralExpression blobExpression(int line, int data) {
-    return new BlobLiteralExpression(typing().blob(), ByteString.of((byte) data), loc(line));
+    return new BlobLiteralExpression(typeFactory().blob(), ByteString.of((byte) data), loc(line));
   }
 
   public IntLiteralExpression intExpression(int value) {
@@ -650,17 +650,17 @@ public abstract class AbstractTestingContext {
   }
 
   public IntLiteralExpression intExpression(int line, int value) {
-    return new IntLiteralExpression(typing().int_(), BigInteger.valueOf(value), loc(line));
+    return new IntLiteralExpression(typeFactory().int_(), BigInteger.valueOf(value), loc(line));
   }
 
   public StringLiteralExpression stringExpression(int line, String data) {
-    return new StringLiteralExpression(typing().string(), data, loc(line));
+    return new StringLiteralExpression(typeFactory().string(), data, loc(line));
   }
 
   public ArrayLiteralExpression arrayExpression(
       int line, Type elemType, Expression... expressions) {
     return new ArrayLiteralExpression(
-        typing().array(elemType), ImmutableList.copyOf(expressions), loc(line));
+        typeFactory().array(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
   public ReferenceExpression referenceExpression(GlobalReferencable referencable) {
@@ -736,8 +736,8 @@ public abstract class AbstractTestingContext {
 
   public AnnotationExpression annotationExpression(
       int line, StringLiteralExpression implementedBy, boolean pure) {
-    StructType type = typing().struct("Native",
-        namedList(list(named("path", typing().string()), named("content", typing().blob()))));
+    StructType type = typeFactory().struct("Native", namedList(list(
+        named("path", typeFactory().string()), named("content", typeFactory().blob()))));
     return new AnnotationExpression(type, implementedBy, pure, loc(line));
   }
 
