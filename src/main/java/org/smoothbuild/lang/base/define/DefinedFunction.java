@@ -1,11 +1,10 @@
 package org.smoothbuild.lang.base.define;
 
-import static java.util.stream.Collectors.joining;
-
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -46,13 +45,7 @@ public class DefinedFunction extends Function {
 
   @Override
   public String toString() {
-    return "Function(`" + resultType() + "(" + parametersToString() + ")" + " = " + body + "`)";
-  }
-
-  private String parametersToString() {
-    return parameters()
-        .stream()
-        .map(Object::toString)
-        .collect(joining(", "));
+    return "Function(`" + resultType()
+        + "(" + Lists.toCommaSeparatedString(parameters()) + ")" + " = " + body + "`)";
   }
 }
