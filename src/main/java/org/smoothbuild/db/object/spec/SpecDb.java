@@ -24,6 +24,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
+import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
@@ -57,6 +58,7 @@ import org.smoothbuild.db.object.spec.expr.InvokeSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
+import org.smoothbuild.db.object.spec.expr.StructExprSpec;
 import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
@@ -210,6 +212,10 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectSpec(evaluationSpec));
   }
 
+  public StructExprSpec structExpr(StructSpec struct) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStructExprSpec(struct));
+  }
+
   public RefSpec refSpec(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRefSpec(evaluationSpec));
   }
@@ -244,6 +250,7 @@ public class SpecDb implements TypeFactory {
       case RECORD -> readRecord(hash, rootSequence);
       case SELECT -> newSelectSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case STRUCT -> readStructSpec(hash, rootSequence);
+      case STRUCT_EXPR -> newStructExprSpec(hash, getDataAsStructSpec(hash, rootSequence, specKind));
       case VARIABLE -> readVariable(hash, rootSequence);
     };
   }
@@ -285,6 +292,11 @@ public class SpecDb implements TypeFactory {
 
   private RecSpec getDataAsRecSpec(Hash rootHash, List<Hash> rootSequence, SpecKind specKind) {
     return getDataAsSpecCastedTo(rootHash, rootSequence, specKind, RecSpec.class);
+  }
+
+  private StructSpec getDataAsStructSpec(
+      Hash rootHash, List<Hash> rootSequence, SpecKind specKind) {
+    return getDataAsSpecCastedTo(rootHash, rootSequence, specKind, StructSpec.class);
   }
 
   private <T extends Spec> T getDataAsSpecCastedTo(Hash rootHash, List<Hash> rootSequence,
@@ -516,6 +528,15 @@ public class SpecDb implements TypeFactory {
 
   private SelectSpec newSelectSpec(Hash rootHash, ValSpec evaluationSpec) {
     return cacheSpec(new SelectSpec(rootHash, evaluationSpec));
+  }
+
+  private StructExprSpec newStructExprSpec(StructSpec evaluationSpec) throws HashedDbException {
+    var rootHash = writeExprSpecRoot(STRUCT_EXPR, evaluationSpec);
+    return newStructExprSpec(rootHash, evaluationSpec);
+  }
+
+  private StructExprSpec newStructExprSpec(Hash rootHash, StructSpec evaluationSpec) {
+    return cacheSpec(new StructExprSpec(rootHash, evaluationSpec));
   }
 
   private <T extends Spec> T cacheSpec(T spec) {

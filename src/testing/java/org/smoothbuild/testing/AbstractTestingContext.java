@@ -45,6 +45,7 @@ import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
+import org.smoothbuild.db.object.spec.expr.StructExprSpec;
 import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
@@ -369,6 +370,10 @@ public abstract class AbstractTestingContext {
 
   public SelectSpec selectSpec(ValSpec evaluationSpec) {
     return specDb().selectSpec(evaluationSpec);
+  }
+
+  public StructExprSpec structExprSpec(StructSpec structSpec) {
+    return specDb().structExpr(structSpec);
   }
 
   public RefSpec refSpec() {

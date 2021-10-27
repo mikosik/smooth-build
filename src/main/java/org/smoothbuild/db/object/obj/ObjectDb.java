@@ -31,6 +31,7 @@ import org.smoothbuild.db.object.obj.expr.Invoke;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
+import org.smoothbuild.db.object.obj.expr.StructExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
@@ -162,6 +163,10 @@ public class ObjectDb {
 
   public Select selectExpr(Expr rec, Int index) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectExpr(rec, index));
+  }
+
+  public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStructExpr(evaluationSpec, items));
   }
 
   public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {
@@ -299,6 +304,27 @@ public class ObjectDb {
     }
   }
 
+  private StructExpr newStructExpr(StructSpec evaluationSpec, List<? extends Expr> items)
+      throws HashedDbException {
+    ImmutableList<Named<ValSpec>> specs = evaluationSpec.fields().list();
+    allMatchOtherwise(specs, items,
+        (f, v) -> f.object().equals(v.evaluationSpec()),
+        (i, j) -> {
+          throw new IllegalArgumentException(
+              "StructSpec specifies " + i + " items but provided " + j + ".");
+        },
+        (i) -> {
+          throw new IllegalArgumentException("StructSpec specifies item at index " + i
+              + " with spec " + specs.get(i).object().name() + " but provided item has spec "
+              + items.get(i).spec().name() + " at that index.");
+        });
+
+    var spec = specDb.structExpr(evaluationSpec);
+    var data = writeStructExprData(items);
+    var root = writeRoot(spec, data);
+    return spec.newObj(root, this);
+  }
+
   private Ref newRefExpr(ValSpec evaluationSpec, BigInteger index) throws HashedDbException {
     var data = writeRefData(index);
     var spec = specDb.refSpec(evaluationSpec);
@@ -406,6 +432,10 @@ public class ObjectDb {
 
   private Hash writeSelectData(Expr rec, Int index) throws HashedDbException {
     return hashedDb.writeSequence(rec.hash(), index.hash());
+  }
+
+  private Hash writeStructExprData(List<? extends Expr> items) throws HashedDbException {
+    return writeSequence(items);
   }
 
   private Hash writeRefData(BigInteger value) throws HashedDbException {

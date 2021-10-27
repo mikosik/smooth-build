@@ -7,6 +7,7 @@ import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
+import org.smoothbuild.db.object.obj.expr.StructExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -41,7 +42,8 @@ public enum SpecKind {
   VARIABLE((byte) 17, null),
   ANY((byte) 18, null),
   NATIVE_METHOD((byte) 19, null),
-  INVOKE((byte) 20, null);
+  INVOKE((byte) 20, null),
+  STRUCT_EXPR((byte) 21, StructExpr.class);
 
   private static final ImmutableMap<Byte, SpecKind> markerToSpecKindMap =
       ImmutableMap.<Byte, SpecKind>builder()
@@ -65,6 +67,7 @@ public enum SpecKind {
           .put((byte) 18, ANY)
           .put((byte) 19, NATIVE_METHOD)
           .put((byte) 20, INVOKE)
+          .put((byte) 21, STRUCT_EXPR)
           .build();
 
   private final byte marker;

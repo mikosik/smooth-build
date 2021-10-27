@@ -26,6 +26,7 @@ import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
+import org.smoothbuild.db.object.obj.expr.StructExpr;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
@@ -37,6 +38,7 @@ import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.SpecDb;
 import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.spec.expr.StructExprSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.BoolSpec;
@@ -144,6 +146,10 @@ public class ObjectFactory {
     return objectDb.selectExpr(rec, index);
   }
 
+  public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
+    return objectDb.structExpr(evaluationSpec, items);
+  }
+
   public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {
     return objectDb.refExpr(value, evaluationSpec);
   }
@@ -189,6 +195,10 @@ public class ObjectFactory {
 
   public StructSpec structSpec(String name, NamedList<? extends Type> fields) {
     return specDb.struct(name, fields);
+  }
+
+  public StructExprSpec structExprSpec(StructSpec struct) {
+    return specDb.structExpr(struct);
   }
 
   public Struc_ errorMessage(String text) {
