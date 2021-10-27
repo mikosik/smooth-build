@@ -169,6 +169,10 @@ public class SpecDb implements TypeFactory {
     return nothing;
   }
 
+  public RecSpec rec(ImmutableList<ValSpec> itemSpecs) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(itemSpecs));
+  }
+
   @Override
   public StrSpec string() {
     return string;
@@ -208,20 +212,16 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(evaluationSpec));
   }
 
+  public RefSpec ref(ValSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRefSpec(evaluationSpec));
+  }
+
   public SelectSpec select(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectSpec(evaluationSpec));
   }
 
   public StructExprSpec structExpr(StructSpec struct) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStructExprSpec(struct));
-  }
-
-  public RefSpec ref(ValSpec evaluationSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRefSpec(evaluationSpec));
-  }
-
-  public RecSpec rec(ImmutableList<ValSpec> itemSpecs) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(itemSpecs));
   }
 
   // methods for reading from db
