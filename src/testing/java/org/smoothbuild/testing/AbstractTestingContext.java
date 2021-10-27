@@ -361,7 +361,7 @@ public abstract class AbstractTestingContext {
   }
 
   public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb().recExprSpec(itemSpecs);
+    return specDb().recExprSpec(recSpec(itemSpecs));
   }
 
   public SelectSpec selectSpec() {

@@ -247,7 +247,7 @@ public class SpecTest {
   }
 
   private static RecExprSpec recExprSpec(ValSpec... items) {
-    return SPEC_DB.recExprSpec(list(items));
+    return SPEC_DB.recExprSpec(recSpec(list(items)));
   }
 
   @Test

@@ -204,8 +204,8 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvokeSpec(evaluationSpec));
   }
 
-  public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(itemSpecs));
+  public RecExprSpec recExprSpec(RecSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(evaluationSpec));
   }
 
   public SelectSpec selectSpec(ValSpec evaluationSpec) {
@@ -502,8 +502,7 @@ public class SpecDb implements TypeFactory {
     return cacheSpec(new InvokeSpec(rootHash, evaluationSpec));
   }
 
-  private RecExprSpec newRecExprSpec(ImmutableList<ValSpec> elementSpec) throws HashedDbException {
-    var evaluationSpec = recSpec(elementSpec);
+  private RecExprSpec newRecExprSpec(RecSpec evaluationSpec) throws HashedDbException {
     var rootHash = writeExprSpecRoot(RECORD_EXPR, evaluationSpec);
     return newRecExprSpec(rootHash, evaluationSpec);
   }

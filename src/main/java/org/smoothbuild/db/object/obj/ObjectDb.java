@@ -279,7 +279,8 @@ public class ObjectDb {
 
   private RecExpr newRecExpr(List<? extends Expr> items) throws HashedDbException {
     var itemSpecs = map(items, Expr::evaluationSpec);
-    var spec = specDb.recExprSpec(itemSpecs);
+    var evaluationSpec = specDb.recSpec(itemSpecs);
+    var spec = specDb.recExprSpec(evaluationSpec);
     var data = writeRecExprData(items);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
