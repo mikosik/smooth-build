@@ -56,6 +56,10 @@ public class ItemSignature extends Named<Type> {
     return typePart + namePart;
   }
 
+  public Named<Type> toNamedType() {
+    return named(name(), type());
+  }
+
   @Override
   public String toString() {
     return type().name() + name().map(n -> " " + n).orElse("");

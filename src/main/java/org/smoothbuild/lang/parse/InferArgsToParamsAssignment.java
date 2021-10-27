@@ -12,6 +12,7 @@ import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,10 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -34,18 +37,18 @@ public class InferArgsToParamsAssignment {
   public static Maybe<List<Optional<ArgNode>>> inferArgsToParamsAssignment(
       CallNode call, List<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
-    var nameToIndex = nameToIndex(parameters);
+    var namedTypes = namedList(map(parameters, ItemSignature::toNamedType));
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
 
     logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call, parameters));
     logBuffer.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, parameters));
-    logBuffer.logAll(findUnknownParameterNameErrors(call, nameToIndex, parameters));
+    logBuffer.logAll(findUnknownParameterNameErrors(call, namedTypes, parameters));
     logBuffer.logAll(findDuplicateAssignmentErrors(call, positionalArguments, parameters));
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
 
-    List<Optional<ArgNode>> assignedArgs = assignedArgs(call, parameters, nameToIndex);
+    List<Optional<ArgNode>> assignedArgs = assignedArgs(call, parameters, namedTypes);
     logBuffer.logAll(
         findUnassignedParametersWithoutDefaultArgumentsErrors(call, assignedArgs, parameters));
     return maybeValueAndLogs(assignedArgs, logBuffer);
@@ -59,14 +62,14 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Optional<ArgNode>> assignedArgs(
-      CallNode call, List<ItemSignature> parameters, Map<String, Integer> nameToIndex) {
+      CallNode call, List<ItemSignature> parameters, NamedList<Type> namedTypes) {
     List<ArgNode> args = call.args();
     List<Optional<ArgNode>> assignedList =
         new ArrayList<>(nCopies(parameters.size(), Optional.empty()));
     for (int i = 0; i < args.size(); i++) {
       ArgNode arg = args.get(i);
       if (arg.declaresName()) {
-        assignedList.set(nameToIndex.get(arg.name()), Optional.of(arg));
+        assignedList.set(namedTypes.indexMap().get(arg.name()), Optional.of(arg));
       } else {
         assignedList.set(i, Optional.of(arg));
       }
@@ -95,11 +98,11 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findUnknownParameterNameErrors(
-      CallNode call, Map<String, Integer> nameToIndex, List<ItemSignature> parameters) {
+      CallNode call, NamedList<Type> namedTypes, List<ItemSignature> parameters) {
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)
-        .filter(a -> !nameToIndex.containsKey(a.name()))
+        .filter(a -> !namedTypes.map().containsKey(a.name()))
         .map(a -> parseError(a,
             inCallToPrefix(call, parameters) + "Unknown parameter " + a.q() + "."))
         .collect(toList());
