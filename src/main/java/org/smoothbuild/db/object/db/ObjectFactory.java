@@ -168,6 +168,9 @@ public class ObjectFactory {
     return fileSpec;
   }
 
+  public LambdaSpec lambdaSpec(Type result, ImmutableList<? extends Type> parameters) {
+    return specDb.function(result, parameters);
+  }
   public StructSpec messageSpec() {
     return messageSpec;
   }
