@@ -102,7 +102,7 @@ public class InferArgsToParamsAssignment {
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)
-        .filter(a -> !namedTypes.map().containsKey(a.name()))
+        .filter(a -> !namedTypes.contains(a.name()))
         .map(a -> parseError(a,
             inCallToPrefix(call, parameters) + "Unknown parameter " + a.q() + "."))
         .collect(toList());

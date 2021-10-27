@@ -33,6 +33,10 @@ public class NamedList<T> {
     return map;
   }
 
+  public boolean contains(String name) {
+    return map.containsKey(name);
+  }
+
   public int size() {
     return list.size();
   }
