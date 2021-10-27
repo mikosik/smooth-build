@@ -27,8 +27,8 @@ public class SpecCachingTest extends TestingContextImpl {
   public void read_spec_is_cached(Function<SpecDb, Spec> specCreator) {
     Hash hash = specCreator.apply(specDb()).hash();
     SpecDb specDb = specDbOther();
-    assertThat(specDb.getSpec(hash))
-        .isSameInstanceAs(specDb.getSpec(hash));
+    assertThat(specDb.get(hash))
+        .isSameInstanceAs(specDb.get(hash));
   }
 
   private static List<Function<SpecDb, Spec>> spec_creators() {
@@ -41,11 +41,11 @@ public class SpecCachingTest extends TestingContextImpl {
         SpecDb::string,
         SpecCachingTest::recSpec,
 
-        specDb -> specDb.callSpec(specDb.int_()),
-        specDb -> specDb.constSpec(specDb.int_()),
-        specDb -> specDb.arrayExprSpec(specDb.int_()),
-        specDb -> specDb.selectSpec(specDb.int_()),
-        specDb -> specDb.refSpec(specDb.int_()),
+        specDb -> specDb.call(specDb.int_()),
+        specDb -> specDb.const_(specDb.int_()),
+        specDb -> specDb.arrayExpr(specDb.int_()),
+        specDb -> specDb.select(specDb.int_()),
+        specDb -> specDb.ref(specDb.int_()),
 
         specDb -> specDb.array(specDb.blob()),
         specDb -> specDb.array(specDb.bool()),
@@ -66,7 +66,7 @@ public class SpecCachingTest extends TestingContextImpl {
   }
 
   private static RecSpec recSpec(SpecDb specDb) {
-    return specDb.recSpec(list(specDb.string(), specDb.string()));
+    return specDb.rec(list(specDb.string(), specDb.string()));
   }
 
   private static LambdaSpec lambdaSpec(SpecDb specDb) {

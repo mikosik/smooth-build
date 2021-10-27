@@ -185,21 +185,21 @@ public class SpecTest {
     @ParameterizedTest
     @MethodSource("specs")
     public void arrayExpr(ValSpec spec) {
-      assertThat(SPEC_DB.arrayExprSpec(spec).evaluationSpec())
+      assertThat(SPEC_DB.arrayExpr(spec).evaluationSpec())
           .isEqualTo(SPEC_DB.array(spec));
     }
 
     @ParameterizedTest
     @MethodSource("specs")
     public void call(ValSpec spec) {
-      assertThat(SPEC_DB.callSpec(spec).evaluationSpec())
+      assertThat(SPEC_DB.call(spec).evaluationSpec())
           .isEqualTo(spec);
     }
 
     @ParameterizedTest
     @MethodSource("specs")
     public void const_(ValSpec spec) {
-      assertThat(SPEC_DB.constSpec(spec).evaluationSpec())
+      assertThat(SPEC_DB.const_(spec).evaluationSpec())
           .isEqualTo(spec);
     }
 
@@ -222,14 +222,14 @@ public class SpecTest {
     @ParameterizedTest
     @MethodSource("specs")
     public void ref(ValSpec spec) {
-      assertThat(SPEC_DB.refSpec(spec).evaluationSpec())
+      assertThat(SPEC_DB.ref(spec).evaluationSpec())
           .isEqualTo(spec);
     }
 
     @ParameterizedTest
     @MethodSource("specs")
     public void select(ValSpec spec) {
-      assertThat(SPEC_DB.selectSpec(spec).evaluationSpec())
+      assertThat(SPEC_DB.select(spec).evaluationSpec())
           .isEqualTo(spec);
     }
 
@@ -243,11 +243,11 @@ public class SpecTest {
   }
 
   private static RecSpec recSpec(ImmutableList<ValSpec> items) {
-    return SPEC_DB.recSpec(items);
+    return SPEC_DB.rec(items);
   }
 
   private static RecExprSpec recExprSpec(ValSpec... items) {
-    return SPEC_DB.recExprSpec(recSpec(list(items)));
+    return SPEC_DB.recExpr(recSpec(list(items)));
   }
 
   @Test

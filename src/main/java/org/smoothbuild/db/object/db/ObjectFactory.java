@@ -190,7 +190,7 @@ public class ObjectFactory {
   }
 
   public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb.recSpec(itemSpecs);
+    return specDb.rec(itemSpecs);
   }
 
   public StructSpec structSpec(String name, NamedList<? extends Type> fields) {

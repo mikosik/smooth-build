@@ -98,30 +98,30 @@ public class SpecDb implements TypeFactory {
 
 
   private final HashedDb hashedDb;
-  private final ConcurrentHashMap<Hash, Spec> specCache;
+  private final ConcurrentHashMap<Hash, Spec> cache;
 
-  private final AnySpec anySpec;
-  private final BlobSpec blobSpec;
-  private final BoolSpec boolSpec;
-  private final IntSpec intSpec;
-  private final NothingSpec nothingSpec;
-  private final StrSpec strSpec;
-  private final NativeMethodSpec nativeMethodSpec;
+  private final AnySpec any;
+  private final BlobSpec blob;
+  private final BoolSpec bool;
+  private final IntSpec int_;
+  private final NothingSpec nothing;
+  private final StrSpec string;
+  private final NativeMethodSpec nativeMethod;
 
   public SpecDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
-    this.specCache = new ConcurrentHashMap<>();
+    this.cache = new ConcurrentHashMap<>();
 
     try {
-      this.anySpec = cacheSpec(new AnySpec(writeBaseSpecRoot(ANY)));
-      this.blobSpec = cacheSpec(new BlobSpec(writeBaseSpecRoot(BLOB)));
-      this.boolSpec = cacheSpec(new BoolSpec(writeBaseSpecRoot(BOOL)));
-      this.intSpec = cacheSpec(new IntSpec(writeBaseSpecRoot(INT)));
-      this.nothingSpec = cacheSpec(new NothingSpec(writeBaseSpecRoot(NOTHING)));
-      this.strSpec = cacheSpec(new StrSpec(writeBaseSpecRoot(STRING)));
+      this.any = cache(new AnySpec(writeBaseSpecRoot(ANY)));
+      this.blob = cache(new BlobSpec(writeBaseSpecRoot(BLOB)));
+      this.bool = cache(new BoolSpec(writeBaseSpecRoot(BOOL)));
+      this.int_ = cache(new IntSpec(writeBaseSpecRoot(INT)));
+      this.nothing = cache(new NothingSpec(writeBaseSpecRoot(NOTHING)));
+      this.string = cache(new StrSpec(writeBaseSpecRoot(STRING)));
 
       // expr
-      this.nativeMethodSpec = cacheSpec(new NativeMethodSpec(writeBaseSpecRoot(NATIVE_METHOD)));
+      this.nativeMethod = cache(new NativeMethodSpec(writeBaseSpecRoot(NATIVE_METHOD)));
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -131,7 +131,7 @@ public class SpecDb implements TypeFactory {
 
   @Override
   public AnySpec any() {
-    return anySpec;
+    return any;
   }
 
   @Override
@@ -141,37 +141,37 @@ public class SpecDb implements TypeFactory {
 
   @Override
   public BlobSpec blob() {
-    return blobSpec;
+    return blob;
   }
 
   @Override
   public BoolSpec bool() {
-    return boolSpec;
+    return bool;
   }
 
   @Override
   public LambdaSpec function(Type result, ImmutableList<? extends Type> parameters) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newLambdaSpec((ValSpec) result, recSpec((ImmutableList<ValSpec>) parameters)));
+        () -> newLambdaSpec((ValSpec) result, rec((ImmutableList<ValSpec>) parameters)));
   }
 
   @Override
   public IntSpec int_() {
-    return intSpec;
+    return int_;
   }
 
-  public NativeMethodSpec nativeMethodSpec() {
-    return nativeMethodSpec;
+  public NativeMethodSpec nativeMethod() {
+    return nativeMethod;
   }
 
   @Override
   public NothingSpec nothing() {
-    return nothingSpec;
+    return nothing;
   }
 
   @Override
   public StrSpec string() {
-    return strSpec;
+    return string;
   }
 
   @Override
@@ -188,27 +188,27 @@ public class SpecDb implements TypeFactory {
 
   // methods for getting Expr-s specs
 
-  public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
+  public ArrayExprSpec arrayExpr(ValSpec elementSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExprSpec(elementSpec));
   }
 
-  public CallSpec callSpec(ValSpec evaluationSpec) {
+  public CallSpec call(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCallSpec(evaluationSpec));
   }
 
-  public ConstSpec constSpec(ValSpec evaluationSpec) {
+  public ConstSpec const_(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstSpec(evaluationSpec));
   }
 
-  public InvokeSpec invokeSpec(ValSpec evaluationSpec) {
+  public InvokeSpec invoke(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvokeSpec(evaluationSpec));
   }
 
-  public RecExprSpec recExprSpec(RecSpec evaluationSpec) {
+  public RecExprSpec recExpr(RecSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(evaluationSpec));
   }
 
-  public SelectSpec selectSpec(ValSpec evaluationSpec) {
+  public SelectSpec select(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelectSpec(evaluationSpec));
   }
 
@@ -216,21 +216,21 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStructExprSpec(struct));
   }
 
-  public RefSpec refSpec(ValSpec evaluationSpec) {
+  public RefSpec ref(ValSpec evaluationSpec) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRefSpec(evaluationSpec));
   }
 
-  public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
+  public RecSpec rec(ImmutableList<ValSpec> itemSpecs) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(itemSpecs));
   }
 
   // methods for reading from db
 
-  public Spec getSpec(Hash hash) {
-    return requireNonNullElseGet(specCache.get(hash), () -> readSpec(hash));
+  public Spec get(Hash hash) {
+    return requireNonNullElseGet(cache.get(hash), () -> read(hash));
   }
 
-  private Spec readSpec(Hash hash) {
+  private Spec read(Hash hash) {
     List<Hash> rootSequence = readSpecRootSequence(hash);
     SpecKind specKind = decodeSpecMarker(hash, rootSequence.get(0));
     return switch (specKind) {
@@ -392,7 +392,7 @@ public class SpecDb implements TypeFactory {
   private <T> T readInnerSpec(SpecKind specKind, Hash outerHash, Hash hash, String path,
       Class<T> expectedClass) {
     Spec result = wrapObjectDbExceptionAsDecodeSpecNodeException(
-        specKind, outerHash, path, () -> getSpec(hash));
+        specKind, outerHash, path, () -> get(hash));
     if (expectedClass.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
@@ -406,7 +406,7 @@ public class SpecDb implements TypeFactory {
   private ValSpec readInnerSpec(SpecKind specKind, Hash outerHash, Hash hash, String path,
       int index) {
     Spec result = wrapObjectDbExceptionAsDecodeSpecNodeException(
-        specKind, outerHash, path, index, () -> getSpec(hash));
+        specKind, outerHash, path, index, () -> get(hash));
     if (result instanceof ValSpec valSpec) {
       return valSpec;
     } else {
@@ -423,7 +423,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private ArraySpec newArraySpec(Hash rootHash, ValSpec elementSpec) {
-    return cacheSpec(new ArraySpec(rootHash, elementSpec));
+    return cache(new ArraySpec(rootHash, elementSpec));
   }
 
   private LambdaSpec newLambdaSpec(ValSpec result, RecSpec parameters) throws HashedDbException {
@@ -432,7 +432,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private LambdaSpec newLambdaSpec(Hash rootHash, ValSpec result, RecSpec parameters) {
-    return cacheSpec(new LambdaSpec(rootHash, result, parameters));
+    return cache(new LambdaSpec(rootHash, result, parameters));
   }
 
   private RecSpec newRecSpec(ImmutableList<ValSpec> itemSpecs) throws HashedDbException {
@@ -441,7 +441,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private RecSpec newRecSpec(Hash rootHash, ImmutableList<? extends ValSpec> itemSpecs) {
-    return cacheSpec(new RecSpec(rootHash, itemSpecs));
+    return cache(new RecSpec(rootHash, itemSpecs));
   }
 
   private StructSpec newStructSpec(String name, NamedList<ValSpec> fields)
@@ -451,7 +451,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private StructSpec newStructSpec(Hash rootHash, String name, NamedList<ValSpec> fields) {
-    return cacheSpec(new StructSpec(rootHash, name, fields));
+    return cache(new StructSpec(rootHash, name, fields));
   }
 
   private VariableSpec newVariableSpec(String name) throws HashedDbException {
@@ -460,7 +460,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private VariableSpec newVariableSpec(Hash rootHash, String name) {
-    return cacheSpec(new VariableSpec(rootHash, name));
+    return cache(new VariableSpec(rootHash, name));
   }
 
   // methods for creating Expr Spec-s
@@ -472,7 +472,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private ArrayExprSpec newArrayExprSpec(Hash rootHash, ArraySpec evaluationSpec) {
-    return cacheSpec(new ArrayExprSpec(rootHash, evaluationSpec));
+    return cache(new ArrayExprSpec(rootHash, evaluationSpec));
   }
 
   private CallSpec newCallSpec(ValSpec evaluationSpec) throws HashedDbException {
@@ -481,7 +481,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private CallSpec newCallSpec(Hash rootHash, ValSpec evaluationSpec) {
-    return cacheSpec(new CallSpec(rootHash, evaluationSpec));
+    return cache(new CallSpec(rootHash, evaluationSpec));
   }
 
   private ConstSpec newConstSpec(ValSpec evaluationSpec) throws HashedDbException {
@@ -490,7 +490,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private ConstSpec newConstSpec(Hash rootHash, ValSpec evaluationSpec) {
-    return cacheSpec(new ConstSpec(rootHash, evaluationSpec));
+    return cache(new ConstSpec(rootHash, evaluationSpec));
   }
 
   private InvokeSpec newInvokeSpec(ValSpec evaluationSpec) throws HashedDbException {
@@ -499,7 +499,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private InvokeSpec newInvokeSpec(Hash rootHash, ValSpec evaluationSpec) {
-    return cacheSpec(new InvokeSpec(rootHash, evaluationSpec));
+    return cache(new InvokeSpec(rootHash, evaluationSpec));
   }
 
   private RecExprSpec newRecExprSpec(RecSpec evaluationSpec) throws HashedDbException {
@@ -508,7 +508,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private RecExprSpec newRecExprSpec(Hash rootHash, RecSpec evaluationSpec) {
-    return cacheSpec(new RecExprSpec(rootHash, evaluationSpec));
+    return cache(new RecExprSpec(rootHash, evaluationSpec));
   }
 
   private RefSpec newRefSpec(ValSpec evaluationSpec) throws HashedDbException {
@@ -517,7 +517,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private RefSpec newRefSpec(Hash rootHash, ValSpec evaluationSpec) {
-    return cacheSpec(new RefSpec(rootHash, evaluationSpec));
+    return cache(new RefSpec(rootHash, evaluationSpec));
   }
 
   private SelectSpec newSelectSpec(ValSpec evaluationSpec) throws HashedDbException {
@@ -526,7 +526,7 @@ public class SpecDb implements TypeFactory {
   }
 
   private SelectSpec newSelectSpec(Hash rootHash, ValSpec evaluationSpec) {
-    return cacheSpec(new SelectSpec(rootHash, evaluationSpec));
+    return cache(new SelectSpec(rootHash, evaluationSpec));
   }
 
   private StructExprSpec newStructExprSpec(StructSpec evaluationSpec) throws HashedDbException {
@@ -535,12 +535,12 @@ public class SpecDb implements TypeFactory {
   }
 
   private StructExprSpec newStructExprSpec(Hash rootHash, StructSpec evaluationSpec) {
-    return cacheSpec(new StructExprSpec(rootHash, evaluationSpec));
+    return cache(new StructExprSpec(rootHash, evaluationSpec));
   }
 
-  private <T extends Spec> T cacheSpec(T spec) {
+  private <T extends Spec> T cache(T spec) {
     @SuppressWarnings("unchecked")
-    T result = (T) requireNonNullElse(specCache.putIfAbsent(spec.hash(), spec), spec);
+    T result = (T) requireNonNullElse(cache.putIfAbsent(spec.hash(), spec), spec);
     return result;
   }
 

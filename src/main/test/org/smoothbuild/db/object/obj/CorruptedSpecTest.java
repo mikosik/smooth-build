@@ -415,7 +415,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
           hash(LAMBDA.marker()),
           notHashOfSequence
       );
-      assertCall(() -> ((LambdaSpec) specDb().getSpec(specHash)).result())
+      assertCall(() -> ((LambdaSpec) specDb().get(specHash)).result())
           .throwsException(new DecodeSpecNodeException(specHash, LAMBDA, DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
@@ -432,7 +432,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
               hash(parameterSpecs)
           )
       );
-      assertCall(() -> specDb().getSpec(specHash))
+      assertCall(() -> specDb().get(specHash))
           .throwsException(new DecodeSpecNodeException(specHash, LAMBDA, LAMBDA_RESULT_PATH))
           .withCause(new DecodeSpecException(nowhere));
     }
@@ -447,7 +447,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
               hash(parameterSpecs)
           )
       );
-      assertCall(() -> specDb().getSpec(specHash))
+      assertCall(() -> specDb().get(specHash))
           .throwsException(new UnexpectedSpecNodeException(
               specHash, LAMBDA, LAMBDA_RESULT_PATH, ValSpec.class, ConstSpec.class));
     }
@@ -462,7 +462,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
               hash(parameterSpecs)
           )
       );
-      assertCall(() -> specDb().getSpec(specHash))
+      assertCall(() -> specDb().get(specHash))
           .throwsException(new DecodeSpecNodeException(specHash, LAMBDA, LAMBDA_RESULT_PATH))
           .withCause(corruptedArraySpecException());
     }
@@ -477,7 +477,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
               nowhere
           )
       );
-      assertCall(() -> specDb().getSpec(specHash))
+      assertCall(() -> specDb().get(specHash))
           .throwsException(new DecodeSpecNodeException(specHash, LAMBDA, LAMBDA_PARAMS_PATH))
           .withCause(new DecodeSpecException(nowhere));
     }
@@ -505,7 +505,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
               hash(constSpec())
           )
       );
-      assertCall(() -> specDb().getSpec(specHash))
+      assertCall(() -> specDb().get(specHash))
           .throwsException(new UnexpectedSpecNodeException(
               specHash, LAMBDA, LAMBDA_PARAMS_PATH, RecSpec.class, ConstSpec.class));
     }
@@ -519,7 +519,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
               corruptedArraySpecHash()
           )
       );
-      assertCall(() -> specDb().getSpec(specHash))
+      assertCall(() -> specDb().get(specHash))
           .throwsException(new DecodeSpecNodeException(specHash, LAMBDA, LAMBDA_PARAMS_PATH))
           .withCause(corruptedArraySpecException());
     }
@@ -735,7 +735,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
         hash(specKind.marker()),
         dataHash
     );
-    assertCall(() -> specDb().getSpec(specHash))
+    assertCall(() -> specDb().get(specHash))
         .throwsException(new DecodeSpecNodeException(specHash, specKind, DATA_PATH))
         .withCause(new DecodeSpecException(dataHash));
   }
@@ -747,7 +747,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
         hash(specKind.marker()),
         dataHash
     );
-    assertCall(() -> specDb().getSpec(specHash))
+    assertCall(() -> specDb().get(specHash))
         .throwsException(new DecodeSpecNodeException(specHash, specKind, DATA_PATH))
         .withCause(new NoSuchDataException(dataHash));
   }
@@ -775,7 +775,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   private ThrownExceptionSubject assertThatGetSpec(Hash hash) {
-      return assertCall(() -> specDb().getSpec(hash));
+      return assertCall(() -> specDb().get(hash));
   }
 
   private DecodeSpecException illegalSpecMarkerException(Hash hash, int marker) {
@@ -1146,7 +1146,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
           hash(VARIABLE.marker()),
           dataHash
       );
-      assertCall(() -> specDb().getSpec(specHash))
+      assertCall(() -> specDb().get(specHash))
           .throwsException(new DecodeSpecNodeException(specHash, VARIABLE, DATA_PATH))
           .withCause(new NoSuchDataException(dataHash));
     }

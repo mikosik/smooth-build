@@ -278,7 +278,7 @@ public abstract class AbstractTestingContext {
   }
 
   public NativeMethodSpec nativeMethodSpec() {
-    return specDb().nativeMethodSpec();
+    return specDb().nativeMethod();
   }
 
   public NothingSpec nothingSpec() {
@@ -290,7 +290,7 @@ public abstract class AbstractTestingContext {
   }
 
   public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb().recSpec(itemSpecs);
+    return specDb().rec(itemSpecs);
   }
 
   public RecSpec emptyRecSpec() {
@@ -337,7 +337,7 @@ public abstract class AbstractTestingContext {
   }
 
   public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
-    return specDb().arrayExprSpec(elementSpec);
+    return specDb().arrayExpr(elementSpec);
   }
 
   public CallSpec callSpec() {
@@ -345,7 +345,7 @@ public abstract class AbstractTestingContext {
   }
 
   public CallSpec callSpec(ValSpec evaluationSpec) {
-    return specDb().callSpec(evaluationSpec);
+    return specDb().call(evaluationSpec);
   }
 
   public ConstSpec constSpec() {
@@ -353,7 +353,7 @@ public abstract class AbstractTestingContext {
   }
 
   public ConstSpec constSpec(ValSpec evaluationSpec) {
-    return specDb().constSpec(evaluationSpec);
+    return specDb().const_(evaluationSpec);
   }
 
   public RecExprSpec recExprSpec() {
@@ -361,7 +361,7 @@ public abstract class AbstractTestingContext {
   }
 
   public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb().recExprSpec(recSpec(itemSpecs));
+    return specDb().recExpr(recSpec(itemSpecs));
   }
 
   public SelectSpec selectSpec() {
@@ -369,7 +369,7 @@ public abstract class AbstractTestingContext {
   }
 
   public SelectSpec selectSpec(ValSpec evaluationSpec) {
-    return specDb().selectSpec(evaluationSpec);
+    return specDb().select(evaluationSpec);
   }
 
   public StructExprSpec structExprSpec(StructSpec structSpec) {
@@ -381,7 +381,7 @@ public abstract class AbstractTestingContext {
   }
 
   public RefSpec refSpec(ValSpec evaluationSpec) {
-    return specDb().refSpec(evaluationSpec);
+    return specDb().ref(evaluationSpec);
   }
 
   // Obj-s (values)

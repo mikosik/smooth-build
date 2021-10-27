@@ -190,7 +190,7 @@ public class ObjectDb {
 
   private Spec getSpecOrChainException(Hash rootHash, Hash specHash) {
     try {
-      return specDb.getSpec(specHash);
+      return specDb.get(specHash);
     } catch (ObjectDbException e) {
       throw new DecodeObjSpecException(rootHash, e);
     }
@@ -212,7 +212,7 @@ public class ObjectDb {
       throws HashedDbException {
     var lambdaSpec = functionEvaluationSpec(function);
     verifyArguments(lambdaSpec, arguments);
-    var spec = specDb.callSpec(lambdaSpec.result());
+    var spec = specDb.call(lambdaSpec.result());
     var data = writeCallData(function, arguments);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
@@ -235,7 +235,7 @@ public class ObjectDb {
   }
 
   private Const newConstExpr(Val val) throws HashedDbException {
-    var spec = specDb.constSpec(val.spec());
+    var spec = specDb.const_(val.spec());
     var data = writeConstData(val);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
@@ -244,14 +244,14 @@ public class ObjectDb {
   private Invoke newInvokeExpr(ValSpec evaluationSpec, NativeMethod nativeMethod, Bool isPure,
       Int argumentCount) throws HashedDbException {
     var data = writeInvokeData(nativeMethod, isPure, argumentCount);
-    var spec = specDb.invokeSpec(evaluationSpec);
+    var spec = specDb.invoke(evaluationSpec);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
   private ArrayExpr newArrayExpr(List<? extends Expr> elements) throws HashedDbException {
     ValSpec elementSpec = elementSpec(elements);
-    var spec = specDb.arrayExprSpec(elementSpec);
+    var spec = specDb.arrayExpr(elementSpec);
     var data = writeArrayExprData(elements);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
@@ -279,8 +279,8 @@ public class ObjectDb {
 
   private RecExpr newRecExpr(List<? extends Expr> items) throws HashedDbException {
     var itemSpecs = map(items, Expr::evaluationSpec);
-    var evaluationSpec = specDb.recSpec(itemSpecs);
-    var spec = specDb.recExprSpec(evaluationSpec);
+    var evaluationSpec = specDb.rec(itemSpecs);
+    var spec = specDb.recExpr(evaluationSpec);
     var data = writeRecExprData(items);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
@@ -299,7 +299,7 @@ public class ObjectDb {
       int intIndex = index.jValue().intValue();
       checkElementIndex(intIndex, fields.size());
       var field = fields.getObject(intIndex);
-      return specDb.selectSpec(field);
+      return specDb.select(field);
     } else {
       throw new IllegalArgumentException();
     }
@@ -328,7 +328,7 @@ public class ObjectDb {
 
   private Ref newRefExpr(ValSpec evaluationSpec, BigInteger index) throws HashedDbException {
     var data = writeRefData(index);
-    var spec = specDb.refSpec(evaluationSpec);
+    var spec = specDb.ref(evaluationSpec);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -368,7 +368,7 @@ public class ObjectDb {
 
   private NativeMethod newNativeMethodVal(Blob jarFile, Str classBinaryName)
       throws HashedDbException {
-    var spec = specDb.nativeMethodSpec();
+    var spec = specDb.nativeMethod();
     var data = writeNativeMethodData(jarFile, classBinaryName);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
