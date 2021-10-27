@@ -7,7 +7,9 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -41,12 +43,11 @@ public class Struc_ extends Val {
   }
 
   private ImmutableList<Val> instantiateItems() {
-    var itemSpecs = spec().fields().objectList();
-    var objs = readSequenceObjs(DATA_PATH, dataHash(), itemSpecs.size(), Val.class);
-    for (int i = 0; i < itemSpecs.size(); i++) {
-      Val obj = objs.get(i);
-      Spec expectedSpec = itemSpecs.get(i);
-      Spec actualSpec = obj.spec();
+    NamedList<ValSpec> fields = spec().fields();
+    var objs = readSequenceObjs(DATA_PATH, dataHash(), fields.size(), Val.class);
+    for (int i = 0; i < fields.size(); i++) {
+      Spec expectedSpec = fields.getObject(i);
+      Spec actualSpec = objs.get(i).spec();
       if (!expectedSpec.equals(actualSpec)) {
         throw new UnexpectedObjNodeException(
             hash(), spec(), DATA_PATH, i, expectedSpec, actualSpec);

@@ -37,12 +37,12 @@ public class NamedList<T> {
     return map.containsKey(name);
   }
 
-  public int size() {
-    return list.size();
+  public T getObject(int index) {
+    return list.get(index).object();
   }
 
-  public ImmutableList<T> objectList() {
-    return Lists.map(list, Named::object);
+  public int size() {
+    return list.size();
   }
 
   public ImmutableMap<String, Integer> indexMap() {

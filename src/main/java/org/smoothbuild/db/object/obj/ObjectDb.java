@@ -50,6 +50,7 @@ import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 
@@ -101,7 +102,7 @@ public class ObjectDb {
   }
 
   public Struc_ structVal(StructSpec structSpec, ImmutableList<Val> items) {
-    var fieldTypes = structSpec.fields().objectList();
+    var fieldTypes = map(structSpec.fields().list(), Named::object);
     allMatchOtherwise(fieldTypes, items, (f, i) -> Objects.equals(f, i.spec()),
         (i, j) -> {
           throw new IllegalArgumentException(
@@ -288,10 +289,10 @@ public class ObjectDb {
 
   private SelectSpec selectSpec(Expr expr, Int index) {
     if (expr.spec().evaluationSpec() instanceof StructSpec struct) {
-      var fields = struct.fields().objectList();
+      var fields = struct.fields();
       int intIndex = index.jValue().intValue();
       checkElementIndex(intIndex, fields.size());
-      var field = fields.get(intIndex);
+      var field = fields.getObject(intIndex);
       return specDb.selectSpec(field);
     } else {
       throw new IllegalArgumentException();
