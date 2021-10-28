@@ -53,7 +53,7 @@ public class FileResolver {
     }
   }
 
-  private BufferedSource source(FilePath filePath) throws IOException {
+  public BufferedSource source(FilePath filePath) throws IOException {
     return fileSystemFor(filePath).source(filePath.path());
   }
 
