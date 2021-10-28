@@ -197,7 +197,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              valueExpression(2, STRING, "result", annotationExpression(1, stringExpression(1, "Impl.met"), true)));
+              valueExpression(2, STRING, "result", annotation(1, stringExpression(1, "Impl.met"), true)));
     }
 
     @Test
@@ -208,7 +208,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              valueExpression(2, STRING, "result", annotationExpression(1, stringExpression(1, "Impl.met"), false)));
+              valueExpression(2, STRING, "result", annotation(1, stringExpression(1, "Impl.met"), false)));
     }
 
     @Test
@@ -219,7 +219,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              valueExpression(2, STRING, "result", annotationExpression(1, stringExpression(1, "Impl.met"), true)));
+              valueExpression(2, STRING, "result", annotation(1, stringExpression(1, "Impl.met"), true)));
     }
 
     @Test
@@ -230,7 +230,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              functionExpression(2, STRING, "myFunction", annotationExpression(1, stringExpression(1, "Impl.met"), true)));
+              functionExpression(2, STRING, "myFunction", annotation(1, stringExpression(1, "Impl.met"), true)));
     }
 
     @Test
@@ -241,7 +241,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              functionExpression(2, STRING, "myFunction", annotationExpression(1, stringExpression(1, "Impl.met"), false)));
+              functionExpression(2, STRING, "myFunction", annotation(1, stringExpression(1, "Impl.met"), false)));
     }
 
     @Test
@@ -252,7 +252,7 @@ public class ExpressionLoadingTest extends TestingContextImpl {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              functionExpression(2, STRING, "myFunction", annotationExpression(1, stringExpression(1, "Impl.met"), true)));
+              functionExpression(2, STRING, "myFunction", annotation(1, stringExpression(1, "Impl.met"), true)));
     }
   }
 

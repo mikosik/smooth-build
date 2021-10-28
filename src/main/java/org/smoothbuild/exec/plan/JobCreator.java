@@ -55,7 +55,7 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.expr.AnnotationExpression;
+import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
@@ -96,7 +96,7 @@ public class JobCreator {
   private ImmutableMap<Class<?>, Handler<?>> constructHandlers(
       Map<Class<?>, Handler<?>> additionalHandlers) {
     return ImmutableMap.<Class<?>, Handler<?>>builder()
-        .put(AnnotationExpression.class,
+        .put(Annotation.class,
             new Handler<>(this::nativeLazy, this::nativeEager))
         .put(CallExpression.class,
             new Handler<>(this::callLazy, this::callEager))
@@ -141,20 +141,20 @@ public class JobCreator {
 
   // NativeExpression
 
-  private Job nativeLazy(Scope<Job> scope, AnnotationExpression nativ) {
-    return nativeLazyJob(nativ);
+  private Job nativeLazy(Scope<Job> scope, Annotation annotation) {
+    return nativeLazyJob(annotation);
   }
 
-  private Job nativeEager(Scope<Job> scope, AnnotationExpression nativ) {
-    return stringEagerJob(nativ.path());
+  private Job nativeEager(Scope<Job> scope, Annotation annotation) {
+    return stringEagerJob(annotation.path());
   }
 
-  private Job nativeLazyJob(AnnotationExpression nativ) {
-    return stringLazyJob(nativ.path());
+  private Job nativeLazyJob(Annotation annotation) {
+    return stringLazyJob(annotation.path());
   }
 
-  private Job nativeEagerJob(AnnotationExpression nativ) {
-    return stringEagerJob(nativ.path());
+  private Job nativeEagerJob(Annotation annotation) {
+    return stringEagerJob(annotation.path());
   }
 
   // CallExpression
@@ -365,7 +365,7 @@ public class JobCreator {
     } else if (referencable instanceof DefinedFunction definedFunction) {
       return definedFunctionEagerJob(scope, actualResultType, definedFunction, arguments, location);
     } else if (referencable instanceof NativeFunction nativeFunction) {
-      return callNativeFunctionEagerJob(scope, arguments, nativeFunction, nativeFunction.nativ(),
+      return callNativeFunctionEagerJob(scope, arguments, nativeFunction, nativeFunction.annotation(),
           variables, actualResultType, location);
     } else if (referencable instanceof IfFunction) {
       return new IfJob(actualResultType, arguments, location);
@@ -406,10 +406,10 @@ public class JobCreator {
   }
 
   private Job callNativeValueEagerJob(NativeValue nativeValue, Location location) {
-    AnnotationExpression nativ = nativeValue.nativ();
+    Annotation annotation = nativeValue.annotation();
     var algorithm = new CallNativeAlgorithm(
-        methodLoader, toSpecConverter.visit(nativeValue.type()), nativeValue, nativ.isPure());
-    var nativeCode = nativeEagerJob(nativ);
+        methodLoader, toSpecConverter.visit(nativeValue.type()), nativeValue, annotation.isPure());
+    var nativeCode = nativeEagerJob(annotation);
     var info = new TaskInfo(VALUE, nativeValue.extendedName(), location);
     return new Task(nativeValue.type(), list(nativeCode), info, algorithm
     );
@@ -430,12 +430,12 @@ public class JobCreator {
   }
 
   private Job callNativeFunctionEagerJob(Scope<Job> scope, List<Job> arguments,
-      NativeFunction function, AnnotationExpression nativ, BoundsMap variables,
+      NativeFunction function, Annotation annotation, BoundsMap variables,
       Type actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(
-        methodLoader, toSpecConverter.visit(actualResultType), function, nativ.isPure());
+        methodLoader, toSpecConverter.visit(actualResultType), function, annotation.isPure());
     var dependencies = concat(
-        nativeEager(scope, nativ),
+        nativeEager(scope, annotation),
         convertedArgumentEagerJob(arguments, function, variables));
     var info = new TaskInfo(CALL, function.extendedName(), location);
     return new Task(actualResultType, dependencies, info, algorithm

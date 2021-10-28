@@ -93,7 +93,7 @@ import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
-import org.smoothbuild.lang.expr.AnnotationExpression;
+import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
@@ -702,13 +702,13 @@ public abstract class AbstractTestingContext {
 
   public NativeFunction functionExpression(Type type, String name, Item... parameters) {
     return functionExpression(
-        1, type, name, annotationExpression(1, stringExpression(1, "Impl.met")), parameters);
+        1, type, name, annotation(1, stringExpression(1, "Impl.met")), parameters);
   }
 
   public NativeFunction functionExpression(int line, Type type, String name,
-      AnnotationExpression nativ, Item... parameters) {
+      Annotation annotation, Item... parameters) {
     return new NativeFunction(functionT(type, parameters), modulePath(), name, list(parameters),
-        nativ, loc(line)
+        annotation, loc(line)
     );
   }
 
@@ -730,20 +730,16 @@ public abstract class AbstractTestingContext {
   }
 
   public NativeValue valueExpression(
-      int line, Type type, String name, AnnotationExpression nativ) {
-    return new NativeValue(type, modulePath(), name, nativ, loc(line));
+      int line, Type type, String name, Annotation annotation) {
+    return new NativeValue(type, modulePath(), name, annotation, loc(line));
   }
 
-  public AnnotationExpression annotationExpression(
-      int line, StringLiteralExpression implementedBy) {
-    return annotationExpression(line, implementedBy, true);
+  public Annotation annotation(int line, StringLiteralExpression implementedBy) {
+    return annotation(line, implementedBy, true);
   }
 
-  public AnnotationExpression annotationExpression(
-      int line, StringLiteralExpression implementedBy, boolean pure) {
-    StructType type = typeFactory().struct("Native", namedList(list(
-        named("path", typeFactory().string()), named("content", typeFactory().blob()))));
-    return new AnnotationExpression(type, implementedBy, pure, loc(line));
+  public Annotation annotation(int line, StringLiteralExpression implementedBy, boolean pure) {
+    return new Annotation(implementedBy, pure, loc(line));
   }
 
   public Constructor constrExpression(

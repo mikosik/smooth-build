@@ -1,11 +1,8 @@
 package org.smoothbuild.lang.parse;
 
 import static org.smoothbuild.lang.base.define.Item.toTypes;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.toMap;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +25,7 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.expr.AnnotationExpression;
+import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
@@ -103,11 +100,9 @@ public class ReferencableLoader {
     }
   }
 
-  private AnnotationExpression loadAnnotation(AnnotationNode annotationNode) {
-    StructType type = typing.struct("Native",
-        namedList(list(named("path", typing.string()), named("content", typing.blob()))));
+  private Annotation loadAnnotation(AnnotationNode annotationNode) {
     var path = createStringLiteral(annotationNode.path());
-    return new AnnotationExpression(type, path, annotationNode.isPure(), annotationNode.location());
+    return new Annotation(path, annotationNode.isPure(), annotationNode.location());
   }
 
   private ImmutableList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {

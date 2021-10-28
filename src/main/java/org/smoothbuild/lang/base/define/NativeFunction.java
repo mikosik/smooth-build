@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.joining;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.expr.AnnotationExpression;
+import org.smoothbuild.lang.expr.Annotation;
 
 import com.google.common.collect.ImmutableList;
 
@@ -13,16 +13,16 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class NativeFunction extends Function {
-  private final AnnotationExpression nativ;
+  private final Annotation annotation;
 
   public NativeFunction(FunctionType type, ModulePath modulePath, String name,
-      ImmutableList<Item> parameters, AnnotationExpression nativ, Location location) {
+      ImmutableList<Item> parameters, Annotation annotation, Location location) {
     super(type, modulePath, name, parameters, location);
-    this.nativ = nativ;
+    this.annotation = annotation;
   }
 
-  public AnnotationExpression nativ() {
-    return nativ;
+  public Annotation annotation() {
+    return annotation;
   }
 
   @Override
@@ -35,18 +35,18 @@ public class NativeFunction extends Function {
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())
         && this.parameters().equals(that.parameters())
-        && this.nativ.equals(that.nativ)
+        && this.annotation.equals(that.annotation)
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), parameters(), nativ, location());
+    return Objects.hash(resultType(), modulePath(), name(), parameters(), annotation, location());
   }
 
   @Override
   public String toString() {
-    return nativ.toString() + " Function(`" + resultType() + "(" + parametersToString() + ")";
+    return annotation.toString() + " Function(`" + resultType() + "(" + parametersToString() + ")";
   }
 
   private String parametersToString() {

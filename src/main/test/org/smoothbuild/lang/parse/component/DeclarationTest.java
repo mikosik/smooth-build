@@ -675,7 +675,7 @@ public class DeclarationTest extends TestingContextImpl {
             """)
               .loadsSuccessfully()
               .containsReferencable(functionExpression(2, STRING, "myFunction",
-                  annotationExpression(1, stringExpression(1, "Impl.met")),
+                  annotation(1, stringExpression(1, "Impl.met")),
                   parameterExpression(3, STRING, "default", stringExpression(3, "value")),
                   parameterExpression(4, STRING, "nonDefault")));
         }
@@ -740,7 +740,7 @@ public class DeclarationTest extends TestingContextImpl {
           module(functionTypeDeclaration("String,"))
               .loadsSuccessfully()
               .containsReferencable(valueExpression(2, f(BLOB, STRING), "myValue",
-                  annotationExpression(1, stringExpression(1, "Impl.met"))));
+                  annotation(1, stringExpression(1, "Impl.met"))));
         }
 
         @Test
