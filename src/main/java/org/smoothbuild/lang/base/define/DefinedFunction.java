@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class DefinedFunction extends Function {
+public class DefinedFunction extends Function implements DefinedEvaluable {
   private final Expression body;
 
   public DefinedFunction(FunctionType type, ModulePath modulePath, String name,
@@ -20,6 +20,7 @@ public class DefinedFunction extends Function {
     this.body = body;
   }
 
+  @Override
   public Expression body() {
     return body;
   }

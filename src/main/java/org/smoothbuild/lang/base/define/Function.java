@@ -38,6 +38,16 @@ public abstract class Function extends GlobalReferencable {
     return parameters;
   }
 
+  @Override
+  public Type evaluationType() {
+    return resultType();
+  }
+
+  @Override
+  public ImmutableList<Item> evaluationParameters() {
+    return parameters();
+  }
+
   public boolean canBeCalledArgless() {
     return parameters.stream()
         .allMatch(p -> p.defaultValue().isPresent());

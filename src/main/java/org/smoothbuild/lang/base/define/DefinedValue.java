@@ -8,7 +8,7 @@ import org.smoothbuild.lang.expr.Expression;
 /**
  * This class is immutable.
  */
-public class DefinedValue extends Value {
+public class DefinedValue extends Value implements DefinedEvaluable {
   private final Expression body;
 
   public DefinedValue(Type type, ModulePath modulePath, String name, Expression body,
@@ -17,6 +17,7 @@ public class DefinedValue extends Value {
     this.body = body;
   }
 
+  @Override
   public Expression body() {
     return body;
   }

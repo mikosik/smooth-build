@@ -8,7 +8,7 @@ import org.smoothbuild.lang.expr.Annotation;
 /**
  * This class is immutable.
  */
-public class NativeValue extends Value {
+public class NativeValue extends Value implements NativeEvaluable {
   private final Annotation annotation;
 
   public NativeValue(Type type, ModulePath modulePath, String name, Annotation annotation,
@@ -17,6 +17,7 @@ public class NativeValue extends Value {
     this.annotation = annotation;
   }
 
+  @Override
   public Annotation annotation() {
     return annotation;
   }
