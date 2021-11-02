@@ -28,10 +28,10 @@ import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Invoke;
-import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
+import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
@@ -40,17 +40,17 @@ import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.SpecDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
@@ -118,28 +118,28 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStructVal(structSpec, items));
   }
 
-  public Rec recVal(RecSpec recSpec, Iterable<? extends Obj> items) {
+  public Tuple tupleVal(TupleSpec tupleSpec, Iterable<? extends Obj> items) {
     List<Obj> itemList = ImmutableList.copyOf(items);
-    var specs = recSpec.items();
+    var specs = tupleSpec.items();
 
     allMatchOtherwise(specs, itemList, (s, i) -> Objects.equals(s, i.spec()),
         (i, j) -> {
           throw new IllegalArgumentException(
-              "recSpec specifies " + i + " items but provided " + j + ".");
+              "TupleSpec specifies " + i + " items but provided " + j + ".");
         },
         (i) -> {
-          throw new IllegalArgumentException("recSpec specifies item at index " + i
+          throw new IllegalArgumentException("TupleSpec specifies item at index " + i
               + " with spec " + specs.get(i).name() + " but provided item has spec "
               + itemList.get(i).spec().name() + " at that index.");
         }
     );
 
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRecVal(recSpec, itemList));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTupleVal(tupleSpec, itemList));
   }
 
   // methods for creating expr-s
 
-  public Call callExpr(Expr function, RecExpr arguments) {
+  public Call callExpr(Expr function, TupleExpr arguments) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCallExpr(function, arguments));
   }
 
@@ -157,12 +157,12 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExpr(elements));
   }
 
-  public RecExpr recExpr(ImmutableList<? extends Expr> items) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRecExpr(items));
+  public TupleExpr tupleExpr(ImmutableList<? extends Expr> items) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTupleExpr(items));
   }
 
-  public Select selectExpr(Expr rec, Int index) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newSelectExpr(rec, index));
+  public Select selectExpr(Expr struct, Int index) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelectExpr(struct, index));
   }
 
   public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
@@ -208,7 +208,7 @@ public class ObjectDb {
 
   // methods for creating Expr Obj-s
 
-  private Call newCallExpr(Expr function, RecExpr arguments)
+  private Call newCallExpr(Expr function, TupleExpr arguments)
       throws HashedDbException {
     var lambdaSpec = functionEvaluationSpec(function);
     verifyArguments(lambdaSpec, arguments);
@@ -218,11 +218,11 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private static void verifyArguments(LambdaSpec lambdaSpec, RecExpr arguments) {
-    if (!Objects.equals(lambdaSpec.parametersRec(), arguments.evaluationSpec())) {
+  private static void verifyArguments(LambdaSpec lambdaSpec, TupleExpr arguments) {
+    if (!Objects.equals(lambdaSpec.parametersTuple(), arguments.evaluationSpec())) {
       throw new IllegalArgumentException(("Arguments evaluation spec %s should be equal to "
           + "function evaluation spec parameters %s.")
-              .formatted(arguments.evaluationSpec().name(), lambdaSpec.parametersRec().name()));
+              .formatted(arguments.evaluationSpec().name(), lambdaSpec.parametersTuple().name()));
     }
   }
 
@@ -277,18 +277,18 @@ public class ObjectDb {
     }
   }
 
-  private RecExpr newRecExpr(List<? extends Expr> items) throws HashedDbException {
+  private TupleExpr newTupleExpr(List<? extends Expr> items) throws HashedDbException {
     var itemSpecs = map(items, Expr::evaluationSpec);
-    var evaluationSpec = specDb.rec(itemSpecs);
-    var spec = specDb.recExpr(evaluationSpec);
-    var data = writeRecExprData(items);
+    var evaluationSpec = specDb.tuple(itemSpecs);
+    var spec = specDb.tupleExpr(evaluationSpec);
+    var data = writeTupleExprData(items);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
-  private Select newSelectExpr(Expr rec, Int index) throws HashedDbException {
-    var spec = selectSpec(rec, index);
-    var data = writeSelectData(rec, index);
+  private Select newSelectExpr(Expr struct, Int index) throws HashedDbException {
+    var spec = selectSpec(struct, index);
+    var data = writeSelectData(struct, index);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -386,8 +386,8 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private Rec newRecVal(RecSpec spec, List<? extends Obj> objects) throws HashedDbException {
-    var data = writeRecData(objects);
+  private Tuple newTupleVal(TupleSpec spec, List<? extends Obj> objects) throws HashedDbException {
+    var data = writeTupleData(objects);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -406,7 +406,7 @@ public class ObjectDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(Expr function, RecExpr arguments) throws HashedDbException {
+  private Hash writeCallData(Expr function, TupleExpr arguments) throws HashedDbException {
     return hashedDb.writeSequence(function.hash(), arguments.hash());
   }
 
@@ -427,12 +427,12 @@ public class ObjectDb {
     return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash());
   }
 
-  private Hash writeRecExprData(List<? extends Expr> items) throws HashedDbException {
+  private Hash writeTupleExprData(List<? extends Expr> items) throws HashedDbException {
     return writeSequence(items);
   }
 
-  private Hash writeSelectData(Expr rec, Int index) throws HashedDbException {
-    return hashedDb.writeSequence(rec.hash(), index.hash());
+  private Hash writeSelectData(Expr struct, Int index) throws HashedDbException {
+    return hashedDb.writeSequence(struct.hash(), index.hash());
   }
 
   private Hash writeStructExprData(List<? extends Expr> items) throws HashedDbException {
@@ -465,7 +465,7 @@ public class ObjectDb {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeRecData(List<? extends Obj> items) throws HashedDbException {
+  private Hash writeTupleData(List<? extends Obj> items) throws HashedDbException {
     return writeSequence(items);
   }
 

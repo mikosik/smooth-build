@@ -16,13 +16,13 @@ import com.google.common.collect.ImmutableList;
 
 public class LambdaSpec extends ValSpec implements FunctionType {
   private final ValSpec result;
-  private final RecSpec parametersRec;
+  private final TupleSpec parametersTuple;
 
-  public LambdaSpec(Hash hash, ValSpec result, RecSpec parametersRec) {
-    super(functionTypeName(result, parametersRec.items()), hash, LAMBDA,
-        calculateVariables(result, parametersRec.items()));
+  public LambdaSpec(Hash hash, ValSpec result, TupleSpec parametersTuple) {
+    super(functionTypeName(result, parametersTuple.items()), hash, LAMBDA,
+        calculateVariables(result, parametersTuple.items()));
     this.result = result;
-    this.parametersRec = parametersRec;
+    this.parametersTuple = parametersTuple;
   }
 
   @Override
@@ -32,11 +32,11 @@ public class LambdaSpec extends ValSpec implements FunctionType {
 
   @Override
   public ImmutableList<ValSpec> parameters() {
-    return parametersRec.items();
+    return parametersTuple.items();
   }
 
-  public RecSpec parametersRec() {
-    return parametersRec;
+  public TupleSpec parametersTuple() {
+    return parametersTuple;
   }
 
   @Override

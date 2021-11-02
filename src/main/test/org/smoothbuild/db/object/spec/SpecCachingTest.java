@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.testing.TestingContextImpl;
 
 public class SpecCachingTest extends TestingContextImpl {
@@ -39,7 +39,7 @@ public class SpecCachingTest extends TestingContextImpl {
         SpecDb::int_,
         SpecDb::nothing,
         SpecDb::string,
-        SpecCachingTest::recSpec,
+        SpecCachingTest::tupleSpec,
 
         specDb -> specDb.call(specDb.int_()),
         specDb -> specDb.const_(specDb.int_()),
@@ -52,7 +52,7 @@ public class SpecCachingTest extends TestingContextImpl {
         specDb -> specDb.array(specDb.int_()),
         specDb -> specDb.array(specDb.nothing()),
         specDb -> specDb.array(specDb.string()),
-        specDb -> specDb.array(recSpec(specDb)),
+        specDb -> specDb.array(tupleSpec(specDb)),
         specDb -> specDb.array(lambdaSpec(specDb)),
 
         specDb -> specDb.array(specDb.array(specDb.blob())),
@@ -60,13 +60,13 @@ public class SpecCachingTest extends TestingContextImpl {
         specDb -> specDb.array(specDb.array(specDb.int_())),
         specDb -> specDb.array(specDb.array(specDb.nothing())),
         specDb -> specDb.array(specDb.array(specDb.string())),
-        specDb -> specDb.array(specDb.array(recSpec(specDb))),
+        specDb -> specDb.array(specDb.array(tupleSpec(specDb))),
         specDb -> specDb.array(specDb.array(lambdaSpec(specDb)))
     );
   }
 
-  private static RecSpec recSpec(SpecDb specDb) {
-    return specDb.rec(list(specDb.string(), specDb.string()));
+  private static TupleSpec tupleSpec(SpecDb specDb) {
+    return specDb.tuple(list(specDb.string(), specDb.string()));
   }
 
   private static LambdaSpec lambdaSpec(SpecDb specDb) {

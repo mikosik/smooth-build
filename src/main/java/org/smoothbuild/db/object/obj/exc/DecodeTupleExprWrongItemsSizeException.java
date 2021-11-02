@@ -1,14 +1,14 @@
 package org.smoothbuild.db.object.obj.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.expr.RecExprSpec;
+import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
 
-public class DecodeRecExprWrongItemsSizeException extends DecodeObjException {
-  public DecodeRecExprWrongItemsSizeException(Hash hash, RecExprSpec spec, int actual) {
+public class DecodeTupleExprWrongItemsSizeException extends DecodeObjException {
+  public DecodeTupleExprWrongItemsSizeException(Hash hash, TupleExprSpec spec, int actual) {
     super(buildMessage(hash, spec, actual));
   }
 
-  private static String buildMessage(Hash hash, RecExprSpec spec, int actual) {
+  private static String buildMessage(Hash hash, TupleExprSpec spec, int actual) {
     return ("Cannot decode %s object at %s. Evaluation spec items size (%s)"
         + " is not equal to actual items size (%s).")
         .formatted(

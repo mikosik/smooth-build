@@ -11,9 +11,9 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BlobType;
 import org.smoothbuild.lang.base.type.api.BoolType;
@@ -78,8 +78,8 @@ public class TypeToSpecConverter {
     return objectFactory.arraySpec(visit(array.element()));
   }
 
-  private RecSpec nativeCodeSpec() {
-    return objectFactory.recSpec(
+  private TupleSpec nativeCodeSpec() {
+    return objectFactory.tupleSpec(
         list(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }
 

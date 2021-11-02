@@ -21,10 +21,10 @@ public class ContainerTest extends TestingContextImpl {
     Iterable<Struc_> iterable = container().messages().elements(Struc_.class);
     assertThat(iterable)
         .hasSize(1);
-    Struc_ rec = iterable.iterator().next();
-    assertThat(text(rec))
+    Struc_ struct = iterable.iterator().next();
+    assertThat(text(struct))
         .isEqualTo("message");
-    assertThat(severity(rec))
+    assertThat(severity(struct))
         .isEqualTo("ERROR");
   }
 }

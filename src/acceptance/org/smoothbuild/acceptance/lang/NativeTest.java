@@ -20,7 +20,7 @@ import org.smoothbuild.acceptance.testing.ReportTwoErrors;
 import org.smoothbuild.acceptance.testing.ReportWarningAndReturnNull;
 import org.smoothbuild.acceptance.testing.ReturnAbc;
 import org.smoothbuild.acceptance.testing.ReturnNull;
-import org.smoothbuild.acceptance.testing.ReturnStringRec;
+import org.smoothbuild.acceptance.testing.ReturnStringStruct;
 import org.smoothbuild.acceptance.testing.StringIdentity;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
@@ -217,19 +217,19 @@ public class NativeTest extends AcceptanceTestCase {
 
           @Test
           public void struct_of_wrong_type() throws Exception {
-            createNativeJar(ReturnStringRec.class);
+            createNativeJar(ReturnStringStruct.class);
             createUserModule(format("""
                 Person {
                   String firstName,
                   String lastName,
                 }
                 @Native("%s")
-                Person returnStringRec;
-                result = returnStringRec;
-                """, ReturnStringRec.class.getCanonicalName()));
+                Person returnStringStruct;
+                result = returnStringStruct;
+                """, ReturnStringStruct.class.getCanonicalName()));
             runSmoothBuild("result");
             assertFinishedWithError();
-            assertSysOutContains("`returnStringRec` has faulty native implementation: " +
+            assertSysOutContains("`returnStringStruct` has faulty native implementation: " +
                 "Its declared result spec == `Person` " +
                 "but it returned object with spec == `StringHolder`.");
           }
@@ -577,20 +577,20 @@ public class NativeTest extends AcceptanceTestCase {
 
         @Test
         public void struct_of_wrong_type() throws Exception {
-          createNativeJar(ReturnStringRec.class);
+          createNativeJar(ReturnStringStruct.class);
           createUserModule(format("""
             Person {
               String firstName,
               String lastName,
             }
             @Native("%s")
-            Person returnStringRec();
-            result = returnStringRec();
-            """, ReturnStringRec.class.getCanonicalName()));
+            Person returnStringStruct();
+            result = returnStringStruct();
+            """, ReturnStringStruct.class.getCanonicalName()));
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains(
-              "`returnStringRec` has faulty native implementation: Its declared " +
+              "`returnStringStruct` has faulty native implementation: Its declared " +
                   "result spec == `Person` but it returned object with spec == `StringHolder`.");
         }
 

@@ -24,9 +24,9 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
+import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
@@ -34,18 +34,18 @@ import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.SpecDb;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
-import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.expr.StructExprSpec;
+import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
 import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
@@ -54,9 +54,9 @@ import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.NativeMethodSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
@@ -289,20 +289,20 @@ public abstract class AbstractTestingContext {
     return specDb().string();
   }
 
-  public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb().rec(itemSpecs);
+  public TupleSpec tupleSpec(ImmutableList<ValSpec> itemSpecs) {
+    return specDb().tuple(itemSpecs);
   }
 
-  public RecSpec emptyRecSpec() {
-    return recSpec(list());
+  public TupleSpec emptyTupleSpec() {
+    return tupleSpec(list());
   }
 
-  public RecSpec recWithStrSpec() {
-    return recSpec(list(strSpec()));
+  public TupleSpec tupleWithStrSpec() {
+    return tupleSpec(list(strSpec()));
   }
 
-  public RecSpec perso_Spec() {
-    return recSpec(list(strSpec(), strSpec()));
+  public TupleSpec perso_Spec() {
+    return tupleSpec(list(strSpec(), strSpec()));
   }
 
   public StructSpec personSpec() {
@@ -310,8 +310,8 @@ public abstract class AbstractTestingContext {
         namedList(list(named("firstName", strSpec()), named("lastName", strSpec()))));
   }
 
-  public RecSpec fileSpec() {
-    return recSpec(list(blobSpec(), strSpec()));
+  public TupleSpec fileSpec() {
+    return tupleSpec(list(blobSpec(), strSpec()));
   }
 
   public StructSpec structSpec() {
@@ -356,12 +356,12 @@ public abstract class AbstractTestingContext {
     return specDb().const_(evaluationSpec);
   }
 
-  public RecExprSpec recExprSpec() {
-    return recExprSpec(list(intSpec(), strSpec()));
+  public TupleExprSpec tupleExprSpec() {
+    return tupleExprSpec(list(intSpec(), strSpec()));
   }
 
-  public RecExprSpec recExprSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb().recExpr(recSpec(itemSpecs));
+  public TupleExprSpec tupleExprSpec(ImmutableList<ValSpec> itemSpecs) {
+    return specDb().tupleExpr(tupleSpec(itemSpecs));
   }
 
   public SelectSpec selectSpec() {
@@ -455,33 +455,33 @@ public abstract class AbstractTestingContext {
     return objectDb().strVal(string);
   }
 
-  public Struc_ structVal(StructSpec recSpec, ImmutableList<Val> items) {
-    return objectDb().structVal(recSpec, items);
+  public Struc_ structVal(StructSpec spec, ImmutableList<Val> items) {
+    return objectDb().structVal(spec, items);
   }
 
-  public Rec recVal(List<? extends Val> items) {
-    var recSpec = recSpec(map(items, Val::spec));
-    return recVal(recSpec, items);
+  public Tuple tupleVal(List<? extends Val> items) {
+    var spec = tupleSpec(map(items, Val::spec));
+    return tupleVal(spec, items);
   }
 
-  public Rec recVal(RecSpec recSpec, List<? extends Val> items) {
-    return objectDb().recVal(recSpec, items);
+  public Tuple tupleVal(TupleSpec tupleSpec, List<? extends Val> items) {
+    return objectDb().tupleVal(tupleSpec, items);
   }
 
-  public Rec emptyRecVal() {
-    return recVal(list());
+  public Tuple emptyTupleVal() {
+    return tupleVal(list());
   }
 
-  public Rec recWithStrVal() {
-    return recVal(list(strVal("abc")));
+  public Tuple tupleWithStrVal() {
+    return tupleVal(list(strVal("abc")));
   }
 
-  public Rec recWithStrVal(Str str) {
-    return recVal(list(str));
+  public Tuple tupleWithStrVal(Str str) {
+    return tupleVal(list(str));
   }
 
-  public Rec personVal(String firstName, String lastName) {
-    return recVal(list(strVal(firstName), strVal(lastName)));
+  public Tuple personVal(String firstName, String lastName) {
+    return tupleVal(list(strVal(firstName), strVal(lastName)));
   }
 
   public Array messageArrayWithOneError() {
@@ -524,7 +524,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Call callExpr(Expr function, ImmutableList<? extends Expr> arguments) {
-    return objectDb().callExpr(function, recExpr(arguments));
+    return objectDb().callExpr(function, tupleExpr(arguments));
   }
 
   public Const constExpr(Val val) {
@@ -535,12 +535,12 @@ public abstract class AbstractTestingContext {
     return objectDb().arrayExpr(elements);
   }
 
-  public RecExpr recExpr(ImmutableList<? extends Expr> items) {
-    return objectDb().recExpr(items);
+  public TupleExpr tupleExpr(ImmutableList<? extends Expr> items) {
+    return objectDb().tupleExpr(items);
   }
 
-  public Select selectExpr(Expr rec, Int index) {
-    return objectDb().selectExpr(rec, index);
+  public Select selectExpr(Expr tuple, Int index) {
+    return objectDb().selectExpr(tuple, index);
   }
 
   public Const intExpr() {

@@ -9,28 +9,28 @@ import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationSpecOfComponentException;
-import org.smoothbuild.db.object.obj.exc.DecodeRecExprWrongItemsSizeException;
-import org.smoothbuild.db.object.spec.expr.RecExprSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.obj.exc.DecodeTupleExprWrongItemsSizeException;
+import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class RecExpr extends Expr {
-  public RecExpr(MerkleRoot merkleRoot, ObjectDb objectDb) {
+public class TupleExpr extends Expr {
+  public TupleExpr(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof RecExprSpec);
+    checkArgument(merkleRoot.spec() instanceof TupleExprSpec);
   }
 
   @Override
-  public RecExprSpec spec() {
-    return (RecExprSpec) super.spec();
+  public TupleExprSpec spec() {
+    return (TupleExprSpec) super.spec();
   }
 
   @Override
-  public RecSpec evaluationSpec() {
+  public TupleSpec evaluationSpec() {
     return spec().evaluationSpec();
   }
 
@@ -43,7 +43,7 @@ public class RecExpr extends Expr {
         items,
         (s, i) -> Objects.equals(s, i.evaluationSpec()),
         (i, j) -> {
-          throw new DecodeRecExprWrongItemsSizeException(hash(), spec(), j);
+          throw new DecodeTupleExprWrongItemsSizeException(hash(), spec(), j);
         },
         (i) -> {
           throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(),
@@ -55,6 +55,6 @@ public class RecExpr extends Expr {
 
   @Override
   public String valueToString() {
-    return "RecExpr(???)";
+    return "TupleExpr(???)";
   }
 }

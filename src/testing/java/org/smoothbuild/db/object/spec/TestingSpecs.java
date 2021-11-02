@@ -6,8 +6,8 @@ import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.collect.ImmutableList;
@@ -25,15 +25,15 @@ public class TestingSpecs {
   public static final ValSpec INT = SPEC_DB.int_();
   public static final ValSpec NOTHING = SPEC_DB.nothing();
   public static final ValSpec STR = SPEC_DB.string();
-  public static final RecSpec PERSON_REC = CONTEXT.perso_Spec();
+  public static final TupleSpec PERSON_TUPLE = CONTEXT.perso_Spec();
   public static final StructSpec PERSON = CONTEXT.personSpec();
-  public static final RecSpec FILE = CONTEXT.fileSpec();
-  public static final RecSpec EMPTY_REC = CONTEXT.emptyRecSpec();
-  public static final RecSpec REC_WITH_STRING = CONTEXT.recWithStrSpec();
+  public static final TupleSpec FILE = CONTEXT.fileSpec();
+  public static final TupleSpec EMPTY_TUPLE = CONTEXT.emptyTupleSpec();
+  public static final TupleSpec TUPLE_WITH_STRING = CONTEXT.tupleWithStrSpec();
   public static final Spec CALL = CONTEXT.callSpec();
   public static final Spec CONST = CONTEXT.constSpec(STR);
   public static final Spec ARRAY_EXPR = CONTEXT.arrayExprSpec();
-  public static final Spec ERECORD = CONTEXT.recExprSpec(list(INT, STR));
+  public static final Spec TUPLE_EXPR = CONTEXT.tupleExprSpec(list(INT, STR));
   public static final Spec SELECT = CONTEXT.selectSpec(INT);
   public static final Spec REF = CONTEXT.refSpec(INT);
 
@@ -44,7 +44,7 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY_INT = array(INT);
   public static final ArraySpec ARRAY_NOTHING = array(NOTHING);
   public static final ArraySpec ARRAY_STR = array(STR);
-  public static final ArraySpec ARRAY_PERSON_REC = array(PERSON_REC);
+  public static final ArraySpec ARRAY_PERSON_TUPLE = array(PERSON_TUPLE);
   public static final ArraySpec ARRAY_PERSON = array(PERSON);
   public static final ArraySpec ARRAY_VARIABLE = array(VARIABLE);
 
@@ -55,7 +55,7 @@ public class TestingSpecs {
   public static final ArraySpec ARRAY2_INT = array(ARRAY_INT);
   public static final ArraySpec ARRAY2_NOTHING = array(ARRAY_NOTHING);
   public static final ArraySpec ARRAY2_STR = array(ARRAY_STR);
-  public static final ArraySpec ARRAY2_PERSON_REC = array(ARRAY_PERSON_REC);
+  public static final ArraySpec ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
   public static final ArraySpec ARRAY2_PERSON = array(ARRAY_PERSON);
   public static final ArraySpec ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
@@ -66,7 +66,7 @@ public class TestingSpecs {
       INT,
       NOTHING,
       STR,
-      PERSON_REC,
+      PERSON_TUPLE,
 
       ARRAY_BLOB,
       ARRAY_BOOL,
@@ -74,7 +74,7 @@ public class TestingSpecs {
       ARRAY_INT,
       ARRAY_NOTHING,
       ARRAY_STR,
-      ARRAY_PERSON_REC,
+      ARRAY_PERSON_TUPLE,
 
       ARRAY2_BLOB,
       ARRAY2_BOOL,
@@ -82,7 +82,7 @@ public class TestingSpecs {
       ARRAY2_INT,
       ARRAY2_NOTHING,
       ARRAY2_STR,
-      ARRAY2_PERSON_REC
+      ARRAY2_PERSON_TUPLE
   );
 
   private static ArraySpec array(ValSpec elemSpec) {

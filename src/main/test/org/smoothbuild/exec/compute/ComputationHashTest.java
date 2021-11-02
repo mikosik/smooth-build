@@ -124,7 +124,7 @@ public class ComputationHashTest extends TestingContextImpl {
   }
 
   @Test
-  public void hash_of_computation_with_read_rec_item_algorithm_and_one_element_input_is_stable() {
+  public void hash_of_computation_with_read_tuple_item_algorithm_and_one_element_input_is_stable() {
     Algorithm algorithm = new ReadStructItemAlgorithm(0, STR);
     Input input = input(list(strVal("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))

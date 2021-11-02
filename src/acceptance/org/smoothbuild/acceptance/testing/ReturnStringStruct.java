@@ -9,11 +9,11 @@ import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.plugin.NativeApi;
 
-public class ReturnStringRec {
+public class ReturnStringStruct {
   public static Struc_ function(NativeApi nativeApi) {
     ObjectFactory factory = nativeApi.factory();
-    StructSpec recSpec =
+    StructSpec spec =
         factory.structSpec("StringHolder", namedList(list(named("field", factory.stringSpec()))));
-    return factory.struct(recSpec, list(factory.string("abc")));
+    return factory.struct(spec, list(factory.string("abc")));
   }
 }

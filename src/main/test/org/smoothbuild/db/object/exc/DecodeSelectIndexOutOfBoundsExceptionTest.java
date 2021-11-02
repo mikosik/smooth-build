@@ -15,6 +15,6 @@ public class DecodeSelectIndexOutOfBoundsExceptionTest extends TestingContextImp
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT:Int` object "
             + "at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "
-            + "Its index component is 13 while RECORD size is 10.");
+            + "Its index component is 13 while TUPLE size is 10.");
   }
 }

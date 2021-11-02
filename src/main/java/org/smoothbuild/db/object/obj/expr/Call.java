@@ -31,22 +31,22 @@ public class Call extends Expr {
 
   public CallData data() {
     Expr function = readFunction();
-    RecExpr arguments = readArguments();
+    TupleExpr arguments = readArguments();
     validate(function, arguments);
     return new CallData(function, arguments);
   }
 
-  public record CallData(Expr function, RecExpr arguments) {}
+  public record CallData(Expr function, TupleExpr arguments) {}
 
-  private void validate(Expr function, RecExpr arguments) {
+  private void validate(Expr function, TupleExpr arguments) {
     if (function.evaluationSpec() instanceof LambdaSpec lambdaSpec) {
       if (!Objects.equals(evaluationSpec(), lambdaSpec.result())) {
         throw new DecodeExprWrongEvaluationSpecOfComponentException(
             hash(), spec(), "function.result", evaluationSpec(), lambdaSpec.result());
       }
-      if (!Objects.equals(lambdaSpec.parametersRec(), arguments.spec().evaluationSpec())) {
+      if (!Objects.equals(lambdaSpec.parametersTuple(), arguments.spec().evaluationSpec())) {
         throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(), "arguments",
-            lambdaSpec.parametersRec(), arguments.spec().evaluationSpec());
+            lambdaSpec.parametersTuple(), arguments.spec().evaluationSpec());
       }
     } else {
       throw new DecodeExprWrongEvaluationSpecOfComponentException(
@@ -59,9 +59,9 @@ public class Call extends Expr {
         DATA_PATH, dataHash(), FUNCTION_INDEX, DATA_SEQUENCE_SIZE, Expr.class);
   }
 
-  private RecExpr readArguments() {
+  private TupleExpr readArguments() {
     return readSequenceElementObj(
-        DATA_PATH, dataHash(), ARGUMENTS_INDEX, DATA_SEQUENCE_SIZE, RecExpr.class);
+        DATA_PATH, dataHash(), ARGUMENTS_INDEX, DATA_SEQUENCE_SIZE, TupleExpr.class);
   }
 
   @Override

@@ -15,12 +15,12 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
-import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
-import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
+import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE;
+import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -54,8 +54,8 @@ import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
@@ -340,12 +340,12 @@ public class CorruptedSpecTest extends TestingContextImpl {
        * to save lambda spec in HashedDb.
        */
       ImmutableList<ValSpec> parameterSpecs = list(strSpec(), boolSpec());
-      RecSpec parameterRec = recSpec(parameterSpecs);
+      TupleSpec parametersTuple = tupleSpec(parameterSpecs);
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
               hash(intSpec()),
-              hash(parameterRec)
+              hash(parametersTuple)
           )
       );
       assertThat(specHash)
@@ -381,7 +381,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_data_having_three_elements() throws Exception {
-      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      TupleSpec parameterSpecs = tupleSpec(list(strSpec(), boolSpec()));
       Hash hash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -423,7 +423,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_result_pointing_nowhere() throws Exception {
-      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      TupleSpec parameterSpecs = tupleSpec(list(strSpec(), boolSpec()));
       Hash nowhere = Hash.of(33);
       Hash specHash = hash(
           hash(LAMBDA.marker()),
@@ -439,7 +439,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_result_being_expr_spec() throws Exception {
-      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      TupleSpec parameterSpecs = tupleSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -454,7 +454,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_result_spec_corrupted() throws Exception {
-      RecSpec parameterSpecs = recSpec(list(strSpec(), boolSpec()));
+      TupleSpec parameterSpecs = tupleSpec(list(strSpec(), boolSpec()));
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -483,7 +483,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
     }
 
     @Test
-    public void with_parameters_not_being_rec() throws Exception {
+    public void with_parameters_not_being_tuple() throws Exception {
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -493,7 +493,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
       );
       assertThatGetSpec(specHash)
           .throwsException(new UnexpectedSpecNodeException(
-              specHash, LAMBDA, DATA_PATH, 1, RecSpec.class, StrSpec.class));
+              specHash, LAMBDA, DATA_PATH, 1, TupleSpec.class, StrSpec.class));
     }
 
     @Test
@@ -507,7 +507,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
       );
       assertCall(() -> specDb().get(specHash))
           .throwsException(new UnexpectedSpecNodeException(
-              specHash, LAMBDA, LAMBDA_PARAMS_PATH, RecSpec.class, ConstSpec.class));
+              specHash, LAMBDA, LAMBDA_PARAMS_PATH, TupleSpec.class, ConstSpec.class));
     }
 
     @Test
@@ -526,15 +526,15 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _rec_spec {
+  class _tuple_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save rec spec in HashedDb.
+       * to save tuple spec in HashedDb.
        */
       Hash hash = hash(
-          hash(RECORD.marker()),
+          hash(TUPLE.marker()),
           hash(
               hash(strSpec()),
               hash(strSpec())
@@ -546,17 +546,17 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void without_data() throws Exception {
-      test_spec_without_data(RECORD);
+      test_spec_without_data(TUPLE);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(RECORD);
+      test_spec_with_additional_data(TUPLE);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_sequence(RECORD);
+      test_data_hash_pointing_nowhere_instead_of_being_sequence(TUPLE);
     }
 
     @Test
@@ -564,11 +564,11 @@ public class CorruptedSpecTest extends TestingContextImpl {
       Hash notSequence = hash("abc");
       Hash hash =
           hash(
-              hash(RECORD.marker()),
+              hash(TUPLE.marker()),
               notSequence
           );
       assertThatGetSpec(hash)
-          .throwsException(new DecodeSpecNodeException(hash, RECORD, DATA_PATH));
+          .throwsException(new DecodeSpecNodeException(hash, TUPLE, DATA_PATH));
     }
 
     @Test
@@ -576,13 +576,13 @@ public class CorruptedSpecTest extends TestingContextImpl {
       Hash stringHash = hash(strVal("abc"));
       Hash hash =
           hash(
-              hash(RECORD.marker()),
+              hash(TUPLE.marker()),
               hash(
                   stringHash
               )
           );
       assertThatGetSpec(hash)
-          .throwsException(new DecodeSpecNodeException(hash, RECORD, "data[0]"))
+          .throwsException(new DecodeSpecNodeException(hash, TUPLE, "data[0]"))
           .withCause(new DecodeSpecException(stringHash));
     }
 
@@ -590,80 +590,80 @@ public class CorruptedSpecTest extends TestingContextImpl {
     public void with_elements_being_sequence_of_expr_spec() throws Exception {
       Hash hash =
           hash(
-              hash(RECORD.marker()),
+              hash(TUPLE.marker()),
               hash(
                   hash(constSpec())
               )
           );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecNodeException(
-              hash, RECORD, "data", 0, ValSpec.class, ConstSpec.class));
+              hash, TUPLE, "data", 0, ValSpec.class, ConstSpec.class));
     }
 
     @Test
     public void with_corrupted_element_spec() throws Exception {
       Hash hash =
           hash(
-              hash(RECORD.marker()),
+              hash(TUPLE.marker()),
               hash(
                   corruptedArraySpecHash(),
                   hash(strSpec())));
       assertThatGetSpec(hash)
-          .throwsException(new DecodeSpecNodeException(hash, RECORD, "data[0]"))
+          .throwsException(new DecodeSpecNodeException(hash, TUPLE, "data[0]"))
           .withCause(corruptedArraySpecException());
     }
   }
 
   @Nested
-  class _record_expr_spec {
+  class _tuple_expr_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save recordExpr spec in HashedDb.
+       * to save tupleExpr spec in HashedDb.
        */
       Hash hash = hash(
-          hash(RECORD_EXPR.marker()),
-          hash(recSpec(list(intSpec(), strSpec())))
+          hash(TUPLE_EXPR.marker()),
+          hash(tupleSpec(list(intSpec(), strSpec())))
       );
       assertThat(hash)
-          .isEqualTo(recExprSpec(list(intSpec(), strSpec())).hash());
+          .isEqualTo(tupleExprSpec(list(intSpec(), strSpec())).hash());
     }
 
     @Test
     public void without_data() throws Exception {
-      test_spec_without_data(RECORD_EXPR);
+      test_spec_without_data(TUPLE_EXPR);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(RECORD_EXPR);
+      test_spec_with_additional_data(TUPLE_EXPR);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(RECORD_EXPR);
+      test_data_hash_pointing_nowhere_instead_of_being_spec(TUPLE_EXPR);
     }
 
     @Test
     public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(RECORD_EXPR);
+      test_spec_with_corrupted_spec_as_data(TUPLE_EXPR);
     }
 
     @Test
     public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(RECORD_EXPR, RecSpec.class);
+      test_spec_with_data_spec_being_expr_spec(TUPLE_EXPR, TupleSpec.class);
     }
 
     @Test
-    public void with_evaluation_spec_not_being_rec_spec() throws Exception {
+    public void with_evaluation_spec_not_being_tuple_spec() throws Exception {
       Hash hash = hash(
-          hash(RECORD_EXPR.marker()),
+          hash(TUPLE_EXPR.marker()),
           hash(intSpec())
       );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecNodeException(
-              hash, RECORD_EXPR, DATA_PATH, RecSpec.class, IntSpec.class));
+              hash, TUPLE_EXPR, DATA_PATH, TupleSpec.class, IntSpec.class));
     }
   }
 

@@ -7,25 +7,23 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 
 import com.google.common.collect.ImmutableList;
 
 /**
- * Record.
- *
  * This class is immutable.
  */
-public class Rec extends Val {
+public class Tuple extends Val {
   private ImmutableList<Val> items;
 
-  public Rec(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Tuple(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
   }
 
   @Override
-  public RecSpec spec() {
-    return (RecSpec) super.spec();
+  public TupleSpec spec() {
+    return (TupleSpec) super.spec();
   }
 
   public Val get(int index) {

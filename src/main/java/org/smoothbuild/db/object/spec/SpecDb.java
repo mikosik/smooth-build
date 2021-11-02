@@ -18,13 +18,13 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
-import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD;
-import static org.smoothbuild.db.object.spec.base.SpecKind.RECORD_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT_EXPR;
+import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE;
+import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
@@ -55,10 +55,10 @@ import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.InvokeSpec;
-import org.smoothbuild.db.object.spec.expr.RecExprSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.expr.StructExprSpec;
+import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
 import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
@@ -67,9 +67,9 @@ import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.NativeMethodSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
@@ -152,7 +152,7 @@ public class SpecDb implements TypeFactory {
   @Override
   public LambdaSpec function(Type result, ImmutableList<? extends Type> parameters) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newLambdaSpec((ValSpec) result, rec((ImmutableList<ValSpec>) parameters)));
+        () -> newLambdaSpec((ValSpec) result, tuple((ImmutableList<ValSpec>) parameters)));
   }
 
   @Override
@@ -169,8 +169,8 @@ public class SpecDb implements TypeFactory {
     return nothing;
   }
 
-  public RecSpec rec(ImmutableList<ValSpec> itemSpecs) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRecSpec(itemSpecs));
+  public TupleSpec tuple(ImmutableList<ValSpec> itemSpecs) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTupleSpec(itemSpecs));
   }
 
   @Override
@@ -208,8 +208,8 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvokeSpec(evaluationSpec));
   }
 
-  public RecExprSpec recExpr(RecSpec evaluationSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRecExprSpec(evaluationSpec));
+  public TupleExprSpec tupleExpr(TupleSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTupleExprSpec(evaluationSpec));
   }
 
   public RefSpec ref(ValSpec evaluationSpec) {
@@ -246,8 +246,8 @@ public class SpecDb implements TypeFactory {
       case INVOKE -> newInvokeSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
-      case RECORD_EXPR -> newRecExprSpec(hash, getDataAsRecSpec(hash, rootSequence, specKind));
-      case RECORD -> readRecord(hash, rootSequence);
+      case TUPLE_EXPR -> newTupleExprSpec(hash, getDataAsTupleSpec(hash, rootSequence, specKind));
+      case TUPLE -> readTuple(hash, rootSequence);
       case SELECT -> newSelectSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case STRUCT -> readStructSpec(hash, rootSequence);
       case STRUCT_EXPR -> newStructExprSpec(hash, getDataAsStructSpec(hash, rootSequence, specKind));
@@ -290,8 +290,8 @@ public class SpecDb implements TypeFactory {
     return getDataAsSpecCastedTo(rootHash, rootSequence, specKind, ArraySpec.class);
   }
 
-  private RecSpec getDataAsRecSpec(Hash rootHash, List<Hash> rootSequence, SpecKind specKind) {
-    return getDataAsSpecCastedTo(rootHash, rootSequence, specKind, RecSpec.class);
+  private TupleSpec getDataAsTupleSpec(Hash rootHash, List<Hash> rootSequence, SpecKind specKind) {
+    return getDataAsSpecCastedTo(rootHash, rootSequence, specKind, TupleSpec.class);
   }
 
   private StructSpec getDataAsStructSpec(
@@ -315,22 +315,22 @@ public class SpecDb implements TypeFactory {
     }
     ValSpec result = readInnerSpec(specKind, rootHash, data.get(LAMBDA_RESULT_INDEX),
         LAMBDA_RESULT_PATH, ValSpec.class);
-    RecSpec parameters = readInnerSpec(specKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
-        LAMBDA_PARAMS_PATH, RecSpec.class);
+    TupleSpec parameters = readInnerSpec(specKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
+        LAMBDA_PARAMS_PATH, TupleSpec.class);
     return newLambdaSpec(rootHash, result, parameters);
   }
 
-  private RecSpec readRecord(Hash rootHash, List<Hash> rootSequence) {
-    assertSpecRootSequenceSize(rootHash, RECORD, rootSequence, 2);
-    ImmutableList<ValSpec> items = readRecSpecItemSpecs(rootHash, rootSequence.get(DATA_INDEX));
-    return newRecSpec(rootHash, items);
+  private TupleSpec readTuple(Hash rootHash, List<Hash> rootSequence) {
+    assertSpecRootSequenceSize(rootHash, TUPLE, rootSequence, 2);
+    var items = readTupleSpecItemSpecs(rootHash, rootSequence.get(DATA_INDEX));
+    return newTupleSpec(rootHash, items);
   }
 
-  private ImmutableList<ValSpec> readRecSpecItemSpecs(Hash rootHash, Hash hash) {
+  private ImmutableList<ValSpec> readTupleSpecItemSpecs(Hash rootHash, Hash hash) {
     var builder = ImmutableList.<ValSpec>builder();
-    var itemSpecHashes = readSequenceHashes(rootHash, hash, RECORD, DATA_PATH);
+    var itemSpecHashes = readSequenceHashes(rootHash, hash, TUPLE, DATA_PATH);
     for (int i = 0; i < itemSpecHashes.size(); i++) {
-      builder.add(readInnerSpec(RECORD, rootHash, itemSpecHashes.get(i), DATA_PATH, i));
+      builder.add(readInnerSpec(TUPLE, rootHash, itemSpecHashes.get(i), DATA_PATH, i));
     }
     return builder.build();
   }
@@ -426,22 +426,22 @@ public class SpecDb implements TypeFactory {
     return cache(new ArraySpec(rootHash, elementSpec));
   }
 
-  private LambdaSpec newLambdaSpec(ValSpec result, RecSpec parameters) throws HashedDbException {
+  private LambdaSpec newLambdaSpec(ValSpec result, TupleSpec parameters) throws HashedDbException {
     var rootHash = writeLambdaSpecRoot(result, parameters);
     return newLambdaSpec(rootHash, result, parameters);
   }
 
-  private LambdaSpec newLambdaSpec(Hash rootHash, ValSpec result, RecSpec parameters) {
+  private LambdaSpec newLambdaSpec(Hash rootHash, ValSpec result, TupleSpec parameters) {
     return cache(new LambdaSpec(rootHash, result, parameters));
   }
 
-  private RecSpec newRecSpec(ImmutableList<ValSpec> itemSpecs) throws HashedDbException {
-    var hash = writeRecSpecRoot(itemSpecs);
-    return newRecSpec(hash, itemSpecs);
+  private TupleSpec newTupleSpec(ImmutableList<ValSpec> itemSpecs) throws HashedDbException {
+    var hash = writeTupleSpecRoot(itemSpecs);
+    return newTupleSpec(hash, itemSpecs);
   }
 
-  private RecSpec newRecSpec(Hash rootHash, ImmutableList<? extends ValSpec> itemSpecs) {
-    return cache(new RecSpec(rootHash, itemSpecs));
+  private TupleSpec newTupleSpec(Hash rootHash, ImmutableList<? extends ValSpec> itemSpecs) {
+    return cache(new TupleSpec(rootHash, itemSpecs));
   }
 
   private StructSpec newStructSpec(String name, NamedList<ValSpec> fields)
@@ -502,13 +502,13 @@ public class SpecDb implements TypeFactory {
     return cache(new InvokeSpec(rootHash, evaluationSpec));
   }
 
-  private RecExprSpec newRecExprSpec(RecSpec evaluationSpec) throws HashedDbException {
-    var rootHash = writeExprSpecRoot(RECORD_EXPR, evaluationSpec);
-    return newRecExprSpec(rootHash, evaluationSpec);
+  private TupleExprSpec newTupleExprSpec(TupleSpec evaluationSpec) throws HashedDbException {
+    var rootHash = writeExprSpecRoot(TUPLE_EXPR, evaluationSpec);
+    return newTupleExprSpec(rootHash, evaluationSpec);
   }
 
-  private RecExprSpec newRecExprSpec(Hash rootHash, RecSpec evaluationSpec) {
-    return cache(new RecExprSpec(rootHash, evaluationSpec));
+  private TupleExprSpec newTupleExprSpec(Hash rootHash, TupleSpec evaluationSpec) {
+    return cache(new TupleExprSpec(rootHash, evaluationSpec));
   }
 
   private RefSpec newRefSpec(ValSpec evaluationSpec) throws HashedDbException {
@@ -550,14 +550,14 @@ public class SpecDb implements TypeFactory {
     return writeNonBaseSpecRoot(ARRAY, elementSpec.hash());
   }
 
-  private Hash writeLambdaSpecRoot(ValSpec result, RecSpec parameters) throws HashedDbException {
+  private Hash writeLambdaSpecRoot(ValSpec result, TupleSpec parameters) throws HashedDbException {
     var hash = hashedDb.writeSequence(result.hash(), parameters.hash());
     return writeNonBaseSpecRoot(LAMBDA, hash);
   }
 
-  private Hash writeRecSpecRoot(ImmutableList<? extends Spec> itemSpecs) throws HashedDbException {
+  private Hash writeTupleSpecRoot(ImmutableList<? extends Spec> itemSpecs) throws HashedDbException {
     var itemsHash = hashedDb.writeSequence(map(itemSpecs, Spec::hash));
-    return writeNonBaseSpecRoot(RECORD, itemsHash);
+    return writeNonBaseSpecRoot(TUPLE, itemsHash);
   }
 
   private Hash writeStructSpecRoot(String name, NamedList<ValSpec> fields)

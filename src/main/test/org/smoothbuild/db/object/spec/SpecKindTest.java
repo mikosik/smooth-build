@@ -35,7 +35,7 @@ public class SpecKindTest {
         Arguments.of(4, SpecKind.INT),
         Arguments.of(5, SpecKind.STRUCT),
         Arguments.of(6, SpecKind.NOTHING),
-        Arguments.of(7, SpecKind.RECORD),
+        Arguments.of(7, SpecKind.TUPLE),
         Arguments.of(8, SpecKind.STRING),
 
         Arguments.of(9, SpecKind.CALL),
@@ -43,7 +43,7 @@ public class SpecKindTest {
         Arguments.of(11, SpecKind.ARRAY_EXPR),
         Arguments.of(12, SpecKind.SELECT),
         Arguments.of(14, SpecKind.REF),
-        Arguments.of(15, SpecKind.RECORD_EXPR),
+        Arguments.of(15, SpecKind.TUPLE_EXPR),
         Arguments.of(17, SpecKind.VARIABLE),
         Arguments.of(18, SpecKind.ANY),
         Arguments.of(19, SpecKind.NATIVE_METHOD),

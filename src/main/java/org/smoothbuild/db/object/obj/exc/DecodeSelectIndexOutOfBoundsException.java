@@ -9,7 +9,7 @@ public class DecodeSelectIndexOutOfBoundsException extends DecodeObjException {
   }
 
   private static String buildMessage(Hash hash, Spec spec, int index, int size) {
-    return "Cannot decode %s object at %s. Its index component is %s while RECORD size is %s."
+    return "Cannot decode %s object at %s. Its index component is %s while TUPLE size is %s."
         .formatted(spec.q(), hash, index, size);
   }
 }

@@ -23,19 +23,19 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.RecExpr;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
+import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
-import org.smoothbuild.db.object.obj.val.Rec;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.SpecDb;
 import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.StructExprSpec;
@@ -45,9 +45,9 @@ import org.smoothbuild.db.object.spec.val.BoolSpec;
 import org.smoothbuild.db.object.spec.val.IntSpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.NothingSpec;
-import org.smoothbuild.db.object.spec.val.RecSpec;
 import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.collect.NamedList;
@@ -126,15 +126,15 @@ public class ObjectFactory {
     return objectDb.structVal(structSpec, items);
   }
 
-  public Rec rec(RecSpec spec, Iterable<? extends Obj> items) {
-    return objectDb.recVal(spec, items);
+  public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> items) {
+    return objectDb.tupleVal(spec, items);
   }
 
   public Const constExpr(Val val) {
     return objectDb.constExpr(val);
   }
 
-  public Call callExpr(Expr function, RecExpr arguments) {
+  public Call callExpr(Expr function, TupleExpr arguments) {
     return objectDb.callExpr(function, arguments);
   }
 
@@ -142,8 +142,8 @@ public class ObjectFactory {
     return objectDb.arrayExpr(elements);
   }
 
-  public Select selectExpr(Expr rec, Int index) {
-    return objectDb.selectExpr(rec, index);
+  public Select selectExpr(Expr struct, Int index) {
+    return objectDb.selectExpr(struct, index);
   }
 
   public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
@@ -189,8 +189,8 @@ public class ObjectFactory {
     return specDb.string();
   }
 
-  public RecSpec recSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb.rec(itemSpecs);
+  public TupleSpec tupleSpec(ImmutableList<ValSpec> itemSpecs) {
+    return specDb.tuple(itemSpecs);
   }
 
   public StructSpec structSpec(String name, NamedList<? extends Type> fields) {
