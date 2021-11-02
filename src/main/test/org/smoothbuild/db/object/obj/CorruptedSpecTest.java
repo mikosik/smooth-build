@@ -87,7 +87,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _base_spec {
+  class _base {
     @Test
     public void learn_creating_base_spec() throws Exception {
       /*
@@ -147,60 +147,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _order_spec {
-    @Test
-    public void learn_creating_spec() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save Order expr spec in HashedDb.
-       */
-      Hash hash = hash(
-          hash(ORDER.marker()),
-          hash(arraySpec(intSpec()))
-      );
-      assertThat(hash)
-          .isEqualTo(orderSpec(intSpec()).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_spec_without_data(ORDER);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(ORDER);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(ORDER);
-    }
-
-    @Test
-    public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(ORDER);
-    }
-
-    @Test
-    public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(ORDER, ArraySpec.class);
-    }
-
-    @Test
-    public void with_evaluation_spec_not_being_array_spec() throws Exception {
-      Hash hash = hash(
-          hash(ORDER.marker()),
-          hash(intSpec())
-      );
-      assertThatGetSpec(hash)
-          .throwsException(new UnexpectedSpecNodeException(
-              hash, ORDER, DATA_PATH, ArraySpec.class, IntSpec.class));
-    }
-  }
-
-  @Nested
-  class _array_spec {
+  class _array {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -248,7 +195,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _call_spec {
+  class _call {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -290,7 +237,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _const_spec {
+  class _const {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -332,7 +279,60 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _lambda_spec {
+  class _construct {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save Construct spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(CONSTRUCT.marker()),
+          hash(tupleSpec(list(intSpec(), stringSpec())))
+      );
+      assertThat(hash)
+          .isEqualTo(constructSpec(list(intSpec(), stringSpec())).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(CONSTRUCT);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(CONSTRUCT);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_spec(CONSTRUCT);
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      test_spec_with_corrupted_spec_as_data(CONSTRUCT);
+    }
+
+    @Test
+    public void with_evaluation_spec_being_expr_spec() throws Exception {
+      test_spec_with_data_spec_being_expr_spec(CONSTRUCT, TupleSpec.class);
+    }
+
+    @Test
+    public void with_evaluation_spec_not_being_tuple_spec() throws Exception {
+      Hash hash = hash(
+          hash(CONSTRUCT.marker()),
+          hash(intSpec())
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new UnexpectedSpecNodeException(
+              hash, CONSTRUCT, DATA_PATH, TupleSpec.class, IntSpec.class));
+    }
+  }
+
+  @Nested
+  class _lambda {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -526,149 +526,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _tuple_spec {
-    @Test
-    public void learn_creating_spec() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save tuple spec in HashedDb.
-       */
-      Hash hash = hash(
-          hash(TUPLE.marker()),
-          hash(
-              hash(stringSpec()),
-              hash(stringSpec())
-          )
-      );
-      assertThat(hash)
-          .isEqualTo(perso_Spec().hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_spec_without_data(TUPLE);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(TUPLE);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_sequence(TUPLE);
-    }
-
-    @Test
-    public void with_elements_not_being_sequence_of_hashes() throws Exception {
-      Hash notSequence = hash("abc");
-      Hash hash =
-          hash(
-              hash(TUPLE.marker()),
-              notSequence
-          );
-      assertThatGetSpec(hash)
-          .throwsException(new DecodeSpecNodeException(hash, TUPLE, DATA_PATH));
-    }
-
-    @Test
-    public void with_elements_being_array_of_non_spec() throws Exception {
-      Hash stringHash = hash(string("abc"));
-      Hash hash =
-          hash(
-              hash(TUPLE.marker()),
-              hash(
-                  stringHash
-              )
-          );
-      assertThatGetSpec(hash)
-          .throwsException(new DecodeSpecNodeException(hash, TUPLE, "data[0]"))
-          .withCause(new DecodeSpecException(stringHash));
-    }
-
-    @Test
-    public void with_elements_being_sequence_of_expr_spec() throws Exception {
-      Hash hash =
-          hash(
-              hash(TUPLE.marker()),
-              hash(
-                  hash(constSpec())
-              )
-          );
-      assertThatGetSpec(hash)
-          .throwsException(new UnexpectedSpecNodeException(
-              hash, TUPLE, "data", 0, ValSpec.class, ConstSpec.class));
-    }
-
-    @Test
-    public void with_corrupted_element_spec() throws Exception {
-      Hash hash =
-          hash(
-              hash(TUPLE.marker()),
-              hash(
-                  corruptedArraySpecHash(),
-                  hash(stringSpec())));
-      assertThatGetSpec(hash)
-          .throwsException(new DecodeSpecNodeException(hash, TUPLE, "data[0]"))
-          .withCause(corruptedArraySpecException());
-    }
-  }
-
-  @Nested
-  class _construct_spec {
-    @Test
-    public void learn_creating_spec() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save Construct spec in HashedDb.
-       */
-      Hash hash = hash(
-          hash(CONSTRUCT.marker()),
-          hash(tupleSpec(list(intSpec(), stringSpec())))
-      );
-      assertThat(hash)
-          .isEqualTo(constructSpec(list(intSpec(), stringSpec())).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_spec_without_data(CONSTRUCT);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(CONSTRUCT);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(CONSTRUCT);
-    }
-
-    @Test
-    public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(CONSTRUCT);
-    }
-
-    @Test
-    public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(CONSTRUCT, TupleSpec.class);
-    }
-
-    @Test
-    public void with_evaluation_spec_not_being_tuple_spec() throws Exception {
-      Hash hash = hash(
-          hash(CONSTRUCT.marker()),
-          hash(intSpec())
-      );
-      assertThatGetSpec(hash)
-          .throwsException(new UnexpectedSpecNodeException(
-              hash, CONSTRUCT, DATA_PATH, TupleSpec.class, IntSpec.class));
-    }
-  }
-
-  @Nested
-  class _ref_spec {
+  class _ref {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -830,7 +688,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _select_spec {
+  class _select {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -872,7 +730,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _struct_spec {
+  class _struct {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
@@ -1114,7 +972,149 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _variable_spec {
+  class _tuple {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save tuple spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(TUPLE.marker()),
+          hash(
+              hash(stringSpec()),
+              hash(stringSpec())
+          )
+      );
+      assertThat(hash)
+          .isEqualTo(perso_Spec().hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(TUPLE);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(TUPLE);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_sequence(TUPLE);
+    }
+
+    @Test
+    public void with_elements_not_being_sequence_of_hashes() throws Exception {
+      Hash notSequence = hash("abc");
+      Hash hash =
+          hash(
+              hash(TUPLE.marker()),
+              notSequence
+          );
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeSpecNodeException(hash, TUPLE, DATA_PATH));
+    }
+
+    @Test
+    public void with_elements_being_array_of_non_spec() throws Exception {
+      Hash stringHash = hash(string("abc"));
+      Hash hash =
+          hash(
+              hash(TUPLE.marker()),
+              hash(
+                  stringHash
+              )
+          );
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeSpecNodeException(hash, TUPLE, "data[0]"))
+          .withCause(new DecodeSpecException(stringHash));
+    }
+
+    @Test
+    public void with_elements_being_sequence_of_expr_spec() throws Exception {
+      Hash hash =
+          hash(
+              hash(TUPLE.marker()),
+              hash(
+                  hash(constSpec())
+              )
+          );
+      assertThatGetSpec(hash)
+          .throwsException(new UnexpectedSpecNodeException(
+              hash, TUPLE, "data", 0, ValSpec.class, ConstSpec.class));
+    }
+
+    @Test
+    public void with_corrupted_element_spec() throws Exception {
+      Hash hash =
+          hash(
+              hash(TUPLE.marker()),
+              hash(
+                  corruptedArraySpecHash(),
+                  hash(stringSpec())));
+      assertThatGetSpec(hash)
+          .throwsException(new DecodeSpecNodeException(hash, TUPLE, "data[0]"))
+          .withCause(corruptedArraySpecException());
+    }
+  }
+
+  @Nested
+  class _order {
+    @Test
+    public void learn_creating_spec() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save Order expr spec in HashedDb.
+       */
+      Hash hash = hash(
+          hash(ORDER.marker()),
+          hash(arraySpec(intSpec()))
+      );
+      assertThat(hash)
+          .isEqualTo(orderSpec(intSpec()).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_spec_without_data(ORDER);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_spec_with_additional_data(ORDER);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_spec(ORDER);
+    }
+
+    @Test
+    public void with_corrupted_spec_as_data() throws Exception {
+      test_spec_with_corrupted_spec_as_data(ORDER);
+    }
+
+    @Test
+    public void with_evaluation_spec_being_expr_spec() throws Exception {
+      test_spec_with_data_spec_being_expr_spec(ORDER, ArraySpec.class);
+    }
+
+    @Test
+    public void with_evaluation_spec_not_being_array_spec() throws Exception {
+      Hash hash = hash(
+          hash(ORDER.marker()),
+          hash(intSpec())
+      );
+      assertThatGetSpec(hash)
+          .throwsException(new UnexpectedSpecNodeException(
+              hash, ORDER, DATA_PATH, ArraySpec.class, IntSpec.class));
+    }
+  }
+
+  @Nested
+  class _variable {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
