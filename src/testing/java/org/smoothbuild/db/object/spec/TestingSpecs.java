@@ -32,7 +32,7 @@ public class TestingSpecs {
   public static final TupleSpec TUPLE_WITH_STRING = CONTEXT.tupleWithStrSpec();
   public static final Spec CALL = CONTEXT.callSpec();
   public static final Spec CONST = CONTEXT.constSpec(STR);
-  public static final Spec ARRAY_EXPR = CONTEXT.arrayExprSpec();
+  public static final Spec ORDER = CONTEXT.orderSpec();
   public static final Spec CONSTRUCT = CONTEXT.constructSpec(list(INT, STR));
   public static final Spec SELECT = CONTEXT.selectSpec(INT);
   public static final Spec REF = CONTEXT.refSpec(INT);

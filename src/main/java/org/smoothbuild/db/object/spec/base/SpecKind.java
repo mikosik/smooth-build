@@ -1,10 +1,10 @@
 package org.smoothbuild.db.object.spec.base;
 
 import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Construct;
+import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
@@ -34,7 +34,7 @@ public enum SpecKind {
   // Expr-s
   CALL((byte) 9, Call.class),
   CONST((byte) 10, Const.class),
-  ARRAY_EXPR((byte) 11, ArrayExpr.class),
+  ORDER((byte) 11, Order.class),
   SELECT((byte) 12, Select.class),
   REF((byte) 14, Ref.class),
   CONSTRUCT((byte) 15, Construct.class),
@@ -59,7 +59,7 @@ public enum SpecKind {
 
           .put((byte) 9, CALL)
           .put((byte) 10, CONST)
-          .put((byte) 11, ARRAY_EXPR)
+          .put((byte) 11, ORDER)
           .put((byte) 12, SELECT)
           .put((byte) 14, REF)
           .put((byte) 15, CONSTRUCT)

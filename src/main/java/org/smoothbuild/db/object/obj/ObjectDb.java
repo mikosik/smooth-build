@@ -24,11 +24,11 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.DecodeObjSpecException;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
-import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.obj.expr.Invoke;
+import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
@@ -153,8 +153,8 @@ public class ObjectDb {
         () -> newInvokeExpr(evaluationSpec, nativeMethod, isPure, argumentCount));
   }
 
-  public ArrayExpr arrayExpr(List<? extends Expr> elements) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExpr(elements));
+  public Order order(List<? extends Expr> elements) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elements));
   }
 
   public Construct construct(ImmutableList<? extends Expr> items) {
@@ -249,10 +249,10 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private ArrayExpr newArrayExpr(List<? extends Expr> elements) throws HashedDbException {
+  private Order newOrder(List<? extends Expr> elements) throws HashedDbException {
     ValSpec elementSpec = elementSpec(elements);
-    var spec = specDb.arrayExpr(elementSpec);
-    var data = writeArrayExprData(elements);
+    var spec = specDb.order(elementSpec);
+    var data = writeOrderData(elements);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -419,7 +419,7 @@ public class ObjectDb {
     return hashedDb.writeSequence(nativeMethod.hash(), isPure.hash(), argumentCount.hash());
   }
 
-  private Hash writeArrayExprData(List<? extends Expr> elements) throws HashedDbException {
+  private Hash writeOrderData(List<? extends Expr> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 

@@ -20,10 +20,10 @@ import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Construct;
+import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
@@ -138,8 +138,8 @@ public class ObjectFactory {
     return objectDb.callExpr(function, arguments);
   }
 
-  public ArrayExpr arrayExpr(List<? extends Expr> elements) {
-    return objectDb.arrayExpr(elements);
+  public Order order(List<? extends Expr> elements) {
+    return objectDb.order(elements);
   }
 
   public Select selectExpr(Expr struct, Int index) {

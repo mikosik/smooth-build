@@ -43,7 +43,7 @@ public class SpecCachingTest extends TestingContextImpl {
 
         specDb -> specDb.call(specDb.int_()),
         specDb -> specDb.const_(specDb.int_()),
-        specDb -> specDb.arrayExpr(specDb.int_()),
+        specDb -> specDb.order(specDb.int_()),
         specDb -> specDb.select(specDb.int_()),
         specDb -> specDb.ref(specDb.int_()),
 

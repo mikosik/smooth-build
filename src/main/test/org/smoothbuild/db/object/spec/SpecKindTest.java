@@ -40,7 +40,7 @@ public class SpecKindTest {
 
         Arguments.of(9, SpecKind.CALL),
         Arguments.of(10, SpecKind.CONST),
-        Arguments.of(11, SpecKind.ARRAY_EXPR),
+        Arguments.of(11, SpecKind.ORDER),
         Arguments.of(12, SpecKind.SELECT),
         Arguments.of(14, SpecKind.REF),
         Arguments.of(15, SpecKind.CONSTRUCT),

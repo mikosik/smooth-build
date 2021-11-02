@@ -6,7 +6,6 @@ import static org.smoothbuild.db.object.spec.SpecDb.LAMBDA_PARAMS_PATH;
 import static org.smoothbuild.db.object.spec.SpecDb.LAMBDA_RESULT_PATH;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
-import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
@@ -16,6 +15,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ORDER;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
@@ -147,55 +147,55 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _array_expr_spec {
+  class _order_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save ArrayExpr spec in HashedDb.
+       * to save Order expr spec in HashedDb.
        */
       Hash hash = hash(
-          hash(ARRAY_EXPR.marker()),
+          hash(ORDER.marker()),
           hash(arraySpec(intSpec()))
       );
       assertThat(hash)
-          .isEqualTo(arrayExprSpec(intSpec()).hash());
+          .isEqualTo(orderSpec(intSpec()).hash());
     }
 
     @Test
     public void without_data() throws Exception {
-      test_spec_without_data(ARRAY_EXPR);
+      test_spec_without_data(ORDER);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(ARRAY_EXPR);
+      test_spec_with_additional_data(ORDER);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(ARRAY_EXPR);
+      test_data_hash_pointing_nowhere_instead_of_being_spec(ORDER);
     }
 
     @Test
     public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(ARRAY_EXPR);
+      test_spec_with_corrupted_spec_as_data(ORDER);
     }
 
     @Test
     public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(ARRAY_EXPR, ArraySpec.class);
+      test_spec_with_data_spec_being_expr_spec(ORDER, ArraySpec.class);
     }
 
     @Test
     public void with_evaluation_spec_not_being_array_spec() throws Exception {
       Hash hash = hash(
-          hash(ARRAY_EXPR.marker()),
+          hash(ORDER.marker()),
           hash(intSpec())
       );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecNodeException(
-              hash, ARRAY_EXPR, DATA_PATH, ArraySpec.class, IntSpec.class));
+              hash, ORDER, DATA_PATH, ArraySpec.class, IntSpec.class));
     }
   }
 

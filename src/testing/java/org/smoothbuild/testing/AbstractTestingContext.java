@@ -21,10 +21,10 @@ import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Construct;
+import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
@@ -39,10 +39,10 @@ import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.SpecDb;
 import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.ConstructSpec;
+import org.smoothbuild.db.object.spec.expr.OrderSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.expr.StructExprSpec;
@@ -332,12 +332,12 @@ public abstract class AbstractTestingContext {
 
   // Expr Spec-s
 
-  public ArrayExprSpec arrayExprSpec() {
-    return arrayExprSpec(intSpec());
+  public OrderSpec orderSpec() {
+    return orderSpec(intSpec());
   }
 
-  public ArrayExprSpec arrayExprSpec(ValSpec elementSpec) {
-    return specDb().arrayExpr(elementSpec);
+  public OrderSpec orderSpec(ValSpec elementSpec) {
+    return specDb().order(elementSpec);
   }
 
   public CallSpec callSpec() {
@@ -531,8 +531,8 @@ public abstract class AbstractTestingContext {
     return objectDb().constExpr(val);
   }
 
-  public ArrayExpr arrayExpr(List<? extends Expr> elements) {
-    return objectDb().arrayExpr(elements);
+  public Order orderExpr(List<? extends Expr> elements) {
+    return objectDb().order(elements);
   }
 
   public Construct constructExpr(ImmutableList<? extends Expr> items) {

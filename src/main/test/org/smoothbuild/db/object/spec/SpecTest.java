@@ -15,7 +15,6 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY2_VARIABLE;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_ANY;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_BOOL;
-import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.ARRAY_NOTHING;
@@ -30,6 +29,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.CONSTRUCT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
+import static org.smoothbuild.db.object.spec.TestingSpecs.ORDER;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON_TUPLE;
 import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
@@ -47,10 +47,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Construct;
+import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.val.Array;
@@ -103,7 +103,7 @@ public class SpecTest {
         arguments(tc.callSpec(tc.intSpec()), "CALL:Int"),
         arguments(tc.constSpec(tc.intSpec()), "CONST:Int"),
         arguments(tc.nativeMethodSpec(), "NATIVE_METHOD"),
-        arguments(tc.arrayExprSpec(tc.strSpec()), "ARRAY:[String]"),
+        arguments(tc.orderSpec(tc.strSpec()), "ORDER:[String]"),
         arguments(tc.constructSpec(list(tc.strSpec(), tc.intSpec())), "CONSTRUCT:{String,Int}"),
         arguments(tc.selectSpec(tc.intSpec()), "SELECT:Int"),
         arguments(tc.refSpec(tc.intSpec()), "REF:Int"),
@@ -144,7 +144,7 @@ public class SpecTest {
 
         arguments(CALL, Call.class),
         arguments(CONST, Const.class),
-        arguments(ARRAY_EXPR, ArrayExpr.class),
+        arguments(ORDER, Order.class),
         arguments(CONSTRUCT, Construct.class),
         arguments(SELECT, Select.class),
         arguments(REF, Ref.class)
@@ -184,8 +184,8 @@ public class SpecTest {
   class _evaluation_spec {
     @ParameterizedTest
     @MethodSource("specs")
-    public void arrayExpr(ValSpec spec) {
-      assertThat(SPEC_DB.arrayExpr(spec).evaluationSpec())
+    public void order(ValSpec spec) {
+      assertThat(SPEC_DB.order(spec).evaluationSpec())
           .isEqualTo(SPEC_DB.array(spec));
     }
 
@@ -285,7 +285,7 @@ public class SpecTest {
 
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(CONST, CONST);
-    tester.addEqualityGroup(ARRAY_EXPR, ARRAY_EXPR);
+    tester.addEqualityGroup(ORDER, ORDER);
     tester.addEqualityGroup(CONSTRUCT, CONSTRUCT);
     tester.addEqualityGroup(SELECT, SELECT);
     tester.addEqualityGroup(REF, REF);

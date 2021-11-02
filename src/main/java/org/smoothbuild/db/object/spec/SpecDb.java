@@ -9,7 +9,6 @@ import static org.smoothbuild.db.object.spec.Helpers.wrapHashedDbExceptionAsDeco
 import static org.smoothbuild.db.object.spec.Helpers.wrapObjectDbExceptionAsDecodeSpecNodeException;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY;
-import static org.smoothbuild.db.object.spec.base.SpecKind.ARRAY_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
@@ -19,6 +18,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NOTHING;
+import static org.smoothbuild.db.object.spec.base.SpecKind.ORDER;
 import static org.smoothbuild.db.object.spec.base.SpecKind.REF;
 import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
@@ -51,11 +51,11 @@ import org.smoothbuild.db.object.spec.exc.DecodeStructSpecWrongNamesSizeExceptio
 import org.smoothbuild.db.object.spec.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.spec.exc.UnexpectedSpecNodeException;
 import org.smoothbuild.db.object.spec.exc.UnexpectedSpecSequenceException;
-import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.ConstructSpec;
 import org.smoothbuild.db.object.spec.expr.InvokeSpec;
+import org.smoothbuild.db.object.spec.expr.OrderSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.expr.StructExprSpec;
@@ -192,8 +192,8 @@ public class SpecDb implements TypeFactory {
 
   // methods for getting Expr-s specs
 
-  public ArrayExprSpec arrayExpr(ValSpec elementSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExprSpec(elementSpec));
+  public OrderSpec order(ValSpec elementSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newOrderSpec(elementSpec));
   }
 
   public CallSpec call(ValSpec evaluationSpec) {
@@ -240,7 +240,7 @@ public class SpecDb implements TypeFactory {
             "Internal error: Spec with kind " + specKind + " should be found in cache.");
       }
       case ARRAY -> newArraySpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
-      case ARRAY_EXPR -> newArrayExprSpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
+      case ORDER -> newOrderSpec(hash, getDataAsArraySpec(hash, rootSequence, specKind));
       case CALL -> newCallSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case CONST -> newConstSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case INVOKE -> newInvokeSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
@@ -465,14 +465,14 @@ public class SpecDb implements TypeFactory {
 
   // methods for creating Expr Spec-s
 
-  private ArrayExprSpec newArrayExprSpec(ValSpec elementSpec) throws HashedDbException {
+  private OrderSpec newOrderSpec(ValSpec elementSpec) throws HashedDbException {
     var evaluationSpec = array(elementSpec);
-    var rootHash = writeExprSpecRoot(ARRAY_EXPR, evaluationSpec);
-    return newArrayExprSpec(rootHash, evaluationSpec);
+    var rootHash = writeExprSpecRoot(ORDER, evaluationSpec);
+    return newOrderSpec(rootHash, evaluationSpec);
   }
 
-  private ArrayExprSpec newArrayExprSpec(Hash rootHash, ArraySpec evaluationSpec) {
-    return cache(new ArrayExprSpec(rootHash, evaluationSpec));
+  private OrderSpec newOrderSpec(Hash rootHash, ArraySpec evaluationSpec) {
+    return cache(new OrderSpec(rootHash, evaluationSpec));
   }
 
   private CallSpec newCallSpec(ValSpec evaluationSpec) throws HashedDbException {

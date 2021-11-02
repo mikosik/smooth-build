@@ -48,10 +48,10 @@ import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationSpecExceptio
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
-import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.obj.expr.Construct;
+import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.Select.SelectData;
@@ -66,10 +66,10 @@ import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.exc.DecodeSpecException;
-import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
 import org.smoothbuild.db.object.spec.expr.ConstructSpec;
+import org.smoothbuild.db.object.spec.expr.OrderSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
@@ -726,23 +726,23 @@ public class CorruptedObjTest extends TestingContextImpl {
   }
 
   @Nested
-  class _array_expr {
+  class _order {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save ArrayExpr
+       * This test makes sure that other tests in this class use proper scheme to save Order expr
        * in HashedDb.
        */
       Const expr1 = intExpr(1);
       Const expr2 = intExpr(2);
       Hash objHash =
           hash(
-              hash(arrayExprSpec()),
+              hash(orderSpec()),
               hash(
                   hash(expr1),
                   hash(expr2)
               ));
-      ImmutableList<Expr> elements = ((ArrayExpr) objectDb().get(objHash)).elements();
+      ImmutableList<Expr> elements = ((Order) objectDb().get(objHash)).elements();
       assertThat(elements)
           .containsExactly(expr1, expr2)
           .inOrder();
@@ -750,7 +750,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(arrayExprSpec());
+      obj_root_without_data_hash(orderSpec());
     }
 
     @Test
@@ -762,17 +762,17 @@ public class CorruptedObjTest extends TestingContextImpl {
           hash(expr2)
       );
       obj_root_with_two_data_hashes(
-          arrayExprSpec(),
+          orderSpec(),
           dataHash,
-          (Hash objHash) -> ((ArrayExpr) objectDb().get(objHash)).elements()
+          (Hash objHash) -> ((Order) objectDb().get(objHash)).elements()
       );
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          arrayExprSpec(),
-          (Hash objHash) -> ((ArrayExpr) objectDb().get(objHash)).elements());
+          orderSpec(),
+          (Hash objHash) -> ((Order) objectDb().get(objHash)).elements());
     }
 
     @ParameterizedTest
@@ -782,11 +782,11 @@ public class CorruptedObjTest extends TestingContextImpl {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
-              hash(arrayExprSpec()),
+              hash(orderSpec()),
               notHashOfSequence
           );
-      assertCall(() -> ((ArrayExpr) objectDb().get(objHash)).elements())
-          .throwsException(new DecodeObjNodeException(objHash, arrayExprSpec(), DATA_PATH))
+      assertCall(() -> ((Order) objectDb().get(objHash)).elements())
+          .throwsException(new DecodeObjNodeException(objHash, orderSpec(), DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
@@ -796,13 +796,13 @@ public class CorruptedObjTest extends TestingContextImpl {
       Hash nowhere = Hash.of(33);
       Hash objHash =
           hash(
-              hash(arrayExprSpec()),
+              hash(orderSpec()),
               hash(
                   nowhere
               )
           );
-      assertCall(() -> ((ArrayExpr) objectDb().get(objHash)).elements())
-          .throwsException(new DecodeObjNodeException(objHash, arrayExprSpec(), DATA_PATH + "[0]"))
+      assertCall(() -> ((Order) objectDb().get(objHash)).elements())
+          .throwsException(new DecodeObjNodeException(objHash, orderSpec(), DATA_PATH + "[0]"))
           .withCause(new NoSuchObjException(nowhere));
     }
 
@@ -812,14 +812,14 @@ public class CorruptedObjTest extends TestingContextImpl {
       Int val = intVal(123);
       Hash objHash =
           hash(
-              hash(arrayExprSpec()),
+              hash(orderSpec()),
               hash(
                   hash(expr1),
                   hash(val)
               ));
-      assertCall(() -> ((ArrayExpr) objectDb().get(objHash)).elements())
+      assertCall(() -> ((Order) objectDb().get(objHash)).elements())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, arrayExprSpec(), DATA_PATH + "[1]", Expr.class, Int.class));
+              objHash, orderSpec(), DATA_PATH + "[1]", Expr.class, Int.class));
     }
 
     @Test
@@ -827,7 +827,7 @@ public class CorruptedObjTest extends TestingContextImpl {
         throws Exception {
       Const expr1 = intExpr();
       Const expr2 = strExpr();
-      ArrayExprSpec spec = arrayExprSpec(intSpec());
+      OrderSpec spec = orderSpec(intSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -835,7 +835,7 @@ public class CorruptedObjTest extends TestingContextImpl {
                   hash(expr1),
                   hash(expr2)
               ));
-      assertCall(() -> ((ArrayExpr) objectDb().get(objHash)).elements())
+      assertCall(() -> ((Order) objectDb().get(objHash)).elements())
           .throwsException(
               new DecodeExprWrongEvaluationSpecOfComponentException(
                   objHash, spec, "elements[1]", intSpec(), strSpec()));
@@ -879,7 +879,7 @@ public class CorruptedObjTest extends TestingContextImpl {
           hash(expr2)
       );
       obj_root_with_two_data_hashes(
-          arrayExprSpec(),
+          orderSpec(),
           dataHash,
           (Hash objHash) -> ((Construct) objectDb().get(objHash)).items()
       );
