@@ -23,7 +23,7 @@ public class FileClassLoaderTest extends TestingContextImpl {
   }
 
   private Struc_ createByteCodeFile(Class<?> klass) throws IOException {
-    return fileVal(path(binaryPath(klass)), Classes.bytecode(klass));
+    return file(path(binaryPath(klass)), Classes.bytecode(klass));
   }
 
   public static class MyClass {

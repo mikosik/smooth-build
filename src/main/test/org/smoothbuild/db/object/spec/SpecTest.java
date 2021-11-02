@@ -103,8 +103,8 @@ public class SpecTest {
         arguments(tc.callSpec(tc.intSpec()), "CALL:Int"),
         arguments(tc.constSpec(tc.intSpec()), "CONST:Int"),
         arguments(tc.nativeMethodSpec(), "NATIVE_METHOD"),
-        arguments(tc.orderSpec(tc.strSpec()), "ORDER:[String]"),
-        arguments(tc.constructSpec(list(tc.strSpec(), tc.intSpec())), "CONSTRUCT:{String,Int}"),
+        arguments(tc.orderSpec(tc.stringSpec()), "ORDER:[String]"),
+        arguments(tc.constructSpec(list(tc.stringSpec(), tc.intSpec())), "CONSTRUCT:{String,Int}"),
         arguments(tc.selectSpec(tc.intSpec()), "SELECT:Int"),
         arguments(tc.refSpec(tc.intSpec()), "REF:Int"),
 

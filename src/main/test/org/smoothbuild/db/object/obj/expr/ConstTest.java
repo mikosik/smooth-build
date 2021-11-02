@@ -15,8 +15,8 @@ public class ConstTest extends TestingContextImpl {
 
   @Test
   public void value_returns_stored_value() {
-    Val val = intVal(1);
-    assertThat(constExpr(val).value())
+    Val val = int_(1);
+    assertThat(const_(val).value())
         .isEqualTo(val);
   }
 
@@ -67,7 +67,7 @@ public class ConstTest extends TestingContextImpl {
   public void const_read_back_by_hash_has_same_obj() {
     Const constE = intExpr(1);
     assertThat(((Const) objectDbOther().get(constE.hash())).value())
-        .isEqualTo(intVal(1));
+        .isEqualTo(int_(1));
   }
 
   @Test

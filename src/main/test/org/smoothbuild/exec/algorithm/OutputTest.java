@@ -89,7 +89,7 @@ public class OutputTest extends TestingContextImpl {
   public void outputs_with_different_value_and_same_messages_are_not_equal() {
     Output output = new Output(aString(), messages());
     assertThat(output)
-        .isNotEqualTo(new Output(strVal("def"), messages()));
+        .isNotEqualTo(new Output(string("def"), messages()));
   }
 
   @Test
@@ -111,6 +111,6 @@ public class OutputTest extends TestingContextImpl {
   }
 
   private Str aString() {
-    return strVal("abc");
+    return string("abc");
   }
 }

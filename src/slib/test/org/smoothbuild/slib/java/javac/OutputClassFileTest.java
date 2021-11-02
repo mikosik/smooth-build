@@ -27,7 +27,7 @@ public class OutputClassFileTest extends TestingContextImpl {
       sink.write(bytes);
     }
     assertThat(fileArrayBuilder.build().elements(Struc_.class))
-        .containsExactly(fileVal(path, bytes));
+        .containsExactly(file(path, bytes));
   }
 
   @Test

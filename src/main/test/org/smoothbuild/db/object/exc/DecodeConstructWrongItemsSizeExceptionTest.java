@@ -12,7 +12,7 @@ public class DecodeConstructWrongItemsSizeExceptionTest extends TestingContextIm
   @Test
   public void message() {
     var exception = new DecodeConstructWrongItemsSizeException(
-        Hash.of(13), constructSpec(list(intSpec(), strSpec())), 3);
+        Hash.of(13), constructSpec(list(intSpec(), stringSpec())), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `CONSTRUCT:{Int,String}` object at "
             + "b1197c208248d0f7ffb3e322d5ec187441dc1b26. "

@@ -98,7 +98,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
           hash(STRING.marker())
       );
       assertThat(hash)
-          .isEqualTo(strSpec().hash());
+          .isEqualTo(stringSpec().hash());
     }
 
     @Test
@@ -209,10 +209,10 @@ public class CorruptedSpecTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(ARRAY.marker()),
-          hash(strSpec())
+          hash(stringSpec())
       );
       assertThat(hash)
-          .isEqualTo(arraySpec(strSpec()).hash());
+          .isEqualTo(arraySpec(stringSpec()).hash());
     }
 
     @Test
@@ -339,7 +339,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme
        * to save lambda spec in HashedDb.
        */
-      ImmutableList<ValSpec> parameterSpecs = list(strSpec(), boolSpec());
+      ImmutableList<ValSpec> parameterSpecs = list(stringSpec(), boolSpec());
       TupleSpec parametersTuple = tupleSpec(parameterSpecs);
       Hash specHash = hash(
           hash(LAMBDA.marker()),
@@ -381,7 +381,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_data_having_three_elements() throws Exception {
-      TupleSpec parameterSpecs = tupleSpec(list(strSpec(), boolSpec()));
+      TupleSpec parameterSpecs = tupleSpec(list(stringSpec(), boolSpec()));
       Hash hash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -423,7 +423,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_result_pointing_nowhere() throws Exception {
-      TupleSpec parameterSpecs = tupleSpec(list(strSpec(), boolSpec()));
+      TupleSpec parameterSpecs = tupleSpec(list(stringSpec(), boolSpec()));
       Hash nowhere = Hash.of(33);
       Hash specHash = hash(
           hash(LAMBDA.marker()),
@@ -439,7 +439,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_result_being_expr_spec() throws Exception {
-      TupleSpec parameterSpecs = tupleSpec(list(strSpec(), boolSpec()));
+      TupleSpec parameterSpecs = tupleSpec(list(stringSpec(), boolSpec()));
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -454,7 +454,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_result_spec_corrupted() throws Exception {
-      TupleSpec parameterSpecs = tupleSpec(list(strSpec(), boolSpec()));
+      TupleSpec parameterSpecs = tupleSpec(list(stringSpec(), boolSpec()));
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -488,7 +488,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
           hash(LAMBDA.marker()),
           hash(
               hash(intSpec()),
-              hash(strSpec())
+              hash(stringSpec())
           )
       );
       assertThatGetSpec(specHash)
@@ -536,8 +536,8 @@ public class CorruptedSpecTest extends TestingContextImpl {
       Hash hash = hash(
           hash(TUPLE.marker()),
           hash(
-              hash(strSpec()),
-              hash(strSpec())
+              hash(stringSpec()),
+              hash(stringSpec())
           )
       );
       assertThat(hash)
@@ -573,7 +573,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
 
     @Test
     public void with_elements_being_array_of_non_spec() throws Exception {
-      Hash stringHash = hash(strVal("abc"));
+      Hash stringHash = hash(string("abc"));
       Hash hash =
           hash(
               hash(TUPLE.marker()),
@@ -607,7 +607,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
               hash(TUPLE.marker()),
               hash(
                   corruptedArraySpecHash(),
-                  hash(strSpec())));
+                  hash(stringSpec())));
       assertThatGetSpec(hash)
           .throwsException(new DecodeSpecNodeException(hash, TUPLE, "data[0]"))
           .withCause(corruptedArraySpecException());
@@ -624,10 +624,10 @@ public class CorruptedSpecTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(CONSTRUCT.marker()),
-          hash(tupleSpec(list(intSpec(), strSpec())))
+          hash(tupleSpec(list(intSpec(), stringSpec())))
       );
       assertThat(hash)
-          .isEqualTo(constructSpec(list(intSpec(), strSpec())).hash());
+          .isEqualTo(constructSpec(list(intSpec(), stringSpec())).hash());
     }
 
     @Test
@@ -721,7 +721,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
   private void test_spec_with_additional_data(SpecKind specKind) throws Exception {
     Hash hash = hash(
         hash(specKind.marker()),
-        hash(strSpec()),
+        hash(stringSpec()),
         hash("corrupted")
     );
     assertThatGetSpec(hash)
@@ -881,7 +881,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
        */
       var name = "MyStruct";
       var field1 = intSpec();
-      var field2 = strSpec();
+      var field2 = stringSpec();
       var name1 = "field1";
       var name2 = "field2";
       Hash hash = hash(
@@ -921,7 +921,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
     public void with_name_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       var field1 = intSpec();
-      var field2 = strSpec();
+      var field2 = stringSpec();
       var name1 = "field1";
       var name2 = "field2";
       Hash hash = hash(
@@ -946,7 +946,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
     public void with_illegal_name() throws Exception {
       Hash nameHash = hash(illegalString());
       var field1 = intSpec();
-      var field2 = strSpec();
+      var field2 = stringSpec();
       var name1 = "field1";
       var name2 = "field2";
       Hash hash = hash(
@@ -994,7 +994,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
     @Test
     public void with_elements_being_sequence_of_non_spec() throws Exception {
       var name = "MyStruct";
-      Hash stringHash = hash(strVal("abc"));
+      Hash stringHash = hash(string("abc"));
       var name1 = "field1";
       var name2 = "field2";
       Hash hash = hash(
@@ -1067,7 +1067,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
     public void with_names_size_different_than_items_size() throws Exception {
       var name = "MyStruct";
       var field1 = intSpec();
-      var field2 = strSpec();
+      var field2 = stringSpec();
       var name1 = "field1";
       Hash hash = hash(
           hash(STRUCT.marker()),
@@ -1090,7 +1090,7 @@ public class CorruptedSpecTest extends TestingContextImpl {
     public void with_names_containing_illegal_string() throws Exception {
       var name = "MyStruct";
       var field1 = intSpec();
-      var field2 = strSpec();
+      var field2 = stringSpec();
       Hash illegalString = hash(illegalString());
       var name1 = "field1";
       Hash hash = hash(

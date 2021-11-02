@@ -11,7 +11,7 @@ public class DecodeSelectWrongEvaluationSpecExceptionTest extends TestingContext
   @Test
   public void message() {
     var exception = new DecodeSelectWrongEvaluationSpecException(
-        Hash.of(13), selectSpec(intSpec()), strSpec());
+        Hash.of(13), selectSpec(intSpec()), stringSpec());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT:Int` object"
             + " at b1197c208248d0f7ffb3e322d5ec187441dc1b26."

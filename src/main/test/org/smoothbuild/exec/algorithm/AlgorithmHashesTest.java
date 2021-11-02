@@ -33,7 +33,7 @@ public class AlgorithmHashesTest extends TestingContextImpl {
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
-    hashes.add(convertAlgorithmHash(strSpec()));
+    hashes.add(convertAlgorithmHash(stringSpec()));
     hashes.add(createStructAlgorithmHash(constructedType));
     hashes.add(readStructItemAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
@@ -53,7 +53,7 @@ public class AlgorithmHashesTest extends TestingContextImpl {
 
   @Test
   public void convert_algorithm_has_different_hash_for_different_types() {
-    assertThat(convertAlgorithmHash(strSpec()))
+    assertThat(convertAlgorithmHash(stringSpec()))
         .isNotEqualTo(convertAlgorithmHash(blobSpec()));
   }
 

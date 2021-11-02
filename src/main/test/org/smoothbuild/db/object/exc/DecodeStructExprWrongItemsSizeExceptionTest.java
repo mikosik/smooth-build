@@ -15,7 +15,7 @@ public class DecodeStructExprWrongItemsSizeExceptionTest extends TestingContextI
   @Test
   public void message() {
     var structSpec = structSpec(
-        "MyStruct", namedList(list(named("f1", intSpec()), named("f2", strSpec()))));
+        "MyStruct", namedList(list(named("f1", intSpec()), named("f2", stringSpec()))));
     StructExprSpec structExprSpec = structExprSpec(structSpec);
     var exception = new DecodeStructExprWrongItemsSizeException(Hash.of(13), structExprSpec, 3);
     assertThat(exception.getMessage())

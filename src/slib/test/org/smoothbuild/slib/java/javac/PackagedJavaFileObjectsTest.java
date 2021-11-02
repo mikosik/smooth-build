@@ -13,9 +13,9 @@ import org.smoothbuild.testing.TestingContextImpl;
 public class PackagedJavaFileObjectsTest extends TestingContextImpl {
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
-    Struc_ file1 = fileVal(path("my/package/MyKlass.class"));
-    Struc_ file2 = fileVal(path("my/package/MyKlass2.class"));
-    Struc_ jar = fileVal("myFile.jar", blobVal(jarByteString(file1, file2)));
+    Struc_ file1 = file(path("my/package/MyKlass.class"));
+    Struc_ file2 = file(path("my/package/MyKlass2.class"));
+    Struc_ jar = file("myFile.jar", blob(jarByteString(file1, file2)));
     assertThat(classesFromJarFiles(nativeApi(), list(jar)))
         .containsExactly(new InputClassFile(file1), new InputClassFile(file2));
   }
@@ -23,12 +23,12 @@ public class PackagedJavaFileObjectsTest extends TestingContextImpl {
   @Test
   public void duplicate_class_file_exception() throws Exception {
     String name = "my/package/MyKlass.class";
-    Struc_ file1 = fileVal(path(name));
-    Struc_ jar = fileVal("myFile.jar", blobVal(jarByteString(file1)));
+    Struc_ file1 = file(path(name));
+    Struc_ jar = file("myFile.jar", blob(jarByteString(file1)));
     assertThat(classesFromJarFiles(nativeApi(), list(jar, jar)))
         .isNull();
     assertThat(nativeApi().messages())
-        .isEqualTo(arrayVal(errorMessageV(
+        .isEqualTo(array(errorMessage(
             "File " + name + " is contained by two different library jar files.")));
   }
 }

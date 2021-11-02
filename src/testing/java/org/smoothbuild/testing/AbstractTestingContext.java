@@ -246,7 +246,7 @@ public abstract class AbstractTestingContext {
 
   public StructSpec animalSpec() {
     return specDb().struct(
-        "Animal", namedList(list(named("species", strSpec()), named("speed", intSpec()))));
+        "Animal", namedList(list(named("species", stringSpec()), named("speed", intSpec()))));
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
@@ -266,7 +266,7 @@ public abstract class AbstractTestingContext {
   }
 
   public LambdaSpec lambdaSpec() {
-    return lambdaSpec(intSpec(), list(blobSpec(), strSpec()));
+    return lambdaSpec(intSpec(), list(blobSpec(), stringSpec()));
   }
 
   public LambdaSpec lambdaSpec(ValSpec result, ImmutableList<? extends Type> parameters) {
@@ -285,7 +285,7 @@ public abstract class AbstractTestingContext {
     return specDb().nothing();
   }
 
-  public StrSpec strSpec() {
+  public StrSpec stringSpec() {
     return specDb().string();
   }
 
@@ -298,20 +298,20 @@ public abstract class AbstractTestingContext {
   }
 
   public TupleSpec tupleWithStrSpec() {
-    return tupleSpec(list(strSpec()));
+    return tupleSpec(list(stringSpec()));
   }
 
   public TupleSpec perso_Spec() {
-    return tupleSpec(list(strSpec(), strSpec()));
+    return tupleSpec(list(stringSpec(), stringSpec()));
   }
 
   public StructSpec personSpec() {
     return structSpec("Person",
-        namedList(list(named("firstName", strSpec()), named("lastName", strSpec()))));
+        namedList(list(named("firstName", stringSpec()), named("lastName", stringSpec()))));
   }
 
   public TupleSpec fileSpec() {
-    return tupleSpec(list(blobSpec(), strSpec()));
+    return tupleSpec(list(blobSpec(), stringSpec()));
   }
 
   public StructSpec structSpec() {
@@ -357,7 +357,7 @@ public abstract class AbstractTestingContext {
   }
 
   public ConstructSpec constructSpec() {
-    return constructSpec(list(intSpec(), strSpec()));
+    return constructSpec(list(intSpec(), stringSpec()));
   }
 
   public ConstructSpec constructSpec(ImmutableList<ValSpec> itemSpecs) {
@@ -386,31 +386,31 @@ public abstract class AbstractTestingContext {
 
   // Obj-s (values)
 
-  public Struc_ animalVal() {
-    return animalVal("rabbit", 7);
+  public Struc_ animal() {
+    return animal("rabbit", 7);
   }
 
-  public Struc_ animalVal(String species, int speed) {
-    return animalVal(strVal(species), intVal(speed));
+  public Struc_ animal(String species, int speed) {
+    return animal(string(species), int_(speed));
   }
 
-  public Struc_ animalVal(Str species, Int speed) {
-    return structVal(animalSpec(), list(species, speed));
+  public Struc_ animal(Str species, Int speed) {
+    return struct(animalSpec(), list(species, speed));
   }
 
-  public Array arrayVal(Val... elements) {
-    return arrayVal(elements[0].spec(), elements);
+  public Array array(Val... elements) {
+    return array(elements[0].spec(), elements);
   }
 
-  public Array arrayVal(ValSpec elementSpec, Obj... elements) {
+  public Array array(ValSpec elementSpec, Obj... elements) {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
-  public Blob blobVal() {
+  public Blob blob() {
     return objectFactory().blob(sink -> sink.writeUtf8("blob data"));
   }
 
-  public Blob blobVal(ByteString bytes) {
+  public Blob blob(ByteString bytes) {
     return objectFactory().blob(sink -> sink.write(bytes));
   }
 
@@ -418,129 +418,139 @@ public abstract class AbstractTestingContext {
     return objectDb().blobBuilder();
   }
 
-  public Bool boolVal(boolean value) {
+  public Bool bool(boolean value) {
     return objectDb().bool(value);
   }
 
-  public Lambda lambdaVal() {
-    return lambdaVal(intExpr());
+  public Lambda lambda() {
+    return lambda(intExpr());
   }
 
-  public Lambda lambdaVal(Expr body) {
-    LambdaSpec spec = lambdaSpec(body.evaluationSpec(), list(strSpec()));
-    return lambdaVal(spec, body);
+  public Lambda lambda(Expr body) {
+    LambdaSpec spec = lambdaSpec(body.evaluationSpec(), list(stringSpec()));
+    return lambda(spec, body);
   }
 
-  public Lambda lambdaVal(LambdaSpec spec, Expr body) {
+  public Lambda lambda(LambdaSpec spec, Expr body) {
     return objectDb().lambda(spec, body);
   }
 
-  public Int intVal() {
-    return intVal(17);
+  public Int int_() {
+    return int_(17);
   }
 
-  public Int intVal(int value) {
+  public Int int_(int value) {
     return objectDb().int_(BigInteger.valueOf(value));
   }
 
-  public NativeMethod nativeMethodVal(Blob jarFile, Str classBinaryName) {
+  public NativeMethod nativeMethod(Blob jarFile, Str classBinaryName) {
     return objectDb().nativeMethod(jarFile, classBinaryName);
   }
 
-  public Str strVal() {
+  public Str string() {
     return objectDb().string("abc");
   }
 
-  public Str strVal(String string) {
+  public Str string(String string) {
     return objectDb().string(string);
   }
 
-  public Struc_ structVal(StructSpec spec, ImmutableList<Val> items) {
+  public Struc_ struct(StructSpec spec, ImmutableList<Val> items) {
     return objectDb().struct(spec, items);
   }
 
-  public Tuple tupleVal(List<? extends Val> items) {
+  public Tuple tuple(List<? extends Val> items) {
     var spec = tupleSpec(map(items, Val::spec));
-    return tupleVal(spec, items);
+    return tuple(spec, items);
   }
 
-  public Tuple tupleVal(TupleSpec tupleSpec, List<? extends Val> items) {
+  public Tuple tuple(TupleSpec tupleSpec, List<? extends Val> items) {
     return objectDb().tuple(tupleSpec, items);
   }
 
-  public Tuple emptyTupleVal() {
-    return tupleVal(list());
+  public Tuple emptyTuple() {
+    return tuple(list());
   }
 
-  public Tuple tupleWithStrVal() {
-    return tupleVal(list(strVal("abc")));
+  public Tuple tupleWithStr() {
+    return tuple(list(string("abc")));
   }
 
-  public Tuple tupleWithStrVal(Str str) {
-    return tupleVal(list(str));
+  public Tuple tupleWithStr(Str str) {
+    return tuple(list(str));
   }
 
-  public Tuple personVal(String firstName, String lastName) {
-    return tupleVal(list(strVal(firstName), strVal(lastName)));
+  public Tuple person(String firstName, String lastName) {
+    return tuple(list(string(firstName), string(lastName)));
   }
 
   public Array messageArrayWithOneError() {
-    return arrayVal(objectFactory().errorMessage("error message"));
+    return array(objectFactory().errorMessage("error message"));
   }
 
   public Array emptyMessageArray() {
-    return arrayVal(objectFactory().messageSpec());
+    return array(objectFactory().messageSpec());
   }
 
-  public Struc_ errorMessageV(String text) {
+  public Struc_ errorMessage(String text) {
     return objectFactory().errorMessage(text);
   }
 
-  public Struc_ warningMessageV(String text) {
+  public Struc_ warningMessage(String text) {
     return objectFactory().warningMessage(text);
   }
 
-  public Struc_ infoMessageV(String text) {
+  public Struc_ infoMessage(String text) {
     return objectFactory().infoMessage(text);
   }
 
-  public Struc_ fileVal(Path path) {
-    return fileVal(path, ByteString.encodeString(path.toString(), CHARSET));
+  public Struc_ file(Path path) {
+    return file(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public Struc_ fileVal(Path path, ByteString content) {
-    return fileVal(path.toString(), blobVal(content));
+  public Struc_ file(Path path, ByteString content) {
+    return file(path.toString(), blob(content));
   }
 
-  public Struc_ fileVal(String path, Blob blob) {
+  public Struc_ file(String path, Blob blob) {
     Str string = objectFactory().string(path);
     return objectFactory().file(string, blob);
   }
 
   // Expr-s
 
-  public Const boolExpr() {
-    return constExpr(boolVal(true));
+  public Call call(Expr function, ImmutableList<? extends Expr> arguments) {
+    return objectDb().call(function, construct(arguments));
   }
 
-  public Call callExpr(Expr function, ImmutableList<? extends Expr> arguments) {
-    return objectDb().call(function, constructExpr(arguments));
-  }
-
-  public Const constExpr(Val val) {
+  public Const const_(Val val) {
     return objectDb().const_(val);
   }
 
-  public Order orderExpr(List<? extends Expr> elements) {
-    return objectDb().order(elements);
-  }
-
-  public Construct constructExpr(ImmutableList<? extends Expr> items) {
+  public Construct construct(ImmutableList<? extends Expr> items) {
     return objectDb().construct(items);
   }
 
-  public Select selectExpr(Expr tuple, Int index) {
+  public Order order(List<? extends Expr> elements) {
+    return objectDb().order(elements);
+  }
+
+  public Ref ref(int value) {
+    return objectDb().ref(BigInteger.valueOf(value), intSpec());
+  }
+
+  public Ref ref(ValSpec evaluationSpec, int pointer) {
+    return objectDb().ref(BigInteger.valueOf(pointer), evaluationSpec);
+  }
+
+  public Select select(Expr tuple, Int index) {
     return objectDb().select(tuple, index);
+  }
+
+  // Expr with specific evaluation type
+
+  public Const boolExpr() {
+    return const_(bool(true));
   }
 
   public Const intExpr() {
@@ -548,24 +558,18 @@ public abstract class AbstractTestingContext {
   }
 
   public Const intExpr(int i) {
-    return constExpr(intVal(i));
+    return const_(int_(i));
   }
 
-  public Ref refExpr(int value) {
-    return objectDb().ref(BigInteger.valueOf(value), intSpec());
+  public Const stringExpr() {
+    return stringExpr("abc");
   }
 
-  public Ref refExpr(ValSpec evaluationSpec, int pointer) {
-    return objectDb().ref(BigInteger.valueOf(pointer), evaluationSpec);
+  public Const stringExpr(String string) {
+    return const_(string(string));
   }
 
-  public Const strExpr() {
-    return strExpr("abc");
-  }
-
-  public Const strExpr(String string) {
-    return constExpr(strVal(string));
-  }
+  // Types
 
   public Variable variable(String name) {
     return typeFactory().variable(name);
@@ -641,6 +645,8 @@ public abstract class AbstractTestingContext {
   public BoundsMap bm() {
     return boundsMap();
   }
+
+  // Expressions
 
   public BlobLiteralExpression blobExpression(int data) {
     return blobExpression(1, data);

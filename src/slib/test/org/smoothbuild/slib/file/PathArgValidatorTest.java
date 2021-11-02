@@ -18,7 +18,7 @@ public class PathArgValidatorTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("listOfCorrectProjectPaths")
   public void valid_project_paths_are_accepted(String path) {
-    validatedProjectPath(container(), "name", strVal(path));
+    validatedProjectPath(container(), "name", string(path));
   }
 
   public static Stream<String> listOfCorrectProjectPaths() {
@@ -42,7 +42,7 @@ public class PathArgValidatorTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("listOfInvalidProjectPaths")
   public void illegal_project_paths_are_reported(String path) {
-    Path name = validatedProjectPath(container(), "name", strVal(path));
+    Path name = validatedProjectPath(container(), "name", string(path));
     assertThat(name)
         .isNull();
     container().messages()

@@ -10,32 +10,32 @@ import org.smoothbuild.testing.TestingContextImpl;
 public class TupleTest extends TestingContextImpl {
   @Test
   public void creating_tuple_with_less_items_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> objectDb().tuple(perso_Spec(), list(strVal("John"))))
+    assertCall(() -> objectDb().tuple(perso_Spec(), list(string("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_item_with_different_spec_than_specified_in_tuple_spec_causes_exception() {
-    assertCall(() -> objectDb().tuple(perso_Spec(), list(strVal(), intVal())))
+    assertCall(() -> objectDb().tuple(perso_Spec(), list(string(), int_())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_more_items_than_specified_in_its_spec_causes_exception() {
     assertCall(() -> objectDb().tuple(
-        perso_Spec(), list(strVal("John"), strVal("Doe"), strVal("abc"))))
+        perso_Spec(), list(string("John"), string("Doe"), string("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> objectDb().tuple(perso_Spec(), list(strVal("John"), null)))
+    assertCall(() -> objectDb().tuple(perso_Spec(), list(string("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_item_to_object_of_wrong_spec_throws_exception() {
-    assertCall(() -> objectDb().tuple(perso_Spec(), list(strVal("John"), intVal(123))))
+    assertCall(() -> objectDb().tuple(perso_Spec(), list(string("John"), int_(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -52,7 +52,7 @@ public class TupleTest extends TestingContextImpl {
     assertThat(person.spec())
         .isEqualTo(perso_Spec());
     assertThat(person.get(0))
-        .isEqualTo(strVal("John"));
+        .isEqualTo(string("John"));
   }
 
   @Test
@@ -73,12 +73,12 @@ public class TupleTest extends TestingContextImpl {
   public void super_object_is_equal_to_first_item() {
     Tuple person = johnDoePerson();
     assertThat(person.superObject())
-        .isEqualTo(strVal("John"));
+        .isEqualTo(string("John"));
   }
 
   @Test
   public void super_object_is_null_when_tuple_spec_has_no_items() {
-    Tuple tuple = tupleVal(list());
+    Tuple tuple = tuple(list());
     assertThat(tuple.superObject())
         .isNull();
   }
@@ -101,7 +101,7 @@ public class TupleTest extends TestingContextImpl {
   @Test
   public void tuples_with_one_item_different_are_not_equal() {
     Tuple person1 = johnDoePerson();
-    Tuple person2 = tupleVal(list(strVal("John"), strVal("Doe2")));
+    Tuple person2 = tuple(list(string("John"), string("Doe2")));
 
     assertThat(person1)
         .isNotEqualTo(person2);
@@ -118,7 +118,7 @@ public class TupleTest extends TestingContextImpl {
   @Test
   public void tuples_with_different_item_have_different_hashes() {
     Tuple person1 = johnDoePerson();
-    Tuple person2 = tupleVal(list(strVal("John"), strVal("Doe2")));
+    Tuple person2 = tuple(list(string("John"), string("Doe2")));
     assertThat(person1.hash())
         .isNotEqualTo(person2.hash());
   }
@@ -134,7 +134,7 @@ public class TupleTest extends TestingContextImpl {
   @Test
   public void tuples_with_different_item_have_different_hash_codes() {
     Tuple person1 = johnDoePerson();
-    Tuple person2 = tupleVal(list(strVal("John"), strVal("Doe2")));
+    Tuple person2 = tuple(list(string("John"), string("Doe2")));
         assertThat(person1.hashCode())
             .isNotEqualTo(person2.hashCode());
   }
@@ -165,6 +165,6 @@ public class TupleTest extends TestingContextImpl {
   }
 
   private Tuple johnDoePerson() {
-    return tupleVal(list(strVal("John"), strVal("Doe")));
+    return tuple(list(string("John"), string("Doe")));
   }
 }

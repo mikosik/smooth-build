@@ -90,7 +90,7 @@ public class CorruptedObjTest extends TestingContextImpl {
        */
       Hash objHash =
           hash(
-              hash(strSpec()),
+              hash(stringSpec()),
               hash("aaa"));
       assertThat(((Str) objectDb().get(objHash)).jValue())
           .isEqualTo("aaa");
@@ -152,14 +152,14 @@ public class CorruptedObjTest extends TestingContextImpl {
        */
       Hash objHash =
           hash(
-              hash(arraySpec(strSpec())),
+              hash(arraySpec(stringSpec())),
               hash(
                   hash(
-                      hash(strSpec()),
+                      hash(stringSpec()),
                       hash("aaa")
                   ),
                   hash(
-                      hash(strSpec()),
+                      hash(stringSpec()),
                       hash("bbb")
                   )
               ));
@@ -199,7 +199,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void with_sequence_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
-      ArraySpec spec = arraySpec(strSpec());
+      ArraySpec spec = arraySpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -217,7 +217,7 @@ public class CorruptedObjTest extends TestingContextImpl {
       Hash dataHash = hash(
           nowhere
       );
-      ArraySpec spec = arraySpec(strSpec());
+      ArraySpec spec = arraySpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -229,13 +229,13 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void with_one_element_of_wrong_spec() throws Exception {
-      ArraySpec spec = arraySpec(strSpec());
+      ArraySpec spec = arraySpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
               hash(
                   hash(
-                      hash(strSpec()),
+                      hash(stringSpec()),
                       hash("aaa")
                   ),
                   hash(
@@ -245,25 +245,25 @@ public class CorruptedObjTest extends TestingContextImpl {
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH, 1, strSpec(), boolSpec()));
+              objHash, spec, DATA_PATH, 1, stringSpec(), boolSpec()));
     }
 
     @Test
     public void with_one_element_being_expr() throws Exception {
-      ArraySpec spec = arraySpec(strSpec());
+      ArraySpec spec = arraySpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
               hash(
                   hash(
-                      hash(strSpec()),
+                      hash(stringSpec()),
                       hash("aaa")
                   ),
                   hash(intExpr(13))
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH, 1, strSpec(), constSpec(intSpec())));
+              objHash, spec, DATA_PATH, 1, stringSpec(), constSpec(intSpec())));
     }
   }
 
@@ -391,10 +391,10 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var lambda = lambdaVal(lambdaSpec, intExpr());
-      Const function = constExpr(lambda);
-      Construct arguments = constructExpr(list(strExpr(), intExpr()));
+      var lambdaSpec = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
+      var lambda = lambda(lambdaSpec, intExpr());
+      Const function = const_(lambda);
+      Construct arguments = construct(list(stringExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callSpec()),
@@ -418,7 +418,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const function = intExpr(0);
-      Construct arguments = constructExpr(list(strExpr(), intExpr()));
+      Construct arguments = construct(list(stringExpr(), intExpr()));
       Hash dataHash = hash(
           hash(function),
           hash(arguments)
@@ -454,7 +454,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
       Const function = intExpr(0);
-      Construct arguments = constructExpr(list(strExpr(), intExpr()));
+      Construct arguments = construct(list(stringExpr(), intExpr()));
       Hash dataHash = hash(
           hash(function),
           hash(arguments),
@@ -471,8 +471,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void function_is_val_instead_of_expr() throws Exception {
-      Int val = intVal(0);
-      Construct arguments = constructExpr(list(strExpr(), intExpr()));
+      Int val = int_(0);
+      Construct arguments = construct(list(stringExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callSpec()),
@@ -489,8 +489,8 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void function_component_evaluation_spec_is_not_lambda() throws Exception {
       Const function = intExpr(3);
-      Construct arguments = constructExpr(list(strExpr(), intExpr()));
-      CallSpec spec = callSpec(strSpec());
+      Construct arguments = construct(list(stringExpr(), intExpr()));
+      CallSpec spec = callSpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -506,15 +506,15 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void arguments_is_val_instead_of_expr() throws Exception {
-      var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var lambda = lambdaVal(lambdaSpec, intExpr());
-      Const function = constExpr(lambda);
+      var lambdaSpec = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
+      var lambda = lambda(lambdaSpec, intExpr());
+      Const function = const_(lambda);
       Hash objHash =
           hash(
               hash(callSpec()),
               hash(
                   hash(function),
-                  hash(intVal())
+                  hash(int_())
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
@@ -525,9 +525,9 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void arguments_component_evaluation_spec_is_not_construct_but_different_expr()
         throws Exception {
-      var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
-      var lambda = lambdaVal(lambdaSpec, intExpr());
-      Const function = constExpr(lambda);
+      var lambdaSpec = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
+      var lambda = lambda(lambdaSpec, intExpr());
+      Const function = const_(lambda);
       CallSpec spec = callSpec();
       Hash objHash =
           hash(
@@ -545,9 +545,9 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void evaluation_spec_is_different_than_function_evaluation_spec_result()
         throws Exception {
-      Const function = constExpr(lambdaVal(lambdaSpec(intSpec(), list(strSpec())), intExpr()));
-      Construct arguments = constructExpr(list(strExpr(), intExpr()));
-      CallSpec spec = callSpec(strSpec());
+      Const function = const_(lambda(lambdaSpec(intSpec(), list(stringSpec())), intExpr()));
+      Construct arguments = construct(list(stringExpr(), intExpr()));
+      CallSpec spec = callSpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -558,15 +558,15 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "function.result", strSpec(), intSpec()));
+                  objHash, spec, "function.result", stringSpec(), intSpec()));
     }
 
     @Test
     public void function_evaluation_spec_parameters_does_not_match_arguments_evaluation_specs()
         throws Exception {
-      LambdaSpec lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), boolSpec()));
-      Const function = constExpr(lambdaVal(lambdaSpec, intExpr()));
-      Construct arguments = constructExpr(list(strExpr(), intExpr()));
+      LambdaSpec lambdaSpec = lambdaSpec(intSpec(), list(stringSpec(), boolSpec()));
+      Const function = const_(lambda(lambdaSpec, intExpr()));
+      Construct arguments = construct(list(stringExpr(), intExpr()));
       CallSpec spec = callSpec(intSpec());
       Hash objHash =
           hash(
@@ -579,8 +579,8 @@ public class CorruptedObjTest extends TestingContextImpl {
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
               objHash, spec, "arguments",
-              tupleSpec(list(strSpec(), boolSpec())),
-              tupleSpec(list(strSpec(), intSpec()))
+              tupleSpec(list(stringSpec(), boolSpec())),
+              tupleSpec(list(stringSpec(), intSpec()))
           ));
     }
   }
@@ -593,7 +593,7 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save const
        * in HashedDb.
        */
-      Val val = intVal(123);
+      Val val = int_(123);
       Hash objHash =
           hash(
               hash(constSpec()),
@@ -611,7 +611,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
           constSpec(),
-          intVal(123).hash(),
+          int_(123).hash(),
           (Hash objHash) -> ((Const) objectDb().get(objHash)).value()
       );
     }
@@ -625,7 +625,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_hash_pointing_to_expr_instead_of_value() throws Exception {
-      Val val = intVal(123);
+      Val val = int_(123);
       Hash exprHash =
           hash(
               hash(constSpec()),
@@ -642,15 +642,15 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void evaluation_spec_is_different_than_spec_of_wrapped_value()
         throws Exception {
-      Val val = intVal(123);
-      ConstSpec spec = constSpec(strSpec());
+      Val val = int_(123);
+      ConstSpec spec = constSpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
               hash(val));
       assertCall(() -> ((Const) objectDb().get(objHash)).value())
           .throwsException(
-              new UnexpectedObjNodeException(objHash, spec, DATA_PATH, strSpec(), intSpec()));
+              new UnexpectedObjNodeException(objHash, spec, DATA_PATH, stringSpec(), intSpec()));
     }
   }
 
@@ -663,7 +663,7 @@ public class CorruptedObjTest extends TestingContextImpl {
        * in HashedDb.
        */
       Const bodyExpr = boolExpr();
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -681,7 +681,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const bodyExpr = boolExpr();
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
       Hash dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           spec,
@@ -698,8 +698,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void body_is_val_instead_of_expr() throws Exception {
-      Bool bodyExpr = boolVal(true);
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      Bool bodyExpr = bool(true);
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -713,7 +713,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void body_evaluation_spec_is_not_equal_function_spec_result() throws Exception {
       Const bodyExpr = intExpr(3);
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), strSpec()));
+      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -809,7 +809,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void with_one_element_being_val() throws Exception {
       Const expr1 = intExpr(1);
-      Int val = intVal(123);
+      Int val = int_(123);
       Hash objHash =
           hash(
               hash(orderSpec()),
@@ -826,7 +826,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void evaluation_spec_element_is_different_than_evaluation_spec_of_one_of_elements()
         throws Exception {
       Const expr1 = intExpr();
-      Const expr2 = strExpr();
+      Const expr2 = stringExpr();
       OrderSpec spec = orderSpec(intSpec());
       Hash objHash =
           hash(
@@ -838,7 +838,7 @@ public class CorruptedObjTest extends TestingContextImpl {
       assertCall(() -> ((Order) objectDb().get(objHash)).elements())
           .throwsException(
               new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "elements[1]", intSpec(), strSpec()));
+                  objHash, spec, "elements[1]", intSpec(), stringSpec()));
     }
   }
 
@@ -851,10 +851,10 @@ public class CorruptedObjTest extends TestingContextImpl {
        * in HashedDb.
        */
       Const expr1 = intExpr(1);
-      Const expr2 = strExpr("abc");
+      Const expr2 = stringExpr("abc");
       Hash objHash =
           hash(
-              hash(constructSpec(list(intSpec(), strSpec()))),
+              hash(constructSpec(list(intSpec(), stringSpec()))),
               hash(
                   hash(expr1),
                   hash(expr2)
@@ -873,7 +873,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const expr1 = intExpr(1);
-      Const expr2 = strExpr("abc");
+      Const expr2 = stringExpr("abc");
       Hash dataHash = hash(
           hash(expr1),
           hash(expr2)
@@ -926,10 +926,10 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void with_one_item_being_val() throws Exception {
       Const expr1 = intExpr(1);
-      Int val = intVal(123);
+      Int val = int_(123);
       Hash objHash =
           hash(
-              hash(constructSpec(list(intSpec(), strSpec()))),
+              hash(constructSpec(list(intSpec(), stringSpec()))),
               hash(
                   hash(expr1),
                   hash(val)
@@ -944,7 +944,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void evaluation_spec_items_size_is_different_than_actual_items_size()
         throws Exception {
       Const expr1 = intExpr(1);
-      ConstructSpec spec = constructSpec(list(intSpec(), strSpec()));
+      ConstructSpec spec = constructSpec(list(intSpec(), stringSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -960,7 +960,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void evaluation_spec_item_is_different_than_evaluation_spec_of_one_of_items()
         throws Exception {
       Const expr1 = intExpr(1);
-      Const expr2 = strExpr("abc");
+      Const expr2 = stringExpr("abc");
       ConstructSpec spec = constructSpec(list(intSpec(), boolSpec()));
       Hash objHash =
           hash(
@@ -973,7 +973,7 @@ public class CorruptedObjTest extends TestingContextImpl {
       assertCall(() -> ((Construct) objectDb().get(objHash)).items())
           .throwsException(
               new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "items[1]", boolSpec(), strSpec()));
+                  objHash, spec, "items[1]", boolSpec(), stringSpec()));
     }
   }
 
@@ -985,13 +985,13 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * select in HashedDb.
        */
-      var structSpec = structSpec(namedList(list(named("field", strSpec()))));
-      var struct = structVal(structSpec, list(strVal("abc")));
-      var expr = constExpr(struct);
-      var index = intVal(0);
+      var structSpec = structSpec(namedList(list(named("field", stringSpec()))));
+      var struct = struct(structSpec, list(string("abc")));
+      var expr = const_(struct);
+      var index = int_(0);
       Hash objHash =
           hash(
-              hash(selectSpec(strSpec())),
+              hash(selectSpec(stringSpec())),
               hash(
                   hash(expr),
                   hash(index)
@@ -1008,8 +1008,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      Val index = intVal(2);
-      Const expr = constExpr(intVal(123));
+      Val index = int_(2);
+      Const expr = const_(int_(123));
       Hash dataHash = hash(
           hash(expr),
           hash(index)
@@ -1029,7 +1029,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_is_sequence_with_one_element() throws Exception {
-      Const expr = constExpr(intVal(123));
+      Const expr = const_(int_(123));
       Hash dataHash = hash(
           hash(expr)
       );
@@ -1045,8 +1045,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
-      Val index = intVal(2);
-      Const expr = constExpr(intVal(123));
+      Val index = int_(2);
+      Const expr = const_(int_(123));
       Hash dataHash = hash(
           hash(expr),
           hash(index),
@@ -1064,8 +1064,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void tuple_is_val_instead_of_expr() throws Exception {
-      Val val = intVal(2);
-      Val index = intVal(2);
+      Val val = int_(2);
+      Val index = int_(2);
       Hash objHash =
           hash(
               hash(selectSpec()),
@@ -1082,8 +1082,8 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void struct_is_not_struct_expr() throws Exception {
       var expr = intExpr(3);
-      var index = intVal(0);
-      var spec = selectSpec(strSpec());
+      var index = int_(0);
+      var spec = selectSpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -1100,11 +1100,11 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void index_is_out_of_bounds() throws Exception {
-      var structSpec = structSpec(namedList(list(named("field", strSpec()))));
-      var struct = structVal(structSpec, list(strVal("abc")));
-      var expr = constExpr(struct);
-      var index = intVal(1);
-      var spec = selectSpec(strSpec());
+      var structSpec = structSpec(namedList(list(named("field", stringSpec()))));
+      var struct = struct(structSpec, list(string("abc")));
+      var expr = const_(struct);
+      var index = int_(1);
+      var spec = selectSpec(stringSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -1121,10 +1121,10 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void evaluation_spec_is_different_than_spec_of_item_pointed_to_by_index()
         throws Exception {
-      var structSpec = structSpec(namedList(list(named("field", strSpec()))));
-      var struct = structVal(structSpec, list(strVal("abc")));
-      var expr = constExpr(struct);
-      var index = intVal(0);
+      var structSpec = structSpec(namedList(list(named("field", stringSpec()))));
+      var struct = struct(structSpec, list(string("abc")));
+      var expr = const_(struct);
+      var index = int_(0);
       var spec = selectSpec(intSpec());
       Hash objHash =
           hash(
@@ -1136,16 +1136,16 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
 
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
-          .throwsException(new DecodeSelectWrongEvaluationSpecException(objHash, spec, strSpec()));
+          .throwsException(new DecodeSelectWrongEvaluationSpecException(objHash, spec, stringSpec()));
     }
 
     @Test
     public void index_is_string_instead_of_int() throws Exception {
-      var spec = selectSpec(strSpec());
-      var structSpec = structSpec(namedList(list(named("field", strSpec()))));
-      var struct = structVal(structSpec, list(strVal("abc")));
-      var expr = constExpr(struct);
-      var strVal = strVal("abc");
+      var spec = selectSpec(stringSpec());
+      var structSpec = structSpec(namedList(list(named("field", stringSpec()))));
+      var struct = struct(structSpec, list(string("abc")));
+      var expr = const_(struct);
+      var strVal = string("abc");
       Hash objHash =
           hash(
               hash(spec),
@@ -1207,8 +1207,8 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save native_method
        * in HashedDb.
        */
-      Blob jarFile = blobVal();
-      Str classBinaryName = strVal();
+      Blob jarFile = blob();
+      Str classBinaryName = string();
       Hash objHash =
           hash(
               hash(nativeMethodSpec()),
@@ -1231,8 +1231,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      Blob jarFile = blobVal();
-      Str classBinaryName = strVal();
+      Blob jarFile = blob();
+      Str classBinaryName = string();
       Hash dataHash = hash(
           hash(jarFile),
           hash(classBinaryName)
@@ -1252,7 +1252,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_is_sequence_with_one_element() throws Exception {
-      Blob jarFile = blobVal();
+      Blob jarFile = blob();
       Hash dataHash = hash(
           hash(jarFile)
       );
@@ -1269,8 +1269,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
-      Blob jarFile = blobVal();
-      Str classBinaryName = strVal();
+      Blob jarFile = blob();
+      Str classBinaryName = string();
       Hash dataHash = hash(
           hash(jarFile),
           hash(classBinaryName),
@@ -1289,8 +1289,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
-      Str jarFile = strVal();
-      Str classBinaryName = strVal();
+      Str jarFile = string();
+      Str classBinaryName = string();
       Hash objHash =
           hash(
               hash(nativeMethodSpec()),
@@ -1306,8 +1306,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
-      Blob jarFile = blobVal();
-      Int classBinaryName = intVal();
+      Blob jarFile = blob();
+      Int classBinaryName = int_();
       Hash objHash =
           hash(
               hash(nativeMethodSpec()),
@@ -1347,7 +1347,7 @@ public class CorruptedObjTest extends TestingContextImpl {
        */
       Hash objHash =
           hash(
-              hash(strSpec()),
+              hash(stringSpec()),
               hash("aaa"));
       assertThat(((Str) objectDb().get(objHash)).jValue())
           .isEqualTo("aaa");
@@ -1355,13 +1355,13 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(strSpec());
+      obj_root_without_data_hash(stringSpec());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          strSpec(),
+          stringSpec(),
           hashedDb().writeBoolean(true),
           (Hash objHash) -> ((Str) objectDb().get(objHash)).jValue()
       );
@@ -1370,7 +1370,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          strSpec(),
+          stringSpec(),
           (Hash objHash) -> ((Str) objectDb().get(objHash)).jValue());
     }
 
@@ -1379,10 +1379,10 @@ public class CorruptedObjTest extends TestingContextImpl {
       Hash notStringHash = hash(illegalString());
       Hash objHash =
           hash(
-              hash(strSpec()),
+              hash(stringSpec()),
               notStringHash);
       assertCall(() -> ((Str) objectDb().get(objHash)).jValue())
-          .throwsException(new DecodeObjNodeException(objHash, strSpec(), DATA_PATH))
+          .throwsException(new DecodeObjNodeException(objHash, stringSpec(), DATA_PATH))
           .withCause(new DecodeStringException(notStringHash, null));
     }
   }
@@ -1396,9 +1396,9 @@ public class CorruptedObjTest extends TestingContextImpl {
        * struct in HashedDb.
        */
       var structSpec = structSpec(
-          namedList(list(named("name1", strSpec()), named("name2", intSpec()))));
-      var item1 = strVal();
-      var item2 = intVal();
+          namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
+      var item1 = string();
+      var item2 = int_();
       Hash objHash =
           hash(
               hash(structSpec),
@@ -1422,9 +1422,9 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var structSpec = structSpec(
-          namedList(list(named("name1", strSpec()), named("name2", intSpec()))));
-      var item1 = strVal();
-      var item2 = intVal();
+          namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
+      var item1 = string();
+      var item2 = int_();
       Hash dataHash = hash(
           hash(item1),
           hash(item2)
@@ -1444,8 +1444,8 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void with_too_few_elements() throws Exception {
       var structSpec = structSpec(
-          namedList(list(named("name1", strSpec()), named("name2", intSpec()))));
-      var item1 = strVal();
+          namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
+      var item1 = string();
       Hash objHash =
           hash(
               hash(structSpec),
@@ -1462,9 +1462,9 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void with_too_many_elements() throws Exception {
       var structSpec = structSpec(
-          namedList(list(named("name1", strSpec()), named("name2", intSpec()))));
-      var item1 = strVal();
-      var item2 = intVal();
+          namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
+      var item1 = string();
+      var item2 = int_();
       Hash objHash =
           hash(
               hash(structSpec),
@@ -1483,14 +1483,14 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void with_element_of_wrong_spec() throws Exception {
       var structSpec = structSpec(
-          namedList(list(named("name1", strSpec()), named("name2", intSpec()))));
-      var item1 = strVal();
+          namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
+      var item1 = string();
       Hash objHash =
           hash(
               hash(structSpec),
               hash(
                   hash(item1),
-                  hash(boolVal(true))
+                  hash(bool(true))
               )
           );
       Struc_ readStruct = (Struc_) objectDb().get(objHash);
@@ -1502,8 +1502,8 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void with_element_being_expr() throws Exception {
       var structSpec = structSpec(
-          namedList(list(named("name1", strSpec()), named("name2", intSpec()))));
-      var item1 = strVal();
+          namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
+      var item1 = string();
       Hash objHash =
           hash(
               hash(structSpec),
@@ -1531,9 +1531,9 @@ public class CorruptedObjTest extends TestingContextImpl {
           hash(
               hash(perso_Spec()),
               hash(
-                  hash(strVal("John")),
-                  hash(strVal("Doe")))))
-          .isEqualTo(personVal("John", "Doe").hash());
+                  hash(string("John")),
+                  hash(string("Doe")))))
+          .isEqualTo(person("John", "Doe").hash());
     }
 
     @Test
@@ -1593,7 +1593,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void with_too_few_elements() throws Exception {
       Hash dataHash =
           hash(
-              hash(strVal("John")));
+              hash(string("John")));
       Hash objHash =
           hash(
               hash(perso_Spec()),
@@ -1607,9 +1607,9 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void with_too_many_elements() throws Exception {
       Hash dataHash =
           hash(
-              hash(strVal("John")),
-              hash(strVal("Doe")),
-              hash(strVal("junk")));
+              hash(string("John")),
+              hash(string("Doe")),
+              hash(string("junk")));
       Hash objHash =
           hash(
               hash(perso_Spec()),
@@ -1625,12 +1625,12 @@ public class CorruptedObjTest extends TestingContextImpl {
           hash(
               hash(perso_Spec()),
               hash(
-                  hash(strVal("John")),
-                  hash(boolVal(true))));
+                  hash(string("John")),
+                  hash(bool(true))));
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, perso_Spec(), DATA_PATH, 1, strSpec(), boolSpec()));
+              objHash, perso_Spec(), DATA_PATH, 1, stringSpec(), boolSpec()));
     }
 
     @Test
@@ -1639,7 +1639,7 @@ public class CorruptedObjTest extends TestingContextImpl {
           hash(
               hash(perso_Spec()),
               hash(
-                  hash(strVal("John")),
+                  hash(string("John")),
                   hash(intExpr())));
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
@@ -1659,7 +1659,7 @@ public class CorruptedObjTest extends TestingContextImpl {
       ByteString byteString = ByteString.of((byte) 3, (byte) 2);
       Hash objHash =
           hash(
-              hash(refSpec(strSpec())),
+              hash(refSpec(stringSpec())),
               hash(byteString));
       assertThat(((Ref) objectDb().get(objHash)).value())
           .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
