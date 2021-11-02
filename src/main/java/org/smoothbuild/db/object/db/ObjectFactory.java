@@ -74,16 +74,7 @@ public class ObjectFactory {
     this.fileSpec = createFileSpec(specDb);
   }
 
-  private static StructSpec createMessageSpec(SpecDb specDb) {
-    StrSpec strSpec = specDb.string();
-    return specDb.struct("", namedList(list(named(strSpec), named(strSpec))));
-  }
-
-  private static StructSpec createFileSpec(SpecDb specDb) {
-    return specDb.struct(FileStruct.NAME, namedList(list(
-        named(CONTENT_FIELD_NAME, specDb.blob()), named(PATH_FIELD_NAME, specDb.string())))
-    );
-  }
+  // Values
 
   public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
     return objectDb.arrayBuilder(elementSpec);
@@ -106,16 +97,32 @@ public class ObjectFactory {
     return objectDb.bool(value);
   }
 
-  public Lambda lambda(LambdaSpec spec, Expr body) {
-    return objectDb.lambda(spec, body);
+  public Call call(Expr function, Construct arguments) {
+    return objectDb.call(function, arguments);
+  }
+
+  public Const const_(Val val) {
+    return objectDb.const_(val);
+  }
+
+  public Struc_ file(Str path, Blob content) {
+    return objectDb.struct(fileSpec(), list(content, path));
   }
 
   public Int int_(BigInteger value) {
     return objectDb.int_(value);
   }
 
-  public Struc_ file(Str path, Blob content) {
-    return objectDb.struct(fileSpec(), list(content, path));
+  public Lambda lambda(LambdaSpec spec, Expr body) {
+    return objectDb.lambda(spec, body);
+  }
+
+  public Ref ref(BigInteger value, ValSpec evaluationSpec) {
+    return objectDb.ref(value, evaluationSpec);
+  }
+
+  public Select select(Expr struct, Int index) {
+    return objectDb.select(struct, index);
   }
 
   public Str string(String string) {
@@ -126,33 +133,19 @@ public class ObjectFactory {
     return objectDb.struct(structSpec, items);
   }
 
+  public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
+    return objectDb.structExpr(evaluationSpec, items);
+  }
+
   public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> items) {
     return objectDb.tuple(spec, items);
-  }
-
-  public Const const_(Val val) {
-    return objectDb.const_(val);
-  }
-
-  public Call call(Expr function, Construct arguments) {
-    return objectDb.call(function, arguments);
   }
 
   public Order order(List<? extends Expr> elements) {
     return objectDb.order(elements);
   }
 
-  public Select select(Expr struct, Int index) {
-    return objectDb.select(struct, index);
-  }
-
-  public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
-    return objectDb.structExpr(evaluationSpec, items);
-  }
-
-  public Ref ref(BigInteger value, ValSpec evaluationSpec) {
-    return objectDb.ref(value, evaluationSpec);
-  }
+  // Specs
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
     return specDb.array(elementSpec);
@@ -170,10 +163,6 @@ public class ObjectFactory {
     return specDb.int_();
   }
 
-  public StructSpec fileSpec() {
-    return fileSpec;
-  }
-
   public LambdaSpec lambdaSpec(Type result, ImmutableList<? extends Type> parameters) {
     return specDb.function(result, parameters);
   }
@@ -189,16 +178,22 @@ public class ObjectFactory {
     return specDb.string();
   }
 
-  public TupleSpec tupleSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb.tuple(itemSpecs);
-  }
-
   public StructSpec structSpec(String name, NamedList<? extends Type> fields) {
     return specDb.struct(name, fields);
   }
 
   public StructExprSpec structExprSpec(StructSpec struct) {
     return specDb.structExpr(struct);
+  }
+
+  public TupleSpec tupleSpec(ImmutableList<ValSpec> itemSpecs) {
+    return specDb.tuple(itemSpecs);
+  }
+
+  // other values and its specs
+
+  public StructSpec fileSpec() {
+    return fileSpec;
   }
 
   public Struc_ errorMessage(String text) {
@@ -217,5 +212,16 @@ public class ObjectFactory {
     Val textObject = objectDb.string(text);
     Val severityObject = objectDb.string(severity);
     return objectDb.struct(messageSpec(), list(textObject, severityObject));
+  }
+
+  private static StructSpec createMessageSpec(SpecDb specDb) {
+    StrSpec strSpec = specDb.string();
+    return specDb.struct("", namedList(list(named(strSpec), named(strSpec))));
+  }
+
+  private static StructSpec createFileSpec(SpecDb specDb) {
+    return specDb.struct(FileStruct.NAME, namedList(list(
+        named(CONTENT_FIELD_NAME, specDb.blob()), named(PATH_FIELD_NAME, specDb.string())))
+    );
   }
 }
