@@ -26,7 +26,7 @@ public class FixedIntAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Val val = nativeApi.factory().intValue(bigInteger);
+    Val val = nativeApi.factory().int_(bigInteger);
     return new Output(val, nativeApi.messages());
   }
 }

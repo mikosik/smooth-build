@@ -103,55 +103,55 @@ public class ObjectFactory {
   }
 
   public Bool bool(boolean value) {
-    return objectDb.boolVal(value);
+    return objectDb.bool(value);
   }
 
   public Lambda lambda(LambdaSpec spec, Expr body) {
-    return objectDb.lambdaVal(spec, body);
+    return objectDb.lambda(spec, body);
   }
 
-  public Int intValue(BigInteger value) {
-    return objectDb.intVal(value);
+  public Int int_(BigInteger value) {
+    return objectDb.int_(value);
   }
 
   public Struc_ file(Str path, Blob content) {
-    return objectDb.structVal(fileSpec(), list(content, path));
+    return objectDb.struct(fileSpec(), list(content, path));
   }
 
   public Str string(String string) {
-    return objectDb.strVal(string);
+    return objectDb.string(string);
   }
 
   public Struc_ struct(StructSpec structSpec, ImmutableList<Val> items) {
-    return objectDb.structVal(structSpec, items);
+    return objectDb.struct(structSpec, items);
   }
 
   public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> items) {
-    return objectDb.tupleVal(spec, items);
+    return objectDb.tuple(spec, items);
   }
 
-  public Const constExpr(Val val) {
-    return objectDb.constExpr(val);
+  public Const const_(Val val) {
+    return objectDb.const_(val);
   }
 
-  public Call callExpr(Expr function, Construct arguments) {
-    return objectDb.callExpr(function, arguments);
+  public Call call(Expr function, Construct arguments) {
+    return objectDb.call(function, arguments);
   }
 
   public Order order(List<? extends Expr> elements) {
     return objectDb.order(elements);
   }
 
-  public Select selectExpr(Expr struct, Int index) {
-    return objectDb.selectExpr(struct, index);
+  public Select select(Expr struct, Int index) {
+    return objectDb.select(struct, index);
   }
 
   public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
     return objectDb.structExpr(evaluationSpec, items);
   }
 
-  public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {
-    return objectDb.refExpr(value, evaluationSpec);
+  public Ref ref(BigInteger value, ValSpec evaluationSpec) {
+    return objectDb.ref(value, evaluationSpec);
   }
 
   public ArraySpec arraySpec(ValSpec elementSpec) {
@@ -214,8 +214,8 @@ public class ObjectFactory {
   }
 
   private Struc_ message(String severity, String text) {
-    Val textObject = objectDb.strVal(text);
-    Val severityObject = objectDb.strVal(severity);
-    return objectDb.structVal(messageSpec(), list(textObject, severityObject));
+    Val textObject = objectDb.string(text);
+    Val severityObject = objectDb.string(severity);
+    return objectDb.struct(messageSpec(), list(textObject, severityObject));
   }
 }

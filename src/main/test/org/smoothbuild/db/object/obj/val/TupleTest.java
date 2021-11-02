@@ -10,32 +10,32 @@ import org.smoothbuild.testing.TestingContextImpl;
 public class TupleTest extends TestingContextImpl {
   @Test
   public void creating_tuple_with_less_items_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> objectDb().tupleVal(perso_Spec(), list(strVal("John"))))
+    assertCall(() -> objectDb().tuple(perso_Spec(), list(strVal("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_item_with_different_spec_than_specified_in_tuple_spec_causes_exception() {
-    assertCall(() -> objectDb().tupleVal(perso_Spec(), list(strVal(), intVal())))
+    assertCall(() -> objectDb().tuple(perso_Spec(), list(strVal(), intVal())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_more_items_than_specified_in_its_spec_causes_exception() {
-    assertCall(() -> objectDb().tupleVal(
+    assertCall(() -> objectDb().tuple(
         perso_Spec(), list(strVal("John"), strVal("Doe"), strVal("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> objectDb().tupleVal(perso_Spec(), list(strVal("John"), null)))
+    assertCall(() -> objectDb().tuple(perso_Spec(), list(strVal("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_item_to_object_of_wrong_spec_throws_exception() {
-    assertCall(() -> objectDb().tupleVal(perso_Spec(), list(strVal("John"), intVal(123))))
+    assertCall(() -> objectDb().tuple(perso_Spec(), list(strVal("John"), intVal(123))))
         .throwsException(IllegalArgumentException.class);
   }
 

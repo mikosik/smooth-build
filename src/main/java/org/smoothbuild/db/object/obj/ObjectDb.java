@@ -77,32 +77,32 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> new BlobBuilder(this, hashedDb.sink()));
   }
 
-  public Bool boolVal(boolean value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newBoolVal(value));
+  public Bool bool(boolean value) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
-  public Lambda lambdaVal(LambdaSpec spec, Expr body) {
+  public Lambda lambda(LambdaSpec spec, Expr body) {
     if (!Objects.equals(spec.result(), body.evaluationSpec())) {
       throw new IllegalArgumentException("`spec` specifies result as " + spec.result().name()
           + " but body.evaluationSpec() is " + body.evaluationSpec().name() + ".");
     }
-    return wrapHashedDbExceptionAsObjectDbException(() -> newLambdaVal(spec, body));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newLambda(spec, body));
   }
 
-  public Int intVal(BigInteger value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newIntVal(value));
+  public Int int_(BigInteger value) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newInt(value));
   }
 
-  public NativeMethod nativeMethodVal(Blob jarFile, Str classBinaryName) {
+  public NativeMethod nativeMethod(Blob jarFile, Str classBinaryName) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newNativeMethodVal(jarFile, classBinaryName));
+        () -> newNativeMethod(jarFile, classBinaryName));
   }
 
-  public Str strVal(String value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStrVal(value));
+  public Str string(String value) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
   }
 
-  public Struc_ structVal(StructSpec structSpec, ImmutableList<Val> items) {
+  public Struc_ struct(StructSpec structSpec, ImmutableList<Val> items) {
     var fieldTypes = map(structSpec.fields().list(), Named::object);
     allMatchOtherwise(fieldTypes, items, (f, i) -> Objects.equals(f, i.spec()),
         (i, j) -> {
@@ -115,10 +115,10 @@ public class ObjectDb {
               + items.get(i).spec().name() + " at that index.");
         }
     );
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStructVal(structSpec, items));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStruct(structSpec, items));
   }
 
-  public Tuple tupleVal(TupleSpec tupleSpec, Iterable<? extends Obj> items) {
+  public Tuple tuple(TupleSpec tupleSpec, Iterable<? extends Obj> items) {
     List<Obj> itemList = ImmutableList.copyOf(items);
     var specs = tupleSpec.items();
 
@@ -134,23 +134,23 @@ public class ObjectDb {
         }
     );
 
-    return wrapHashedDbExceptionAsObjectDbException(() -> newTupleVal(tupleSpec, itemList));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleSpec, itemList));
   }
 
   // methods for creating expr-s
 
-  public Call callExpr(Expr function, Construct arguments) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCallExpr(function, arguments));
+  public Call call(Expr function, Construct arguments) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(function, arguments));
   }
 
-  public Const constExpr(Val val) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newConstExpr(val));
+  public Const const_(Val val) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newConst(val));
   }
 
-  public Invoke invokeExpr(
+  public Invoke invoke(
       ValSpec evaluationSpec, NativeMethod nativeMethod, Bool isPure, Int argumentCount) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newInvokeExpr(evaluationSpec, nativeMethod, isPure, argumentCount));
+        () -> newInvoke(evaluationSpec, nativeMethod, isPure, argumentCount));
   }
 
   public Order order(List<? extends Expr> elements) {
@@ -161,16 +161,16 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(items));
   }
 
-  public Select selectExpr(Expr struct, Int index) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newSelectExpr(struct, index));
+  public Select select(Expr struct, Int index) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(struct, index));
   }
 
   public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStructExpr(evaluationSpec, items));
   }
 
-  public Ref refExpr(BigInteger value, ValSpec evaluationSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRefExpr(evaluationSpec, value));
+  public Ref ref(BigInteger value, ValSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationSpec, value));
   }
 
   // generic getter
@@ -208,8 +208,7 @@ public class ObjectDb {
 
   // methods for creating Expr Obj-s
 
-  private Call newCallExpr(Expr function, Construct arguments)
-      throws HashedDbException {
+  private Call newCall(Expr function, Construct arguments) throws HashedDbException {
     var lambdaSpec = functionEvaluationSpec(function);
     verifyArguments(lambdaSpec, arguments);
     var spec = specDb.call(lambdaSpec.result());
@@ -234,14 +233,14 @@ public class ObjectDb {
     }
   }
 
-  private Const newConstExpr(Val val) throws HashedDbException {
+  private Const newConst(Val val) throws HashedDbException {
     var spec = specDb.const_(val.spec());
     var data = writeConstData(val);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
-  private Invoke newInvokeExpr(ValSpec evaluationSpec, NativeMethod nativeMethod, Bool isPure,
+  private Invoke newInvoke(ValSpec evaluationSpec, NativeMethod nativeMethod, Bool isPure,
       Int argumentCount) throws HashedDbException {
     var data = writeInvokeData(nativeMethod, isPure, argumentCount);
     var spec = specDb.invoke(evaluationSpec);
@@ -286,7 +285,7 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private Select newSelectExpr(Expr struct, Int index) throws HashedDbException {
+  private Select newSelect(Expr struct, Int index) throws HashedDbException {
     var spec = selectSpec(struct, index);
     var data = writeSelectData(struct, index);
     var root = writeRoot(spec, data);
@@ -326,7 +325,7 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private Ref newRefExpr(ValSpec evaluationSpec, BigInteger index) throws HashedDbException {
+  private Ref newRef(ValSpec evaluationSpec, BigInteger index) throws HashedDbException {
     var data = writeRefData(index);
     var spec = specDb.ref(evaluationSpec);
     var root = writeRoot(spec, data);
@@ -335,38 +334,38 @@ public class ObjectDb {
 
   // methods for creating Val Obj-s
 
-  public Array newArrayVal(ArraySpec spec, List<? extends Obj> elements)
+  public Array newArray(ArraySpec spec, List<? extends Obj> elements)
       throws HashedDbException {
     var data = writeArrayData(elements);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
-  public Blob newBlobVal(Hash dataHash) throws HashedDbException {
+  public Blob newBlob(Hash dataHash) throws HashedDbException {
     var root = writeRoot(specDb.blob(), dataHash);
     return specDb.blob().newObj(root, this);
   }
 
-  private Bool newBoolVal(boolean value) throws HashedDbException {
+  private Bool newBool(boolean value) throws HashedDbException {
     var data = writeBoolData(value);
     var root = writeRoot(specDb.bool(), data);
     return specDb.bool().newObj(root, this);
   }
 
-  private Lambda newLambdaVal(LambdaSpec spec, Expr body)
+  private Lambda newLambda(LambdaSpec spec, Expr body)
       throws HashedDbException {
     var data = writeLambdaData(body);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
-  private Int newIntVal(BigInteger value) throws HashedDbException {
+  private Int newInt(BigInteger value) throws HashedDbException {
     var data = writeIntData(value);
     var root = writeRoot(specDb.int_(), data);
     return specDb.int_().newObj(root, this);
   }
 
-  private NativeMethod newNativeMethodVal(Blob jarFile, Str classBinaryName)
+  private NativeMethod newNativeMethod(Blob jarFile, Str classBinaryName)
       throws HashedDbException {
     var spec = specDb.nativeMethod();
     var data = writeNativeMethodData(jarFile, classBinaryName);
@@ -374,19 +373,19 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private Str newStrVal(String string) throws HashedDbException {
+  private Str newString(String string) throws HashedDbException {
     var data = writeStrData(string);
     var root = writeRoot(specDb.string(), data);
     return specDb.string().newObj(root, this);
   }
 
-  private Struc_ newStructVal(StructSpec spec, ImmutableList<Val> items) throws HashedDbException {
+  private Struc_ newStruct(StructSpec spec, ImmutableList<Val> items) throws HashedDbException {
     var data = writeStructData(items);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
 
-  private Tuple newTupleVal(TupleSpec spec, List<? extends Obj> objects) throws HashedDbException {
+  private Tuple newTuple(TupleSpec spec, List<? extends Obj> objects) throws HashedDbException {
     var data = writeTupleData(objects);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);

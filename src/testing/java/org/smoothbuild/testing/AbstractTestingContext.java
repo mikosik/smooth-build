@@ -419,7 +419,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Bool boolVal(boolean value) {
-    return objectDb().boolVal(value);
+    return objectDb().bool(value);
   }
 
   public Lambda lambdaVal() {
@@ -432,7 +432,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Lambda lambdaVal(LambdaSpec spec, Expr body) {
-    return objectDb().lambdaVal(spec, body);
+    return objectDb().lambda(spec, body);
   }
 
   public Int intVal() {
@@ -440,23 +440,23 @@ public abstract class AbstractTestingContext {
   }
 
   public Int intVal(int value) {
-    return objectDb().intVal(BigInteger.valueOf(value));
+    return objectDb().int_(BigInteger.valueOf(value));
   }
 
   public NativeMethod nativeMethodVal(Blob jarFile, Str classBinaryName) {
-    return objectDb().nativeMethodVal(jarFile, classBinaryName);
+    return objectDb().nativeMethod(jarFile, classBinaryName);
   }
 
   public Str strVal() {
-    return objectDb().strVal("abc");
+    return objectDb().string("abc");
   }
 
   public Str strVal(String string) {
-    return objectDb().strVal(string);
+    return objectDb().string(string);
   }
 
   public Struc_ structVal(StructSpec spec, ImmutableList<Val> items) {
-    return objectDb().structVal(spec, items);
+    return objectDb().struct(spec, items);
   }
 
   public Tuple tupleVal(List<? extends Val> items) {
@@ -465,7 +465,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Tuple tupleVal(TupleSpec tupleSpec, List<? extends Val> items) {
-    return objectDb().tupleVal(tupleSpec, items);
+    return objectDb().tuple(tupleSpec, items);
   }
 
   public Tuple emptyTupleVal() {
@@ -524,11 +524,11 @@ public abstract class AbstractTestingContext {
   }
 
   public Call callExpr(Expr function, ImmutableList<? extends Expr> arguments) {
-    return objectDb().callExpr(function, constructExpr(arguments));
+    return objectDb().call(function, constructExpr(arguments));
   }
 
   public Const constExpr(Val val) {
-    return objectDb().constExpr(val);
+    return objectDb().const_(val);
   }
 
   public Order orderExpr(List<? extends Expr> elements) {
@@ -540,7 +540,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Select selectExpr(Expr tuple, Int index) {
-    return objectDb().selectExpr(tuple, index);
+    return objectDb().select(tuple, index);
   }
 
   public Const intExpr() {
@@ -552,11 +552,11 @@ public abstract class AbstractTestingContext {
   }
 
   public Ref refExpr(int value) {
-    return objectDb().refExpr(BigInteger.valueOf(value), intSpec());
+    return objectDb().ref(BigInteger.valueOf(value), intSpec());
   }
 
   public Ref refExpr(ValSpec evaluationSpec, int pointer) {
-    return objectDb().refExpr(BigInteger.valueOf(pointer), evaluationSpec);
+    return objectDb().ref(BigInteger.valueOf(pointer), evaluationSpec);
   }
 
   public Const strExpr() {
