@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.db.object.obj.base.Obj.DATA_PATH;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.objRootException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -1692,7 +1691,7 @@ public class CorruptedObjTest extends TestingContextImpl {
         hash(
             hash(spec));
     assertCall(() -> objectDb().get(objHash))
-        .throwsException(objRootException(objHash, 1));
+        .throwsException(wrongSizeOfRootSequenceException(objHash, 1));
   }
 
   private void obj_root_with_two_data_hashes(

@@ -3,7 +3,6 @@ package org.smoothbuild.db.object.obj;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.objRootException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -177,13 +176,10 @@ public class ObjectDb {
 
   public Obj get(Hash rootHash) {
     List<Hash> hashes = decodeRootSequence(rootHash);
-    if (hashes.size() != 1 && hashes.size() != 2) {
+    if (hashes.size() != 2) {
       throw wrongSizeOfRootSequenceException(rootHash, hashes.size());
     }
     Spec spec = getSpecOrChainException(rootHash, hashes.get(0));
-    if (hashes.size() != 2) {
-      throw objRootException(rootHash, hashes.size());
-    }
     Hash dataHash = hashes.get(1);
     return spec.newObj(new MerkleRoot(rootHash, spec, dataHash), this);
   }
