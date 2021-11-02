@@ -1,21 +1,21 @@
 package org.smoothbuild.db.object.spec.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE_EXPR;
+import static org.smoothbuild.db.object.spec.base.SpecKind.CONSTRUCT;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.expr.TupleExpr;
+import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.spec.base.ExprSpec;
 import org.smoothbuild.db.object.spec.val.TupleSpec;
 
 /**
  * This class is immutable.
  */
-public class TupleExprSpec extends ExprSpec {
-  public TupleExprSpec(Hash hash, TupleSpec evaluationSpec) {
-    super("TUPLE", hash, TUPLE_EXPR, evaluationSpec);
+public class ConstructSpec extends ExprSpec {
+  public ConstructSpec(Hash hash, TupleSpec evaluationSpec) {
+    super("CONSTRUCT", hash, CONSTRUCT, evaluationSpec);
   }
 
   @Override
@@ -24,8 +24,8 @@ public class TupleExprSpec extends ExprSpec {
   }
 
   @Override
-  public TupleExpr newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Construct newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new TupleExpr(merkleRoot, objectDb);
+    return new Construct(merkleRoot, objectDb);
   }
 }

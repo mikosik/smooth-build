@@ -14,6 +14,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
+import static org.smoothbuild.db.object.spec.base.SpecKind.CONSTRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
@@ -24,7 +25,6 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE;
-import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.db.object.spec.base.SpecKind.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
@@ -54,11 +54,11 @@ import org.smoothbuild.db.object.spec.exc.UnexpectedSpecSequenceException;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
+import org.smoothbuild.db.object.spec.expr.ConstructSpec;
 import org.smoothbuild.db.object.spec.expr.InvokeSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.expr.StructExprSpec;
-import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
 import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
@@ -208,8 +208,8 @@ public class SpecDb implements TypeFactory {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvokeSpec(evaluationSpec));
   }
 
-  public TupleExprSpec tupleExpr(TupleSpec evaluationSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newTupleExprSpec(evaluationSpec));
+  public ConstructSpec construct(TupleSpec evaluationSpec) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newConstructSpec(evaluationSpec));
   }
 
   public RefSpec ref(ValSpec evaluationSpec) {
@@ -246,7 +246,7 @@ public class SpecDb implements TypeFactory {
       case INVOKE -> newInvokeSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case LAMBDA -> readLambdaSpec(hash, rootSequence, specKind);
       case REF -> newRefSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
-      case TUPLE_EXPR -> newTupleExprSpec(hash, getDataAsTupleSpec(hash, rootSequence, specKind));
+      case CONSTRUCT -> newConstructSpec(hash, getDataAsTupleSpec(hash, rootSequence, specKind));
       case TUPLE -> readTuple(hash, rootSequence);
       case SELECT -> newSelectSpec(hash, getDataAsValSpec(hash, rootSequence, specKind));
       case STRUCT -> readStructSpec(hash, rootSequence);
@@ -502,13 +502,13 @@ public class SpecDb implements TypeFactory {
     return cache(new InvokeSpec(rootHash, evaluationSpec));
   }
 
-  private TupleExprSpec newTupleExprSpec(TupleSpec evaluationSpec) throws HashedDbException {
-    var rootHash = writeExprSpecRoot(TUPLE_EXPR, evaluationSpec);
-    return newTupleExprSpec(rootHash, evaluationSpec);
+  private ConstructSpec newConstructSpec(TupleSpec evaluationSpec) throws HashedDbException {
+    var rootHash = writeExprSpecRoot(CONSTRUCT, evaluationSpec);
+    return newConstructSpec(rootHash, evaluationSpec);
   }
 
-  private TupleExprSpec newTupleExprSpec(Hash rootHash, TupleSpec evaluationSpec) {
-    return cache(new TupleExprSpec(rootHash, evaluationSpec));
+  private ConstructSpec newConstructSpec(Hash rootHash, TupleSpec evaluationSpec) {
+    return cache(new ConstructSpec(rootHash, evaluationSpec));
   }
 
   private RefSpec newRefSpec(ValSpec evaluationSpec) throws HashedDbException {

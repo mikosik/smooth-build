@@ -27,11 +27,11 @@ import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.obj.expr.Invoke;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
-import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
@@ -139,7 +139,7 @@ public class ObjectDb {
 
   // methods for creating expr-s
 
-  public Call callExpr(Expr function, TupleExpr arguments) {
+  public Call callExpr(Expr function, Construct arguments) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCallExpr(function, arguments));
   }
 
@@ -157,8 +157,8 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArrayExpr(elements));
   }
 
-  public TupleExpr tupleExpr(ImmutableList<? extends Expr> items) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newTupleExpr(items));
+  public Construct construct(ImmutableList<? extends Expr> items) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(items));
   }
 
   public Select selectExpr(Expr struct, Int index) {
@@ -208,7 +208,7 @@ public class ObjectDb {
 
   // methods for creating Expr Obj-s
 
-  private Call newCallExpr(Expr function, TupleExpr arguments)
+  private Call newCallExpr(Expr function, Construct arguments)
       throws HashedDbException {
     var lambdaSpec = functionEvaluationSpec(function);
     verifyArguments(lambdaSpec, arguments);
@@ -218,7 +218,7 @@ public class ObjectDb {
     return spec.newObj(root, this);
   }
 
-  private static void verifyArguments(LambdaSpec lambdaSpec, TupleExpr arguments) {
+  private static void verifyArguments(LambdaSpec lambdaSpec, Construct arguments) {
     if (!Objects.equals(lambdaSpec.parametersTuple(), arguments.evaluationSpec())) {
       throw new IllegalArgumentException(("Arguments evaluation spec %s should be equal to "
           + "function evaluation spec parameters %s.")
@@ -277,11 +277,11 @@ public class ObjectDb {
     }
   }
 
-  private TupleExpr newTupleExpr(List<? extends Expr> items) throws HashedDbException {
+  private Construct newConstruct(List<? extends Expr> items) throws HashedDbException {
     var itemSpecs = map(items, Expr::evaluationSpec);
     var evaluationSpec = specDb.tuple(itemSpecs);
-    var spec = specDb.tupleExpr(evaluationSpec);
-    var data = writeTupleExprData(items);
+    var spec = specDb.construct(evaluationSpec);
+    var data = writeConstructData(items);
     var root = writeRoot(spec, data);
     return spec.newObj(root, this);
   }
@@ -406,7 +406,7 @@ public class ObjectDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(Expr function, TupleExpr arguments) throws HashedDbException {
+  private Hash writeCallData(Expr function, Construct arguments) throws HashedDbException {
     return hashedDb.writeSequence(function.hash(), arguments.hash());
   }
 
@@ -427,7 +427,7 @@ public class ObjectDb {
     return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash());
   }
 
-  private Hash writeTupleExprData(List<? extends Expr> items) throws HashedDbException {
+  private Hash writeConstructData(List<? extends Expr> items) throws HashedDbException {
     return writeSequence(items);
   }
 

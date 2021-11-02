@@ -4,10 +4,10 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
-import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -37,7 +37,7 @@ public enum SpecKind {
   ARRAY_EXPR((byte) 11, ArrayExpr.class),
   SELECT((byte) 12, Select.class),
   REF((byte) 14, Ref.class),
-  TUPLE_EXPR((byte) 15, TupleExpr.class),
+  CONSTRUCT((byte) 15, Construct.class),
 
   VARIABLE((byte) 17, null),
   ANY((byte) 18, null),
@@ -62,7 +62,7 @@ public enum SpecKind {
           .put((byte) 11, ARRAY_EXPR)
           .put((byte) 12, SELECT)
           .put((byte) 14, REF)
-          .put((byte) 15, TUPLE_EXPR)
+          .put((byte) 15, CONSTRUCT)
           .put((byte) 17, VARIABLE)
           .put((byte) 18, ANY)
           .put((byte) 19, NATIVE_METHOD)

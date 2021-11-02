@@ -23,10 +23,10 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
-import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
@@ -134,7 +134,7 @@ public class ObjectFactory {
     return objectDb.constExpr(val);
   }
 
-  public Call callExpr(Expr function, TupleExpr arguments) {
+  public Call callExpr(Expr function, Construct arguments) {
     return objectDb.callExpr(function, arguments);
   }
 

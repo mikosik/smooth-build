@@ -8,9 +8,9 @@ import java.util.Objects;
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationSpecOfComponentException;
-import org.smoothbuild.db.object.obj.exc.DecodeTupleExprWrongItemsSizeException;
-import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
+import org.smoothbuild.db.object.spec.expr.ConstructSpec;
 import org.smoothbuild.db.object.spec.val.TupleSpec;
 
 import com.google.common.collect.ImmutableList;
@@ -18,15 +18,15 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class TupleExpr extends Expr {
-  public TupleExpr(MerkleRoot merkleRoot, ObjectDb objectDb) {
+public class Construct extends Expr {
+  public Construct(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof TupleExprSpec);
+    checkArgument(merkleRoot.spec() instanceof ConstructSpec);
   }
 
   @Override
-  public TupleExprSpec spec() {
-    return (TupleExprSpec) super.spec();
+  public ConstructSpec spec() {
+    return (ConstructSpec) super.spec();
   }
 
   @Override
@@ -43,7 +43,7 @@ public class TupleExpr extends Expr {
         items,
         (s, i) -> Objects.equals(s, i.evaluationSpec()),
         (i, j) -> {
-          throw new DecodeTupleExprWrongItemsSizeException(hash(), spec(), j);
+          throw new DecodeConstructWrongItemsSizeException(hash(), spec(), j);
         },
         (i) -> {
           throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(),
@@ -55,6 +55,6 @@ public class TupleExpr extends Expr {
 
   @Override
   public String valueToString() {
-    return "TupleExpr(???)";
+    return "CONSTRUCT(???)";
   }
 }

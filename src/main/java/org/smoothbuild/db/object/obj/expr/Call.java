@@ -31,14 +31,14 @@ public class Call extends Expr {
 
   public CallData data() {
     Expr function = readFunction();
-    TupleExpr arguments = readArguments();
+    Construct arguments = readArguments();
     validate(function, arguments);
     return new CallData(function, arguments);
   }
 
-  public record CallData(Expr function, TupleExpr arguments) {}
+  public record CallData(Expr function, Construct arguments) {}
 
-  private void validate(Expr function, TupleExpr arguments) {
+  private void validate(Expr function, Construct arguments) {
     if (function.evaluationSpec() instanceof LambdaSpec lambdaSpec) {
       if (!Objects.equals(evaluationSpec(), lambdaSpec.result())) {
         throw new DecodeExprWrongEvaluationSpecOfComponentException(
@@ -59,9 +59,9 @@ public class Call extends Expr {
         DATA_PATH, dataHash(), FUNCTION_INDEX, DATA_SEQUENCE_SIZE, Expr.class);
   }
 
-  private TupleExpr readArguments() {
+  private Construct readArguments() {
     return readSequenceElementObj(
-        DATA_PATH, dataHash(), ARGUMENTS_INDEX, DATA_SEQUENCE_SIZE, TupleExpr.class);
+        DATA_PATH, dataHash(), ARGUMENTS_INDEX, DATA_SEQUENCE_SIZE, Construct.class);
   }
 
   @Override

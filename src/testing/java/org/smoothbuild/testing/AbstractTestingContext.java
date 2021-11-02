@@ -24,9 +24,9 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
-import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
@@ -42,10 +42,10 @@ import org.smoothbuild.db.object.spec.base.ValSpec;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
+import org.smoothbuild.db.object.spec.expr.ConstructSpec;
 import org.smoothbuild.db.object.spec.expr.RefSpec;
 import org.smoothbuild.db.object.spec.expr.SelectSpec;
 import org.smoothbuild.db.object.spec.expr.StructExprSpec;
-import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
 import org.smoothbuild.db.object.spec.val.AnySpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.BlobSpec;
@@ -356,12 +356,12 @@ public abstract class AbstractTestingContext {
     return specDb().const_(evaluationSpec);
   }
 
-  public TupleExprSpec tupleExprSpec() {
-    return tupleExprSpec(list(intSpec(), strSpec()));
+  public ConstructSpec constructSpec() {
+    return constructSpec(list(intSpec(), strSpec()));
   }
 
-  public TupleExprSpec tupleExprSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb().tupleExpr(tupleSpec(itemSpecs));
+  public ConstructSpec constructSpec(ImmutableList<ValSpec> itemSpecs) {
+    return specDb().construct(tupleSpec(itemSpecs));
   }
 
   public SelectSpec selectSpec() {
@@ -524,7 +524,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Call callExpr(Expr function, ImmutableList<? extends Expr> arguments) {
-    return objectDb().callExpr(function, tupleExpr(arguments));
+    return objectDb().callExpr(function, constructExpr(arguments));
   }
 
   public Const constExpr(Val val) {
@@ -535,8 +535,8 @@ public abstract class AbstractTestingContext {
     return objectDb().arrayExpr(elements);
   }
 
-  public TupleExpr tupleExpr(ImmutableList<? extends Expr> items) {
-    return objectDb().tupleExpr(items);
+  public Construct constructExpr(ImmutableList<? extends Expr> items) {
+    return objectDb().construct(items);
   }
 
   public Select selectExpr(Expr tuple, Int index) {

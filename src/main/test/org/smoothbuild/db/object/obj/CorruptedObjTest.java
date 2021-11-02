@@ -39,22 +39,22 @@ import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationSpecOfComponentException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjSpecException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationSpecException;
-import org.smoothbuild.db.object.obj.exc.DecodeTupleExprWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
 import org.smoothbuild.db.object.obj.expr.Select.SelectData;
-import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -69,7 +69,7 @@ import org.smoothbuild.db.object.spec.exc.DecodeSpecException;
 import org.smoothbuild.db.object.spec.expr.ArrayExprSpec;
 import org.smoothbuild.db.object.spec.expr.CallSpec;
 import org.smoothbuild.db.object.spec.expr.ConstSpec;
-import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
+import org.smoothbuild.db.object.spec.expr.ConstructSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.LambdaSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
@@ -394,7 +394,7 @@ public class CorruptedObjTest extends TestingContextImpl {
       var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
       var lambda = lambdaVal(lambdaSpec, intExpr());
       Const function = constExpr(lambda);
-      TupleExpr arguments = tupleExpr(list(strExpr(), intExpr()));
+      Construct arguments = constructExpr(list(strExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callSpec()),
@@ -418,7 +418,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const function = intExpr(0);
-      TupleExpr arguments = tupleExpr(list(strExpr(), intExpr()));
+      Construct arguments = constructExpr(list(strExpr(), intExpr()));
       Hash dataHash = hash(
           hash(function),
           hash(arguments)
@@ -454,7 +454,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
       Const function = intExpr(0);
-      TupleExpr arguments = tupleExpr(list(strExpr(), intExpr()));
+      Construct arguments = constructExpr(list(strExpr(), intExpr()));
       Hash dataHash = hash(
           hash(function),
           hash(arguments),
@@ -472,7 +472,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void function_is_val_instead_of_expr() throws Exception {
       Int val = intVal(0);
-      TupleExpr arguments = tupleExpr(list(strExpr(), intExpr()));
+      Construct arguments = constructExpr(list(strExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callSpec()),
@@ -489,7 +489,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void function_component_evaluation_spec_is_not_lambda() throws Exception {
       Const function = intExpr(3);
-      TupleExpr arguments = tupleExpr(list(strExpr(), intExpr()));
+      Construct arguments = constructExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(strSpec());
       Hash objHash =
           hash(
@@ -519,11 +519,11 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, callSpec(), DATA_PATH + "[1]", TupleExpr.class, Int.class));
+              objHash, callSpec(), DATA_PATH + "[1]", Construct.class, Int.class));
     }
 
     @Test
-    public void arguments_component_evaluation_spec_is_not_tuple_expr_but_different_expr()
+    public void arguments_component_evaluation_spec_is_not_construct_but_different_expr()
         throws Exception {
       var lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), intSpec()));
       var lambda = lambdaVal(lambdaSpec, intExpr());
@@ -539,14 +539,14 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH + "[1]", TupleExpr.class, Const.class));
+              objHash, spec, DATA_PATH + "[1]", Construct.class, Const.class));
     }
 
     @Test
     public void evaluation_spec_is_different_than_function_evaluation_spec_result()
         throws Exception {
       Const function = constExpr(lambdaVal(lambdaSpec(intSpec(), list(strSpec())), intExpr()));
-      TupleExpr arguments = tupleExpr(list(strExpr(), intExpr()));
+      Construct arguments = constructExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(strSpec());
       Hash objHash =
           hash(
@@ -566,7 +566,7 @@ public class CorruptedObjTest extends TestingContextImpl {
         throws Exception {
       LambdaSpec lambdaSpec = lambdaSpec(intSpec(), list(strSpec(), boolSpec()));
       Const function = constExpr(lambdaVal(lambdaSpec, intExpr()));
-      TupleExpr arguments = tupleExpr(list(strExpr(), intExpr()));
+      Construct arguments = constructExpr(list(strExpr(), intExpr()));
       CallSpec spec = callSpec(intSpec());
       Hash objHash =
           hash(
@@ -843,23 +843,23 @@ public class CorruptedObjTest extends TestingContextImpl {
   }
 
   @Nested
-  class _tuple_expr {
+  class _construct {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save tupleExpr
+       * This test makes sure that other tests in this class use proper scheme to save Construct
        * in HashedDb.
        */
       Const expr1 = intExpr(1);
       Const expr2 = strExpr("abc");
       Hash objHash =
           hash(
-              hash(tupleExprSpec(list(intSpec(), strSpec()))),
+              hash(constructSpec(list(intSpec(), strSpec()))),
               hash(
                   hash(expr1),
                   hash(expr2)
               ));
-      ImmutableList<Expr> items = ((TupleExpr) objectDb().get(objHash)).items();
+      ImmutableList<Expr> items = ((Construct) objectDb().get(objHash)).items();
       assertThat(items)
           .containsExactly(expr1, expr2)
           .inOrder();
@@ -867,7 +867,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(tupleExprSpec());
+      obj_root_without_data_hash(constructSpec());
     }
 
     @Test
@@ -881,15 +881,15 @@ public class CorruptedObjTest extends TestingContextImpl {
       obj_root_with_two_data_hashes(
           arrayExprSpec(),
           dataHash,
-          (Hash objHash) -> ((TupleExpr) objectDb().get(objHash)).items()
+          (Hash objHash) -> ((Construct) objectDb().get(objHash)).items()
       );
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          tupleExprSpec(),
-          (Hash objHash) -> ((TupleExpr) objectDb().get(objHash)).items());
+          constructSpec(),
+          (Hash objHash) -> ((Construct) objectDb().get(objHash)).items());
     }
 
     @ParameterizedTest
@@ -899,11 +899,11 @@ public class CorruptedObjTest extends TestingContextImpl {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
-              hash(tupleExprSpec()),
+              hash(constructSpec()),
               notHashOfSequence
           );
-      assertCall(() -> ((TupleExpr) objectDb().get(objHash)).items())
-          .throwsException(new DecodeObjNodeException(objHash, tupleExprSpec(), DATA_PATH))
+      assertCall(() -> ((Construct) objectDb().get(objHash)).items())
+          .throwsException(new DecodeObjNodeException(objHash, constructSpec(), DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
@@ -913,13 +913,13 @@ public class CorruptedObjTest extends TestingContextImpl {
       Hash nowhere = Hash.of(33);
       Hash objHash =
           hash(
-              hash(tupleExprSpec()),
+              hash(constructSpec()),
               hash(
                   nowhere
               )
           );
-      assertCall(() -> ((TupleExpr) objectDb().get(objHash)).items())
-          .throwsException(new DecodeObjNodeException(objHash, tupleExprSpec(), DATA_PATH + "[0]"))
+      assertCall(() -> ((Construct) objectDb().get(objHash)).items())
+          .throwsException(new DecodeObjNodeException(objHash, constructSpec(), DATA_PATH + "[0]"))
           .withCause(new NoSuchObjException(nowhere));
     }
 
@@ -929,22 +929,22 @@ public class CorruptedObjTest extends TestingContextImpl {
       Int val = intVal(123);
       Hash objHash =
           hash(
-              hash(tupleExprSpec(list(intSpec(), strSpec()))),
+              hash(constructSpec(list(intSpec(), strSpec()))),
               hash(
                   hash(expr1),
                   hash(val)
               ));
 
-      assertCall(() -> ((TupleExpr) objectDb().get(objHash)).items())
+      assertCall(() -> ((Construct) objectDb().get(objHash)).items())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, tupleExprSpec(), DATA_PATH + "[1]", Expr.class, Int.class));
+              objHash, constructSpec(), DATA_PATH + "[1]", Expr.class, Int.class));
     }
 
     @Test
     public void evaluation_spec_items_size_is_different_than_actual_items_size()
         throws Exception {
       Const expr1 = intExpr(1);
-      TupleExprSpec spec = tupleExprSpec(list(intSpec(), strSpec()));
+      ConstructSpec spec = constructSpec(list(intSpec(), strSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -952,8 +952,8 @@ public class CorruptedObjTest extends TestingContextImpl {
                   hash(expr1)
               ));
 
-      assertCall(() -> ((TupleExpr) objectDb().get(objHash)).items())
-          .throwsException(new DecodeTupleExprWrongItemsSizeException(objHash, spec, 1));
+      assertCall(() -> ((Construct) objectDb().get(objHash)).items())
+          .throwsException(new DecodeConstructWrongItemsSizeException(objHash, spec, 1));
     }
 
     @Test
@@ -961,7 +961,7 @@ public class CorruptedObjTest extends TestingContextImpl {
         throws Exception {
       Const expr1 = intExpr(1);
       Const expr2 = strExpr("abc");
-      TupleExprSpec spec = tupleExprSpec(list(intSpec(), boolSpec()));
+      ConstructSpec spec = constructSpec(list(intSpec(), boolSpec()));
       Hash objHash =
           hash(
               hash(spec),
@@ -970,7 +970,7 @@ public class CorruptedObjTest extends TestingContextImpl {
                   hash(expr2)
               ));
 
-      assertCall(() -> ((TupleExpr) objectDb().get(objHash)).items())
+      assertCall(() -> ((Construct) objectDb().get(objHash)).items())
           .throwsException(
               new DecodeExprWrongEvaluationSpecOfComponentException(
                   objHash, spec, "items[1]", boolSpec(), strSpec()));

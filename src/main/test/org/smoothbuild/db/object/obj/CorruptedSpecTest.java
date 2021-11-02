@@ -11,6 +11,7 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.base.SpecKind.BOOL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CALL;
 import static org.smoothbuild.db.object.spec.base.SpecKind.CONST;
+import static org.smoothbuild.db.object.spec.base.SpecKind.CONSTRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.INT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.LAMBDA;
 import static org.smoothbuild.db.object.spec.base.SpecKind.NATIVE_METHOD;
@@ -20,7 +21,6 @@ import static org.smoothbuild.db.object.spec.base.SpecKind.SELECT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRING;
 import static org.smoothbuild.db.object.spec.base.SpecKind.STRUCT;
 import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE;
-import static org.smoothbuild.db.object.spec.base.SpecKind.TUPLE_EXPR;
 import static org.smoothbuild.db.object.spec.base.SpecKind.VARIABLE;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -615,55 +615,55 @@ public class CorruptedSpecTest extends TestingContextImpl {
   }
 
   @Nested
-  class _tuple_expr_spec {
+  class _construct_spec {
     @Test
     public void learn_creating_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save tupleExpr spec in HashedDb.
+       * to save Construct spec in HashedDb.
        */
       Hash hash = hash(
-          hash(TUPLE_EXPR.marker()),
+          hash(CONSTRUCT.marker()),
           hash(tupleSpec(list(intSpec(), strSpec())))
       );
       assertThat(hash)
-          .isEqualTo(tupleExprSpec(list(intSpec(), strSpec())).hash());
+          .isEqualTo(constructSpec(list(intSpec(), strSpec())).hash());
     }
 
     @Test
     public void without_data() throws Exception {
-      test_spec_without_data(TUPLE_EXPR);
+      test_spec_without_data(CONSTRUCT);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_spec_with_additional_data(TUPLE_EXPR);
+      test_spec_with_additional_data(CONSTRUCT);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_spec(TUPLE_EXPR);
+      test_data_hash_pointing_nowhere_instead_of_being_spec(CONSTRUCT);
     }
 
     @Test
     public void with_corrupted_spec_as_data() throws Exception {
-      test_spec_with_corrupted_spec_as_data(TUPLE_EXPR);
+      test_spec_with_corrupted_spec_as_data(CONSTRUCT);
     }
 
     @Test
     public void with_evaluation_spec_being_expr_spec() throws Exception {
-      test_spec_with_data_spec_being_expr_spec(TUPLE_EXPR, TupleSpec.class);
+      test_spec_with_data_spec_being_expr_spec(CONSTRUCT, TupleSpec.class);
     }
 
     @Test
     public void with_evaluation_spec_not_being_tuple_spec() throws Exception {
       Hash hash = hash(
-          hash(TUPLE_EXPR.marker()),
+          hash(CONSTRUCT.marker()),
           hash(intSpec())
       );
       assertThatGetSpec(hash)
           .throwsException(new UnexpectedSpecNodeException(
-              hash, TUPLE_EXPR, DATA_PATH, TupleSpec.class, IntSpec.class));
+              hash, CONSTRUCT, DATA_PATH, TupleSpec.class, IntSpec.class));
     }
   }
 

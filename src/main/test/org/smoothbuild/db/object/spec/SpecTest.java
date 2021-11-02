@@ -26,6 +26,7 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.BLOB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.BOOL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CALL;
 import static org.smoothbuild.db.object.spec.TestingSpecs.CONST;
+import static org.smoothbuild.db.object.spec.TestingSpecs.CONSTRUCT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.INT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.LAMBDA;
 import static org.smoothbuild.db.object.spec.TestingSpecs.NOTHING;
@@ -35,7 +36,6 @@ import static org.smoothbuild.db.object.spec.TestingSpecs.REF;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SELECT;
 import static org.smoothbuild.db.object.spec.TestingSpecs.SPEC_DB;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
-import static org.smoothbuild.db.object.spec.TestingSpecs.TUPLE_EXPR;
 import static org.smoothbuild.db.object.spec.TestingSpecs.VARIABLE;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -50,9 +50,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.expr.ArrayExpr;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
+import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
-import org.smoothbuild.db.object.obj.expr.TupleExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -62,7 +62,7 @@ import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.spec.base.Spec;
 import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.TupleExprSpec;
+import org.smoothbuild.db.object.spec.expr.ConstructSpec;
 import org.smoothbuild.db.object.spec.val.ArraySpec;
 import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.testing.TestingContextImpl;
@@ -104,7 +104,7 @@ public class SpecTest {
         arguments(tc.constSpec(tc.intSpec()), "CONST:Int"),
         arguments(tc.nativeMethodSpec(), "NATIVE_METHOD"),
         arguments(tc.arrayExprSpec(tc.strSpec()), "ARRAY:[String]"),
-        arguments(tc.tupleExprSpec(list(tc.strSpec(), tc.intSpec())), "TUPLE:{String,Int}"),
+        arguments(tc.constructSpec(list(tc.strSpec(), tc.intSpec())), "CONSTRUCT:{String,Int}"),
         arguments(tc.selectSpec(tc.intSpec()), "SELECT:Int"),
         arguments(tc.refSpec(tc.intSpec()), "REF:Int"),
 
@@ -145,7 +145,7 @@ public class SpecTest {
         arguments(CALL, Call.class),
         arguments(CONST, Const.class),
         arguments(ARRAY_EXPR, ArrayExpr.class),
-        arguments(TUPLE_EXPR, TupleExpr.class),
+        arguments(CONSTRUCT, Construct.class),
         arguments(SELECT, Select.class),
         arguments(REF, Ref.class)
     );
@@ -204,18 +204,18 @@ public class SpecTest {
     }
 
     @ParameterizedTest
-    @MethodSource("tuple_expr_cases")
-    public void tuple_expr(TupleExprSpec spec, TupleSpec expected) {
+    @MethodSource("construct_cases")
+    public void construct(ConstructSpec spec, TupleSpec expected) {
       assertThat(spec.evaluationSpec())
           .isEqualTo(expected);
     }
 
-    public static List<Arguments> tuple_expr_cases() {
+    public static List<Arguments> construct_cases() {
       return list(
-          arguments(tupleExprSpec(), tupleSpec()),
-          arguments(tupleExprSpec(STR), tupleSpec(STR)),
-          arguments(tupleExprSpec(STR, INT), tupleSpec(STR, INT)),
-          arguments(tupleExprSpec(STR, INT, BLOB), tupleSpec(STR, INT, BLOB))
+          arguments(constructSpec(), tupleSpec()),
+          arguments(constructSpec(STR), tupleSpec(STR)),
+          arguments(constructSpec(STR, INT), tupleSpec(STR, INT)),
+          arguments(constructSpec(STR, INT, BLOB), tupleSpec(STR, INT, BLOB))
       );
     }
 
@@ -246,8 +246,8 @@ public class SpecTest {
     return SPEC_DB.tuple(items);
   }
 
-  private static TupleExprSpec tupleExprSpec(ValSpec... items) {
-    return SPEC_DB.tupleExpr(tupleSpec(list(items)));
+  private static ConstructSpec constructSpec(ValSpec... items) {
+    return SPEC_DB.construct(tupleSpec(list(items)));
   }
 
   @Test
@@ -286,7 +286,7 @@ public class SpecTest {
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(CONST, CONST);
     tester.addEqualityGroup(ARRAY_EXPR, ARRAY_EXPR);
-    tester.addEqualityGroup(TUPLE_EXPR, TUPLE_EXPR);
+    tester.addEqualityGroup(CONSTRUCT, CONSTRUCT);
     tester.addEqualityGroup(SELECT, SELECT);
     tester.addEqualityGroup(REF, REF);
 

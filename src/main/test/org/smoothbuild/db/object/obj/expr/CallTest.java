@@ -59,7 +59,7 @@ public class CallTest extends TestingContextImpl {
     var function = constExpr(lambdaVal());
     var arguments = list(strExpr()) ;
     assertThat(callExpr(function, arguments).data().arguments())
-        .isEqualTo(tupleExpr(arguments));
+        .isEqualTo(constructExpr(arguments));
   }
 
   @Test
@@ -148,7 +148,7 @@ public class CallTest extends TestingContextImpl {
     ImmutableList<Expr> arguments = list(strExpr());
     Call call = callExpr(function, arguments);
     assertThat(((Call) objectDbOther().get(call.hash())).data())
-        .isEqualTo(new CallData(function, tupleExpr(arguments)));
+        .isEqualTo(new CallData(function, constructExpr(arguments)));
   }
 
   @Test
