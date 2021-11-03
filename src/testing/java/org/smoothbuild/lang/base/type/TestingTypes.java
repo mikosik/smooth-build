@@ -15,6 +15,7 @@ import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.util.collect.NamedList;
@@ -23,10 +24,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class TestingTypes {
-  private static final Typing TYPING = new TestingContextImpl().typing();
+  private static final TestingContextImpl CONTEXT = new TestingContextImpl();
+  private static final TypeFactory FACTORY = CONTEXT.typeFactory();
+  private static final Typing TYPING = CONTEXT.typing();
 
-  public static final ImmutableSet<BaseType> BASE_TYPES = TYPING.baseTypes();
-  public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = TYPING.inferableBaseTypes();
+  public static final ImmutableSet<BaseType> BASE_TYPES = FACTORY.baseTypes();
+  public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
 
   public static final AnyType ANY = TYPING.any();
   public static final BlobType BLOB = TYPING.blob();

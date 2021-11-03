@@ -71,8 +71,8 @@ import org.smoothbuild.db.object.spec.val.StrSpec;
 import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
+import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.util.collect.NamedList;
 
@@ -82,7 +82,7 @@ import com.google.common.collect.ImmutableList.Builder;
 /**
  * This class is thread-safe.
  */
-public class SpecDb implements TypeFactory {
+public class SpecDb extends AbstractTypeFactory {
   public static final String DATA_PATH = "data";
   private static final int DATA_INDEX = 1;
   private static final int LAMBDA_RESULT_INDEX = 0;

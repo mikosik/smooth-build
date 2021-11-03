@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base.type.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 
+import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.AnyType;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BlobType;
@@ -14,13 +15,12 @@ import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 
-public class TypeFactoryImpl implements TypeFactory {
+public class TypeFactoryImpl extends AbstractTypeFactory {
   private static final AnyType ANY = new AnyTypeImpl();
   private static final BlobType BLOB = new BlobTypeImpl();
   private static final BoolType BOOL = new BoolTypeImpl();

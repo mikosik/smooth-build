@@ -14,7 +14,6 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.lang.base.type.api.AnyType;
 import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.BaseType;
 import org.smoothbuild.lang.base.type.api.BlobType;
 import org.smoothbuild.lang.base.type.api.BoolType;
 import org.smoothbuild.lang.base.type.api.Bounded;
@@ -34,7 +33,6 @@ import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 // TODO use switch pattern matching on JDK-17
 @Singleton
@@ -48,28 +46,8 @@ public class Typing {
     this.sides = new Sides(typeFactory.any(), typeFactory.nothing());
   }
 
-  /**
-   * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
-   * language.
-   */
-  public ImmutableSet<BaseType> inferableBaseTypes() {
-    return ImmutableSet.<BaseType>builder()
-        .addAll(baseTypes())
-        .add(typeFactory.any())
-        .build();
-  }
-
-  /**
-   * Base types that are legal in smooth language.
-   */
-  public ImmutableSet<BaseType> baseTypes() {
-    return ImmutableSet.of(
-        typeFactory.blob(),
-        typeFactory.bool(),
-        typeFactory.int_(),
-        typeFactory.nothing(),
-        typeFactory.string()
-    );
+  public TypeFactory factory() {
+    return typeFactory;
   }
 
   public Variable variable(String name) {

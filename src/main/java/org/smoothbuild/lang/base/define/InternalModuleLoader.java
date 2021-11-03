@@ -22,7 +22,7 @@ public class InternalModuleLoader {
 
   public SModule loadModule() {
     ModulePath modulePath = new ModulePath("internal-module");
-    var types = toMap(typing.baseTypes(), Type::name, t -> new DefinedBaseType(modulePath, t));
+    var types = toMap(typing.factory().baseTypes(), Type::name, t -> new DefinedBaseType(modulePath, t));
     Hash hash = calculateModuleHash(modulePath, Hash.of(list()), list());
     return new SModule(modulePath, hash, null, list(), types, referencables(modulePath));
   }
