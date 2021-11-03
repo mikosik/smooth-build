@@ -17,7 +17,6 @@ import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
@@ -30,12 +29,10 @@ import com.google.common.collect.ImmutableMap;
 @Singleton
 public class Typing {
   private final TypeFactory typeFactory;
-  private final Sides sides;
 
   @Inject
   public Typing(TypeFactory typeFactory) {
     this.typeFactory = typeFactory;
-    this.sides = new Sides(typeFactory.any(), typeFactory.nothing());
   }
 
   public boolean contains(Type type, Type inner) {
