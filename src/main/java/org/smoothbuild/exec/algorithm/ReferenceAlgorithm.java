@@ -7,7 +7,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
@@ -18,8 +18,8 @@ public class ReferenceAlgorithm extends Algorithm {
   private final GlobalReferencable referencable;
   private final SModule module;
 
-  public ReferenceAlgorithm(GlobalReferencable referencable, SModule module, StructSpec spec) {
-    super(spec);
+  public ReferenceAlgorithm(GlobalReferencable referencable, SModule module, StructOType type) {
+    super(type);
     this.referencable = referencable;
     this.module = module;
   }
@@ -35,7 +35,7 @@ public class ReferenceAlgorithm extends Algorithm {
     Blob moduleHash = nativeApi.factory().blob(sink -> sink.write(module.hash().toByteString()));
     Struc_ functionStruct = nativeApi
         .factory()
-        .struct((StructSpec) outputSpec(), list(name, moduleHash));
+        .struct((StructOType) outputType(), list(name, moduleHash));
     return new Output(functionStruct, nativeApi.messages());
   }
 }

@@ -12,29 +12,29 @@ import org.smoothbuild.testing.TestingContextImpl;
 
 public class SelectTest extends TestingContextImpl {
   @Test
-  public void spec_of_select_is_inferred_correctly() {
+  public void type_of_select_is_inferred_correctly() {
     Struc_ struct = animal("rabbit", 7);
-    assertThat(select(const_(struct), int_(1)).spec())
+    assertThat(select(const_(struct), int_(1)).type())
         .isEqualTo(selectSpec(intSpec()));
   }
 
   @Test
   public void creating_select_with_non_struct_expr_causes_exception() {
-    assertCall(() -> select(intExpr(3), int_(2)).spec())
+    assertCall(() -> select(intExpr(3), int_(2)).type())
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_select_with_too_great_index_causes_exception() {
     Struc_ struct = animal("rabbit", 7);
-    assertCall(() -> select(const_(struct), int_(2)).spec())
+    assertCall(() -> select(const_(struct), int_(2)).type())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   public void creating_select_with_index_lower_than_zero_causes_exception() {
     Struc_ struct = animal("rabbit", 7);
-    assertCall(() -> select(const_(struct), int_(-1)).spec())
+    assertCall(() -> select(const_(struct), int_(-1)).type())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
   }
 

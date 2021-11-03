@@ -8,11 +8,11 @@ import java.util.Objects;
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationSpecOfComponentException;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.obj.exc.DecodeStructExprWrongItemsSizeException;
-import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.StructExprSpec;
-import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.expr.StructExprOType;
+import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.util.collect.NamedList;
 
@@ -24,34 +24,34 @@ import com.google.common.collect.ImmutableList;
 public class StructExpr extends Expr {
   public StructExpr(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof StructExprSpec);
+    checkArgument(merkleRoot.type() instanceof StructExprOType);
   }
 
   @Override
-  public StructExprSpec spec() {
-    return (StructExprSpec) super.spec();
+  public StructExprOType type() {
+    return (StructExprOType) super.type();
   }
 
   @Override
-  public StructSpec evaluationSpec() {
-    return spec().evaluationSpec();
+  public StructOType evaluationType() {
+    return type().evaluationType();
   }
 
   public ImmutableList<Expr> items() {
-    NamedList<ValSpec> fields = spec().evaluationSpec().fields();
-    ImmutableList<Named<ValSpec>> expectedItemSpecs = fields.list();
+    NamedList<ValType> fields = type().evaluationType().fields();
+    ImmutableList<Named<ValType>> expectedItemTypes = fields.list();
     var items = readSequenceObjs(DATA_PATH, dataHash(), Expr.class);
 
     allMatchOtherwise(
-        expectedItemSpecs,
+        expectedItemTypes,
         items,
-        (s, i) -> Objects.equals(s.object(), i.evaluationSpec()),
+        (s, i) -> Objects.equals(s.object(), i.evaluationType()),
         (i, j) -> {
-          throw new DecodeStructExprWrongItemsSizeException(hash(), spec(), j);
+          throw new DecodeStructExprWrongItemsSizeException(hash(), type(), j);
         },
         (i) -> {
-          throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(),
-              "items[" + i + "]", fields.getObject(i), items.get(i).evaluationSpec());
+          throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(),
+              "items[" + i + "]", fields.getObject(i), items.get(i).evaluationType());
         }
     );
     return items;

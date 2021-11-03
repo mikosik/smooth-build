@@ -36,18 +36,18 @@ import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.spec.SpecDb;
-import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.StructExprSpec;
-import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.BlobSpec;
-import org.smoothbuild.db.object.spec.val.BoolSpec;
-import org.smoothbuild.db.object.spec.val.IntSpec;
-import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.NothingSpec;
-import org.smoothbuild.db.object.spec.val.StrSpec;
-import org.smoothbuild.db.object.spec.val.StructSpec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
+import org.smoothbuild.db.object.type.ObjTypeDb;
+import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.expr.StructExprOType;
+import org.smoothbuild.db.object.type.val.ArrayOType;
+import org.smoothbuild.db.object.type.val.BlobOType;
+import org.smoothbuild.db.object.type.val.BoolOType;
+import org.smoothbuild.db.object.type.val.IntOType;
+import org.smoothbuild.db.object.type.val.LambdaOType;
+import org.smoothbuild.db.object.type.val.NothingOType;
+import org.smoothbuild.db.object.type.val.StringOType;
+import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.TupleOType;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.collect.NamedList;
@@ -62,22 +62,22 @@ import com.google.common.collect.ImmutableList;
 @Singleton
 public class ObjectFactory {
   private final ObjectDb objectDb;
-  private final SpecDb specDb;
-  private final StructSpec messageSpec;
-  private final StructSpec fileSpec;
+  private final ObjTypeDb objTypeDb;
+  private final StructOType messageType;
+  private final StructOType fileType;
 
   @Inject
-  public ObjectFactory(ObjectDb objectDb, SpecDb specDb) {
+  public ObjectFactory(ObjectDb objectDb, ObjTypeDb objTypeDb) {
     this.objectDb = objectDb;
-    this.specDb = specDb;
-    this.messageSpec = createMessageSpec(specDb);
-    this.fileSpec = createFileSpec(specDb);
+    this.objTypeDb = objTypeDb;
+    this.messageType = createMessageType(objTypeDb);
+    this.fileType = createFileType(objTypeDb);
   }
 
   // Values
 
-  public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
-    return objectDb.arrayBuilder(elementSpec);
+  public ArrayBuilder arrayBuilder(ValType elementType) {
+    return objectDb.arrayBuilder(elementType);
   }
 
   public Blob blob(DataWriter dataWriter) {
@@ -106,19 +106,19 @@ public class ObjectFactory {
   }
 
   public Struc_ file(Str path, Blob content) {
-    return objectDb.struct(fileSpec(), list(content, path));
+    return objectDb.struct(fileType(), list(content, path));
   }
 
   public Int int_(BigInteger value) {
     return objectDb.int_(value);
   }
 
-  public Lambda lambda(LambdaSpec spec, Expr body) {
-    return objectDb.lambda(spec, body);
+  public Lambda lambda(LambdaOType type, Expr body) {
+    return objectDb.lambda(type, body);
   }
 
-  public Ref ref(BigInteger value, ValSpec evaluationSpec) {
-    return objectDb.ref(value, evaluationSpec);
+  public Ref ref(BigInteger value, ValType evaluationType) {
+    return objectDb.ref(value, evaluationType);
   }
 
   public Select select(Expr struct, Int index) {
@@ -129,71 +129,71 @@ public class ObjectFactory {
     return objectDb.string(string);
   }
 
-  public Struc_ struct(StructSpec structSpec, ImmutableList<Val> items) {
-    return objectDb.struct(structSpec, items);
+  public Struc_ struct(StructOType structType, ImmutableList<Val> items) {
+    return objectDb.struct(structType, items);
   }
 
-  public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
-    return objectDb.structExpr(evaluationSpec, items);
+  public StructExpr structExpr(StructOType evaluationType, ImmutableList<? extends Expr> items) {
+    return objectDb.structExpr(evaluationType, items);
   }
 
-  public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> items) {
-    return objectDb.tuple(spec, items);
+  public Tuple tuple(TupleOType type, Iterable<? extends Obj> items) {
+    return objectDb.tuple(type, items);
   }
 
   public Order order(List<? extends Expr> elements) {
     return objectDb.order(elements);
   }
 
-  // Specs
+  // Types
 
-  public ArraySpec arraySpec(ValSpec elementSpec) {
-    return specDb.array(elementSpec);
+  public ArrayOType arrayType(ValType elementType) {
+    return objTypeDb.array(elementType);
   }
 
-  public BlobSpec blobSpec() {
-    return specDb.blob();
+  public BlobOType blobType() {
+    return objTypeDb.blob();
   }
 
-  public BoolSpec boolSpec() {
-    return specDb.bool();
+  public BoolOType boolType() {
+    return objTypeDb.bool();
   }
 
-  public IntSpec intSpec() {
-    return specDb.int_();
+  public IntOType intType() {
+    return objTypeDb.int_();
   }
 
-  public LambdaSpec lambdaSpec(Type result, ImmutableList<? extends Type> parameters) {
-    return specDb.function(result, parameters);
+  public LambdaOType lambdaType(Type result, ImmutableList<? extends Type> parameters) {
+    return objTypeDb.function(result, parameters);
   }
-  public StructSpec messageSpec() {
-    return messageSpec;
-  }
-
-  public NothingSpec nothingSpec() {
-    return specDb.nothing();
+  public StructOType messageType() {
+    return messageType;
   }
 
-  public StrSpec stringSpec() {
-    return specDb.string();
+  public NothingOType nothingType() {
+    return objTypeDb.nothing();
   }
 
-  public StructSpec structSpec(String name, NamedList<? extends Type> fields) {
-    return specDb.struct(name, fields);
+  public StringOType stringType() {
+    return objTypeDb.string();
   }
 
-  public StructExprSpec structExprSpec(StructSpec struct) {
-    return specDb.structExpr(struct);
+  public StructOType structType(String name, NamedList<? extends Type> fields) {
+    return objTypeDb.struct(name, fields);
   }
 
-  public TupleSpec tupleSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb.tuple(itemSpecs);
+  public StructExprOType structExprType(StructOType struct) {
+    return objTypeDb.structExpr(struct);
   }
 
-  // other values and its specs
+  public TupleOType tupleType(ImmutableList<ValType> itemTypes) {
+    return objTypeDb.tuple(itemTypes);
+  }
 
-  public StructSpec fileSpec() {
-    return fileSpec;
+  // other values and its types
+
+  public StructOType fileType() {
+    return fileType;
   }
 
   public Struc_ errorMessage(String text) {
@@ -211,17 +211,17 @@ public class ObjectFactory {
   private Struc_ message(String severity, String text) {
     Val textObject = objectDb.string(text);
     Val severityObject = objectDb.string(severity);
-    return objectDb.struct(messageSpec(), list(textObject, severityObject));
+    return objectDb.struct(messageType(), list(textObject, severityObject));
   }
 
-  private static StructSpec createMessageSpec(SpecDb specDb) {
-    StrSpec strSpec = specDb.string();
-    return specDb.struct("", namedList(list(named(strSpec), named(strSpec))));
+  private static StructOType createMessageType(ObjTypeDb objTypeDb) {
+    StringOType stringType = objTypeDb.string();
+    return objTypeDb.struct("", namedList(list(named(stringType), named(stringType))));
   }
 
-  private static StructSpec createFileSpec(SpecDb specDb) {
-    return specDb.struct(FileStruct.NAME, namedList(list(
-        named(CONTENT_FIELD_NAME, specDb.blob()), named(PATH_FIELD_NAME, specDb.string())))
+  private static StructOType createFileType(ObjTypeDb objTypeDb) {
+    return objTypeDb.struct(FileStruct.NAME, namedList(list(
+        named(CONTENT_FIELD_NAME, objTypeDb.blob()), named(PATH_FIELD_NAME, objTypeDb.string())))
     );
   }
 }

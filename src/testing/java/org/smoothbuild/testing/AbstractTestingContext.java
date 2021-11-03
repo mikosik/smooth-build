@@ -37,27 +37,27 @@ import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.spec.SpecDb;
-import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.CallSpec;
-import org.smoothbuild.db.object.spec.expr.ConstSpec;
-import org.smoothbuild.db.object.spec.expr.ConstructSpec;
-import org.smoothbuild.db.object.spec.expr.OrderSpec;
-import org.smoothbuild.db.object.spec.expr.RefSpec;
-import org.smoothbuild.db.object.spec.expr.SelectSpec;
-import org.smoothbuild.db.object.spec.expr.StructExprSpec;
-import org.smoothbuild.db.object.spec.val.AnySpec;
-import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.BlobSpec;
-import org.smoothbuild.db.object.spec.val.BoolSpec;
-import org.smoothbuild.db.object.spec.val.IntSpec;
-import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.NativeMethodSpec;
-import org.smoothbuild.db.object.spec.val.NothingSpec;
-import org.smoothbuild.db.object.spec.val.StrSpec;
-import org.smoothbuild.db.object.spec.val.StructSpec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
-import org.smoothbuild.db.object.spec.val.VariableSpec;
+import org.smoothbuild.db.object.type.ObjTypeDb;
+import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.expr.CallOType;
+import org.smoothbuild.db.object.type.expr.ConstOType;
+import org.smoothbuild.db.object.type.expr.ConstructOType;
+import org.smoothbuild.db.object.type.expr.OrderOType;
+import org.smoothbuild.db.object.type.expr.RefOType;
+import org.smoothbuild.db.object.type.expr.SelectOType;
+import org.smoothbuild.db.object.type.expr.StructExprOType;
+import org.smoothbuild.db.object.type.val.AnyOType;
+import org.smoothbuild.db.object.type.val.ArrayOType;
+import org.smoothbuild.db.object.type.val.BlobOType;
+import org.smoothbuild.db.object.type.val.BoolOType;
+import org.smoothbuild.db.object.type.val.IntOType;
+import org.smoothbuild.db.object.type.val.LambdaOType;
+import org.smoothbuild.db.object.type.val.NativeMethodOType;
+import org.smoothbuild.db.object.type.val.NothingOType;
+import org.smoothbuild.db.object.type.val.StringOType;
+import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.VariableOType;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
@@ -120,7 +120,7 @@ public abstract class AbstractTestingContext {
   private FileSystem computationCacheFileSystem;
   private ObjectDb objectDb;
   private Typing typing;
-  private SpecDb specDb;
+  private ObjTypeDb objTypeDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
@@ -162,7 +162,7 @@ public abstract class AbstractTestingContext {
 
   public ObjectFactory objectFactory() {
     if (objectFactory == null) {
-      objectFactory = new ObjectFactory(objectDb(), specDb());
+      objectFactory = new ObjectFactory(objectDb(), objTypeDb());
     }
     return objectFactory;
   }
@@ -176,16 +176,16 @@ public abstract class AbstractTestingContext {
 
   public abstract TypeFactory typeFactory();
 
-  public SpecDb specDb() {
-    if (specDb == null) {
-      specDb = new SpecDb(hashedDb());
+  public ObjTypeDb objTypeDb() {
+    if (objTypeDb == null) {
+      objTypeDb = new ObjTypeDb(hashedDb());
     }
-    return specDb;
+    return objTypeDb;
   }
 
   public ObjectDb objectDb() {
     if (objectDb == null) {
-      objectDb = new ObjectDb(hashedDb(), specDb());
+      objectDb = new ObjectDb(hashedDb(), objTypeDb());
     }
     return objectDb;
   }
@@ -206,11 +206,11 @@ public abstract class AbstractTestingContext {
   }
 
   public ObjectDb objectDbOther() {
-    return new ObjectDb(hashedDb(), specDbOther());
+    return new ObjectDb(hashedDb(), objTypeDbOther());
   }
 
-  public SpecDb specDbOther() {
-    return new SpecDb(hashedDb());
+  public ObjTypeDb objTypeDbOther() {
+    return new ObjTypeDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -242,146 +242,146 @@ public abstract class AbstractTestingContext {
     return fullFileSystem;
   }
 
-  // Obj Spec-s
+  // Obj types
 
-  public StructSpec animalSpec() {
-    return specDb().struct(
+  public StructOType animalSpec() {
+    return objTypeDb().struct(
         "Animal", namedList(list(named("species", stringSpec()), named("speed", intSpec()))));
   }
 
-  public ArraySpec arraySpec(ValSpec elementSpec) {
-    return specDb().array(elementSpec);
+  public ArrayOType arraySpec(ValType elementSpec) {
+    return objTypeDb().array(elementSpec);
   }
 
-  public AnySpec anySpec() {
-    return specDb().any();
+  public AnyOType anySpec() {
+    return objTypeDb().any();
   }
 
-  public BlobSpec blobSpec() {
-    return specDb().blob();
+  public BlobOType blobSpec() {
+    return objTypeDb().blob();
   }
 
-  public BoolSpec boolSpec() {
-    return specDb().bool();
+  public BoolOType boolSpec() {
+    return objTypeDb().bool();
   }
 
-  public LambdaSpec lambdaSpec() {
+  public LambdaOType lambdaSpec() {
     return lambdaSpec(intSpec(), list(blobSpec(), stringSpec()));
   }
 
-  public LambdaSpec lambdaSpec(ValSpec result, ImmutableList<? extends Type> parameters) {
-    return specDb().function(result, parameters);
+  public LambdaOType lambdaSpec(ValType result, ImmutableList<? extends Type> parameters) {
+    return objTypeDb().function(result, parameters);
   }
 
-  public IntSpec intSpec() {
-    return specDb().int_();
+  public IntOType intSpec() {
+    return objTypeDb().int_();
   }
 
-  public NativeMethodSpec nativeMethodSpec() {
-    return specDb().nativeMethod();
+  public NativeMethodOType nativeMethodSpec() {
+    return objTypeDb().nativeMethod();
   }
 
-  public NothingSpec nothingSpec() {
-    return specDb().nothing();
+  public NothingOType nothingSpec() {
+    return objTypeDb().nothing();
   }
 
-  public StrSpec stringSpec() {
-    return specDb().string();
+  public StringOType stringSpec() {
+    return objTypeDb().string();
   }
 
-  public TupleSpec tupleSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb().tuple(itemSpecs);
+  public TupleOType tupleSpec(ImmutableList<ValType> itemSpecs) {
+    return objTypeDb().tuple(itemSpecs);
   }
 
-  public TupleSpec emptyTupleSpec() {
+  public TupleOType emptyTupleSpec() {
     return tupleSpec(list());
   }
 
-  public TupleSpec tupleWithStrSpec() {
+  public TupleOType tupleWithStrSpec() {
     return tupleSpec(list(stringSpec()));
   }
 
-  public TupleSpec perso_Spec() {
+  public TupleOType perso_Spec() {
     return tupleSpec(list(stringSpec(), stringSpec()));
   }
 
-  public StructSpec personSpec() {
+  public StructOType personSpec() {
     return structSpec("Person",
         namedList(list(named("firstName", stringSpec()), named("lastName", stringSpec()))));
   }
 
-  public TupleSpec fileSpec() {
+  public TupleOType fileSpec() {
     return tupleSpec(list(blobSpec(), stringSpec()));
   }
 
-  public StructSpec structSpec() {
+  public StructOType structSpec() {
     return structSpec(namedList(list(named("field", intSpec()))));
   }
 
-  public StructSpec structSpec(NamedList<? extends Type> fields) {
+  public StructOType structSpec(NamedList<? extends Type> fields) {
     return structSpec("MyStruct", fields);
   }
 
-  public StructSpec structSpec(String name, NamedList<? extends Type> fields) {
-    return specDb().struct(name, fields);
+  public StructOType structSpec(String name, NamedList<? extends Type> fields) {
+    return objTypeDb().struct(name, fields);
   }
 
-  public VariableSpec variableSpec(String name) {
-    return specDb().variable(name);
+  public VariableOType variableSpec(String name) {
+    return objTypeDb().variable(name);
   }
 
-  // Expr Spec-s
+  // Expr types
 
-  public OrderSpec orderSpec() {
+  public OrderOType orderSpec() {
     return orderSpec(intSpec());
   }
 
-  public OrderSpec orderSpec(ValSpec elementSpec) {
-    return specDb().order(elementSpec);
+  public OrderOType orderSpec(ValType elementSpec) {
+    return objTypeDb().order(elementSpec);
   }
 
-  public CallSpec callSpec() {
+  public CallOType callSpec() {
     return callSpec(intSpec());
   }
 
-  public CallSpec callSpec(ValSpec evaluationSpec) {
-    return specDb().call(evaluationSpec);
+  public CallOType callSpec(ValType evaluationType) {
+    return objTypeDb().call(evaluationType);
   }
 
-  public ConstSpec constSpec() {
+  public ConstOType constSpec() {
     return constSpec(intSpec());
   }
 
-  public ConstSpec constSpec(ValSpec evaluationSpec) {
-    return specDb().const_(evaluationSpec);
+  public ConstOType constSpec(ValType evaluationType) {
+    return objTypeDb().const_(evaluationType);
   }
 
-  public ConstructSpec constructSpec() {
+  public ConstructOType constructSpec() {
     return constructSpec(list(intSpec(), stringSpec()));
   }
 
-  public ConstructSpec constructSpec(ImmutableList<ValSpec> itemSpecs) {
-    return specDb().construct(tupleSpec(itemSpecs));
+  public ConstructOType constructSpec(ImmutableList<ValType> itemSpecs) {
+    return objTypeDb().construct(tupleSpec(itemSpecs));
   }
 
-  public SelectSpec selectSpec() {
+  public SelectOType selectSpec() {
     return selectSpec(intSpec());
   }
 
-  public SelectSpec selectSpec(ValSpec evaluationSpec) {
-    return specDb().select(evaluationSpec);
+  public SelectOType selectSpec(ValType evaluationType) {
+    return objTypeDb().select(evaluationType);
   }
 
-  public StructExprSpec structExprSpec(StructSpec structSpec) {
-    return specDb().structExpr(structSpec);
+  public StructExprOType structExprSpec(StructOType structType) {
+    return objTypeDb().structExpr(structType);
   }
 
-  public RefSpec refSpec() {
+  public RefOType refSpec() {
     return refSpec(intSpec());
   }
 
-  public RefSpec refSpec(ValSpec evaluationSpec) {
-    return specDb().ref(evaluationSpec);
+  public RefOType refSpec(ValType evaluationType) {
+    return objTypeDb().ref(evaluationType);
   }
 
   // Obj-s (values)
@@ -399,10 +399,10 @@ public abstract class AbstractTestingContext {
   }
 
   public Array array(Val... elements) {
-    return array(elements[0].spec(), elements);
+    return array(elements[0].type(), elements);
   }
 
-  public Array array(ValSpec elementSpec, Obj... elements) {
+  public Array array(ValType elementSpec, Obj... elements) {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
@@ -427,11 +427,11 @@ public abstract class AbstractTestingContext {
   }
 
   public Lambda lambda(Expr body) {
-    LambdaSpec spec = lambdaSpec(body.evaluationSpec(), list(stringSpec()));
+    LambdaOType spec = lambdaSpec(body.evaluationType(), list(stringSpec()));
     return lambda(spec, body);
   }
 
-  public Lambda lambda(LambdaSpec spec, Expr body) {
+  public Lambda lambda(LambdaOType spec, Expr body) {
     return objectDb().lambda(spec, body);
   }
 
@@ -455,17 +455,17 @@ public abstract class AbstractTestingContext {
     return objectDb().string(string);
   }
 
-  public Struc_ struct(StructSpec spec, ImmutableList<Val> items) {
+  public Struc_ struct(StructOType spec, ImmutableList<Val> items) {
     return objectDb().struct(spec, items);
   }
 
   public Tuple tuple(List<? extends Val> items) {
-    var spec = tupleSpec(map(items, Val::spec));
+    var spec = tupleSpec(map(items, Val::type));
     return tuple(spec, items);
   }
 
-  public Tuple tuple(TupleSpec tupleSpec, List<? extends Val> items) {
-    return objectDb().tuple(tupleSpec, items);
+  public Tuple tuple(TupleOType tupleType, List<? extends Val> items) {
+    return objectDb().tuple(tupleType, items);
   }
 
   public Tuple emptyTuple() {
@@ -489,7 +489,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Array emptyMessageArray() {
-    return array(objectFactory().messageSpec());
+    return array(objectFactory().messageType());
   }
 
   public Struc_ errorMessage(String text) {
@@ -539,8 +539,8 @@ public abstract class AbstractTestingContext {
     return objectDb().ref(BigInteger.valueOf(value), intSpec());
   }
 
-  public Ref ref(ValSpec evaluationSpec, int pointer) {
-    return objectDb().ref(BigInteger.valueOf(pointer), evaluationSpec);
+  public Ref ref(ValType evaluationType, int pointer) {
+    return objectDb().ref(BigInteger.valueOf(pointer), evaluationType);
   }
 
   public Select select(Expr tuple, Int index) {

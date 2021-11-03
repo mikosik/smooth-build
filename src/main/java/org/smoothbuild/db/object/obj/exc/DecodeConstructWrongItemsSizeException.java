@@ -1,20 +1,20 @@
 package org.smoothbuild.db.object.obj.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.expr.ConstructSpec;
+import org.smoothbuild.db.object.type.expr.ConstructOType;
 
 public class DecodeConstructWrongItemsSizeException extends DecodeObjException {
-  public DecodeConstructWrongItemsSizeException(Hash hash, ConstructSpec spec, int actual) {
-    super(buildMessage(hash, spec, actual));
+  public DecodeConstructWrongItemsSizeException(Hash hash, ConstructOType type, int actual) {
+    super(buildMessage(hash, type, actual));
   }
 
-  private static String buildMessage(Hash hash, ConstructSpec spec, int actual) {
-    return ("Cannot decode %s object at %s. Evaluation spec items size (%s)"
+  private static String buildMessage(Hash hash, ConstructOType type, int actual) {
+    return ("Cannot decode %s object at %s. Evaluation type items size (%s)"
         + " is not equal to actual items size (%s).")
         .formatted(
-            spec.q(),
+            type.q(),
             hash,
-            spec.evaluationSpec().items().size(),
+            type.evaluationType().items().size(),
             actual);
   }
 }

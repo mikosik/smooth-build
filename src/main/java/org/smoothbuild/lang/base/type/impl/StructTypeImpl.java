@@ -9,7 +9,7 @@ import org.smoothbuild.util.collect.NamedList;
 /**
  * This class is immutable.
  */
-public class StructTypeImpl extends AbstractTypeImpl implements StructType {
+public class StructTypeImpl extends SType implements StructType {
   private final NamedList<Type> fields;
 
   public StructTypeImpl(String name, NamedList<Type> fields) {

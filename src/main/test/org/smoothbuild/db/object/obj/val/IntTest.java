@@ -9,8 +9,8 @@ import org.smoothbuild.testing.TestingContextImpl;
 
 public class IntTest extends TestingContextImpl {
   @Test
-  public void spec_of_int_is_int_spec() {
-    assertThat(int_(123).spec())
+  public void type_of_int_is_int_type() {
+    assertThat(int_(123).type())
         .isEqualTo(intSpec());
   }
 

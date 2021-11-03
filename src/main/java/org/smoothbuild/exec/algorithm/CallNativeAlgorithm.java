@@ -11,7 +11,7 @@ import java.util.List;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
@@ -24,9 +24,9 @@ public class CallNativeAlgorithm extends Algorithm {
   private final MethodLoader methodLoader;
   private final GlobalReferencable referencable;
 
-  public CallNativeAlgorithm(MethodLoader methodLoader, ValSpec outputSpec,
+  public CallNativeAlgorithm(MethodLoader methodLoader, ValType outputType,
       GlobalReferencable referencable, boolean isPure) {
-    super(outputSpec, isPure);
+    super(outputType, isPure);
     this.methodLoader = methodLoader;
     this.referencable = referencable;
   }
@@ -50,11 +50,11 @@ public class CallNativeAlgorithm extends Algorithm {
         }
         return new Output(null, nativeApi.messages());
       }
-      if (!outputSpec().equals(result.spec())) {
+      if (!outputType().equals(result.type())) {
         nativeApi.log().error("`" + referencable.name()
-            + "` has faulty native implementation: Its declared result spec == "
-            + outputSpec().q()
-            + " but it returned object with spec == " + result.spec().q() + ".");
+            + "` has faulty native implementation: Its declared result type == "
+            + outputType().q()
+            + " but it returned object with type == " + result.type().q() + ".");
         return new Output(null, nativeApi.messages());
       }
       return new Output(result, nativeApi.messages());

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
+import static org.smoothbuild.db.object.type.TestingObjTypes.STR;
 import static org.smoothbuild.exec.compute.ResultSource.DISK;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
@@ -36,7 +36,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -329,7 +329,7 @@ public class ParallelJobExecutorTest extends TestingContextImpl {
     }
 
     @Override
-    public ValSpec outputSpec() {
+    public ValType outputType() {
       return STR;
     }
   }

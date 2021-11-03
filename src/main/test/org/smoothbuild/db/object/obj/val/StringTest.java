@@ -10,8 +10,8 @@ public class StringTest extends TestingContextImpl {
   private final String otherString = "my string 2";
 
   @Test
-  public void spec_of_str_is_str_spec() {
-    assertThat(string(string).spec())
+  public void type_of_string_is_string_type() {
+    assertThat(string(string).type())
         .isEqualTo(stringSpec());
   }
 

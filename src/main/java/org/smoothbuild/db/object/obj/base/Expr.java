@@ -3,21 +3,21 @@ package org.smoothbuild.db.object.obj.base;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.db.object.obj.ObjectDb;
-import org.smoothbuild.db.object.spec.base.ExprSpec;
-import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.type.base.ExprType;
+import org.smoothbuild.db.object.type.base.ValType;
 
 public abstract class Expr extends Obj {
   public Expr(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof ExprSpec);
+    checkArgument(merkleRoot.type() instanceof ExprType);
   }
 
   @Override
-  public ExprSpec spec() {
-    return (ExprSpec) super.spec();
+  public ExprType type() {
+    return (ExprType) super.type();
   }
 
-  public ValSpec evaluationSpec() {
-    return spec().evaluationSpec();
+  public ValType evaluationType() {
+    return type().evaluationType();
   }
 }

@@ -9,19 +9,19 @@ import org.smoothbuild.testing.TestingContextImpl;
 
 public class TupleTest extends TestingContextImpl {
   @Test
-  public void creating_tuple_with_less_items_than_specified_in_its_spec_causes_exception() {
+  public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
     assertCall(() -> objectDb().tuple(perso_Spec(), list(string("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void creating_tuple_with_item_with_different_spec_than_specified_in_tuple_spec_causes_exception() {
+  public void creating_tuple_with_item_with_different_type_than_specified_in_tuple_type_causes_exception() {
     assertCall(() -> objectDb().tuple(perso_Spec(), list(string(), int_())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void creating_tuple_with_more_items_than_specified_in_its_spec_causes_exception() {
+  public void creating_tuple_with_more_items_than_specified_in_its_type_causes_exception() {
     assertCall(() -> objectDb().tuple(
         perso_Spec(), list(string("John"), string("Doe"), string("abc"))))
         .throwsException(IllegalArgumentException.class);
@@ -34,22 +34,22 @@ public class TupleTest extends TestingContextImpl {
   }
 
   @Test
-  public void setting_item_to_object_of_wrong_spec_throws_exception() {
+  public void setting_item_to_object_of_wrong_type_throws_exception() {
     assertCall(() -> objectDb().tuple(perso_Spec(), list(string("John"), int_(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void spec_of_person_tuple_is_person_spec() {
+  public void type_of_person_tuple_is_person_type() {
     Tuple person = johnDoePerson();
-    assertThat(person.spec())
+    assertThat(person.type())
         .isEqualTo(perso_Spec());
   }
 
   @Test
   public void item_contains_object_passed_to_builder() {
     Tuple person = johnDoePerson();
-    assertThat(person.spec())
+    assertThat(person.type())
         .isEqualTo(perso_Spec());
     assertThat(person.get(0))
         .isEqualTo(string("John"));
@@ -77,7 +77,7 @@ public class TupleTest extends TestingContextImpl {
   }
 
   @Test
-  public void super_object_is_null_when_tuple_spec_has_no_items() {
+  public void super_object_is_null_when_tuple_type_has_no_items() {
     Tuple tuple = tuple(list());
     assertThat(tuple.superObject())
         .isNull();

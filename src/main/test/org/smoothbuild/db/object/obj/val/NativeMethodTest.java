@@ -9,8 +9,8 @@ import okio.ByteString;
 
 public class NativeMethodTest extends TestingContextImpl {
   @Test
-  public void spec_of_native_method_expr_is_calculated_correctly() {
-    assertThat(nativeMethod(blob(), string()).spec())
+  public void type_of_native_method_expr_is_calculated_correctly() {
+    assertThat(nativeMethod(blob(), string()).type())
         .isEqualTo(nativeMethodSpec());
   }
 

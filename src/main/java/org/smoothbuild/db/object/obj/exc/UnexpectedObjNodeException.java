@@ -1,34 +1,35 @@
 package org.smoothbuild.db.object.obj.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.base.Spec;
+import org.smoothbuild.db.object.type.base.ObjType;
 
 public class UnexpectedObjNodeException extends DecodeObjNodeException {
-  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, int pathIndex, Spec expected,
-      Spec actual) {
-    this(hash, spec, indexedPath(path, pathIndex), expected, actual);
+  public UnexpectedObjNodeException(Hash hash, ObjType type, String path, int pathIndex,
+      ObjType expected, ObjType actual) {
+    this(hash, type, indexedPath(path, pathIndex), expected, actual);
   }
 
-  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, Spec expected, Spec actual) {
-    super(hash, spec, path, buildMessage(expected, actual));
+  public UnexpectedObjNodeException(
+      Hash hash, ObjType type, String path, ObjType expected, ObjType actual) {
+    super(hash, type, path, buildMessage(expected, actual));
   }
 
-  private static String buildMessage(Spec expected, Spec actual) {
-    return "Node has unexpected spec. Expected " + expected.q() + " but was " + actual.q() + ".";
+  private static String buildMessage(ObjType expected, ObjType actual) {
+    return "Node has unexpected type. Expected " + expected.q() + " but was " + actual.q() + ".";
   }
 
-  public UnexpectedObjNodeException(Hash hash, Spec spec, String memberPath, int pathIndex,
+  public UnexpectedObjNodeException(Hash hash, ObjType type, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
-    this(hash, spec, indexedPath(memberPath, pathIndex), expected, actual);
+    this(hash, type, indexedPath(memberPath, pathIndex), expected, actual);
   }
 
   private static String indexedPath(String memberPath, int pathIndex) {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public UnexpectedObjNodeException(Hash hash, Spec spec, String path, Class<?> expected,
+  public UnexpectedObjNodeException(Hash hash, ObjType type, String path, Class<?> expected,
       Class<?> actual) {
-    super(hash, spec, path, buildMessage(expected, actual));
+    super(hash, type, path, buildMessage(expected, actual));
   }
 
   private static String buildMessage(Class<?> expected, Class<?> actual) {

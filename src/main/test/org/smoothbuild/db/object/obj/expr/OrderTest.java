@@ -13,21 +13,21 @@ import com.google.common.collect.ImmutableList;
 
 public class OrderTest extends TestingContextImpl {
   @Test
-  public void spec_of_empty_array_is_inferred_correctly() {
-    assertThat(order(list()).spec())
+  public void type_of_empty_array_is_inferred_correctly() {
+    assertThat(order(list()).type())
         .isEqualTo(orderSpec(nothingSpec()));
   }
 
   @Test
-  public void spec_of_array_is_inferred_correctly() {
-    assertThat(order(list(intExpr(3))).spec())
+  public void type_of_array_is_inferred_correctly() {
+    assertThat(order(list(intExpr(3))).type())
         .isEqualTo(orderSpec(intSpec()));
   }
 
   @Test
-  public void creating_array_with_elements_with_different_evaluation_spec_causes_exception() {
-    assertCall(() -> order(list(intExpr(3), stringExpr("abc"))).spec())
-        .throwsException(new IllegalArgumentException("Element evaluation specs are not equal "
+  public void creating_array_with_elements_with_different_evaluation_type_causes_exception() {
+    assertCall(() -> order(list(intExpr(3), stringExpr("abc"))).type())
+        .throwsException(new IllegalArgumentException("Element evaluation types are not equal "
             + intSpec().name() + " != " + stringSpec().name() + "."));
   }
 

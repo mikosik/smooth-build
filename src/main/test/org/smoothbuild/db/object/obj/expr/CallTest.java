@@ -7,15 +7,15 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.expr.Call.CallData;
-import org.smoothbuild.db.object.spec.val.LambdaSpec;
+import org.smoothbuild.db.object.type.val.LambdaOType;
 import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.collect.ImmutableList;
 
 public class CallTest extends TestingContextImpl {
   @Test
-  public void spec_of_call_expr_is_inferred_correctly() {
-    assertThat(call(const_(lambda()), list(stringExpr())).spec())
+  public void type_of_call_expr_is_inferred_correctly() {
+    assertThat(call(const_(lambda()), list(stringExpr())).type())
         .isEqualTo(callSpec(intSpec()));
   }
 
@@ -29,22 +29,25 @@ public class CallTest extends TestingContextImpl {
   @Test
   public void creating_call_with_too_few_arguments_causes_exception() {
     assertCall(() -> call(const_(lambda()), list()))
-        .throwsException(new IllegalArgumentException("Arguments evaluation spec {} should be "
-            + "equal to function evaluation spec parameters {String}."));
+        .throwsException(argumentsNotMatchingParametersException("{}", "{String}"));
   }
 
   @Test
   public void creating_call_with_too_many_arguments_causes_exception() {
     assertCall(() -> call(const_(lambda()), list(intExpr(), intExpr())))
-        .throwsException(new IllegalArgumentException("Arguments evaluation spec {Int,Int}"
-            + " should be equal to function evaluation spec parameters {String}."));
+        .throwsException(argumentsNotMatchingParametersException("{Int,Int}", "{String}"));
   }
 
   @Test
-  public void creating_call_with_argument_not_matching_parameter_spec_causes_exception() {
+  public void creating_call_with_argument_not_matching_parameter_type_causes_exception() {
     assertCall(() -> call(const_(lambda()), list(intExpr(3))))
-        .throwsException(new IllegalArgumentException("Arguments evaluation spec {Int} should be"
-            + " equal to function evaluation spec parameters {String}."));
+        .throwsException(argumentsNotMatchingParametersException("{Int}", "{String}"));
+  }
+
+  private static IllegalArgumentException argumentsNotMatchingParametersException(
+      String arguments, String parameters) {
+    return new IllegalArgumentException("Arguments evaluation type " + arguments + " should be"
+        + " equal to function evaluation type parameters " + parameters + ".");
   }
 
   @Test
@@ -96,9 +99,9 @@ public class CallTest extends TestingContextImpl {
 
   @Test
   public void hash_of_calls_with_different_function_is_not_the_same() {
-    LambdaSpec spec = lambdaSpec(intSpec(), list(stringSpec()));
-    Const function1 = const_(lambda(spec, intExpr(1)));
-    Const function2 = const_(lambda(spec, intExpr(2)));
+    LambdaOType type = lambdaSpec(intSpec(), list(stringSpec()));
+    Const function1 = const_(lambda(type, intExpr(1)));
+    Const function2 = const_(lambda(type, intExpr(2)));
     var arguments = list(stringExpr()) ;
     assertThat(call(function1, arguments).hash())
         .isNotEqualTo(call(function2, arguments).hash());

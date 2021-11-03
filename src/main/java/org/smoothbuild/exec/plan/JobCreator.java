@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
@@ -73,24 +73,24 @@ import com.google.common.collect.ImmutableMap;
 
 public class JobCreator {
   private final Definitions definitions;
-  private final TypeToSpecConverter toSpecConverter;
+  private final STypeToOTypeConverter toOTypeConverter;
   private final MethodLoader methodLoader;
   private final TypeFactory factory;
   private final Typing typing;
   private final Map<Class<?>, Handler<?>> map;
 
   @Inject
-  public JobCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
+  public JobCreator(Definitions definitions, STypeToOTypeConverter toOTypeConverter,
       MethodLoader methodLoader, TypeFactory factory, Typing typing) {
-    this(definitions, toSpecConverter, methodLoader, factory, typing, ImmutableMap.of());
+    this(definitions, toOTypeConverter, methodLoader, factory, typing, ImmutableMap.of());
   }
 
   // Visible for testing
-  JobCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
+  JobCreator(Definitions definitions, STypeToOTypeConverter toOTypeConverter,
       MethodLoader methodLoader, TypeFactory factory, Typing typing,
       Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;
-    this.toSpecConverter = toSpecConverter;
+    this.toOTypeConverter = toOTypeConverter;
     this.methodLoader = methodLoader;
     this.factory = factory;
     this.typing = typing;
@@ -226,7 +226,7 @@ public class JobCreator {
 
   private Job selectReadEager(Scope<Job> scope, SelectExpression expression, Type type) {
     var index = expression.index();
-    var algorithm = new ReadStructItemAlgorithm(index, toSpecConverter.visit(type));
+    var algorithm = new ReadStructItemAlgorithm(index, toOTypeConverter.visit(type));
     var dependencies = list(eagerJobFor(scope, expression.expression()));
     var info = new TaskInfo(SELECT, "." + index, expression.location());
     return new Task(type, dependencies, info, algorithm);
@@ -254,7 +254,7 @@ public class JobCreator {
   private Job referenceEager(Scope<Job> scope, ReferenceExpression reference, Type type) {
     var referencable = definitions.referencables().get(reference.name());
     var module = definitions.modules().get(referencable.modulePath());
-    var algorithm = new ReferenceAlgorithm(referencable, module, toSpecConverter.functionSpec());
+    var algorithm = new ReferenceAlgorithm(referencable, module, toOTypeConverter.functionType());
     var info = new TaskInfo(REFERENCE, ":" + referencable.name(), reference.location());
     var job = new Task(type, list(), info, algorithm);
     if (referencable instanceof Value) {
@@ -297,7 +297,7 @@ public class JobCreator {
   }
 
   public Job arrayEager(ArrayType type, ImmutableList<Job> elements, TaskInfo info) {
-    var algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(type));
+    var algorithm = new CreateArrayAlgorithm(toOTypeConverter.visit(type));
     return new Task(type, elements, info, algorithm);
   }
 
@@ -312,8 +312,8 @@ public class JobCreator {
   }
 
   private Job blobEagerJob(BlobLiteralExpression expression) {
-    var blobSpec = toSpecConverter.visit(factory.blob());
-    var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
+    var blobType = toOTypeConverter.visit(factory.blob());
+    var algorithm = new FixedBlobAlgorithm(blobType, expression.byteString());
     var info = new TaskInfo(LITERAL, algorithm.shortedLiteral(), expression.location());
     return new Task(factory.blob(), list(), info, algorithm);
   }
@@ -329,9 +329,9 @@ public class JobCreator {
   }
 
   private Job intEager(IntLiteralExpression expression) {
-    var intSpec = toSpecConverter.visit(factory.int_());
+    var intType = toOTypeConverter.visit(factory.int_());
     var bigInteger = expression.bigInteger();
-    var algorithm = new FixedIntAlgorithm(intSpec, bigInteger);
+    var algorithm = new FixedIntAlgorithm(intType, bigInteger);
     var info = new TaskInfo(LITERAL, bigInteger.toString(), expression.location());
     return new Task(factory.int_(), list(), info, algorithm);
   }
@@ -352,7 +352,7 @@ public class JobCreator {
   }
 
   private Job stringEagerJob(StringLiteralExpression stringLiteral) {
-    var stringType = toSpecConverter.visit(factory.string());
+    var stringType = toOTypeConverter.visit(factory.string());
     var algorithm = new FixedStringAlgorithm(stringType, stringLiteral.string());
     var name = algorithm.shortedString();
     var info = new TaskInfo(LITERAL, name, stringLiteral.location());
@@ -377,8 +377,8 @@ public class JobCreator {
       return new MapJob(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof Constructor constructor) {
       var resultType = constructor.type().result();
-      var structSpec = (StructSpec) toSpecConverter.visit(resultType);
-      return constructorCallEagerJob(resultType, structSpec, constructor.extendedName(),
+      var structType = (StructOType) toOTypeConverter.visit(resultType);
+      return constructorCallEagerJob(resultType, structType, constructor.extendedName(),
           arguments, location);
     } else {
       throw new IllegalArgumentException(
@@ -412,7 +412,7 @@ public class JobCreator {
   private Job callNativeValueEagerJob(NativeValue nativeValue, Location location) {
     Annotation annotation = nativeValue.annotation();
     var algorithm = new CallNativeAlgorithm(
-        methodLoader, toSpecConverter.visit(nativeValue.type()), nativeValue, annotation.isPure());
+        methodLoader, toOTypeConverter.visit(nativeValue.type()), nativeValue, annotation.isPure());
     var nativeCode = nativeEagerJob(annotation);
     var info = new TaskInfo(VALUE, nativeValue.extendedName(), location);
     return new Task(nativeValue.type(), list(nativeCode), info, algorithm
@@ -437,7 +437,7 @@ public class JobCreator {
       NativeFunction function, Annotation annotation, BoundsMap variables,
       Type actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(
-        methodLoader, toSpecConverter.visit(actualResultType), function, annotation.isPure());
+        methodLoader, toOTypeConverter.visit(actualResultType), function, annotation.isPure());
     var dependencies = concat(
         nativeEager(scope, annotation),
         convertedArgumentEagerJob(arguments, function, variables));
@@ -454,9 +454,9 @@ public class JobCreator {
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }
 
-  private Job constructorCallEagerJob(Type resultType, StructSpec structSpec, String name,
+  private Job constructorCallEagerJob(Type resultType, StructOType structType, String name,
       List<Job> arguments, Location location) {
-    var algorithm = new CreateStructAlgorithm(structSpec);
+    var algorithm = new CreateStructAlgorithm(structType);
     var info = new TaskInfo(CALL, name, location);
     return new Task(resultType, arguments, info, algorithm);
   }
@@ -471,7 +471,7 @@ public class JobCreator {
 
   private Job convertEagerJob(Type requiredType, Job job) {
     var description = requiredType.name() + "<-" + job.type().name();
-    var algorithm = new ConvertAlgorithm(toSpecConverter.visit(requiredType));
+    var algorithm = new ConvertAlgorithm(toOTypeConverter.visit(requiredType));
     var info = new TaskInfo(CONVERSION, description, job.location());
     return new Task(requiredType, list(job), info, algorithm);
   }

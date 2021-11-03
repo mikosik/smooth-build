@@ -6,7 +6,7 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.spec.val.StrSpec;
+import org.smoothbuild.db.object.type.val.StringOType;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -15,8 +15,8 @@ public class FixedStringAlgorithm extends Algorithm {
   private final String string;
   private final String shortedString;
 
-  public FixedStringAlgorithm(StrSpec strSpec, String string) {
-    super(strSpec);
+  public FixedStringAlgorithm(StringOType stringType, String string) {
+    super(stringType);
     this.string = string;
     this.shortedString = escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
   }

@@ -39,11 +39,11 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationSpecOfComponentException;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
-import org.smoothbuild.db.object.obj.exc.DecodeObjSpecException;
+import org.smoothbuild.db.object.obj.exc.DecodeObjTypeException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
-import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationSpecException;
+import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
@@ -63,15 +63,15 @@ import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.exc.DecodeSpecException;
-import org.smoothbuild.db.object.spec.expr.CallSpec;
-import org.smoothbuild.db.object.spec.expr.ConstSpec;
-import org.smoothbuild.db.object.spec.expr.ConstructSpec;
-import org.smoothbuild.db.object.spec.expr.OrderSpec;
-import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.exc.DecodeTypeException;
+import org.smoothbuild.db.object.type.expr.CallOType;
+import org.smoothbuild.db.object.type.expr.ConstOType;
+import org.smoothbuild.db.object.type.expr.ConstructOType;
+import org.smoothbuild.db.object.type.expr.OrderOType;
+import org.smoothbuild.db.object.type.val.ArrayOType;
+import org.smoothbuild.db.object.type.val.LambdaOType;
+import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.testing.TestingContextImpl;
 
 import com.google.common.collect.ImmutableList;
@@ -107,15 +107,15 @@ public class CorruptedObjTest extends TestingContextImpl {
     }
 
     @Test
-    public void corrupted_spec() throws Exception {
-      Hash specHash = Hash.of("not a spec");
+    public void corrupted_type() throws Exception {
+      Hash typeHash = Hash.of("not a type");
       Hash objHash =
           hash(
-              specHash,
+              typeHash,
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
-          .throwsException(new DecodeObjSpecException(objHash))
-          .withCause(new DecodeSpecException(specHash));
+          .throwsException(new DecodeObjTypeException(objHash))
+          .withCause(new DecodeTypeException(typeHash));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class CorruptedObjTest extends TestingContextImpl {
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new UnsupportedOperationException(
-              "Cannot create object for ANY spec."));
+              "Cannot create object for ANY type."));
     }
   }
 
@@ -198,14 +198,14 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void with_sequence_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
-      ArraySpec spec = arraySpec(stringSpec());
+      ArrayOType type = arraySpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               notHashOfSequence
           );
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Val.class))
-          .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH))
+          .throwsException(new DecodeObjNodeException(objHash, type, DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
@@ -216,22 +216,22 @@ public class CorruptedObjTest extends TestingContextImpl {
       Hash dataHash = hash(
           nowhere
       );
-      ArraySpec spec = arraySpec(stringSpec());
+      ArrayOType type = arraySpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               dataHash);
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
-          .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH + "[0]"))
+          .throwsException(new DecodeObjNodeException(objHash, type, DATA_PATH + "[0]"))
           .withCause(new NoSuchObjException(nowhere));
     }
 
     @Test
-    public void with_one_element_of_wrong_spec() throws Exception {
-      ArraySpec spec = arraySpec(stringSpec());
+    public void with_one_element_of_wrong_types() throws Exception {
+      ArrayOType type = arraySpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(
                       hash(stringSpec()),
@@ -244,15 +244,15 @@ public class CorruptedObjTest extends TestingContextImpl {
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH, 1, stringSpec(), boolSpec()));
+              objHash, type, DATA_PATH, 1, stringSpec(), boolSpec()));
     }
 
     @Test
     public void with_one_element_being_expr() throws Exception {
-      ArraySpec spec = arraySpec(stringSpec());
+      ArrayOType type = arraySpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(
                       hash(stringSpec()),
@@ -262,7 +262,7 @@ public class CorruptedObjTest extends TestingContextImpl {
               ));
       assertCall(() -> ((Array) objectDb().get(objHash)).elements(Str.class))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH, 1, stringSpec(), constSpec(intSpec())));
+              objHash, type, DATA_PATH, 1, stringSpec(), constSpec(intSpec())));
     }
   }
 
@@ -390,8 +390,8 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var lambdaSpec = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
-      var lambda = lambda(lambdaSpec, intExpr());
+      var lambdaType = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
+      var lambda = lambda(lambdaType, intExpr());
       Const function = const_(lambda);
       Construct arguments = construct(list(stringExpr(), intExpr()));
       Hash objHash =
@@ -486,27 +486,27 @@ public class CorruptedObjTest extends TestingContextImpl {
     }
 
     @Test
-    public void function_component_evaluation_spec_is_not_lambda() throws Exception {
+    public void function_component_evaluation_type_is_not_lambda() throws Exception {
       Const function = intExpr(3);
       Construct arguments = construct(list(stringExpr(), intExpr()));
-      CallSpec spec = callSpec(stringSpec());
+      CallOType type = callSpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(function),
                   hash(arguments)
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-              objHash, spec, "function", LambdaSpec.class, intSpec()));
+          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+              objHash, type, "function", LambdaOType.class, intSpec()));
     }
 
     @Test
     public void arguments_is_val_instead_of_expr() throws Exception {
-      var lambdaSpec = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
-      var lambda = lambda(lambdaSpec, intExpr());
+      var lambdaType = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
+      var lambda = lambda(lambdaType, intExpr());
       Const function = const_(lambda);
       Hash objHash =
           hash(
@@ -522,15 +522,15 @@ public class CorruptedObjTest extends TestingContextImpl {
     }
 
     @Test
-    public void arguments_component_evaluation_spec_is_not_construct_but_different_expr()
+    public void arguments_component_evaluation_type_is_not_construct_but_different_expr()
         throws Exception {
-      var lambdaSpec = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
-      var lambda = lambda(lambdaSpec, intExpr());
+      var lambdaType = lambdaSpec(intSpec(), list(stringSpec(), intSpec()));
+      var lambda = lambda(lambdaType, intExpr());
       Const function = const_(lambda);
-      CallSpec spec = callSpec();
+      CallOType type = callSpec();
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(function),
                   hash(intExpr())
@@ -538,35 +538,35 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH + "[1]", Construct.class, Const.class));
+              objHash, type, DATA_PATH + "[1]", Construct.class, Const.class));
     }
 
     @Test
-    public void evaluation_spec_is_different_than_function_evaluation_spec_result()
+    public void evaluation_type_is_different_than_function_evaluation_type_result()
         throws Exception {
       Const function = const_(lambda(lambdaSpec(intSpec(), list(stringSpec())), intExpr()));
       Construct arguments = construct(list(stringExpr(), intExpr()));
-      CallSpec spec = callSpec(stringSpec());
+      CallOType type = callSpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(function),
                   hash(arguments)
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "function.result", stringSpec(), intSpec()));
+          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+                  objHash, type, "function.result", stringSpec(), intSpec()));
     }
 
     @Test
-    public void function_evaluation_spec_parameters_does_not_match_arguments_evaluation_specs()
+    public void function_evaluation_type_parameters_does_not_match_arguments_evaluation_types()
         throws Exception {
-      LambdaSpec lambdaSpec = lambdaSpec(intSpec(), list(stringSpec(), boolSpec()));
-      Const function = const_(lambda(lambdaSpec, intExpr()));
+      LambdaOType lambdaType = lambdaSpec(intSpec(), list(stringSpec(), boolSpec()));
+      Const function = const_(lambda(lambdaType, intExpr()));
       Construct arguments = construct(list(stringExpr(), intExpr()));
-      CallSpec spec = callSpec(intSpec());
+      CallOType spec = callSpec(intSpec());
       Hash objHash =
           hash(
               hash(spec),
@@ -576,7 +576,7 @@ public class CorruptedObjTest extends TestingContextImpl {
               )
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
+          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
               objHash, spec, "arguments",
               tupleSpec(list(stringSpec(), boolSpec())),
               tupleSpec(list(stringSpec(), intSpec()))
@@ -639,17 +639,17 @@ public class CorruptedObjTest extends TestingContextImpl {
     }
 
     @Test
-    public void evaluation_spec_is_different_than_spec_of_wrapped_value()
+    public void evaluation_type_is_different_than_type_of_wrapped_value()
         throws Exception {
       Val val = int_(123);
-      ConstSpec spec = constSpec(stringSpec());
+      ConstOType type = constSpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(val));
       assertCall(() -> ((Const) objectDb().get(objHash)).value())
           .throwsException(
-              new UnexpectedObjNodeException(objHash, spec, DATA_PATH, stringSpec(), intSpec()));
+              new UnexpectedObjNodeException(objHash, type, DATA_PATH, stringSpec(), intSpec()));
     }
   }
 
@@ -662,10 +662,10 @@ public class CorruptedObjTest extends TestingContextImpl {
        * in HashedDb.
        */
       Const bodyExpr = boolExpr();
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
+      LambdaOType type = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(bodyExpr)
           );
       assertThat(((Lambda) objectDb().get(objHash)).body())
@@ -680,10 +680,10 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const bodyExpr = boolExpr();
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
+      LambdaOType type = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
       Hash dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
-          spec,
+          type,
           dataHash,
           (Hash objHash) -> ((Lambda) objectDb().get(objHash)).body());
     }
@@ -698,29 +698,29 @@ public class CorruptedObjTest extends TestingContextImpl {
     @Test
     public void body_is_val_instead_of_expr() throws Exception {
       Bool bodyExpr = bool(true);
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
+      LambdaOType type = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(bodyExpr)
           );
       assertCall(() -> ((Lambda) objectDb().get(objHash)).body())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH, Expr.class, Bool.class));
+              objHash, type, DATA_PATH, Expr.class, Bool.class));
     }
 
     @Test
-    public void body_evaluation_spec_is_not_equal_function_spec_result() throws Exception {
+    public void body_evaluation_type_is_not_equal_function_type_result() throws Exception {
       Const bodyExpr = intExpr(3);
-      LambdaSpec spec = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
+      LambdaOType type = lambdaSpec(boolSpec(), list(intSpec(), stringSpec()));
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(bodyExpr)
           );
       assertCall(() -> ((Lambda) objectDb().get(objHash)).body())
-          .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-              objHash, spec, DATA_PATH, intSpec(), boolSpec()));
+          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+              objHash, type, DATA_PATH, intSpec(), boolSpec()));
     }
   }
 
@@ -822,22 +822,22 @@ public class CorruptedObjTest extends TestingContextImpl {
     }
 
     @Test
-    public void evaluation_spec_element_is_different_than_evaluation_spec_of_one_of_elements()
+    public void evaluation_type_element_is_different_than_evaluation_type_of_one_of_elements()
         throws Exception {
       Const expr1 = intExpr();
       Const expr2 = stringExpr();
-      OrderSpec spec = orderSpec(intSpec());
+      OrderOType type = orderSpec(intSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(expr1),
                   hash(expr2)
               ));
       assertCall(() -> ((Order) objectDb().get(objHash)).elements())
           .throwsException(
-              new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "elements[1]", intSpec(), stringSpec()));
+              new DecodeExprWrongEvaluationTypeOfComponentException(
+                  objHash, type, "elements[1]", intSpec(), stringSpec()));
     }
   }
 
@@ -940,30 +940,30 @@ public class CorruptedObjTest extends TestingContextImpl {
     }
 
     @Test
-    public void evaluation_spec_items_size_is_different_than_actual_items_size()
+    public void evaluation_type_items_size_is_different_than_actual_items_size()
         throws Exception {
       Const expr1 = intExpr(1);
-      ConstructSpec spec = constructSpec(list(intSpec(), stringSpec()));
+      ConstructOType type = constructSpec(list(intSpec(), stringSpec()));
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(expr1)
               ));
 
       assertCall(() -> ((Construct) objectDb().get(objHash)).items())
-          .throwsException(new DecodeConstructWrongItemsSizeException(objHash, spec, 1));
+          .throwsException(new DecodeConstructWrongItemsSizeException(objHash, type, 1));
     }
 
     @Test
-    public void evaluation_spec_item_is_different_than_evaluation_spec_of_one_of_items()
+    public void evaluation_type_item_is_different_than_evaluation_type_of_one_of_items()
         throws Exception {
       Const expr1 = intExpr(1);
       Const expr2 = stringExpr("abc");
-      ConstructSpec spec = constructSpec(list(intSpec(), boolSpec()));
+      ConstructOType type = constructSpec(list(intSpec(), boolSpec()));
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(expr1),
                   hash(expr2)
@@ -971,8 +971,8 @@ public class CorruptedObjTest extends TestingContextImpl {
 
       assertCall(() -> ((Construct) objectDb().get(objHash)).items())
           .throwsException(
-              new DecodeExprWrongEvaluationSpecOfComponentException(
-                  objHash, spec, "items[1]", boolSpec(), stringSpec()));
+              new DecodeExprWrongEvaluationTypeOfComponentException(
+                  objHash, type, "items[1]", boolSpec(), stringSpec()));
     }
   }
 
@@ -984,8 +984,8 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * select in HashedDb.
        */
-      var structSpec = structSpec(namedList(list(named("field", stringSpec()))));
-      var struct = struct(structSpec, list(string("abc")));
+      var structType = structSpec(namedList(list(named("field", stringSpec()))));
+      var struct = struct(structType, list(string("abc")));
       var expr = const_(struct);
       var index = int_(0);
       Hash objHash =
@@ -1082,10 +1082,10 @@ public class CorruptedObjTest extends TestingContextImpl {
     public void struct_is_not_struct_expr() throws Exception {
       var expr = intExpr(3);
       var index = int_(0);
-      var spec = selectSpec(stringSpec());
+      var type = selectSpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(expr),
                   hash(index)
@@ -1093,20 +1093,20 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
 
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationSpecOfComponentException(
-              objHash, spec, "struct", StructSpec.class, intSpec()));
+          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+              objHash, type, "struct", StructOType.class, intSpec()));
     }
 
     @Test
     public void index_is_out_of_bounds() throws Exception {
-      var structSpec = structSpec(namedList(list(named("field", stringSpec()))));
-      var struct = struct(structSpec, list(string("abc")));
+      var structType = structSpec(namedList(list(named("field", stringSpec()))));
+      var struct = struct(structType, list(string("abc")));
       var expr = const_(struct);
       var index = int_(1);
-      var spec = selectSpec(stringSpec());
+      var type = selectSpec(stringSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(expr),
                   hash(index)
@@ -1114,20 +1114,20 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
 
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
-          .throwsException(new DecodeSelectIndexOutOfBoundsException(objHash, spec, 1, 1));
+          .throwsException(new DecodeSelectIndexOutOfBoundsException(objHash, type, 1, 1));
     }
 
     @Test
-    public void evaluation_spec_is_different_than_spec_of_item_pointed_to_by_index()
+    public void evaluation_type_is_different_than_type_of_item_pointed_to_by_index()
         throws Exception {
-      var structSpec = structSpec(namedList(list(named("field", stringSpec()))));
-      var struct = struct(structSpec, list(string("abc")));
+      var structType = structSpec(namedList(list(named("field", stringSpec()))));
+      var struct = struct(structType, list(string("abc")));
       var expr = const_(struct);
       var index = int_(0);
-      var spec = selectSpec(intSpec());
+      var type = selectSpec(intSpec());
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(expr),
                   hash(index)
@@ -1135,19 +1135,19 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
 
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
-          .throwsException(new DecodeSelectWrongEvaluationSpecException(objHash, spec, stringSpec()));
+          .throwsException(new DecodeSelectWrongEvaluationTypeException(objHash, type, stringSpec()));
     }
 
     @Test
     public void index_is_string_instead_of_int() throws Exception {
-      var spec = selectSpec(stringSpec());
-      var structSpec = structSpec(namedList(list(named("field", stringSpec()))));
-      var struct = struct(structSpec, list(string("abc")));
+      var type = selectSpec(stringSpec());
+      var structType = structSpec(namedList(list(named("field", stringSpec()))));
+      var struct = struct(structType, list(string("abc")));
       var expr = const_(struct);
       var strVal = string("abc");
       Hash objHash =
           hash(
-              hash(spec),
+              hash(type),
               hash(
                   hash(expr),
                   hash(strVal)
@@ -1155,7 +1155,7 @@ public class CorruptedObjTest extends TestingContextImpl {
           );
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, spec, DATA_PATH + "[1]", Int.class, Str.class));
+              objHash, type, DATA_PATH + "[1]", Int.class, Str.class));
     }
   }
 
@@ -1332,7 +1332,7 @@ public class CorruptedObjTest extends TestingContextImpl {
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new UnsupportedOperationException(
-              "Cannot create object for NOTHING spec."));
+              "Cannot create object for NOTHING type."));
     }
   }
 
@@ -1394,13 +1394,13 @@ public class CorruptedObjTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * struct in HashedDb.
        */
-      var structSpec = structSpec(
+      var structType = structSpec(
           namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
       var item1 = string();
       var item2 = int_();
       Hash objHash =
           hash(
-              hash(structSpec),
+              hash(structType),
               hash(
                   hash(item1),
                   hash(item2)
@@ -1409,8 +1409,8 @@ public class CorruptedObjTest extends TestingContextImpl {
       Struc_ readStruct = (Struc_) objectDb().get(objHash);
       assertThat(readStruct.items())
           .isEqualTo(list(item1, item2));
-      assertThat(readStruct.spec())
-          .isEqualTo(structSpec);
+      assertThat(readStruct.type())
+          .isEqualTo(structType);
     }
 
     @Test
@@ -1420,7 +1420,7 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var structSpec = structSpec(
+      var structType = structSpec(
           namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
       var item1 = string();
       var item2 = int_();
@@ -1429,7 +1429,7 @@ public class CorruptedObjTest extends TestingContextImpl {
           hash(item2)
       );
       obj_root_with_two_data_hashes(
-          structSpec,
+          structType,
           dataHash,
           (Hash objHash) -> ((Struc_) objectDb().get(objHash)).items());
     }
@@ -1442,12 +1442,12 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void with_too_few_elements() throws Exception {
-      var structSpec = structSpec(
+      var structType = structSpec(
           namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
       var item1 = string();
       Hash objHash =
           hash(
-              hash(structSpec),
+              hash(structType),
               hash(
                   hash(item1)
               )
@@ -1460,13 +1460,13 @@ public class CorruptedObjTest extends TestingContextImpl {
 
     @Test
     public void with_too_many_elements() throws Exception {
-      var structSpec = structSpec(
+      var structType = structSpec(
           namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
       var item1 = string();
       var item2 = int_();
       Hash objHash =
           hash(
-              hash(structSpec),
+              hash(structType),
               hash(
                   hash(item1),
                   hash(item2),
@@ -1476,17 +1476,17 @@ public class CorruptedObjTest extends TestingContextImpl {
       Struc_ readStruct = (Struc_) objectDb().get(objHash);
       assertCall(() -> readStruct.get(0))
           .throwsException(new UnexpectedObjSequenceException(
-              objHash, structSpec, DATA_PATH, 2, 3));
+              objHash, structType, DATA_PATH, 2, 3));
     }
 
     @Test
-    public void with_element_of_wrong_spec() throws Exception {
-      var structSpec = structSpec(
+    public void with_element_of_wrong_type() throws Exception {
+      var structType = structSpec(
           namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
       var item1 = string();
       Hash objHash =
           hash(
-              hash(structSpec),
+              hash(structType),
               hash(
                   hash(item1),
                   hash(bool(true))
@@ -1495,17 +1495,17 @@ public class CorruptedObjTest extends TestingContextImpl {
       Struc_ readStruct = (Struc_) objectDb().get(objHash);
       assertCall(() -> readStruct.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, structSpec, DATA_PATH, 1, intSpec(), boolSpec()));
+              objHash, structType, DATA_PATH, 1, intSpec(), boolSpec()));
     }
 
     @Test
     public void with_element_being_expr() throws Exception {
-      var structSpec = structSpec(
+      var structType = structSpec(
           namedList(list(named("name1", stringSpec()), named("name2", intSpec()))));
       var item1 = string();
       Hash objHash =
           hash(
-              hash(structSpec),
+              hash(structType),
               hash(
                   hash(item1),
                   hash(intExpr())
@@ -1514,7 +1514,7 @@ public class CorruptedObjTest extends TestingContextImpl {
       Struc_ readStruct = (Struc_) objectDb().get(objHash);
       assertCall(() -> readStruct.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, structSpec, DATA_PATH + "[1]", Val.class, Const.class));
+              objHash, structType, DATA_PATH + "[1]", Val.class, Const.class));
     }
   }
 
@@ -1619,7 +1619,7 @@ public class CorruptedObjTest extends TestingContextImpl {
     }
 
     @Test
-    public void with_element_of_wrong_spec() throws Exception {
+    public void with_element_of_wrong_type() throws Exception {
       Hash objHash =
           hash(
               hash(perso_Spec()),
@@ -1686,19 +1686,19 @@ public class CorruptedObjTest extends TestingContextImpl {
     }
   }
 
-  private void obj_root_without_data_hash(Spec spec) throws HashedDbException {
+  private void obj_root_without_data_hash(ObjType type) throws HashedDbException {
     Hash objHash =
         hash(
-            hash(spec));
+            hash(type));
     assertCall(() -> objectDb().get(objHash))
         .throwsException(wrongSizeOfRootSequenceException(objHash, 1));
   }
 
   private void obj_root_with_two_data_hashes(
-      Spec spec, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbException {
+      ObjType type, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbException {
     Hash objHash =
         hash(
-            hash(spec),
+            hash(type),
             dataHash,
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
@@ -1706,26 +1706,26 @@ public class CorruptedObjTest extends TestingContextImpl {
   }
 
   private void obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-      Spec spec, Function<Hash, ?> readClosure) throws HashedDbException {
+      ObjType type, Function<Hash, ?> readClosure) throws HashedDbException {
     Hash dataHash = Hash.of(33);
     Hash objHash =
         hash(
-            hash(spec),
+            hash(type),
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH))
+        .throwsException(new DecodeObjNodeException(objHash, type, DATA_PATH))
         .withCause(new NoSuchObjException(dataHash));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-      Spec spec, Consumer<Hash> readClosure) throws HashedDbException {
+      ObjType type, Consumer<Hash> readClosure) throws HashedDbException {
     Hash dataHash = Hash.of(33);
     Hash objHash =
         hash(
-            hash(spec),
+            hash(type),
             dataHash);
     assertCall(() -> readClosure.accept(objHash))
-        .throwsException(new DecodeObjNodeException(objHash, spec, DATA_PATH))
+        .throwsException(new DecodeObjNodeException(objHash, type, DATA_PATH))
         .withCause(new NoSuchDataException(dataHash));
   }
 
@@ -1739,7 +1739,7 @@ public class CorruptedObjTest extends TestingContextImpl {
               hash("aaa"));
       assertCall(() -> objectDb().get(objHash))
           .throwsException(new UnsupportedOperationException(
-              "Cannot create object for VARIABLE spec."));
+              "Cannot create object for VARIABLE type."));
     }
   }
 
@@ -1784,8 +1784,8 @@ public class CorruptedObjTest extends TestingContextImpl {
     return obj.hash();
   }
 
-  protected Hash hash(Spec spec) {
-    return spec.hash();
+  protected Hash hash(ObjType type) {
+    return type.hash();
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {

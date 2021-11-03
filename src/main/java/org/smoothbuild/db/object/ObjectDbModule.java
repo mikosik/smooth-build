@@ -7,12 +7,12 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.obj.ObjectDb;
-import org.smoothbuild.db.object.spec.SpecDb;
+import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryImpl;
+import org.smoothbuild.lang.base.type.impl.STypeFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -23,20 +23,20 @@ public class ObjectDbModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ObjectDb provideObjectDb(HashedDb hashedDb, SpecDb specDb) {
-    return new ObjectDb(hashedDb, specDb);
+  public ObjectDb provideObjectDb(HashedDb hashedDb, ObjTypeDb objTypeDb) {
+    return new ObjectDb(hashedDb, objTypeDb);
   }
 
   @Provides
   @Singleton
   public TypeFactory provideTypeFactory() {
-    return new TypeFactoryImpl();
+    return new STypeFactory();
   }
 
   @Provides
   @Singleton
-  public SpecDb provideSpecDb(HashedDb hashedDb) {
-    return new SpecDb(hashedDb);
+  public ObjTypeDb provideObjTypeDb(HashedDb hashedDb) {
+    return new ObjTypeDb(hashedDb);
   }
 
   @Provides

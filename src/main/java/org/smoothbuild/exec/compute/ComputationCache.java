@@ -19,8 +19,8 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.val.ArraySpec;
+import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -69,13 +69,13 @@ public class ComputationCache {
     };
   }
 
-  public synchronized Output read(Hash taskHash, ValSpec spec) throws ComputationCacheException {
+  public synchronized Output read(Hash taskHash, ValType type) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       Obj messagesObject = objectDb.get(Hash.read(source));
-      ArraySpec messageArraySpec = objectFactory.arraySpec(objectFactory.messageSpec());
-      if (!messagesObject.spec().equals(messageArraySpec)) {
-        throw corruptedValueException(taskHash, "Expected " + messageArraySpec
-            + " as first child of its Merkle root, but got " + messagesObject.spec());
+      ArrayOType messageArrayType = objectFactory.arrayType(objectFactory.messageType());
+      if (!messagesObject.type().equals(messageArrayType)) {
+        throw corruptedValueException(taskHash, "Expected " + messageArrayType
+            + " as first child of its Merkle root, but got " + messagesObject.type());
       }
 
       Array messages = (Array) messagesObject;
@@ -92,9 +92,9 @@ public class ComputationCache {
       } else {
         Hash resultObjectHash = Hash.read(source);
         Obj obj = objectDb.get(resultObjectHash);
-        if (!spec.equals(obj.spec())) {
-          throw corruptedValueException(taskHash, "Expected value of type " + spec
-              + " as second child of its Merkle root, but got " + obj.spec());
+        if (!type.equals(obj.type())) {
+          throw corruptedValueException(taskHash, "Expected value of type " + type
+              + " as second child of its Merkle root, but got " + obj.type());
         } else {
           return new Output((Val) obj, messages);
         }

@@ -8,8 +8,8 @@ import org.smoothbuild.testing.TestingContextImpl;
 
 public class ConstTest extends TestingContextImpl {
   @Test
-  public void spec_of_const_expr_is_inferred_correctly() {
-    assertThat(intExpr(1).spec())
+  public void type_of_const_expr_is_inferred_correctly() {
+    assertThat(intExpr(1).type())
         .isEqualTo(constSpec(intSpec()));
   }
 

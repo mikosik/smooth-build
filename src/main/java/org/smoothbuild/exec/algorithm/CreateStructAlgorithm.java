@@ -4,24 +4,24 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createStructAlgorit
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CreateStructAlgorithm extends Algorithm {
-  public CreateStructAlgorithm(StructSpec structSpec) {
-    super(structSpec);
+  public CreateStructAlgorithm(StructOType structType) {
+    super(structType);
   }
 
   @Override
   public Hash hash() {
-    return createStructAlgorithmHash((StructSpec) outputSpec());
+    return createStructAlgorithmHash((StructOType) outputType());
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Struc_ struct = nativeApi.factory().struct(((StructSpec) outputSpec()), input.vals());
+    Struc_ struct = nativeApi.factory().struct(((StructOType) outputType()), input.vals());
     return new Output(struct, nativeApi.messages());
   }
 }

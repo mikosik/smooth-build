@@ -8,15 +8,15 @@ import java.util.List;
 
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.spec.val.ArraySpec;
+import org.smoothbuild.db.object.type.val.ArrayOType;
 
 public class ArrayBuilder {
-  private final ArraySpec spec;
+  private final ArrayOType type;
   private final ObjectDb objectDb;
   private final List<Obj> elements;
 
-  public ArrayBuilder(ArraySpec spec, ObjectDb objectDb) {
-    this.spec = spec;
+  public ArrayBuilder(ArrayOType type, ObjectDb objectDb) {
+    this.type = type;
     this.objectDb = objectDb;
     this.elements = new ArrayList<>();
   }
@@ -27,11 +27,11 @@ public class ArrayBuilder {
   }
 
   public ArrayBuilder add(Obj elements) {
-    if (!spec.element().equals(elements.spec())) {
-      throw new IllegalArgumentException("Element spec must be " + spec.element().name()
-          + " but was " + elements.spec().name() + ".");
+    if (!type.element().equals(elements.type())) {
+      throw new IllegalArgumentException("Element type must be " + type.element().name()
+          + " but was " + elements.type().name() + ".");
     }
-    Class<?> required = spec.element().jType();
+    Class<?> required = type.element().jType();
     if (!required.equals(elements.getClass())) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "
@@ -42,6 +42,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return wrapHashedDbExceptionAsObjectDbException(() -> objectDb.newArray(spec, elements));
+    return wrapHashedDbExceptionAsObjectDbException(() -> objectDb.newArray(type, elements));
   }
 }

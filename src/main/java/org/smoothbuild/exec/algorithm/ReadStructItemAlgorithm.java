@@ -6,7 +6,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readStructItemAlgor
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -16,8 +16,8 @@ import com.google.common.collect.ImmutableList;
 public class ReadStructItemAlgorithm extends Algorithm {
   private final int itemIndex;
 
-  public ReadStructItemAlgorithm(int itemIndex, ValSpec outputSpec) {
-    super(outputSpec);
+  public ReadStructItemAlgorithm(int itemIndex, ValType outputType) {
+    super(outputType);
     this.itemIndex = itemIndex;
   }
 

@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.spec.val.NativeMethodSpec;
+import org.smoothbuild.db.object.type.val.NativeMethodOType;
 
 /**
  * This class is immutable.
@@ -17,7 +17,7 @@ public class NativeMethod extends Val {
 
   public NativeMethod(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof NativeMethodSpec);
+    checkArgument(merkleRoot.type() instanceof NativeMethodOType);
   }
 
   public Blob jarFile() {

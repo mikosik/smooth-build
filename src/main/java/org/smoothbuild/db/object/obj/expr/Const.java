@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.spec.expr.ConstSpec;
+import org.smoothbuild.db.object.type.expr.ConstOType;
 
 /**
  * This class is immutable.
@@ -17,19 +17,19 @@ import org.smoothbuild.db.object.spec.expr.ConstSpec;
 public class Const extends Expr {
   public Const(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof ConstSpec);
+    checkArgument(merkleRoot.type() instanceof ConstOType);
   }
 
   @Override
-  public ConstSpec spec() {
-    return (ConstSpec) super.spec();
+  public ConstOType type() {
+    return (ConstOType) super.type();
   }
 
   public Val value() {
     Val val = readObj(DATA_PATH, dataHash(), Val.class);
-    if (!Objects.equals(evaluationSpec(), val.spec())) {
+    if (!Objects.equals(evaluationType(), val.type())) {
       throw new UnexpectedObjNodeException(
-          hash(), spec(), DATA_PATH, evaluationSpec(), val.spec());
+          hash(), type(), DATA_PATH, evaluationType(), val.type());
     }
     return val;
   }

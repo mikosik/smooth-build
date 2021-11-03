@@ -197,8 +197,7 @@ public class NativeTest extends AcceptanceTestCase {
                 """, ReturnNull.class.getCanonicalName()));
             runSmoothBuild("result");
             assertFinishedWithError();
-            assertSysOutContains("`returnNull` has faulty native implementation: "
-                + "it returned `null` but logged no error.");
+            assertSysOutContains(faultyNullReturned("returnNull"));
           }
 
           @Test
@@ -211,8 +210,7 @@ public class NativeTest extends AcceptanceTestCase {
                 """, ReportWarningAndReturnNull.class.getCanonicalName()));
             runSmoothBuild("result");
             assertFinishedWithError();
-            assertSysOutContains("`reportWarning` has faulty native implementation: "
-                + "it returned `null` but logged no error.");
+            assertSysOutContains(faultyNullReturned("reportWarning"));
           }
 
           @Test
@@ -229,9 +227,8 @@ public class NativeTest extends AcceptanceTestCase {
                 """, ReturnStringStruct.class.getCanonicalName()));
             runSmoothBuild("result");
             assertFinishedWithError();
-            assertSysOutContains("`returnStringStruct` has faulty native implementation: " +
-                "Its declared result spec == `Person` " +
-                "but it returned object with spec == `StringHolder`.");
+            assertSysOutContains(
+                faultyTypeOfReturnedObject("returnStringStruct", "Person", "StringHolder"));
           }
 
           @Test
@@ -244,9 +241,8 @@ public class NativeTest extends AcceptanceTestCase {
                 """, EmptyStringArray.class.getCanonicalName()));
             runSmoothBuild("result");
             assertFinishedWithError();
-            assertSysOutContains("`emptyStringArray` has faulty native implementation: "
-                + "Its declared result spec == `[Blob]` but it returned"
-                + " object with spec == `[String]`.");
+            assertSysOutContains(
+                faultyTypeOfReturnedObject("emptyStringArray", "[Blob]", "[String]"));
           }
 
           @Test
@@ -261,7 +257,7 @@ public class NativeTest extends AcceptanceTestCase {
             assertFinishedWithError();
             assertSysOutContains(
                 "`addElementOfWrongTypeToArray` threw java exception from its native code.");
-            assertSysOutContains("Element spec must be Blob but was String.");
+            assertSysOutContains("Element type must be Blob but was String.");
           }
         }
       }
@@ -542,8 +538,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, ReturnNull.class.getCanonicalName()));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains("`returnNull` has faulty native implementation: "
-              + "it returned `null` but logged no error.");
+          assertSysOutContains(faultyNullReturned("returnNull"));
         }
 
         @Test
@@ -570,9 +565,8 @@ public class NativeTest extends AcceptanceTestCase {
             """, BrokenIdentity.class.getCanonicalName()));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains("`brokenIdentity` has faulty native implementation: "
-              + "Its declared result spec == `[Nothing]` but it returned "
-              + "object with spec == `String`.");
+          assertSysOutContains(
+              faultyTypeOfReturnedObject("brokenIdentity", "[Nothing]", "String"));
         }
 
         @Test
@@ -590,8 +584,7 @@ public class NativeTest extends AcceptanceTestCase {
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains(
-              "`returnStringStruct` has faulty native implementation: Its declared " +
-                  "result spec == `Person` but it returned object with spec == `StringHolder`.");
+              faultyTypeOfReturnedObject("returnStringStruct", "Person", "StringHolder"));
         }
 
         @Test
@@ -604,9 +597,8 @@ public class NativeTest extends AcceptanceTestCase {
             """, EmptyStringArray.class.getCanonicalName()));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains("`emptyStringArray` has faulty native implementation: "
-              + "Its declared result spec == `[Blob]` but it returned object with "
-              + "spec == `[String]`.");
+          assertSysOutContains(
+              faultyTypeOfReturnedObject("emptyStringArray", "[Blob]", "[String]"));
         }
 
         @Test
@@ -621,10 +613,21 @@ public class NativeTest extends AcceptanceTestCase {
           assertFinishedWithError();
           assertSysOutContains(
               "`addElementOfWrongTypeToArray` threw java exception from its native code.");
-          assertSysOutContains("Element spec must be Blob but was String.");
+          assertSysOutContains("Element type must be Blob but was String.");
         }
       }
     }
+  }
+
+  private String faultyNullReturned(String name) {
+    return "`" + name
+        + "` has faulty native implementation: it returned `null` but logged no error.";
+  }
+
+  private static String faultyTypeOfReturnedObject(
+      String name, String declared, String actual) {
+    return "`" + name + "` has faulty native implementation: Its declared result type == `"
+        + declared + "` but it returned object with type == `" + actual + "`.";
   }
 
   private String fileNotFoundErrorMessage(String memberName, String methodPath) {

@@ -23,7 +23,7 @@ public class FilterFunction {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;
     }
-    ArrayBuilder builder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileSpec());
+    ArrayBuilder builder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileType());
 
     for (Struc_ file : files.elements(Struc_.class)) {
       if (filter.test(path(filePath(file).jValue()))) {

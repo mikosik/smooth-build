@@ -9,23 +9,23 @@ import org.smoothbuild.testing.TestingContextImpl;
 
 public class UnexpectedObjNodeExceptionTest extends TestingContextImpl {
   @Test
-  public void message_with_specs() {
+  public void message_with_types() {
     var exception = new UnexpectedObjNodeException(
         Hash.of(123), intSpec(), "node-path", boolSpec(), stringSpec());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` object at 1959893f68220459cbd800396e1eae7bfc382e97. "
             + "Cannot decode its node at `node-path` path in Merkle tree. "
-            + "Node has unexpected spec. Expected `Bool` but was `String`.");
+            + "Node has unexpected type. Expected `Bool` but was `String`.");
   }
 
   @Test
-  public void message_with_index_and_specs() {
+  public void message_with_index_and_types() {
     var exception = new UnexpectedObjNodeException(
         Hash.of(123), intSpec(), "node-path", 7, boolSpec(), stringSpec());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Int` object at 1959893f68220459cbd800396e1eae7bfc382e97. "
             + "Cannot decode its node at `node-path[7]` path in Merkle tree. "
-            + "Node has unexpected spec. Expected `Bool` but was `String`.");
+            + "Node has unexpected type. Expected `Bool` but was `String`.");
   }
 
   @Test

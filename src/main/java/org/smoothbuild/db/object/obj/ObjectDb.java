@@ -21,7 +21,7 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.exc.DecodeObjSpecException;
+import org.smoothbuild.db.object.obj.exc.DecodeObjTypeException;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
@@ -42,14 +42,14 @@ import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.spec.SpecDb;
-import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.expr.SelectSpec;
-import org.smoothbuild.db.object.spec.val.ArraySpec;
-import org.smoothbuild.db.object.spec.val.LambdaSpec;
-import org.smoothbuild.db.object.spec.val.StructSpec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
+import org.smoothbuild.db.object.type.ObjTypeDb;
+import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.expr.SelectOType;
+import org.smoothbuild.db.object.type.val.ArrayOType;
+import org.smoothbuild.db.object.type.val.LambdaOType;
+import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.TupleOType;
 import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
@@ -59,17 +59,17 @@ import com.google.common.collect.ImmutableList;
  */
 public class ObjectDb {
   private final HashedDb hashedDb;
-  private final SpecDb specDb;
+  private final ObjTypeDb objTypeDb;
 
-  public ObjectDb(HashedDb hashedDb, SpecDb specDb) {
+  public ObjectDb(HashedDb hashedDb, ObjTypeDb objTypeDb) {
     this.hashedDb = hashedDb;
-    this.specDb = specDb;
+    this.objTypeDb = objTypeDb;
   }
 
   // methods for creating value or value builders
 
-  public ArrayBuilder arrayBuilder(ValSpec elementSpec) {
-    return new ArrayBuilder(specDb.array(elementSpec), this);
+  public ArrayBuilder arrayBuilder(ValType elementType) {
+    return new ArrayBuilder(objTypeDb.array(elementType), this);
   }
 
   public BlobBuilder blobBuilder() {
@@ -80,12 +80,12 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
-  public Lambda lambda(LambdaSpec spec, Expr body) {
-    if (!Objects.equals(spec.result(), body.evaluationSpec())) {
-      throw new IllegalArgumentException("`spec` specifies result as " + spec.result().name()
-          + " but body.evaluationSpec() is " + body.evaluationSpec().name() + ".");
+  public Lambda lambda(LambdaOType type, Expr body) {
+    if (!Objects.equals(type.result(), body.evaluationType())) {
+      throw new IllegalArgumentException("`type` specifies result as " + type.result().name()
+          + " but body.evaluationType() is " + body.evaluationType().name() + ".");
     }
-    return wrapHashedDbExceptionAsObjectDbException(() -> newLambda(spec, body));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newLambda(type, body));
   }
 
   public Int int_(BigInteger value) {
@@ -101,39 +101,39 @@ public class ObjectDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
   }
 
-  public Struc_ struct(StructSpec structSpec, ImmutableList<Val> items) {
-    var fieldTypes = map(structSpec.fields().list(), Named::object);
-    allMatchOtherwise(fieldTypes, items, (f, i) -> Objects.equals(f, i.spec()),
+  public Struc_ struct(StructOType structType, ImmutableList<Val> items) {
+    var fieldTypes = map(structType.fields().list(), Named::object);
+    allMatchOtherwise(fieldTypes, items, (f, i) -> Objects.equals(f, i.type()),
         (i, j) -> {
           throw new IllegalArgumentException(
-              "structSpec specifies " + i + " items but provided " + j + ".");
+              "structType specifies " + i + " items but provided " + j + ".");
         },
         (i) -> {
-          throw new IllegalArgumentException("structSpec specifies field at index " + i
-              + " with spec " + fieldTypes.get(i).name() + " but provided item has spec "
-              + items.get(i).spec().name() + " at that index.");
+          throw new IllegalArgumentException("structType specifies field at index " + i
+              + " with type " + fieldTypes.get(i).name() + " but provided item has type "
+              + items.get(i).type().name() + " at that index.");
         }
     );
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStruct(structSpec, items));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStruct(structType, items));
   }
 
-  public Tuple tuple(TupleSpec tupleSpec, Iterable<? extends Obj> items) {
+  public Tuple tuple(TupleOType tupleType, Iterable<? extends Obj> items) {
     List<Obj> itemList = ImmutableList.copyOf(items);
-    var specs = tupleSpec.items();
+    var types = tupleType.items();
 
-    allMatchOtherwise(specs, itemList, (s, i) -> Objects.equals(s, i.spec()),
+    allMatchOtherwise(types, itemList, (s, i) -> Objects.equals(s, i.type()),
         (i, j) -> {
           throw new IllegalArgumentException(
-              "TupleSpec specifies " + i + " items but provided " + j + ".");
+              "tupleType specifies " + i + " items but provided " + j + ".");
         },
         (i) -> {
-          throw new IllegalArgumentException("TupleSpec specifies item at index " + i
-              + " with spec " + specs.get(i).name() + " but provided item has spec "
-              + itemList.get(i).spec().name() + " at that index.");
+          throw new IllegalArgumentException("tupleType specifies item at index " + i
+              + " with type " + types.get(i).name() + " but provided item has type "
+              + itemList.get(i).type().name() + " at that index.");
         }
     );
 
-    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleSpec, itemList));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleType, itemList));
   }
 
   // methods for creating expr-s
@@ -151,25 +151,25 @@ public class ObjectDb {
   }
 
   public Invoke invoke(
-      ValSpec evaluationSpec, NativeMethod nativeMethod, Bool isPure, Int argumentCount) {
+      ValType evaluationType, NativeMethod nativeMethod, Bool isPure, Int argumentCount) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newInvoke(evaluationSpec, nativeMethod, isPure, argumentCount));
+        () -> newInvoke(evaluationType, nativeMethod, isPure, argumentCount));
   }
 
   public Order order(List<? extends Expr> elements) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elements));
   }
 
-  public Ref ref(BigInteger value, ValSpec evaluationSpec) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationSpec, value));
+  public Ref ref(BigInteger value, ValType evaluationType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType, value));
   }
 
   public Select select(Expr struct, Int index) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(struct, index));
   }
 
-  public StructExpr structExpr(StructSpec evaluationSpec, ImmutableList<? extends Expr> items) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStructExpr(evaluationSpec, items));
+  public StructExpr structExpr(StructOType evaluationType, ImmutableList<? extends Expr> items) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newStructExpr(evaluationType, items));
   }
 
   // generic getter
@@ -179,16 +179,16 @@ public class ObjectDb {
     if (hashes.size() != 2) {
       throw wrongSizeOfRootSequenceException(rootHash, hashes.size());
     }
-    Spec spec = getSpecOrChainException(rootHash, hashes.get(0));
+    ObjType type = getTypeOrChainException(rootHash, hashes.get(0));
     Hash dataHash = hashes.get(1);
-    return spec.newObj(new MerkleRoot(rootHash, spec, dataHash), this);
+    return type.newObj(new MerkleRoot(rootHash, type, dataHash), this);
   }
 
-  private Spec getSpecOrChainException(Hash rootHash, Hash specHash) {
+  private ObjType getTypeOrChainException(Hash rootHash, Hash typeHash) {
     try {
-      return specDb.get(specHash);
+      return objTypeDb.get(typeHash);
     } catch (ObjectDbException e) {
-      throw new DecodeObjSpecException(rootHash, e);
+      throw new DecodeObjTypeException(rootHash, e);
     }
   }
 
@@ -204,189 +204,189 @@ public class ObjectDb {
 
   // methods for creating Val Obj-s
 
-  public Array newArray(ArraySpec spec, List<? extends Obj> elements) throws HashedDbException {
+  public Array newArray(ArrayOType type, List<? extends Obj> elements) throws HashedDbException {
     var data = writeArrayData(elements);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
   public Blob newBlob(Hash dataHash) throws HashedDbException {
-    var root = newRoot(specDb.blob(), dataHash);
-    return specDb.blob().newObj(root, this);
+    var root = newRoot(objTypeDb.blob(), dataHash);
+    return objTypeDb.blob().newObj(root, this);
   }
 
   private Bool newBool(boolean value) throws HashedDbException {
     var data = writeBoolData(value);
-    var root = newRoot(specDb.bool(), data);
-    return specDb.bool().newObj(root, this);
+    var root = newRoot(objTypeDb.bool(), data);
+    return objTypeDb.bool().newObj(root, this);
   }
 
-  private Lambda newLambda(LambdaSpec spec, Expr body) throws HashedDbException {
+  private Lambda newLambda(LambdaOType type, Expr body) throws HashedDbException {
     var data = writeLambdaData(body);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
   private Int newInt(BigInteger value) throws HashedDbException {
     var data = writeIntData(value);
-    var root = newRoot(specDb.int_(), data);
-    return specDb.int_().newObj(root, this);
+    var root = newRoot(objTypeDb.int_(), data);
+    return objTypeDb.int_().newObj(root, this);
   }
 
   private NativeMethod newNativeMethod(Blob jarFile, Str classBinaryName) throws HashedDbException {
-    var spec = specDb.nativeMethod();
+    var type = objTypeDb.nativeMethod();
     var data = writeNativeMethodData(jarFile, classBinaryName);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
   private Str newString(String string) throws HashedDbException {
     var data = writeStringData(string);
-    var root = newRoot(specDb.string(), data);
-    return specDb.string().newObj(root, this);
+    var root = newRoot(objTypeDb.string(), data);
+    return objTypeDb.string().newObj(root, this);
   }
 
-  private Struc_ newStruct(StructSpec spec, ImmutableList<Val> items) throws HashedDbException {
+  private Struc_ newStruct(StructOType type, ImmutableList<Val> items) throws HashedDbException {
     var data = writeStructData(items);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
-  private Tuple newTuple(TupleSpec spec, List<? extends Obj> objects) throws HashedDbException {
+  private Tuple newTuple(TupleOType type, List<? extends Obj> objects) throws HashedDbException {
     var data = writeTupleData(objects);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
   // methods for creating Expr-s
 
   private Call newCall(Expr function, Construct arguments) throws HashedDbException {
-    var lambdaSpec = functionEvaluationSpec(function);
-    verifyArguments(lambdaSpec, arguments);
-    var spec = specDb.call(lambdaSpec.result());
+    var lambdaType = functionevaluationType(function);
+    verifyArguments(lambdaType, arguments);
+    var type = objTypeDb.call(lambdaType.result());
     var data = writeCallData(function, arguments);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
-  private static void verifyArguments(LambdaSpec lambdaSpec, Construct arguments) {
-    if (!Objects.equals(lambdaSpec.parametersTuple(), arguments.evaluationSpec())) {
-      throw new IllegalArgumentException(("Arguments evaluation spec %s should be equal to "
-          + "function evaluation spec parameters %s.")
-          .formatted(arguments.evaluationSpec().name(), lambdaSpec.parametersTuple().name()));
+  private static void verifyArguments(LambdaOType lambdaType, Construct arguments) {
+    if (!Objects.equals(lambdaType.parametersTuple(), arguments.evaluationType())) {
+      throw new IllegalArgumentException(("Arguments evaluation type %s should be equal to "
+          + "function evaluation type parameters %s.")
+          .formatted(arguments.evaluationType().name(), lambdaType.parametersTuple().name()));
     }
   }
 
-  private LambdaSpec functionEvaluationSpec(Expr function) {
-    if (function.evaluationSpec() instanceof LambdaSpec lambdaSpec) {
-      return lambdaSpec;
+  private LambdaOType functionevaluationType(Expr function) {
+    if (function.evaluationType() instanceof LambdaOType lambdaType) {
+      return lambdaType;
     } else {
       throw new IllegalArgumentException("`function` component doesn't evaluate to Function.");
     }
   }
 
   private Const newConst(Val val) throws HashedDbException {
-    var spec = specDb.const_(val.spec());
+    var type = objTypeDb.const_(val.type());
     var data = writeConstData(val);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
-  private Invoke newInvoke(ValSpec evaluationSpec, NativeMethod nativeMethod, Bool isPure,
+  private Invoke newInvoke(ValType evaluationType, NativeMethod nativeMethod, Bool isPure,
       Int argumentCount) throws HashedDbException {
     var data = writeInvokeData(nativeMethod, isPure, argumentCount);
-    var spec = specDb.invoke(evaluationSpec);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var type = objTypeDb.invoke(evaluationType);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
   private Order newOrder(List<? extends Expr> elements) throws HashedDbException {
-    ValSpec elementSpec = elementSpec(elements);
-    var spec = specDb.order(elementSpec);
+    ValType elementType = elementType(elements);
+    var type = objTypeDb.order(elementType);
     var data = writeOrderData(elements);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
-  private ValSpec elementSpec(List<? extends Expr> elements) {
-    Optional<ValSpec> elementSpec = elements.stream()
-        .map(expr -> expr.spec().evaluationSpec())
-        .reduce((spec1, spec2) -> {
-          if (spec1.equals(spec2)) {
-            return spec1;
+  private ValType elementType(List<? extends Expr> elements) {
+    Optional<ValType> elementType = elements.stream()
+        .map(expr -> expr.type().evaluationType())
+        .reduce((type1, type2) -> {
+          if (type1.equals(type2)) {
+            return type1;
           } else {
-            throw new IllegalArgumentException("Element evaluation specs are not equal "
-                + spec1.name() + " != " + spec2.name() + ".");
+            throw new IllegalArgumentException("Element evaluation types are not equal "
+                + type1.name() + " != " + type2.name() + ".");
           }
         });
-    Spec spec = elementSpec.orElse(specDb.nothing());
-    if (spec instanceof ValSpec valSpec) {
-      return valSpec;
+    ObjType type = elementType.orElse(objTypeDb.nothing());
+    if (type instanceof ValType valType) {
+      return valType;
     } else {
       throw new IllegalArgumentException(
-          "Element specs should be ValSpec but was " + spec.getClass().getCanonicalName());
+          "Element type should be ValOType but was " + type.getClass().getCanonicalName());
     }
   }
 
   private Construct newConstruct(List<? extends Expr> items) throws HashedDbException {
-    var itemSpecs = map(items, Expr::evaluationSpec);
-    var evaluationSpec = specDb.tuple(itemSpecs);
-    var spec = specDb.construct(evaluationSpec);
+    var itemTypes = map(items, Expr::evaluationType);
+    var evaluationType = objTypeDb.tuple(itemTypes);
+    var type = objTypeDb.construct(evaluationType);
     var data = writeConstructData(items);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
   private Select newSelect(Expr struct, Int index) throws HashedDbException {
-    var spec = selectSpec(struct, index);
+    var type = selectType(struct, index);
     var data = writeSelectData(struct, index);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
-  private SelectSpec selectSpec(Expr expr, Int index) {
-    if (expr.spec().evaluationSpec() instanceof StructSpec struct) {
+  private SelectOType selectType(Expr expr, Int index) {
+    if (expr.type().evaluationType() instanceof StructOType struct) {
       var fields = struct.fields();
       int intIndex = index.jValue().intValue();
       checkElementIndex(intIndex, fields.size());
       var field = fields.getObject(intIndex);
-      return specDb.select(field);
+      return objTypeDb.select(field);
     } else {
       throw new IllegalArgumentException();
     }
   }
 
-  private StructExpr newStructExpr(StructSpec evaluationSpec, List<? extends Expr> items)
+  private StructExpr newStructExpr(StructOType evaluationType, List<? extends Expr> items)
       throws HashedDbException {
-    ImmutableList<Named<ValSpec>> specs = evaluationSpec.fields().list();
-    allMatchOtherwise(specs, items,
-        (f, v) -> f.object().equals(v.evaluationSpec()),
+    ImmutableList<Named<ValType>> types = evaluationType.fields().list();
+    allMatchOtherwise(types, items,
+        (f, v) -> f.object().equals(v.evaluationType()),
         (i, j) -> {
           throw new IllegalArgumentException(
-              "StructSpec specifies " + i + " items but provided " + j + ".");
+              "StructType specifies " + i + " items but provided " + j + ".");
         },
         (i) -> {
-          throw new IllegalArgumentException("StructSpec specifies item at index " + i
-              + " with spec " + specs.get(i).object().name() + " but provided item has spec "
-              + items.get(i).spec().name() + " at that index.");
+          throw new IllegalArgumentException("StructType specifies item at index " + i
+              + " with type " + types.get(i).object().name() + " but provided item has type "
+              + items.get(i).type().name() + " at that index.");
         });
 
-    var spec = specDb.structExpr(evaluationSpec);
+    var type = objTypeDb.structExpr(evaluationType);
     var data = writeStructExprData(items);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
-  private Ref newRef(ValSpec evaluationSpec, BigInteger index) throws HashedDbException {
+  private Ref newRef(ValType evaluationType, BigInteger index) throws HashedDbException {
     var data = writeRefData(index);
-    var spec = specDb.ref(evaluationSpec);
-    var root = newRoot(spec, data);
-    return spec.newObj(root, this);
+    var type = objTypeDb.ref(evaluationType);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
   }
 
-  private MerkleRoot newRoot(Spec spec, Hash dataHash) throws HashedDbException {
-    Hash rootHash = hashedDb.writeSequence(spec.hash(), dataHash);
-    return new MerkleRoot(rootHash, spec, dataHash);
+  private MerkleRoot newRoot(ObjType type, Hash dataHash) throws HashedDbException {
+    Hash rootHash = hashedDb.writeSequence(type.hash(), dataHash);
+    return new MerkleRoot(rootHash, type, dataHash);
   }
 
   // methods for writing data of Expr-s

@@ -38,7 +38,7 @@ public class UnzipFunction {
   public static Array unzip(NativeApi nativeApi, Blob blob, Predicate<String> filter)
       throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder fileArrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileSpec());
+    ArrayBuilder fileArrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileType());
     File tempFile = copyToTempFile(blob);
     try (ZipFile zipFile = new ZipFile(tempFile)) {
       Enumeration<? extends ZipEntry> entries = zipFile.entries();

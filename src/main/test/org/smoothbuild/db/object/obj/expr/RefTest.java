@@ -9,8 +9,8 @@ import org.smoothbuild.testing.TestingContextImpl;
 
 public class RefTest extends TestingContextImpl {
   @Test
-  public void spec_of_ref_expr_is_ref_spec() {
-    assertThat(ref(intSpec(), 123).spec())
+  public void type_of_ref_expr_is_ref_type() {
+    assertThat(ref(intSpec(), 123).type())
         .isEqualTo(refSpec(intSpec()));
   }
 
@@ -33,7 +33,7 @@ public class RefTest extends TestingContextImpl {
   }
 
   @Test
-  public void refs_with_different_evaluation_specs_are_not_equal() {
+  public void refs_with_different_evaluation_types_are_not_equal() {
     assertThat(ref(intSpec(), 123))
         .isNotEqualTo(ref(stringSpec(), 123));
   }
@@ -51,7 +51,7 @@ public class RefTest extends TestingContextImpl {
   }
 
   @Test
-  public void hash_of_refs_with_different_evaluation_spec_is_not_the_same() {
+  public void hash_of_refs_with_different_evaluation_type_is_not_the_same() {
     assertThat(ref(intSpec(), 123).hash())
         .isNotEqualTo(ref(stringSpec(), 123).hash());
   }
@@ -69,7 +69,7 @@ public class RefTest extends TestingContextImpl {
   }
 
   @Test
-  public void hash_code_of_refs_with_evaluation_specs_is_not_the_same() {
+  public void hash_code_of_refs_with_evaluation_types_is_not_the_same() {
     assertThat(ref(intSpec(), 123).hashCode())
         .isNotEqualTo(ref(stringSpec(), 123).hashCode());
   }

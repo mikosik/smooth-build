@@ -7,9 +7,9 @@ import java.util.Objects;
 import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationSpecOfComponentException;
-import org.smoothbuild.db.object.spec.expr.CallSpec;
-import org.smoothbuild.db.object.spec.val.LambdaSpec;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
+import org.smoothbuild.db.object.type.expr.CallOType;
+import org.smoothbuild.db.object.type.val.LambdaOType;
 
 /**
  * This class is immutable.
@@ -21,12 +21,12 @@ public class Call extends Expr {
 
   public Call(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof CallSpec);
+    checkArgument(merkleRoot.type() instanceof CallOType);
   }
 
   @Override
-  public CallSpec spec() {
-    return (CallSpec) super.spec();
+  public CallOType type() {
+    return (CallOType) super.type();
   }
 
   public CallData data() {
@@ -39,18 +39,18 @@ public class Call extends Expr {
   public record CallData(Expr function, Construct arguments) {}
 
   private void validate(Expr function, Construct arguments) {
-    if (function.evaluationSpec() instanceof LambdaSpec lambdaSpec) {
-      if (!Objects.equals(evaluationSpec(), lambdaSpec.result())) {
-        throw new DecodeExprWrongEvaluationSpecOfComponentException(
-            hash(), spec(), "function.result", evaluationSpec(), lambdaSpec.result());
+    if (function.evaluationType() instanceof LambdaOType lambdaType) {
+      if (!Objects.equals(evaluationType(), lambdaType.result())) {
+        throw new DecodeExprWrongEvaluationTypeOfComponentException(
+            hash(), type(), "function.result", evaluationType(), lambdaType.result());
       }
-      if (!Objects.equals(lambdaSpec.parametersTuple(), arguments.spec().evaluationSpec())) {
-        throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(), "arguments",
-            lambdaSpec.parametersTuple(), arguments.spec().evaluationSpec());
+      if (!Objects.equals(lambdaType.parametersTuple(), arguments.type().evaluationType())) {
+        throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(), "arguments",
+            lambdaType.parametersTuple(), arguments.type().evaluationType());
       }
     } else {
-      throw new DecodeExprWrongEvaluationSpecOfComponentException(
-          hash(), spec(), "function", LambdaSpec.class, function.evaluationSpec());
+      throw new DecodeExprWrongEvaluationTypeOfComponentException(
+          hash(), type(), "function", LambdaOType.class, function.evaluationType());
     }
   }
 

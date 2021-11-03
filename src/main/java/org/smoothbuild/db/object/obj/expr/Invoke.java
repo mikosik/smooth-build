@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
-import org.smoothbuild.db.object.spec.expr.InvokeSpec;
+import org.smoothbuild.db.object.type.expr.InvokeOType;
 
 /**
  * This class is immutable.
@@ -21,12 +21,12 @@ public class Invoke extends Expr {
 
   public Invoke(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof InvokeSpec);
+    checkArgument(merkleRoot.type() instanceof InvokeOType);
   }
 
   @Override
-  public InvokeSpec spec() {
-    return (InvokeSpec) super.spec();
+  public InvokeOType type() {
+    return (InvokeOType) super.type();
   }
 
   public InvokeData data() {

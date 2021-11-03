@@ -9,9 +9,9 @@ import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationSpecOfComponentException;
-import org.smoothbuild.db.object.spec.expr.ConstructSpec;
-import org.smoothbuild.db.object.spec.val.TupleSpec;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
+import org.smoothbuild.db.object.type.expr.ConstructOType;
+import org.smoothbuild.db.object.type.val.TupleOType;
 
 import com.google.common.collect.ImmutableList;
 
@@ -21,33 +21,33 @@ import com.google.common.collect.ImmutableList;
 public class Construct extends Expr {
   public Construct(MerkleRoot merkleRoot, ObjectDb objectDb) {
     super(merkleRoot, objectDb);
-    checkArgument(merkleRoot.spec() instanceof ConstructSpec);
+    checkArgument(merkleRoot.type() instanceof ConstructOType);
   }
 
   @Override
-  public ConstructSpec spec() {
-    return (ConstructSpec) super.spec();
+  public ConstructOType type() {
+    return (ConstructOType) super.type();
   }
 
   @Override
-  public TupleSpec evaluationSpec() {
-    return spec().evaluationSpec();
+  public TupleOType evaluationType() {
+    return type().evaluationType();
   }
 
   public ImmutableList<Expr> items() {
-    var expectedItemSpecs = spec().evaluationSpec().items();
+    var expectedItemTypes = type().evaluationType().items();
     var items = readSequenceObjs(DATA_PATH, dataHash(), Expr.class);
 
     allMatchOtherwise(
-        expectedItemSpecs,
+        expectedItemTypes,
         items,
-        (s, i) -> Objects.equals(s, i.evaluationSpec()),
+        (s, i) -> Objects.equals(s, i.evaluationType()),
         (i, j) -> {
-          throw new DecodeConstructWrongItemsSizeException(hash(), spec(), j);
+          throw new DecodeConstructWrongItemsSizeException(hash(), type(), j);
         },
         (i) -> {
-          throw new DecodeExprWrongEvaluationSpecOfComponentException(hash(), spec(),
-              "items[" + i + "]", expectedItemSpecs.get(i), items.get(i).evaluationSpec());
+          throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(),
+              "items[" + i + "]", expectedItemTypes.get(i), items.get(i).evaluationType());
         }
     );
     return items;

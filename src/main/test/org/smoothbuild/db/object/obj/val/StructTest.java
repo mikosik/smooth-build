@@ -9,20 +9,20 @@ import org.smoothbuild.testing.TestingContextImpl;
 
 public class StructTest extends TestingContextImpl {
   @Test
-  public void creating_struct_with_item_spec_different_than_specified_in_its_spec_causes_exception() {
+  public void creating_struct_with_item_type_different_than_specified_in_its_type_causes_exception() {
     assertCall(() -> struct(animalSpec(), list(string("rabbit"), string("7"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void creating_struct_with_item_count_different_than_specified_in_its_spec_causes_exception() {
+  public void creating_struct_with_item_count_different_than_specified_in_its_type_causes_exception() {
     assertCall(() -> struct(animalSpec(), list(string("rabbit"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void reading_struct_spec() {
-    assertThat(animal().spec())
+  public void reading_struct_type() {
+    assertThat(animal().type())
         .isEqualTo(animalSpec());
   }
 

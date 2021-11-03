@@ -7,21 +7,21 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
-import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.val.ArraySpec;
+import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConvertAlgorithm extends Algorithm {
-  public ConvertAlgorithm(ValSpec outputSpec) {
-    super(outputSpec);
+  public ConvertAlgorithm(ValType outputType) {
+    super(outputType);
   }
 
   @Override
   public Hash hash() {
-    return convertAlgorithmHash(outputSpec());
+    return convertAlgorithmHash(outputType());
   }
 
   @Override
@@ -30,29 +30,29 @@ public class ConvertAlgorithm extends Algorithm {
       throw newBuildBrokenException("Expected input size == 1 but was " + input.vals().size());
     }
     Obj obj = input.vals().get(0);
-    assertThatSpecsAreNotEqual(obj);
-    return new Output(convert(outputSpec(), obj, nativeApi), nativeApi.messages());
+    assertThatTypesAreNotEqual(obj);
+    return new Output(convert(outputType(), obj, nativeApi), nativeApi.messages());
   }
 
-  private void assertThatSpecsAreNotEqual(Obj obj) {
-    if (outputSpec().equals(obj.spec())) {
+  private void assertThatTypesAreNotEqual(Obj obj) {
+    if (outputType().equals(obj.type())) {
       throw newBuildBrokenException(
-          "Expected non equal specs but got " + outputSpec() + " " + obj.spec());
+          "Expected non equal types but got " + outputType() + " " + obj.type());
     }
   }
 
-  private static Val convert(Spec destinationSpec, Obj obj, NativeApi nativeApi) {
+  private static Val convert(ObjType destinationType, Obj obj, NativeApi nativeApi) {
     if (obj instanceof Array array) {
-      return convertArray(destinationSpec, array, nativeApi);
+      return convertArray(destinationType, array, nativeApi);
     }
-    throw newBuildBrokenException("Expected `Array` spec but got " + obj.getClass());
+    throw newBuildBrokenException("Expected `Array` type but got " + obj.getClass());
   }
 
-  private static Array convertArray(Spec destinationSpec, Array array, NativeApi nativeApi) {
-    ValSpec elementSpec = ((ArraySpec) destinationSpec).element();
-    ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elementSpec);
+  private static Array convertArray(ObjType destinationType, Array array, NativeApi nativeApi) {
+    ValType elementType = ((ArrayOType) destinationType).element();
+    ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elementType);
     for (Val element : array.elements(Val.class)) {
-      arrayBuilder.add(convert(elementSpec, element, nativeApi));
+      arrayBuilder.add(convert(elementType, element, nativeApi));
     }
     return arrayBuilder.build();
   }

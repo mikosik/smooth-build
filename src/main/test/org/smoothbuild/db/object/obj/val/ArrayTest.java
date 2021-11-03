@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.spec.TestingSpecs;
-import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.val.NothingSpec;
+import org.smoothbuild.db.object.type.TestingObjTypes;
+import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.val.NothingOType;
 import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
@@ -54,7 +54,7 @@ public class ArrayTest extends TestingContextImpl {
   }
 
   @Test
-  public void adding_element_with_wrong_spec_is_forbidden() {
+  public void adding_element_with_wrong_type_is_forbidden() {
     ArrayBuilder arrayBuilder = objectDb().arrayBuilder(stringSpec());
     assertCall(() -> arrayBuilder.add(blob(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
@@ -202,15 +202,15 @@ public class ArrayTest extends TestingContextImpl {
   }
 
   @ParameterizedTest
-  @MethodSource("spec_test_data")
-  public void spec(ValSpec spec) {
-    Array array = objectDb().arrayBuilder(spec).build();
-    assertThat(array.spec())
-        .isEqualTo(arraySpec(spec));
+  @MethodSource("type_test_data")
+  public void type(ValType type) {
+    Array array = objectDb().arrayBuilder(type).build();
+    assertThat(array.type())
+        .isEqualTo(arraySpec(type));
   }
 
-  private static List<Spec> spec_test_data() {
-    return TestingSpecs.VAL_SPECS_TO_TEST;
+  private static List<ObjType> type_test_data() {
+    return TestingObjTypes.VAL_TYPES_TO_TEST;
   }
 
   @Test
@@ -229,9 +229,9 @@ public class ArrayTest extends TestingContextImpl {
   @Nested
   class _nothing_array {
     @Test
-    public void spec_of_nothing_array_is_nothing_array() {
+    public void type_of_nothing_array_is_nothing_array() {
       Array array = emptyArrayOf(nothingSpec());
-      assertThat(array.spec())
+      assertThat(array.type())
           .isEqualTo(arraySpec(nothingSpec()));
     }
 
@@ -262,8 +262,8 @@ public class ArrayTest extends TestingContextImpl {
           .isEqualTo("[]@" + array.hash());
     }
 
-    private Array emptyArrayOf(NothingSpec elemSpec) {
-      return objectDb().arrayBuilder(elemSpec).build();
+    private Array emptyArrayOf(NothingOType elemType) {
+      return objectDb().arrayBuilder(elemType).build();
     }
   }
 }

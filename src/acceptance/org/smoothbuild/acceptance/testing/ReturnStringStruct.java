@@ -6,14 +6,14 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReturnStringStruct {
   public static Struc_ function(NativeApi nativeApi) {
     ObjectFactory factory = nativeApi.factory();
-    StructSpec spec =
-        factory.structSpec("StringHolder", namedList(list(named("field", factory.stringSpec()))));
-    return factory.struct(spec, list(factory.string("abc")));
+    StructOType type =
+        factory.structType("StringHolder", namedList(list(named("field", factory.stringType()))));
+    return factory.struct(type, list(factory.string("abc")));
   }
 }

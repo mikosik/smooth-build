@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.Lambda;
-import org.smoothbuild.db.object.spec.val.LambdaSpec;
+import org.smoothbuild.db.object.type.val.LambdaOType;
 import org.smoothbuild.testing.TestingContextImpl;
 
 import okio.ByteString;
@@ -111,8 +111,8 @@ public class ObjStableHashTest extends TestingContextImpl {
 
     @Test
     public void call_expression_without_arguments() {
-      LambdaSpec spec = lambdaSpec(intSpec(), list(stringSpec()));
-      Lambda lambda = lambda(spec, intExpr());
+      LambdaOType type = lambdaSpec(intSpec(), list(stringSpec()));
+      Lambda lambda = lambda(type, intExpr());
       assertThat(call(const_(lambda), list(stringExpr("abc"))).hash())
           .isEqualTo(Hash.decode("dcc7713d99ef11f816501e79c7539b800ebeddd3"));
     }

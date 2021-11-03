@@ -5,8 +5,8 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.val.ArraySpec;
+import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.val.ArrayOType;
 
 import com.google.common.collect.ImmutableList;
 
@@ -19,14 +19,14 @@ public class Array extends Val {
   }
 
   @Override
-  public ArraySpec spec() {
-    return (ArraySpec) super.spec();
+  public ArrayOType type() {
+    return (ArrayOType) super.type();
   }
 
   public <T extends Val> ImmutableList<T> elements(Class<T> elementJType) {
     assertIsIterableAs(elementJType);
     var elements = elementObjs();
-    return checkSpecOfSequenceObjs(elements, spec().element());
+    return checkTypeOfSequenceObjs(elements, this.type().element());
   }
 
   private ImmutableList<Obj> elementObjs() {
@@ -34,18 +34,19 @@ public class Array extends Val {
   }
 
   private <T extends Val> void assertIsIterableAs(Class<T> clazz) {
-    Spec element = spec().element();
+    ObjType element = this.type().element();
     if (!(element.isNothing() || clazz.isAssignableFrom(element.jType()))) {
-      throw new IllegalArgumentException(spec().name() + " cannot be viewed as Iterable of "
+      throw new IllegalArgumentException(this.type().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
     }
   }
 
-  protected <T> ImmutableList<T> checkSpecOfSequenceObjs(ImmutableList<Obj> elements, Spec spec) {
+  protected <T> ImmutableList<T> checkTypeOfSequenceObjs(
+      ImmutableList<Obj> elements, ObjType type) {
     for (int i = 0; i < elements.size(); i++) {
-      Spec elementSpec = elements.get(i).spec();
-      if (!(spec.equals(elementSpec))) {
-        throw new UnexpectedObjNodeException(hash(), spec(), DATA_PATH, i, spec, elementSpec);
+      ObjType elementType = elements.get(i).type();
+      if (!(type.equals(elementType))) {
+        throw new UnexpectedObjNodeException(hash(), this.type(), DATA_PATH, i, type, elementType);
       }
     }
     @SuppressWarnings("unchecked")

@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.spec.val.IntSpec;
+import org.smoothbuild.db.object.type.val.IntOType;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -14,8 +14,8 @@ import org.smoothbuild.plugin.NativeApi;
 public class FixedIntAlgorithm extends Algorithm {
   private final BigInteger bigInteger;
 
-  public FixedIntAlgorithm(IntSpec intSpec, BigInteger bigInteger) {
-    super(intSpec);
+  public FixedIntAlgorithm(IntOType intType, BigInteger bigInteger) {
+    super(intType);
     this.bigInteger = bigInteger;
   }
 

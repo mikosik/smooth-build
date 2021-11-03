@@ -16,6 +16,6 @@ public class DecodeConstructWrongItemsSizeExceptionTest extends TestingContextIm
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `CONSTRUCT:{Int,String}` object at "
             + "b1197c208248d0f7ffb3e322d5ec187441dc1b26. "
-            + "Evaluation spec items size (2) is not equal to actual items size (3).");
+            + "Evaluation type items size (2) is not equal to actual items size (3).");
   }
 }

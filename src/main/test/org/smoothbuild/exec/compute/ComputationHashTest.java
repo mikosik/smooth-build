@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
-import static org.smoothbuild.db.object.spec.TestingSpecs.STR;
+import static org.smoothbuild.db.object.type.TestingObjTypes.PERSON;
+import static org.smoothbuild.db.object.type.TestingObjTypes.STR;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -10,7 +10,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.base.ValSpec;
+import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -139,7 +139,7 @@ public class ComputationHashTest extends TestingContextImpl {
       }
 
       @Override
-      public ValSpec outputSpec() {
+      public ValType outputType() {
         return null;
       }
 

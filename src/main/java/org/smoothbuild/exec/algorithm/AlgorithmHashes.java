@@ -5,8 +5,8 @@ import static java.util.Arrays.asList;
 import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.val.StructOType;
 
 import okio.ByteString;
 
@@ -19,11 +19,11 @@ public class AlgorithmHashes {
     return hash(1, Hash.of(referencableName));
   }
 
-  public static Hash convertAlgorithmHash(Spec destinationSpec) {
-    return hash(2, destinationSpec.hash());
+  public static Hash convertAlgorithmHash(ObjType destinationType) {
+    return hash(2, destinationType.hash());
   }
 
-  public static Hash createStructAlgorithmHash(StructSpec type) {
+  public static Hash createStructAlgorithmHash(StructOType type) {
     return hash(3, type.hash());
   }
 

@@ -6,9 +6,9 @@ import org.smoothbuild.db.object.obj.ObjectDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.spec.base.Spec;
-import org.smoothbuild.db.object.spec.base.ValSpec;
-import org.smoothbuild.db.object.spec.val.StructSpec;
+import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
@@ -25,8 +25,8 @@ public class Struc_ extends Val {
   }
 
   @Override
-  public StructSpec spec() {
-    return (StructSpec) super.spec();
+  public StructOType type() {
+    return (StructOType) super.type();
   }
 
   public Val get(int index) {
@@ -43,14 +43,14 @@ public class Struc_ extends Val {
   }
 
   private ImmutableList<Val> instantiateItems() {
-    NamedList<ValSpec> fields = spec().fields();
+    NamedList<ValType> fields = this.type().fields();
     var objs = readSequenceObjs(DATA_PATH, dataHash(), fields.size(), Val.class);
     for (int i = 0; i < fields.size(); i++) {
-      Spec expectedSpec = fields.getObject(i);
-      Spec actualSpec = objs.get(i).spec();
-      if (!expectedSpec.equals(actualSpec)) {
+      ObjType expectedType = fields.getObject(i);
+      ObjType actualType = objs.get(i).type();
+      if (!expectedType.equals(actualType)) {
         throw new UnexpectedObjNodeException(
-            hash(), spec(), DATA_PATH, i, expectedSpec, actualSpec);
+            hash(), this.type(), DATA_PATH, i, expectedType, actualType);
       }
     }
     return objs;
@@ -59,7 +59,7 @@ public class Struc_ extends Val {
   @Override
   public String valueToString() {
     StringBuilder builder = new StringBuilder("{");
-    var typeFields = spec().fields().list();
+    var typeFields = this.type().fields().list();
     ImmutableList<Val> values = items();
     for (int i = 0; i < values.size(); i++) {
       builder.append(typeFields.get(i).saneName());

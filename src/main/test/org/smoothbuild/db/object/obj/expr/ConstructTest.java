@@ -8,14 +8,14 @@ import org.smoothbuild.testing.TestingContextImpl;
 
 public class ConstructTest extends TestingContextImpl {
   @Test
-  public void spec_of_empty_construct_is_inferred_correctly() {
-    assertThat(construct(list()).spec())
+  public void type_of_empty_construct_is_inferred_correctly() {
+    assertThat(construct(list()).type())
         .isEqualTo(constructSpec(list()));
   }
 
   @Test
-  public void spec_of_construct_is_inferred_correctly() {
-    assertThat(construct(list(intExpr(3))).spec())
+  public void type_of_construct_is_inferred_correctly() {
+    assertThat(construct(list(intExpr(3))).type())
         .isEqualTo(constructSpec(list(intSpec())));
   }
 
