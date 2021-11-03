@@ -626,8 +626,8 @@ public abstract class AbstractTestingContext {
   public BoundsMap bm(
       Variable var1, Side side1, Type bound1,
       Variable var2, Side side2, Type bound2) {
-    Bounds bounds1 = typing().oneSideBound(side1, bound1);
-    Bounds bounds2 = typing().oneSideBound(side2, bound2);
+    Bounds bounds1 = typeFactory().oneSideBound(side1, bound1);
+    Bounds bounds2 = typeFactory().oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
       return boundsMap(new Bounded(var1, typing().merge(bounds1, bounds2)));
     } else {
@@ -639,7 +639,7 @@ public abstract class AbstractTestingContext {
   }
 
   public BoundsMap bm(Variable var, Side side, Type bound) {
-    return boundsMap(new Bounded(var, typing().oneSideBound(side, bound)));
+    return boundsMap(new Bounded(var, typeFactory().oneSideBound(side, bound)));
   }
 
   public BoundsMap bm() {

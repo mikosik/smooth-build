@@ -390,14 +390,14 @@ public class TypingTest extends TestingContextImpl {
   class _merge_bounds {
     @Test
     public void variable_with_one_lower_bound() {
-      var bounds = typing().oneSideBound(lower(), STRING);
+      var bounds = typeFactory().oneSideBound(lower(), STRING);
       assertThat(bounds.upper()).isEqualTo(ANY);
       assertThat(bounds.lower()).isEqualTo(STRING);
     }
 
     @Test
     public void variable_with_one_upper_bound() {
-      var bounds = typing().oneSideBound(upper(), STRING);
+      var bounds = typeFactory().oneSideBound(upper(), STRING);
       assertThat(bounds.upper()).isEqualTo(STRING);
       assertThat(bounds.lower()).isEqualTo(NOTHING);
     }
@@ -405,8 +405,8 @@ public class TypingTest extends TestingContextImpl {
     @Test
     public void variable_with_two_lower_bounds() {
       var bounds = typing().merge(
-          typing().oneSideBound(lower(), STRING),
-          typing().oneSideBound(lower(), BOOL));
+          typeFactory().oneSideBound(lower(), STRING),
+          typeFactory().oneSideBound(lower(), BOOL));
       assertThat(bounds.upper()).isEqualTo(ANY);
       assertThat(bounds.lower()).isEqualTo(ANY);
     }
@@ -414,8 +414,8 @@ public class TypingTest extends TestingContextImpl {
     @Test
     public void variable_with_two_upper_bounds() {
       var bounds = typing().merge(
-          typing().oneSideBound(upper(), STRING),
-          typing().oneSideBound(upper(), BOOL));
+          typeFactory().oneSideBound(upper(), STRING),
+          typeFactory().oneSideBound(upper(), BOOL));
       assertThat(bounds.upper()).isEqualTo(NOTHING);
       assertThat(bounds.lower()).isEqualTo(NOTHING);
     }

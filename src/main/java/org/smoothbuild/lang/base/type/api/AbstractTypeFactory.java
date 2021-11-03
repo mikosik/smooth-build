@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base.type.api;
 
+import org.smoothbuild.lang.base.type.api.Sides.Side;
+
 import com.google.common.collect.ImmutableSet;
 
 public abstract class AbstractTypeFactory implements TypeFactory {
@@ -19,6 +21,19 @@ public abstract class AbstractTypeFactory implements TypeFactory {
         int_(),
         nothing(),
         string()
+    );
+  }
+
+  @Override
+  public Bounds unbounded() {
+    return new Bounds(nothing(), any());
+  }
+
+  @Override
+  public Bounds oneSideBound(Side side, Type type) {
+    return side.dispatch(
+        () -> new Bounds(type, any()),
+        () -> new Bounds(nothing(), type)
     );
   }
 }

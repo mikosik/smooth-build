@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.base.type.api;
 
+import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
@@ -16,6 +17,10 @@ public interface TypeFactory {
    * Base types that are legal in smooth language.
    */
   public ImmutableSet<BaseType> baseTypes();
+
+  public Bounds unbounded();
+
+  public Bounds oneSideBound(Side side, Type type);
 
   public AnyType any();
 
