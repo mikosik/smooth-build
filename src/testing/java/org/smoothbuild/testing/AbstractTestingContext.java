@@ -616,11 +616,11 @@ public abstract class AbstractTestingContext {
   }
 
   public Side lower() {
-    return typing().lower();
+    return typeFactory().lower();
   }
 
   public Side upper() {
-    return typing().upper();
+    return typeFactory().upper();
   }
 
   public BoundsMap bm(

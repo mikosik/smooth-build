@@ -185,7 +185,7 @@ public class JobCreator {
       return callEagerJob(scope, function, arguments, location, variables);
     } else {
       var functionType = (FunctionType) function.type();
-      var actualResultType = typing.mapVariables(functionType.result(), variables, typing.lower());
+      var actualResultType = typing.mapVariables(functionType.result(), variables, factory.lower());
       return new LazyJob(actualResultType, location,
           () -> callEagerJob(scope, function, arguments, location, variables));
     }
@@ -200,7 +200,7 @@ public class JobCreator {
   private Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
       Location location, BoundsMap variables) {
     var functionType = (FunctionType) function.type();
-    var actualResultType = typing.mapVariables(functionType.result(), variables, typing.lower());
+    var actualResultType = typing.mapVariables(functionType.result(), variables, factory.lower());
     return new ApplyJob(
         actualResultType, function, arguments, location, variables, scope, JobCreator.this);
   }
@@ -208,7 +208,7 @@ public class JobCreator {
   private BoundsMap inferVariablesInFunctionCall(Job function, List<Job> arguments) {
     var functionType = (FunctionType) function.type();
     var argumentTypes = map(arguments, Job::type);
-    return typing.inferVariableBounds(functionType.parameters(), argumentTypes, typing.lower());
+    return typing.inferVariableBounds(functionType.parameters(), argumentTypes, factory.lower());
   }
 
   // FieldReadExpression
@@ -450,7 +450,7 @@ public class JobCreator {
       List<Job> arguments, NativeFunction function, BoundsMap variables) {
     var actualTypes = map(
         function.type().parameters(),
-        t -> typing.mapVariables(t, variables, typing.lower()));
+        t -> typing.mapVariables(t, variables, factory.lower()));
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }
 

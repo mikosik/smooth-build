@@ -12,6 +12,7 @@ import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.IntType;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides;
+import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
@@ -32,6 +33,16 @@ public class TypeFactoryImpl extends AbstractTypeFactory {
 
   public TypeFactoryImpl() {
     this.sides = new Sides(any(), nothing());
+  }
+
+  @Override
+  public Side upper() {
+    return sides.upper();
+  }
+
+  @Override
+  public Side lower() {
+    return sides.lower();
   }
 
   @Override

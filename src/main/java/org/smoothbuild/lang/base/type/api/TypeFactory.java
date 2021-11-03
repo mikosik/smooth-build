@@ -22,6 +22,10 @@ public interface TypeFactory {
 
   public Bounds oneSideBound(Side side, Type type);
 
+  public Side upper();
+
+  public Side lower();
+
   public AnyType any();
 
   public ArrayType array(Type elemType);

@@ -72,6 +72,8 @@ import org.smoothbuild.db.object.spec.val.StructSpec;
 import org.smoothbuild.db.object.spec.val.TupleSpec;
 import org.smoothbuild.db.object.spec.val.VariableSpec;
 import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
+import org.smoothbuild.lang.base.type.api.Sides;
+import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.util.collect.NamedList;
@@ -107,6 +109,7 @@ public class SpecDb extends AbstractTypeFactory {
   private final NothingSpec nothing;
   private final StrSpec string;
   private final NativeMethodSpec nativeMethod;
+  private final Sides sides;
 
   public SpecDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -125,6 +128,17 @@ public class SpecDb extends AbstractTypeFactory {
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
+    this.sides = new Sides(this.any, this.nothing);
+  }
+
+  @Override
+  public Side upper() {
+    return sides.upper();
+  }
+
+  @Override
+  public Side lower() {
+    return sides.lower();
   }
 
   // methods for getting Val-s specs

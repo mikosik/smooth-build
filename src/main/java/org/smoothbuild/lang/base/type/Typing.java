@@ -38,14 +38,6 @@ public class Typing {
     this.sides = new Sides(typeFactory.any(), typeFactory.nothing());
   }
 
-  public Side upper() {
-    return sides.upper();
-  }
-
-  public Side lower() {
-    return sides.lower();
-  }
-
   public boolean contains(Type type, Type inner) {
     if (type.equals(inner)) {
       return true;
@@ -59,12 +51,12 @@ public class Typing {
   }
 
   public boolean isAssignable(Type target, Type source) {
-    return inequal(target, source, lower());
+    return inequal(target, source, typeFactory.lower());
   }
 
   public boolean isParamAssignable(Type target, Type source) {
-    return inequalParam(target, source, lower())
-        && areConsistent(inferVariableBounds(target, source, lower()));
+    return inequalParam(target, source, typeFactory.lower())
+        && areConsistent(inferVariableBounds(target, source, typeFactory.lower()));
   }
 
   public boolean inequal(Type typeA, Type that, Side side) {
@@ -119,7 +111,7 @@ public class Typing {
   public BoundsMap inferVariableBoundsInCall(
       Type resultTypes, List<? extends Type> parameterTypes, List<? extends Type> argumentTypes) {
     var result = new HashMap<Variable, Bounded>();
-    inferVariableBounds(parameterTypes, argumentTypes, lower(), result);
+    inferVariableBounds(parameterTypes, argumentTypes, typeFactory.lower(), result);
     resultTypes.variables().forEach(v -> result.merge(
         v, new Bounded(v, typeFactory.unbounded()), this::merge));
     return new BoundsMap(ImmutableMap.copyOf(result));
@@ -193,11 +185,11 @@ public class Typing {
   }
 
   public Type mergeUp(Type typeA, Type typeB) {
-    return merge(typeA, typeB, upper());
+    return merge(typeA, typeB, typeFactory.upper());
   }
 
   public Type mergeDown(Type typeA, Type typeB) {
-    return merge(typeA, typeB, lower());
+    return merge(typeA, typeB, typeFactory.lower());
   }
 
   public Type merge(Type typeA, Type typeB, Side direction) {
@@ -246,8 +238,8 @@ public class Typing {
 
   public Bounds merge(Bounds boundsA, Bounds boundsB) {
     return new Bounds(
-        merge(boundsA.lower(), boundsB.lower(), this.upper()),
-        merge(boundsA.upper(), boundsB.upper(), this.lower()));
+        merge(boundsA.lower(), boundsB.lower(), typeFactory.upper()),
+        merge(boundsA.upper(), boundsB.upper(), typeFactory.lower()));
   }
 
   private ArrayType createArrayType(ArrayType type, Type elemType) {
