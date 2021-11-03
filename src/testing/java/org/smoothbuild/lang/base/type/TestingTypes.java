@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableSet;
 
 public class TestingTypes {
   private static final TestingContextImpl CONTEXT = new TestingContextImpl();
-  private static final TypeFactory FACTORY = CONTEXT.typeFactory();
+  private static final TypeFactory FACTORY = CONTEXT.sTypeFactory();
 
   public static final ImmutableSet<BaseType> BASE_TYPES = FACTORY.baseTypes();
   public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();

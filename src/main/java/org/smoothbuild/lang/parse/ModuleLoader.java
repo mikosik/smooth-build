@@ -26,7 +26,7 @@ import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.define.Struct;
 import org.smoothbuild.lang.base.type.api.StructType;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.impl.STypeFactory;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
@@ -36,11 +36,11 @@ import com.google.common.collect.ImmutableMap;
 public class ModuleLoader {
   private final TypeInferrer typeInferrer;
   private final ReferencableLoader referencableLoader;
-  private final TypeFactory typeFactory;
+  private final STypeFactory typeFactory;
 
   @Inject
   public ModuleLoader(TypeInferrer typeInferrer, ReferencableLoader referencableLoader,
-      TypeFactory typeFactory) {
+      STypeFactory typeFactory) {
     this.typeInferrer = typeInferrer;
     this.referencableLoader = referencableLoader;
     this.typeFactory = typeFactory;

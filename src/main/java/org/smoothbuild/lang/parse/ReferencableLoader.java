@@ -24,7 +24,7 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.impl.STypeFactory;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -54,10 +54,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ReferencableLoader {
-  private final TypeFactory factory;
+  private final STypeFactory factory;
 
   @Inject
-  public ReferencableLoader(TypeFactory factory) {
+  public ReferencableLoader(STypeFactory factory) {
     this.factory = factory;
   }
 

@@ -28,7 +28,7 @@ import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.impl.STypeFactory;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
@@ -55,12 +55,12 @@ import org.smoothbuild.util.collect.Optionals;
 import com.google.common.collect.ImmutableList;
 
 public class TypeInferrer {
-  private final TypeFactory factory;
+  private final STypeFactory factory;
   private final Typing typing;
   private final CallTypeInferrer callTypeInferrer;
 
   @Inject
-  public TypeInferrer(TypeFactory factory, Typing typing) {
+  public TypeInferrer(STypeFactory factory, Typing typing) {
     this.factory = factory;
     this.typing = typing;
     this.callTypeInferrer = new CallTypeInferrer(factory, typing);

@@ -8,15 +8,15 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.impl.STypeFactory;
 
 import com.google.common.collect.ImmutableMap;
 
 public class InternalModuleLoader {
-  private final TypeFactory factory;
+  private final STypeFactory factory;
 
   @Inject
-  public InternalModuleLoader(TypeFactory factory) {
+  public InternalModuleLoader(STypeFactory factory) {
     this.factory = factory;
   }
 

@@ -37,6 +37,7 @@ import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.type.OTypeFactory;
 import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.db.object.type.expr.CallOType;
@@ -93,6 +94,7 @@ import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.impl.STypeFactory;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -126,6 +128,7 @@ public abstract class AbstractTestingContext {
   private FileSystem fullFileSystem;
   private TempManager tempManager;
   private SModule internalModule;
+  private STypeFactory sTypeFactory;
 
   public NativeApi nativeApi() {
     return container();
@@ -137,7 +140,7 @@ public abstract class AbstractTestingContext {
 
   public SModule internalModule() {
     if (internalModule == null) {
-      internalModule = new InternalModuleLoader(typeFactory()).loadModule();
+      internalModule = new InternalModuleLoader(sTypeFactory()).loadModule();
     }
     return internalModule;
   }
@@ -175,6 +178,17 @@ public abstract class AbstractTestingContext {
   }
 
   public abstract TypeFactory typeFactory();
+
+  public OTypeFactory oTypeFactory() {
+    return objTypeDb();
+  }
+
+  public STypeFactory sTypeFactory() {
+    if (sTypeFactory == null) {
+      sTypeFactory = new STypeFactory();
+    }
+    return sTypeFactory;
+  }
 
   public ObjTypeDb objTypeDb() {
     if (objTypeDb == null) {
