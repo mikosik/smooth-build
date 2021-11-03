@@ -137,7 +137,7 @@ public abstract class AbstractTestingContext {
 
   public SModule internalModule() {
     if (internalModule == null) {
-      internalModule = new InternalModuleLoader(typing()).loadModule();
+      internalModule = new InternalModuleLoader(typeFactory()).loadModule();
     }
     return internalModule;
   }

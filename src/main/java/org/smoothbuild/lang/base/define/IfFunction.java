@@ -6,24 +6,24 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 
 import com.google.common.collect.ImmutableList;
 
 public class IfFunction extends Function {
   public static final String IF_FUNCTION_NAME = "if";
 
-  public IfFunction(ModulePath modulePath, Typing typing) {
+  public IfFunction(ModulePath modulePath, TypeFactory typing) {
     this(typing.variable("A"), typing.bool(), modulePath, typing);
   }
 
-  private IfFunction(Type resultType, Type boolType, ModulePath modulePath, Typing typing) {
+  private IfFunction(Type resultType, Type boolType, ModulePath modulePath, TypeFactory typing) {
     this(resultType, createParameters(resultType, boolType, modulePath), modulePath, typing);
   }
 
   private IfFunction(Type resultType, ImmutableList<Item> parameters, ModulePath modulePath,
-      Typing typing) {
+      TypeFactory typing) {
     super(typing.function(resultType, toTypes(parameters)),
         modulePath, IF_FUNCTION_NAME, parameters, internal());
   }

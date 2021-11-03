@@ -26,17 +26,16 @@ import com.google.common.collect.ImmutableSet;
 public class TestingTypes {
   private static final TestingContextImpl CONTEXT = new TestingContextImpl();
   private static final TypeFactory FACTORY = CONTEXT.typeFactory();
-  private static final Typing TYPING = CONTEXT.typing();
 
   public static final ImmutableSet<BaseType> BASE_TYPES = FACTORY.baseTypes();
   public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
 
-  public static final AnyType ANY = TYPING.any();
-  public static final BlobType BLOB = TYPING.blob();
-  public static final BoolType BOOL = TYPING.bool();
-  public static final IntType INT = TYPING.int_();
-  public static final NothingType NOTHING = TYPING.nothing();
-  public static final StringType STRING = TYPING.string();
+  public static final AnyType ANY = FACTORY.any();
+  public static final BlobType BLOB = FACTORY.blob();
+  public static final BoolType BOOL = FACTORY.bool();
+  public static final IntType INT = FACTORY.int_();
+  public static final NothingType NOTHING = FACTORY.nothing();
+  public static final StringType STRING = FACTORY.string();
   public static final StructType PERSON = struct(
       "Person", namedList(list(named("firstName", STRING), named("lastName", STRING))));
   public static final StructType FLAG = struct("Flag", namedList(list(named("flab", BOOL))));
@@ -78,11 +77,11 @@ public class TestingTypes {
           .build();
 
   public static ArrayType a(Type elemType) {
-    return TYPING.array(elemType);
+    return FACTORY.array(elemType);
   }
 
   public static FunctionType f(Type resultType) {
-    return TYPING.function(resultType, list());
+    return FACTORY.function(resultType, list());
   }
 
   public static FunctionType f(Type resultType, Type... params) {
@@ -90,14 +89,14 @@ public class TestingTypes {
   }
 
   public static FunctionType f(Type resultType, ImmutableList<Type> params) {
-    return TYPING.function(resultType, params);
+    return FACTORY.function(resultType, params);
   }
 
   public static Variable variable(String a) {
-    return TYPING.variable(a);
+    return FACTORY.variable(a);
   }
 
   public static StructType struct(String name, NamedList<? extends Type> fields) {
-    return TYPING.struct(name, fields);
+    return FACTORY.struct(name, fields);
   }
 }

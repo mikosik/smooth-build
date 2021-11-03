@@ -25,8 +25,8 @@ import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.define.Struct;
-import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
@@ -36,14 +36,14 @@ import com.google.common.collect.ImmutableMap;
 public class ModuleLoader {
   private final TypeInferrer typeInferrer;
   private final ReferencableLoader referencableLoader;
-  private final Typing typing;
+  private final TypeFactory typeFactory;
 
   @Inject
   public ModuleLoader(TypeInferrer typeInferrer, ReferencableLoader referencableLoader,
-      Typing typing) {
+      TypeFactory typeFactory) {
     this.typeInferrer = typeInferrer;
     this.referencableLoader = referencableLoader;
-    this.typing = typing;
+    this.typeFactory = typeFactory;
   }
 
   public Maybe<SModule> loadModule(ModulePath path, Hash hash, ModuleFiles moduleFiles,
@@ -106,7 +106,7 @@ public class ModuleLoader {
     var resultType = struct.type().get();
     var name = struct.constructor().name();
     var parameterTypes = map(struct.fields(), f -> f.type().get());
-    var type = typing.function(resultType, parameterTypes);
+    var type = typeFactory.function(resultType, parameterTypes);
     var parameters = map(struct.fields(), f -> f.toItem(path));
     return new Constructor(type, path, name, parameters, struct.location());
   }

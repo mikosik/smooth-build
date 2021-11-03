@@ -102,8 +102,8 @@ public class JobCreatorTest extends TestingContextImpl {
   private JobCreator taskCreator(
       Map<Class<?>, Handler<?>> additionalHandlers, Function... functions) {
     var definitions = definitions(functions);
-    return new JobCreator(definitions, new TypeToSpecConverter(objectFactory()), null, typing(),
-        additionalHandlers);
+    return new JobCreator(definitions, new TypeToSpecConverter(objectFactory()), null,
+        typeFactory(), typing(), additionalHandlers);
   }
 
   private Definitions definitions(Function... functions) {

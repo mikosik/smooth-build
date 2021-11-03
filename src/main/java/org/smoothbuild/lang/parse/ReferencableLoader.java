@@ -20,11 +20,11 @@ import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
-import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -54,11 +54,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ReferencableLoader {
-  private final Typing typing;
+  private final TypeFactory factory;
 
   @Inject
-  public ReferencableLoader(Typing typing) {
-    this.typing = typing;
+  public ReferencableLoader(TypeFactory factory) {
+    this.factory = factory;
   }
 
   public GlobalReferencable loadReferencable(ModulePath path,
@@ -88,7 +88,7 @@ public class ReferencableLoader {
     Type resultType = realFuncNode.resultType().get();
     String name = realFuncNode.name();
     Location location = realFuncNode.location();
-    FunctionType type = typing.function(resultType, toTypes(parameters));
+    FunctionType type = factory.function(resultType, toTypes(parameters));
     if (realFuncNode.annotation().isPresent()) {
       return new NativeFunction(type,
           path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
@@ -220,21 +220,21 @@ public class ReferencableLoader {
 
   public BlobLiteralExpression createBlobLiteral(BlobNode blob) {
     return new BlobLiteralExpression(
-        typing.blob(),
+        factory.blob(),
         blob.byteString(),
         blob.location());
   }
 
   public IntLiteralExpression createIntLiteral(IntNode intNode) {
     return new IntLiteralExpression(
-        typing.int_(),
+        factory.int_(),
         intNode.bigInteger(),
         intNode.location());
   }
 
   public StringLiteralExpression createStringLiteral(StringNode string) {
     return new StringLiteralExpression(
-        typing.string(),
+        factory.string(),
         string.unescapedValue(),
         string.location());
   }

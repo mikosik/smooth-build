@@ -12,24 +12,16 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.base.type.api.AnyType;
 import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.BlobType;
-import org.smoothbuild.lang.base.type.api.BoolType;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.api.StringType;
-import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
-import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -46,50 +38,6 @@ public class Typing {
     this.sides = new Sides(typeFactory.any(), typeFactory.nothing());
   }
 
-  public TypeFactory factory() {
-    return typeFactory;
-  }
-
-  public Variable variable(String name) {
-    return typeFactory.variable(name);
-  }
-
-  public AnyType any() {
-    return typeFactory.any();
-  }
-
-  public ArrayType array(Type elemType) {
-    return typeFactory.array(elemType);
-  }
-
-  public BlobType blob() {
-    return typeFactory.blob();
-  }
-
-  public BoolType bool() {
-    return typeFactory.bool();
-  }
-
-  public FunctionType function(Type resultType, ImmutableList<Type> parameters) {
-    return typeFactory.function(resultType, parameters);
-  }
-
-  public IntType int_() {
-    return typeFactory.int_();
-  }
-
-  public NothingType nothing() {
-    return typeFactory.nothing();
-  }
-
-  public StringType string() {
-    return typeFactory.string();
-  }
-
-  public StructType struct(String name, NamedList<? extends Type> fields) {
-    return typeFactory.struct(name, fields);
-  }
-
   public Side upper() {
     return sides.upper();
   }
@@ -99,13 +47,13 @@ public class Typing {
   }
 
   public Bounds unbounded() {
-    return new Bounds(nothing(), any());
+    return new Bounds(typeFactory.nothing(), typeFactory.any());
   }
 
   public Bounds oneSideBound(Side side, Type type) {
     return side.dispatch(
-        () -> new Bounds(type, any()),
-        () -> new Bounds(nothing(), type)
+        () -> new Bounds(type, typeFactory.any()),
+        () -> new Bounds(typeFactory.nothing(), type)
     );
   }
 

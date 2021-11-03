@@ -55,6 +55,7 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -74,21 +75,24 @@ public class JobCreator {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final MethodLoader methodLoader;
+  private final TypeFactory factory;
   private final Typing typing;
   private final Map<Class<?>, Handler<?>> map;
 
   @Inject
   public JobCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
-      MethodLoader methodLoader, Typing typing) {
-    this(definitions, toSpecConverter, methodLoader, typing, ImmutableMap.of());
+      MethodLoader methodLoader, TypeFactory factory, Typing typing) {
+    this(definitions, toSpecConverter, methodLoader, factory, typing, ImmutableMap.of());
   }
 
   // Visible for testing
   JobCreator(Definitions definitions, TypeToSpecConverter toSpecConverter,
-      MethodLoader methodLoader, Typing typing, Map<Class<?>, Handler<?>> additionalHandlers) {
+      MethodLoader methodLoader, TypeFactory factory, Typing typing,
+      Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;
     this.toSpecConverter = toSpecConverter;
     this.methodLoader = methodLoader;
+    this.factory = factory;
     this.typing = typing;
     this.map = constructHandlers(additionalHandlers);
   }
@@ -282,7 +286,7 @@ public class JobCreator {
         .stream()
         .map(Job::type)
         .reduce(typing::mergeUp)
-        .map(typing::array);
+        .map(factory::array);
   }
 
   private Job arrayEager(ArrayLiteralExpression expression, List<Job> elements,
@@ -300,7 +304,7 @@ public class JobCreator {
   // BlobLiteralExpression
 
   private Job blobLazy(Scope<Job> scope, BlobLiteralExpression blobLiteral) {
-    return new LazyJob(typing.blob(), blobLiteral.location(), () -> blobEagerJob(blobLiteral));
+    return new LazyJob(factory.blob(), blobLiteral.location(), () -> blobEagerJob(blobLiteral));
   }
 
   private Job blobEager(Scope<Job> scope, BlobLiteralExpression expression) {
@@ -308,16 +312,16 @@ public class JobCreator {
   }
 
   private Job blobEagerJob(BlobLiteralExpression expression) {
-    var blobSpec = toSpecConverter.visit(typing.blob());
+    var blobSpec = toSpecConverter.visit(factory.blob());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     var info = new TaskInfo(LITERAL, algorithm.shortedLiteral(), expression.location());
-    return new Task(typing.blob(), list(), info, algorithm);
+    return new Task(factory.blob(), list(), info, algorithm);
   }
 
   // IntLiteralExpression
 
   private Job intLazy(Scope<Job> scope, IntLiteralExpression intLiteral) {
-    return new LazyJob(typing.int_(), intLiteral.location(), () -> intEager(intLiteral));
+    return new LazyJob(factory.int_(), intLiteral.location(), () -> intEager(intLiteral));
   }
 
   private Job intEager(Scope<Job> scope, IntLiteralExpression intLiteral) {
@@ -325,11 +329,11 @@ public class JobCreator {
   }
 
   private Job intEager(IntLiteralExpression expression) {
-    var intSpec = toSpecConverter.visit(typing.int_());
+    var intSpec = toSpecConverter.visit(factory.int_());
     var bigInteger = expression.bigInteger();
     var algorithm = new FixedIntAlgorithm(intSpec, bigInteger);
     var info = new TaskInfo(LITERAL, bigInteger.toString(), expression.location());
-    return new Task(typing.int_(), list(), info, algorithm);
+    return new Task(factory.int_(), list(), info, algorithm);
   }
 
   // StringLiteralExpression
@@ -343,16 +347,16 @@ public class JobCreator {
   }
 
   private Job stringLazyJob(StringLiteralExpression stringLiteral) {
-    return new LazyJob(typing.string(), stringLiteral.location(),
+    return new LazyJob(factory.string(), stringLiteral.location(),
         () -> stringEagerJob(stringLiteral));
   }
 
   private Job stringEagerJob(StringLiteralExpression stringLiteral) {
-    var stringType = toSpecConverter.visit(typing.string());
+    var stringType = toSpecConverter.visit(factory.string());
     var algorithm = new FixedStringAlgorithm(stringType, stringLiteral.string());
     var name = algorithm.shortedString();
     var info = new TaskInfo(LITERAL, name, stringLiteral.location());
-    return new Task(typing.string(), list(), info, algorithm);
+    return new Task(factory.string(), list(), info, algorithm);
   }
 
   // helper methods

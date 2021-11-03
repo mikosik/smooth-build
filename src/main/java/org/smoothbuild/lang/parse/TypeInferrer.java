@@ -28,6 +28,7 @@ import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
@@ -54,13 +55,15 @@ import org.smoothbuild.util.collect.Optionals;
 import com.google.common.collect.ImmutableList;
 
 public class TypeInferrer {
+  private final TypeFactory factory;
   private final Typing typing;
   private final CallTypeInferrer callTypeInferrer;
 
   @Inject
-  public TypeInferrer(Typing typing) {
+  public TypeInferrer(TypeFactory factory, Typing typing) {
+    this.factory = factory;
     this.typing = typing;
-    this.callTypeInferrer = new CallTypeInferrer(typing);
+    this.callTypeInferrer = new CallTypeInferrer(factory, typing);
   }
 
   public List<Log> inferTypes(Ast ast, Definitions imported) {
@@ -71,9 +74,9 @@ public class TypeInferrer {
         super.visitStruct(struct);
         var fields = Optionals.pullUp(
             map(struct.fields(), f -> f.type().map(t -> f.toNamedType())));
-        struct.setType(fields.map(s -> typing.struct(struct.name(), namedList(s))));
+        struct.setType(fields.map(s -> factory.struct(struct.name(), namedList(s))));
         struct.constructor().setType(
-            fields.map(s -> typing.function(struct.type().get(), map(s, Named::object))));
+            fields.map(s -> factory.function(struct.type().get(), map(s, Named::object))));
       }
 
       @Override
@@ -157,10 +160,10 @@ public class TypeInferrer {
 
       private Optional<Type> createType(TypeNode type) {
         if (isVariableName(type.name())) {
-          return Optional.of(typing.variable(type.name()));
+          return Optional.of(factory.variable(type.name()));
         } else if (type instanceof ArrayTypeNode array) {
           TypeNode elementType = array.elementType();
-          return createType(elementType).map(typing::array);
+          return createType(elementType).map(factory::array);
         } else if (type instanceof FunctionTypeNode function) {
           Optional<Type> result = createType(function.resultType());
           var parameters = Optionals.pullUp(map(function.parameterTypes(), this::createType));
@@ -173,7 +176,7 @@ public class TypeInferrer {
       private Optional<Type> optionalFunctionType(
           Optional<Type> result, Optional<ImmutableList<Type>> parameters) {
         if (result.isPresent() && parameters.isPresent()) {
-          return Optional.of(typing.function(result.get(), parameters.get()));
+          return Optional.of(factory.function(result.get(), parameters.get()));
         } else {
           return empty();
         }
@@ -229,7 +232,7 @@ public class TypeInferrer {
       private Optional<Type> findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return Optional.of(typing.array(typing.nothing()));
+          return Optional.of(factory.array(factory.nothing()));
         }
         Optional<Type> firstType = expressions.get(0).type();
         if (firstType.isEmpty()) {
@@ -244,7 +247,7 @@ public class TypeInferrer {
             return empty();
           }
           type = typing.mergeUp(type, elemType.get());
-          if (typing.contains(type, typing.any())) {
+          if (typing.contains(type, factory.any())) {
             logBuffer.log(parseError(elem.location(),
                 "Array elements at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
@@ -252,7 +255,7 @@ public class TypeInferrer {
             return empty();
           }
         }
-        return Optional.of(typing.array(type));
+        return Optional.of(factory.array(type));
       }
 
       @Override
@@ -333,19 +336,19 @@ public class TypeInferrer {
       @Override
       public void visitStringLiteral(StringNode string) {
         super.visitStringLiteral(string);
-        string.setType(typing.string());
+        string.setType(factory.string());
       }
 
       @Override
       public void visitBlobLiteral(BlobNode blob) {
         super.visitBlobLiteral(blob);
-        blob.setType(typing.blob());
+        blob.setType(factory.blob());
       }
 
       @Override
       public void visitIntLiteral(IntNode intNode) {
         super.visitIntLiteral(intNode);
-        intNode.setType(typing.int_());
+        intNode.setType(factory.int_());
       }
     }.visitAst(ast);
     return logBuffer.toList();

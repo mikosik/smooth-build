@@ -19,6 +19,7 @@ import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeImpl;
 import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.testing.TestingModuleLoader;
@@ -146,12 +147,14 @@ public class AssignmentTest extends TestingContextImpl {
   }
 
   private static List<Arguments> array_element_assignment_test_specs() {
-    Typing typing = new TestingContextImpl().typing();
+    TestingContextImpl context = new TestingContextImpl();
+    Typing typing = context.typing();
+    TypeFactory factory = context.typeFactory();
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
         Type commonSuperType = typing.mergeUp(type1.type(), type2.type());
-        if (!typing.contains(commonSuperType, typing.any())) {
+        if (!typing.contains(commonSuperType, factory.any())) {
           result.add(Arguments.of(type1, type2, commonSuperType));
         }
       }
