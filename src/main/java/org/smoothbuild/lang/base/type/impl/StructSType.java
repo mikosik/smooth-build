@@ -9,10 +9,10 @@ import org.smoothbuild.util.collect.NamedList;
 /**
  * This class is immutable.
  */
-public class StructTypeImpl extends SType implements StructType {
+public class StructSType extends SType implements StructType {
   private final NamedList<Type> fields;
 
-  public StructTypeImpl(String name, NamedList<Type> fields) {
+  public StructSType(String name, NamedList<Type> fields) {
     super(name, calculateVariables(fields));
     this.fields = fields;
   }
@@ -28,7 +28,7 @@ public class StructTypeImpl extends SType implements StructType {
     if (this == object) {
       return true;
     }
-    return object instanceof StructTypeImpl thatStruct
+    return object instanceof StructSType thatStruct
         && this.name().equals(thatStruct.name())
         && this.fields.equals(thatStruct.fields);
   }
