@@ -30,8 +30,8 @@ import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.testing.EqualsTester;
 
-public abstract class AbstractTypeGenericTest extends TestingContext {
-  public abstract TypeFactory typeFactory();
+public abstract class AbstractTypeGenericTest<T extends Type> extends TestingContext {
+  public abstract TypeFactory<T> typeFactory();
 
   public static List<Arguments> names() {
     return asList(
@@ -153,7 +153,7 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <T> Arguments args(Function<TypeFactory, T> factoryCall) {
+  private static <R, T extends Type> Arguments args(Function<TypeFactory<T>, R> factoryCall) {
     return arguments(factoryCall);
   }
 
@@ -161,7 +161,8 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <T> Arguments args(Function<TypeFactory, T> factoryCall, Object arg) {
+  private static <R, T extends Type> Arguments args(
+      Function<TypeFactory<T>, R> factoryCall, Object arg) {
     return arguments(factoryCall, arg);
   }
 
@@ -169,8 +170,8 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <T> Arguments args(Function<TypeFactory, T> factoryCall,
-      Function<TypeFactory, T> arg2) {
+  private static <R, T extends Type> Arguments args(Function<TypeFactory<T>, R> factoryCall,
+      Function<TypeFactory<T>, R> arg2) {
     return arguments(factoryCall, arg2);
   }
 
@@ -182,28 +183,28 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("names")
-  public void name(Function<TypeFactory, Type> factoryCall, String name) {
+  public void name(Function<TypeFactory<T>, T> factoryCall, String name) {
     assertThat(invoke(factoryCall).name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(Function<TypeFactory, Type> factoryCall, String name) {
+  public void quoted_name(Function<TypeFactory<T>, T> factoryCall, String name) {
     assertThat(invoke(factoryCall).q())
         .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(Function<TypeFactory, Type> factoryCall, String name) {
+  public void to_string(Function<TypeFactory<T>, T> factoryCall, String name) {
     assertThat(invoke(factoryCall).toString())
         .isEqualTo("Type(`" + name + "`)");
   }
 
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
-  public void isPolytype(Function<TypeFactory, Type> factoryCall, boolean expected) {
+  public void isPolytype(Function<TypeFactory<T>, T> factoryCall, boolean expected) {
     assertThat(invoke(factoryCall).isPolytype())
         .isEqualTo(expected);
   }
@@ -211,8 +212,8 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("variables_test_data")
   public void variables(
-      Function<TypeFactory, Type> factoryCall,
-      Function<TypeFactory, Set<Variable>> resultCall) {
+      Function<TypeFactory<T>, T> factoryCall,
+      Function<TypeFactory<T>, Set<Variable>> resultCall) {
     assertThat(invoke(factoryCall).variables())
         .containsExactlyElementsIn(invoke(resultCall))
         .inOrder();
@@ -220,8 +221,8 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("function_result_cases")
-  public void function_result(Function<TypeFactory, FunctionType> factoryCall,
-      Function<TypeFactory, List<Type>> expected) {
+  public void function_result(Function<TypeFactory<T>, FunctionType> factoryCall,
+      Function<TypeFactory<T>, List<Type>> expected) {
     assertThat(invoke(factoryCall).result())
         .isEqualTo(invoke(expected));
   }
@@ -236,8 +237,8 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("function_parameters_cases")
-  public void function_parameters(Function<TypeFactory, FunctionType> factoryCall,
-      Function<TypeFactory, List<Type>> expected) {
+  public void function_parameters(Function<TypeFactory<T>, FunctionType> factoryCall,
+      Function<TypeFactory<T>, List<Type>> expected) {
     assertThat(invoke(factoryCall).parameters())
         .isEqualTo(invoke(expected));
   }
@@ -269,7 +270,7 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
   @Test
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
-    TypeFactory f = typeFactory();
+    TypeFactory<T> f = typeFactory();
     List<Type> types = asList(
         f.any(),
         f.blob(),
@@ -280,27 +281,27 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
         f.variable("B"),
         f.variable("C"),
 
-        f.function(f.blob(), list()),
-        f.function(f.string(), list()),
-        f.function(f.blob(), list(f.string())),
-        f.function(f.blob(), list(f.blob())),
+        f.function((T) f.blob(), list()),
+        f.function((T) f.string(), list()),
+        f.function((T) f.blob(), list((T) f.string())),
+        f.function((T) f.blob(), list((T) f.blob())),
 
         f.struct("Person", namedList(list())),
         f.struct("Person2", namedList(list())),
-        f.struct("Person", namedList(list(named("name", f.blob())))),
-        f.struct("Person", namedList(list(named("name", f.string())))),
-        f.struct("Person", namedList(list(named("name2", f.blob()))))
+        f.struct("Person", namedList(list(named("name", (T) f.blob())))),
+        f.struct("Person", namedList(list(named("name", (T) f.string())))),
+        f.struct("Person", namedList(list(named("name2", (T) f.blob()))))
     );
 
     for (Type type : types) {
       equalsTester.addEqualityGroup(type, type);
-      equalsTester.addEqualityGroup(f.array(type), f.array(type));
-      equalsTester.addEqualityGroup(f.array(f.array(type)), f.array(f.array(type)));
+      equalsTester.addEqualityGroup(f.array((T) type), f.array((T) type));
+      equalsTester.addEqualityGroup(f.array((T) f.array((T) type)), f.array((T) f.array((T) type)));
     }
     equalsTester.testEquals();
   }
 
-  private <T> T invoke(Function<TypeFactory, T> f) {
+  private <R> R invoke(Function<TypeFactory<T>, R> f) {
     return f.apply(typeFactory());
   }
 
@@ -308,8 +309,8 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
-    public void elemType(Function<TypeFactory, Type> factoryCall) {
-      Type element = invoke(factoryCall);
+    public void elemType(Function<TypeFactory<T>, T> factoryCall) {
+      T element = invoke(factoryCall);
       ArrayType array = typeFactory().array(element);
       assertThat(array.element())
           .isEqualTo(element);
@@ -359,7 +360,7 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("struct_name_cases")
-    public void struct_name(Function<TypeFactory, StructType> factoryCall, String expected) {
+    public void struct_name(Function<TypeFactory<T>, StructType> factoryCall, String expected) {
       assertThat(invoke(factoryCall).name())
           .isEqualTo(expected);
     }
@@ -373,8 +374,8 @@ public abstract class AbstractTypeGenericTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("struct_fields_cases")
-    public void struct_fields(Function<TypeFactory, StructType> factoryCall,
-        Function<TypeFactory, NamedList<Type>> expected) {
+    public void struct_fields(Function<TypeFactory<T>, StructType> factoryCall,
+        Function<TypeFactory<T>, NamedList<Type>> expected) {
       assertThat(invoke(factoryCall).fields())
           .isEqualTo(invoke(expected));
     }
