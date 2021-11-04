@@ -13,9 +13,12 @@ import static org.smoothbuild.lang.base.type.TestingSTypes.DATA;
 import static org.smoothbuild.lang.base.type.TestingSTypes.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestingSTypes.FLAG;
 import static org.smoothbuild.lang.base.type.TestingSTypes.INT;
+import static org.smoothbuild.lang.base.type.TestingSTypes.LOWER;
 import static org.smoothbuild.lang.base.type.TestingSTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingSTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.TYPING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.UPPER;
 import static org.smoothbuild.lang.base.type.TestingSTypes.X;
 import static org.smoothbuild.lang.base.type.TestingSTypes.a;
 import static org.smoothbuild.lang.base.type.TestingSTypes.f;
@@ -42,7 +45,7 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("contains_test_data")
   public void contains(Type type, Type contained, boolean expected) {
-    assertThat(typing().contains(type, contained))
+    assertThat(TYPING.contains(type, contained))
         .isEqualTo(expected);
   }
 
@@ -177,7 +180,7 @@ public class TypingTest extends TestingContextImpl {
   public void isAssignable(TestedAssignmentSpec spec) {
     Type target = spec.target().type();
     Type source = spec.source().type();
-    assertThat(typing().isAssignable(target, source))
+    assertThat(TYPING.isAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
 
@@ -190,7 +193,7 @@ public class TypingTest extends TestingContextImpl {
   public void isParamAssignable(TestedAssignmentSpec spec) {
     Type target = spec.target().type();
     Type source = spec.source().type();
-    assertThat(typing().isParamAssignable(target, source))
+    assertThat(TYPING.isParamAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
 
@@ -201,14 +204,12 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("inferVariableBounds_test_data")
   public void inferVariableBounds(Type type, Type assigned, BoundsMap expected) {
-    assertThat(typing().inferVariableBounds(type, assigned, lowerST()))
+    assertThat(typingS().inferVariableBounds(type, assigned, LOWER))
         .isEqualTo(expected);
   }
 
   public static List<Arguments> inferVariableBounds_test_data() {
     TestingContextImpl tc = new TestingContextImpl();
-    Side LOWER = tc.lowerST();
-    Side UPPER = tc.upperST();
     var r = new ArrayList<Arguments>();
     for (Type type : concat(ELEMENTARY_TYPES, X)) {
       if (type instanceof NothingType) {
@@ -296,15 +297,12 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("mapVariables_test_data")
   public void mapVariables(Type type, BoundsMap boundsMap, Type expected) {
-    assertThat(typing().mapVariables(type, boundsMap, lowerST()))
+    assertThat(typingS().mapVariables(type, boundsMap, LOWER))
         .isEqualTo(expected);
   }
 
   public static List<Arguments> mapVariables_test_data() {
     TestingContextImpl tc = new TestingContextImpl();
-    Side LOWER = tc.lowerST();
-    Side UPPER = tc.upperST();
-
     var result = new ArrayList<Arguments>();
     for (Type type : ALL_TESTED_TYPES) {
       result.add(arguments(X, tc.bm(X, LOWER, type), type));
@@ -330,7 +328,7 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("merge_up_wide_graph_cases")
   public void merge_up_wide_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, upperST());
+    testMergeBothWays(type1, type2, expected, UPPER);
   }
 
   public static Collection<Arguments> merge_up_wide_graph_cases() {
@@ -341,7 +339,7 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("merge_up_deep_graph_cases")
   public void merge_up_deep_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, upperST());
+    testMergeBothWays(type1, type2, expected, UPPER);
   }
 
   public static Collection<Arguments> merge_up_deep_graph_cases() {
@@ -352,7 +350,7 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("merge_down_wide_graph_cases")
   public void merge_down_wide_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, lowerST());
+    testMergeBothWays(type1, type2, expected, LOWER);
   }
 
   public static Collection<Arguments> merge_down_wide_graph_cases() {
@@ -364,7 +362,7 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("merge_down_deep_graph_cases")
   public void merge_down_deep_graph(Type type1, Type type2, Type expected) {
-    testMergeBothWays(type1, type2, expected, lowerST());
+    testMergeBothWays(type1, type2, expected, LOWER);
   }
 
   public static Collection<Arguments> merge_down_deep_graph_cases() {
@@ -374,9 +372,9 @@ public class TypingTest extends TestingContextImpl {
   }
 
   private void testMergeBothWays(Type type1, Type type2, Type expected, Side direction) {
-    assertThat(typing().merge(type1, type2, direction))
+    assertThat(TYPING.merge(type1, type2, direction))
         .isEqualTo(expected);
-    assertThat(typing().merge(type2, type1, direction))
+    assertThat(TYPING.merge(type2, type1, direction))
         .isEqualTo(expected);
   }
 
@@ -390,32 +388,32 @@ public class TypingTest extends TestingContextImpl {
   class _merge_bounds {
     @Test
     public void variable_with_one_lower_bound() {
-      var bounds = sTypeFactory().oneSideBound(lowerST(), STRING);
+      var bounds = sTypeFactory().oneSideBound(LOWER, STRING);
       assertThat(bounds.upper()).isEqualTo(ANY);
       assertThat(bounds.lower()).isEqualTo(STRING);
     }
 
     @Test
     public void variable_with_one_upper_bound() {
-      var bounds = sTypeFactory().oneSideBound(upperST(), STRING);
+      var bounds = sTypeFactory().oneSideBound(UPPER, STRING);
       assertThat(bounds.upper()).isEqualTo(STRING);
       assertThat(bounds.lower()).isEqualTo(NOTHING);
     }
 
     @Test
     public void variable_with_two_lower_bounds() {
-      var bounds = typing().merge(
-          sTypeFactory().oneSideBound(lowerST(), STRING),
-          sTypeFactory().oneSideBound(lowerST(), BOOL));
+      var bounds = TYPING.merge(
+          sTypeFactory().oneSideBound(LOWER, STRING),
+          sTypeFactory().oneSideBound(LOWER, BOOL));
       assertThat(bounds.upper()).isEqualTo(ANY);
       assertThat(bounds.lower()).isEqualTo(ANY);
     }
 
     @Test
     public void variable_with_two_upper_bounds() {
-      var bounds = typing().merge(
-          sTypeFactory().oneSideBound(upperST(), STRING),
-          sTypeFactory().oneSideBound(upperST(), BOOL));
+      var bounds = TYPING.merge(
+          sTypeFactory().oneSideBound(UPPER, STRING),
+          sTypeFactory().oneSideBound(UPPER, BOOL));
       assertThat(bounds.upper()).isEqualTo(NOTHING);
       assertThat(bounds.lower()).isEqualTo(NOTHING);
     }

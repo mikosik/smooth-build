@@ -3,7 +3,9 @@ package org.smoothbuild.lang.base.type.api;
 import static org.smoothbuild.lang.base.type.TestingSTypes.A;
 import static org.smoothbuild.lang.base.type.TestingSTypes.B;
 import static org.smoothbuild.lang.base.type.TestingSTypes.BOOL;
+import static org.smoothbuild.lang.base.type.TestingSTypes.LOWER;
 import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.UPPER;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContextImpl;
@@ -15,10 +17,9 @@ public class BoundsMapTest extends TestingContextImpl {
   public void equality() {
     new EqualsTester()
         .addEqualityGroup(bm())
-        .addEqualityGroup(bm(A, lowerST(), STRING))
-        .addEqualityGroup(bm(A, upperST(), STRING))
-        .addEqualityGroup(bm(A, lowerST(), BOOL))
-        .addEqualityGroup(
-            bm(B, lowerST(), STRING), bm(B, lowerST(), STRING));
+        .addEqualityGroup(bm(A, LOWER, STRING))
+        .addEqualityGroup(bm(A, UPPER, STRING))
+        .addEqualityGroup(bm(A, LOWER, BOOL))
+        .addEqualityGroup(bm(B, LOWER, STRING), bm(B, LOWER, STRING));
   }
 }

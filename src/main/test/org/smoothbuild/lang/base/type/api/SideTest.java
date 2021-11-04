@@ -2,7 +2,9 @@ package org.smoothbuild.lang.base.type.api;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.TestingSTypes.ANY;
+import static org.smoothbuild.lang.base.type.TestingSTypes.LOWER;
 import static org.smoothbuild.lang.base.type.TestingSTypes.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.UPPER;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,14 +15,14 @@ public class SideTest extends TestingContextImpl {
   class _reverse_of {
     @Test
     public void upper_is_lower() {
-      assertThat(upperST().reversed())
-          .isEqualTo(lowerST());
+      assertThat(UPPER.reversed())
+          .isEqualTo(LOWER);
     }
 
     @Test
     public void lower_is_upper() {
-      assertThat(lowerST().reversed())
-          .isEqualTo(upperST());
+      assertThat(LOWER.reversed())
+          .isEqualTo(UPPER);
     }
   }
 
@@ -28,13 +30,13 @@ public class SideTest extends TestingContextImpl {
   class _edge_of {
     @Test
     public void lower_is_nothing() {
-      assertThat(lowerST().edge())
+      assertThat(LOWER.edge())
           .isEqualTo(NOTHING);
     }
 
     @Test
     public void upper_is_any() {
-      assertThat(upperST().edge())
+      assertThat(UPPER.edge())
           .isEqualTo(ANY);
     }
   }

@@ -6,6 +6,7 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.lang.base.type.api.BaseType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.AnySType;
 import org.smoothbuild.lang.base.type.impl.ArraySType;
@@ -27,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 public class TestingSTypes {
   private static final TestingContextImpl CONTEXT = new TestingContextImpl();
   private static final STypeFactory FACTORY = CONTEXT.sTypeFactory();
+  public static final Typing TYPING = CONTEXT.typingS();
 
   public static final ImmutableSet<BaseType> BASE_TYPES = FACTORY.baseTypes();
   public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
@@ -46,6 +48,8 @@ public class TestingSTypes {
   public static final VariableSType C = variable("C");
   public static final VariableSType D = variable("D");
   public static final VariableSType X = variable("X");
+  public static final Side LOWER = FACTORY.lower();
+  public static final Side UPPER = FACTORY.upper();
 
   public static final ImmutableList<Type> ELEMENTARY_TYPES = ImmutableList.<Type>builder()
       .addAll(BASE_TYPES)

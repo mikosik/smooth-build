@@ -123,6 +123,7 @@ public abstract class AbstractTestingContext {
   private FileSystem computationCacheFileSystem;
   private ObjectDb objectDb;
   private Typing typing;
+  private Typing typingS;
   private ObjTypeDb objTypeDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -176,6 +177,13 @@ public abstract class AbstractTestingContext {
       typing = new Typing(typeFactory());
     }
     return typing;
+  }
+
+  public Typing typingS() {
+    if (typingS == null) {
+      typingS = new Typing(sTypeFactory());
+    }
+    return typingS;
   }
 
   public abstract TypeFactory typeFactory();
