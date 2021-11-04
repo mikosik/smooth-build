@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.type.api.BaseType;
 /**
  * This class is immutable.
  */
-public class BaseSType extends SmoothType implements BaseType {
+public class BaseSType extends TypeS implements BaseType {
   public BaseSType(String name) {
     super(name, set());
   }

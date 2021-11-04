@@ -11,8 +11,8 @@ import com.google.common.collect.ImmutableSet;
  * Smooth language type.
  * This class and all its subclasses are immutable.
  */
-public abstract class SmoothType extends AbstractType {
-  protected SmoothType(String name, ImmutableSet<Variable> variables) {
+public abstract class TypeS extends AbstractType {
+  protected TypeS(String name, ImmutableSet<Variable> variables) {
     super(name, variables);
   }
 

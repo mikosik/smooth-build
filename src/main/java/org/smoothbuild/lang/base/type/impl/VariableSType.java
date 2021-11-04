@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * This class is immutable.
  */
-public class VariableSType extends SmoothType implements Variable {
+public class VariableSType extends TypeS implements Variable {
   private final ImmutableSet<Variable> variables;
 
   public VariableSType(String name) {
