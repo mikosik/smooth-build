@@ -125,7 +125,7 @@ public class TestingModuleLoader {
   }
 
   private Maybe<SModule> load() {
-    Typing typing = testingContext.typing();
+    Typing typing = testingContext.typingS();
     TypeFactoryS factory = testingContext.typeFactoryS();
     ModuleLoader moduleLoader = new ModuleLoader(
         new TypeInferrer(factory, typing), new ReferencableLoader(factory), factory);

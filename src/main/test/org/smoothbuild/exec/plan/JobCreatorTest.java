@@ -103,7 +103,7 @@ public class JobCreatorTest extends TestingContextImpl {
       Map<Class<?>, Handler<?>> additionalHandlers, Function... functions) {
     var definitions = definitions(functions);
     return new JobCreator(definitions, new STypeToOTypeConverter(objectFactory()), null,
-        typeFactoryS(), typing(), additionalHandlers);
+        typeFactoryS(), typingS(), additionalHandlers);
   }
 
   private Definitions definitions(Function... functions) {
