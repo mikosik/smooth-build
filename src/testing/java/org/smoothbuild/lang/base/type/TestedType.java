@@ -4,8 +4,8 @@ import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
-import static org.smoothbuild.lang.base.type.TestingTypes.struct;
-import static org.smoothbuild.lang.base.type.TestingTypes.variable;
+import static org.smoothbuild.lang.base.type.TestingSTypes.struct;
+import static org.smoothbuild.lang.base.type.TestingSTypes.variable;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Named.named;
@@ -41,53 +41,53 @@ public class TestedType {
       null
   );
   public static final TestedType ANY = new TestedType(
-      TestingTypes.ANY,
+      TestingSTypes.ANY,
       "createAny()",
       null,
       Set.of(),
       Set.of("Any createAny() = \"abc\";"));
   public static final TestedType BLOB = new TestedType(
-      TestingTypes.BLOB,
+      TestingSTypes.BLOB,
       "0x" + encodeString("xyz", US_ASCII).hex(),
       "xyz"
   );
   public static final TestedType BOOL = new TestedType(
-      TestingTypes.BOOL,
+      TestingSTypes.BOOL,
       "true",
       new String(new byte[] {1})
   );
   public static final TestedType INT = new TestedType(
-      TestingTypes.INT,
+      TestingSTypes.INT,
       "123",
       new String(new byte[] {123})
   );
   public static final TestedType NOTHING = new TestedType(
-      TestingTypes.NOTHING,
+      TestingSTypes.NOTHING,
       "reportError(\"e\")",
       null,
       Set.of(),
       Set.of("@Native(\"impl\") Nothing reportError(String message);"));
   public static final TestedType STRING = new TestedType(
-      TestingTypes.STRING,
+      TestingSTypes.STRING,
       "\"abc\"",
       "abc"
   );
   public static final TestedType STRUCT = new TestedType(
-      struct("Person", namedList(list(named("name", TestingTypes.STRING)))),
+      struct("Person", namedList(list(named("name", TestingSTypes.STRING)))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", namedList(list(named("value", TestingTypes.BLOB)))),
+      struct("Data", namedList(list(named("value", TestingSTypes.BLOB)))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", namedList(list(named("value", TestingTypes.BOOL)))),
+      struct("Flag", namedList(list(named("value", TestingSTypes.BOOL)))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),
@@ -168,7 +168,7 @@ public class TestedType {
     if (type == NOTHING) {
       return new TestedArrayType(
           type,
-          TestingTypes.a(TestingTypes.NOTHING),
+          TestingSTypes.a(TestingSTypes.NOTHING),
           "[]",
           list(),
           Set.of(),
@@ -183,7 +183,7 @@ public class TestedType {
   private static TestedType a(TestedType type, Object value) {
     return new TestedArrayType(
         type,
-        TestingTypes.a(type.type),
+        TestingSTypes.a(type.type),
         "[" + type.literal + "]",
         value,
         type.typeDeclarations(),
@@ -317,7 +317,7 @@ public class TestedType {
     return new TestedFunctionType(
         resultType,
         ImmutableList.copyOf(paramTestedTypes2),
-        TestingTypes.f(resultType.type, map(paramSignatures, ItemSignature::type)),
+        TestingSTypes.f(resultType.type, map(paramSignatures, ItemSignature::type)),
         name,
         null,
         typeDeclarations,

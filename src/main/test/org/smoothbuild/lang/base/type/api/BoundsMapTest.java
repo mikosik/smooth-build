@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base.type.api;
 
-import static org.smoothbuild.lang.base.type.TestingTypes.A;
-import static org.smoothbuild.lang.base.type.TestingTypes.B;
-import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
-import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.A;
+import static org.smoothbuild.lang.base.type.TestingSTypes.B;
+import static org.smoothbuild.lang.base.type.TestingSTypes.BOOL;
+import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContextImpl;

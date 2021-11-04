@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.base.type.api;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
-import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.ANY;
+import static org.smoothbuild.lang.base.type.TestingSTypes.NOTHING;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

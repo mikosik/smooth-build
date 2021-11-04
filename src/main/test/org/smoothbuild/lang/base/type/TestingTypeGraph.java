@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.collect.Multimaps.newSetMultimap;
-import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
-import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
-import static org.smoothbuild.lang.base.type.TestingTypes.a;
-import static org.smoothbuild.lang.base.type.TestingTypes.f;
+import static org.smoothbuild.lang.base.type.TestingSTypes.ANY;
+import static org.smoothbuild.lang.base.type.TestingSTypes.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.a;
+import static org.smoothbuild.lang.base.type.TestingSTypes.f;
 
 import java.util.ArrayList;
 import java.util.Collection;

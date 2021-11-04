@@ -4,47 +4,48 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
-import org.smoothbuild.lang.base.type.api.AnyType;
-import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BaseType;
-import org.smoothbuild.lang.base.type.api.BlobType;
-import org.smoothbuild.lang.base.type.api.BoolType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.type.api.NothingType;
-import org.smoothbuild.lang.base.type.api.StringType;
-import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.impl.AnySType;
+import org.smoothbuild.lang.base.type.impl.ArraySType;
+import org.smoothbuild.lang.base.type.impl.BlobSType;
+import org.smoothbuild.lang.base.type.impl.BoolSType;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.IntSType;
+import org.smoothbuild.lang.base.type.impl.NothingSType;
+import org.smoothbuild.lang.base.type.impl.STypeFactory;
+import org.smoothbuild.lang.base.type.impl.StringSType;
+import org.smoothbuild.lang.base.type.impl.StructSType;
+import org.smoothbuild.lang.base.type.impl.VariableSType;
 import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public class TestingTypes {
+public class TestingSTypes {
   private static final TestingContextImpl CONTEXT = new TestingContextImpl();
-  private static final TypeFactory FACTORY = CONTEXT.sTypeFactory();
+  private static final STypeFactory FACTORY = CONTEXT.sTypeFactory();
 
   public static final ImmutableSet<BaseType> BASE_TYPES = FACTORY.baseTypes();
   public static final ImmutableSet<BaseType> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
 
-  public static final AnyType ANY = FACTORY.any();
-  public static final BlobType BLOB = FACTORY.blob();
-  public static final BoolType BOOL = FACTORY.bool();
-  public static final IntType INT = FACTORY.int_();
-  public static final NothingType NOTHING = FACTORY.nothing();
-  public static final StringType STRING = FACTORY.string();
-  public static final StructType PERSON = struct(
+  public static final AnySType ANY = FACTORY.any();
+  public static final BlobSType BLOB = FACTORY.blob();
+  public static final BoolSType BOOL = FACTORY.bool();
+  public static final IntSType INT = FACTORY.int_();
+  public static final NothingSType NOTHING = FACTORY.nothing();
+  public static final StringSType STRING = FACTORY.string();
+  public static final StructSType PERSON = struct(
       "Person", namedList(list(named("firstName", STRING), named("lastName", STRING))));
-  public static final StructType FLAG = struct("Flag", namedList(list(named("flab", BOOL))));
-  public static final StructType DATA = struct("Data", namedList(list(named("data", BLOB))));
-  public static final Variable A = variable("A");
-  public static final Variable B = variable("B");
-  public static final Variable C = variable("C");
-  public static final Variable D = variable("D");
-  public static final Variable X = variable("X");
+  public static final StructSType FLAG = struct("Flag", namedList(list(named("flab", BOOL))));
+  public static final StructSType DATA = struct("Data", namedList(list(named("data", BLOB))));
+  public static final VariableSType A = variable("A");
+  public static final VariableSType B = variable("B");
+  public static final VariableSType C = variable("C");
+  public static final VariableSType D = variable("D");
+  public static final VariableSType X = variable("X");
 
   public static final ImmutableList<Type> ELEMENTARY_TYPES = ImmutableList.<Type>builder()
       .addAll(BASE_TYPES)
@@ -76,27 +77,27 @@ public class TestingTypes {
           .add(X)
           .build();
 
-  public static ArrayType a(Type elemType) {
+  public static ArraySType a(Type elemType) {
     return FACTORY.array(elemType);
   }
 
-  public static FunctionType f(Type resultType) {
+  public static FunctionSType f(Type resultType) {
     return FACTORY.function(resultType, list());
   }
 
-  public static FunctionType f(Type resultType, Type... params) {
+  public static FunctionSType f(Type resultType, Type... params) {
     return f(resultType, list(params));
   }
 
-  public static FunctionType f(Type resultType, ImmutableList<Type> params) {
+  public static FunctionSType f(Type resultType, ImmutableList<Type> params) {
     return FACTORY.function(resultType, params);
   }
 
-  public static Variable variable(String a) {
+  public static VariableSType variable(String a) {
     return FACTORY.variable(a);
   }
 
-  public static StructType struct(String name, NamedList<? extends Type> fields) {
+  public static StructSType struct(String name, NamedList<? extends Type> fields) {
     return FACTORY.struct(name, fields);
   }
 }

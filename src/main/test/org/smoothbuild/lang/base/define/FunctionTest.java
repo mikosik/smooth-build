@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
-import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import static org.smoothbuild.db.object.type.TestingObjTypes.PERSON;
 import static org.smoothbuild.db.object.type.TestingObjTypes.STR;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
-import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
