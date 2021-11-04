@@ -29,15 +29,15 @@ import com.google.common.collect.ImmutableMap;
 // TODO use switch pattern matching on JDK-17
 @Singleton
 public class Typing {
-  private final TypeFactory typeFactory;
+  private final TypeFactory factory;
 
   @Inject
-  public Typing(STypeFactory typeFactory) {
-    this.typeFactory = typeFactory;
+  public Typing(STypeFactory factory) {
+    this.factory = factory;
   }
 
-  public Typing(TypeFactory typeFactory) {
-    this.typeFactory = typeFactory;
+  public Typing(TypeFactory factory) {
+    this.factory = factory;
   }
 
   public boolean contains(Type type, Type inner) {
@@ -53,12 +53,12 @@ public class Typing {
   }
 
   public boolean isAssignable(Type target, Type source) {
-    return inequal(target, source, typeFactory.lower());
+    return inequal(target, source, factory.lower());
   }
 
   public boolean isParamAssignable(Type target, Type source) {
-    return inequalParam(target, source, typeFactory.lower())
-        && areConsistent(inferVariableBounds(target, source, typeFactory.lower()));
+    return inequalParam(target, source, factory.lower())
+        && areConsistent(inferVariableBounds(target, source, factory.lower()));
   }
 
   public boolean inequal(Type typeA, Type that, Side side) {
@@ -113,9 +113,9 @@ public class Typing {
   public BoundsMap inferVariableBoundsInCall(
       Type resultTypes, List<? extends Type> parameterTypes, List<? extends Type> argumentTypes) {
     var result = new HashMap<Variable, Bounded>();
-    inferVariableBounds(parameterTypes, argumentTypes, typeFactory.lower(), result);
+    inferVariableBounds(parameterTypes, argumentTypes, factory.lower(), result);
     resultTypes.variables().forEach(v -> result.merge(
-        v, new Bounded(v, typeFactory.unbounded()), this::merge));
+        v, new Bounded(v, factory.unbounded()), this::merge));
     return new BoundsMap(ImmutableMap.copyOf(result));
   }
 
@@ -142,7 +142,7 @@ public class Typing {
 
   private void inferImpl(Type typeA, Type typeB, Side side, Map<Variable, Bounded> result) {
     if (typeA instanceof Variable variable) {
-      Bounded bounded = new Bounded(variable, typeFactory.oneSideBound(side, typeB));
+      Bounded bounded = new Bounded(variable, factory.oneSideBound(side, typeB));
       result.merge(variable, bounded, this::merge);
     } else if (typeA instanceof ArrayType arrayA) {
       if (typeB.equals(side.edge())) {
@@ -187,11 +187,11 @@ public class Typing {
   }
 
   public Type mergeUp(Type typeA, Type typeB) {
-    return merge(typeA, typeB, typeFactory.upper());
+    return merge(typeA, typeB, factory.upper());
   }
 
   public Type mergeDown(Type typeA, Type typeB) {
-    return merge(typeA, typeB, typeFactory.lower());
+    return merge(typeA, typeB, factory.lower());
   }
 
   public Type merge(Type typeA, Type typeB, Side direction) {
@@ -212,7 +212,7 @@ public class Typing {
         } else if (elemB == elemM) {
           return arrayB;
         } else {
-          return typeFactory.array(elemM);
+          return factory.array(elemM);
         }
       }
     } else if (typeA instanceof FunctionType functionA) {
@@ -226,7 +226,7 @@ public class Typing {
           } else if (isFunctionTypeEqual(functionB, resultM, parametersM)){
             return functionB;
           } else {
-            return typeFactory.function(resultM, parametersM);
+            return factory.function(resultM, parametersM);
           }
         }
       }
@@ -240,15 +240,15 @@ public class Typing {
 
   public Bounds merge(Bounds boundsA, Bounds boundsB) {
     return new Bounds(
-        merge(boundsA.lower(), boundsB.lower(), typeFactory.upper()),
-        merge(boundsA.upper(), boundsB.upper(), typeFactory.lower()));
+        merge(boundsA.lower(), boundsB.lower(), factory.upper()),
+        merge(boundsA.upper(), boundsB.upper(), factory.lower()));
   }
 
   private ArrayType createArrayType(ArrayType type, Type elemType) {
     if (type.element() == elemType) {
       return type;
     } else {
-      return typeFactory.array(elemType);
+      return factory.array(elemType);
     }
   }
 
@@ -257,7 +257,7 @@ public class Typing {
     if (isFunctionTypeEqual(type, resultType, parameters)) {
       return type;
     }
-    return typeFactory.function(resultType, parameters);
+    return factory.function(resultType, parameters);
   }
 
   private boolean isFunctionTypeEqual(
