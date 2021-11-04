@@ -94,6 +94,7 @@ import org.smoothbuild.lang.base.type.impl.NothingSType;
 import org.smoothbuild.lang.base.type.impl.StringSType;
 import org.smoothbuild.lang.base.type.impl.StructSType;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.VariableSType;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -687,12 +688,12 @@ public class TestingContext {
   }
 
   public CallExpression callExpression(
-      Type type, Expression expression, Expression... arguments) {
+      TypeS type, Expression expression, Expression... arguments) {
     return callExpression(1, type, expression, arguments);
   }
 
   public CallExpression callExpression(
-      int line, Type type, Expression expression, Expression... arguments) {
+      int line, TypeS type, Expression expression, Expression... arguments) {
     return new CallExpression(type, expression, list(arguments), loc(line));
   }
 
@@ -728,12 +729,12 @@ public class TestingContext {
     return new IntLiteralExpression(intST(), BigInteger.valueOf(value), loc(line));
   }
 
-  public ParameterReferenceExpression parameterRefExpression(Type type, String name) {
+  public ParameterReferenceExpression parameterRefExpression(TypeS type, String name) {
     return parameterRefExpression(1, type, name);
   }
 
   public ParameterReferenceExpression parameterRefExpression(
-      int line, Type type, String name) {
+      int line, TypeS type, String name) {
     return new ParameterReferenceExpression(type, name, loc(line));
   }
 
@@ -741,12 +742,12 @@ public class TestingContext {
     return referenceExpression(1, referencable.type(), referencable.name());
   }
 
-  public ReferenceExpression referenceExpression(int line, Type type, String name) {
+  public ReferenceExpression referenceExpression(int line, TypeS type, String name) {
     return new ReferenceExpression(type, name, loc(line));
   }
 
   public SelectExpression selectExpression(
-      int line, Type field, int index, Expression expression) {
+      int line, TypeS field, int index, Expression expression) {
     return new SelectExpression(field, index, expression, loc(line));
   }
 
@@ -769,32 +770,32 @@ public class TestingContext {
         functionST(resultType, parameters), modulePath(), name, list(parameters), loc(line));
   }
 
-  public Item field(Type type, String name) {
+  public Item field(TypeS type, String name) {
     return new Item(type, modulePath(), name, Optional.empty(), loc(1));
   }
 
-  public Item parameter(Type type, String name) {
+  public Item parameter(TypeS type, String name) {
     return parameter(1, type, name);
   }
 
-  public Item parameter(int line, Type type, String name) {
+  public Item parameter(int line, TypeS type, String name) {
     return parameter(line, type, name, Optional.empty());
   }
 
-  public Item parameter(int line, Type type, String name, Expression defaultArg) {
+  public Item parameter(int line, TypeS type, String name, Expression defaultArg) {
     return parameter(line, type, name, Optional.of(defaultArg));
   }
 
-  private Item parameter(int line, Type type, String name,
+  private Item parameter(int line, TypeS type, String name,
       Optional<Expression> defaultArg) {
     return new Item(type, modulePath(), name, defaultArg, loc(line));
   }
 
-  public DefinedValue value(int line, Type type, String name, Expression expression) {
+  public DefinedValue value(int line, TypeS type, String name, Expression expression) {
     return new DefinedValue(type, modulePath(), name, expression, loc(line));
   }
 
-  public NativeValue value(int line, Type type, String name, Annotation annotation) {
+  public NativeValue value(int line, TypeS type, String name, Annotation annotation) {
     return new NativeValue(type, modulePath(), name, annotation, loc(line));
   }
 }

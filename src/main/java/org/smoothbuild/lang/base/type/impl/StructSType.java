@@ -3,23 +3,22 @@ package org.smoothbuild.lang.base.type.impl;
 import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.calculateVariables;
 
 import org.smoothbuild.lang.base.type.api.StructType;
-import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.collect.NamedList;
 
 /**
  * This class is immutable.
  */
 public class StructSType extends TypeS implements StructType {
-  private final NamedList<Type> fields;
+  private final NamedList<TypeS> fields;
 
-  public StructSType(String name, NamedList<Type> fields) {
+  public StructSType(String name, NamedList<TypeS> fields) {
     super(name, calculateVariables(fields));
     this.fields = fields;
   }
 
 
   @Override
-  public NamedList<Type> fields() {
+  public NamedList<TypeS> fields() {
     return fields;
   }
 

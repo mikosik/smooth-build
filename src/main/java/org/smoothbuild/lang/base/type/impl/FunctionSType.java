@@ -5,7 +5,6 @@ import static org.smoothbuild.lang.base.type.api.TypeNames.functionTypeName;
 import static org.smoothbuild.lang.base.type.help.FunctionTypeImplHelper.calculateVariables;
 
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 
@@ -13,22 +12,22 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class FunctionSType extends TypeS implements FunctionType {
-  private final Type result;
-  private final ImmutableList<Type> parameters;
+  private final TypeS result;
+  private final ImmutableList<TypeS> parameters;
 
-  public FunctionSType(Type result, ImmutableList<Type> parameters) {
+  public FunctionSType(TypeS result, ImmutableList<TypeS> parameters) {
     super(functionTypeName(result, parameters), calculateVariables(result, parameters));
     this.result = requireNonNull(result);
     this.parameters = requireNonNull(parameters);
   }
 
   @Override
-  public Type result() {
+  public TypeS result() {
     return result;
   }
 
   @Override
-  public ImmutableList<Type> parameters() {
+  public ImmutableList<TypeS> parameters() {
     return parameters;
   }
 

@@ -18,8 +18,8 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
-import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
@@ -34,7 +34,7 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Maybe<Type> inferCallType(CallNode call, Type resultType,
+  public Maybe<TypeS> inferCallType(CallNode call, TypeS resultType,
       List<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
@@ -42,7 +42,7 @@ public class CallTypeInferrer {
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
-    List<Optional<Type>> assignedTypes = assignedTypes(parameters, assignedArgs);
+    List<Optional<TypeS>> assignedTypes = assignedTypes(parameters, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
       var boundedVariables = typing.inferVariableBoundsInCall(
           resultType,
@@ -53,7 +53,7 @@ public class CallTypeInferrer {
         logBuffer.logAll(variableProblems);
         return maybeLogs(logBuffer);
       }
-      Type mapped = typing.mapVariables(resultType, boundedVariables, factory.lower());
+      TypeS mapped = (TypeS) typing.mapVariables(resultType, boundedVariables, factory.lower());
       return maybeValueAndLogs(mapped, logBuffer);
     }
     return maybeLogs(logBuffer);
@@ -82,9 +82,9 @@ public class CallTypeInferrer {
     return "In call to function with type " + call.function().type().get().q() + ": ";
   }
 
-  private List<Optional<Type>> assignedTypes(
+  private List<Optional<TypeS>> assignedTypes(
       List<ItemSignature> parameters, List<Optional<ArgNode>> arguments) {
-    List<Optional<Type>> assigned = new ArrayList<>();
+    List<Optional<TypeS>> assigned = new ArrayList<>();
     for (int i = 0; i < parameters.size(); i++) {
       Optional<ArgNode> arg = arguments.get(i);
       if (arg.isPresent()) {
@@ -96,7 +96,7 @@ public class CallTypeInferrer {
     return assigned;
   }
 
-  private static boolean allAssignedTypesAreInferred(List<Optional<Type>> assigned) {
+  private static boolean allAssignedTypesAreInferred(List<Optional<TypeS>> assigned) {
     return assigned.stream().allMatch(Optional::isPresent);
   }
 

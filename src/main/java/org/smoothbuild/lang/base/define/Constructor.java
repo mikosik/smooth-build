@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
 
 import com.google.common.collect.ImmutableList;
 
@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Constructor extends Function {
-  public Constructor(FunctionType type, ModulePath modulePath, String name,
+  public Constructor(FunctionSType type, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Location location) {
     super(type, modulePath, name, parameters, location);
   }

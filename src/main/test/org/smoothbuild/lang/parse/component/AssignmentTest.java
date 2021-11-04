@@ -79,7 +79,7 @@ public class AssignmentTest extends TestingContext {
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      Type type = targetType.type();
+      var type = targetType.type();
       FunctionType functionType = new FunctionSType(type, list(type));
       module.loadsWithError(3, "In call to function with type " + functionType.q()
           + ": Cannot assign argument of type " + sourceType.q()
@@ -100,7 +100,7 @@ public class AssignmentTest extends TestingContext {
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      Type type = targetType.type();
+      var type = targetType.type();
       FunctionType functionType = new FunctionSType(type, list(type));
       module.loadsWithError(3,
           "In call to function with type " + functionType.q() +

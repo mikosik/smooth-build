@@ -2,22 +2,22 @@ package org.smoothbuild.lang.base.define;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 /**
  * This class and all its subclasses are immutable.
  */
 public class Defined extends NalImpl {
-  private final Type type;
+  private final TypeS type;
   private final ModulePath modulePath;
 
-  public Defined(Type type, ModulePath modulePath, String name, Location location) {
+  public Defined(TypeS type, ModulePath modulePath, String name, Location location) {
     super(name, location);
     this.type = requireNonNull(type);
     this.modulePath = requireNonNull(modulePath);
   }
 
-  public Type type() {
+  public TypeS type() {
     return type;
   }
 

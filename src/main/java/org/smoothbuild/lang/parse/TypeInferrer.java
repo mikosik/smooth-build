@@ -25,10 +25,11 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Typing;
-import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.StructType;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.StructSType;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
@@ -109,7 +110,7 @@ public class TypeInferrer {
         param.setType(typeOfParameter(param));
       }
 
-      private Optional<Type> typeOfParameter(ItemNode param) {
+      private Optional<TypeS> typeOfParameter(ItemNode param) {
         return evaluationTypeOf(param, (target, source) -> {
           if (!typing.isParamAssignable(target, source)) {
             logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + target.q()
@@ -118,7 +119,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<Type> evaluationTypeOfGlobalReferencable(ReferencableNode referencable) {
+      private Optional<TypeS> evaluationTypeOfGlobalReferencable(ReferencableNode referencable) {
         return evaluationTypeOf(referencable, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
             logBuffer.log(parseError(referencable, "`" + referencable.name()
@@ -129,12 +130,12 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<Type> evaluationTypeOf(ReferencableNode referencable,
-          BiConsumer<Type, Type> assignmentChecker) {
+      private Optional<TypeS> evaluationTypeOf(ReferencableNode referencable,
+          BiConsumer<TypeS, TypeS> assignmentChecker) {
         if (referencable.body().isPresent()) {
-          Optional<Type> exprType = referencable.body().get().type();
+          Optional<TypeS> exprType = referencable.body().get().type();
           if (referencable.typeNode().isPresent()) {
-            Optional<Type> type = createType(referencable.typeNode().get());
+            Optional<TypeS> type = createType(referencable.typeNode().get());
             type.ifPresent(target -> exprType.ifPresent(
                 source -> assignmentChecker.accept(target, source)));
             return type;
@@ -158,14 +159,14 @@ public class TypeInferrer {
         type.setType(createType(type));
       }
 
-      private Optional<Type> createType(TypeNode type) {
+      private Optional<TypeS> createType(TypeNode type) {
         if (isVariableName(type.name())) {
           return Optional.of(factory.variable(type.name()));
         } else if (type instanceof ArrayTypeNode array) {
           TypeNode elementType = array.elementType();
           return createType(elementType).map(factory::array);
         } else if (type instanceof FunctionTypeNode function) {
-          Optional<Type> result = createType(function.resultType());
+          Optional<TypeS> result = createType(function.resultType());
           var parameters = Optionals.pullUp(map(function.parameterTypes(), this::createType));
           return optionalFunctionType(result, parameters);
         } else {
@@ -173,8 +174,8 @@ public class TypeInferrer {
         }
       }
 
-      private Optional<Type> optionalFunctionType(
-          Optional<Type> result, Optional<ImmutableList<Type>> parameters) {
+      private Optional<TypeS> optionalFunctionType(
+          Optional<TypeS> result, Optional<ImmutableList<TypeS>> parameters) {
         if (result.isPresent() && parameters.isPresent()) {
           return Optional.of(factory.function(result.get(), parameters.get()));
         } else {
@@ -182,7 +183,7 @@ public class TypeInferrer {
         }
       }
 
-      private Type findType(String name) {
+      private TypeS findType(String name) {
         Defined type = imported.types().get(name);
         if (type != null) {
           return type.type();
@@ -191,7 +192,7 @@ public class TypeInferrer {
         }
       }
 
-      private Type findStruct(String name) {
+      private TypeS findStruct(String name) {
         StructNode structNode = ast.structsMap().get(name);
         if (structNode == null) {
           throw new RuntimeException(
@@ -216,7 +217,7 @@ public class TypeInferrer {
                 logBuffer.log(parseError(expr.location(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               } else {
-                expr.setType(((StructType) t).fields().map().get(expr.fieldName()));
+                expr.setType(((StructSType) t).fields().map().get(expr.fieldName()));
               }
             },
             () -> expr.setType(empty())
@@ -229,24 +230,24 @@ public class TypeInferrer {
         array.setType(findArrayType(array));
       }
 
-      private Optional<Type> findArrayType(ArrayNode array) {
+      private Optional<TypeS> findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
           return Optional.of(factory.array(factory.nothing()));
         }
-        Optional<Type> firstType = expressions.get(0).type();
+        Optional<TypeS> firstType = expressions.get(0).type();
         if (firstType.isEmpty()) {
           return empty();
         }
 
-        Type type = firstType.get();
+        TypeS type = firstType.get();
         for (int i = 1; i < expressions.size(); i++) {
           ExprNode elem = expressions.get(i);
-          Optional<Type> elemType = elem.type();
+          Optional<TypeS> elemType = elem.type();
           if (elemType.isEmpty()) {
             return empty();
           }
-          type = typing.mergeUp(type, elemType.get());
+          type = (TypeS) typing.mergeUp(type, elemType.get());
           if (typing.contains(type, factory.any())) {
             logBuffer.log(parseError(elem.location(),
                 "Array elements at indexes 0 and " + i + " doesn't have common super type."
@@ -262,10 +263,10 @@ public class TypeInferrer {
       public void visitCall(CallNode call) {
         super.visitCall(call);
         ExprNode called = call.function();
-        Optional<Type> calledType = called.type();
+        Optional<TypeS> calledType = called.type();
         if (calledType.isEmpty()) {
           call.setType(empty());
-        } else if (!(calledType.get() instanceof FunctionType functionType)) {
+        } else if (!(calledType.get() instanceof FunctionSType functionType)) {
           logBuffer.log(parseError(call.location(), description(called)
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
@@ -283,7 +284,7 @@ public class TypeInferrer {
               call.setType(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<Type> type = callTypeInferrer.inferCallType(
+              Maybe<TypeS> type = callTypeInferrer.inferCallType(
                   call, functionType.result(), parameters);
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
@@ -300,11 +301,11 @@ public class TypeInferrer {
           } else if (referenced instanceof FunctionNode functionNode) {
             return Optionals.pullUp(map(functionNode.params(), ItemNode::itemSignature));
           } else {
-            return Optional.of(map(((FunctionType) referenced.inferredType().get()).parameters(),
+            return Optional.of(map(((FunctionSType) referenced.inferredType().get()).parameters(),
                 ItemSignature::itemSignature));
           }
         } else {
-          return called.type().map(t -> toItemSignatures(((FunctionType) t).parameters()));
+          return called.type().map(t -> toItemSignatures(((FunctionSType) t).parameters()));
         }
       }
 

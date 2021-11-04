@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
@@ -25,11 +25,11 @@ public class FunctionNode extends ReferencableNode {
     return params;
   }
 
-  public Optional<ImmutableList<Type>> optParameterTypes() {
+  public Optional<ImmutableList<TypeS>> optParameterTypes() {
     return Optionals.pullUp(map(params(), ItemNode::type));
   }
 
-  public Optional<Type> resultType() {
-    return type().map(f -> ((FunctionType) f).result());
+  public Optional<TypeS> resultType() {
+    return type().map(f -> ((FunctionSType) f).result());
   }
 }

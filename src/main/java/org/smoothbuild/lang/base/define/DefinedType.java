@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base.define;
 
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public class DefinedType extends Defined {
-  public DefinedType(Type type, ModulePath modulePath, String name, Location location) {
+  public DefinedType(TypeS type, ModulePath modulePath, String name, Location location) {
     super(type, modulePath, name, location);
   }
 }

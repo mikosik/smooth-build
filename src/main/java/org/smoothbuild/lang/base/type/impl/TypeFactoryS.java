@@ -3,6 +3,8 @@ package org.smoothbuild.lang.base.type.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 
+import java.util.List;
+
 import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -42,7 +44,7 @@ public class TypeFactoryS extends AbstractTypeFactory {
 
   @Override
   public ArraySType array(Type elemType) {
-    return new ArraySType(elemType);
+    return new ArraySType((TypeS) elemType);
   }
 
   @Override
@@ -57,7 +59,7 @@ public class TypeFactoryS extends AbstractTypeFactory {
 
   @Override
   public FunctionSType function(Type result, ImmutableList<? extends Type> parameters) {
-    return new FunctionSType(result, ImmutableList.copyOf(parameters));
+    return new FunctionSType((TypeS) result, ImmutableList.copyOf((List<TypeS>)parameters));
   }
 
   @Override
@@ -77,7 +79,7 @@ public class TypeFactoryS extends AbstractTypeFactory {
 
   @Override
   public StructSType struct(String name, NamedList<? extends Type> fields) {
-    return new StructSType(name, (NamedList<Type>) fields);
+    return new StructSType(name, (NamedList<TypeS>) fields);
   }
 
   @Override

@@ -2,8 +2,8 @@ package org.smoothbuild.lang.base.define;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 
@@ -14,15 +14,15 @@ public abstract class Function extends GlobalReferencable {
   public static final String PARENTHESES = "()";
   private final ImmutableList<Item> parameters;
 
-  public Function(FunctionType type, ModulePath modulePath, String name,
+  public Function(FunctionSType type, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Location location) {
     super(type, modulePath, name, location);
     this.parameters = requireNonNull(parameters);
   }
 
   @Override
-  public FunctionType type() {
-    return (FunctionType) super.type();
+  public FunctionSType type() {
+    return (FunctionSType) super.type();
   }
 
   @Override
@@ -30,7 +30,7 @@ public abstract class Function extends GlobalReferencable {
     return name() + PARENTHESES;
   }
 
-  public Type resultType() {
+  public TypeS resultType() {
     return type().result();
   }
 
@@ -39,7 +39,7 @@ public abstract class Function extends GlobalReferencable {
   }
 
   @Override
-  public Type evaluationType() {
+  public TypeS evaluationType() {
     return resultType();
   }
 

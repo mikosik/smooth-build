@@ -25,7 +25,7 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.util.collect.NamedList;
@@ -62,7 +62,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Optional<ArgNode>> assignedArgs(
-      CallNode call, List<ItemSignature> parameters, NamedList<Type> namedTypes) {
+      CallNode call, List<ItemSignature> parameters, NamedList<TypeS> namedTypes) {
     List<ArgNode> args = call.args();
     List<Optional<ArgNode>> assignedList =
         new ArrayList<>(nCopies(parameters.size(), Optional.empty()));
@@ -98,7 +98,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findUnknownParameterNameErrors(
-      CallNode call, NamedList<Type> namedTypes, List<ItemSignature> parameters) {
+      CallNode call, NamedList<TypeS> namedTypes, List<ItemSignature> parameters) {
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)

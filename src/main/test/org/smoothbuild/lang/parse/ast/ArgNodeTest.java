@@ -10,7 +10,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public class ArgNodeTest {
   @Test
@@ -64,7 +64,7 @@ public class ArgNodeTest {
         .isEqualTo("String:<nameless>");
   }
 
-  private static ExprNode expr(Type type) {
+  private static ExprNode expr(TypeS type) {
     ExprNode expr = mock(ExprNode.class);
     when(expr.type()).thenReturn(Optional.of(type));
     return expr;

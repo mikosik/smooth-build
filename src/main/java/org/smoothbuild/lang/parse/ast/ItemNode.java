@@ -10,7 +10,7 @@ import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.like.ReferencableLike;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.Named;
 
 public class ItemNode extends ReferencableNode implements ReferencableLike {
@@ -21,7 +21,7 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
   }
 
   @Override
-  public void setType(Optional<Type> type) {
+  public void setType(Optional<TypeS> type) {
     super.setType(type);
     signature = type()
         .map(t -> new ItemSignature(t, Optional.of(name()), body().flatMap(Node::type)));
@@ -32,7 +32,7 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
   }
 
   @Override
-  public Optional<Type> inferredType() {
+  public Optional<TypeS> inferredType() {
     return type();
   }
 
@@ -41,7 +41,7 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
     return new Item(type().get(), path, name(), Optional.empty(), location());
   }
 
-  public Named<Type> toNamedType() {
+  public Named<TypeS> toNamedType() {
     return named(name(), type().get());
   }
 }

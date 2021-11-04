@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.impl.ArraySType;
 
 import com.google.common.collect.ImmutableList;
 
 public record ArrayLiteralExpression(
-    ArrayType type, ImmutableList<Expression> elements, Location location)
+    ArraySType type, ImmutableList<Expression> elements, Location location)
     implements Expression {
 }

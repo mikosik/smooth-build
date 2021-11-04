@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
@@ -20,7 +20,7 @@ public class Item extends Referencable {
   private final Optional<Expression> defaultValue;
   private final ItemSignature signature;
 
-  public Item(Type type, ModulePath modulePath, String name, Optional<Expression> defaultValue,
+  public Item(TypeS type, ModulePath modulePath, String name, Optional<Expression> defaultValue,
       Location location) {
     super(type, modulePath, name, location);
     this.defaultValue = defaultValue;
@@ -48,7 +48,7 @@ public class Item extends Referencable {
     return map(items, Item::signature);
   }
 
-  public static ImmutableList<Type> toTypes(List<Item> items) {
+  public static ImmutableList<TypeS> toTypes(List<Item> items) {
     return map(items, Item::type);
   }
 

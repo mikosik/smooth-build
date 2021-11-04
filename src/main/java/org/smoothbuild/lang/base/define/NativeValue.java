@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.Annotation;
 
 /**
@@ -11,7 +11,7 @@ import org.smoothbuild.lang.expr.Annotation;
 public class NativeValue extends Value implements NativeEvaluable {
   private final Annotation annotation;
 
-  public NativeValue(Type type, ModulePath modulePath, String name, Annotation annotation,
+  public NativeValue(TypeS type, ModulePath modulePath, String name, Annotation annotation,
       Location location) {
     super(type, modulePath, name, location);
     this.annotation = annotation;

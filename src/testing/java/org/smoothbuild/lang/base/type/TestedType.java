@@ -19,9 +19,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.NothingType;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -191,17 +191,17 @@ public class TestedType {
     );
   }
 
-  private final Type type;
+  private final TypeS type;
   private final String literal;
   private final Object value;
   private final Set<String> typeDeclarations;
   private final Set<String> allDeclarations;
 
-  public TestedType(Type type, String literal, Object value) {
+  public TestedType(TypeS type, String literal, Object value) {
     this(type, literal, value, Set.of(), Set.of());
   }
 
-  public TestedType(Type type, String literal, Object value, Set<String> typeDeclarations,
+  public TestedType(TypeS type, String literal, Object value, Set<String> typeDeclarations,
       Set<String> allDeclarations) {
     this.type = type;
     this.literal = literal;
@@ -216,7 +216,7 @@ public class TestedType {
         .addAll(typeDeclarations).addAll(instanceDeclarations).build();
   }
 
-  public Type type() {
+  public TypeS type() {
     return type;
   }
 
@@ -338,7 +338,7 @@ public class TestedType {
     public final ImmutableList<TestedType> parameters;
 
     public TestedFunctionType(TestedType resultType, ImmutableList<TestedType> parameters,
-        FunctionType type, String literal,
+        FunctionSType type, String literal,
         Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.resultType = resultType;
@@ -363,7 +363,7 @@ public class TestedType {
   public static class TestedArrayType extends TestedType {
     public final TestedType elemType;
 
-    public TestedArrayType(TestedType elemType, Type type, String literal,
+    public TestedArrayType(TestedType elemType, TypeS type, String literal,
         Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.elemType = elemType;

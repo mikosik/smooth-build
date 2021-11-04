@@ -25,7 +25,7 @@ import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.define.Struct;
-import org.smoothbuild.lang.base.type.api.StructType;
+import org.smoothbuild.lang.base.type.impl.StructSType;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
@@ -83,7 +83,7 @@ public class ModuleLoader {
   }
 
   private Struct loadStruct(ModulePath path, StructNode struct) {
-    var type = (StructType) struct.type().get();
+    var type = (StructSType) struct.type().get();
     var name = struct.name();
     var items = map(struct.fields(), f -> f.toItem(path));
     var location = struct.location();

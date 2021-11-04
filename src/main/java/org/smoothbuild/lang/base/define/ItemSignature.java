@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
@@ -18,31 +18,31 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public class ItemSignature extends Named<Type> {
-  private final Optional<Type> defaultValueType;
+public class ItemSignature extends Named<TypeS> {
+  private final Optional<TypeS> defaultValueType;
 
-  public ItemSignature(Type type, String name, Optional<Type> defaultValueType) {
+  public ItemSignature(TypeS type, String name, Optional<TypeS> defaultValueType) {
     this(type, Optional.of(name), defaultValueType);
   }
 
-  public ItemSignature(Type type, Optional<String> name, Optional<Type> defaultValueType) {
+  public ItemSignature(TypeS type, Optional<String> name, Optional<TypeS> defaultValueType) {
     super(name, type);
     this.defaultValueType = requireNonNull(defaultValueType);
   }
 
-  public static ItemSignature itemSignature(Type type) {
+  public static ItemSignature itemSignature(TypeS type) {
     return new ItemSignature(type, Optional.empty(), Optional.empty());
   }
 
-  public static ImmutableList<ItemSignature> toItemSignatures(List<? extends Type> types) {
+  public static ImmutableList<ItemSignature> toItemSignatures(List<? extends TypeS> types) {
     return map(types, ItemSignature::itemSignature);
   }
 
-  public Type type() {
+  public TypeS type() {
     return object();
   }
 
-  public Optional<Type> defaultValueType() {
+  public Optional<TypeS> defaultValueType() {
     return defaultValueType;
   }
 
@@ -56,7 +56,7 @@ public class ItemSignature extends Named<Type> {
     return typePart + namePart;
   }
 
-  public Named<Type> toNamedType() {
+  public Named<TypeS> toNamedType() {
     return named(name(), type());
   }
 

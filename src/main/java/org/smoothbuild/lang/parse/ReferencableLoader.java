@@ -20,11 +20,11 @@ import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
-import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.StructType;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.ArraySType;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.StructSType;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -71,9 +71,9 @@ public class ReferencableLoader {
   }
 
   private Value loadValue(ModulePath path, ReferencableNode valueNode) {
-    Type type = valueNode.type().get();
-    String name = valueNode.name();
-    Location location = valueNode.location();
+    var type = valueNode.type().get();
+    var name = valueNode.name();
+    var location = valueNode.location();
     if (valueNode.annotation().isPresent()) {
       return new NativeValue(type, path, name, loadAnnotation(valueNode.annotation().get()), location);
     } else {
@@ -84,11 +84,11 @@ public class ReferencableLoader {
   }
 
   private Function loadFunction(ModulePath path, RealFuncNode realFuncNode) {
-    ImmutableList<Item> parameters = loadParameters(path, realFuncNode);
-    Type resultType = realFuncNode.resultType().get();
+    var parameters = loadParameters(path, realFuncNode);
+    var resultType = realFuncNode.resultType().get();
     String name = realFuncNode.name();
     Location location = realFuncNode.location();
-    FunctionType type = factory.function(resultType, toTypes(parameters));
+    FunctionSType type = factory.function(resultType, toTypes(parameters));
     if (realFuncNode.annotation().isPresent()) {
       return new NativeFunction(type,
           path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
@@ -112,19 +112,17 @@ public class ReferencableLoader {
 
   private class ExpressionLoader {
     private final ModulePath modulePath;
-    private final ImmutableMap<String, Type> functionParameters;
+    private final ImmutableMap<String, TypeS> functionParameters;
 
-    public ExpressionLoader(ModulePath modulePath,
-        ImmutableMap<String, Type> functionParameters) {
+    public ExpressionLoader(ModulePath modulePath, ImmutableMap<String, TypeS> functionParameters) {
       this.modulePath = modulePath;
       this.functionParameters = functionParameters;
     }
 
     public Item createParameter(ItemNode param) {
-      Type type = param.typeNode().get().type().get();
-      String name = param.name();
-      Optional<Expression> defaultArgument = param.body()
-          .map(this::createExpression);
+      var type = param.typeNode().get().type().get();
+      var name = param.name();
+      var defaultArgument = param.body().map(this::createExpression);
       return new Item(type, modulePath, name, defaultArgument, param.location());
     }
 
@@ -154,7 +152,7 @@ public class ReferencableLoader {
     }
 
     private Expression createArrayLiteral(ArrayNode array) {
-      ArrayType type = (ArrayType) array.type().get();
+      var type = (ArraySType) array.type().get();
       ImmutableList<Expression> elements = map(array.elements(), this::createExpression);
       return new ArrayLiteralExpression(type, elements, array.location());
     }
@@ -201,9 +199,9 @@ public class ReferencableLoader {
     }
 
     private Expression createSelect(SelectNode selectNode) {
-      StructType structType = (StructType) selectNode.expr().type().get();
-      int index = structType.fields().indexMap().get(selectNode.fieldName());
-      Type fieldType = structType.fields().getObject(index);
+      var structType = (StructSType) selectNode.expr().type().get();
+      var index = structType.fields().indexMap().get(selectNode.fieldName());
+      var fieldType = structType.fields().getObject(index);
       Expression expression = createExpression(selectNode.expr());
       return new SelectExpression(fieldType, index, expression, selectNode.location());
     }

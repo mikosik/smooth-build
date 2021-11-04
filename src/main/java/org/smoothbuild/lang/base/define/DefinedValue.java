@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.Expression;
 
 /**
@@ -11,7 +11,7 @@ import org.smoothbuild.lang.expr.Expression;
 public class DefinedValue extends Value implements DefinedEvaluable {
   private final Expression body;
 
-  public DefinedValue(Type type, ModulePath modulePath, String name, Expression body,
+  public DefinedValue(TypeS type, ModulePath modulePath, String name, Expression body,
       Location location) {
     super(type, modulePath, name, location);
     this.body = body;

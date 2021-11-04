@@ -3,22 +3,21 @@ package org.smoothbuild.lang.base.type.impl;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
 public class ArraySType extends TypeS implements ArrayType {
-  private final Type elemType;
+  private final TypeS elemType;
 
-  public ArraySType(Type elemType) {
+  public ArraySType(TypeS elemType) {
     super(TypeNames.arrayTypeName(elemType), elemType.variables());
     this.elemType = requireNonNull(elemType);
   }
 
   @Override
-  public Type element() {
+  public TypeS element() {
     return elemType;
   }
 

@@ -13,7 +13,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.testing.EqualsTester;
 
@@ -52,7 +52,7 @@ public class ItemSignatureTest {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(new ItemSignature(STRING, "equal", Optional.of(STRING)));
     tester.addEqualityGroup(new ItemSignature(STRING, "equal", Optional.empty()));
-    for (Type type : list(BOOL, STRING, a(STRING), BLOB, NOTHING, PERSON)) {
+    for (TypeS type : list(BOOL, STRING, a(STRING), BLOB, NOTHING, PERSON)) {
       tester.addEqualityGroup(new ItemSignature(type, name, Optional.of(STRING)));
       tester.addEqualityGroup(new ItemSignature(type, "name2", Optional.of(STRING)));
     }

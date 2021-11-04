@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.like.ReferencableLike;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public class ReferencableNode extends NamedNode implements ReferencableLike {
   private final Optional<TypeNode> typeNode;
@@ -32,7 +32,7 @@ public class ReferencableNode extends NamedNode implements ReferencableLike {
   }
 
   @Override
-  public Optional<Type> inferredType() {
+  public Optional<TypeS> inferredType() {
     return type();
   }
 

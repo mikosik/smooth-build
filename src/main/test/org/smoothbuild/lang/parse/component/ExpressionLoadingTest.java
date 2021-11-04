@@ -130,7 +130,7 @@ public class ExpressionLoadingTest extends TestingContext {
 
     @Test
     public void with_constructor_reference_and_argument() {
-      StructType struct = structST("MyStruct", namedList(list(named("field", STRING))));
+      var struct = structST("MyStruct", namedList(list(named("field", STRING))));
       module("""
           MyStruct {
             String field
@@ -169,7 +169,7 @@ public class ExpressionLoadingTest extends TestingContext {
 
   @Test
   public void select_expression() {
-    StructType myStruct = structST("MyStruct", namedList(list(named("field", STRING))));
+    var myStruct = structST("MyStruct", namedList(list(named("field", STRING))));
     module("""
           MyStruct {
             String field,

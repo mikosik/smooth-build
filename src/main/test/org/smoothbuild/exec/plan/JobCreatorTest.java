@@ -20,6 +20,7 @@ import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.TestingLocation;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
@@ -112,7 +113,7 @@ public class JobCreatorTest extends TestingContext {
 
   private static class MyExpression implements Expression {
     @Override
-    public Type type() {
+    public TypeS type() {
       return STRING;
     }
 
