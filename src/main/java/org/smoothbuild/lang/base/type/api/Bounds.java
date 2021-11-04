@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type.api;
 
-public record Bounds(Type lower, Type upper) {
-  public Type get(Sides.Side side) {
+public record Bounds<T extends Type>(T lower, T upper) {
+  public T get(Sides.Side<T> side) {
     return side.dispatch(() -> lower, () -> upper);
   }
 }

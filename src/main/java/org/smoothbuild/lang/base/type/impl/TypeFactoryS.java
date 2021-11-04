@@ -19,10 +19,10 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   private static final NothingTypeS NOTHING = new NothingTypeS();
   private static final StringTypeS STRING = new StringTypeS();
 
-  private final Sides sides;
+  private final Sides<TypeS> sides;
 
   public TypeFactoryS() {
-    this.sides = new Sides(any(), nothing());
+    this.sides = new Sides<>(any(), nothing());
   }
   /**
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
@@ -50,12 +50,12 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   }
 
   @Override
-  public Side upper() {
+  public Side<TypeS> upper() {
     return sides.upper();
   }
 
   @Override
-  public Side lower() {
+  public Side<TypeS> lower() {
     return sides.lower();
   }
 

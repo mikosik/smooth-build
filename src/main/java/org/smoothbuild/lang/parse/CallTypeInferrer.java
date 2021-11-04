@@ -53,7 +53,7 @@ public class CallTypeInferrer {
         logBuffer.logAll(variableProblems);
         return maybeLogs(logBuffer);
       }
-      TypeS mapped = (TypeS) typing.mapVariables(resultType, boundedVariables, factory.lower());
+      TypeS mapped = typing.mapVariables(resultType, boundedVariables, factory.lower());
       return maybeValueAndLogs(mapped, logBuffer);
     }
     return maybeLogs(logBuffer);
@@ -101,9 +101,9 @@ public class CallTypeInferrer {
   }
 
   private ImmutableList<Log> findVariableProblems(
-      CallNode call, BoundsMap boundedVariables) {
+      CallNode call, BoundsMap<TypeS> boundedVariables) {
     return boundedVariables.map().values().stream()
-        .filter(b -> typing.contains((TypeS) b.bounds().lower(), factory.any()))
+        .filter(b -> typing.contains(b.bounds().lower(), factory.any()))
         .map(b -> parseError(call, "Cannot infer actual type for type variable "
             + b.variable().q() + "."))
         .collect(toImmutableList());

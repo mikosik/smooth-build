@@ -20,16 +20,16 @@ import com.google.common.collect.ImmutableList;
 
 public interface TypeFactoryO extends TypeFactory<TypeV> {
   @Override
-  public Bounds unbounded();
+  public Bounds<TypeV> unbounded();
 
   @Override
-  public Bounds oneSideBound(Side side, TypeV type);
+  public Bounds<TypeV> oneSideBound(Side<TypeV> side, TypeV type);
 
   @Override
-  public Side upper();
+  public Side<TypeV> upper();
 
   @Override
-  public Side lower();
+  public Side<TypeV> lower();
 
   @Override
   public AnyTypeO any();

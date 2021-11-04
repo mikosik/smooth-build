@@ -107,7 +107,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   private final NothingTypeO nothing;
   private final StringTypeO string;
   private final NativeMethodTypeO nativeMethod;
-  private final Sides sides;
+  private final Sides<TypeV> sides;
 
   public ObjTypeDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -126,16 +126,16 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     } catch (HashedDbException e) {
       throw new ObjDbException(e);
     }
-    this.sides = new Sides(this.any, this.nothing);
+    this.sides = new Sides<>(this.any, this.nothing);
   }
 
   @Override
-  public Side upper() {
+  public Side<TypeV> upper() {
     return sides.upper();
   }
 
   @Override
-  public Side lower() {
+  public Side<TypeV> lower() {
     return sides.lower();
   }
 

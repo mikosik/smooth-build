@@ -297,7 +297,7 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("mapVariables_test_data")
-  public void mapVariables(TypeS type, BoundsMap boundsMap, Type expected) {
+  public void mapVariables(TypeS type, BoundsMap<TypeS> boundsMap, Type expected) {
     assertThat(TYPING.mapVariables(type, boundsMap, LOWER))
         .isEqualTo(expected);
   }

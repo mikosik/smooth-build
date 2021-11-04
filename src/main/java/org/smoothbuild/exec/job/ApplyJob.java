@@ -20,12 +20,12 @@ import org.smoothbuild.util.concurrent.PromisedValue;
 
 public class ApplyJob extends AbstractJob {
   private final List<Job> arguments;
-  private final BoundsMap variables;
+  private final BoundsMap<TypeS> variables;
   private final Scope<Job> scope;
   private final JobCreator jobCreator;
 
   public ApplyJob(TypeS type, Job referencable, List<Job> arguments, Location location,
-      BoundsMap variables, Scope<Job> scope, JobCreator jobCreator) {
+      BoundsMap<TypeS> variables, Scope<Job> scope, JobCreator jobCreator) {
     super(type, concat(referencable, arguments), new NalImpl("building-evaluation", location));
     this.arguments = arguments;
     this.variables = variables;

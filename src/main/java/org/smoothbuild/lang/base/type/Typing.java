@@ -51,28 +51,28 @@ public class Typing<T extends Type> {
         && areConsistent(inferVariableBounds(target, source, factory.lower()));
   }
 
-  public boolean inequal(Type typeA, Type that, Side side) {
+  public boolean inequal(Type typeA, Type that, Side<T> side) {
     return inequalImpl(typeA, that, side, this::inequal);
   }
 
-  public boolean inequalParam(Type typeA, Type that, Side side) {
+  public boolean inequalParam(Type typeA, Type that, Side<T> side) {
     return (typeA instanceof Variable)
         || inequalImpl(typeA, that, side, this::inequalParam);
   }
 
-  private boolean inequalImpl(Type typeA, Type that, Side side,
-      InequalFunction inequalityFunction) {
+  private boolean inequalImpl(Type typeA, Type that, Side<T> side,
+      InequalFunction<T> inequalityFunction) {
     return inequalByEdgeCases(typeA, that, side)
         || inequalByConstruction(typeA, that, side, inequalityFunction);
   }
 
-  private boolean inequalByEdgeCases(Type typeA, Type that, Side side) {
+  private boolean inequalByEdgeCases(Type typeA, Type that, Side<T> side) {
     return that.equals(side.edge())
         || typeA.equals(side.reversed().edge());
   }
 
-  private boolean inequalByConstruction(Type typeA, Type that, Side side,
-      InequalFunction isInequal) {
+  private boolean inequalByConstruction(Type typeA, Type that, Side<T> side,
+      InequalFunction<T> isInequal) {
     if (typeA instanceof ArrayType arrayA) {
       if (that instanceof ArrayType arrayB) {
         return isInequal.apply(arrayA.element(), arrayB.element(), side);
@@ -91,63 +91,63 @@ public class Typing<T extends Type> {
     return false;
   }
 
-  public static interface InequalFunction {
-    public boolean apply(Type typeA, Type typeB, Side side);
+  public static interface InequalFunction<T> {
+    public boolean apply(Type typeA, Type typeB, Side<T> side);
   }
 
-  private boolean areConsistent(BoundsMap boundsMap) {
+  private boolean areConsistent(BoundsMap<T> boundsMap) {
     return boundsMap.map().values().stream()
-        .allMatch(b -> isAssignable((T) b.bounds().upper(), (T) b.bounds().lower()));
+        .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public BoundsMap inferVariableBoundsInCall(
+  public BoundsMap<T> inferVariableBoundsInCall(
       T resultTypes, List<? extends T> parameterTypes, List<? extends T> argumentTypes) {
-    var result = new HashMap<Variable, Bounded>();
+    var result = new HashMap<Variable, Bounded<T>>();
     inferVariableBounds(parameterTypes, argumentTypes, factory.lower(), result);
     resultTypes.variables().forEach(v -> result.merge(
-        v, new Bounded(v, factory.unbounded()), this::merge));
-    return new BoundsMap(ImmutableMap.copyOf(result));
+        v, new Bounded<>(v, factory.unbounded()), this::merge));
+    return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
-  public BoundsMap inferVariableBounds(List<? extends T> typesA, List<? extends T> typesB,
-      Side side) {
-    var result = new HashMap<Variable, Bounded>();
+  public BoundsMap<T> inferVariableBounds(List<? extends T> typesA, List<? extends T> typesB,
+      Side<T> side) {
+    var result = new HashMap<Variable, Bounded<T>>();
     inferVariableBounds(typesA, typesB, side, result);
-    return new BoundsMap(ImmutableMap.copyOf(result));
+    return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
   private void inferVariableBounds(List<? extends T> typesA, List<? extends T> typesB,
-      Side side, Map<Variable, Bounded> result) {
+      Side<T> side, Map<Variable, Bounded<T>> result) {
     checkArgument(typesA.size() == typesB.size());
     for (int i = 0; i < typesA.size(); i++) {
       inferImpl(typesA.get(i), typesB.get(i), side, result);
     }
   }
 
-  public BoundsMap inferVariableBounds(T typeA, T typeB, Side side) {
-    var result = new HashMap<Variable, Bounded>();
+  public BoundsMap<T> inferVariableBounds(T typeA, T typeB, Side<T> side) {
+    var result = new HashMap<Variable, Bounded<T>>();
     inferImpl(typeA, typeB, side, result);
-    return new BoundsMap(ImmutableMap.copyOf(result));
+    return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
-  private void inferImpl(T typeA, T typeB, Side side, Map<Variable, Bounded> result) {
+  private void inferImpl(T typeA, T typeB, Side<T> side, Map<Variable, Bounded<T>> result) {
     if (typeA instanceof Variable variable) {
-      Bounded bounded = new Bounded(variable, factory.oneSideBound(side, typeB));
+      var bounded = new Bounded<>(variable, factory.oneSideBound(side, typeB));
       result.merge(variable, bounded, this::merge);
     } else if (typeA instanceof ArrayType arrayA) {
       if (typeB.equals(side.edge())) {
-        inferImpl((T) arrayA.element(), (T) side.edge(), side, result);
+        inferImpl((T) arrayA.element(), side.edge(), side, result);
       } else if (typeB instanceof ArrayType arrayB) {
         inferImpl((T) arrayA.element(), (T) arrayB.element(), side, result);
       }
     } else if (typeA instanceof FunctionType functionA) {
       if (typeB.equals(side.edge())) {
-        Side reversed = side.reversed();
-        inferImpl((T) functionA.result(), (T) side.edge(), side, result);
-        functionA.parameters().forEach(t -> inferImpl((T) t, (T) reversed.edge(), reversed, result));
+        var reversed = side.reversed();
+        inferImpl((T) functionA.result(), side.edge(), side, result);
+        functionA.parameters().forEach(t -> inferImpl((T) t, reversed.edge(), reversed, result));
       } else if (typeB instanceof FunctionType functionB
           && functionA.parameters().size() == functionB.parameters().size()) {
-        Side reversed = side.reversed();
+        var reversed = side.reversed();
         inferImpl((T) functionA.result(), (T) functionB.result(), side, result);
         for (int i = 0; i < functionA.parameters().size(); i++) {
           Type thisParamType = functionA.parameters().get(i);
@@ -158,7 +158,7 @@ public class Typing<T extends Type> {
     }
   }
 
-  public T mapVariables(T type, BoundsMap boundsMap, Side side) {
+  public T mapVariables(T type, BoundsMap<T> boundsMap, Side<T> side) {
     if (type.isPolytype()) {
       if (type instanceof Variable variable) {
         return (T) boundsMap.map().get(variable).bounds().get(side);
@@ -170,7 +170,7 @@ public class Typing<T extends Type> {
         ImmutableList<T> parametersM = map(
             functionType.parameters(),
             p -> mapVariables((T) p, boundsMap, side.reversed()));
-        return (T) createFunctionType(functionType, (T) resultTypeM, parametersM);
+        return (T) createFunctionType(functionType, resultTypeM, parametersM);
       }
     }
     return type;
@@ -184,7 +184,7 @@ public class Typing<T extends Type> {
     return merge(typeA, typeB, factory.lower());
   }
 
-  public T merge(T typeA, T typeB, Side direction) {
+  public T merge(T typeA, T typeB, Side<T> direction) {
     Type reversedEdge = direction.reversed().edge();
     if (reversedEdge.equals(typeB)) {
       return typeA;
@@ -221,17 +221,17 @@ public class Typing<T extends Type> {
         }
       }
     }
-    return (T) direction.edge();
+    return direction.edge();
   }
 
-  public Bounded merge(Bounded a, Bounded b) {
-    return new Bounded(a.variable(), merge(a.bounds(), b.bounds()));
+  public Bounded<T> merge(Bounded<T> a, Bounded<T> b) {
+    return new Bounded<>(a.variable(), merge(a.bounds(), b.bounds()));
   }
 
-  public Bounds merge(Bounds boundsA, Bounds boundsB) {
-    return new Bounds(
-        merge((T) boundsA.lower(), (T) boundsB.lower(), factory.upper()),
-        merge((T) boundsA.upper(), (T) boundsB.upper(), factory.lower()));
+  public Bounds<T> merge(Bounds<T> boundsA, Bounds<T> boundsB) {
+    return new Bounds<>(
+        merge(boundsA.lower(), boundsB.lower(), factory.upper()),
+        merge(boundsA.upper(), boundsB.upper(), factory.lower()));
   }
 
   private ArrayType createArrayType(ArrayType type, T elemType) {

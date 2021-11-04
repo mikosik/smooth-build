@@ -6,13 +6,13 @@ import org.smoothbuild.util.collect.NamedList;
 import com.google.common.collect.ImmutableList;
 
 public interface TypeFactory<T extends Type> {
-  public Bounds unbounded();
+  public Bounds<T> unbounded();
 
-  public Bounds oneSideBound(Side side, T type);
+  public Bounds<T> oneSideBound(Side<T> side, T type);
 
-  public Side upper();
+  public Side<T> upper();
 
-  public Side lower();
+  public Side<T> lower();
 
   public AnyType any();
 

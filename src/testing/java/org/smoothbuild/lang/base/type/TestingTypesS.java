@@ -50,8 +50,8 @@ public class TestingTypesS {
   public static final VariableS C = variable("C");
   public static final VariableS D = variable("D");
   public static final VariableS X = variable("X");
-  public static final Side LOWER = FACTORY.lower();
-  public static final Side UPPER = FACTORY.upper();
+  public static final Side<TypeS> LOWER = FACTORY.lower();
+  public static final Side<TypeS> UPPER = FACTORY.upper();
 
   public static final ImmutableList<TypeS> ELEMENTARY_TYPES = ImmutableList.<TypeS>builder()
       .addAll(BASE_TYPES)
@@ -107,21 +107,21 @@ public class TestingTypesS {
     return FACTORY.struct(name, fields);
   }
 
-  public static Bounds oneSideBound(Side side, TypeS type) {
+  public static Bounds<TypeS> oneSideBound(Side<TypeS> side, TypeS type) {
     return FACTORY.oneSideBound(side, type);
   }
 
-  public static BoundsMap bm(
-      VariableS var1, Side side1, TypeS bound1,
-      VariableS var2, Side side2, TypeS bound2) {
+  public static BoundsMap<TypeS> bm(
+      VariableS var1, Side<TypeS> side1, TypeS bound1,
+      VariableS var2, Side<TypeS> side2, TypeS bound2) {
     return CONTEXT.bmST(var1, side1, bound1, var2, side2, bound2);
   }
 
-  public static BoundsMap bm(VariableS var, Side side, TypeS bound) {
+  public static BoundsMap<TypeS> bm(VariableS var, Side<TypeS> side, TypeS bound) {
     return CONTEXT.bmST(var, side, bound);
   }
 
-  public static BoundsMap bm() {
+  public static BoundsMap<TypeS> bm() {
     return CONTEXT.bmST();
   }
 }

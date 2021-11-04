@@ -81,7 +81,6 @@ import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.lang.base.type.impl.AnyTypeS;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
@@ -342,11 +341,11 @@ public class TestingContext {
     return typeFactoryO().variable(name);
   }
 
-  public Side lowerOT() {
+  public Side<TypeV> lowerOT() {
     return typeFactoryO().lower();
   }
 
-  public Side upperOT() {
+  public Side<TypeV> upperOT() {
     return typeFactoryO().upper();
   }
 
@@ -635,38 +634,38 @@ public class TestingContext {
     return typeFactoryS().variable(name);
   }
 
-  public Side lowerST() {
+  public Side<TypeS> lowerST() {
     return typeFactoryS().lower();
   }
 
-  public Side upperST() {
+  public Side<TypeS> upperST() {
     return typeFactoryS().upper();
   }
 
-  public BoundsMap bmST(
-      VariableS var1, Side side1, TypeS bound1,
-      VariableS var2, Side side2, TypeS bound2) {
-    Bounds bounds1 = oneSideBoundST(side1, bound1);
-    Bounds bounds2 = oneSideBoundST(side2, bound2);
+  public BoundsMap<TypeS> bmST(
+      VariableS var1, Side<TypeS> side1, TypeS bound1,
+      VariableS var2, Side<TypeS> side2, TypeS bound2) {
+    Bounds<TypeS> bounds1 = oneSideBoundST(side1, bound1);
+    Bounds<TypeS> bounds2 = oneSideBoundST(side2, bound2);
     if (var1.equals(var2)) {
-      return boundsMap(new Bounded(var1, typingS().merge(bounds1, bounds2)));
+      return boundsMap(new Bounded<>(var1, typingS().merge(bounds1, bounds2)));
     } else {
-      return new BoundsMap(ImmutableMap.of(
-          var1, new Bounded(var1, bounds1),
-          var2, new Bounded(var2, bounds2)
+      return new BoundsMap<>(ImmutableMap.of(
+          var1, new Bounded<>(var1, bounds1),
+          var2, new Bounded<>(var2, bounds2)
       ));
     }
   }
 
-  public BoundsMap bmST(Variable var, Side side, TypeS bound) {
-    return boundsMap(new Bounded(var, oneSideBoundST(side, bound)));
+  public BoundsMap<TypeS> bmST(VariableS var, Side<TypeS> side, TypeS bound) {
+    return boundsMap(new Bounded<>(var, oneSideBoundST(side, bound)));
   }
 
-  public BoundsMap bmST() {
+  public BoundsMap<TypeS> bmST() {
     return boundsMap();
   }
 
-  public Bounds oneSideBoundST(Side side, TypeS type) {
+  public Bounds<TypeS> oneSideBoundST(Side<TypeS> side, TypeS type) {
     return typeFactoryS().oneSideBound(side, type);
   }
 

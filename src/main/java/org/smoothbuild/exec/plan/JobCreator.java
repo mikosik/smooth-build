@@ -180,7 +180,7 @@ public class JobCreator {
   }
 
   private Job callJob(Scope<Job> scope, Job function, List<Job> arguments,
-      Location location, BoundsMap variables, boolean eager) {
+      Location location, BoundsMap<TypeS> variables, boolean eager) {
     if (eager) {
       return callEagerJob(scope, function, arguments, location, variables);
     } else {
@@ -198,14 +198,14 @@ public class JobCreator {
   }
 
   private Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
-      Location location, BoundsMap variables) {
+      Location location, BoundsMap<TypeS> variables) {
     var functionType = (FunctionTypeS) function.type();
     var actualResultType = typing.mapVariables(functionType.result(), variables, factory.lower());
     return new ApplyJob(
         actualResultType, function, arguments, location, variables, scope, JobCreator.this);
   }
 
-  private BoundsMap inferVariablesInFunctionCall(Job function, List<Job> arguments) {
+  private BoundsMap<TypeS> inferVariablesInFunctionCall(Job function, List<Job> arguments) {
     var functionType = (FunctionTypeS) function.type();
     var argumentTypes = map(arguments, Job::type);
     return typing.inferVariableBounds(functionType.parameters(), argumentTypes, factory.lower());
@@ -361,7 +361,7 @@ public class JobCreator {
 
   // helper methods
 
-  public Job evaluateLambdaEagerJob(Scope<Job> scope, BoundsMap variables,
+  public Job evaluateLambdaEagerJob(Scope<Job> scope, BoundsMap<TypeS> variables,
       TypeS actualResultType, String name, List<Job> arguments, Location location) {
     var referencable = definitions.referencables().get(name);
     if (referencable instanceof Value value) {
@@ -434,7 +434,7 @@ public class JobCreator {
   }
 
   private Job callNativeFunctionEagerJob(Scope<Job> scope, List<Job> arguments,
-      NativeFunction function, Annotation annotation, BoundsMap variables,
+      NativeFunction function, Annotation annotation, BoundsMap<TypeS> variables,
       TypeS actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(
         methodLoader, toOTypeConverter.visit(actualResultType), function, annotation.isPure());
@@ -447,7 +447,7 @@ public class JobCreator {
   }
 
   private ImmutableList<Job> convertedArgumentEagerJob(
-      List<Job> arguments, NativeFunction function, BoundsMap variables) {
+      List<Job> arguments, NativeFunction function, BoundsMap<TypeS> variables) {
     var actualTypes = map(
         function.type().parameters(),
         t -> typing.mapVariables(t, variables, factory.lower()));
