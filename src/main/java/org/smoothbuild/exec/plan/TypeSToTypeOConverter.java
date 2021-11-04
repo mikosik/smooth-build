@@ -25,11 +25,11 @@ import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 
-public class STypeToOTypeConverter {
+public class TypeSToTypeOConverter {
   private final ObjectFactory objectFactory;
 
   @Inject
-  public STypeToOTypeConverter(ObjectFactory objectFactory) {
+  public TypeSToTypeOConverter(ObjectFactory objectFactory) {
     this.objectFactory = objectFactory;
   }
 

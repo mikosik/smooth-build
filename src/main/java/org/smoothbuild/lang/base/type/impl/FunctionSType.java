@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class FunctionSType extends SType implements FunctionType {
+public class FunctionSType extends SmoothType implements FunctionType {
   private final Type result;
   private final ImmutableList<Type> parameters;
 

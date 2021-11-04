@@ -73,20 +73,20 @@ import com.google.common.collect.ImmutableMap;
 
 public class JobCreator {
   private final Definitions definitions;
-  private final STypeToOTypeConverter toOTypeConverter;
+  private final TypeSToTypeOConverter toOTypeConverter;
   private final MethodLoader methodLoader;
   private final TypeFactoryS factory;
   private final Typing typing;
   private final Map<Class<?>, Handler<?>> map;
 
   @Inject
-  public JobCreator(Definitions definitions, STypeToOTypeConverter toOTypeConverter,
+  public JobCreator(Definitions definitions, TypeSToTypeOConverter toOTypeConverter,
       MethodLoader methodLoader, TypeFactoryS factory, Typing typing) {
     this(definitions, toOTypeConverter, methodLoader, factory, typing, ImmutableMap.of());
   }
 
   // Visible for testing
-  JobCreator(Definitions definitions, STypeToOTypeConverter toOTypeConverter,
+  JobCreator(Definitions definitions, TypeSToTypeOConverter toOTypeConverter,
       MethodLoader methodLoader, TypeFactoryS factory, Typing typing,
       Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;

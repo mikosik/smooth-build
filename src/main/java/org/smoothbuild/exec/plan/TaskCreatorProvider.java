@@ -8,21 +8,21 @@ import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 
 public class TaskCreatorProvider {
-  private final STypeToOTypeConverter STypeToOTypeConverter;
+  private final TypeSToTypeOConverter typeSToTypeOConverter;
   private final MethodLoader methodLoader;
   private final TypeFactoryS factory;
   private final Typing typing;
 
   @Inject
-  public TaskCreatorProvider(STypeToOTypeConverter STypeToOTypeConverter, MethodLoader methodLoader,
+  public TaskCreatorProvider(TypeSToTypeOConverter typeSToTypeOConverter, MethodLoader methodLoader,
       TypeFactoryS factory, Typing typing) {
-    this.STypeToOTypeConverter = STypeToOTypeConverter;
+    this.typeSToTypeOConverter = typeSToTypeOConverter;
     this.methodLoader = methodLoader;
     this.factory = factory;
     this.typing = typing;
   }
 
   public JobCreator get(Definitions definitions) {
-    return new JobCreator(definitions, STypeToOTypeConverter, methodLoader, factory, typing);
+    return new JobCreator(definitions, typeSToTypeOConverter, methodLoader, factory, typing);
   }
 }
