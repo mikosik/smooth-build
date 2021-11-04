@@ -12,7 +12,6 @@ import org.smoothbuild.db.object.type.TypeFactoryO;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.space.ForSpace;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -25,12 +24,6 @@ public class ObjDbModule extends AbstractModule {
   @Singleton
   public ObjDb provideObjectDb(HashedDb hashedDb, ObjTypeDb objTypeDb) {
     return new ObjDb(hashedDb, objTypeDb);
-  }
-
-  @Provides
-  @Singleton
-  public TypeFactoryS provideTypeFactoryS() {
-    return new TypeFactoryS();
   }
 
   @Provides

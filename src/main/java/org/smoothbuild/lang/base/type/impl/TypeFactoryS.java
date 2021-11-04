@@ -3,6 +3,9 @@ package org.smoothbuild.lang.base.type.impl;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -11,6 +14,7 @@ import org.smoothbuild.util.collect.NamedList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
+@Singleton
 public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   private static final AnyTypeS ANY = new AnyTypeS();
   private static final BlobTypeS BLOB = new BlobTypeS();
@@ -21,6 +25,7 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
 
   private final Sides<TypeS> sides;
 
+  @Inject
   public TypeFactoryS() {
     this.sides = new Sides<>(any(), nothing());
   }
