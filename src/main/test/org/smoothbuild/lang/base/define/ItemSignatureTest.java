@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.TestingSTypes.BLOB;
-import static org.smoothbuild.lang.base.type.TestingSTypes.BOOL;
-import static org.smoothbuild.lang.base.type.TestingSTypes.NOTHING;
-import static org.smoothbuild.lang.base.type.TestingSTypes.PERSON;
-import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
-import static org.smoothbuild.lang.base.type.TestingSTypes.a;
+import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypesS.BOOL;
+import static org.smoothbuild.lang.base.type.TestingTypesS.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTypesS.PERSON;
+import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTypesS.a;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 

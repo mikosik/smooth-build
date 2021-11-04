@@ -18,7 +18,7 @@ import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
 import static org.smoothbuild.exec.job.TaskKind.CALL;
 import static org.smoothbuild.exec.parallel.ExecutionReporter.header;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
-import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 

@@ -26,7 +26,7 @@ import org.smoothbuild.util.collect.NamedList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public class TestingSTypes {
+public class TestingTypesS {
   private static final TestingContextImpl CONTEXT = new TestingContextImpl();
   private static final STypeFactory FACTORY = CONTEXT.sTypeFactory();
   public static final Typing TYPING = CONTEXT.typingS();

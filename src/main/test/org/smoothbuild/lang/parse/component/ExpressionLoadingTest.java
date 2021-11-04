@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.base.type.TestingSTypes.BLOB;
-import static org.smoothbuild.lang.base.type.TestingSTypes.INT;
-import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
-import static org.smoothbuild.lang.base.type.TestingSTypes.a;
-import static org.smoothbuild.lang.base.type.TestingSTypes.f;
+import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypesS.INT;
+import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTypesS.a;
+import static org.smoothbuild.lang.base.type.TestingTypesS.f;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;

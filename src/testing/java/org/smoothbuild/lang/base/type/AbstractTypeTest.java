@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.TestingSTypes.INFERABLE_BASE_TYPES;
+import static org.smoothbuild.lang.base.type.TestingTypesS.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Named.named;

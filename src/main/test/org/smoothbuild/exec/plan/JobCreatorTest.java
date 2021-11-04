@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
-import static org.smoothbuild.lang.base.type.TestingSTypes.BLOB;
-import static org.smoothbuild.lang.base.type.TestingSTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.toMap;
 
