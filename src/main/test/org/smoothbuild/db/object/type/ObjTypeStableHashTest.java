@@ -8,9 +8,9 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.ObjType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class ObjTypeStableHashTest extends TestingContextImpl {
+public class ObjTypeStableHashTest extends TestingContext {
   @Test
   public void hashes_of_types_are_stable() {
     assertHash(anyOT(), "b35d79d5718f7bba2cda55c29e2408c13ffc8cd5");

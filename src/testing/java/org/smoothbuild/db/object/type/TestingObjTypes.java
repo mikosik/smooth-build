@@ -8,12 +8,12 @@ import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.db.object.type.val.TupleOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
 public class TestingObjTypes {
-  private static final TestingContextImpl CONTEXT = new TestingContextImpl();
+  private static final TestingContext CONTEXT = new TestingContext();
   public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
   public static final ObjTypeDb OBJECT_TYPE_DB = CONTEXT.objTypeDb();
 

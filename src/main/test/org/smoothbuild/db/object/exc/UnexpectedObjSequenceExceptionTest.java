@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class UnexpectedObjSequenceExceptionTest extends TestingContextImpl {
+public class UnexpectedObjSequenceExceptionTest extends TestingContext {
   @Test
   public void message() {
     var exception = new UnexpectedObjSequenceException(Hash.of(123), intOT(), "node-path", 7, 2);

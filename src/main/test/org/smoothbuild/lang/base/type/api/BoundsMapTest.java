@@ -9,11 +9,11 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.UPPER;
 import static org.smoothbuild.lang.base.type.TestingTypesS.bm;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.testing.EqualsTester;
 
-public class BoundsMapTest extends TestingContextImpl {
+public class BoundsMapTest extends TestingContext {
   @Test
   public void equality() {
     new EqualsTester()

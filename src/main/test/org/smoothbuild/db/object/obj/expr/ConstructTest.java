@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class ConstructTest extends TestingContextImpl {
+public class ConstructTest extends TestingContext {
   @Test
   public void type_of_empty_construct_is_inferred_correctly() {
     assertThat(construct(list()).type())

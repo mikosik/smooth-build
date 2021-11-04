@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.expr.Call.CallData;
 import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallTest extends TestingContextImpl {
+public class CallTest extends TestingContext {
   @Test
   public void type_of_call_expr_is_inferred_correctly() {
     assertThat(call(const_(lambda()), list(stringExpr())).type())

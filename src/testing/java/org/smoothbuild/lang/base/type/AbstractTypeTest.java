@@ -25,12 +25,12 @@ import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
-import org.smoothbuild.testing.AbstractTestingContext;
+import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.testing.EqualsTester;
 
-public abstract class AbstractTypeTest extends AbstractTestingContext {
+public abstract class AbstractTypeTest extends TestingContext {
   public abstract TypeFactory typeFactory();
 
   public static List<Arguments> names() {

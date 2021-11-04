@@ -9,10 +9,10 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.reflect.Classes;
 
-public class FileClassLoaderTest extends TestingContextImpl {
+public class FileClassLoaderTest extends TestingContext {
   @Test
   public void loads_class_from_binary() throws Exception {
     Class<MyClass> klass = MyClass.class;

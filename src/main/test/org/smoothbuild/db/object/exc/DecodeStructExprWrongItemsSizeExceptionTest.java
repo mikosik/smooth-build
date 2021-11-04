@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.exc.DecodeStructExprWrongItemsSizeException;
 import org.smoothbuild.db.object.type.expr.StructExprOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class DecodeStructExprWrongItemsSizeExceptionTest extends TestingContextImpl {
+public class DecodeStructExprWrongItemsSizeExceptionTest extends TestingContext {
   @Test
   public void message() {
     var structSpec = structOT(

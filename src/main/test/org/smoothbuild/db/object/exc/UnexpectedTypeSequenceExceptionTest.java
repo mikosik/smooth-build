@@ -6,9 +6,9 @@ import static org.smoothbuild.db.object.type.base.ObjKind.INT;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class UnexpectedTypeSequenceExceptionTest extends TestingContextImpl {
+public class UnexpectedTypeSequenceExceptionTest extends TestingContext {
   @Test
   public void message() {
     var exception = new UnexpectedTypeSequenceException(Hash.of(123), INT, "node-path", 7, 2);

@@ -5,9 +5,9 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class TupleTest extends TestingContextImpl {
+public class TupleTest extends TestingContext {
   @Test
   public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
     assertCall(() -> objectDb().tuple(perso_OT(), list(string("John"))))

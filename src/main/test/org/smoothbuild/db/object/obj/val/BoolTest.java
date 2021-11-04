@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class BoolTest extends TestingContextImpl {
+public class BoolTest extends TestingContext {
   @Test
   public void type_of_bool_is_bool_type() {
     assertThat(bool(true).type())

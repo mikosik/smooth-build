@@ -56,14 +56,14 @@ import org.smoothbuild.db.object.type.val.IntOType;
 import org.smoothbuild.db.object.type.val.LambdaOType;
 import org.smoothbuild.db.object.type.val.StringOType;
 import org.smoothbuild.db.object.type.val.TupleOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
 import com.google.common.collect.ImmutableList;
 
 import okio.ByteString;
 
-public class CorruptedObjTypeTest extends TestingContextImpl {
+public class CorruptedObjTypeTest extends TestingContext {
   @Nested
   class _illegal_type_marker {
     @Test

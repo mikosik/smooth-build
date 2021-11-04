@@ -7,9 +7,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class LambdaTest extends TestingContextImpl {
+public class LambdaTest extends TestingContext {
   @Test
   public void creating_lambda_with_body_evaluation_type_not_equal_result_type_causes_exception() {
     LambdaOType lambdaType = lambdaOT(intOT(), list(stringOT()));

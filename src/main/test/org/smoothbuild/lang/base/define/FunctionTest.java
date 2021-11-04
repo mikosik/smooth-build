@@ -14,11 +14,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class FunctionTest extends TestingContextImpl {
+public class FunctionTest extends TestingContext {
   @Test
   public void function_without_params_can_be_called_without_args() {
     Function function = myFunction(STRING, list());

@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class OutputTest extends TestingContextImpl {
+public class OutputTest extends TestingContext {
   @Test
   public void null_messages_are_forbidden() {
     assertCall(() -> new Output(aString(), null))

@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class UnexpectedObjNodeExceptionTest extends TestingContextImpl {
+public class UnexpectedObjNodeExceptionTest extends TestingContext {
   @Test
   public void message_with_types() {
     var exception = new UnexpectedObjNodeException(

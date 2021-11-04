@@ -7,11 +7,11 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class OrderTest extends TestingContextImpl {
+public class OrderTest extends TestingContext {
   @Test
   public void type_of_empty_array_is_inferred_correctly() {
     assertThat(order(list()).type())

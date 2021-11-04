@@ -6,9 +6,9 @@ import static org.smoothbuild.exec.base.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class ContainerTest extends TestingContextImpl {
+public class ContainerTest extends TestingContext {
   @Test
   public void file_system() {
     assertThat(container().fileSystem())

@@ -5,9 +5,9 @@ import static org.smoothbuild.exec.base.MessageStruct.containsErrors;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class MessageStructTest extends TestingContextImpl {
+public class MessageStructTest extends TestingContext {
   private Array messages;
 
   @Test

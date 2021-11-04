@@ -26,9 +26,9 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class MapTypeToJTypeTest extends TestingContextImpl {
+public class MapTypeToJTypeTest extends TestingContext {
   @Test
   public void verify_all_types_are_tested_below() {
     assertThat(BASE_TYPES.size())

@@ -5,9 +5,9 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class StructTest extends TestingContextImpl {
+public class StructTest extends TestingContext {
   @Test
   public void creating_struct_with_item_type_different_than_specified_in_its_type_causes_exception() {
     assertCall(() -> struct(animalOT(), list(string("rabbit"), string("7"))))

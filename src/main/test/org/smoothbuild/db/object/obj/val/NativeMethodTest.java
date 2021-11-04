@@ -3,11 +3,11 @@ package org.smoothbuild.db.object.obj.val;
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class NativeMethodTest extends TestingContextImpl {
+public class NativeMethodTest extends TestingContext {
   @Test
   public void type_of_native_method_expr_is_calculated_correctly() {
     assertThat(nativeMethod(blob(), string()).type())

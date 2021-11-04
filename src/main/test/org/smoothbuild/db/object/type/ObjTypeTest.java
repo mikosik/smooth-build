@@ -65,7 +65,7 @@ import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.db.object.type.expr.ConstructOType;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.db.object.type.val.TupleOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
@@ -97,7 +97,7 @@ public class ObjTypeTest {
   }
 
   public static Stream<Arguments> names() {
-    TestingContextImpl tc = new TestingContextImpl();
+    TestingContext tc = new TestingContext();
     return Stream.of(
         arguments(PERSON_TUPLE, "{String,String}"),
         arguments(tc.callOT(tc.intOT()), "CALL:Int"),

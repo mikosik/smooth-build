@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class VisibilityTest extends TestingContextImpl {
+public class VisibilityTest extends TestingContext {
   @Nested
   class _visibility {
     @Nested

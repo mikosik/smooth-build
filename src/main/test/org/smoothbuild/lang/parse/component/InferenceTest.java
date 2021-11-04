@@ -11,9 +11,9 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.f;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class InferenceTest extends TestingContextImpl {
+public class InferenceTest extends TestingContext {
   @Nested
   class _inferring_value_type_from {
     @Test

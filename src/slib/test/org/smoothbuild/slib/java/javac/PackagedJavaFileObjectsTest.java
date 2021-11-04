@@ -8,9 +8,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class PackagedJavaFileObjectsTest extends TestingContextImpl {
+public class PackagedJavaFileObjectsTest extends TestingContext {
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
     Struc_ file1 = file(path("my/package/MyKlass.class"));

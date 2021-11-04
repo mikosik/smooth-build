@@ -72,13 +72,13 @@ import org.smoothbuild.db.object.type.expr.OrderOType;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.db.object.type.val.LambdaOType;
 import org.smoothbuild.db.object.type.val.StructOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
 import okio.ByteString;
 
-public class CorruptedObjTest extends TestingContextImpl {
+public class CorruptedObjTest extends TestingContext {
   @Nested
   class _obj {
     @Test

@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class IntTest extends TestingContextImpl {
+public class IntTest extends TestingContext {
   @Test
   public void type_of_int_is_int_type() {
     assertThat(int_(123).type())

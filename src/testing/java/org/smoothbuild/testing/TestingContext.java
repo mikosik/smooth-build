@@ -114,7 +114,7 @@ import com.google.inject.util.Providers;
 
 import okio.ByteString;
 
-public abstract class AbstractTestingContext {
+public class TestingContext {
   private Computer computer;
   private Container container;
   private ObjectFactory objectFactory;

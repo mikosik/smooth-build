@@ -26,11 +26,11 @@ import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
 import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class HashedDbTest extends TestingContextImpl {
+public class HashedDbTest extends TestingContext {
   private final ByteString bytes1 = ByteString.encodeUtf8("aaa");
   private final ByteString bytes2 = ByteString.encodeUtf8("bbb");
   private HashingBufferedSink sink;

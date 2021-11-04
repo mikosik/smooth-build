@@ -7,11 +7,11 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.base.MessageStruct;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class ObjectFactoryTest extends TestingContextImpl {
+public class ObjectFactoryTest extends TestingContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test

@@ -48,9 +48,9 @@ import org.smoothbuild.exec.job.Task;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class ParallelJobExecutorTest extends TestingContextImpl {
+public class ParallelJobExecutorTest extends TestingContext {
   private ParallelJobExecutor parallelJobExecutor;
   private ExecutionReporter reporter;
 

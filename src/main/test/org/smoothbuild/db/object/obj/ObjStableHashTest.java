@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class ObjStableHashTest extends TestingContextImpl {
+public class ObjStableHashTest extends TestingContext {
   @Nested
   class _array {
     @Test

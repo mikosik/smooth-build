@@ -6,11 +6,11 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class InputSourceFileTest extends TestingContextImpl {
+public class InputSourceFileTest extends TestingContext {
   @Test
   public void get_char_content_returns_file_content() {
     Path path = path("my/path");

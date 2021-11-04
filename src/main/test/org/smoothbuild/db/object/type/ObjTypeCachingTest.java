@@ -12,9 +12,9 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.ObjType;
 import org.smoothbuild.db.object.type.val.LambdaOType;
 import org.smoothbuild.db.object.type.val.TupleOType;
-import org.smoothbuild.testing.TestingContextImpl;
+import org.smoothbuild.testing.TestingContext;
 
-public class ObjTypeCachingTest extends TestingContextImpl {
+public class ObjTypeCachingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("type_creators")
   public void created_type_is_cached(Function<ObjTypeDb, ObjType> typeCreator) {
