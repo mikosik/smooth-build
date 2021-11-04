@@ -6,8 +6,8 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class BoolSType extends BaseSType implements BoolType {
-  public BoolSType() {
+public class BoolTypeS extends BaseTypeS implements BoolType {
+  public BoolTypeS() {
     super(TypeNames.BOOL);
   }
 }

@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.ArrayOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -49,7 +49,7 @@ public class ConvertAlgorithm extends Algorithm {
   }
 
   private static Array convertArray(TypeO destinationType, Array array, NativeApi nativeApi) {
-    TypeV elementType = ((ArrayOType) destinationType).element();
+    TypeV elementType = ((ArrayTypeO) destinationType).element();
     ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elementType);
     for (Val element : array.elements(Val.class)) {
       arrayBuilder.add(convert(elementType, element, nativeApi));

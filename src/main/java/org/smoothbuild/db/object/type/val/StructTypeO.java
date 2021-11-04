@@ -12,10 +12,10 @@ import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.util.collect.NamedList;
 
-public class StructOType extends TypeV implements StructType {
+public class StructTypeO extends TypeV implements StructType {
   private final NamedList<TypeV> fields;
 
-  public StructOType(Hash hash, String name, NamedList<TypeV> fields) {
+  public StructTypeO(Hash hash, String name, NamedList<TypeV> fields) {
     super(name, hash, STRUCT, calculateVariables(fields));
     this.fields = fields;
   }

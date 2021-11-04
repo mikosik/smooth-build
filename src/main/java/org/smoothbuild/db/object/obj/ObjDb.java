@@ -46,10 +46,10 @@ import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.SelectOType;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.db.object.type.val.StructOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
@@ -80,7 +80,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
-  public Lambda lambda(LambdaOType type, Expr body) {
+  public Lambda lambda(LambdaTypeO type, Expr body) {
     if (!Objects.equals(type.result(), body.evaluationType())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.result().name()
           + " but body.evaluationType() is " + body.evaluationType().name() + ".");
@@ -101,7 +101,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
   }
 
-  public Struc_ struct(StructOType structType, ImmutableList<Val> items) {
+  public Struc_ struct(StructTypeO structType, ImmutableList<Val> items) {
     var fieldTypes = map(structType.fields().list(), Named::object);
     allMatchOtherwise(fieldTypes, items, (f, i) -> Objects.equals(f, i.type()),
         (i, j) -> {
@@ -117,7 +117,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStruct(structType, items));
   }
 
-  public Tuple tuple(TupleOType tupleType, Iterable<? extends Obj> items) {
+  public Tuple tuple(TupleTypeO tupleType, Iterable<? extends Obj> items) {
     List<Obj> itemList = ImmutableList.copyOf(items);
     var types = tupleType.items();
 
@@ -168,7 +168,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(struct, index));
   }
 
-  public StructExpr structExpr(StructOType evaluationType, ImmutableList<? extends Expr> items) {
+  public StructExpr structExpr(StructTypeO evaluationType, ImmutableList<? extends Expr> items) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStructExpr(evaluationType, items));
   }
 
@@ -204,7 +204,7 @@ public class ObjDb {
 
   // methods for creating Val Obj-s
 
-  public Array newArray(ArrayOType type, List<? extends Obj> elements) throws HashedDbException {
+  public Array newArray(ArrayTypeO type, List<? extends Obj> elements) throws HashedDbException {
     var data = writeArrayData(elements);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -221,7 +221,7 @@ public class ObjDb {
     return objTypeDb.bool().newObj(root, this);
   }
 
-  private Lambda newLambda(LambdaOType type, Expr body) throws HashedDbException {
+  private Lambda newLambda(LambdaTypeO type, Expr body) throws HashedDbException {
     var data = writeLambdaData(body);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -246,13 +246,13 @@ public class ObjDb {
     return objTypeDb.string().newObj(root, this);
   }
 
-  private Struc_ newStruct(StructOType type, ImmutableList<Val> items) throws HashedDbException {
+  private Struc_ newStruct(StructTypeO type, ImmutableList<Val> items) throws HashedDbException {
     var data = writeStructData(items);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private Tuple newTuple(TupleOType type, List<? extends Obj> objects) throws HashedDbException {
+  private Tuple newTuple(TupleTypeO type, List<? extends Obj> objects) throws HashedDbException {
     var data = writeTupleData(objects);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -269,7 +269,7 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private static void verifyArguments(LambdaOType lambdaType, Construct arguments) {
+  private static void verifyArguments(LambdaTypeO lambdaType, Construct arguments) {
     if (!Objects.equals(lambdaType.parametersTuple(), arguments.evaluationType())) {
       throw new IllegalArgumentException(("Arguments evaluation type %s should be equal to "
           + "function evaluation type parameters %s.")
@@ -277,8 +277,8 @@ public class ObjDb {
     }
   }
 
-  private LambdaOType functionevaluationType(Expr function) {
-    if (function.evaluationType() instanceof LambdaOType lambdaType) {
+  private LambdaTypeO functionevaluationType(Expr function) {
+    if (function.evaluationType() instanceof LambdaTypeO lambdaType) {
       return lambdaType;
     } else {
       throw new IllegalArgumentException("`function` component doesn't evaluate to Function.");
@@ -345,7 +345,7 @@ public class ObjDb {
   }
 
   private SelectOType selectType(Expr expr, Int index) {
-    if (expr.type().evaluationType() instanceof StructOType struct) {
+    if (expr.type().evaluationType() instanceof StructTypeO struct) {
       var fields = struct.fields();
       int intIndex = index.jValue().intValue();
       checkElementIndex(intIndex, fields.size());
@@ -356,7 +356,7 @@ public class ObjDb {
     }
   }
 
-  private StructExpr newStructExpr(StructOType evaluationType, List<? extends Expr> items)
+  private StructExpr newStructExpr(StructTypeO evaluationType, List<? extends Expr> items)
       throws HashedDbException {
     ImmutableList<Named<TypeV>> types = evaluationType.fields().list();
     allMatchOtherwise(types, items,

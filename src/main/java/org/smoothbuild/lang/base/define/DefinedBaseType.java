@@ -2,10 +2,10 @@ package org.smoothbuild.lang.base.define;
 
 import static org.smoothbuild.lang.base.define.Location.internal;
 
-import org.smoothbuild.lang.base.type.impl.BaseSType;
+import org.smoothbuild.lang.base.type.impl.BaseTypeS;
 
 public class DefinedBaseType extends DefinedType {
-  public DefinedBaseType(ModulePath modulePath, BaseSType type) {
+  public DefinedBaseType(ModulePath modulePath, BaseTypeS type) {
     super(type, modulePath, type.name(), internal());
   }
 }

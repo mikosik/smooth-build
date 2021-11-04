@@ -14,8 +14,8 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class BoolOType extends TypeV implements BoolType {
-  public BoolOType(Hash hash) {
+public class BoolTypeO extends TypeV implements BoolType {
+  public BoolTypeO(Hash hash) {
     super(TypeNames.BOOL, hash, BOOL);
   }
 

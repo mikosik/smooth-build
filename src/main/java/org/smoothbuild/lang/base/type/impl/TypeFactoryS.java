@@ -12,12 +12,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
-  private static final AnySType ANY = new AnySType();
-  private static final BlobSType BLOB = new BlobSType();
-  private static final BoolSType BOOL = new BoolSType();
-  private static final IntSType INT = new IntSType();
-  private static final NothingSType NOTHING = new NothingSType();
-  private static final StringSType STRING = new StringSType();
+  private static final AnyTypeS ANY = new AnyTypeS();
+  private static final BlobTypeS BLOB = new BlobTypeS();
+  private static final BoolTypeS BOOL = new BoolTypeS();
+  private static final IntTypeS INT = new IntTypeS();
+  private static final NothingTypeS NOTHING = new NothingTypeS();
+  private static final StringTypeS STRING = new StringTypeS();
 
   private final Sides sides;
 
@@ -28,8 +28,8 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
    */
-  public ImmutableSet<BaseSType> inferableBaseTypes() {
-    return ImmutableSet.<BaseSType>builder()
+  public ImmutableSet<BaseTypeS> inferableBaseTypes() {
+    return ImmutableSet.<BaseTypeS>builder()
         .addAll(baseTypes())
         .add(any())
         .build();
@@ -39,7 +39,7 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   /**
    * Base types that are legal in smooth language.
    */
-  public ImmutableSet<BaseSType> baseTypes() {
+  public ImmutableSet<BaseTypeS> baseTypes() {
     return ImmutableSet.of(
         blob(),
         bool(),
@@ -60,53 +60,53 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   }
 
   @Override
-  public AnySType any() {
+  public AnyTypeS any() {
     return ANY;
   }
 
   @Override
-  public ArraySType array(TypeS elemType) {
-    return new ArraySType(elemType);
+  public ArrayTypeS array(TypeS elemType) {
+    return new ArrayTypeS(elemType);
   }
 
   @Override
-  public BlobSType blob() {
+  public BlobTypeS blob() {
     return BLOB;
   }
 
   @Override
-  public BoolSType bool() {
+  public BoolTypeS bool() {
     return BOOL;
   }
 
   @Override
-  public FunctionSType function(TypeS result, ImmutableList<? extends TypeS> parameters) {
-    return new FunctionSType(result, ImmutableList.copyOf(parameters));
+  public FunctionTypeS function(TypeS result, ImmutableList<? extends TypeS> parameters) {
+    return new FunctionTypeS(result, ImmutableList.copyOf(parameters));
   }
 
   @Override
-  public IntSType int_() {
+  public IntTypeS int_() {
     return INT;
   }
 
   @Override
-  public NothingSType nothing() {
+  public NothingTypeS nothing() {
     return NOTHING;
   }
 
   @Override
-  public StringSType string() {
+  public StringTypeS string() {
     return STRING;
   }
 
   @Override
-  public StructSType struct(String name, NamedList<? extends TypeS> fields) {
-    return new StructSType(name, (NamedList<TypeS>) fields);
+  public StructTypeS struct(String name, NamedList<? extends TypeS> fields) {
+    return new StructTypeS(name, (NamedList<TypeS>) fields);
   }
 
   @Override
-  public VariableSType variable(String name) {
+  public VariableS variable(String name) {
     checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
-    return new VariableSType(name);
+    return new VariableS(name);
   }
 }

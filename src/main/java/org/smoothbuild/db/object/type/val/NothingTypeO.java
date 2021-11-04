@@ -13,8 +13,8 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class NothingOType extends TypeV implements NothingType {
-  public NothingOType(Hash hash) {
+public class NothingTypeO extends TypeV implements NothingType {
+  public NothingTypeO(Hash hash) {
     super(TypeNames.NOTHING, hash, NOTHING);
   }
 

@@ -7,7 +7,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.expr.Call.CallData;
-import org.smoothbuild.db.object.type.val.LambdaOType;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -99,7 +99,7 @@ public class CallTest extends TestingContext {
 
   @Test
   public void hash_of_calls_with_different_function_is_not_the_same() {
-    LambdaOType type = lambdaOT(intOT(), list(stringOT()));
+    LambdaTypeO type = lambdaOT(intOT(), list(stringOT()));
     Const function1 = const_(lambda(type, intExpr(1)));
     Const function2 = const_(lambda(type, intExpr(2)));
     var arguments = list(stringExpr()) ;

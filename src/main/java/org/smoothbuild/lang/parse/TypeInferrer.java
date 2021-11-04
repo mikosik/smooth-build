@@ -25,8 +25,8 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.api.StructType;
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
-import org.smoothbuild.lang.base.type.impl.StructSType;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -217,7 +217,7 @@ public class TypeInferrer {
                 logBuffer.log(parseError(expr.location(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               } else {
-                expr.setType(((StructSType) t).fields().map().get(expr.fieldName()));
+                expr.setType(((StructTypeS) t).fields().map().get(expr.fieldName()));
               }
             },
             () -> expr.setType(empty())
@@ -266,7 +266,7 @@ public class TypeInferrer {
         Optional<TypeS> calledType = called.type();
         if (calledType.isEmpty()) {
           call.setType(empty());
-        } else if (!(calledType.get() instanceof FunctionSType functionType)) {
+        } else if (!(calledType.get() instanceof FunctionTypeS functionType)) {
           logBuffer.log(parseError(call.location(), description(called)
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
@@ -301,11 +301,11 @@ public class TypeInferrer {
           } else if (referenced instanceof FunctionNode functionNode) {
             return Optionals.pullUp(map(functionNode.params(), ItemNode::itemSignature));
           } else {
-            return Optional.of(map(((FunctionSType) referenced.inferredType().get()).parameters(),
+            return Optional.of(map(((FunctionTypeS) referenced.inferredType().get()).parameters(),
                 ItemSignature::itemSignature));
           }
         } else {
-          return called.type().map(t -> toItemSignatures(((FunctionSType) t).parameters()));
+          return called.type().map(t -> toItemSignatures(((FunctionTypeS) t).parameters()));
         }
       }
 

@@ -14,11 +14,11 @@ import org.smoothbuild.lang.base.type.api.FunctionType;
 
 import com.google.common.collect.ImmutableList;
 
-public class LambdaOType extends TypeV implements FunctionType {
+public class LambdaTypeO extends TypeV implements FunctionType {
   private final TypeV result;
-  private final TupleOType parametersTuple;
+  private final TupleTypeO parametersTuple;
 
-  public LambdaOType(Hash hash, TypeV result, TupleOType parametersTuple) {
+  public LambdaTypeO(Hash hash, TypeV result, TupleTypeO parametersTuple) {
     super(functionTypeName(result, parametersTuple.items()), hash, LAMBDA,
         calculateVariables(result, parametersTuple.items()));
     this.result = result;
@@ -35,7 +35,7 @@ public class LambdaOType extends TypeV implements FunctionType {
     return parametersTuple.items();
   }
 
-  public TupleOType parametersTuple() {
+  public TupleTypeO parametersTuple() {
     return parametersTuple;
   }
 

@@ -51,11 +51,11 @@ import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
 import org.smoothbuild.db.object.type.expr.ConstOType;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.IntOType;
-import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.db.object.type.val.StringOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.IntTypeO;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.StringTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 
@@ -316,7 +316,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(CONSTRUCT, TupleOType.class);
+      test_type_with_data_being_expr_type(CONSTRUCT, TupleTypeO.class);
     }
 
     @Test
@@ -327,7 +327,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, CONSTRUCT, DATA_PATH, TupleOType.class, IntOType.class));
+              hash, CONSTRUCT, DATA_PATH, TupleTypeO.class, IntTypeO.class));
     }
   }
 
@@ -340,7 +340,7 @@ public class CorruptedObjTypeTest extends TestingContext {
        * to save lambda type in HashedDb.
        */
       ImmutableList<TypeV> parameterTypes = list(stringOT(), boolOT());
-      TupleOType parametersTuple = tupleOT(parameterTypes);
+      TupleTypeO parametersTuple = tupleOT(parameterTypes);
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -381,7 +381,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_data_having_three_elements() throws Exception {
-      TupleOType parameterTypes = tupleOT(list(stringOT(), boolOT()));
+      TupleTypeO parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash hash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -415,7 +415,7 @@ public class CorruptedObjTypeTest extends TestingContext {
           hash(LAMBDA.marker()),
           notHashOfSequence
       );
-      assertCall(() -> ((LambdaOType) objTypeDb().get(typeHash)).result())
+      assertCall(() -> ((LambdaTypeO) objTypeDb().get(typeHash)).result())
           .throwsException(new DecodeTypeNodeException(typeHash, LAMBDA, DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
@@ -423,7 +423,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_result_pointing_nowhere() throws Exception {
-      TupleOType parameterTypes = tupleOT(list(stringOT(), boolOT()));
+      TupleTypeO parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
@@ -439,7 +439,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_result_being_expr_type() throws Exception {
-      TupleOType parameterType = tupleOT(list(stringOT(), boolOT()));
+      TupleTypeO parameterType = tupleOT(list(stringOT(), boolOT()));
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -454,7 +454,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_result_type_corrupted() throws Exception {
-      TupleOType parameterTypes = tupleOT(list(stringOT(), boolOT()));
+      TupleTypeO parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -493,7 +493,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertThatGet(typeHash)
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, LAMBDA, DATA_PATH, 1, TupleOType.class, StringOType.class));
+              typeHash, LAMBDA, DATA_PATH, 1, TupleTypeO.class, StringTypeO.class));
     }
 
     @Test
@@ -507,7 +507,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertCall(() -> objTypeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, LAMBDA, LAMBDA_PARAMS_PATH, TupleOType.class, ConstOType.class));
+              typeHash, LAMBDA, LAMBDA_PARAMS_PATH, TupleTypeO.class, ConstOType.class));
     }
 
     @Test
@@ -1098,7 +1098,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(ORDER, ArrayOType.class);
+      test_type_with_data_being_expr_type(ORDER, ArrayTypeO.class);
     }
 
     @Test
@@ -1109,7 +1109,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, ORDER, DATA_PATH, ArrayOType.class, IntOType.class));
+              hash, ORDER, DATA_PATH, ArrayTypeO.class, IntTypeO.class));
     }
   }
 

@@ -1,16 +1,16 @@
 package org.smoothbuild.db.object.type;
 
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.AnyOType;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.BlobOType;
-import org.smoothbuild.db.object.type.val.BoolOType;
-import org.smoothbuild.db.object.type.val.IntOType;
-import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.db.object.type.val.NothingOType;
-import org.smoothbuild.db.object.type.val.StringOType;
-import org.smoothbuild.db.object.type.val.StructOType;
-import org.smoothbuild.db.object.type.val.VariableOType;
+import org.smoothbuild.db.object.type.val.AnyTypeO;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.BlobTypeO;
+import org.smoothbuild.db.object.type.val.BoolTypeO;
+import org.smoothbuild.db.object.type.val.IntTypeO;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.NothingTypeO;
+import org.smoothbuild.db.object.type.val.StringTypeO;
+import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.VariableO;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
@@ -32,32 +32,32 @@ public interface TypeFactoryO extends TypeFactory<TypeV> {
   public Side lower();
 
   @Override
-  public AnyOType any();
+  public AnyTypeO any();
 
   @Override
-  public ArrayOType array(TypeV elemType);
+  public ArrayTypeO array(TypeV elemType);
 
   @Override
-  public BlobOType blob();
+  public BlobTypeO blob();
 
   @Override
-  public BoolOType bool();
+  public BoolTypeO bool();
 
   @Override
-  public LambdaOType function(TypeV result, ImmutableList<? extends TypeV> parameters);
+  public LambdaTypeO function(TypeV result, ImmutableList<? extends TypeV> parameters);
 
   @Override
-  public IntOType int_();
+  public IntTypeO int_();
 
   @Override
-  public NothingOType nothing();
+  public NothingTypeO nothing();
 
   @Override
-  public StringOType string();
+  public StringTypeO string();
 
   @Override
-  public StructOType struct(String name, NamedList<? extends TypeV> fields);
+  public StructTypeO struct(String name, NamedList<? extends TypeV> fields);
 
   @Override
-  public VariableOType variable(String name);
+  public VariableO variable(String name);
 }

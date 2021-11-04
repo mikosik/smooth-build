@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.NothingType;
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -338,7 +338,7 @@ public class TestedType {
     public final ImmutableList<TestedType> parameters;
 
     public TestedFunctionType(TestedType resultType, ImmutableList<TestedType> parameters,
-        FunctionSType type, String literal,
+        FunctionTypeS type, String literal,
         Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.resultType = resultType;

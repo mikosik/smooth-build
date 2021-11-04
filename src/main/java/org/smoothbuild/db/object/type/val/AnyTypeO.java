@@ -12,8 +12,8 @@ import org.smoothbuild.lang.base.type.api.AnyType;
 /**
  * This class is immutable.
  */
-public class AnyOType extends TypeV implements AnyType {
-  public AnyOType(Hash hash) {
+public class AnyTypeO extends TypeV implements AnyType {
+  public AnyTypeO(Hash hash) {
     super("Any", hash, ANY);
   }
 

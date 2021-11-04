@@ -12,7 +12,7 @@ import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponen
 import org.smoothbuild.db.object.obj.exc.DecodeStructExprWrongItemsSizeException;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.StructExprOType;
-import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.util.collect.NamedList;
 
@@ -33,7 +33,7 @@ public class StructExpr extends Expr {
   }
 
   @Override
-  public StructOType evaluationType() {
+  public StructTypeO evaluationType() {
     return type().evaluationType();
   }
 

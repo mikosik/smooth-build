@@ -59,18 +59,18 @@ import org.smoothbuild.db.object.type.expr.OrderOType;
 import org.smoothbuild.db.object.type.expr.RefOType;
 import org.smoothbuild.db.object.type.expr.SelectOType;
 import org.smoothbuild.db.object.type.expr.StructExprOType;
-import org.smoothbuild.db.object.type.val.AnyOType;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.BlobOType;
-import org.smoothbuild.db.object.type.val.BoolOType;
-import org.smoothbuild.db.object.type.val.IntOType;
-import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.db.object.type.val.NativeMethodOType;
-import org.smoothbuild.db.object.type.val.NothingOType;
-import org.smoothbuild.db.object.type.val.StringOType;
-import org.smoothbuild.db.object.type.val.StructOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
-import org.smoothbuild.db.object.type.val.VariableOType;
+import org.smoothbuild.db.object.type.val.AnyTypeO;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.BlobTypeO;
+import org.smoothbuild.db.object.type.val.BoolTypeO;
+import org.smoothbuild.db.object.type.val.IntTypeO;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.NativeMethodTypeO;
+import org.smoothbuild.db.object.type.val.NothingTypeO;
+import org.smoothbuild.db.object.type.val.StringTypeO;
+import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
+import org.smoothbuild.db.object.type.val.VariableO;
 import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -100,13 +100,13 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, TypeO> cache;
 
-  private final AnyOType any;
-  private final BlobOType blob;
-  private final BoolOType bool;
-  private final IntOType int_;
-  private final NothingOType nothing;
-  private final StringOType string;
-  private final NativeMethodOType nativeMethod;
+  private final AnyTypeO any;
+  private final BlobTypeO blob;
+  private final BoolTypeO bool;
+  private final IntTypeO int_;
+  private final NothingTypeO nothing;
+  private final StringTypeO string;
+  private final NativeMethodTypeO nativeMethod;
   private final Sides sides;
 
   public ObjTypeDb(HashedDb hashedDb) {
@@ -114,15 +114,15 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     this.cache = new ConcurrentHashMap<>();
 
     try {
-      this.any = cache(new AnyOType(writeBaseRoot(ANY)));
-      this.blob = cache(new BlobOType(writeBaseRoot(BLOB)));
-      this.bool = cache(new BoolOType(writeBaseRoot(BOOL)));
-      this.int_ = cache(new IntOType(writeBaseRoot(INT)));
-      this.nothing = cache(new NothingOType(writeBaseRoot(NOTHING)));
-      this.string = cache(new StringOType(writeBaseRoot(STRING)));
+      this.any = cache(new AnyTypeO(writeBaseRoot(ANY)));
+      this.blob = cache(new BlobTypeO(writeBaseRoot(BLOB)));
+      this.bool = cache(new BoolTypeO(writeBaseRoot(BOOL)));
+      this.int_ = cache(new IntTypeO(writeBaseRoot(INT)));
+      this.nothing = cache(new NothingTypeO(writeBaseRoot(NOTHING)));
+      this.string = cache(new StringTypeO(writeBaseRoot(STRING)));
 
       // expr
-      this.nativeMethod = cache(new NativeMethodOType(writeBaseRoot(NATIVE_METHOD)));
+      this.nativeMethod = cache(new NativeMethodTypeO(writeBaseRoot(NATIVE_METHOD)));
     } catch (HashedDbException e) {
       throw new ObjDbException(e);
     }
@@ -142,62 +142,62 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   // methods for getting Val-s types
 
   @Override
-  public AnyOType any() {
+  public AnyTypeO any() {
     return any;
   }
 
   @Override
-  public ArrayOType array(TypeV elementType) {
+  public ArrayTypeO array(TypeV elementType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArray(elementType));
   }
 
   @Override
-  public BlobOType blob() {
+  public BlobTypeO blob() {
     return blob;
   }
 
   @Override
-  public BoolOType bool() {
+  public BoolTypeO bool() {
     return bool;
   }
 
   @Override
-  public LambdaOType function(TypeV result, ImmutableList<? extends TypeV> parameters) {
+  public LambdaTypeO function(TypeV result, ImmutableList<? extends TypeV> parameters) {
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newLambda(result, tuple((ImmutableList<TypeV>) parameters)));
   }
 
   @Override
-  public IntOType int_() {
+  public IntTypeO int_() {
     return int_;
   }
 
-  public NativeMethodOType nativeMethod() {
+  public NativeMethodTypeO nativeMethod() {
     return nativeMethod;
   }
 
   @Override
-  public NothingOType nothing() {
+  public NothingTypeO nothing() {
     return nothing;
   }
 
-  public TupleOType tuple(ImmutableList<TypeV> itemTypes) {
+  public TupleTypeO tuple(ImmutableList<TypeV> itemTypes) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(itemTypes));
   }
 
   @Override
-  public StringOType string() {
+  public StringTypeO string() {
     return string;
   }
 
   @Override
-  public StructOType struct(String name, NamedList<? extends TypeV> fields) {
+  public StructTypeO struct(String name, NamedList<? extends TypeV> fields) {
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newStruct(name, (NamedList<TypeV>) fields));
   }
 
   @Override
-  public VariableOType variable(String name) {
+  public VariableO variable(String name) {
     checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
     return wrapHashedDbExceptionAsObjectDbException(() -> newVariable(name));
   }
@@ -220,7 +220,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evaluationType));
   }
 
-  public ConstructOType construct(TupleOType evaluationType) {
+  public ConstructOType construct(TupleTypeO evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(evaluationType));
   }
 
@@ -232,7 +232,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evaluationType));
   }
 
-  public StructExprOType structExpr(StructOType struct) {
+  public StructExprOType structExpr(StructTypeO struct) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newStructExpr(struct));
   }
 
@@ -298,16 +298,16 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return readDataAsClass(rootHash, rootSequence, objKind, TypeV.class);
   }
 
-  private ArrayOType readDataAsArray(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
-    return readDataAsClass(rootHash, rootSequence, objKind, ArrayOType.class);
+  private ArrayTypeO readDataAsArray(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
+    return readDataAsClass(rootHash, rootSequence, objKind, ArrayTypeO.class);
   }
 
-  private TupleOType readDataAsTuple(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
-    return readDataAsClass(rootHash, rootSequence, objKind, TupleOType.class);
+  private TupleTypeO readDataAsTuple(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
+    return readDataAsClass(rootHash, rootSequence, objKind, TupleTypeO.class);
   }
 
-  private StructOType readDataAsStruct(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
-    return readDataAsClass(rootHash, rootSequence, objKind, StructOType.class);
+  private StructTypeO readDataAsStruct(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
+    return readDataAsClass(rootHash, rootSequence, objKind, StructTypeO.class);
   }
 
   private <T extends TypeO> T readDataAsClass(Hash rootHash, List<Hash> rootSequence,
@@ -326,12 +326,12 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     }
     TypeV result = readInnerType(objKind, rootHash, data.get(LAMBDA_RESULT_INDEX),
         LAMBDA_RESULT_PATH, TypeV.class);
-    TupleOType parameters = readInnerType(objKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
-        LAMBDA_PARAMS_PATH, TupleOType.class);
+    TupleTypeO parameters = readInnerType(objKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
+        LAMBDA_PARAMS_PATH, TupleTypeO.class);
     return newLambda(rootHash, result, parameters);
   }
 
-  private TupleOType readTuple(Hash rootHash, List<Hash> rootSequence) {
+  private TupleTypeO readTuple(Hash rootHash, List<Hash> rootSequence) {
     assertTypeRootSequenceSize(rootHash, TUPLE, rootSequence, 2);
     var items = readTupleItems(rootHash, rootSequence.get(DATA_INDEX));
     return newTuple(rootHash, items);
@@ -346,7 +346,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return builder.build();
   }
 
-  private StructOType readStruct(Hash rootHash, List<Hash> rootSequence) {
+  private StructTypeO readStruct(Hash rootHash, List<Hash> rootSequence) {
     assertTypeRootSequenceSize(rootHash, STRUCT, rootSequence, 2);
     Hash dataHash = rootSequence.get(DATA_INDEX);
     List<Hash> data = readSequenceHashes(rootHash, dataHash, STRUCT, DATA_PATH);
@@ -390,7 +390,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return builder.build();
   }
 
-  private VariableOType readVariable(Hash rootHash, List<Hash> rootSequence) {
+  private VariableO readVariable(Hash rootHash, List<Hash> rootSequence) {
     assertTypeRootSequenceSize(rootHash, VARIABLE, rootSequence, 2);
     String name = wrapHashedDbExceptionAsDecodeTypeNodeException(
         rootHash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSequence.get(1)));
@@ -428,50 +428,50 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
 
   // methods for creating Val types
 
-  private ArrayOType newArray(TypeV elementType) throws HashedDbException {
+  private ArrayTypeO newArray(TypeV elementType) throws HashedDbException {
     var rootHash = writeArrayRoot(elementType);
     return newArray(rootHash, elementType);
   }
 
-  private ArrayOType newArray(Hash rootHash, TypeV elementType) {
-    return cache(new ArrayOType(rootHash, elementType));
+  private ArrayTypeO newArray(Hash rootHash, TypeV elementType) {
+    return cache(new ArrayTypeO(rootHash, elementType));
   }
 
-  private LambdaOType newLambda(TypeV result, TupleOType parameters) throws HashedDbException {
+  private LambdaTypeO newLambda(TypeV result, TupleTypeO parameters) throws HashedDbException {
     var rootHash = writeLambdaRoot(result, parameters);
     return newLambda(rootHash, result, parameters);
   }
 
-  private LambdaOType newLambda(Hash rootHash, TypeV result, TupleOType parameters) {
-    return cache(new LambdaOType(rootHash, result, parameters));
+  private LambdaTypeO newLambda(Hash rootHash, TypeV result, TupleTypeO parameters) {
+    return cache(new LambdaTypeO(rootHash, result, parameters));
   }
 
-  private StructOType newStruct(String name, NamedList<TypeV> fields)
+  private StructTypeO newStruct(String name, NamedList<TypeV> fields)
       throws HashedDbException {
     var rootHash = writeStructRoot(name, fields);
     return newStruct(rootHash, name, fields);
   }
 
-  private StructOType newStruct(Hash rootHash, String name, NamedList<TypeV> fields) {
-    return cache(new StructOType(rootHash, name, fields));
+  private StructTypeO newStruct(Hash rootHash, String name, NamedList<TypeV> fields) {
+    return cache(new StructTypeO(rootHash, name, fields));
   }
 
-  private TupleOType newTuple(ImmutableList<TypeV> itemTypes) throws HashedDbException {
+  private TupleTypeO newTuple(ImmutableList<TypeV> itemTypes) throws HashedDbException {
     var hash = writeTupleRoot(itemTypes);
     return newTuple(hash, itemTypes);
   }
 
-  private TupleOType newTuple(Hash rootHash, ImmutableList<? extends TypeV> itemTypes) {
-    return cache(new TupleOType(rootHash, itemTypes));
+  private TupleTypeO newTuple(Hash rootHash, ImmutableList<? extends TypeV> itemTypes) {
+    return cache(new TupleTypeO(rootHash, itemTypes));
   }
 
-  private VariableOType newVariable(String name) throws HashedDbException {
+  private VariableO newVariable(String name) throws HashedDbException {
     var rootHash = writeVariableRoot(name);
     return newVariable(rootHash, name);
   }
 
-  private VariableOType newVariable(Hash rootHash, String name) {
-    return cache(new VariableOType(rootHash, name));
+  private VariableO newVariable(Hash rootHash, String name) {
+    return cache(new VariableO(rootHash, name));
   }
 
   // methods for creating Expr types
@@ -494,12 +494,12 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return cache(new ConstOType(rootHash, evaluationType));
   }
 
-  private ConstructOType newConstruct(TupleOType evaluationType) throws HashedDbException {
+  private ConstructOType newConstruct(TupleTypeO evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(CONSTRUCT, evaluationType);
     return newConstruct(rootHash, evaluationType);
   }
 
-  private ConstructOType newConstruct(Hash rootHash, TupleOType evaluationType) {
+  private ConstructOType newConstruct(Hash rootHash, TupleTypeO evaluationType) {
     return cache(new ConstructOType(rootHash, evaluationType));
   }
 
@@ -518,7 +518,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return newOrder(rootHash, evaluationType);
   }
 
-  private OrderOType newOrder(Hash rootHash, ArrayOType evaluationType) {
+  private OrderOType newOrder(Hash rootHash, ArrayTypeO evaluationType) {
     return cache(new OrderOType(rootHash, evaluationType));
   }
 
@@ -540,12 +540,12 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return cache(new SelectOType(rootHash, evaluationType));
   }
 
-  private StructExprOType newStructExpr(StructOType evaluationType) throws HashedDbException {
+  private StructExprOType newStructExpr(StructTypeO evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(STRUCT_EXPR, evaluationType);
     return newStructExpr(rootHash, evaluationType);
   }
 
-  private StructExprOType newStructExpr(Hash rootHash, StructOType evaluationType) {
+  private StructExprOType newStructExpr(Hash rootHash, StructTypeO evaluationType) {
     return cache(new StructExprOType(rootHash, evaluationType));
   }
 
@@ -561,7 +561,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return writeNonBaseRoot(ARRAY, elementType.hash());
   }
 
-  private Hash writeLambdaRoot(TypeV result, TupleOType parameters) throws HashedDbException {
+  private Hash writeLambdaRoot(TypeV result, TupleTypeO parameters) throws HashedDbException {
     var hash = hashedDb.writeSequence(result.hash(), parameters.hash());
     return writeNonBaseRoot(LAMBDA, hash);
   }

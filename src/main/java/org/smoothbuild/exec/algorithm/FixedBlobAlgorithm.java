@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.job.TaskInfo.NAME_LENGTH_LIMIT;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.type.val.BlobOType;
+import org.smoothbuild.db.object.type.val.BlobTypeO;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -16,7 +16,7 @@ public class FixedBlobAlgorithm extends Algorithm {
   private final ByteString byteString;
   private final String shortedString;
 
-  public FixedBlobAlgorithm(BlobOType blobType, ByteString byteString) {
+  public FixedBlobAlgorithm(BlobTypeO blobType, ByteString byteString) {
     super(blobType);
     this.byteString = byteString;
     this.shortedString = toStringLimitedWithEllipsis(byteString, NAME_LENGTH_LIMIT);

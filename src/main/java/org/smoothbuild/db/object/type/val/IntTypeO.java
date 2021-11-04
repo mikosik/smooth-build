@@ -14,8 +14,8 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class IntOType extends TypeV implements IntType {
-  public IntOType(Hash hash) {
+public class IntTypeO extends TypeV implements IntType {
+  public IntTypeO(Hash hash) {
     super(TypeNames.INT, hash, INT);
   }
 

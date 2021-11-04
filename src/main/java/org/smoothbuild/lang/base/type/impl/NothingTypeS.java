@@ -6,8 +6,8 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class NothingSType extends BaseSType implements NothingType {
-  public NothingSType() {
+public class NothingTypeS extends BaseTypeS implements NothingType {
+  public NothingTypeS() {
     super(TypeNames.NOTHING);
   }
 }

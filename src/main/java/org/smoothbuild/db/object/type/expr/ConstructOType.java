@@ -8,19 +8,19 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.type.base.TypeE;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 
 /**
  * This class is immutable.
  */
 public class ConstructOType extends TypeE {
-  public ConstructOType(Hash hash, TupleOType evaluationType) {
+  public ConstructOType(Hash hash, TupleTypeO evaluationType) {
     super("CONSTRUCT", hash, CONSTRUCT, evaluationType);
   }
 
   @Override
-  public TupleOType evaluationType() {
-    return (TupleOType) super.evaluationType();
+  public TupleTypeO evaluationType() {
+    return (TupleTypeO) super.evaluationType();
   }
 
   @Override

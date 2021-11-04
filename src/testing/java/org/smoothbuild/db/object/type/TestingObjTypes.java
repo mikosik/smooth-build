@@ -5,9 +5,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.StructOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -25,11 +25,11 @@ public class TestingObjTypes {
   public static final TypeV INT = OBJECT_TYPE_DB.int_();
   public static final TypeV NOTHING = OBJECT_TYPE_DB.nothing();
   public static final TypeV STR = OBJECT_TYPE_DB.string();
-  public static final TupleOType PERSON_TUPLE = CONTEXT.perso_OT();
-  public static final StructOType PERSON = CONTEXT.personOT();
-  public static final TupleOType FILE = CONTEXT.fileOT();
-  public static final TupleOType EMPTY_TUPLE = CONTEXT.tupleEmptyOT();
-  public static final TupleOType TUPLE_WITH_STRING = CONTEXT.tupleWithStrOT();
+  public static final TupleTypeO PERSON_TUPLE = CONTEXT.perso_OT();
+  public static final StructTypeO PERSON = CONTEXT.personOT();
+  public static final TupleTypeO FILE = CONTEXT.fileOT();
+  public static final TupleTypeO EMPTY_TUPLE = CONTEXT.tupleEmptyOT();
+  public static final TupleTypeO TUPLE_WITH_STRING = CONTEXT.tupleWithStrOT();
   public static final TypeO CALL = CONTEXT.callOT();
   public static final TypeO CONST = CONTEXT.constOT(STR);
   public static final TypeO ORDER = CONTEXT.orderOT();
@@ -37,27 +37,27 @@ public class TestingObjTypes {
   public static final TypeO SELECT = CONTEXT.selectOT(INT);
   public static final TypeO REF = CONTEXT.refOT(INT);
 
-  public static final ArrayOType ARRAY_ANY = array(ANY);
-  public static final ArrayOType ARRAY_BLOB = array(BLOB);
-  public static final ArrayOType ARRAY_BOOL = array(BOOL);
-  public static final ArrayOType ARRAY_LAMBDA = array(LAMBDA);
-  public static final ArrayOType ARRAY_INT = array(INT);
-  public static final ArrayOType ARRAY_NOTHING = array(NOTHING);
-  public static final ArrayOType ARRAY_STR = array(STR);
-  public static final ArrayOType ARRAY_PERSON_TUPLE = array(PERSON_TUPLE);
-  public static final ArrayOType ARRAY_PERSON = array(PERSON);
-  public static final ArrayOType ARRAY_VARIABLE = array(VARIABLE);
+  public static final ArrayTypeO ARRAY_ANY = array(ANY);
+  public static final ArrayTypeO ARRAY_BLOB = array(BLOB);
+  public static final ArrayTypeO ARRAY_BOOL = array(BOOL);
+  public static final ArrayTypeO ARRAY_LAMBDA = array(LAMBDA);
+  public static final ArrayTypeO ARRAY_INT = array(INT);
+  public static final ArrayTypeO ARRAY_NOTHING = array(NOTHING);
+  public static final ArrayTypeO ARRAY_STR = array(STR);
+  public static final ArrayTypeO ARRAY_PERSON_TUPLE = array(PERSON_TUPLE);
+  public static final ArrayTypeO ARRAY_PERSON = array(PERSON);
+  public static final ArrayTypeO ARRAY_VARIABLE = array(VARIABLE);
 
-  public static final ArrayOType ARRAY2_ANY = array(ARRAY_ANY);
-  public static final ArrayOType ARRAY2_BLOB = array(ARRAY_BLOB);
-  public static final ArrayOType ARRAY2_BOOL = array(ARRAY_BOOL);
-  public static final ArrayOType ARRAY2_LAMBDA = array(ARRAY_LAMBDA);
-  public static final ArrayOType ARRAY2_INT = array(ARRAY_INT);
-  public static final ArrayOType ARRAY2_NOTHING = array(ARRAY_NOTHING);
-  public static final ArrayOType ARRAY2_STR = array(ARRAY_STR);
-  public static final ArrayOType ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
-  public static final ArrayOType ARRAY2_PERSON = array(ARRAY_PERSON);
-  public static final ArrayOType ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
+  public static final ArrayTypeO ARRAY2_ANY = array(ARRAY_ANY);
+  public static final ArrayTypeO ARRAY2_BLOB = array(ARRAY_BLOB);
+  public static final ArrayTypeO ARRAY2_BOOL = array(ARRAY_BOOL);
+  public static final ArrayTypeO ARRAY2_LAMBDA = array(ARRAY_LAMBDA);
+  public static final ArrayTypeO ARRAY2_INT = array(ARRAY_INT);
+  public static final ArrayTypeO ARRAY2_NOTHING = array(ARRAY_NOTHING);
+  public static final ArrayTypeO ARRAY2_STR = array(ARRAY_STR);
+  public static final ArrayTypeO ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
+  public static final ArrayTypeO ARRAY2_PERSON = array(ARRAY_PERSON);
+  public static final ArrayTypeO ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
   public static final ImmutableList<TypeO> VAL_TYPES_TO_TEST = list(
       BLOB,
@@ -85,7 +85,7 @@ public class TestingObjTypes {
       ARRAY2_PERSON_TUPLE
   );
 
-  private static ArrayOType array(TypeV elemType) {
+  private static ArrayTypeO array(TypeV elemType) {
     return OBJECT_TYPE_DB.array(elemType);
   }
 }

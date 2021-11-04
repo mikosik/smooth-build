@@ -8,12 +8,12 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.BlobOType;
-import org.smoothbuild.db.object.type.val.IntOType;
-import org.smoothbuild.db.object.type.val.StringOType;
-import org.smoothbuild.db.object.type.val.StructOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.BlobTypeO;
+import org.smoothbuild.db.object.type.val.IntTypeO;
+import org.smoothbuild.db.object.type.val.StringTypeO;
+import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BlobType;
 import org.smoothbuild.lang.base.type.api.BoolType;
@@ -59,31 +59,31 @@ public class TypeSToTypeOConverter {
     }
   }
 
-  public BlobOType visit(BlobType type) {
+  public BlobTypeO visit(BlobType type) {
     return objFactory.blobType();
   }
 
-  public IntOType visit(IntType type) {
+  public IntTypeO visit(IntType type) {
     return objFactory.intType();
   }
 
-  public StringOType visit(StringType string) {
+  public StringTypeO visit(StringType string) {
     return objFactory.stringType();
   }
 
-  public ArrayOType visit(ArrayType array) {
+  public ArrayTypeO visit(ArrayType array) {
     if (array.isPolytype()) {
       throw new UnsupportedOperationException();
     }
     return objFactory.arrayType(visit(array.element()));
   }
 
-  private TupleOType nativeCodeType() {
+  private TupleTypeO nativeCodeType() {
     return objFactory.tupleType(
         list(objFactory.stringType(), objFactory.blobType()));
   }
 
-  public StructOType functionType() {
+  public StructTypeO functionType() {
     return objFactory.structType(
         "", namedList(list(named(objFactory.stringType()), named(objFactory.blobType()))));
   }

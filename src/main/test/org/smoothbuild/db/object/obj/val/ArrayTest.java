@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.type.TestingObjTypes;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.NothingOType;
+import org.smoothbuild.db.object.type.val.NothingTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -262,7 +262,7 @@ public class ArrayTest extends TestingContext {
           .isEqualTo("[]@" + array.hash());
     }
 
-    private Array emptyArrayOf(NothingOType elemType) {
+    private Array emptyArrayOf(NothingTypeO elemType) {
       return objectDb().arrayBuilder(elemType).build();
     }
   }

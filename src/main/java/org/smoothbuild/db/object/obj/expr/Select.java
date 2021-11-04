@@ -13,7 +13,7 @@ import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationTypeExceptio
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.SelectOType;
-import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.StructTypeO;
 
 /**
  * This class is immutable.
@@ -35,7 +35,7 @@ public class Select extends Expr {
 
   public SelectData data() {
     Expr struct = readStruct();
-    if (struct.evaluationType() instanceof StructOType structevaluationType) {
+    if (struct.evaluationType() instanceof StructTypeO structevaluationType) {
       Int index = readIndex();
       int i = index.jValue().intValue();
       int size = structevaluationType.fields().size();
@@ -49,7 +49,7 @@ public class Select extends Expr {
       return new SelectData(struct, index);
     } else {
       throw new DecodeExprWrongEvaluationTypeOfComponentException(
-          hash(), type(), "struct", StructOType.class, struct.evaluationType());
+          hash(), type(), "struct", StructTypeO.class, struct.evaluationType());
     }
   }
 

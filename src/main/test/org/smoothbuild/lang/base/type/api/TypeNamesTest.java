@@ -8,7 +8,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.impl.BaseSType;
+import org.smoothbuild.lang.base.type.impl.BaseTypeS;
 
 public class TypeNamesTest {
   @Nested
@@ -74,7 +74,7 @@ public class TypeNamesTest {
     }
   }
 
-  private BaseSType type(String resultType) {
-    return new BaseSType(resultType);
+  private BaseTypeS type(String resultType) {
+    return new BaseTypeS(resultType);
   }
 }

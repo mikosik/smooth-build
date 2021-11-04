@@ -10,8 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.TypeO;
-import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 public class TypeOCachingTest extends TestingContext {
@@ -65,11 +65,11 @@ public class TypeOCachingTest extends TestingContext {
     );
   }
 
-  private static TupleOType tupleType(ObjTypeDb objTypeDb) {
+  private static TupleTypeO tupleType(ObjTypeDb objTypeDb) {
     return objTypeDb.tuple(list(objTypeDb.string(), objTypeDb.string()));
   }
 
-  private static LambdaOType lambdaType(ObjTypeDb objTypeDb) {
+  private static LambdaTypeO lambdaType(ObjTypeDb objTypeDb) {
     return objTypeDb.function(objTypeDb.string(), list(objTypeDb.bool(), objTypeDb.blob()));
   }
 }

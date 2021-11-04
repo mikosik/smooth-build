@@ -7,7 +7,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.type.base.TypeO;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 
 import com.google.common.collect.ImmutableList;
 
@@ -22,8 +22,8 @@ public class Tuple extends Val {
   }
 
   @Override
-  public TupleOType type() {
-    return (TupleOType) super.type();
+  public TupleTypeO type() {
+    return (TupleTypeO) super.type();
   }
 
   public Val get(int index) {

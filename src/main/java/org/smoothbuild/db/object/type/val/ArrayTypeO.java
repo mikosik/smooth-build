@@ -15,10 +15,10 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
 /**
  * This class is immutable.
  */
-public class ArrayOType extends TypeV implements ArrayType {
+public class ArrayTypeO extends TypeV implements ArrayType {
   private final TypeV element;
 
-  public ArrayOType(Hash hash, TypeV element) {
+  public ArrayTypeO(Hash hash, TypeV element) {
     super(arrayTypeName(element), hash, ARRAY, element.variables());
     this.element = requireNonNull(element);
   }

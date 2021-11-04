@@ -69,9 +69,9 @@ import org.smoothbuild.db.object.type.expr.CallOType;
 import org.smoothbuild.db.object.type.expr.ConstOType;
 import org.smoothbuild.db.object.type.expr.ConstructOType;
 import org.smoothbuild.db.object.type.expr.OrderOType;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -198,7 +198,7 @@ public class CorruptedObjTest extends TestingContext {
     public void with_sequence_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
-      ArrayOType type = arrayOT(stringOT());
+      ArrayTypeO type = arrayOT(stringOT());
       Hash objHash =
           hash(
               hash(type),
@@ -216,7 +216,7 @@ public class CorruptedObjTest extends TestingContext {
       Hash dataHash = hash(
           nowhere
       );
-      ArrayOType type = arrayOT(stringOT());
+      ArrayTypeO type = arrayOT(stringOT());
       Hash objHash =
           hash(
               hash(type),
@@ -228,7 +228,7 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void with_one_element_of_wrong_types() throws Exception {
-      ArrayOType type = arrayOT(stringOT());
+      ArrayTypeO type = arrayOT(stringOT());
       Hash objHash =
           hash(
               hash(type),
@@ -249,7 +249,7 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void with_one_element_being_expr() throws Exception {
-      ArrayOType type = arrayOT(stringOT());
+      ArrayTypeO type = arrayOT(stringOT());
       Hash objHash =
           hash(
               hash(type),
@@ -500,7 +500,7 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
-              objHash, type, "function", LambdaOType.class, intOT()));
+              objHash, type, "function", LambdaTypeO.class, intOT()));
     }
 
     @Test
@@ -563,7 +563,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void function_evaluation_type_parameters_does_not_match_arguments_evaluation_types()
         throws Exception {
-      LambdaOType lambdaType = lambdaOT(intOT(), list(stringOT(), boolOT()));
+      LambdaTypeO lambdaType = lambdaOT(intOT(), list(stringOT(), boolOT()));
       Const function = const_(lambda(lambdaType, intExpr()));
       Construct arguments = construct(list(stringExpr(), intExpr()));
       CallOType spec = callOT(intOT());
@@ -662,7 +662,7 @@ public class CorruptedObjTest extends TestingContext {
        * in HashedDb.
        */
       Const bodyExpr = boolExpr();
-      LambdaOType type = lambdaOT(boolOT(), list(intOT(), stringOT()));
+      LambdaTypeO type = lambdaOT(boolOT(), list(intOT(), stringOT()));
       Hash objHash =
           hash(
               hash(type),
@@ -680,7 +680,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const bodyExpr = boolExpr();
-      LambdaOType type = lambdaOT(boolOT(), list(intOT(), stringOT()));
+      LambdaTypeO type = lambdaOT(boolOT(), list(intOT(), stringOT()));
       Hash dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           type,
@@ -698,7 +698,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void body_is_val_instead_of_expr() throws Exception {
       Bool bodyExpr = bool(true);
-      LambdaOType type = lambdaOT(boolOT(), list(intOT(), stringOT()));
+      LambdaTypeO type = lambdaOT(boolOT(), list(intOT(), stringOT()));
       Hash objHash =
           hash(
               hash(type),
@@ -712,7 +712,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void body_evaluation_type_is_not_equal_function_type_result() throws Exception {
       Const bodyExpr = intExpr(3);
-      LambdaOType type = lambdaOT(boolOT(), list(intOT(), stringOT()));
+      LambdaTypeO type = lambdaOT(boolOT(), list(intOT(), stringOT()));
       Hash objHash =
           hash(
               hash(type),
@@ -1094,7 +1094,7 @@ public class CorruptedObjTest extends TestingContext {
 
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
-              objHash, type, "struct", StructOType.class, intOT()));
+              objHash, type, "struct", StructTypeO.class, intOT()));
     }
 
     @Test

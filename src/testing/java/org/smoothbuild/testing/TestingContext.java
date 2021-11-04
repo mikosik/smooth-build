@@ -47,18 +47,18 @@ import org.smoothbuild.db.object.type.expr.OrderOType;
 import org.smoothbuild.db.object.type.expr.RefOType;
 import org.smoothbuild.db.object.type.expr.SelectOType;
 import org.smoothbuild.db.object.type.expr.StructExprOType;
-import org.smoothbuild.db.object.type.val.AnyOType;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.BlobOType;
-import org.smoothbuild.db.object.type.val.BoolOType;
-import org.smoothbuild.db.object.type.val.IntOType;
-import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.db.object.type.val.NativeMethodOType;
-import org.smoothbuild.db.object.type.val.NothingOType;
-import org.smoothbuild.db.object.type.val.StringOType;
-import org.smoothbuild.db.object.type.val.StructOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
-import org.smoothbuild.db.object.type.val.VariableOType;
+import org.smoothbuild.db.object.type.val.AnyTypeO;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.BlobTypeO;
+import org.smoothbuild.db.object.type.val.BoolTypeO;
+import org.smoothbuild.db.object.type.val.IntTypeO;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.NativeMethodTypeO;
+import org.smoothbuild.db.object.type.val.NothingTypeO;
+import org.smoothbuild.db.object.type.val.StringTypeO;
+import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
+import org.smoothbuild.db.object.type.val.VariableO;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
@@ -82,19 +82,19 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Variable;
-import org.smoothbuild.lang.base.type.impl.AnySType;
-import org.smoothbuild.lang.base.type.impl.ArraySType;
-import org.smoothbuild.lang.base.type.impl.BlobSType;
-import org.smoothbuild.lang.base.type.impl.BoolSType;
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
-import org.smoothbuild.lang.base.type.impl.IntSType;
-import org.smoothbuild.lang.base.type.impl.NothingSType;
-import org.smoothbuild.lang.base.type.impl.StringSType;
-import org.smoothbuild.lang.base.type.impl.StructSType;
+import org.smoothbuild.lang.base.type.impl.AnyTypeS;
+import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
+import org.smoothbuild.lang.base.type.impl.BlobTypeS;
+import org.smoothbuild.lang.base.type.impl.BoolTypeS;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.IntTypeS;
+import org.smoothbuild.lang.base.type.impl.NothingTypeS;
+import org.smoothbuild.lang.base.type.impl.StringTypeS;
+import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
-import org.smoothbuild.lang.base.type.impl.VariableSType;
+import org.smoothbuild.lang.base.type.impl.VariableS;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -256,89 +256,89 @@ public class TestingContext {
 
   // Obj types
 
-  public StructOType animalOT() {
+  public StructTypeO animalOT() {
     return typeFactoryO().struct(
         "Animal", namedList(list(named("species", stringOT()), named("speed", intOT()))));
   }
 
-  public AnyOType anyOT() {
+  public AnyTypeO anyOT() {
     return typeFactoryO().any();
   }
 
-  public ArrayOType arrayOT(TypeV elementSpec) {
+  public ArrayTypeO arrayOT(TypeV elementSpec) {
     return typeFactoryO().array(elementSpec);
   }
 
-  public BlobOType blobOT() {
+  public BlobTypeO blobOT() {
     return typeFactoryO().blob();
   }
 
-  public BoolOType boolOT() {
+  public BoolTypeO boolOT() {
     return typeFactoryO().bool();
   }
 
-  public TupleOType fileOT() {
+  public TupleTypeO fileOT() {
     return tupleOT(list(blobOT(), stringOT()));
   }
 
-  public IntOType intOT() {
+  public IntTypeO intOT() {
     return typeFactoryO().int_();
   }
 
-  public LambdaOType lambdaOT() {
+  public LambdaTypeO lambdaOT() {
     return lambdaOT(intOT(), list(blobOT(), stringOT()));
   }
 
-  public LambdaOType lambdaOT(TypeV result, ImmutableList<? extends TypeV> parameters) {
+  public LambdaTypeO lambdaOT(TypeV result, ImmutableList<? extends TypeV> parameters) {
     return typeFactoryO().function(result, parameters);
   }
 
-  public NativeMethodOType nativeMethodOT() {
+  public NativeMethodTypeO nativeMethodOT() {
     return objTypeDb().nativeMethod();
   }
 
-  public NothingOType nothingOT() {
+  public NothingTypeO nothingOT() {
     return typeFactoryO().nothing();
   }
 
-  public TupleOType perso_OT() {
+  public TupleTypeO perso_OT() {
     return tupleOT(list(stringOT(), stringOT()));
   }
 
-  public StructOType personOT() {
+  public StructTypeO personOT() {
     return structOT("Person",
         namedList(list(named("firstName", stringOT()), named("lastName", stringOT()))));
   }
 
-  public StringOType stringOT() {
+  public StringTypeO stringOT() {
     return typeFactoryO().string();
   }
 
-  public TupleOType tupleOT(ImmutableList<TypeV> itemSpecs) {
+  public TupleTypeO tupleOT(ImmutableList<TypeV> itemSpecs) {
     return objTypeDb().tuple(itemSpecs);
   }
 
-  public TupleOType tupleEmptyOT() {
+  public TupleTypeO tupleEmptyOT() {
     return tupleOT(list());
   }
 
-  public TupleOType tupleWithStrOT() {
+  public TupleTypeO tupleWithStrOT() {
     return tupleOT(list(stringOT()));
   }
 
-  public StructOType structOT() {
+  public StructTypeO structOT() {
     return structOT(namedList(list(named("field", intOT()))));
   }
 
-  public StructOType structOT(NamedList<? extends TypeV> fields) {
+  public StructTypeO structOT(NamedList<? extends TypeV> fields) {
     return structOT("MyStruct", fields);
   }
 
-  public StructOType structOT(String name, NamedList<? extends TypeV> fields) {
+  public StructTypeO structOT(String name, NamedList<? extends TypeV> fields) {
     return typeFactoryO().struct(name, fields);
   }
 
-  public VariableOType variableOT(String name) {
+  public VariableO variableOT(String name) {
     return typeFactoryO().variable(name);
   }
 
@@ -400,7 +400,7 @@ public class TestingContext {
     return objTypeDb().select(evaluationType);
   }
 
-  public StructExprOType structExprOT(StructOType structType) {
+  public StructExprOType structExprOT(StructTypeO structType) {
     return objTypeDb().structExpr(structType);
   }
 
@@ -468,11 +468,11 @@ public class TestingContext {
   }
 
   public Lambda lambda(Expr body) {
-    LambdaOType spec = lambdaOT(body.evaluationType(), list(stringOT()));
+    LambdaTypeO spec = lambdaOT(body.evaluationType(), list(stringOT()));
     return lambda(spec, body);
   }
 
-  public Lambda lambda(LambdaOType spec, Expr body) {
+  public Lambda lambda(LambdaTypeO spec, Expr body) {
     return objectDb().lambda(spec, body);
   }
 
@@ -492,7 +492,7 @@ public class TestingContext {
     return objectDb().string(string);
   }
 
-  public Struc_ struct(StructOType spec, ImmutableList<Val> items) {
+  public Struc_ struct(StructTypeO spec, ImmutableList<Val> items) {
     return objectDb().struct(spec, items);
   }
 
@@ -501,7 +501,7 @@ public class TestingContext {
     return tuple(spec, items);
   }
 
-  public Tuple tuple(TupleOType tupleType, List<? extends Val> items) {
+  public Tuple tuple(TupleTypeO tupleType, List<? extends Val> items) {
     return objectDb().tuple(tupleType, items);
   }
 
@@ -591,47 +591,47 @@ public class TestingContext {
 
   // Types Smooth
 
-  public AnySType anyST() {
+  public AnyTypeS anyST() {
     return typeFactoryS().any();
   }
 
-  public ArraySType arrayST(TypeS elemType) {
+  public ArrayTypeS arrayST(TypeS elemType) {
     return typeFactoryS().array(elemType);
   }
 
-  public BlobSType blobST() {
+  public BlobTypeS blobST() {
     return typeFactoryS().blob();
   }
 
-  public BoolSType boolST() {
+  public BoolTypeS boolST() {
     return typeFactoryS().bool();
   }
 
-  public FunctionSType functionST(TypeS resultType, Item... parameters) {
+  public FunctionTypeS functionST(TypeS resultType, Item... parameters) {
     return typeFactoryS().function(resultType, toTypes(list(parameters)));
   }
 
-  public FunctionSType functionST(TypeS resultType, Iterable<ItemSignature> parameters) {
+  public FunctionTypeS functionST(TypeS resultType, Iterable<ItemSignature> parameters) {
     return typeFactoryS().function(resultType, map(parameters, ItemSignature::type));
   }
 
-  public IntSType intST() {
+  public IntTypeS intST() {
     return typeFactoryS().int_();
   }
 
-  public NothingSType nothingST() {
+  public NothingTypeS nothingST() {
     return typeFactoryS().nothing();
   }
 
-  public StringSType stringST() {
+  public StringTypeS stringST() {
     return typeFactoryS().string();
   }
 
-  public StructSType structST(String name, NamedList<? extends TypeS> fields) {
+  public StructTypeS structST(String name, NamedList<? extends TypeS> fields) {
     return typeFactoryS().struct(name, fields);
   }
 
-  public VariableSType variableST(String name) {
+  public VariableS variableST(String name) {
     return typeFactoryS().variable(name);
   }
 
@@ -644,8 +644,8 @@ public class TestingContext {
   }
 
   public BoundsMap bmST(
-      VariableSType var1, Side side1, TypeS bound1,
-      VariableSType var2, Side side2, TypeS bound2) {
+      VariableS var1, Side side1, TypeS bound1,
+      VariableS var2, Side side2, TypeS bound2) {
     Bounds bounds1 = oneSideBoundST(side1, bound1);
     Bounds bounds2 = oneSideBoundST(side2, bound2);
     if (var1.equals(var2)) {

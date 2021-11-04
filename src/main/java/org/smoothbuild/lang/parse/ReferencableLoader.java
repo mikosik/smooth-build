@@ -20,9 +20,9 @@ import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
-import org.smoothbuild.lang.base.type.impl.ArraySType;
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
-import org.smoothbuild.lang.base.type.impl.StructSType;
+import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.Annotation;
@@ -88,7 +88,7 @@ public class ReferencableLoader {
     var resultType = realFuncNode.resultType().get();
     String name = realFuncNode.name();
     Location location = realFuncNode.location();
-    FunctionSType type = factory.function(resultType, toTypes(parameters));
+    FunctionTypeS type = factory.function(resultType, toTypes(parameters));
     if (realFuncNode.annotation().isPresent()) {
       return new NativeFunction(type,
           path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
@@ -152,7 +152,7 @@ public class ReferencableLoader {
     }
 
     private Expression createArrayLiteral(ArrayNode array) {
-      var type = (ArraySType) array.type().get();
+      var type = (ArrayTypeS) array.type().get();
       ImmutableList<Expression> elements = map(array.elements(), this::createExpression);
       return new ArrayLiteralExpression(type, elements, array.location());
     }
@@ -199,7 +199,7 @@ public class ReferencableLoader {
     }
 
     private Expression createSelect(SelectNode selectNode) {
-      var structType = (StructSType) selectNode.expr().type().get();
+      var structType = (StructTypeS) selectNode.expr().type().get();
       var index = structType.fields().indexMap().get(selectNode.fieldName());
       var fieldType = structType.fields().getObject(index);
       Expression expression = createExpression(selectNode.expr());

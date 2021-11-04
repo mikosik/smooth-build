@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.util.collect.Lists;
 
@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 public class DefinedFunction extends Function implements DefinedEvaluable {
   private final Expression body;
 
-  public DefinedFunction(FunctionSType type, ModulePath modulePath, String name,
+  public DefinedFunction(FunctionTypeS type, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Expression body, Location location) {
     super(type, modulePath, name, parameters, location);
     this.body = body;

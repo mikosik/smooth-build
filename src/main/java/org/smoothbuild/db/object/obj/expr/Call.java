@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.CallOType;
-import org.smoothbuild.db.object.type.val.LambdaOType;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
 
 /**
  * This class is immutable.
@@ -39,7 +39,7 @@ public class Call extends Expr {
   public record CallData(Expr function, Construct arguments) {}
 
   private void validate(Expr function, Construct arguments) {
-    if (function.evaluationType() instanceof LambdaOType lambdaType) {
+    if (function.evaluationType() instanceof LambdaTypeO lambdaType) {
       if (!Objects.equals(evaluationType(), lambdaType.result())) {
         throw new DecodeExprWrongEvaluationTypeOfComponentException(
             hash(), type(), "function.result", evaluationType(), lambdaType.result());
@@ -50,7 +50,7 @@ public class Call extends Expr {
       }
     } else {
       throw new DecodeExprWrongEvaluationTypeOfComponentException(
-          hash(), type(), "function", LambdaOType.class, function.evaluationType());
+          hash(), type(), "function", LambdaTypeO.class, function.evaluationType());
     }
   }
 

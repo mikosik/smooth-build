@@ -17,7 +17,7 @@ import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.type.impl.ArraySType;
+import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.concurrent.Promise;
@@ -47,7 +47,7 @@ public class MapJob extends AbstractJob {
 
   private void onArrayCompleted(Array array, Struc_ lambda, Worker worker,
       Consumer<Val> result) {
-    var outputArrayType = (ArraySType) type();
+    var outputArrayType = (ArrayTypeS) type();
     var outputElemType = outputArrayType.element();
     Job lambdaJob = getJob(lambda);
     var mapElemJobs = map(

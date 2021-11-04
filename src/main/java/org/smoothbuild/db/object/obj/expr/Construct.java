@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.ConstructOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 
 import com.google.common.collect.ImmutableList;
 
@@ -30,7 +30,7 @@ public class Construct extends Expr {
   }
 
   @Override
-  public TupleOType evaluationType() {
+  public TupleTypeO evaluationType() {
     return type().evaluationType();
   }
 

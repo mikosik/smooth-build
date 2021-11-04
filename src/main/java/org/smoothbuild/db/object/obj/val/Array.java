@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.type.base.TypeO;
-import org.smoothbuild.db.object.type.val.ArrayOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
 
 import com.google.common.collect.ImmutableList;
 
@@ -19,8 +19,8 @@ public class Array extends Val {
   }
 
   @Override
-  public ArrayOType type() {
-    return (ArrayOType) super.type();
+  public ArrayTypeO type() {
+    return (ArrayTypeO) super.type();
   }
 
   public <T extends Val> ImmutableList<T> elements(Class<T> elementJType) {

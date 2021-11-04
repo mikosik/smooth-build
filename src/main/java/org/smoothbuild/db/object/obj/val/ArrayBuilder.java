@@ -8,14 +8,14 @@ import java.util.List;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.type.val.ArrayOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
 
 public class ArrayBuilder {
-  private final ArrayOType type;
+  private final ArrayTypeO type;
   private final ObjDb objDb;
   private final List<Obj> elements;
 
-  public ArrayBuilder(ArrayOType type, ObjDb objDb) {
+  public ArrayBuilder(ArrayTypeO type, ObjDb objDb) {
     this.type = type;
     this.objDb = objDb;
     this.elements = new ArrayList<>();

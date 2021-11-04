@@ -39,15 +39,15 @@ import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.StructExprOType;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.BlobOType;
-import org.smoothbuild.db.object.type.val.BoolOType;
-import org.smoothbuild.db.object.type.val.IntOType;
-import org.smoothbuild.db.object.type.val.LambdaOType;
-import org.smoothbuild.db.object.type.val.NothingOType;
-import org.smoothbuild.db.object.type.val.StringOType;
-import org.smoothbuild.db.object.type.val.StructOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.BlobTypeO;
+import org.smoothbuild.db.object.type.val.BoolTypeO;
+import org.smoothbuild.db.object.type.val.IntTypeO;
+import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.NothingTypeO;
+import org.smoothbuild.db.object.type.val.StringTypeO;
+import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.io.DataWriter;
@@ -62,8 +62,8 @@ import com.google.common.collect.ImmutableList;
 public class ObjFactory {
   private final ObjDb objDb;
   private final ObjTypeDb objTypeDb;
-  private final StructOType messageType;
-  private final StructOType fileType;
+  private final StructTypeO messageType;
+  private final StructTypeO fileType;
 
   @Inject
   public ObjFactory(ObjDb objDb, ObjTypeDb objTypeDb) {
@@ -112,7 +112,7 @@ public class ObjFactory {
     return objDb.int_(value);
   }
 
-  public Lambda lambda(LambdaOType type, Expr body) {
+  public Lambda lambda(LambdaTypeO type, Expr body) {
     return objDb.lambda(type, body);
   }
 
@@ -128,15 +128,15 @@ public class ObjFactory {
     return objDb.string(string);
   }
 
-  public Struc_ struct(StructOType structType, ImmutableList<Val> items) {
+  public Struc_ struct(StructTypeO structType, ImmutableList<Val> items) {
     return objDb.struct(structType, items);
   }
 
-  public StructExpr structExpr(StructOType evaluationType, ImmutableList<? extends Expr> items) {
+  public StructExpr structExpr(StructTypeO evaluationType, ImmutableList<? extends Expr> items) {
     return objDb.structExpr(evaluationType, items);
   }
 
-  public Tuple tuple(TupleOType type, Iterable<? extends Obj> items) {
+  public Tuple tuple(TupleTypeO type, Iterable<? extends Obj> items) {
     return objDb.tuple(type, items);
   }
 
@@ -146,52 +146,52 @@ public class ObjFactory {
 
   // Types
 
-  public ArrayOType arrayType(TypeV elementType) {
+  public ArrayTypeO arrayType(TypeV elementType) {
     return objTypeDb.array(elementType);
   }
 
-  public BlobOType blobType() {
+  public BlobTypeO blobType() {
     return objTypeDb.blob();
   }
 
-  public BoolOType boolType() {
+  public BoolTypeO boolType() {
     return objTypeDb.bool();
   }
 
-  public IntOType intType() {
+  public IntTypeO intType() {
     return objTypeDb.int_();
   }
 
-  public LambdaOType lambdaType(TypeV result, ImmutableList<? extends TypeV> parameters) {
+  public LambdaTypeO lambdaType(TypeV result, ImmutableList<? extends TypeV> parameters) {
     return objTypeDb.function(result, parameters);
   }
-  public StructOType messageType() {
+  public StructTypeO messageType() {
     return messageType;
   }
 
-  public NothingOType nothingType() {
+  public NothingTypeO nothingType() {
     return objTypeDb.nothing();
   }
 
-  public StringOType stringType() {
+  public StringTypeO stringType() {
     return objTypeDb.string();
   }
 
-  public StructOType structType(String name, NamedList<? extends TypeV> fields) {
+  public StructTypeO structType(String name, NamedList<? extends TypeV> fields) {
     return objTypeDb.struct(name, fields);
   }
 
-  public StructExprOType structExprType(StructOType struct) {
+  public StructExprOType structExprType(StructTypeO struct) {
     return objTypeDb.structExpr(struct);
   }
 
-  public TupleOType tupleType(ImmutableList<TypeV> itemTypes) {
+  public TupleTypeO tupleType(ImmutableList<TypeV> itemTypes) {
     return objTypeDb.tuple(itemTypes);
   }
 
   // other values and its types
 
-  public StructOType fileType() {
+  public StructTypeO fileType() {
     return fileType;
   }
 
@@ -213,12 +213,12 @@ public class ObjFactory {
     return objDb.struct(messageType(), list(textObject, severityObject));
   }
 
-  private static StructOType createMessageType(ObjTypeDb objTypeDb) {
-    StringOType stringType = objTypeDb.string();
+  private static StructTypeO createMessageType(ObjTypeDb objTypeDb) {
+    StringTypeO stringType = objTypeDb.string();
     return objTypeDb.struct("", namedList(list(named(stringType), named(stringType))));
   }
 
-  private static StructOType createFileType(ObjTypeDb objTypeDb) {
+  private static StructTypeO createFileType(ObjTypeDb objTypeDb) {
     return objTypeDb.struct(FileStruct.NAME, namedList(list(
         named(CONTENT_FIELD_NAME, objTypeDb.blob()), named(PATH_FIELD_NAME, objTypeDb.string())))
     );

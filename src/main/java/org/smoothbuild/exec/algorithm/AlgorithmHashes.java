@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.TypeO;
-import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.StructTypeO;
 
 import okio.ByteString;
 
@@ -23,7 +23,7 @@ public class AlgorithmHashes {
     return hash(2, destinationType.hash());
   }
 
-  public static Hash createStructAlgorithmHash(StructOType type) {
+  public static Hash createStructAlgorithmHash(StructTypeO type) {
     return hash(3, type.hash());
   }
 

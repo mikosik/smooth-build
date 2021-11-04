@@ -16,10 +16,10 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class TupleOType extends TypeV {
+public class TupleTypeO extends TypeV {
   private final ImmutableList<TypeV> itemTypes;
 
-  public TupleOType(Hash hash, Iterable<? extends TypeV> itemTypes) {
+  public TupleTypeO(Hash hash, Iterable<? extends TypeV> itemTypes) {
     super(calculateName(itemTypes), hash, TUPLE);
     this.itemTypes = ImmutableList.copyOf(itemTypes);
   }

@@ -63,8 +63,8 @@ import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.ConstructOType;
-import org.smoothbuild.db.object.type.val.ArrayOType;
-import org.smoothbuild.db.object.type.val.TupleOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -153,7 +153,7 @@ public class TypeOTest {
 
   @ParameterizedTest
   @MethodSource("array_element_cases")
-  public void array_element(ArrayOType type, TypeO expected) {
+  public void array_element(ArrayTypeO type, TypeO expected) {
     assertThat(type.element())
         .isEqualTo(expected);
   }
@@ -166,7 +166,7 @@ public class TypeOTest {
 
   @ParameterizedTest
   @MethodSource("tuple_items_cases")
-  public void tuple_item(TupleOType type, List<TypeO> expected) {
+  public void tuple_item(TupleTypeO type, List<TypeO> expected) {
     assertThat(type.items())
         .isEqualTo(expected);
   }
@@ -205,7 +205,7 @@ public class TypeOTest {
 
     @ParameterizedTest
     @MethodSource("construct_cases")
-    public void construct(ConstructOType type, TupleOType expected) {
+    public void construct(ConstructOType type, TupleTypeO expected) {
       assertThat(type.evaluationType())
           .isEqualTo(expected);
     }
@@ -238,11 +238,11 @@ public class TypeOTest {
     }
   }
 
-  private static TupleOType tupleType(TypeV... items) {
+  private static TupleTypeO tupleType(TypeV... items) {
     return tupleType(list(items));
   }
 
-  private static TupleOType tupleType(ImmutableList<TypeV> items) {
+  private static TupleTypeO tupleType(ImmutableList<TypeV> items) {
     return OBJECT_TYPE_DB.tuple(items);
   }
 

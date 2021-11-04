@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.Optionals;
 
@@ -30,6 +30,6 @@ public class FunctionNode extends ReferencableNode {
   }
 
   public Optional<TypeS> resultType() {
-    return type().map(f -> ((FunctionSType) f).result());
+    return type().map(f -> ((FunctionTypeS) f).result());
   }
 }

@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
@@ -25,8 +25,8 @@ public class Struc_ extends Val {
   }
 
   @Override
-  public StructOType type() {
-    return (StructOType) super.type();
+  public StructTypeO type() {
+    return (StructTypeO) super.type();
   }
 
   public Val get(int index) {

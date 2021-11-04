@@ -6,8 +6,8 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class BlobSType extends BaseSType implements BlobType {
-  public BlobSType() {
+public class BlobTypeS extends BaseTypeS implements BlobType {
+  public BlobTypeS() {
     super(TypeNames.BLOB);
   }
 }

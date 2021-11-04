@@ -6,8 +6,8 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class AnySType extends BaseSType implements AnyType {
-  public AnySType() {
+public class AnyTypeS extends BaseTypeS implements AnyType {
+  public AnyTypeS() {
     super(TypeNames.ANY);
   }
 }

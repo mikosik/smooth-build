@@ -12,8 +12,8 @@ import org.smoothbuild.db.object.type.base.TypeV;
 /**
  * This class is immutable.
  */
-public class NativeMethodOType extends TypeV {
-  public NativeMethodOType(Hash hash) {
+public class NativeMethodTypeO extends TypeV {
+  public NativeMethodTypeO(Hash hash) {
     super("NATIVE_METHOD", hash, NATIVE_METHOD);
   }
 

@@ -11,11 +11,11 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class FunctionSType extends TypeS implements FunctionType {
+public class FunctionTypeS extends TypeS implements FunctionType {
   private final TypeS result;
   private final ImmutableList<TypeS> parameters;
 
-  public FunctionSType(TypeS result, ImmutableList<TypeS> parameters) {
+  public FunctionTypeS(TypeS result, ImmutableList<TypeS> parameters) {
     super(functionTypeName(result, parameters), calculateVariables(result, parameters));
     this.result = requireNonNull(result);
     this.parameters = requireNonNull(parameters);
@@ -36,7 +36,7 @@ public class FunctionSType extends TypeS implements FunctionType {
     if (this == object) {
       return true;
     }
-    return object instanceof FunctionSType that
+    return object instanceof FunctionTypeS that
         && result.equals(that.result)
         && parameters.equals(that.parameters);
   }

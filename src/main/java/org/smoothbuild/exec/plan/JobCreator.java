@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
@@ -51,8 +51,8 @@ import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
-import org.smoothbuild.lang.base.type.impl.ArraySType;
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -184,7 +184,7 @@ public class JobCreator {
     if (eager) {
       return callEagerJob(scope, function, arguments, location, variables);
     } else {
-      var functionType = (FunctionSType) function.type();
+      var functionType = (FunctionTypeS) function.type();
       var actualResultType = typing.mapVariables(functionType.result(), variables, factory.lower());
       return new LazyJob(actualResultType, location,
           () -> callEagerJob(scope, function, arguments, location, variables));
@@ -199,14 +199,14 @@ public class JobCreator {
 
   private Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
       Location location, BoundsMap variables) {
-    var functionType = (FunctionSType) function.type();
+    var functionType = (FunctionTypeS) function.type();
     var actualResultType = typing.mapVariables(functionType.result(), variables, factory.lower());
     return new ApplyJob(
         actualResultType, function, arguments, location, variables, scope, JobCreator.this);
   }
 
   private BoundsMap inferVariablesInFunctionCall(Job function, List<Job> arguments) {
-    var functionType = (FunctionSType) function.type();
+    var functionType = (FunctionTypeS) function.type();
     var argumentTypes = map(arguments, Job::type);
     return typing.inferVariableBounds(functionType.parameters(), argumentTypes, factory.lower());
   }
@@ -281,7 +281,7 @@ public class JobCreator {
     return arrayEager(arrayLiteral, elements, actualType);
   }
 
-  private Optional<ArraySType> arrayType(List<Job> elements) {
+  private Optional<ArrayTypeS> arrayType(List<Job> elements) {
     return elements
         .stream()
         .map(Job::type)
@@ -290,13 +290,13 @@ public class JobCreator {
   }
 
   private Job arrayEager(ArrayLiteralExpression expression, List<Job> elements,
-      ArraySType actualType) {
+      ArrayTypeS actualType) {
     var convertedElements = map(elements, e -> convertIfNeededEagerJob(actualType.element(), e));
     var info = new TaskInfo(LITERAL, "[]", expression.location());
     return arrayEager(actualType, convertedElements, info);
   }
 
-  public Job arrayEager(ArraySType type, ImmutableList<Job> elements, TaskInfo info) {
+  public Job arrayEager(ArrayTypeS type, ImmutableList<Job> elements, TaskInfo info) {
     var algorithm = new CreateArrayAlgorithm(toOTypeConverter.visit(type));
     return new Task(type, elements, info, algorithm);
   }
@@ -377,7 +377,7 @@ public class JobCreator {
       return new MapJob(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof Constructor constructor) {
       var resultType = constructor.type().result();
-      var structType = (StructOType) toOTypeConverter.visit(resultType);
+      var structType = (StructTypeO) toOTypeConverter.visit(resultType);
       return constructorCallEagerJob(resultType, structType, constructor.extendedName(),
           arguments, location);
     } else {
@@ -454,7 +454,7 @@ public class JobCreator {
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }
 
-  private Job constructorCallEagerJob(TypeS resultType, StructOType structType, String name,
+  private Job constructorCallEagerJob(TypeS resultType, StructTypeO structType, String name,
       List<Job> arguments, Location location) {
     var algorithm = new CreateStructAlgorithm(structType);
     var info = new TaskInfo(CALL, name, location);

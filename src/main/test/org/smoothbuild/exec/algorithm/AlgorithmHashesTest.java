@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -29,7 +29,7 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    StructOType constructedType = structOT();
+    StructTypeO constructedType = structOT();
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
@@ -59,8 +59,8 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void create_struct_algorithm_has_different_hash_for_different_fields() {
-    StructOType constructedType = structOT(namedList(list()));
-    StructOType constructedType2 = structOT(namedList(list(named("field", blobOT()))));
+    StructTypeO constructedType = structOT(namedList(list()));
+    StructTypeO constructedType2 = structOT(namedList(list(named("field", blobOT()))));
 
     assertThat(createStructAlgorithmHash(constructedType))
         .isNotEqualTo(createStructAlgorithmHash(constructedType2));

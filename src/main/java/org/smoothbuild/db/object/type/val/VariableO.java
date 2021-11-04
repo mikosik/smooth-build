@@ -12,11 +12,11 @@ import org.smoothbuild.lang.base.type.api.Variable;
 
 import com.google.common.collect.ImmutableSet;
 
-public class VariableOType extends TypeV implements Variable {
+public class VariableO extends TypeV implements Variable {
   private final String name;
   private final ImmutableSet<Variable> variables;
 
-  public VariableOType(Hash hash, String name) {
+  public VariableO(Hash hash, String name) {
     super(name, hash, VARIABLE);
     this.name = name;
     this.variables = set(this);

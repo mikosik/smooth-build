@@ -18,7 +18,7 @@ import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -81,7 +81,7 @@ public class AssignmentTest extends TestingContext {
       module.loadsSuccessfully();
     } else {
       var type = targetType.type();
-      FunctionType functionType = new FunctionSType(type, list(type));
+      FunctionType functionType = new FunctionTypeS(type, list(type));
       module.loadsWithError(3, "In call to function with type " + functionType.q()
           + ": Cannot assign argument of type " + sourceType.q()
           + " to parameter `target` of type " + targetType.q() + ".");
@@ -102,7 +102,7 @@ public class AssignmentTest extends TestingContext {
       module.loadsSuccessfully();
     } else {
       var type = targetType.type();
-      FunctionType functionType = new FunctionSType(type, list(type));
+      FunctionType functionType = new FunctionTypeS(type, list(type));
       module.loadsWithError(3,
           "In call to function with type " + functionType.q() +
               ": Cannot assign argument of type " + sourceType.q()

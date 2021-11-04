@@ -7,7 +7,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -25,7 +25,7 @@ public class IfFunction extends Function {
 
   private IfFunction(TypeS resultType, ImmutableList<Item> parameters, ModulePath modulePath,
       TypeFactory typing) {
-    super((FunctionSType) typing.function(resultType, toTypes(parameters)),
+    super((FunctionTypeS) typing.function(resultType, toTypes(parameters)),
         modulePath, IF_FUNCTION_NAME, parameters, internal());
   }
 

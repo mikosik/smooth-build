@@ -8,19 +8,19 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.type.base.TypeE;
-import org.smoothbuild.db.object.type.val.ArrayOType;
+import org.smoothbuild.db.object.type.val.ArrayTypeO;
 
 /**
  * This class is immutable.
  */
 public class OrderOType extends TypeE {
-  public OrderOType(Hash hash, ArrayOType evaluationType) {
+  public OrderOType(Hash hash, ArrayTypeO evaluationType) {
     super("ORDER", hash, ORDER, evaluationType);
   }
 
   @Override
-  public ArrayOType evaluationType() {
-    return (ArrayOType) super.evaluationType();
+  public ArrayTypeO evaluationType() {
+    return (ArrayTypeO) super.evaluationType();
   }
 
   @Override
