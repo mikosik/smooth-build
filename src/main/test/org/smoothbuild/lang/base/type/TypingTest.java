@@ -22,6 +22,7 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.TYPING;
 import static org.smoothbuild.lang.base.type.TestingTypesS.UPPER;
 import static org.smoothbuild.lang.base.type.TestingTypesS.X;
 import static org.smoothbuild.lang.base.type.TestingTypesS.a;
+import static org.smoothbuild.lang.base.type.TestingTypesS.bm;
 import static org.smoothbuild.lang.base.type.TestingTypesS.f;
 import static org.smoothbuild.lang.base.type.TestingTypesS.oneSideBound;
 import static org.smoothbuild.util.collect.Lists.concat;
@@ -40,7 +41,6 @@ import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.testing.TestingContextImpl;
 
 public class TypingTest {
   @ParameterizedTest
@@ -210,86 +210,85 @@ public class TypingTest {
   }
 
   public static List<Arguments> inferVariableBounds_test_data() {
-    TestingContextImpl tc = new TestingContextImpl();
     var r = new ArrayList<Arguments>();
     for (Type type : concat(ELEMENTARY_TYPES, X)) {
       if (type instanceof NothingType) {
         // arrays
-        r.add(arguments(A, NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(A, a(NOTHING), tc.bm(A, LOWER, a(NOTHING))));
-        r.add(arguments(A, a(a(NOTHING)), tc.bm(A, LOWER, a(a(NOTHING)))));
+        r.add(arguments(A, NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(A, a(NOTHING), bm(A, LOWER, a(NOTHING))));
+        r.add(arguments(A, a(a(NOTHING)), bm(A, LOWER, a(a(NOTHING)))));
 
-        r.add(arguments(a(A), NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(a(A), a(NOTHING), tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(a(A), a(a(NOTHING)), tc.bm(A, LOWER, a(NOTHING))));
+        r.add(arguments(a(A), NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(a(A), a(NOTHING), bm(A, LOWER, NOTHING)));
+        r.add(arguments(a(A), a(a(NOTHING)), bm(A, LOWER, a(NOTHING))));
 
-        r.add(arguments(a(a(A)), NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(a(a(A)), a(NOTHING), tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(a(a(A)), a(a(NOTHING)), tc.bm(A, LOWER, NOTHING)));
+        r.add(arguments(a(a(A)), NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(a(a(A)), a(NOTHING), bm(A, LOWER, NOTHING)));
+        r.add(arguments(a(a(A)), a(a(NOTHING)), bm(A, LOWER, NOTHING)));
 
         // functions
-        r.add(arguments(f(A), NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(f(f(A)), NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(f(f(f(A))), NOTHING, tc.bm(A, LOWER, NOTHING)));
+        r.add(arguments(f(A), NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(f(f(A)), NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(f(f(f(A))), NOTHING, bm(A, LOWER, NOTHING)));
 
-        r.add(arguments(f(BOOL, A), NOTHING, tc.bm(A, UPPER, ANY)));
-        r.add(arguments(f(BOOL, f(A)), NOTHING, tc.bm(A, UPPER, ANY)));
-        r.add(arguments(f(BOOL, f(f(A))), NOTHING, tc.bm(A, UPPER, ANY)));
+        r.add(arguments(f(BOOL, A), NOTHING, bm(A, UPPER, ANY)));
+        r.add(arguments(f(BOOL, f(A)), NOTHING, bm(A, UPPER, ANY)));
+        r.add(arguments(f(BOOL, f(f(A))), NOTHING, bm(A, UPPER, ANY)));
 
-        r.add(arguments(f(BOOL, f(BLOB, A)), NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(f(BOOL, f(BLOB, f(A))), NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(f(BOOL, f(BLOB, f(f(A)))), NOTHING, tc.bm(A, LOWER, NOTHING)));
+        r.add(arguments(f(BOOL, f(BLOB, A)), NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(f(BOOL, f(BLOB, f(A))), NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(f(BOOL, f(BLOB, f(f(A)))), NOTHING, bm(A, LOWER, NOTHING)));
 
         // arrays + functions
-        r.add(arguments(a(f(A)), NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(a(f(STRING, A)), NOTHING, tc.bm(A, UPPER, ANY)));
+        r.add(arguments(a(f(A)), NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(a(f(STRING, A)), NOTHING, bm(A, UPPER, ANY)));
 
-        r.add(arguments(f(a(A)), NOTHING, tc.bm(A, LOWER, NOTHING)));
-        r.add(arguments(f(BOOL, a(A)), NOTHING, tc.bm(A, UPPER, ANY)));
+        r.add(arguments(f(a(A)), NOTHING, bm(A, LOWER, NOTHING)));
+        r.add(arguments(f(BOOL, a(A)), NOTHING, bm(A, UPPER, ANY)));
       } else {
         // arrays
-        r.add(arguments(A, type, tc.bm(A, LOWER, type)));
-        r.add(arguments(A, a(type), tc.bm(A, LOWER, a(type))));
-        r.add(arguments(A, a(a(type)), tc.bm(A, LOWER, a(a(type)))));
+        r.add(arguments(A, type, bm(A, LOWER, type)));
+        r.add(arguments(A, a(type), bm(A, LOWER, a(type))));
+        r.add(arguments(A, a(a(type)), bm(A, LOWER, a(a(type)))));
 
-        r.add(arguments(a(A), type, tc.bm()));
-        r.add(arguments(a(A), a(type), tc.bm(A, LOWER, type)));
-        r.add(arguments(a(A), a(a(type)), tc.bm(A, LOWER, a(type))));
+        r.add(arguments(a(A), type, bm()));
+        r.add(arguments(a(A), a(type), bm(A, LOWER, type)));
+        r.add(arguments(a(A), a(a(type)), bm(A, LOWER, a(type))));
 
-        r.add(arguments(a(a(A)), type, tc.bm()));
-        r.add(arguments(a(a(A)), a(type), tc.bm()));
-        r.add(arguments(a(a(A)), a(a(type)), tc.bm(A, LOWER, type)));
+        r.add(arguments(a(a(A)), type, bm()));
+        r.add(arguments(a(a(A)), a(type), bm()));
+        r.add(arguments(a(a(A)), a(a(type)), bm(A, LOWER, type)));
 
         // functions
-        r.add(arguments(f(A), type, tc.bm()));
-        r.add(arguments(f(A), f(type), tc.bm(A, LOWER, type)));
-        r.add(arguments(f(A), f(f(type)), tc.bm(A, LOWER, f(type))));
-        r.add(arguments(f(A), f(f(f(type))), tc.bm(A, LOWER, f(f(type)))));
+        r.add(arguments(f(A), type, bm()));
+        r.add(arguments(f(A), f(type), bm(A, LOWER, type)));
+        r.add(arguments(f(A), f(f(type)), bm(A, LOWER, f(type))));
+        r.add(arguments(f(A), f(f(f(type))), bm(A, LOWER, f(f(type)))));
 
-        r.add(arguments(f(f(A)), type, tc.bm()));
-        r.add(arguments(f(f(A)), f(type), tc.bm()));
-        r.add(arguments(f(f(A)), f(f(type)), tc.bm(A, LOWER, type)));
-        r.add(arguments(f(f(A)), f(f(f(type))), tc.bm(A, LOWER, f(type))));
+        r.add(arguments(f(f(A)), type, bm()));
+        r.add(arguments(f(f(A)), f(type), bm()));
+        r.add(arguments(f(f(A)), f(f(type)), bm(A, LOWER, type)));
+        r.add(arguments(f(f(A)), f(f(f(type))), bm(A, LOWER, f(type))));
 
-        r.add(arguments(f(f(f(A))), type, tc.bm()));
-        r.add(arguments(f(f(f(A))), f(type), tc.bm()));
-        r.add(arguments(f(f(f(A))), f(f(type)), tc.bm()));
-        r.add(arguments(f(f(f(A))), f(f(f(type))), tc.bm(A, LOWER, type)));
+        r.add(arguments(f(f(f(A))), type, bm()));
+        r.add(arguments(f(f(f(A))), f(type), bm()));
+        r.add(arguments(f(f(f(A))), f(f(type)), bm()));
+        r.add(arguments(f(f(f(A))), f(f(f(type))), bm(A, LOWER, type)));
 
-        r.add(arguments(f(BOOL, A), f(BOOL, type), tc.bm(A, UPPER, type)));
-        r.add(arguments(f(BOOL, f(A)), f(BOOL, f(type)), tc.bm(A, UPPER, type)));
-        r.add(arguments(f(BOOL, f(f(A))), f(BOOL, f(f(type))), tc.bm(A, UPPER, type)));
+        r.add(arguments(f(BOOL, A), f(BOOL, type), bm(A, UPPER, type)));
+        r.add(arguments(f(BOOL, f(A)), f(BOOL, f(type)), bm(A, UPPER, type)));
+        r.add(arguments(f(BOOL, f(f(A))), f(BOOL, f(f(type))), bm(A, UPPER, type)));
 
-        r.add(arguments(f(BOOL, f(BLOB, A)), f(BOOL, f(BLOB, type)), tc.bm(A, LOWER, type)));
-        r.add(arguments(f(BOOL, f(BLOB, f(A))), f(BOOL, f(BLOB, f(type))), tc.bm(A, LOWER, type)));
-        r.add(arguments(f(BOOL, f(BLOB, f(f(A)))), f(BOOL, f(BLOB, f(f(type)))), tc.bm(A, LOWER, type)));
+        r.add(arguments(f(BOOL, f(BLOB, A)), f(BOOL, f(BLOB, type)), bm(A, LOWER, type)));
+        r.add(arguments(f(BOOL, f(BLOB, f(A))), f(BOOL, f(BLOB, f(type))), bm(A, LOWER, type)));
+        r.add(arguments(f(BOOL, f(BLOB, f(f(A)))), f(BOOL, f(BLOB, f(f(type)))), bm(A, LOWER, type)));
 
         // arrays + functions
-        r.add(arguments(a(f(A)), a(f(type)), tc.bm(A, LOWER, type)));
-        r.add(arguments(a(f(BOOL, A)), a(f(BOOL, type)), tc.bm(A, UPPER, type)));
+        r.add(arguments(a(f(A)), a(f(type)), bm(A, LOWER, type)));
+        r.add(arguments(a(f(BOOL, A)), a(f(BOOL, type)), bm(A, UPPER, type)));
 
-        r.add(arguments(f(a(A)), f(a(type)), tc.bm(A, LOWER, type)));
-        r.add(arguments(f(BOOL, a(A)), f(BOOL, a(type)), tc.bm(A, UPPER, type)));
+        r.add(arguments(f(a(A)), f(a(type)), bm(A, LOWER, type)));
+        r.add(arguments(f(BOOL, a(A)), f(BOOL, a(type)), bm(A, UPPER, type)));
       }
     }
     return r;
@@ -303,25 +302,24 @@ public class TypingTest {
   }
 
   public static List<Arguments> mapVariables_test_data() {
-    TestingContextImpl tc = new TestingContextImpl();
     var result = new ArrayList<Arguments>();
     for (Type type : ALL_TESTED_TYPES) {
-      result.add(arguments(X, tc.bm(X, LOWER, type), type));
-      result.add(arguments(a(X), tc.bm(X, LOWER, type), a(type)));
-      result.add(arguments(X, tc.bm(X, LOWER, a(type)), a(type)));
-      result.add(arguments(a(X), tc.bm(X, LOWER, a(type)), a(a(type))));
+      result.add(arguments(X, bm(X, LOWER, type), type));
+      result.add(arguments(a(X), bm(X, LOWER, type), a(type)));
+      result.add(arguments(X, bm(X, LOWER, a(type)), a(type)));
+      result.add(arguments(a(X), bm(X, LOWER, a(type)), a(a(type))));
     }
     for (Type newA : ALL_TESTED_TYPES) {
       for (Type newB : ALL_TESTED_TYPES) {
-        result.add(arguments(f(A, B), tc.bm(A, LOWER, newA, B, UPPER, newB), f(newA, newB)));
+        result.add(arguments(f(A, B), bm(A, LOWER, newA, B, UPPER, newB), f(newA, newB)));
       }
     }
     for (Type type : ELEMENTARY_TYPES) {
-      result.add(arguments(type, tc.bm(), type));
-      result.add(arguments(a(a(type)), tc.bm(), a(a(type))));
+      result.add(arguments(type, bm(), type));
+      result.add(arguments(a(a(type)), bm(), a(a(type))));
 
-      result.add(arguments(f(type), tc.bm(), f(type)));
-      result.add(arguments(f(BOOL, type), tc.bm(), f(BOOL, type)));
+      result.add(arguments(f(type), bm(), f(type)));
+      result.add(arguments(f(BOOL, type), bm(), f(BOOL, type)));
     }
     return result;
   }

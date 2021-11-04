@@ -654,13 +654,13 @@ public abstract class AbstractTestingContext {
     return typeFactoryS().upper();
   }
 
-  public BoundsMap bm(
+  public BoundsMap bmST(
       Variable var1, Side side1, Type bound1,
       Variable var2, Side side2, Type bound2) {
-    Bounds bounds1 = typeFactory().oneSideBound(side1, bound1);
-    Bounds bounds2 = typeFactory().oneSideBound(side2, bound2);
+    Bounds bounds1 = oneSideBoundST(side1, bound1);
+    Bounds bounds2 = oneSideBoundST(side2, bound2);
     if (var1.equals(var2)) {
-      return boundsMap(new Bounded(var1, typing().merge(bounds1, bounds2)));
+      return boundsMap(new Bounded(var1, typingS().merge(bounds1, bounds2)));
     } else {
       return new BoundsMap(ImmutableMap.of(
           var1, new Bounded(var1, bounds1),
@@ -669,12 +669,16 @@ public abstract class AbstractTestingContext {
     }
   }
 
-  public BoundsMap bm(Variable var, Side side, Type bound) {
-    return boundsMap(new Bounded(var, typeFactory().oneSideBound(side, bound)));
+  public BoundsMap bmST(Variable var, Side side, Type bound) {
+    return boundsMap(new Bounded(var, oneSideBoundST(side, bound)));
   }
 
-  public BoundsMap bm() {
+  public BoundsMap bmST() {
     return boundsMap();
+  }
+
+  public Bounds oneSideBoundST(Side side, Type type) {
+    return typeFactoryS().oneSideBound(side, type);
   }
 
   // Expressions

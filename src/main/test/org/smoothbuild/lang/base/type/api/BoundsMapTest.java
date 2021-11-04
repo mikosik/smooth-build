@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypesS.LOWER;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypesS.UPPER;
+import static org.smoothbuild.lang.base.type.TestingTypesS.bm;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContextImpl;

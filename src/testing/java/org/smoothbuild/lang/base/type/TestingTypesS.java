@@ -6,9 +6,11 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.lang.base.type.api.BaseType;
 import org.smoothbuild.lang.base.type.api.Bounds;
+import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.lang.base.type.impl.AnySType;
 import org.smoothbuild.lang.base.type.impl.ArraySType;
 import org.smoothbuild.lang.base.type.impl.BlobSType;
@@ -108,5 +110,19 @@ public class TestingTypesS {
 
   public static Bounds oneSideBound(Side side, Type type) {
     return FACTORY.oneSideBound(side, type);
+  }
+
+  public static BoundsMap bm(
+      Variable var1, Side side1, Type bound1,
+      Variable var2, Side side2, Type bound2) {
+    return CONTEXT.bmST(var1, side1, bound1, var2, side2, bound2);
+  }
+
+  public static BoundsMap bm(Variable var, Side side, Type bound) {
+    return CONTEXT.bmST(var, side, bound);
+  }
+
+  public static BoundsMap bm() {
+    return CONTEXT.bmST();
   }
 }
