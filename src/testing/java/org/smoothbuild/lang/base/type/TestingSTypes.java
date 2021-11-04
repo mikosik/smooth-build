@@ -5,6 +5,7 @@ import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.lang.base.type.api.BaseType;
+import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
@@ -103,5 +104,9 @@ public class TestingSTypes {
 
   public static StructSType struct(String name, NamedList<? extends Type> fields) {
     return FACTORY.struct(name, fields);
+  }
+
+  public static Bounds oneSideBound(Side side, Type type) {
+    return FACTORY.oneSideBound(side, type);
   }
 }

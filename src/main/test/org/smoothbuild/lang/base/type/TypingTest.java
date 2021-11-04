@@ -22,6 +22,7 @@ import static org.smoothbuild.lang.base.type.TestingSTypes.UPPER;
 import static org.smoothbuild.lang.base.type.TestingSTypes.X;
 import static org.smoothbuild.lang.base.type.TestingSTypes.a;
 import static org.smoothbuild.lang.base.type.TestingSTypes.f;
+import static org.smoothbuild.lang.base.type.TestingSTypes.oneSideBound;
 import static org.smoothbuild.lang.base.type.TestingTypeGraph.buildGraph;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -41,7 +42,7 @@ import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.testing.TestingContextImpl;
 
-public class TypingTest extends TestingContextImpl {
+public class TypingTest {
   @ParameterizedTest
   @MethodSource("contains_test_data")
   public void contains(Type type, Type contained, boolean expected) {
@@ -204,7 +205,7 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("inferVariableBounds_test_data")
   public void inferVariableBounds(Type type, Type assigned, BoundsMap expected) {
-    assertThat(typingS().inferVariableBounds(type, assigned, LOWER))
+    assertThat(TYPING.inferVariableBounds(type, assigned, LOWER))
         .isEqualTo(expected);
   }
 
@@ -297,7 +298,7 @@ public class TypingTest extends TestingContextImpl {
   @ParameterizedTest
   @MethodSource("mapVariables_test_data")
   public void mapVariables(Type type, BoundsMap boundsMap, Type expected) {
-    assertThat(typingS().mapVariables(type, boundsMap, LOWER))
+    assertThat(TYPING.mapVariables(type, boundsMap, LOWER))
         .isEqualTo(expected);
   }
 
@@ -384,18 +385,19 @@ public class TypingTest extends TestingContextImpl {
     }
     return buildGraph(list(A, B, BLOB, BOOL, DATA, INT, FLAG, PERSON, STRING), 1);
   }
+
   @Nested
   class _merge_bounds {
     @Test
     public void variable_with_one_lower_bound() {
-      var bounds = sTypeFactory().oneSideBound(LOWER, STRING);
+      var bounds = oneSideBound(LOWER, STRING);
       assertThat(bounds.upper()).isEqualTo(ANY);
       assertThat(bounds.lower()).isEqualTo(STRING);
     }
 
     @Test
     public void variable_with_one_upper_bound() {
-      var bounds = sTypeFactory().oneSideBound(UPPER, STRING);
+      var bounds = oneSideBound(UPPER, STRING);
       assertThat(bounds.upper()).isEqualTo(STRING);
       assertThat(bounds.lower()).isEqualTo(NOTHING);
     }
@@ -403,8 +405,8 @@ public class TypingTest extends TestingContextImpl {
     @Test
     public void variable_with_two_lower_bounds() {
       var bounds = TYPING.merge(
-          sTypeFactory().oneSideBound(LOWER, STRING),
-          sTypeFactory().oneSideBound(LOWER, BOOL));
+          oneSideBound(LOWER, STRING),
+          oneSideBound(LOWER, BOOL));
       assertThat(bounds.upper()).isEqualTo(ANY);
       assertThat(bounds.lower()).isEqualTo(ANY);
     }
@@ -412,8 +414,8 @@ public class TypingTest extends TestingContextImpl {
     @Test
     public void variable_with_two_upper_bounds() {
       var bounds = TYPING.merge(
-          sTypeFactory().oneSideBound(UPPER, STRING),
-          sTypeFactory().oneSideBound(UPPER, BOOL));
+          oneSideBound(UPPER, STRING),
+          oneSideBound(UPPER, BOOL));
       assertThat(bounds.upper()).isEqualTo(NOTHING);
       assertThat(bounds.lower()).isEqualTo(NOTHING);
     }
