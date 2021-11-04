@@ -315,7 +315,7 @@ public class CorruptedObjTypeTest extends TestingContext {
     }
 
     @Test
-    public void with_evaluation_type_being_expr_spec() throws Exception {
+    public void with_evaluation_type_being_expr_type() throws Exception {
       test_type_with_data_being_expr_type(CONSTRUCT, TupleOType.class);
     }
 
