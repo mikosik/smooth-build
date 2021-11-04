@@ -6,7 +6,7 @@ import static org.smoothbuild.io.fs.space.Space.PRJ;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.TypeFactoryO;
 import org.smoothbuild.install.TempManager;
@@ -17,14 +17,14 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class ObjectDbModule extends AbstractModule {
+public class ObjDbModule extends AbstractModule {
   @Override
   protected void configure() {}
 
   @Provides
   @Singleton
-  public ObjectDb provideObjectDb(HashedDb hashedDb, ObjTypeDb objTypeDb) {
-    return new ObjectDb(hashedDb, objTypeDb);
+  public ObjDb provideObjectDb(HashedDb hashedDb, ObjTypeDb objTypeDb) {
+    return new ObjDb(hashedDb, objTypeDb);
   }
 
   @Provides

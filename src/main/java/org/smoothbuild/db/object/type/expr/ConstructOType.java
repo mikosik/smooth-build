@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.ObjKind.CONSTRUCT;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.type.base.ExprType;
@@ -24,8 +24,8 @@ public class ConstructOType extends ExprType {
   }
 
   @Override
-  public Construct newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Construct newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Construct(merkleRoot, objectDb);
+    return new Construct(merkleRoot, objDb);
   }
 }

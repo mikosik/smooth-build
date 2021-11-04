@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.ObjKind.INT;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.type.base.ValType;
@@ -20,8 +20,8 @@ public class IntOType extends ValType implements IntType {
   }
 
   @Override
-  public Int newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Int newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Int(merkleRoot, objectDb);
+    return new Int(merkleRoot, objDb);
   }
 }

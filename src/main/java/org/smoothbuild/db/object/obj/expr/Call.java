@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
@@ -19,8 +19,8 @@ public class Call extends Expr {
   private static final int FUNCTION_INDEX = 0;
   private static final int ARGUMENTS_INDEX = 1;
 
-  public Call(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Call(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.type() instanceof CallOType);
   }
 

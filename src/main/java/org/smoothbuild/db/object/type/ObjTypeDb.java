@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.db.ObjectDbException;
+import org.smoothbuild.db.object.db.ObjDbException;
 import org.smoothbuild.db.object.type.base.ObjKind;
 import org.smoothbuild.db.object.type.base.ObjType;
 import org.smoothbuild.db.object.type.base.ValType;
@@ -126,7 +126,7 @@ public class ObjTypeDb extends AbstractTypeFactory implements TypeFactoryO {
       // expr
       this.nativeMethod = cache(new NativeMethodOType(writeBaseRoot(NATIVE_METHOD)));
     } catch (HashedDbException e) {
-      throw new ObjectDbException(e);
+      throw new ObjDbException(e);
     }
     this.sides = new Sides(this.any, this.nothing);
   }

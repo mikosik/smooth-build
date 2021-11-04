@@ -6,18 +6,18 @@ import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjec
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 
 public class ArrayBuilder {
   private final ArrayOType type;
-  private final ObjectDb objectDb;
+  private final ObjDb objDb;
   private final List<Obj> elements;
 
-  public ArrayBuilder(ArrayOType type, ObjectDb objectDb) {
+  public ArrayBuilder(ArrayOType type, ObjDb objDb) {
     this.type = type;
-    this.objectDb = objectDb;
+    this.objDb = objDb;
     this.elements = new ArrayList<>();
   }
 
@@ -42,6 +42,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return wrapHashedDbExceptionAsObjectDbException(() -> objectDb.newArray(type, elements));
+    return wrapHashedDbExceptionAsObjectDbException(() -> objDb.newArray(type, elements));
   }
 }

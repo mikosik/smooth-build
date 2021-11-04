@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.type;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.type.base.ObjType;
 import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.db.object.type.val.ArrayOType;
@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 public class TestingObjTypes {
   private static final TestingContext CONTEXT = new TestingContext();
-  public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
+  public static final ObjDb OBJECT_DB = CONTEXT.objectDb();
   public static final ObjTypeDb OBJECT_TYPE_DB = CONTEXT.objTypeDb();
 
   public static final ValType ANY = OBJECT_TYPE_DB.any();

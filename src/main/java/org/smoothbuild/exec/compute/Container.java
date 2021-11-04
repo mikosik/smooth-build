@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -20,19 +20,19 @@ import org.smoothbuild.plugin.NativeApi;
  */
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
-  private final ObjectFactory objectFactory;
+  private final ObjFactory objFactory;
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(@ForSpace(PRJ) FileSystem fileSystem, ObjectFactory objectFactory) {
+  public Container(@ForSpace(PRJ) FileSystem fileSystem, ObjFactory objFactory) {
     this.fileSystem = fileSystem;
-    this.objectFactory = objectFactory;
-    this.messageLogger = new MessageLoggerImpl(objectFactory);
+    this.objFactory = objFactory;
+    this.messageLogger = new MessageLoggerImpl(objFactory);
   }
 
   @Override
-  public ObjectFactory factory() {
-    return objectFactory;
+  public ObjFactory factory() {
+    return objFactory;
   }
 
   public FileSystem fileSystem() {
@@ -46,32 +46,32 @@ public class Container implements NativeApi {
 
   @Override
   public Array messages() {
-    return objectFactory.arrayBuilder(objectFactory.messageType())
+    return objFactory.arrayBuilder(objFactory.messageType())
         .addAll(messageLogger.messages)
         .build();
   }
 
   private static class MessageLoggerImpl implements MessageLogger {
     private final List<Obj> messages = new ArrayList<>();
-    private final ObjectFactory objectFactory;
+    private final ObjFactory objFactory;
 
-    public MessageLoggerImpl(ObjectFactory objectFactory) {
-      this.objectFactory = objectFactory;
+    public MessageLoggerImpl(ObjFactory objFactory) {
+      this.objFactory = objFactory;
     }
 
     @Override
     public void error(String message) {
-      messages.add(objectFactory.errorMessage(message));
+      messages.add(objFactory.errorMessage(message));
     }
 
     @Override
     public void warning(String message) {
-      messages.add(objectFactory.warningMessage(message));
+      messages.add(objFactory.warningMessage(message));
     }
 
     @Override
     public void info(String message) {
-      messages.add(objectFactory.infoMessage(message));
+      messages.add(objFactory.infoMessage(message));
     }
   }
 }

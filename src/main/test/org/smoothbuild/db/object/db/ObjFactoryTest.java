@@ -11,7 +11,7 @@ import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class ObjectFactoryTest extends TestingContext {
+public class ObjFactoryTest extends TestingContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test

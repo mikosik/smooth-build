@@ -16,8 +16,8 @@ import java.util.Optional;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.object.db.ObjectFactory;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.db.ObjFactory;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -117,10 +117,10 @@ import okio.ByteString;
 public class TestingContext {
   private Computer computer;
   private Container container;
-  private ObjectFactory objectFactory;
+  private ObjFactory objFactory;
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
-  private ObjectDb objectDb;
+  private ObjDb objDb;
   private Typing typingS;
   private ObjTypeDb objTypeDb;
   private HashedDb hashedDb;
@@ -163,11 +163,11 @@ public class TestingContext {
     return new Container(fullFileSystem(), objectFactory());
   }
 
-  public ObjectFactory objectFactory() {
-    if (objectFactory == null) {
-      objectFactory = new ObjectFactory(objectDb(), objTypeDb());
+  public ObjFactory objectFactory() {
+    if (objFactory == null) {
+      objFactory = new ObjFactory(objectDb(), objTypeDb());
     }
-    return objectFactory;
+    return objFactory;
   }
 
   public Typing typingS() {
@@ -195,11 +195,11 @@ public class TestingContext {
     return objTypeDb;
   }
 
-  public ObjectDb objectDb() {
-    if (objectDb == null) {
-      objectDb = new ObjectDb(hashedDb(), objTypeDb());
+  public ObjDb objectDb() {
+    if (objDb == null) {
+      objDb = new ObjDb(hashedDb(), objTypeDb());
     }
-    return objectDb;
+    return objDb;
   }
 
   public ComputationCache computationCache() {
@@ -217,8 +217,8 @@ public class TestingContext {
     return computationCacheFileSystem;
   }
 
-  public ObjectDb objectDbOther() {
-    return new ObjectDb(hashedDb(), objTypeDbOther());
+  public ObjDb objectDbOther() {
+    return new ObjDb(hashedDb(), objTypeDbOther());
   }
 
   public ObjTypeDb objTypeDbOther() {

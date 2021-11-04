@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.ObjKind.STRUCT_EXPR;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.StructExpr;
 import org.smoothbuild.db.object.type.base.ExprType;
@@ -24,8 +24,8 @@ public class StructExprOType extends ExprType {
   }
 
   @Override
-  public StructExpr newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public StructExpr newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new StructExpr(merkleRoot, objectDb);
+    return new StructExpr(merkleRoot, objDb);
   }
 }

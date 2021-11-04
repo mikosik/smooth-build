@@ -5,7 +5,7 @@ import static org.smoothbuild.db.object.type.base.ObjKind.TUPLE;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.base.ObjType;
@@ -25,9 +25,9 @@ public class TupleOType extends ValType {
   }
 
   @Override
-  public Tuple newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Tuple newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Tuple(merkleRoot, objectDb);
+    return new Tuple(merkleRoot, objDb);
   }
 
   public ImmutableList<ValType> items() {

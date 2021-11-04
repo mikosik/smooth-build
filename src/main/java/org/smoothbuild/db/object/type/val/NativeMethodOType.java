@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.ObjKind.NATIVE_METHOD;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.type.base.ValType;
@@ -18,8 +18,8 @@ public class NativeMethodOType extends ValType {
   }
 
   @Override
-  public NativeMethod newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public NativeMethod newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new NativeMethod(merkleRoot, objectDb);
+    return new NativeMethod(merkleRoot, objDb);
   }
 }

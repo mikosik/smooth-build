@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.db.ObjectDbException;
+import org.smoothbuild.db.object.db.ObjDbException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.type.base.ObjType;
 
@@ -11,7 +11,7 @@ public class Helpers {
     try {
       runnable.run();
     } catch (HashedDbException e) {
-      throw new ObjectDbException(e);
+      throw new ObjDbException(e);
     }
   }
 
@@ -19,7 +19,7 @@ public class Helpers {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new ObjectDbException(e);
+      throw new ObjDbException(e);
     }
   }
 
@@ -33,26 +33,26 @@ public class Helpers {
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, ObjType type, String path, ObjectDbCallable<T> callable) {
+      Hash hash, ObjType type, String path, ObjDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjectDbException e) {
+    } catch (ObjDbException e) {
       throw new DecodeObjNodeException(hash, type, path, e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, ObjType type, String path, int pathIndex, ObjectDbCallable<T> callable) {
+      Hash hash, ObjType type, String path, int pathIndex, ObjDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjectDbException e) {
+    } catch (ObjDbException e) {
       throw new DecodeObjNodeException(hash, type, path + "[" + pathIndex + "]", e);
     }
   }
 
   @FunctionalInterface
-  public static interface ObjectDbCallable<T> {
-    public T call() throws ObjectDbException;
+  public static interface ObjDbCallable<T> {
+    public T call() throws ObjDbException;
   }
 
   @FunctionalInterface

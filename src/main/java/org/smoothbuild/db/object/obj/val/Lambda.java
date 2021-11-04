@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponen
 import org.smoothbuild.db.object.type.val.LambdaOType;
 
 public class Lambda extends Val {
-  public Lambda(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Lambda(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override

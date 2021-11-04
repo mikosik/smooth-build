@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.type.base;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.lang.base.type.api.AbstractType;
@@ -28,7 +28,7 @@ public abstract class ObjType extends AbstractType {
   /**
    * Creates new java instance of Obj represented by merkleRoot.
    */
-  public abstract Obj newObj(MerkleRoot merkleRoot, ObjectDb objectDb);
+  public abstract Obj newObj(MerkleRoot merkleRoot, ObjDb objDb);
 
   public Hash hash() {
     return hash;

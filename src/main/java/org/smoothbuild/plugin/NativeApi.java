@@ -1,6 +1,6 @@
 package org.smoothbuild.plugin;
 
-import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.val.Array;
 
 /**
@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.val.Array;
  * from one thread by native functions.
  */
 public interface NativeApi {
-  public ObjectFactory factory();
+  public ObjFactory factory();
 
   public MessageLogger log();
 

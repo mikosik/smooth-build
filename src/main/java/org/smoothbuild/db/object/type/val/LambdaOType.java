@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.base.type.api.TypeNames.functionTypeName;
 import static org.smoothbuild.lang.base.type.help.FunctionTypeImplHelper.calculateVariables;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.type.base.ValType;
@@ -40,8 +40,8 @@ public class LambdaOType extends ValType implements FunctionType {
   }
 
   @Override
-  public Lambda newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Lambda newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Lambda(merkleRoot, objectDb);
+    return new Lambda(merkleRoot, objDb);
   }
 }

@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.db.object.type.val.BlobOType;
@@ -26,11 +26,11 @@ import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 
 public class TypeSToTypeOConverter {
-  private final ObjectFactory objectFactory;
+  private final ObjFactory objFactory;
 
   @Inject
-  public TypeSToTypeOConverter(ObjectFactory objectFactory) {
-    this.objectFactory = objectFactory;
+  public TypeSToTypeOConverter(ObjFactory objFactory) {
+    this.objFactory = objFactory;
   }
 
   public ValType visit(Type type) {
@@ -38,16 +38,16 @@ public class TypeSToTypeOConverter {
     if (type instanceof BlobType blob) {
       return visit(blob);
     } else if (type instanceof BoolType) {
-      return objectFactory.boolType();
+      return objFactory.boolType();
     } else if (type instanceof IntType intType) {
       return visit(intType);
     } else if (type instanceof NothingType) {
-      return objectFactory.nothingType();
+      return objFactory.nothingType();
     } else if (type instanceof StringType stringType) {
       return visit(stringType);
     } else if (type instanceof StructType structType) {
       var fields = structType.fields().mapObjects(this::visit);
-      return objectFactory.structType(structType.name(), fields);
+      return objFactory.structType(structType.name(), fields);
     } else if (type instanceof Variable) {
       throw new UnsupportedOperationException();
     } else if (type instanceof ArrayType array) {
@@ -60,31 +60,31 @@ public class TypeSToTypeOConverter {
   }
 
   public BlobOType visit(BlobType type) {
-    return objectFactory.blobType();
+    return objFactory.blobType();
   }
 
   public IntOType visit(IntType type) {
-    return objectFactory.intType();
+    return objFactory.intType();
   }
 
   public StringOType visit(StringType string) {
-    return objectFactory.stringType();
+    return objFactory.stringType();
   }
 
   public ArrayOType visit(ArrayType array) {
     if (array.isPolytype()) {
       throw new UnsupportedOperationException();
     }
-    return objectFactory.arrayType(visit(array.element()));
+    return objFactory.arrayType(visit(array.element()));
   }
 
   private TupleOType nativeCodeType() {
-    return objectFactory.tupleType(
-        list(objectFactory.stringType(), objectFactory.blobType()));
+    return objFactory.tupleType(
+        list(objFactory.stringType(), objFactory.blobType()));
   }
 
   public StructOType functionType() {
-    return objectFactory.structType(
-        "", namedList(list(named(objectFactory.stringType()), named(objectFactory.blobType()))));
+    return objFactory.structType(
+        "", namedList(list(named(objFactory.stringType()), named(objFactory.blobType()))));
   }
 }

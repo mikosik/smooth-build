@@ -2,13 +2,13 @@ package org.smoothbuild.db.object.obj.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.type.base.ExprType;
 import org.smoothbuild.db.object.type.base.ValType;
 
 public abstract class Expr extends Obj {
-  public Expr(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Expr(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.type() instanceof ExprType);
   }
 

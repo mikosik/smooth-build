@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static java.util.Objects.checkIndex;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
@@ -20,8 +20,8 @@ public class Struc_ extends Val {
   // Should be accessed only through synchronized items() method.
   private ImmutableList<Val> items;
 
-  public Struc_(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Struc_(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override

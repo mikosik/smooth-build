@@ -10,7 +10,7 @@ import java.util.Objects;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.obj.Helpers.HashedDbCallable;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
@@ -23,23 +23,23 @@ public abstract class Obj {
   public static final String DATA_PATH = "data";
 
   private final MerkleRoot merkleRoot;
-  private final ObjectDb objectDb;
+  private final ObjDb objDb;
 
-  public Obj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Obj(MerkleRoot merkleRoot, ObjDb objDb) {
     this.merkleRoot = merkleRoot;
-    this.objectDb = objectDb;
+    this.objDb = objDb;
   }
 
   protected MerkleRoot merkleRoot() {
     return merkleRoot;
   }
 
-  protected ObjectDb objectDb() {
-    return objectDb;
+  protected ObjDb objectDb() {
+    return objDb;
   }
 
   protected HashedDb hashedDb() {
-    return objectDb.hashedDb();
+    return objDb.hashedDb();
   }
 
   public Hash hash() {
@@ -117,7 +117,7 @@ public abstract class Obj {
     for (int i = 0; i < sequence.size(); i++) {
       int index = i;
       Obj obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), type(), path, index,
-          () -> objectDb.get(sequence.get(index)));
+          () -> objDb.get(sequence.get(index)));
       builder.add(obj);
     }
     return builder.build();
@@ -133,7 +133,7 @@ public abstract class Obj {
 
   private ImmutableList<Hash> readSequenceHashes(String path, Hash hash) {
     return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), type(), path,
-        () -> objectDb.readSequence(hash));
+        () -> objDb.readSequence(hash));
   }
 
   protected static String sequenceToString(ImmutableList<? extends Obj> objects) {

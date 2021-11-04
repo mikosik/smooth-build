@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Bool;
@@ -19,8 +19,8 @@ public class Invoke extends Expr {
   private static final int IS_PURE_INDEX = 1;
   private static final int ARGUMENT_COUNT_INDEX = 2;
 
-  public Invoke(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Invoke(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.type() instanceof InvokeOType);
   }
 

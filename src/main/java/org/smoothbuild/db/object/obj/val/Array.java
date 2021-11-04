@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -14,8 +14,8 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Array extends Val {
-  public Array(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Array(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override

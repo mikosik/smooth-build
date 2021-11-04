@@ -5,7 +5,7 @@ import static org.smoothbuild.db.object.type.base.ObjKind.STRUCT;
 import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.calculateVariables;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.type.base.ValType;
@@ -26,8 +26,8 @@ public class StructOType extends ValType implements StructType {
   }
 
   @Override
-  public Struc_ newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Struc_ newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Struc_(merkleRoot, objectDb);
+    return new Struc_(merkleRoot, objDb);
   }
 }

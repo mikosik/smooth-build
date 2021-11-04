@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -15,8 +15,8 @@ import org.smoothbuild.db.object.type.expr.ConstOType;
  * This class is immutable.
  */
 public class Const extends Expr {
-  public Const(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Const(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.type() instanceof ConstOType);
   }
 

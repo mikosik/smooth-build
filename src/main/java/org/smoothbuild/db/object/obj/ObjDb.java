@@ -16,7 +16,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
-import org.smoothbuild.db.object.db.ObjectDbException;
+import org.smoothbuild.db.object.db.ObjDbException;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
@@ -57,11 +57,11 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public class ObjectDb {
+public class ObjDb {
   private final HashedDb hashedDb;
   private final ObjTypeDb objTypeDb;
 
-  public ObjectDb(HashedDb hashedDb, ObjTypeDb objTypeDb) {
+  public ObjDb(HashedDb hashedDb, ObjTypeDb objTypeDb) {
     this.hashedDb = hashedDb;
     this.objTypeDb = objTypeDb;
   }
@@ -187,7 +187,7 @@ public class ObjectDb {
   private ObjType getTypeOrChainException(Hash rootHash, Hash typeHash) {
     try {
       return objTypeDb.get(typeHash);
-    } catch (ObjectDbException e) {
+    } catch (ObjDbException e) {
       throw new DecodeObjTypeException(rootHash, e);
     }
   }

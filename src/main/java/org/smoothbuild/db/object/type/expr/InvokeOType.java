@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.ObjKind.INVOKE;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Invoke;
 import org.smoothbuild.db.object.type.base.ExprType;
@@ -20,8 +20,8 @@ public class InvokeOType extends ExprType {
   }
 
   @Override
-  public Invoke newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Invoke newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Invoke(merkleRoot, objectDb);
+    return new Invoke(merkleRoot, objDb);
   }
 }

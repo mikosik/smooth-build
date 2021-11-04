@@ -13,8 +13,8 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectFactory;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.db.ObjFactory;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
@@ -35,15 +35,15 @@ import okio.BufferedSource;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final ObjectDb objectDb;
-  private final ObjectFactory objectFactory;
+  private final ObjDb objDb;
+  private final ObjFactory objFactory;
 
   @Inject
-  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjectDb objectDb,
-      ObjectFactory objectFactory) {
+  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjDb objDb,
+      ObjFactory objFactory) {
     this.fileSystem = fileSystem;
-    this.objectDb = objectDb;
-    this.objectFactory = objectFactory;
+    this.objDb = objDb;
+    this.objFactory = objFactory;
   }
 
   public synchronized void write(Hash computationHash, Output output)
@@ -71,8 +71,8 @@ public class ComputationCache {
 
   public synchronized Output read(Hash taskHash, ValType type) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      Obj messagesObject = objectDb.get(Hash.read(source));
-      ArrayOType messageArrayType = objectFactory.arrayType(objectFactory.messageType());
+      Obj messagesObject = objDb.get(Hash.read(source));
+      ArrayOType messageArrayType = objFactory.arrayType(objFactory.messageType());
       if (!messagesObject.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
             + " as first child of its Merkle root, but got " + messagesObject.type());
@@ -91,7 +91,7 @@ public class ComputationCache {
         return new Output(null, messages);
       } else {
         Hash resultObjectHash = Hash.read(source);
-        Obj obj = objectDb.get(resultObjectHash);
+        Obj obj = objDb.get(resultObjectHash);
         if (!type.equals(obj.type())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its Merkle root, but got " + obj.type());

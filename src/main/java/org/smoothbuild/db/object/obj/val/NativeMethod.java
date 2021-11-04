@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.type.val.NativeMethodOType;
@@ -15,8 +15,8 @@ public class NativeMethod extends Val {
   private static final int JAR_FILE_INDEX = 0;
   private static final int CLASS_BINARY_NAME_INDEX = 1;
 
-  public NativeMethod(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public NativeMethod(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.type() instanceof NativeMethodOType);
   }
 

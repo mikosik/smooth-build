@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.type;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.db.ObjectDbException;
+import org.smoothbuild.db.object.db.ObjDbException;
 import org.smoothbuild.db.object.type.base.ObjKind;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeNodeException;
@@ -36,25 +36,25 @@ public class Helpers {
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeTypeNodeException(
-      ObjKind objKind, Hash hash, String path, int index, ObjectDbCallable<T> callable) {
+      ObjKind objKind, Hash hash, String path, int index, ObjDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjectDbException e) {
+    } catch (ObjDbException e) {
       throw new DecodeTypeNodeException(hash, objKind, path, index, e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeTypeNodeException(
-      ObjKind objKind, Hash hash, String path, ObjectDbCallable<T> callable) {
+      ObjKind objKind, Hash hash, String path, ObjDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjectDbException e) {
+    } catch (ObjDbException e) {
       throw new DecodeTypeNodeException(hash, objKind, path, e);
     }
   }
   @FunctionalInterface
-  public static interface ObjectDbCallable<T> {
-    public T call() throws ObjectDbException;
+  public static interface ObjDbCallable<T> {
+    public T call() throws ObjDbException;
   }
 
   @FunctionalInterface

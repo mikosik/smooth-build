@@ -16,7 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
@@ -60,15 +60,15 @@ import com.google.common.collect.ImmutableList;
  * Builders returned by xxxBuilder() methods are not thread-safe.
  */
 @Singleton
-public class ObjectFactory {
-  private final ObjectDb objectDb;
+public class ObjFactory {
+  private final ObjDb objDb;
   private final ObjTypeDb objTypeDb;
   private final StructOType messageType;
   private final StructOType fileType;
 
   @Inject
-  public ObjectFactory(ObjectDb objectDb, ObjTypeDb objTypeDb) {
-    this.objectDb = objectDb;
+  public ObjFactory(ObjDb objDb, ObjTypeDb objTypeDb) {
+    this.objDb = objDb;
     this.objTypeDb = objTypeDb;
     this.messageType = createMessageType(objTypeDb);
     this.fileType = createFileType(objTypeDb);
@@ -77,7 +77,7 @@ public class ObjectFactory {
   // Values
 
   public ArrayBuilder arrayBuilder(ValType elementType) {
-    return objectDb.arrayBuilder(elementType);
+    return objDb.arrayBuilder(elementType);
   }
 
   public Blob blob(DataWriter dataWriter) {
@@ -85,64 +85,64 @@ public class ObjectFactory {
       builder.write(dataWriter);
       return builder.build();
     } catch (IOException e) {
-      throw new ObjectDbException(e);
+      throw new ObjDbException(e);
     }
   }
 
   public BlobBuilder blobBuilder() {
-    return objectDb.blobBuilder();
+    return objDb.blobBuilder();
   }
 
   public Bool bool(boolean value) {
-    return objectDb.bool(value);
+    return objDb.bool(value);
   }
 
   public Call call(Expr function, Construct arguments) {
-    return objectDb.call(function, arguments);
+    return objDb.call(function, arguments);
   }
 
   public Const const_(Val val) {
-    return objectDb.const_(val);
+    return objDb.const_(val);
   }
 
   public Struc_ file(Str path, Blob content) {
-    return objectDb.struct(fileType(), list(content, path));
+    return objDb.struct(fileType(), list(content, path));
   }
 
   public Int int_(BigInteger value) {
-    return objectDb.int_(value);
+    return objDb.int_(value);
   }
 
   public Lambda lambda(LambdaOType type, Expr body) {
-    return objectDb.lambda(type, body);
+    return objDb.lambda(type, body);
   }
 
   public Ref ref(BigInteger value, ValType evaluationType) {
-    return objectDb.ref(value, evaluationType);
+    return objDb.ref(value, evaluationType);
   }
 
   public Select select(Expr struct, Int index) {
-    return objectDb.select(struct, index);
+    return objDb.select(struct, index);
   }
 
   public Str string(String string) {
-    return objectDb.string(string);
+    return objDb.string(string);
   }
 
   public Struc_ struct(StructOType structType, ImmutableList<Val> items) {
-    return objectDb.struct(structType, items);
+    return objDb.struct(structType, items);
   }
 
   public StructExpr structExpr(StructOType evaluationType, ImmutableList<? extends Expr> items) {
-    return objectDb.structExpr(evaluationType, items);
+    return objDb.structExpr(evaluationType, items);
   }
 
   public Tuple tuple(TupleOType type, Iterable<? extends Obj> items) {
-    return objectDb.tuple(type, items);
+    return objDb.tuple(type, items);
   }
 
   public Order order(List<? extends Expr> elements) {
-    return objectDb.order(elements);
+    return objDb.order(elements);
   }
 
   // Types
@@ -209,9 +209,9 @@ public class ObjectFactory {
   }
 
   private Struc_ message(String severity, String text) {
-    Val textObject = objectDb.string(text);
-    Val severityObject = objectDb.string(severity);
-    return objectDb.struct(messageType(), list(textObject, severityObject));
+    Val textObject = objDb.string(text);
+    Val severityObject = objDb.string(severity);
+    return objDb.struct(messageType(), list(textObject, severityObject));
   }
 
   private static StructOType createMessageType(ObjTypeDb objTypeDb) {

@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
@@ -19,8 +19,8 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Construct extends Expr {
-  public Construct(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Construct(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.type() instanceof ConstructOType);
   }
 

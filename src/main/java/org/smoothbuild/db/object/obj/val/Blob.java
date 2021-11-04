@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 
@@ -10,8 +10,8 @@ import okio.BufferedSource;
  * This class is immutable.
  */
 public class Blob extends Val {
-  public Blob(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Blob(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   public BufferedSource source() {

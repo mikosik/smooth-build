@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
@@ -23,8 +23,8 @@ public class Select extends Expr {
   private static final int STRUCT_INDEX = 0;
   private static final int INDEX_INDEX = 1;
 
-  public Select(MerkleRoot merkleRoot, ObjectDb objectDb) {
-    super(merkleRoot, objectDb);
+  public Select(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.type() instanceof SelectOType);
   }
 

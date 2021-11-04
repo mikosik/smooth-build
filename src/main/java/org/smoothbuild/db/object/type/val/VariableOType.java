@@ -4,7 +4,7 @@ import static org.smoothbuild.db.object.type.base.ObjKind.VARIABLE;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.type.base.ValType;
@@ -28,7 +28,7 @@ public class VariableOType extends ValType implements Variable {
   }
 
   @Override
-  public Obj newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Obj newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     throw new UnsupportedOperationException("Cannot create object for " + VARIABLE + " type.");
   }
 }

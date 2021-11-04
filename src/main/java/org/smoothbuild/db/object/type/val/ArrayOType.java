@@ -6,7 +6,7 @@ import static org.smoothbuild.db.object.type.base.ObjKind.ARRAY;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.type.base.ValType;
@@ -29,8 +29,8 @@ public class ArrayOType extends ValType implements ArrayType {
   }
 
   @Override
-  public Array newObj(MerkleRoot merkleRoot, ObjectDb objectDb) {
+  public Array newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Array(merkleRoot, objectDb);
+    return new Array(merkleRoot, objDb);
   }
 }
