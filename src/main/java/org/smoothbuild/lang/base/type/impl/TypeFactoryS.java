@@ -85,7 +85,7 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   }
 
   @Override
-  public FunctionTypeS function(TypeS result, ImmutableList<? extends TypeS> parameters) {
+  public FunctionTypeS function(TypeS result, ImmutableList<TypeS> parameters) {
     return new FunctionTypeS(result, ImmutableList.copyOf(parameters));
   }
 
@@ -105,8 +105,8 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   }
 
   @Override
-  public StructTypeS struct(String name, NamedList<? extends TypeS> fields) {
-    return new StructTypeS(name, (NamedList<TypeS>) fields);
+  public StructTypeS struct(String name, NamedList<TypeS> fields) {
+    return new StructTypeS(name, fields);
   }
 
   @Override

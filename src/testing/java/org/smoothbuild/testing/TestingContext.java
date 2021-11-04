@@ -288,7 +288,7 @@ public class TestingContext {
     return lambdaOT(intOT(), list(blobOT(), stringOT()));
   }
 
-  public LambdaTypeO lambdaOT(TypeV result, ImmutableList<? extends TypeV> parameters) {
+  public LambdaTypeO lambdaOT(TypeV result, ImmutableList<TypeV> parameters) {
     return typeFactoryO().function(result, parameters);
   }
 
@@ -329,11 +329,11 @@ public class TestingContext {
     return structOT(namedList(list(named("field", intOT()))));
   }
 
-  public StructTypeO structOT(NamedList<? extends TypeV> fields) {
+  public StructTypeO structOT(NamedList<TypeV> fields) {
     return structOT("MyStruct", fields);
   }
 
-  public StructTypeO structOT(String name, NamedList<? extends TypeV> fields) {
+  public StructTypeO structOT(String name, NamedList<TypeV> fields) {
     return typeFactoryO().struct(name, fields);
   }
 
@@ -626,7 +626,7 @@ public class TestingContext {
     return typeFactoryS().string();
   }
 
-  public StructTypeS structST(String name, NamedList<? extends TypeS> fields) {
+  public StructTypeS structST(String name, NamedList<TypeS> fields) {
     return typeFactoryS().struct(name, fields);
   }
 

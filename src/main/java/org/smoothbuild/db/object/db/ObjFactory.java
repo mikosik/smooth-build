@@ -162,7 +162,7 @@ public class ObjFactory {
     return objTypeDb.int_();
   }
 
-  public LambdaTypeO lambdaType(TypeV result, ImmutableList<? extends TypeV> parameters) {
+  public LambdaTypeO lambdaType(TypeV result, ImmutableList<TypeV> parameters) {
     return objTypeDb.function(result, parameters);
   }
   public StructTypeO messageType() {
@@ -177,7 +177,7 @@ public class ObjFactory {
     return objTypeDb.string();
   }
 
-  public StructTypeO structType(String name, NamedList<? extends TypeV> fields) {
+  public StructTypeO structType(String name, NamedList<TypeV> fields) {
     return objTypeDb.struct(name, fields);
   }
 

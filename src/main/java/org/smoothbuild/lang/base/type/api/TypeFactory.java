@@ -22,7 +22,7 @@ public interface TypeFactory<T extends Type> {
 
   public BoolType bool();
 
-  public FunctionType function(T result, ImmutableList<? extends T> parameters);
+  public FunctionType function(T result, ImmutableList<T> parameters);
 
   public IntType int_();
 
@@ -30,7 +30,7 @@ public interface TypeFactory<T extends Type> {
 
   public StringType string();
 
-  public StructType struct(String name, NamedList<? extends T> fields);
+  public StructType struct(String name, NamedList<T> fields);
 
   public Variable variable(String name);
 }

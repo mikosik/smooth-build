@@ -162,9 +162,8 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   }
 
   @Override
-  public LambdaTypeO function(TypeV result, ImmutableList<? extends TypeV> parameters) {
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newLambda(result, tuple((ImmutableList<TypeV>) parameters)));
+  public LambdaTypeO function(TypeV result, ImmutableList<TypeV> parameters) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newLambda(result, tuple(parameters)));
   }
 
   @Override
@@ -191,9 +190,9 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   }
 
   @Override
-  public StructTypeO struct(String name, NamedList<? extends TypeV> fields) {
+  public StructTypeO struct(String name, NamedList<TypeV> fields) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newStruct(name, (NamedList<TypeV>) fields));
+        () -> newStruct(name, fields));
   }
 
   @Override
@@ -461,7 +460,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return newTuple(hash, itemTypes);
   }
 
-  private TupleTypeO newTuple(Hash rootHash, ImmutableList<? extends TypeV> itemTypes) {
+  private TupleTypeO newTuple(Hash rootHash, ImmutableList<TypeV> itemTypes) {
     return cache(new TupleTypeO(rootHash, itemTypes));
   }
 
@@ -587,7 +586,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return hashedDb.writeSequence(nameHashes);
   }
 
-  private Hash writeTupleRoot(ImmutableList<? extends TypeO> itemTypes) throws HashedDbException {
+  private Hash writeTupleRoot(ImmutableList<TypeV> itemTypes) throws HashedDbException {
     var itemsHash = hashedDb.writeSequence(map(itemTypes, TypeO::hash));
     return writeNonBaseRoot(TUPLE, itemsHash);
   }

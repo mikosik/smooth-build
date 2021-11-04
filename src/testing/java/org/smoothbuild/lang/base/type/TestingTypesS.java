@@ -103,7 +103,7 @@ public class TestingTypesS {
     return FACTORY.variable(a);
   }
 
-  public static StructTypeS struct(String name, NamedList<? extends TypeS> fields) {
+  public static StructTypeS struct(String name, NamedList<TypeS> fields) {
     return FACTORY.struct(name, fields);
   }
 

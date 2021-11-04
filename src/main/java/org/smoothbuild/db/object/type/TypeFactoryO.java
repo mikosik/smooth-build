@@ -44,7 +44,7 @@ public interface TypeFactoryO extends TypeFactory<TypeV> {
   public BoolTypeO bool();
 
   @Override
-  public LambdaTypeO function(TypeV result, ImmutableList<? extends TypeV> parameters);
+  public LambdaTypeO function(TypeV result, ImmutableList<TypeV> parameters);
 
   @Override
   public IntTypeO int_();
@@ -56,7 +56,7 @@ public interface TypeFactoryO extends TypeFactory<TypeV> {
   public StringTypeO string();
 
   @Override
-  public StructTypeO struct(String name, NamedList<? extends TypeV> fields);
+  public StructTypeO struct(String name, NamedList<TypeV> fields);
 
   @Override
   public VariableO variable(String name);
