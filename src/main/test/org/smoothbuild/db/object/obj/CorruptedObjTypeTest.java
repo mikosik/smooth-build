@@ -98,7 +98,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
           hash(STRING.marker())
       );
       assertThat(hash)
-          .isEqualTo(stringSpec().hash());
+          .isEqualTo(stringOT().hash());
     }
 
     @Test
@@ -156,10 +156,10 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(ARRAY.marker()),
-          hash(stringSpec())
+          hash(stringOT())
       );
       assertThat(hash)
-          .isEqualTo(arraySpec(stringSpec()).hash());
+          .isEqualTo(arrayOT(stringOT()).hash());
     }
 
     @Test
@@ -186,7 +186,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
     public void with_element_type_being_expr_type() throws Exception {
       Hash hash = hash(
           hash(ARRAY.marker()),
-          hash(constSpec(intSpec()))
+          hash(constOT(intOT()))
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
@@ -204,10 +204,10 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(CALL.marker()),
-          hash(intSpec())
+          hash(intOT())
       );
       assertThat(hash)
-          .isEqualTo(callSpec(intSpec()).hash());
+          .isEqualTo(callOT(intOT()).hash());
     }
 
     @Test
@@ -246,10 +246,10 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(CONST.marker()),
-          hash(intSpec())
+          hash(intOT())
       );
       assertThat(hash)
-          .isEqualTo(constSpec(intSpec()).hash());
+          .isEqualTo(constOT(intOT()).hash());
     }
 
     @Test
@@ -288,10 +288,10 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(CONSTRUCT.marker()),
-          hash(tupleSpec(list(intSpec(), stringSpec())))
+          hash(tupleOT(list(intOT(), stringOT())))
       );
       assertThat(hash)
-          .isEqualTo(constructSpec(list(intSpec(), stringSpec())).hash());
+          .isEqualTo(constructOT(list(intOT(), stringOT())).hash());
     }
 
     @Test
@@ -323,7 +323,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
     public void with_evaluation_type_not_being_tuple_type() throws Exception {
       Hash hash = hash(
           hash(CONSTRUCT.marker()),
-          hash(intSpec())
+          hash(intOT())
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
@@ -339,17 +339,17 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        * This test makes sure that other tests in this class use proper scheme
        * to save lambda type in HashedDb.
        */
-      ImmutableList<ValType> parameterTypes = list(stringSpec(), boolSpec());
-      TupleOType parametersTuple = tupleSpec(parameterTypes);
+      ImmutableList<ValType> parameterTypes = list(stringOT(), boolOT());
+      TupleOType parametersTuple = tupleOT(parameterTypes);
       Hash specHash = hash(
           hash(LAMBDA.marker()),
           hash(
-              hash(intSpec()),
+              hash(intOT()),
               hash(parametersTuple)
           )
       );
       assertThat(specHash)
-          .isEqualTo(lambdaSpec(intSpec(), parameterTypes).hash());
+          .isEqualTo(lambdaOT(intOT(), parameterTypes).hash());
     }
 
     @Test
@@ -381,11 +381,11 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
 
     @Test
     public void with_data_having_three_elements() throws Exception {
-      TupleOType parameterTypes = tupleSpec(list(stringSpec(), boolSpec()));
+      TupleOType parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash hash = hash(
           hash(LAMBDA.marker()),
           hash(
-              hash(intSpec()),
+              hash(intOT()),
               hash(parameterTypes),
               hash(parameterTypes)
           )
@@ -399,7 +399,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
       Hash hash = hash(
           hash(LAMBDA.marker()),
           hash(
-              hash(intSpec())
+              hash(intOT())
           )
       );
       assertThatGet(hash)
@@ -423,7 +423,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
 
     @Test
     public void with_result_pointing_nowhere() throws Exception {
-      TupleOType parameterTypes = tupleSpec(list(stringSpec(), boolSpec()));
+      TupleOType parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
@@ -439,11 +439,11 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
 
     @Test
     public void with_result_being_expr_type() throws Exception {
-      TupleOType parameterType = tupleSpec(list(stringSpec(), boolSpec()));
+      TupleOType parameterType = tupleOT(list(stringOT(), boolOT()));
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
           hash(
-              hash(constSpec()),
+              hash(constOT()),
               hash(parameterType)
           )
       );
@@ -454,7 +454,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
 
     @Test
     public void with_result_type_corrupted() throws Exception {
-      TupleOType parameterTypes = tupleSpec(list(stringSpec(), boolSpec()));
+      TupleOType parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
           hash(
@@ -473,7 +473,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
           hash(
-              hash(intSpec()),
+              hash(intOT()),
               nowhere
           )
       );
@@ -487,8 +487,8 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
           hash(
-              hash(intSpec()),
-              hash(stringSpec())
+              hash(intOT()),
+              hash(stringOT())
           )
       );
       assertThatGet(typeHash)
@@ -501,8 +501,8 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
           hash(
-              hash(intSpec()),
-              hash(constSpec())
+              hash(intOT()),
+              hash(constOT())
           )
       );
       assertCall(() -> objTypeDb().get(typeHash))
@@ -515,7 +515,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
       Hash typeHash = hash(
           hash(LAMBDA.marker()),
           hash(
-              hash(intSpec()),
+              hash(intOT()),
               corruptedArrayTypeHash()
           )
       );
@@ -535,10 +535,10 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(REF.marker()),
-          hash(intSpec())
+          hash(intOT())
       );
       assertThat(hash)
-          .isEqualTo(refSpec(intSpec()).hash());
+          .isEqualTo(refOT(intOT()).hash());
     }
 
     @Test
@@ -579,7 +579,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
   private void test_type_with_additional_data(ObjKind objKind) throws Exception {
     Hash hash = hash(
         hash(objKind.marker()),
-        hash(stringSpec()),
+        hash(stringOT()),
         hash("corrupted")
     );
     assertThatGet(hash)
@@ -625,7 +625,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
       throws Exception {
     Hash hash = hash(
         hash(objKind.marker()),
-        hash(constSpec(intSpec()))
+        hash(constOT(intOT()))
     );
     assertThatGet(hash)
         .throwsException(new UnexpectedTypeNodeException(
@@ -697,10 +697,10 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(SELECT.marker()),
-          hash(intSpec())
+          hash(intOT())
       );
       assertThat(hash)
-          .isEqualTo(selectSpec(intSpec()).hash());
+          .isEqualTo(selectOT(intOT()).hash());
     }
 
     @Test
@@ -738,8 +738,8 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        * to save Struct type in HashedDb.
        */
       var name = "MyStruct";
-      var field1 = intSpec();
-      var field2 = stringSpec();
+      var field1 = intOT();
+      var field2 = stringOT();
       var name1 = "field1";
       var name2 = "field2";
       Hash hash = hash(
@@ -757,7 +757,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
           )
       );
       assertThat(hash).isEqualTo(
-          structSpec(namedList(list(named(name1, field1), named(name2, field2)))).hash());
+          structOT(namedList(list(named(name1, field1), named(name2, field2)))).hash());
     }
 
     @Test
@@ -778,8 +778,8 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
     @Test
     public void with_name_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
-      var field1 = intSpec();
-      var field2 = stringSpec();
+      var field1 = intOT();
+      var field2 = stringOT();
       var name1 = "field1";
       var name2 = "field2";
       Hash hash = hash(
@@ -803,8 +803,8 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
     @Test
     public void with_illegal_name() throws Exception {
       Hash nameHash = hash(illegalString());
-      var field1 = intSpec();
-      var field2 = stringSpec();
+      var field1 = intOT();
+      var field2 = stringOT();
       var name1 = "field1";
       var name2 = "field2";
       Hash hash = hash(
@@ -883,7 +883,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
           hash(
               hash(name),
               hash(
-                  hash(constSpec())
+                  hash(constOT())
               ),
               hash(
                   hash(name1),
@@ -899,7 +899,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
     @Test
     public void with_corrupted_element_type() throws Exception {
       var name = "MyStruct";
-      var field1 = intSpec();
+      var field1 = intOT();
       var name1 = "field1";
       var name2 = "field2";
       Hash hash = hash(
@@ -924,8 +924,8 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
     @Test
     public void with_names_size_different_than_items_size() throws Exception {
       var name = "MyStruct";
-      var field1 = intSpec();
-      var field2 = stringSpec();
+      var field1 = intOT();
+      var field2 = stringOT();
       var name1 = "field1";
       Hash hash = hash(
           hash(STRUCT.marker()),
@@ -947,8 +947,8 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
     @Test
     public void with_names_containing_illegal_string() throws Exception {
       var name = "MyStruct";
-      var field1 = intSpec();
-      var field2 = stringSpec();
+      var field1 = intOT();
+      var field2 = stringOT();
       Hash illegalString = hash(illegalString());
       var name1 = "field1";
       Hash hash = hash(
@@ -982,12 +982,12 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
       Hash hash = hash(
           hash(TUPLE.marker()),
           hash(
-              hash(stringSpec()),
-              hash(stringSpec())
+              hash(stringOT()),
+              hash(stringOT())
           )
       );
       assertThat(hash)
-          .isEqualTo(perso_Spec().hash());
+          .isEqualTo(perso_OT().hash());
     }
 
     @Test
@@ -1038,7 +1038,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
           hash(
               hash(TUPLE.marker()),
               hash(
-                  hash(constSpec())
+                  hash(constOT())
               )
           );
       assertThatGet(hash)
@@ -1053,7 +1053,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
               hash(TUPLE.marker()),
               hash(
                   corruptedArrayTypeHash(),
-                  hash(stringSpec())));
+                  hash(stringOT())));
       assertThatGet(hash)
           .throwsException(new DecodeTypeNodeException(hash, TUPLE, "data[0]"))
           .withCause(corruptedArrayTypeException());
@@ -1070,10 +1070,10 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
        */
       Hash hash = hash(
           hash(ORDER.marker()),
-          hash(arraySpec(intSpec()))
+          hash(arrayOT(intOT()))
       );
       assertThat(hash)
-          .isEqualTo(orderSpec(intSpec()).hash());
+          .isEqualTo(orderOT(intOT()).hash());
     }
 
     @Test
@@ -1105,7 +1105,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
     public void with_evaluation_type_not_being_array_type() throws Exception {
       Hash hash = hash(
           hash(ORDER.marker()),
-          hash(intSpec())
+          hash(intOT())
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
@@ -1126,7 +1126,7 @@ public class CorruptedObjTypeTest extends TestingContextImpl {
           hash("A")
       );
       assertThat(hash)
-          .isEqualTo(variableSpec("A").hash());
+          .isEqualTo(variableOT("A").hash());
     }
 
     @Test

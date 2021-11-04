@@ -18,7 +18,7 @@ public class ObjStableHashTest extends TestingContextImpl {
   class _array {
     @Test
     public void empty_blob_array() {
-      assertThat(array(blobSpec()).hash())
+      assertThat(array(blobOT()).hash())
           .isEqualTo(Hash.decode("fd11e3a7a0eca23315da184c8ce90c051724e90b"));
     }
 
@@ -30,7 +30,7 @@ public class ObjStableHashTest extends TestingContextImpl {
 
     @Test
     public void empty_bool_array() {
-      assertThat(array(boolSpec()).hash())
+      assertThat(array(boolOT()).hash())
           .isEqualTo(Hash.decode("e4478355c1f6ea8d4a9edef0a7213cb1aa5b44d4"));
     }
 
@@ -42,13 +42,13 @@ public class ObjStableHashTest extends TestingContextImpl {
 
     @Test
     public void empty_nothing_array() {
-      assertThat(array(nothingSpec()).hash())
+      assertThat(array(nothingOT()).hash())
           .isEqualTo(Hash.decode("fc21e8e3b2e04f46fa35cdd3fa0b932cb59c38a0"));
     }
 
     @Test
     public void empty_string_array() {
-      assertThat(array(stringSpec()).hash())
+      assertThat(array(stringOT()).hash())
           .isEqualTo(Hash.decode("5e8edad671513a73f56c6bb216789c6f85de320f"));
     }
 
@@ -60,7 +60,7 @@ public class ObjStableHashTest extends TestingContextImpl {
 
     @Test
     public void empty_tuple_array() {
-      assertThat(array(perso_Spec()).hash())
+      assertThat(array(perso_OT()).hash())
           .isEqualTo(Hash.decode("a9688c71bf2aae5f4a8e219ce92e8ab8e6b46e27"));
     }
 
@@ -111,7 +111,7 @@ public class ObjStableHashTest extends TestingContextImpl {
 
     @Test
     public void call_expression_without_arguments() {
-      LambdaOType type = lambdaSpec(intSpec(), list(stringSpec()));
+      LambdaOType type = lambdaOT(intOT(), list(stringOT()));
       Lambda lambda = lambda(type, intExpr());
       assertThat(call(const_(lambda), list(stringExpr("abc"))).hash())
           .isEqualTo(Hash.decode("dcc7713d99ef11f816501e79c7539b800ebeddd3"));
@@ -150,7 +150,7 @@ public class ObjStableHashTest extends TestingContextImpl {
     @Test
     public void with_no_parameters() {
       Lambda lambda =
-          lambda(lambdaSpec(intSpec(), list()), intExpr(1));
+          lambda(lambdaOT(intOT(), list()), intExpr(1));
       assertThat(lambda.hash())
           .isEqualTo(Hash.decode("337bd07ddf18547d72c6ad93705ef00ae087cc3b"));
     }
@@ -158,7 +158,7 @@ public class ObjStableHashTest extends TestingContextImpl {
     @Test
     public void with_one_parameter() {
       Lambda lambda =
-          lambda(lambdaSpec(intSpec(), list(intSpec())), intExpr(1));
+          lambda(lambdaOT(intOT(), list(intOT())), intExpr(1));
       assertThat(lambda.hash())
           .isEqualTo(Hash.decode("f5ab6c8ecc79081d233c4b1df33cdd5ad5e3e937"));
     }
@@ -166,7 +166,7 @@ public class ObjStableHashTest extends TestingContextImpl {
     @Test
     public void with_two_parameters() {
       Lambda lambda =
-          lambda(lambdaSpec(intSpec(), list(intSpec(), stringSpec())), intExpr(1));
+          lambda(lambdaOT(intOT(), list(intOT(), stringOT())), intExpr(1));
       assertThat(lambda.hash())
           .isEqualTo(Hash.decode("004270e88a71120738cc7c9a6283b10bc92a0b57"));
     }
@@ -245,13 +245,13 @@ public class ObjStableHashTest extends TestingContextImpl {
   class _struct {
     @Test
     public void empty_struct() {
-      assertThat(struct(structSpec(namedList(list())), list()).hash())
+      assertThat(struct(structOT(namedList(list())), list()).hash())
           .isEqualTo(Hash.decode("8c2c19d776a34cc6258dc97c7ef844bf843415c4"));
     }
 
     @Test
     public void some_struct() {
-      assertThat(struct(structSpec(), list(int_())).hash())
+      assertThat(struct(structOT(), list(int_())).hash())
           .isEqualTo(Hash.decode("7f88fa64f4abd3ccf87a9d5d253893ef2a881d9b"));
     }
   }
@@ -275,19 +275,19 @@ public class ObjStableHashTest extends TestingContextImpl {
   class _ref {
     @Test
     public void zero_ref() {
-      assertThat(ref(intSpec(), 0).hash())
+      assertThat(ref(intOT(), 0).hash())
           .isEqualTo(Hash.decode("c41708244b3367007e1a216c7712cb2235371707"));
     }
 
     @Test
     public void positive_ref() {
-      assertThat(ref(intSpec(), 123).hash())
+      assertThat(ref(intOT(), 123).hash())
           .isEqualTo(Hash.decode("130112c820a58abd4b90086ff7abfcf29f39a8e8"));
     }
 
     @Test
     public void negative_ref() {
-      assertThat(ref(intSpec(), -123).hash())
+      assertThat(ref(intOT(), -123).hash())
           .isEqualTo(Hash.decode("f7ccbc4c95d78604753662395b5c5357f833fd64"));
     }
   }

@@ -16,7 +16,7 @@ public class CallTest extends TestingContextImpl {
   @Test
   public void type_of_call_expr_is_inferred_correctly() {
     assertThat(call(const_(lambda()), list(stringExpr())).type())
-        .isEqualTo(callSpec(intSpec()));
+        .isEqualTo(callOT(intOT()));
   }
 
   @Test
@@ -99,7 +99,7 @@ public class CallTest extends TestingContextImpl {
 
   @Test
   public void hash_of_calls_with_different_function_is_not_the_same() {
-    LambdaOType type = lambdaSpec(intSpec(), list(stringSpec()));
+    LambdaOType type = lambdaOT(intOT(), list(stringOT()));
     Const function1 = const_(lambda(type, intExpr(1)));
     Const function2 = const_(lambda(type, intExpr(2)));
     var arguments = list(stringExpr()) ;

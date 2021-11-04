@@ -11,7 +11,7 @@ public class DecodeSelectIndexOutOfBoundsExceptionTest extends TestingContextImp
   @Test
   public void message() {
     var exception = new DecodeSelectIndexOutOfBoundsException(
-        Hash.of(13), selectSpec(intSpec()), 13, 10);
+        Hash.of(13), selectOT(intOT()), 13, 10);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT:Int` object "
             + "at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "

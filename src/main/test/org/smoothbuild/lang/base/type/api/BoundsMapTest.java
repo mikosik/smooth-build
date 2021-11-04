@@ -15,10 +15,10 @@ public class BoundsMapTest extends TestingContextImpl {
   public void equality() {
     new EqualsTester()
         .addEqualityGroup(bm())
-        .addEqualityGroup(bm(A, lower(), STRING))
-        .addEqualityGroup(bm(A, upper(), STRING))
-        .addEqualityGroup(bm(A, lower(), BOOL))
+        .addEqualityGroup(bm(A, lowerST(), STRING))
+        .addEqualityGroup(bm(A, upperST(), STRING))
+        .addEqualityGroup(bm(A, lowerST(), BOOL))
         .addEqualityGroup(
-            bm(B, lower(), STRING), bm(B, lower(), STRING));
+            bm(B, lowerST(), STRING), bm(B, lowerST(), STRING));
   }
 }

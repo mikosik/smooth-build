@@ -100,13 +100,13 @@ public class ObjTypeTest {
     TestingContextImpl tc = new TestingContextImpl();
     return Stream.of(
         arguments(PERSON_TUPLE, "{String,String}"),
-        arguments(tc.callSpec(tc.intSpec()), "CALL:Int"),
-        arguments(tc.constSpec(tc.intSpec()), "CONST:Int"),
-        arguments(tc.nativeMethodSpec(), "NATIVE_METHOD"),
-        arguments(tc.orderSpec(tc.stringSpec()), "ORDER:[String]"),
-        arguments(tc.constructSpec(list(tc.stringSpec(), tc.intSpec())), "CONSTRUCT:{String,Int}"),
-        arguments(tc.selectSpec(tc.intSpec()), "SELECT:Int"),
-        arguments(tc.refSpec(tc.intSpec()), "REF:Int"),
+        arguments(tc.callOT(tc.intOT()), "CALL:Int"),
+        arguments(tc.constOT(tc.intOT()), "CONST:Int"),
+        arguments(tc.nativeMethodOT(), "NATIVE_METHOD"),
+        arguments(tc.orderOT(tc.stringOT()), "ORDER:[String]"),
+        arguments(tc.constructOT(list(tc.stringOT(), tc.intOT())), "CONSTRUCT:{String,Int}"),
+        arguments(tc.selectOT(tc.intOT()), "SELECT:Int"),
+        arguments(tc.refOT(tc.intOT()), "REF:Int"),
 
         arguments(ARRAY_PERSON_TUPLE, "[{String,String}]"),
         arguments(ARRAY2_PERSON_TUPLE, "[[{String,String}]]")

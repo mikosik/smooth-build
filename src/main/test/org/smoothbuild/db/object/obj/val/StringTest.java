@@ -12,7 +12,7 @@ public class StringTest extends TestingContextImpl {
   @Test
   public void type_of_string_is_string_type() {
     assertThat(string(string).type())
-        .isEqualTo(stringSpec());
+        .isEqualTo(stringOT());
   }
 
   @Test

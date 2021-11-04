@@ -10,13 +10,13 @@ public class ConstructTest extends TestingContextImpl {
   @Test
   public void type_of_empty_construct_is_inferred_correctly() {
     assertThat(construct(list()).type())
-        .isEqualTo(constructSpec(list()));
+        .isEqualTo(constructOT(list()));
   }
 
   @Test
   public void type_of_construct_is_inferred_correctly() {
     assertThat(construct(list(intExpr(3))).type())
-        .isEqualTo(constructSpec(list(intSpec())));
+        .isEqualTo(constructOT(list(intOT())));
   }
 
   @Test

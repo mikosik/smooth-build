@@ -13,14 +13,14 @@ public class SideTest extends TestingContextImpl {
   class _reverse_of {
     @Test
     public void upper_is_lower() {
-      assertThat(upper().reversed())
-          .isEqualTo(lower());
+      assertThat(upperST().reversed())
+          .isEqualTo(lowerST());
     }
 
     @Test
     public void lower_is_upper() {
-      assertThat(lower().reversed())
-          .isEqualTo(upper());
+      assertThat(lowerST().reversed())
+          .isEqualTo(upperST());
     }
   }
 
@@ -28,13 +28,13 @@ public class SideTest extends TestingContextImpl {
   class _edge_of {
     @Test
     public void lower_is_nothing() {
-      assertThat(lower().edge())
+      assertThat(lowerST().edge())
           .isEqualTo(NOTHING);
     }
 
     @Test
     public void upper_is_any() {
-      assertThat(upper().edge())
+      assertThat(upperST().edge())
           .isEqualTo(ANY);
     }
   }

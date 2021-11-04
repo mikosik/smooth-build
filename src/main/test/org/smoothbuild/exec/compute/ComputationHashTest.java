@@ -59,7 +59,7 @@ public class ComputationHashTest extends TestingContextImpl {
 
   @Test
   public void hash_of_computation_with_array_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CreateArrayAlgorithm(arraySpec(stringSpec()));
+    Algorithm algorithm = new CreateArrayAlgorithm(arrayOT(stringOT()));
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("16457f3457ec260bb4be0161933c32010b162123"));
@@ -67,7 +67,7 @@ public class ComputationHashTest extends TestingContextImpl {
 
   @Test
   public void hash_of_computation_with_array_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new CreateArrayAlgorithm(arraySpec(stringSpec()));
+    Algorithm algorithm = new CreateArrayAlgorithm(arrayOT(stringOT()));
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("3afcc3677dc2662b5ae660ca82b6755dd89b9f6a"));
@@ -76,7 +76,7 @@ public class ComputationHashTest extends TestingContextImpl {
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
     Algorithm algorithm = new CallNativeAlgorithm(
-        null, stringSpec(), functionExpression(STRING, "name"), true);
+        null, stringOT(), functionExpression(STRING, "name"), true);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("fa404053c470625cc32d666d02acd1cc634e2bb5"));
@@ -85,7 +85,7 @@ public class ComputationHashTest extends TestingContextImpl {
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
     Algorithm algorithm = new CallNativeAlgorithm(
-        null, stringSpec(), functionExpression(STRING, "name"), true);
+        null, stringOT(), functionExpression(STRING, "name"), true);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("6add42096c8900855b21d87a95f7e2d26b054d44"));
@@ -93,7 +93,7 @@ public class ComputationHashTest extends TestingContextImpl {
 
   @Test
   public void hash_of_computation_with_convert_from_nothing_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ConvertAlgorithm(stringSpec());
+    Algorithm algorithm = new ConvertAlgorithm(stringOT());
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("a025bfcacf9dadbc72256e41fbc60f4f5355233b"));

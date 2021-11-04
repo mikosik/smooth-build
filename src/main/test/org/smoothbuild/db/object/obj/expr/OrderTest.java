@@ -15,20 +15,20 @@ public class OrderTest extends TestingContextImpl {
   @Test
   public void type_of_empty_array_is_inferred_correctly() {
     assertThat(order(list()).type())
-        .isEqualTo(orderSpec(nothingSpec()));
+        .isEqualTo(orderOT(nothingOT()));
   }
 
   @Test
   public void type_of_array_is_inferred_correctly() {
     assertThat(order(list(intExpr(3))).type())
-        .isEqualTo(orderSpec(intSpec()));
+        .isEqualTo(orderOT(intOT()));
   }
 
   @Test
   public void creating_array_with_elements_with_different_evaluation_type_causes_exception() {
     assertCall(() -> order(list(intExpr(3), stringExpr("abc"))).type())
         .throwsException(new IllegalArgumentException("Element evaluation types are not equal "
-            + intSpec().name() + " != " + stringSpec().name() + "."));
+            + intOT().name() + " != " + stringOT().name() + "."));
   }
 
   @Test

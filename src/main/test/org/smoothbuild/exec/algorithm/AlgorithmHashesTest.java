@@ -29,11 +29,11 @@ public class AlgorithmHashesTest extends TestingContextImpl {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    StructOType constructedType = structSpec();
+    StructOType constructedType = structOT();
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
-    hashes.add(convertAlgorithmHash(stringSpec()));
+    hashes.add(convertAlgorithmHash(stringOT()));
     hashes.add(createStructAlgorithmHash(constructedType));
     hashes.add(readStructItemAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
@@ -53,14 +53,14 @@ public class AlgorithmHashesTest extends TestingContextImpl {
 
   @Test
   public void convert_algorithm_has_different_hash_for_different_types() {
-    assertThat(convertAlgorithmHash(stringSpec()))
-        .isNotEqualTo(convertAlgorithmHash(blobSpec()));
+    assertThat(convertAlgorithmHash(stringOT()))
+        .isNotEqualTo(convertAlgorithmHash(blobOT()));
   }
 
   @Test
   public void create_struct_algorithm_has_different_hash_for_different_fields() {
-    StructOType constructedType = structSpec(namedList(list()));
-    StructOType constructedType2 = structSpec(namedList(list(named("field", blobSpec()))));
+    StructOType constructedType = structOT(namedList(list()));
+    StructOType constructedType2 = structOT(namedList(list(named("field", blobOT()))));
 
     assertThat(createStructAlgorithmHash(constructedType))
         .isNotEqualTo(createStructAlgorithmHash(constructedType2));

@@ -10,32 +10,32 @@ import org.smoothbuild.testing.TestingContextImpl;
 public class TupleTest extends TestingContextImpl {
   @Test
   public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> objectDb().tuple(perso_Spec(), list(string("John"))))
+    assertCall(() -> objectDb().tuple(perso_OT(), list(string("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_item_with_different_type_than_specified_in_tuple_type_causes_exception() {
-    assertCall(() -> objectDb().tuple(perso_Spec(), list(string(), int_())))
+    assertCall(() -> objectDb().tuple(perso_OT(), list(string(), int_())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_more_items_than_specified_in_its_type_causes_exception() {
     assertCall(() -> objectDb().tuple(
-        perso_Spec(), list(string("John"), string("Doe"), string("abc"))))
+        perso_OT(), list(string("John"), string("Doe"), string("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> objectDb().tuple(perso_Spec(), list(string("John"), null)))
+    assertCall(() -> objectDb().tuple(perso_OT(), list(string("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_item_to_object_of_wrong_type_throws_exception() {
-    assertCall(() -> objectDb().tuple(perso_Spec(), list(string("John"), int_(123))))
+    assertCall(() -> objectDb().tuple(perso_OT(), list(string("John"), int_(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -43,14 +43,14 @@ public class TupleTest extends TestingContextImpl {
   public void type_of_person_tuple_is_person_type() {
     Tuple person = johnDoePerson();
     assertThat(person.type())
-        .isEqualTo(perso_Spec());
+        .isEqualTo(perso_OT());
   }
 
   @Test
   public void item_contains_object_passed_to_builder() {
     Tuple person = johnDoePerson();
     assertThat(person.type())
-        .isEqualTo(perso_Spec());
+        .isEqualTo(perso_OT());
     assertThat(person.get(0))
         .isEqualTo(string("John"));
   }

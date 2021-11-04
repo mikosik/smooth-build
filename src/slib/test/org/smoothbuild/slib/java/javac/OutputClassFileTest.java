@@ -33,7 +33,7 @@ public class OutputClassFileTest extends TestingContextImpl {
   @Test
   public void get_name_returns_file_path() {
     OutputClassFile outputClassFile =
-        new OutputClassFile(objectDb().arrayBuilder(fileSpec()), path, nativeApi());
+        new OutputClassFile(objectDb().arrayBuilder(fileOT()), path, nativeApi());
     assertThat(outputClassFile.getName())
         .isEqualTo("/" + path);
   }

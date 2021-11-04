@@ -240,7 +240,7 @@ public class DeclarationTest extends TestingContextImpl {
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
               .loadsSuccessfully()
-              .containsType(structT("MyStruct", namedList(list(named("field", STRING)))));
+              .containsType(structST("MyStruct", namedList(list(named("field", STRING)))));
         }
 
         @Test

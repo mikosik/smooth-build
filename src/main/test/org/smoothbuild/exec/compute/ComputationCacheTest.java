@@ -48,7 +48,7 @@ public class ComputationCacheTest extends TestingContextImpl {
 
   @Test
   public void reading_not_written_value_fails() {
-    assertCall(() -> computationCache().read(hash, stringSpec()))
+    assertCall(() -> computationCache().read(hash, stringOT()))
         .throwsException(ComputationCacheException.class);
   }
 
@@ -59,7 +59,7 @@ public class ComputationCacheTest extends TestingContextImpl {
     var messages = array(message);
     computationCache().write(hash, new Output(strV, messages));
 
-    assertThat(computationCache().read(hash, stringSpec()).messages())
+    assertThat(computationCache().read(hash, stringOT()).messages())
         .isEqualTo(messages);
   }
 
@@ -67,7 +67,7 @@ public class ComputationCacheTest extends TestingContextImpl {
   public void written_file_array_can_be_read_back() throws Exception {
     var file = file(path("file/path"), bytes);
     computationCache().write(hash, new Output(array(file), emptyMessageArray()));
-    var arrayType = arraySpec(objectFactory().fileType());
+    var arrayType = arrayOT(objectFactory().fileType());
 
     assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Struc_.class))
         .containsExactly(file);
@@ -77,7 +77,7 @@ public class ComputationCacheTest extends TestingContextImpl {
   public void written_blob_array_can_be_read_back() throws Exception {
     var blob = blob(bytes);
     computationCache().write(hash, new Output(array(blob), emptyMessageArray()));
-    var arrayType = arraySpec(blobSpec());
+    var arrayType = arrayOT(blobOT());
 
     assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Blob.class))
         .containsExactly(blob);
@@ -87,7 +87,7 @@ public class ComputationCacheTest extends TestingContextImpl {
   public void written_bool_array_can_be_read_back() throws Exception {
     var boolV = bool(true);
     computationCache().write(hash, new Output(array(boolV), emptyMessageArray()));
-    var arrayType = arraySpec(boolSpec());
+    var arrayType = arrayOT(boolOT());
 
     assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Bool.class))
         .containsExactly(boolV);
@@ -97,7 +97,7 @@ public class ComputationCacheTest extends TestingContextImpl {
   public void written_int_array_can_be_read_back() throws Exception {
     var intV = int_(123);
     computationCache().write(hash, new Output(array(intV), emptyMessageArray()));
-    var arrayType = arraySpec(intSpec());
+    var arrayType = arrayOT(intOT());
 
     assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Int.class))
         .containsExactly(intV);
@@ -108,7 +108,7 @@ public class ComputationCacheTest extends TestingContextImpl {
     var strV = string("some string");
     var array = array(strV);
     computationCache().write(hash, new Output(array, emptyMessageArray()));
-    var arrayType = arraySpec(stringSpec());
+    var arrayType = arrayOT(stringOT());
 
     assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Str.class))
         .containsExactly(strV);
@@ -128,7 +128,7 @@ public class ComputationCacheTest extends TestingContextImpl {
     var blob = blob(bytes);
     computationCache().write(hash, new Output(blob, emptyMessageArray()));
 
-    assertThat(computationCache().read(hash, blobSpec()).value())
+    assertThat(computationCache().read(hash, blobOT()).value())
         .isEqualTo(blob);
   }
 
@@ -137,7 +137,7 @@ public class ComputationCacheTest extends TestingContextImpl {
     var boolV = bool(true);
     computationCache().write(hash, new Output(boolV, emptyMessageArray()));
 
-    assertThat(((Bool) computationCache().read(hash, boolSpec()).value()).jValue())
+    assertThat(((Bool) computationCache().read(hash, boolOT()).value()).jValue())
         .isTrue();
   }
 
@@ -146,7 +146,7 @@ public class ComputationCacheTest extends TestingContextImpl {
     var intV = int_(123);
     computationCache().write(hash, new Output(intV, emptyMessageArray()));
 
-    assertThat(((Int) computationCache().read(hash, intSpec()).value()).jValue())
+    assertThat(((Int) computationCache().read(hash, intOT()).value()).jValue())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -155,7 +155,7 @@ public class ComputationCacheTest extends TestingContextImpl {
     var string = "some string";
     var strV = string(string);
     computationCache().write(hash, new Output(strV, emptyMessageArray()));
-    assertThat(((Str) computationCache().read(hash, stringSpec()).value()).jValue())
+    assertThat(((Str) computationCache().read(hash, stringOT()).value()).jValue())
         .isEqualTo(string);
   }
 }

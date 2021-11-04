@@ -22,7 +22,7 @@ import okio.ByteString;
 public class ArrayTest extends TestingContextImpl {
   @Test
   public void empty_nothing_array_can_be_iterated_as_struct() {
-    Array array = objectDb().arrayBuilder(nothingSpec())
+    Array array = objectDb().arrayBuilder(nothingOT())
         .build();
     assertThat(array.elements(Struc_.class))
         .isEmpty();
@@ -30,7 +30,7 @@ public class ArrayTest extends TestingContextImpl {
 
   @Test
   public void string_array_cannot_be_iterated_as_struct() {
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(string("abc"))
         .build();
     assertCall(() -> array.elements(Struc_.class))
@@ -40,7 +40,7 @@ public class ArrayTest extends TestingContextImpl {
 
   @Test
   public void empty_array_is_empty() {
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .build();
     assertThat(array.elements(Str.class))
         .isEmpty();
@@ -48,21 +48,21 @@ public class ArrayTest extends TestingContextImpl {
 
   @Test
   public void adding_null_is_forbidden() {
-    ArrayBuilder arrayBuilder = objectDb().arrayBuilder(stringSpec());
+    ArrayBuilder arrayBuilder = objectDb().arrayBuilder(stringOT());
     assertCall(() -> arrayBuilder.add(null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void adding_element_with_wrong_type_is_forbidden() {
-    ArrayBuilder arrayBuilder = objectDb().arrayBuilder(stringSpec());
+    ArrayBuilder arrayBuilder = objectDb().arrayBuilder(stringOT());
     assertCall(() -> arrayBuilder.add(blob(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void array_contains_added_element() {
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(string("abc"))
         .build();
     assertThat(array.elements(Str.class))
@@ -73,7 +73,7 @@ public class ArrayTest extends TestingContextImpl {
   public void array_contains_added_element_via_add_all_method() {
     Str str = string("abc");
     Str str2 = string("def");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .addAll(list(str, str2))
         .build();
     assertThat(array.elements(Str.class))
@@ -86,7 +86,7 @@ public class ArrayTest extends TestingContextImpl {
     Str str1 = string("abc");
     Str str2 = string("def");
     Str str3 = string("ghi");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .add(str3)
@@ -99,7 +99,7 @@ public class ArrayTest extends TestingContextImpl {
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() {
     Str str = string("abc");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str)
         .add(str)
         .build();
@@ -111,11 +111,11 @@ public class ArrayTest extends TestingContextImpl {
   public void arrays_with_same_elements_have_same_hash() {
     Str str1 = string("abc");
     Str str2 = string("def");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .build();
-    Array array2 = objectDb().arrayBuilder(stringSpec())
+    Array array2 = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .build();
@@ -126,7 +126,7 @@ public class ArrayTest extends TestingContextImpl {
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() {
     Str str = string("abc");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str)
         .build();
     assertThat(array.hash())
@@ -137,11 +137,11 @@ public class ArrayTest extends TestingContextImpl {
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes() {
     Str str1 = string("abc");
     Str str2 = string("def");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .build();
-    Array array2 = objectDb().arrayBuilder(stringSpec())
+    Array array2 = objectDb().arrayBuilder(stringOT())
         .add(str2)
         .add(str1)
         .build();
@@ -153,10 +153,10 @@ public class ArrayTest extends TestingContextImpl {
   public void array_with_one_more_element_have_different_hash() {
     Str str1 = string("abc");
     Str str2 = string("def");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .build();
-    Array array2 = objectDb().arrayBuilder(stringSpec())
+    Array array2 = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .build();
@@ -168,7 +168,7 @@ public class ArrayTest extends TestingContextImpl {
   public void array_can_be_read_by_hash() {
     Str str1 = string("abc");
     Str str2 = string("def");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .build();
@@ -180,7 +180,7 @@ public class ArrayTest extends TestingContextImpl {
   public void array_read_by_hash_contains_same_elements() {
     Str str1 = string("abc");
     Str str2 = string("def");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .build();
@@ -193,7 +193,7 @@ public class ArrayTest extends TestingContextImpl {
   public void array_read_by_hash_has_same_hash() {
     Str str1 = string("abc");
     Str str2 = string("def");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .build();
@@ -206,7 +206,7 @@ public class ArrayTest extends TestingContextImpl {
   public void type(ValType type) {
     Array array = objectDb().arrayBuilder(type).build();
     assertThat(array.type())
-        .isEqualTo(arraySpec(type));
+        .isEqualTo(arrayOT(type));
   }
 
   private static List<ObjType> type_test_data() {
@@ -217,7 +217,7 @@ public class ArrayTest extends TestingContextImpl {
   public void to_string() {
     Str str1 = string("abc");
     Str str2 = string("def");
-    Array array = objectDb().arrayBuilder(stringSpec())
+    Array array = objectDb().arrayBuilder(stringOT())
         .add(str1)
         .add(str2)
         .build();
@@ -230,34 +230,34 @@ public class ArrayTest extends TestingContextImpl {
   class _nothing_array {
     @Test
     public void type_of_nothing_array_is_nothing_array() {
-      Array array = emptyArrayOf(nothingSpec());
+      Array array = emptyArrayOf(nothingOT());
       assertThat(array.type())
-          .isEqualTo(arraySpec(nothingSpec()));
+          .isEqualTo(arrayOT(nothingOT()));
     }
 
     @Test
     public void nothing_array_is_empty() {
-      assertThat(emptyArrayOf(nothingSpec()).elements(Val.class))
+      assertThat(emptyArrayOf(nothingOT()).elements(Val.class))
           .isEmpty();
     }
 
     @Test
     public void nothing_array_can_be_read_by_hash() {
-      Array array = emptyArrayOf(nothingSpec());
+      Array array = emptyArrayOf(nothingOT());
       assertThat(objectDbOther().get(array.hash()))
           .isEqualTo(array);
     }
 
     @Test
     public void nothing_array_read_by_hash_is_empty() {
-      Array array = emptyArrayOf(nothingSpec());
+      Array array = emptyArrayOf(nothingOT());
       assertThat(((Array) objectDbOther().get(array.hash())).elements(Val.class))
           .isEmpty();
     }
 
     @Test
     public void nothing_array_to_string() {
-      Array array = emptyArrayOf(nothingSpec());
+      Array array = emptyArrayOf(nothingOT());
       assertThat(array.toString())
           .isEqualTo("[]@" + array.hash());
     }

@@ -11,7 +11,7 @@ public class IntTest extends TestingContextImpl {
   @Test
   public void type_of_int_is_int_type() {
     assertThat(int_(123).type())
-        .isEqualTo(intSpec());
+        .isEqualTo(intOT());
   }
 
   @Test

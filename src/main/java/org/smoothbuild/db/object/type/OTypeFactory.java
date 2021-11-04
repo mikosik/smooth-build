@@ -9,6 +9,7 @@ import org.smoothbuild.db.object.type.val.LambdaOType;
 import org.smoothbuild.db.object.type.val.NothingOType;
 import org.smoothbuild.db.object.type.val.StringOType;
 import org.smoothbuild.db.object.type.val.StructOType;
+import org.smoothbuild.db.object.type.val.VariableOType;
 import org.smoothbuild.lang.base.type.api.BaseType;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -64,4 +65,7 @@ public interface OTypeFactory extends TypeFactory {
 
   @Override
   public StructOType struct(String name, NamedList<? extends Type> fields);
+
+  @Override
+  public VariableOType variable(String name);
 }

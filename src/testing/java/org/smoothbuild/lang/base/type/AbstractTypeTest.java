@@ -252,13 +252,13 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
   class _variable {
     @Test
     public void name() {
-      assertThat(variable("A").name())
+      assertThat(variableST("A").name())
           .isEqualTo("A");
     }
 
     @Test
     public void illegal_name() {
-      assertCall(() -> variable("a"))
+      assertCall(() -> variableST("a"))
           .throwsException(new IllegalArgumentException("Illegal type variable name 'a'."));
     }
   }
@@ -342,17 +342,17 @@ public abstract class AbstractTypeTest extends AbstractTestingContext {
   class _struct {
     @Test
     public void _without_fields_can_be_created() {
-      structT("Struct", namedList(list()));
+      structST("Struct", namedList(list()));
     }
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structT("Struct", namedList(list(named("fieldName", nothingT()))));
+      structST("Struct", namedList(list(named("fieldName", nothingST()))));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structT("Struct", namedList(list(named("fieldName", arrayT(nothingT())))));
+      structST("Struct", namedList(list(named("fieldName", arrayST(nothingST())))));
     }
 
     @ParameterizedTest

@@ -22,7 +22,7 @@ public class BlobTest extends TestingContextImpl {
   @Test
   public void type_of_blob_is_blob_type() {
     assertThat(blob(bytes).type())
-        .isEqualTo(blobSpec());
+        .isEqualTo(blobOT());
   }
 
   @Test

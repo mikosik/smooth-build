@@ -55,7 +55,7 @@ public class FunctionTest extends TestingContextImpl {
   }
 
   private Function myFunction(Type resultType, List<Item> parameters) {
-    return new DefinedFunction(functionT(resultType, toItemSignatures(parameters)),
+    return new DefinedFunction(functionST(resultType, toItemSignatures(parameters)),
         modulePath(), "name", ImmutableList.copyOf(parameters),
         mock(Expression.class), loc(1)
     );

@@ -14,9 +14,9 @@ import org.smoothbuild.testing.TestingContextImpl;
 public class DecodeStructExprWrongItemsSizeExceptionTest extends TestingContextImpl {
   @Test
   public void message() {
-    var structSpec = structSpec(
-        "MyStruct", namedList(list(named("f1", intSpec()), named("f2", stringSpec()))));
-    StructExprOType structExprSpec = structExprSpec(structSpec);
+    var structSpec = structOT(
+        "MyStruct", namedList(list(named("f1", intOT()), named("f2", stringOT()))));
+    StructExprOType structExprSpec = structExprOT(structSpec);
     var exception = new DecodeStructExprWrongItemsSizeException(Hash.of(13), structExprSpec, 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `STRUCT:MyStruct` object at "

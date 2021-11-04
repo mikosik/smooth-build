@@ -78,23 +78,24 @@ import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Typing;
-import org.smoothbuild.lang.base.type.api.AnyType;
-import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.BlobType;
-import org.smoothbuild.lang.base.type.api.BoolType;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
-import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.api.StringType;
-import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.impl.AnySType;
+import org.smoothbuild.lang.base.type.impl.ArraySType;
+import org.smoothbuild.lang.base.type.impl.BlobSType;
+import org.smoothbuild.lang.base.type.impl.BoolSType;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.IntSType;
+import org.smoothbuild.lang.base.type.impl.NothingSType;
 import org.smoothbuild.lang.base.type.impl.STypeFactory;
+import org.smoothbuild.lang.base.type.impl.StringSType;
+import org.smoothbuild.lang.base.type.impl.StructSType;
+import org.smoothbuild.lang.base.type.impl.VariableSType;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -258,143 +259,151 @@ public abstract class AbstractTestingContext {
 
   // Obj types
 
-  public StructOType animalSpec() {
-    return objTypeDb().struct(
-        "Animal", namedList(list(named("species", stringSpec()), named("speed", intSpec()))));
+  public StructOType animalOT() {
+    return oTypeFactory().struct(
+        "Animal", namedList(list(named("species", stringOT()), named("speed", intOT()))));
   }
 
-  public ArrayOType arraySpec(ValType elementSpec) {
-    return objTypeDb().array(elementSpec);
+  public ArrayOType arrayOT(ValType elementSpec) {
+    return oTypeFactory().array(elementSpec);
   }
 
-  public AnyOType anySpec() {
-    return objTypeDb().any();
+  public AnyOType anyOT() {
+    return oTypeFactory().any();
   }
 
-  public BlobOType blobSpec() {
-    return objTypeDb().blob();
+  public BlobOType blobOT() {
+    return oTypeFactory().blob();
   }
 
-  public BoolOType boolSpec() {
-    return objTypeDb().bool();
+  public BoolOType boolOT() {
+    return oTypeFactory().bool();
   }
 
-  public LambdaOType lambdaSpec() {
-    return lambdaSpec(intSpec(), list(blobSpec(), stringSpec()));
+  public LambdaOType lambdaOT() {
+    return lambdaOT(intOT(), list(blobOT(), stringOT()));
   }
 
-  public LambdaOType lambdaSpec(ValType result, ImmutableList<? extends Type> parameters) {
-    return objTypeDb().function(result, parameters);
+  public LambdaOType lambdaOT(ValType result, ImmutableList<? extends Type> parameters) {
+    return oTypeFactory().function(result, parameters);
   }
 
-  public IntOType intSpec() {
-    return objTypeDb().int_();
+  public IntOType intOT() {
+    return oTypeFactory().int_();
   }
 
-  public NativeMethodOType nativeMethodSpec() {
+  public NativeMethodOType nativeMethodOT() {
     return objTypeDb().nativeMethod();
   }
 
-  public NothingOType nothingSpec() {
-    return objTypeDb().nothing();
+  public NothingOType nothingOT() {
+    return oTypeFactory().nothing();
   }
 
-  public StringOType stringSpec() {
-    return objTypeDb().string();
+  public StringOType stringOT() {
+    return oTypeFactory().string();
   }
 
-  public TupleOType tupleSpec(ImmutableList<ValType> itemSpecs) {
+  public TupleOType tupleOT(ImmutableList<ValType> itemSpecs) {
     return objTypeDb().tuple(itemSpecs);
   }
 
-  public TupleOType emptyTupleSpec() {
-    return tupleSpec(list());
+  public TupleOType emptyTupleOT() {
+    return tupleOT(list());
   }
 
-  public TupleOType tupleWithStrSpec() {
-    return tupleSpec(list(stringSpec()));
+  public TupleOType tupleWithStrOT() {
+    return tupleOT(list(stringOT()));
   }
 
-  public TupleOType perso_Spec() {
-    return tupleSpec(list(stringSpec(), stringSpec()));
+  public TupleOType perso_OT() {
+    return tupleOT(list(stringOT(), stringOT()));
   }
 
-  public StructOType personSpec() {
-    return structSpec("Person",
-        namedList(list(named("firstName", stringSpec()), named("lastName", stringSpec()))));
+  public StructOType personOT() {
+    return structOT("Person",
+        namedList(list(named("firstName", stringOT()), named("lastName", stringOT()))));
   }
 
-  public TupleOType fileSpec() {
-    return tupleSpec(list(blobSpec(), stringSpec()));
+  public TupleOType fileOT() {
+    return tupleOT(list(blobOT(), stringOT()));
   }
 
-  public StructOType structSpec() {
-    return structSpec(namedList(list(named("field", intSpec()))));
+  public StructOType structOT() {
+    return structOT(namedList(list(named("field", intOT()))));
   }
 
-  public StructOType structSpec(NamedList<? extends Type> fields) {
-    return structSpec("MyStruct", fields);
+  public StructOType structOT(NamedList<? extends Type> fields) {
+    return structOT("MyStruct", fields);
   }
 
-  public StructOType structSpec(String name, NamedList<? extends Type> fields) {
-    return objTypeDb().struct(name, fields);
+  public StructOType structOT(String name, NamedList<? extends Type> fields) {
+    return oTypeFactory().struct(name, fields);
   }
 
-  public VariableOType variableSpec(String name) {
-    return objTypeDb().variable(name);
+  public VariableOType variableOT(String name) {
+    return oTypeFactory().variable(name);
+  }
+
+  public Side lowerOT() {
+    return oTypeFactory().lower();
+  }
+
+  public Side upperOT() {
+    return oTypeFactory().upper();
   }
 
   // Expr types
 
-  public OrderOType orderSpec() {
-    return orderSpec(intSpec());
+  public OrderOType orderOT() {
+    return orderOT(intOT());
   }
 
-  public OrderOType orderSpec(ValType elementSpec) {
+  public OrderOType orderOT(ValType elementSpec) {
     return objTypeDb().order(elementSpec);
   }
 
-  public CallOType callSpec() {
-    return callSpec(intSpec());
+  public CallOType callOT() {
+    return callOT(intOT());
   }
 
-  public CallOType callSpec(ValType evaluationType) {
+  public CallOType callOT(ValType evaluationType) {
     return objTypeDb().call(evaluationType);
   }
 
-  public ConstOType constSpec() {
-    return constSpec(intSpec());
+  public ConstOType constOT() {
+    return constOT(intOT());
   }
 
-  public ConstOType constSpec(ValType evaluationType) {
+  public ConstOType constOT(ValType evaluationType) {
     return objTypeDb().const_(evaluationType);
   }
 
-  public ConstructOType constructSpec() {
-    return constructSpec(list(intSpec(), stringSpec()));
+  public ConstructOType constructOT() {
+    return constructOT(list(intOT(), stringOT()));
   }
 
-  public ConstructOType constructSpec(ImmutableList<ValType> itemSpecs) {
-    return objTypeDb().construct(tupleSpec(itemSpecs));
+  public ConstructOType constructOT(ImmutableList<ValType> itemSpecs) {
+    return objTypeDb().construct(tupleOT(itemSpecs));
   }
 
-  public SelectOType selectSpec() {
-    return selectSpec(intSpec());
+  public SelectOType selectOT() {
+    return selectOT(intOT());
   }
 
-  public SelectOType selectSpec(ValType evaluationType) {
+  public SelectOType selectOT(ValType evaluationType) {
     return objTypeDb().select(evaluationType);
   }
 
-  public StructExprOType structExprSpec(StructOType structType) {
+  public StructExprOType structExprOT(StructOType structType) {
     return objTypeDb().structExpr(structType);
   }
 
-  public RefOType refSpec() {
-    return refSpec(intSpec());
+  public RefOType refOT() {
+    return refOT(intOT());
   }
 
-  public RefOType refSpec(ValType evaluationType) {
+  public RefOType refOT(ValType evaluationType) {
     return objTypeDb().ref(evaluationType);
   }
 
@@ -409,7 +418,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Struc_ animal(Str species, Int speed) {
-    return struct(animalSpec(), list(species, speed));
+    return struct(animalOT(), list(species, speed));
   }
 
   public Array array(Val... elements) {
@@ -441,7 +450,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Lambda lambda(Expr body) {
-    LambdaOType spec = lambdaSpec(body.evaluationType(), list(stringSpec()));
+    LambdaOType spec = lambdaOT(body.evaluationType(), list(stringOT()));
     return lambda(spec, body);
   }
 
@@ -474,7 +483,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Tuple tuple(List<? extends Val> items) {
-    var spec = tupleSpec(map(items, Val::type));
+    var spec = tupleOT(map(items, Val::type));
     return tuple(spec, items);
   }
 
@@ -550,7 +559,7 @@ public abstract class AbstractTestingContext {
   }
 
   public Ref ref(int value) {
-    return objectDb().ref(BigInteger.valueOf(value), intSpec());
+    return objectDb().ref(BigInteger.valueOf(value), intOT());
   }
 
   public Ref ref(ValType evaluationType, int pointer) {
@@ -585,56 +594,56 @@ public abstract class AbstractTestingContext {
 
   // Types
 
-  public Variable variable(String name) {
-    return typeFactory().variable(name);
+  public VariableSType variableST(String name) {
+    return sTypeFactory().variable(name);
   }
 
-  public AnyType anyT() {
-    return typeFactory().any();
+  public AnySType anyST() {
+    return sTypeFactory().any();
   }
 
-  public ArrayType arrayT(Type elemType) {
-    return typeFactory().array(elemType);
+  public ArraySType arrayST(Type elemType) {
+    return sTypeFactory().array(elemType);
   }
 
-  public BlobType blobT() {
-    return typeFactory().blob();
+  public BlobSType blobST() {
+    return sTypeFactory().blob();
   }
 
-  public BoolType boolT() {
-    return typeFactory().bool();
+  public BoolSType boolST() {
+    return sTypeFactory().bool();
   }
 
-  public IntType intT() {
-    return typeFactory().int_();
+  public IntSType intST() {
+    return sTypeFactory().int_();
   }
 
-  public NothingType nothingT() {
-    return typeFactory().nothing();
+  public NothingSType nothingST() {
+    return sTypeFactory().nothing();
   }
 
-  public StringType stringT() {
-    return typeFactory().string();
+  public StringSType stringST() {
+    return sTypeFactory().string();
   }
 
-  public StructType structT(String name, NamedList<? extends Type> fields) {
-    return typeFactory().struct(name, fields);
+  public StructSType structST(String name, NamedList<? extends Type> fields) {
+    return sTypeFactory().struct(name, fields);
   }
 
-  public FunctionType functionT(Type resultType, Item... parameters) {
-    return typeFactory().function(resultType, toTypes(list(parameters)));
+  public FunctionSType functionST(Type resultType, Item... parameters) {
+    return sTypeFactory().function(resultType, toTypes(list(parameters)));
   }
 
-  public FunctionType functionT(Type resultType, Iterable<ItemSignature> parameters) {
-    return typeFactory().function(resultType, map(parameters, ItemSignature::type));
+  public FunctionSType functionST(Type resultType, Iterable<ItemSignature> parameters) {
+    return sTypeFactory().function(resultType, map(parameters, ItemSignature::type));
   }
 
-  public Side lower() {
-    return typeFactory().lower();
+  public Side lowerST() {
+    return sTypeFactory().lower();
   }
 
-  public Side upper() {
-    return typeFactory().upper();
+  public Side upperST() {
+    return sTypeFactory().upper();
   }
 
   public BoundsMap bm(
@@ -727,7 +736,7 @@ public abstract class AbstractTestingContext {
 
   public NativeFunction functionExpression(int line, Type type, String name,
       Annotation annotation, Item... parameters) {
-    return new NativeFunction(functionT(type, parameters), modulePath(), name, list(parameters),
+    return new NativeFunction(functionST(type, parameters), modulePath(), name, list(parameters),
         annotation, loc(line)
     );
   }
@@ -739,7 +748,7 @@ public abstract class AbstractTestingContext {
 
   public DefinedFunction functionExpression(
       int line, Type type, String name, Expression body, Item... parameters) {
-    return new DefinedFunction(functionT(type, parameters), modulePath(), name, list(parameters),
+    return new DefinedFunction(functionST(type, parameters), modulePath(), name, list(parameters),
         body, loc(line)
     );
   }
@@ -764,7 +773,7 @@ public abstract class AbstractTestingContext {
 
   public Constructor constrExpression(
       int line, Type resultType, String name, Item... parameters) {
-    return new Constructor(functionT(resultType, parameters), modulePath(), name, list(parameters),
+    return new Constructor(functionST(resultType, parameters), modulePath(), name, list(parameters),
         loc(line));
   }
 

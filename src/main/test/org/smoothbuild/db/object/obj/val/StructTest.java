@@ -10,27 +10,27 @@ import org.smoothbuild.testing.TestingContextImpl;
 public class StructTest extends TestingContextImpl {
   @Test
   public void creating_struct_with_item_type_different_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> struct(animalSpec(), list(string("rabbit"), string("7"))))
+    assertCall(() -> struct(animalOT(), list(string("rabbit"), string("7"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_struct_with_item_count_different_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> struct(animalSpec(), list(string("rabbit"))))
+    assertCall(() -> struct(animalOT(), list(string("rabbit"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void reading_struct_type() {
     assertThat(animal().type())
-        .isEqualTo(animalSpec());
+        .isEqualTo(animalOT());
   }
 
   @Test
   public void items_contains_object_passed_to_builder() {
     Str species = string("rabbit");
     Int speed = int_(7);
-    Struc_ struct = struct(animalSpec(), list(species, speed));
+    Struc_ struct = struct(animalOT(), list(species, speed));
     assertThat(struct.items())
         .isEqualTo(list(species, speed));
   }
@@ -39,7 +39,7 @@ public class StructTest extends TestingContextImpl {
   public void struct_hash_is_different_than_its_item_hash() {
     Str species = string("rabbit");
     Int speed = int_(7);
-    Struc_ struct = struct(animalSpec(), list(species, speed));
+    Struc_ struct = struct(animalOT(), list(species, speed));
     assertThat(struct.hash())
         .isNotEqualTo(species.hash());
   }

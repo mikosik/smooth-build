@@ -10,7 +10,7 @@ public class BoolTest extends TestingContextImpl {
   @Test
   public void type_of_bool_is_bool_type() {
     assertThat(bool(true).type())
-        .isEqualTo(boolSpec());
+        .isEqualTo(boolOT());
   }
 
   @Test

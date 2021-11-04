@@ -15,7 +15,7 @@ public class SelectTest extends TestingContextImpl {
   public void type_of_select_is_inferred_correctly() {
     Struc_ struct = animal("rabbit", 7);
     assertThat(select(const_(struct), int_(1)).type())
-        .isEqualTo(selectSpec(intSpec()));
+        .isEqualTo(selectOT(intOT()));
   }
 
   @Test
@@ -40,7 +40,7 @@ public class SelectTest extends TestingContextImpl {
 
   @Test
   public void data_returns_struct_and_index() {
-    Struc_ struct = struct(structSpec(), list(int_(7)));
+    Struc_ struct = struct(structOT(), list(int_(7)));
     Const expr = const_(struct);
     Int index = int_(0);
     assertThat(select(expr, index).data())
