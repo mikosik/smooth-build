@@ -31,6 +31,8 @@ import org.smoothbuild.util.collect.NamedList;
 import com.google.common.testing.EqualsTester;
 
 public abstract class AbstractTypeTest extends AbstractTestingContext {
+  public abstract TypeFactory typeFactory();
+
   public static List<Arguments> names() {
     return asList(
         args(f -> f.variable("A"), "A"),

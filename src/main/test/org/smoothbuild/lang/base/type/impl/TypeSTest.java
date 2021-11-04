@@ -1,11 +1,11 @@
-package org.smoothbuild.db.object.type;
+package org.smoothbuild.lang.base.type.impl;
 
 import org.smoothbuild.lang.base.type.AbstractTypeTest;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 
-public class TypeTest extends AbstractTypeTest {
+public class TypeSTest extends AbstractTypeTest {
   @Override
   public TypeFactory typeFactory() {
-    return objTypeDb();
+    return typeFactoryS();
   }
 }

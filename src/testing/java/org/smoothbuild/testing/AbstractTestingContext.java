@@ -83,7 +83,6 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.lang.base.type.impl.AnySType;
 import org.smoothbuild.lang.base.type.impl.ArraySType;
@@ -177,8 +176,6 @@ public abstract class AbstractTestingContext {
     }
     return typingS;
   }
-
-  public abstract TypeFactory typeFactory();
 
   public TypeFactoryO typeFactoryO() {
     return objTypeDb();
