@@ -10,7 +10,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -139,7 +139,7 @@ public class ComputationHashTest extends TestingContext {
       }
 
       @Override
-      public ValType outputType() {
+      public TypeV outputType() {
         return null;
       }
 

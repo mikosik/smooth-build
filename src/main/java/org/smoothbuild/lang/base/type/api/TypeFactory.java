@@ -4,23 +4,11 @@ import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
-public interface TypeFactory {
-  /**
-   * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
-   * language.
-   */
-  public ImmutableSet<BaseType> inferableBaseTypes();
-
-  /**
-   * Base types that are legal in smooth language.
-   */
-  public ImmutableSet<BaseType> baseTypes();
-
+public interface TypeFactory<T extends Type> {
   public Bounds unbounded();
 
-  public Bounds oneSideBound(Side side, Type type);
+  public Bounds oneSideBound(Side side, T type);
 
   public Side upper();
 
@@ -28,13 +16,13 @@ public interface TypeFactory {
 
   public AnyType any();
 
-  public ArrayType array(Type elemType);
+  public ArrayType array(T elemType);
 
   public BlobType blob();
 
   public BoolType bool();
 
-  public FunctionType function(Type result, ImmutableList<? extends Type> parameters);
+  public FunctionType function(T result, ImmutableList<? extends T> parameters);
 
   public IntType int_();
 
@@ -42,7 +30,7 @@ public interface TypeFactory {
 
   public StringType string();
 
-  public StructType struct(String name, NamedList<? extends Type> fields);
+  public StructType struct(String name, NamedList<? extends T> fields);
 
   public Variable variable(String name);
 }

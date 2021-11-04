@@ -7,13 +7,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Order;
-import org.smoothbuild.db.object.type.base.ExprType;
+import org.smoothbuild.db.object.type.base.TypeE;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 
 /**
  * This class is immutable.
  */
-public class OrderOType extends ExprType {
+public class OrderOType extends TypeE {
   public OrderOType(Hash hash, ArrayOType evaluationType) {
     super("ORDER", hash, ORDER, evaluationType);
   }

@@ -9,22 +9,22 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 
 /**
  * This class is immutable.
  */
-public class ArrayOType extends ValType implements ArrayType {
-  private final ValType element;
+public class ArrayOType extends TypeV implements ArrayType {
+  private final TypeV element;
 
-  public ArrayOType(Hash hash, ValType element) {
+  public ArrayOType(Hash hash, TypeV element) {
     super(arrayTypeName(element), hash, ARRAY, element.variables());
     this.element = requireNonNull(element);
   }
 
   @Override
-  public ValType element() {
+  public TypeV element() {
     return element;
   }
 

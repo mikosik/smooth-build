@@ -7,7 +7,7 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.db.object.type.val.BlobOType;
 import org.smoothbuild.db.object.type.val.IntOType;
@@ -33,7 +33,7 @@ public class TypeSToTypeOConverter {
     this.objFactory = objFactory;
   }
 
-  public ValType visit(Type type) {
+  public TypeV visit(Type type) {
     // TODO refactor to pattern matching once we have java 17
     if (type instanceof BlobType blob) {
       return visit(blob);

@@ -7,14 +7,14 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.lang.base.type.api.IntType;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
-public class IntOType extends ValType implements IntType {
+public class IntOType extends TypeV implements IntType {
   public IntOType(Hash hash) {
     super(TypeNames.INT, hash, INT);
   }

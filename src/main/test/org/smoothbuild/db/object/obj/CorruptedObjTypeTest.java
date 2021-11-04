@@ -40,8 +40,8 @@ import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.type.base.ObjKind;
-import org.smoothbuild.db.object.type.base.ObjType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeO;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.exc.DecodeStructTypeWrongNamesSizeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
@@ -190,7 +190,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, ARRAY, DATA_PATH, ValType.class, ConstOType.class));
+              hash, ARRAY, DATA_PATH, TypeV.class, ConstOType.class));
     }
   }
 
@@ -232,7 +232,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(CALL, ValType.class);
+      test_type_with_data_being_expr_type(CALL, TypeV.class);
     }
   }
 
@@ -274,7 +274,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(CONST, ValType.class);
+      test_type_with_data_being_expr_type(CONST, TypeV.class);
     }
   }
 
@@ -339,7 +339,7 @@ public class CorruptedObjTypeTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme
        * to save lambda type in HashedDb.
        */
-      ImmutableList<ValType> parameterTypes = list(stringOT(), boolOT());
+      ImmutableList<TypeV> parameterTypes = list(stringOT(), boolOT());
       TupleOType parametersTuple = tupleOT(parameterTypes);
       Hash specHash = hash(
           hash(LAMBDA.marker()),
@@ -449,7 +449,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertCall(() -> objTypeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, LAMBDA, LAMBDA_RESULT_PATH, ValType.class, ConstOType.class));
+              typeHash, LAMBDA, LAMBDA_RESULT_PATH, TypeV.class, ConstOType.class));
     }
 
     @Test
@@ -563,7 +563,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(REF, ValType.class);
+      test_type_with_data_being_expr_type(REF, TypeV.class);
     }
   }
 
@@ -621,7 +621,7 @@ public class CorruptedObjTypeTest extends TestingContext {
   }
 
   private void test_type_with_data_being_expr_type(
-      ObjKind objKind, Class<? extends ObjType> expected)
+      ObjKind objKind, Class<? extends TypeO> expected)
       throws Exception {
     Hash hash = hash(
         hash(objKind.marker()),
@@ -679,7 +679,7 @@ public class CorruptedObjTypeTest extends TestingContext {
     return obj.hash();
   }
 
-  protected Hash hash(ObjType type) {
+  protected Hash hash(TypeO type) {
     return type.hash();
   }
 
@@ -725,7 +725,7 @@ public class CorruptedObjTypeTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(SELECT, ValType.class);
+      test_type_with_data_being_expr_type(SELECT, TypeV.class);
     }
   }
 
@@ -893,7 +893,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, STRUCT, "data[1]", 0, ValType.class, ConstOType.class));
+              hash, STRUCT, "data[1]", 0, TypeV.class, ConstOType.class));
     }
 
     @Test
@@ -1043,7 +1043,7 @@ public class CorruptedObjTypeTest extends TestingContext {
           );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, TUPLE, "data", 0, ValType.class, ConstOType.class));
+              hash, TUPLE, "data", 0, TypeV.class, ConstOType.class));
     }
 
     @Test

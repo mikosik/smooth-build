@@ -10,7 +10,7 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.obj.exc.DecodeStructExprWrongItemsSizeException;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.StructExprOType;
 import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.util.collect.Named;
@@ -38,8 +38,8 @@ public class StructExpr extends Expr {
   }
 
   public ImmutableList<Expr> items() {
-    NamedList<ValType> fields = type().evaluationType().fields();
-    ImmutableList<Named<ValType>> expectedItemTypes = fields.list();
+    NamedList<TypeV> fields = type().evaluationType().fields();
+    ImmutableList<Named<TypeV>> expectedItemTypes = fields.list();
     var items = readSequenceObjs(DATA_PATH, dataHash(), Expr.class);
 
     allMatchOtherwise(

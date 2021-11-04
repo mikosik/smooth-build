@@ -43,8 +43,8 @@ import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.ObjTypeDb;
-import org.smoothbuild.db.object.type.base.ObjType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeO;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.SelectOType;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.db.object.type.val.LambdaOType;
@@ -68,7 +68,7 @@ public class ObjDb {
 
   // methods for creating value or value builders
 
-  public ArrayBuilder arrayBuilder(ValType elementType) {
+  public ArrayBuilder arrayBuilder(TypeV elementType) {
     return new ArrayBuilder(objTypeDb.array(elementType), this);
   }
 
@@ -151,7 +151,7 @@ public class ObjDb {
   }
 
   public Invoke invoke(
-      ValType evaluationType, NativeMethod nativeMethod, Bool isPure, Int argumentCount) {
+      TypeV evaluationType, NativeMethod nativeMethod, Bool isPure, Int argumentCount) {
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newInvoke(evaluationType, nativeMethod, isPure, argumentCount));
   }
@@ -160,7 +160,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elements));
   }
 
-  public Ref ref(BigInteger value, ValType evaluationType) {
+  public Ref ref(BigInteger value, TypeV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType, value));
   }
 
@@ -179,12 +179,12 @@ public class ObjDb {
     if (hashes.size() != 2) {
       throw wrongSizeOfRootSequenceException(rootHash, hashes.size());
     }
-    ObjType type = getTypeOrChainException(rootHash, hashes.get(0));
+    TypeO type = getTypeOrChainException(rootHash, hashes.get(0));
     Hash dataHash = hashes.get(1);
     return type.newObj(new MerkleRoot(rootHash, type, dataHash), this);
   }
 
-  private ObjType getTypeOrChainException(Hash rootHash, Hash typeHash) {
+  private TypeO getTypeOrChainException(Hash rootHash, Hash typeHash) {
     try {
       return objTypeDb.get(typeHash);
     } catch (ObjDbException e) {
@@ -292,7 +292,7 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private Invoke newInvoke(ValType evaluationType, NativeMethod nativeMethod, Bool isPure,
+  private Invoke newInvoke(TypeV evaluationType, NativeMethod nativeMethod, Bool isPure,
       Int argumentCount) throws HashedDbException {
     var data = writeInvokeData(nativeMethod, isPure, argumentCount);
     var type = objTypeDb.invoke(evaluationType);
@@ -301,15 +301,15 @@ public class ObjDb {
   }
 
   private Order newOrder(List<? extends Expr> elements) throws HashedDbException {
-    ValType elementType = elementType(elements);
+    TypeV elementType = elementType(elements);
     var type = objTypeDb.order(elementType);
     var data = writeOrderData(elements);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private ValType elementType(List<? extends Expr> elements) {
-    Optional<ValType> elementType = elements.stream()
+  private TypeV elementType(List<? extends Expr> elements) {
+    Optional<TypeV> elementType = elements.stream()
         .map(expr -> expr.type().evaluationType())
         .reduce((type1, type2) -> {
           if (type1.equals(type2)) {
@@ -319,9 +319,9 @@ public class ObjDb {
                 + type1.name() + " != " + type2.name() + ".");
           }
         });
-    ObjType type = elementType.orElse(objTypeDb.nothing());
-    if (type instanceof ValType valType) {
-      return valType;
+    TypeO type = elementType.orElse(objTypeDb.nothing());
+    if (type instanceof TypeV typeV) {
+      return typeV;
     } else {
       throw new IllegalArgumentException(
           "Element type should be ValOType but was " + type.getClass().getCanonicalName());
@@ -358,7 +358,7 @@ public class ObjDb {
 
   private StructExpr newStructExpr(StructOType evaluationType, List<? extends Expr> items)
       throws HashedDbException {
-    ImmutableList<Named<ValType>> types = evaluationType.fields().list();
+    ImmutableList<Named<TypeV>> types = evaluationType.fields().list();
     allMatchOtherwise(types, items,
         (f, v) -> f.object().equals(v.evaluationType()),
         (i, j) -> {
@@ -377,14 +377,14 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private Ref newRef(ValType evaluationType, BigInteger index) throws HashedDbException {
+  private Ref newRef(TypeV evaluationType, BigInteger index) throws HashedDbException {
     var data = writeRefData(index);
     var type = objTypeDb.ref(evaluationType);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private MerkleRoot newRoot(ObjType type, Hash dataHash) throws HashedDbException {
+  private MerkleRoot newRoot(TypeO type, Hash dataHash) throws HashedDbException {
     Hash rootHash = hashedDb.writeSequence(type.hash(), dataHash);
     return new MerkleRoot(rootHash, type, dataHash);
   }

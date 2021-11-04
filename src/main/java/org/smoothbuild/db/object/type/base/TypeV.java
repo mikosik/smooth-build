@@ -5,12 +5,12 @@ import org.smoothbuild.lang.base.type.api.Variable;
 
 import com.google.common.collect.ImmutableSet;
 
-public abstract class ValType extends ObjType {
-  protected ValType(String name, Hash hash, ObjKind kind) {
+public abstract class TypeV extends TypeO {
+  protected TypeV(String name, Hash hash, ObjKind kind) {
     super(name, hash, kind, ImmutableSet.of());
   }
 
-  protected ValType(String name, Hash hash, ObjKind kind, ImmutableSet<Variable> variables) {
+  protected TypeV(String name, Hash hash, ObjKind kind, ImmutableSet<Variable> variables) {
     super(name, hash, kind, variables);
   }
 }

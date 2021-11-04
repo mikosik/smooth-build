@@ -39,7 +39,7 @@ import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.TypeFactoryO;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.CallOType;
 import org.smoothbuild.db.object.type.expr.ConstOType;
 import org.smoothbuild.db.object.type.expr.ConstructOType;
@@ -77,12 +77,10 @@ import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.SModule;
-import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.lang.base.type.impl.AnySType;
 import org.smoothbuild.lang.base.type.impl.ArraySType;
@@ -95,6 +93,7 @@ import org.smoothbuild.lang.base.type.impl.StringSType;
 import org.smoothbuild.lang.base.type.impl.StructSType;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VariableSType;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -122,7 +121,7 @@ public class TestingContext {
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
   private ObjDb objDb;
-  private Typing typingS;
+  private TypingS typingS;
   private ObjTypeDb objTypeDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -171,9 +170,9 @@ public class TestingContext {
     return objFactory;
   }
 
-  public Typing typingS() {
+  public TypingS typingS() {
     if (typingS == null) {
-      typingS = new Typing(typeFactoryS());
+      typingS = new TypingS(typeFactoryS());
     }
     return typingS;
   }
@@ -266,7 +265,7 @@ public class TestingContext {
     return typeFactoryO().any();
   }
 
-  public ArrayOType arrayOT(ValType elementSpec) {
+  public ArrayOType arrayOT(TypeV elementSpec) {
     return typeFactoryO().array(elementSpec);
   }
 
@@ -290,7 +289,7 @@ public class TestingContext {
     return lambdaOT(intOT(), list(blobOT(), stringOT()));
   }
 
-  public LambdaOType lambdaOT(ValType result, ImmutableList<? extends Type> parameters) {
+  public LambdaOType lambdaOT(TypeV result, ImmutableList<? extends TypeV> parameters) {
     return typeFactoryO().function(result, parameters);
   }
 
@@ -315,7 +314,7 @@ public class TestingContext {
     return typeFactoryO().string();
   }
 
-  public TupleOType tupleOT(ImmutableList<ValType> itemSpecs) {
+  public TupleOType tupleOT(ImmutableList<TypeV> itemSpecs) {
     return objTypeDb().tuple(itemSpecs);
   }
 
@@ -331,11 +330,11 @@ public class TestingContext {
     return structOT(namedList(list(named("field", intOT()))));
   }
 
-  public StructOType structOT(NamedList<? extends Type> fields) {
+  public StructOType structOT(NamedList<? extends TypeV> fields) {
     return structOT("MyStruct", fields);
   }
 
-  public StructOType structOT(String name, NamedList<? extends Type> fields) {
+  public StructOType structOT(String name, NamedList<? extends TypeV> fields) {
     return typeFactoryO().struct(name, fields);
   }
 
@@ -357,7 +356,7 @@ public class TestingContext {
     return callOT(intOT());
   }
 
-  public CallOType callOT(ValType evaluationType) {
+  public CallOType callOT(TypeV evaluationType) {
     return objTypeDb().call(evaluationType);
   }
 
@@ -365,7 +364,7 @@ public class TestingContext {
     return constOT(intOT());
   }
 
-  public ConstOType constOT(ValType evaluationType) {
+  public ConstOType constOT(TypeV evaluationType) {
     return objTypeDb().const_(evaluationType);
   }
 
@@ -373,7 +372,7 @@ public class TestingContext {
     return constructOT(list(intOT(), stringOT()));
   }
 
-  public ConstructOType constructOT(ImmutableList<ValType> itemSpecs) {
+  public ConstructOType constructOT(ImmutableList<TypeV> itemSpecs) {
     return objTypeDb().construct(tupleOT(itemSpecs));
   }
 
@@ -381,7 +380,7 @@ public class TestingContext {
     return orderOT(intOT());
   }
 
-  public OrderOType orderOT(ValType elementSpec) {
+  public OrderOType orderOT(TypeV elementSpec) {
     return objTypeDb().order(elementSpec);
   }
 
@@ -389,7 +388,7 @@ public class TestingContext {
     return refOT(intOT());
   }
 
-  public RefOType refOT(ValType evaluationType) {
+  public RefOType refOT(TypeV evaluationType) {
     return objTypeDb().ref(evaluationType);
   }
 
@@ -397,7 +396,7 @@ public class TestingContext {
     return selectOT(intOT());
   }
 
-  public SelectOType selectOT(ValType evaluationType) {
+  public SelectOType selectOT(TypeV evaluationType) {
     return objTypeDb().select(evaluationType);
   }
 
@@ -423,7 +422,7 @@ public class TestingContext {
     return array(elements[0].type(), elements);
   }
 
-  public Array array(ValType elementSpec, Obj... elements) {
+  public Array array(TypeV elementSpec, Obj... elements) {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
@@ -560,7 +559,7 @@ public class TestingContext {
     return objectDb().ref(BigInteger.valueOf(value), intOT());
   }
 
-  public Ref ref(ValType evaluationType, int pointer) {
+  public Ref ref(TypeV evaluationType, int pointer) {
     return objectDb().ref(BigInteger.valueOf(pointer), evaluationType);
   }
 
@@ -596,7 +595,7 @@ public class TestingContext {
     return typeFactoryS().any();
   }
 
-  public ArraySType arrayST(Type elemType) {
+  public ArraySType arrayST(TypeS elemType) {
     return typeFactoryS().array(elemType);
   }
 
@@ -608,11 +607,11 @@ public class TestingContext {
     return typeFactoryS().bool();
   }
 
-  public FunctionSType functionST(Type resultType, Item... parameters) {
+  public FunctionSType functionST(TypeS resultType, Item... parameters) {
     return typeFactoryS().function(resultType, toTypes(list(parameters)));
   }
 
-  public FunctionSType functionST(Type resultType, Iterable<ItemSignature> parameters) {
+  public FunctionSType functionST(TypeS resultType, Iterable<ItemSignature> parameters) {
     return typeFactoryS().function(resultType, map(parameters, ItemSignature::type));
   }
 
@@ -628,7 +627,7 @@ public class TestingContext {
     return typeFactoryS().string();
   }
 
-  public StructSType structST(String name, NamedList<? extends Type> fields) {
+  public StructSType structST(String name, NamedList<? extends TypeS> fields) {
     return typeFactoryS().struct(name, fields);
   }
 
@@ -645,8 +644,8 @@ public class TestingContext {
   }
 
   public BoundsMap bmST(
-      Variable var1, Side side1, Type bound1,
-      Variable var2, Side side2, Type bound2) {
+      VariableSType var1, Side side1, TypeS bound1,
+      VariableSType var2, Side side2, TypeS bound2) {
     Bounds bounds1 = oneSideBoundST(side1, bound1);
     Bounds bounds2 = oneSideBoundST(side2, bound2);
     if (var1.equals(var2)) {
@@ -659,7 +658,7 @@ public class TestingContext {
     }
   }
 
-  public BoundsMap bmST(Variable var, Side side, Type bound) {
+  public BoundsMap bmST(Variable var, Side side, TypeS bound) {
     return boundsMap(new Bounded(var, oneSideBoundST(side, bound)));
   }
 
@@ -667,14 +666,14 @@ public class TestingContext {
     return boundsMap();
   }
 
-  public Bounds oneSideBoundST(Side side, Type type) {
+  public Bounds oneSideBoundST(Side side, TypeS type) {
     return typeFactoryS().oneSideBound(side, type);
   }
 
   // Expressions
 
   public ArrayLiteralExpression arrayExpression(
-      int line, Type elemType, Expression... expressions) {
+      int line, TypeS elemType, Expression... expressions) {
     return new ArrayLiteralExpression(
         arrayST(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
@@ -697,25 +696,25 @@ public class TestingContext {
     return new CallExpression(type, expression, list(arguments), loc(line));
   }
 
-  public NativeFunction functionExpression(Type type, String name, Item... parameters) {
+  public NativeFunction functionExpression(TypeS type, String name, Item... parameters) {
     return functionExpression(
         1, type, name, annotation(1, stringExpression(1, "Impl.met")), parameters);
   }
 
-  public NativeFunction functionExpression(int line, Type type, String name,
+  public NativeFunction functionExpression(int line, TypeS type, String name,
       Annotation annotation, Item... parameters) {
     return new NativeFunction(functionST(type, parameters), modulePath(), name, list(parameters),
         annotation, loc(line)
     );
   }
 
-  public DefinedFunction functionExpression(Type type, String name, Expression body,
+  public DefinedFunction functionExpression(TypeS type, String name, Expression body,
       Item... parameters) {
     return functionExpression(1, type, name, body, parameters);
   }
 
   public DefinedFunction functionExpression(
-      int line, Type type, String name, Expression body, Item... parameters) {
+      int line, TypeS type, String name, Expression body, Item... parameters) {
     return new DefinedFunction(functionST(type, parameters), modulePath(), name, list(parameters),
         body, loc(line)
     );
@@ -765,7 +764,7 @@ public class TestingContext {
     return new Annotation(implementedBy, pure, loc(line));
   }
 
-  public Constructor constructor(int line, Type resultType, String name, Item... parameters) {
+  public Constructor constructor(int line, TypeS resultType, String name, Item... parameters) {
     return new Constructor(
         functionST(resultType, parameters), modulePath(), name, list(parameters), loc(line));
   }

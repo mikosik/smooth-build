@@ -41,11 +41,12 @@ import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public class TypingTest {
   @ParameterizedTest
   @MethodSource("contains_test_data")
-  public void contains(Type type, Type contained, boolean expected) {
+  public void contains(TypeS type, TypeS contained, boolean expected) {
     assertThat(TYPING.contains(type, contained))
         .isEqualTo(expected);
   }
@@ -179,8 +180,8 @@ public class TypingTest {
   @ParameterizedTest
   @MethodSource("isAssignable_test_data")
   public void isAssignable(TestedAssignmentSpec spec) {
-    Type target = spec.target().type();
-    Type source = spec.source().type();
+    var target = spec.target().type();
+    var source = spec.source().type();
     assertThat(TYPING.isAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
@@ -192,8 +193,8 @@ public class TypingTest {
   @ParameterizedTest
   @MethodSource("isParamAssignable_test_data")
   public void isParamAssignable(TestedAssignmentSpec spec) {
-    Type target = spec.target().type();
-    Type source = spec.source().type();
+    var target = spec.target().type();
+    var source = spec.source().type();
     assertThat(TYPING.isParamAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
@@ -204,14 +205,14 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("inferVariableBounds_test_data")
-  public void inferVariableBounds(Type type, Type assigned, BoundsMap expected) {
+  public void inferVariableBounds(TypeS type, TypeS assigned, BoundsMap expected) {
     assertThat(TYPING.inferVariableBounds(type, assigned, LOWER))
         .isEqualTo(expected);
   }
 
   public static List<Arguments> inferVariableBounds_test_data() {
     var r = new ArrayList<Arguments>();
-    for (Type type : concat(ELEMENTARY_TYPES, X)) {
+    for (TypeS type : concat(ELEMENTARY_TYPES, X)) {
       if (type instanceof NothingType) {
         // arrays
         r.add(arguments(A, NOTHING, bm(A, LOWER, NOTHING)));
@@ -296,25 +297,25 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("mapVariables_test_data")
-  public void mapVariables(Type type, BoundsMap boundsMap, Type expected) {
+  public void mapVariables(TypeS type, BoundsMap boundsMap, Type expected) {
     assertThat(TYPING.mapVariables(type, boundsMap, LOWER))
         .isEqualTo(expected);
   }
 
   public static List<Arguments> mapVariables_test_data() {
     var result = new ArrayList<Arguments>();
-    for (Type type : ALL_TESTED_TYPES) {
+    for (TypeS type : ALL_TESTED_TYPES) {
       result.add(arguments(X, bm(X, LOWER, type), type));
       result.add(arguments(a(X), bm(X, LOWER, type), a(type)));
       result.add(arguments(X, bm(X, LOWER, a(type)), a(type)));
       result.add(arguments(a(X), bm(X, LOWER, a(type)), a(a(type))));
     }
-    for (Type newA : ALL_TESTED_TYPES) {
-      for (Type newB : ALL_TESTED_TYPES) {
+    for (TypeS newA : ALL_TESTED_TYPES) {
+      for (TypeS newB : ALL_TESTED_TYPES) {
         result.add(arguments(f(A, B), bm(A, LOWER, newA, B, UPPER, newB), f(newA, newB)));
       }
     }
-    for (Type type : ELEMENTARY_TYPES) {
+    for (TypeS type : ELEMENTARY_TYPES) {
       result.add(arguments(type, bm(), type));
       result.add(arguments(a(a(type)), bm(), a(a(type))));
 
@@ -326,7 +327,7 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("merge_up_wide_graph_cases")
-  public void merge_up_wide_graph(Type type1, Type type2, Type expected) {
+  public void merge_up_wide_graph(TypeS type1, TypeS type2, TypeS expected) {
     testMergeBothWays(type1, type2, expected, UPPER);
   }
 
@@ -337,7 +338,7 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("merge_up_deep_graph_cases")
-  public void merge_up_deep_graph(Type type1, Type type2, Type expected) {
+  public void merge_up_deep_graph(TypeS type1, TypeS type2, TypeS expected) {
     testMergeBothWays(type1, type2, expected, UPPER);
   }
 
@@ -348,7 +349,7 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("merge_down_wide_graph_cases")
-  public void merge_down_wide_graph(Type type1, Type type2, Type expected) {
+  public void merge_down_wide_graph(TypeS type1, TypeS type2, TypeS expected) {
     testMergeBothWays(type1, type2, expected, LOWER);
   }
 
@@ -360,7 +361,7 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("merge_down_deep_graph_cases")
-  public void merge_down_deep_graph(Type type1, Type type2, Type expected) {
+  public void merge_down_deep_graph(TypeS type1, TypeS type2, Type expected) {
     testMergeBothWays(type1, type2, expected, LOWER);
   }
 
@@ -370,7 +371,7 @@ public class TypingTest {
         .buildTestCases(ANY);
   }
 
-  private void testMergeBothWays(Type type1, Type type2, Type expected, Side direction) {
+  private void testMergeBothWays(TypeS type1, TypeS type2, Type expected, Side direction) {
     assertThat(TYPING.merge(type1, type2, direction))
         .isEqualTo(expected);
     assertThat(TYPING.merge(type2, type1, direction))

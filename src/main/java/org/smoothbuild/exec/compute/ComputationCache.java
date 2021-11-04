@@ -19,7 +19,7 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -69,7 +69,7 @@ public class ComputationCache {
     };
   }
 
-  public synchronized Output read(Hash taskHash, ValType type) throws ComputationCacheException {
+  public synchronized Output read(Hash taskHash, TypeV type) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       Obj messagesObject = objDb.get(Hash.read(source));
       ArrayOType messageArrayType = objFactory.arrayType(objFactory.messageType());

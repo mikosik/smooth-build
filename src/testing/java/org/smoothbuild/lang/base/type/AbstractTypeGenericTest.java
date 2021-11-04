@@ -30,7 +30,7 @@ import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.testing.EqualsTester;
 
-public abstract class AbstractTypeTest extends TestingContext {
+public abstract class AbstractTypeGenericTest extends TestingContext {
   public abstract TypeFactory typeFactory();
 
   public static List<Arguments> names() {

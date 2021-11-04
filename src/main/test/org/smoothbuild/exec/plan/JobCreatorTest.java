@@ -19,7 +19,6 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.TestingLocation;
-import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -69,7 +68,7 @@ public class JobCreatorTest extends TestingContext {
           }
           return new Job() {
             @Override
-            public Type type() {
+            public TypeS type() {
               return STRING;
             }
 

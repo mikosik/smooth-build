@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
 
@@ -54,7 +54,7 @@ public class FunctionTest extends TestingContext {
     return new Item(STRING, modulePath(), "a", defaultArgument, loc());
   }
 
-  private Function myFunction(Type resultType, List<Item> parameters) {
+  private Function myFunction(TypeS resultType, List<Item> parameters) {
     return new DefinedFunction(functionST(resultType, toItemSignatures(parameters)),
         modulePath(), "name", ImmutableList.copyOf(parameters),
         mock(Expression.class), loc(1)

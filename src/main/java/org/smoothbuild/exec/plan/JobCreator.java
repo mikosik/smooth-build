@@ -50,12 +50,12 @@ import org.smoothbuild.lang.base.define.MapFunction;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.Value;
-import org.smoothbuild.lang.base.type.Typing;
-import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
-import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.ArraySType;
+import org.smoothbuild.lang.base.type.impl.FunctionSType;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -76,18 +76,18 @@ public class JobCreator {
   private final TypeSToTypeOConverter toOTypeConverter;
   private final MethodLoader methodLoader;
   private final TypeFactoryS factory;
-  private final Typing typing;
+  private final TypingS typing;
   private final Map<Class<?>, Handler<?>> map;
 
   @Inject
   public JobCreator(Definitions definitions, TypeSToTypeOConverter toOTypeConverter,
-      MethodLoader methodLoader, TypeFactoryS factory, Typing typing) {
+      MethodLoader methodLoader, TypeFactoryS factory, TypingS typing) {
     this(definitions, toOTypeConverter, methodLoader, factory, typing, ImmutableMap.of());
   }
 
   // Visible for testing
   JobCreator(Definitions definitions, TypeSToTypeOConverter toOTypeConverter,
-      MethodLoader methodLoader, TypeFactoryS factory, Typing typing,
+      MethodLoader methodLoader, TypeFactoryS factory, TypingS typing,
       Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;
     this.toOTypeConverter = toOTypeConverter;
@@ -184,7 +184,7 @@ public class JobCreator {
     if (eager) {
       return callEagerJob(scope, function, arguments, location, variables);
     } else {
-      var functionType = (FunctionType) function.type();
+      var functionType = (FunctionSType) function.type();
       var actualResultType = typing.mapVariables(functionType.result(), variables, factory.lower());
       return new LazyJob(actualResultType, location,
           () -> callEagerJob(scope, function, arguments, location, variables));
@@ -199,14 +199,14 @@ public class JobCreator {
 
   private Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
       Location location, BoundsMap variables) {
-    var functionType = (FunctionType) function.type();
+    var functionType = (FunctionSType) function.type();
     var actualResultType = typing.mapVariables(functionType.result(), variables, factory.lower());
     return new ApplyJob(
         actualResultType, function, arguments, location, variables, scope, JobCreator.this);
   }
 
   private BoundsMap inferVariablesInFunctionCall(Job function, List<Job> arguments) {
-    var functionType = (FunctionType) function.type();
+    var functionType = (FunctionSType) function.type();
     var argumentTypes = map(arguments, Job::type);
     return typing.inferVariableBounds(functionType.parameters(), argumentTypes, factory.lower());
   }
@@ -224,7 +224,7 @@ public class JobCreator {
     return selectReadEager(scope, select, type);
   }
 
-  private Job selectReadEager(Scope<Job> scope, SelectExpression expression, Type type) {
+  private Job selectReadEager(Scope<Job> scope, SelectExpression expression, TypeS type) {
     var index = expression.index();
     var algorithm = new ReadStructItemAlgorithm(index, toOTypeConverter.visit(type));
     var dependencies = list(eagerJobFor(scope, expression.expression()));
@@ -251,7 +251,7 @@ public class JobCreator {
     return referenceEager(scope, reference, reference.type());
   }
 
-  private Job referenceEager(Scope<Job> scope, ReferenceExpression reference, Type type) {
+  private Job referenceEager(Scope<Job> scope, ReferenceExpression reference, TypeS type) {
     var referencable = definitions.referencables().get(reference.name());
     var module = definitions.modules().get(referencable.modulePath());
     var algorithm = new ReferenceAlgorithm(referencable, module, toOTypeConverter.functionType());
@@ -281,7 +281,7 @@ public class JobCreator {
     return arrayEager(arrayLiteral, elements, actualType);
   }
 
-  private Optional<ArrayType> arrayType(List<Job> elements) {
+  private Optional<ArraySType> arrayType(List<Job> elements) {
     return elements
         .stream()
         .map(Job::type)
@@ -290,13 +290,13 @@ public class JobCreator {
   }
 
   private Job arrayEager(ArrayLiteralExpression expression, List<Job> elements,
-      ArrayType actualType) {
+      ArraySType actualType) {
     var convertedElements = map(elements, e -> convertIfNeededEagerJob(actualType.element(), e));
     var info = new TaskInfo(LITERAL, "[]", expression.location());
     return arrayEager(actualType, convertedElements, info);
   }
 
-  public Job arrayEager(ArrayType type, ImmutableList<Job> elements, TaskInfo info) {
+  public Job arrayEager(ArraySType type, ImmutableList<Job> elements, TaskInfo info) {
     var algorithm = new CreateArrayAlgorithm(toOTypeConverter.visit(type));
     return new Task(type, elements, info, algorithm);
   }
@@ -362,7 +362,7 @@ public class JobCreator {
   // helper methods
 
   public Job evaluateLambdaEagerJob(Scope<Job> scope, BoundsMap variables,
-      Type actualResultType, String name, List<Job> arguments, Location location) {
+      TypeS actualResultType, String name, List<Job> arguments, Location location) {
     var referencable = definitions.referencables().get(name);
     if (referencable instanceof Value value) {
       return valueEagerJob(scope, value, location);
@@ -419,7 +419,7 @@ public class JobCreator {
     );
   }
 
-  private Job definedFunctionEagerJob(Scope<Job> scope, Type actualResultType,
+  private Job definedFunctionEagerJob(Scope<Job> scope, TypeS actualResultType,
       DefinedFunction function, List<Job> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     var body = eagerJobFor(newScope, function.body());
@@ -435,7 +435,7 @@ public class JobCreator {
 
   private Job callNativeFunctionEagerJob(Scope<Job> scope, List<Job> arguments,
       NativeFunction function, Annotation annotation, BoundsMap variables,
-      Type actualResultType, Location location) {
+      TypeS actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(
         methodLoader, toOTypeConverter.visit(actualResultType), function, annotation.isPure());
     var dependencies = concat(
@@ -454,14 +454,14 @@ public class JobCreator {
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }
 
-  private Job constructorCallEagerJob(Type resultType, StructOType structType, String name,
+  private Job constructorCallEagerJob(TypeS resultType, StructOType structType, String name,
       List<Job> arguments, Location location) {
     var algorithm = new CreateStructAlgorithm(structType);
     var info = new TaskInfo(CALL, name, location);
     return new Task(resultType, arguments, info, algorithm);
   }
 
-  private Job convertIfNeededEagerJob(Type requiredType, Job job) {
+  private Job convertIfNeededEagerJob(TypeS requiredType, Job job) {
     if (job.type().equals(requiredType)) {
       return job;
     } else {
@@ -469,7 +469,7 @@ public class JobCreator {
     }
   }
 
-  private Job convertEagerJob(Type requiredType, Job job) {
+  private Job convertEagerJob(TypeS requiredType, Job job) {
     var description = requiredType.name() + "<-" + job.type().name();
     var algorithm = new ConvertAlgorithm(toOTypeConverter.visit(requiredType));
     var info = new TaskInfo(CONVERSION, description, job.location());

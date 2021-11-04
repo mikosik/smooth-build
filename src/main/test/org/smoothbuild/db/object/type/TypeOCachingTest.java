@@ -9,37 +9,37 @@ import java.util.function.Function;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.val.LambdaOType;
 import org.smoothbuild.db.object.type.val.TupleOType;
 import org.smoothbuild.testing.TestingContext;
 
-public class ObjTypeCachingTest extends TestingContext {
+public class TypeOCachingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("type_creators")
-  public void created_type_is_cached(Function<ObjTypeDb, ObjType> typeCreator) {
+  public void created_type_is_cached(Function<ObjTypeDb, TypeO> typeCreator) {
     assertThat(typeCreator.apply(objTypeDb()))
         .isSameInstanceAs(typeCreator.apply(objTypeDb()));
   }
 
   @ParameterizedTest
   @MethodSource("type_creators")
-  public void read_type_is_cached(Function<ObjTypeDb, ObjType> typeCreator) {
+  public void read_type_is_cached(Function<ObjTypeDb, TypeO> typeCreator) {
     Hash hash = typeCreator.apply(objTypeDb()).hash();
     ObjTypeDb objTypeDb = objTypeDbOther();
     assertThat(objTypeDb.get(hash))
         .isSameInstanceAs(objTypeDb.get(hash));
   }
 
-  private static List<Function<ObjTypeDb, ObjType>> type_creators() {
+  private static List<Function<ObjTypeDb, TypeO>> type_creators() {
     return list(
         ObjTypeDb::blob,
         ObjTypeDb::bool,
-        ObjTypeCachingTest::lambdaType,
+        TypeOCachingTest::lambdaType,
         ObjTypeDb::int_,
         ObjTypeDb::nothing,
         ObjTypeDb::string,
-        ObjTypeCachingTest::tupleType,
+        TypeOCachingTest::tupleType,
 
         objTypeDb -> objTypeDb.call(objTypeDb.int_()),
         objTypeDb -> objTypeDb.const_(objTypeDb.int_()),

@@ -1,22 +1,22 @@
 package org.smoothbuild.db.object.obj.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.TypeO;
 
 public class DecodeObjNodeException extends DecodeObjException {
-  public DecodeObjNodeException(Hash hash, ObjType type, String path, String message) {
+  public DecodeObjNodeException(Hash hash, TypeO type, String path, String message) {
     super(buildMessage(hash, type, path, message));
   }
 
-  public DecodeObjNodeException(Hash hash, ObjType type, String path) {
+  public DecodeObjNodeException(Hash hash, TypeO type, String path) {
     super(buildMessage(hash, type, path, null));
   }
 
-  public DecodeObjNodeException(Hash hash, ObjType type, String path, Throwable e) {
+  public DecodeObjNodeException(Hash hash, TypeO type, String path, Throwable e) {
     super(buildMessage(hash, type, path, null), e);
   }
 
-  private static String buildMessage(Hash hash, ObjType type, String path, String message) {
+  private static String buildMessage(Hash hash, TypeO type, String path, String message) {
     return "Cannot decode " + type.q() + " object at " + hash + ". Cannot decode its node at `"
         + path + "` path in Merkle tree. " + (message != null ? message : "");
   }

@@ -36,7 +36,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -329,7 +329,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     @Override
-    public ValType outputType() {
+    public TypeV outputType() {
       return STR;
     }
   }

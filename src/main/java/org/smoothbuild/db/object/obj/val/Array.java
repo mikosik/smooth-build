@@ -5,7 +5,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 
 import com.google.common.collect.ImmutableList;
@@ -34,7 +34,7 @@ public class Array extends Val {
   }
 
   private <T extends Val> void assertIsIterableAs(Class<T> clazz) {
-    ObjType element = this.type().element();
+    TypeO element = this.type().element();
     if (!(element.isNothing() || clazz.isAssignableFrom(element.jType()))) {
       throw new IllegalArgumentException(this.type().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
@@ -42,9 +42,9 @@ public class Array extends Val {
   }
 
   protected <T> ImmutableList<T> checkTypeOfSequenceObjs(
-      ImmutableList<Obj> elements, ObjType type) {
+      ImmutableList<Obj> elements, TypeO type) {
     for (int i = 0; i < elements.size(); i++) {
-      ObjType elementType = elements.get(i).type();
+      TypeO elementType = elements.get(i).type();
       if (!(type.equals(elementType))) {
         throw new UnexpectedObjNodeException(hash(), this.type(), DATA_PATH, i, type, elementType);
       }

@@ -7,14 +7,14 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
-public class StringOType extends ValType implements StringType {
+public class StringOType extends TypeV implements StringType {
   public StringOType(Hash hash) {
     super(TypeNames.STRING, hash, STRING);
   }

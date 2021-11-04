@@ -2,20 +2,20 @@ package org.smoothbuild.db.object.type.exc;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.ObjKind;
-import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.TypeO;
 
 public class UnexpectedTypeNodeException extends DecodeTypeNodeException {
   public UnexpectedTypeNodeException(Hash hash, ObjKind kind, String path, int pathIndex,
-      ObjType expected, ObjType actual) {
+      TypeO expected, TypeO actual) {
     this(hash, kind, indexedPath(path, pathIndex), expected, actual);
   }
 
-  public UnexpectedTypeNodeException(Hash hash, ObjKind kind, String path, ObjType expected,
-      ObjType actual) {
+  public UnexpectedTypeNodeException(Hash hash, ObjKind kind, String path, TypeO expected,
+      TypeO actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }
 
-  private static String buildMessage(ObjType expected, ObjType actual) {
+  private static String buildMessage(TypeO expected, TypeO actual) {
     return "Node has unexpected type. Expected " + expected.name() + " but was " + actual.name()
         + ".";
   }

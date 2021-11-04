@@ -17,8 +17,8 @@ import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.ArraySType;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -28,7 +28,7 @@ public class MapJob extends AbstractJob {
   private final Scope<Job> scope;
   private final JobCreator jobCreator;
 
-  public MapJob(Type type, List<Job> dependencies, Location location, Scope<Job> scope,
+  public MapJob(TypeS type, List<Job> dependencies, Location location, Scope<Job> scope,
       JobCreator jobCreator) {
     super(type, dependencies, new NalImpl("building:" + MAP_TASK_NAME, location));
     this.scope = scope;
@@ -47,7 +47,7 @@ public class MapJob extends AbstractJob {
 
   private void onArrayCompleted(Array array, Struc_ lambda, Worker worker,
       Consumer<Val> result) {
-    var outputArrayType = (ArrayType) type();
+    var outputArrayType = (ArraySType) type();
     var outputElemType = outputArrayType.element();
     Job lambdaJob = getJob(lambda);
     var mapElemJobs = map(
@@ -63,12 +63,12 @@ public class MapJob extends AbstractJob {
     return new DummyJob(functionJob().type(), lambda, functionJob());
   }
 
-  private Job mapElementJob(Type elemType, Job lambdaJob, Val element) {
+  private Job mapElementJob(TypeS elemType, Job lambdaJob, Val element) {
     Job elemJob = elemJob(elemType, element, arrayJob().location());
     return jobCreator.callEagerJob(scope, lambdaJob, list(elemJob), lambdaJob.location());
   }
 
-  private Job elemJob(Type elemType, Val element, Location location) {
+  private Job elemJob(TypeS elemType, Val element, Location location) {
     return new DummyJob(elemType, element, new NalImpl("element-to-map", location));
   }
 

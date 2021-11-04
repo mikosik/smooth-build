@@ -6,13 +6,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.lang.base.type.api.AnyType;
 
 /**
  * This class is immutable.
  */
-public class AnyOType extends ValType implements AnyType {
+public class AnyOType extends TypeV implements AnyType {
   public AnyOType(Hash hash) {
     super("Any", hash, ANY);
   }

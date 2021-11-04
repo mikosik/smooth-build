@@ -7,14 +7,14 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.type.base.ExprType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeE;
+import org.smoothbuild.db.object.type.base.TypeV;
 
 /**
  * This class is immutable.
  */
-public class ConstOType extends ExprType {
-  public ConstOType(Hash hash, ValType evaluationType) {
+public class ConstOType extends TypeE {
+  public ConstOType(Hash hash, TypeV evaluationType) {
     super("CONST", hash, CONST, evaluationType);
   }
 

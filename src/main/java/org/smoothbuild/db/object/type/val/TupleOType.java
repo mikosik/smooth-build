@@ -8,18 +8,18 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.type.base.ObjType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeO;
+import org.smoothbuild.db.object.type.base.TypeV;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class TupleOType extends ValType {
-  private final ImmutableList<ValType> itemTypes;
+public class TupleOType extends TypeV {
+  private final ImmutableList<TypeV> itemTypes;
 
-  public TupleOType(Hash hash, Iterable<? extends ValType> itemTypes) {
+  public TupleOType(Hash hash, Iterable<? extends TypeV> itemTypes) {
     super(calculateName(itemTypes), hash, TUPLE);
     this.itemTypes = ImmutableList.copyOf(itemTypes);
   }
@@ -30,11 +30,11 @@ public class TupleOType extends ValType {
     return new Tuple(merkleRoot, objDb);
   }
 
-  public ImmutableList<ValType> items() {
+  public ImmutableList<TypeV> items() {
     return itemTypes;
   }
 
-  private static String calculateName(Iterable<? extends ValType> itemTypes) {
-    return "{" + toCommaSeparatedString(itemTypes, ObjType::name) + "}";
+  private static String calculateName(Iterable<? extends TypeV> itemTypes) {
+    return "{" + toCommaSeparatedString(itemTypes, TypeO::name) + "}";
   }
 }

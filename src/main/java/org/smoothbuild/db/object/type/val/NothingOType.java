@@ -6,14 +6,14 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
-public class NothingOType extends ValType implements NothingType {
+public class NothingOType extends TypeV implements NothingType {
   public NothingOType(Hash hash) {
     super(TypeNames.NOTHING, hash, NOTHING);
   }

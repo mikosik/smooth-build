@@ -7,13 +7,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Construct;
-import org.smoothbuild.db.object.type.base.ExprType;
+import org.smoothbuild.db.object.type.base.TypeE;
 import org.smoothbuild.db.object.type.val.TupleOType;
 
 /**
  * This class is immutable.
  */
-public class ConstructOType extends ExprType {
+public class ConstructOType extends TypeE {
   public ConstructOType(Hash hash, TupleOType evaluationType) {
     super("CONSTRUCT", hash, CONSTRUCT, evaluationType);
   }

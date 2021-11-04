@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.obj.base;
 
 import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 
 /**
  * This class is immutable.
@@ -12,7 +12,7 @@ public abstract class Val extends Obj {
   }
 
   @Override
-  public ValType type() {
-    return (ValType) super.type();
+  public TypeV type() {
+    return (TypeV) super.type();
   }
 }

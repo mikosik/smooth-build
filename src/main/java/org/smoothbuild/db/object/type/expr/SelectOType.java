@@ -7,14 +7,14 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Select;
-import org.smoothbuild.db.object.type.base.ExprType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeE;
+import org.smoothbuild.db.object.type.base.TypeV;
 
 /**
  * This class is immutable.
  */
-public class SelectOType extends ExprType {
-  public SelectOType(Hash hash, ValType evaluationType) {
+public class SelectOType extends TypeE {
+  public SelectOType(Hash hash, TypeV evaluationType) {
     super("SELECT", hash, SELECT, evaluationType);
   }
 

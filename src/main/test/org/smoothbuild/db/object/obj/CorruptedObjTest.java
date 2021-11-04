@@ -63,7 +63,7 @@ import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.expr.CallOType;
 import org.smoothbuild.db.object.type.expr.ConstOType;
@@ -1686,7 +1686,7 @@ public class CorruptedObjTest extends TestingContext {
     }
   }
 
-  private void obj_root_without_data_hash(ObjType type) throws HashedDbException {
+  private void obj_root_without_data_hash(TypeO type) throws HashedDbException {
     Hash objHash =
         hash(
             hash(type));
@@ -1695,7 +1695,7 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   private void obj_root_with_two_data_hashes(
-      ObjType type, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbException {
+      TypeO type, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbException {
     Hash objHash =
         hash(
             hash(type),
@@ -1706,7 +1706,7 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   private void obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-      ObjType type, Function<Hash, ?> readClosure) throws HashedDbException {
+      TypeO type, Function<Hash, ?> readClosure) throws HashedDbException {
     Hash dataHash = Hash.of(33);
     Hash objHash =
         hash(
@@ -1718,7 +1718,7 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-      ObjType type, Consumer<Hash> readClosure) throws HashedDbException {
+      TypeO type, Consumer<Hash> readClosure) throws HashedDbException {
     Hash dataHash = Hash.of(33);
     Hash objHash =
         hash(
@@ -1784,7 +1784,7 @@ public class CorruptedObjTest extends TestingContext {
     return obj.hash();
   }
 
-  protected Hash hash(ObjType type) {
+  protected Hash hash(TypeO type) {
     return type.hash();
   }
 

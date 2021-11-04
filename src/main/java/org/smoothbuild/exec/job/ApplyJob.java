@@ -13,7 +13,7 @@ import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -24,7 +24,7 @@ public class ApplyJob extends AbstractJob {
   private final Scope<Job> scope;
   private final JobCreator jobCreator;
 
-  public ApplyJob(Type type, Job referencable, List<Job> arguments, Location location,
+  public ApplyJob(TypeS type, Job referencable, List<Job> arguments, Location location,
       BoundsMap variables, Scope<Job> scope, JobCreator jobCreator) {
     super(type, concat(referencable, arguments), new NalImpl("building-evaluation", location));
     this.arguments = arguments;

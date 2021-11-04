@@ -11,15 +11,15 @@ import org.smoothbuild.lang.base.type.api.Variable;
 
 import com.google.common.collect.ImmutableSet;
 
-public abstract class ObjType extends AbstractType {
+public abstract class TypeO extends AbstractType {
   private final Hash hash;
   private final ObjKind kind;
 
-  protected ObjType(String name, Hash hash, ObjKind kind) {
+  protected TypeO(String name, Hash hash, ObjKind kind) {
     this(name, hash, kind, ImmutableSet.of());
   }
 
-  protected ObjType(String name, Hash hash, ObjKind kind, ImmutableSet<Variable> variables) {
+  protected TypeO(String name, Hash hash, ObjKind kind, ImmutableSet<Variable> variables) {
     super(name, variables);
     this.hash = hash;
     this.kind = kind;
@@ -36,7 +36,7 @@ public abstract class ObjType extends AbstractType {
 
   @Override
   public boolean equals(Object object) {
-    return (object instanceof ObjType that) && Objects.equals(hash(), that.hash());
+    return (object instanceof TypeO that) && Objects.equals(hash(), that.hash());
   }
 
   @Override

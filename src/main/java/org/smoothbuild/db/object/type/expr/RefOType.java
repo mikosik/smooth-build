@@ -7,11 +7,11 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Ref;
-import org.smoothbuild.db.object.type.base.ExprType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeE;
+import org.smoothbuild.db.object.type.base.TypeV;
 
-public class RefOType extends ExprType {
-  public RefOType(Hash hash, ValType evaluationType) {
+public class RefOType extends TypeE {
+  public RefOType(Hash hash, TypeV evaluationType) {
     super("REF", hash, REF, evaluationType);
   }
 

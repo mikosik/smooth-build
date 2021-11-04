@@ -12,7 +12,6 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Constructor;
-import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.testing.TestingContext;
 
 public class ExpressionLoadingTest extends TestingContext {
@@ -117,7 +116,7 @@ public class ExpressionLoadingTest extends TestingContext {
 
     @Test
     public void with_constructor_reference() {
-      StructType struct = structST("MyStruct", namedList(list(named("field", STRING))));
+      var struct = structST("MyStruct", namedList(list(named("field", STRING))));
       Constructor constr = constructor(1, struct, "myStruct", parameter(2, STRING, "field"));
       module("""
           MyStruct {
@@ -292,7 +291,7 @@ public class ExpressionLoadingTest extends TestingContext {
 
     @Test
     public void to_constructor() {
-      StructType structType = structST("MyStruct", namedList(list()));
+      var structType = structST("MyStruct", namedList(list()));
       module("""
           MyStruct {}
           MyStruct() result =

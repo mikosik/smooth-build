@@ -6,8 +6,8 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.type.base.ObjType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeO;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.val.StructOType;
 import org.smoothbuild.util.collect.NamedList;
 
@@ -43,11 +43,11 @@ public class Struc_ extends Val {
   }
 
   private ImmutableList<Val> instantiateItems() {
-    NamedList<ValType> fields = this.type().fields();
+    NamedList<TypeV> fields = this.type().fields();
     var objs = readSequenceObjs(DATA_PATH, dataHash(), fields.size(), Val.class);
     for (int i = 0; i < fields.size(); i++) {
-      ObjType expectedType = fields.getObject(i);
-      ObjType actualType = objs.get(i).type();
+      TypeO expectedType = fields.getObject(i);
+      TypeO actualType = objs.get(i).type();
       if (!expectedType.equals(actualType)) {
         throw new UnexpectedObjNodeException(
             hash(), this.type(), DATA_PATH, i, expectedType, actualType);

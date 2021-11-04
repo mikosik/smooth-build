@@ -7,12 +7,12 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 
 /**
  * This class is immutable.
  */
-public class NativeMethodOType extends ValType {
+public class NativeMethodOType extends TypeV {
   public NativeMethodOType(Hash hash) {
     super("NATIVE_METHOD", hash, NATIVE_METHOD);
   }

@@ -7,14 +7,14 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.Call;
-import org.smoothbuild.db.object.type.base.ExprType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeE;
+import org.smoothbuild.db.object.type.base.TypeV;
 
 /**
  * This class is immutable.
  */
-public class CallOType extends ExprType {
-  public CallOType(Hash hash, ValType evaluationType) {
+public class CallOType extends TypeE {
+  public CallOType(Hash hash, TypeV evaluationType) {
     super("CALL", hash, CALL, evaluationType);
   }
 

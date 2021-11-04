@@ -4,7 +4,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.object.db.ObjDbException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
-import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.TypeO;
 
 public class Helpers {
   public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {
@@ -24,7 +24,7 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeObjNodeException(
-      Hash hash, ObjType type, String path, HashedDbCallable<T> callable) {
+      Hash hash, TypeO type, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
@@ -33,7 +33,7 @@ public class Helpers {
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, ObjType type, String path, ObjDbCallable<T> callable) {
+      Hash hash, TypeO type, String path, ObjDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjDbException e) {
@@ -42,7 +42,7 @@ public class Helpers {
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, ObjType type, String path, int pathIndex, ObjDbCallable<T> callable) {
+      Hash hash, TypeO type, String path, int pathIndex, ObjDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjDbException e) {

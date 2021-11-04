@@ -8,20 +8,20 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Struc_;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.util.collect.NamedList;
 
-public class StructOType extends ValType implements StructType {
-  private final NamedList<ValType> fields;
+public class StructOType extends TypeV implements StructType {
+  private final NamedList<TypeV> fields;
 
-  public StructOType(Hash hash, String name, NamedList<ValType> fields) {
+  public StructOType(Hash hash, String name, NamedList<TypeV> fields) {
     super(name, hash, STRUCT, calculateVariables(fields));
     this.fields = fields;
   }
 
   @Override
-  public NamedList<ValType> fields() {
+  public NamedList<TypeV> fields() {
     return fields;
   }
 

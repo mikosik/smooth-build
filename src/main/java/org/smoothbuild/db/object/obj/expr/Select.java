@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponen
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.SelectOType;
 import org.smoothbuild.db.object.type.val.StructOType;
 
@@ -42,7 +42,7 @@ public class Select extends Expr {
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsException(hash(), type(), i, size);
       }
-      ValType fieldType = structevaluationType.fields().getObject(i);
+      TypeV fieldType = structevaluationType.fields().getObject(i);
       if (!Objects.equals(evaluationType(), fieldType)) {
         throw new DecodeSelectWrongEvaluationTypeException(hash(), type(), fieldType);
       }

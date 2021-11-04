@@ -11,7 +11,7 @@ import java.util.List;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
@@ -24,7 +24,7 @@ public class CallNativeAlgorithm extends Algorithm {
   private final MethodLoader methodLoader;
   private final GlobalReferencable referencable;
 
-  public CallNativeAlgorithm(MethodLoader methodLoader, ValType outputType,
+  public CallNativeAlgorithm(MethodLoader methodLoader, TypeV outputType,
       GlobalReferencable referencable, boolean isPure) {
     super(outputType, isPure);
     this.methodLoader = methodLoader;

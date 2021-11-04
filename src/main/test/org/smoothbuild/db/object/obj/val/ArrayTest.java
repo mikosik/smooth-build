@@ -12,8 +12,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.type.TestingObjTypes;
-import org.smoothbuild.db.object.type.base.ObjType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeO;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.val.NothingOType;
 import org.smoothbuild.testing.TestingContext;
 
@@ -203,13 +203,13 @@ public class ArrayTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("type_test_data")
-  public void type(ValType type) {
+  public void type(TypeV type) {
     Array array = objectDb().arrayBuilder(type).build();
     assertThat(array.type())
         .isEqualTo(arrayOT(type));
   }
 
-  private static List<ObjType> type_test_data() {
+  private static List<TypeO> type_test_data() {
     return TestingObjTypes.VAL_TYPES_TO_TEST;
   }
 

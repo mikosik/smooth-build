@@ -16,10 +16,10 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
@@ -27,9 +27,9 @@ import com.google.common.collect.ImmutableList;
 
 public class CallTypeInferrer {
   private final TypeFactoryS factory;
-  private final Typing typing;
+  private final TypingS typing;
 
-  public CallTypeInferrer(TypeFactoryS factory, Typing typing) {
+  public CallTypeInferrer(TypeFactoryS factory, TypingS typing) {
     this.factory = factory;
     this.typing = typing;
   }
@@ -103,7 +103,7 @@ public class CallTypeInferrer {
   private ImmutableList<Log> findVariableProblems(
       CallNode call, BoundsMap boundedVariables) {
     return boundedVariables.map().values().stream()
-        .filter(b -> typing.contains(b.bounds().lower(), factory.any()))
+        .filter(b -> typing.contains((TypeS) b.bounds().lower(), factory.any()))
         .map(b -> parseError(call, "Cannot infer actual type for type variable "
             + b.variable().q() + "."))
         .collect(toImmutableList());

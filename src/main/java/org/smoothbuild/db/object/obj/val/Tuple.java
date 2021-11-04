@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.val.TupleOType;
 
 import com.google.common.collect.ImmutableList;
@@ -49,8 +49,8 @@ public class Tuple extends Val {
     var objs = readSequenceObjs(DATA_PATH, dataHash(), itemTypes.size(), Val.class);
     for (int i = 0; i < itemTypes.size(); i++) {
       Val obj = objs.get(i);
-      ObjType expectedType = itemTypes.get(i);
-      ObjType actualType = obj.type();
+      TypeO expectedType = itemTypes.get(i);
+      TypeO actualType = obj.type();
       if (!expectedType.equals(actualType)) {
         throw new UnexpectedObjNodeException(
             hash(), this.type(), DATA_PATH, i, expectedType, actualType);

@@ -7,10 +7,10 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.ObjType;
+import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.testing.TestingContext;
 
-public class ObjTypeStableHashTest extends TestingContext {
+public class TypeOStableHashTest extends TestingContext {
   @Test
   public void hashes_of_types_are_stable() {
     assertHash(anyOT(), "b35d79d5718f7bba2cda55c29e2408c13ffc8cd5");
@@ -43,7 +43,7 @@ public class ObjTypeStableHashTest extends TestingContext {
     assertHash(selectOT(intOT()), "bc511a321ba8a722155574c39f0cb5f58ee84a71");
   }
 
-  private static void assertHash(ObjType type, String hash) {
+  private static void assertHash(TypeO type, String hash) {
     assertThat(type.hash())
         .isEqualTo(Hash.decode(hash));
   }

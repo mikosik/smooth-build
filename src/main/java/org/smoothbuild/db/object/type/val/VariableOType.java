@@ -7,12 +7,12 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.lang.base.type.api.Variable;
 
 import com.google.common.collect.ImmutableSet;
 
-public class VariableOType extends ValType implements Variable {
+public class VariableOType extends TypeV implements Variable {
   private final String name;
   private final ImmutableSet<Variable> variables;
 

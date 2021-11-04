@@ -7,15 +7,15 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
-import org.smoothbuild.db.object.type.base.ObjType;
-import org.smoothbuild.db.object.type.base.ValType;
+import org.smoothbuild.db.object.type.base.TypeO;
+import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.val.ArrayOType;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConvertAlgorithm extends Algorithm {
-  public ConvertAlgorithm(ValType outputType) {
+  public ConvertAlgorithm(TypeV outputType) {
     super(outputType);
   }
 
@@ -41,15 +41,15 @@ public class ConvertAlgorithm extends Algorithm {
     }
   }
 
-  private static Val convert(ObjType destinationType, Obj obj, NativeApi nativeApi) {
+  private static Val convert(TypeO destinationType, Obj obj, NativeApi nativeApi) {
     if (obj instanceof Array array) {
       return convertArray(destinationType, array, nativeApi);
     }
     throw newBuildBrokenException("Expected `Array` type but got " + obj.getClass());
   }
 
-  private static Array convertArray(ObjType destinationType, Array array, NativeApi nativeApi) {
-    ValType elementType = ((ArrayOType) destinationType).element();
+  private static Array convertArray(TypeO destinationType, Array array, NativeApi nativeApi) {
+    TypeV elementType = ((ArrayOType) destinationType).element();
     ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elementType);
     for (Val element : array.elements(Val.class)) {
       arrayBuilder.add(convert(elementType, element, nativeApi));

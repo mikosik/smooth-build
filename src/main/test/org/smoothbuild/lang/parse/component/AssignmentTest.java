@@ -16,11 +16,12 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
-import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.impl.FunctionSType;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModuleLoader;
 
@@ -148,12 +149,12 @@ public class AssignmentTest extends TestingContext {
 
   private static List<Arguments> array_element_assignment_test_specs() {
     TestingContext context = new TestingContext();
-    Typing typing = context.typingS();
-    TypeFactory factory = context.typeFactoryS();
+    TypingS typing = context.typingS();
+    TypeFactoryS factory = context.typeFactoryS();
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        Type commonSuperType = typing.mergeUp(type1.type(), type2.type());
+        TypeS commonSuperType = typing.mergeUp(type1.type(), type2.type());
         if (!typing.contains(commonSuperType, factory.any())) {
           result.add(Arguments.of(type1, type2, commonSuperType));
         }
