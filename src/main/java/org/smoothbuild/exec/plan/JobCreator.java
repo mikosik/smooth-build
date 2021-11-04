@@ -55,7 +55,7 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.STypeFactory;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -75,19 +75,19 @@ public class JobCreator {
   private final Definitions definitions;
   private final STypeToOTypeConverter toOTypeConverter;
   private final MethodLoader methodLoader;
-  private final STypeFactory factory;
+  private final TypeFactoryS factory;
   private final Typing typing;
   private final Map<Class<?>, Handler<?>> map;
 
   @Inject
   public JobCreator(Definitions definitions, STypeToOTypeConverter toOTypeConverter,
-      MethodLoader methodLoader, STypeFactory factory, Typing typing) {
+      MethodLoader methodLoader, TypeFactoryS factory, Typing typing) {
     this(definitions, toOTypeConverter, methodLoader, factory, typing, ImmutableMap.of());
   }
 
   // Visible for testing
   JobCreator(Definitions definitions, STypeToOTypeConverter toOTypeConverter,
-      MethodLoader methodLoader, STypeFactory factory, Typing typing,
+      MethodLoader methodLoader, TypeFactoryS factory, Typing typing,
       Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;
     this.toOTypeConverter = toOTypeConverter;

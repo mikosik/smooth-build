@@ -19,17 +19,17 @@ import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.STypeFactory;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
 import com.google.common.collect.ImmutableList;
 
 public class CallTypeInferrer {
-  private final STypeFactory factory;
+  private final TypeFactoryS factory;
   private final Typing typing;
 
-  public CallTypeInferrer(STypeFactory factory, Typing typing) {
+  public CallTypeInferrer(TypeFactoryS factory, Typing typing) {
     this.factory = factory;
     this.typing = typing;
   }

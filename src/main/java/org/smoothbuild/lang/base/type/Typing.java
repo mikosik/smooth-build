@@ -21,7 +21,7 @@ import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Variable;
-import org.smoothbuild.lang.base.type.impl.STypeFactory;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -32,7 +32,7 @@ public class Typing {
   private final TypeFactory factory;
 
   @Inject
-  public Typing(STypeFactory factory) {
+  public Typing(TypeFactoryS factory) {
     this.factory = factory;
   }
 

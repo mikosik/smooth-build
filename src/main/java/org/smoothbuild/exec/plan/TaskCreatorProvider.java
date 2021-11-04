@@ -5,17 +5,17 @@ import javax.inject.Inject;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.type.Typing;
-import org.smoothbuild.lang.base.type.impl.STypeFactory;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 
 public class TaskCreatorProvider {
   private final STypeToOTypeConverter STypeToOTypeConverter;
   private final MethodLoader methodLoader;
-  private final STypeFactory factory;
+  private final TypeFactoryS factory;
   private final Typing typing;
 
   @Inject
   public TaskCreatorProvider(STypeToOTypeConverter STypeToOTypeConverter, MethodLoader methodLoader,
-      STypeFactory factory, Typing typing) {
+      TypeFactoryS factory, Typing typing) {
     this.STypeToOTypeConverter = STypeToOTypeConverter;
     this.methodLoader = methodLoader;
     this.factory = factory;

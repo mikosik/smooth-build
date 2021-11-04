@@ -18,7 +18,7 @@ import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.STypeFactory;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.parse.ModuleLoader;
 import org.smoothbuild.lang.parse.ReferencableLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
@@ -126,7 +126,7 @@ public class TestingModuleLoader {
 
   private Maybe<SModule> load() {
     Typing typing = testingContext.typing();
-    STypeFactory factory = testingContext.sTypeFactory();
+    TypeFactoryS factory = testingContext.typeFactoryS();
     ModuleLoader moduleLoader = new ModuleLoader(
         new TypeInferrer(factory, typing), new ReferencableLoader(factory), factory);
     Definitions importedSane = imported != null ? imported

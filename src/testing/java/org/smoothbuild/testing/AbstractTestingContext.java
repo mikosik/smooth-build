@@ -37,8 +37,8 @@ import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.type.OTypeFactory;
 import org.smoothbuild.db.object.type.ObjTypeDb;
+import org.smoothbuild.db.object.type.TypeFactoryO;
 import org.smoothbuild.db.object.type.base.ValType;
 import org.smoothbuild.db.object.type.expr.CallOType;
 import org.smoothbuild.db.object.type.expr.ConstOType;
@@ -92,9 +92,9 @@ import org.smoothbuild.lang.base.type.impl.BoolSType;
 import org.smoothbuild.lang.base.type.impl.FunctionSType;
 import org.smoothbuild.lang.base.type.impl.IntSType;
 import org.smoothbuild.lang.base.type.impl.NothingSType;
-import org.smoothbuild.lang.base.type.impl.STypeFactory;
 import org.smoothbuild.lang.base.type.impl.StringSType;
 import org.smoothbuild.lang.base.type.impl.StructSType;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.VariableSType;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -130,7 +130,7 @@ public abstract class AbstractTestingContext {
   private FileSystem fullFileSystem;
   private TempManager tempManager;
   private SModule internalModule;
-  private STypeFactory sTypeFactory;
+  private TypeFactoryS typeFactoryS;
 
   public NativeApi nativeApi() {
     return container();
@@ -142,7 +142,7 @@ public abstract class AbstractTestingContext {
 
   public SModule internalModule() {
     if (internalModule == null) {
-      internalModule = new InternalModuleLoader(sTypeFactory()).loadModule();
+      internalModule = new InternalModuleLoader(typeFactoryS()).loadModule();
     }
     return internalModule;
   }
@@ -181,22 +181,22 @@ public abstract class AbstractTestingContext {
 
   public Typing typingS() {
     if (typingS == null) {
-      typingS = new Typing(sTypeFactory());
+      typingS = new Typing(typeFactoryS());
     }
     return typingS;
   }
 
   public abstract TypeFactory typeFactory();
 
-  public OTypeFactory oTypeFactory() {
+  public TypeFactoryO typeFactoryO() {
     return objTypeDb();
   }
 
-  public STypeFactory sTypeFactory() {
-    if (sTypeFactory == null) {
-      sTypeFactory = new STypeFactory();
+  public TypeFactoryS typeFactoryS() {
+    if (typeFactoryS == null) {
+      typeFactoryS = new TypeFactoryS();
     }
-    return sTypeFactory;
+    return typeFactoryS;
   }
 
   public ObjTypeDb objTypeDb() {
@@ -268,24 +268,24 @@ public abstract class AbstractTestingContext {
   // Obj types
 
   public StructOType animalOT() {
-    return oTypeFactory().struct(
+    return typeFactoryO().struct(
         "Animal", namedList(list(named("species", stringOT()), named("speed", intOT()))));
   }
 
   public ArrayOType arrayOT(ValType elementSpec) {
-    return oTypeFactory().array(elementSpec);
+    return typeFactoryO().array(elementSpec);
   }
 
   public AnyOType anyOT() {
-    return oTypeFactory().any();
+    return typeFactoryO().any();
   }
 
   public BlobOType blobOT() {
-    return oTypeFactory().blob();
+    return typeFactoryO().blob();
   }
 
   public BoolOType boolOT() {
-    return oTypeFactory().bool();
+    return typeFactoryO().bool();
   }
 
   public LambdaOType lambdaOT() {
@@ -293,11 +293,11 @@ public abstract class AbstractTestingContext {
   }
 
   public LambdaOType lambdaOT(ValType result, ImmutableList<? extends Type> parameters) {
-    return oTypeFactory().function(result, parameters);
+    return typeFactoryO().function(result, parameters);
   }
 
   public IntOType intOT() {
-    return oTypeFactory().int_();
+    return typeFactoryO().int_();
   }
 
   public NativeMethodOType nativeMethodOT() {
@@ -305,11 +305,11 @@ public abstract class AbstractTestingContext {
   }
 
   public NothingOType nothingOT() {
-    return oTypeFactory().nothing();
+    return typeFactoryO().nothing();
   }
 
   public StringOType stringOT() {
-    return oTypeFactory().string();
+    return typeFactoryO().string();
   }
 
   public TupleOType tupleOT(ImmutableList<ValType> itemSpecs) {
@@ -346,19 +346,19 @@ public abstract class AbstractTestingContext {
   }
 
   public StructOType structOT(String name, NamedList<? extends Type> fields) {
-    return oTypeFactory().struct(name, fields);
+    return typeFactoryO().struct(name, fields);
   }
 
   public VariableOType variableOT(String name) {
-    return oTypeFactory().variable(name);
+    return typeFactoryO().variable(name);
   }
 
   public Side lowerOT() {
-    return oTypeFactory().lower();
+    return typeFactoryO().lower();
   }
 
   public Side upperOT() {
-    return oTypeFactory().upper();
+    return typeFactoryO().upper();
   }
 
   // Expr types
@@ -603,55 +603,55 @@ public abstract class AbstractTestingContext {
   // Types
 
   public VariableSType variableST(String name) {
-    return sTypeFactory().variable(name);
+    return typeFactoryS().variable(name);
   }
 
   public AnySType anyST() {
-    return sTypeFactory().any();
+    return typeFactoryS().any();
   }
 
   public ArraySType arrayST(Type elemType) {
-    return sTypeFactory().array(elemType);
+    return typeFactoryS().array(elemType);
   }
 
   public BlobSType blobST() {
-    return sTypeFactory().blob();
+    return typeFactoryS().blob();
   }
 
   public BoolSType boolST() {
-    return sTypeFactory().bool();
+    return typeFactoryS().bool();
   }
 
   public IntSType intST() {
-    return sTypeFactory().int_();
+    return typeFactoryS().int_();
   }
 
   public NothingSType nothingST() {
-    return sTypeFactory().nothing();
+    return typeFactoryS().nothing();
   }
 
   public StringSType stringST() {
-    return sTypeFactory().string();
+    return typeFactoryS().string();
   }
 
   public StructSType structST(String name, NamedList<? extends Type> fields) {
-    return sTypeFactory().struct(name, fields);
+    return typeFactoryS().struct(name, fields);
   }
 
   public FunctionSType functionST(Type resultType, Item... parameters) {
-    return sTypeFactory().function(resultType, toTypes(list(parameters)));
+    return typeFactoryS().function(resultType, toTypes(list(parameters)));
   }
 
   public FunctionSType functionST(Type resultType, Iterable<ItemSignature> parameters) {
-    return sTypeFactory().function(resultType, map(parameters, ItemSignature::type));
+    return typeFactoryS().function(resultType, map(parameters, ItemSignature::type));
   }
 
   public Side lowerST() {
-    return sTypeFactory().lower();
+    return typeFactoryS().lower();
   }
 
   public Side upperST() {
-    return sTypeFactory().upper();
+    return typeFactoryS().upper();
   }
 
   public BoundsMap bm(

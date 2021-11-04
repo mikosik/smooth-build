@@ -6,6 +6,6 @@ import org.smoothbuild.lang.base.type.api.TypeFactory;
 public class TypeTest extends AbstractTypeTest {
   @Override
   public TypeFactory typeFactory() {
-    return new STypeFactory();
+    return new TypeFactoryS();
   }
 }

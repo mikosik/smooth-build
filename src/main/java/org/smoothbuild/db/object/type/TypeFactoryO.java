@@ -20,7 +20,7 @@ import org.smoothbuild.util.collect.NamedList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public interface OTypeFactory extends TypeFactory {
+public interface TypeFactoryO extends TypeFactory {
   @Override
   public ImmutableSet<BaseType> inferableBaseTypes();
 

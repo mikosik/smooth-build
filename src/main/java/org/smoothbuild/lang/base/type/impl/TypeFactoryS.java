@@ -11,7 +11,7 @@ import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 
-public class STypeFactory extends AbstractTypeFactory {
+public class TypeFactoryS extends AbstractTypeFactory {
   private static final AnySType ANY = new AnySType();
   private static final BlobSType BLOB = new BlobSType();
   private static final BoolSType BOOL = new BoolSType();
@@ -21,7 +21,7 @@ public class STypeFactory extends AbstractTypeFactory {
 
   private final Sides sides;
 
-  public STypeFactory() {
+  public TypeFactoryS() {
     this.sides = new Sides(any(), nothing());
   }
 

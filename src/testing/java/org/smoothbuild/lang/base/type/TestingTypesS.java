@@ -16,9 +16,9 @@ import org.smoothbuild.lang.base.type.impl.BoolSType;
 import org.smoothbuild.lang.base.type.impl.FunctionSType;
 import org.smoothbuild.lang.base.type.impl.IntSType;
 import org.smoothbuild.lang.base.type.impl.NothingSType;
-import org.smoothbuild.lang.base.type.impl.STypeFactory;
 import org.smoothbuild.lang.base.type.impl.StringSType;
 import org.smoothbuild.lang.base.type.impl.StructSType;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.VariableSType;
 import org.smoothbuild.testing.TestingContextImpl;
 import org.smoothbuild.util.collect.NamedList;
@@ -28,7 +28,7 @@ import com.google.common.collect.ImmutableSet;
 
 public class TestingTypesS {
   private static final TestingContextImpl CONTEXT = new TestingContextImpl();
-  private static final STypeFactory FACTORY = CONTEXT.sTypeFactory();
+  private static final TypeFactoryS FACTORY = CONTEXT.typeFactoryS();
   public static final Typing TYPING = CONTEXT.typingS();
 
   public static final ImmutableSet<BaseType> BASE_TYPES = FACTORY.baseTypes();

@@ -149,7 +149,7 @@ public class AssignmentTest extends TestingContextImpl {
   private static List<Arguments> array_element_assignment_test_specs() {
     TestingContextImpl context = new TestingContextImpl();
     Typing typing = context.typing();
-    TypeFactory factory = context.sTypeFactory();
+    TypeFactory factory = context.typeFactoryS();
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {

@@ -84,7 +84,7 @@ import com.google.common.collect.ImmutableList.Builder;
 /**
  * This class is thread-safe.
  */
-public class ObjTypeDb extends AbstractTypeFactory implements OTypeFactory {
+public class ObjTypeDb extends AbstractTypeFactory implements TypeFactoryO {
   public static final String DATA_PATH = "data";
   private static final int DATA_INDEX = 1;
   private static final int LAMBDA_RESULT_INDEX = 0;
