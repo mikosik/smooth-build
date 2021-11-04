@@ -21,8 +21,7 @@ public abstract class TypeS extends AbstractType {
     if (this == object) {
       return true;
     }
-    return object instanceof AbstractType that
-        && this.name().equals(that.name());
+    return object instanceof TypeS that && this.name().equals(that.name());
   }
 
   @Override
