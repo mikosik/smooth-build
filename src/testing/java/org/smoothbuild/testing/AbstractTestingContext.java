@@ -680,7 +680,7 @@ public abstract class AbstractTestingContext {
   }
 
   public BlobLiteralExpression blobExpression(int line, int data) {
-    return new BlobLiteralExpression(typeFactory().blob(), ByteString.of((byte) data), loc(line));
+    return new BlobLiteralExpression(blobST(), ByteString.of((byte) data), loc(line));
   }
 
   public IntLiteralExpression intExpression(int value) {
@@ -688,17 +688,17 @@ public abstract class AbstractTestingContext {
   }
 
   public IntLiteralExpression intExpression(int line, int value) {
-    return new IntLiteralExpression(typeFactory().int_(), BigInteger.valueOf(value), loc(line));
+    return new IntLiteralExpression(intST(), BigInteger.valueOf(value), loc(line));
   }
 
   public StringLiteralExpression stringExpression(int line, String data) {
-    return new StringLiteralExpression(typeFactory().string(), data, loc(line));
+    return new StringLiteralExpression(stringST(), data, loc(line));
   }
 
   public ArrayLiteralExpression arrayExpression(
       int line, Type elemType, Expression... expressions) {
     return new ArrayLiteralExpression(
-        typeFactory().array(elemType), ImmutableList.copyOf(expressions), loc(line));
+        arrayST(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
   public ReferenceExpression referenceExpression(GlobalReferencable referencable) {
