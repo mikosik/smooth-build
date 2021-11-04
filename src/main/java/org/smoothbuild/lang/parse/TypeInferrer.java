@@ -247,7 +247,7 @@ public class TypeInferrer {
           if (elemType.isEmpty()) {
             return empty();
           }
-          type = (TypeS) typing.mergeUp(type, elemType.get());
+          type = typing.mergeUp(type, elemType.get());
           if (typing.contains(type, factory.any())) {
             logBuffer.log(parseError(elem.location(),
                 "Array elements at indexes 0 and " + i + " doesn't have common super type."

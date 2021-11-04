@@ -161,7 +161,7 @@ public class Typing<T extends Type> {
   public T mapVariables(T type, BoundsMap<T> boundsMap, Side<T> side) {
     if (type.isPolytype()) {
       if (type instanceof Variable variable) {
-        return (T) boundsMap.map().get(variable).bounds().get(side);
+        return boundsMap.map().get(variable).bounds().get(side);
       } else if (type instanceof ArrayType arrayType) {
         T elemTypeM = mapVariables((T) arrayType.element(), boundsMap, side);
         return (T) createArrayType(arrayType, elemTypeM);
