@@ -261,12 +261,12 @@ public class TestingContext {
         "Animal", namedList(list(named("species", stringOT()), named("speed", intOT()))));
   }
 
-  public ArrayOType arrayOT(ValType elementSpec) {
-    return typeFactoryO().array(elementSpec);
-  }
-
   public AnyOType anyOT() {
     return typeFactoryO().any();
+  }
+
+  public ArrayOType arrayOT(ValType elementSpec) {
+    return typeFactoryO().array(elementSpec);
   }
 
   public BlobOType blobOT() {
@@ -277,6 +277,14 @@ public class TestingContext {
     return typeFactoryO().bool();
   }
 
+  public TupleOType fileOT() {
+    return tupleOT(list(blobOT(), stringOT()));
+  }
+
+  public IntOType intOT() {
+    return typeFactoryO().int_();
+  }
+
   public LambdaOType lambdaOT() {
     return lambdaOT(intOT(), list(blobOT(), stringOT()));
   }
@@ -285,32 +293,12 @@ public class TestingContext {
     return typeFactoryO().function(result, parameters);
   }
 
-  public IntOType intOT() {
-    return typeFactoryO().int_();
-  }
-
   public NativeMethodOType nativeMethodOT() {
     return objTypeDb().nativeMethod();
   }
 
   public NothingOType nothingOT() {
     return typeFactoryO().nothing();
-  }
-
-  public StringOType stringOT() {
-    return typeFactoryO().string();
-  }
-
-  public TupleOType tupleOT(ImmutableList<ValType> itemSpecs) {
-    return objTypeDb().tuple(itemSpecs);
-  }
-
-  public TupleOType emptyTupleOT() {
-    return tupleOT(list());
-  }
-
-  public TupleOType tupleWithStrOT() {
-    return tupleOT(list(stringOT()));
   }
 
   public TupleOType perso_OT() {
@@ -322,8 +310,20 @@ public class TestingContext {
         namedList(list(named("firstName", stringOT()), named("lastName", stringOT()))));
   }
 
-  public TupleOType fileOT() {
-    return tupleOT(list(blobOT(), stringOT()));
+  public StringOType stringOT() {
+    return typeFactoryO().string();
+  }
+
+  public TupleOType tupleOT(ImmutableList<ValType> itemSpecs) {
+    return objTypeDb().tuple(itemSpecs);
+  }
+
+  public TupleOType tupleEmptyOT() {
+    return tupleOT(list());
+  }
+
+  public TupleOType tupleWithStrOT() {
+    return tupleOT(list(stringOT()));
   }
 
   public StructOType structOT() {
@@ -352,14 +352,6 @@ public class TestingContext {
 
   // Expr types
 
-  public OrderOType orderOT() {
-    return orderOT(intOT());
-  }
-
-  public OrderOType orderOT(ValType elementSpec) {
-    return objTypeDb().order(elementSpec);
-  }
-
   public CallOType callOT() {
     return callOT(intOT());
   }
@@ -384,6 +376,22 @@ public class TestingContext {
     return objTypeDb().construct(tupleOT(itemSpecs));
   }
 
+  public OrderOType orderOT() {
+    return orderOT(intOT());
+  }
+
+  public OrderOType orderOT(ValType elementSpec) {
+    return objTypeDb().order(elementSpec);
+  }
+
+  public RefOType refOT() {
+    return refOT(intOT());
+  }
+
+  public RefOType refOT(ValType evaluationType) {
+    return objTypeDb().ref(evaluationType);
+  }
+
   public SelectOType selectOT() {
     return selectOT(intOT());
   }
@@ -394,14 +402,6 @@ public class TestingContext {
 
   public StructExprOType structExprOT(StructOType structType) {
     return objTypeDb().structExpr(structType);
-  }
-
-  public RefOType refOT() {
-    return refOT(intOT());
-  }
-
-  public RefOType refOT(ValType evaluationType) {
-    return objTypeDb().ref(evaluationType);
   }
 
   // Obj-s (values)
@@ -442,6 +442,27 @@ public class TestingContext {
     return objectDb().bool(value);
   }
 
+  public Struc_ file(Path path) {
+    return file(path, ByteString.encodeString(path.toString(), CHARSET));
+  }
+
+  public Struc_ file(Path path, ByteString content) {
+    return file(path.toString(), blob(content));
+  }
+
+  public Struc_ file(String path, Blob blob) {
+    Str string = objectFactory().string(path);
+    return objectFactory().file(string, blob);
+  }
+
+  public Int int_() {
+    return int_(17);
+  }
+
+  public Int int_(int value) {
+    return objectDb().int_(BigInteger.valueOf(value));
+  }
+
   public Lambda lambda() {
     return lambda(intExpr());
   }
@@ -455,16 +476,12 @@ public class TestingContext {
     return objectDb().lambda(spec, body);
   }
 
-  public Int int_() {
-    return int_(17);
-  }
-
-  public Int int_(int value) {
-    return objectDb().int_(BigInteger.valueOf(value));
-  }
-
   public NativeMethod nativeMethod(Blob jarFile, Str classBinaryName) {
     return objectDb().nativeMethod(jarFile, classBinaryName);
+  }
+
+  public Tuple person(String firstName, String lastName) {
+    return tuple(list(string(firstName), string(lastName)));
   }
 
   public Str string() {
@@ -488,7 +505,7 @@ public class TestingContext {
     return objectDb().tuple(tupleType, items);
   }
 
-  public Tuple emptyTuple() {
+  public Tuple tupleEmpty() {
     return tuple(list());
   }
 
@@ -500,15 +517,11 @@ public class TestingContext {
     return tuple(list(str));
   }
 
-  public Tuple person(String firstName, String lastName) {
-    return tuple(list(string(firstName), string(lastName)));
-  }
-
   public Array messageArrayWithOneError() {
     return array(objectFactory().errorMessage("error message"));
   }
 
-  public Array emptyMessageArray() {
+  public Array messageArrayEmtpy() {
     return array(objectFactory().messageType());
   }
 
@@ -522,19 +535,6 @@ public class TestingContext {
 
   public Struc_ infoMessage(String text) {
     return objectFactory().infoMessage(text);
-  }
-
-  public Struc_ file(Path path) {
-    return file(path, ByteString.encodeString(path.toString(), CHARSET));
-  }
-
-  public Struc_ file(Path path, ByteString content) {
-    return file(path.toString(), blob(content));
-  }
-
-  public Struc_ file(String path, Blob blob) {
-    Str string = objectFactory().string(path);
-    return objectFactory().file(string, blob);
   }
 
   // Expr-s
@@ -589,11 +589,7 @@ public class TestingContext {
     return const_(string(string));
   }
 
-  // Types
-
-  public VariableSType variableST(String name) {
-    return typeFactoryS().variable(name);
-  }
+  // Types Smooth
 
   public AnySType anyST() {
     return typeFactoryS().any();
@@ -609,6 +605,14 @@ public class TestingContext {
 
   public BoolSType boolST() {
     return typeFactoryS().bool();
+  }
+
+  public FunctionSType functionST(Type resultType, Item... parameters) {
+    return typeFactoryS().function(resultType, toTypes(list(parameters)));
+  }
+
+  public FunctionSType functionST(Type resultType, Iterable<ItemSignature> parameters) {
+    return typeFactoryS().function(resultType, map(parameters, ItemSignature::type));
   }
 
   public IntSType intST() {
@@ -627,12 +631,8 @@ public class TestingContext {
     return typeFactoryS().struct(name, fields);
   }
 
-  public FunctionSType functionST(Type resultType, Item... parameters) {
-    return typeFactoryS().function(resultType, toTypes(list(parameters)));
-  }
-
-  public FunctionSType functionST(Type resultType, Iterable<ItemSignature> parameters) {
-    return typeFactoryS().function(resultType, map(parameters, ItemSignature::type));
+  public VariableSType variableST(String name) {
+    return typeFactoryS().variable(name);
   }
 
   public Side lowerST() {
@@ -672,52 +672,18 @@ public class TestingContext {
 
   // Expressions
 
-  public BlobLiteralExpression blobExpression(int data) {
-    return blobExpression(1, data);
-  }
-
-  public BlobLiteralExpression blobExpression(int line, int data) {
-    return new BlobLiteralExpression(blobST(), ByteString.of((byte) data), loc(line));
-  }
-
-  public IntLiteralExpression intExpression(int value) {
-    return intExpression(1, value);
-  }
-
-  public IntLiteralExpression intExpression(int line, int value) {
-    return new IntLiteralExpression(intST(), BigInteger.valueOf(value), loc(line));
-  }
-
-  public StringLiteralExpression stringExpression(int line, String data) {
-    return new StringLiteralExpression(stringST(), data, loc(line));
-  }
-
   public ArrayLiteralExpression arrayExpression(
       int line, Type elemType, Expression... expressions) {
     return new ArrayLiteralExpression(
         arrayST(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
-  public ReferenceExpression referenceExpression(GlobalReferencable referencable) {
-    return referenceExpression(1, referencable.type(), referencable.name());
+  public BlobLiteralExpression blobExpression(int data) {
+    return blobExpression(1, data);
   }
 
-  public ReferenceExpression referenceExpression(int line, Type type, String name) {
-    return new ReferenceExpression(type, name, loc(line));
-  }
-
-  public ParameterReferenceExpression parameterRefExpression(Type type, String name) {
-    return parameterRefExpression(1, type, name);
-  }
-
-  public ParameterReferenceExpression parameterRefExpression(
-      int line, Type type, String name) {
-    return new ParameterReferenceExpression(type, name, loc(line));
-  }
-
-  public SelectExpression selectExpression(
-      int line, Type field, int index, Expression expression) {
-    return new SelectExpression(field, index, expression, loc(line));
+  public BlobLiteralExpression blobExpression(int line, int data) {
+    return new BlobLiteralExpression(blobST(), ByteString.of((byte) data), loc(line));
   }
 
   public CallExpression callExpression(
@@ -754,15 +720,41 @@ public class TestingContext {
     );
   }
 
-  public DefinedValue valueExpression(
-      int line, Type type, String name, Expression expression) {
-    return new DefinedValue(type, modulePath(), name, expression, loc(line));
+  public IntLiteralExpression intExpression(int value) {
+    return intExpression(1, value);
   }
 
-  public NativeValue valueExpression(
-      int line, Type type, String name, Annotation annotation) {
-    return new NativeValue(type, modulePath(), name, annotation, loc(line));
+  public IntLiteralExpression intExpression(int line, int value) {
+    return new IntLiteralExpression(intST(), BigInteger.valueOf(value), loc(line));
   }
+
+  public ParameterReferenceExpression parameterRefExpression(Type type, String name) {
+    return parameterRefExpression(1, type, name);
+  }
+
+  public ParameterReferenceExpression parameterRefExpression(
+      int line, Type type, String name) {
+    return new ParameterReferenceExpression(type, name, loc(line));
+  }
+
+  public ReferenceExpression referenceExpression(GlobalReferencable referencable) {
+    return referenceExpression(1, referencable.type(), referencable.name());
+  }
+
+  public ReferenceExpression referenceExpression(int line, Type type, String name) {
+    return new ReferenceExpression(type, name, loc(line));
+  }
+
+  public SelectExpression selectExpression(
+      int line, Type field, int index, Expression expression) {
+    return new SelectExpression(field, index, expression, loc(line));
+  }
+
+  public StringLiteralExpression stringExpression(int line, String data) {
+    return new StringLiteralExpression(stringST(), data, loc(line));
+  }
+
+  // other smooth language thingies
 
   public Annotation annotation(int line, StringLiteralExpression implementedBy) {
     return annotation(line, implementedBy, true);
@@ -772,30 +764,37 @@ public class TestingContext {
     return new Annotation(implementedBy, pure, loc(line));
   }
 
-  public Constructor constrExpression(
-      int line, Type resultType, String name, Item... parameters) {
-    return new Constructor(functionST(resultType, parameters), modulePath(), name, list(parameters),
-        loc(line));
+  public Constructor constructor(int line, Type resultType, String name, Item... parameters) {
+    return new Constructor(
+        functionST(resultType, parameters), modulePath(), name, list(parameters), loc(line));
   }
 
-  public Item parameterExpression(Type type, String name) {
-    return parameterExpression(1, type, name);
+  public Item field(Type type, String name) {
+    return new Item(type, modulePath(), name, Optional.empty(), loc(1));
   }
 
-  public Item parameterExpression(int line, Type type, String name) {
-    return parameterExpression(line, type, name, Optional.empty());
+  public Item parameter(Type type, String name) {
+    return parameter(1, type, name);
   }
 
-  public Item parameterExpression(int line, Type type, String name, Expression defaultArg) {
-    return parameterExpression(line, type, name, Optional.of(defaultArg));
+  public Item parameter(int line, Type type, String name) {
+    return parameter(line, type, name, Optional.empty());
   }
 
-  private Item parameterExpression(int line, Type type, String name,
+  public Item parameter(int line, Type type, String name, Expression defaultArg) {
+    return parameter(line, type, name, Optional.of(defaultArg));
+  }
+
+  private Item parameter(int line, Type type, String name,
       Optional<Expression> defaultArg) {
     return new Item(type, modulePath(), name, defaultArg, loc(line));
   }
 
-  public Item fieldExpression(Type type, String name) {
-    return new Item(type, modulePath(), name, Optional.empty(), loc(1));
+  public DefinedValue value(int line, Type type, String name, Expression expression) {
+    return new DefinedValue(type, modulePath(), name, expression, loc(line));
+  }
+
+  public NativeValue value(int line, Type type, String name, Annotation annotation) {
+    return new NativeValue(type, modulePath(), name, annotation, loc(line));
   }
 }

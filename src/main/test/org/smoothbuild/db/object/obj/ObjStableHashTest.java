@@ -260,7 +260,7 @@ public class ObjStableHashTest extends TestingContext {
   class _tuple {
     @Test
     public void empty_tuple() {
-      assertThat(emptyTuple().hash())
+      assertThat(tupleEmpty().hash())
           .isEqualTo(Hash.decode("54d8451fd0f31c5111433cddf501fabd26e2a9ab"));
     }
 

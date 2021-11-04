@@ -28,7 +28,7 @@ public class TestingObjTypes {
   public static final TupleOType PERSON_TUPLE = CONTEXT.perso_OT();
   public static final StructOType PERSON = CONTEXT.personOT();
   public static final TupleOType FILE = CONTEXT.fileOT();
-  public static final TupleOType EMPTY_TUPLE = CONTEXT.emptyTupleOT();
+  public static final TupleOType EMPTY_TUPLE = CONTEXT.tupleEmptyOT();
   public static final TupleOType TUPLE_WITH_STRING = CONTEXT.tupleWithStrOT();
   public static final ObjType CALL = CONTEXT.callOT();
   public static final ObjType CONST = CONTEXT.constOT(STR);

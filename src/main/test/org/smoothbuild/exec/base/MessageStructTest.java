@@ -12,7 +12,7 @@ public class MessageStructTest extends TestingContext {
 
   @Test
   public void empty_list_contains_no_errors() {
-    messages = emptyMessageArray();
+    messages = messageArrayEmtpy();
     assertThat(containsErrors(messages))
         .isFalse();
   }
