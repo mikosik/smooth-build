@@ -4,7 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.testing.TestingContext;
+
+import com.google.common.collect.ImmutableList;
 
 public class ConstructTest extends TestingContext {
   @Test
@@ -21,14 +24,14 @@ public class ConstructTest extends TestingContext {
 
   @Test
   public void items_returns_items() {
-    var items = list(intExpr(1), stringExpr("abc"));
+    ImmutableList<Expr> items = list(intExpr(1), stringExpr("abc"));
     assertThat(construct(items).items())
         .isEqualTo(items);
   }
 
   @Test
   public void construct_with_equal_items_are_equal() {
-    var items = list(intExpr(1), stringExpr("abc"));
+    ImmutableList<Expr> items = list(intExpr(1), stringExpr("abc"));
     assertThat(construct(items))
         .isEqualTo(construct(items));
   }
@@ -41,7 +44,7 @@ public class ConstructTest extends TestingContext {
 
   @Test
   public void hash_of_construct_with_equal_items_is_the_same() {
-    var items = list(intExpr(1));
+    ImmutableList<Expr> items = list(intExpr(1));
     assertThat(construct(items).hash())
         .isEqualTo(construct(items).hash());
   }
@@ -54,7 +57,7 @@ public class ConstructTest extends TestingContext {
 
   @Test
   public void hash_code_of_construct_with_equal_items_is_the_same() {
-    var items = list(intExpr(1));
+    ImmutableList<Expr> items = list(intExpr(1));
     assertThat(construct(items).hashCode())
         .isEqualTo(construct(items).hashCode());
   }
@@ -74,7 +77,7 @@ public class ConstructTest extends TestingContext {
 
   @Test
   public void construct_read_back_by_hash_has_same_items() {
-    var items = list(intExpr(), stringExpr());
+    ImmutableList<Expr> items = list(intExpr(), stringExpr());
     Construct expr = construct(items);
     assertThat(((Construct) objectDbOther().get(expr.hash())).items())
         .isEqualTo(items);

@@ -97,11 +97,9 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
   }
 
-  public Tuple tuple(TupleTypeO tupleType, Iterable<? extends Obj> items) {
-    List<Obj> itemList = ImmutableList.copyOf(items);
+  public Tuple tuple(TupleTypeO tupleType, ImmutableList<Val> items) {
     var types = tupleType.items();
-
-    allMatchOtherwise(types, itemList, (s, i) -> Objects.equals(s, i.type()),
+    allMatchOtherwise(types, items, (s, i) -> Objects.equals(s, i.type()),
         (i, j) -> {
           throw new IllegalArgumentException(
               "tupleType specifies " + i + " items but provided " + j + ".");
@@ -109,11 +107,11 @@ public class ObjDb {
         (i) -> {
           throw new IllegalArgumentException("tupleType specifies item at index " + i
               + " with type " + types.get(i).name() + " but provided item has type "
-              + itemList.get(i).type().name() + " at that index.");
+              + items.get(i).type().name() + " at that index.");
         }
     );
 
-    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleType, itemList));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleType, items));
   }
 
   // methods for creating expr-s
@@ -126,7 +124,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConst(val));
   }
 
-  public Construct construct(ImmutableList<? extends Expr> items) {
+  public Construct construct(ImmutableList<Expr> items) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(items));
   }
 
@@ -136,7 +134,7 @@ public class ObjDb {
         () -> newInvoke(evaluationType, nativeMethod, isPure, argumentCount));
   }
 
-  public Order order(List<? extends Expr> elements) {
+  public Order order(ImmutableList<Expr> elements) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elements));
   }
 
@@ -180,7 +178,7 @@ public class ObjDb {
 
   // methods for creating Val Obj-s
 
-  public Array newArray(ArrayTypeO type, List<? extends Obj> elements) throws HashedDbException {
+  public Array newArray(ArrayTypeO type, List<Val> elements) throws HashedDbException {
     var data = writeArrayData(elements);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -222,7 +220,7 @@ public class ObjDb {
     return objTypeDb.string().newObj(root, this);
   }
 
-  private Tuple newTuple(TupleTypeO type, List<? extends Obj> objects) throws HashedDbException {
+  private Tuple newTuple(TupleTypeO type, ImmutableList<Val> objects) throws HashedDbException {
     var data = writeTupleData(objects);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -270,7 +268,7 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private Order newOrder(List<? extends Expr> elements) throws HashedDbException {
+  private Order newOrder(ImmutableList<Expr> elements) throws HashedDbException {
     TypeV elementType = elementType(elements);
     var type = objTypeDb.order(elementType);
     var data = writeOrderData(elements);
@@ -278,7 +276,7 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private TypeV elementType(List<? extends Expr> elements) {
+  private TypeV elementType(ImmutableList<Expr> elements) {
     Optional<TypeV> elementType = elements.stream()
         .map(expr -> expr.type().evaluationType())
         .reduce((type1, type2) -> {
@@ -298,7 +296,7 @@ public class ObjDb {
     }
   }
 
-  private Construct newConstruct(List<? extends Expr> items) throws HashedDbException {
+  private Construct newConstruct(ImmutableList<Expr> items) throws HashedDbException {
     var itemTypes = map(items, Expr::evaluationType);
     var evaluationType = objTypeDb.tuple(itemTypes);
     var type = objTypeDb.construct(evaluationType);
@@ -348,7 +346,7 @@ public class ObjDb {
     return val.hash();
   }
 
-  private Hash writeConstructData(List<? extends Expr> items) throws HashedDbException {
+  private Hash writeConstructData(ImmutableList<Expr> items) throws HashedDbException {
     return writeSequence(items);
   }
 
@@ -361,7 +359,7 @@ public class ObjDb {
     return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash());
   }
 
-  private Hash writeOrderData(List<? extends Expr> elements) throws HashedDbException {
+  private Hash writeOrderData(ImmutableList<Expr> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 
@@ -375,7 +373,7 @@ public class ObjDb {
 
   // methods for writing data of Val-s
 
-  private Hash writeArrayData(List<? extends Obj> elements) throws HashedDbException {
+  private Hash writeArrayData(List<Val> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 
@@ -395,7 +393,7 @@ public class ObjDb {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeTupleData(List<? extends Obj> items) throws HashedDbException {
+  private Hash writeTupleData(ImmutableList<Val> items) throws HashedDbException {
     return writeSequence(items);
   }
 

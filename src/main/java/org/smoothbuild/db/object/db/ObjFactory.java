@@ -7,14 +7,12 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
-import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
@@ -96,7 +94,7 @@ public class ObjFactory {
     return objDb.const_(val);
   }
 
-  public Construct construct(ImmutableList<? extends Expr> items) {
+  public Construct construct(ImmutableList<Expr> items) {
     return objDb.construct(items);
   }
 
@@ -133,11 +131,11 @@ public class ObjFactory {
     return objDb.string(string);
   }
 
-  public Tuple tuple(TupleTypeO type, Iterable<? extends Obj> items) {
+  public Tuple tuple(TupleTypeO type, ImmutableList<Val> items) {
     return objDb.tuple(type, items);
   }
 
-  public Order order(List<? extends Expr> elements) {
+  public Order order(ImmutableList<Expr> elements) {
     return objDb.order(elements);
   }
 

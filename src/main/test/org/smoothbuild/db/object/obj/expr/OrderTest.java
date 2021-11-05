@@ -4,9 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -33,14 +32,14 @@ public class OrderTest extends TestingContext {
 
   @Test
   public void elements_returns_elements() {
-    ImmutableList<Const> elements = list(intExpr(2));
+    ImmutableList<Expr> elements = list(intExpr(2));
     assertThat(order(elements).elements())
         .isEqualTo(elements);
   }
 
   @Test
   public void arrays_with_equal_elements_are_equal() {
-    List<Const> elements = list(intExpr(2)) ;
+    ImmutableList<Expr> elements = list(intExpr(2)) ;
     assertThat(order(elements))
         .isEqualTo(order(elements));
   }
@@ -53,7 +52,7 @@ public class OrderTest extends TestingContext {
 
   @Test
   public void hash_of_arrays_with_equal_elements_is_the_same() {
-    ImmutableList<Const> elements = list(intExpr(1));
+    ImmutableList<Expr> elements = list(intExpr(1));
     assertThat(order(elements).hash())
         .isEqualTo(order(elements).hash());
   }
@@ -66,7 +65,7 @@ public class OrderTest extends TestingContext {
 
   @Test
   public void hash_code_of_arrays_with_equal_elements_is_the_same() {
-    ImmutableList<Const> elements = list(intExpr(1));
+    ImmutableList<Expr> elements = list(intExpr(1));
     assertThat(order(elements).hashCode())
         .isEqualTo(order(elements).hashCode());
   }
@@ -86,7 +85,7 @@ public class OrderTest extends TestingContext {
 
   @Test
   public void array_read_back_by_hash_has_same_elements() {
-    ImmutableList<Const> elements = list(intExpr(1));
+    ImmutableList<Expr> elements = list(intExpr(1));
     Order array = order(elements);
     assertThat(((Order) objectDbOther().get(array.hash())).elements())
         .isEqualTo(elements);

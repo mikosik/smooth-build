@@ -9,7 +9,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -468,12 +467,12 @@ public class TestingContext {
     return objectDb().string(string);
   }
 
-  public Tuple tuple(List<? extends Val> items) {
+  public Tuple tuple(ImmutableList<Val> items) {
     var spec = tupleOT(map(items, Val::type));
     return tuple(spec, items);
   }
 
-  public Tuple tuple(TupleTypeO tupleType, List<? extends Val> items) {
+  public Tuple tuple(TupleTypeO tupleType, ImmutableList<Val> items) {
     return objectDb().tuple(tupleType, items);
   }
 
@@ -511,7 +510,7 @@ public class TestingContext {
 
   // Expr-s
 
-  public Call call(Expr function, ImmutableList<? extends Expr> arguments) {
+  public Call call(Expr function, ImmutableList<Expr> arguments) {
     return objectDb().call(function, construct(arguments));
   }
 
@@ -519,11 +518,11 @@ public class TestingContext {
     return objectDb().const_(val);
   }
 
-  public Construct construct(ImmutableList<? extends Expr> items) {
+  public Construct construct(ImmutableList<Expr> items) {
     return objectDb().construct(items);
   }
 
-  public Order order(List<? extends Expr> elements) {
+  public Order order(ImmutableList<Expr> elements) {
     return objectDb().order(elements);
   }
 

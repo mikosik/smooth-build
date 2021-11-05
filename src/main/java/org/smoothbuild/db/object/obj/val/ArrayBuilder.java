@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 
 public class ArrayBuilder {
   private final ArrayTypeO type;
   private final ObjDb objDb;
-  private final List<Obj> elements;
+  private final List<Val> elements;
 
   public ArrayBuilder(ArrayTypeO type, ObjDb objDb) {
     this.type = type;
@@ -21,12 +21,12 @@ public class ArrayBuilder {
     this.elements = new ArrayList<>();
   }
 
-  public ArrayBuilder addAll(Iterable<? extends Obj> objs) {
+  public ArrayBuilder addAll(Iterable<? extends Val> objs) {
     stream(objs).forEach(this::add);
     return this;
   }
 
-  public ArrayBuilder add(Obj elements) {
+  public ArrayBuilder add(Val elements) {
     if (!type.element().equals(elements.type())) {
       throw new IllegalArgumentException("Element type must be " + type.element().name()
           + " but was " + elements.type().name() + ".");
