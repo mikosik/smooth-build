@@ -2,7 +2,6 @@ package org.smoothbuild.db.object.obj;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -60,7 +59,7 @@ public class ObjStableHashTest extends TestingContext {
 
     @Test
     public void empty_tuple_array() {
-      assertThat(array(perso_OT()).hash())
+      assertThat(array(personOT()).hash())
           .isEqualTo(Hash.decode("a9688c71bf2aae5f4a8e219ce92e8ab8e6b46e27"));
     }
 
@@ -192,7 +191,7 @@ public class ObjStableHashTest extends TestingContext {
     @Test
     public void select_expression() {
       assertThat(select(const_(animal()), int_(0)).hash())
-          .isEqualTo(Hash.decode("ab8f773b5ba544efcddbe2460f1e2dada4d82054"));
+          .isEqualTo(Hash.decode("c95a9b1d53aa249f7a8e1b9c1425214d0b37cf3e"));
     }
   }
 
@@ -238,21 +237,6 @@ public class ObjStableHashTest extends TestingContext {
     public void some_string() {
       assertThat(string("abc").hash())
           .isEqualTo(Hash.decode("2f79dcd289cb78ca01f0f24a250203987145d9fa"));
-    }
-  }
-
-  @Nested
-  class _struct {
-    @Test
-    public void empty_struct() {
-      assertThat(struct(structOT(namedList(list())), list()).hash())
-          .isEqualTo(Hash.decode("8c2c19d776a34cc6258dc97c7ef844bf843415c4"));
-    }
-
-    @Test
-    public void some_struct() {
-      assertThat(struct(structOT(), list(int_())).hash())
-          .isEqualTo(Hash.decode("7f88fa64f4abd3ccf87a9d5d253893ef2a881d9b"));
     }
   }
 

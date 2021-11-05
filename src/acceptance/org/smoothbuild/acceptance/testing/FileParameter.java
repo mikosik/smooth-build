@@ -1,10 +1,10 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.plugin.NativeApi;
 
 public class FileParameter {
-  public static Struc_ function(NativeApi nativeApi, Struc_ file) {
+  public static Tuple function(NativeApi nativeApi, Tuple file) {
     return file;
   }
 }

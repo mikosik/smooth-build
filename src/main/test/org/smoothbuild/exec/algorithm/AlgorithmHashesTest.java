@@ -1,18 +1,16 @@
 package org.smoothbuild.exec.algorithm;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.constructAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createStructAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readStructItemAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.orderAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.selectAlgorithmHash;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.math.BigInteger;
 import java.util.HashSet;
@@ -20,7 +18,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -29,13 +27,13 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    StructTypeO constructedType = structOT();
+    TupleTypeO constructedType = tupleOT();
 
-    hashes.add(arrayAlgorithmHash());
+    hashes.add(orderAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
     hashes.add(convertAlgorithmHash(stringOT()));
-    hashes.add(createStructAlgorithmHash(constructedType));
-    hashes.add(readStructItemAlgorithmHash(0));
+    hashes.add(constructAlgorithmHash(constructedType));
+    hashes.add(selectAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
     hashes.add(referenceAlgorithmHash(Hash.of(""), "global-referencable-name"));
@@ -58,18 +56,18 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void create_struct_algorithm_has_different_hash_for_different_fields() {
-    StructTypeO constructedType = structOT(namedList(list()));
-    StructTypeO constructedType2 = structOT(namedList(list(named("field", blobOT()))));
+  public void construct_algorithm_has_different_hash_for_different_fields() {
+    TupleTypeO constructedType = tupleOT(list());
+    TupleTypeO constructedType2 = tupleOT(list(blobOT()));
 
-    assertThat(createStructAlgorithmHash(constructedType))
-        .isNotEqualTo(createStructAlgorithmHash(constructedType2));
+    assertThat(constructAlgorithmHash(constructedType))
+        .isNotEqualTo(constructAlgorithmHash(constructedType2));
   }
 
   @Test
-  public void read_struct_item_algorithm_has_different_hash_for_different_field_indexes() {
-    assertThat(readStructItemAlgorithmHash(0))
-        .isNotEqualTo(readStructItemAlgorithmHash(1));
+  public void read_tuple_item_algorithm_has_different_hash_for_different_field_indexes() {
+    assertThat(selectAlgorithmHash(0))
+        .isNotEqualTo(selectAlgorithmHash(1));
   }
 
   @Test

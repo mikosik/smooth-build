@@ -33,7 +33,6 @@ public class ObjKindTest {
         Arguments.of(2, ObjKind.BOOL),
         Arguments.of(3, ObjKind.LAMBDA),
         Arguments.of(4, ObjKind.INT),
-        Arguments.of(5, ObjKind.STRUCT),
         Arguments.of(6, ObjKind.NOTHING),
         Arguments.of(7, ObjKind.TUPLE),
         Arguments.of(8, ObjKind.STRING),
@@ -47,13 +46,12 @@ public class ObjKindTest {
         Arguments.of(17, ObjKind.VARIABLE),
         Arguments.of(18, ObjKind.ANY),
         Arguments.of(19, ObjKind.NATIVE_METHOD),
-        Arguments.of(20, ObjKind.INVOKE),
-        Arguments.of(21, ObjKind.STRUCT_EXPR)
+        Arguments.of(20, ObjKind.INVOKE)
     );
   }
 
   @ParameterizedTest
-  @ValueSource(bytes = {-1, 22})
+  @ValueSource(bytes = {-1, 5, 21})
   public void from_marker_returns_null_for_illegal_marker(int marker) {
     assertThat(ObjKind.fromMarker((byte) marker))
         .isNull();

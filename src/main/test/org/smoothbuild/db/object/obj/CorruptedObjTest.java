@@ -8,8 +8,6 @@ import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSize
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -61,7 +59,6 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
@@ -71,7 +68,7 @@ import org.smoothbuild.db.object.type.expr.ConstructOType;
 import org.smoothbuild.db.object.type.expr.OrderOType;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.LambdaTypeO;
-import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -984,9 +981,9 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * select in HashedDb.
        */
-      var structType = structOT(namedList(list(named("field", stringOT()))));
-      var struct = struct(structType, list(string("abc")));
-      var expr = const_(struct);
+      var tupleType = tupleOT(list(stringOT()));
+      var tuple = tuple(tupleType, list(string("abc")));
+      var expr = const_(tuple);
       var index = int_(0);
       Hash objHash =
           hash(
@@ -1079,7 +1076,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void struct_is_not_struct_expr() throws Exception {
+    public void tuple_is_not_tuple_expr() throws Exception {
       var expr = intExpr(3);
       var index = int_(0);
       var type = selectOT(stringOT());
@@ -1094,14 +1091,14 @@ public class CorruptedObjTest extends TestingContext {
 
       assertCall(() -> ((Select) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
-              objHash, type, "struct", StructTypeO.class, intOT()));
+              objHash, type, "tuple", TupleTypeO.class, intOT()));
     }
 
     @Test
     public void index_is_out_of_bounds() throws Exception {
-      var structType = structOT(namedList(list(named("field", stringOT()))));
-      var struct = struct(structType, list(string("abc")));
-      var expr = const_(struct);
+      var tupleType = tupleOT(list(stringOT()));
+      var tuple = tuple(tupleType, list(string("abc")));
+      var expr = const_(tuple);
       var index = int_(1);
       var type = selectOT(stringOT());
       Hash objHash =
@@ -1120,9 +1117,9 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void evaluation_type_is_different_than_type_of_item_pointed_to_by_index()
         throws Exception {
-      var structType = structOT(namedList(list(named("field", stringOT()))));
-      var struct = struct(structType, list(string("abc")));
-      var expr = const_(struct);
+      var tupleType = tupleOT(list(stringOT()));
+      var tuple = tuple(tupleType, list(string("abc")));
+      var expr = const_(tuple);
       var index = int_(0);
       var type = selectOT(intOT());
       Hash objHash =
@@ -1141,9 +1138,9 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void index_is_string_instead_of_int() throws Exception {
       var type = selectOT(stringOT());
-      var structType = structOT(namedList(list(named("field", stringOT()))));
-      var struct = struct(structType, list(string("abc")));
-      var expr = const_(struct);
+      var tupleType = tupleOT(list(stringOT()));
+      var tuple = tuple(tupleType, list(string("abc")));
+      var expr = const_(tuple);
       var strVal = string("abc");
       Hash objHash =
           hash(
@@ -1387,138 +1384,6 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
-  class _struct {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth
-       * struct in HashedDb.
-       */
-      var structType = structOT(
-          namedList(list(named("name1", stringOT()), named("name2", intOT()))));
-      var item1 = string();
-      var item2 = int_();
-      Hash objHash =
-          hash(
-              hash(structType),
-              hash(
-                  hash(item1),
-                  hash(item2)
-              )
-          );
-      Struc_ readStruct = (Struc_) objectDb().get(objHash);
-      assertThat(readStruct.items())
-          .isEqualTo(list(item1, item2));
-      assertThat(readStruct.type())
-          .isEqualTo(structType);
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(structOT());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      var structType = structOT(
-          namedList(list(named("name1", stringOT()), named("name2", intOT()))));
-      var item1 = string();
-      var item2 = int_();
-      Hash dataHash = hash(
-          hash(item1),
-          hash(item2)
-      );
-      obj_root_with_two_data_hashes(
-          structType,
-          dataHash,
-          (Hash objHash) -> ((Struc_) objectDb().get(objHash)).items());
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          structOT(), (Hash objHash) -> ((Struc_) objectDb().get(objHash)).items());
-    }
-
-    @Test
-    public void with_too_few_elements() throws Exception {
-      var structType = structOT(
-          namedList(list(named("name1", stringOT()), named("name2", intOT()))));
-      var item1 = string();
-      Hash objHash =
-          hash(
-              hash(structType),
-              hash(
-                  hash(item1)
-              )
-          );
-      Struc_ struct = (Struc_) objectDb().get(objHash);
-      assertCall(() -> struct.get(0))
-          .throwsException(new UnexpectedObjSequenceException(
-              objHash, structOT(), DATA_PATH, 2, 1));
-    }
-
-    @Test
-    public void with_too_many_elements() throws Exception {
-      var structType = structOT(
-          namedList(list(named("name1", stringOT()), named("name2", intOT()))));
-      var item1 = string();
-      var item2 = int_();
-      Hash objHash =
-          hash(
-              hash(structType),
-              hash(
-                  hash(item1),
-                  hash(item2),
-                  hash(item2)
-              )
-          );
-      Struc_ readStruct = (Struc_) objectDb().get(objHash);
-      assertCall(() -> readStruct.get(0))
-          .throwsException(new UnexpectedObjSequenceException(
-              objHash, structType, DATA_PATH, 2, 3));
-    }
-
-    @Test
-    public void with_element_of_wrong_type() throws Exception {
-      var structType = structOT(
-          namedList(list(named("name1", stringOT()), named("name2", intOT()))));
-      var item1 = string();
-      Hash objHash =
-          hash(
-              hash(structType),
-              hash(
-                  hash(item1),
-                  hash(bool(true))
-              )
-          );
-      Struc_ readStruct = (Struc_) objectDb().get(objHash);
-      assertCall(() -> readStruct.get(0))
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, structType, DATA_PATH, 1, intOT(), boolOT()));
-    }
-
-    @Test
-    public void with_element_being_expr() throws Exception {
-      var structType = structOT(
-          namedList(list(named("name1", stringOT()), named("name2", intOT()))));
-      var item1 = string();
-      Hash objHash =
-          hash(
-              hash(structType),
-              hash(
-                  hash(item1),
-                  hash(intExpr())
-              )
-          );
-      Struc_ readStruct = (Struc_) objectDb().get(objHash);
-      assertCall(() -> readStruct.get(0))
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, structType, DATA_PATH + "[1]", Val.class, Const.class));
-    }
-  }
-
-  @Nested
   class _tuple {
     @Test
     public void learning_test() throws Exception {
@@ -1528,7 +1393,7 @@ public class CorruptedObjTest extends TestingContext {
        */
       assertThat(
           hash(
-              hash(perso_OT()),
+              hash(personOT()),
               hash(
                   hash(string("John")),
                   hash(string("Doe")))))
@@ -1537,13 +1402,13 @@ public class CorruptedObjTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(perso_OT());
+      obj_root_without_data_hash(personOT());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
-          perso_OT(),
+          personOT(),
           hashedDb().writeBoolean(true),
           (Hash objHash) -> ((Tuple) objectDb().get(objHash)).get(0)
       );
@@ -1552,7 +1417,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          perso_OT(),
+          personOT(),
           (Hash objHash) -> ((Tuple) objectDb().get(objHash)).get(0));
     }
 
@@ -1563,10 +1428,10 @@ public class CorruptedObjTest extends TestingContext {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
-              hash(perso_OT()),
+              hash(personOT()),
               notHashOfSequence);
       assertCall(() -> ((Tuple) objectDb().get(objHash)).get(0))
-          .throwsException(new DecodeObjNodeException(objHash, perso_OT(), DATA_PATH))
+          .throwsException(new DecodeObjNodeException(objHash, personOT(), DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
@@ -1580,11 +1445,11 @@ public class CorruptedObjTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(perso_OT()),
+              hash(personOT()),
               dataHash
           );
       assertCall(() -> ((Tuple) objectDb().get(objHash)).get(0))
-          .throwsException(new DecodeObjNodeException(objHash, perso_OT(), DATA_PATH + "[0]"))
+          .throwsException(new DecodeObjNodeException(objHash, personOT(), DATA_PATH + "[0]"))
           .withCause(new NoSuchObjException(nowhere));
     }
 
@@ -1595,11 +1460,11 @@ public class CorruptedObjTest extends TestingContext {
               hash(string("John")));
       Hash objHash =
           hash(
-              hash(perso_OT()),
+              hash(personOT()),
               dataHash);
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new UnexpectedObjSequenceException(objHash, perso_OT(), DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedObjSequenceException(objHash, personOT(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1611,39 +1476,39 @@ public class CorruptedObjTest extends TestingContext {
               hash(string("junk")));
       Hash objHash =
           hash(
-              hash(perso_OT()),
+              hash(personOT()),
               dataHash);
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new UnexpectedObjSequenceException(objHash, perso_OT(), DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedObjSequenceException(objHash, personOT(), DATA_PATH, 2, 3));
     }
 
     @Test
     public void with_element_of_wrong_type() throws Exception {
       Hash objHash =
           hash(
-              hash(perso_OT()),
+              hash(personOT()),
               hash(
                   hash(string("John")),
                   hash(bool(true))));
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, perso_OT(), DATA_PATH, 1, stringOT(), boolOT()));
+              objHash, personOT(), DATA_PATH, 1, stringOT(), boolOT()));
     }
 
     @Test
     public void with_element_being_expr() throws Exception {
       Hash objHash =
           hash(
-              hash(perso_OT()),
+              hash(personOT()),
               hash(
                   hash(string("John")),
                   hash(intExpr())));
       Tuple tuple = (Tuple) objectDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, perso_OT(), DATA_PATH + "[1]", Val.class, Const.class));
+              objHash, personOT(), DATA_PATH + "[1]", Val.class, Const.class));
     }
   }
 

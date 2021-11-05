@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
@@ -26,7 +26,7 @@ public class OutputClassFileTest extends TestingContext {
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().elements(Struc_.class))
+    assertThat(fileArrayBuilder.build().elements(Tuple.class))
         .containsExactly(file(path, bytes));
   }
 

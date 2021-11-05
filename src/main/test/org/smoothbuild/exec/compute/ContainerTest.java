@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.base.MessageStruct.severity;
 import static org.smoothbuild.exec.base.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 public class ContainerTest extends TestingContext {
@@ -18,13 +18,13 @@ public class ContainerTest extends TestingContext {
   @Test
   public void messages_are_logged() {
     container().log().error("message");
-    Iterable<Struc_> iterable = container().messages().elements(Struc_.class);
+    Iterable<Tuple> iterable = container().messages().elements(Tuple.class);
     assertThat(iterable)
         .hasSize(1);
-    Struc_ struct = iterable.iterator().next();
-    assertThat(text(struct))
+    Tuple tuple = iterable.iterator().next();
+    assertThat(text(tuple))
         .isEqualTo("message");
-    assertThat(severity(struct))
+    assertThat(severity(tuple))
         .isEqualTo("ERROR");
   }
 }

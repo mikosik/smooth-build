@@ -29,7 +29,7 @@ import org.smoothbuild.acceptance.testing.WrongMethodName;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NativeTest extends AcceptanceTestCase {
@@ -228,7 +228,7 @@ public class NativeTest extends AcceptanceTestCase {
             runSmoothBuild("result");
             assertFinishedWithError();
             assertSysOutContains(
-                faultyTypeOfReturnedObject("returnStringStruct", "Person", "StringHolder"));
+                faultyTypeOfReturnedObject("returnStringStruct", "{String,String}", "{String}"));
           }
 
           @Test
@@ -427,7 +427,7 @@ public class NativeTest extends AcceptanceTestCase {
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "`stringIdentity` declares type `File` "
                 + "so its native implementation result type must be "
-                + Struc_.class.getCanonicalName()
+                + Tuple.class.getCanonicalName()
                 + " but it is " + Str.class.getCanonicalName() + ".\n"));
       }
 
@@ -584,7 +584,7 @@ public class NativeTest extends AcceptanceTestCase {
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains(
-              faultyTypeOfReturnedObject("returnStringStruct", "Person", "StringHolder"));
+              faultyTypeOfReturnedObject("returnStringStruct", "{String,String}", "{String}"));
         }
 
         @Test

@@ -21,21 +21,21 @@ import okio.ByteString;
 
 public class ArrayTest extends TestingContext {
   @Test
-  public void empty_nothing_array_can_be_iterated_as_struct() {
+  public void empty_nothing_array_can_be_iterated_as_tuple() {
     Array array = objectDb().arrayBuilder(nothingOT())
         .build();
-    assertThat(array.elements(Struc_.class))
+    assertThat(array.elements(Tuple.class))
         .isEmpty();
   }
 
   @Test
-  public void string_array_cannot_be_iterated_as_struct() {
+  public void string_array_cannot_be_iterated_as_tuple() {
     Array array = objectDb().arrayBuilder(stringOT())
         .add(string("abc"))
         .build();
-    assertCall(() -> array.elements(Struc_.class))
+    assertCall(() -> array.elements(Tuple.class))
         .throwsException(new IllegalArgumentException(
-            "[String] cannot be viewed as Iterable of " + Struc_.class.getCanonicalName() + "."));
+            "[String] cannot be viewed as Iterable of " + Tuple.class.getCanonicalName() + "."));
   }
 
   @Test

@@ -1,8 +1,7 @@
 package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import javax.inject.Inject;
 
@@ -12,18 +11,17 @@ import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
 import org.smoothbuild.db.object.type.val.IntTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
-import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
-import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.BlobType;
-import org.smoothbuild.lang.base.type.api.BoolType;
-import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.IntType;
-import org.smoothbuild.lang.base.type.api.NothingType;
-import org.smoothbuild.lang.base.type.api.StringType;
-import org.smoothbuild.lang.base.type.api.StructType;
-import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
+import org.smoothbuild.lang.base.type.impl.BlobTypeS;
+import org.smoothbuild.lang.base.type.impl.BoolTypeS;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.IntTypeS;
+import org.smoothbuild.lang.base.type.impl.NothingTypeS;
+import org.smoothbuild.lang.base.type.impl.StringTypeS;
+import org.smoothbuild.lang.base.type.impl.StructTypeS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.VariableS;
 
 public class TypeSToTypeOConverter {
   private final ObjFactory objFactory;
@@ -33,45 +31,49 @@ public class TypeSToTypeOConverter {
     this.objFactory = objFactory;
   }
 
-  public TypeV visit(Type type) {
+  public TypeV visit(TypeS type) {
     // TODO refactor to pattern matching once we have java 17
-    if (type instanceof BlobType blob) {
+    if (type instanceof BlobTypeS blob) {
       return visit(blob);
-    } else if (type instanceof BoolType) {
+    } else if (type instanceof BoolTypeS) {
       return objFactory.boolType();
-    } else if (type instanceof IntType intType) {
+    } else if (type instanceof IntTypeS intType) {
       return visit(intType);
-    } else if (type instanceof NothingType) {
+    } else if (type instanceof NothingTypeS) {
       return objFactory.nothingType();
-    } else if (type instanceof StringType stringType) {
+    } else if (type instanceof StringTypeS stringType) {
       return visit(stringType);
-    } else if (type instanceof StructType structType) {
-      var fields = structType.fields().mapObjects(this::visit);
-      return objFactory.structType(structType.name(), fields);
-    } else if (type instanceof Variable) {
+    } else if (type instanceof StructTypeS structType) {
+      return visit(structType);
+    } else if (type instanceof VariableS) {
       throw new UnsupportedOperationException();
-    } else if (type instanceof ArrayType array) {
+    } else if (type instanceof ArrayTypeS array) {
       return visit(array);
-    } else if (type instanceof FunctionType) {
+    } else if (type instanceof FunctionTypeS) {
       return nativeCodeType();
     } else {
       throw new IllegalArgumentException("Unknown type " + type.getClass().getCanonicalName());
     }
   }
 
-  public BlobTypeO visit(BlobType type) {
+  public BlobTypeO visit(BlobTypeS type) {
     return objFactory.blobType();
   }
 
-  public IntTypeO visit(IntType type) {
+  public IntTypeO visit(IntTypeS type) {
     return objFactory.intType();
   }
 
-  public StringTypeO visit(StringType string) {
+  public StringTypeO visit(StringTypeS string) {
     return objFactory.stringType();
   }
 
-  public ArrayTypeO visit(ArrayType array) {
+  public TupleTypeO visit(StructTypeS structType) {
+    var itemTypes = map(structType.fields().objects(), this::visit);
+    return objFactory.tupleType(itemTypes);
+  }
+
+  public ArrayTypeO visit(ArrayTypeS array) {
     if (array.isPolytype()) {
       throw new UnsupportedOperationException();
     }
@@ -83,8 +85,7 @@ public class TypeSToTypeOConverter {
         list(objFactory.stringType(), objFactory.blobType()));
   }
 
-  public StructTypeO functionType() {
-    return objFactory.structType(
-        "", namedList(list(named(objFactory.stringType()), named(objFactory.blobType()))));
+  public TupleTypeO functionType() {
+    return objFactory.tupleType(list(objFactory.stringType(), objFactory.blobType()));
   }
 }

@@ -22,19 +22,12 @@ import static org.smoothbuild.db.object.type.base.ObjKind.ORDER;
 import static org.smoothbuild.db.object.type.base.ObjKind.REF;
 import static org.smoothbuild.db.object.type.base.ObjKind.SELECT;
 import static org.smoothbuild.db.object.type.base.ObjKind.STRING;
-import static org.smoothbuild.db.object.type.base.ObjKind.STRUCT;
-import static org.smoothbuild.db.object.type.base.ObjKind.STRUCT_EXPR;
 import static org.smoothbuild.db.object.type.base.ObjKind.TUPLE;
 import static org.smoothbuild.db.object.type.base.ObjKind.VARIABLE;
 import static org.smoothbuild.db.object.type.base.ObjKind.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
-import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Lists.zip;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +38,6 @@ import org.smoothbuild.db.object.db.ObjDbException;
 import org.smoothbuild.db.object.type.base.ObjKind;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.exc.DecodeStructTypeWrongNamesSizeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
 import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
@@ -58,7 +50,6 @@ import org.smoothbuild.db.object.type.expr.InvokeOType;
 import org.smoothbuild.db.object.type.expr.OrderOType;
 import org.smoothbuild.db.object.type.expr.RefOType;
 import org.smoothbuild.db.object.type.expr.SelectOType;
-import org.smoothbuild.db.object.type.expr.StructExprOType;
 import org.smoothbuild.db.object.type.val.AnyTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
@@ -68,17 +59,13 @@ import org.smoothbuild.db.object.type.val.LambdaTypeO;
 import org.smoothbuild.db.object.type.val.NativeMethodTypeO;
 import org.smoothbuild.db.object.type.val.NothingTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
-import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.db.object.type.val.VariableO;
 import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.util.collect.Named;
-import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * This class is thread-safe.
@@ -90,12 +77,6 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   public static final String LAMBDA_RESULT_PATH = DATA_PATH + "[" + LAMBDA_RESULT_INDEX + "]";
   private static final int LAMBDA_PARAMS_INDEX = 1;
   public static final String LAMBDA_PARAMS_PATH = DATA_PATH + "[" + LAMBDA_PARAMS_INDEX + "]";
-  private static final int STRUCT_NAME_INDEX = 0;
-  public static final String STRUCT_NAME_PATH = DATA_PATH + "[" + STRUCT_NAME_INDEX + "]";
-  private static final int STRUCT_FIELDS_INDEX = 1;
-  public static final String STRUCT_FIELDS_PATH = DATA_PATH + "[" + STRUCT_FIELDS_INDEX + "]";
-  private static final int STRUCT_NAMES_INDEX = 2;
-  public static final String STRUCT_NAMES_PATH = DATA_PATH + "[" + STRUCT_NAMES_INDEX + "]";
 
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, TypeO> cache;
@@ -180,6 +161,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return nothing;
   }
 
+  @Override
   public TupleTypeO tuple(ImmutableList<TypeV> itemTypes) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(itemTypes));
   }
@@ -187,12 +169,6 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   @Override
   public StringTypeO string() {
     return string;
-  }
-
-  @Override
-  public StructTypeO struct(String name, NamedList<TypeV> fields) {
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newStruct(name, fields));
   }
 
   @Override
@@ -231,10 +207,6 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evaluationType));
   }
 
-  public StructExprOType structExpr(StructTypeO struct) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStructExpr(struct));
-  }
-
   // methods for reading from db
 
   public TypeO get(Hash hash) {
@@ -260,8 +232,6 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
       case CONSTRUCT -> newConstruct(hash, readDataAsTuple(hash, rootSequence, objKind));
       case TUPLE -> readTuple(hash, rootSequence);
       case SELECT -> newSelect(hash, readDataAsValue(hash, rootSequence, objKind));
-      case STRUCT -> readStruct(hash, rootSequence);
-      case STRUCT_EXPR -> newStructExpr(hash, readDataAsStruct(hash, rootSequence, objKind));
       case VARIABLE -> readVariable(hash, rootSequence);
     };
   }
@@ -305,15 +275,11 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return readDataAsClass(rootHash, rootSequence, objKind, TupleTypeO.class);
   }
 
-  private StructTypeO readDataAsStruct(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
-    return readDataAsClass(rootHash, rootSequence, objKind, StructTypeO.class);
-  }
-
   private <T extends TypeO> T readDataAsClass(Hash rootHash, List<Hash> rootSequence,
       ObjKind objKind, Class<T> expectedTypeClass) {
     assertTypeRootSequenceSize(rootHash, objKind, rootSequence, 2);
     Hash hash = rootSequence.get(DATA_INDEX);
-    return readInnerType(objKind, rootHash, hash, DATA_PATH, expectedTypeClass);
+    return readTupleItemType(objKind, rootHash, hash, DATA_PATH, expectedTypeClass);
   }
 
   private TypeO readLambda(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
@@ -323,9 +289,9 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     if (data.size() != 2) {
       throw new UnexpectedTypeSequenceException(rootHash, objKind, DATA_PATH, 2, data.size());
     }
-    TypeV result = readInnerType(objKind, rootHash, data.get(LAMBDA_RESULT_INDEX),
+    TypeV result = readTupleItemType(objKind, rootHash, data.get(LAMBDA_RESULT_INDEX),
         LAMBDA_RESULT_PATH, TypeV.class);
-    TupleTypeO parameters = readInnerType(objKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
+    TupleTypeO parameters = readTupleItemType(objKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
         LAMBDA_PARAMS_PATH, TupleTypeO.class);
     return newLambda(rootHash, result, parameters);
   }
@@ -340,51 +306,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     var builder = ImmutableList.<TypeV>builder();
     var itemTypeHashes = readSequenceHashes(rootHash, hash, TUPLE, DATA_PATH);
     for (int i = 0; i < itemTypeHashes.size(); i++) {
-      builder.add(readInnerType(TUPLE, rootHash, itemTypeHashes.get(i), DATA_PATH, i));
-    }
-    return builder.build();
-  }
-
-  private StructTypeO readStruct(Hash rootHash, List<Hash> rootSequence) {
-    assertTypeRootSequenceSize(rootHash, STRUCT, rootSequence, 2);
-    Hash dataHash = rootSequence.get(DATA_INDEX);
-    List<Hash> data = readSequenceHashes(rootHash, dataHash, STRUCT, DATA_PATH);
-    if (data.size() != 3) {
-      throw new UnexpectedTypeSequenceException(rootHash, STRUCT, DATA_PATH, 2, data.size());
-    }
-    String name = wrapHashedDbExceptionAsDecodeTypeNodeException(
-        rootHash, STRUCT, STRUCT_NAME_PATH, () -> hashedDb.readString(data.get(STRUCT_NAME_INDEX)));
-    ImmutableList<TypeV> fields = readStructFields(rootHash, data.get(STRUCT_FIELDS_INDEX));
-    var names = readFieldNames(rootHash, data);
-    return newStruct(rootHash, name, mergeFieldWithNames(rootHash, names, fields));
-  }
-
-  private NamedList<TypeV> mergeFieldWithNames(Hash rootHash,
-      ImmutableList<String> names, ImmutableList<TypeV> fields) {
-    if (names.size() != fields.size()) {
-      throw new DecodeStructTypeWrongNamesSizeException(rootHash, fields.size(), names.size());
-    }
-    return namedList(zip(names, fields, (n, f) -> named(stringToOptionalString(n), f)));
-  }
-
-  private ImmutableList<TypeV> readStructFields(Hash rootHash, Hash hash) {
-    var builder = ImmutableList.<TypeV>builder();
-    var itemTypeHashes = readSequenceHashes(rootHash, hash, STRUCT, STRUCT_FIELDS_PATH);
-    for (int i = 0; i < itemTypeHashes.size(); i++) {
-      builder.add(readInnerType(
-          STRUCT, rootHash, itemTypeHashes.get(i), STRUCT_FIELDS_PATH, i));
-    }
-    return builder.build();
-  }
-
-  private ImmutableList<String> readFieldNames(Hash rootHash, List<Hash> data) {
-    var nameHashes = readSequenceHashes(
-        rootHash, data.get(STRUCT_NAMES_INDEX), STRUCT, STRUCT_NAMES_PATH);
-    Builder<String> builder = ImmutableList.builder();
-    for (int i = 0; i < nameHashes.size(); i++) {
-      final int index = i;
-      builder.add(Helpers.wrapHashedDbExceptionAsDecodeTypeNodeException(rootHash, STRUCT,
-          STRUCT_NAMES_PATH, index, () -> hashedDb.readString(nameHashes.get(index))));
+      builder.add(readTupleItemType(rootHash, itemTypeHashes.get(i), DATA_PATH, i));
     }
     return builder.build();
   }
@@ -399,7 +321,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return newVariable(rootHash, name);
   }
 
-  private <T> T readInnerType(ObjKind objKind, Hash outerHash, Hash hash, String path,
+  private <T> T readTupleItemType(ObjKind objKind, Hash outerHash, Hash hash, String path,
       Class<T> expectedClass) {
     TypeO result = wrapObjectDbExceptionAsDecodeTypeNodeException(
         objKind, outerHash, path, () -> get(hash));
@@ -413,15 +335,14 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     }
   }
 
-  private TypeV readInnerType(ObjKind objKind, Hash outerHash, Hash hash, String path,
-      int index) {
-    TypeO result = Helpers.wrapObjectDbExceptionAsDecodeTypeNodeException(
-        objKind, outerHash, path, index, () -> get(hash));
+  private TypeV readTupleItemType(Hash outerHash, Hash hash, String path, int index) {
+    TypeO result = wrapObjectDbExceptionAsDecodeTypeNodeException(
+        TUPLE, outerHash, path, index, () -> get(hash));
     if (result instanceof TypeV typeV) {
       return typeV;
     } else {
       throw new UnexpectedTypeNodeException(
-          outerHash, objKind, path, index, TypeV.class, result.getClass());
+          outerHash, TUPLE, path, index, TypeV.class, result.getClass());
     }
   }
 
@@ -443,16 +364,6 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
 
   private LambdaTypeO newLambda(Hash rootHash, TypeV result, TupleTypeO parameters) {
     return cache(new LambdaTypeO(rootHash, result, parameters));
-  }
-
-  private StructTypeO newStruct(String name, NamedList<TypeV> fields)
-      throws HashedDbException {
-    var rootHash = writeStructRoot(name, fields);
-    return newStruct(rootHash, name, fields);
-  }
-
-  private StructTypeO newStruct(Hash rootHash, String name, NamedList<TypeV> fields) {
-    return cache(new StructTypeO(rootHash, name, fields));
   }
 
   private TupleTypeO newTuple(ImmutableList<TypeV> itemTypes) throws HashedDbException {
@@ -539,15 +450,6 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return cache(new SelectOType(rootHash, evaluationType));
   }
 
-  private StructExprOType newStructExpr(StructTypeO evaluationType) throws HashedDbException {
-    var rootHash = writeExprRoot(STRUCT_EXPR, evaluationType);
-    return newStructExpr(rootHash, evaluationType);
-  }
-
-  private StructExprOType newStructExpr(Hash rootHash, StructTypeO evaluationType) {
-    return cache(new StructExprOType(rootHash, evaluationType));
-  }
-
   private <T extends TypeO> T cache(T type) {
     @SuppressWarnings("unchecked")
     T result = (T) requireNonNullElse(cache.putIfAbsent(type.hash(), type), type);
@@ -563,27 +465,6 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   private Hash writeLambdaRoot(TypeV result, TupleTypeO parameters) throws HashedDbException {
     var hash = hashedDb.writeSequence(result.hash(), parameters.hash());
     return writeNonBaseRoot(LAMBDA, hash);
-  }
-
-  private Hash writeStructRoot(String name, NamedList<TypeV> fields)
-      throws HashedDbException {
-    var nameHash = hashedDb.writeString(name);
-    var fieldsSequenceHash = writeFieldsSequence(fields);
-    var namesSequenceHash = writeNamesSequence(fields);
-    var typeData = hashedDb.writeSequence(nameHash, fieldsSequenceHash, namesSequenceHash);
-    return writeNonBaseRoot(STRUCT, typeData);
-  }
-
-  private Hash writeFieldsSequence(NamedList<TypeV> fields) throws HashedDbException {
-    return hashedDb.writeSequence(map(fields.list(), f -> f.object().hash()));
-  }
-
-  private Hash writeNamesSequence(NamedList<TypeV> fields) throws HashedDbException {
-    var nameHashes = new ArrayList<Hash>(fields.size());
-    for (Named<TypeV> field : fields.list()) {
-      nameHashes.add(hashedDb.writeString(field.saneName()));
-    }
-    return hashedDb.writeSequence(nameHashes);
   }
 
   private Hash writeTupleRoot(ImmutableList<TypeV> itemTypes) throws HashedDbException {

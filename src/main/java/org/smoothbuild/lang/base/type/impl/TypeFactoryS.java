@@ -105,13 +105,12 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   }
 
   @Override
-  public StructTypeS struct(String name, NamedList<TypeS> fields) {
-    return new StructTypeS(name, fields);
-  }
-
-  @Override
   public VariableS variable(String name) {
     checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
     return new VariableS(name);
+  }
+
+  public StructTypeS struct(String name, NamedList<TypeS> fields) {
+    return new StructTypeS(name, fields);
   }
 }

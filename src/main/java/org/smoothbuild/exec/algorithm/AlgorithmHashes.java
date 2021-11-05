@@ -6,12 +6,12 @@ import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.TypeO;
-import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 
 import okio.ByteString;
 
 public class AlgorithmHashes {
-  public static Hash arrayAlgorithmHash() {
+  public static Hash orderAlgorithmHash() {
     return hash(0);
   }
 
@@ -23,11 +23,11 @@ public class AlgorithmHashes {
     return hash(2, destinationType.hash());
   }
 
-  public static Hash createStructAlgorithmHash(StructTypeO type) {
+  public static Hash constructAlgorithmHash(TupleTypeO type) {
     return hash(3, type.hash());
   }
 
-  public static Hash readStructItemAlgorithmHash(int itemIndex) {
+  public static Hash selectAlgorithmHash(int itemIndex) {
     return hash(4, Hash.of(itemIndex));
   }
 

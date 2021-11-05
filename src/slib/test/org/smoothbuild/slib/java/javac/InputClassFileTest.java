@@ -10,7 +10,7 @@ import static org.smoothbuild.util.io.Okios.readAndClose;
 import java.net.URI;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
@@ -91,7 +91,7 @@ public class InputClassFileTest extends TestingContext {
 
   @Test
   public void open_input_stream_returns_file_content() throws Exception {
-    Struc_ file = file(path, bytes);
+    Tuple file = file(path, bytes);
     InputClassFile inputClassFile = new InputClassFile(file);
     BufferedSource buffer = buffer(source(inputClassFile.openInputStream()));
     ByteString byteString = readAndClose(buffer, BufferedSource::readByteString);

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.Path;
 
@@ -17,7 +17,7 @@ public class FileReader {
     this.container = container;
   }
 
-  public Struc_ createFile(Path path, Path projectPath) throws IOException {
+  public Tuple createFile(Path path, Path projectPath) throws IOException {
     return container.factory().file(createPath(path), createContent(projectPath));
   }
 

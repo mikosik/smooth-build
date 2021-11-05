@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -43,13 +43,13 @@ public class ArtifactSaver {
     if (value.type() instanceof ArrayType arrayType) {
       return saveArray(arrayType, artifactPath, (Array) obj);
     } else if (value.type().name().equals(FileStruct.NAME)) {
-      return saveFile(artifactPath, (Struc_) obj);
+      return saveFile(artifactPath, (Tuple) obj);
     } else {
       return saveBaseObject(artifactPath, obj);
     }
   }
 
-  private Path saveFile(Path artifactPath, Struc_ file)
+  private Path saveFile(Path artifactPath, Tuple file)
       throws IOException, DuplicatedPathsException {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileObjectPath(file));
@@ -66,7 +66,7 @@ public class ArtifactSaver {
         i++;
       }
     } else if (elemType.name().equals(FileStruct.NAME)) {
-      saveFileArray(artifactPath, array.elements(Struc_.class));
+      saveFileArray(artifactPath, array.elements(Tuple.class));
     } else {
       saveObjectArray(artifactPath, array);
     }
@@ -83,10 +83,10 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveFileArray(Path artifactPath, Iterable<Struc_> files) throws IOException,
+  private void saveFileArray(Path artifactPath, Iterable<Tuple> files) throws IOException,
       DuplicatedPathsException {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    for (Struc_ file : files) {
+    for (Tuple file : files) {
       Path filePath = fileObjectPath(file);
       Path sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
@@ -118,7 +118,7 @@ public class ArtifactSaver {
     return artifactPath;
   }
 
-  private static Path fileObjectPath(Struc_ file) {
+  private static Path fileObjectPath(Tuple file) {
     return path(filePath(file).jValue());
   }
 }

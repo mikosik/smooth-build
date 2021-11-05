@@ -32,7 +32,6 @@ import static org.smoothbuild.db.object.type.TestingObjTypes.NOTHING;
 import static org.smoothbuild.db.object.type.TestingObjTypes.OBJECT_TYPE_DB;
 import static org.smoothbuild.db.object.type.TestingObjTypes.ORDER;
 import static org.smoothbuild.db.object.type.TestingObjTypes.PERSON;
-import static org.smoothbuild.db.object.type.TestingObjTypes.PERSON_TUPLE;
 import static org.smoothbuild.db.object.type.TestingObjTypes.REF;
 import static org.smoothbuild.db.object.type.TestingObjTypes.SELECT;
 import static org.smoothbuild.db.object.type.TestingObjTypes.STR;
@@ -59,7 +58,7 @@ import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.ConstructOType;
@@ -99,7 +98,7 @@ public class TypeOTest {
   public static Stream<Arguments> names() {
     TestingContext tc = new TestingContext();
     return Stream.of(
-        arguments(PERSON_TUPLE, "{String,String}"),
+        arguments(PERSON, "{String,String}"),
         arguments(tc.callOT(tc.intOT()), "CALL:Int"),
         arguments(tc.constOT(tc.intOT()), "CONST:Int"),
         arguments(tc.nativeMethodOT(), "NATIVE_METHOD"),
@@ -128,7 +127,7 @@ public class TypeOTest {
         arguments(LAMBDA, Lambda.class),
         arguments(INT, Int.class),
         arguments(NOTHING, null),
-        arguments(PERSON, Struc_.class),
+        arguments(PERSON, Tuple.class),
         arguments(STR, Str.class),
         arguments(VARIABLE, null),
 
@@ -160,7 +159,7 @@ public class TypeOTest {
 
   public static List<Arguments> array_element_cases() {
     return list(
-        arguments(ARRAY_PERSON_TUPLE, PERSON_TUPLE),
+        arguments(ARRAY_PERSON_TUPLE, PERSON),
         arguments(ARRAY2_PERSON_TUPLE, ARRAY_PERSON_TUPLE));
   }
 
@@ -260,7 +259,7 @@ public class TypeOTest {
     tester.addEqualityGroup(INT, INT);
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STR, STR);
-    tester.addEqualityGroup(PERSON_TUPLE, PERSON_TUPLE);
+    tester.addEqualityGroup(PERSON, PERSON);
     tester.addEqualityGroup(VARIABLE, VARIABLE);
 
     tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);

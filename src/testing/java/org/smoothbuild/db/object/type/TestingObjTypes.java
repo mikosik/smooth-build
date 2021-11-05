@@ -6,7 +6,6 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
-import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
@@ -25,10 +24,9 @@ public class TestingObjTypes {
   public static final TypeV INT = OBJECT_TYPE_DB.int_();
   public static final TypeV NOTHING = OBJECT_TYPE_DB.nothing();
   public static final TypeV STR = OBJECT_TYPE_DB.string();
-  public static final TupleTypeO PERSON_TUPLE = CONTEXT.perso_OT();
-  public static final StructTypeO PERSON = CONTEXT.personOT();
+  public static final TupleTypeO PERSON = CONTEXT.personOT();
   public static final TupleTypeO FILE = CONTEXT.fileOT();
-  public static final TupleTypeO EMPTY_TUPLE = CONTEXT.tupleEmptyOT();
+  public static final TupleTypeO TUPLE_EMPTY = CONTEXT.tupleEmptyOT();
   public static final TupleTypeO TUPLE_WITH_STRING = CONTEXT.tupleWithStrOT();
   public static final TypeO CALL = CONTEXT.callOT();
   public static final TypeO CONST = CONTEXT.constOT(STR);
@@ -44,7 +42,7 @@ public class TestingObjTypes {
   public static final ArrayTypeO ARRAY_INT = array(INT);
   public static final ArrayTypeO ARRAY_NOTHING = array(NOTHING);
   public static final ArrayTypeO ARRAY_STR = array(STR);
-  public static final ArrayTypeO ARRAY_PERSON_TUPLE = array(PERSON_TUPLE);
+  public static final ArrayTypeO ARRAY_PERSON_TUPLE = array(PERSON);
   public static final ArrayTypeO ARRAY_PERSON = array(PERSON);
   public static final ArrayTypeO ARRAY_VARIABLE = array(VARIABLE);
 
@@ -66,7 +64,7 @@ public class TestingObjTypes {
       INT,
       NOTHING,
       STR,
-      PERSON_TUPLE,
+      PERSON,
 
       ARRAY_BLOB,
       ARRAY_BOOL,

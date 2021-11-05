@@ -18,7 +18,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.exec.base.Output;
@@ -79,8 +79,8 @@ public class ComputationCache {
       }
 
       Array messages = (Array) messagesObject;
-      Iterable<Struc_> structs = messages.elements(Struc_.class);
-      for (Struc_ m : structs) {
+      Iterable<Tuple> tuples = messages.elements(Tuple.class);
+      for (Tuple m : tuples) {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {
           throw corruptedValueException(taskHash,

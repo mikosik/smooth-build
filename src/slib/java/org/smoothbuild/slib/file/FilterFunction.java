@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
@@ -25,7 +25,7 @@ public class FilterFunction {
     }
     ArrayBuilder builder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileType());
 
-    for (Struc_ file : files.elements(Struc_.class)) {
+    for (Tuple file : files.elements(Tuple.class)) {
       if (filter.test(path(filePath(file).jValue()))) {
         builder.add(file);
       }

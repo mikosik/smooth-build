@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
@@ -69,7 +69,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array(file), messageArrayEmtpy()));
     var arrayType = arrayOT(objectFactory().fileType());
 
-    assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Struc_.class))
+    assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Tuple.class))
         .containsExactly(file);
   }
 

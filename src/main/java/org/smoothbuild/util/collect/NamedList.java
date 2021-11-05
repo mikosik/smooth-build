@@ -29,6 +29,10 @@ public class NamedList<T> {
     return list;
   }
 
+  public ImmutableList<T> objects() {
+    return Lists.map(list, Named::object);
+  }
+
   public ImmutableMap<String, T> map() {
     return map;
   }

@@ -9,12 +9,11 @@ import org.smoothbuild.db.object.type.val.IntTypeO;
 import org.smoothbuild.db.object.type.val.LambdaTypeO;
 import org.smoothbuild.db.object.type.val.NothingTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
-import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.db.object.type.val.VariableO;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -56,8 +55,7 @@ public interface TypeFactoryO extends TypeFactory<TypeV> {
   public StringTypeO string();
 
   @Override
-  public StructTypeO struct(String name, NamedList<TypeV> fields);
-
-  @Override
   public VariableO variable(String name);
+
+  public TupleTypeO tuple(ImmutableList<TypeV> items);
 }

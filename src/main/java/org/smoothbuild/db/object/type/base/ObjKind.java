@@ -7,14 +7,12 @@ import org.smoothbuild.db.object.obj.expr.Construct;
 import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
-import org.smoothbuild.db.object.obj.expr.StructExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
 
 import com.google.common.collect.ImmutableMap;
@@ -26,7 +24,7 @@ public enum ObjKind {
   BOOL((byte) 2, Bool.class),
   LAMBDA((byte) 3, Lambda.class),
   INT((byte) 4, Int.class),
-  STRUCT((byte) 5, Struc_.class),
+  // unused 5
   NOTHING((byte) 6, null),
   TUPLE((byte) 7, Tuple.class),
   STRING((byte) 8, Str.class),
@@ -42,8 +40,7 @@ public enum ObjKind {
   VARIABLE((byte) 17, null),
   ANY((byte) 18, null),
   NATIVE_METHOD((byte) 19, null),
-  INVOKE((byte) 20, null),
-  STRUCT_EXPR((byte) 21, StructExpr.class);
+  INVOKE((byte) 20, null);
 
   private static final ImmutableMap<Byte, ObjKind> markerToObjKindMap =
       ImmutableMap.<Byte, ObjKind>builder()
@@ -52,7 +49,6 @@ public enum ObjKind {
           .put((byte) 2, BOOL)
           .put((byte) 3, LAMBDA)
           .put((byte) 4, INT)
-          .put((byte) 5, STRUCT)
           .put((byte) 6, NOTHING)
           .put((byte) 7, TUPLE)
           .put((byte) 8, STRING)
@@ -67,7 +63,6 @@ public enum ObjKind {
           .put((byte) 18, ANY)
           .put((byte) 19, NATIVE_METHOD)
           .put((byte) 20, INVOKE)
-          .put((byte) 21, STRUCT_EXPR)
           .build();
 
   private final byte marker;

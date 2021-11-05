@@ -7,8 +7,6 @@ import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -35,7 +33,6 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.TypeFactoryO;
@@ -46,7 +43,6 @@ import org.smoothbuild.db.object.type.expr.ConstructOType;
 import org.smoothbuild.db.object.type.expr.OrderOType;
 import org.smoothbuild.db.object.type.expr.RefOType;
 import org.smoothbuild.db.object.type.expr.SelectOType;
-import org.smoothbuild.db.object.type.expr.StructExprOType;
 import org.smoothbuild.db.object.type.val.AnyTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
@@ -56,7 +52,6 @@ import org.smoothbuild.db.object.type.val.LambdaTypeO;
 import org.smoothbuild.db.object.type.val.NativeMethodTypeO;
 import org.smoothbuild.db.object.type.val.NothingTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
-import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.db.object.type.val.VariableO;
 import org.smoothbuild.exec.compute.ComputationCache;
@@ -255,9 +250,8 @@ public class TestingContext {
 
   // Obj types
 
-  public StructTypeO animalOT() {
-    return typeFactoryO().struct(
-        "Animal", namedList(list(named("species", stringOT()), named("speed", intOT()))));
+  public TupleTypeO animalOT() {
+    return typeFactoryO().tuple(list(stringOT(), intOT()));
   }
 
   public AnyTypeO anyOT() {
@@ -300,17 +294,16 @@ public class TestingContext {
     return typeFactoryO().nothing();
   }
 
-  public TupleTypeO perso_OT() {
+  public TupleTypeO personOT() {
     return tupleOT(list(stringOT(), stringOT()));
-  }
-
-  public StructTypeO personOT() {
-    return structOT("Person",
-        namedList(list(named("firstName", stringOT()), named("lastName", stringOT()))));
   }
 
   public StringTypeO stringOT() {
     return typeFactoryO().string();
+  }
+
+  public TupleTypeO tupleOT() {
+    return objTypeDb().tuple(list(intOT()));
   }
 
   public TupleTypeO tupleOT(ImmutableList<TypeV> itemSpecs) {
@@ -323,18 +316,6 @@ public class TestingContext {
 
   public TupleTypeO tupleWithStrOT() {
     return tupleOT(list(stringOT()));
-  }
-
-  public StructTypeO structOT() {
-    return structOT(namedList(list(named("field", intOT()))));
-  }
-
-  public StructTypeO structOT(NamedList<TypeV> fields) {
-    return structOT("MyStruct", fields);
-  }
-
-  public StructTypeO structOT(String name, NamedList<TypeV> fields) {
-    return typeFactoryO().struct(name, fields);
   }
 
   public VariableO variableOT(String name) {
@@ -399,22 +380,18 @@ public class TestingContext {
     return objTypeDb().select(evaluationType);
   }
 
-  public StructExprOType structExprOT(StructTypeO structType) {
-    return objTypeDb().structExpr(structType);
-  }
-
   // Obj-s (values)
 
-  public Struc_ animal() {
+  public Tuple animal() {
     return animal("rabbit", 7);
   }
 
-  public Struc_ animal(String species, int speed) {
+  public Tuple animal(String species, int speed) {
     return animal(string(species), int_(speed));
   }
 
-  public Struc_ animal(Str species, Int speed) {
-    return struct(animalOT(), list(species, speed));
+  public Tuple animal(Str species, Int speed) {
+    return tuple(animalOT(), list(species, speed));
   }
 
   public Array array(Val... elements) {
@@ -441,15 +418,15 @@ public class TestingContext {
     return objectDb().bool(value);
   }
 
-  public Struc_ file(Path path) {
+  public Tuple file(Path path) {
     return file(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public Struc_ file(Path path, ByteString content) {
+  public Tuple file(Path path, ByteString content) {
     return file(path.toString(), blob(content));
   }
 
-  public Struc_ file(String path, Blob blob) {
+  public Tuple file(String path, Blob blob) {
     Str string = objectFactory().string(path);
     return objectFactory().file(string, blob);
   }
@@ -491,10 +468,6 @@ public class TestingContext {
     return objectDb().string(string);
   }
 
-  public Struc_ struct(StructTypeO spec, ImmutableList<Val> items) {
-    return objectDb().struct(spec, items);
-  }
-
   public Tuple tuple(List<? extends Val> items) {
     var spec = tupleOT(map(items, Val::type));
     return tuple(spec, items);
@@ -524,15 +497,15 @@ public class TestingContext {
     return array(objectFactory().messageType());
   }
 
-  public Struc_ errorMessage(String text) {
+  public Tuple errorMessage(String text) {
     return objectFactory().errorMessage(text);
   }
 
-  public Struc_ warningMessage(String text) {
+  public Tuple warningMessage(String text) {
     return objectFactory().warningMessage(text);
   }
 
-  public Struc_ infoMessage(String text) {
+  public Tuple infoMessage(String text) {
     return objectFactory().infoMessage(text);
   }
 

@@ -13,14 +13,14 @@ import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationTypeExceptio
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.SelectOType;
-import org.smoothbuild.db.object.type.val.StructTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeO;
 
 /**
  * This class is immutable.
  */
 public class Select extends Expr {
   private static final int DATA_SEQUENCE_SIZE = 2;
-  private static final int STRUCT_INDEX = 0;
+  private static final int TUPLE_INDEX = 0;
   private static final int INDEX_INDEX = 1;
 
   public Select(MerkleRoot merkleRoot, ObjDb objDb) {
@@ -34,30 +34,30 @@ public class Select extends Expr {
   }
 
   public SelectData data() {
-    Expr struct = readStruct();
-    if (struct.evaluationType() instanceof StructTypeO structevaluationType) {
+    Expr tuple = readTuple();
+    if (tuple.evaluationType() instanceof TupleTypeO tupleEvaluationType) {
       Int index = readIndex();
       int i = index.jValue().intValue();
-      int size = structevaluationType.fields().size();
+      int size = tupleEvaluationType.items().size();
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsException(hash(), type(), i, size);
       }
-      TypeV fieldType = structevaluationType.fields().getObject(i);
+      TypeV fieldType = tupleEvaluationType.items().get(i);
       if (!Objects.equals(evaluationType(), fieldType)) {
         throw new DecodeSelectWrongEvaluationTypeException(hash(), type(), fieldType);
       }
-      return new SelectData(struct, index);
+      return new SelectData(tuple, index);
     } else {
       throw new DecodeExprWrongEvaluationTypeOfComponentException(
-          hash(), type(), "struct", StructTypeO.class, struct.evaluationType());
+          hash(), type(), "tuple", TupleTypeO.class, tuple.evaluationType());
     }
   }
 
-  public static record SelectData(Expr struct, Int index) {}
+  public static record SelectData(Expr tuple, Int index) {}
 
-  private Expr readStruct() {
+  private Expr readTuple() {
     return readSequenceElementObj(
-        DATA_PATH, dataHash(), STRUCT_INDEX, DATA_SEQUENCE_SIZE, Expr.class);
+        DATA_PATH, dataHash(), TUPLE_INDEX, DATA_SEQUENCE_SIZE, Expr.class);
   }
 
   private Int readIndex() {

@@ -24,7 +24,7 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.testing.TestingContext;
 
@@ -50,7 +50,7 @@ public class MapTypeToJTypeTest extends TestingContext {
         arguments(INT, Int.class),
         arguments(NOTHING, Val.class),
         arguments(STRING, Str.class),
-        arguments(PERSON, Struc_.class),
+        arguments(PERSON, Tuple.class),
 
         arguments(a(A), Array.class),
         arguments(a(BLOB), Array.class),

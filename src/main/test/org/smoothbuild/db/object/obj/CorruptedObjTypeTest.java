@@ -19,14 +19,10 @@ import static org.smoothbuild.db.object.type.base.ObjKind.ORDER;
 import static org.smoothbuild.db.object.type.base.ObjKind.REF;
 import static org.smoothbuild.db.object.type.base.ObjKind.SELECT;
 import static org.smoothbuild.db.object.type.base.ObjKind.STRING;
-import static org.smoothbuild.db.object.type.base.ObjKind.STRUCT;
 import static org.smoothbuild.db.object.type.base.ObjKind.TUPLE;
 import static org.smoothbuild.db.object.type.base.ObjKind.VARIABLE;
-import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -42,7 +38,6 @@ import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.type.base.ObjKind;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.exc.DecodeStructTypeWrongNamesSizeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeNodeException;
@@ -730,248 +725,6 @@ public class CorruptedObjTypeTest extends TestingContext {
   }
 
   @Nested
-  class _struct {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save Struct type in HashedDb.
-       */
-      var name = "MyStruct";
-      var field1 = intOT();
-      var field2 = stringOT();
-      var name1 = "field1";
-      var name2 = "field2";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              hash(name),
-              hash(
-                  hash(field1),
-                  hash(field2)
-              ),
-              hash(
-                  hash(name1),
-                  hash(name2)
-              )
-          )
-      );
-      assertThat(hash).isEqualTo(
-          structOT(namedList(list(named(name1, field1), named(name2, field2)))).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_type_without_data(STRUCT);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_type_with_additional_data(STRUCT);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_sequence(STRUCT);
-    }
-
-    @Test
-    public void with_name_pointing_nowhere() throws Exception {
-      Hash nowhere = Hash.of(33);
-      var field1 = intOT();
-      var field2 = stringOT();
-      var name1 = "field1";
-      var name2 = "field2";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              nowhere,
-              hash(
-                  hash(field1),
-                  hash(field2)
-              ),
-              hash(
-                  hash(name1),
-                  hash(name2)
-              )
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, STRUCT, DATA_PATH + "[0]"));
-    }
-
-    @Test
-    public void with_illegal_name() throws Exception {
-      Hash nameHash = hash(illegalString());
-      var field1 = intOT();
-      var field2 = stringOT();
-      var name1 = "field1";
-      var name2 = "field2";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              hash(nameHash),
-              hash(
-                  hash(field1),
-                  hash(field2)
-              ),
-              hash(
-                  hash(name1),
-                  hash(name2)
-              )
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, STRUCT, DATA_PATH + "[0]"))
-          .withCause(DecodeStringException.class);
-    }
-
-//      TODO
-
-    @Test
-    public void with_elements_not_being_sequence_of_hashes() throws Exception {
-      Hash notSequence = hash("abc");
-      var name = "MyStruct";
-      var name1 = "field1";
-      var name2 = "field2";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              hash(name),
-              notSequence,
-              hash(
-                  hash(name1),
-                  hash(name2)
-              )
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, STRUCT, "data[1]"));
-    }
-
-    @Test
-    public void with_elements_being_sequence_of_non_type() throws Exception {
-      var name = "MyStruct";
-      Hash stringHash = hash(string("abc"));
-      var name1 = "field1";
-      var name2 = "field2";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              hash(name),
-              hash(
-                  stringHash
-              ),
-              hash(
-                  hash(name1),
-                  hash(name2)
-              )
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, STRUCT, "data[1][0]"))
-          .withCause(new DecodeTypeException(stringHash));
-    }
-
-    @Test
-    public void with_elements_being_sequence_of_expr_type() throws Exception {
-      var name = "MyStruct";
-      var name1 = "field1";
-      var name2 = "field2";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              hash(name),
-              hash(
-                  hash(constOT())
-              ),
-              hash(
-                  hash(name1),
-                  hash(name2)
-              )
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new UnexpectedTypeNodeException(
-              hash, STRUCT, "data[1]", 0, TypeV.class, ConstOType.class));
-    }
-
-    @Test
-    public void with_corrupted_element_type() throws Exception {
-      var name = "MyStruct";
-      var field1 = intOT();
-      var name1 = "field1";
-      var name2 = "field2";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              hash(name),
-              hash(
-                  hash(field1),
-                  corruptedArrayTypeHash()
-              ),
-              hash(
-                  hash(name1),
-                  hash(name2)
-              )
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, STRUCT, "data[1][1]"))
-          .withCause(corruptedArrayTypeException());
-    }
-
-    @Test
-    public void with_names_size_different_than_items_size() throws Exception {
-      var name = "MyStruct";
-      var field1 = intOT();
-      var field2 = stringOT();
-      var name1 = "field1";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              hash(name),
-              hash(
-                  hash(field1),
-                  hash(field2)
-              ),
-              hash(
-                  hash(name1)
-              )
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeStructTypeWrongNamesSizeException(hash, 2, 1));
-    }
-
-    @Test
-    public void with_names_containing_illegal_string() throws Exception {
-      var name = "MyStruct";
-      var field1 = intOT();
-      var field2 = stringOT();
-      Hash illegalString = hash(illegalString());
-      var name1 = "field1";
-      Hash hash = hash(
-          hash(STRUCT.marker()),
-          hash(
-              hash(name),
-              hash(
-                  hash(field1),
-                  hash(field2)
-              ),
-              hash(
-                  hash(name1),
-                  illegalString
-              )
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, STRUCT, "data[2][1]"))
-          .withCause(DecodeStringException.class);
-    }
-  }
-
-  @Nested
   class _tuple {
     @Test
     public void learning_test() throws Exception {
@@ -987,7 +740,7 @@ public class CorruptedObjTypeTest extends TestingContext {
           )
       );
       assertThat(hash)
-          .isEqualTo(perso_OT().hash());
+          .isEqualTo(personOT().hash());
     }
 
     @Test

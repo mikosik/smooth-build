@@ -30,7 +30,6 @@ import org.smoothbuild.db.object.obj.expr.Invoke;
 import org.smoothbuild.db.object.obj.expr.Order;
 import org.smoothbuild.db.object.obj.expr.Ref;
 import org.smoothbuild.db.object.obj.expr.Select;
-import org.smoothbuild.db.object.obj.expr.StructExpr;
 import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.ArrayBuilder;
 import org.smoothbuild.db.object.obj.val.Blob;
@@ -40,7 +39,6 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Struc_;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.base.TypeO;
@@ -48,9 +46,7 @@ import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.SelectOType;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.LambdaTypeO;
-import org.smoothbuild.db.object.type.val.StructTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
-import org.smoothbuild.util.collect.Named;
 
 import com.google.common.collect.ImmutableList;
 
@@ -101,22 +97,6 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
   }
 
-  public Struc_ struct(StructTypeO structType, ImmutableList<Val> items) {
-    var fieldTypes = map(structType.fields().list(), Named::object);
-    allMatchOtherwise(fieldTypes, items, (f, i) -> Objects.equals(f, i.type()),
-        (i, j) -> {
-          throw new IllegalArgumentException(
-              "structType specifies " + i + " items but provided " + j + ".");
-        },
-        (i) -> {
-          throw new IllegalArgumentException("structType specifies field at index " + i
-              + " with type " + fieldTypes.get(i).name() + " but provided item has type "
-              + items.get(i).type().name() + " at that index.");
-        }
-    );
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStruct(structType, items));
-  }
-
   public Tuple tuple(TupleTypeO tupleType, Iterable<? extends Obj> items) {
     List<Obj> itemList = ImmutableList.copyOf(items);
     var types = tupleType.items();
@@ -164,12 +144,8 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType, value));
   }
 
-  public Select select(Expr struct, Int index) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(struct, index));
-  }
-
-  public StructExpr structExpr(StructTypeO evaluationType, ImmutableList<? extends Expr> items) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newStructExpr(evaluationType, items));
+  public Select select(Expr tuple, Int index) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(tuple, index));
   }
 
   // generic getter
@@ -244,12 +220,6 @@ public class ObjDb {
     var data = writeStringData(string);
     var root = newRoot(objTypeDb.string(), data);
     return objTypeDb.string().newObj(root, this);
-  }
-
-  private Struc_ newStruct(StructTypeO type, ImmutableList<Val> items) throws HashedDbException {
-    var data = writeStructData(items);
-    var root = newRoot(type, data);
-    return type.newObj(root, this);
   }
 
   private Tuple newTuple(TupleTypeO type, List<? extends Obj> objects) throws HashedDbException {
@@ -337,44 +307,23 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private Select newSelect(Expr struct, Int index) throws HashedDbException {
-    var type = selectType(struct, index);
-    var data = writeSelectData(struct, index);
+  private Select newSelect(Expr tuple, Int index) throws HashedDbException {
+    var type = selectType(tuple, index);
+    var data = writeSelectData(tuple, index);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
   private SelectOType selectType(Expr expr, Int index) {
-    if (expr.type().evaluationType() instanceof StructTypeO struct) {
-      var fields = struct.fields();
+    if (expr.type().evaluationType() instanceof TupleTypeO tuple) {
       int intIndex = index.jValue().intValue();
-      checkElementIndex(intIndex, fields.size());
-      var field = fields.getObject(intIndex);
-      return objTypeDb.select(field);
+      ImmutableList<TypeV> items = tuple.items();
+      checkElementIndex(intIndex, items.size());
+      var itemType = items.get(intIndex);
+      return objTypeDb.select(itemType);
     } else {
       throw new IllegalArgumentException();
     }
-  }
-
-  private StructExpr newStructExpr(StructTypeO evaluationType, List<? extends Expr> items)
-      throws HashedDbException {
-    ImmutableList<Named<TypeV>> types = evaluationType.fields().list();
-    allMatchOtherwise(types, items,
-        (f, v) -> f.object().equals(v.evaluationType()),
-        (i, j) -> {
-          throw new IllegalArgumentException(
-              "StructType specifies " + i + " items but provided " + j + ".");
-        },
-        (i) -> {
-          throw new IllegalArgumentException("StructType specifies item at index " + i
-              + " with type " + types.get(i).object().name() + " but provided item has type "
-              + items.get(i).type().name() + " at that index.");
-        });
-
-    var type = objTypeDb.structExpr(evaluationType);
-    var data = writeStructExprData(items);
-    var root = newRoot(type, data);
-    return type.newObj(root, this);
   }
 
   private Ref newRef(TypeV evaluationType, BigInteger index) throws HashedDbException {
@@ -420,12 +369,8 @@ public class ObjDb {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeSelectData(Expr struct, Int index) throws HashedDbException {
-    return hashedDb.writeSequence(struct.hash(), index.hash());
-  }
-
-  private Hash writeStructExprData(List<? extends Expr> items) throws HashedDbException {
-    return writeSequence(items);
+  private Hash writeSelectData(Expr tuple, Int index) throws HashedDbException {
+    return hashedDb.writeSequence(tuple.hash(), index.hash());
   }
 
   // methods for writing data of Val-s
@@ -448,10 +393,6 @@ public class ObjDb {
 
   private Hash writeStringData(String string) throws HashedDbException {
     return hashedDb.writeString(string);
-  }
-
-  private Hash writeStructData(List<? extends Val> items) throws HashedDbException {
-    return writeSequence(items);
   }
 
   private Hash writeTupleData(List<? extends Obj> items) throws HashedDbException {

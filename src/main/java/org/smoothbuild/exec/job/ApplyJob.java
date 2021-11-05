@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Struc_;
+import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.exec.base.LambdaStruct;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
@@ -43,7 +43,7 @@ public class ApplyJob extends AbstractJob {
   }
 
   private void onLambdaCompleted(Val val, Worker worker, Consumer<Val> result) {
-    String name = LambdaStruct.name(((Struc_) val)).jValue();
+    String name = LambdaStruct.name(((Tuple) val)).jValue();
     jobCreator.evaluateLambdaEagerJob(scope, variables, type(), name, arguments, location())
         .schedule(worker)
         .addConsumer(result);

@@ -2,8 +2,6 @@ package org.smoothbuild.db.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
@@ -21,8 +19,6 @@ public class TypeOStableHashTest extends TestingContext {
     assertHash(nothingOT(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(tupleOT(list(blobOT())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
     assertHash(stringOT(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
-    assertHash(structOT("MyStruct", namedList(list(named("field", intOT())))),
-        "8a4a8dba1b7ae414b16fb6a75889d93bd92cab6f");
     assertHash(variableOT("A"), "99f61661c131c5db3723bdaa5ad26229d06dc6ce");
 
     assertHash(arrayOT(anyOT()), "2dfdcb5ccf6df3057cb84565af5b67f64c685e9c");
