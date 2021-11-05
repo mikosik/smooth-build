@@ -37,12 +37,12 @@ import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.TypeFactoryO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.expr.CallOType;
-import org.smoothbuild.db.object.type.expr.ConstOType;
-import org.smoothbuild.db.object.type.expr.ConstructOType;
-import org.smoothbuild.db.object.type.expr.OrderOType;
-import org.smoothbuild.db.object.type.expr.RefOType;
-import org.smoothbuild.db.object.type.expr.SelectOType;
+import org.smoothbuild.db.object.type.expr.CallTypeO;
+import org.smoothbuild.db.object.type.expr.ConstTypeO;
+import org.smoothbuild.db.object.type.expr.ConstructTypeO;
+import org.smoothbuild.db.object.type.expr.OrderTypeO;
+import org.smoothbuild.db.object.type.expr.RefTypeO;
+import org.smoothbuild.db.object.type.expr.SelectTypeO;
 import org.smoothbuild.db.object.type.val.AnyTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
@@ -332,51 +332,51 @@ public class TestingContext {
 
   // Expr types
 
-  public CallOType callOT() {
+  public CallTypeO callOT() {
     return callOT(intOT());
   }
 
-  public CallOType callOT(TypeV evaluationType) {
+  public CallTypeO callOT(TypeV evaluationType) {
     return objTypeDb().call(evaluationType);
   }
 
-  public ConstOType constOT() {
+  public ConstTypeO constOT() {
     return constOT(intOT());
   }
 
-  public ConstOType constOT(TypeV evaluationType) {
+  public ConstTypeO constOT(TypeV evaluationType) {
     return objTypeDb().const_(evaluationType);
   }
 
-  public ConstructOType constructOT() {
+  public ConstructTypeO constructOT() {
     return constructOT(list(intOT(), stringOT()));
   }
 
-  public ConstructOType constructOT(ImmutableList<TypeV> itemSpecs) {
+  public ConstructTypeO constructOT(ImmutableList<TypeV> itemSpecs) {
     return objTypeDb().construct(tupleOT(itemSpecs));
   }
 
-  public OrderOType orderOT() {
+  public OrderTypeO orderOT() {
     return orderOT(intOT());
   }
 
-  public OrderOType orderOT(TypeV elementSpec) {
+  public OrderTypeO orderOT(TypeV elementSpec) {
     return objTypeDb().order(elementSpec);
   }
 
-  public RefOType refOT() {
+  public RefTypeO refOT() {
     return refOT(intOT());
   }
 
-  public RefOType refOT(TypeV evaluationType) {
+  public RefTypeO refOT(TypeV evaluationType) {
     return objTypeDb().ref(evaluationType);
   }
 
-  public SelectOType selectOT() {
+  public SelectTypeO selectOT() {
     return selectOT(intOT());
   }
 
-  public SelectOType selectOT(TypeV evaluationType) {
+  public SelectTypeO selectOT(TypeV evaluationType) {
     return objTypeDb().select(evaluationType);
   }
 

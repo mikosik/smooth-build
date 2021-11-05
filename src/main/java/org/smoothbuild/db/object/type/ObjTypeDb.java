@@ -43,13 +43,13 @@ import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
 import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
-import org.smoothbuild.db.object.type.expr.CallOType;
-import org.smoothbuild.db.object.type.expr.ConstOType;
-import org.smoothbuild.db.object.type.expr.ConstructOType;
-import org.smoothbuild.db.object.type.expr.InvokeOType;
-import org.smoothbuild.db.object.type.expr.OrderOType;
-import org.smoothbuild.db.object.type.expr.RefOType;
-import org.smoothbuild.db.object.type.expr.SelectOType;
+import org.smoothbuild.db.object.type.expr.CallTypeO;
+import org.smoothbuild.db.object.type.expr.ConstTypeO;
+import org.smoothbuild.db.object.type.expr.ConstructTypeO;
+import org.smoothbuild.db.object.type.expr.InvokeTypeO;
+import org.smoothbuild.db.object.type.expr.OrderTypeO;
+import org.smoothbuild.db.object.type.expr.RefTypeO;
+import org.smoothbuild.db.object.type.expr.SelectTypeO;
 import org.smoothbuild.db.object.type.val.AnyTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
@@ -179,31 +179,31 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
 
   // methods for getting Expr-s types
 
-  public OrderOType order(TypeV elementType) {
+  public OrderTypeO order(TypeV elementType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elementType));
   }
 
-  public CallOType call(TypeV evaluationType) {
+  public CallTypeO call(TypeV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evaluationType));
   }
 
-  public ConstOType const_(TypeV evaluationType) {
+  public ConstTypeO const_(TypeV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConst(evaluationType));
   }
 
-  public InvokeOType invoke(TypeV evaluationType) {
+  public InvokeTypeO invoke(TypeV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evaluationType));
   }
 
-  public ConstructOType construct(TupleTypeO evaluationType) {
+  public ConstructTypeO construct(TupleTypeO evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(evaluationType));
   }
 
-  public RefOType ref(TypeV evaluationType) {
+  public RefTypeO ref(TypeV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType));
   }
 
-  public SelectOType select(TypeV evaluationType) {
+  public SelectTypeO select(TypeV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evaluationType));
   }
 
@@ -386,68 +386,68 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
 
   // methods for creating Expr types
 
-  private CallOType newCall(TypeV evaluationType) throws HashedDbException {
+  private CallTypeO newCall(TypeV evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(CALL, evaluationType);
     return newCall(rootHash, evaluationType);
   }
 
-  private CallOType newCall(Hash rootHash, TypeV evaluationType) {
-    return cache(new CallOType(rootHash, evaluationType));
+  private CallTypeO newCall(Hash rootHash, TypeV evaluationType) {
+    return cache(new CallTypeO(rootHash, evaluationType));
   }
 
-  private ConstOType newConst(TypeV evaluationType) throws HashedDbException {
+  private ConstTypeO newConst(TypeV evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(CONST, evaluationType);
     return newConst(rootHash, evaluationType);
   }
 
-  private ConstOType newConst(Hash rootHash, TypeV evaluationType) {
-    return cache(new ConstOType(rootHash, evaluationType));
+  private ConstTypeO newConst(Hash rootHash, TypeV evaluationType) {
+    return cache(new ConstTypeO(rootHash, evaluationType));
   }
 
-  private ConstructOType newConstruct(TupleTypeO evaluationType) throws HashedDbException {
+  private ConstructTypeO newConstruct(TupleTypeO evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(CONSTRUCT, evaluationType);
     return newConstruct(rootHash, evaluationType);
   }
 
-  private ConstructOType newConstruct(Hash rootHash, TupleTypeO evaluationType) {
-    return cache(new ConstructOType(rootHash, evaluationType));
+  private ConstructTypeO newConstruct(Hash rootHash, TupleTypeO evaluationType) {
+    return cache(new ConstructTypeO(rootHash, evaluationType));
   }
 
-  private InvokeOType newInvoke(TypeV evaluationType) throws HashedDbException {
+  private InvokeTypeO newInvoke(TypeV evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(CONST, evaluationType);
     return newInvoke(rootHash, evaluationType);
   }
 
-  private InvokeOType newInvoke(Hash rootHash, TypeV evaluationType) {
-    return cache(new InvokeOType(rootHash, evaluationType));
+  private InvokeTypeO newInvoke(Hash rootHash, TypeV evaluationType) {
+    return cache(new InvokeTypeO(rootHash, evaluationType));
   }
 
-  private OrderOType newOrder(TypeV elementType) throws HashedDbException {
+  private OrderTypeO newOrder(TypeV elementType) throws HashedDbException {
     var evaluationType = array(elementType);
     var rootHash = writeExprRoot(ORDER, evaluationType);
     return newOrder(rootHash, evaluationType);
   }
 
-  private OrderOType newOrder(Hash rootHash, ArrayTypeO evaluationType) {
-    return cache(new OrderOType(rootHash, evaluationType));
+  private OrderTypeO newOrder(Hash rootHash, ArrayTypeO evaluationType) {
+    return cache(new OrderTypeO(rootHash, evaluationType));
   }
 
-  private RefOType newRef(TypeV evaluationType) throws HashedDbException {
+  private RefTypeO newRef(TypeV evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(REF, evaluationType);
     return newRef(rootHash, evaluationType);
   }
 
-  private RefOType newRef(Hash rootHash, TypeV evaluationType) {
-    return cache(new RefOType(rootHash, evaluationType));
+  private RefTypeO newRef(Hash rootHash, TypeV evaluationType) {
+    return cache(new RefTypeO(rootHash, evaluationType));
   }
 
-  private SelectOType newSelect(TypeV evaluationType) throws HashedDbException {
+  private SelectTypeO newSelect(TypeV evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(SELECT, evaluationType);
     return newSelect(rootHash, evaluationType);
   }
 
-  private SelectOType newSelect(Hash rootHash, TypeV evaluationType) {
-    return cache(new SelectOType(rootHash, evaluationType));
+  private SelectTypeO newSelect(Hash rootHash, TypeV evaluationType) {
+    return cache(new SelectTypeO(rootHash, evaluationType));
   }
 
   private <T extends TypeO> T cache(T type) {

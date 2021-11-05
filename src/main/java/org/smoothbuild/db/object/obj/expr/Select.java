@@ -12,7 +12,7 @@ import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.expr.SelectOType;
+import org.smoothbuild.db.object.type.expr.SelectTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 
 /**
@@ -25,12 +25,12 @@ public class Select extends Expr {
 
   public Select(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
-    checkArgument(merkleRoot.type() instanceof SelectOType);
+    checkArgument(merkleRoot.type() instanceof SelectTypeO);
   }
 
   @Override
-  public SelectOType type() {
-    return (SelectOType) super.type();
+  public SelectTypeO type() {
+    return (SelectTypeO) super.type();
   }
 
   public SelectData data() {

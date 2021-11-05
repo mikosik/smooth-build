@@ -10,7 +10,7 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
-import org.smoothbuild.db.object.type.expr.ConstructOType;
+import org.smoothbuild.db.object.type.expr.ConstructTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 
 import com.google.common.collect.ImmutableList;
@@ -21,12 +21,12 @@ import com.google.common.collect.ImmutableList;
 public class Construct extends Expr {
   public Construct(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
-    checkArgument(merkleRoot.type() instanceof ConstructOType);
+    checkArgument(merkleRoot.type() instanceof ConstructTypeO);
   }
 
   @Override
-  public ConstructOType type() {
-    return (ConstructOType) super.type();
+  public ConstructTypeO type() {
+    return (ConstructTypeO) super.type();
   }
 
   @Override

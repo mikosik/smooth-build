@@ -45,7 +45,7 @@ import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
 import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
-import org.smoothbuild.db.object.type.expr.ConstOType;
+import org.smoothbuild.db.object.type.expr.ConstTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.IntTypeO;
 import org.smoothbuild.db.object.type.val.LambdaTypeO;
@@ -185,7 +185,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, ARRAY, DATA_PATH, TypeV.class, ConstOType.class));
+              hash, ARRAY, DATA_PATH, TypeV.class, ConstTypeO.class));
     }
   }
 
@@ -444,7 +444,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertCall(() -> objTypeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, LAMBDA, LAMBDA_RESULT_PATH, TypeV.class, ConstOType.class));
+              typeHash, LAMBDA, LAMBDA_RESULT_PATH, TypeV.class, ConstTypeO.class));
     }
 
     @Test
@@ -502,7 +502,7 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertCall(() -> objTypeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, LAMBDA, LAMBDA_PARAMS_PATH, TupleTypeO.class, ConstOType.class));
+              typeHash, LAMBDA, LAMBDA_PARAMS_PATH, TupleTypeO.class, ConstTypeO.class));
     }
 
     @Test
@@ -624,7 +624,7 @@ public class CorruptedObjTypeTest extends TestingContext {
     );
     assertThatGet(hash)
         .throwsException(new UnexpectedTypeNodeException(
-            hash, objKind, DATA_PATH, expected, ConstOType.class));
+            hash, objKind, DATA_PATH, expected, ConstTypeO.class));
   }
 
   private ThrownExceptionSubject assertThatGet(Hash hash) {
@@ -796,7 +796,7 @@ public class CorruptedObjTypeTest extends TestingContext {
           );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, TUPLE, "data", 0, TypeV.class, ConstOType.class));
+              hash, TUPLE, "data", 0, TypeV.class, ConstTypeO.class));
     }
 
     @Test

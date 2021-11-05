@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
-import org.smoothbuild.db.object.type.expr.CallOType;
+import org.smoothbuild.db.object.type.expr.CallTypeO;
 import org.smoothbuild.db.object.type.val.LambdaTypeO;
 
 /**
@@ -21,12 +21,12 @@ public class Call extends Expr {
 
   public Call(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
-    checkArgument(merkleRoot.type() instanceof CallOType);
+    checkArgument(merkleRoot.type() instanceof CallTypeO);
   }
 
   @Override
-  public CallOType type() {
-    return (CallOType) super.type();
+  public CallTypeO type() {
+    return (CallTypeO) super.type();
   }
 
   public CallData data() {

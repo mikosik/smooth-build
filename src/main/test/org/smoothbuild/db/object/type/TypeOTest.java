@@ -61,7 +61,7 @@ import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.expr.ConstructOType;
+import org.smoothbuild.db.object.type.expr.ConstructTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
@@ -204,7 +204,7 @@ public class TypeOTest {
 
     @ParameterizedTest
     @MethodSource("construct_cases")
-    public void construct(ConstructOType type, TupleTypeO expected) {
+    public void construct(ConstructTypeO type, TupleTypeO expected) {
       assertThat(type.evaluationType())
           .isEqualTo(expected);
     }
@@ -245,7 +245,7 @@ public class TypeOTest {
     return OBJECT_TYPE_DB.tuple(items);
   }
 
-  private static ConstructOType constructType(TypeV... items) {
+  private static ConstructTypeO constructType(TypeV... items) {
     return OBJECT_TYPE_DB.construct(tupleType(list(items)));
   }
 

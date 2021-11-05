@@ -1,23 +1,26 @@
 package org.smoothbuild.db.object.type.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.db.object.type.base.ObjKind.REF;
+import static org.smoothbuild.db.object.type.base.ObjKind.CONST;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.expr.Ref;
+import org.smoothbuild.db.object.obj.expr.Const;
 import org.smoothbuild.db.object.type.base.TypeE;
 import org.smoothbuild.db.object.type.base.TypeV;
 
-public class RefOType extends TypeE {
-  public RefOType(Hash hash, TypeV evaluationType) {
-    super("REF", hash, REF, evaluationType);
+/**
+ * This class is immutable.
+ */
+public class ConstTypeO extends TypeE {
+  public ConstTypeO(Hash hash, TypeV evaluationType) {
+    super("CONST", hash, CONST, evaluationType);
   }
 
   @Override
-  public Ref newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+  public Const newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Ref(merkleRoot, objDb);
+    return new Const(merkleRoot, objDb);
   }
 }

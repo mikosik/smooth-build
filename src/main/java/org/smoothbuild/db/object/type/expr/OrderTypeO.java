@@ -13,8 +13,8 @@ import org.smoothbuild.db.object.type.val.ArrayTypeO;
 /**
  * This class is immutable.
  */
-public class OrderOType extends TypeE {
-  public OrderOType(Hash hash, ArrayTypeO evaluationType) {
+public class OrderTypeO extends TypeE {
+  public OrderTypeO(Hash hash, ArrayTypeO evaluationType) {
     super("ORDER", hash, ORDER, evaluationType);
   }
 

@@ -62,10 +62,10 @@ import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
-import org.smoothbuild.db.object.type.expr.CallOType;
-import org.smoothbuild.db.object.type.expr.ConstOType;
-import org.smoothbuild.db.object.type.expr.ConstructOType;
-import org.smoothbuild.db.object.type.expr.OrderOType;
+import org.smoothbuild.db.object.type.expr.CallTypeO;
+import org.smoothbuild.db.object.type.expr.ConstTypeO;
+import org.smoothbuild.db.object.type.expr.ConstructTypeO;
+import org.smoothbuild.db.object.type.expr.OrderTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.LambdaTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
@@ -486,7 +486,7 @@ public class CorruptedObjTest extends TestingContext {
     public void function_component_evaluation_type_is_not_lambda() throws Exception {
       Const function = intExpr(3);
       Construct arguments = construct(list(stringExpr(), intExpr()));
-      CallOType type = callOT(stringOT());
+      CallTypeO type = callOT(stringOT());
       Hash objHash =
           hash(
               hash(type),
@@ -524,7 +524,7 @@ public class CorruptedObjTest extends TestingContext {
       var lambdaType = lambdaOT(intOT(), list(stringOT(), intOT()));
       var lambda = lambda(lambdaType, intExpr());
       Const function = const_(lambda);
-      CallOType type = callOT();
+      CallTypeO type = callOT();
       Hash objHash =
           hash(
               hash(type),
@@ -543,7 +543,7 @@ public class CorruptedObjTest extends TestingContext {
         throws Exception {
       Const function = const_(lambda(lambdaOT(intOT(), list(stringOT())), intExpr()));
       Construct arguments = construct(list(stringExpr(), intExpr()));
-      CallOType type = callOT(stringOT());
+      CallTypeO type = callOT(stringOT());
       Hash objHash =
           hash(
               hash(type),
@@ -563,7 +563,7 @@ public class CorruptedObjTest extends TestingContext {
       LambdaTypeO lambdaType = lambdaOT(intOT(), list(stringOT(), boolOT()));
       Const function = const_(lambda(lambdaType, intExpr()));
       Construct arguments = construct(list(stringExpr(), intExpr()));
-      CallOType spec = callOT(intOT());
+      CallTypeO spec = callOT(intOT());
       Hash objHash =
           hash(
               hash(spec),
@@ -639,7 +639,7 @@ public class CorruptedObjTest extends TestingContext {
     public void evaluation_type_is_different_than_type_of_wrapped_value()
         throws Exception {
       Val val = int_(123);
-      ConstOType type = constOT(stringOT());
+      ConstTypeO type = constOT(stringOT());
       Hash objHash =
           hash(
               hash(type),
@@ -823,7 +823,7 @@ public class CorruptedObjTest extends TestingContext {
         throws Exception {
       Const expr1 = intExpr();
       Const expr2 = stringExpr();
-      OrderOType type = orderOT(intOT());
+      OrderTypeO type = orderOT(intOT());
       Hash objHash =
           hash(
               hash(type),
@@ -940,7 +940,7 @@ public class CorruptedObjTest extends TestingContext {
     public void evaluation_type_items_size_is_different_than_actual_items_size()
         throws Exception {
       Const expr1 = intExpr(1);
-      ConstructOType type = constructOT(list(intOT(), stringOT()));
+      ConstructTypeO type = constructOT(list(intOT(), stringOT()));
       Hash objHash =
           hash(
               hash(type),
@@ -957,7 +957,7 @@ public class CorruptedObjTest extends TestingContext {
         throws Exception {
       Const expr1 = intExpr(1);
       Const expr2 = stringExpr("abc");
-      ConstructOType type = constructOT(list(intOT(), boolOT()));
+      ConstructTypeO type = constructOT(list(intOT(), boolOT()));
       Hash objHash =
           hash(
               hash(type),

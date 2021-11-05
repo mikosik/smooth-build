@@ -13,8 +13,8 @@ import org.smoothbuild.db.object.type.val.TupleTypeO;
 /**
  * This class is immutable.
  */
-public class ConstructOType extends TypeE {
-  public ConstructOType(Hash hash, TupleTypeO evaluationType) {
+public class ConstructTypeO extends TypeE {
+  public ConstructTypeO(Hash hash, TupleTypeO evaluationType) {
     super("CONSTRUCT", hash, CONSTRUCT, evaluationType);
   }
 

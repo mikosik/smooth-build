@@ -43,7 +43,7 @@ import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.ObjTypeDb;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.expr.SelectOType;
+import org.smoothbuild.db.object.type.expr.SelectTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.LambdaTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
@@ -314,7 +314,7 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private SelectOType selectType(Expr expr, Int index) {
+  private SelectTypeO selectType(Expr expr, Int index) {
     if (expr.type().evaluationType() instanceof TupleTypeO tuple) {
       int intIndex = index.jValue().intValue();
       ImmutableList<TypeV> items = tuple.items();
