@@ -231,7 +231,7 @@ public class ObjDb {
   // methods for creating Expr-s
 
   private Call newCall(Expr function, Construct arguments) throws HashedDbException {
-    var lambdaType = functionevaluationType(function);
+    var lambdaType = functionEvaluationType(function);
     verifyArguments(lambdaType, arguments);
     var type = objTypeDb.call(lambdaType.result());
     var data = writeCallData(function, arguments);
@@ -247,7 +247,7 @@ public class ObjDb {
     }
   }
 
-  private LambdaTypeO functionevaluationType(Expr function) {
+  private LambdaTypeO functionEvaluationType(Expr function) {
     if (function.evaluationType() instanceof LambdaTypeO lambdaType) {
       return lambdaType;
     } else {
