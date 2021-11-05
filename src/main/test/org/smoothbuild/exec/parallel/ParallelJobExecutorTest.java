@@ -11,7 +11,6 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.db.object.type.TestingObjTypes.STR;
 import static org.smoothbuild.exec.compute.ResultSource.DISK;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
@@ -36,6 +35,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.type.TestingTypesO;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
@@ -319,7 +319,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     protected TestAlgorithm(Hash hash, boolean isPure) {
-      super(STR, isPure);
+      super(TestingTypesO.STRING, isPure);
       this.hash = hash;
     }
 
@@ -330,7 +330,7 @@ public class ParallelJobExecutorTest extends TestingContext {
 
     @Override
     public TypeV outputType() {
-      return STR;
+      return TestingTypesO.STRING;
     }
   }
 }

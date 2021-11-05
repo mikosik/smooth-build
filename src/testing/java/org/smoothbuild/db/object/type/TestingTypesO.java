@@ -5,13 +5,14 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
+import org.smoothbuild.db.object.type.expr.ConstructTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestingObjTypes {
+public class TestingTypesO {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final ObjDb OBJECT_DB = CONTEXT.objectDb();
   public static final ObjTypeDb OBJECT_TYPE_DB = CONTEXT.objTypeDb();
@@ -23,15 +24,16 @@ public class TestingObjTypes {
   public static final TypeV VARIABLE = OBJECT_TYPE_DB.variable("A");
   public static final TypeV INT = OBJECT_TYPE_DB.int_();
   public static final TypeV NOTHING = OBJECT_TYPE_DB.nothing();
-  public static final TypeV STR = OBJECT_TYPE_DB.string();
+  public static final TypeV STRING = OBJECT_TYPE_DB.string();
   public static final TupleTypeO PERSON = CONTEXT.personOT();
   public static final TupleTypeO FILE = CONTEXT.fileOT();
   public static final TupleTypeO TUPLE_EMPTY = CONTEXT.tupleEmptyOT();
   public static final TupleTypeO TUPLE_WITH_STRING = CONTEXT.tupleWithStrOT();
   public static final TypeO CALL = CONTEXT.callOT();
-  public static final TypeO CONST = CONTEXT.constOT(STR);
+  public static final TypeO CONST = CONTEXT.constOT(STRING);
   public static final TypeO ORDER = CONTEXT.orderOT();
-  public static final TypeO CONSTRUCT = CONTEXT.constructOT(list(INT, STR));
+  public static final TypeO CONSTRUCT = CONTEXT.constructOT(list(INT, STRING));
+  public static final TypeO INVOKE = CONTEXT.invokeOT(INT);
   public static final TypeO SELECT = CONTEXT.selectOT(INT);
   public static final TypeO REF = CONTEXT.refOT(INT);
 
@@ -41,7 +43,7 @@ public class TestingObjTypes {
   public static final ArrayTypeO ARRAY_LAMBDA = array(LAMBDA);
   public static final ArrayTypeO ARRAY_INT = array(INT);
   public static final ArrayTypeO ARRAY_NOTHING = array(NOTHING);
-  public static final ArrayTypeO ARRAY_STR = array(STR);
+  public static final ArrayTypeO ARRAY_STR = array(STRING);
   public static final ArrayTypeO ARRAY_PERSON_TUPLE = array(PERSON);
   public static final ArrayTypeO ARRAY_PERSON = array(PERSON);
   public static final ArrayTypeO ARRAY_VARIABLE = array(VARIABLE);
@@ -57,13 +59,13 @@ public class TestingObjTypes {
   public static final ArrayTypeO ARRAY2_PERSON = array(ARRAY_PERSON);
   public static final ArrayTypeO ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
-  public static final ImmutableList<TypeO> VAL_TYPES_TO_TEST = list(
+  public static final ImmutableList<TypeO> TYPESV_TO_TEST = list(
       BLOB,
       BOOL,
       LAMBDA,
       INT,
       NOTHING,
-      STR,
+      STRING,
       PERSON,
 
       ARRAY_BLOB,
@@ -85,5 +87,13 @@ public class TestingObjTypes {
 
   private static ArrayTypeO array(TypeV elemType) {
     return OBJECT_TYPE_DB.array(elemType);
+  }
+
+  public static TupleTypeO tuple(ImmutableList<TypeV> itemTypes) {
+    return OBJECT_TYPE_DB.tuple(itemTypes);
+  }
+
+  public static ConstructTypeO construct(TupleTypeO tupleType) {
+    return OBJECT_TYPE_DB.construct(tupleType);
   }
 }

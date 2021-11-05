@@ -1,45 +1,50 @@
 package org.smoothbuild.db.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ANY;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_ANY;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_BLOB;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_BOOL;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_INT;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_LAMBDA;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_NOTHING;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_PERSON_TUPLE;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_STR;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY2_VARIABLE;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_ANY;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_BLOB;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_BOOL;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_INT;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_LAMBDA;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_NOTHING;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_PERSON_TUPLE;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_STR;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ARRAY_VARIABLE;
-import static org.smoothbuild.db.object.type.TestingObjTypes.BLOB;
-import static org.smoothbuild.db.object.type.TestingObjTypes.BOOL;
-import static org.smoothbuild.db.object.type.TestingObjTypes.CALL;
-import static org.smoothbuild.db.object.type.TestingObjTypes.CONST;
-import static org.smoothbuild.db.object.type.TestingObjTypes.CONSTRUCT;
-import static org.smoothbuild.db.object.type.TestingObjTypes.INT;
-import static org.smoothbuild.db.object.type.TestingObjTypes.LAMBDA;
-import static org.smoothbuild.db.object.type.TestingObjTypes.NOTHING;
-import static org.smoothbuild.db.object.type.TestingObjTypes.OBJECT_TYPE_DB;
-import static org.smoothbuild.db.object.type.TestingObjTypes.ORDER;
-import static org.smoothbuild.db.object.type.TestingObjTypes.PERSON;
-import static org.smoothbuild.db.object.type.TestingObjTypes.REF;
-import static org.smoothbuild.db.object.type.TestingObjTypes.SELECT;
-import static org.smoothbuild.db.object.type.TestingObjTypes.STR;
-import static org.smoothbuild.db.object.type.TestingObjTypes.VARIABLE;
+import static org.smoothbuild.db.object.type.TestingTypesO.ANY;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_ANY;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_BLOB;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_BOOL;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_INT;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_LAMBDA;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_NOTHING;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_PERSON_TUPLE;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_STR;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_VARIABLE;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_ANY;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_BLOB;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_BOOL;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_INT;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_LAMBDA;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_NOTHING;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_PERSON_TUPLE;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_STR;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_VARIABLE;
+import static org.smoothbuild.db.object.type.TestingTypesO.BLOB;
+import static org.smoothbuild.db.object.type.TestingTypesO.BOOL;
+import static org.smoothbuild.db.object.type.TestingTypesO.CALL;
+import static org.smoothbuild.db.object.type.TestingTypesO.CONST;
+import static org.smoothbuild.db.object.type.TestingTypesO.CONSTRUCT;
+import static org.smoothbuild.db.object.type.TestingTypesO.INT;
+import static org.smoothbuild.db.object.type.TestingTypesO.INVOKE;
+import static org.smoothbuild.db.object.type.TestingTypesO.LAMBDA;
+import static org.smoothbuild.db.object.type.TestingTypesO.NOTHING;
+import static org.smoothbuild.db.object.type.TestingTypesO.OBJECT_TYPE_DB;
+import static org.smoothbuild.db.object.type.TestingTypesO.ORDER;
+import static org.smoothbuild.db.object.type.TestingTypesO.PERSON;
+import static org.smoothbuild.db.object.type.TestingTypesO.REF;
+import static org.smoothbuild.db.object.type.TestingTypesO.SELECT;
+import static org.smoothbuild.db.object.type.TestingTypesO.STRING;
+import static org.smoothbuild.db.object.type.TestingTypesO.VARIABLE;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Set;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -59,57 +64,301 @@ import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Lambda;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.type.base.ObjKind;
 import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.ConstructTypeO;
-import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
+import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
-/**
- * Most types are tested in TypeTest. Here we test only types which are not Types from
- * TypeFactory perspective.
- */
-public class TypeOTest {
+public class TypeOTest extends TestingContext {
+  @Test
+  public void verify_all_base_TypeO_are_tested() {
+    assertThat(ObjKind.values())
+        .hasLength(18);
+  }
+
   @ParameterizedTest
   @MethodSource("names")
-  public void name(TypeO type, String name) {
-    assertThat(type.name())
+  public void name(Function<TypeFactoryO, TypeO> factoryCall, String name) {
+    assertThat(invoke(factoryCall).name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(TypeO type, String name) {
-    assertThat(type.name())
-        .isEqualTo(name);
+  public void quoted_name(Function<TypeFactoryO, TypeO> factoryCall, String name) {
+    assertThat(invoke(factoryCall).q())
+        .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(TypeO type, String name) {
-    assertThat(type.toString())
+  public void to_string(Function<TypeFactoryO, TypeO> factoryCall, String name) {
+    assertThat(invoke(factoryCall).toString())
         .isEqualTo("Type(`" + name + "`)");
   }
 
-  public static Stream<Arguments> names() {
-    TestingContext tc = new TestingContext();
-    return Stream.of(
-        arguments(PERSON, "{String,String}"),
-        arguments(tc.callOT(tc.intOT()), "CALL:Int"),
-        arguments(tc.constOT(tc.intOT()), "CONST:Int"),
-        arguments(tc.nativeMethodOT(), "NATIVE_METHOD"),
-        arguments(tc.orderOT(tc.stringOT()), "ORDER:[String]"),
-        arguments(tc.constructOT(list(tc.stringOT(), tc.intOT())), "CONSTRUCT:{String,Int}"),
-        arguments(tc.selectOT(tc.intOT()), "SELECT:Int"),
-        arguments(tc.refOT(tc.intOT()), "REF:Int"),
+  public static List<Arguments> names() {
+    return asList(
+        args(f -> f.any(), "Any"),
+        args(f -> f.blob(), "Blob"),
+        args(f -> f.bool(), "Bool"),
+        args(f -> f.int_(), "Int"),
+        args(f -> f.nothing(), "Nothing"),
+        args(f -> f.string(), "String"),
+        args(f -> f.variable("A"), "A"),
 
-        arguments(ARRAY_PERSON_TUPLE, "[{String,String}]"),
-        arguments(ARRAY2_PERSON_TUPLE, "[[{String,String}]]")
+        args(f -> f.array(f.variable("A")), "[A]"),
+        args(f -> f.array(f.any()), "[Any]"),
+        args(f -> f.array(f.blob()), "[Blob]"),
+        args(f -> f.array(f.bool()), "[Bool]"),
+        args(f -> f.array(f.int_()), "[Int]"),
+        args(f -> f.array(f.nothing()), "[Nothing]"),
+        args(f -> f.array(f.string()), "[String]"),
+
+        args(f -> f.array(f.array(f.variable("A"))), "[[A]]"),
+        args(f -> f.array(f.array(f.any())), "[[Any]]"),
+        args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
+        args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
+        args(f -> f.array(f.array(f.int_())), "[[Int]]"),
+        args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
+        args(f -> f.array(f.array(f.string())), "[[String]]"),
+
+        args(f -> f.function(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
+        args(f -> f.function(f.string(), list(f.array(f.variable("A")))), "String([A])"),
+        args(f -> f.function(f.variable("A"), list(f.variable("A"))), "A(A)"),
+        args(f -> f.function(f.string(), list()), "String()"),
+        args(f -> f.function(f.string(), list(f.string())), "String(String)"),
+
+        args(f -> f.tuple(list()), "{}"),
+        args(f -> f.tuple(list(f.string(), f.string())), "{String,String}"),
+        args(f -> f.tuple(list(f.tuple(list(f.int_())))), "{{Int}}"),
+
+        args(f -> f.call(f.int_()), "CALL:Int"),
+        args(f -> f.const_(f.int_()), "CONST:Int"),
+        args(f -> f.construct(f.tuple(list(f.string(), f.int_()))), "CONSTRUCT:{String,Int}"),
+        args(f -> f.invoke(f.int_()), "INVOKE:Int"),
+        args(f -> f.nativeMethod(), "NATIVE_METHOD"),
+        args(f -> f.order(f.string()), "ORDER:[String]"),
+        args(f -> f.ref(f.int_()), "REF:Int"),
+        args(f -> f.select(f.int_()), "SELECT:Int")
     );
+  }
+
+  @ParameterizedTest
+  @MethodSource("isPolytype_test_data")
+  public void isPolytype(Function<TypeFactoryO, TypeO> factoryCall, boolean expected) {
+    assertThat(invoke(factoryCall).isPolytype())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> isPolytype_test_data() {
+    return asList(
+        args(f -> f.variable("A"), true),
+        args(f -> f.array(f.variable("A")), true),
+        args(f -> f.array(f.array(f.variable("A"))), true),
+
+        args(f -> f.function(f.variable("A"), list()), true),
+        args(f -> f.function(f.function(f.variable("A"), list()), list()), true),
+        args(f -> f.function(f.function(f.function(f.variable("A"), list()), list()), list()),
+            true),
+
+        args(f -> f.function(f.bool(), list(f.variable("A"))), true),
+        args(f -> f.function(f.bool(), list(f.function(f.variable("A"), list()))), true),
+        args(f -> f
+                .function(f.bool(), list(f.function(f.function(f.variable("A"), list()), list()))),
+            true),
+
+        args(f -> f.function(f.bool(), list(f.function(f.blob(), list(f.variable("A"))))),
+            true),
+
+        args(f -> f.any(), false),
+        args(f -> f.blob(), false),
+        args(f -> f.bool(), false),
+        args(f -> f.int_(), false),
+        args(f -> f.nothing(), false),
+        args(f -> f.string(), false),
+        args(f -> f.tuple(list()), false),
+        args(f -> f.tuple(list(f.int_())), false)
+        );
+  }
+
+  @ParameterizedTest
+  @MethodSource("variables_test_data")
+  public void variables(
+      Function<TypeFactoryO, TypeO> factoryCall,
+      Function<TypeFactoryO, Set<Variable>> resultCall) {
+    assertThat(invoke(factoryCall).variables())
+        .containsExactlyElementsIn(invoke(resultCall))
+        .inOrder();
+  }
+
+  public static List<Arguments> variables_test_data() {
+    return asList(
+        args(f -> f.any(), f -> set()),
+        args(f -> f.blob(), f -> set()),
+        args(f -> f.bool(), f -> set()),
+        args(f -> f.int_(), f -> set()),
+        args(f -> f.nothing(), f -> set()),
+        args(f -> f.string(), f -> set()),
+        args(f -> f.tuple(list()), f -> set()),
+        args(f -> f.tuple(list(f.int_())), f -> set()),
+        args(f -> f.variable("A"), f -> set(f.variable("A"))),
+
+        args(f -> f.array(f.any()), f -> set()),
+        args(f -> f.array(f.blob()), f -> set()),
+        args(f -> f.array(f.bool()), f -> set()),
+        args(f -> f.array(f.int_()), f -> set()),
+        args(f -> f.array(f.nothing()), f -> set()),
+        args(f -> f.array(f.string()), f -> set()),
+        args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
+
+        args(f -> f.function(f.string(), list()), f -> set()),
+        args(f -> f.function(f.string(), list(f.bool())), f -> set()),
+
+        args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
+        args(f -> f.array(f.array(f.variable("A"))), f -> set(f.variable("A"))),
+
+        args(f -> f.function(f.variable("A"), list()), f -> set(f.variable("A"))),
+        args(f -> f.function(f.variable("A"), list(f.string())), f -> set(f.variable("A"))),
+        args(f -> f.function(f.string(), list(f.variable("A"))), f -> set(f.variable("A"))),
+        args(f -> f.function(f.variable("B"), list(f.variable("A"))),
+            f -> set(f.variable("A"), f.variable("B"))),
+
+        args(f -> f.function(f.function(f.variable("A"), list()), list()),
+            f -> set(f.variable("A"))),
+        args(f -> f.function(f.variable("D"), list(f.variable("C"), f.variable("B"))),
+            f -> set(f.variable("B"), f.variable("C"), f.variable("D")))
+    );
+  }
+
+  @Nested
+  class _function {
+    @ParameterizedTest
+    @MethodSource("result_cases")
+    public void result(Function<TypeFactoryO, FunctionType> factoryCall,
+        Function<TypeFactoryO, List<Type>> expected) {
+      assertThat(invoke(factoryCall).result())
+          .isEqualTo(invoke(expected));
+    }
+
+    public static List<Arguments> result_cases() {
+      return asList(
+          args(f -> f.function(f.int_(), list()), f -> f.int_()),
+          args(f -> f.function(f.blob(), list(f.bool())), f -> f.blob()),
+          args(f -> f.function(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("parameters_cases")
+    public void parameters(Function<TypeFactoryO, FunctionType> factoryCall,
+        Function<TypeFactoryO, List<Type>> expected) {
+      assertThat(invoke(factoryCall).parameters())
+          .isEqualTo(invoke(expected));
+    }
+
+    public static List<Arguments> parameters_cases() {
+      return asList(
+          args(f -> f.function(f.int_(), list()), f -> list()),
+          args(f -> f.function(f.blob(), list(f.bool())), f -> list(f.bool())),
+          args(f -> f.function(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+      );
+    }
+  }
+
+  @Nested
+  class _variable {
+    @Test
+    public void name() {
+      assertThat(variableST("A").name())
+          .isEqualTo("A");
+    }
+
+    @Test
+    public void illegal_name() {
+      assertCall(() -> variableST("a"))
+          .throwsException(new IllegalArgumentException("Illegal type variable name 'a'."));
+    }
+  }
+
+  @Nested
+  class _array {
+    @ParameterizedTest
+    @MethodSource("elemType_test_data")
+    public void elemType(Function<TypeFactoryO, TypeV> factoryCall) {
+      TypeV element = invoke(factoryCall);
+      ArrayType array = typeFactoryO().array(element);
+      assertThat(array.element())
+          .isEqualTo(element);
+    }
+
+    public static List<Arguments> elemType_test_data() {
+      return asList(
+          args(f -> f.any()),
+          args(f -> f.blob()),
+          args(f -> f.bool()),
+          args(f -> f.function(f.string(), list())),
+          args(f -> f.int_()),
+          args(f -> f.nothing()),
+          args(f -> f.string()),
+          args(f -> f.tuple(list(f.int_()))),
+          args(f -> f.variable("A")),
+
+          args(f -> f.array(f.any())),
+          args(f -> f.array(f.blob())),
+          args(f -> f.array(f.bool())),
+          args(f -> f.array(f.function(f.string(), list()))),
+          args(f -> f.array(f.int_())),
+          args(f -> f.array(f.nothing())),
+          args(f -> f.array(f.string())),
+          args(f -> f.array(f.variable("A")))
+      );
+    }
+  }
+
+  @Nested
+  class _tuple {
+    @Test
+    public void _without_items_can_be_created() {
+      tupleOT(list());
+    }
+
+    @Test
+    public void first_item_type_can_be_nothing() {
+      tupleOT(list(nothingOT()));
+    }
+
+    @Test
+    public void first_item_type_can_be_nothing_array() {
+      tupleOT(list(arrayOT(nothingOT())));
+    }
+
+    @ParameterizedTest
+    @MethodSource("tuple_item_cases")
+    public void tuple_item(
+        Function<TypeFactoryO, TupleTypeO> factoryCall,
+        Function<TypeFactoryO, NamedList<Type>> expected) {
+      assertThat(invoke(factoryCall).items())
+          .isEqualTo(invoke(expected));
+    }
+
+    public static List<Arguments> tuple_item_cases() {
+      return asList(
+          args(f -> f.tuple(list()), f -> list()),
+          args(f -> f.tuple(list(f.string())), f -> list(f.string())),
+          args(f -> f.tuple(list(f.string(), f.int_())), f -> list(f.string(), f.int_()))
+      );
+    }
   }
 
   @ParameterizedTest
@@ -128,7 +377,7 @@ public class TypeOTest {
         arguments(INT, Int.class),
         arguments(NOTHING, null),
         arguments(PERSON, Tuple.class),
-        arguments(STR, Str.class),
+        arguments(STRING, Str.class),
         arguments(VARIABLE, null),
 
         arguments(ARRAY_ANY, Array.class),
@@ -150,44 +399,8 @@ public class TypeOTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("array_element_cases")
-  public void array_element(ArrayTypeO type, TypeO expected) {
-    assertThat(type.element())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> array_element_cases() {
-    return list(
-        arguments(ARRAY_PERSON_TUPLE, PERSON),
-        arguments(ARRAY2_PERSON_TUPLE, ARRAY_PERSON_TUPLE));
-  }
-
-  @ParameterizedTest
-  @MethodSource("tuple_items_cases")
-  public void tuple_item(TupleTypeO type, List<TypeO> expected) {
-    assertThat(type.items())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> tuple_items_cases() {
-    return list(
-        arguments(tupleType(), list()),
-        arguments(tupleType(STR), list(STR)),
-        arguments(tupleType(STR, INT), list(STR, INT)),
-        arguments(tupleType(STR, INT, BLOB), list(STR, INT, BLOB))
-    );
-  }
-
   @Nested
   class _evaluation_type {
-    @ParameterizedTest
-    @MethodSource("types")
-    public void order(TypeV type) {
-      assertThat(OBJECT_TYPE_DB.order(type).evaluationType())
-          .isEqualTo(OBJECT_TYPE_DB.array(type));
-    }
-
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeV type) {
@@ -210,12 +423,25 @@ public class TypeOTest {
     }
 
     public static List<Arguments> construct_cases() {
+      ObjTypeDb db = OBJECT_TYPE_DB;
       return list(
-          arguments(constructType(), tupleType()),
-          arguments(constructType(STR), tupleType(STR)),
-          arguments(constructType(STR, INT), tupleType(STR, INT)),
-          arguments(constructType(STR, INT, BLOB), tupleType(STR, INT, BLOB))
+          arguments(db.construct(db.tuple(list())), db.tuple(list())),
+          arguments(db.construct(db.tuple(list(STRING))), db.tuple(list(STRING)))
       );
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
+    public void invoke(TypeV type) {
+      assertThat(OBJECT_TYPE_DB.invoke(type).evaluationType())
+          .isEqualTo(type);
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
+    public void order(TypeV type) {
+      assertThat(OBJECT_TYPE_DB.order(type).evaluationType())
+          .isEqualTo(OBJECT_TYPE_DB.array(type));
     }
 
     @ParameterizedTest
@@ -233,20 +459,8 @@ public class TypeOTest {
     }
 
     public static ImmutableList<TypeO> types() {
-      return TestingObjTypes.VAL_TYPES_TO_TEST;
+      return TestingTypesO.TYPESV_TO_TEST;
     }
-  }
-
-  private static TupleTypeO tupleType(TypeV... items) {
-    return tupleType(list(items));
-  }
-
-  private static TupleTypeO tupleType(ImmutableList<TypeV> items) {
-    return OBJECT_TYPE_DB.tuple(items);
-  }
-
-  private static ConstructTypeO constructType(TypeV... items) {
-    return OBJECT_TYPE_DB.construct(tupleType(list(items)));
   }
 
   @Test
@@ -258,7 +472,7 @@ public class TypeOTest {
     tester.addEqualityGroup(LAMBDA, LAMBDA);
     tester.addEqualityGroup(INT, INT);
     tester.addEqualityGroup(NOTHING, NOTHING);
-    tester.addEqualityGroup(STR, STR);
+    tester.addEqualityGroup(STRING, STRING);
     tester.addEqualityGroup(PERSON, PERSON);
     tester.addEqualityGroup(VARIABLE, VARIABLE);
 
@@ -284,11 +498,42 @@ public class TypeOTest {
 
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(CONST, CONST);
-    tester.addEqualityGroup(ORDER, ORDER);
     tester.addEqualityGroup(CONSTRUCT, CONSTRUCT);
-    tester.addEqualityGroup(SELECT, SELECT);
+    tester.addEqualityGroup(INVOKE, INVOKE);
+    tester.addEqualityGroup(ORDER, ORDER);
     tester.addEqualityGroup(REF, REF);
+    tester.addEqualityGroup(SELECT, SELECT);
 
     tester.testEquals();
+  }
+
+  private <R> R invoke(Function<TypeFactoryO, R> f) {
+    return f.apply(typeFactoryO());
+  }
+
+  /**
+   * We need this chaining method because without it java compiler is not able to infer
+   * exact type of lambda expression passed to factoryCall.
+   */
+  private static <R> Arguments args(
+      Function<TypeFactoryO, R> factoryCall1,
+      Function<TypeFactoryO, R> factoryCall2) {
+    return arguments(factoryCall1, factoryCall2);
+  }
+
+  /**
+   * We need this chaining method because without it java compiler is not able to infer
+   * exact type of lambda expression passed to factoryCall.
+   */
+  private static <R> Arguments args(Function<ObjTypeDb, R> factoryCall, Object arg) {
+    return arguments(factoryCall, arg);
+  }
+
+  /**
+   * We need this chaining method because without it java compiler is not able to infer
+   * exact type of lambda expression passed to factoryCall.
+   */
+  private static <R> Arguments args(Function<TypeFactoryO, R> factoryCall) {
+    return arguments(factoryCall);
   }
 }

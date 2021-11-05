@@ -15,6 +15,7 @@ import static org.smoothbuild.db.object.type.base.ObjKind.CALL;
 import static org.smoothbuild.db.object.type.base.ObjKind.CONST;
 import static org.smoothbuild.db.object.type.base.ObjKind.CONSTRUCT;
 import static org.smoothbuild.db.object.type.base.ObjKind.INT;
+import static org.smoothbuild.db.object.type.base.ObjKind.INVOKE;
 import static org.smoothbuild.db.object.type.base.ObjKind.LAMBDA;
 import static org.smoothbuild.db.object.type.base.ObjKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.type.base.ObjKind.NOTHING;
@@ -401,7 +402,8 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   }
 
   private ConstTypeO newConst(Hash rootHash, TypeV evaluationType) {
-    return cache(new ConstTypeO(rootHash, evaluationType));
+    ConstTypeO type = new ConstTypeO(rootHash, evaluationType);
+    return cache(type);
   }
 
   private ConstructTypeO newConstruct(TupleTypeO evaluationType) throws HashedDbException {
@@ -414,7 +416,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   }
 
   private InvokeTypeO newInvoke(TypeV evaluationType) throws HashedDbException {
-    var rootHash = writeExprRoot(CONST, evaluationType);
+    var rootHash = writeExprRoot(INVOKE, evaluationType);
     return newInvoke(rootHash, evaluationType);
   }
 

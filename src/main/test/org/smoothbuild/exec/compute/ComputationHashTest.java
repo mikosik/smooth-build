@@ -1,8 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.object.type.TestingObjTypes.PERSON;
-import static org.smoothbuild.db.object.type.TestingObjTypes.STR;
+import static org.smoothbuild.db.object.type.TestingTypesO.PERSON;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
@@ -10,6 +9,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.type.TestingTypesO;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
@@ -125,7 +125,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_select_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new SelectAlgorithm(0, STR);
+    Algorithm algorithm = new SelectAlgorithm(0, TestingTypesO.STRING);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("3bcff362c86471722865738fd753e0dd567b55ee"));

@@ -16,7 +16,6 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.Expr;
-import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.expr.Call;
 import org.smoothbuild.db.object.obj.expr.Const;
@@ -39,6 +38,7 @@ import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.CallTypeO;
 import org.smoothbuild.db.object.type.expr.ConstTypeO;
 import org.smoothbuild.db.object.type.expr.ConstructTypeO;
+import org.smoothbuild.db.object.type.expr.InvokeTypeO;
 import org.smoothbuild.db.object.type.expr.OrderTypeO;
 import org.smoothbuild.db.object.type.expr.RefTypeO;
 import org.smoothbuild.db.object.type.expr.SelectTypeO;
@@ -355,6 +355,10 @@ public class TestingContext {
     return objTypeDb().construct(tupleOT(itemSpecs));
   }
 
+  public InvokeTypeO invokeOT(TypeV evaluationType) {
+    return objTypeDb().invoke(evaluationType);
+  }
+
   public OrderTypeO orderOT() {
     return orderOT(intOT());
   }
@@ -397,7 +401,7 @@ public class TestingContext {
     return array(elements[0].type(), elements);
   }
 
-  public Array array(TypeV elementSpec, Obj... elements) {
+  public Array array(TypeV elementSpec, Val... elements) {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
