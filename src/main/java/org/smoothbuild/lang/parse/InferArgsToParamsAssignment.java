@@ -16,7 +16,6 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,7 +30,6 @@ import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class InferArgsToParamsAssignment {
   public static Maybe<List<Optional<ArgNode>>> inferArgsToParamsAssignment(
@@ -141,17 +139,6 @@ public class InferArgsToParamsAssignment {
     String paramName = param.name().map(n -> "`" + n + "`").orElse("#" + (i + 1));
     return parseError(call,
         inCallToPrefix(call, parameters) + "Parameter " + paramName + " must be specified.");
-  }
-
-  private static Map<String, Integer> nameToIndex(List<ItemSignature> parameters) {
-    var builder = ImmutableMap.<String, Integer>builder();
-    for (int i = 0; i < parameters.size(); i++) {
-      Optional<String> name = parameters.get(i).name();
-      if (name.isPresent()) {
-        builder.put(name.get(), i);
-      }
-    }
-    return builder.build();
   }
 
   private static String inCallToPrefix(CallNode call, List<ItemSignature> parameters) {
