@@ -29,6 +29,7 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   public TypeFactoryS() {
     this.sides = new Sides<>(any(), nothing());
   }
+
   /**
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
@@ -39,7 +40,6 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
         .add(any())
         .build();
   }
-
 
   /**
    * Base types that are legal in smooth language.
