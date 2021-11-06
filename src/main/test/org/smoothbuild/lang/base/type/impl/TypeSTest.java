@@ -59,7 +59,6 @@ public class TypeSTest extends TestingContext {
 
   public static List<Arguments> names() {
     return asList(
-        args(f -> f.variable("A"), "A"),
         args(f -> f.any(), "Any"),
         args(f -> f.blob(), "Blob"),
         args(f -> f.bool(), "Bool"),
@@ -67,14 +66,16 @@ public class TypeSTest extends TestingContext {
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
         args(f -> f.struct("MyStruct", namedList(list())), "MyStruct"),
+        args(f -> f.variable("A"), "A"),
 
-        args(f -> f.array(f.variable("A")), "[A]"),
         args(f -> f.array(f.any()), "[Any]"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
         args(f -> f.array(f.int_()), "[Int]"),
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
+        args(f -> f.array(f.struct("MyStruct", namedList(list()))), "[MyStruct]"),
+        args(f -> f.array(f.variable("A")), "[A]"),
 
         args(f -> f.array(f.array(f.variable("A"))), "[[A]]"),
         args(f -> f.array(f.array(f.any())), "[[Any]]"),
@@ -82,6 +83,7 @@ public class TypeSTest extends TestingContext {
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
+        args(f -> f.array(f.array(f.struct("MyStruct", namedList(list())))), "[[MyStruct]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
         args(f -> f.function(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
@@ -118,6 +120,8 @@ public class TypeSTest extends TestingContext {
 
         args(f -> f.function(f.bool(), list(f.function(f.blob(), list(f.variable("A"))))),
             true),
+
+        args(f -> f.function(f.bool(), list(f.int_())), false),
 
         args(f -> f.any(), false),
         args(f -> f.blob(), false),
@@ -212,12 +216,6 @@ public class TypeSTest extends TestingContext {
   @Nested
   class _variable {
     @Test
-    public void name() {
-      assertThat(variableST("A").name())
-          .isEqualTo("A");
-    }
-
-    @Test
     public void illegal_name() {
       assertCall(() -> variableST("a"))
           .throwsException(new IllegalArgumentException("Illegal type variable name 'a'."));
@@ -262,7 +260,7 @@ public class TypeSTest extends TestingContext {
   @Nested
   class _struct {
     @Test
-    public void _without_fields_can_be_created() {
+    public void without_fields_can_be_created() {
       structST("MyStruct", namedList(list()));
     }
 
