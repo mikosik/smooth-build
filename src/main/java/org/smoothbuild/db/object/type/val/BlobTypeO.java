@@ -8,13 +8,12 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.lang.base.type.api.BlobType;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
-public class BlobTypeO extends TypeV implements BlobType {
+public class BlobTypeO extends TypeV {
   public BlobTypeO(Hash hash) {
     super(TypeNames.BLOB, hash, BLOB);
   }

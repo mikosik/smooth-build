@@ -8,13 +8,12 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.lang.base.type.api.IntType;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
-public class IntTypeO extends TypeV implements IntType {
+public class IntTypeO extends TypeV {
   public IntTypeO(Hash hash) {
     super(TypeNames.INT, hash, INT);
   }

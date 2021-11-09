@@ -7,12 +7,11 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.lang.base.type.api.AnyType;
 
 /**
  * This class is immutable.
  */
-public class AnyTypeO extends TypeV implements AnyType {
+public class AnyTypeO extends TypeV {
   public AnyTypeO(Hash hash) {
     super("Any", hash, ANY);
   }

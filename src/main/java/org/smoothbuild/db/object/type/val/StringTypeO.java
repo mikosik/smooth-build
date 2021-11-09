@@ -8,13 +8,12 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.lang.base.type.api.StringType;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
-public class StringTypeO extends TypeV implements StringType {
+public class StringTypeO extends TypeV {
   public StringTypeO(Hash hash) {
     super(TypeNames.STRING, hash, STRING);
   }

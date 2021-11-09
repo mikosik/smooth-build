@@ -13,21 +13,21 @@ public interface TypeFactory<T extends Type> {
 
   public Side<T> lower();
 
-  public AnyType any();
+  public Type any();
 
   public ArrayType array(T elemType);
 
-  public BlobType blob();
+  public Type blob();
 
-  public BoolType bool();
+  public Type bool();
 
   public FunctionType function(T result, ImmutableList<T> parameters);
 
-  public IntType int_();
+  public Type int_();
 
-  public NothingType nothing();
+  public Type nothing();
 
-  public StringType string();
+  public Type string();
 
   public Variable variable(String name);
 }

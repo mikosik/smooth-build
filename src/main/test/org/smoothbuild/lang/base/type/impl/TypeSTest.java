@@ -21,7 +21,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContext;
@@ -276,7 +275,7 @@ public class TypeSTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("struct_name_cases")
-    public void struct_name(Function<TypeFactoryS, StructType> factoryCall, String expected) {
+    public void struct_name(Function<TypeFactoryS, StructTypeS> factoryCall, String expected) {
       assertThat(invoke(factoryCall).name())
           .isEqualTo(expected);
     }
@@ -291,7 +290,7 @@ public class TypeSTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("struct_fields_cases")
     public void struct_fields(
-        Function<TypeFactoryS, StructType> factoryCall,
+        Function<TypeFactoryS, StructTypeS> factoryCall,
         Function<TypeFactoryS, NamedList<Type>> expected) {
       assertThat(invoke(factoryCall).fields())
           .isEqualTo(invoke(expected));

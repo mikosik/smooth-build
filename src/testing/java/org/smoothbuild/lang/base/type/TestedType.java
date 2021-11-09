@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.NothingTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -265,7 +265,7 @@ public class TestedType {
   }
 
   public boolean isNothing() {
-    return type instanceof NothingType;
+    return type instanceof NothingTypeS;
   }
 
   public boolean isFunction(Predicate<TestedType> result, Predicate<TestedType>... parameters) {

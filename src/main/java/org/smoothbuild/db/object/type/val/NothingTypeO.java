@@ -7,13 +7,12 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Obj;
 import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.lang.base.type.api.NothingType;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
-public class NothingTypeO extends TypeV implements NothingType {
+public class NothingTypeO extends TypeV {
   public NothingTypeO(Hash hash) {
     super(TypeNames.NOTHING, hash, NOTHING);
   }

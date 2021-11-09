@@ -24,7 +24,6 @@ import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.like.ReferencableLike;
-import org.smoothbuild.lang.base.type.api.StructType;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
@@ -208,7 +207,7 @@ public class TypeInferrer {
         super.visitSelect(expr);
         expr.expr().type().ifPresentOrElse(
             t -> {
-              if (!(t instanceof StructType st)) {
+              if (!(t instanceof StructTypeS st)) {
                 expr.setType(empty());
                 logBuffer.log(parseError(expr.location(), "Type " + t.q()
                     + " is not a struct so it doesn't have " + q(expr.fieldName()) + " field."));

@@ -1,12 +1,11 @@
 package org.smoothbuild.lang.base.type.impl;
 
-import org.smoothbuild.lang.base.type.api.IntType;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**
  * This class is immutable.
  */
-public class IntTypeS extends BaseTypeS implements IntType {
+public class IntTypeS extends BaseTypeS {
   public IntTypeS() {
     super(TypeNames.INT);
   }
