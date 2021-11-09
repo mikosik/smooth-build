@@ -361,7 +361,7 @@ public class JobCreator {
 
   // helper methods
 
-  public Job evaluateLambdaEagerJob(Scope<Job> scope, BoundsMap<TypeS> variables,
+  public Job evaluateFunctionEagerJob(Scope<Job> scope, BoundsMap<TypeS> variables,
       TypeS actualResultType, String name, List<Job> arguments, Location location) {
     var referencable = definitions.referencables().get(name);
     if (referencable instanceof Value value) {

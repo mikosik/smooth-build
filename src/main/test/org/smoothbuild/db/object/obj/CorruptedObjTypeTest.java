@@ -2,8 +2,8 @@ package org.smoothbuild.db.object.obj;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.type.ObjTypeDb.DATA_PATH;
-import static org.smoothbuild.db.object.type.ObjTypeDb.LAMBDA_PARAMS_PATH;
-import static org.smoothbuild.db.object.type.ObjTypeDb.LAMBDA_RESULT_PATH;
+import static org.smoothbuild.db.object.type.ObjTypeDb.FUNCTION_PARAMS_PATH;
+import static org.smoothbuild.db.object.type.ObjTypeDb.FUNCTION_RESULT_PATH;
 import static org.smoothbuild.db.object.type.base.ObjKind.ANY;
 import static org.smoothbuild.db.object.type.base.ObjKind.ARRAY;
 import static org.smoothbuild.db.object.type.base.ObjKind.BLOB;
@@ -12,7 +12,7 @@ import static org.smoothbuild.db.object.type.base.ObjKind.CALL;
 import static org.smoothbuild.db.object.type.base.ObjKind.CONST;
 import static org.smoothbuild.db.object.type.base.ObjKind.CONSTRUCT;
 import static org.smoothbuild.db.object.type.base.ObjKind.INT;
-import static org.smoothbuild.db.object.type.base.ObjKind.LAMBDA;
+import static org.smoothbuild.db.object.type.base.ObjKind.FUNCTION;
 import static org.smoothbuild.db.object.type.base.ObjKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.type.base.ObjKind.NOTHING;
 import static org.smoothbuild.db.object.type.base.ObjKind.ORDER;
@@ -48,7 +48,7 @@ import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
 import org.smoothbuild.db.object.type.expr.ConstTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.IntTypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
@@ -327,39 +327,39 @@ public class CorruptedObjTypeTest extends TestingContext {
   }
 
   @Nested
-  class _lambda {
+  class _function {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save lambda type in HashedDb.
+       * to save function type in HashedDb.
        */
       ImmutableList<TypeV> parameterTypes = list(stringOT(), boolOT());
       TupleTypeO parametersTuple = tupleOT(parameterTypes);
       Hash specHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               hash(intOT()),
               hash(parametersTuple)
           )
       );
       assertThat(specHash)
-          .isEqualTo(lambdaOT(intOT(), parameterTypes).hash());
+          .isEqualTo(functionOT(intOT(), parameterTypes).hash());
     }
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(LAMBDA);
+      test_type_without_data(FUNCTION);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(LAMBDA);
+      test_type_with_additional_data(FUNCTION);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_sequence(LAMBDA);
+      test_data_hash_pointing_nowhere_instead_of_being_sequence(FUNCTION);
     }
 
     @Test
@@ -367,18 +367,18 @@ public class CorruptedObjTypeTest extends TestingContext {
       Hash notSequence = hash("abc");
       Hash hash =
           hash(
-              hash(LAMBDA.marker()),
+              hash(FUNCTION.marker()),
               notSequence
           );
       assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, LAMBDA, DATA_PATH));
+          .throwsException(new DecodeTypeNodeException(hash, FUNCTION, DATA_PATH));
     }
 
     @Test
     public void with_data_having_three_elements() throws Exception {
       TupleTypeO parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash hash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               hash(intOT()),
               hash(parameterTypes),
@@ -386,19 +386,19 @@ public class CorruptedObjTypeTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeSequenceException(hash, LAMBDA, DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedTypeSequenceException(hash, FUNCTION, DATA_PATH, 2, 3));
     }
 
     @Test
     public void with_data_having_one_elements() throws Exception {
       Hash hash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               hash(intOT())
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeSequenceException(hash, LAMBDA, DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedTypeSequenceException(hash, FUNCTION, DATA_PATH, 2, 1));
     }
 
     @ParameterizedTest
@@ -407,11 +407,11 @@ public class CorruptedObjTypeTest extends TestingContext {
         int byteCount) throws Exception {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash typeHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           notHashOfSequence
       );
-      assertCall(() -> ((LambdaTypeO) objTypeDb().get(typeHash)).result())
-          .throwsException(new DecodeTypeNodeException(typeHash, LAMBDA, DATA_PATH))
+      assertCall(() -> ((FunctionTypeO) objTypeDb().get(typeHash)).result())
+          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
@@ -421,14 +421,14 @@ public class CorruptedObjTypeTest extends TestingContext {
       TupleTypeO parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               nowhere,
               hash(parameterTypes)
           )
       );
       assertCall(() -> objTypeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, LAMBDA, LAMBDA_RESULT_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, FUNCTION_RESULT_PATH))
           .withCause(new DecodeTypeException(nowhere));
     }
 
@@ -436,7 +436,7 @@ public class CorruptedObjTypeTest extends TestingContext {
     public void with_result_being_expr_type() throws Exception {
       TupleTypeO parameterType = tupleOT(list(stringOT(), boolOT()));
       Hash typeHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               hash(constOT()),
               hash(parameterType)
@@ -444,21 +444,21 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertCall(() -> objTypeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, LAMBDA, LAMBDA_RESULT_PATH, TypeV.class, ConstTypeO.class));
+              typeHash, FUNCTION, FUNCTION_RESULT_PATH, TypeV.class, ConstTypeO.class));
     }
 
     @Test
     public void with_result_type_corrupted() throws Exception {
       TupleTypeO parameterTypes = tupleOT(list(stringOT(), boolOT()));
       Hash typeHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               corruptedArrayTypeHash(),
               hash(parameterTypes)
           )
       );
       assertCall(() -> objTypeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, LAMBDA, LAMBDA_RESULT_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, FUNCTION_RESULT_PATH))
           .withCause(corruptedArrayTypeException());
     }
 
@@ -466,21 +466,21 @@ public class CorruptedObjTypeTest extends TestingContext {
     public void with_parameters_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               hash(intOT()),
               nowhere
           )
       );
       assertCall(() -> objTypeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, LAMBDA, LAMBDA_PARAMS_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, FUNCTION_PARAMS_PATH))
           .withCause(new DecodeTypeException(nowhere));
     }
 
     @Test
     public void with_parameters_not_being_tuple() throws Exception {
       Hash typeHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               hash(intOT()),
               hash(stringOT())
@@ -488,13 +488,13 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertThatGet(typeHash)
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, LAMBDA, DATA_PATH, 1, TupleTypeO.class, StringTypeO.class));
+              typeHash, FUNCTION, DATA_PATH, 1, TupleTypeO.class, StringTypeO.class));
     }
 
     @Test
     public void with_parameters_being_expr_type() throws Exception {
       Hash typeHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               hash(intOT()),
               hash(constOT())
@@ -502,20 +502,20 @@ public class CorruptedObjTypeTest extends TestingContext {
       );
       assertCall(() -> objTypeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, LAMBDA, LAMBDA_PARAMS_PATH, TupleTypeO.class, ConstTypeO.class));
+              typeHash, FUNCTION, FUNCTION_PARAMS_PATH, TupleTypeO.class, ConstTypeO.class));
     }
 
     @Test
     public void with_parameters_type_corrupted() throws Exception {
       Hash typeHash = hash(
-          hash(LAMBDA.marker()),
+          hash(FUNCTION.marker()),
           hash(
               hash(intOT()),
               corruptedArrayTypeHash()
           )
       );
       assertCall(() -> objTypeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, LAMBDA, LAMBDA_PARAMS_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, FUNCTION_PARAMS_PATH))
           .withCause(corruptedArrayTypeException());
     }
   }

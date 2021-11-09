@@ -16,7 +16,7 @@ import static org.smoothbuild.db.object.type.base.ObjKind.CONST;
 import static org.smoothbuild.db.object.type.base.ObjKind.CONSTRUCT;
 import static org.smoothbuild.db.object.type.base.ObjKind.INT;
 import static org.smoothbuild.db.object.type.base.ObjKind.INVOKE;
-import static org.smoothbuild.db.object.type.base.ObjKind.LAMBDA;
+import static org.smoothbuild.db.object.type.base.ObjKind.FUNCTION;
 import static org.smoothbuild.db.object.type.base.ObjKind.NATIVE_METHOD;
 import static org.smoothbuild.db.object.type.base.ObjKind.NOTHING;
 import static org.smoothbuild.db.object.type.base.ObjKind.ORDER;
@@ -56,7 +56,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
 import org.smoothbuild.db.object.type.val.BoolTypeO;
 import org.smoothbuild.db.object.type.val.IntTypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.db.object.type.val.NativeMethodTypeO;
 import org.smoothbuild.db.object.type.val.NothingTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
@@ -74,10 +74,10 @@ import com.google.common.collect.ImmutableList;
 public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactoryO {
   public static final String DATA_PATH = "data";
   private static final int DATA_INDEX = 1;
-  private static final int LAMBDA_RESULT_INDEX = 0;
-  public static final String LAMBDA_RESULT_PATH = DATA_PATH + "[" + LAMBDA_RESULT_INDEX + "]";
-  private static final int LAMBDA_PARAMS_INDEX = 1;
-  public static final String LAMBDA_PARAMS_PATH = DATA_PATH + "[" + LAMBDA_PARAMS_INDEX + "]";
+  private static final int FUNCTION_RESULT_INDEX = 0;
+  public static final String FUNCTION_RESULT_PATH = DATA_PATH + "[" + FUNCTION_RESULT_INDEX + "]";
+  private static final int FUNCTION_PARAMS_INDEX = 1;
+  public static final String FUNCTION_PARAMS_PATH = DATA_PATH + "[" + FUNCTION_PARAMS_INDEX + "]";
 
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, TypeO> cache;
@@ -144,8 +144,8 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
   }
 
   @Override
-  public LambdaTypeO function(TypeV result, ImmutableList<TypeV> parameters) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newLambda(result, tuple(parameters)));
+  public FunctionTypeO function(TypeV result, ImmutableList<TypeV> parameters) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newFunction(result, tuple(parameters)));
   }
 
   @Override
@@ -228,7 +228,7 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
       case CALL -> newCall(hash, readDataAsValue(hash, rootSequence, objKind));
       case CONST -> newConst(hash, readDataAsValue(hash, rootSequence, objKind));
       case INVOKE -> newInvoke(hash, readDataAsValue(hash, rootSequence, objKind));
-      case LAMBDA -> readLambda(hash, rootSequence, objKind);
+      case FUNCTION -> readFunction(hash, rootSequence, objKind);
       case REF -> newRef(hash, readDataAsValue(hash, rootSequence, objKind));
       case CONSTRUCT -> newConstruct(hash, readDataAsTuple(hash, rootSequence, objKind));
       case TUPLE -> readTuple(hash, rootSequence);
@@ -283,18 +283,18 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return readTupleItemType(objKind, rootHash, hash, DATA_PATH, expectedTypeClass);
   }
 
-  private TypeO readLambda(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
+  private TypeO readFunction(Hash rootHash, List<Hash> rootSequence, ObjKind objKind) {
     assertTypeRootSequenceSize(rootHash, objKind, rootSequence, 2);
     Hash dataHash = rootSequence.get(DATA_INDEX);
     List<Hash> data = readSequenceHashes(rootHash, dataHash, objKind, DATA_PATH);
     if (data.size() != 2) {
       throw new UnexpectedTypeSequenceException(rootHash, objKind, DATA_PATH, 2, data.size());
     }
-    TypeV result = readTupleItemType(objKind, rootHash, data.get(LAMBDA_RESULT_INDEX),
-        LAMBDA_RESULT_PATH, TypeV.class);
-    TupleTypeO parameters = readTupleItemType(objKind, rootHash, data.get(LAMBDA_PARAMS_INDEX),
-        LAMBDA_PARAMS_PATH, TupleTypeO.class);
-    return newLambda(rootHash, result, parameters);
+    TypeV result = readTupleItemType(objKind, rootHash, data.get(FUNCTION_RESULT_INDEX),
+        FUNCTION_RESULT_PATH, TypeV.class);
+    TupleTypeO parameters = readTupleItemType(objKind, rootHash, data.get(FUNCTION_PARAMS_INDEX),
+        FUNCTION_PARAMS_PATH, TupleTypeO.class);
+    return newFunction(rootHash, result, parameters);
   }
 
   private TupleTypeO readTuple(Hash rootHash, List<Hash> rootSequence) {
@@ -358,13 +358,13 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return cache(new ArrayTypeO(rootHash, elementType));
   }
 
-  private LambdaTypeO newLambda(TypeV result, TupleTypeO parameters) throws HashedDbException {
-    var rootHash = writeLambdaRoot(result, parameters);
-    return newLambda(rootHash, result, parameters);
+  private FunctionTypeO newFunction(TypeV result, TupleTypeO parameters) throws HashedDbException {
+    var rootHash = writeFunctionRoot(result, parameters);
+    return newFunction(rootHash, result, parameters);
   }
 
-  private LambdaTypeO newLambda(Hash rootHash, TypeV result, TupleTypeO parameters) {
-    return cache(new LambdaTypeO(rootHash, result, parameters));
+  private FunctionTypeO newFunction(Hash rootHash, TypeV result, TupleTypeO parameters) {
+    return cache(new FunctionTypeO(rootHash, result, parameters));
   }
 
   private TupleTypeO newTuple(ImmutableList<TypeV> itemTypes) throws HashedDbException {
@@ -464,9 +464,9 @@ public class ObjTypeDb extends AbstractTypeFactory<TypeV> implements TypeFactory
     return writeNonBaseRoot(ARRAY, elementType.hash());
   }
 
-  private Hash writeLambdaRoot(TypeV result, TupleTypeO parameters) throws HashedDbException {
+  private Hash writeFunctionRoot(TypeV result, TupleTypeO parameters) throws HashedDbException {
     var hash = hashedDb.writeSequence(result.hash(), parameters.hash());
-    return writeNonBaseRoot(LAMBDA, hash);
+    return writeNonBaseRoot(FUNCTION, hash);
   }
 
   private Hash writeTupleRoot(ImmutableList<TypeV> itemTypes) throws HashedDbException {

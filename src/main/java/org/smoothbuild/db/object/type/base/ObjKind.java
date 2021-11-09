@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Lambda;
+import org.smoothbuild.db.object.obj.val.FunctionV;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
 
@@ -22,7 +22,7 @@ public enum ObjKind {
   ARRAY((byte) 0, Array.class),
   BLOB((byte) 1, Blob.class),
   BOOL((byte) 2, Bool.class),
-  LAMBDA((byte) 3, Lambda.class),
+  FUNCTION((byte) 3, FunctionV.class),
   INT((byte) 4, Int.class),
   // unused 5
   NOTHING((byte) 6, null),
@@ -47,7 +47,7 @@ public enum ObjKind {
           .put((byte) 0, ARRAY)
           .put((byte) 1, BLOB)
           .put((byte) 2, BOOL)
-          .put((byte) 3, LAMBDA)
+          .put((byte) 3, FUNCTION)
           .put((byte) 4, INT)
           .put((byte) 6, NOTHING)
           .put((byte) 7, TUPLE)

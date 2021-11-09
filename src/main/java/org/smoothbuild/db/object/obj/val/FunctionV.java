@@ -7,16 +7,16 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 
-public class Lambda extends Val {
-  public Lambda(MerkleRoot merkleRoot, ObjDb objDb) {
+public class FunctionV extends Val {
+  public FunctionV(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
   }
 
   @Override
-  public LambdaTypeO type() {
-    return (LambdaTypeO) super.type();
+  public FunctionTypeO type() {
+    return (FunctionTypeO) super.type();
   }
 
   public Expr body() {

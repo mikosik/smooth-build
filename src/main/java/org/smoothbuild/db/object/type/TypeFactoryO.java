@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
 import org.smoothbuild.db.object.type.val.BoolTypeO;
 import org.smoothbuild.db.object.type.val.IntTypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.db.object.type.val.NothingTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
@@ -43,7 +43,7 @@ public interface TypeFactoryO extends TypeFactory<TypeV> {
   public BoolTypeO bool();
 
   @Override
-  public LambdaTypeO function(TypeV result, ImmutableList<TypeV> parameters);
+  public FunctionTypeO function(TypeV result, ImmutableList<TypeV> parameters);
 
   @Override
   public IntTypeO int_();

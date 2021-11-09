@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.TypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
@@ -35,7 +35,7 @@ public class TypeOCachingTest extends TestingContext {
     return list(
         ObjTypeDb::blob,
         ObjTypeDb::bool,
-        TypeOCachingTest::lambdaType,
+        TypeOCachingTest::functionType,
         ObjTypeDb::int_,
         ObjTypeDb::nothing,
         ObjTypeDb::string,
@@ -54,7 +54,7 @@ public class TypeOCachingTest extends TestingContext {
         objTypeDb -> objTypeDb.array(objTypeDb.nothing()),
         objTypeDb -> objTypeDb.array(objTypeDb.string()),
         objTypeDb -> objTypeDb.array(tupleType(objTypeDb)),
-        objTypeDb -> objTypeDb.array(lambdaType(objTypeDb)),
+        objTypeDb -> objTypeDb.array(functionType(objTypeDb)),
 
         objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.blob())),
         objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.bool())),
@@ -62,7 +62,7 @@ public class TypeOCachingTest extends TestingContext {
         objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.nothing())),
         objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.string())),
         objTypeDb -> objTypeDb.array(objTypeDb.array(tupleType(objTypeDb))),
-        objTypeDb -> objTypeDb.array(objTypeDb.array(lambdaType(objTypeDb)))
+        objTypeDb -> objTypeDb.array(objTypeDb.array(functionType(objTypeDb)))
     );
   }
 
@@ -70,7 +70,7 @@ public class TypeOCachingTest extends TestingContext {
     return objTypeDb.tuple(list(objTypeDb.string(), objTypeDb.string()));
   }
 
-  private static LambdaTypeO lambdaType(ObjTypeDb objTypeDb) {
+  private static FunctionTypeO functionType(ObjTypeDb objTypeDb) {
     return objTypeDb.function(objTypeDb.string(), list(objTypeDb.bool(), objTypeDb.blob()));
   }
 }

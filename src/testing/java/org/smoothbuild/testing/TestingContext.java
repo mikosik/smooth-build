@@ -28,7 +28,7 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Lambda;
+import org.smoothbuild.db.object.obj.val.FunctionV;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
@@ -47,7 +47,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
 import org.smoothbuild.db.object.type.val.BoolTypeO;
 import org.smoothbuild.db.object.type.val.IntTypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.db.object.type.val.NativeMethodTypeO;
 import org.smoothbuild.db.object.type.val.NothingTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
@@ -277,11 +277,11 @@ public class TestingContext {
     return typeFactoryO().int_();
   }
 
-  public LambdaTypeO lambdaOT() {
-    return lambdaOT(intOT(), list(blobOT(), stringOT()));
+  public FunctionTypeO functionOT() {
+    return functionOT(intOT(), list(blobOT(), stringOT()));
   }
 
-  public LambdaTypeO lambdaOT(TypeV result, ImmutableList<TypeV> parameters) {
+  public FunctionTypeO functionOT(TypeV result, ImmutableList<TypeV> parameters) {
     return typeFactoryO().function(result, parameters);
   }
 
@@ -442,17 +442,17 @@ public class TestingContext {
     return objectDb().int_(BigInteger.valueOf(value));
   }
 
-  public Lambda lambda() {
-    return lambda(intExpr());
+  public FunctionV function() {
+    return function(intExpr());
   }
 
-  public Lambda lambda(Expr body) {
-    LambdaTypeO spec = lambdaOT(body.evaluationType(), list(stringOT()));
-    return lambda(spec, body);
+  public FunctionV function(Expr body) {
+    FunctionTypeO spec = functionOT(body.evaluationType(), list(stringOT()));
+    return function(spec, body);
   }
 
-  public Lambda lambda(LambdaTypeO spec, Expr body) {
-    return objectDb().lambda(spec, body);
+  public FunctionV function(FunctionTypeO spec, Expr body) {
+    return objectDb().function(spec, body);
   }
 
   public NativeMethod nativeMethod(Blob jarFile, Str classBinaryName) {

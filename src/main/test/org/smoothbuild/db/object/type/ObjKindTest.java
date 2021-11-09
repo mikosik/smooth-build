@@ -31,7 +31,7 @@ public class ObjKindTest {
         Arguments.of(0, ObjKind.ARRAY),
         Arguments.of(1, ObjKind.BLOB),
         Arguments.of(2, ObjKind.BOOL),
-        Arguments.of(3, ObjKind.LAMBDA),
+        Arguments.of(3, ObjKind.FUNCTION),
         Arguments.of(4, ObjKind.INT),
         Arguments.of(6, ObjKind.NOTHING),
         Arguments.of(7, ObjKind.TUPLE),

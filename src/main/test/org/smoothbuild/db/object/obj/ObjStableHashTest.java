@@ -6,8 +6,8 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.Lambda;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.obj.val.FunctionV;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -104,15 +104,15 @@ public class ObjStableHashTest extends TestingContext {
   class _call {
     @Test
     public void call_expression_with_one_argument() {
-      assertThat(call(const_(lambda()), list(stringExpr("abc"))).hash())
+      assertThat(call(const_(function()), list(stringExpr("abc"))).hash())
           .isEqualTo(Hash.decode("dcc7713d99ef11f816501e79c7539b800ebeddd3"));
     }
 
     @Test
     public void call_expression_without_arguments() {
-      LambdaTypeO type = lambdaOT(intOT(), list(stringOT()));
-      Lambda lambda = lambda(type, intExpr());
-      assertThat(call(const_(lambda), list(stringExpr("abc"))).hash())
+      FunctionTypeO type = functionOT(intOT(), list(stringOT()));
+      FunctionV function = function(type, intExpr());
+      assertThat(call(const_(function), list(stringExpr("abc"))).hash())
           .isEqualTo(Hash.decode("dcc7713d99ef11f816501e79c7539b800ebeddd3"));
     }
   }
@@ -145,28 +145,28 @@ public class ObjStableHashTest extends TestingContext {
   }
 
   @Nested
-  class _lambda {
+  class _function {
     @Test
     public void with_no_parameters() {
-      Lambda lambda =
-          lambda(lambdaOT(intOT(), list()), intExpr(1));
-      assertThat(lambda.hash())
+      FunctionV function =
+          function(functionOT(intOT(), list()), intExpr(1));
+      assertThat(function.hash())
           .isEqualTo(Hash.decode("337bd07ddf18547d72c6ad93705ef00ae087cc3b"));
     }
 
     @Test
     public void with_one_parameter() {
-      Lambda lambda =
-          lambda(lambdaOT(intOT(), list(intOT())), intExpr(1));
-      assertThat(lambda.hash())
+      FunctionV function =
+          function(functionOT(intOT(), list(intOT())), intExpr(1));
+      assertThat(function.hash())
           .isEqualTo(Hash.decode("f5ab6c8ecc79081d233c4b1df33cdd5ad5e3e937"));
     }
 
     @Test
     public void with_two_parameters() {
-      Lambda lambda =
-          lambda(lambdaOT(intOT(), list(intOT(), stringOT())), intExpr(1));
-      assertThat(lambda.hash())
+      FunctionV function =
+          function(functionOT(intOT(), list(intOT(), stringOT())), intExpr(1));
+      assertThat(function.hash())
           .isEqualTo(Hash.decode("004270e88a71120738cc7c9a6283b10bc92a0b57"));
     }
   }

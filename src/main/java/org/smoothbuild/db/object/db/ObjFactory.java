@@ -26,7 +26,7 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Lambda;
+import org.smoothbuild.db.object.obj.val.FunctionV;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
@@ -36,7 +36,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeO;
 import org.smoothbuild.db.object.type.val.BlobTypeO;
 import org.smoothbuild.db.object.type.val.BoolTypeO;
 import org.smoothbuild.db.object.type.val.IntTypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.db.object.type.val.NothingTypeO;
 import org.smoothbuild.db.object.type.val.StringTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
@@ -111,8 +111,8 @@ public class ObjFactory {
     return objDb.invoke(evaluationSpec, nativeMethod, isPure, argumentCount);
   }
 
-  public Lambda lambda(LambdaTypeO type, Expr body) {
-    return objDb.lambda(type, body);
+  public FunctionV function(FunctionTypeO type, Expr body) {
+    return objDb.function(type, body);
   }
 
   public NativeMethod nativeMethod(Blob jarFile, Str classBinaryName) {
@@ -157,7 +157,7 @@ public class ObjFactory {
     return objTypeDb.int_();
   }
 
-  public LambdaTypeO lambdaType(TypeV result, ImmutableList<TypeV> parameters) {
+  public FunctionTypeO functionType(TypeV result, ImmutableList<TypeV> parameters) {
     return objTypeDb.function(result, parameters);
   }
   public TupleTypeO messageType() {

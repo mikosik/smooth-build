@@ -8,7 +8,7 @@ import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_ANY;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_BLOB;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_BOOL;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_INT;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_LAMBDA;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_FUNCTION;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_NOTHING;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_PERSON_TUPLE;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_STR;
@@ -17,7 +17,7 @@ import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_ANY;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_BLOB;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_BOOL;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_INT;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_LAMBDA;
+import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_FUNCTION;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_NOTHING;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_PERSON_TUPLE;
 import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_STR;
@@ -29,7 +29,7 @@ import static org.smoothbuild.db.object.type.TestingTypesO.CONST;
 import static org.smoothbuild.db.object.type.TestingTypesO.CONSTRUCT;
 import static org.smoothbuild.db.object.type.TestingTypesO.INT;
 import static org.smoothbuild.db.object.type.TestingTypesO.INVOKE;
-import static org.smoothbuild.db.object.type.TestingTypesO.LAMBDA;
+import static org.smoothbuild.db.object.type.TestingTypesO.FUNCTION;
 import static org.smoothbuild.db.object.type.TestingTypesO.NOTHING;
 import static org.smoothbuild.db.object.type.TestingTypesO.OBJECT_TYPE_DB;
 import static org.smoothbuild.db.object.type.TestingTypesO.ORDER;
@@ -61,7 +61,7 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Lambda;
+import org.smoothbuild.db.object.obj.val.FunctionV;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
 import org.smoothbuild.db.object.type.base.ObjKind;
@@ -373,7 +373,7 @@ public class TypeOTest extends TestingContext {
         arguments(ANY, null),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
-        arguments(LAMBDA, Lambda.class),
+        arguments(FUNCTION, FunctionV.class),
         arguments(INT, Int.class),
         arguments(NOTHING, null),
         arguments(PERSON, Tuple.class),
@@ -383,7 +383,7 @@ public class TypeOTest extends TestingContext {
         arguments(ARRAY_ANY, Array.class),
         arguments(ARRAY_BLOB, Array.class),
         arguments(ARRAY_BOOL, Array.class),
-        arguments(ARRAY_LAMBDA, Array.class),
+        arguments(ARRAY_FUNCTION, Array.class),
         arguments(ARRAY_INT, Array.class),
         arguments(ARRAY_NOTHING, Array.class),
         arguments(ARRAY_PERSON_TUPLE, Array.class),
@@ -469,7 +469,7 @@ public class TypeOTest extends TestingContext {
     tester.addEqualityGroup(ANY, ANY);
     tester.addEqualityGroup(BLOB, BLOB);
     tester.addEqualityGroup(BOOL, BOOL);
-    tester.addEqualityGroup(LAMBDA, LAMBDA);
+    tester.addEqualityGroup(FUNCTION, FUNCTION);
     tester.addEqualityGroup(INT, INT);
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STRING, STRING);
@@ -479,7 +479,7 @@ public class TypeOTest extends TestingContext {
     tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);
     tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
     tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
-    tester.addEqualityGroup(ARRAY_LAMBDA, ARRAY_LAMBDA);
+    tester.addEqualityGroup(ARRAY_FUNCTION, ARRAY_FUNCTION);
     tester.addEqualityGroup(ARRAY_INT, ARRAY_INT);
     tester.addEqualityGroup(ARRAY_NOTHING, ARRAY_NOTHING);
     tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
@@ -490,7 +490,7 @@ public class TypeOTest extends TestingContext {
     tester.addEqualityGroup(ARRAY2_ANY, ARRAY2_ANY);
     tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
     tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
-    tester.addEqualityGroup(ARRAY2_LAMBDA, ARRAY2_LAMBDA);
+    tester.addEqualityGroup(ARRAY2_FUNCTION, ARRAY2_FUNCTION);
     tester.addEqualityGroup(ARRAY2_INT, ARRAY2_INT);
     tester.addEqualityGroup(ARRAY2_NOTHING, ARRAY2_NOTHING);
     tester.addEqualityGroup(ARRAY2_STR, ARRAY2_STR);

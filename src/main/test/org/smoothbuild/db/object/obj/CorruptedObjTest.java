@@ -56,7 +56,7 @@ import org.smoothbuild.db.object.obj.val.Array;
 import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Lambda;
+import org.smoothbuild.db.object.obj.val.FunctionV;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
@@ -67,7 +67,7 @@ import org.smoothbuild.db.object.type.expr.ConstTypeO;
 import org.smoothbuild.db.object.type.expr.ConstructTypeO;
 import org.smoothbuild.db.object.type.expr.OrderTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 import org.smoothbuild.testing.TestingContext;
 
@@ -387,21 +387,21 @@ public class CorruptedObjTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var lambdaType = lambdaOT(intOT(), list(stringOT(), intOT()));
-      var lambda = lambda(lambdaType, intExpr());
-      Const function = const_(lambda);
+      var functionType = functionOT(intOT(), list(stringOT(), intOT()));
+      var function = function(functionType, intExpr());
+      Const functionConst = const_(function);
       Construct arguments = construct(list(stringExpr(), intExpr()));
       Hash objHash =
           hash(
               hash(callOT()),
               hash(
-                  hash(function),
+                  hash(functionConst),
                   hash(arguments)
               )
           );
 
       assertThat(((Call) objectDb().get(objHash)).data().function())
-          .isEqualTo(function);
+          .isEqualTo(functionConst);
       assertThat(((Call) objectDb().get(objHash)).data().arguments())
           .isEqualTo(arguments);
     }
@@ -483,7 +483,7 @@ public class CorruptedObjTest extends TestingContext {
     }
 
     @Test
-    public void function_component_evaluation_type_is_not_lambda() throws Exception {
+    public void function_component_evaluation_type_is_not_function() throws Exception {
       Const function = intExpr(3);
       Construct arguments = construct(list(stringExpr(), intExpr()));
       CallTypeO type = callOT(stringOT());
@@ -497,19 +497,19 @@ public class CorruptedObjTest extends TestingContext {
           );
       assertCall(() -> ((Call) objectDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
-              objHash, type, "function", LambdaTypeO.class, intOT()));
+              objHash, type, "function", FunctionTypeO.class, intOT()));
     }
 
     @Test
     public void arguments_is_val_instead_of_expr() throws Exception {
-      var lambdaType = lambdaOT(intOT(), list(stringOT(), intOT()));
-      var lambda = lambda(lambdaType, intExpr());
-      Const function = const_(lambda);
+      var functionType = functionOT(intOT(), list(stringOT(), intOT()));
+      var function = function(functionType, intExpr());
+      Const functionConst = const_(function);
       Hash objHash =
           hash(
               hash(callOT()),
               hash(
-                  hash(function),
+                  hash(functionConst),
                   hash(int_())
               )
           );
@@ -521,15 +521,15 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void arguments_component_evaluation_type_is_not_construct_but_different_expr()
         throws Exception {
-      var lambdaType = lambdaOT(intOT(), list(stringOT(), intOT()));
-      var lambda = lambda(lambdaType, intExpr());
-      Const function = const_(lambda);
+      var functionType = functionOT(intOT(), list(stringOT(), intOT()));
+      var function = function(functionType, intExpr());
+      Const functionConst = const_(function);
       CallTypeO type = callOT();
       Hash objHash =
           hash(
               hash(type),
               hash(
-                  hash(function),
+                  hash(functionConst),
                   hash(intExpr())
               )
           );
@@ -541,7 +541,7 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void evaluation_type_is_different_than_function_evaluation_type_result()
         throws Exception {
-      Const function = const_(lambda(lambdaOT(intOT(), list(stringOT())), intExpr()));
+      Const function = const_(function(functionOT(intOT(), list(stringOT())), intExpr()));
       Construct arguments = construct(list(stringExpr(), intExpr()));
       CallTypeO type = callOT(stringOT());
       Hash objHash =
@@ -560,8 +560,8 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void function_evaluation_type_parameters_does_not_match_arguments_evaluation_types()
         throws Exception {
-      LambdaTypeO lambdaType = lambdaOT(intOT(), list(stringOT(), boolOT()));
-      Const function = const_(lambda(lambdaType, intExpr()));
+      FunctionTypeO functionType = functionOT(intOT(), list(stringOT(), boolOT()));
+      Const function = const_(function(functionType, intExpr()));
       Construct arguments = construct(list(stringExpr(), intExpr()));
       CallTypeO spec = callOT(intOT());
       Hash objHash =
@@ -651,7 +651,7 @@ public class CorruptedObjTest extends TestingContext {
   }
 
   @Nested
-  class _lambda {
+  class _function {
     @Test
     public void learning_test() throws Exception {
       /*
@@ -659,49 +659,49 @@ public class CorruptedObjTest extends TestingContext {
        * in HashedDb.
        */
       Const bodyExpr = boolExpr();
-      LambdaTypeO type = lambdaOT(boolOT(), list(intOT(), stringOT()));
+      FunctionTypeO type = functionOT(boolOT(), list(intOT(), stringOT()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertThat(((Lambda) objectDb().get(objHash)).body())
+      assertThat(((FunctionV) objectDb().get(objHash)).body())
           .isEqualTo(bodyExpr);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(lambdaOT());
+      obj_root_without_data_hash(functionOT());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       Const bodyExpr = boolExpr();
-      LambdaTypeO type = lambdaOT(boolOT(), list(intOT(), stringOT()));
+      FunctionTypeO type = functionOT(boolOT(), list(intOT(), stringOT()));
       Hash dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           type,
           dataHash,
-          (Hash objHash) -> ((Lambda) objectDb().get(objHash)).body());
+          (Hash objHash) -> ((FunctionV) objectDb().get(objHash)).body());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          lambdaOT(),
-          (Hash objHash) -> ((Lambda) objectDb().get(objHash)).body());
+          functionOT(),
+          (Hash objHash) -> ((FunctionV) objectDb().get(objHash)).body());
     }
 
     @Test
     public void body_is_val_instead_of_expr() throws Exception {
       Bool bodyExpr = bool(true);
-      LambdaTypeO type = lambdaOT(boolOT(), list(intOT(), stringOT()));
+      FunctionTypeO type = functionOT(boolOT(), list(intOT(), stringOT()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertCall(() -> ((Lambda) objectDb().get(objHash)).body())
+      assertCall(() -> ((FunctionV) objectDb().get(objHash)).body())
           .throwsException(new UnexpectedObjNodeException(
               objHash, type, DATA_PATH, Expr.class, Bool.class));
     }
@@ -709,13 +709,13 @@ public class CorruptedObjTest extends TestingContext {
     @Test
     public void body_evaluation_type_is_not_equal_function_type_result() throws Exception {
       Const bodyExpr = intExpr(3);
-      LambdaTypeO type = lambdaOT(boolOT(), list(intOT(), stringOT()));
+      FunctionTypeO type = functionOT(boolOT(), list(intOT(), stringOT()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertCall(() -> ((Lambda) objectDb().get(objHash)).body())
+      assertCall(() -> ((FunctionV) objectDb().get(objHash)).body())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
               objHash, type, DATA_PATH, intOT(), boolOT()));
     }

@@ -45,26 +45,26 @@ public class MapJob extends AbstractJob {
     return result;
   }
 
-  private void onArrayCompleted(Array array, Tuple lambda, Worker worker, Consumer<Val> result) {
+  private void onArrayCompleted(Array array, Tuple function, Worker worker, Consumer<Val> result) {
     var outputArrayType = (ArrayTypeS) type();
     var outputElemType = outputArrayType.element();
-    Job lambdaJob = getJob(lambda);
+    Job functionJob = getJob(function);
     var mapElemJobs = map(
         array.elements(Val.class),
-        o -> mapElementJob(outputElemType, lambdaJob, o));
+        o -> mapElementJob(outputElemType, functionJob, o));
     var info = new TaskInfo(CALL, MAP_TASK_NAME, location());
     jobCreator.arrayEager(outputArrayType, mapElemJobs, info)
         .schedule(worker)
         .addConsumer(result);
   }
 
-  private Job getJob(Tuple lambda) {
-    return new DummyJob(functionJob().type(), lambda, functionJob());
+  private Job getJob(Tuple function) {
+    return new DummyJob(functionJob().type(), function, functionJob());
   }
 
-  private Job mapElementJob(TypeS elemType, Job lambdaJob, Val element) {
+  private Job mapElementJob(TypeS elemType, Job functionJob, Val element) {
     Job elemJob = elemJob(elemType, element, arrayJob().location());
-    return jobCreator.callEagerJob(scope, lambdaJob, list(elemJob), lambdaJob.location());
+    return jobCreator.callEagerJob(scope, functionJob, list(elemJob), functionJob.location());
   }
 
   private Job elemJob(TypeS elemType, Val element, Location location) {

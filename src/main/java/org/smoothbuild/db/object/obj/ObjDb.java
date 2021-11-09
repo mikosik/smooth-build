@@ -36,7 +36,7 @@ import org.smoothbuild.db.object.obj.val.Blob;
 import org.smoothbuild.db.object.obj.val.BlobBuilder;
 import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Lambda;
+import org.smoothbuild.db.object.obj.val.FunctionV;
 import org.smoothbuild.db.object.obj.val.NativeMethod;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
@@ -45,7 +45,7 @@ import org.smoothbuild.db.object.type.base.TypeO;
 import org.smoothbuild.db.object.type.base.TypeV;
 import org.smoothbuild.db.object.type.expr.SelectTypeO;
 import org.smoothbuild.db.object.type.val.ArrayTypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 import org.smoothbuild.db.object.type.val.TupleTypeO;
 
 import com.google.common.collect.ImmutableList;
@@ -76,12 +76,12 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
-  public Lambda lambda(LambdaTypeO type, Expr body) {
+  public FunctionV function(FunctionTypeO type, Expr body) {
     if (!Objects.equals(type.result(), body.evaluationType())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.result().name()
           + " but body.evaluationType() is " + body.evaluationType().name() + ".");
     }
-    return wrapHashedDbExceptionAsObjectDbException(() -> newLambda(type, body));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newFunction(type, body));
   }
 
   public Int int_(BigInteger value) {
@@ -195,8 +195,8 @@ public class ObjDb {
     return objTypeDb.bool().newObj(root, this);
   }
 
-  private Lambda newLambda(LambdaTypeO type, Expr body) throws HashedDbException {
-    var data = writeLambdaData(body);
+  private FunctionV newFunction(FunctionTypeO type, Expr body) throws HashedDbException {
+    var data = writeFunctionData(body);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -229,25 +229,25 @@ public class ObjDb {
   // methods for creating Expr-s
 
   private Call newCall(Expr function, Construct arguments) throws HashedDbException {
-    var lambdaType = functionEvaluationType(function);
-    verifyArguments(lambdaType, arguments);
-    var type = objTypeDb.call(lambdaType.result());
+    var functionType = functionEvaluationType(function);
+    verifyArguments(functionType, arguments);
+    var type = objTypeDb.call(functionType.result());
     var data = writeCallData(function, arguments);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private static void verifyArguments(LambdaTypeO lambdaType, Construct arguments) {
-    if (!Objects.equals(lambdaType.parametersTuple(), arguments.evaluationType())) {
+  private static void verifyArguments(FunctionTypeO functionType, Construct arguments) {
+    if (!Objects.equals(functionType.parametersTuple(), arguments.evaluationType())) {
       throw new IllegalArgumentException(("Arguments evaluation type %s should be equal to "
           + "function evaluation type parameters %s.")
-          .formatted(arguments.evaluationType().name(), lambdaType.parametersTuple().name()));
+          .formatted(arguments.evaluationType().name(), functionType.parametersTuple().name()));
     }
   }
 
-  private LambdaTypeO functionEvaluationType(Expr function) {
-    if (function.evaluationType() instanceof LambdaTypeO lambdaType) {
-      return lambdaType;
+  private FunctionTypeO functionEvaluationType(Expr function) {
+    if (function.evaluationType() instanceof FunctionTypeO functionType) {
+      return functionType;
     } else {
       throw new IllegalArgumentException("`function` component doesn't evaluate to Function.");
     }
@@ -385,7 +385,7 @@ public class ObjDb {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeLambdaData(Expr body) {
+  private Hash writeFunctionData(Expr body) {
     return body.hash();
   }
 

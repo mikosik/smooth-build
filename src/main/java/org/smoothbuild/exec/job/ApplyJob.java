@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.Val;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.exec.base.LambdaStruct;
+import org.smoothbuild.exec.base.FunctionStruct;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
@@ -36,20 +36,20 @@ public class ApplyJob extends AbstractJob {
   @Override
   public Promise<Val> schedule(Worker worker) {
     PromisedValue<Val> result = new PromisedValue<>();
-    lambdaJob()
+    functionJob()
         .schedule(worker)
-        .addConsumer(obj -> onLambdaCompleted(obj, worker, result));
+        .addConsumer(obj -> onFunctionJobCompleted(obj, worker, result));
     return result;
   }
 
-  private void onLambdaCompleted(Val val, Worker worker, Consumer<Val> result) {
-    String name = LambdaStruct.name(((Tuple) val)).jValue();
-    jobCreator.evaluateLambdaEagerJob(scope, variables, type(), name, arguments, location())
+  private void onFunctionJobCompleted(Val val, Worker worker, Consumer<Val> result) {
+    String name = FunctionStruct.name(((Tuple) val)).jValue();
+    jobCreator.evaluateFunctionEagerJob(scope, variables, type(), name, arguments, location())
         .schedule(worker)
         .addConsumer(result);
   }
 
-  private Job lambdaJob() {
+  private Job functionJob() {
     return dependencies().get(0);
   }
 }

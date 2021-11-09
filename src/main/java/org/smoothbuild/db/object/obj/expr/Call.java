@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.base.Expr;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.CallTypeO;
-import org.smoothbuild.db.object.type.val.LambdaTypeO;
+import org.smoothbuild.db.object.type.val.FunctionTypeO;
 
 /**
  * This class is immutable.
@@ -39,18 +39,18 @@ public class Call extends Expr {
   public record CallData(Expr function, Construct arguments) {}
 
   private void validate(Expr function, Construct arguments) {
-    if (function.evaluationType() instanceof LambdaTypeO lambdaType) {
-      if (!Objects.equals(evaluationType(), lambdaType.result())) {
+    if (function.evaluationType() instanceof FunctionTypeO functionType) {
+      if (!Objects.equals(evaluationType(), functionType.result())) {
         throw new DecodeExprWrongEvaluationTypeOfComponentException(
-            hash(), type(), "function.result", evaluationType(), lambdaType.result());
+            hash(), type(), "function.result", evaluationType(), functionType.result());
       }
-      if (!Objects.equals(lambdaType.parametersTuple(), arguments.type().evaluationType())) {
+      if (!Objects.equals(functionType.parametersTuple(), arguments.type().evaluationType())) {
         throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(), "arguments",
-            lambdaType.parametersTuple(), arguments.type().evaluationType());
+            functionType.parametersTuple(), arguments.type().evaluationType());
       }
     } else {
       throw new DecodeExprWrongEvaluationTypeOfComponentException(
-          hash(), type(), "function", LambdaTypeO.class, function.evaluationType());
+          hash(), type(), "function", FunctionTypeO.class, function.evaluationType());
     }
   }
 

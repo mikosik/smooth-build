@@ -20,7 +20,7 @@ public class TestingTypesO {
   public static final TypeV ANY = OBJECT_TYPE_DB.any();
   public static final TypeV BLOB = OBJECT_TYPE_DB.blob();
   public static final TypeV BOOL = OBJECT_TYPE_DB.bool();
-  public static final TypeV LAMBDA = OBJECT_TYPE_DB.function(BLOB, list(BOOL));
+  public static final TypeV FUNCTION = OBJECT_TYPE_DB.function(BLOB, list(BOOL));
   public static final TypeV VARIABLE = OBJECT_TYPE_DB.variable("A");
   public static final TypeV INT = OBJECT_TYPE_DB.int_();
   public static final TypeV NOTHING = OBJECT_TYPE_DB.nothing();
@@ -40,7 +40,7 @@ public class TestingTypesO {
   public static final ArrayTypeO ARRAY_ANY = array(ANY);
   public static final ArrayTypeO ARRAY_BLOB = array(BLOB);
   public static final ArrayTypeO ARRAY_BOOL = array(BOOL);
-  public static final ArrayTypeO ARRAY_LAMBDA = array(LAMBDA);
+  public static final ArrayTypeO ARRAY_FUNCTION = array(FUNCTION);
   public static final ArrayTypeO ARRAY_INT = array(INT);
   public static final ArrayTypeO ARRAY_NOTHING = array(NOTHING);
   public static final ArrayTypeO ARRAY_STR = array(STRING);
@@ -51,7 +51,7 @@ public class TestingTypesO {
   public static final ArrayTypeO ARRAY2_ANY = array(ARRAY_ANY);
   public static final ArrayTypeO ARRAY2_BLOB = array(ARRAY_BLOB);
   public static final ArrayTypeO ARRAY2_BOOL = array(ARRAY_BOOL);
-  public static final ArrayTypeO ARRAY2_LAMBDA = array(ARRAY_LAMBDA);
+  public static final ArrayTypeO ARRAY2_FUNCTION = array(ARRAY_FUNCTION);
   public static final ArrayTypeO ARRAY2_INT = array(ARRAY_INT);
   public static final ArrayTypeO ARRAY2_NOTHING = array(ARRAY_NOTHING);
   public static final ArrayTypeO ARRAY2_STR = array(ARRAY_STR);
@@ -62,7 +62,7 @@ public class TestingTypesO {
   public static final ImmutableList<TypeO> TYPESV_TO_TEST = list(
       BLOB,
       BOOL,
-      LAMBDA,
+      FUNCTION,
       INT,
       NOTHING,
       STRING,
@@ -70,7 +70,7 @@ public class TestingTypesO {
 
       ARRAY_BLOB,
       ARRAY_BOOL,
-      ARRAY_LAMBDA,
+      ARRAY_FUNCTION,
       ARRAY_INT,
       ARRAY_NOTHING,
       ARRAY_STR,
@@ -78,7 +78,7 @@ public class TestingTypesO {
 
       ARRAY2_BLOB,
       ARRAY2_BOOL,
-      ARRAY2_LAMBDA,
+      ARRAY2_FUNCTION,
       ARRAY2_INT,
       ARRAY2_NOTHING,
       ARRAY2_STR,
