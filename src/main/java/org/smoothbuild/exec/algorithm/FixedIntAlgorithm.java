@@ -5,8 +5,8 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHa
 import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.type.val.IntTypeO;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.type.val.IntTypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -14,7 +14,7 @@ import org.smoothbuild.plugin.NativeApi;
 public class FixedIntAlgorithm extends Algorithm {
   private final BigInteger bigInteger;
 
-  public FixedIntAlgorithm(IntTypeO intType, BigInteger bigInteger) {
+  public FixedIntAlgorithm(IntTypeH intType, BigInteger bigInteger) {
     super(intType);
     this.bigInteger = bigInteger;
   }
@@ -26,7 +26,7 @@ public class FixedIntAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Val val = nativeApi.factory().int_(bigInteger);
+    ValueH val = nativeApi.factory().int_(bigInteger);
     return new Output(val, nativeApi.messages());
   }
 }

@@ -10,9 +10,9 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
@@ -36,21 +36,21 @@ public class MapJob extends AbstractJob {
   }
 
   @Override
-  public Promise<Val> schedule(Worker worker) {
-    PromisedValue<Val> result = new PromisedValue<>();
-    Promise<Val> array = arrayJob().schedule(worker);
-    Promise<Val> function = functionJob().schedule(worker);
+  public Promise<ValueH> schedule(Worker worker) {
+    PromisedValue<ValueH> result = new PromisedValue<>();
+    Promise<ValueH> array = arrayJob().schedule(worker);
+    Promise<ValueH> function = functionJob().schedule(worker);
     runWhenAllAvailable(list(array, function),
-        () -> onArrayCompleted((Array) array.get(), (Tuple) function.get(), worker, result));
+        () -> onArrayCompleted((ArrayH) array.get(), (TupleH) function.get(), worker, result));
     return result;
   }
 
-  private void onArrayCompleted(Array array, Tuple function, Worker worker, Consumer<Val> result) {
+  private void onArrayCompleted(ArrayH array, TupleH function, Worker worker, Consumer<ValueH> result) {
     var outputArrayType = (ArrayTypeS) type();
     var outputElemType = outputArrayType.element();
     Job functionJob = getJob(function);
     var mapElemJobs = map(
-        array.elements(Val.class),
+        array.elements(ValueH.class),
         o -> mapElementJob(outputElemType, functionJob, o));
     var info = new TaskInfo(CALL, MAP_TASK_NAME, location());
     jobCreator.arrayEager(outputArrayType, mapElemJobs, info)
@@ -58,16 +58,16 @@ public class MapJob extends AbstractJob {
         .addConsumer(result);
   }
 
-  private Job getJob(Tuple function) {
+  private Job getJob(TupleH function) {
     return new DummyJob(functionJob().type(), function, functionJob());
   }
 
-  private Job mapElementJob(TypeS elemType, Job functionJob, Val element) {
+  private Job mapElementJob(TypeS elemType, Job functionJob, ValueH element) {
     Job elemJob = elemJob(elemType, element, arrayJob().location());
     return jobCreator.callEagerJob(scope, functionJob, list(elemJob), functionJob.location());
   }
 
-  private Job elemJob(TypeS elemType, Val element, Location location) {
+  private Job elemJob(TypeS elemType, ValueH element, Location location) {
     return new DummyJob(elemType, element, new NalImpl("element-to-map", location));
   }
 

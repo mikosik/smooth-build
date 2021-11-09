@@ -1,14 +1,14 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.ArrayBuilder;
-import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
+import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class AddElementOfWrongTypeToArray {
-  public static Array function(NativeApi nativeApi) {
-    ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().blobType());
-    Str string = nativeApi.factory().string("abc");
+  public static ArrayH function(NativeApi nativeApi) {
+    ArrayHBuilder arrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().blobType());
+    StringH string = nativeApi.factory().string("abc");
     arrayBuilder.add(string);
     return arrayBuilder.build();
   }

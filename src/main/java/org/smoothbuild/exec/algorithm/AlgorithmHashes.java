@@ -5,8 +5,8 @@ import static java.util.Arrays.asList;
 import java.math.BigInteger;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.TypeO;
-import org.smoothbuild.db.object.type.val.TupleTypeO;
+import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.val.TupleTypeH;
 
 import okio.ByteString;
 
@@ -19,11 +19,11 @@ public class AlgorithmHashes {
     return hash(1, Hash.of(referencableName));
   }
 
-  public static Hash convertAlgorithmHash(TypeO destinationType) {
+  public static Hash convertAlgorithmHash(TypeH destinationType) {
     return hash(2, destinationType.hash());
   }
 
-  public static Hash constructAlgorithmHash(TupleTypeO type) {
+  public static Hash constructAlgorithmHash(TupleTypeH type) {
     return hash(3, type.hash());
   }
 

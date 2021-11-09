@@ -1,11 +1,11 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReportError {
-  public static Val function(NativeApi nativeApi, Str message) {
+  public static ValueH function(NativeApi nativeApi, StringH message) {
     nativeApi.log().error(message.jValue());
     return null;
   }

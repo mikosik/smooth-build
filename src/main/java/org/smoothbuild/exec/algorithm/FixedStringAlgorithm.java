@@ -5,8 +5,8 @@ import static org.smoothbuild.exec.job.TaskInfo.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.type.val.StringTypeO;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -15,7 +15,7 @@ public class FixedStringAlgorithm extends Algorithm {
   private final String string;
   private final String shortedString;
 
-  public FixedStringAlgorithm(StringTypeO stringType, String string) {
+  public FixedStringAlgorithm(StringTypeH stringType, String string) {
     super(stringType);
     this.string = string;
     this.shortedString = escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
@@ -32,7 +32,7 @@ public class FixedStringAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Str str = nativeApi
+    StringH str = nativeApi
         .factory()
         .string(string);
     return new Output(str, nativeApi.messages());

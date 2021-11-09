@@ -14,13 +14,13 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -35,21 +35,21 @@ import okio.BufferedSource;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final ObjDb objDb;
+  private final ObjectHDb objectHDb;
   private final ObjFactory objFactory;
 
   @Inject
-  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjDb objDb,
+  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjectHDb objectHDb,
       ObjFactory objFactory) {
     this.fileSystem = fileSystem;
-    this.objDb = objDb;
+    this.objectHDb = objectHDb;
     this.objFactory = objFactory;
   }
 
   public synchronized void write(Hash computationHash, Output output)
       throws ComputationCacheException {
     try (BufferedSink sink = fileSystem.sink(toPath(computationHash))) {
-      Array messages = output.messages();
+      ArrayH messages = output.messages();
       sink.write(messages.hash().toByteString());
       if (!containsErrors(messages)) {
         sink.write(output.value().hash().toByteString());
@@ -69,18 +69,18 @@ public class ComputationCache {
     };
   }
 
-  public synchronized Output read(Hash taskHash, TypeV type) throws ComputationCacheException {
+  public synchronized Output read(Hash taskHash, TypeHV type) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      Obj messagesObject = objDb.get(Hash.read(source));
-      ArrayTypeO messageArrayType = objFactory.arrayType(objFactory.messageType());
+      ObjectH messagesObject = objectHDb.get(Hash.read(source));
+      ArrayTypeH messageArrayType = objFactory.arrayType(objFactory.messageType());
       if (!messagesObject.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
             + " as first child of its Merkle root, but got " + messagesObject.type());
       }
 
-      Array messages = (Array) messagesObject;
-      Iterable<Tuple> tuples = messages.elements(Tuple.class);
-      for (Tuple m : tuples) {
+      ArrayH messages = (ArrayH) messagesObject;
+      Iterable<TupleH> tuples = messages.elements(TupleH.class);
+      for (TupleH m : tuples) {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {
           throw corruptedValueException(taskHash,
@@ -91,12 +91,12 @@ public class ComputationCache {
         return new Output(null, messages);
       } else {
         Hash resultObjectHash = Hash.read(source);
-        Obj obj = objDb.get(resultObjectHash);
+        ObjectH obj = objectHDb.get(resultObjectHash);
         if (!type.equals(obj.type())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its Merkle root, but got " + obj.type());
         } else {
-          return new Output((Val) obj, messages);
+          return new Output((ValueH) obj, messages);
         }
       }
     } catch (IOException e) {

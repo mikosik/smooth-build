@@ -9,12 +9,12 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Bool;
-import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.BoolH;
+import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
@@ -69,7 +69,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array(file), messageArrayEmtpy()));
     var arrayType = arrayOT(objectFactory().fileType());
 
-    assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Tuple.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(TupleH.class))
         .containsExactly(file);
   }
 
@@ -79,7 +79,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array(blob), messageArrayEmtpy()));
     var arrayType = arrayOT(blobOT());
 
-    assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Blob.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(BlobH.class))
         .containsExactly(blob);
   }
 
@@ -89,7 +89,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array(boolV), messageArrayEmtpy()));
     var arrayType = arrayOT(boolOT());
 
-    assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Bool.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(BoolH.class))
         .containsExactly(boolV);
   }
 
@@ -99,7 +99,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array(intV), messageArrayEmtpy()));
     var arrayType = arrayOT(intOT());
 
-    assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Int.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(IntH.class))
         .containsExactly(intV);
   }
 
@@ -110,7 +110,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array, messageArrayEmtpy()));
     var arrayType = arrayOT(stringOT());
 
-    assertThat(((Array) computationCache().read(hash, arrayType).value()).elements(Str.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(StringH.class))
         .containsExactly(strV);
   }
 
@@ -137,7 +137,7 @@ public class ComputationCacheTest extends TestingContext {
     var boolV = bool(true);
     computationCache().write(hash, new Output(boolV, messageArrayEmtpy()));
 
-    assertThat(((Bool) computationCache().read(hash, boolOT()).value()).jValue())
+    assertThat(((BoolH) computationCache().read(hash, boolOT()).value()).jValue())
         .isTrue();
   }
 
@@ -146,7 +146,7 @@ public class ComputationCacheTest extends TestingContext {
     var intV = int_(123);
     computationCache().write(hash, new Output(intV, messageArrayEmtpy()));
 
-    assertThat(((Int) computationCache().read(hash, intOT()).value()).jValue())
+    assertThat(((IntH) computationCache().read(hash, intOT()).value()).jValue())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -155,7 +155,7 @@ public class ComputationCacheTest extends TestingContext {
     var string = "some string";
     var strV = string(string);
     computationCache().write(hash, new Output(strV, messageArrayEmtpy()));
-    assertThat(((Str) computationCache().read(hash, stringOT()).value()).jValue())
+    assertThat(((StringH) computationCache().read(hash, stringOT()).value()).jValue())
         .isEqualTo(string);
   }
 }

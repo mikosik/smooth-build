@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
@@ -46,7 +46,7 @@ public class PathArgValidatorTest extends TestingContext {
     assertThat(name)
         .isNull();
     container().messages()
-        .elements(Tuple.class)
+        .elements(TupleH.class)
         .forEach(s -> {
           assertThat(messageText(s).jValue())
               .startsWith("Param `name` has illegal value.");

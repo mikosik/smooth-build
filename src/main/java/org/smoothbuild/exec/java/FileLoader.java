@@ -4,27 +4,27 @@ import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.BlobBuilder;
+import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 
 public class FileLoader {
   private final FileResolver fileResolver;
-  private final ObjDb objDb;
-  private final ConcurrentHashMap<FilePath, Blob> fileCache;
+  private final ObjectHDb objectHDb;
+  private final ConcurrentHashMap<FilePath, BlobH> fileCache;
 
-  public FileLoader(FileResolver fileResolver, ObjDb objDb) {
+  public FileLoader(FileResolver fileResolver, ObjectHDb objectHDb) {
     this.fileResolver = fileResolver;
-    this.objDb = objDb;
+    this.objectHDb = objectHDb;
     this.fileCache = new ConcurrentHashMap<>();
   }
 
-  public Blob load(FilePath filePath) {
-    Blob result = fileCache.get(filePath);
+  public BlobH load(FilePath filePath) {
+    BlobH result = fileCache.get(filePath);
     if (result == null) {
-      BlobBuilder blobBuilder = objDb.blobBuilder();
+      BlobHBuilder blobBuilder = objectHDb.blobBuilder();
       blobBuilder.write(sink -> copyAllAndClose(fileResolver.source(filePath), sink));
       result = blobBuilder.build();
       fileCache.put(filePath, result);

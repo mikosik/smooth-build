@@ -18,13 +18,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Bool;
-import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.BoolH;
+import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.testing.TestingContext;
 
@@ -44,29 +44,29 @@ public class MapTypeToJTypeTest extends TestingContext {
 
   private static Stream<Arguments> mapTypeToJType_test_data() {
     return Stream.of(
-        arguments(A, Val.class),
-        arguments(BLOB, Blob.class),
-        arguments(BOOL, Bool.class),
-        arguments(INT, Int.class),
-        arguments(NOTHING, Val.class),
-        arguments(STRING, Str.class),
-        arguments(PERSON, Tuple.class),
+        arguments(A, ValueH.class),
+        arguments(BLOB, BlobH.class),
+        arguments(BOOL, BoolH.class),
+        arguments(INT, IntH.class),
+        arguments(NOTHING, ValueH.class),
+        arguments(STRING, StringH.class),
+        arguments(PERSON, TupleH.class),
 
-        arguments(a(A), Array.class),
-        arguments(a(BLOB), Array.class),
-        arguments(a(BOOL), Array.class),
-        arguments(a(INT), Array.class),
-        arguments(a(NOTHING), Array.class),
-        arguments(a(STRING), Array.class),
-        arguments(a(PERSON), Array.class),
+        arguments(a(A), ArrayH.class),
+        arguments(a(BLOB), ArrayH.class),
+        arguments(a(BOOL), ArrayH.class),
+        arguments(a(INT), ArrayH.class),
+        arguments(a(NOTHING), ArrayH.class),
+        arguments(a(STRING), ArrayH.class),
+        arguments(a(PERSON), ArrayH.class),
 
-        arguments(a(a(A)), Array.class),
-        arguments(a(a(BLOB)), Array.class),
-        arguments(a(a(BOOL)), Array.class),
-        arguments(a(a(INT)), Array.class),
-        arguments(a(a(NOTHING)), Array.class),
-        arguments(a(a(STRING)), Array.class),
-        arguments(a(a(PERSON)), Array.class)
+        arguments(a(a(A)), ArrayH.class),
+        arguments(a(a(BLOB)), ArrayH.class),
+        arguments(a(a(BOOL)), ArrayH.class),
+        arguments(a(a(INT)), ArrayH.class),
+        arguments(a(a(NOTHING)), ArrayH.class),
+        arguments(a(a(STRING)), ArrayH.class),
+        arguments(a(a(PERSON)), ArrayH.class)
     );
   }
 }

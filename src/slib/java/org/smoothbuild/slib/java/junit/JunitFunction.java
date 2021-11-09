@@ -20,24 +20,24 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.zip.ZipException;
 
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class JunitFunction {
-  public static Str function(NativeApi nativeApi, Tuple tests, Array deps, Str include)
+  public static StringH function(NativeApi nativeApi, TupleH tests, ArrayH deps, StringH include)
       throws IOException {
 
     try {
-      Array unzipped = unzipTestFiles(nativeApi, tests);
-      Map<String, Tuple> testFiles = stream(unzipped.elements(Tuple.class).spliterator(), false)
+      ArrayH unzipped = unzipTestFiles(nativeApi, tests);
+      Map<String, TupleH> testFiles = stream(unzipped.elements(TupleH.class).spliterator(), false)
           .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
-      Map<String, Tuple> allFiles = buildNameFileMap(nativeApi, deps, testFiles);
+      Map<String, TupleH> allFiles = buildNameFileMap(nativeApi, deps, testFiles);
 
       FileClassLoader classLoader = new FileClassLoader(allFiles);
       ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
@@ -74,14 +74,14 @@ public class JunitFunction {
     }
   }
 
-  private static Map<String, Tuple> buildNameFileMap(NativeApi nativeApi, Array deps,
-      Map<String, Tuple> testFiles) throws IOException, JunitException {
-    Iterable<Blob> libraryJars = deps.elements(Tuple.class)
+  private static Map<String, TupleH> buildNameFileMap(NativeApi nativeApi, ArrayH deps,
+      Map<String, TupleH> testFiles) throws IOException, JunitException {
+    Iterable<BlobH> libraryJars = deps.elements(TupleH.class)
         .stream()
         .map(FileStruct::fileContent)
         .collect(toList());
-    Map<String, Tuple> allFiles = binaryNameToClassFile(nativeApi, libraryJars);
-    for (Entry<String, Tuple> entry : testFiles.entrySet()) {
+    Map<String, TupleH> allFiles = binaryNameToClassFile(nativeApi, libraryJars);
+    for (Entry<String, TupleH> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
         throw new JunitException("Both 'tests' and 'deps' contains class " + entry.getValue());
       } else {
@@ -91,7 +91,7 @@ public class JunitFunction {
     return allFiles;
   }
 
-  private static Array unzipTestFiles(NativeApi nativeApi, Tuple tests) throws IOException,
+  private static ArrayH unzipTestFiles(NativeApi nativeApi, TupleH tests) throws IOException,
       JunitException {
     try {
       return unzip(nativeApi, fileContent(tests), isClassFilePredicate());
@@ -101,7 +101,7 @@ public class JunitFunction {
   }
 
   private static JUnitCoreWrapper createJUnitCore(NativeApi nativeApi,
-      Map<String, Tuple> binaryNameToClassFile, FileClassLoader classLoader)
+      Map<String, TupleH> binaryNameToClassFile, FileClassLoader classLoader)
       throws JunitException {
     if (binaryNameToClassFile.containsKey("org.junit.runner.JUnitCore")) {
       return newInstance(
@@ -121,7 +121,7 @@ public class JunitFunction {
     }
   }
 
-  private static Predicate<Path> createFilter(Str includeParam) throws JunitException {
+  private static Predicate<Path> createFilter(StringH includeParam) throws JunitException {
     try {
       return pathMatcher(includeParam.jValue());
     } catch (IllegalPathPatternException e) {

@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
@@ -46,8 +46,8 @@ public class ArtifactBuilder {
       return;
     }
     try {
-      Map<Value, Optional<Obj>> artifacts = parallelExecutor.executeAll(plans);
-      if (!artifacts.containsValue(Optional.<Obj>empty())) {
+      Map<Value, Optional<ObjectH>> artifacts = parallelExecutor.executeAll(plans);
+      if (!artifacts.containsValue(Optional.<ObjectH>empty())) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
         artifacts.entrySet()
             .stream()
@@ -60,7 +60,7 @@ public class ArtifactBuilder {
     }
   }
 
-  private void save(Value value, Obj obj) {
+  private void save(Value value, ObjectH obj) {
     String name = value.name();
     try {
       Path path = artifactSaver.save(value, obj);

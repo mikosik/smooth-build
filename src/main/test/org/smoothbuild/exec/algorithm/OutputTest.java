@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
@@ -106,11 +106,11 @@ public class OutputTest extends TestingContext {
         .isEqualTo(new Output(aString(), messages()));
   }
 
-  private Array messages() {
+  private ArrayH messages() {
     return messageArrayWithOneError();
   }
 
-  private Str aString() {
+  private StringH aString() {
     return string("abc");
   }
 }

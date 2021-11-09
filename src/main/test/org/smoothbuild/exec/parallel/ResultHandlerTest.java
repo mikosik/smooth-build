@@ -12,8 +12,8 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.job.TaskInfo;
@@ -23,8 +23,8 @@ import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 public class ResultHandlerTest {
   private ExecutionReporter reporter;
   private SoftTerminationExecutor executor;
-  private Consumer<Val> consumer;
-  private Val val;
+  private Consumer<ValueH> consumer;
+  private ValueH val;
 
   @BeforeEach
   @SuppressWarnings("unchecked")
@@ -32,7 +32,7 @@ public class ResultHandlerTest {
     reporter = mock(ExecutionReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
-    val = mock(Val.class);
+    val = mock(ValueH.class);
   }
 
   @Nested
@@ -86,12 +86,12 @@ public class ResultHandlerTest {
     }
   }
 
-  private Computed maybeComputed(Val val) {
+  private Computed maybeComputed(ValueH val) {
     return new Computed(output(val), DISK);
   }
 
-  private static Output output(Val val) {
-    return new Output(val, mock(Array.class));
+  private static Output output(ValueH val) {
+    return new Output(val, mock(ArrayH.class));
   }
 
   private TaskInfo taskInfo() {

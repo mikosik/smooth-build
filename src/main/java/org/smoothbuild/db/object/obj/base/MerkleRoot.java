@@ -1,14 +1,14 @@
 package org.smoothbuild.db.object.obj.base;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.TypeO;
+import org.smoothbuild.db.object.type.base.TypeH;
 
 public class MerkleRoot {
   private final Hash hash;
-  private final TypeO type;
+  private final TypeH type;
   private final Hash dataHash;
 
-  public MerkleRoot(Hash hash, TypeO type, Hash dataHash) {
+  public MerkleRoot(Hash hash, TypeH type, Hash dataHash) {
     this.hash = hash;
     this.dataHash = dataHash;
     this.type = type;
@@ -18,7 +18,7 @@ public class MerkleRoot {
     return hash;
   }
 
-  public TypeO type() {
+  public TypeH type() {
     return type;
   }
 

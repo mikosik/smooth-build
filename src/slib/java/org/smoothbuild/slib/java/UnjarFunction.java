@@ -5,12 +5,12 @@ import static org.smoothbuild.slib.compress.UnzipFunction.unzip;
 import java.io.IOException;
 import java.util.zip.ZipException;
 
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Blob;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class UnjarFunction {
-  public static Array function(NativeApi nativeApi, Blob jar) throws IOException {
+  public static ArrayH function(NativeApi nativeApi, BlobH jar) throws IOException {
     try {
       return unzip(nativeApi, jar, string -> !string.equals("META-INF/MANIFEST.MF"));
     } catch (ZipException e) {

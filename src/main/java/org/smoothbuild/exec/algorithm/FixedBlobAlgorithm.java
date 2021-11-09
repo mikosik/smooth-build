@@ -4,8 +4,8 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmH
 import static org.smoothbuild.exec.job.TaskInfo.NAME_LENGTH_LIMIT;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.type.val.BlobTypeO;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.type.val.BlobTypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -16,7 +16,7 @@ public class FixedBlobAlgorithm extends Algorithm {
   private final ByteString byteString;
   private final String shortedString;
 
-  public FixedBlobAlgorithm(BlobTypeO blobType, ByteString byteString) {
+  public FixedBlobAlgorithm(BlobTypeH blobType, ByteString byteString) {
     super(blobType);
     this.byteString = byteString;
     this.shortedString = toStringLimitedWithEllipsis(byteString, NAME_LENGTH_LIMIT);
@@ -42,7 +42,7 @@ public class FixedBlobAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Blob blob = nativeApi
+    BlobH blob = nativeApi
         .factory()
         .blob(sink -> sink.write(byteString));
     return new Output(blob, nativeApi.messages());

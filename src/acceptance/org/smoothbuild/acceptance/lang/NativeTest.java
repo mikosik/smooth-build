@@ -26,10 +26,10 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.acceptance.testing.WithoutContainer;
 import org.smoothbuild.acceptance.testing.WrongMethodName;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NativeTest extends AcceptanceTestCase {
@@ -120,8 +120,8 @@ public class NativeTest extends AcceptanceTestCase {
           assertFinishedWithError();
           assertSysOutContains(errorLoadingMessage("returnAbc", classPath,
               "`returnAbc` declares type `Blob` so its native implementation result type must be "
-                  + Blob.class.getCanonicalName() + " but it is "
-                  + Str.class.getCanonicalName() + ".\n"));
+                  + BlobH.class.getCanonicalName() + " but it is "
+                  + StringH.class.getCanonicalName() + ".\n"));
         }
 
         @Test
@@ -427,8 +427,8 @@ public class NativeTest extends AcceptanceTestCase {
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "`stringIdentity` declares type `File` "
                 + "so its native implementation result type must be "
-                + Tuple.class.getCanonicalName()
-                + " but it is " + Str.class.getCanonicalName() + ".\n"));
+                + TupleH.class.getCanonicalName()
+                + " but it is " + StringH.class.getCanonicalName() + ".\n"));
       }
 
       @Test
@@ -476,8 +476,8 @@ public class NativeTest extends AcceptanceTestCase {
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "Function `stringIdentity` parameter `string` has type `[String]` "
-            + "so its native implementation type must be " + Array.class.getCanonicalName()
-            + " but it is " + Str.class.getCanonicalName() + "."));
+            + "so its native implementation type must be " + ArrayH.class.getCanonicalName()
+            + " but it is " + StringH.class.getCanonicalName() + "."));
       }
 
       @Test

@@ -4,10 +4,10 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmH
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.type.val.TupleTypeO;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
@@ -18,7 +18,7 @@ public class ReferenceAlgorithm extends Algorithm {
   private final GlobalReferencable referencable;
   private final SModule module;
 
-  public ReferenceAlgorithm(GlobalReferencable referencable, SModule module, TupleTypeO type) {
+  public ReferenceAlgorithm(GlobalReferencable referencable, SModule module, TupleTypeH type) {
     super(type);
     this.referencable = referencable;
     this.module = module;
@@ -31,11 +31,11 @@ public class ReferenceAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Str name = nativeApi.factory().string(referencable.name());
-    Blob moduleHash = nativeApi.factory().blob(sink -> sink.write(module.hash().toByteString()));
-    Tuple functionTuple = nativeApi
+    StringH name = nativeApi.factory().string(referencable.name());
+    BlobH moduleHash = nativeApi.factory().blob(sink -> sink.write(module.hash().toByteString()));
+    TupleH functionTuple = nativeApi
         .factory()
-        .tuple((TupleTypeO) outputType(), list(name, moduleHash));
+        .tuple((TupleTypeH) outputType(), list(name, moduleHash));
     return new Output(functionTuple, nativeApi.messages());
   }
 }

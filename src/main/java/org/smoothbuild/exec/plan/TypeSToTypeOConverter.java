@@ -6,12 +6,12 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.ArrayTypeO;
-import org.smoothbuild.db.object.type.val.BlobTypeO;
-import org.smoothbuild.db.object.type.val.IntTypeO;
-import org.smoothbuild.db.object.type.val.StringTypeO;
-import org.smoothbuild.db.object.type.val.TupleTypeO;
+import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.val.ArrayTypeH;
+import org.smoothbuild.db.object.type.val.BlobTypeH;
+import org.smoothbuild.db.object.type.val.IntTypeH;
+import org.smoothbuild.db.object.type.val.StringTypeH;
+import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
 import org.smoothbuild.lang.base.type.impl.BoolTypeS;
@@ -31,7 +31,7 @@ public class TypeSToTypeOConverter {
     this.objFactory = objFactory;
   }
 
-  public TypeV visit(TypeS type) {
+  public TypeHV visit(TypeS type) {
     // TODO refactor to pattern matching once we have java 17
     if (type instanceof BlobTypeS blob) {
       return visit(blob);
@@ -56,36 +56,36 @@ public class TypeSToTypeOConverter {
     }
   }
 
-  public BlobTypeO visit(BlobTypeS type) {
+  public BlobTypeH visit(BlobTypeS type) {
     return objFactory.blobType();
   }
 
-  public IntTypeO visit(IntTypeS type) {
+  public IntTypeH visit(IntTypeS type) {
     return objFactory.intType();
   }
 
-  public StringTypeO visit(StringTypeS string) {
+  public StringTypeH visit(StringTypeS string) {
     return objFactory.stringType();
   }
 
-  public TupleTypeO visit(StructTypeS structType) {
+  public TupleTypeH visit(StructTypeS structType) {
     var itemTypes = map(structType.fields().objects(), this::visit);
     return objFactory.tupleType(itemTypes);
   }
 
-  public ArrayTypeO visit(ArrayTypeS array) {
+  public ArrayTypeH visit(ArrayTypeS array) {
     if (array.isPolytype()) {
       throw new UnsupportedOperationException();
     }
     return objFactory.arrayType(visit(array.element()));
   }
 
-  private TupleTypeO nativeCodeType() {
+  private TupleTypeH nativeCodeType() {
     return objFactory.tupleType(
         list(objFactory.stringType(), objFactory.blobType()));
   }
 
-  public TupleTypeO functionType() {
+  public TupleTypeH functionType() {
     return objFactory.tupleType(list(objFactory.stringType(), objFactory.blobType()));
   }
 }

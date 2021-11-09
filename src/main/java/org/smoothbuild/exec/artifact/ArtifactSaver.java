@@ -14,10 +14,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -38,44 +38,44 @@ public class ArtifactSaver {
     this.fileSystem = fileSystem;
   }
 
-  public Path save(Value value, Obj obj) throws IOException, DuplicatedPathsException {
+  public Path save(Value value, ObjectH obj) throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(value.name());
     if (value.type() instanceof ArrayType arrayType) {
-      return saveArray(arrayType, artifactPath, (Array) obj);
+      return saveArray(arrayType, artifactPath, (ArrayH) obj);
     } else if (value.type().name().equals(FileStruct.NAME)) {
-      return saveFile(artifactPath, (Tuple) obj);
+      return saveFile(artifactPath, (TupleH) obj);
     } else {
       return saveBaseObject(artifactPath, obj);
     }
   }
 
-  private Path saveFile(Path artifactPath, Tuple file)
+  private Path saveFile(Path artifactPath, TupleH file)
       throws IOException, DuplicatedPathsException {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileObjectPath(file));
   }
 
   private Path saveArray(ArrayType arrayType, Path artifactPath,
-      Array array) throws IOException, DuplicatedPathsException {
+      ArrayH array) throws IOException, DuplicatedPathsException {
     fileSystem.createDir(artifactPath);
     Type elemType = arrayType.element();
     if (elemType instanceof ArrayType elemArrayType) {
       int i = 0;
-      for (Array element : array.elements(Array.class)) {
+      for (ArrayH element : array.elements(ArrayH.class)) {
         saveArray(elemArrayType, artifactPath.appendPart(Integer.toString(i)), element);
         i++;
       }
     } else if (elemType.name().equals(FileStruct.NAME)) {
-      saveFileArray(artifactPath, array.elements(Tuple.class));
+      saveFileArray(artifactPath, array.elements(TupleH.class));
     } else {
       saveObjectArray(artifactPath, array);
     }
     return artifactPath;
   }
 
-  private void saveObjectArray(Path artifactPath, Array array) throws IOException {
+  private void saveObjectArray(Path artifactPath, ArrayH array) throws IOException {
     int i = 0;
-    for (Val val : array.elements(Val.class)) {
+    for (ValueH val : array.elements(ValueH.class)) {
       Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       Path targetPath = targetPath(val);
       fileSystem.createLink(sourcePath, targetPath);
@@ -83,10 +83,10 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveFileArray(Path artifactPath, Iterable<Tuple> files) throws IOException,
+  private void saveFileArray(Path artifactPath, Iterable<TupleH> files) throws IOException,
       DuplicatedPathsException {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    for (Tuple file : files) {
+    for (TupleH file : files) {
       Path filePath = fileObjectPath(file);
       Path sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
@@ -111,14 +111,14 @@ public class ArtifactSaver {
             + delimiter + list);
   }
 
-  private Path saveBaseObject(Path artifactPath, Obj object) throws IOException {
+  private Path saveBaseObject(Path artifactPath, ObjectH object) throws IOException {
     Path targetPath = targetPath(object);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;
   }
 
-  private static Path fileObjectPath(Tuple file) {
+  private static Path fileObjectPath(TupleH file) {
     return path(filePath(file).jValue());
   }
 }

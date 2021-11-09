@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.val.TupleTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -27,7 +27,7 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    TupleTypeO constructedType = tupleOT();
+    TupleTypeH constructedType = tupleOT();
 
     hashes.add(orderAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
@@ -57,8 +57,8 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void construct_algorithm_has_different_hash_for_different_fields() {
-    TupleTypeO constructedType = tupleOT(list());
-    TupleTypeO constructedType2 = tupleOT(list(blobOT()));
+    TupleTypeH constructedType = tupleOT(list());
+    TupleTypeH constructedType2 = tupleOT(list(blobOT()));
 
     assertThat(constructAlgorithmHash(constructedType))
         .isNotEqualTo(constructAlgorithmHash(constructedType2));

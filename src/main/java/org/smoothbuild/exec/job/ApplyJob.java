@@ -5,8 +5,8 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.exec.base.FunctionStruct;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
@@ -34,16 +34,16 @@ public class ApplyJob extends AbstractJob {
   }
 
   @Override
-  public Promise<Val> schedule(Worker worker) {
-    PromisedValue<Val> result = new PromisedValue<>();
+  public Promise<ValueH> schedule(Worker worker) {
+    PromisedValue<ValueH> result = new PromisedValue<>();
     functionJob()
         .schedule(worker)
         .addConsumer(obj -> onFunctionJobCompleted(obj, worker, result));
     return result;
   }
 
-  private void onFunctionJobCompleted(Val val, Worker worker, Consumer<Val> result) {
-    String name = FunctionStruct.name(((Tuple) val)).jValue();
+  private void onFunctionJobCompleted(ValueH val, Worker worker, Consumer<ValueH> result) {
+    String name = FunctionStruct.name(((TupleH) val)).jValue();
     jobCreator.evaluateFunctionEagerJob(scope, variables, type(), name, arguments, location())
         .schedule(worker)
         .addConsumer(result);

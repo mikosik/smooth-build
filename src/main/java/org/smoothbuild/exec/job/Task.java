@@ -5,7 +5,7 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.List;
 
-import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -31,8 +31,8 @@ public class Task extends AbstractJob {
   }
 
   @Override
-  public Promise<Val> schedule(Worker worker) {
-    PromisedValue<Val> result = new PromisedValue<>();
+  public Promise<ValueH> schedule(Worker worker) {
+    PromisedValue<ValueH> result = new PromisedValue<>();
     var input = map(dependencies(), d -> d.schedule(worker));
     runWhenAllAvailable(input, () -> worker.enqueue(info, algorithm, input, result));
     return result;

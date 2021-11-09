@@ -2,13 +2,13 @@ package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 
-import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 
 public class PathArgValidator {
-  public static Path validatedProjectPath(NativeApi nativeApi, String name, Str path) {
+  public static Path validatedProjectPath(NativeApi nativeApi, String name, StringH path) {
     String value = path.jValue();
     switch (value) {
       case ".":

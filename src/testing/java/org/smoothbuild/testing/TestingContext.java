@@ -14,45 +14,45 @@ import java.util.Optional;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.base.Expr;
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.expr.Call;
-import org.smoothbuild.db.object.obj.expr.Const;
-import org.smoothbuild.db.object.obj.expr.Construct;
-import org.smoothbuild.db.object.obj.expr.Order;
-import org.smoothbuild.db.object.obj.expr.Ref;
-import org.smoothbuild.db.object.obj.expr.Select;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.BlobBuilder;
-import org.smoothbuild.db.object.obj.val.Bool;
-import org.smoothbuild.db.object.obj.val.Int;
-import org.smoothbuild.db.object.obj.val.FunctionV;
-import org.smoothbuild.db.object.obj.val.NativeMethod;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.db.object.type.ObjTypeDb;
-import org.smoothbuild.db.object.type.TypeFactoryO;
-import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.expr.CallTypeO;
-import org.smoothbuild.db.object.type.expr.ConstTypeO;
-import org.smoothbuild.db.object.type.expr.ConstructTypeO;
-import org.smoothbuild.db.object.type.expr.InvokeTypeO;
-import org.smoothbuild.db.object.type.expr.OrderTypeO;
-import org.smoothbuild.db.object.type.expr.RefTypeO;
-import org.smoothbuild.db.object.type.expr.SelectTypeO;
-import org.smoothbuild.db.object.type.val.AnyTypeO;
-import org.smoothbuild.db.object.type.val.ArrayTypeO;
-import org.smoothbuild.db.object.type.val.BlobTypeO;
-import org.smoothbuild.db.object.type.val.BoolTypeO;
-import org.smoothbuild.db.object.type.val.IntTypeO;
-import org.smoothbuild.db.object.type.val.FunctionTypeO;
-import org.smoothbuild.db.object.type.val.NativeMethodTypeO;
-import org.smoothbuild.db.object.type.val.NothingTypeO;
-import org.smoothbuild.db.object.type.val.StringTypeO;
-import org.smoothbuild.db.object.type.val.TupleTypeO;
-import org.smoothbuild.db.object.type.val.VariableO;
+import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.base.ExprH;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.expr.CallH;
+import org.smoothbuild.db.object.obj.expr.ConstH;
+import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.OrderH;
+import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.SelectH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.BlobHBuilder;
+import org.smoothbuild.db.object.obj.val.BoolH;
+import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.NativeMethodH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.type.TypeFactoryH;
+import org.smoothbuild.db.object.type.TypeHDb;
+import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.expr.CallTypeH;
+import org.smoothbuild.db.object.type.expr.ConstTypeH;
+import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.expr.InvokeTypeH;
+import org.smoothbuild.db.object.type.expr.OrderTypeH;
+import org.smoothbuild.db.object.type.expr.RefTypeH;
+import org.smoothbuild.db.object.type.expr.SelectTypeH;
+import org.smoothbuild.db.object.type.val.AnyTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTypeH;
+import org.smoothbuild.db.object.type.val.BlobTypeH;
+import org.smoothbuild.db.object.type.val.BoolTypeH;
+import org.smoothbuild.db.object.type.val.FunctionTypeH;
+import org.smoothbuild.db.object.type.val.IntTypeH;
+import org.smoothbuild.db.object.type.val.NativeMethodTypeH;
+import org.smoothbuild.db.object.type.val.NothingTypeH;
+import org.smoothbuild.db.object.type.val.StringTypeH;
+import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.val.VariableH;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
@@ -113,9 +113,9 @@ public class TestingContext {
   private ObjFactory objFactory;
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
-  private ObjDb objDb;
+  private ObjectHDb objectHDb;
   private TypingS typingS;
-  private ObjTypeDb objTypeDb;
+  private TypeHDb typeHDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
@@ -170,7 +170,7 @@ public class TestingContext {
     return typingS;
   }
 
-  public TypeFactoryO typeFactoryO() {
+  public TypeFactoryH typeFactoryO() {
     return objTypeDb();
   }
 
@@ -181,18 +181,18 @@ public class TestingContext {
     return typeFactoryS;
   }
 
-  public ObjTypeDb objTypeDb() {
-    if (objTypeDb == null) {
-      objTypeDb = new ObjTypeDb(hashedDb());
+  public TypeHDb objTypeDb() {
+    if (typeHDb == null) {
+      typeHDb = new TypeHDb(hashedDb());
     }
-    return objTypeDb;
+    return typeHDb;
   }
 
-  public ObjDb objectDb() {
-    if (objDb == null) {
-      objDb = new ObjDb(hashedDb(), objTypeDb());
+  public ObjectHDb objectDb() {
+    if (objectHDb == null) {
+      objectHDb = new ObjectHDb(hashedDb(), objTypeDb());
     }
-    return objDb;
+    return objectHDb;
   }
 
   public ComputationCache computationCache() {
@@ -210,12 +210,12 @@ public class TestingContext {
     return computationCacheFileSystem;
   }
 
-  public ObjDb objectDbOther() {
-    return new ObjDb(hashedDb(), objTypeDbOther());
+  public ObjectHDb objectDbOther() {
+    return new ObjectHDb(hashedDb(), objTypeDbOther());
   }
 
-  public ObjTypeDb objTypeDbOther() {
-    return new ObjTypeDb(hashedDb());
+  public TypeHDb objTypeDbOther() {
+    return new TypeHDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -249,318 +249,318 @@ public class TestingContext {
 
   // Obj types
 
-  public TupleTypeO animalOT() {
+  public TupleTypeH animalOT() {
     return typeFactoryO().tuple(list(stringOT(), intOT()));
   }
 
-  public AnyTypeO anyOT() {
+  public AnyTypeH anyOT() {
     return typeFactoryO().any();
   }
 
-  public ArrayTypeO arrayOT(TypeV elementSpec) {
+  public ArrayTypeH arrayOT(TypeHV elementSpec) {
     return typeFactoryO().array(elementSpec);
   }
 
-  public BlobTypeO blobOT() {
+  public BlobTypeH blobOT() {
     return typeFactoryO().blob();
   }
 
-  public BoolTypeO boolOT() {
+  public BoolTypeH boolOT() {
     return typeFactoryO().bool();
   }
 
-  public TupleTypeO fileOT() {
+  public TupleTypeH fileOT() {
     return tupleOT(list(blobOT(), stringOT()));
   }
 
-  public IntTypeO intOT() {
+  public IntTypeH intOT() {
     return typeFactoryO().int_();
   }
 
-  public FunctionTypeO functionOT() {
+  public FunctionTypeH functionOT() {
     return functionOT(intOT(), list(blobOT(), stringOT()));
   }
 
-  public FunctionTypeO functionOT(TypeV result, ImmutableList<TypeV> parameters) {
+  public FunctionTypeH functionOT(TypeHV result, ImmutableList<TypeHV> parameters) {
     return typeFactoryO().function(result, parameters);
   }
 
-  public NativeMethodTypeO nativeMethodOT() {
+  public NativeMethodTypeH nativeMethodOT() {
     return objTypeDb().nativeMethod();
   }
 
-  public NothingTypeO nothingOT() {
+  public NothingTypeH nothingOT() {
     return typeFactoryO().nothing();
   }
 
-  public TupleTypeO personOT() {
+  public TupleTypeH personOT() {
     return tupleOT(list(stringOT(), stringOT()));
   }
 
-  public StringTypeO stringOT() {
+  public StringTypeH stringOT() {
     return typeFactoryO().string();
   }
 
-  public TupleTypeO tupleOT() {
+  public TupleTypeH tupleOT() {
     return objTypeDb().tuple(list(intOT()));
   }
 
-  public TupleTypeO tupleOT(ImmutableList<TypeV> itemSpecs) {
+  public TupleTypeH tupleOT(ImmutableList<TypeHV> itemSpecs) {
     return objTypeDb().tuple(itemSpecs);
   }
 
-  public TupleTypeO tupleEmptyOT() {
+  public TupleTypeH tupleEmptyOT() {
     return tupleOT(list());
   }
 
-  public TupleTypeO tupleWithStrOT() {
+  public TupleTypeH tupleWithStrOT() {
     return tupleOT(list(stringOT()));
   }
 
-  public VariableO variableOT(String name) {
+  public VariableH variableOT(String name) {
     return typeFactoryO().variable(name);
   }
 
-  public Side<TypeV> lowerOT() {
+  public Side<TypeHV> lowerOT() {
     return typeFactoryO().lower();
   }
 
-  public Side<TypeV> upperOT() {
+  public Side<TypeHV> upperOT() {
     return typeFactoryO().upper();
   }
 
   // Expr types
 
-  public CallTypeO callOT() {
+  public CallTypeH callOT() {
     return callOT(intOT());
   }
 
-  public CallTypeO callOT(TypeV evaluationType) {
+  public CallTypeH callOT(TypeHV evaluationType) {
     return objTypeDb().call(evaluationType);
   }
 
-  public ConstTypeO constOT() {
+  public ConstTypeH constOT() {
     return constOT(intOT());
   }
 
-  public ConstTypeO constOT(TypeV evaluationType) {
+  public ConstTypeH constOT(TypeHV evaluationType) {
     return objTypeDb().const_(evaluationType);
   }
 
-  public ConstructTypeO constructOT() {
+  public ConstructTypeH constructOT() {
     return constructOT(list(intOT(), stringOT()));
   }
 
-  public ConstructTypeO constructOT(ImmutableList<TypeV> itemSpecs) {
+  public ConstructTypeH constructOT(ImmutableList<TypeHV> itemSpecs) {
     return objTypeDb().construct(tupleOT(itemSpecs));
   }
 
-  public InvokeTypeO invokeOT(TypeV evaluationType) {
+  public InvokeTypeH invokeOT(TypeHV evaluationType) {
     return objTypeDb().invoke(evaluationType);
   }
 
-  public OrderTypeO orderOT() {
+  public OrderTypeH orderOT() {
     return orderOT(intOT());
   }
 
-  public OrderTypeO orderOT(TypeV elementSpec) {
+  public OrderTypeH orderOT(TypeHV elementSpec) {
     return objTypeDb().order(elementSpec);
   }
 
-  public RefTypeO refOT() {
+  public RefTypeH refOT() {
     return refOT(intOT());
   }
 
-  public RefTypeO refOT(TypeV evaluationType) {
+  public RefTypeH refOT(TypeHV evaluationType) {
     return objTypeDb().ref(evaluationType);
   }
 
-  public SelectTypeO selectOT() {
+  public SelectTypeH selectOT() {
     return selectOT(intOT());
   }
 
-  public SelectTypeO selectOT(TypeV evaluationType) {
+  public SelectTypeH selectOT(TypeHV evaluationType) {
     return objTypeDb().select(evaluationType);
   }
 
   // Obj-s (values)
 
-  public Tuple animal() {
+  public TupleH animal() {
     return animal("rabbit", 7);
   }
 
-  public Tuple animal(String species, int speed) {
+  public TupleH animal(String species, int speed) {
     return animal(string(species), int_(speed));
   }
 
-  public Tuple animal(Str species, Int speed) {
+  public TupleH animal(StringH species, IntH speed) {
     return tuple(animalOT(), list(species, speed));
   }
 
-  public Array array(Val... elements) {
+  public ArrayH array(ValueH... elements) {
     return array(elements[0].type(), elements);
   }
 
-  public Array array(TypeV elementSpec, Val... elements) {
+  public ArrayH array(TypeHV elementSpec, ValueH... elements) {
     return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
-  public Blob blob() {
+  public BlobH blob() {
     return objectFactory().blob(sink -> sink.writeUtf8("blob data"));
   }
 
-  public Blob blob(ByteString bytes) {
+  public BlobH blob(ByteString bytes) {
     return objectFactory().blob(sink -> sink.write(bytes));
   }
 
-  public BlobBuilder blobBuilder() {
+  public BlobHBuilder blobBuilder() {
     return objectDb().blobBuilder();
   }
 
-  public Bool bool(boolean value) {
+  public BoolH bool(boolean value) {
     return objectDb().bool(value);
   }
 
-  public Tuple file(Path path) {
+  public TupleH file(Path path) {
     return file(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public Tuple file(Path path, ByteString content) {
+  public TupleH file(Path path, ByteString content) {
     return file(path.toString(), blob(content));
   }
 
-  public Tuple file(String path, Blob blob) {
-    Str string = objectFactory().string(path);
+  public TupleH file(String path, BlobH blob) {
+    StringH string = objectFactory().string(path);
     return objectFactory().file(string, blob);
   }
 
-  public Int int_() {
+  public IntH int_() {
     return int_(17);
   }
 
-  public Int int_(int value) {
+  public IntH int_(int value) {
     return objectDb().int_(BigInteger.valueOf(value));
   }
 
-  public FunctionV function() {
+  public FunctionH function() {
     return function(intExpr());
   }
 
-  public FunctionV function(Expr body) {
-    FunctionTypeO spec = functionOT(body.evaluationType(), list(stringOT()));
+  public FunctionH function(ExprH body) {
+    FunctionTypeH spec = functionOT(body.evaluationType(), list(stringOT()));
     return function(spec, body);
   }
 
-  public FunctionV function(FunctionTypeO spec, Expr body) {
+  public FunctionH function(FunctionTypeH spec, ExprH body) {
     return objectDb().function(spec, body);
   }
 
-  public NativeMethod nativeMethod(Blob jarFile, Str classBinaryName) {
+  public NativeMethodH nativeMethod(BlobH jarFile, StringH classBinaryName) {
     return objectDb().nativeMethod(jarFile, classBinaryName);
   }
 
-  public Tuple person(String firstName, String lastName) {
+  public TupleH person(String firstName, String lastName) {
     return tuple(list(string(firstName), string(lastName)));
   }
 
-  public Str string() {
+  public StringH string() {
     return objectDb().string("abc");
   }
 
-  public Str string(String string) {
+  public StringH string(String string) {
     return objectDb().string(string);
   }
 
-  public Tuple tuple(ImmutableList<Val> items) {
-    var spec = tupleOT(map(items, Val::type));
+  public TupleH tuple(ImmutableList<ValueH> items) {
+    var spec = tupleOT(map(items, ValueH::type));
     return tuple(spec, items);
   }
 
-  public Tuple tuple(TupleTypeO tupleType, ImmutableList<Val> items) {
+  public TupleH tuple(TupleTypeH tupleType, ImmutableList<ValueH> items) {
     return objectDb().tuple(tupleType, items);
   }
 
-  public Tuple tupleEmpty() {
+  public TupleH tupleEmpty() {
     return tuple(list());
   }
 
-  public Tuple tupleWithStr() {
+  public TupleH tupleWithStr() {
     return tuple(list(string("abc")));
   }
 
-  public Tuple tupleWithStr(Str str) {
+  public TupleH tupleWithStr(StringH str) {
     return tuple(list(str));
   }
 
-  public Array messageArrayWithOneError() {
+  public ArrayH messageArrayWithOneError() {
     return array(objectFactory().errorMessage("error message"));
   }
 
-  public Array messageArrayEmtpy() {
+  public ArrayH messageArrayEmtpy() {
     return array(objectFactory().messageType());
   }
 
-  public Tuple errorMessage(String text) {
+  public TupleH errorMessage(String text) {
     return objectFactory().errorMessage(text);
   }
 
-  public Tuple warningMessage(String text) {
+  public TupleH warningMessage(String text) {
     return objectFactory().warningMessage(text);
   }
 
-  public Tuple infoMessage(String text) {
+  public TupleH infoMessage(String text) {
     return objectFactory().infoMessage(text);
   }
 
   // Expr-s
 
-  public Call call(Expr function, ImmutableList<Expr> arguments) {
+  public CallH call(ExprH function, ImmutableList<ExprH> arguments) {
     return objectDb().call(function, construct(arguments));
   }
 
-  public Const const_(Val val) {
+  public ConstH const_(ValueH val) {
     return objectDb().const_(val);
   }
 
-  public Construct construct(ImmutableList<Expr> items) {
+  public ConstructH construct(ImmutableList<ExprH> items) {
     return objectDb().construct(items);
   }
 
-  public Order order(ImmutableList<Expr> elements) {
+  public OrderH order(ImmutableList<ExprH> elements) {
     return objectDb().order(elements);
   }
 
-  public Ref ref(int value) {
+  public RefH ref(int value) {
     return objectDb().ref(BigInteger.valueOf(value), intOT());
   }
 
-  public Ref ref(TypeV evaluationType, int pointer) {
+  public RefH ref(TypeHV evaluationType, int pointer) {
     return objectDb().ref(BigInteger.valueOf(pointer), evaluationType);
   }
 
-  public Select select(Expr tuple, Int index) {
+  public SelectH select(ExprH tuple, IntH index) {
     return objectDb().select(tuple, index);
   }
 
   // Expr with specific evaluation type
 
-  public Const boolExpr() {
+  public ConstH boolExpr() {
     return const_(bool(true));
   }
 
-  public Const intExpr() {
+  public ConstH intExpr() {
     return intExpr(17);
   }
 
-  public Const intExpr(int i) {
+  public ConstH intExpr(int i) {
     return const_(int_(i));
   }
 
-  public Const stringExpr() {
+  public ConstH stringExpr() {
     return stringExpr("abc");
   }
 
-  public Const stringExpr(String string) {
+  public ConstH stringExpr(String string) {
     return const_(string(string));
   }
 

@@ -8,8 +8,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Array;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.plugin.MessageLogger;
@@ -45,14 +45,14 @@ public class Container implements NativeApi {
   }
 
   @Override
-  public Array messages() {
+  public ArrayH messages() {
     return objFactory.arrayBuilder(objFactory.messageType())
         .addAll(messageLogger.messages)
         .build();
   }
 
   private static class MessageLoggerImpl implements MessageLogger {
-    private final List<Val> messages = new ArrayList<>();
+    private final List<ValueH> messages = new ArrayList<>();
     private final ObjFactory objFactory;
 
     public MessageLoggerImpl(ObjFactory objFactory) {

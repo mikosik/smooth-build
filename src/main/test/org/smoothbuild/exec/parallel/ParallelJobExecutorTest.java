@@ -33,10 +33,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.TestingTypesO;
-import org.smoothbuild.db.object.type.base.TypeV;
+import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -204,7 +204,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     var value = mock(Value.class);
     var job = job(valueAlgorithm("A"));
 
-    Optional<Obj> object = parallelJobExecutor.executeAll(Map.of(value, job)).get(value);
+    Optional<ObjectH> object = parallelJobExecutor.executeAll(Map.of(value, job)).get(value);
 
     verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
     assertThat(object.isEmpty())
@@ -220,8 +220,8 @@ public class ParallelJobExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        String joinedArgs = toCommaSeparatedString(input.vals(), v -> ((Str) v).jValue());
-        Str result = nativeApi.factory().string("(" + joinedArgs + ")");
+        String joinedArgs = toCommaSeparatedString(input.vals(), v -> ((StringH) v).jValue());
+        StringH result = nativeApi.factory().string("(" + joinedArgs + ")");
         return new Output(result, nativeApi.messages());
       }
     };
@@ -240,7 +240,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(asList(Hash.of(2), Hash.of(value)))) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        Str result = nativeApi.factory().string(value);
+        StringH result = nativeApi.factory().string(value);
         return new Output(result, nativeApi.messages());
       }
     };
@@ -289,11 +289,11 @@ public class ParallelJobExecutorTest extends TestingContext {
     };
   }
 
-  private Obj executeSingleJob(Job job) throws InterruptedException {
+  private ObjectH executeSingleJob(Job job) throws InterruptedException {
     return executeSingleJob(parallelJobExecutor, job);
   }
 
-  private static Obj executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
+  private static ObjectH executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
     Value value = mock(Value.class);
     return parallelJobExecutor.executeAll(Map.of(value, job)).get(value).get();
@@ -329,7 +329,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     @Override
-    public TypeV outputType() {
+    public TypeHV outputType() {
       return TestingTypesO.STRING;
     }
   }

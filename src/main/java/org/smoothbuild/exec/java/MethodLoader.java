@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.Obj;
+import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
@@ -164,7 +164,7 @@ public class MethodLoader {
       Parameter nativeParam = nativeParams[i + 1];
       TypeS paramType = param.type();
       Class<?> paramJType = nativeParam.getType();
-      Class<? extends Obj> expectedParamJType = mapTypeToJType(paramType);
+      Class<? extends ObjectH> expectedParamJType = mapTypeToJType(paramType);
       if (!expectedParamJType.equals(paramJType)) {
         throw newLoadingException(function, classBinaryName, "Function " + function.q()
             + " parameter `" + param.name() + "` has type " + paramType.q()

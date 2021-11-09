@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.type.val.TupleTypeO;
+import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConstructAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -377,7 +377,7 @@ public class JobCreator {
       return new MapJob(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof Constructor constructor) {
       var resultType = constructor.type().result();
-      var tupleType = (TupleTypeO) toOTypeConverter.visit(resultType);
+      var tupleType = (TupleTypeH) toOTypeConverter.visit(resultType);
       return constructorCallEagerJob(resultType, tupleType, constructor.extendedName(),
           arguments, location);
     } else {
@@ -454,7 +454,7 @@ public class JobCreator {
     return zip(actualTypes, arguments, this::convertIfNeededEagerJob);
   }
 
-  private Job constructorCallEagerJob(TypeS resultType, TupleTypeO tupleType, String name,
+  private Job constructorCallEagerJob(TypeS resultType, TupleTypeH tupleType, String name,
       List<Job> arguments, Location location) {
     var algorithm = new ConstructAlgorithm(tupleType);
     var info = new TaskInfo(CALL, name, location);

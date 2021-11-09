@@ -7,18 +7,18 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import java.util.Set;
 
 import org.smoothbuild.cli.console.Level;
-import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 
 public class MessageStruct {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
   private static final int TEXT_INDEX = 0;
   private static final int SEVERITY_INDEX = 1;
 
-  public static boolean containsErrors(Array messages) {
-    return messages.elements(Tuple.class)
+  public static boolean containsErrors(ArrayH messages) {
+    return messages.elements(TupleH.class)
         .stream()
         .anyMatch(m -> severity(m).equals(ERROR.name()));
   }
@@ -27,27 +27,27 @@ public class MessageStruct {
     return SEVERITIES.contains(severity);
   }
 
-  public static boolean isEmpty(Array messages) {
-    return !messages.elements(Tuple.class).iterator().hasNext();
+  public static boolean isEmpty(ArrayH messages) {
+    return !messages.elements(TupleH.class).iterator().hasNext();
   }
 
-  public static Level level(Obj message) {
+  public static Level level(ObjectH message) {
     return Level.valueOf(severity(message));
   }
 
-  public static String severity(Obj message) {
-    return messageSeverity((Tuple) message).jValue();
+  public static String severity(ObjectH message) {
+    return messageSeverity((TupleH) message).jValue();
   }
 
-  public static String text(Obj message) {
-    return messageText((Tuple) message).jValue();
+  public static String text(ObjectH message) {
+    return messageText((TupleH) message).jValue();
   }
 
-  public static Str messageText(Tuple message) {
-    return (Str) message.get(TEXT_INDEX);
+  public static StringH messageText(TupleH message) {
+    return (StringH) message.get(TEXT_INDEX);
   }
 
-  public static Str messageSeverity(Tuple message) {
-    return (Str) message.get(SEVERITY_INDEX);
+  public static StringH messageSeverity(TupleH message) {
+    return (StringH) message.get(SEVERITY_INDEX);
   }
 }

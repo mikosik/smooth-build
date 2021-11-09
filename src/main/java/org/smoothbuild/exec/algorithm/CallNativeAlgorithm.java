@@ -9,9 +9,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.type.base.TypeV;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
@@ -24,7 +24,7 @@ public class CallNativeAlgorithm extends Algorithm {
   private final MethodLoader methodLoader;
   private final GlobalReferencable referencable;
 
-  public CallNativeAlgorithm(MethodLoader methodLoader, TypeV outputType,
+  public CallNativeAlgorithm(MethodLoader methodLoader, TypeHV outputType,
       GlobalReferencable referencable, boolean isPure) {
     super(outputType, isPure);
     this.methodLoader = methodLoader;
@@ -38,11 +38,11 @@ public class CallNativeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    String classBinaryName = ((Str) input.vals().get(0)).jValue();
+    String classBinaryName = ((StringH) input.vals().get(0)).jValue();
     Method method = methodLoader.load(referencable, classBinaryName);
     try {
-      ImmutableList<Val> nativeArgs = skip(1, input.vals());
-      Val result = (Val) method.invoke(null, createArguments(nativeApi, nativeArgs));
+      ImmutableList<ValueH> nativeArgs = skip(1, input.vals());
+      ValueH result = (ValueH) method.invoke(null, createArguments(nativeApi, nativeArgs));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
           nativeApi.log().error("`" + referencable.name()
@@ -66,7 +66,7 @@ public class CallNativeAlgorithm extends Algorithm {
     }
   }
 
-  private static Object[] createArguments(NativeApi nativeApi, List<Val> arguments) {
+  private static Object[] createArguments(NativeApi nativeApi, List<ValueH> arguments) {
     Object[] nativeArguments = new Object[1 + arguments.size()];
     nativeArguments[0] = nativeApi;
     for (int i = 0; i < arguments.size(); i++) {

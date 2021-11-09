@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.Obj;
-import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.Computer;
@@ -43,7 +43,7 @@ public class ParallelJobExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<Value, Optional<Obj>> executeAll(Map<Value, Job> jobs) throws InterruptedException {
+  public Map<Value, Optional<ObjectH>> executeAll(Map<Value, Job> jobs) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(jobs);
   }
@@ -65,7 +65,7 @@ public class ParallelJobExecutor {
       return reporter;
     }
 
-    public Map<Value, Optional<Obj>> executeAll(Map<Value, Job> jobs)
+    public Map<Value, Optional<ObjectH>> executeAll(Map<Value, Job> jobs)
         throws InterruptedException {
       var results = mapValues(jobs, job -> job.schedule(this));
       runWhenAllAvailable(results.values(), jobExecutor::terminate);
@@ -74,8 +74,8 @@ public class ParallelJobExecutor {
       return mapValues(results, promise -> Optional.ofNullable(promise.get()));
     }
 
-    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<Val>> dependencies,
-        Consumer<Val> consumer) {
+    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<ValueH>> dependencies,
+        Consumer<ValueH> consumer) {
       jobExecutor.enqueue(() -> {
         try {
           var resultHandler = new ResultHandler(info, consumer, reporter, jobExecutor);

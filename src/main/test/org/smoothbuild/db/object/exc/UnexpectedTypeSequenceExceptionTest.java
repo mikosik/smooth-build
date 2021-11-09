@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.exc;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.object.type.base.ObjKind.INT;
+import static org.smoothbuild.db.object.type.base.TypeKindH.INT;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;

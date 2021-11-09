@@ -1,10 +1,10 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NonPublicMethod {
-  static Str function(NativeApi nativeApi) {
+  static StringH function(NativeApi nativeApi) {
     return nativeApi.factory().string("abc");
   }
 }

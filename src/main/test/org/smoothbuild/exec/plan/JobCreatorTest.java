@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.base.Val;
+import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator.Handler;
@@ -78,7 +78,7 @@ public class JobCreatorTest extends TestingContext {
             }
 
             @Override
-            public Promise<Val> schedule(Worker worker) {
+            public Promise<ValueH> schedule(Worker worker) {
               return null;
             }
 

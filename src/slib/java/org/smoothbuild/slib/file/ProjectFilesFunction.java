@@ -6,9 +6,9 @@ import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.ArrayBuilder;
-import org.smoothbuild.db.object.obj.val.Str;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
+import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -16,7 +16,7 @@ import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
 
 public class ProjectFilesFunction {
-  public static Array function(Container container, Str dir) throws IOException {
+  public static ArrayH function(Container container, StringH dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;
@@ -42,9 +42,9 @@ public class ProjectFilesFunction {
     }
   }
 
-  private static Array readFiles(Container container, FileSystem fileSystem, Path dir)
+  private static ArrayH readFiles(Container container, FileSystem fileSystem, Path dir)
       throws IOException {
-    ArrayBuilder fileArrayBuilder = container.factory().arrayBuilder(container.factory().fileType());
+    ArrayHBuilder fileArrayBuilder = container.factory().arrayBuilder(container.factory().fileType());
     FileReader reader = new FileReader(container);
     if (dir.isRoot()) {
       for (Path path : fileSystem.files(Path.root())) {

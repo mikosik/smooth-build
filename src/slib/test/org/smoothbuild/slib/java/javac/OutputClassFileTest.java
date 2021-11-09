@@ -7,8 +7,8 @@ import static okio.Okio.sink;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.ArrayBuilder;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
@@ -21,12 +21,12 @@ public class OutputClassFileTest extends TestingContext {
 
   @Test
   public void open_output_stream() throws IOException {
-    ArrayBuilder fileArrayBuilder = objectDb().arrayBuilder(nativeApi().factory().fileType());
+    ArrayHBuilder fileArrayBuilder = objectDb().arrayBuilder(nativeApi().factory().fileType());
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi());
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().elements(Tuple.class))
+    assertThat(fileArrayBuilder.build().elements(TupleH.class))
         .containsExactly(file(path, bytes));
   }
 

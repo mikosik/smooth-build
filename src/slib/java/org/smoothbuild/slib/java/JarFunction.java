@@ -12,10 +12,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.BlobBuilder;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.BlobHBuilder;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 
@@ -23,11 +23,11 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class JarFunction {
-  public static Blob function(NativeApi nativeApi, Array files, Blob manifest) throws IOException {
+  public static BlobH function(NativeApi nativeApi, ArrayH files, BlobH manifest) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
+    BlobHBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
-      for (Tuple file : files.elements(Tuple.class)) {
+      for (TupleH file : files.elements(TupleH.class)) {
         String path = filePath(file).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot jar two files with the same path = " + path);
@@ -39,7 +39,7 @@ public class JarFunction {
     return blobBuilder.build();
   }
 
-  private static JarOutputStream createOutputStream(BlobBuilder blobBuilder, Blob manifest)
+  private static JarOutputStream createOutputStream(BlobHBuilder blobBuilder, BlobH manifest)
       throws IOException {
     OutputStream outputStream = blobBuilder.sink().outputStream();
     if (manifest == null) {
@@ -51,7 +51,7 @@ public class JarFunction {
     }
   }
 
-  private static void jarFile(Tuple file, JarOutputStream jarOutputStream) throws IOException {
+  private static void jarFile(TupleH file, JarOutputStream jarOutputStream) throws IOException {
     jarOutputStream.putNextEntry(new JarEntry(filePath(file).jValue()));
     try (BufferedSource source = fileContent(file).source()) {
       BufferedSink sink = buffer(sink(jarOutputStream));

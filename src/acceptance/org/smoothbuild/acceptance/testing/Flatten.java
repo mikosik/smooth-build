@@ -1,18 +1,18 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.base.Val;
-import org.smoothbuild.db.object.obj.val.Array;
-import org.smoothbuild.db.object.obj.val.ArrayBuilder;
-import org.smoothbuild.db.object.type.base.TypeV;
-import org.smoothbuild.db.object.type.val.ArrayTypeO;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
+import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Flatten {
-  public static Array function(NativeApi nativeApi, Array array) {
-    TypeV resultArrayElemType = ((ArrayTypeO) array.type().element()).element();
-    ArrayBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemType);
-    for (Array innerArray : array.elements(Array.class)) {
-      builder.addAll(innerArray.elements(Val.class));
+  public static ArrayH function(NativeApi nativeApi, ArrayH array) {
+    TypeHV resultArrayElemType = ((ArrayTypeH) array.type().element()).element();
+    ArrayHBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemType);
+    for (ArrayH innerArray : array.elements(ArrayH.class)) {
+      builder.addAll(innerArray.elements(ValueH.class));
     }
     return builder.build();
   }

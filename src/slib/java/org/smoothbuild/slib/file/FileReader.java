@@ -2,9 +2,9 @@ package org.smoothbuild.slib.file;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.object.obj.val.Blob;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.Path;
 
@@ -17,15 +17,15 @@ public class FileReader {
     this.container = container;
   }
 
-  public Tuple createFile(Path path, Path projectPath) throws IOException {
+  public TupleH createFile(Path path, Path projectPath) throws IOException {
     return container.factory().file(createPath(path), createContent(projectPath));
   }
 
-  private Str createPath(Path path) {
+  private StringH createPath(Path path) {
     return container.factory().string(path.toString());
   }
 
-  private Blob createContent(Path path) throws IOException {
+  private BlobH createContent(Path path) throws IOException {
     try (BufferedSource source = container.fileSystem().source(path)) {
       return container.factory().blob(sink -> sink.writeAll(source));
     }

@@ -6,10 +6,10 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.db.object.obj.val.ArrayBuilder;
-import org.smoothbuild.db.object.obj.val.BlobBuilder;
-import org.smoothbuild.db.object.obj.val.Str;
-import org.smoothbuild.db.object.obj.val.Tuple;
+import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
+import org.smoothbuild.db.object.obj.val.BlobHBuilder;
+import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -17,12 +17,12 @@ import okio.ForwardingSink;
 import okio.Okio;
 
 public class OutputClassFile extends SimpleJavaFileObject {
-  private final ArrayBuilder fileArrayBuilder;
+  private final ArrayHBuilder fileArrayBuilder;
   private final Path path;
-  private final BlobBuilder contentBuilder;
+  private final BlobHBuilder contentBuilder;
   private final NativeApi nativeApi;
 
-  public OutputClassFile(ArrayBuilder fileArrayBuilder, Path path, NativeApi nativeApi) {
+  public OutputClassFile(ArrayHBuilder fileArrayBuilder, Path path, NativeApi nativeApi) {
     super(URI.create("class:///" + path.toString()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;
@@ -36,8 +36,8 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         super.close();
-        Str pathString = nativeApi.factory().string(path.toString());
-        Tuple file = nativeApi.factory().file(pathString, contentBuilder.build());
+        StringH pathString = nativeApi.factory().string(path.toString());
+        TupleH file = nativeApi.factory().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
     }).outputStream();
