@@ -521,6 +521,59 @@ public class CorruptedObjTypeTest extends TestingContext {
   }
 
   @Nested
+  class _order {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save Order type in HashedDb.
+       */
+      Hash hash = hash(
+          hash(ORDER.marker()),
+          hash(arrayOT(intOT()))
+      );
+      assertThat(hash)
+          .isEqualTo(orderOT(intOT()).hash());
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      test_type_without_data(ORDER);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      test_type_with_additional_data(ORDER);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      test_data_hash_pointing_nowhere_instead_of_being_type(ORDER);
+    }
+
+    @Test
+    public void with_corrupted_type_as_data() throws Exception {
+      test_type_with_corrupted_type_as_data(ORDER);
+    }
+
+    @Test
+    public void with_evaluation_type_being_expr_type() throws Exception {
+      test_type_with_data_being_expr_type(ORDER, ArrayTypeO.class);
+    }
+
+    @Test
+    public void with_evaluation_type_not_being_array_type() throws Exception {
+      Hash hash = hash(
+          hash(ORDER.marker()),
+          hash(intOT())
+      );
+      assertThatGet(hash)
+          .throwsException(new UnexpectedTypeNodeException(
+              hash, ORDER, DATA_PATH, ArrayTypeO.class, IntTypeO.class));
+    }
+  }
+
+  @Nested
   class _ref {
     @Test
     public void learning_test() throws Exception {
@@ -810,59 +863,6 @@ public class CorruptedObjTypeTest extends TestingContext {
       assertThatGet(hash)
           .throwsException(new DecodeTypeNodeException(hash, TUPLE, "data[0]"))
           .withCause(corruptedArrayTypeException());
-    }
-  }
-
-  @Nested
-  class _order {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save Order type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(ORDER.marker()),
-          hash(arrayOT(intOT()))
-      );
-      assertThat(hash)
-          .isEqualTo(orderOT(intOT()).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_type_without_data(ORDER);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_type_with_additional_data(ORDER);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(ORDER);
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(ORDER);
-    }
-
-    @Test
-    public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(ORDER, ArrayTypeO.class);
-    }
-
-    @Test
-    public void with_evaluation_type_not_being_array_type() throws Exception {
-      Hash hash = hash(
-          hash(ORDER.marker()),
-          hash(intOT())
-      );
-      assertThatGet(hash)
-          .throwsException(new UnexpectedTypeNodeException(
-              hash, ORDER, DATA_PATH, ArrayTypeO.class, IntTypeO.class));
     }
   }
 
