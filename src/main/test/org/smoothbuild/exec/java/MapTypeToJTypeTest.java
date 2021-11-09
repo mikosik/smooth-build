@@ -25,7 +25,7 @@ import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.testing.TestingContext;
 
 public class MapTypeToJTypeTest extends TestingContext {
@@ -37,7 +37,7 @@ public class MapTypeToJTypeTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("mapTypeToJType_test_data")
-  public void map_type_to_jType(Type type, Class<?> clazz) {
+  public void map_type_to_jType(TypeS type, Class<?> clazz) {
     assertThat(MapTypeToJType.mapTypeToJType(type))
         .isEqualTo(clazz);
   }

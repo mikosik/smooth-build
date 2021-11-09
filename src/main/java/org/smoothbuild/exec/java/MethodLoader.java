@@ -27,7 +27,7 @@ import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Value;
-import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.plugin.NativeApi;
 
 /**
@@ -140,7 +140,7 @@ public class MethodLoader {
   }
 
   private static void assertNativeResultMatchesDeclared(GlobalReferencable referencable,
-      Method method, Type resultType, String classBinaryName) throws LoadingMethodException {
+      Method method, TypeS resultType, String classBinaryName) throws LoadingMethodException {
     Class<?> resultJType = method.getReturnType();
     if (!mapTypeToJType(resultType).equals(resultJType)) {
       throw newLoadingException(referencable, classBinaryName, referencable.q() + " declares type "
@@ -162,7 +162,7 @@ public class MethodLoader {
     for (int i = 0; i < params.size(); i++) {
       Item param = params.get(i);
       Parameter nativeParam = nativeParams[i + 1];
-      Type paramType = param.type();
+      TypeS paramType = param.type();
       Class<?> paramJType = nativeParam.getType();
       Class<? extends Obj> expectedParamJType = mapTypeToJType(paramType);
       if (!expectedParamJType.equals(paramJType)) {

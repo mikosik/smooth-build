@@ -8,22 +8,22 @@ import org.smoothbuild.db.object.obj.val.Bool;
 import org.smoothbuild.db.object.obj.val.Int;
 import org.smoothbuild.db.object.obj.val.Str;
 import org.smoothbuild.db.object.obj.val.Tuple;
-import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.FunctionType;
-import org.smoothbuild.lang.base.type.api.StructType;
-import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeNames;
-import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
+import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.StructTypeS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.VariableS;
 
 public class MapTypeToJType {
-  public static Class<? extends Obj> mapTypeToJType(Type type) {
-    if (type instanceof ArrayType) {
+  public static Class<? extends Obj> mapTypeToJType(TypeS type) {
+    if (type instanceof ArrayTypeS) {
       return Array.class;
-    } else if (type instanceof Variable) {
+    } else if (type instanceof VariableS) {
       return Val.class;
-    } else if (type instanceof StructType) {
+    } else if (type instanceof StructTypeS) {
       return Tuple.class;
-    } else if (type instanceof FunctionType) {
+    } else if (type instanceof FunctionTypeS) {
       return Tuple.class;
     } else {
       return switch (type.name()) {
