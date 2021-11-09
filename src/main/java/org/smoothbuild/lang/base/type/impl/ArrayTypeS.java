@@ -9,16 +9,16 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
  * This class is immutable.
  */
 public class ArrayTypeS extends TypeS implements ArrayType {
-  private final TypeS elemType;
+  private final TypeS element;
 
-  public ArrayTypeS(TypeS elemType) {
-    super(TypeNames.arrayTypeName(elemType), elemType.variables());
-    this.elemType = requireNonNull(elemType);
+  public ArrayTypeS(TypeS element) {
+    super(TypeNames.arrayTypeName(element), element.variables());
+    this.element = requireNonNull(element);
   }
 
   @Override
   public TypeS element() {
-    return elemType;
+    return element;
   }
 
   @Override
