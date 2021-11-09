@@ -8,6 +8,6 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public record CallExpression(TypeS type, Expression function,
-    ImmutableList<Expression> arguments, Location location) implements Expression {
+public record CallS(TypeS type, ExprS function,
+    ImmutableList<ExprS> arguments, Location location) implements ExprS {
 }

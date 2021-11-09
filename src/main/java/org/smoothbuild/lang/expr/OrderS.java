@@ -5,7 +5,7 @@ import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 
 import com.google.common.collect.ImmutableList;
 
-public record ArrayLiteralExpression(
-    ArrayTypeS type, ImmutableList<Expression> elements, Location location)
-    implements Expression {
+public record OrderS(
+    ArrayTypeS type, ImmutableList<ExprS> elements, Location location)
+    implements ExprS {
 }

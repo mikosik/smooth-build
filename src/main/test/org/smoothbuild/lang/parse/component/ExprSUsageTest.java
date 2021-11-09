@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
-public class ExpressionUsageTest extends TestingContext {
+public class ExprSUsageTest extends TestingContext {
   @Nested
   class _blob_literal_used_as {
     @Test

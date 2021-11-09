@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -43,21 +43,21 @@ public class FunctionTest extends TestingContext {
   }
 
   private Item paramWithDefault() {
-    return param(Optional.of(mock(Expression.class)));
+    return param(Optional.of(mock(ExprS.class)));
   }
 
   private Item paramWithoutDefault() {
     return param(Optional.empty());
   }
 
-  private Item param(Optional<Expression> defaultArgument) {
+  private Item param(Optional<ExprS> defaultArgument) {
     return new Item(STRING, modulePath(), "a", defaultArgument, loc());
   }
 
   private Function myFunction(TypeS resultType, List<Item> parameters) {
     return new DefinedFunction(functionST(resultType, toItemSignatures(parameters)),
         modulePath(), "name", ImmutableList.copyOf(parameters),
-        mock(Expression.class), loc(1)
+        mock(ExprS.class), loc(1)
     );
   }
 }

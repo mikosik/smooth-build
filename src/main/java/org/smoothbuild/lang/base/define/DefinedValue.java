@@ -3,22 +3,22 @@ package org.smoothbuild.lang.base.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.ExprS;
 
 /**
  * This class is immutable.
  */
 public class DefinedValue extends Value implements DefinedEvaluable {
-  private final Expression body;
+  private final ExprS body;
 
-  public DefinedValue(TypeS type, ModulePath modulePath, String name, Expression body,
+  public DefinedValue(TypeS type, ModulePath modulePath, String name, ExprS body,
       Location location) {
     super(type, modulePath, name, location);
     this.body = body;
   }
 
   @Override
-  public Expression body() {
+  public ExprS body() {
     return body;
   }
 

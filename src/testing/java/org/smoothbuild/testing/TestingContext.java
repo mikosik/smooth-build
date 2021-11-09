@@ -89,15 +89,15 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VariableS;
 import org.smoothbuild.lang.expr.Annotation;
-import org.smoothbuild.lang.expr.ArrayLiteralExpression;
-import org.smoothbuild.lang.expr.BlobLiteralExpression;
-import org.smoothbuild.lang.expr.CallExpression;
-import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.IntLiteralExpression;
-import org.smoothbuild.lang.expr.ParameterReferenceExpression;
-import org.smoothbuild.lang.expr.ReferenceExpression;
-import org.smoothbuild.lang.expr.SelectExpression;
-import org.smoothbuild.lang.expr.StringLiteralExpression;
+import org.smoothbuild.lang.expr.BlobS;
+import org.smoothbuild.lang.expr.CallS;
+import org.smoothbuild.lang.expr.ExprS;
+import org.smoothbuild.lang.expr.IntS;
+import org.smoothbuild.lang.expr.OrderS;
+import org.smoothbuild.lang.expr.ParamRefS;
+import org.smoothbuild.lang.expr.RefS;
+import org.smoothbuild.lang.expr.SelectS;
+import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NamedList;
 
@@ -647,28 +647,28 @@ public class TestingContext {
 
   // Expressions
 
-  public ArrayLiteralExpression arrayExpression(
-      int line, TypeS elemType, Expression... expressions) {
-    return new ArrayLiteralExpression(
-        arrayST(elemType), ImmutableList.copyOf(expressions), loc(line));
+  public OrderS arrayExpression(
+      int line, TypeS elemType, ExprS... expr) {
+    return new OrderS(
+        arrayST(elemType), ImmutableList.copyOf(expr), loc(line));
   }
 
-  public BlobLiteralExpression blobExpression(int data) {
+  public BlobS blobExpression(int data) {
     return blobExpression(1, data);
   }
 
-  public BlobLiteralExpression blobExpression(int line, int data) {
-    return new BlobLiteralExpression(blobST(), ByteString.of((byte) data), loc(line));
+  public BlobS blobExpression(int line, int data) {
+    return new BlobS(blobST(), ByteString.of((byte) data), loc(line));
   }
 
-  public CallExpression callExpression(
-      TypeS type, Expression expression, Expression... arguments) {
-    return callExpression(1, type, expression, arguments);
+  public CallS callExpression(
+      TypeS type, ExprS expr, ExprS... arguments) {
+    return callExpression(1, type, expr, arguments);
   }
 
-  public CallExpression callExpression(
-      int line, TypeS type, Expression expression, Expression... arguments) {
-    return new CallExpression(type, expression, list(arguments), loc(line));
+  public CallS callExpression(
+      int line, TypeS type, ExprS expr, ExprS... arguments) {
+    return new CallS(type, expr, list(arguments), loc(line));
   }
 
   public NativeFunction functionExpression(TypeS type, String name, Item... parameters) {
@@ -683,59 +683,59 @@ public class TestingContext {
     );
   }
 
-  public DefinedFunction functionExpression(TypeS type, String name, Expression body,
+  public DefinedFunction functionExpression(TypeS type, String name, ExprS body,
       Item... parameters) {
     return functionExpression(1, type, name, body, parameters);
   }
 
   public DefinedFunction functionExpression(
-      int line, TypeS type, String name, Expression body, Item... parameters) {
+      int line, TypeS type, String name, ExprS body, Item... parameters) {
     return new DefinedFunction(functionST(type, parameters), modulePath(), name, list(parameters),
         body, loc(line)
     );
   }
 
-  public IntLiteralExpression intExpression(int value) {
+  public IntS intExpression(int value) {
     return intExpression(1, value);
   }
 
-  public IntLiteralExpression intExpression(int line, int value) {
-    return new IntLiteralExpression(intST(), BigInteger.valueOf(value), loc(line));
+  public IntS intExpression(int line, int value) {
+    return new IntS(intST(), BigInteger.valueOf(value), loc(line));
   }
 
-  public ParameterReferenceExpression parameterRefExpression(TypeS type, String name) {
+  public ParamRefS parameterRefExpression(TypeS type, String name) {
     return parameterRefExpression(1, type, name);
   }
 
-  public ParameterReferenceExpression parameterRefExpression(
+  public ParamRefS parameterRefExpression(
       int line, TypeS type, String name) {
-    return new ParameterReferenceExpression(type, name, loc(line));
+    return new ParamRefS(type, name, loc(line));
   }
 
-  public ReferenceExpression referenceExpression(GlobalReferencable referencable) {
+  public RefS referenceExpression(GlobalReferencable referencable) {
     return referenceExpression(1, referencable.type(), referencable.name());
   }
 
-  public ReferenceExpression referenceExpression(int line, TypeS type, String name) {
-    return new ReferenceExpression(type, name, loc(line));
+  public RefS referenceExpression(int line, TypeS type, String name) {
+    return new RefS(type, name, loc(line));
   }
 
-  public SelectExpression selectExpression(
-      int line, TypeS field, int index, Expression expression) {
-    return new SelectExpression(field, index, expression, loc(line));
+  public SelectS selectExpression(
+      int line, TypeS field, int index, ExprS expr) {
+    return new SelectS(field, index, expr, loc(line));
   }
 
-  public StringLiteralExpression stringExpression(int line, String data) {
-    return new StringLiteralExpression(stringST(), data, loc(line));
+  public StringS stringExpression(int line, String data) {
+    return new StringS(stringST(), data, loc(line));
   }
 
   // other smooth language thingies
 
-  public Annotation annotation(int line, StringLiteralExpression implementedBy) {
+  public Annotation annotation(int line, StringS implementedBy) {
     return annotation(line, implementedBy, true);
   }
 
-  public Annotation annotation(int line, StringLiteralExpression implementedBy, boolean pure) {
+  public Annotation annotation(int line, StringS implementedBy, boolean pure) {
     return new Annotation(implementedBy, pure, loc(line));
   }
 
@@ -756,17 +756,17 @@ public class TestingContext {
     return parameter(line, type, name, Optional.empty());
   }
 
-  public Item parameter(int line, TypeS type, String name, Expression defaultArg) {
+  public Item parameter(int line, TypeS type, String name, ExprS defaultArg) {
     return parameter(line, type, name, Optional.of(defaultArg));
   }
 
   private Item parameter(int line, TypeS type, String name,
-      Optional<Expression> defaultArg) {
+      Optional<ExprS> defaultArg) {
     return new Item(type, modulePath(), name, defaultArg, loc(line));
   }
 
-  public DefinedValue value(int line, TypeS type, String name, Expression expression) {
-    return new DefinedValue(type, modulePath(), name, expression, loc(line));
+  public DefinedValue value(int line, TypeS type, String name, ExprS expr) {
+    return new DefinedValue(type, modulePath(), name, expr, loc(line));
   }
 
   public NativeValue value(int line, TypeS type, String name, Annotation annotation) {

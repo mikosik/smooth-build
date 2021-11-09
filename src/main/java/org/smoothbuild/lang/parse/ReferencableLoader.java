@@ -26,15 +26,15 @@ import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.Annotation;
-import org.smoothbuild.lang.expr.ArrayLiteralExpression;
-import org.smoothbuild.lang.expr.BlobLiteralExpression;
-import org.smoothbuild.lang.expr.CallExpression;
-import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.IntLiteralExpression;
-import org.smoothbuild.lang.expr.ParameterReferenceExpression;
-import org.smoothbuild.lang.expr.ReferenceExpression;
-import org.smoothbuild.lang.expr.SelectExpression;
-import org.smoothbuild.lang.expr.StringLiteralExpression;
+import org.smoothbuild.lang.expr.BlobS;
+import org.smoothbuild.lang.expr.CallS;
+import org.smoothbuild.lang.expr.ExprS;
+import org.smoothbuild.lang.expr.IntS;
+import org.smoothbuild.lang.expr.OrderS;
+import org.smoothbuild.lang.expr.ParamRefS;
+import org.smoothbuild.lang.expr.RefS;
+import org.smoothbuild.lang.expr.SelectS;
+import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.parse.ast.AnnotationNode;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
@@ -126,7 +126,7 @@ public class ReferencableLoader {
       return new Item(type, modulePath, name, defaultArgument, param.location());
     }
 
-    private Expression createExpression(ExprNode expr) {
+    private ExprS createExpression(ExprNode expr) {
       if (expr instanceof ArrayNode arrayNode) {
         return createArrayLiteral(arrayNode);
       }
@@ -151,21 +151,21 @@ public class ReferencableLoader {
       throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
     }
 
-    private Expression createArrayLiteral(ArrayNode array) {
+    private ExprS createArrayLiteral(ArrayNode array) {
       var type = (ArrayTypeS) array.type().get();
-      ImmutableList<Expression> elements = map(array.elements(), this::createExpression);
-      return new ArrayLiteralExpression(type, elements, array.location());
+      ImmutableList<ExprS> elements = map(array.elements(), this::createExpression);
+      return new OrderS(type, elements, array.location());
     }
 
-    private Expression createCall(CallNode call) {
-      Expression called = createExpression(call.function());
+    private ExprS createCall(CallNode call) {
+      ExprS called = createExpression(call.function());
       var argumentExpressions = createArgumentExpressions(call);
       var resultType = call.type().get();
-      return new CallExpression(resultType, called, argumentExpressions, call.location());
+      return new CallS(resultType, called, argumentExpressions, call.location());
     }
 
-    private ImmutableList<Expression> createArgumentExpressions(CallNode call) {
-      var builder = ImmutableList.<Expression>builder();
+    private ImmutableList<ExprS> createArgumentExpressions(CallNode call) {
+      var builder = ImmutableList.<ExprS>builder();
       List<Optional<ArgNode>> args = call.assignedArgs();
       for (int i = 0; i < args.size(); i++) {
         builder.add(createArgumentExpression(call, args, i));
@@ -173,7 +173,7 @@ public class ReferencableLoader {
       return builder.build();
     }
 
-    private Expression createArgumentExpression(
+    private ExprS createArgumentExpression(
         CallNode call, List<Optional<ArgNode>> args, int i) {
       Optional<ArgNode> arg = args.get(i);
       if (arg.isPresent()) {
@@ -183,7 +183,7 @@ public class ReferencableLoader {
       }
     }
 
-    private Expression createDefaultArgumentExpression(CallNode call, int i) {
+    private ExprS createDefaultArgumentExpression(CallNode call, int i) {
       // Argument is not present so we have to use function default argument.
       // This means that this call is made on reference to actual function and that function
       // has default argument for given parameter, otherwise checkers that ran so far would
@@ -198,40 +198,40 @@ public class ReferencableLoader {
       }
     }
 
-    private Expression createSelect(SelectNode selectNode) {
+    private ExprS createSelect(SelectNode selectNode) {
       var structType = (StructTypeS) selectNode.expr().type().get();
       var index = structType.fields().indexMap().get(selectNode.fieldName());
       var fieldType = structType.fields().getObject(index);
-      Expression expression = createExpression(selectNode.expr());
-      return new SelectExpression(fieldType, index, expression, selectNode.location());
+      ExprS expr = createExpression(selectNode.expr());
+      return new SelectS(fieldType, index, expr, selectNode.location());
     }
 
-    private Expression createReference(RefNode ref) {
+    private ExprS createReference(RefNode ref) {
       ReferencableLike referenced = ref.referenced();
       if (referenced instanceof ItemNode) {
         String name = ref.name();
-        return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
+        return new ParamRefS(functionParameters.get(name), name, ref.location());
       }
-      return new ReferenceExpression(referenced.inferredType().get(), ref.name(), ref.location());
+      return new RefS(referenced.inferredType().get(), ref.name(), ref.location());
     }
   }
 
-  public BlobLiteralExpression createBlobLiteral(BlobNode blob) {
-    return new BlobLiteralExpression(
+  public BlobS createBlobLiteral(BlobNode blob) {
+    return new BlobS(
         factory.blob(),
         blob.byteString(),
         blob.location());
   }
 
-  public IntLiteralExpression createIntLiteral(IntNode intNode) {
-    return new IntLiteralExpression(
+  public IntS createIntLiteral(IntNode intNode) {
+    return new IntS(
         factory.int_(),
         intNode.bigInteger(),
         intNode.location());
   }
 
-  public StringLiteralExpression createStringLiteral(StringNode string) {
-    return new StringLiteralExpression(
+  public StringS createStringLiteral(StringNode string) {
+    return new StringS(
         factory.string(),
         string.unescapedValue(),
         string.location());

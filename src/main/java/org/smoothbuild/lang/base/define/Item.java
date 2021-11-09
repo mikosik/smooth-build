@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.ExprS;
 
 import com.google.common.collect.ImmutableList;
 
@@ -17,21 +17,21 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Item extends Referencable {
-  private final Optional<Expression> defaultValue;
+  private final Optional<ExprS> defaultValue;
   private final ItemSignature signature;
 
-  public Item(TypeS type, ModulePath modulePath, String name, Optional<Expression> defaultValue,
+  public Item(TypeS type, ModulePath modulePath, String name, Optional<ExprS> defaultValue,
       Location location) {
     super(type, modulePath, name, location);
     this.defaultValue = defaultValue;
-    this.signature = new ItemSignature(type(), name(), defaultValue.map(Expression::type));
+    this.signature = new ItemSignature(type(), name(), defaultValue.map(ExprS::type));
   }
 
   public ItemSignature signature() {
     return signature;
   }
 
-  public Optional<Expression> defaultValue() {
+  public Optional<ExprS> defaultValue() {
     return defaultValue;
   }
 

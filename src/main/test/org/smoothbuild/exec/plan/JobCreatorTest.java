@@ -20,8 +20,8 @@ import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.TestingLocation;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.expr.CallExpression;
-import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.CallS;
+import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.concurrent.Promise;
@@ -47,12 +47,12 @@ public class JobCreatorTest extends TestingContext {
     Function twoBlobsEater = functionExpression(
         BLOB, "twoBlobsEater", parameter(BLOB, "a"), parameter(BLOB, "b"));
 
-    CallExpression twoBlobsEaterCall = callExpression(BLOB, referenceExpression(twoBlobsEater),
+    CallS twoBlobsEaterCall = callExpression(BLOB, referenceExpression(twoBlobsEater),
         parameterRefExpression(BLOB, "param"), parameterRefExpression(BLOB, "param"));
     Function myFunction = functionExpression(
         BLOB, "myFunction", twoBlobsEaterCall, parameter(BLOB, "param"));
 
-    CallExpression myFunctionCall = callExpression(BLOB, referenceExpression(myFunction),
+    CallS myFunctionCall = callExpression(BLOB, referenceExpression(myFunction),
         new MyExpression());
 
     taskCreator(oneLazyCallAllowed(), myFunction, twoBlobsEater)
@@ -110,7 +110,7 @@ public class JobCreatorTest extends TestingContext {
         ImmutableMap.of(), null, toMap(list(functions), Defined::name, f -> f));
   }
 
-  private static class MyExpression implements Expression {
+  private static class MyExpression implements ExprS {
     @Override
     public TypeS type() {
       return STRING;
