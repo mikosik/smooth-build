@@ -44,10 +44,6 @@ public class Item extends Referencable {
     return "Item(`" + type().name() + " " + name() + defaultValueToString() + "`)";
   }
 
-  public static ImmutableList<ItemSignature> toItemSignatures(List<Item> items) {
-    return map(items, Item::signature);
-  }
-
   public static ImmutableList<TypeS> toTypes(List<Item> items) {
     return map(items, Item::type);
   }

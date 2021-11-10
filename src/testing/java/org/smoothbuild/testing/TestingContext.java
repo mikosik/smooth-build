@@ -67,7 +67,6 @@ import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.SModule;
@@ -583,11 +582,11 @@ public class TestingContext {
   }
 
   public FunctionTypeS functionST(TypeS resultType, Item... parameters) {
-    return typeFactoryS().function(resultType, toTypes(list(parameters)));
+    return functionST(resultType, toTypes(list(parameters)));
   }
 
-  public FunctionTypeS functionST(TypeS resultType, Iterable<ItemSignature> parameters) {
-    return typeFactoryS().function(resultType, map(parameters, ItemSignature::type));
+  public FunctionTypeS functionST(TypeS resultType, ImmutableList<TypeS> types) {
+    return typeFactoryS().function(resultType, types);
   }
 
   public IntTypeS intST() {

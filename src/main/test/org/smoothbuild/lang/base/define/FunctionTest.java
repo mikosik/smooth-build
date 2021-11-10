@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
+import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
@@ -55,7 +55,7 @@ public class FunctionTest extends TestingContext {
   }
 
   private Function myFunction(TypeS resultType, List<Item> parameters) {
-    return new DefinedFunction(functionST(resultType, toItemSignatures(parameters)),
+    return new DefinedFunction(functionST(resultType, toTypes(parameters)),
         modulePath(), "name", ImmutableList.copyOf(parameters),
         mock(ExprS.class), loc(1)
     );
