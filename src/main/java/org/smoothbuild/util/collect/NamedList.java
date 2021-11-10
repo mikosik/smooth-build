@@ -11,6 +11,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class NamedList<T> {
+  private static final NamedList<?> EMPTY = new NamedList<>(ImmutableList.of());
+
   private final ImmutableList<Named<T>> list;
   private final ImmutableMap<String, T> map;
   private final ImmutableMap<String, Integer> indexMap;
@@ -23,6 +25,11 @@ public class NamedList<T> {
     this.list = list;
     this.map = calculateMap(list);
     this.indexMap = calculateIndexMap(list);
+  }
+
+  public static <T> NamedList<T> empty() {
+    // cast is safe as EMPTY is empty
+    return (NamedList<T>) EMPTY;
   }
 
   public ImmutableList<Named<T>> list() {

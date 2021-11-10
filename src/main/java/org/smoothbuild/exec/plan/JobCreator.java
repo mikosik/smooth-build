@@ -67,6 +67,7 @@ import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.util.Scope;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -428,8 +429,8 @@ public class JobCreator {
     return new VirtualJob(convertedTask, taskInfo);
   }
 
-  private static Map<String, Job> nameToArgumentMap(List<Item> names, List<Job> arguments) {
-    var mapEntries = zip(names, arguments, (n, a) -> Map.entry(n.name(), a));
+  private static Map<String, Job> nameToArgumentMap(NamedList<Item> params, List<Job> arguments) {
+    var mapEntries = zip(params.list(), arguments, (n, a) -> Map.entry(n.object().name(), a));
     return ImmutableMap.copyOf(mapEntries);
   }
 

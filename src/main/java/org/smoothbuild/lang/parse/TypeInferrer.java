@@ -1,12 +1,13 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.define.ItemSignature.toItemSignatures;
+import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
@@ -50,6 +51,7 @@ import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
@@ -292,19 +294,21 @@ public class TypeInferrer {
         }
       }
 
-      public static Optional<ImmutableList<ItemSignature>> functionParameters(ExprNode called) {
+      public static Optional<NamedList<ItemSignature>> functionParameters(ExprNode called) {
         if (called instanceof RefNode refNode) {
           ReferencableLike referenced = refNode.referenced();
           if (referenced instanceof FunctionS function) {
-            return Optional.of(map(function.parameters(), Item::signature));
+            return Optional.of(function.parameters().mapObjects(Item::signature));
           } else if (referenced instanceof FunctionNode functionNode) {
-            return Optionals.pullUp(map(functionNode.params(), ItemNode::itemSignature));
+            var itemSignatures = Optionals.pullUp(map(functionNode.params(), ItemNode::itemSignature));
+            return itemSignatures.map(ss -> namedList(map(ss, s -> named(s.name(), s))));
           } else {
-            return Optional.of(map(((FunctionTypeS) referenced.inferredType().get()).parameters(),
-                ItemSignature::itemSignature));
+            var parameters = ((FunctionTypeS) referenced.inferredType().get()).parameters();
+            return Optional.of(namedList(map(parameters, type -> named(itemSignature(type)))));
           }
         } else {
-          return called.type().map(t -> toItemSignatures(((FunctionTypeS) t).parameters()));
+          return called.type().map(
+              t -> namedList(map(((FunctionTypeS) t).parameters(), type -> named(itemSignature(type)))));
         }
       }
 

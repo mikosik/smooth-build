@@ -5,8 +5,7 @@ import java.util.Objects;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.util.collect.Lists;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.util.collect.NamedList;
 
 /**
  * This class is immutable.
@@ -15,7 +14,7 @@ public class DefinedFunction extends FunctionS implements DefinedEvaluable {
   private final ExprS body;
 
   public DefinedFunction(FunctionTypeS type, ModulePath modulePath, String name,
-      ImmutableList<Item> parameters, ExprS body, Location location) {
+      NamedList<Item> parameters, ExprS body, Location location) {
     super(type, modulePath, name, parameters, location);
     this.body = body;
   }
@@ -47,6 +46,6 @@ public class DefinedFunction extends FunctionS implements DefinedEvaluable {
   @Override
   public String toString() {
     return "Function(`" + resultType()
-        + "(" + Lists.toCommaSeparatedString(parameters()) + ")" + " = " + body + "`)";
+        + "(" + Lists.toCommaSeparatedString(parameters().objects()) + ")" + " = " + body + "`)";
   }
 }

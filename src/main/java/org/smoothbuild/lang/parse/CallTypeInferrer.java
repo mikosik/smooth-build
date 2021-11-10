@@ -22,6 +22,7 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -35,18 +36,19 @@ public class CallTypeInferrer {
   }
 
   public Maybe<TypeS> inferCallType(CallNode call, TypeS resultType,
-      List<ItemSignature> parameters) {
+      NamedList<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
-    findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, logBuffer);
+    ImmutableList<ItemSignature> paramSignatures = parameters.objects();
+    findIllegalTypeAssignmentErrors(call, assignedArgs, paramSignatures, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
-    List<Optional<TypeS>> assignedTypes = assignedTypes(parameters, assignedArgs);
+    List<Optional<TypeS>> assignedTypes = assignedTypes(paramSignatures, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
       var boundedVariables = typing.inferVariableBoundsInCall(
           resultType,
-          map(parameters, ItemSignature::type),
+          map(paramSignatures, ItemSignature::type),
           map(assignedTypes, Optional::get));
       var variableProblems = findVariableProblems(call, boundedVariables);
       if (!variableProblems.isEmpty()) {

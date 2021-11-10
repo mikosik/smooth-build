@@ -1,8 +1,9 @@
 package org.smoothbuild.lang.parse;
 
-import static org.smoothbuild.lang.base.define.Item.toTypes;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.toMap;
+import static org.smoothbuild.util.collect.Named.named;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,17 +15,14 @@ import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
-import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.Annotation;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
@@ -49,9 +47,9 @@ import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.SelectNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
+import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class ReferencableLoader {
   private final TypeFactoryS factory;
@@ -77,7 +75,7 @@ public class ReferencableLoader {
     if (valueNode.annotation().isPresent()) {
       return new NativeValue(type, path, name, loadAnnotation(valueNode.annotation().get()), location);
     } else {
-      ExpressionLoader loader = new ExpressionLoader(path, ImmutableMap.of());
+      ExpressionLoader loader = new ExpressionLoader(path, NamedList.empty());
       return new DefinedValue(
           type, path, name, loader.createExpression(valueNode.body().get()), location);
     }
@@ -86,15 +84,15 @@ public class ReferencableLoader {
   private FunctionS loadFunction(ModulePath path, RealFuncNode realFuncNode) {
     var parameters = loadParameters(path, realFuncNode);
     var resultType = realFuncNode.resultType().get();
-    String name = realFuncNode.name();
-    Location location = realFuncNode.location();
-    FunctionTypeS type = factory.function(resultType, toTypes(parameters));
+    var name = realFuncNode.name();
+    var location = realFuncNode.location();
+    var type = factory.function(resultType, map(parameters.list(), p -> p.object().type()));
     if (realFuncNode.annotation().isPresent()) {
       return new NativeFunction(type,
           path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
       );
     } else {
-      var expressionLoader = new ExpressionLoader(path, toMap(parameters, Item::name, Item::type));
+      var expressionLoader = new ExpressionLoader(path, parameters);
       return new DefinedFunction(type, path,
           name, parameters, expressionLoader.createExpression(realFuncNode.body().get()), location);
     }
@@ -105,16 +103,20 @@ public class ReferencableLoader {
     return new Annotation(path, annotationNode.isPure(), annotationNode.location());
   }
 
-  private ImmutableList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
-    ExpressionLoader parameterLoader = new ExpressionLoader(path, ImmutableMap.of());
-    return map(realFuncNode.params(), parameterLoader::createParameter);
+  private NamedList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
+    ExpressionLoader parameterLoader = new ExpressionLoader(path, NamedList.empty());
+    var parameters = realFuncNode.params().stream()
+        .map(parameterLoader::createParameter)
+        .map(p -> named(p.name(), p))
+        .collect(toImmutableList());
+    return namedList(parameters);
   }
 
   private class ExpressionLoader {
     private final ModulePath modulePath;
-    private final ImmutableMap<String, TypeS> functionParameters;
+    private final NamedList<Item> functionParameters;
 
-    public ExpressionLoader(ModulePath modulePath, ImmutableMap<String, TypeS> functionParameters) {
+    public ExpressionLoader(ModulePath modulePath, NamedList<Item> functionParameters) {
       this.modulePath = modulePath;
       this.functionParameters = functionParameters;
     }
@@ -190,7 +192,7 @@ public class ReferencableLoader {
       // report an error.
       ReferencableLike referenced = ((RefNode) call.function()).referenced();
       if (referenced instanceof FunctionS function) {
-        return function.parameters().get(i).defaultValue().get();
+        return function.parameters().objects().get(i).defaultValue().get();
       } else if (referenced instanceof FunctionNode functionNode) {
         return createExpression(functionNode.params().get(i).body().get());
       } else {
@@ -210,7 +212,7 @@ public class ReferencableLoader {
       ReferencableLike referenced = ref.referenced();
       if (referenced instanceof ItemNode) {
         String name = ref.name();
-        return new ParamRefS(functionParameters.get(name), name, ref.location());
+        return new ParamRefS(functionParameters.map().get(name).type(), name, ref.location());
       }
       return new RefS(referenced.inferredType().get(), ref.name(), ref.location());
     }

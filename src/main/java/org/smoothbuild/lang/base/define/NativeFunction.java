@@ -6,8 +6,7 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.expr.Annotation;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.util.collect.NamedList;
 
 /**
  * This class is immutable.
@@ -16,7 +15,7 @@ public class NativeFunction extends FunctionS implements NativeEvaluable {
   private final Annotation annotation;
 
   public NativeFunction(FunctionTypeS type, ModulePath modulePath, String name,
-      ImmutableList<Item> parameters, Annotation annotation, Location location) {
+      NamedList<Item> parameters, Annotation annotation, Location location) {
     super(type, modulePath, name, parameters, location);
     this.annotation = annotation;
   }
@@ -51,7 +50,7 @@ public class NativeFunction extends FunctionS implements NativeEvaluable {
   }
 
   private String parametersToString() {
-    return parameters()
+    return parameters().objects()
         .stream()
         .map(Object::toString)
         .collect(joining(", "));

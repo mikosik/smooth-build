@@ -1,6 +1,7 @@
 package org.smoothbuild.testing;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.lang.base.define.Item.namedItems;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
@@ -672,8 +673,8 @@ public class TestingContext {
 
   public NativeFunction functionS(int line, TypeS type, String name, Annotation annotation,
       Item... parameters) {
-    return new NativeFunction(functionST(type, parameters), modulePath(), name, list(parameters),
-        annotation, loc(line)
+    return new NativeFunction(functionST(type, parameters), modulePath(), name,
+        namedItems(list(parameters)), annotation, loc(line)
     );
   }
 
@@ -683,8 +684,8 @@ public class TestingContext {
 
   public DefinedFunction functionS(
       int line, TypeS type, String name, ExprS body, Item... parameters) {
-    return new DefinedFunction(functionST(type, parameters), modulePath(), name, list(parameters),
-        body, loc(line)
+    return new DefinedFunction(functionST(type, parameters), modulePath(), name,
+        namedItems(list(parameters)), body, loc(line)
     );
   }
 
@@ -731,8 +732,8 @@ public class TestingContext {
   }
 
   public ConstructorS constructor(int line, TypeS resultType, String name, Item... parameters) {
-    return new ConstructorS(
-        functionST(resultType, parameters), modulePath(), name, list(parameters), loc(line));
+    return new ConstructorS(functionST(resultType, parameters), modulePath(), name,
+        namedItems(list(parameters)), loc(line));
   }
 
   public Item field(TypeS type, String name) {

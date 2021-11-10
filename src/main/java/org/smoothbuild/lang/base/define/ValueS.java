@@ -1,10 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.util.collect.Lists.list;
-
 import org.smoothbuild.lang.base.type.impl.TypeS;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.util.collect.NamedList;
 
 /**
  * This class is immutable.
@@ -20,8 +17,8 @@ public abstract class ValueS extends GlobalReferencable {
   }
 
   @Override
-  public ImmutableList<Item> evaluationParameters() {
-    return list();
+  public NamedList<Item> evaluationParameters() {
+    return NamedList.empty();
   }
 }
 

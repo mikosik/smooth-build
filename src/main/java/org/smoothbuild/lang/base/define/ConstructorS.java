@@ -6,15 +6,14 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.util.collect.NamedList;
 
 /**
  * This class is immutable.
  */
 public class ConstructorS extends FunctionS {
   public ConstructorS(FunctionTypeS type, ModulePath modulePath, String name,
-      ImmutableList<Item> parameters, Location location) {
+      NamedList<Item> parameters, Location location) {
     super(type, modulePath, name, parameters, location);
     checkArgument(type.result() instanceof StructTypeS);
   }

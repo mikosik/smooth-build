@@ -4,18 +4,17 @@ import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.util.collect.NamedList;
 
 /**
  * This class and all its subclasses are immutable.
  */
 public abstract class FunctionS extends GlobalReferencable {
   public static final String PARENTHESES = "()";
-  private final ImmutableList<Item> parameters;
+  private final NamedList<Item> parameters;
 
   public FunctionS(FunctionTypeS type, ModulePath modulePath, String name,
-      ImmutableList<Item> parameters, Location location) {
+      NamedList<Item> parameters, Location location) {
     super(type, modulePath, name, location);
     this.parameters = requireNonNull(parameters);
   }
@@ -34,7 +33,7 @@ public abstract class FunctionS extends GlobalReferencable {
     return type().result();
   }
 
-  public ImmutableList<Item> parameters() {
+  public NamedList<Item> parameters() {
     return parameters;
   }
 
@@ -44,12 +43,12 @@ public abstract class FunctionS extends GlobalReferencable {
   }
 
   @Override
-  public ImmutableList<Item> evaluationParameters() {
+  public NamedList<Item> evaluationParameters() {
     return parameters();
   }
 
   public boolean canBeCalledArgless() {
-    return parameters.stream()
-        .allMatch(p -> p.defaultValue().isPresent());
+    return parameters.list().stream()
+        .allMatch(p -> p.object().defaultValue().isPresent());
   }
 }

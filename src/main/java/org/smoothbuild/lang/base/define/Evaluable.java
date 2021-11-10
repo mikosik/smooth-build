@@ -2,11 +2,10 @@ package org.smoothbuild.lang.base.define;
 
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.util.collect.NamedList;
 
 public interface Evaluable {
   public TypeS evaluationType();
 
-  public ImmutableList<Item> evaluationParameters();
+  public NamedList<Item> evaluationParameters();
 }
