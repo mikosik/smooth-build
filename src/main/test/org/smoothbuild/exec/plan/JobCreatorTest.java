@@ -32,11 +32,11 @@ import com.google.common.collect.ImmutableMap;
 public class JobCreatorTest extends TestingContext {
   @Test
   public void lazy_task_is_created_for_parameter() {
-    var functionBody = blobExpression(0x33);
-    var function = functionExpression(BLOB, "myFunction", functionBody, parameter(BLOB, "p"));
+    var functionBody = blobS(0x33);
+    var function = functionS(BLOB, "myFunction", functionBody, parameter(BLOB, "p"));
 
     var argument = new MyExpression();
-    var call = callExpression(11, BLOB, referenceExpression(function), argument);
+    var call = callS(11, BLOB, refS(function), argument);
 
     taskCreator(oneLazyCallAllowed(), function)
         .eagerJobFor(new Scope<>(Map.of()), call);
@@ -44,16 +44,15 @@ public class JobCreatorTest extends TestingContext {
 
   @Test
   public void only_one_lazy_task_is_created_for_argument_assigned_to_parameter_that_is_used_twice() {
-    Function twoBlobsEater = functionExpression(
+    Function twoBlobsEater = functionS(
         BLOB, "twoBlobsEater", parameter(BLOB, "a"), parameter(BLOB, "b"));
 
-    CallS twoBlobsEaterCall = callExpression(BLOB, referenceExpression(twoBlobsEater),
-        parameterRefExpression(BLOB, "param"), parameterRefExpression(BLOB, "param"));
-    Function myFunction = functionExpression(
+    CallS twoBlobsEaterCall = callS(BLOB, refS(twoBlobsEater),
+        paramRefS(BLOB, "param"), paramRefS(BLOB, "param"));
+    Function myFunction = functionS(
         BLOB, "myFunction", twoBlobsEaterCall, parameter(BLOB, "param"));
 
-    CallS myFunctionCall = callExpression(BLOB, referenceExpression(myFunction),
-        new MyExpression());
+    CallS myFunctionCall = callS(BLOB, refS(myFunction), new MyExpression());
 
     taskCreator(oneLazyCallAllowed(), myFunction, twoBlobsEater)
         .eagerJobFor(new Scope<>(Map.of()), myFunctionCall);

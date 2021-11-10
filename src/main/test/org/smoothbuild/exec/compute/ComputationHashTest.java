@@ -76,7 +76,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
     Algorithm algorithm = new CallNativeAlgorithm(
-        null, stringOT(), functionExpression(STRING, "name"), true);
+        null, stringOT(), functionS(STRING, "name"), true);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("fa404053c470625cc32d666d02acd1cc634e2bb5"));
@@ -85,7 +85,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
     Algorithm algorithm = new CallNativeAlgorithm(
-        null, stringOT(), functionExpression(STRING, "name"), true);
+        null, stringOT(), functionS(STRING, "name"), true);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("6add42096c8900855b21d87a95f7e2d26b054d44"));

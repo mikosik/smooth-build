@@ -26,7 +26,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
         .loadsSuccessfully()
         .containsReferencable(value(1, a(BLOB), "result",
-            arrayExpression(2, BLOB, blobExpression(3, 7), blobExpression(4, 8))));
+            orderS(2, BLOB, blobS(3, 7), blobS(4, 8))));
   }
 
   @Test
@@ -36,7 +36,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, BLOB, "result", blobExpression(2, 7)));
+        .containsReferencable(value(1, BLOB, "result", blobS(2, 7)));
   }
 
   @Test
@@ -46,7 +46,7 @@ public class ExprSLoadingTest extends TestingContext {
             123;
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, INT, "result", intExpression(2, 123)));
+        .containsReferencable(value(1, INT, "result", intS(2, 123)));
   }
 
   @Nested
@@ -59,7 +59,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(2, STRING, "result",
-              callExpression(2, STRING, referenceExpression(2, f(STRING), "myFunction"))));
+              callS(2, STRING, refS(2, f(STRING), "myFunction"))));
     }
 
     @Test
@@ -71,8 +71,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(2, STRING, "result",
-              callExpression(2, STRING, referenceExpression(2, f(STRING, BLOB),
-                  "myFunction"), blobExpression(3, 7))));
+              callS(2, STRING, refS(2, f(STRING, BLOB), "myFunction"), blobS(3, 7))));
     }
 
     @Test
@@ -84,8 +83,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(2, STRING, "result",
-              callExpression(2, STRING, referenceExpression(2, f(STRING, BLOB),
-                  "myFunction"), blobExpression(3, 7))));
+              callS(2, STRING, refS(2, f(STRING, BLOB), "myFunction"), blobS(3, 7))));
     }
 
     @Test
@@ -97,7 +95,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(3, STRING, "result",
-              callExpression(3, STRING, referenceExpression(3, f(STRING), "myValue"))));
+              callS(3, STRING, refS(3, f(STRING), "myValue"))));
     }
 
     @Test
@@ -110,8 +108,8 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              value(3, STRING, "result", callExpression(3, STRING,
-              referenceExpression(3, f(STRING, BLOB), "myValue"), blobExpression(4, 7))));
+              value(3, STRING, "result", callS(3, STRING,
+              refS(3, f(STRING, BLOB), "myValue"), blobS(4, 7))));
     }
 
     @Test
@@ -139,8 +137,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(4, struct, "result",
-              callExpression(4, struct, referenceExpression(4, f(struct, STRING),
-                  "myStruct"), stringExpression(5, "aaa"))));
+              callS(4, struct, refS(4, f(struct, STRING), "myStruct"), stringS(5, "aaa"))));
     }
 
     @Test
@@ -149,9 +146,8 @@ public class ExprSLoadingTest extends TestingContext {
           result(String() f) = f();
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionExpression(1, STRING, "result",
-              callExpression(1, STRING, parameterRefExpression(f(STRING), "f")),
-              parameter(1, f(STRING), "f")));
+          .containsReferencable(functionS(1, STRING, "result",
+              callS(1, STRING, paramRefS(f(STRING), "f")), parameter(1, f(STRING), "f")));
     }
 
     @Test
@@ -160,8 +156,8 @@ public class ExprSLoadingTest extends TestingContext {
           result(String(Blob) f) = f(0x09);
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionExpression(1, STRING, "result",
-              callExpression(1, STRING, parameterRefExpression(f(STRING, BLOB), "f"), blobExpression(1, 9)),
+          .containsReferencable(functionS(1, STRING, "result",
+              callS(1, STRING, paramRefS(f(STRING, BLOB), "f"), blobS(1, 9)),
               parameter(1, f(STRING, BLOB), "f")));
     }
   }
@@ -179,8 +175,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
         .loadsSuccessfully()
         .containsReferencable(
-            value(5, STRING, "result",
-                selectExpression(6, STRING, 0, referenceExpression(5, myStruct, "struct"))));
+            value(5, STRING, "result", selectS(6, STRING, 0, refS(5, myStruct, "struct"))));
   }
 
   @Nested
@@ -193,7 +188,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              value(2, STRING, "result", annotation(1, stringExpression(1, "Impl.met"), true)));
+              value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
@@ -204,7 +199,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              value(2, STRING, "result", annotation(1, stringExpression(1, "Impl.met"), false)));
+              value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), false)));
     }
 
     @Test
@@ -215,7 +210,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              value(2, STRING, "result", annotation(1, stringExpression(1, "Impl.met"), true)));
+              value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
@@ -226,7 +221,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              functionExpression(2, STRING, "myFunction", annotation(1, stringExpression(1, "Impl.met"), true)));
+              functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
@@ -237,7 +232,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              functionExpression(2, STRING, "myFunction", annotation(1, stringExpression(1, "Impl.met"), false)));
+              functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), false)));
     }
 
     @Test
@@ -248,7 +243,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              functionExpression(2, STRING, "myFunction", annotation(1, stringExpression(1, "Impl.met"), true)));
+              functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), true)));
     }
   }
 
@@ -259,8 +254,8 @@ public class ExprSLoadingTest extends TestingContext {
             = param1;
           """)
         .loadsSuccessfully()
-        .containsReferencable(functionExpression(
-            1, BLOB, "myFunction", parameterRefExpression(2, BLOB, "param1"), parameter(1, BLOB, "param1")));
+        .containsReferencable(functionS(
+            1, BLOB, "myFunction", paramRefS(2, BLOB, "param1"), parameter(1, BLOB, "param1")));
   }
 
   @Nested
@@ -274,7 +269,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(
-              value(2, STRING, "result", referenceExpression(3, STRING, "myValue")));
+              value(2, STRING, "result", refS(3, STRING, "myValue")));
     }
 
     @Test
@@ -286,7 +281,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(2, f(STRING), "result",
-              referenceExpression(3, f(STRING), "myFunction")));
+              refS(3, f(STRING), "myFunction")));
     }
 
     @Test
@@ -299,7 +294,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(value(2, f(structType), "result",
-              referenceExpression(3, f(structType), "myStruct")));
+              refS(3, f(structType), "myStruct")));
     }
   }
 
@@ -310,7 +305,7 @@ public class ExprSLoadingTest extends TestingContext {
             "abc";
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, STRING, "result", stringExpression(2, "abc")));
+        .containsReferencable(value(1, STRING, "result", stringS(2, "abc")));
   }
 
   @Nested
@@ -322,7 +317,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(1, BLOB, "myValue", blobExpression(2, 7)));
+          .containsReferencable(value(1, BLOB, "myValue", blobS(2, 7)));
     }
 
     @Test
@@ -332,8 +327,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsSuccessfully()
-          .containsReferencable(
-              functionExpression(1, BLOB, "myFunction", blobExpression(2, 7)));
+          .containsReferencable(functionS(1, BLOB, "myFunction", blobS(2, 7)));
     }
 
     @Test
@@ -344,8 +338,8 @@ public class ExprSLoadingTest extends TestingContext {
             = "abc";
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionExpression(1, STRING, "myFunction",
-              stringExpression(3, "abc"), parameter(2, BLOB, "param1")));
+          .containsReferencable(functionS(1, STRING, "myFunction",
+              stringS(3, "abc"), parameter(2, BLOB, "param1")));
     }
 
     @Test
@@ -357,8 +351,8 @@ public class ExprSLoadingTest extends TestingContext {
               = "abc";
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionExpression(1, STRING, "myFunction",
-              stringExpression(4, "abc"), parameter(2, BLOB, "param1", blobExpression(3, 7))));
+          .containsReferencable(functionS(1, STRING, "myFunction",
+              stringS(4, "abc"), parameter(2, BLOB, "param1", blobS(3, 7))));
     }
 
     @Test

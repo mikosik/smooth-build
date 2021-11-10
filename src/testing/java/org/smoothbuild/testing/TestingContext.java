@@ -647,85 +647,77 @@ public class TestingContext {
 
   // Expressions
 
-  public OrderS arrayExpression(
-      int line, TypeS elemType, ExprS... expr) {
-    return new OrderS(
-        arrayST(elemType), ImmutableList.copyOf(expr), loc(line));
+  public OrderS orderS(int line, TypeS elemType, ExprS... expr) {
+    return new OrderS(arrayST(elemType), ImmutableList.copyOf(expr), loc(line));
   }
 
-  public BlobS blobExpression(int data) {
-    return blobExpression(1, data);
+  public BlobS blobS(int data) {
+    return blobS(1, data);
   }
 
-  public BlobS blobExpression(int line, int data) {
+  public BlobS blobS(int line, int data) {
     return new BlobS(blobST(), ByteString.of((byte) data), loc(line));
   }
 
-  public CallS callExpression(
-      TypeS type, ExprS expr, ExprS... arguments) {
-    return callExpression(1, type, expr, arguments);
+  public CallS callS(TypeS type, ExprS expr, ExprS... arguments) {
+    return callS(1, type, expr, arguments);
   }
 
-  public CallS callExpression(
-      int line, TypeS type, ExprS expr, ExprS... arguments) {
+  public CallS callS(int line, TypeS type, ExprS expr, ExprS... arguments) {
     return new CallS(type, expr, list(arguments), loc(line));
   }
 
-  public NativeFunction functionExpression(TypeS type, String name, Item... parameters) {
-    return functionExpression(
-        1, type, name, annotation(1, stringExpression(1, "Impl.met")), parameters);
+  public NativeFunction functionS(TypeS type, String name, Item... parameters) {
+    return functionS(1, type, name, annotation(1, stringS(1, "Impl.met")), parameters);
   }
 
-  public NativeFunction functionExpression(int line, TypeS type, String name,
-      Annotation annotation, Item... parameters) {
+  public NativeFunction functionS(int line, TypeS type, String name, Annotation annotation,
+      Item... parameters) {
     return new NativeFunction(functionST(type, parameters), modulePath(), name, list(parameters),
         annotation, loc(line)
     );
   }
 
-  public DefinedFunction functionExpression(TypeS type, String name, ExprS body,
-      Item... parameters) {
-    return functionExpression(1, type, name, body, parameters);
+  public DefinedFunction functionS(TypeS type, String name, ExprS body, Item... parameters) {
+    return functionS(1, type, name, body, parameters);
   }
 
-  public DefinedFunction functionExpression(
+  public DefinedFunction functionS(
       int line, TypeS type, String name, ExprS body, Item... parameters) {
     return new DefinedFunction(functionST(type, parameters), modulePath(), name, list(parameters),
         body, loc(line)
     );
   }
 
-  public IntS intExpression(int value) {
-    return intExpression(1, value);
+  public IntS intS(int value) {
+    return intS(1, value);
   }
 
-  public IntS intExpression(int line, int value) {
+  public IntS intS(int line, int value) {
     return new IntS(intST(), BigInteger.valueOf(value), loc(line));
   }
 
-  public ParamRefS parameterRefExpression(TypeS type, String name) {
-    return parameterRefExpression(1, type, name);
+  public ParamRefS paramRefS(TypeS type, String name) {
+    return paramRefS(1, type, name);
   }
 
-  public ParamRefS parameterRefExpression(
-      int line, TypeS type, String name) {
+  public ParamRefS paramRefS(int line, TypeS type, String name) {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public RefS referenceExpression(GlobalReferencable referencable) {
-    return referenceExpression(1, referencable.type(), referencable.name());
+  public RefS refS(GlobalReferencable referencable) {
+    return refS(1, referencable.type(), referencable.name());
   }
 
-  public RefS referenceExpression(int line, TypeS type, String name) {
+  public RefS refS(int line, TypeS type, String name) {
     return new RefS(type, name, loc(line));
   }
 
-  public SelectS selectExpression(
-      int line, TypeS field, int index, ExprS expr) {
+  public SelectS selectS(int line, TypeS field, int index, ExprS expr) {
     return new SelectS(field, index, expr, loc(line));
   }
 
-  public StringS stringExpression(int line, String data) {
+  public StringS stringS(int line, String data) {
     return new StringS(stringST(), data, loc(line));
   }
 

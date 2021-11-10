@@ -674,9 +674,9 @@ public class DeclarationTest extends TestingContext {
               String nonDefault);
             """)
               .loadsSuccessfully()
-              .containsReferencable(functionExpression(2, STRING, "myFunction",
-                  annotation(1, stringExpression(1, "Impl.met")),
-                  parameter(3, STRING, "default", stringExpression(3, "value")),
+              .containsReferencable(functionS(2, STRING, "myFunction",
+                  annotation(1, stringS(1, "Impl.met")),
+                  parameter(3, STRING, "default", stringS(3, "value")),
                   parameter(4, STRING, "nonDefault")));
         }
 
@@ -704,8 +704,8 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(functionDeclaration("String param1,"))
               .loadsSuccessfully()
-              .containsReferencable(functionExpression(1, STRING, "myFunction",
-                  stringExpression(1, "abc"), parameter(1, STRING, "param1")));
+              .containsReferencable(functionS(1, STRING, "myFunction",
+                  stringS(1, "abc"), parameter(1, STRING, "param1")));
         }
 
         @Test
@@ -740,7 +740,7 @@ public class DeclarationTest extends TestingContext {
           module(functionTypeDeclaration("String,"))
               .loadsSuccessfully()
               .containsReferencable(value(2, f(BLOB, STRING), "myValue",
-                  annotation(1, stringExpression(1, "Impl.met"))));
+                  annotation(1, stringS(1, "Impl.met"))));
         }
 
         @Test
@@ -966,9 +966,9 @@ public class DeclarationTest extends TestingContext {
           module(functionCall("0x07,"))
               .loadsSuccessfully()
               .containsReferencable(value(2, BLOB, "result",
-                  callExpression(2, BLOB,
-                      referenceExpression(2, f(BLOB, BLOB), "myFunction"),
-                      blobExpression(2, 7))));
+                  callS(2, BLOB,
+                      refS(2, f(BLOB, BLOB), "myFunction"),
+                      blobS(2, 7))));
         }
 
         @Test
@@ -1241,7 +1241,7 @@ public class DeclarationTest extends TestingContext {
             module(arrayLiteral("0x07,"))
                 .loadsSuccessfully()
                 .containsReferencable(value(1, a(BLOB), "result",
-                    arrayExpression(1, BLOB, blobExpression(1, 7))));
+                    orderS(1, BLOB, blobS(1, 7))));
           }
 
           @Test
