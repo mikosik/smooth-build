@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.base.ValueH;
-import org.smoothbuild.db.object.type.TestingTypesO;
+import org.smoothbuild.db.object.type.TestingTypesH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.val.NothingTypeH;
@@ -210,7 +210,7 @@ public class ArrayHTest extends TestingContext {
   }
 
   private static List<TypeH> type_test_data() {
-    return TestingTypesO.TYPESV_TO_TEST;
+    return TestingTypesH.TYPESV_TO_TEST;
   }
 
   @Test

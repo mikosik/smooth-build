@@ -4,6 +4,7 @@ import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.IfH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -24,7 +25,7 @@ public enum TypeKindH {
   BOOL((byte) 2, BoolH.class),
   FUNCTION((byte) 3, FunctionH.class),
   INT((byte) 4, IntH.class),
-  // unused 5
+  IF((byte) 5, IfH.class),
   NOTHING((byte) 6, null),
   TUPLE((byte) 7, TupleH.class),
   STRING((byte) 8, StringH.class),
@@ -40,7 +41,8 @@ public enum TypeKindH {
   VARIABLE((byte) 17, null),
   ANY((byte) 18, null),
   NATIVE_METHOD((byte) 19, null),
-  INVOKE((byte) 20, null);
+  INVOKE((byte) 20, null),
+  MAP((byte) 21, null);
 
   private static final ImmutableMap<Byte, TypeKindH> markerToObjKindMap =
       ImmutableMap.<Byte, TypeKindH>builder()
@@ -49,6 +51,7 @@ public enum TypeKindH {
           .put((byte) 2, BOOL)
           .put((byte) 3, FUNCTION)
           .put((byte) 4, INT)
+          .put((byte) 5, IF)
           .put((byte) 6, NOTHING)
           .put((byte) 7, TUPLE)
           .put((byte) 8, STRING)
@@ -63,6 +66,7 @@ public enum TypeKindH {
           .put((byte) 18, ANY)
           .put((byte) 19, NATIVE_METHOD)
           .put((byte) 20, INVOKE)
+          .put((byte) 21, MAP)
           .build();
 
   private final byte marker;

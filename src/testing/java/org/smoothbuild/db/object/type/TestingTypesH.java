@@ -12,19 +12,19 @@ import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestingTypesO {
+public class TestingTypesH {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final ObjectHDb OBJECT_DB = CONTEXT.objectDb();
-  public static final TypeHDb OBJECT_TYPE_DB = CONTEXT.objTypeDb();
+  public static final TypeHDb TYPEH_DB = CONTEXT.objTypeDb();
 
-  public static final TypeHV ANY = OBJECT_TYPE_DB.any();
-  public static final TypeHV BLOB = OBJECT_TYPE_DB.blob();
-  public static final TypeHV BOOL = OBJECT_TYPE_DB.bool();
-  public static final TypeHV FUNCTION = OBJECT_TYPE_DB.function(BLOB, list(BOOL));
-  public static final TypeHV VARIABLE = OBJECT_TYPE_DB.variable("A");
-  public static final TypeHV INT = OBJECT_TYPE_DB.int_();
-  public static final TypeHV NOTHING = OBJECT_TYPE_DB.nothing();
-  public static final TypeHV STRING = OBJECT_TYPE_DB.string();
+  public static final TypeHV ANY = TYPEH_DB.any();
+  public static final TypeHV BLOB = TYPEH_DB.blob();
+  public static final TypeHV BOOL = TYPEH_DB.bool();
+  public static final TypeHV FUNCTION = TYPEH_DB.function(BLOB, list(BOOL));
+  public static final TypeHV VARIABLE = TYPEH_DB.variable("A");
+  public static final TypeHV INT = TYPEH_DB.int_();
+  public static final TypeHV NOTHING = TYPEH_DB.nothing();
+  public static final TypeHV STRING = TYPEH_DB.string();
   public static final TupleTypeH PERSON = CONTEXT.personOT();
   public static final TupleTypeH FILE = CONTEXT.fileOT();
   public static final TupleTypeH TUPLE_EMPTY = CONTEXT.tupleEmptyOT();
@@ -86,14 +86,14 @@ public class TestingTypesO {
   );
 
   private static ArrayTypeH array(TypeHV elemType) {
-    return OBJECT_TYPE_DB.array(elemType);
+    return TYPEH_DB.array(elemType);
   }
 
   public static TupleTypeH tuple(ImmutableList<TypeHV> itemTypes) {
-    return OBJECT_TYPE_DB.tuple(itemTypes);
+    return TYPEH_DB.tuple(itemTypes);
   }
 
   public static ConstructTypeH construct(TupleTypeH tupleType) {
-    return OBJECT_TYPE_DB.construct(tupleType);
+    return TYPEH_DB.construct(tupleType);
   }
 }

@@ -35,7 +35,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.type.TestingTypesO;
+import org.smoothbuild.db.object.type.TestingTypesH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
@@ -319,7 +319,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     protected TestAlgorithm(Hash hash, boolean isPure) {
-      super(TestingTypesO.STRING, isPure);
+      super(TestingTypesH.STRING, isPure);
       this.hash = hash;
     }
 
@@ -330,7 +330,7 @@ public class ParallelJobExecutorTest extends TestingContext {
 
     @Override
     public TypeHV outputType() {
-      return TestingTypesO.STRING;
+      return TestingTypesH.STRING;
     }
   }
 }

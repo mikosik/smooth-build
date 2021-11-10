@@ -33,6 +33,7 @@ public class TypeKindHTest {
         Arguments.of(2, TypeKindH.BOOL),
         Arguments.of(3, TypeKindH.FUNCTION),
         Arguments.of(4, TypeKindH.INT),
+        Arguments.of(5, TypeKindH.IF),
         Arguments.of(6, TypeKindH.NOTHING),
         Arguments.of(7, TypeKindH.TUPLE),
         Arguments.of(8, TypeKindH.STRING),
@@ -46,12 +47,13 @@ public class TypeKindHTest {
         Arguments.of(17, TypeKindH.VARIABLE),
         Arguments.of(18, TypeKindH.ANY),
         Arguments.of(19, TypeKindH.NATIVE_METHOD),
-        Arguments.of(20, TypeKindH.INVOKE)
+        Arguments.of(20, TypeKindH.INVOKE),
+        Arguments.of(21, TypeKindH.MAP)
     );
   }
 
   @ParameterizedTest
-  @ValueSource(bytes = {-1, 5, 21})
+  @ValueSource(bytes = {-1, 22})
   public void from_marker_returns_null_for_illegal_marker(int marker) {
     assertThat(TypeKindH.fromMarker((byte) marker))
         .isNull();

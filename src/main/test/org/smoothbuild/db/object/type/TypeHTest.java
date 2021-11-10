@@ -3,41 +3,41 @@ package org.smoothbuild.db.object.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.db.object.type.TestingTypesO.ANY;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_ANY;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_BLOB;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_BOOL;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_FUNCTION;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_INT;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_NOTHING;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_PERSON_TUPLE;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_STR;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY2_VARIABLE;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_ANY;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_BLOB;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_BOOL;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_FUNCTION;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_INT;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_NOTHING;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_PERSON_TUPLE;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_STR;
-import static org.smoothbuild.db.object.type.TestingTypesO.ARRAY_VARIABLE;
-import static org.smoothbuild.db.object.type.TestingTypesO.BLOB;
-import static org.smoothbuild.db.object.type.TestingTypesO.BOOL;
-import static org.smoothbuild.db.object.type.TestingTypesO.CALL;
-import static org.smoothbuild.db.object.type.TestingTypesO.CONST;
-import static org.smoothbuild.db.object.type.TestingTypesO.CONSTRUCT;
-import static org.smoothbuild.db.object.type.TestingTypesO.FUNCTION;
-import static org.smoothbuild.db.object.type.TestingTypesO.INT;
-import static org.smoothbuild.db.object.type.TestingTypesO.INVOKE;
-import static org.smoothbuild.db.object.type.TestingTypesO.NOTHING;
-import static org.smoothbuild.db.object.type.TestingTypesO.OBJECT_TYPE_DB;
-import static org.smoothbuild.db.object.type.TestingTypesO.ORDER;
-import static org.smoothbuild.db.object.type.TestingTypesO.PERSON;
-import static org.smoothbuild.db.object.type.TestingTypesO.REF;
-import static org.smoothbuild.db.object.type.TestingTypesO.SELECT;
-import static org.smoothbuild.db.object.type.TestingTypesO.STRING;
-import static org.smoothbuild.db.object.type.TestingTypesO.VARIABLE;
+import static org.smoothbuild.db.object.type.TestingTypesH.ANY;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_ANY;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_BLOB;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_BOOL;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_FUNCTION;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_INT;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_NOTHING;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_PERSON_TUPLE;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_STR;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY2_VARIABLE;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_ANY;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_BLOB;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_BOOL;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_FUNCTION;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_INT;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_NOTHING;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_PERSON_TUPLE;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_STR;
+import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_VARIABLE;
+import static org.smoothbuild.db.object.type.TestingTypesH.BLOB;
+import static org.smoothbuild.db.object.type.TestingTypesH.BOOL;
+import static org.smoothbuild.db.object.type.TestingTypesH.CALL;
+import static org.smoothbuild.db.object.type.TestingTypesH.CONST;
+import static org.smoothbuild.db.object.type.TestingTypesH.CONSTRUCT;
+import static org.smoothbuild.db.object.type.TestingTypesH.FUNCTION;
+import static org.smoothbuild.db.object.type.TestingTypesH.INT;
+import static org.smoothbuild.db.object.type.TestingTypesH.INVOKE;
+import static org.smoothbuild.db.object.type.TestingTypesH.NOTHING;
+import static org.smoothbuild.db.object.type.TestingTypesH.TYPEH_DB;
+import static org.smoothbuild.db.object.type.TestingTypesH.ORDER;
+import static org.smoothbuild.db.object.type.TestingTypesH.PERSON;
+import static org.smoothbuild.db.object.type.TestingTypesH.REF;
+import static org.smoothbuild.db.object.type.TestingTypesH.SELECT;
+import static org.smoothbuild.db.object.type.TestingTypesH.STRING;
+import static org.smoothbuild.db.object.type.TestingTypesH.VARIABLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Sets.set;
@@ -83,7 +83,7 @@ public class TypeHTest extends TestingContext {
   @Test
   public void verify_all_base_TypeO_are_tested() {
     assertThat(TypeKindH.values())
-        .hasLength(18);
+        .hasLength(20);
   }
 
   @ParameterizedTest
@@ -146,7 +146,9 @@ public class TypeHTest extends TestingContext {
         args(f -> f.call(f.int_()), "CALL:Int"),
         args(f -> f.const_(f.int_()), "CONST:Int"),
         args(f -> f.construct(f.tuple(list(f.string(), f.int_()))), "CONSTRUCT:{String,Int}"),
+        args(f -> f.if_(f.int_()), "IF:Int"),
         args(f -> f.invoke(f.int_()), "INVOKE:Int"),
+        args(f -> f.map(f.int_()), "MAP:Int"),
         args(f -> f.nativeMethod(), "NATIVE_METHOD"),
         args(f -> f.order(f.string()), "ORDER:[String]"),
         args(f -> f.ref(f.int_()), "REF:Int"),
@@ -404,14 +406,14 @@ public class TypeHTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeHV type) {
-      assertThat(OBJECT_TYPE_DB.call(type).evaluationType())
+      assertThat(TYPEH_DB.call(type).evaluationType())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void const_(TypeHV type) {
-      assertThat(OBJECT_TYPE_DB.const_(type).evaluationType())
+      assertThat(TYPEH_DB.const_(type).evaluationType())
           .isEqualTo(type);
     }
 
@@ -423,7 +425,7 @@ public class TypeHTest extends TestingContext {
     }
 
     public static List<Arguments> construct_cases() {
-      TypeHDb db = OBJECT_TYPE_DB;
+      TypeHDb db = TYPEH_DB;
       return list(
           arguments(db.construct(db.tuple(list())), db.tuple(list())),
           arguments(db.construct(db.tuple(list(STRING))), db.tuple(list(STRING)))
@@ -432,34 +434,48 @@ public class TypeHTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("types")
+    public void if_(TypeHV type) {
+      assertThat(TYPEH_DB.if_(type).evaluationType())
+          .isEqualTo(type);
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
     public void invoke(TypeHV type) {
-      assertThat(OBJECT_TYPE_DB.invoke(type).evaluationType())
+      assertThat(TYPEH_DB.invoke(type).evaluationType())
+          .isEqualTo(type);
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
+    public void map_(TypeHV type) {
+      assertThat(TYPEH_DB.map(type).evaluationType())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void order(TypeHV type) {
-      assertThat(OBJECT_TYPE_DB.order(type).evaluationType())
-          .isEqualTo(OBJECT_TYPE_DB.array(type));
+      assertThat(TYPEH_DB.order(type).evaluationType())
+          .isEqualTo(TYPEH_DB.array(type));
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void ref(TypeHV type) {
-      assertThat(OBJECT_TYPE_DB.ref(type).evaluationType())
+      assertThat(TYPEH_DB.ref(type).evaluationType())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeHV type) {
-      assertThat(OBJECT_TYPE_DB.select(type).evaluationType())
+      assertThat(TYPEH_DB.select(type).evaluationType())
           .isEqualTo(type);
     }
 
     public static ImmutableList<TypeH> types() {
-      return TestingTypesO.TYPESV_TO_TEST;
+      return TestingTypesH.TYPESV_TO_TEST;
     }
   }
 

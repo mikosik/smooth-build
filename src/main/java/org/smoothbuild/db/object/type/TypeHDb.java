@@ -15,8 +15,10 @@ import static org.smoothbuild.db.object.type.base.TypeKindH.CALL;
 import static org.smoothbuild.db.object.type.base.TypeKindH.CONST;
 import static org.smoothbuild.db.object.type.base.TypeKindH.CONSTRUCT;
 import static org.smoothbuild.db.object.type.base.TypeKindH.FUNCTION;
+import static org.smoothbuild.db.object.type.base.TypeKindH.IF;
 import static org.smoothbuild.db.object.type.base.TypeKindH.INT;
 import static org.smoothbuild.db.object.type.base.TypeKindH.INVOKE;
+import static org.smoothbuild.db.object.type.base.TypeKindH.MAP;
 import static org.smoothbuild.db.object.type.base.TypeKindH.NATIVE_METHOD;
 import static org.smoothbuild.db.object.type.base.TypeKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.TypeKindH.ORDER;
@@ -27,7 +29,6 @@ import static org.smoothbuild.db.object.type.base.TypeKindH.TUPLE;
 import static org.smoothbuild.db.object.type.base.TypeKindH.VARIABLE;
 import static org.smoothbuild.db.object.type.base.TypeKindH.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,7 +48,9 @@ import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.expr.ConstTypeH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.expr.IfTypeH;
 import org.smoothbuild.db.object.type.expr.InvokeTypeH;
+import org.smoothbuild.db.object.type.expr.MapTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
 import org.smoothbuild.db.object.type.expr.RefTypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
@@ -65,6 +68,7 @@ import org.smoothbuild.db.object.type.val.VariableH;
 import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -192,8 +196,16 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(evaluationType));
   }
 
+  public IfTypeH if_(TypeHV evaluationType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newIf(evaluationType));
+  }
+
   public InvokeTypeH invoke(TypeHV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evaluationType));
+  }
+
+  public MapTypeH map(TypeHV evaluationType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newMap(evaluationType));
   }
 
   public OrderTypeH order(TypeHV elementType) {
@@ -228,7 +240,9 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
       case CONST -> newConst(hash, readDataAsValue(hash, rootSequence, kind));
       case CONSTRUCT -> newConstruct(hash, readDataAsTuple(hash, rootSequence, kind));
       case FUNCTION -> readFunction(hash, rootSequence, kind);
+      case IF -> newIf(hash, readDataAsValue(hash, rootSequence, kind));
       case INVOKE -> newInvoke(hash, readDataAsValue(hash, rootSequence, kind));
+      case MAP -> newMap(hash, readDataAsValue(hash, rootSequence, kind));
       case ORDER -> newOrder(hash, readDataAsArray(hash, rootSequence, kind));
       case REF -> newRef(hash, readDataAsValue(hash, rootSequence, kind));
       case SELECT -> newSelect(hash, readDataAsValue(hash, rootSequence, kind));
@@ -415,6 +429,15 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
     return cache(new ConstructTypeH(rootHash, evaluationType));
   }
 
+  private IfTypeH newIf(TypeHV evaluationType) throws HashedDbException {
+    var rootHash = writeExprRoot(IF, evaluationType);
+    return newIf(rootHash, evaluationType);
+  }
+
+  private IfTypeH newIf(Hash rootHash, TypeHV evaluationType) {
+    return cache(new IfTypeH(rootHash, evaluationType));
+  }
+
   private InvokeTypeH newInvoke(TypeHV evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(INVOKE, evaluationType);
     return newInvoke(rootHash, evaluationType);
@@ -422,6 +445,15 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
 
   private InvokeTypeH newInvoke(Hash rootHash, TypeHV evaluationType) {
     return cache(new InvokeTypeH(rootHash, evaluationType));
+  }
+
+  private MapTypeH newMap(TypeHV evaluationType) throws HashedDbException {
+    var rootHash = writeExprRoot(MAP, evaluationType);
+    return newMap(rootHash, evaluationType);
+  }
+
+  private MapTypeH newMap(Hash rootHash, TypeHV evaluationType) {
+    return cache(new MapTypeH(rootHash, evaluationType));
   }
 
   private OrderTypeH newOrder(TypeHV elementType) throws HashedDbException {
@@ -470,7 +502,7 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
   }
 
   private Hash writeTupleRoot(ImmutableList<TypeHV> itemTypes) throws HashedDbException {
-    var itemsHash = hashedDb.writeSequence(map(itemTypes, TypeH::hash));
+    var itemsHash = hashedDb.writeSequence(Lists.map(itemTypes, TypeH::hash));
     return writeNonBaseRoot(TUPLE, itemsHash);
   }
 

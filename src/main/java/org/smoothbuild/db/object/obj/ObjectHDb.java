@@ -5,7 +5,6 @@ import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjec
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
-import static org.smoothbuild.util.collect.Lists.map;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -26,7 +25,9 @@ import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.IfH;
 import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -47,6 +48,7 @@ import org.smoothbuild.db.object.type.expr.SelectTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.FunctionTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -62,7 +64,7 @@ public class ObjectHDb {
     this.typeHDb = typeHDb;
   }
 
-  // methods for creating value or value builders
+  // methods for creating ValueH subclasses
 
   public ArrayHBuilder arrayBuilder(TypeHV elementType) {
     return new ArrayHBuilder(typeHDb.array(elementType), this);
@@ -114,7 +116,7 @@ public class ObjectHDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleType, items));
   }
 
-  // methods for creating expr-s
+  // methods for creating ExprH subclasses
 
   public CallH call(ExprH function, ConstructH arguments) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(function, arguments));
@@ -128,10 +130,18 @@ public class ObjectHDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(items));
   }
 
+  public IfH if_(ExprH condition, ExprH then, ExprH else_) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
+  }
+
   public InvokeH invoke(
       TypeHV evaluationType, NativeMethodH nativeMethod, BoolH isPure, IntH argumentCount) {
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newInvoke(evaluationType, nativeMethod, isPure, argumentCount));
+  }
+
+  public MapH map(ExprH array, ExprH function) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newMap(array, function));
   }
 
   public OrderH order(ImmutableList<ExprH> elements) {
@@ -260,10 +270,27 @@ public class ObjectHDb {
     return type.newObj(root, this);
   }
 
+  private IfH newIf(ExprH condition, ExprH then, ExprH else_) throws HashedDbException {
+    var evaluationType = then.evaluationType();
+    var type = typeHDb.if_(evaluationType);
+    var data = writeIfData(condition, then, else_);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
+  }
+
   private InvokeH newInvoke(TypeHV evaluationType, NativeMethodH nativeMethod, BoolH isPure,
       IntH argumentCount) throws HashedDbException {
     var data = writeInvokeData(nativeMethod, isPure, argumentCount);
     var type = typeHDb.invoke(evaluationType);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
+  }
+
+  private MapH newMap(ExprH array, ExprH function) throws HashedDbException {
+    // TODO type-variables are not handled by this line
+    var evaluationType = typeHDb.array(functionEvaluationType(function).result());
+    var type = typeHDb.map(evaluationType);
+    var data = writeMapData(array, function);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -297,7 +324,7 @@ public class ObjectHDb {
   }
 
   private ConstructH newConstruct(ImmutableList<ExprH> items) throws HashedDbException {
-    var itemTypes = map(items, ExprH::evaluationType);
+    var itemTypes = Lists.map(items, ExprH::evaluationType);
     var evaluationType = typeHDb.tuple(itemTypes);
     var type = typeHDb.construct(evaluationType);
     var data = writeConstructData(items);
@@ -350,9 +377,17 @@ public class ObjectHDb {
     return writeSequence(items);
   }
 
+  private Hash writeIfData(ExprH condition, ExprH then, ExprH else_) throws HashedDbException {
+    return hashedDb.writeSequence(condition.hash(), then.hash(), else_.hash());
+  }
+
   private Hash writeInvokeData(NativeMethodH nativeMethod,
       BoolH isPure, IntH argumentCount) throws HashedDbException {
     return hashedDb.writeSequence(nativeMethod.hash(), isPure.hash(), argumentCount.hash());
+  }
+
+  private Hash writeMapData(ExprH array, ExprH function) throws HashedDbException {
+    return hashedDb.writeSequence(array.hash(), function.hash());
   }
 
   private Hash writeNativeMethodData(BlobH jarFile, StringH classBinaryName) throws HashedDbException {
@@ -400,7 +435,7 @@ public class ObjectHDb {
   // helpers
 
   private Hash writeSequence(List<? extends ObjectH> objs) throws HashedDbException {
-    var hashes = map(objs, ObjectH::hash);
+    var hashes = Lists.map(objs, ObjectH::hash);
     return hashedDb.writeSequence(hashes);
   }
 
