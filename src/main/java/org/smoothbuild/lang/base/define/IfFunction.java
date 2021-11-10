@@ -6,8 +6,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -15,17 +14,18 @@ import com.google.common.collect.ImmutableList;
 public class IfFunction extends FunctionS {
   public static final String IF_FUNCTION_NAME = "if";
 
-  public IfFunction(ModulePath modulePath, TypeFactory typing) {
-    this((TypeS) typing.variable("A"), (TypeS) typing.bool(), modulePath, typing);
+  public IfFunction(ModulePath modulePath, TypeFactoryS factory) {
+    this(factory.variable("A"), factory.bool(), modulePath, factory);
   }
 
-  private IfFunction(TypeS resultType, TypeS boolType, ModulePath modulePath, TypeFactory typing) {
-    this(resultType, createParameters(resultType, boolType, modulePath), modulePath, typing);
+  private IfFunction(
+      TypeS resultType, TypeS boolType, ModulePath modulePath, TypeFactoryS factory) {
+    this(resultType, createParameters(resultType, boolType, modulePath), modulePath, factory);
   }
 
   private IfFunction(TypeS resultType, ImmutableList<Item> parameters, ModulePath modulePath,
-      TypeFactory typing) {
-    super((FunctionTypeS) typing.function(resultType, toTypes(parameters)),
+      TypeFactoryS factory) {
+    super(factory.function(resultType, toTypes(parameters)),
         modulePath, IF_FUNCTION_NAME, parameters, internal());
   }
 

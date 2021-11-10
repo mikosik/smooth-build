@@ -54,8 +54,8 @@ public interface TypeFactoryH extends TypeFactory<TypeHV> {
   @Override
   public StringTypeH string();
 
+  public TupleTypeH tuple(ImmutableList<TypeHV> items);
+
   @Override
   public VariableH variable(String name);
-
-  public TupleTypeH tuple(ImmutableList<TypeHV> items);
 }
