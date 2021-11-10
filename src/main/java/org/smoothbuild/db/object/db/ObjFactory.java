@@ -102,6 +102,10 @@ public class ObjFactory {
     return objectHDb.tuple(fileType(), list(content, path));
   }
 
+  public FunctionH function(FunctionTypeH type, ExprH body) {
+    return objectHDb.function(type, body);
+  }
+
   public IntH int_(BigInteger value) {
     return objectHDb.int_(value);
   }
@@ -109,10 +113,6 @@ public class ObjFactory {
   public InvokeH invoke(
       TypeHV evaluationSpec, NativeMethodH nativeMethod, BoolH isPure, IntH argumentCount) {
     return objectHDb.invoke(evaluationSpec, nativeMethod, isPure, argumentCount);
-  }
-
-  public FunctionH function(FunctionTypeH type, ExprH body) {
-    return objectHDb.function(type, body);
   }
 
   public NativeMethodH nativeMethod(BlobH jarFile, StringH classBinaryName) {
@@ -153,12 +153,12 @@ public class ObjFactory {
     return typeHDb.bool();
   }
 
-  public IntTypeH intType() {
-    return typeHDb.int_();
-  }
-
   public FunctionTypeH functionType(TypeHV result, ImmutableList<TypeHV> parameters) {
     return typeHDb.function(result, parameters);
+  }
+
+  public IntTypeH intType() {
+    return typeHDb.int_();
   }
   public TupleTypeH messageType() {
     return messageType;

@@ -224,15 +224,15 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
             "Internal error: Type with kind " + kind + " should be found in cache.");
       }
       case ARRAY -> newArray(hash, readDataAsValue(hash, rootSequence, kind));
-      case ORDER -> newOrder(hash, readDataAsArray(hash, rootSequence, kind));
       case CALL -> newCall(hash, readDataAsValue(hash, rootSequence, kind));
       case CONST -> newConst(hash, readDataAsValue(hash, rootSequence, kind));
-      case INVOKE -> newInvoke(hash, readDataAsValue(hash, rootSequence, kind));
-      case FUNCTION -> readFunction(hash, rootSequence, kind);
-      case REF -> newRef(hash, readDataAsValue(hash, rootSequence, kind));
       case CONSTRUCT -> newConstruct(hash, readDataAsTuple(hash, rootSequence, kind));
-      case TUPLE -> readTuple(hash, rootSequence);
+      case FUNCTION -> readFunction(hash, rootSequence, kind);
+      case INVOKE -> newInvoke(hash, readDataAsValue(hash, rootSequence, kind));
+      case ORDER -> newOrder(hash, readDataAsArray(hash, rootSequence, kind));
+      case REF -> newRef(hash, readDataAsValue(hash, rootSequence, kind));
       case SELECT -> newSelect(hash, readDataAsValue(hash, rootSequence, kind));
+      case TUPLE -> readTuple(hash, rootSequence);
       case VARIABLE -> readVariable(hash, rootSequence);
     };
   }

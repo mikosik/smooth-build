@@ -273,16 +273,16 @@ public class TestingContext {
     return tupleOT(list(blobOT(), stringOT()));
   }
 
-  public IntTypeH intOT() {
-    return typeFactoryO().int_();
-  }
-
   public FunctionTypeH functionOT() {
     return functionOT(intOT(), list(blobOT(), stringOT()));
   }
 
   public FunctionTypeH functionOT(TypeHV result, ImmutableList<TypeHV> parameters) {
     return typeFactoryO().function(result, parameters);
+  }
+
+  public IntTypeH intOT() {
+    return typeFactoryO().int_();
   }
 
   public NativeMethodTypeH nativeMethodOT() {
@@ -434,14 +434,6 @@ public class TestingContext {
     return objectFactory().file(string, blob);
   }
 
-  public IntH int_() {
-    return int_(17);
-  }
-
-  public IntH int_(int value) {
-    return objectDb().int_(BigInteger.valueOf(value));
-  }
-
   public FunctionH function() {
     return function(intExpr());
   }
@@ -453,6 +445,14 @@ public class TestingContext {
 
   public FunctionH function(FunctionTypeH spec, ExprH body) {
     return objectDb().function(spec, body);
+  }
+
+  public IntH int_() {
+    return int_(17);
+  }
+
+  public IntH int_(int value) {
+    return objectDb().int_(BigInteger.valueOf(value));
   }
 
   public NativeMethodH nativeMethod(BlobH jarFile, StringH classBinaryName) {
