@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.util.collect.Named.named;
 
 import java.util.Optional;
 
@@ -11,7 +10,7 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.Labeled;
 
 public class ItemNode extends ReferencableNode implements ReferencableLike {
   private Optional<ItemSignature> signature;
@@ -41,7 +40,7 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
     return new Item(type().get(), path, name(), Optional.empty(), location());
   }
 
-  public Named<TypeS> toNamedType() {
-    return named(name(), type().get());
+  public Labeled<TypeS> toNamedType() {
+    return Labeled.labeled(name(), type().get());
   }
 }

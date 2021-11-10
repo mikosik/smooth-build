@@ -2,20 +2,21 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.base.define.Item.namedItems;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.testing.TestingContext;
+
+import com.google.common.collect.ImmutableList;
 
 public class FunctionSTest extends TestingContext {
   @Test
@@ -51,9 +52,9 @@ public class FunctionSTest extends TestingContext {
     return new Item(STRING, modulePath(), name, defaultArgument, loc());
   }
 
-  private FunctionS myFunction(TypeS resultType, List<Item> parameters) {
+  private FunctionS myFunction(TypeS resultType, ImmutableList<Item> parameters) {
     return new DefinedFunction(functionST(resultType, toTypes(parameters)),
-        modulePath(), "name", namedItems(parameters),
+        modulePath(), "name", namedList(parameters),
         mock(ExprS.class), loc(1)
     );
   }

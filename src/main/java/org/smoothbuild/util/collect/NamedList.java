@@ -1,7 +1,6 @@
 package org.smoothbuild.util.collect;
 
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
-import static org.smoothbuild.util.collect.Named.named;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -10,46 +9,42 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class NamedList<T> {
+public class NamedList<T extends Nameable> {
   private static final NamedList<?> EMPTY = new NamedList<>(ImmutableList.of());
 
-  private final ImmutableList<Named<T>> list;
+  private final ImmutableList<T> list;
   private final ImmutableMap<String, T> map;
   private final ImmutableMap<String, Integer> indexMap;
 
-  public static <E> NamedList<E> namedList(ImmutableList<Named<E>> list) {
+  public static <E extends Nameable> NamedList<E> namedList(ImmutableList<E> list) {
     return new NamedList<>(list);
   }
 
-  private NamedList(ImmutableList<Named<T>> list) {
+  private NamedList(ImmutableList<T> list) {
     this.list = list;
     this.map = calculateMap(list);
     this.indexMap = calculateIndexMap(list);
   }
 
-  public static <T> NamedList<T> empty() {
+  public static <T extends Nameable> NamedList<T> empty() {
     // cast is safe as EMPTY is empty
     return (NamedList<T>) EMPTY;
   }
 
-  public ImmutableList<Named<T>> list() {
+  public ImmutableList<T> list() {
     return list;
   }
 
-  public ImmutableList<T> objects() {
-    return Lists.map(list, Named::object);
+  public <R  extends Nameable> NamedList<R> map(Function<T, R> mapping) {
+    return new NamedList<>(Lists.map(list, mapping));
   }
 
-  public ImmutableMap<String, T> map() {
-    return map;
+  public T get(String name) {
+    return map.get(name);
   }
 
   public boolean contains(String name) {
     return map.containsKey(name);
-  }
-
-  public T getObject(int index) {
-    return list.get(index).object();
   }
 
   public int size() {
@@ -60,24 +55,21 @@ public class NamedList<T> {
     return indexMap;
   }
 
-  public <R> NamedList<R> mapObjects(Function<T, R> mapper) {
-    return new NamedList<>(Lists.map(list, n -> named(n.name(), mapper.apply(n.object()))));
-  }
-
-  private static <E> ImmutableMap<String, Integer> calculateIndexMap(
-      ImmutableList<Named<E>> nameds) {
+  private static <E extends Nameable> ImmutableMap<String, Integer> calculateIndexMap(
+      ImmutableList<E> nameables) {
     Builder<String, Integer> builder = ImmutableMap.builder();
-    for (int i = 0; i < nameds.size(); i++) {
+    for (int i = 0; i < nameables.size(); i++) {
       int index = i;
-      nameds.get(i).name().ifPresent(n -> builder.put(n, index));
+      nameables.get(i).nameO().ifPresent(n -> builder.put(n, index));
     }
     return builder.build();
   }
 
-  private static <E> ImmutableMap<String, E> calculateMap(ImmutableList<Named<E>> nameds) {
+  private static <E extends Nameable> ImmutableMap<String, E> calculateMap(
+      ImmutableList<E> nameables) {
     Builder<String, E> builder = ImmutableMap.builder();
-    for (Named<E> named : nameds) {
-      named.name().ifPresent(n -> builder.put(n, named.object()));
+    for (E nameable : nameables) {
+      nameable.nameO().ifPresent(n -> builder.put(n, nameable));
     }
     return builder.build();
   }

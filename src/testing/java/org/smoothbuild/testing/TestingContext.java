@@ -1,13 +1,13 @@
 package org.smoothbuild.testing;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.lang.base.define.Item.namedItems;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -99,6 +99,7 @@ import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
@@ -602,7 +603,7 @@ public class TestingContext {
     return typeFactoryS().string();
   }
 
-  public StructTypeS structST(String name, NamedList<TypeS> fields) {
+  public StructTypeS structST(String name, NamedList<Labeled<TypeS>> fields) {
     return typeFactoryS().struct(name, fields);
   }
 
@@ -674,7 +675,7 @@ public class TestingContext {
   public NativeFunction functionS(int line, TypeS type, String name, Annotation annotation,
       Item... parameters) {
     return new NativeFunction(functionST(type, parameters), modulePath(), name,
-        namedItems(list(parameters)), annotation, loc(line)
+        namedList(list(parameters)), annotation, loc(line)
     );
   }
 
@@ -685,7 +686,7 @@ public class TestingContext {
   public DefinedFunction functionS(
       int line, TypeS type, String name, ExprS body, Item... parameters) {
     return new DefinedFunction(functionST(type, parameters), modulePath(), name,
-        namedItems(list(parameters)), body, loc(line)
+        namedList(list(parameters)), body, loc(line)
     );
   }
 
@@ -733,7 +734,7 @@ public class TestingContext {
 
   public ConstructorS constructor(int line, TypeS resultType, String name, Item... parameters) {
     return new ConstructorS(functionST(resultType, parameters), modulePath(), name,
-        namedItems(list(parameters)), loc(line));
+        namedList(list(parameters)), loc(line));
   }
 
   public Item field(TypeS type, String name) {

@@ -1,13 +1,11 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
@@ -50,7 +48,7 @@ import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.collect.Optionals;
 
@@ -78,7 +76,7 @@ public class TypeInferrer {
             map(struct.fields(), f -> f.type().map(t -> f.toNamedType())));
         struct.setType(fields.map(s -> factory.struct(struct.name(), namedList(s))));
         struct.constructor().setType(
-            fields.map(s -> factory.function(struct.type().get(), map(s, Named::object))));
+            fields.map(s -> factory.function(struct.type().get(), map(s, Labeled::object))));
       }
 
       @Override
@@ -218,7 +216,7 @@ public class TypeInferrer {
                 logBuffer.log(parseError(expr.location(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               } else {
-                expr.setType(((StructTypeS) t).fields().map().get(expr.fieldName()));
+                expr.setType(((StructTypeS) t).fields().get(expr.fieldName()).object());
               }
             },
             () -> expr.setType(empty())
@@ -298,17 +296,17 @@ public class TypeInferrer {
         if (called instanceof RefNode refNode) {
           ReferencableLike referenced = refNode.referenced();
           if (referenced instanceof FunctionS function) {
-            return Optional.of(function.parameters().mapObjects(Item::signature));
+            return Optional.of(function.parameters().map(Item::signature));
           } else if (referenced instanceof FunctionNode functionNode) {
             var itemSignatures = Optionals.pullUp(map(functionNode.params(), ItemNode::itemSignature));
-            return itemSignatures.map(ss -> namedList(map(ss, s -> named(s.name(), s))));
+            return itemSignatures.map(NamedList::namedList);
           } else {
             var parameters = ((FunctionTypeS) referenced.inferredType().get()).parameters();
-            return Optional.of(namedList(map(parameters, type -> named(itemSignature(type)))));
+            return Optional.of(namedList(map(parameters, ItemSignature::itemSignature)));
           }
         } else {
           return called.type().map(
-              t -> namedList(map(((FunctionTypeS) t).parameters(), type -> named(itemSignature(type)))));
+              t -> namedList(map(((FunctionTypeS) t).parameters(), ItemSignature::itemSignature)));
         }
       }
 

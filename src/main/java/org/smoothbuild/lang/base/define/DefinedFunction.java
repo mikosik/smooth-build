@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.collect.NamedList;
 
 /**
@@ -45,7 +44,6 @@ public class DefinedFunction extends FunctionS implements DefinedEvaluable {
 
   @Override
   public String toString() {
-    return "Function(`" + resultType()
-        + "(" + Lists.toCommaSeparatedString(parameters().objects()) + ")" + " = " + body + "`)";
+    return "Function(`" + resultType() + "(" + parametersToString() + ")" + " = " + body + "`)";
   }
 }

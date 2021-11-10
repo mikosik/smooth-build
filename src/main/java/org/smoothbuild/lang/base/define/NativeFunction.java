@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.base.define;
 
-import static java.util.stream.Collectors.joining;
-
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
@@ -47,12 +45,5 @@ public class NativeFunction extends FunctionS implements NativeEvaluable {
   @Override
   public String toString() {
     return annotation.toString() + " Function(`" + resultType() + "(" + parametersToString() + ")";
-  }
-
-  private String parametersToString() {
-    return parameters().objects()
-        .stream()
-        .map(Object::toString)
-        .collect(joining(", "));
   }
 }

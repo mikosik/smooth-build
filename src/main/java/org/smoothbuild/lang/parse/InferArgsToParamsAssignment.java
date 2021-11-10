@@ -34,7 +34,7 @@ public class InferArgsToParamsAssignment {
       CallNode call, NamedList<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
-    ImmutableList<ItemSignature> signatures = parameters.objects();
+    ImmutableList<ItemSignature> signatures = parameters.list();
     logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call, signatures));
     logBuffer.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, signatures));
     logBuffer.logAll(findUnknownParameterNameErrors(call, parameters));
@@ -99,7 +99,7 @@ public class InferArgsToParamsAssignment {
         .filter(ArgNode::declaresName)
         .filter(a -> !parameters.contains(a.name()))
         .map(a -> parseError(a,
-            inCallToPrefix(call, parameters.objects()) + "Unknown parameter " + a.q() + "."))
+            inCallToPrefix(call, parameters.list()) + "Unknown parameter " + a.q() + "."))
         .collect(toList());
   }
 
@@ -110,7 +110,7 @@ public class InferArgsToParamsAssignment {
         .stream()
         .filter(ArgNode::declaresName)
         .filter(a -> !names.add(a.name()))
-        .map(a -> parseError(a, inCallToPrefix(call, parameters.objects()) + a.q()
+        .map(a -> parseError(a, inCallToPrefix(call, parameters.list()) + a.q()
             + " is already assigned."))
         .collect(toList());
   }
@@ -119,7 +119,7 @@ public class InferArgsToParamsAssignment {
       NamedList<ItemSignature> parameters) {
     return parameters.list().stream()
         .limit(positionalArguments.size())
-        .flatMap(p -> p.name().stream())
+        .flatMap(p -> p.nameO().stream())
         .collect(toSet());
   }
 
@@ -127,15 +127,15 @@ public class InferArgsToParamsAssignment {
       List<Optional<ArgNode>> assignedList, NamedList<ItemSignature> parameters) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())
-        .filter(i -> parameters.list().get(i).object().defaultValueType().isEmpty())
+        .filter(i -> parameters.list().get(i).defaultValueType().isEmpty())
         .mapToObj(i -> parameterMustBeSpecifiedError(
-            call, i, parameters.list().get(i).object(), parameters.objects()))
+            call, i, parameters.list().get(i), parameters.list()))
         .collect(toList());
   }
 
   private static Log parameterMustBeSpecifiedError(CallNode call, int i, ItemSignature param,
       List<ItemSignature> parameters) {
-    String paramName = param.name().map(n -> "`" + n + "`").orElse("#" + (i + 1));
+    String paramName = param.nameO().map(n -> "`" + n + "`").orElse("#" + (i + 1));
     return parseError(call,
         inCallToPrefix(call, parameters) + "Parameter " + paramName + " must be specified.");
   }

@@ -7,7 +7,6 @@ import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.toMap;
-import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.HashMap;
@@ -109,7 +108,7 @@ public class ModuleLoader {
     var name = struct.constructor().name();
     var parameterTypes = map(struct.fields(), f -> f.type().get());
     var type = typeFactory.function(resultType, parameterTypes);
-    var parameters = namedList(map(struct.fields(), f -> named(f.name(), f.toItem(path))));
+    var parameters = namedList(map(struct.fields(), f -> f.toItem(path)));
     return new ConstructorS(type, path, name, parameters, struct.location());
   }
 }

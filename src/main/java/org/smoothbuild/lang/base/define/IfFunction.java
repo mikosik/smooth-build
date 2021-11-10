@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.define;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.Optional;
@@ -26,17 +25,16 @@ public class IfFunction extends FunctionS {
 
   private IfFunction(TypeS resultType, NamedList<Item> parameters, ModulePath modulePath,
       TypeFactoryS factory) {
-    super(factory.function(resultType, map(parameters.list(), p -> p.object().type())),
+    super(factory.function(resultType, map(parameters.list(), Defined::type)),
         modulePath, IF_FUNCTION_NAME, parameters, internal());
   }
 
   private static NamedList<Item> createParameters(
       TypeS resultType, TypeS boolType, ModulePath modulePath) {
-    var list = list(
+    return namedList(list(
         parameter(boolType, modulePath, "condition"),
         parameter(resultType, modulePath, "then"),
-        parameter(resultType, modulePath, "else"));
-    return namedList(map(list, p -> named(p.name(), p)));
+        parameter(resultType, modulePath, "else")));
   }
 
   public static Item parameter(TypeS type, ModulePath modulePath, String name) {

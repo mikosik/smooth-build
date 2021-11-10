@@ -154,7 +154,7 @@ public class MethodLoader {
   private static void assertNativeParameterTypesMatchesFuncParameters(Method method,
       FunctionS function, String classBinaryName) throws LoadingMethodException {
     Parameter[] nativeParams = method.getParameters();
-    ImmutableList<Item> params = function.parameters().objects();
+    ImmutableList<Item> params = function.parameters().list();
     if (params.size() != nativeParams.length - 1) {
       throw newLoadingException(function, classBinaryName, "Function " + function.q() + " has "
           + params.size() + " parameter(s) but its native implementation has "

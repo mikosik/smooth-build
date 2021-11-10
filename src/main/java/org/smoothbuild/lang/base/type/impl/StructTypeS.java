@@ -1,21 +1,37 @@
 package org.smoothbuild.lang.base.type.impl;
 
-import static org.smoothbuild.lang.base.type.help.StructTypeImplHelper.calculateVariables;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.util.Comparator.comparing;
 
+import java.util.Collection;
+
+import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * This class is immutable.
  */
 public class StructTypeS extends TypeS {
-  private final NamedList<TypeS> fields;
+  private final NamedList<Labeled<TypeS>> fields;
 
-  public StructTypeS(String name, NamedList<TypeS> fields) {
+  public StructTypeS(String name, NamedList<Labeled<TypeS>> fields) {
     super(name, calculateVariables(fields));
     this.fields = fields;
   }
 
-  public NamedList<TypeS> fields() {
+  private static ImmutableSet<Variable> calculateVariables(NamedList<Labeled<TypeS>> fields) {
+    return fields.list().stream()
+        .map(f -> f.object().variables())
+        .flatMap(Collection::stream)
+        .sorted(comparing(Type::name))
+        .collect(toImmutableSet());
+  }
+
+  public NamedList<Labeled<TypeS>> fields() {
     return fields;
   }
 

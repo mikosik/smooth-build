@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,8 +8,6 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.Named;
-import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;

@@ -4,7 +4,6 @@ import static org.smoothbuild.lang.base.define.IfFunction.parameter;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
@@ -12,8 +11,6 @@ import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NamedList;
-
-import com.google.common.collect.ImmutableList;
 
 public class MapFunction extends FunctionS {
   public static final String MAP_FUNCTION_NAME = "map";
@@ -40,7 +37,7 @@ public class MapFunction extends FunctionS {
   private MapFunction(ArrayTypeS resultType, NamedList<Item> parameters, ModulePath modulePath,
       TypeFactoryS factory) {
     super(
-        factory.function(resultType, map(parameters.list(), p -> p.object().type())),
+        factory.function(resultType, map(parameters.list(), Defined::type)),
         modulePath,
         MAP_FUNCTION_NAME,
         parameters,
@@ -50,9 +47,8 @@ public class MapFunction extends FunctionS {
 
   private static NamedList<Item> createParameters(ModulePath modulePath,
       ArrayTypeS inputArrayType, FunctionTypeS mappingFunctionType) {
-    ImmutableList<Item> list = list(
+    return namedList(list(
         parameter(inputArrayType, modulePath, "array"),
-        parameter(mappingFunctionType, modulePath, "function"));
-    return namedList(map(list, p -> named(p.name(), p)));
+        parameter(mappingFunctionType, modulePath, "function")));
   }
 }

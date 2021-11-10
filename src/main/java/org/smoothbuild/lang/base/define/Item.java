@@ -1,8 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Named.named;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +8,6 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -44,10 +41,6 @@ public class Item extends Referencable {
 
   public static ImmutableList<TypeS> toTypes(List<Item> items) {
     return map(items, Item::type);
-  }
-
-  public static NamedList<Item> namedItems(List<Item> items) {
-    return namedList(map(items, p -> named(p.name(), p)));
   }
 
   @Override

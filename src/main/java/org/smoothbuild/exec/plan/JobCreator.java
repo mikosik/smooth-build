@@ -430,7 +430,7 @@ public class JobCreator {
   }
 
   private static Map<String, Job> nameToArgumentMap(NamedList<Item> params, List<Job> arguments) {
-    var mapEntries = zip(params.list(), arguments, (n, a) -> Map.entry(n.object().name(), a));
+    var mapEntries = zip(params.list(), arguments, (n, a) -> Map.entry(n.name(), a));
     return ImmutableMap.copyOf(mapEntries);
   }
 

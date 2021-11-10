@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.Named;
+import org.smoothbuild.util.collect.Labeled;
 
 import com.google.common.collect.ImmutableList;
 
@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public class ItemSignature extends Named<TypeS> {
+public class ItemSignature extends Labeled<TypeS> {
   private final Optional<TypeS> defaultValueType;
 
   public ItemSignature(TypeS type, String name, Optional<TypeS> defaultValueType) {
@@ -47,22 +47,22 @@ public class ItemSignature extends Named<TypeS> {
   }
 
   public String typeAndName() {
-    return name().map(n -> type().name() + " " + n).orElseGet(() -> type().name());
+    return nameO().map(n -> type().name() + " " + n).orElseGet(() -> type().name());
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(saneName(), minNameLength, ' ');
+    String namePart = padEnd(saneLabel(), minNameLength, ' ');
     return typePart + namePart;
   }
 
-  public Named<TypeS> toNamedType() {
-    return named(name(), type());
+  public Labeled<TypeS> toNamedType() {
+    return labeled(nameO(), type());
   }
 
   @Override
   public String toString() {
-    return type().name() + name().map(n -> " " + n).orElse("");
+    return type().name() + nameO().map(n -> " " + n).orElse("");
   }
 
   @Override
@@ -72,12 +72,12 @@ public class ItemSignature extends Named<TypeS> {
     }
     return object instanceof ItemSignature that
         && Objects.equals(this.type(), that.type())
-        && Objects.equals(this.name(), that.name())
+        && Objects.equals(this.nameO(), that.nameO())
         && Objects.equals(this.defaultValueType, that.defaultValueType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), name(), defaultValueType);
+    return Objects.hash(type(), nameO(), defaultValueType);
   }
 }

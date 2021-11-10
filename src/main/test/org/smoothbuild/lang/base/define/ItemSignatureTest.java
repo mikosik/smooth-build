@@ -43,7 +43,7 @@ public class ItemSignatureTest {
   @Test
   public void name_getter() {
     item = new ItemSignature(STRING, name, Optional.of(STRING));
-    assertThat(item.name())
+    assertThat(item.nameO())
         .isEqualTo(Optional.of(name));
   }
 

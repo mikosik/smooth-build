@@ -39,7 +39,7 @@ public class CallTypeInferrer {
       NamedList<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
-    ImmutableList<ItemSignature> paramSignatures = parameters.objects();
+    ImmutableList<ItemSignature> paramSignatures = parameters.list();
     findIllegalTypeAssignmentErrors(call, assignedArgs, paramSignatures, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);

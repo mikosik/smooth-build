@@ -1,8 +1,6 @@
 package org.smoothbuild.lang.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Named.named;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
@@ -10,6 +8,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.FunctionS;
@@ -86,7 +85,7 @@ public class ReferencableLoader {
     var resultType = realFuncNode.resultType().get();
     var name = realFuncNode.name();
     var location = realFuncNode.location();
-    var type = factory.function(resultType, map(parameters.list(), p -> p.object().type()));
+    var type = factory.function(resultType, map(parameters.list(), Defined::type));
     if (realFuncNode.annotation().isPresent()) {
       return new NativeFunction(type,
           path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
@@ -105,11 +104,7 @@ public class ReferencableLoader {
 
   private NamedList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
     ExpressionLoader parameterLoader = new ExpressionLoader(path, NamedList.empty());
-    var parameters = realFuncNode.params().stream()
-        .map(parameterLoader::createParameter)
-        .map(p -> named(p.name(), p))
-        .collect(toImmutableList());
-    return namedList(parameters);
+    return namedList(map(realFuncNode.params(), parameterLoader:: createParameter));
   }
 
   private class ExpressionLoader {
@@ -192,7 +187,7 @@ public class ReferencableLoader {
       // report an error.
       ReferencableLike referenced = ((RefNode) call.function()).referenced();
       if (referenced instanceof FunctionS function) {
-        return function.parameters().objects().get(i).defaultValue().get();
+        return function.parameters().list().get(i).defaultValue().get();
       } else if (referenced instanceof FunctionNode functionNode) {
         return createExpression(functionNode.params().get(i).body().get());
       } else {
@@ -203,7 +198,7 @@ public class ReferencableLoader {
     private ExprS createSelect(SelectNode selectNode) {
       var structType = (StructTypeS) selectNode.expr().type().get();
       var index = structType.fields().indexMap().get(selectNode.fieldName());
-      var fieldType = structType.fields().getObject(index);
+      var fieldType = structType.fields().list().get(index).object();
       ExprS expr = createExpression(selectNode.expr());
       return new SelectS(fieldType, index, expr, selectNode.location());
     }
@@ -212,7 +207,7 @@ public class ReferencableLoader {
       ReferencableLike referenced = ref.referenced();
       if (referenced instanceof ItemNode) {
         String name = ref.name();
-        return new ParamRefS(functionParameters.map().get(name).type(), name, ref.location());
+        return new ParamRefS(functionParameters.get(name).type(), name, ref.location());
       }
       return new RefS(referenced.inferredType().get(), ref.name(), ref.location());
     }

@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -49,6 +50,10 @@ public abstract class FunctionS extends GlobalReferencable {
 
   public boolean canBeCalledArgless() {
     return parameters.list().stream()
-        .allMatch(p -> p.object().defaultValue().isPresent());
+        .allMatch(p -> p.defaultValue().isPresent());
+  }
+
+  protected String parametersToString() {
+    return toCommaSeparatedString(parameters().list());
   }
 }

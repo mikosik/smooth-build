@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
@@ -110,7 +111,7 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
     return new VariableS(name);
   }
 
-  public StructTypeS struct(String name, NamedList<TypeS> fields) {
+  public StructTypeS struct(String name, NamedList<Labeled<TypeS>> fields) {
     return new StructTypeS(name, fields);
   }
 }
