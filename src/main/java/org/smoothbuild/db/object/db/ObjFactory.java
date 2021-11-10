@@ -17,7 +17,9 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.IfH;
 import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -63,7 +65,7 @@ public class ObjFactory {
     this.fileType = createFileType(typeHDb);
   }
 
-  // Values
+  // Objects
 
   public ArrayHBuilder arrayBuilder(TypeHV elementType) {
     return objectHDb.arrayBuilder(elementType);
@@ -106,6 +108,10 @@ public class ObjFactory {
     return objectHDb.function(type, body);
   }
 
+  public IfH if_(ExprH condition, ExprH then, ExprH else_) {
+    return objectHDb.if_(condition, then, else_);
+  }
+
   public IntH int_(BigInteger value) {
     return objectHDb.int_(value);
   }
@@ -113,6 +119,10 @@ public class ObjFactory {
   public InvokeH invoke(
       TypeHV evaluationSpec, NativeMethodH nativeMethod, BoolH isPure, IntH argumentCount) {
     return objectHDb.invoke(evaluationSpec, nativeMethod, isPure, argumentCount);
+  }
+
+  public MapH map(ExprH array, ExprH function) {
+    return objectHDb.map(array, function);
   }
 
   public NativeMethodH nativeMethod(BlobH jarFile, StringH classBinaryName) {

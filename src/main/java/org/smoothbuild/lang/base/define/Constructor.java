@@ -1,8 +1,11 @@
 package org.smoothbuild.lang.base.define;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.StructTypeS;
 
 import com.google.common.collect.ImmutableList;
 
@@ -13,6 +16,12 @@ public class Constructor extends Function {
   public Constructor(FunctionTypeS type, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Location location) {
     super(type, modulePath, name, parameters, location);
+    checkArgument(type.result() instanceof StructTypeS);
+  }
+
+  @Override
+  public StructTypeS resultType() {
+    return (StructTypeS) type().result();
   }
 
   @Override
