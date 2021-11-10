@@ -180,10 +180,6 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
 
   // methods for getting Expr-s types
 
-  public OrderTypeH order(TypeHV elementType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elementType));
-  }
-
   public CallTypeH call(TypeHV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evaluationType));
   }
@@ -192,12 +188,16 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
     return wrapHashedDbExceptionAsObjectDbException(() -> newConst(evaluationType));
   }
 
+  public ConstructTypeH construct(TupleTypeH evaluationType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(evaluationType));
+  }
+
   public InvokeTypeH invoke(TypeHV evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evaluationType));
   }
 
-  public ConstructTypeH construct(TupleTypeH evaluationType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(evaluationType));
+  public OrderTypeH order(TypeHV elementType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elementType));
   }
 
   public RefTypeH ref(TypeHV evaluationType) {
