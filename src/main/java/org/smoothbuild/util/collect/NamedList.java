@@ -19,7 +19,7 @@ public class NamedList<T> {
     return new NamedList<>(list);
   }
 
-  public NamedList(ImmutableList<Named<T>> list) {
+  private NamedList(ImmutableList<Named<T>> list) {
     this.list = list;
     this.map = calculateMap(list);
     this.indexMap = calculateIndexMap(list);
