@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class NativeFunction extends Function implements NativeEvaluable {
+public class NativeFunction extends FunctionS implements NativeEvaluable {
   private final Annotation annotation;
 
   public NativeFunction(FunctionTypeS type, ModulePath modulePath, String name,

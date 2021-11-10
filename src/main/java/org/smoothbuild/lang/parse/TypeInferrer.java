@@ -20,7 +20,7 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.like.ReferencableLike;
@@ -295,7 +295,7 @@ public class TypeInferrer {
       public static Optional<ImmutableList<ItemSignature>> functionParameters(ExprNode called) {
         if (called instanceof RefNode refNode) {
           ReferencableLike referenced = refNode.referenced();
-          if (referenced instanceof Function function) {
+          if (referenced instanceof FunctionS function) {
             return Optional.of(map(function.parameters(), Item::signature));
           } else if (referenced instanceof FunctionNode functionNode) {
             return Optionals.pullUp(map(functionNode.params(), ItemNode::itemSignature));

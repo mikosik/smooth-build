@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.job;
 
 import static org.smoothbuild.exec.job.TaskKind.CALL;
-import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
+import static org.smoothbuild.lang.base.define.FunctionS.PARENTHESES;
 import static org.smoothbuild.lang.base.define.IfFunction.IF_FUNCTION_NAME;
 
 import java.util.List;

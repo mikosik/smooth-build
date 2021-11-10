@@ -12,7 +12,7 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 
-public class IfFunction extends Function {
+public class IfFunction extends FunctionS {
   public static final String IF_FUNCTION_NAME = "if";
 
   public IfFunction(ModulePath modulePath, TypeFactory typing) {

@@ -11,14 +11,14 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
-import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
@@ -70,7 +70,7 @@ public class ReferencableLoader {
     }
   }
 
-  private Value loadValue(ModulePath path, ReferencableNode valueNode) {
+  private ValueS loadValue(ModulePath path, ReferencableNode valueNode) {
     var type = valueNode.type().get();
     var name = valueNode.name();
     var location = valueNode.location();
@@ -83,7 +83,7 @@ public class ReferencableLoader {
     }
   }
 
-  private Function loadFunction(ModulePath path, RealFuncNode realFuncNode) {
+  private FunctionS loadFunction(ModulePath path, RealFuncNode realFuncNode) {
     var parameters = loadParameters(path, realFuncNode);
     var resultType = realFuncNode.resultType().get();
     String name = realFuncNode.name();
@@ -189,7 +189,7 @@ public class ReferencableLoader {
       // has default argument for given parameter, otherwise checkers that ran so far would
       // report an error.
       ReferencableLike referenced = ((RefNode) call.function()).referenced();
-      if (referenced instanceof Function function) {
+      if (referenced instanceof FunctionS function) {
         return function.parameters().get(i).defaultValue().get();
       } else if (referenced instanceof FunctionNode functionNode) {
         return createExpression(functionNode.params().get(i).body().get());

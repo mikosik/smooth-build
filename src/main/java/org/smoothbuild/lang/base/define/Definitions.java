@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.define;
 import com.google.common.collect.ImmutableMap;
 
 public record Definitions(
-    ImmutableMap<ModulePath, SModule> modules,
+    ImmutableMap<ModulePath, ModuleS> modules,
     ImmutableMap<String, Defined> types,
     ImmutableMap<String, GlobalReferencable> referencables) {
 
@@ -11,7 +11,7 @@ public record Definitions(
     return new Definitions(ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of());
   }
 
-  public Definitions withModule(SModule module) {
+  public Definitions withModule(ModuleS module) {
     return new Definitions(
         concat(modules, module),
         ImmutableMap.<String, Defined>builder()
@@ -25,9 +25,9 @@ public record Definitions(
     );
   }
 
-  private static ImmutableMap<ModulePath, SModule> concat(
-      ImmutableMap<ModulePath, SModule> modules, SModule module) {
-    var builder = ImmutableMap.<ModulePath, SModule>builder();
+  private static ImmutableMap<ModulePath, ModuleS> concat(
+      ImmutableMap<ModulePath, ModuleS> modules, ModuleS module) {
+    var builder = ImmutableMap.<ModulePath, ModuleS>builder();
     builder.putAll(modules);
     builder.put(module.path(), module);
     return builder.build();

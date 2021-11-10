@@ -10,18 +10,18 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 
 public class FindReferencables {
-  public static Optional<List<Value>> findReferencables(
+  public static Optional<List<ValueS>> findReferencables(
       Reporter reporter, Definitions definitions, List<String> names) {
     var values = definitions.referencables();
-    List<Value> referencables = new ArrayList<>();
+    List<ValueS> referencables = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
       GlobalReferencable referencable = values.get(name);
       if (referencable != null) {
-        if (referencable instanceof Value value) {
+        if (referencable instanceof ValueS value) {
           referencables.add(value);
         } else {
           logs.add(error(

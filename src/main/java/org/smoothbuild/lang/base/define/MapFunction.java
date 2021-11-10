@@ -12,7 +12,7 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 
-public class MapFunction extends Function {
+public class MapFunction extends FunctionS {
   public static final String MAP_FUNCTION_NAME = "map";
 
   public MapFunction(ModulePath modulePath, TypeFactory factory) {

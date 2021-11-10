@@ -23,10 +23,10 @@ import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.io.fs.space.JPathResolver;
-import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -50,10 +50,10 @@ public class MethodLoader {
   public synchronized Method load(GlobalReferencable referencable, String classBinaryName)
       throws LoadingMethodException {
     Method method = loadMethod(referencable, classBinaryName);
-    if (referencable instanceof Function function) {
+    if (referencable instanceof FunctionS function) {
       assertMethodMatchesFunctionRequirements(function, method, classBinaryName);
     } else {
-      assertMethodMatchesValueRequirements((Value) referencable, method, classBinaryName);
+      assertMethodMatchesValueRequirements((ValueS) referencable, method, classBinaryName);
     }
     return method;
   }
@@ -126,14 +126,14 @@ public class MethodLoader {
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
 
-  private void assertMethodMatchesFunctionRequirements(Function function, Method method,
+  private void assertMethodMatchesFunctionRequirements(FunctionS function, Method method,
       String classBinaryName) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(
         function, method, function.type().result(), classBinaryName);
     assertNativeParameterTypesMatchesFuncParameters(method, function, classBinaryName);
   }
 
-  private void assertMethodMatchesValueRequirements(Value value, Method method,
+  private void assertMethodMatchesValueRequirements(ValueS value, Method method,
       String classBinaryName) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(value, method, value.type(), classBinaryName);
     assertNativeHasOneParameter(method, value, classBinaryName);
@@ -151,7 +151,7 @@ public class MethodLoader {
   }
 
   private static void assertNativeParameterTypesMatchesFuncParameters(Method method,
-      Function function, String classBinaryName) throws LoadingMethodException {
+      FunctionS function, String classBinaryName) throws LoadingMethodException {
     Parameter[] nativeParams = method.getParameters();
     List<Item> params = function.parameters();
     if (params.size() != nativeParams.length - 1) {
@@ -175,7 +175,7 @@ public class MethodLoader {
   }
 
   private static void assertNativeHasOneParameter(
-      Method method, Value value, String classBinaryName) throws LoadingMethodException {
+      Method method, ValueS value, String classBinaryName) throws LoadingMethodException {
     int paramCount = method.getParameters().length;
     if (paramCount != 1) {
       throw newLoadingException(value, classBinaryName, value.q()

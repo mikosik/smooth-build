@@ -46,7 +46,7 @@ import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.job.Task;
 import org.smoothbuild.exec.job.TaskInfo;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -181,7 +181,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     parallelJobExecutor = new ParallelJobExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
     var job = job(throwingAlgorithm(exception));
-    var value = mock(Value.class);
+    var value = mock(ValueS.class);
 
     assertThat(parallelJobExecutor.executeAll(Map.of(value, job)).get(value).isEmpty())
         .isTrue();
@@ -201,7 +201,7 @@ public class ParallelJobExecutorTest extends TestingContext {
       }
     };
     parallelJobExecutor = new ParallelJobExecutor(computer, reporter);
-    var value = mock(Value.class);
+    var value = mock(ValueS.class);
     var job = job(valueAlgorithm("A"));
 
     Optional<ObjectH> object = parallelJobExecutor.executeAll(Map.of(value, job)).get(value);
@@ -295,7 +295,7 @@ public class ParallelJobExecutorTest extends TestingContext {
 
   private static ObjectH executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
-    Value value = mock(Value.class);
+    ValueS value = mock(ValueS.class);
     return parallelJobExecutor.executeAll(Map.of(value, job)).get(value).get();
   }
 

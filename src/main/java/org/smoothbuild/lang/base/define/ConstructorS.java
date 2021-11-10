@@ -12,8 +12,8 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class Constructor extends Function {
-  public Constructor(FunctionTypeS type, ModulePath modulePath, String name,
+public class ConstructorS extends FunctionS {
+  public ConstructorS(FunctionTypeS type, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Location location) {
     super(type, modulePath, name, parameters, location);
     checkArgument(type.result() instanceof StructTypeS);
@@ -29,7 +29,7 @@ public class Constructor extends Function {
     if (this == object) {
       return true;
     }
-    return object instanceof Constructor that
+    return object instanceof ConstructorS that
         && this.resultType().equals(that.resultType())
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())

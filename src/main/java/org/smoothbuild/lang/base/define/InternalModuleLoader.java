@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.lang.base.define.SModule.calculateModuleHash;
+import static org.smoothbuild.lang.base.define.ModuleS.calculateModuleHash;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.toMap;
 
@@ -20,17 +20,17 @@ public class InternalModuleLoader {
     this.factory = factory;
   }
 
-  public SModule loadModule() {
+  public ModuleS loadModule() {
     ModulePath modulePath = new ModulePath("internal-module");
     var types = toMap(factory.baseTypes(),
         Type::name, t -> new DefinedBaseType(modulePath, t));
     Hash hash = calculateModuleHash(modulePath, Hash.of(list()), list());
-    return new SModule(modulePath, hash, null, list(), types, referencables(modulePath));
+    return new ModuleS(modulePath, hash, null, list(), types, referencables(modulePath));
   }
 
   private ImmutableMap<String, GlobalReferencable> referencables(ModulePath modulePath) {
-    Function ifFunction = new IfFunction(modulePath, factory);
-    Function mapFunction = new MapFunction(modulePath, factory);
+    FunctionS ifFunction = new IfFunction(modulePath, factory);
+    FunctionS mapFunction = new MapFunction(modulePath, factory);
     return toMap(list(ifFunction, mapFunction), Defined::name, f -> f);
   }
 }

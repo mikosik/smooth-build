@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.job;
 
 import static org.smoothbuild.exec.job.TaskKind.CALL;
-import static org.smoothbuild.lang.base.define.Function.PARENTHESES;
+import static org.smoothbuild.lang.base.define.FunctionS.PARENTHESES;
 import static org.smoothbuild.lang.base.define.MapFunction.MAP_FUNCTION_NAME;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;

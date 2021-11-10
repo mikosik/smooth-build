@@ -39,7 +39,7 @@ import org.smoothbuild.exec.job.MapJob;
 import org.smoothbuild.exec.job.Task;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.exec.job.VirtualJob;
-import org.smoothbuild.lang.base.define.Constructor;
+import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Definitions;
@@ -49,7 +49,7 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.MapFunction;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
@@ -257,7 +257,7 @@ public class JobCreator {
     var algorithm = new ReferenceAlgorithm(referencable, module, toOTypeConverter.functionType());
     var info = new TaskInfo(REFERENCE, ":" + referencable.name(), reference.location());
     var job = new Task(type, list(), info, algorithm);
-    if (referencable instanceof Value) {
+    if (referencable instanceof ValueS) {
       return new ApplyJob(
           type, job, list(), reference.location(), boundsMap(), scope, JobCreator.this);
     } else {
@@ -364,7 +364,7 @@ public class JobCreator {
   public Job evaluateFunctionEagerJob(Scope<Job> scope, BoundsMap<TypeS> variables,
       TypeS actualResultType, String name, List<Job> arguments, Location location) {
     var referencable = definitions.referencables().get(name);
-    if (referencable instanceof Value value) {
+    if (referencable instanceof ValueS value) {
       return valueEagerJob(scope, value, location);
     } else if (referencable instanceof DefinedFunction definedFunction) {
       return definedFunctionEagerJob(scope, actualResultType, definedFunction, arguments, location);
@@ -375,7 +375,7 @@ public class JobCreator {
       return new IfJob(actualResultType, arguments, location);
     } else if (referencable instanceof MapFunction) {
       return new MapJob(actualResultType, arguments, location, scope, this);
-    } else if (referencable instanceof Constructor constructor) {
+    } else if (referencable instanceof ConstructorS constructor) {
       var resultType = constructor.type().result();
       var tupleType = (TupleTypeH) toOTypeConverter.visit(resultType);
       return constructorCallEagerJob(resultType, tupleType, constructor.extendedName(),
@@ -386,11 +386,11 @@ public class JobCreator {
     }
   }
 
-  public Job commandLineValueEagerJob(Value value) {
+  public Job commandLineValueEagerJob(ValueS value) {
     return valueEagerJob(new Scope<>(Map.of()), value, commandLineLocation());
   }
 
-  private Job valueEagerJob(Scope<Job> scope, Value value, Location location) {
+  private Job valueEagerJob(Scope<Job> scope, ValueS value, Location location) {
     if (value instanceof DefinedValue definedValue) {
       return definedValueEagerJob(scope, definedValue, location);
     } else if (value instanceof NativeValue nativeValue) {

@@ -15,7 +15,7 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.SModule;
+import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -30,7 +30,7 @@ public class TestingModuleLoader {
   private final String sourceCode;
   private ModuleFiles moduleFiles;
   private Definitions imported;
-  private Maybe<SModule> module;
+  private Maybe<ModuleS> module;
 
   TestingModuleLoader(TestingContext testingContext, String sourceCode) {
     this.testingContext = testingContext;
@@ -124,7 +124,7 @@ public class TestingModuleLoader {
         + "\n====================\n";
   }
 
-  private Maybe<SModule> load() {
+  private Maybe<ModuleS> load() {
     TypingS typing = testingContext.typingS();
     TypeFactoryS factory = testingContext.typeFactoryS();
     ModuleLoader moduleLoader = new ModuleLoader(

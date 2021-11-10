@@ -10,11 +10,11 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class and all its subclasses are immutable.
  */
-public abstract class Function extends GlobalReferencable {
+public abstract class FunctionS extends GlobalReferencable {
   public static final String PARENTHESES = "()";
   private final ImmutableList<Item> parameters;
 
-  public Function(FunctionTypeS type, ModulePath modulePath, String name,
+  public FunctionS(FunctionTypeS type, ModulePath modulePath, String name,
       ImmutableList<Item> parameters, Location location) {
     super(type, modulePath, name, location);
     this.parameters = requireNonNull(parameters);

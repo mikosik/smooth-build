@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class DefinedFunction extends Function implements DefinedEvaluable {
+public class DefinedFunction extends FunctionS implements DefinedEvaluable {
   private final ExprS body;
 
   public DefinedFunction(FunctionTypeS type, ModulePath modulePath, String name,

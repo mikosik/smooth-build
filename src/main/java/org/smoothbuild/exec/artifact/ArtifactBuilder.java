@@ -21,7 +21,7 @@ import org.smoothbuild.exec.parallel.ParallelJobExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 
 public class ArtifactBuilder {
   private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";
@@ -40,13 +40,13 @@ public class ArtifactBuilder {
     this.reporter = reporter;
   }
 
-  public void buildArtifacts(Definitions definitions, List<Value> values) {
-    Map<Value, Job> plans = executionPlanner.createPlans(definitions, values);
+  public void buildArtifacts(Definitions definitions, List<ValueS> values) {
+    Map<ValueS, Job> plans = executionPlanner.createPlans(definitions, values);
     if (reporter.isProblemReported()) {
       return;
     }
     try {
-      Map<Value, Optional<ObjectH>> artifacts = parallelExecutor.executeAll(plans);
+      Map<ValueS, Optional<ObjectH>> artifacts = parallelExecutor.executeAll(plans);
       if (!artifacts.containsValue(Optional.<ObjectH>empty())) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
         artifacts.entrySet()
@@ -60,7 +60,7 @@ public class ArtifactBuilder {
     }
   }
 
-  private void save(Value value, ObjectH obj) {
+  private void save(ValueS value, ObjectH obj) {
     String name = value.name();
     try {
       Path path = artifactSaver.save(value, obj);

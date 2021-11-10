@@ -11,14 +11,14 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
-import org.smoothbuild.lang.base.define.SModule;
+import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReferenceAlgorithm extends Algorithm {
   private final GlobalReferencable referencable;
-  private final SModule module;
+  private final ModuleS module;
 
-  public ReferenceAlgorithm(GlobalReferencable referencable, SModule module, TupleTypeH type) {
+  public ReferenceAlgorithm(GlobalReferencable referencable, ModuleS module, TupleTypeH type) {
     super(type);
     this.referencable = referencable;
     this.module = module;

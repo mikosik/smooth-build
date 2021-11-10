@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -20,7 +20,7 @@ public class ExecutionPlanner {
     this.taskCreatorProvider = taskCreatorProvider;
   }
 
-  public ImmutableMap<Value, Job> createPlans(Definitions definitions, List<Value> values) {
+  public ImmutableMap<ValueS, Job> createPlans(Definitions definitions, List<ValueS> values) {
     JobCreator jobCreator = taskCreatorProvider.get(definitions);
     return toMap(values, jobCreator::commandLineValueEagerJob);
   }

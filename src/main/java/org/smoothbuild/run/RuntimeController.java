@@ -9,7 +9,7 @@ import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
-import static org.smoothbuild.lang.base.define.SModule.calculateModuleHash;
+import static org.smoothbuild.lang.base.define.ModuleS.calculateModuleHash;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -31,7 +31,7 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.SModule;
+import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.parse.ModuleLoader;
 
 import com.google.common.collect.ImmutableList;
@@ -64,12 +64,12 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
     reporter.startNewPhase("Parsing");
 
-    SModule internalModule = internalModuleLoader.loadModule();
+    ModuleS internalModule = internalModuleLoader.loadModule();
     Definitions allDefinitions = Definitions.empty().withModule(internalModule);
     ImmutableMap<ModulePath, ModuleFiles> files = moduleFilesDetector.detect(MODULES);
     for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
       ModuleFiles moduleFiles = entry.getValue();
-      Maybe<SModule> module = load(allDefinitions, entry.getKey(), moduleFiles);
+      Maybe<ModuleS> module = load(allDefinitions, entry.getKey(), moduleFiles);
       reporter.report(moduleFiles.smoothFile().toString(), module.logs().toList());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
@@ -83,7 +83,7 @@ public class RuntimeController {
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private Maybe<SModule> load(Definitions imported, ModulePath path, ModuleFiles moduleFiles) {
+  private Maybe<ModuleS> load(Definitions imported, ModulePath path, ModuleFiles moduleFiles) {
     var sourceCode = readFileContent(moduleFiles.smoothFile());
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());
@@ -109,7 +109,7 @@ public class RuntimeController {
   }
 
   private Maybe<Hash> moduleHash(
-      ModulePath path, ModuleFiles moduleFiles, ImmutableList<SModule> modules) {
+      ModulePath path, ModuleFiles moduleFiles, ImmutableList<ModuleS> modules) {
     Maybe<Hash> moduleFilesHash = hashOfModuleFiles(moduleFiles);
     if (moduleFilesHash.containsProblem()) {
       return maybeLogs(moduleFilesHash.logs());

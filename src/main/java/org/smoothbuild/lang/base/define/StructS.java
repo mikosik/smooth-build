@@ -4,10 +4,10 @@ import org.smoothbuild.lang.base.type.impl.StructTypeS;
 
 import com.google.common.collect.ImmutableList;
 
-public class Struct extends DefinedType {
+public class StructS extends DefinedType {
   private final ImmutableList<Item> fields;
 
-  public Struct(StructTypeS type, ModulePath modulePath, String name, ImmutableList<Item> fields,
+  public StructS(StructTypeS type, ModulePath modulePath, String name, ImmutableList<Item> fields,
       Location location) {
     super(type, modulePath, name, location);
     this.fields = fields;

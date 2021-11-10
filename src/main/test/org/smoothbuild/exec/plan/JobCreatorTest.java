@@ -16,7 +16,7 @@ import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator.Handler;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.TestingLocation;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -44,12 +44,12 @@ public class JobCreatorTest extends TestingContext {
 
   @Test
   public void only_one_lazy_task_is_created_for_argument_assigned_to_parameter_that_is_used_twice() {
-    Function twoBlobsEater = functionS(
+    FunctionS twoBlobsEater = functionS(
         BLOB, "twoBlobsEater", parameter(BLOB, "a"), parameter(BLOB, "b"));
 
     CallS twoBlobsEaterCall = callS(BLOB, refS(twoBlobsEater),
         paramRefS(BLOB, "param"), paramRefS(BLOB, "param"));
-    Function myFunction = functionS(
+    FunctionS myFunction = functionS(
         BLOB, "myFunction", twoBlobsEaterCall, parameter(BLOB, "param"));
 
     CallS myFunctionCall = callS(BLOB, refS(myFunction), new MyExpression());
@@ -98,13 +98,13 @@ public class JobCreatorTest extends TestingContext {
   }
 
   private JobCreator taskCreator(
-      Map<Class<?>, Handler<?>> additionalHandlers, Function... functions) {
+      Map<Class<?>, Handler<?>> additionalHandlers, FunctionS... functions) {
     var definitions = definitions(functions);
     return new JobCreator(definitions, new TypeSToTypeOConverter(objectFactory()), null,
         typeFactoryS(), typingS(), additionalHandlers);
   }
 
-  private Definitions definitions(Function... functions) {
+  private Definitions definitions(FunctionS... functions) {
     return new Definitions(
         ImmutableMap.of(), null, toMap(list(functions), Defined::name, f -> f));
   }

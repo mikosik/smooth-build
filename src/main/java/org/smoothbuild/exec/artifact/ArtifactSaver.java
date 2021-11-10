@@ -22,7 +22,7 @@ import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.space.ForSpace;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.collect.DuplicatesDetector;
@@ -38,7 +38,7 @@ public class ArtifactSaver {
     this.fileSystem = fileSystem;
   }
 
-  public Path save(Value value, ObjectH obj) throws IOException, DuplicatedPathsException {
+  public Path save(ValueS value, ObjectH obj) throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(value.name());
     if (value.type() instanceof ArrayType arrayType) {
       return saveArray(arrayType, artifactPath, (ArrayH) obj);

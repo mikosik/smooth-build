@@ -8,7 +8,7 @@ import org.smoothbuild.lang.expr.ExprS;
 /**
  * This class is immutable.
  */
-public class DefinedValue extends Value implements DefinedEvaluable {
+public class DefinedValue extends ValueS implements DefinedEvaluable {
   private final ExprS body;
 
   public DefinedValue(TypeS type, ModulePath modulePath, String name, ExprS body,

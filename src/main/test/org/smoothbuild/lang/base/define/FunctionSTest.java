@@ -18,10 +18,10 @@ import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class FunctionTest extends TestingContext {
+public class FunctionSTest extends TestingContext {
   @Test
   public void function_without_params_can_be_called_without_args() {
-    Function function = myFunction(STRING, list());
+    FunctionS function = myFunction(STRING, list());
     assertThat(function.canBeCalledArgless())
         .isTrue();
   }
@@ -29,7 +29,7 @@ public class FunctionTest extends TestingContext {
   @Test
   public void function_with_all_params_with_default_arguments_can_be_called_without_args() {
     List<Item> parameters = list(paramWithDefault(), paramWithDefault());
-    Function function = myFunction(STRING, parameters);
+    FunctionS function = myFunction(STRING, parameters);
     assertThat(function.canBeCalledArgless())
         .isTrue();
   }
@@ -37,7 +37,7 @@ public class FunctionTest extends TestingContext {
   @Test
   public void function_with_one_param_without_default_arguments_cannot_be_called_without_args() {
     List<Item> parameters = list(paramWithDefault(), paramWithoutDefault());
-    Function function = myFunction(STRING, parameters);
+    FunctionS function = myFunction(STRING, parameters);
     assertThat(function.canBeCalledArgless())
         .isFalse();
   }
@@ -54,7 +54,7 @@ public class FunctionTest extends TestingContext {
     return new Item(STRING, modulePath(), "a", defaultArgument, loc());
   }
 
-  private Function myFunction(TypeS resultType, List<Item> parameters) {
+  private FunctionS myFunction(TypeS resultType, List<Item> parameters) {
     return new DefinedFunction(functionST(resultType, toTypes(parameters)),
         modulePath(), "name", ImmutableList.copyOf(parameters),
         mock(ExprS.class), loc(1)

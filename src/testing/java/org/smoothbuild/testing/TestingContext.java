@@ -61,15 +61,15 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.lang.base.define.Constructor;
+import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
-import org.smoothbuild.lang.base.define.SModule;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
@@ -119,7 +119,7 @@ public class TestingContext {
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
   private TempManager tempManager;
-  private SModule internalModule;
+  private ModuleS internalModule;
   private TypeFactoryS typeFactoryS;
 
   public NativeApi nativeApi() {
@@ -130,7 +130,7 @@ public class TestingContext {
     return new TestingModuleLoader(this, sourceCode);
   }
 
-  public SModule internalModule() {
+  public ModuleS internalModule() {
     if (internalModule == null) {
       internalModule = new InternalModuleLoader(typeFactoryS()).loadModule();
     }
@@ -730,8 +730,8 @@ public class TestingContext {
     return new Annotation(implementedBy, pure, loc(line));
   }
 
-  public Constructor constructor(int line, TypeS resultType, String name, Item... parameters) {
-    return new Constructor(
+  public ConstructorS constructor(int line, TypeS resultType, String name, Item... parameters) {
+    return new ConstructorS(
         functionST(resultType, parameters), modulePath(), name, list(parameters), loc(line));
   }
 

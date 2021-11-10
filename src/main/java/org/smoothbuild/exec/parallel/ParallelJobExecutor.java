@@ -17,7 +17,7 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.job.TaskInfo;
-import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
@@ -43,7 +43,7 @@ public class ParallelJobExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<Value, Optional<ObjectH>> executeAll(Map<Value, Job> jobs) throws InterruptedException {
+  public Map<ValueS, Optional<ObjectH>> executeAll(Map<ValueS, Job> jobs) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(jobs);
   }
@@ -65,7 +65,7 @@ public class ParallelJobExecutor {
       return reporter;
     }
 
-    public Map<Value, Optional<ObjectH>> executeAll(Map<Value, Job> jobs)
+    public Map<ValueS, Optional<ObjectH>> executeAll(Map<ValueS, Job> jobs)
         throws InterruptedException {
       var results = mapValues(jobs, job -> job.schedule(this));
       runWhenAllAvailable(results.values(), jobExecutor::terminate);
