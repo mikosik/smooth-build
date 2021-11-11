@@ -45,7 +45,7 @@ public abstract class FunctionS extends GlobalReferencable {
 
   @Override
   public NamedList<Item> evaluationParameters() {
-    return parameters();
+    return parameters;
   }
 
   public boolean canBeCalledArgless() {
@@ -53,7 +53,16 @@ public abstract class FunctionS extends GlobalReferencable {
         .allMatch(p -> p.defaultValue().isPresent());
   }
 
+  protected String signature() {
+    return resultType().name() + " " + name() + "(" + parametersToString() + ")";
+  }
+
   protected String parametersToString() {
-    return toCommaSeparatedString(parameters().list());
+    return toCommaSeparatedString(parameters.list(), Defined::typeAndName);
+  }
+
+  @Override
+  public String toString() {
+    return this.getClass().getSimpleName() + "(`" + signature() + "`)";
   }
 }

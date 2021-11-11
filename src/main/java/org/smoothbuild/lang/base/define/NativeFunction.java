@@ -44,6 +44,10 @@ public class NativeFunction extends FunctionS implements NativeEvaluable {
 
   @Override
   public String toString() {
-    return annotation.toString() + " Function(`" + resultType() + "(" + parametersToString() + ")";
+    return "NativeFunction(`" + code() + "`)";
+  }
+
+  private String code() {
+    return annotation + " " + signature();
   }
 }

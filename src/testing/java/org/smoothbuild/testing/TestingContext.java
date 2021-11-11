@@ -732,6 +732,10 @@ public class TestingContext {
     return new Annotation(implementedBy, pure, loc(line));
   }
 
+  public ConstructorS constructor(TypeS resultType, String name, Item... parameters) {
+    return constructor(1, resultType, name, parameters);
+  }
+
   public ConstructorS constructor(int line, TypeS resultType, String name, Item... parameters) {
     return new ConstructorS(functionST(resultType, parameters), modulePath(), name,
         namedList(list(parameters)), loc(line));

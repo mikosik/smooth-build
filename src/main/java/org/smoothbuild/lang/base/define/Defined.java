@@ -28,4 +28,8 @@ public class Defined extends NalImpl {
   public String extendedName() {
     return name();
   }
+
+  public String typeAndName() {
+    return type.name() + " " + extendedName();
+  }
 }

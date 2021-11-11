@@ -44,6 +44,10 @@ public class DefinedFunction extends FunctionS implements DefinedEvaluable {
 
   @Override
   public String toString() {
-    return "Function(`" + resultType() + "(" + parametersToString() + ")" + " = " + body + "`)";
+    return "DefinedFunction(`" + code() + "`)";
+  }
+
+  private String code() {
+    return resultType().name() + " " + name() + "(" + parametersToString() + ")" + " = ?";
   }
 }
