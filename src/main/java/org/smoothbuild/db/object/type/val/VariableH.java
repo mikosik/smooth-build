@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableSet;
 
 public class VariableH extends TypeHV implements Variable {
   private final String name;
-  private final ImmutableSet<Variable> variables;
+  private final ImmutableSet<VariableH> variables;
 
   public VariableH(Hash hash, String name) {
     super(name, hash, VARIABLE);
@@ -23,7 +23,7 @@ public class VariableH extends TypeHV implements Variable {
   }
 
   @Override
-  public ImmutableSet<Variable> variables() {
+  public ImmutableSet<VariableH> variables() {
     return variables;
   }
 

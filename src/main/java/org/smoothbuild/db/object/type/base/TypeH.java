@@ -19,7 +19,8 @@ public abstract class TypeH extends AbstractType {
     this(name, hash, kind, ImmutableSet.of());
   }
 
-  protected TypeH(String name, Hash hash, TypeKindH kind, ImmutableSet<Variable> variables) {
+  protected TypeH(String name, Hash hash, TypeKindH kind,
+      ImmutableSet<? extends Variable> variables) {
     super(name, variables);
     this.hash = hash;
     this.kind = kind;

@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableSet;
 
 public abstract class AbstractType implements Type {
   protected final String name;
-  protected final ImmutableSet<Variable> variables;
+  protected final ImmutableSet<? extends Variable> variables;
 
-  public AbstractType(String name, ImmutableSet<Variable> variables) {
+  public AbstractType(String name, ImmutableSet<? extends Variable> variables) {
     this.name = name;
     this.variables = variables;
   }
@@ -20,7 +20,7 @@ public abstract class AbstractType implements Type {
    * @return type variables sorted alphabetically
    */
   @Override
-  public ImmutableSet<Variable> variables() {
+  public ImmutableSet<? extends Variable> variables() {
     return variables;
   }
 

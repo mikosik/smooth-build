@@ -6,7 +6,6 @@ import static java.util.Comparator.comparing;
 import java.util.Collection;
 
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 
@@ -23,7 +22,7 @@ public class StructTypeS extends TypeS {
     this.fields = fields;
   }
 
-  private static ImmutableSet<Variable> calculateVariables(NamedList<Labeled<TypeS>> fields) {
+  private static ImmutableSet<VariableS> calculateVariables(NamedList<Labeled<TypeS>> fields) {
     return fields.list().stream()
         .map(f -> f.object().variables())
         .flatMap(Collection::stream)

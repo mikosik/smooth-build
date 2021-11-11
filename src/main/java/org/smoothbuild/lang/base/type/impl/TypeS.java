@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.type.impl;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.api.AbstractType;
-import org.smoothbuild.lang.base.type.api.Variable;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -12,8 +11,13 @@ import com.google.common.collect.ImmutableSet;
  * This class and all its subclasses are immutable.
  */
 public abstract class TypeS extends AbstractType {
-  protected TypeS(String name, ImmutableSet<Variable> variables) {
+  protected TypeS(String name, ImmutableSet<VariableS> variables) {
     super(name, variables);
+  }
+
+  @Override
+  public ImmutableSet<VariableS> variables() {
+    return (ImmutableSet<VariableS>) super.variables();
   }
 
   @Override

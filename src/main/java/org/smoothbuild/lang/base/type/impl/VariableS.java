@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableSet;
  * This class is immutable.
  */
 public class VariableS extends TypeS implements Variable {
-  private final ImmutableSet<Variable> variables;
+  private final ImmutableSet<VariableS> variables;
 
   public VariableS(String name) {
     super(name, null);
@@ -18,7 +18,7 @@ public class VariableS extends TypeS implements Variable {
   }
 
   @Override
-  public ImmutableSet<Variable> variables() {
+  public ImmutableSet<VariableS> variables() {
     return variables;
   }
 }

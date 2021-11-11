@@ -9,7 +9,7 @@ public interface Type {
 
   public String name();
 
-  public ImmutableSet<Variable> variables();
+  public ImmutableSet<? extends Variable> variables();
 
   public default String q() {
     return "`" + name() + "`";
