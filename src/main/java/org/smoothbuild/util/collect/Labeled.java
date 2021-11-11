@@ -35,13 +35,6 @@ public class Labeled<T> implements Nameable {
     return object;
   }
 
-  /**
-   * @return name of this parameter inside backticks.
-   */
-  public String q() {
-    return "`" + saneLabel() + "`";
-  }
-
   public String saneLabel() {
     return nameO().orElse("");
   }

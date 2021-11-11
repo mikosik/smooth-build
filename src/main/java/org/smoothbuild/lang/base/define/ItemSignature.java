@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.Labeled;
+import org.smoothbuild.util.collect.NameableImpl;
 
 import com.google.common.collect.ImmutableList;
 
@@ -18,7 +18,8 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public class ItemSignature extends Labeled<TypeS> {
+public class ItemSignature extends NameableImpl {
+  private final TypeS type;
   private final Optional<TypeS> defaultValueType;
 
   public ItemSignature(TypeS type, String name, Optional<TypeS> defaultValueType) {
@@ -26,7 +27,8 @@ public class ItemSignature extends Labeled<TypeS> {
   }
 
   public ItemSignature(TypeS type, Optional<String> name, Optional<TypeS> defaultValueType) {
-    super(name, type);
+    super(name);
+    this.type = requireNonNull(type);
     this.defaultValueType = requireNonNull(defaultValueType);
   }
 
@@ -39,7 +41,7 @@ public class ItemSignature extends Labeled<TypeS> {
   }
 
   public TypeS type() {
-    return object();
+    return type;
   }
 
   public Optional<TypeS> defaultValueType() {
@@ -52,12 +54,8 @@ public class ItemSignature extends Labeled<TypeS> {
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(saneLabel(), minNameLength, ' ');
+    String namePart = padEnd(nameSane(), minNameLength, ' ');
     return typePart + namePart;
-  }
-
-  public Labeled<TypeS> toNamedType() {
-    return labeled(nameO(), type());
   }
 
   @Override

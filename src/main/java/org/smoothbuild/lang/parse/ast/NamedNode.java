@@ -16,10 +16,6 @@ public class NamedNode extends Node implements Nal {
     return name;
   }
 
-  public String q() {
-    return "`" + name() + "`";
-  }
-
   @Override
   public boolean equals(Object object) {
     return object instanceof NamedNode that

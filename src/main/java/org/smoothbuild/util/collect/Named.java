@@ -9,4 +9,9 @@ public interface Named extends Nameable {
   public default Optional<String> nameO() {
     return Optional.of(name());
   }
+
+  @Override
+  public default String q() {
+    return "`" + name() + "`";
+  }
 }

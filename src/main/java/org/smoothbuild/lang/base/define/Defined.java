@@ -25,10 +25,6 @@ public class Defined extends NalImpl {
     return modulePath;
   }
 
-  public String q() {
-    return "`" + name() + "`";
-  }
-
   public String extendedName() {
     return name();
   }
