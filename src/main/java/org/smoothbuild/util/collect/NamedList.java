@@ -2,14 +2,22 @@ package org.smoothbuild.util.collect;
 
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
+import java.util.AbstractList;
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class NamedList<T extends Nameable> {
+public class NamedList<T extends Nameable> extends AbstractList<T> {
   private static final NamedList<?> EMPTY = new NamedList<>(ImmutableList.of());
 
   private final ImmutableList<T> list;
@@ -45,10 +53,6 @@ public class NamedList<T extends Nameable> {
 
   public boolean contains(String name) {
     return map.containsKey(name);
-  }
-
-  public int size() {
-    return list.size();
   }
 
   public ImmutableMap<String, Integer> indexMap() {
@@ -95,5 +99,60 @@ public class NamedList<T extends Nameable> {
 
   public String valuesToString() {
     return toCommaSeparatedString(list);
+  }
+
+  // overriden methods from List<T>
+
+  @Override
+  public T get(int index) {
+    return list.get(index);
+  }
+
+  @Override
+  public int size() {
+    return list.size();
+  }
+
+  @Override
+  public void forEach(Consumer<? super T> consumer) {
+    list.forEach(consumer);
+  }
+
+  @Override
+  public Spliterator<T> spliterator() {
+    return list.spliterator();
+  }
+
+  @Override
+  public Stream<T> stream() {
+    return list.stream();
+  }
+
+  @Override
+  public Stream<T> parallelStream() {
+    return list.parallelStream();
+  }
+
+  @Override
+  public <T1> T1[] toArray(IntFunction<T1[]> generator) {
+    return list.toArray(generator);
+  }
+
+  @Deprecated
+  @Override
+  public boolean removeIf(Predicate<? super T> filter) {
+    return list.removeIf(filter);
+  }
+
+  @Deprecated
+  @Override
+  public void replaceAll(UnaryOperator<T> operator) {
+    list.replaceAll(operator);
+  }
+
+  @Deprecated
+  @Override
+  public void sort(Comparator<? super T> c) {
+    list.sort(c);
   }
 }
