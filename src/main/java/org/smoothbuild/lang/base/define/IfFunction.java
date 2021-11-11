@@ -25,7 +25,7 @@ public class IfFunction extends FunctionS {
 
   private IfFunction(TypeS resultType, NamedList<Item> parameters, ModulePath modulePath,
       TypeFactoryS factory) {
-    super(factory.function(resultType, map(parameters.list(), Defined::type)),
+    super(factory.function(resultType, map(parameters, Defined::type)),
         modulePath, IF_FUNCTION_NAME, parameters, internal());
   }
 

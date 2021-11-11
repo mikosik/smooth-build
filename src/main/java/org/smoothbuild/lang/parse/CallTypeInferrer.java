@@ -39,16 +39,15 @@ public class CallTypeInferrer {
       NamedList<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
-    ImmutableList<ItemSignature> paramSignatures = parameters.list();
-    findIllegalTypeAssignmentErrors(call, assignedArgs, paramSignatures, logBuffer);
+    findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
-    List<Optional<TypeS>> assignedTypes = assignedTypes(paramSignatures, assignedArgs);
+    List<Optional<TypeS>> assignedTypes = assignedTypes(parameters, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
       var boundedVariables = typing.inferVariableBoundsInCall(
           resultType,
-          map(paramSignatures, ItemSignature::type),
+          map(parameters, ItemSignature::type),
           map(assignedTypes, Optional::get));
       var variableProblems = findVariableProblems(call, boundedVariables);
       if (!variableProblems.isEmpty()) {

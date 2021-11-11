@@ -85,7 +85,7 @@ public class ReferencableLoader {
     var resultType = realFuncNode.resultType().get();
     var name = realFuncNode.name();
     var location = realFuncNode.location();
-    var type = factory.function(resultType, map(parameters.list(), Defined::type));
+    var type = factory.function(resultType, map(parameters, Defined::type));
     if (realFuncNode.annotation().isPresent()) {
       return new NativeFunction(type,
           path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
@@ -187,7 +187,7 @@ public class ReferencableLoader {
       // report an error.
       ReferencableLike referenced = ((RefNode) call.function()).referenced();
       if (referenced instanceof FunctionS function) {
-        return function.parameters().list().get(i).defaultValue().get();
+        return function.parameters().get(i).defaultValue().get();
       } else if (referenced instanceof FunctionNode functionNode) {
         return createExpression(functionNode.params().get(i).body().get());
       } else {
@@ -198,7 +198,7 @@ public class ReferencableLoader {
     private ExprS createSelect(SelectNode selectNode) {
       var structType = (StructTypeS) selectNode.expr().type().get();
       var index = structType.fields().indexMap().get(selectNode.fieldName());
-      var fieldType = structType.fields().list().get(index).object();
+      var fieldType = structType.fields().get(index).object();
       ExprS expr = createExpression(selectNode.expr());
       return new SelectS(fieldType, index, expr, selectNode.location());
     }

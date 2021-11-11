@@ -23,7 +23,7 @@ public class StructTypeS extends TypeS {
   }
 
   private static ImmutableSet<VariableS> calculateVariables(NamedList<Labeled<TypeS>> fields) {
-    return fields.list().stream()
+    return fields.stream()
         .map(f -> f.object().variables())
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))

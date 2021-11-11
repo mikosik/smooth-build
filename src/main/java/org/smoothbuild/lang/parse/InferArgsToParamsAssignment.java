@@ -34,9 +34,8 @@ public class InferArgsToParamsAssignment {
       CallNode call, NamedList<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
-    ImmutableList<ItemSignature> signatures = parameters.list();
-    logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call, signatures));
-    logBuffer.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, signatures));
+    logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call, parameters));
+    logBuffer.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, parameters));
     logBuffer.logAll(findUnknownParameterNameErrors(call, parameters));
     logBuffer.logAll(findDuplicateAssignmentErrors(call, positionalArguments, parameters));
     if (logBuffer.containsProblem()) {
@@ -97,9 +96,9 @@ public class InferArgsToParamsAssignment {
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)
-        .filter(a -> !parameters.contains(a.name()))
+        .filter(a -> !parameters.containsWithName(a.name()))
         .map(a -> parseError(a,
-            inCallToPrefix(call, parameters.list()) + "Unknown parameter " + a.q() + "."))
+            inCallToPrefix(call, parameters) + "Unknown parameter " + a.q() + "."))
         .collect(toList());
   }
 
@@ -110,14 +109,13 @@ public class InferArgsToParamsAssignment {
         .stream()
         .filter(ArgNode::declaresName)
         .filter(a -> !names.add(a.name()))
-        .map(a -> parseError(a, inCallToPrefix(call, parameters.list()) + a.q()
-            + " is already assigned."))
+        .map(a -> parseError(a, inCallToPrefix(call, parameters) + a.q() + " is already assigned."))
         .collect(toList());
   }
 
   private static Set<String> positionalArgumentNames(List<ArgNode> positionalArguments,
       NamedList<ItemSignature> parameters) {
-    return parameters.list().stream()
+    return parameters.stream()
         .limit(positionalArguments.size())
         .flatMap(p -> p.nameO().stream())
         .collect(toSet());
@@ -127,9 +125,8 @@ public class InferArgsToParamsAssignment {
       List<Optional<ArgNode>> assignedList, NamedList<ItemSignature> parameters) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())
-        .filter(i -> parameters.list().get(i).defaultValueType().isEmpty())
-        .mapToObj(i -> parameterMustBeSpecifiedError(
-            call, i, parameters.list().get(i), parameters.list()))
+        .filter(i -> parameters.get(i).defaultValueType().isEmpty())
+        .mapToObj(i -> parameterMustBeSpecifiedError(call, i, parameters.get(i), parameters))
         .collect(toList());
   }
 

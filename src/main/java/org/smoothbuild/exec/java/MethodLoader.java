@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,8 +29,6 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.plugin.NativeApi;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -154,7 +153,7 @@ public class MethodLoader {
   private static void assertNativeParameterTypesMatchesFuncParameters(Method method,
       FunctionS function, String classBinaryName) throws LoadingMethodException {
     Parameter[] nativeParams = method.getParameters();
-    ImmutableList<Item> params = function.parameters().list();
+    List<Item> params = function.parameters();
     if (params.size() != nativeParams.length - 1) {
       throw newLoadingException(function, classBinaryName, "Function " + function.q() + " has "
           + params.size() + " parameter(s) but its native implementation has "

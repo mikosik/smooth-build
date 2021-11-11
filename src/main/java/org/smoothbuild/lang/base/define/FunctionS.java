@@ -49,7 +49,7 @@ public abstract class FunctionS extends GlobalReferencable {
   }
 
   public boolean canBeCalledArgless() {
-    return parameters.list().stream()
+    return parameters.stream()
         .allMatch(p -> p.defaultValue().isPresent());
   }
 
@@ -58,7 +58,7 @@ public abstract class FunctionS extends GlobalReferencable {
   }
 
   protected String parametersToString() {
-    return toCommaSeparatedString(parameters.list(), Defined::typeAndName);
+    return toCommaSeparatedString(parameters, Defined::typeAndName);
   }
 
   @Override

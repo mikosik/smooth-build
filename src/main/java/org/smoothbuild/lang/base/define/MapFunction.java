@@ -37,7 +37,7 @@ public class MapFunction extends FunctionS {
   private MapFunction(ArrayTypeS resultType, NamedList<Item> parameters, ModulePath modulePath,
       TypeFactoryS factory) {
     super(
-        factory.function(resultType, map(parameters.list(), Defined::type)),
+        factory.function(resultType, map(parameters, Defined::type)),
         modulePath,
         MAP_FUNCTION_NAME,
         parameters,

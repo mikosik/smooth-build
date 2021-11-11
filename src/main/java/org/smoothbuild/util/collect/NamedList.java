@@ -39,26 +39,6 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
     return (NamedList<T>) EMPTY;
   }
 
-  public ImmutableList<T> list() {
-    return list;
-  }
-
-  public <R  extends Nameable> NamedList<R> map(Function<T, R> mapping) {
-    return new NamedList<>(Lists.map(list, mapping));
-  }
-
-  public T get(String name) {
-    return map.get(name);
-  }
-
-  public boolean contains(String name) {
-    return map.containsKey(name);
-  }
-
-  public ImmutableMap<String, Integer> indexMap() {
-    return indexMap;
-  }
-
   private static <E extends Nameable> ImmutableMap<String, Integer> calculateIndexMap(
       ImmutableList<E> nameables) {
     Builder<String, Integer> builder = ImmutableMap.builder();
@@ -76,6 +56,22 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
       nameable.nameO().ifPresent(n -> builder.put(n, nameable));
     }
     return builder.build();
+  }
+
+  public <R  extends Nameable> NamedList<R> map(Function<T, R> mapping) {
+    return new NamedList<>(Lists.map(list, mapping));
+  }
+
+  public T get(String name) {
+    return map.get(name);
+  }
+
+  public boolean containsWithName(String name) {
+    return map.containsKey(name);
+  }
+
+  public ImmutableMap<String, Integer> indexMap() {
+    return indexMap;
   }
 
   @Override
