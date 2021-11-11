@@ -115,7 +115,7 @@ public class ExprSLoadingTest extends TestingContext {
     @Test
     public void with_constructor_reference() {
       var struct = structST("MyStruct", namedList(list(labeled("field", STRING))));
-      ConstructorS constr = constructor(1, struct, "myStruct", parameter(2, STRING, "field"));
+      ConstructorS constr = constructor(1, struct, "myStruct", param(2, STRING, "field"));
       module("""
           MyStruct {
             String field
@@ -147,7 +147,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(functionS(1, STRING, "result",
-              callS(1, STRING, paramRefS(f(STRING), "f")), parameter(1, f(STRING), "f")));
+              callS(1, STRING, paramRefS(f(STRING), "f")), param(1, f(STRING), "f")));
     }
 
     @Test
@@ -158,7 +158,7 @@ public class ExprSLoadingTest extends TestingContext {
           .loadsSuccessfully()
           .containsReferencable(functionS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING, BLOB), "f"), blobS(1, 9)),
-              parameter(1, f(STRING, BLOB), "f")));
+              param(1, f(STRING, BLOB), "f")));
     }
   }
 
@@ -255,7 +255,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
         .loadsSuccessfully()
         .containsReferencable(functionS(
-            1, BLOB, "myFunction", paramRefS(2, BLOB, "param1"), parameter(1, BLOB, "param1")));
+            1, BLOB, "myFunction", paramRefS(2, BLOB, "param1"), param(1, BLOB, "param1")));
   }
 
   @Nested
@@ -339,7 +339,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(functionS(1, STRING, "myFunction",
-              stringS(3, "abc"), parameter(2, BLOB, "param1")));
+              stringS(3, "abc"), param(2, BLOB, "param1")));
     }
 
     @Test
@@ -352,7 +352,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsReferencable(functionS(1, STRING, "myFunction",
-              stringS(4, "abc"), parameter(2, BLOB, "param1", blobS(3, 7))));
+              stringS(4, "abc"), param(2, BLOB, "param1", blobS(3, 7))));
     }
 
     @Test

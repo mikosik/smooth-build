@@ -676,8 +676,8 @@ public class DeclarationTest extends TestingContext {
               .loadsSuccessfully()
               .containsReferencable(functionS(2, STRING, "myFunction",
                   annotation(1, stringS(1, "Impl.met")),
-                  parameter(3, STRING, "default", stringS(3, "value")),
-                  parameter(4, STRING, "nonDefault")));
+                  param(3, STRING, "default", stringS(3, "value")),
+                  param(4, STRING, "nonDefault")));
         }
 
         @Test
@@ -705,7 +705,7 @@ public class DeclarationTest extends TestingContext {
           module(functionDeclaration("String param1,"))
               .loadsSuccessfully()
               .containsReferencable(functionS(1, STRING, "myFunction",
-                  stringS(1, "abc"), parameter(1, STRING, "param1")));
+                  stringS(1, "abc"), param(1, STRING, "param1")));
         }
 
         @Test

@@ -33,7 +33,7 @@ public class JobCreatorTest extends TestingContext {
   @Test
   public void lazy_task_is_created_for_parameter() {
     var functionBody = blobS(0x33);
-    var function = functionS(BLOB, "myFunction", functionBody, parameter(BLOB, "p"));
+    var function = functionS(BLOB, "myFunction", functionBody, param(BLOB, "p"));
 
     var argument = new MyExpression();
     var call = callS(11, BLOB, refS(function), argument);
@@ -45,12 +45,12 @@ public class JobCreatorTest extends TestingContext {
   @Test
   public void only_one_lazy_task_is_created_for_argument_assigned_to_parameter_that_is_used_twice() {
     FunctionS twoBlobsEater = functionS(
-        BLOB, "twoBlobsEater", parameter(BLOB, "a"), parameter(BLOB, "b"));
+        BLOB, "twoBlobsEater", param(BLOB, "a"), param(BLOB, "b"));
 
     CallS twoBlobsEaterCall = callS(BLOB, refS(twoBlobsEater),
         paramRefS(BLOB, "param"), paramRefS(BLOB, "param"));
     FunctionS myFunction = functionS(
-        BLOB, "myFunction", twoBlobsEaterCall, parameter(BLOB, "param"));
+        BLOB, "myFunction", twoBlobsEaterCall, param(BLOB, "param"));
 
     CallS myFunctionCall = callS(BLOB, refS(myFunction), new MyExpression());
 

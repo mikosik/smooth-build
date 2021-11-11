@@ -741,20 +741,19 @@ public class TestingContext {
     return new Item(type, modulePath(), name, Optional.empty(), loc(1));
   }
 
-  public Item parameter(TypeS type, String name) {
-    return parameter(1, type, name);
+  public Item param(TypeS type, String name) {
+    return param(1, type, name);
   }
 
-  public Item parameter(int line, TypeS type, String name) {
-    return parameter(line, type, name, Optional.empty());
+  public Item param(int line, TypeS type, String name) {
+    return param(line, type, name, Optional.empty());
   }
 
-  public Item parameter(int line, TypeS type, String name, ExprS defaultArg) {
-    return parameter(line, type, name, Optional.of(defaultArg));
+  public Item param(int line, TypeS type, String name, ExprS defaultArg) {
+    return param(line, type, name, Optional.of(defaultArg));
   }
 
-  private Item parameter(int line, TypeS type, String name,
-      Optional<ExprS> defaultArg) {
+  private Item param(int line, TypeS type, String name, Optional<ExprS> defaultArg) {
     return new Item(type, modulePath(), name, defaultArg, loc(line));
   }
 
