@@ -18,7 +18,7 @@ import okio.ByteString;
 
 public class JarTester {
   public static BlobH jar(TupleH... files) throws IOException {
-    return new TestingContext().blob(jarByteString(files));
+    return new TestingContext().blobH(jarByteString(files));
   }
 
   public static ByteString jarByteString(TupleH... files) throws IOException {

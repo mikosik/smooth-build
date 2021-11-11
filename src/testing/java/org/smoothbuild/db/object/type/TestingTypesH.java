@@ -14,8 +14,8 @@ import com.google.common.collect.ImmutableList;
 
 public class TestingTypesH {
   private static final TestingContext CONTEXT = new TestingContext();
-  public static final ObjectHDb OBJECT_DB = CONTEXT.objectDb();
-  public static final TypeHDb TYPEH_DB = CONTEXT.objTypeDb();
+  public static final ObjectHDb OBJECT_DB = CONTEXT.objectHDb();
+  public static final TypeHDb TYPEH_DB = CONTEXT.typeHDb();
 
   public static final TypeHV ANY = TYPEH_DB.any();
   public static final TypeHV BLOB = TYPEH_DB.blob();
@@ -25,17 +25,17 @@ public class TestingTypesH {
   public static final TypeHV INT = TYPEH_DB.int_();
   public static final TypeHV NOTHING = TYPEH_DB.nothing();
   public static final TypeHV STRING = TYPEH_DB.string();
-  public static final TupleTypeH PERSON = CONTEXT.personOT();
-  public static final TupleTypeH FILE = CONTEXT.fileOT();
-  public static final TupleTypeH TUPLE_EMPTY = CONTEXT.tupleEmptyOT();
-  public static final TupleTypeH TUPLE_WITH_STRING = CONTEXT.tupleWithStrOT();
-  public static final TypeH CALL = CONTEXT.callOT();
-  public static final TypeH CONST = CONTEXT.constOT(STRING);
-  public static final TypeH ORDER = CONTEXT.orderOT();
-  public static final TypeH CONSTRUCT = CONTEXT.constructOT(list(INT, STRING));
-  public static final TypeH INVOKE = CONTEXT.invokeOT(INT);
-  public static final TypeH SELECT = CONTEXT.selectOT(INT);
-  public static final TypeH REF = CONTEXT.refOT(INT);
+  public static final TupleTypeH PERSON = CONTEXT.personHT();
+  public static final TupleTypeH FILE = CONTEXT.fileHT();
+  public static final TupleTypeH TUPLE_EMPTY = CONTEXT.tupleEmptyHT();
+  public static final TupleTypeH TUPLE_WITH_STRING = CONTEXT.tupleWithStrHT();
+  public static final TypeH CALL = CONTEXT.callHT();
+  public static final TypeH CONST = CONTEXT.constHT(STRING);
+  public static final TypeH ORDER = CONTEXT.orderHT();
+  public static final TypeH CONSTRUCT = CONTEXT.constructHT(list(INT, STRING));
+  public static final TypeH INVOKE = CONTEXT.invokeHT(INT);
+  public static final TypeH SELECT = CONTEXT.selectHT(INT);
+  public static final TypeH REF = CONTEXT.refHT(INT);
 
   public static final ArrayTypeH ARRAY_ANY = array(ANY);
   public static final ArrayTypeH ARRAY_BLOB = array(BLOB);

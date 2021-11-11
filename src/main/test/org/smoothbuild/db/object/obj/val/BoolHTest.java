@@ -9,90 +9,90 @@ import org.smoothbuild.testing.TestingContext;
 public class BoolHTest extends TestingContext {
   @Test
   public void type_of_bool_is_bool_type() {
-    assertThat(bool(true).type())
-        .isEqualTo(boolOT());
+    assertThat(boolH(true).type())
+        .isEqualTo(boolHT());
   }
 
   @Test
   public void jvalue_returns_java_true_from_true_bool() {
-    BoolH bool = bool(true);
+    BoolH bool = boolH(true);
     assertThat(bool.jValue())
         .isTrue();
   }
 
   @Test
   public void javlue_returns_java_false_from_false_bool() {
-    BoolH bool = bool(false);
+    BoolH bool = boolH(false);
     assertThat(bool.jValue())
         .isFalse();
   }
 
   @Test
   public void bools_with_equal_values_are_equal() {
-    assertThat(bool(true))
-        .isEqualTo(bool(true));
+    assertThat(boolH(true))
+        .isEqualTo(boolH(true));
   }
 
   @Test
   public void bools_with_different_values_are_not_equal() {
-    assertThat(bool(true))
-        .isNotEqualTo(bool(false));
+    assertThat(boolH(true))
+        .isNotEqualTo(boolH(false));
   }
 
   @Test
   public void hash_of_true_bools_are_the_same() {
-    assertThat(bool(true).hash())
-        .isEqualTo(bool(true).hash());
+    assertThat(boolH(true).hash())
+        .isEqualTo(boolH(true).hash());
   }
 
   @Test
   public void hash_of_false_bools_are_the_same() {
-    assertThat(bool(false).hash())
-        .isEqualTo(bool(false).hash());
+    assertThat(boolH(false).hash())
+        .isEqualTo(boolH(false).hash());
   }
 
   @Test
   public void hash_of_bools_with_different_values_is_not_the_same() {
-    assertThat(bool(true).hash())
-        .isNotEqualTo(bool(false).hash());
+    assertThat(boolH(true).hash())
+        .isNotEqualTo(boolH(false).hash());
   }
 
   @Test
   public void hash_code_of_true_bools_is_the_same() {
-    assertThat(bool(true).hashCode())
-        .isEqualTo(bool(true).hashCode());
+    assertThat(boolH(true).hashCode())
+        .isEqualTo(boolH(true).hashCode());
   }
 
   @Test
   public void hash_code_of_false_bools_is_the_same() {
-    assertThat(bool(false).hashCode())
-        .isEqualTo(bool(false).hashCode());
+    assertThat(boolH(false).hashCode())
+        .isEqualTo(boolH(false).hashCode());
   }
 
   @Test
   public void hash_code_of_bools_with_different_values_is_not_the_same() {
-    assertThat(bool(true).hashCode())
-        .isNotEqualTo(bool(false).hashCode());
+    assertThat(boolH(true).hashCode())
+        .isNotEqualTo(boolH(false).hashCode());
   }
 
   @Test
   public void bool_can_be_read_back_by_hash() {
-    BoolH bool = bool(true);
+    BoolH bool = boolH(true);
     Hash hash = bool.hash();
-    assertThat(objectDbOther().get(hash))
+    assertThat(objectHDbOther().get(hash))
         .isEqualTo(bool);
   }
 
   @Test
   public void bool_read_back_by_hash_has_same_jvalue() {
-    BoolH bool = bool(true);
-    assertThat(((BoolH) objectDbOther().get(bool.hash())).jValue())
+    BoolH bool = boolH(true);
+    assertThat(((BoolH) objectHDbOther().get(bool.hash())).jValue())
         .isTrue();
   }
 
   @Test
   public void to_string_contains_value() {
-    BoolH bool = bool(true);
+    BoolH bool = boolH(true);
     assertThat(bool.toString())
         .isEqualTo("true@" + bool.hash());
   }

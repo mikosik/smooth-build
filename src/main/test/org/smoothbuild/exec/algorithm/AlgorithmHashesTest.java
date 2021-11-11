@@ -27,11 +27,11 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    TupleTypeH constructedType = tupleOT();
+    TupleTypeH constructedType = tupleHT();
 
     hashes.add(orderAlgorithmHash());
     hashes.add(callNativeAlgorithmHash("referencableName"));
-    hashes.add(convertAlgorithmHash(stringOT()));
+    hashes.add(convertAlgorithmHash(stringHT()));
     hashes.add(constructAlgorithmHash(constructedType));
     hashes.add(selectAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
@@ -51,14 +51,14 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void convert_algorithm_has_different_hash_for_different_types() {
-    assertThat(convertAlgorithmHash(stringOT()))
-        .isNotEqualTo(convertAlgorithmHash(blobOT()));
+    assertThat(convertAlgorithmHash(stringHT()))
+        .isNotEqualTo(convertAlgorithmHash(blobHT()));
   }
 
   @Test
   public void construct_algorithm_has_different_hash_for_different_fields() {
-    TupleTypeH constructedType = tupleOT(list());
-    TupleTypeH constructedType2 = tupleOT(list(blobOT()));
+    TupleTypeH constructedType = tupleHT(list());
+    TupleTypeH constructedType2 = tupleHT(list(blobHT()));
 
     assertThat(constructAlgorithmHash(constructedType))
         .isNotEqualTo(constructAlgorithmHash(constructedType2));

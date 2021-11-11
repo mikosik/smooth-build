@@ -13,126 +13,126 @@ import org.smoothbuild.testing.TestingContext;
 public class SelectHTest extends TestingContext {
   @Test
   public void type_of_select_is_inferred_correctly() {
-    TupleH tuple = animal("rabbit", 7);
-    assertThat(select(const_(tuple), int_(1)).type())
-        .isEqualTo(selectOT(intOT()));
+    TupleH tuple = animalH("rabbit", 7);
+    assertThat(selectH(constH(tuple), intH(1)).type())
+        .isEqualTo(selectHT(intHT()));
   }
 
   @Test
   public void creating_select_with_non_tuple_expr_causes_exception() {
-    assertCall(() -> select(intExpr(3), int_(2)).type())
+    assertCall(() -> selectH(intHE(3), intH(2)).type())
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_select_with_too_great_index_causes_exception() {
-    TupleH tuple = animal("rabbit", 7);
-    assertCall(() -> select(const_(tuple), int_(2)).type())
+    TupleH tuple = animalH("rabbit", 7);
+    assertCall(() -> selectH(constH(tuple), intH(2)).type())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   public void creating_select_with_index_lower_than_zero_causes_exception() {
-    TupleH tuple = animal("rabbit", 7);
-    assertCall(() -> select(const_(tuple), int_(-1)).type())
+    TupleH tuple = animalH("rabbit", 7);
+    assertCall(() -> selectH(constH(tuple), intH(-1)).type())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
   }
 
   @Test
   public void data_returns_tuple_and_index() {
-    TupleH tuple = tuple(tupleOT(), list(int_(7)));
-    ConstH expr = const_(tuple);
-    IntH index = int_(0);
-    assertThat(select(expr, index).data())
+    TupleH tuple = tupleH(tupleHT(), list(intH(7)));
+    ConstH expr = constH(tuple);
+    IntH index = intH(0);
+    assertThat(selectH(expr, index).data())
         .isEqualTo(new SelectData(expr, index));
   }
 
   @Test
   public void select_with_equal_components_are_equal() {
-    TupleH tuple = animal("rabbit", 7);
-    assertThat(select(const_(tuple), int_(0)))
-        .isEqualTo(select(const_(tuple), int_(0)));
+    TupleH tuple = animalH("rabbit", 7);
+    assertThat(selectH(constH(tuple), intH(0)))
+        .isEqualTo(selectH(constH(tuple), intH(0)));
   }
 
   @Test
   public void select_with_different_tuples_are_not_equal() {
-    TupleH tuple1 = animal("rabbit", 7);
-    TupleH tuple2 = animal("cat", 7);
-    assertThat(select(const_(tuple1), int_(0)))
-        .isNotEqualTo(select(const_(tuple2), int_(0)));
+    TupleH tuple1 = animalH("rabbit", 7);
+    TupleH tuple2 = animalH("cat", 7);
+    assertThat(selectH(constH(tuple1), intH(0)))
+        .isNotEqualTo(selectH(constH(tuple2), intH(0)));
   }
 
   @Test
   public void select_with_different_indexes_are_not_equal() {
-    TupleH tuple = animal("rabbit", 7);
-    assertThat(select(const_(tuple), int_(0)))
-        .isNotEqualTo(select(const_(tuple), int_(1)));
+    TupleH tuple = animalH("rabbit", 7);
+    assertThat(selectH(constH(tuple), intH(0)))
+        .isNotEqualTo(selectH(constH(tuple), intH(1)));
   }
 
   @Test
   public void hash_of_selects_with_equal_components_is_the_same() {
-    TupleH tuple = animal("rabbit", 7);
-    assertThat(select(const_(tuple), int_(0)).hash())
-        .isEqualTo(select(const_(tuple), int_(0)).hash());
+    TupleH tuple = animalH("rabbit", 7);
+    assertThat(selectH(constH(tuple), intH(0)).hash())
+        .isEqualTo(selectH(constH(tuple), intH(0)).hash());
   }
 
   @Test
   public void hash_of_selects_with_different_tuples_is_not_the_same() {
-    TupleH tuple1 = animal("rabbit", 7);
-    TupleH tuple2 = animal("cat", 7);
-    assertThat(select(const_(tuple1), int_(0)).hash())
-        .isNotEqualTo(select(const_(tuple2), int_(0)).hash());
+    TupleH tuple1 = animalH("rabbit", 7);
+    TupleH tuple2 = animalH("cat", 7);
+    assertThat(selectH(constH(tuple1), intH(0)).hash())
+        .isNotEqualTo(selectH(constH(tuple2), intH(0)).hash());
   }
 
   @Test
   public void hash_of_selects_with_different_indexes_is_not_the_same() {
-    TupleH tuple = animal("rabbit", 7);
-    assertThat(select(const_(tuple), int_(0)).hash())
-        .isNotEqualTo(select(const_(tuple), int_(1)).hash());
+    TupleH tuple = animalH("rabbit", 7);
+    assertThat(selectH(constH(tuple), intH(0)).hash())
+        .isNotEqualTo(selectH(constH(tuple), intH(1)).hash());
   }
 
   @Test
   public void hash_code_of_selects_with_equal_components_is_the_same() {
-    TupleH tuple = animal("rabbit", 7);
-    assertThat(select(const_(tuple), int_(1)).hashCode())
-        .isEqualTo(select(const_(tuple), int_(1)).hashCode());
+    TupleH tuple = animalH("rabbit", 7);
+    assertThat(selectH(constH(tuple), intH(1)).hashCode())
+        .isEqualTo(selectH(constH(tuple), intH(1)).hashCode());
   }
 
   @Test
   public void hash_code_of_selects_with_different_tuples_is_not_the_same() {
-    TupleH tuple1 = animal("rabbit", 7);
-    TupleH tuple2 = animal("cat", 7);
-    assertThat(select(const_(tuple1), int_(0)).hashCode())
-        .isNotEqualTo(select(const_(tuple2), int_(0)).hashCode());
+    TupleH tuple1 = animalH("rabbit", 7);
+    TupleH tuple2 = animalH("cat", 7);
+    assertThat(selectH(constH(tuple1), intH(0)).hashCode())
+        .isNotEqualTo(selectH(constH(tuple2), intH(0)).hashCode());
   }
 
   @Test
   public void hash_code_of_selects_with_different_indexes_is_not_the_same() {
-    TupleH tuple = animal("rabbit", 7);
-    assertThat(select(const_(tuple), int_(0)).hashCode())
-        .isNotEqualTo(select(const_(tuple), int_(1)).hashCode());
+    TupleH tuple = animalH("rabbit", 7);
+    assertThat(selectH(constH(tuple), intH(0)).hashCode())
+        .isNotEqualTo(selectH(constH(tuple), intH(1)).hashCode());
   }
 
   @Test
   public void select_can_be_read_back_by_hash() {
-    TupleH tuple = animal("rabbit", 7);
-    SelectH select = select(const_(tuple), int_(0));
-    assertThat(objectDbOther().get(select.hash()))
+    TupleH tuple = animalH("rabbit", 7);
+    SelectH select = selectH(constH(tuple), intH(0));
+    assertThat(objectHDbOther().get(select.hash()))
         .isEqualTo(select);
   }
 
   @Test
   public void select_read_back_by_hash_has_same_data() {
-    ConstH tupleExpr = const_(animal());
-    IntH index = int_(0);
-    SelectH select = select(tupleExpr, index);
-    assertThat(((SelectH) objectDbOther().get(select.hash())).data())
+    ConstH tupleExpr = constH(animalH());
+    IntH index = intH(0);
+    SelectH select = selectH(tupleExpr, index);
+    assertThat(((SelectH) objectHDbOther().get(select.hash())).data())
         .isEqualTo(new SelectData(tupleExpr, index));
   }
 
   @Test
   public void to_string() {
-    SelectH select = select(const_(animal()), int_(0));
+    SelectH select = selectH(constH(animalH()), intH(0));
     assertThat(select.toString())
         .isEqualTo("Select(???)@" + select.hash());
   }

@@ -26,7 +26,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hashes_of_computations_with_same_algorithm_runtime_and_input_are_equal() {
     Algorithm algorithm = computation(Hash.of(1));
-    Input input = input(list(string("input")));
+    Input input = input(list(stringH("input")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(computationHash(Hash.of(13), algorithm, input));
   }
@@ -35,7 +35,7 @@ public class ComputationHashTest extends TestingContext {
   public void hashes_of_computations_with_different_algorithm_but_same_runtime_and_input_are_not_equal() {
     Algorithm algorithm = computation(Hash.of(1));
     Algorithm algorithm2 = computation(Hash.of(2));
-    Input input = input(list(string("input")));
+    Input input = input(list(stringH("input")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isNotEqualTo(computationHash(Hash.of(13), algorithm2, input));
   }
@@ -43,7 +43,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hashes_of_computations_with_same_algorithm_and_input_but_different_runtime_are_not_equal() {
     Algorithm algorithm = computation(Hash.of(1));
-    Input input = input(list(string("input")));
+    Input input = input(list(stringH("input")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isNotEqualTo(computationHash(Hash.of(14), algorithm, input));
   }
@@ -51,15 +51,15 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hashes_of_computations_with_same_algorithm_runtime_but_different_input_are_not_equal() {
     Algorithm algorithm = computation(Hash.of(1));
-    Input input = input(list(string("input")));
-    Input input2 = input(list(string("input2")));
+    Input input = input(list(stringH("input")));
+    Input input2 = input(list(stringH("input2")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isNotEqualTo(computationHash(Hash.of(13), algorithm, input2));
   }
 
   @Test
   public void hash_of_computation_with_array_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new OrderAlgorithm(arrayOT(stringOT()));
+    Algorithm algorithm = new OrderAlgorithm(arrayHT(stringHT()));
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("16457f3457ec260bb4be0161933c32010b162123"));
@@ -67,8 +67,8 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_array_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new OrderAlgorithm(arrayOT(stringOT()));
-    Input input = input(list(string("abc"), string("def")));
+    Algorithm algorithm = new OrderAlgorithm(arrayHT(stringHT()));
+    Input input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("3afcc3677dc2662b5ae660ca82b6755dd89b9f6a"));
   }
@@ -76,7 +76,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
     Algorithm algorithm = new CallNativeAlgorithm(
-        null, stringOT(), functionS(STRING, "name"), true);
+        null, stringHT(), functionS(STRING, "name"), true);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("fa404053c470625cc32d666d02acd1cc634e2bb5"));
@@ -85,16 +85,16 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
     Algorithm algorithm = new CallNativeAlgorithm(
-        null, stringOT(), functionS(STRING, "name"), true);
-    Input input = input(list(string("abc"), string("def")));
+        null, stringHT(), functionS(STRING, "name"), true);
+    Input input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("6add42096c8900855b21d87a95f7e2d26b054d44"));
   }
 
   @Test
   public void hash_of_computation_with_convert_from_nothing_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ConvertAlgorithm(stringOT());
-    Input input = input(list(string("abc")));
+    Algorithm algorithm = new ConvertAlgorithm(stringHT());
+    Input input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("a025bfcacf9dadbc72256e41fbc60f4f5355233b"));
   }
@@ -110,7 +110,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_construct_algorithm_and_one_element_input_is_stable() {
     Algorithm algorithm = new ConstructAlgorithm(PERSON);
-    Input input = input(list(string("abc")));
+    Input input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("b7f6067462bee16b2bf3e9ab5c54c3e4bd1eba54"));
   }
@@ -118,7 +118,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_construct_algorithm_and_two_elements_input_is_stable() {
     Algorithm algorithm = new ConstructAlgorithm(PERSON);
-    Input input = input(list(string("abc"), string("def")));
+    Input input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("b598a215e92550d41b2772ff96ba134e4b544dbf"));
   }
@@ -126,7 +126,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_select_algorithm_and_one_element_input_is_stable() {
     Algorithm algorithm = new SelectAlgorithm(0, TestingTypesH.STRING);
-    Input input = input(list(string("abc")));
+    Input input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("3bcff362c86471722865738fd753e0dd567b55ee"));
   }

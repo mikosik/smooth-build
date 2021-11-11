@@ -21,19 +21,19 @@ public class OutputClassFileTest extends TestingContext {
 
   @Test
   public void open_output_stream() throws IOException {
-    ArrayHBuilder fileArrayBuilder = objectDb().arrayBuilder(nativeApi().factory().fileType());
+    ArrayHBuilder fileArrayBuilder = objectHDb().arrayBuilder(nativeApi().factory().fileType());
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi());
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
     assertThat(fileArrayBuilder.build().elements(TupleH.class))
-        .containsExactly(file(path, bytes));
+        .containsExactly(fileH(path, bytes));
   }
 
   @Test
   public void get_name_returns_file_path() {
     OutputClassFile outputClassFile =
-        new OutputClassFile(objectDb().arrayBuilder(fileOT()), path, nativeApi());
+        new OutputClassFile(objectHDb().arrayBuilder(fileHT()), path, nativeApi());
     assertThat(outputClassFile.getName())
         .isEqualTo("/" + path);
   }

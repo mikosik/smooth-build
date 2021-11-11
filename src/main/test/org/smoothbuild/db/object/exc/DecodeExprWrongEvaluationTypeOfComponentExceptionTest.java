@@ -11,7 +11,7 @@ public class DecodeExprWrongEvaluationTypeOfComponentExceptionTest extends Testi
   @Test
   public void message() {
     var exception = new DecodeExprWrongEvaluationTypeOfComponentException(
-        Hash.of(13), selectOT(intOT()), "tuple", intOT(), stringOT());
+        Hash.of(13), selectHT(intHT()), "tuple", intHT(), stringHT());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT:Int` "
             + "object at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "

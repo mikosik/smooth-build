@@ -71,7 +71,7 @@ public class ParallelJobExecutorTest extends TestingContext {
             job(valueAlgorithm("D"))));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(string("((A,B),(C,D))"));
+        .isEqualTo(stringH("((A,B),(C,D))"));
   }
 
   @Test
@@ -83,7 +83,7 @@ public class ParallelJobExecutorTest extends TestingContext {
         job(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(string("(11,21)"));
+        .isEqualTo(stringH("(11,21)"));
   }
 
   @Test
@@ -98,7 +98,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     var job = concat(job1, job2, job3, job4);
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(string("(0,0,0,0)"));
+        .isEqualTo(stringH("(0,0,0,0)"));
 
     ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
     ExecutionReporter reporter = this.reporter;
@@ -124,7 +124,7 @@ public class ParallelJobExecutorTest extends TestingContext {
       var job = concat(job1, job2);
 
       assertThat(executeSingleJob(job))
-          .isEqualTo(string("(0,0)"));
+          .isEqualTo(stringH("(0,0)"));
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
       verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
@@ -147,7 +147,7 @@ public class ParallelJobExecutorTest extends TestingContext {
       var job = concat(job1, job2);
 
       assertThat(executeSingleJob(job))
-          .isEqualTo(string("(0,0)"));
+          .isEqualTo(stringH("(0,0)"));
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
       verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
@@ -172,7 +172,7 @@ public class ParallelJobExecutorTest extends TestingContext {
         job(getIncrementAlgorithm(counter)));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(string("(1,1,0)"));
+        .isEqualTo(stringH("(1,1,0)"));
   }
 
   @Test

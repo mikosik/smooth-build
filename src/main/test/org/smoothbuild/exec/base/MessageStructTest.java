@@ -19,21 +19,21 @@ public class MessageStructTest extends TestingContext {
 
   @Test
   public void list_with_info_message_contains_no_errors() {
-    messages = array(infoMessage("info message"));
+    messages = arrayH(infoMessage("info message"));
     assertThat(containsErrors(messages))
         .isFalse();
   }
 
   @Test
   public void list_with_warning_messsage_contains_no_errors() {
-    messages = array(warningMessage("warning message"));
+    messages = arrayH(warningMessage("warning message"));
     assertThat(containsErrors(messages))
         .isFalse();
   }
 
   @Test
   public void list_with_error_messsage_contains_errors() {
-    messages = array(errorMessage("error message"));
+    messages = arrayH(errorMessage("error message"));
     assertThat(containsErrors(messages))
         .isTrue();
   }

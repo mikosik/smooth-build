@@ -10,32 +10,32 @@ import org.smoothbuild.testing.TestingContext;
 public class TupleHTest extends TestingContext {
   @Test
   public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> objectDb().tuple(personOT(), list(string("John"))))
+    assertCall(() -> objectHDb().tuple(personHT(), list(stringH("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_item_with_different_type_than_specified_in_tuple_type_causes_exception() {
-    assertCall(() -> objectDb().tuple(personOT(), list(string(), int_())))
+    assertCall(() -> objectHDb().tuple(personHT(), list(stringH(), intH())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_more_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> objectDb().tuple(
-        personOT(), list(string("John"), string("Doe"), string("abc"))))
+    assertCall(() -> objectHDb().tuple(
+        personHT(), list(stringH("John"), stringH("Doe"), stringH("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> objectDb().tuple(personOT(), list(string("John"), null)))
+    assertCall(() -> objectHDb().tuple(personHT(), list(stringH("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_item_to_object_of_wrong_type_throws_exception() {
-    assertCall(() -> objectDb().tuple(personOT(), list(string("John"), int_(123))))
+    assertCall(() -> objectHDb().tuple(personHT(), list(stringH("John"), intH(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -43,16 +43,16 @@ public class TupleHTest extends TestingContext {
   public void type_of_person_tuple_is_person_type() {
     TupleH person = johnDoePerson();
     assertThat(person.type())
-        .isEqualTo(personOT());
+        .isEqualTo(personHT());
   }
 
   @Test
   public void item_contains_object_passed_to_builder() {
     TupleH person = johnDoePerson();
     assertThat(person.type())
-        .isEqualTo(personOT());
+        .isEqualTo(personHT());
     assertThat(person.get(0))
-        .isEqualTo(string("John"));
+        .isEqualTo(stringH("John"));
   }
 
   @Test
@@ -73,12 +73,12 @@ public class TupleHTest extends TestingContext {
   public void super_object_is_equal_to_first_item() {
     TupleH person = johnDoePerson();
     assertThat(person.superObject())
-        .isEqualTo(string("John"));
+        .isEqualTo(stringH("John"));
   }
 
   @Test
   public void super_object_is_null_when_tuple_type_has_no_items() {
-    TupleH tuple = tuple(list());
+    TupleH tuple = tupleH(list());
     assertThat(tuple.superObject())
         .isNull();
   }
@@ -101,7 +101,7 @@ public class TupleHTest extends TestingContext {
   @Test
   public void tuples_with_one_item_different_are_not_equal() {
     TupleH person1 = johnDoePerson();
-    TupleH person2 = tuple(list(string("John"), string("Doe2")));
+    TupleH person2 = tupleH(list(stringH("John"), stringH("Doe2")));
 
     assertThat(person1)
         .isNotEqualTo(person2);
@@ -118,7 +118,7 @@ public class TupleHTest extends TestingContext {
   @Test
   public void tuples_with_different_item_have_different_hashes() {
     TupleH person1 = johnDoePerson();
-    TupleH person2 = tuple(list(string("John"), string("Doe2")));
+    TupleH person2 = tupleH(list(stringH("John"), stringH("Doe2")));
     assertThat(person1.hash())
         .isNotEqualTo(person2.hash());
   }
@@ -134,7 +134,7 @@ public class TupleHTest extends TestingContext {
   @Test
   public void tuples_with_different_item_have_different_hash_codes() {
     TupleH person1 = johnDoePerson();
-    TupleH person2 = tuple(list(string("John"), string("Doe2")));
+    TupleH person2 = tupleH(list(stringH("John"), stringH("Doe2")));
         assertThat(person1.hashCode())
             .isNotEqualTo(person2.hashCode());
   }
@@ -142,14 +142,14 @@ public class TupleHTest extends TestingContext {
   @Test
   public void tuples_can_be_read_by_hash() {
     TupleH person = johnDoePerson();
-    assertThat(objectDbOther().get(person.hash()))
+    assertThat(objectHDbOther().get(person.hash()))
         .isEqualTo(person);
   }
 
   @Test
   public void tuples_read_by_hash_have_equal_items() {
     TupleH person = johnDoePerson();
-    TupleH personRead = (TupleH) objectDbOther().get(person.hash());
+    TupleH personRead = (TupleH) objectHDbOther().get(person.hash());
     assertThat(personRead.get(0))
         .isEqualTo(person.get(0));
     assertThat(personRead.get(1))
@@ -165,6 +165,6 @@ public class TupleHTest extends TestingContext {
   }
 
   private TupleH johnDoePerson() {
-    return tuple(list(string("John"), string("Doe")));
+    return tupleH(list(stringH("John"), stringH("Doe")));
   }
 }

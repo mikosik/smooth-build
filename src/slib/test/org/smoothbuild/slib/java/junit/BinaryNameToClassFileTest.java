@@ -16,8 +16,8 @@ import org.smoothbuild.testing.common.JarTester;
 public class BinaryNameToClassFileTest extends TestingContext {
   @Test
   public void binary_names_are_mapped_to_proper_class_files() throws IOException, JunitException {
-    TupleH file1 = file(path("a/Klass.class"));
-    TupleH file2 = file(path("b/Klass.class"));
+    TupleH file1 = fileH(path("a/Klass.class"));
+    TupleH file2 = fileH(path("b/Klass.class"));
     BlobH blob = JarTester.jar(file1, file2);
     assertThat(binaryNameToClassFile(nativeApi(), list(blob)))
         .containsExactly("a.Klass", file1, "b.Klass", file2);
@@ -25,8 +25,8 @@ public class BinaryNameToClassFileTest extends TestingContext {
 
   @Test
   public void non_class_files_are_not_mapped() throws IOException, JunitException {
-    TupleH file1 = file(path("a/Klass.txt"));
-    TupleH file2 = file(path("b/Klass.java"));
+    TupleH file1 = fileH(path("a/Klass.txt"));
+    TupleH file2 = fileH(path("b/Klass.java"));
     BlobH blob = JarTester.jar(file1, file2);
     assertThat(binaryNameToClassFile(nativeApi(), list(blob)).entrySet())
         .isEmpty();

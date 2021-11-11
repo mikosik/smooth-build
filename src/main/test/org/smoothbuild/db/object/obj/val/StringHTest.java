@@ -11,75 +11,75 @@ public class StringHTest extends TestingContext {
 
   @Test
   public void type_of_string_is_string_type() {
-    assertThat(string(string).type())
-        .isEqualTo(stringOT());
+    assertThat(stringH(string).type())
+        .isEqualTo(stringHT());
   }
 
   @Test
   public void jvalue_returns_java_string() {
-    assertThat(string(string).jValue())
+    assertThat(stringH(string).jValue())
         .isEqualTo(string);
   }
 
   @Test
   public void jvalue_returns_empty_java_string_for_empty_str() {
-    assertThat(string("").jValue())
+    assertThat(stringH("").jValue())
         .isEqualTo("");
   }
 
   @Test
   public void strs_with_equal_values_are_equal() {
-    assertThat(string(string))
-        .isEqualTo(string(string));
+    assertThat(stringH(string))
+        .isEqualTo(stringH(string));
   }
 
   @Test
   public void strs_with_different_values_are_not_equal() {
-    assertThat(string(string))
-        .isNotEqualTo(string(otherString));
+    assertThat(stringH(string))
+        .isNotEqualTo(stringH(otherString));
   }
 
   @Test
   public void hash_of_strs_with_equal_values_is_the_same() {
-    assertThat(string(string).hash())
-        .isEqualTo(string(string).hash());
+    assertThat(stringH(string).hash())
+        .isEqualTo(stringH(string).hash());
   }
 
   @Test
   public void hash_of_strs_with_different_values_is_not_the_same() {
-    assertThat(string(string).hash())
-        .isNotEqualTo(string(otherString).hash());
+    assertThat(stringH(string).hash())
+        .isNotEqualTo(stringH(otherString).hash());
   }
 
   @Test
   public void hash_code_of_strs_with_equal_values_is_the_same() {
-    assertThat(string(string).hashCode())
-        .isEqualTo(string(string).hashCode());
+    assertThat(stringH(string).hashCode())
+        .isEqualTo(stringH(string).hashCode());
   }
 
   @Test
   public void hash_code_of_strs_with_different_values_is_not_the_same() {
-    assertThat(string(string).hashCode())
-        .isNotEqualTo(string(otherString).hashCode());
+    assertThat(stringH(string).hashCode())
+        .isNotEqualTo(stringH(otherString).hashCode());
   }
 
   @Test
   public void str_can_be_read_back_by_hash() {
-    StringH str = string(string);
-    assertThat(objectDbOther().get(str.hash()))
+    StringH str = stringH(string);
+    assertThat(objectHDbOther().get(str.hash()))
         .isEqualTo(str);
   }
 
   @Test
   public void str_read_back_by_hash_has_same_jvalue() {
-    StringH str = string(string);
-    assertThat(((StringH) objectDbOther().get(str.hash())).jValue())
+    StringH str = stringH(string);
+    assertThat(((StringH) objectHDbOther().get(str.hash())).jValue())
         .isEqualTo(string);
   }
 
   @Test
   public void to_string_contains_string_value() {
-    StringH str = string(string);
+    StringH str = stringH(string);
     assertThat(str.toString())
         .isEqualTo("""
             "my string"@""" + str.hash());
@@ -87,7 +87,7 @@ public class StringHTest extends TestingContext {
 
   @Test
   public void to_string_contains_shortened_string_value_for_long_strings() {
-    StringH str = string("123456789012345678901234567890");
+    StringH str = stringH("123456789012345678901234567890");
     assertThat(str.toString())
         .isEqualTo("""
             "1234567890123456789012345"...@""" + str.hash());
@@ -95,7 +95,7 @@ public class StringHTest extends TestingContext {
 
   @Test
   public void to_string_contains_properly_escaped_special_characters() {
-    StringH str = string("\t \b \n \r \f \" \\");
+    StringH str = stringH("\t \b \n \r \f \" \\");
     assertThat(str.toString())
         .isEqualTo("""
             "\\t \\b \\n \\r \\f \\" \\\\"@""" + str.hash());

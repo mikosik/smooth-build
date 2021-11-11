@@ -18,15 +18,15 @@ public class TypeHCachingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("type_creators")
   public void created_type_is_cached(Function<TypeHDb, TypeH> typeCreator) {
-    assertThat(typeCreator.apply(objTypeDb()))
-        .isSameInstanceAs(typeCreator.apply(objTypeDb()));
+    assertThat(typeCreator.apply(typeHDb()))
+        .isSameInstanceAs(typeCreator.apply(typeHDb()));
   }
 
   @ParameterizedTest
   @MethodSource("type_creators")
   public void read_type_is_cached(Function<TypeHDb, TypeH> typeCreator) {
-    Hash hash = typeCreator.apply(objTypeDb()).hash();
-    TypeHDb typeHDb = objTypeDbOther();
+    Hash hash = typeCreator.apply(typeHDb()).hash();
+    TypeHDb typeHDb = typeHDbOther();
     assertThat(typeHDb.get(hash))
         .isSameInstanceAs(typeHDb.get(hash));
   }

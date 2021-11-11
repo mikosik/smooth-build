@@ -14,86 +14,86 @@ public class BlobHTest extends TestingContext {
 
   @Test
   public void creating_blob_without_content_creates_empty_blob() throws Exception {
-    BlobH blob = blobBuilder().build();
+    BlobH blob = blobHBuilder().build();
     assertThat(blob.source().readByteString())
         .isEqualTo(ByteString.of());
   }
 
   @Test
   public void type_of_blob_is_blob_type() {
-    assertThat(blob(bytes).type())
-        .isEqualTo(blobOT());
+    assertThat(blobH(bytes).type())
+        .isEqualTo(blobHT());
   }
 
   @Test
   public void empty_blob_is_empty() throws Exception {
-    BlobH blob = blobBuilder().build();
+    BlobH blob = blobHBuilder().build();
     assertThat(blob.source().readByteString())
         .isEqualTo(ByteString.of());
   }
 
   @Test
   public void blob_has_content_passed_to_builder() throws Exception {
-    BlobH blob = blob(bytes);
+    BlobH blob = blobH(bytes);
     assertThat(blob.source().readByteString())
         .isEqualTo(bytes);
   }
 
   @Test
   public void blobs_with_equal_content_are_equal() {
-    assertThat(blob(bytes))
-        .isEqualTo(blob(bytes));
+    assertThat(blobH(bytes))
+        .isEqualTo(blobH(bytes));
   }
 
   @Test
   public void blobs_with_different_content_are_not_equal() {
-    assertThat(blob(bytes))
-        .isNotEqualTo(blob(otherBytes));
+    assertThat(blobH(bytes))
+        .isNotEqualTo(blobH(otherBytes));
   }
 
   @Test
   public void hash_of_blobs_with_equal_content_is_the_same() {
-    assertThat(blob(bytes).hash())
-        .isEqualTo(blob(bytes).hash());
+    assertThat(blobH(bytes).hash())
+        .isEqualTo(blobH(bytes).hash());
   }
 
   @Test
   public void hash_of_blobs_with_different_content_is_not_the_same() {
-    assertThat(blob(bytes).hash())
-        .isNotEqualTo(blob(otherBytes).hash());
+    assertThat(blobH(bytes).hash())
+        .isNotEqualTo(blobH(otherBytes).hash());
   }
 
   @Test
   public void hash_code_of_blob_with_equal_content_is_the_same() {
-    assertThat(blob(bytes).hashCode())
-        .isEqualTo(blob(bytes).hashCode());
+    assertThat(blobH(bytes).hashCode())
+        .isEqualTo(blobH(bytes).hashCode());
   }
 
   @Test
   public void hash_code_of_blobs_with_different_values_is_not_the_same() {
-    assertThat(blob(bytes).hashCode())
-        .isNotEqualTo(blob(otherBytes).hashCode());
+    assertThat(blobH(bytes).hashCode())
+        .isNotEqualTo(blobH(otherBytes).hashCode());
   }
 
   @Test
   public void blob_can_be_read_by_hash() {
-    BlobH blob = blob(bytes);
+    BlobH blob = blobH(bytes);
     Hash hash = blob.hash();
-    assertThat(objectDbOther().get(hash))
+    assertThat(objectHDbOther().get(hash))
         .isEqualTo(blob);
   }
 
   @Test
   public void blob_read_by_hash_has_same_content() throws Exception {
-    BlobH blob = blob(bytes);
+    BlobH blob = blobH(bytes);
     Hash hash = blob.hash();
-    assertThat(((BlobH) objectDbOther().get(hash)).source().readByteString())
+    assertThat(((BlobH) objectHDbOther().get(hash)).source().readByteString())
         .isEqualTo(blob.source().readByteString());
   }
 
   @Test
   public void to_string() {
-    BlobH blob = blob(bytes);
+    BlobH blob = blobH(bytes);
     assertThat(blob.toString())
         .isEqualTo("0x??@" + blob.hash());
   }

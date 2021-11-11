@@ -333,17 +333,17 @@ public class TypeHTest extends TestingContext {
   class _tuple {
     @Test
     public void _without_items_can_be_created() {
-      tupleOT(list());
+      tupleHT(list());
     }
 
     @Test
     public void first_item_type_can_be_nothing() {
-      tupleOT(list(nothingOT()));
+      tupleHT(list(nothingHT()));
     }
 
     @Test
     public void first_item_type_can_be_nothing_array() {
-      tupleOT(list(arrayOT(nothingOT())));
+      tupleHT(list(arrayHT(nothingHT())));
     }
 
     @ParameterizedTest

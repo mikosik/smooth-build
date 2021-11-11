@@ -14,7 +14,7 @@ public class InputSourceFileTest extends TestingContext {
   @Test
   public void get_char_content_returns_file_content() {
     Path path = path("my/path");
-    TupleH file = file(path, ByteString.encodeUtf8("abc"));
+    TupleH file = fileH(path, ByteString.encodeUtf8("abc"));
     assertThat(new InputSourceFile(file).getCharContent(true).toString())
         .isEqualTo("abc");
   }
@@ -22,7 +22,7 @@ public class InputSourceFileTest extends TestingContext {
   @Test
   public void uri() {
     Path path = path("my/path");
-    TupleH file = file(path);
+    TupleH file = fileH(path);
     assertThat(new InputSourceFile(file).getName())
         .isEqualTo("/" + path.toString());
   }
