@@ -20,10 +20,11 @@ public class InternalModuleLoader {
   }
 
   public ModuleS loadModule() {
-    ModulePath modulePath = new ModulePath("internal-module");
-    var types = namedList(map(factory.baseTypes(), t -> new DefinedBaseType(modulePath, t)));
-    Hash hash = calculateModuleHash(modulePath, Hash.of(list()), list());
-    return new ModuleS(modulePath, hash, null, list(), types, referencables(modulePath));
+    ModulePath path = new ModulePath("internal-module");
+    var types = namedList(map(
+        factory.baseTypes(), t -> (DefinedType) new DefinedBaseType(path, t)));
+    Hash hash = calculateModuleHash(path, Hash.of(list()), list());
+    return new ModuleS(path, hash, null, list(), types, referencables(path));
   }
 
   private NamedList<GlobalReferencable> referencables(ModulePath modulePath) {
