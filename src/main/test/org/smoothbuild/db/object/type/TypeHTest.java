@@ -300,7 +300,7 @@ public class TypeHTest extends TestingContext {
     @MethodSource("elemType_test_data")
     public void elemType(Function<TypeFactoryH, TypeHV> factoryCall) {
       TypeHV element = invoke(factoryCall);
-      ArrayType array = typeFactoryO().array(element);
+      ArrayType array = typeFactoryH().array(element);
       assertThat(array.element())
           .isEqualTo(element);
     }
@@ -525,7 +525,7 @@ public class TypeHTest extends TestingContext {
   }
 
   private <R> R invoke(Function<TypeFactoryH, R> f) {
-    return f.apply(typeFactoryO());
+    return f.apply(typeFactoryH());
   }
 
   /**

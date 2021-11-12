@@ -172,7 +172,7 @@ public class TestingContext {
     return typingS;
   }
 
-  public TypeFactoryH typeFactoryO() {
+  public TypeFactoryH typeFactoryH() {
     return typeHDb();
   }
 
@@ -252,23 +252,23 @@ public class TestingContext {
   // Obj types
 
   public TupleTypeH animalHT() {
-    return typeFactoryO().tuple(list(stringHT(), intHT()));
+    return typeFactoryH().tuple(list(stringHT(), intHT()));
   }
 
   public AnyTypeH anyHT() {
-    return typeFactoryO().any();
+    return typeFactoryH().any();
   }
 
   public ArrayTypeH arrayHT(TypeHV elementSpec) {
-    return typeFactoryO().array(elementSpec);
+    return typeFactoryH().array(elementSpec);
   }
 
   public BlobTypeH blobHT() {
-    return typeFactoryO().blob();
+    return typeFactoryH().blob();
   }
 
   public BoolTypeH boolHT() {
-    return typeFactoryO().bool();
+    return typeFactoryH().bool();
   }
 
   public TupleTypeH fileHT() {
@@ -280,11 +280,11 @@ public class TestingContext {
   }
 
   public FunctionTypeH functionHT(TypeHV result, ImmutableList<TypeHV> parameters) {
-    return typeFactoryO().function(result, parameters);
+    return typeFactoryH().function(result, parameters);
   }
 
   public IntTypeH intHT() {
-    return typeFactoryO().int_();
+    return typeFactoryH().int_();
   }
 
   public NativeMethodTypeH nativeMethodHT() {
@@ -292,7 +292,7 @@ public class TestingContext {
   }
 
   public NothingTypeH nothingHT() {
-    return typeFactoryO().nothing();
+    return typeFactoryH().nothing();
   }
 
   public TupleTypeH personHT() {
@@ -300,7 +300,7 @@ public class TestingContext {
   }
 
   public StringTypeH stringHT() {
-    return typeFactoryO().string();
+    return typeFactoryH().string();
   }
 
   public TupleTypeH tupleHT() {
@@ -320,15 +320,15 @@ public class TestingContext {
   }
 
   public VariableH variableHT(String name) {
-    return typeFactoryO().variable(name);
+    return typeFactoryH().variable(name);
   }
 
   public Side<TypeHV> lowerHT() {
-    return typeFactoryO().lower();
+    return typeFactoryH().lower();
   }
 
   public Side<TypeHV> upperHT() {
-    return typeFactoryO().upper();
+    return typeFactoryH().upper();
   }
 
   // Expr types
