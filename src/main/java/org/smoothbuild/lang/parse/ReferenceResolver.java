@@ -36,6 +36,7 @@ public class ReferenceResolver extends AstVisitor {
 
   @Override
   public void visitRealFunc(RealFuncNode func) {
+    visitParams(func.params());
     func.body().ifPresent(expr -> {
       var uniqueParams = func.params().stream()
           .collect(toImmutableMap(ReferencableLike::name, p -> p, (a, b) -> a));
@@ -43,7 +44,6 @@ public class ReferenceResolver extends AstVisitor {
       var referenceResolver = new ReferenceResolver(new Scope<>(scope, params), logger);
       referenceResolver.visitExpr(expr);
     });
-    visitFunction(func);
   }
 
   @Override

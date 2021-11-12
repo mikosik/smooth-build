@@ -17,10 +17,6 @@ public class AstVisitor {
     visitFields(struct.fields());
   }
 
-  public void visitFunction(FunctionNode function) {
-    visitParams(function.params());
-  }
-
   public void visitFields(List<ItemNode> fields) {
     fields.forEach(this::visitField);
   }
@@ -53,8 +49,8 @@ public class AstVisitor {
   public void visitRealFunc(RealFuncNode func) {
     func.annotation().ifPresent(this::visitNative);
     func.typeNode().ifPresent(this::visitType);
+    visitParams(func.params());
     func.body().ifPresent(this::visitExpr);
-    visitFunction(func);
   }
 
   public void visitNative(AnnotationNode annotation) {
