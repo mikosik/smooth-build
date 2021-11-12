@@ -29,8 +29,8 @@ public class InternalModuleLoader {
   }
 
   private ImmutableMap<String, GlobalReferencable> referencables(ModulePath modulePath) {
-    FunctionS ifFunction = new IfFunction(modulePath, factory);
-    FunctionS mapFunction = new MapFunction(modulePath, factory);
+    FunctionS ifFunction = new IfFunctionS(modulePath, factory);
+    FunctionS mapFunction = new MapFunctionS(modulePath, factory);
     return toMap(list(ifFunction, mapFunction), Defined::name, f -> f);
   }
 }

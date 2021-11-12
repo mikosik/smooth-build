@@ -43,10 +43,10 @@ import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.IfFunction;
+import org.smoothbuild.lang.base.define.IfFunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.MapFunction;
+import org.smoothbuild.lang.base.define.MapFunctionS;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
 import org.smoothbuild.lang.base.define.ValueS;
@@ -372,9 +372,9 @@ public class JobCreator {
     } else if (referencable instanceof NativeFunction nativeFunction) {
       return callNativeFunctionEagerJob(scope, arguments, nativeFunction, nativeFunction.annotation(),
           variables, actualResultType, location);
-    } else if (referencable instanceof IfFunction) {
+    } else if (referencable instanceof IfFunctionS) {
       return new IfJob(actualResultType, arguments, location);
-    } else if (referencable instanceof MapFunction) {
+    } else if (referencable instanceof MapFunctionS) {
       return new MapJob(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof ConstructorS constructor) {
       var resultType = constructor.type().result();

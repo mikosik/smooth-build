@@ -11,19 +11,19 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NamedList;
 
-public class IfFunction extends FunctionS {
+public class IfFunctionS extends FunctionS {
   public static final String IF_FUNCTION_NAME = "if";
 
-  public IfFunction(ModulePath modulePath, TypeFactoryS factory) {
+  public IfFunctionS(ModulePath modulePath, TypeFactoryS factory) {
     this(factory.variable("A"), factory.bool(), modulePath, factory);
   }
 
-  private IfFunction(
+  private IfFunctionS(
       TypeS resultType, TypeS boolType, ModulePath modulePath, TypeFactoryS factory) {
     this(resultType, createParameters(resultType, boolType, modulePath), modulePath, factory);
   }
 
-  private IfFunction(TypeS resultType, NamedList<Item> parameters, ModulePath modulePath,
+  private IfFunctionS(TypeS resultType, NamedList<Item> parameters, ModulePath modulePath,
       TypeFactoryS factory) {
     super(factory.function(resultType, map(parameters, Defined::type)),
         modulePath, IF_FUNCTION_NAME, parameters, internal());
