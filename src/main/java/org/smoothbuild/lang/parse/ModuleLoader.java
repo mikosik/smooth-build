@@ -4,6 +4,7 @@ import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
+import static org.smoothbuild.lang.parse.ReferenceResolver.resolveReferences;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NamedList.namedList;
@@ -67,6 +68,11 @@ public class ModuleLoader {
       return maybeLogs(logBuffer);
     }
     Ast sortedAst = maybeSortedAst.value();
+
+    resolveReferences(logBuffer, imported, sortedAst);
+    if (logBuffer.containsProblem()) {
+      return maybeLogs(logBuffer);
+    }
 
     logBuffer.logAll(typeInferrer.inferTypes(sortedAst, imported));
     if (logBuffer.containsProblem()) {

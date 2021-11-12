@@ -5,7 +5,9 @@ import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.like.ReferencableLike;
+import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
@@ -14,6 +16,13 @@ import org.smoothbuild.util.Scope;
 public class ReferenceResolver extends AstVisitor {
   private final Scope<? extends ReferencableLike> scope;
   private final Logger logger;
+
+  public static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
+    var importedScope = new Scope<>(imported.referencables());
+    var scope = new Scope<>(importedScope, ast.referencablesMap());
+    new ReferenceResolver(scope, logger)
+        .visitAst(ast);
+  }
 
   public ReferenceResolver(Scope<? extends ReferencableLike> scope, Logger logger) {
     this.scope = scope;

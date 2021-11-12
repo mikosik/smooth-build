@@ -36,7 +36,6 @@ import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.util.DecodeHexException;
-import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.UnescapingFailedException;
 import org.smoothbuild.util.collect.CountersMap;
 import org.smoothbuild.util.collect.NamedList;
@@ -50,7 +49,6 @@ public class AnalyzeSemantically {
     decodeBlobLiterals(logBuffer, ast);
     decodeIntLiterals(logBuffer, ast);
     decodeStringLiterals(logBuffer, ast);
-    resolveReferences(logBuffer, imported, ast);
     detectUndefinedTypes(logBuffer, imported, ast);
     detectDuplicateGlobalNames(logBuffer, imported, ast);
     detectDuplicateFieldNames(logBuffer, ast);
@@ -101,13 +99,6 @@ public class AnalyzeSemantically {
         }
       }
     }.visitAst(ast);
-  }
-
-  private static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
-    var importedScope = new Scope<>(imported.referencables());
-    var scope = new Scope<>(importedScope, ast.referencablesMap());
-    new ReferenceResolver(scope, logger)
-        .visitAst(ast);
   }
 
   private static void detectUndefinedTypes(Logger logger, Definitions imported, Ast ast) {
