@@ -60,9 +60,7 @@ public class Ast {
       @Override
       public void visitReferencable(ReferencableNode referencable) {
         super.visitReferencable(referencable);
-        if (!result.containsKey(referencable.name())) {
-          result.put(referencable.name(), referencable);
-        }
+        result.put(referencable.name(), referencable);
       }
     }.visitAst(this);
     return namedList(ImmutableMap.copyOf(result));
