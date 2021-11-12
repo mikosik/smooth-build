@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.lang.base.define.IfFunctionS.parameter;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NamedList.namedList;
+
+import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
@@ -48,7 +49,7 @@ public class MapFunctionS extends FunctionS {
   private static NamedList<Item> createParameters(ModulePath modulePath,
       ArrayTypeS inputArrayType, FunctionTypeS mappingFunctionType) {
     return namedList(list(
-        parameter(inputArrayType, modulePath, "array"),
-        parameter(mappingFunctionType, modulePath, "function")));
+        new Item(inputArrayType, modulePath, "array", Optional.empty(), internal()),
+        new Item(mappingFunctionType, modulePath, "function", Optional.empty(), internal())));
   }
 }

@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
+import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -32,12 +33,8 @@ public class IfFunctionS extends FunctionS {
   private static NamedList<Item> createParameters(
       TypeS resultType, TypeS boolType, ModulePath modulePath) {
     return namedList(list(
-        parameter(boolType, modulePath, "condition"),
-        parameter(resultType, modulePath, "then"),
-        parameter(resultType, modulePath, "else")));
-  }
-
-  public static Item parameter(TypeS type, ModulePath modulePath, String name) {
-    return new Item(type, modulePath, name, Optional.empty(), internal());
+        new Item(boolType, modulePath, "condition", empty(), internal()),
+        new Item(resultType, modulePath, "then", empty(), internal()),
+        new Item(resultType, modulePath, "else", empty(), internal())));
   }
 }
