@@ -11,7 +11,7 @@ public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
     visitReferencable(map(ast.structs(), StructNode::constructor));
-    visitReferencable(ast.referencable());
+    visitReferencable(ast.referencables());
   }
 
   public void visitStructs(List<StructNode> structs) {

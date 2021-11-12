@@ -6,10 +6,7 @@ import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.NamedList.namedList;
-
-import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -19,7 +16,6 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.ConstructorS;
-import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
@@ -31,8 +27,9 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
+import org.smoothbuild.util.collect.NamedList;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
   private final TypeInferrer typeInferrer;
@@ -75,11 +72,10 @@ public class ModuleLoader {
       return maybeLogs(logBuffer);
     }
 
+    var modules = imported.modules().values().asList();
+    var definedStructs = namedList(map(sortedAst.structs(), s -> loadStruct(path, s)));
     var referencables = loadReferencables(path, sortedAst);
-    var structs = map(sortedAst.structs(), s -> loadStruct(path, s));
-    var definedStructs = toMap(structs, Defined::name, d -> (Defined) d);
-    ModuleS module = new ModuleS(path, hash, moduleFiles, imported.modules().values().asList(),
-        definedStructs, referencables);
+    ModuleS module = new ModuleS(path, hash, moduleFiles, modules, definedStructs, referencables);
     return maybeValueAndLogs(module, logBuffer);
   }
 
@@ -91,16 +87,16 @@ public class ModuleLoader {
     return new StructS(type, path, name, items, location);
   }
 
-  private ImmutableMap<String, GlobalReferencable> loadReferencables(ModulePath path, Ast ast) {
-    var local = new HashMap<String, GlobalReferencable>();
+  private NamedList<GlobalReferencable> loadReferencables(ModulePath path, Ast ast) {
+    var local = ImmutableList.<GlobalReferencable>builder();
     for (StructNode struct : ast.structs()) {
       ConstructorS constructor = loadConstructor(path, struct);
-      local.put(constructor.name(), constructor);
+      local.add(constructor);
     }
-    for (ReferencableNode referencable : ast.referencable()) {
-      local.put(referencable.name(), referencableLoader.loadReferencable(path, referencable));
+    for (ReferencableNode referencable : ast.referencables()) {
+      local.add(referencableLoader.loadReferencable(path, referencable));
     }
-    return ImmutableMap.copyOf(local);
+    return namedList(local.build());
   }
 
   private ConstructorS loadConstructor(ModulePath path, StructNode struct) {

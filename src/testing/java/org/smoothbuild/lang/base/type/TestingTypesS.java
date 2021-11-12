@@ -26,15 +26,14 @@ import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 public class TestingTypesS {
   private static final TestingContext CONTEXT = new TestingContext();
   private static final TypeFactoryS FACTORY = CONTEXT.typeFactoryS();
   public static final TypingS TYPING = CONTEXT.typingS();
 
-  public static final ImmutableSet<BaseTypeS> BASE_TYPES = FACTORY.baseTypes();
-  public static final ImmutableSet<BaseTypeS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
+  public static final ImmutableList<BaseTypeS> BASE_TYPES = FACTORY.baseTypes();
+  public static final ImmutableList<BaseTypeS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
 
   public static final AnyTypeS ANY = FACTORY.any();
   public static final BlobTypeS BLOB = FACTORY.blob();

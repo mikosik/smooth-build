@@ -1,27 +1,23 @@
 package org.smoothbuild.lang.base.define;
 
+import org.smoothbuild.util.collect.NamedList;
+
 import com.google.common.collect.ImmutableMap;
 
 public record Definitions(
     ImmutableMap<ModulePath, ModuleS> modules,
-    ImmutableMap<String, Defined> types,
-    ImmutableMap<String, GlobalReferencable> referencables) {
+    NamedList<DefinedType> types,
+    NamedList<GlobalReferencable> referencables) {
 
   public static Definitions empty() {
-    return new Definitions(ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of());
+    return new Definitions(ImmutableMap.of(), NamedList.empty(), NamedList.empty());
   }
 
   public Definitions withModule(ModuleS module) {
     return new Definitions(
         concat(modules, module),
-        ImmutableMap.<String, Defined>builder()
-            .putAll(types)
-            .putAll(module.types())
-            .build(),
-        ImmutableMap.<String, GlobalReferencable>builder()
-            .putAll(referencables)
-            .putAll(module.referencables())
-            .build()
+        NamedList.concat(types, module.types()),
+        NamedList.concat(this.referencables, module.referencables())
     );
   }
 

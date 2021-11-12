@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Maps.toMap;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,7 +14,6 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator.Handler;
-import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Location;
@@ -24,6 +23,7 @@ import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.Scope;
+import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.concurrent.Promise;
 
 import com.google.common.collect.ImmutableList;
@@ -39,7 +39,7 @@ public class JobCreatorTest extends TestingContext {
     var call = callS(11, BLOB, refS(function), argument);
 
     taskCreator(oneLazyCallAllowed(), function)
-        .eagerJobFor(new Scope<>(Map.of()), call);
+        .eagerJobFor(new Scope<>(NamedList.empty()), call);
   }
 
   @Test
@@ -55,7 +55,7 @@ public class JobCreatorTest extends TestingContext {
     CallS myFunctionCall = callS(BLOB, refS(myFunction), new MyExpression());
 
     taskCreator(oneLazyCallAllowed(), myFunction, twoBlobsEater)
-        .eagerJobFor(new Scope<>(Map.of()), myFunctionCall);
+        .eagerJobFor(new Scope<>(NamedList.empty()), myFunctionCall);
   }
 
   private static  ImmutableMap<Class<?>, Handler<?>> oneLazyCallAllowed() {
@@ -105,8 +105,7 @@ public class JobCreatorTest extends TestingContext {
   }
 
   private Definitions definitions(FunctionS... functions) {
-    return new Definitions(
-        ImmutableMap.of(), null, toMap(list(functions), Defined::name, f -> f));
+    return new Definitions(ImmutableMap.of(), null, namedList(list(functions)));
   }
 
   private static class MyExpression implements ExprS {

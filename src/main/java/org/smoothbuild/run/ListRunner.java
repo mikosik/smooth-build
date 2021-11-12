@@ -21,7 +21,6 @@ public class ListRunner {
   public int run() {
     return runtimeController.setUpRuntimeAndRun(defintions -> defintions
         .referencables()
-        .values()
         .stream()
         .filter(f -> f.location().file().space().equals(PRJ))
         .filter(ValueS.class::isInstance)

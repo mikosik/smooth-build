@@ -10,7 +10,6 @@ import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
@@ -22,8 +21,6 @@ import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ModuleLoader;
 import org.smoothbuild.lang.parse.ReferencableLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
-
-import com.google.common.collect.ImmutableMap;
 
 public class TestingModuleLoader {
   private final TestingContext testingContext;
@@ -71,17 +68,17 @@ public class TestingModuleLoader {
   private GlobalReferencable assertContainsReferencable(String name) {
     var referencables = module.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(referencables)
-        .containsKey(name);
+        .that(referencables.containsWithName(name))
+        .isTrue();
     return referencables.get(name);
   }
 
   public void containsType(Type expected) {
-    String name = expected.name();
-    ImmutableMap<String, ? extends Defined> types = module.value().types();
+    var name = expected.name();
+    var types = module.value().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
-        .that(types)
-        .containsKey(name);
+        .that(types.containsWithName(name))
+        .isTrue();
     Type actual = types.get(name).type();
     assertWithMessage(
         "Module contains type '" + name + "', but")

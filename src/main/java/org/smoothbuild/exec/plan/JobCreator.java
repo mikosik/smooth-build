@@ -8,10 +8,12 @@ import static org.smoothbuild.exec.job.TaskKind.SELECT;
 import static org.smoothbuild.exec.job.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
+import static org.smoothbuild.util.collect.Labeled.labeled;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
 import java.util.Map;
@@ -67,6 +69,7 @@ import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.util.Scope;
+import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
@@ -123,15 +126,15 @@ public class JobCreator {
         .build();
   }
 
-  public Job jobFor(Scope<Job> scope, ExprS expr, boolean eager) {
+  public Job jobFor(Scope<Labeled<Job>> scope, ExprS expr, boolean eager) {
     return handlerFor(expr).job(eager).apply(scope, expr);
   }
 
-  public Job eagerJobFor(Scope<Job> scope, ExprS expr) {
+  public Job eagerJobFor(Scope<Labeled<Job>> scope, ExprS expr) {
     return handlerFor(expr).eagerJob().apply(scope, expr);
   }
 
-  private Job lazyJobFor(Scope<Job> scope, ExprS expr) {
+  private Job lazyJobFor(Scope<Labeled<Job>> scope, ExprS expr) {
     return handlerFor(expr).lazyJob().apply(scope, expr);
   }
 
@@ -146,11 +149,11 @@ public class JobCreator {
 
   // NativeExpression
 
-  private Job nativeLazy(Scope<Job> scope, Annotation annotation) {
+  private Job nativeLazy(Scope<Labeled<Job>> scope, Annotation annotation) {
     return nativeLazyJob(annotation);
   }
 
-  private Job nativeEager(Scope<Job> scope, Annotation annotation) {
+  private Job nativeEager(Scope<Labeled<Job>> scope, Annotation annotation) {
     return stringEagerJob(annotation.path());
   }
 
@@ -164,15 +167,15 @@ public class JobCreator {
 
   // CallExpression
 
-  private Job callLazy(Scope<Job> scope, CallS call) {
+  private Job callLazy(Scope<Labeled<Job>> scope, CallS call) {
     return callJob(scope, call, false);
   }
 
-  private Job callEager(Scope<Job> scope, CallS call) {
+  private Job callEager(Scope<Labeled<Job>> scope, CallS call) {
     return callJob(scope, call, true);
   }
 
-  private Job callJob(Scope<Job> scope, CallS call, boolean eager) {
+  private Job callJob(Scope<Labeled<Job>> scope, CallS call, boolean eager) {
     var function = jobFor(scope, call.function(), eager);
     var arguments = map(call.arguments(), a -> lazyJobFor(scope, a));
     Location location = call.location();
@@ -180,7 +183,7 @@ public class JobCreator {
     return callJob(scope, function, arguments, location, variables, eager);
   }
 
-  private Job callJob(Scope<Job> scope, Job function, List<Job> arguments,
+  private Job callJob(Scope<Labeled<Job>> scope, Job function, List<Job> arguments,
       Location location, BoundsMap<TypeS> variables, boolean eager) {
     if (eager) {
       return callEagerJob(scope, function, arguments, location, variables);
@@ -192,13 +195,13 @@ public class JobCreator {
     }
   }
 
-  public Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
+  public Job callEagerJob(Scope<Labeled<Job>> scope, Job function, List<Job> arguments,
       Location location) {
     var variables = inferVariablesInFunctionCall(function, arguments);
     return callEagerJob(scope, function, arguments, location, variables);
   }
 
-  private Job callEagerJob(Scope<Job> scope, Job function, List<Job> arguments,
+  private Job callEagerJob(Scope<Labeled<Job>> scope, Job function, List<Job> arguments,
       Location location, BoundsMap<TypeS> variables) {
     var functionType = (FunctionTypeS) function.type();
     var actualResultType = typing.mapVariables(functionType.result(), variables, factory.lower());
@@ -214,18 +217,18 @@ public class JobCreator {
 
   // FieldReadExpression
 
-  private Job selectLazy(Scope<Job> scope, SelectS select) {
+  private Job selectLazy(Scope<Labeled<Job>> scope, SelectS select) {
     var type = select.type();
     var location = select.location();
     return new LazyJob(type, location, () -> selectEager(scope, select, type));
   }
 
-  private Job selectEager(Scope<Job> scope, SelectS select) {
+  private Job selectEager(Scope<Labeled<Job>> scope, SelectS select) {
     var type = select.type();
     return selectEager(scope, select, type);
   }
 
-  private Job selectEager(Scope<Job> scope, SelectS expression, TypeS type) {
+  private Job selectEager(Scope<Labeled<Job>> scope, SelectS expression, TypeS type) {
     var index = expression.index();
     var algorithm = new SelectAlgorithm(index, toOTypeConverter.visit(type));
     var dependencies = list(eagerJobFor(scope, expression.expr()));
@@ -235,24 +238,24 @@ public class JobCreator {
 
   // ParameterReferenceExpression
 
-  private Job paramReferenceLazy(Scope<Job> scope,
+  private Job paramReferenceLazy(Scope<Labeled<Job>> scope,
       ParamRefS parameterReference) {
-    return scope.get(parameterReference.name());
+    return scope.get(parameterReference.name()).object();
   }
 
   // ReferenceExpression
 
-  private Job referenceLazy(Scope<Job> scope, RefS reference) {
+  private Job referenceLazy(Scope<Labeled<Job>> scope, RefS reference) {
     var type = reference.type();
     return new LazyJob(type, reference.location(),
         () -> referenceEager(scope, reference, type));
   }
 
-  private Job referenceEager(Scope<Job> scope, RefS reference) {
+  private Job referenceEager(Scope<Labeled<Job>> scope, RefS reference) {
     return referenceEager(scope, reference, reference.type());
   }
 
-  private Job referenceEager(Scope<Job> scope, RefS reference, TypeS type) {
+  private Job referenceEager(Scope<Labeled<Job>> scope, RefS reference, TypeS type) {
     var referencable = definitions.referencables().get(reference.name());
     var module = definitions.modules().get(referencable.modulePath());
     var algorithm = new ReferenceAlgorithm(referencable, module, toOTypeConverter.functionType());
@@ -268,7 +271,7 @@ public class JobCreator {
 
   // ArrayLiteralExpression
 
-  private Job arrayLazy(Scope<Job> scope, OrderS arrayLiteral) {
+  private Job arrayLazy(Scope<Labeled<Job>> scope, OrderS arrayLiteral) {
     var elements = map(arrayLiteral.elements(), e -> lazyJobFor(scope, e));
     var actualType = arrayType(elements).orElse(arrayLiteral.type());
 
@@ -276,7 +279,7 @@ public class JobCreator {
         () -> arrayEager(arrayLiteral, elements, actualType));
   }
 
-  private Job arrayEager(Scope<Job> scope, OrderS arrayLiteral) {
+  private Job arrayEager(Scope<Labeled<Job>> scope, OrderS arrayLiteral) {
     var elements = map(arrayLiteral.elements(), e -> eagerJobFor(scope, e));
     var actualType = arrayType(elements).orElse(arrayLiteral.type());
     return arrayEager(arrayLiteral, elements, actualType);
@@ -304,11 +307,11 @@ public class JobCreator {
 
   // BlobLiteralExpression
 
-  private Job blobLazy(Scope<Job> scope, BlobS blobLiteral) {
+  private Job blobLazy(Scope<Labeled<Job>> scope, BlobS blobLiteral) {
     return new LazyJob(factory.blob(), blobLiteral.location(), () -> blobEagerJob(blobLiteral));
   }
 
-  private Job blobEager(Scope<Job> scope, BlobS expression) {
+  private Job blobEager(Scope<Labeled<Job>> scope, BlobS expression) {
     return blobEagerJob(expression);
   }
 
@@ -321,11 +324,11 @@ public class JobCreator {
 
   // IntLiteralExpression
 
-  private Job intLazy(Scope<Job> scope, IntS intLiteral) {
+  private Job intLazy(Scope<Labeled<Job>> scope, IntS intLiteral) {
     return new LazyJob(factory.int_(), intLiteral.location(), () -> intEager(intLiteral));
   }
 
-  private Job intEager(Scope<Job> scope, IntS intLiteral) {
+  private Job intEager(Scope<Labeled<Job>> scope, IntS intLiteral) {
     return intEager(intLiteral);
   }
 
@@ -339,11 +342,11 @@ public class JobCreator {
 
   // StringLiteralExpression
 
-  private Job stringLazy(Scope<Job> scope, StringS stringLiteral) {
+  private Job stringLazy(Scope<Labeled<Job>> scope, StringS stringLiteral) {
     return stringLazyJob(stringLiteral);
   }
 
-  private Job stringEager(Scope<Job> scope, StringS stringLiteral) {
+  private Job stringEager(Scope<Labeled<Job>> scope, StringS stringLiteral) {
     return stringEagerJob(stringLiteral);
   }
 
@@ -362,7 +365,7 @@ public class JobCreator {
 
   // helper methods
 
-  public Job evaluateFunctionEagerJob(Scope<Job> scope, BoundsMap<TypeS> variables,
+  public Job evaluateFunctionEagerJob(Scope<Labeled<Job>> scope, BoundsMap<TypeS> variables,
       TypeS actualResultType, String name, List<Job> arguments, Location location) {
     var referencable = definitions.referencables().get(name);
     if (referencable instanceof ValueS value) {
@@ -388,10 +391,10 @@ public class JobCreator {
   }
 
   public Job commandLineValueEagerJob(ValueS value) {
-    return valueEagerJob(new Scope<>(Map.of()), value, commandLineLocation());
+    return valueEagerJob(new Scope<>(NamedList.empty()), value, commandLineLocation());
   }
 
-  private Job valueEagerJob(Scope<Job> scope, ValueS value, Location location) {
+  private Job valueEagerJob(Scope<Labeled<Job>> scope, ValueS value, Location location) {
     if (value instanceof DefinedValue definedValue) {
       return definedValueEagerJob(scope, definedValue, location);
     } else if (value instanceof NativeValue nativeValue) {
@@ -402,7 +405,7 @@ public class JobCreator {
     }
   }
 
-  private Job definedValueEagerJob(Scope<Job> scope, DefinedValue definedValue,
+  private Job definedValueEagerJob(Scope<Labeled<Job>> scope, DefinedValue definedValue,
       Location location) {
     var job = eagerJobFor(scope, definedValue.body());
     var convertedTask = convertIfNeededEagerJob(definedValue.type(), job);
@@ -420,21 +423,21 @@ public class JobCreator {
     );
   }
 
-  private Job definedFunctionEagerJob(Scope<Job> scope, TypeS actualResultType,
+  private Job definedFunctionEagerJob(Scope<Labeled<Job>> scope, TypeS actualResultType,
       DefinedFunction function, List<Job> arguments, Location location) {
-    var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
+    var newScope = new Scope<>(scope, namedArguments(function.parameters(), arguments));
     var body = eagerJobFor(newScope, function.body());
     var convertedTask = convertIfNeededEagerJob(actualResultType, body);
     var taskInfo = new TaskInfo(CALL, function.extendedName(), location);
     return new VirtualJob(convertedTask, taskInfo);
   }
 
-  private static Map<String, Job> nameToArgumentMap(NamedList<Item> params, List<Job> arguments) {
-    var mapEntries = zip(params, arguments, (n, a) -> Map.entry(n.name(), a));
-    return ImmutableMap.copyOf(mapEntries);
+  private static NamedList<Labeled<Job>> namedArguments(
+      NamedList<Item> params, List<Job> arguments) {
+    return namedList(zip(params, arguments, (p, a) -> labeled(p.name(), a)));
   }
 
-  private Job callNativeFunctionEagerJob(Scope<Job> scope, List<Job> arguments,
+  private Job callNativeFunctionEagerJob(Scope<Labeled<Job>> scope, List<Job> arguments,
       NativeFunction function, Annotation annotation, BoundsMap<TypeS> variables,
       TypeS actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(
@@ -478,9 +481,9 @@ public class JobCreator {
   }
 
   public record Handler<E>(
-      BiFunction<Scope<Job>, E, Job> lazyJob,
-      BiFunction<Scope<Job>, E, Job> eagerJob) {
-    public BiFunction<Scope<Job>, E, Job> job(boolean eager) {
+      BiFunction<Scope<Labeled<Job>>, E, Job> lazyJob,
+      BiFunction<Scope<Labeled<Job>>, E, Job> eagerJob) {
+    public BiFunction<Scope<Labeled<Job>>, E, Job> job(boolean eager) {
       return eager ? eagerJob : lazyJob;
     }
   }

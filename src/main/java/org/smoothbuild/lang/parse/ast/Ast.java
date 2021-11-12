@@ -8,6 +8,7 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
 import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
@@ -29,7 +31,7 @@ import com.google.common.collect.ImmutableMap;
 public class Ast {
   private final ImmutableList<StructNode> structs;
   private final ImmutableList<ReferencableNode> referencables;
-  private ImmutableMap<String, ReferencableNode> referencablesMap;
+  private NamedList<ReferencableNode> referencablesMap;
   private ImmutableMap<String, StructNode> structsMap;
 
   public Ast(List<StructNode> structs, List<ReferencableNode> referencables) {
@@ -37,7 +39,7 @@ public class Ast {
     this.referencables = ImmutableList.copyOf(referencables);
   }
 
-  public ImmutableList<ReferencableNode> referencable() {
+  public ImmutableList<ReferencableNode> referencables() {
     return referencables;
   }
 
@@ -45,14 +47,14 @@ public class Ast {
     return structs;
   }
 
-  public ImmutableMap<String, ReferencableNode> referencablesMap() {
+  public NamedList<ReferencableNode> referencablesMap() {
     if (referencablesMap == null) {
       referencablesMap = createReferencablesMap();
     }
     return referencablesMap;
   }
 
-  private ImmutableMap<String, ReferencableNode> createReferencablesMap() {
+  private NamedList<ReferencableNode> createReferencablesMap() {
     var result = new HashMap<String, ReferencableNode>();
     new AstVisitor() {
       @Override
@@ -63,7 +65,7 @@ public class Ast {
         }
       }
     }.visitAst(this);
-    return ImmutableMap.copyOf(result);
+    return namedList(ImmutableMap.copyOf(result));
   }
 
   public ImmutableMap<String, StructNode> structsMap() {

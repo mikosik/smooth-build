@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.lang.parse.ast.FunctionTypeNode.countFunctionVariables;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import org.smoothbuild.util.DecodeHexException;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.UnescapingFailedException;
 import org.smoothbuild.util.collect.CountersMap;
+import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.collect.ImmutableList;
@@ -106,19 +108,19 @@ public class AnalyzeSemantically {
   }
 
   private static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
-    var importedScope = new Scope<ReferencableLike>(imported.referencables());
-    Scope<ReferencableLike> localScope = new Scope<>(importedScope, ast.referencablesMap());
+    var importedScope = new Scope<>(imported.referencables());
+    var localScope = new Scope<>(importedScope, ast.referencablesMap());
 
     new AstVisitor() {
-      Scope<ReferencableLike> scope = localScope;
+      Scope<? extends ReferencableLike> scope = localScope;
       @Override
       public void visitRealFunc(RealFuncNode func) {
         func.typeNode().ifPresent(this::visitType);
 
-        var nameToParam = func.params()
+        var map = func.params()
             .stream()
             .collect(toImmutableMap(ReferencableLike::name, p -> p, (a, b) -> a));
-        scope = new Scope<>(scope, nameToParam);
+        scope = new Scope<>(scope, namedList(map));
         func.body().ifPresent(this::visitExpr);
         scope = scope.outerScope();
 
@@ -184,7 +186,7 @@ public class AnalyzeSemantically {
       private boolean isDefinedType(TypeNode type) {
         return isVariableName(type.name())
             || structNames.contains(type.name())
-            || imported.types().containsKey(type.name());
+            || imported.types().containsWithName(type.name());
       }
     }.visitAst(ast);
   }
@@ -193,7 +195,7 @@ public class AnalyzeSemantically {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
     nals.addAll(map(ast.structs(), StructNode::constructor));
-    nals.addAll(ast.referencable());
+    nals.addAll(ast.referencables());
     nals.sort(comparing(n -> n.location().line()));
 
     for (Nal nal : nals) {
@@ -207,8 +209,16 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static void logIfDuplicate(
-      Logger logger, Map<String, ? extends Nal> others, Nal nal) {
+  private static void logIfDuplicate(Logger logger, NamedList<? extends Nal> others, Nal nal) {
+    String name = nal.name();
+    if (others.containsWithName(name)) {
+      Nal otherNal = others.get(name);
+      Location location = otherNal.location();
+      logger.log(alreadyDefinedError(nal, location));
+    }
+  }
+
+  private static void logIfDuplicate(Logger logger, Map<String, ? extends Nal> others, Nal nal) {
     String name = nal.name();
     if (others.containsKey(name)) {
       Nal otherNal = others.get(name);

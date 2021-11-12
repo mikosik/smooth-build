@@ -28,9 +28,19 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
     return new NamedList<>(list);
   }
 
+  public static <E extends Nameable> NamedList<E> namedList(ImmutableMap<String, E> map) {
+    return new NamedList<>(map.values().asList(), map);
+  }
+
   private NamedList(ImmutableList<T> list) {
     this.list = list;
     this.map = calculateMap(list);
+    this.indexMap = calculateIndexMap(list);
+  }
+
+  private NamedList(ImmutableList<T> list, ImmutableMap<String, T> map) {
+    this.list = list;
+    this.map = map;
     this.indexMap = calculateIndexMap(list);
   }
 
@@ -150,5 +160,12 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
   @Override
   public void sort(Comparator<? super T> c) {
     list.sort(c);
+  }
+
+  // helper methods
+
+  public static <E extends Nameable> NamedList<E> concat(
+      NamedList<? extends E> listA, NamedList<? extends E> listB) {
+    return namedList(ImmutableList.<E>builder().addAll(listA).addAll(listB).build());
   }
 }

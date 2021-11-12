@@ -13,7 +13,6 @@ import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 @Singleton
 public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
@@ -35,8 +34,8 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
    */
-  public ImmutableSet<BaseTypeS> inferableBaseTypes() {
-    return ImmutableSet.<BaseTypeS>builder()
+  public ImmutableList<BaseTypeS> inferableBaseTypes() {
+    return ImmutableList.<BaseTypeS>builder()
         .addAll(baseTypes())
         .add(any())
         .build();
@@ -45,8 +44,8 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   /**
    * Base types that are legal in smooth language.
    */
-  public ImmutableSet<BaseTypeS> baseTypes() {
-    return ImmutableSet.of(
+  public ImmutableList<BaseTypeS> baseTypes() {
+    return ImmutableList.of(
         blob(),
         bool(),
         int_(),

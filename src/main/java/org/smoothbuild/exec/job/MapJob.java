@@ -20,15 +20,16 @@ import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.Scope;
+import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 
 public class MapJob extends AbstractJob {
   private static final String MAP_TASK_NAME = MAP_FUNCTION_NAME + PARENTHESES;
-  private final Scope<Job> scope;
+  private final Scope<Labeled<Job>> scope;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeS type, List<Job> dependencies, Location location, Scope<Job> scope,
+  public MapJob(TypeS type, List<Job> dependencies, Location location, Scope<Labeled<Job>> scope,
       JobCreator jobCreator) {
     super(type, dependencies, new NalImpl("building:" + MAP_TASK_NAME, location));
     this.scope = scope;

@@ -2,29 +2,30 @@ package org.smoothbuild.util;
 
 import static java.util.stream.Collectors.joining;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
-public class Scope<E> {
-  private final Scope<E> outerScope;
-  private final Map<String, ? extends E> bindings;
+import org.smoothbuild.util.collect.Nameable;
+import org.smoothbuild.util.collect.NamedList;
 
-  public Scope(Map<String, ? extends E> bindings) {
+public class Scope<E extends Nameable> {
+  private final Scope<? extends E> outerScope;
+  private final NamedList<? extends E> bindings;
+
+  public Scope(NamedList<? extends E> bindings) {
     this(null, bindings);
   }
 
-  public Scope(Scope<E> outerScope, Map<String, ? extends E> bindings) {
+  public Scope(Scope<? extends E> outerScope, NamedList<? extends E> bindings) {
     this.outerScope = outerScope;
     this.bindings = bindings;
   }
 
   public boolean contains(String name) {
-    return bindings.containsKey(name) || (outerScope != null && outerScope.contains(name));
+    return bindings.containsWithName(name) || (outerScope != null && outerScope.contains(name));
   }
 
   public E get(String name) {
-    if (bindings.containsKey(name)) {
+    if (bindings.containsWithName(name)) {
       return bindings.get(name);
     }
     if (outerScope != null) {
@@ -33,29 +34,22 @@ public class Scope<E> {
     throw new NoSuchElementException(name);
   }
 
-  public Scope<E> outerScope() {
+  public Scope<? extends E> outerScope() {
     if (outerScope == null) {
       throw new IllegalStateException("This is top level scope. It doesn't have outer scope.");
     }
     return outerScope;
   }
 
-  public String namesToString() {
-    String outer = outerScope == null ? "" : outerScope.namesToString() + "\n";
-    String inner = prettyPrint(bindings.keySet());
-    return outer + inner;
-  }
-
   @Override
   public String toString() {
-    String outer = outerScope == null ? "" : outerScope.toString() + "\n";
-    String inner = prettyPrint(bindings.entrySet());
+    String outer = outerScope == null ? "" : outerScope + "\n";
+    String inner = prettyPrint();
     return outer + inner;
   }
 
-  private String prettyPrint(Set<?> set) {
-    return set.stream()
-        .map(Object::toString)
+  private String prettyPrint() {
+    return bindings.stream()
         .map(s -> indent() + s)
         .collect(joining("\n"));
   }
