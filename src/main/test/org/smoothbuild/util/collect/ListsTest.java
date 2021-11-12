@@ -22,6 +22,8 @@ import java.util.function.BiFunction;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ImmutableList;
+
 public class ListsTest {
   @Nested
   class _list {
@@ -134,6 +136,62 @@ public class ListsTest {
         Integer two = 2;
         List<Integer> list = asList(one);
         assertThat(concat(list, (Number) two))
+            .containsExactly(one, two);
+      }
+    }
+
+    @Nested
+    class _two_iterables {
+      @Test
+      public void both_empty(){
+        assertThat(concat(new ArrayList<>(), new ArrayList<>()))
+            .isEmpty();
+      }
+
+      @Test
+      public void first_empty(){
+        assertThat(concat(new ArrayList<>(), asList("second")))
+            .containsExactly("second")
+            .inOrder();
+      }
+
+      @Test
+      public void second_empty(){
+        assertThat(concat(asList("first"), new ArrayList<>()))
+            .containsExactly("first")
+            .inOrder();
+      }
+
+      @Test
+      public void concat_doesnt_modify_lists(){
+        List<String> first = asList("first");
+        List<String> second = asList("second");
+        concat(first, second);
+        assertThat(first)
+            .containsExactly("first");
+        assertThat(second)
+            .containsExactly("second");
+      }
+
+      @Test
+      public void first_can_be_subtype_of_list_elements(){
+        Integer one = 1;
+        Integer two = 2;
+        List<Number> first = asList(one);
+        List<Integer> second = asList(two);
+        ImmutableList<Number> result = concat(first, second);
+        assertThat(result)
+            .containsExactly(one, two);
+      }
+
+      @Test
+      public void second_can_be_subtype_of_list_elements(){
+        Integer one = 1;
+        Integer two = 2;
+        List<Integer> first = asList(one);
+        List<Number> second = asList(two);
+        ImmutableList<Number> result = concat(first, second);
+        assertThat(result)
             .containsExactly(one, two);
       }
     }

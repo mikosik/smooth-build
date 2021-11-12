@@ -163,9 +163,4 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
   }
 
   // helper methods
-
-  public static <E extends Nameable> NamedList<E> concat(
-      NamedList<? extends E> listA, NamedList<? extends E> listB) {
-    return namedList(ImmutableList.<E>builder().addAll(listA).addAll(listB).build());
-  }
 }

@@ -22,17 +22,25 @@ public class Lists {
     return ImmutableList.copyOf(elements);
   }
 
-  public static <R, S extends R, T extends R> ImmutableList<R> concat(S element, List<T> list) {
+  public static <R, S extends R, T extends R> ImmutableList<R> concat(S element, Iterable<T> list) {
     return ImmutableList.<R>builder()
         .add(element)
         .addAll(list)
         .build();
   }
 
-  public static <R, S extends R, T extends R> ImmutableList<R> concat(List<S> list, T element) {
+  public static <R, S extends R, T extends R> ImmutableList<R> concat(Iterable<S> list, T element) {
     return ImmutableList.<R>builder()
         .addAll(list)
         .add(element)
+        .build();
+  }
+
+  public static <R, S extends R, T extends R> ImmutableList<R> concat(
+      Iterable<S> list1, Iterable<T> list2) {
+    return ImmutableList.<R>builder()
+        .addAll(list1)
+        .addAll(list2)
         .build();
   }
 

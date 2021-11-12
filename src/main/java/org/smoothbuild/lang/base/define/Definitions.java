@@ -1,5 +1,8 @@
 package org.smoothbuild.lang.base.define;
 
+import static org.smoothbuild.util.collect.NamedList.namedList;
+
+import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableMap;
@@ -16,8 +19,8 @@ public record Definitions(
   public Definitions withModule(ModuleS module) {
     return new Definitions(
         concat(modules, module),
-        NamedList.concat(types, module.types()),
-        NamedList.concat(this.referencables, module.referencables())
+        namedList(Lists.concat(types, module.types())),
+        namedList(Lists.concat(referencables, module.referencables()))
     );
   }
 
