@@ -1,9 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.util.collect.Labeled.labeled;
+import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
+import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -22,7 +23,6 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VariableS;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
@@ -42,10 +42,12 @@ public class TestingTypesS {
   public static final IntTypeS INT = FACTORY.int_();
   public static final NothingTypeS NOTHING = FACTORY.nothing();
   public static final StringTypeS STRING = FACTORY.string();
-  public static final StructTypeS PERSON = struct(
-      "Person", namedList(list(labeled("firstName", STRING), labeled("lastName", STRING))));
-  public static final StructTypeS FLAG = struct("Flag", namedList(list(labeled("flab", BOOL))));
-  public static final StructTypeS DATA = struct("Data", namedList(list(labeled("data", BLOB))));
+  public static final StructTypeS PERSON = struct("Person",
+      namedList(list(itemSignature("firstName", STRING), itemSignature("lastName", STRING))));
+  public static final StructTypeS FLAG = struct("Flag",
+      namedList(list(itemSignature("flab", BOOL))));
+  public static final StructTypeS DATA = struct("Data",
+      namedList(list(itemSignature("data", BLOB))));
   public static final VariableS A = variable("A");
   public static final VariableS B = variable("B");
   public static final VariableS C = variable("C");
@@ -104,7 +106,7 @@ public class TestingTypesS {
     return FACTORY.variable(a);
   }
 
-  public static StructTypeS struct(String name, NamedList<Labeled<TypeS>> fields) {
+  public static StructTypeS struct(String name, NamedList<ItemSignature> fields) {
     return FACTORY.struct(name, fields);
   }
 

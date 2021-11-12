@@ -198,7 +198,7 @@ public class ReferencableLoader {
     private ExprS createSelect(SelectNode selectNode) {
       var structType = (StructTypeS) selectNode.expr().type().get();
       var index = structType.fields().indexMap().get(selectNode.fieldName());
-      var fieldType = structType.fields().get(index).object();
+      var fieldType = structType.fields().get(index).type();
       ExprS expr = createExpression(selectNode.expr());
       return new SelectS(fieldType, index, expr, selectNode.location());
     }

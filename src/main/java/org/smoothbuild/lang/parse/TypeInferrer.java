@@ -48,7 +48,6 @@ import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
-import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.collect.Optionals;
 
@@ -72,11 +71,10 @@ public class TypeInferrer {
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
-        var fields = Optionals.pullUp(
-            map(struct.fields(), f -> f.type().map(t -> f.toNamedType())));
+        var fields = Optionals.pullUp(map(struct.fields(), ItemNode::itemSignature));
         struct.setType(fields.map(s -> factory.struct(struct.name(), namedList(s))));
         struct.constructor().setType(
-            fields.map(s -> factory.function(struct.type().get(), map(s, Labeled::object))));
+            fields.map(s -> factory.function(struct.type().get(), map(s, ItemSignature::type))));
       }
 
       @Override
@@ -216,7 +214,7 @@ public class TypeInferrer {
                 logBuffer.log(parseError(expr.location(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               } else {
-                expr.setType(((StructTypeS) t).fields().get(expr.fieldName()).object());
+                expr.setType(((StructTypeS) t).fields().get(expr.fieldName()).type());
               }
             },
             () -> expr.setType(empty())

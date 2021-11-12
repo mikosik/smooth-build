@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.base.Strings.padEnd;
 import static java.util.Objects.requireNonNull;
+import static java.util.Optional.empty;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
@@ -33,7 +34,11 @@ public class ItemSignature extends NameableImpl {
   }
 
   public static ItemSignature itemSignature(TypeS type) {
-    return new ItemSignature(type, Optional.empty(), Optional.empty());
+    return new ItemSignature(type, empty(), empty());
+  }
+
+  public static ItemSignature itemSignature(String name, TypeS type) {
+    return new ItemSignature(type, name, empty());
   }
 
   public static ImmutableList<ItemSignature> toItemSignatures(List<? extends TypeS> types) {

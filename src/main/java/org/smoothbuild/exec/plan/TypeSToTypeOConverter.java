@@ -69,7 +69,7 @@ public class TypeSToTypeOConverter {
   }
 
   public TupleTypeH visit(StructTypeS structType) {
-    var itemTypes = map(structType.fields(), labeledField -> visit(labeledField.object()));
+    var itemTypes = map(structType.fields(), isig -> visit(isig.type()));
     return objFactory.tupleType(itemTypes);
   }
 

@@ -1,5 +1,6 @@
 package org.smoothbuild.testing;
 
+import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
@@ -68,6 +69,7 @@ import org.smoothbuild.lang.base.define.DefinedValue;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.base.define.NativeFunction;
 import org.smoothbuild.lang.base.define.NativeValue;
@@ -99,7 +101,6 @@ import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableList;
@@ -603,7 +604,7 @@ public class TestingContext {
     return typeFactoryS().string();
   }
 
-  public StructTypeS structST(String name, NamedList<Labeled<TypeS>> fields) {
+  public StructTypeS structST(String name, NamedList<ItemSignature> fields) {
     return typeFactoryS().struct(name, fields);
   }
 
@@ -742,7 +743,7 @@ public class TestingContext {
   }
 
   public Item field(TypeS type, String name) {
-    return new Item(type, modulePath(), name, Optional.empty(), loc(1));
+    return new Item(type, modulePath(), name, empty(), loc(1));
   }
 
   public Item param(TypeS type, String name) {
@@ -750,7 +751,7 @@ public class TestingContext {
   }
 
   public Item param(int line, TypeS type, String name) {
-    return param(line, type, name, Optional.empty());
+    return param(line, type, name, empty());
   }
 
   public Item param(int line, TypeS type, String name, ExprS defaultArg) {
@@ -767,5 +768,9 @@ public class TestingContext {
 
   public NativeValue value(int line, TypeS type, String name, Annotation annotation) {
     return new NativeValue(type, modulePath(), name, annotation, loc(line));
+  }
+
+  public ItemSignature isig(String name, TypeS type) {
+    return new ItemSignature(type, name, empty());
   }
 }

@@ -4,9 +4,9 @@ import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
+import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypesS.struct;
 import static org.smoothbuild.lang.base.type.TestingTypesS.variable;
-import static org.smoothbuild.util.collect.Labeled.labeled;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NamedList.namedList;
@@ -73,21 +73,21 @@ public class TestedType {
       "abc"
   );
   public static final TestedType STRUCT = new TestedType(
-      struct("Person", namedList(list(labeled("name", TestingTypesS.STRING)))),
+      struct("Person", namedList(list(itemSignature("name", TestingTypesS.STRING)))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", namedList(list(labeled("value", TestingTypesS.BLOB)))),
+      struct("Data", namedList(list(itemSignature("value", TestingTypesS.BLOB)))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", namedList(list(labeled("value", TestingTypesS.BOOL)))),
+      struct("Flag", namedList(list(itemSignature("value", TestingTypesS.BOOL)))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),

@@ -5,7 +5,6 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.INT;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypesS.a;
 import static org.smoothbuild.lang.base.type.TestingTypesS.f;
-import static org.smoothbuild.util.collect.Labeled.labeled;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
@@ -114,7 +113,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_constructor_reference() {
-      var struct = structST("MyStruct", namedList(list(labeled("field", STRING))));
+      var struct = structST("MyStruct", namedList(list(isig("field", STRING))));
       ConstructorS constr = constructor(1, struct, "myStruct", param(2, STRING, "field"));
       module("""
           MyStruct {
@@ -127,7 +126,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_constructor_reference_and_argument() {
-      var struct = structST("MyStruct", namedList(list(labeled("field", STRING))));
+      var struct = structST("MyStruct", namedList(list(isig("field", STRING))));
       module("""
           MyStruct {
             String field
@@ -164,7 +163,7 @@ public class ExprSLoadingTest extends TestingContext {
 
   @Test
   public void select_expression() {
-    var myStruct = structST("MyStruct", namedList(list(labeled("field", STRING))));
+    var myStruct = structST("MyStruct", namedList(list(isig("field", STRING))));
     module("""
           MyStruct {
             String field,
@@ -363,7 +362,7 @@ public class ExprSLoadingTest extends TestingContext {
           }
           """)
           .loadsSuccessfully()
-          .containsType(structST("MyStruct", namedList(list(labeled("field", STRING)))));
+          .containsType(structST("MyStruct", namedList(list(isig("field", STRING)))));
     }
   }
 }

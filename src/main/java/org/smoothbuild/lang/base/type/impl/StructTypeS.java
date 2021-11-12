@@ -5,8 +5,8 @@ import static java.util.Comparator.comparing;
 
 import java.util.Collection;
 
+import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.collect.ImmutableSet;
@@ -15,22 +15,22 @@ import com.google.common.collect.ImmutableSet;
  * This class is immutable.
  */
 public class StructTypeS extends TypeS {
-  private final NamedList<Labeled<TypeS>> fields;
+  private final NamedList<ItemSignature> fields;
 
-  public StructTypeS(String name, NamedList<Labeled<TypeS>> fields) {
+  public StructTypeS(String name, NamedList<ItemSignature> fields) {
     super(name, calculateVariables(fields));
     this.fields = fields;
   }
 
-  private static ImmutableSet<VariableS> calculateVariables(NamedList<Labeled<TypeS>> fields) {
+  private static ImmutableSet<VariableS> calculateVariables(NamedList<ItemSignature> fields) {
     return fields.stream()
-        .map(f -> f.object().variables())
+        .map(f -> f.type().variables())
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))
         .collect(toImmutableSet());
   }
 
-  public NamedList<Labeled<TypeS>> fields() {
+  public NamedList<ItemSignature> fields() {
     return fields;
   }
 

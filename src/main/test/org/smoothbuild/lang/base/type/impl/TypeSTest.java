@@ -3,9 +3,9 @@ package org.smoothbuild.lang.base.type.impl;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypesS.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Labeled.labeled;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 import static org.smoothbuild.util.collect.Sets.set;
@@ -19,12 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NamedList;
 
 import com.google.common.testing.EqualsTester;
@@ -266,12 +266,12 @@ public class TypeSTest extends TestingContext {
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structST("MyStruct", namedList(list(labeled("fieldName", nothingST()))));
+      structST("MyStruct", namedList(list(isig("fieldName", nothingST()))));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structST("MyStruct", namedList(list(labeled("fieldName", arrayST(nothingST())))));
+      structST("MyStruct", namedList(list(isig("fieldName", arrayST(nothingST())))));
     }
 
     @ParameterizedTest
@@ -292,7 +292,7 @@ public class TypeSTest extends TestingContext {
     @MethodSource("struct_fields_cases")
     public void struct_fields(
         Function<TypeFactoryS, StructTypeS> factoryCall,
-        Function<TypeFactoryS, NamedList<Labeled<Type>>> expected) {
+        Function<TypeFactoryS, NamedList<ItemSignature>> expected) {
       assertThat(invoke(factoryCall).fields())
           .isEqualTo(invoke(expected));
     }
@@ -300,11 +300,11 @@ public class TypeSTest extends TestingContext {
     public static List<Arguments> struct_fields_cases() {
       return asList(
           args(f -> f.struct("Person", namedList(list())), f -> namedList(list())),
-          args(f -> f.struct("Person", namedList(list(labeled("field", f.string())))),
-              f -> namedList(list(labeled("field", f.string())))),
+          args(f -> f.struct("Person", namedList(list(itemSignature("field", f.string())))),
+              f -> namedList(list(itemSignature("field", f.string())))),
           args(f -> f.struct("Person",
-              namedList(list(labeled("field", f.string()), labeled("field2", f.int_())))),
-              f -> namedList(list(labeled("field", f.string()), labeled("field2", f.int_()))))
+              namedList(list(itemSignature("field", f.string()), itemSignature("field2", f.int_())))),
+              f -> namedList(list(itemSignature("field", f.string()), itemSignature("field2", f.int_()))))
       );
     }
   }
@@ -321,7 +321,7 @@ public class TypeSTest extends TestingContext {
         f.nothing(),
         f.string(),
         f.struct("MyStruct", namedList(list())),
-        f.struct("MyStruct", namedList(list(labeled("field", f.int_())))),
+        f.struct("MyStruct", namedList(list(isig("field", f.int_())))),
         f.variable("A"),
         f.variable("B"),
         f.variable("C"),
