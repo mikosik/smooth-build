@@ -30,6 +30,6 @@ public class InternalModuleLoader {
   private NamedList<GlobalReferencable> referencables(ModulePath modulePath) {
     FunctionS ifFunction = new IfFunctionS(modulePath, factory);
     FunctionS mapFunction = new MapFunctionS(modulePath, factory);
-    return namedList(list(ifFunction, mapFunction));
+    return namedList(ifFunction, mapFunction);
   }
 }

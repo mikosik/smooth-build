@@ -42,11 +42,9 @@ public class TestingTypesS {
   public static final NothingTypeS NOTHING = FACTORY.nothing();
   public static final StringTypeS STRING = FACTORY.string();
   public static final StructTypeS PERSON = struct("Person",
-      namedList(list(itemSignature("firstName", STRING), itemSignature("lastName", STRING))));
-  public static final StructTypeS FLAG = struct("Flag",
-      namedList(list(itemSignature("flab", BOOL))));
-  public static final StructTypeS DATA = struct("Data",
-      namedList(list(itemSignature("data", BLOB))));
+      namedList(itemSignature("firstName", STRING), itemSignature("lastName", STRING)));
+  public static final StructTypeS FLAG = struct("Flag", namedList(itemSignature("flab", BOOL)));
+  public static final StructTypeS DATA = struct("Data", namedList(itemSignature("data", BLOB)));
   public static final VariableS A = variable("A");
   public static final VariableS B = variable("B");
   public static final VariableS C = variable("C");

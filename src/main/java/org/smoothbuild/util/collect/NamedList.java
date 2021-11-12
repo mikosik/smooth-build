@@ -1,5 +1,6 @@
 package org.smoothbuild.util.collect;
 
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.AbstractList;
@@ -23,6 +24,10 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
   private final ImmutableList<T> list;
   private final ImmutableMap<String, T> map;
   private final ImmutableMap<String, Integer> indexMap;
+
+  public static <E extends Nameable> NamedList<E> namedList(E... elements) {
+    return new NamedList<>(list(elements));
+  }
 
   public static <E extends Nameable> NamedList<E> namedList(ImmutableList<E> list) {
     return new NamedList<>(list);

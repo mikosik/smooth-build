@@ -65,7 +65,7 @@ public class TypeSTest extends TestingContext {
         args(f -> f.int_(), "Int"),
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
-        args(f -> f.struct("MyStruct", namedList(list())), "MyStruct"),
+        args(f -> f.struct("MyStruct", namedList()), "MyStruct"),
         args(f -> f.variable("A"), "A"),
 
         args(f -> f.array(f.any()), "[Any]"),
@@ -74,7 +74,7 @@ public class TypeSTest extends TestingContext {
         args(f -> f.array(f.int_()), "[Int]"),
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
-        args(f -> f.array(f.struct("MyStruct", namedList(list()))), "[MyStruct]"),
+        args(f -> f.array(f.struct("MyStruct", namedList())), "[MyStruct]"),
         args(f -> f.array(f.variable("A")), "[A]"),
 
         args(f -> f.array(f.array(f.variable("A"))), "[[A]]"),
@@ -83,7 +83,7 @@ public class TypeSTest extends TestingContext {
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
         args(f -> f.array(f.array(f.int_())), "[[Int]]"),
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
-        args(f -> f.array(f.array(f.struct("MyStruct", namedList(list())))), "[[MyStruct]]"),
+        args(f -> f.array(f.array(f.struct("MyStruct", namedList()))), "[[MyStruct]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
         args(f -> f.function(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
@@ -129,7 +129,7 @@ public class TypeSTest extends TestingContext {
         args(f -> f.int_(), false),
         args(f -> f.nothing(), false),
         args(f -> f.string(), false),
-        args(f -> f.struct("MyStruct", namedList(list())), false)
+        args(f -> f.struct("MyStruct", namedList()), false)
     );
   }
 
@@ -151,7 +151,7 @@ public class TypeSTest extends TestingContext {
         args(f -> f.int_(), f -> set()),
         args(f -> f.nothing(), f -> set()),
         args(f -> f.string(), f -> set()),
-        args(f -> f.struct("MyStruct", namedList(list())), f -> set()),
+        args(f -> f.struct("MyStruct", namedList()), f -> set()),
 
         args(f -> f.array(f.any()), f -> set()),
         args(f -> f.array(f.blob()), f -> set()),
@@ -242,7 +242,7 @@ public class TypeSTest extends TestingContext {
           args(f -> f.int_()),
           args(f -> f.nothing()),
           args(f -> f.string()),
-          args(f -> f.struct("MyStruct", namedList(list()))),
+          args(f -> f.struct("MyStruct", namedList())),
           args(f -> f.variable("A")),
 
           args(f -> f.array(f.any())),
@@ -261,17 +261,17 @@ public class TypeSTest extends TestingContext {
   class _struct {
     @Test
     public void without_fields_can_be_created() {
-      structST("MyStruct", namedList(list()));
+      structST("MyStruct", namedList());
     }
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structST("MyStruct", namedList(list(isig("fieldName", nothingST()))));
+      structST("MyStruct", namedList(isig("fieldName", nothingST())));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structST("MyStruct", namedList(list(isig("fieldName", arrayST(nothingST())))));
+      structST("MyStruct", namedList(isig("fieldName", arrayST(nothingST()))));
     }
 
     @ParameterizedTest
@@ -283,8 +283,8 @@ public class TypeSTest extends TestingContext {
 
     public static List<Arguments> struct_name_cases() {
       return asList(
-          args(f -> f.struct("MyStruct", namedList(list())), "MyStruct"),
-          args(f -> f.struct("", namedList(list())), "")
+          args(f -> f.struct("MyStruct", namedList()), "MyStruct"),
+          args(f -> f.struct("", namedList()), "")
       );
     }
 
@@ -299,12 +299,12 @@ public class TypeSTest extends TestingContext {
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
-          args(f -> f.struct("Person", namedList(list())), f -> namedList(list())),
-          args(f -> f.struct("Person", namedList(list(itemSignature("field", f.string())))),
-              f -> namedList(list(itemSignature("field", f.string())))),
+          args(f -> f.struct("Person", namedList()), f -> namedList()),
+          args(f -> f.struct("Person", namedList(itemSignature("field", f.string()))),
+              f -> namedList(itemSignature("field", f.string()))),
           args(f -> f.struct("Person",
-              namedList(list(itemSignature("field", f.string()), itemSignature("field2", f.int_())))),
-              f -> namedList(list(itemSignature("field", f.string()), itemSignature("field2", f.int_()))))
+              namedList(itemSignature("field", f.string()), itemSignature("field2", f.int_()))),
+              f -> namedList(itemSignature("field", f.string()), itemSignature("field2", f.int_())))
       );
     }
   }
@@ -320,8 +320,8 @@ public class TypeSTest extends TestingContext {
         f.int_(),
         f.nothing(),
         f.string(),
-        f.struct("MyStruct", namedList(list())),
-        f.struct("MyStruct", namedList(list(isig("field", f.int_())))),
+        f.struct("MyStruct", namedList()),
+        f.struct("MyStruct", namedList(isig("field", f.int_()))),
         f.variable("A"),
         f.variable("B"),
         f.variable("C"),

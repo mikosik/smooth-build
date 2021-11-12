@@ -105,7 +105,7 @@ public class JobCreatorTest extends TestingContext {
   }
 
   private Definitions definitions(FunctionS... functions) {
-    return new Definitions(ImmutableMap.of(), null, namedList(list(functions)));
+    return new Definitions(ImmutableMap.of(), null, namedList(functions));
   }
 
   private static class MyExpression implements ExprS {

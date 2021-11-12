@@ -602,7 +602,7 @@ public class TestingContext {
 
   public StructTypeS personST() {
     return typeFactoryS().struct("Person",
-        namedList(list(isig("firstName", stringST()), isig("lastName", stringST()))));
+        namedList(isig("firstName", stringST()), isig("lastName", stringST())));
   }
 
   public StringTypeS stringST() {
@@ -680,7 +680,7 @@ public class TestingContext {
 
   public ConstructorS constructorS(int line, TypeS resultType, String name, Item... parameters) {
     return new ConstructorS(functionST(resultType, parameters), modulePath(), name,
-        namedList(list(parameters)), loc(line));
+        namedList(parameters), loc(line));
   }
 
   public NativeFunction functionS(TypeS type, String name, Item... parameters) {
@@ -690,7 +690,7 @@ public class TestingContext {
   public NativeFunction functionS(int line, TypeS type, String name, Annotation annotation,
       Item... parameters) {
     return new NativeFunction(functionST(type, parameters), modulePath(), name,
-        namedList(list(parameters)), annotation, loc(line)
+        namedList(parameters), annotation, loc(line)
     );
   }
 
@@ -701,7 +701,7 @@ public class TestingContext {
   public DefinedFunction functionS(
       int line, TypeS type, String name, ExprS body, Item... parameters) {
     return new DefinedFunction(functionST(type, parameters), modulePath(), name,
-        namedList(list(parameters)), body, loc(line)
+        namedList(parameters), body, loc(line)
     );
   }
 

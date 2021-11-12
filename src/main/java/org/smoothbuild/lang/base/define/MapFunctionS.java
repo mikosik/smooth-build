@@ -48,8 +48,8 @@ public class MapFunctionS extends FunctionS {
 
   private static NamedList<Item> createParameters(ModulePath modulePath,
       ArrayTypeS inputArrayType, FunctionTypeS mappingFunctionType) {
-    return namedList(list(
+    return namedList(
         new Item(inputArrayType, modulePath, "array", Optional.empty(), internal()),
-        new Item(mappingFunctionType, modulePath, "function", Optional.empty(), internal())));
+        new Item(mappingFunctionType, modulePath, "function", Optional.empty(), internal()));
   }
 }

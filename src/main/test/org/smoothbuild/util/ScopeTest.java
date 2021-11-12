@@ -2,7 +2,6 @@ package org.smoothbuild.util;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.NoSuchElementException;
@@ -31,21 +30,21 @@ public class ScopeTest {
 
   @Test
   public void scope_contains_binding_that_is_in_current_scope() {
-    scope = new Scope<>(namedList(list(elem("name", 7))));
+    scope = new Scope<>(namedList(elem("name", 7)));
     assertThat(scope.contains("name"))
         .isTrue();
   }
 
   @Test
   public void binding_from_current_scope_can_be_retrieved() {
-    scope = new Scope<>(namedList(list(elem("name", 7))));
+    scope = new Scope<>(namedList(elem("name", 7)));
     assertThat(scope.get("name"))
         .isEqualTo(elem("name", 7));
   }
 
   @Test
   public void when_no_binding_in_current_scope_then_binding_from_outer_scope_is_returned() {
-    outerScope = new Scope<>(namedList(list(elem("name", 7))));
+    outerScope = new Scope<>(namedList(elem("name", 7)));
     scope = new Scope<>(outerScope, NamedList.empty());
     assertThat(scope.get("name"))
         .isEqualTo(elem("name", 7));
@@ -53,8 +52,8 @@ public class ScopeTest {
 
   @Test
   public void binding_in_current_scope_hides_binding_from_outer_scope() {
-    outerScope = new Scope<>(namedList(list(elem("name", 3))));
-    scope = new Scope<>(outerScope, namedList(list(elem("name", 7))));
+    outerScope = new Scope<>(namedList(elem("name", 3)));
+    scope = new Scope<>(outerScope, namedList(elem("name", 7)));
     assertThat(scope.get("name"))
         .isEqualTo(elem("name", 7));
   }
@@ -76,8 +75,8 @@ public class ScopeTest {
 
   @Test
   public void to_string() {
-    outerScope = new Scope<>(namedList(list(elem("value-a", 7), elem("value-b", 8))));
-    scope = new Scope<>(outerScope, namedList(list(elem("value-c", 9), elem("value-d", 10))));
+    outerScope = new Scope<>(namedList(elem("value-a", 7), elem("value-b", 8)));
+    scope = new Scope<>(outerScope, namedList(elem("value-c", 9), elem("value-d", 10)));
     assertThat(scope.toString())
         .isEqualTo("""
             Elem[name=value-a, value=7]

@@ -73,21 +73,21 @@ public class TestedType {
       "abc"
   );
   public static final TestedType STRUCT = new TestedType(
-      struct("Person", namedList(list(itemSignature("name", TestingTypesS.STRING)))),
+      struct("Person", namedList(itemSignature("name", TestingTypesS.STRING))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", namedList(list(itemSignature("value", TestingTypesS.BLOB)))),
+      struct("Data", namedList(itemSignature("value", TestingTypesS.BLOB))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", namedList(list(itemSignature("value", TestingTypesS.BOOL)))),
+      struct("Flag", namedList(itemSignature("value", TestingTypesS.BOOL))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),
