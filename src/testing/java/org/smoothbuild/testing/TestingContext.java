@@ -600,6 +600,11 @@ public class TestingContext {
     return typeFactoryS().nothing();
   }
 
+  public StructTypeS personST() {
+    return typeFactoryS().struct("Person",
+        namedList(list(isig("firstName", stringST()), isig("lastName", stringST()))));
+  }
+
   public StringTypeS stringST() {
     return typeFactoryS().string();
   }
@@ -669,6 +674,15 @@ public class TestingContext {
     return new CallS(type, expr, list(arguments), loc(line));
   }
 
+  public ConstructorS constructorS(TypeS resultType, String name, Item... parameters) {
+    return constructorS(1, resultType, name, parameters);
+  }
+
+  public ConstructorS constructorS(int line, TypeS resultType, String name, Item... parameters) {
+    return new ConstructorS(functionST(resultType, parameters), modulePath(), name,
+        namedList(list(parameters)), loc(line));
+  }
+
   public NativeFunction functionS(TypeS type, String name, Item... parameters) {
     return functionS(1, type, name, annotation(1, stringS(1, "Impl.met")), parameters);
   }
@@ -731,15 +745,6 @@ public class TestingContext {
 
   public Annotation annotation(int line, StringS implementedBy, boolean pure) {
     return new Annotation(implementedBy, pure, loc(line));
-  }
-
-  public ConstructorS constructor(TypeS resultType, String name, Item... parameters) {
-    return constructor(1, resultType, name, parameters);
-  }
-
-  public ConstructorS constructor(int line, TypeS resultType, String name, Item... parameters) {
-    return new ConstructorS(functionST(resultType, parameters), modulePath(), name,
-        namedList(list(parameters)), loc(line));
   }
 
   public Item field(TypeS type, String name) {

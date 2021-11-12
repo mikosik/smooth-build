@@ -114,7 +114,7 @@ public class ExprSLoadingTest extends TestingContext {
     @Test
     public void with_constructor_reference() {
       var struct = structST("MyStruct", namedList(list(isig("field", STRING))));
-      ConstructorS constr = constructor(1, struct, "myStruct", param(2, STRING, "field"));
+      ConstructorS constr = constructorS(1, struct, "myStruct", param(2, STRING, "field"));
       module("""
           MyStruct {
             String field
