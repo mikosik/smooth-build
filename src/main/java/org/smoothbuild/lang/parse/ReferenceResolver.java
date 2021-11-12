@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -38,10 +37,7 @@ public class ReferenceResolver extends AstVisitor {
   public void visitRealFunc(RealFuncNode func) {
     visitParams(func.params());
     func.body().ifPresent(expr -> {
-      var uniqueParams = func.params().stream()
-          .collect(toImmutableMap(ReferencableLike::name, p -> p, (a, b) -> a));
-      var params = namedList(uniqueParams);
-      var referenceResolver = new ReferenceResolver(new Scope<>(scope, params), logger);
+      var referenceResolver = new ReferenceResolver(new Scope<>(scope, func.params()), logger);
       referenceResolver.visitExpr(expr);
     });
   }

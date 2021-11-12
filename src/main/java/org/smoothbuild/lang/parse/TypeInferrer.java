@@ -292,7 +292,8 @@ public class TypeInferrer {
           if (referenced instanceof FunctionS function) {
             return Optional.of(function.parameters().map(Item::signature));
           } else if (referenced instanceof FunctionNode functionNode) {
-            var itemSignatures = Optionals.pullUp(map(functionNode.params(), ItemNode::itemSignature));
+            var itemSignatures = Optionals.pullUp(
+                map(functionNode.params(), ItemNode::itemSignature));
             return itemSignatures.map(NamedList::namedList);
           } else {
             var parameters = ((FunctionTypeS) referenced.inferredType().get()).parameters();
