@@ -89,9 +89,8 @@ public class ModuleLoader {
   private StructS loadStruct(ModulePath path, StructNode struct) {
     var type = (StructTypeS) struct.type().get();
     var name = struct.name();
-    var items = map(struct.fields(), f -> f.toItem(path));
     var location = struct.location();
-    return new StructS(type, path, name, items, location);
+    return new StructS(type, path, name, location);
   }
 
   private NamedList<GlobalReferencable> loadReferencables(ModulePath path, Ast ast) {
