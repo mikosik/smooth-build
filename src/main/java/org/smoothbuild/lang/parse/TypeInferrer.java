@@ -97,11 +97,6 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitFunction(FunctionNode function) {
-        super.visitFunction(function);
-      }
-
-      @Override
       public void visitParam(int index, ItemNode param) {
         super.visitParam(index, param);
         param.setType(typeOfParameter(param));
