@@ -68,7 +68,7 @@ public class TestingModuleLoader {
   private GlobalReferencable assertContainsReferencable(String name) {
     var referencables = module.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(referencables.containsWithName(name))
+        .that(referencables.containsName(name))
         .isTrue();
     return referencables.get(name);
   }
@@ -77,7 +77,7 @@ public class TestingModuleLoader {
     var name = expected.name();
     var types = module.value().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
-        .that(types.containsWithName(name))
+        .that(types.containsName(name))
         .isTrue();
     Type actual = types.get(name).type();
     assertWithMessage(

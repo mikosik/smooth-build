@@ -186,7 +186,7 @@ public class AnalyzeSemantically {
       private boolean isDefinedType(TypeNode type) {
         return isVariableName(type.name())
             || structNames.contains(type.name())
-            || imported.types().containsWithName(type.name());
+            || imported.types().containsName(type.name());
       }
     }.visitAst(ast);
   }
@@ -211,7 +211,7 @@ public class AnalyzeSemantically {
 
   private static void logIfDuplicate(Logger logger, NamedList<? extends Nal> others, Nal nal) {
     String name = nal.name();
-    if (others.containsWithName(name)) {
+    if (others.containsName(name)) {
       Nal otherNal = others.get(name);
       Location location = otherNal.location();
       logger.log(alreadyDefinedError(nal, location));

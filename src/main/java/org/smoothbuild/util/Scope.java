@@ -21,11 +21,11 @@ public class Scope<E extends Nameable> {
   }
 
   public boolean contains(String name) {
-    return bindings.containsWithName(name) || (outerScope != null && outerScope.contains(name));
+    return bindings.containsName(name) || (outerScope != null && outerScope.contains(name));
   }
 
   public E get(String name) {
-    if (bindings.containsWithName(name)) {
+    if (bindings.containsName(name)) {
       return bindings.get(name);
     }
     if (outerScope != null) {

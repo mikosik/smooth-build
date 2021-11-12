@@ -76,7 +76,7 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
     return map.get(name);
   }
 
-  public boolean containsWithName(String name) {
+  public boolean containsName(String name) {
     return map.containsKey(name);
   }
 
