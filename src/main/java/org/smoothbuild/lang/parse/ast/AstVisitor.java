@@ -1,16 +1,11 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.util.collect.Lists.map;
-
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitReferencable(map(ast.structs(), StructNode::constructor));
     visitReferencable(ast.referencables());
   }
 
@@ -20,10 +15,6 @@ public class AstVisitor {
 
   public void visitStruct(StructNode struct) {
     visitFields(struct.fields());
-  }
-
-  public void visitConstructor(ConstructorNode constructor) {
-    visitFunction(constructor);
   }
 
   public void visitFunction(FunctionNode function) {
@@ -47,8 +38,6 @@ public class AstVisitor {
       visitRealFunc(func);
     } else if (referencable instanceof ValueNode value) {
       visitValue(value);
-    } else if (referencable instanceof ConstructorNode constructor) {
-      visitConstructor(constructor);
     } else {
       throw new RuntimeException(
           "Didn't expect instance of " + referencable.getClass().getCanonicalName());

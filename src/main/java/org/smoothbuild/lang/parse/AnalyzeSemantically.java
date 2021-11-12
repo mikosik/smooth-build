@@ -32,7 +32,6 @@ import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
-import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.util.DecodeHexException;
@@ -104,13 +103,6 @@ public class AnalyzeSemantically {
   private static void detectUndefinedTypes(Logger logger, Definitions imported, Ast ast) {
     Set<String> structNames = Sets.map(ast.structs(), NamedNode::name);
     new AstVisitor() {
-      @Override
-      public void visitConstructor(ConstructorNode constructor) {
-        // intentionally empty to avoid calling visitParams() as synthetic constructor
-        // should not be analyzed for semantic problems. Such problems are reported for
-        // struct fields.
-      }
-
       @Override
       public void visitRealFunc(RealFuncNode func) {
         super.visitRealFunc(func);
@@ -204,13 +196,6 @@ public class AnalyzeSemantically {
       public void visitParams(List<ItemNode> params) {
         super.visitParams(params);
         findDuplicateNames(logger, params);
-      }
-
-      @Override
-      public void visitConstructor(ConstructorNode constructor) {
-        // intentionally empty to avoid calling visitParams() as synthetic constructor
-        // should not be analyzed for semantic problems. Such problems are reported for
-        // struct fields.
       }
     }.visitAst(ast);
   }

@@ -8,11 +8,9 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +18,6 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
 import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
@@ -31,7 +28,6 @@ import com.google.common.collect.ImmutableMap;
 public class Ast {
   private final ImmutableList<StructNode> structs;
   private final ImmutableList<ReferencableNode> referencables;
-  private NamedList<ReferencableNode> referencablesMap;
   private ImmutableMap<String, StructNode> structsMap;
 
   public Ast(List<StructNode> structs, List<ReferencableNode> referencables) {
@@ -45,25 +41,6 @@ public class Ast {
 
   public ImmutableList<StructNode> structs() {
     return structs;
-  }
-
-  public NamedList<ReferencableNode> referencablesMap() {
-    if (referencablesMap == null) {
-      referencablesMap = createReferencablesMap();
-    }
-    return referencablesMap;
-  }
-
-  private NamedList<ReferencableNode> createReferencablesMap() {
-    var result = new HashMap<String, ReferencableNode>();
-    new AstVisitor() {
-      @Override
-      public void visitReferencable(ReferencableNode referencable) {
-        super.visitReferencable(referencable);
-        result.put(referencable.name(), referencable);
-      }
-    }.visitAst(this);
-    return namedList(ImmutableMap.copyOf(result));
   }
 
   public ImmutableMap<String, StructNode> structsMap() {

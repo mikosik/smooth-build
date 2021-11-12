@@ -2,6 +2,8 @@ package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.util.collect.Lists.concat;
+import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import org.smoothbuild.cli.console.Logger;
@@ -11,6 +13,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
+import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.util.Scope;
 
 public class ReferenceResolver extends AstVisitor {
@@ -19,7 +22,9 @@ public class ReferenceResolver extends AstVisitor {
 
   public static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
     var importedScope = new Scope<>(imported.referencables());
-    var scope = new Scope<>(importedScope, ast.referencablesMap());
+    var constructors = map(ast.structs(), StructNode::constructor);
+    var referencables = ast.referencables();
+    var scope = new Scope<>(importedScope, namedList(concat(referencables, constructors)));
     new ReferenceResolver(scope, logger)
         .visitAst(ast);
   }
