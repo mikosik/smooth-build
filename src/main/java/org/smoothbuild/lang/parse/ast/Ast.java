@@ -23,12 +23,10 @@ import org.smoothbuild.util.graph.GraphNode;
 import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class Ast {
   private final ImmutableList<StructNode> structs;
   private final ImmutableList<ReferencableNode> referencables;
-  private ImmutableMap<String, StructNode> structsMap;
 
   public Ast(List<StructNode> structs, List<ReferencableNode> referencables) {
     this.structs = ImmutableList.copyOf(structs);
@@ -41,24 +39,6 @@ public class Ast {
 
   public ImmutableList<StructNode> structs() {
     return structs;
-  }
-
-  public ImmutableMap<String, StructNode> structsMap() {
-    if (structsMap == null) {
-      structsMap = createStructsMap();
-    }
-    return structsMap;
-  }
-
-  private ImmutableMap<String, StructNode> createStructsMap() {
-    var builder = ImmutableMap.<String, StructNode>builder();
-    new AstVisitor() {
-      @Override
-      public void visitStruct(StructNode struct) {
-        builder.put(struct.name(), struct);
-      }
-    }.visitAst(this);
-    return builder.build();
   }
 
   public Maybe<Ast> sortedByDependencies() {
