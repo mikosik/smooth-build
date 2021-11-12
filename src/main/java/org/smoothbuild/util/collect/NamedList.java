@@ -1,5 +1,6 @@
 package org.smoothbuild.util.collect;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
@@ -37,16 +38,25 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
     return new NamedList<>(map.values().asList(), map);
   }
 
+  public static <E extends Nameable> NamedList<E> namedListWithDuplicates(ImmutableList<E> list) {
+    var withoutDuplicates = list.stream().collect(toImmutableSet());
+    return new NamedList<>(list, calculateMap(withoutDuplicates),
+        calculateIndexMap(withoutDuplicates));
+  }
+
   private NamedList(ImmutableList<T> list) {
-    this.list = list;
-    this.map = calculateMap(list);
-    this.indexMap = calculateIndexMap(list);
+    this(list, calculateMap(list), calculateIndexMap(list));
   }
 
   private NamedList(ImmutableList<T> list, ImmutableMap<String, T> map) {
+    this(list, map, calculateIndexMap(list));
+  }
+
+  private NamedList(ImmutableList<T> list, ImmutableMap<String, T> map,
+      ImmutableMap<String, Integer> indexMap) {
     this.list = list;
     this.map = map;
-    this.indexMap = calculateIndexMap(list);
+    this.indexMap = indexMap;
   }
 
   public static <T extends Nameable> NamedList<T> empty() {
@@ -55,17 +65,18 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
   }
 
   private static <E extends Nameable> ImmutableMap<String, Integer> calculateIndexMap(
-      ImmutableList<E> nameables) {
+      Iterable<E> nameables) {
     Builder<String, Integer> builder = ImmutableMap.builder();
-    for (int i = 0; i < nameables.size(); i++) {
+    int i = 0;
+    for (E nameable : nameables) {
       int index = i;
-      nameables.get(i).nameO().ifPresent(n -> builder.put(n, index));
+      nameable.nameO().ifPresent(n -> builder.put(n, index));
+      i++;
     }
     return builder.build();
   }
 
-  private static <E extends Nameable> ImmutableMap<String, E> calculateMap(
-      ImmutableList<E> nameables) {
+  private static <E extends Nameable> ImmutableMap<String, E> calculateMap(Iterable<E> nameables) {
     Builder<String, E> builder = ImmutableMap.builder();
     for (E nameable : nameables) {
       nameable.nameO().ifPresent(n -> builder.put(n, nameable));

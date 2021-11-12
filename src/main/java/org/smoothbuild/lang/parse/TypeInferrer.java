@@ -67,7 +67,6 @@ public class TypeInferrer {
 
   public List<Log> inferTypes(Ast ast, Definitions imported) {
     var logBuffer = new LogBuffer();
-    var localTypes = namedList(ast.structs());
 
     new AstVisitor() {
       @Override
@@ -187,13 +186,13 @@ public class TypeInferrer {
       }
 
       private TypeS findLocalType(String name) {
-        StructNode localStruct = localTypes.get(name);
+        StructNode localStruct = ast.structs().get(name);
         if (localStruct == null) {
           throw new RuntimeException(
-              "Cannot find type `" + name + "`. Available types = " + localTypes);
+              "Cannot find type `" + name + "`. Available types = " + ast.structs());
         } else {
           return localStruct.type().orElseThrow(() -> new RuntimeException(
-              "Cannot find type `" + name + "`. Available types = " + localTypes));
+              "Cannot find type `" + name + "`. Available types = " + ast.structs()));
         }
       }
 

@@ -8,6 +8,7 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.NamedList.namedListWithDuplicates;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
 import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
@@ -25,11 +27,11 @@ import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
 import com.google.common.collect.ImmutableList;
 
 public class Ast {
-  private final ImmutableList<StructNode> structs;
+  private final NamedList<StructNode> structs;
   private final ImmutableList<ReferencableNode> referencables;
 
   public Ast(List<StructNode> structs, List<ReferencableNode> referencables) {
-    this.structs = ImmutableList.copyOf(structs);
+    this.structs = namedListWithDuplicates(ImmutableList.copyOf(structs));
     this.referencables = ImmutableList.copyOf(referencables);
   }
 
@@ -37,7 +39,7 @@ public class Ast {
     return referencables;
   }
 
-  public ImmutableList<StructNode> structs() {
+  public NamedList<StructNode> structs() {
     return structs;
   }
 

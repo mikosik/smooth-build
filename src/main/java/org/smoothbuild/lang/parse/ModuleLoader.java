@@ -80,7 +80,7 @@ public class ModuleLoader {
     }
 
     var modules = imported.modules().values().asList();
-    var types = namedList(map(sortedAst.structs(), s -> (DefinedType) loadStruct(path, s)));
+    var types = sortedAst.structs().map(s -> (DefinedType) loadStruct(path, s));
     var referencables = loadReferencables(path, sortedAst);
     ModuleS module = new ModuleS(path, hash, moduleFiles, modules, types, referencables);
     return maybeValueAndLogs(module, logBuffer);

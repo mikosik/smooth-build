@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.smoothbuild.cli.console.ImmutableLogs;
 import org.smoothbuild.cli.console.Log;
@@ -38,7 +37,6 @@ import org.smoothbuild.util.DecodeHexException;
 import org.smoothbuild.util.UnescapingFailedException;
 import org.smoothbuild.util.collect.CountersMap;
 import org.smoothbuild.util.collect.NamedList;
-import org.smoothbuild.util.collect.Sets;
 
 import com.google.common.collect.ImmutableList;
 
@@ -101,7 +99,6 @@ public class AnalyzeSemantically {
   }
 
   private static void detectUndefinedTypes(Logger logger, Definitions imported, Ast ast) {
-    Set<String> structNames = Sets.map(ast.structs(), NamedNode::name);
     new AstVisitor() {
       @Override
       public void visitRealFunc(RealFuncNode func) {
@@ -138,7 +135,7 @@ public class AnalyzeSemantically {
 
       private boolean isDefinedType(TypeNode type) {
         return isVariableName(type.name())
-            || structNames.contains(type.name())
+            || ast.structs().containsName(type.name())
             || imported.types().containsName(type.name());
       }
     }.visitAst(ast);
