@@ -34,13 +34,6 @@ public class Scope<E extends Nameable> {
     throw new NoSuchElementException(name);
   }
 
-  public Scope<? extends E> outerScope() {
-    if (outerScope == null) {
-      throw new IllegalStateException("This is top level scope. It doesn't have outer scope.");
-    }
-    return outerScope;
-  }
-
   @Override
   public String toString() {
     String outer = outerScope == null ? "" : outerScope + "\n";

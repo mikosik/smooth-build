@@ -59,21 +59,6 @@ public class ScopeTest {
   }
 
   @Test
-  public void top_level_scope_doesnt_have_outer_scope() {
-    scope = new Scope<>(NamedList.empty());
-    assertCall(() -> scope.outerScope())
-        .throwsException(IllegalStateException.class);
-  }
-
-  @Test
-  public void inner_scope_can_return_outer_scope() {
-    outerScope = new Scope<>(NamedList.empty());
-    scope = new Scope<>(outerScope, NamedList.empty());
-    assertThat(scope.outerScope())
-        .isSameInstanceAs(outerScope);
-  }
-
-  @Test
   public void to_string() {
     outerScope = new Scope<>(namedList(elem("value-a", 7), elem("value-b", 8)));
     scope = new Scope<>(outerScope, namedList(elem("value-c", 9), elem("value-d", 10)));
