@@ -10,7 +10,6 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.Labeled;
 
 public class ItemNode extends ReferencableNode implements ReferencableLike {
   private Optional<ItemSignature> signature;
@@ -38,9 +37,5 @@ public class ItemNode extends ReferencableNode implements ReferencableLike {
   public Item toItem(ModulePath path) {
     checkState(body().isEmpty());
     return new Item(type().get(), path, name(), Optional.empty(), location());
-  }
-
-  public Labeled<TypeS> toNamedType() {
-    return Labeled.labeled(name(), type().get());
   }
 }
