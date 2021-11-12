@@ -1,13 +1,11 @@
 package org.smoothbuild.lang.parse;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.lang.String.join;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.lang.parse.ast.FunctionTypeNode.countFunctionVariables;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +20,6 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Nal;
-import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
@@ -32,7 +29,6 @@ import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.NamedNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
-import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
@@ -109,35 +105,9 @@ public class AnalyzeSemantically {
 
   private static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
     var importedScope = new Scope<>(imported.referencables());
-    var localScope = new Scope<>(importedScope, ast.referencablesMap());
-
-    new AstVisitor() {
-      Scope<? extends ReferencableLike> scope = localScope;
-      @Override
-      public void visitRealFunc(RealFuncNode func) {
-        func.typeNode().ifPresent(this::visitType);
-
-        var map = func.params()
-            .stream()
-            .collect(toImmutableMap(ReferencableLike::name, p -> p, (a, b) -> a));
-        scope = new Scope<>(scope, namedList(map));
-        func.body().ifPresent(this::visitExpr);
-        scope = scope.outerScope();
-
-        visitFunction(func);
-      }
-
-      @Override
-      public void visitRef(RefNode ref) {
-        super.visitRef(ref);
-        String name = ref.name();
-        if (scope.contains(name)) {
-          ref.setReferenced(scope.get(name));
-        } else {
-          logger.log(parseError(ref.location(), "`" + name + "` is undefined."));
-        }
-      }
-    }.visitAst(ast);
+    var scope = new Scope<>(importedScope, ast.referencablesMap());
+    new ReferenceResolver(scope, logger)
+        .visitAst(ast);
   }
 
   private static void detectUndefinedTypes(Logger logger, Definitions imported, Ast ast) {
