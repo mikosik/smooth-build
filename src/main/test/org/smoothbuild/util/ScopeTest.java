@@ -6,63 +6,101 @@ import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.NoSuchElementException;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.util.collect.Named;
 import org.smoothbuild.util.collect.NamedList;
 
 public class ScopeTest {
-  private Scope<Elem> scope;
+  private Scope<Elem> innerScope;
   private Scope<Elem> outerScope;
 
   @Test
   public void empty_scope_doesnt_contain_any_binding() {
-    scope = new Scope<>(NamedList.empty());
-    assertThat(scope.contains("name"))
+    innerScope = new Scope<>(NamedList.empty());
+    assertThat(innerScope.contains("name"))
         .isFalse();
   }
 
   @Test
   public void getting_not_added_binding_throws_exception() {
-    scope = new Scope<>(NamedList.empty());
-    assertCall(() -> scope.get("name"))
+    innerScope = new Scope<>(NamedList.empty());
+    assertCall(() -> innerScope.get("name"))
         .throwsException(NoSuchElementException.class);
   }
 
   @Test
   public void scope_contains_binding_that_is_in_current_scope() {
-    scope = new Scope<>(namedList(elem("name", 7)));
-    assertThat(scope.contains("name"))
+    innerScope = new Scope<>(namedList(elem("name", 7)));
+    assertThat(innerScope.contains("name"))
         .isTrue();
   }
 
   @Test
   public void binding_from_current_scope_can_be_retrieved() {
-    scope = new Scope<>(namedList(elem("name", 7)));
-    assertThat(scope.get("name"))
+    innerScope = new Scope<>(namedList(elem("name", 7)));
+    assertThat(innerScope.get("name"))
         .isEqualTo(elem("name", 7));
   }
 
   @Test
   public void when_no_binding_in_current_scope_then_binding_from_outer_scope_is_returned() {
     outerScope = new Scope<>(namedList(elem("name", 7)));
-    scope = new Scope<>(outerScope, NamedList.empty());
-    assertThat(scope.get("name"))
+    innerScope = new Scope<>(outerScope, NamedList.empty());
+    assertThat(innerScope.get("name"))
         .isEqualTo(elem("name", 7));
   }
 
   @Test
   public void binding_in_current_scope_hides_binding_from_outer_scope() {
     outerScope = new Scope<>(namedList(elem("name", 3)));
-    scope = new Scope<>(outerScope, namedList(elem("name", 7)));
-    assertThat(scope.get("name"))
+    innerScope = new Scope<>(outerScope, namedList(elem("name", 7)));
+    assertThat(innerScope.get("name"))
         .isEqualTo(elem("name", 7));
+  }
+
+  @Nested
+  class _index_of {
+    @Test
+    public void throws_exception_when_name_is_missing() {
+      innerScope = new Scope<>(namedList(elem("name", 3)));
+      assertCall(() -> innerScope.indexOf("other name"))
+          .throwsException(NoSuchElementException.class);
+    }
+
+    @Test
+    public void returns_index() {
+      innerScope = new Scope<>(namedList(elem("a", 3), elem("b", 7)));
+      assertThat(innerScope.indexOf("a"))
+          .isEqualTo(0);
+      assertThat(innerScope.indexOf("b"))
+          .isEqualTo(1);
+    }
+
+    @Test
+    public void returns_index_from_outer_scope_increased_by_inner_scope_elem_size() {
+      outerScope = new Scope<>(namedList(elem("c", 3), elem("d", 3)));
+      innerScope = new Scope<>(outerScope, namedList(elem("a", 7), elem("b", 7)));
+      assertThat(innerScope.indexOf("c"))
+          .isEqualTo(2);
+      assertThat(innerScope.indexOf("d"))
+          .isEqualTo(3);
+    }
+
+    @Test
+    public void name_in_inner_scope_shadows_name_from_outer_scope() {
+      outerScope = new Scope<>(namedList(elem("c", 3), elem("d", 3)));
+      innerScope = new Scope<>(outerScope, namedList(elem("a", 7), elem("c", 7)));
+      assertThat(innerScope.indexOf("c"))
+          .isEqualTo(1);
+    }
   }
 
   @Test
   public void to_string() {
     outerScope = new Scope<>(namedList(elem("value-a", 7), elem("value-b", 8)));
-    scope = new Scope<>(outerScope, namedList(elem("value-c", 9), elem("value-d", 10)));
-    assertThat(scope.toString())
+    innerScope = new Scope<>(outerScope, namedList(elem("value-c", 9), elem("value-d", 10)));
+    assertThat(innerScope.toString())
         .isEqualTo("""
             Elem[name=value-a, value=7]
             Elem[name=value-b, value=8]
