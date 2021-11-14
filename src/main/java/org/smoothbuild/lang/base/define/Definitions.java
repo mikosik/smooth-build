@@ -13,7 +13,7 @@ public record Definitions(
     NamedList<GlobalReferencable> referencables) {
 
   public static Definitions empty() {
-    return new Definitions(ImmutableMap.of(), NamedList.empty(), NamedList.empty());
+    return new Definitions(ImmutableMap.of(), namedList(), namedList());
   }
 
   public Definitions withModule(ModuleS module) {

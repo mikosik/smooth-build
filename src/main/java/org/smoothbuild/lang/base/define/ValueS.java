@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
+import static org.smoothbuild.util.collect.NamedList.namedList;
+
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NamedList;
 
@@ -18,7 +20,7 @@ public abstract class ValueS extends GlobalReferencable {
 
   @Override
   public NamedList<Item> evaluationParameters() {
-    return NamedList.empty();
+    return namedList();
   }
 }
 

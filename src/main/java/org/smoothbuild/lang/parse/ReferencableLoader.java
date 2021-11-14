@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.NamedList.namedList;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +74,7 @@ public class ReferencableLoader {
     if (valueNode.annotation().isPresent()) {
       return new NativeValue(type, path, name, loadAnnotation(valueNode.annotation().get()), location);
     } else {
-      ExpressionLoader loader = new ExpressionLoader(path, NamedList.empty());
+      ExpressionLoader loader = new ExpressionLoader(path, namedList());
       return new DefinedValue(
           type, path, name, loader.createExpression(valueNode.body().get()), location);
     }
@@ -102,7 +103,7 @@ public class ReferencableLoader {
   }
 
   private NamedList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
-    ExpressionLoader parameterLoader = new ExpressionLoader(path, NamedList.empty());
+    ExpressionLoader parameterLoader = new ExpressionLoader(path, namedList());
     return realFuncNode.params().map(parameterLoader::createParameter);
   }
 

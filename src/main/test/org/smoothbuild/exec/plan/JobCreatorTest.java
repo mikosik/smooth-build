@@ -23,7 +23,6 @@ import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.Scope;
-import org.smoothbuild.util.collect.NamedList;
 import org.smoothbuild.util.concurrent.Promise;
 
 import com.google.common.collect.ImmutableList;
@@ -39,7 +38,7 @@ public class JobCreatorTest extends TestingContext {
     var call = callS(11, BLOB, refS(function), argument);
 
     taskCreator(oneLazyCallAllowed(), function)
-        .eagerJobFor(new Scope<>(NamedList.empty()), call);
+        .eagerJobFor(new Scope<>(namedList()), call);
   }
 
   @Test
@@ -55,7 +54,7 @@ public class JobCreatorTest extends TestingContext {
     CallS myFunctionCall = callS(BLOB, refS(myFunction), new MyExpression());
 
     taskCreator(oneLazyCallAllowed(), myFunction, twoBlobsEater)
-        .eagerJobFor(new Scope<>(NamedList.empty()), myFunctionCall);
+        .eagerJobFor(new Scope<>(namedList()), myFunctionCall);
   }
 
   private static  ImmutableMap<Class<?>, Handler<?>> oneLazyCallAllowed() {

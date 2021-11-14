@@ -391,7 +391,7 @@ public class JobCreator {
   }
 
   public Job commandLineValueEagerJob(ValueS value) {
-    return valueEagerJob(new Scope<>(NamedList.empty()), value, commandLineLocation());
+    return valueEagerJob(new Scope<>(namedList()), value, commandLineLocation());
   }
 
   private Job valueEagerJob(Scope<Labeled<Job>> scope, ValueS value, Location location) {

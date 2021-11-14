@@ -9,7 +9,6 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.util.collect.Named;
-import org.smoothbuild.util.collect.NamedList;
 
 public class ScopeTest {
   private Scope<Elem> innerScope;
@@ -17,14 +16,14 @@ public class ScopeTest {
 
   @Test
   public void empty_scope_doesnt_contain_any_binding() {
-    innerScope = new Scope<>(NamedList.empty());
+    innerScope = new Scope<>(namedList());
     assertThat(innerScope.contains("name"))
         .isFalse();
   }
 
   @Test
   public void getting_not_added_binding_throws_exception() {
-    innerScope = new Scope<>(NamedList.empty());
+    innerScope = new Scope<>(namedList());
     assertCall(() -> innerScope.get("name"))
         .throwsException(NoSuchElementException.class);
   }
@@ -46,7 +45,7 @@ public class ScopeTest {
   @Test
   public void when_no_binding_in_current_scope_then_binding_from_outer_scope_is_returned() {
     outerScope = new Scope<>(namedList(elem("name", 7)));
-    innerScope = new Scope<>(outerScope, NamedList.empty());
+    innerScope = new Scope<>(outerScope, namedList());
     assertThat(innerScope.get("name"))
         .isEqualTo(elem("name", 7));
   }
