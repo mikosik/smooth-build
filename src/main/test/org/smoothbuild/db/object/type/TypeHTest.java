@@ -89,21 +89,21 @@ public class TypeHTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("names")
-  public void name(Function<TypeFactoryH, TypeH> factoryCall, String name) {
+  public void name(Function<TypeHDb, TypeH> factoryCall, String name) {
     assertThat(invoke(factoryCall).name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(Function<TypeFactoryH, TypeH> factoryCall, String name) {
+  public void quoted_name(Function<TypeHDb, TypeH> factoryCall, String name) {
     assertThat(invoke(factoryCall).q())
         .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(Function<TypeFactoryH, TypeH> factoryCall, String name) {
+  public void to_string(Function<TypeHDb, TypeH> factoryCall, String name) {
     assertThat(invoke(factoryCall).toString())
         .isEqualTo("Type(`" + name + "`)");
   }
@@ -159,7 +159,7 @@ public class TypeHTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
-  public void isPolytype(Function<TypeFactoryH, TypeH> factoryCall, boolean expected) {
+  public void isPolytype(Function<TypeHDb, TypeH> factoryCall, boolean expected) {
     assertThat(invoke(factoryCall).isPolytype())
         .isEqualTo(expected);
   }
@@ -198,8 +198,8 @@ public class TypeHTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("variables_test_data")
   public void variables(
-      Function<TypeFactoryH, TypeH> factoryCall,
-      Function<TypeFactoryH, Set<Variable>> resultCall) {
+      Function<TypeHDb, TypeH> factoryCall,
+      Function<TypeHDb, Set<Variable>> resultCall) {
     assertThat(invoke(factoryCall).variables())
         .containsExactlyElementsIn(invoke(resultCall))
         .inOrder();
@@ -248,8 +248,8 @@ public class TypeHTest extends TestingContext {
   class _function {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<TypeFactoryH, FunctionType> factoryCall,
-        Function<TypeFactoryH, List<Type>> expected) {
+    public void result(Function<TypeHDb, FunctionType> factoryCall,
+        Function<TypeHDb, List<Type>> expected) {
       assertThat(invoke(factoryCall).result())
           .isEqualTo(invoke(expected));
     }
@@ -264,8 +264,8 @@ public class TypeHTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("parameters_cases")
-    public void parameters(Function<TypeFactoryH, FunctionType> factoryCall,
-        Function<TypeFactoryH, List<Type>> expected) {
+    public void parameters(Function<TypeHDb, FunctionType> factoryCall,
+        Function<TypeHDb, List<Type>> expected) {
       assertThat(invoke(factoryCall).parameters())
           .isEqualTo(invoke(expected));
     }
@@ -298,7 +298,7 @@ public class TypeHTest extends TestingContext {
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
-    public void elemType(Function<TypeFactoryH, TypeHV> factoryCall) {
+    public void elemType(Function<TypeHDb, TypeHV> factoryCall) {
       TypeHV element = invoke(factoryCall);
       ArrayType array = typeFactoryH().array(element);
       assertThat(array.element())
@@ -349,8 +349,8 @@ public class TypeHTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("tuple_item_cases")
     public void tuple_item(
-        Function<TypeFactoryH, TupleTypeH> factoryCall,
-        Function<TypeFactoryH, NList<Labeled<Type>>> expected) {
+        Function<TypeHDb, TupleTypeH> factoryCall,
+        Function<TypeHDb, NList<Labeled<Type>>> expected) {
       assertThat(invoke(factoryCall).items())
           .isEqualTo(invoke(expected));
     }
@@ -524,7 +524,7 @@ public class TypeHTest extends TestingContext {
     tester.testEquals();
   }
 
-  private <R> R invoke(Function<TypeFactoryH, R> f) {
+  private <R> R invoke(Function<TypeHDb, R> f) {
     return f.apply(typeFactoryH());
   }
 
@@ -533,8 +533,8 @@ public class TypeHTest extends TestingContext {
    * exact type of lambda expression passed to factoryCall.
    */
   private static <R> Arguments args(
-      Function<TypeFactoryH, R> factoryCall1,
-      Function<TypeFactoryH, R> factoryCall2) {
+      Function<TypeHDb, R> factoryCall1,
+      Function<TypeHDb, R> factoryCall2) {
     return arguments(factoryCall1, factoryCall2);
   }
 
@@ -550,7 +550,7 @@ public class TypeHTest extends TestingContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <R> Arguments args(Function<TypeFactoryH, R> factoryCall) {
+  private static <R> Arguments args(Function<TypeHDb, R> factoryCall) {
     return arguments(factoryCall);
   }
 }

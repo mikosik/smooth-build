@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.obj.ObjectHDb;
-import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypeHDb;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -24,11 +23,6 @@ public class ObjectHDbModule extends AbstractModule {
   @Singleton
   public ObjectHDb provideObjectDb(HashedDb hashedDb, TypeHDb typeHDb) {
     return new ObjectHDb(hashedDb, typeHDb);
-  }
-
-  @Provides
-  public TypeFactoryH provideTypeFactoryO(TypeHDb typeHDb) {
-    return typeHDb;
   }
 
   @Provides

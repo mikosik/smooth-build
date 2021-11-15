@@ -7,15 +7,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
+import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 @Singleton
-public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
+public class TypeFactoryS implements TypeFactory<TypeS> {
   private static final AnyTypeS ANY = new AnyTypeS();
   private static final BlobTypeS BLOB = new BlobTypeS();
   private static final BoolTypeS BOOL = new BoolTypeS();
@@ -55,6 +56,19 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
   }
 
   @Override
+  public Bounds<TypeS> unbounded() {
+    return new Bounds<>(nothing(), any());
+  }
+
+  @Override
+  public Bounds<TypeS> oneSideBound(Side<TypeS> side, TypeS type) {
+    return side.dispatch(
+        () -> new Bounds<>(type, any()),
+        () -> new Bounds<>(nothing(), type)
+    );
+  }
+
+  @Override
   public Side<TypeS> upper() {
     return sides.upper();
   }
@@ -64,7 +78,6 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
     return sides.lower();
   }
 
-  @Override
   public AnyTypeS any() {
     return ANY;
   }
@@ -74,12 +87,10 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
     return new ArrayTypeS(elemType);
   }
 
-  @Override
   public BlobTypeS blob() {
     return BLOB;
   }
 
-  @Override
   public BoolTypeS bool() {
     return BOOL;
   }
@@ -89,22 +100,18 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
     return new FunctionTypeS(result, ImmutableList.copyOf(parameters));
   }
 
-  @Override
   public IntTypeS int_() {
     return INT;
   }
 
-  @Override
   public NothingTypeS nothing() {
     return NOTHING;
   }
 
-  @Override
   public StringTypeS string() {
     return STRING;
   }
 
-  @Override
   public VariableS variable(String name) {
     checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
     return new VariableS(name);

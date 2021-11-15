@@ -34,7 +34,6 @@ import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NativeMethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypeHDb;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
@@ -172,7 +171,7 @@ public class TestingContext {
     return typingS;
   }
 
-  public TypeFactoryH typeFactoryH() {
+  public TypeHDb typeFactoryH() {
     return typeHDb();
   }
 

@@ -90,11 +90,11 @@ public class TestingTypesH {
   );
 
   private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
-      "string", "string", "any", "any", "call", "select", "tuple", "blob", "blob", "bool", "bool",
-      "int_", "int_", "nativeMethod", "nothing", "nothing", "variable", "variable", "const_",
-      "construct", "oneSideBound", "if_", "invoke", "get", "map", "array", "array", "ref",
-      "function", "function", "upper", "lower", "order", "oneSideBound", "unbounded", "wait",
-      "wait", "wait", "equals", "toString", "hashCode", "getClass", "notify", "notifyAll"
+      "string", "any", "call", "select", "tuple", "blob", "bool", "int_", "nativeMethod", "nothing",
+      "variable", "const_", "construct", "oneSideBound", "if_", "invoke", "get", "map", "array",
+      "array", "ref", "function", "function", "upper", "lower", "order", "oneSideBound",
+      "unbounded", "wait", "wait", "wait", "equals", "toString", "hashCode", "getClass",
+      "notify", "notifyAll"
   );
 
   private static final ImmutableList<String> TYPEH_DB_ACTUAL_METHOD_NAMES =

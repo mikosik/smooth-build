@@ -65,9 +65,10 @@ import org.smoothbuild.db.object.type.val.NothingTypeH;
 import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.db.object.type.val.VariableH;
-import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
+import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
@@ -75,7 +76,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH {
+public class TypeHDb implements TypeFactory<TypeHV> {
   public static final String DATA_PATH = "data";
   private static final int DATA_INDEX = 1;
   private static final int FUNCTION_RESULT_INDEX = 0;
@@ -116,6 +117,19 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
   }
 
   @Override
+  public Bounds<TypeHV> unbounded() {
+    return new Bounds<>(nothing(), any());
+  }
+
+  @Override
+  public Bounds<TypeHV> oneSideBound(Side<TypeHV> side, TypeHV type) {
+    return side.dispatch(
+        () -> new Bounds<>(type, any()),
+        () -> new Bounds<>(nothing(), type)
+    );
+  }
+
+  @Override
   public Side<TypeHV> upper() {
     return sides.upper();
   }
@@ -127,7 +141,6 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
 
   // methods for getting Val-s types
 
-  @Override
   public AnyTypeH any() {
     return any;
   }
@@ -137,12 +150,10 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
     return wrapHashedDbExceptionAsObjectDbException(() -> newArray(elementType));
   }
 
-  @Override
   public BlobTypeH blob() {
     return blob;
   }
 
-  @Override
   public BoolTypeH bool() {
     return bool;
   }
@@ -152,7 +163,6 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
     return wrapHashedDbExceptionAsObjectDbException(() -> newFunction(result, tuple(parameters)));
   }
 
-  @Override
   public IntTypeH int_() {
     return int_;
   }
@@ -161,22 +171,18 @@ public class TypeHDb extends AbstractTypeFactory<TypeHV> implements TypeFactoryH
     return nativeMethod;
   }
 
-  @Override
   public NothingTypeH nothing() {
     return nothing;
   }
 
-  @Override
   public TupleTypeH tuple(ImmutableList<TypeHV> itemTypes) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(itemTypes));
   }
 
-  @Override
   public StringTypeH string() {
     return string;
   }
 
-  @Override
   public VariableH variable(String name) {
     checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
     return wrapHashedDbExceptionAsObjectDbException(() -> newVariable(name));
