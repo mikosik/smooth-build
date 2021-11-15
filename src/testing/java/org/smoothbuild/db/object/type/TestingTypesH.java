@@ -1,6 +1,12 @@
 package org.smoothbuild.db.object.type;
 
+import static com.google.common.truth.Truth.assertWithMessage;
+import static java.util.Arrays.asList;
+import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Lists.map;
+
+import java.lang.reflect.Method;
 
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.base.TypeHV;
@@ -82,6 +88,72 @@ public class TestingTypesH {
       ARRAY2_STR,
       ARRAY2_PERSON_TUPLE
   );
+
+  private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
+      "string", "string", "any", "any", "call", "select", "tuple", "blob", "blob", "bool", "bool",
+      "int_", "int_", "nativeMethod", "nothing", "nothing", "variable", "variable", "const_",
+      "construct", "oneSideBound", "if_", "invoke", "get", "map", "array", "array", "ref",
+      "function", "function", "upper", "lower", "order", "oneSideBound", "unbounded", "wait",
+      "wait", "wait", "equals", "toString", "hashCode", "getClass", "notify", "notifyAll"
+  );
+
+  private static final ImmutableList<String> TYPEH_DB_ACTUAL_METHOD_NAMES =
+      map(asList(TypeHDb.class.getMethods()), Method::getName);
+
+  public static final ImmutableList<TypeH> ALL_TYPES_TO_TEST = createAllTypes();
+
+  private static ImmutableList<TypeH> createAllTypes() {
+    assertTypeHDbIsNotChanged();
+    var baseTypes = list(
+        BLOB,
+        BOOL,
+        TYPEH_DB.function(BLOB, list()),
+        TYPEH_DB.function(BLOB, list(BLOB)),
+        TYPEH_DB.function(BLOB, list(BLOB, BLOB)),
+        TYPEH_DB.function(STRING, list()),
+        INT,
+        NOTHING,
+        STRING,
+        TYPEH_DB.tuple(list()),
+        TYPEH_DB.tuple(list(BLOB)),
+        TYPEH_DB.tuple(list(BLOB, BLOB)),
+        TYPEH_DB.tuple(list(STRING)),
+        TYPEH_DB.variable("A"),
+        TYPEH_DB.variable("B")
+    );
+    var arrayTypes = map(baseTypes, TYPEH_DB::array);
+    ImmutableList<TypeH> valueTypes = concat(baseTypes, arrayTypes);
+
+    var exprTypes = list(
+        TYPEH_DB.call(BLOB),
+        TYPEH_DB.call(STRING),
+        TYPEH_DB.construct(TYPEH_DB.tuple(list(BLOB))),
+        TYPEH_DB.construct(TYPEH_DB.tuple(list(STRING))),
+        TYPEH_DB.const_(BLOB),
+        TYPEH_DB.const_(STRING),
+        TYPEH_DB.if_(BLOB),
+        TYPEH_DB.if_(STRING),
+        TYPEH_DB.invoke(BLOB),
+        TYPEH_DB.invoke(STRING),
+        TYPEH_DB.map(BLOB),
+        TYPEH_DB.map(STRING),
+        TYPEH_DB.order(BLOB),
+        TYPEH_DB.order(STRING),
+        TYPEH_DB.ref(BLOB),
+        TYPEH_DB.ref(STRING),
+        TYPEH_DB.select(BLOB),
+        TYPEH_DB.select(STRING)
+    );
+
+    return concat(valueTypes, exprTypes);
+  }
+
+  public static void assertTypeHDbIsNotChanged() {
+    assertWithMessage(
+        "TypeHDb API changed (method was changed). Update all tests that call this method.")
+        .that(TYPEH_DB_ACTUAL_METHOD_NAMES)
+        .containsExactlyElementsIn(TYPEH_DB_METHOD_NAMES);
+  }
 
   private static ArrayTypeH array(TypeHV elemType) {
     return TYPEH_DB.array(elemType);
