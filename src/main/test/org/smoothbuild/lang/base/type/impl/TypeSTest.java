@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
@@ -274,18 +275,18 @@ public class TypeSTest extends TestingContext {
       structST("MyStruct", nList(isig("fieldName", arrayST(nothingST()))));
     }
 
-    @ParameterizedTest
-    @MethodSource("struct_name_cases")
-    public void struct_name(Function<TypeFactoryS, StructTypeS> factoryCall, String expected) {
-      assertThat(invoke(factoryCall).name())
-          .isEqualTo(expected);
+    @Test
+    public void struct_name() {
+      var struct = typeFactoryS().struct("MyStruct", nList());
+      assertThat(struct.name())
+          .isEqualTo("MyStruct");
     }
 
-    public static List<Arguments> struct_name_cases() {
-      return asList(
-          args(f -> f.struct("MyStruct", nList()), "MyStruct"),
-          args(f -> f.struct("", nList()), "")
-      );
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "  "})
+    public void illegal_struct_name(String name) {
+      assertCall(() -> typeFactoryS().struct(name, nList()))
+          .throwsException(IllegalArgumentException.class);
     }
 
     @ParameterizedTest

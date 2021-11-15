@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base.type.api;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.collect.ImmutableSet;
 
 public abstract class AbstractType implements Type {
@@ -7,6 +9,7 @@ public abstract class AbstractType implements Type {
   protected final ImmutableSet<? extends Variable> variables;
 
   public AbstractType(String name, ImmutableSet<? extends Variable> variables) {
+    checkArgument(!name.isBlank());
     this.name = name;
     this.variables = variables;
   }
