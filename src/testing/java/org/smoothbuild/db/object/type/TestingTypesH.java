@@ -2,7 +2,6 @@ package org.smoothbuild.db.object.type;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
@@ -14,7 +13,6 @@ import com.google.common.collect.ImmutableList;
 
 public class TestingTypesH {
   private static final TestingContext CONTEXT = new TestingContext();
-  public static final ObjectHDb OBJECT_DB = CONTEXT.objectHDb();
   public static final TypeHDb TYPEH_DB = CONTEXT.typeHDb();
 
   public static final TypeHV ANY = TYPEH_DB.any();
