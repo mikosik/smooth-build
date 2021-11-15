@@ -75,7 +75,7 @@ import com.google.common.collect.ImmutableList;
 
 import okio.ByteString;
 
-public class CorruptedObjectHTest extends TestingContext {
+public class ObjectCorruptedHTest extends TestingContext {
   @Nested
   class _obj {
     @Test

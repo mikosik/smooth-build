@@ -1,4 +1,4 @@
-package org.smoothbuild.db.object.obj;
+package org.smoothbuild.db.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.type.TypeHDb.DATA_PATH;
@@ -34,6 +34,7 @@ import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
 import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
+import org.smoothbuild.db.object.obj.IllegalArrayByteSizesProvider;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.base.TypeHV;
@@ -58,7 +59,7 @@ import com.google.common.collect.ImmutableList;
 
 import okio.ByteString;
 
-public class CorruptedTypeHTest extends TestingContext {
+public class TypeHCorruptedTest extends TestingContext {
   @Nested
   class _illegal_type_marker {
     @Test
