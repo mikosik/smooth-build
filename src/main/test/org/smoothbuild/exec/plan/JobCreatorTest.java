@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator.Handler;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.TestingLocation;
@@ -103,8 +103,8 @@ public class JobCreatorTest extends TestingContext {
         typeFactoryS(), typingS(), additionalHandlers);
   }
 
-  private Definitions definitions(FunctionS... functions) {
-    return new Definitions(ImmutableMap.of(), null, nList(functions));
+  private DefinitionsS definitions(FunctionS... functions) {
+    return new DefinitionsS(ImmutableMap.of(), null, nList(functions));
   }
 
   private static class MyExpression implements ExprS {

@@ -11,7 +11,7 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.ValueS;
 
 public class PlanRunner {
@@ -47,13 +47,13 @@ public class PlanRunner {
       this.executionPlanner = executionPlanner;
     }
 
-    public void execute(Definitions definitions, List<String> names) {
+    public void execute(DefinitionsS definitions, List<String> names) {
       reporter.startNewPhase("Creating execution plan");
       findReferencables(reporter, definitions, names)
           .ifPresent(values -> printPlans(definitions, values));
     }
 
-    private void printPlans(Definitions definitions, List<ValueS> values) {
+    private void printPlans(DefinitionsS definitions, List<ValueS> values) {
       executionPlanner.createPlans(definitions, values)
           .values()
           .forEach(this::print);

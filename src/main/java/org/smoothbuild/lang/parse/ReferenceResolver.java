@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
@@ -19,7 +19,7 @@ public class ReferenceResolver extends AstVisitor {
   private final Scope<? extends ReferencableLike> scope;
   private final Logger logger;
 
-  public static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
+  public static void resolveReferences(Logger logger, DefinitionsS imported, Ast ast) {
     var importedScope = new Scope<>(imported.referencables());
     var constructors = map(ast.structs(), StructNode::constructor);
     var referencables = ast.referencables();

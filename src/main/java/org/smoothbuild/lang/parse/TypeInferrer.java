@@ -18,7 +18,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
@@ -65,7 +65,7 @@ public class TypeInferrer {
     this.callTypeInferrer = new CallTypeInferrer(factory, typing);
   }
 
-  public List<Log> inferTypes(Ast ast, Definitions imported) {
+  public List<Log> inferTypes(Ast ast, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
 
     new AstVisitor() {

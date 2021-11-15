@@ -8,13 +8,13 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ValueS;
 
 public class FindReferencables {
   public static Optional<List<ValueS>> findReferencables(
-      Reporter reporter, Definitions definitions, List<String> names) {
+      Reporter reporter, DefinitionsS definitions, List<String> names) {
     var values = definitions.referencables();
     List<ValueS> referencables = new ArrayList<>();
     List<Log> logs = new ArrayList<>();

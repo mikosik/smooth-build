@@ -3,7 +3,7 @@ package org.smoothbuild.exec.plan;
 import javax.inject.Inject;
 
 import org.smoothbuild.exec.java.MethodLoader;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 
@@ -22,7 +22,7 @@ public class JobCreatorProvider {
     this.typing = typing;
   }
 
-  public JobCreator get(Definitions definitions) {
+  public JobCreator get(DefinitionsS definitions) {
     return new JobCreator(definitions, typeSToTypeOConverter, methodLoader, factory, typing);
   }
 }

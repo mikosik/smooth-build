@@ -7,17 +7,17 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableMap;
 
-public record Definitions(
+public record DefinitionsS(
     ImmutableMap<ModulePath, ModuleS> modules,
     NList<DefinedType> types,
     NList<GlobalReferencable> referencables) {
 
-  public static Definitions empty() {
-    return new Definitions(ImmutableMap.of(), nList(), nList());
+  public static DefinitionsS empty() {
+    return new DefinitionsS(ImmutableMap.of(), nList(), nList());
   }
 
-  public Definitions withModule(ModuleS module) {
-    return new Definitions(
+  public DefinitionsS withModule(ModuleS module) {
+    return new DefinitionsS(
         concat(modules, module),
         nList(Lists.concat(types, module.types())),
         nList(Lists.concat(referencables, module.referencables()))

@@ -27,7 +27,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.install.ModuleFilesDetector;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
@@ -61,11 +61,11 @@ public class RuntimeController {
     this.reporter = reporter;
   }
 
-  public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
+  public int setUpRuntimeAndRun(Consumer<DefinitionsS> runner) {
     reporter.startNewPhase("Parsing");
 
     ModuleS internalModule = internalModuleLoader.loadModule();
-    Definitions allDefinitions = Definitions.empty().withModule(internalModule);
+    DefinitionsS allDefinitions = DefinitionsS.empty().withModule(internalModule);
     ImmutableMap<ModulePath, ModuleFiles> files = moduleFilesDetector.detect(MODULES);
     for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
       ModuleFiles moduleFiles = entry.getValue();
@@ -83,7 +83,7 @@ public class RuntimeController {
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private Maybe<ModuleS> load(Definitions imported, ModulePath path, ModuleFiles moduleFiles) {
+  private Maybe<ModuleS> load(DefinitionsS imported, ModulePath path, ModuleFiles moduleFiles) {
     var sourceCode = readFileContent(moduleFiles.smoothFile());
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());

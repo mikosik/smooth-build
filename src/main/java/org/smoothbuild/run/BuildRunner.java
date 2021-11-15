@@ -19,7 +19,7 @@ import org.smoothbuild.exec.artifact.ArtifactBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.space.ForSpace;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 
 public class BuildRunner {
   private final Console console;
@@ -67,7 +67,7 @@ public class BuildRunner {
       this.reporter = reporter;
     }
 
-    public void execute(Definitions definitions, List<String> names) {
+    public void execute(DefinitionsS definitions, List<String> names) {
       reporter.startNewPhase("Building");
       findReferencables(reporter, definitions, names)
           .ifPresent((values) -> artifactBuilder.buildArtifacts(definitions, values));

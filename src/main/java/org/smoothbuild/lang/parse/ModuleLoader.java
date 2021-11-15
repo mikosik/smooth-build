@@ -18,7 +18,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedType;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
@@ -47,7 +47,7 @@ public class ModuleLoader {
   }
 
   public Maybe<ModuleS> loadModule(ModulePath path, Hash hash, ModuleFiles moduleFiles,
-      String sourceCode, Definitions imported) {
+      String sourceCode, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
     FilePath filePath = moduleFiles.smoothFile();
     Maybe<ModuleContext> moduleContext = parseModule(filePath, sourceCode);

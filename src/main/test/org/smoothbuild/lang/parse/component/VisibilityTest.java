@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.TestingModuleLoader.err;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.testing.TestingContext;
 
 public class VisibilityTest extends TestingContext {
@@ -94,7 +94,7 @@ public class VisibilityTest extends TestingContext {
     class _imported {
       @Test
       public void value_is_visible() {
-        Definitions imported = module("""
+        DefinitionsS imported = module("""
           String otherModuleValue = "abc";
           """)
             .loadsSuccessfully()
@@ -108,7 +108,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void function_is_visible() {
-        Definitions imported = module("""
+        DefinitionsS imported = module("""
           String otherModuleFunction() = "abc";
           """)
             .loadsSuccessfully()
@@ -122,7 +122,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void constructor_is_visible() {
-        Definitions imported = module("""
+        DefinitionsS imported = module("""
           OtherModuleStruct{}
           """)
             .loadsSuccessfully()
@@ -136,7 +136,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_is_visible() {
-        Definitions imported = module("""
+        DefinitionsS imported = module("""
           OtherModuleStruct{}
           """)
             .loadsSuccessfully()
@@ -501,7 +501,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModuleFiles()
@@ -516,7 +516,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void function_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             otherModuleFunction() = "abc";
             """)
               .withImportedModuleFiles()
@@ -531,7 +531,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void constructor_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             OtherModuleStruct {}
             """)
               .withImportedModuleFiles()
@@ -593,7 +593,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModuleFiles()
@@ -608,7 +608,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void function_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             otherModuleFunction() = "abc";
             """)
               .withImportedModuleFiles()
@@ -623,7 +623,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void constructor_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             OtherModuleStruct {}
             """)
               .withImportedModuleFiles()
@@ -695,7 +695,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
               otherModuleValue = "abc";
               """)
               .withImportedModuleFiles()
@@ -710,7 +710,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void function_succeeds() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
               otherModuleFunction() = "abc";
               """)
               .withImportedModuleFiles()
@@ -725,7 +725,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void constructor_succeeds() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
               OtherModuleStruct {}
               """)
               .withImportedModuleFiles()
@@ -796,7 +796,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void struct_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             OtherModuleStruct {}
             """)
               .withImportedModuleFiles()
@@ -847,7 +847,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
               otherModuleValue = "abc";
               """)
               .withImportedModuleFiles()
@@ -864,7 +864,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void function_succeeds() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
               otherModuleFunction() = "abc";
               """)
               .withImportedModuleFiles()
@@ -881,7 +881,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void constructor_succeeds() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
               OtherModuleStruct {}
               """)
               .withImportedModuleFiles()
@@ -954,7 +954,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModuleFiles()
@@ -969,7 +969,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void function_fails() {
-          Definitions imported = module("""
+          DefinitionsS imported = module("""
             otherModuleFunction() = "abc";
             """)
               .withImportedModuleFiles()

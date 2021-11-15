@@ -44,7 +44,7 @@ import org.smoothbuild.exec.job.VirtualJob;
 import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedFunction;
 import org.smoothbuild.lang.base.define.DefinedValue;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.IfFunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
@@ -76,7 +76,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class JobCreator {
-  private final Definitions definitions;
+  private final DefinitionsS definitions;
   private final TypeSToTypeOConverter toOTypeConverter;
   private final MethodLoader methodLoader;
   private final TypeFactoryS factory;
@@ -84,13 +84,13 @@ public class JobCreator {
   private final Map<Class<?>, Handler<?>> map;
 
   @Inject
-  public JobCreator(Definitions definitions, TypeSToTypeOConverter toOTypeConverter,
+  public JobCreator(DefinitionsS definitions, TypeSToTypeOConverter toOTypeConverter,
       MethodLoader methodLoader, TypeFactoryS factory, TypingS typing) {
     this(definitions, toOTypeConverter, methodLoader, factory, typing, ImmutableMap.of());
   }
 
   // Visible for testing
-  JobCreator(Definitions definitions, TypeSToTypeOConverter toOTypeConverter,
+  JobCreator(DefinitionsS definitions, TypeSToTypeOConverter toOTypeConverter,
       MethodLoader methodLoader, TypeFactoryS factory, TypingS typing,
       Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;

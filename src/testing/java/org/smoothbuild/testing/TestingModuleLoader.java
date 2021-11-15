@@ -10,7 +10,7 @@ import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
@@ -26,7 +26,7 @@ public class TestingModuleLoader {
   private final TestingContext testingContext;
   private final String sourceCode;
   private ModuleFiles moduleFiles;
-  private Definitions imported;
+  private DefinitionsS imported;
   private Maybe<ModuleS> module;
 
   TestingModuleLoader(TestingContext testingContext, String sourceCode) {
@@ -39,7 +39,7 @@ public class TestingModuleLoader {
     return this;
   }
 
-  public TestingModuleLoader withImported(Definitions imported) {
+  public TestingModuleLoader withImported(DefinitionsS imported) {
     this.imported = imported;
     return this;
   }
@@ -86,8 +86,8 @@ public class TestingModuleLoader {
         .isEqualTo(expected);
   }
 
-  public Definitions getModuleAsDefinitions() {
-    return Definitions.empty()
+  public DefinitionsS getModuleAsDefinitions() {
+    return DefinitionsS.empty()
         .withModule(testingContext.internalModule())
         .withModule(module.value());
   }
@@ -126,8 +126,8 @@ public class TestingModuleLoader {
     TypeFactoryS factory = testingContext.typeFactoryS();
     ModuleLoader moduleLoader = new ModuleLoader(
         new TypeInferrer(factory, typing), new ReferencableLoader(factory), factory);
-    Definitions importedSane = imported != null ? imported
-        : Definitions.empty().withModule(testingContext.internalModule());
+    DefinitionsS importedSane = imported != null ? imported
+        : DefinitionsS.empty().withModule(testingContext.internalModule());
     ModuleFiles moduleFilesSane = this.moduleFiles != null ? moduleFiles : moduleFiles();
     return moduleLoader.loadModule(ModulePath.of(moduleFilesSane.smoothFile()), Hash.of(13),
         moduleFilesSane, sourceCode, importedSane);
