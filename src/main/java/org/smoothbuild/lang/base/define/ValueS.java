@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 /**
  * This class is immutable.
@@ -19,8 +19,8 @@ public abstract class ValueS extends GlobalReferencable {
   }
 
   @Override
-  public NamedList<Item> evaluationParameters() {
-    return namedList();
+  public NList<Item> evaluationParameters() {
+    return nList();
   }
 }
 

@@ -2,10 +2,10 @@ package org.smoothbuild.lang.base.define;
 
 
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 public interface Evaluable {
   public TypeS evaluationType();
 
-  public NamedList<Item> evaluationParameters();
+  public NList<Item> evaluationParameters();
 }

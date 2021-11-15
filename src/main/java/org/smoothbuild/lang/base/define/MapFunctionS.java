@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.define;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.Optional;
 
@@ -11,7 +11,7 @@ import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 public class MapFunctionS extends FunctionS {
   public static final String MAP_FUNCTION_NAME = "map";
@@ -35,7 +35,7 @@ public class MapFunctionS extends FunctionS {
         factory);
   }
 
-  private MapFunctionS(ArrayTypeS resultType, NamedList<Item> parameters, ModulePath modulePath,
+  private MapFunctionS(ArrayTypeS resultType, NList<Item> parameters, ModulePath modulePath,
       TypeFactoryS factory) {
     super(
         factory.function(resultType, map(parameters, Defined::type)),
@@ -46,9 +46,9 @@ public class MapFunctionS extends FunctionS {
     );
   }
 
-  private static NamedList<Item> createParameters(ModulePath modulePath,
+  private static NList<Item> createParameters(ModulePath modulePath,
       ArrayTypeS inputArrayType, FunctionTypeS mappingFunctionType) {
-    return namedList(
+    return nList(
         new Item(inputArrayType, modulePath, "array", Optional.empty(), internal()),
         new Item(mappingFunctionType, modulePath, "function", Optional.empty(), internal()));
   }

@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ReferenceResolver.resolveReferences;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import javax.inject.Inject;
 
@@ -29,7 +29,7 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -93,7 +93,7 @@ public class ModuleLoader {
     return new StructS(type, path, name, location);
   }
 
-  private NamedList<GlobalReferencable> loadReferencables(ModulePath path, Ast ast) {
+  private NList<GlobalReferencable> loadReferencables(ModulePath path, Ast ast) {
     var local = ImmutableList.<GlobalReferencable>builder();
     for (StructNode struct : ast.structs()) {
       ConstructorS constructor = loadConstructor(path, struct);
@@ -102,7 +102,7 @@ public class ModuleLoader {
     for (ReferencableNode referencable : ast.referencables()) {
       local.add(referencableLoader.loadReferencable(path, referencable));
     }
-    return namedList(local.build());
+    return nList(local.build());
   }
 
   private ConstructorS loadConstructor(ModulePath path, StructNode struct) {

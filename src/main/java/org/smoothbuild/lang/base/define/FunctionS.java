@@ -5,17 +5,17 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 /**
  * This class and all its subclasses are immutable.
  */
 public abstract class FunctionS extends GlobalReferencable {
   public static final String PARENTHESES = "()";
-  private final NamedList<Item> parameters;
+  private final NList<Item> parameters;
 
-  public FunctionS(FunctionTypeS type, ModulePath modulePath, String name,
-      NamedList<Item> parameters, Location location) {
+  public FunctionS(FunctionTypeS type, ModulePath modulePath, String name, NList<Item> parameters,
+      Location location) {
     super(type, modulePath, name, location);
     this.parameters = requireNonNull(parameters);
   }
@@ -34,7 +34,7 @@ public abstract class FunctionS extends GlobalReferencable {
     return type().result();
   }
 
-  public NamedList<Item> parameters() {
+  public NList<Item> parameters() {
     return parameters;
   }
 
@@ -44,7 +44,7 @@ public abstract class FunctionS extends GlobalReferencable {
   }
 
   @Override
-  public NamedList<Item> evaluationParameters() {
+  public NList<Item> evaluationParameters() {
     return parameters;
   }
 

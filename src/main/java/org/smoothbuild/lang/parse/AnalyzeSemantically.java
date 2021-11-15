@@ -36,7 +36,7 @@ import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.util.DecodeHexException;
 import org.smoothbuild.util.UnescapingFailedException;
 import org.smoothbuild.util.collect.CountersMap;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -159,7 +159,7 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static void logIfDuplicate(Logger logger, NamedList<? extends Nal> others, Nal nal) {
+  private static void logIfDuplicate(Logger logger, NList<? extends Nal> others, Nal nal) {
     String name = nal.name();
     if (others.containsName(name)) {
       Nal otherNal = others.get(name);

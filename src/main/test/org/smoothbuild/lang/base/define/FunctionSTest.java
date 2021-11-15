@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.Optional;
 
@@ -54,7 +54,7 @@ public class FunctionSTest extends TestingContext {
 
   private FunctionS myFunction(TypeS resultType, ImmutableList<Item> parameters) {
     return new DefinedFunction(functionST(resultType, toTypes(parameters)),
-        modulePath(), "name", namedList(parameters),
+        modulePath(), "name", nList(parameters),
         mock(ExprS.class), loc(1)
     );
   }

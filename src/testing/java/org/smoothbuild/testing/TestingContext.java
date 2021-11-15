@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -101,7 +101,7 @@ import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -602,14 +602,14 @@ public class TestingContext {
 
   public StructTypeS personST() {
     return typeFactoryS().struct("Person",
-        namedList(isig("firstName", stringST()), isig("lastName", stringST())));
+        nList(isig("firstName", stringST()), isig("lastName", stringST())));
   }
 
   public StringTypeS stringST() {
     return typeFactoryS().string();
   }
 
-  public StructTypeS structST(String name, NamedList<ItemSignature> fields) {
+  public StructTypeS structST(String name, NList<ItemSignature> fields) {
     return typeFactoryS().struct(name, fields);
   }
 
@@ -680,7 +680,7 @@ public class TestingContext {
 
   public ConstructorS constructorS(int line, TypeS resultType, String name, Item... parameters) {
     return new ConstructorS(functionST(resultType, parameters), modulePath(), name,
-        namedList(parameters), loc(line));
+        nList(parameters), loc(line));
   }
 
   public NativeFunction functionS(TypeS type, String name, Item... parameters) {
@@ -690,7 +690,7 @@ public class TestingContext {
   public NativeFunction functionS(int line, TypeS type, String name, Annotation annotation,
       Item... parameters) {
     return new NativeFunction(functionST(type, parameters), modulePath(), name,
-        namedList(parameters), annotation, loc(line)
+        nList(parameters), annotation, loc(line)
     );
   }
 
@@ -701,7 +701,7 @@ public class TestingContext {
   public DefinedFunction functionS(
       int line, TypeS type, String name, ExprS body, Item... parameters) {
     return new DefinedFunction(functionST(type, parameters), modulePath(), name,
-        namedList(parameters), body, loc(line)
+        nList(parameters), body, loc(line)
     );
   }
 

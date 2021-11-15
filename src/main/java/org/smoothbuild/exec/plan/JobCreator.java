@@ -13,7 +13,7 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.List;
 import java.util.Map;
@@ -70,7 +70,7 @@ import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.collect.Labeled;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -391,7 +391,7 @@ public class JobCreator {
   }
 
   public Job commandLineValueEagerJob(ValueS value) {
-    return valueEagerJob(new Scope<>(namedList()), value, commandLineLocation());
+    return valueEagerJob(new Scope<>(nList()), value, commandLineLocation());
   }
 
   private Job valueEagerJob(Scope<Labeled<Job>> scope, ValueS value, Location location) {
@@ -432,9 +432,9 @@ public class JobCreator {
     return new VirtualJob(convertedTask, taskInfo);
   }
 
-  private static NamedList<Labeled<Job>> namedArguments(
-      NamedList<Item> params, List<Job> arguments) {
-    return namedList(zip(params, arguments, (p, a) -> labeled(p.name(), a)));
+  private static NList<Labeled<Job>> namedArguments(
+      NList<Item> params, List<Job> arguments) {
+    return nList(zip(params, arguments, (p, a) -> labeled(p.name(), a)));
   }
 
   private Job callNativeFunctionEagerJob(Scope<Labeled<Job>> scope, List<Job> arguments,

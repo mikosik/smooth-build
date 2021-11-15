@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.expr.ExprS;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 /**
  * This class is immutable.
@@ -13,7 +13,7 @@ public class DefinedFunction extends FunctionS implements DefinedEvaluable {
   private final ExprS body;
 
   public DefinedFunction(FunctionTypeS type, ModulePath modulePath, String name,
-      NamedList<Item> parameters, ExprS body, Location location) {
+      NList<Item> parameters, ExprS body, Location location) {
     super(type, modulePath, name, parameters, location);
     this.body = body;
   }

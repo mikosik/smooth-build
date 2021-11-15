@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,7 +38,7 @@ public class JobCreatorTest extends TestingContext {
     var call = callS(11, BLOB, refS(function), argument);
 
     taskCreator(oneLazyCallAllowed(), function)
-        .eagerJobFor(new Scope<>(namedList()), call);
+        .eagerJobFor(new Scope<>(nList()), call);
   }
 
   @Test
@@ -54,7 +54,7 @@ public class JobCreatorTest extends TestingContext {
     CallS myFunctionCall = callS(BLOB, refS(myFunction), new MyExpression());
 
     taskCreator(oneLazyCallAllowed(), myFunction, twoBlobsEater)
-        .eagerJobFor(new Scope<>(namedList()), myFunctionCall);
+        .eagerJobFor(new Scope<>(nList()), myFunctionCall);
   }
 
   private static  ImmutableMap<Class<?>, Handler<?>> oneLazyCallAllowed() {
@@ -104,7 +104,7 @@ public class JobCreatorTest extends TestingContext {
   }
 
   private Definitions definitions(FunctionS... functions) {
-    return new Definitions(ImmutableMap.of(), null, namedList(functions));
+    return new Definitions(ImmutableMap.of(), null, nList(functions));
   }
 
   private static class MyExpression implements ExprS {

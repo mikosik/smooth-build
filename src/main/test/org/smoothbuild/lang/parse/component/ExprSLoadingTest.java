@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.INT;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypesS.a;
 import static org.smoothbuild.lang.base.type.TestingTypesS.f;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -112,7 +112,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_constructor_reference() {
-      var struct = structST("MyStruct", namedList(isig("field", STRING)));
+      var struct = structST("MyStruct", nList(isig("field", STRING)));
       ConstructorS constr = constructorS(1, struct, "myStruct", param(2, STRING, "field"));
       module("""
           MyStruct {
@@ -125,7 +125,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_constructor_reference_and_argument() {
-      var struct = structST("MyStruct", namedList(isig("field", STRING)));
+      var struct = structST("MyStruct", nList(isig("field", STRING)));
       module("""
           MyStruct {
             String field
@@ -162,7 +162,7 @@ public class ExprSLoadingTest extends TestingContext {
 
   @Test
   public void select_expression() {
-    var myStruct = structST("MyStruct", namedList(isig("field", STRING)));
+    var myStruct = structST("MyStruct", nList(isig("field", STRING)));
     module("""
           MyStruct {
             String field,
@@ -284,7 +284,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void to_constructor() {
-      var structType = structST("MyStruct", namedList());
+      var structType = structST("MyStruct", nList());
       module("""
           MyStruct {}
           MyStruct() result =
@@ -361,7 +361,7 @@ public class ExprSLoadingTest extends TestingContext {
           }
           """)
           .loadsSuccessfully()
-          .containsType(structST("MyStruct", namedList(isig("field", STRING))));
+          .containsType(structST("MyStruct", nList(isig("field", STRING))));
     }
   }
 }

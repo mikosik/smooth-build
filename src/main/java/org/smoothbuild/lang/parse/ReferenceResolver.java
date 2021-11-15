@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.define.Definitions;
@@ -23,7 +23,7 @@ public class ReferenceResolver extends AstVisitor {
     var importedScope = new Scope<>(imported.referencables());
     var constructors = map(ast.structs(), StructNode::constructor);
     var referencables = ast.referencables();
-    var scope = new Scope<>(importedScope, namedList(concat(referencables, constructors)));
+    var scope = new Scope<>(importedScope, nList(concat(referencables, constructors)));
     new ReferenceResolver(scope, logger)
         .visitAst(ast);
   }

@@ -75,7 +75,7 @@ import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.Labeled;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
@@ -350,7 +350,7 @@ public class TypeHTest extends TestingContext {
     @MethodSource("tuple_item_cases")
     public void tuple_item(
         Function<TypeFactoryH, TupleTypeH> factoryCall,
-        Function<TypeFactoryH, NamedList<Labeled<Type>>> expected) {
+        Function<TypeFactoryH, NList<Labeled<Type>>> expected) {
       assertThat(invoke(factoryCall).items())
           .isEqualTo(invoke(expected));
     }

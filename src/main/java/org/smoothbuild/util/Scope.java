@@ -4,18 +4,18 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.NoSuchElementException;
 
+import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Nameable;
-import org.smoothbuild.util.collect.NamedList;
 
 public class Scope<E extends Nameable> {
   private final Scope<? extends E> outerScope;
-  private final NamedList<? extends E> bindings;
+  private final NList<? extends E> bindings;
 
-  public Scope(NamedList<? extends E> bindings) {
+  public Scope(NList<? extends E> bindings) {
     this(null, bindings);
   }
 
-  public Scope(Scope<? extends E> outerScope, NamedList<? extends E> bindings) {
+  public Scope(Scope<? extends E> outerScope, NList<? extends E> bindings) {
     this.outerScope = outerScope;
     this.bindings = bindings;
   }

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +46,7 @@ import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.SelectNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -74,7 +74,7 @@ public class ReferencableLoader {
     if (valueNode.annotation().isPresent()) {
       return new NativeValue(type, path, name, loadAnnotation(valueNode.annotation().get()), location);
     } else {
-      ExpressionLoader loader = new ExpressionLoader(path, namedList());
+      ExpressionLoader loader = new ExpressionLoader(path, nList());
       return new DefinedValue(
           type, path, name, loader.createExpression(valueNode.body().get()), location);
     }
@@ -102,16 +102,16 @@ public class ReferencableLoader {
     return new Annotation(path, annotationNode.isPure(), annotationNode.location());
   }
 
-  private NamedList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
-    ExpressionLoader parameterLoader = new ExpressionLoader(path, namedList());
+  private NList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
+    ExpressionLoader parameterLoader = new ExpressionLoader(path, nList());
     return realFuncNode.params().map(parameterLoader::createParameter);
   }
 
   private class ExpressionLoader {
     private final ModulePath modulePath;
-    private final NamedList<Item> functionParameters;
+    private final NList<Item> functionParameters;
 
-    public ExpressionLoader(ModulePath modulePath, NamedList<Item> functionParameters) {
+    public ExpressionLoader(ModulePath modulePath, NList<Item> functionParameters) {
       this.modulePath = modulePath;
       this.functionParameters = functionParameters;
     }

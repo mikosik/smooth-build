@@ -19,45 +19,45 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class NamedList<T extends Nameable> extends AbstractList<T> {
-  private static final NamedList<?> EMPTY = namedList(ImmutableList.of());
+public class NList<T extends Nameable> extends AbstractList<T> {
+  private static final NList<?> EMPTY = nList(ImmutableList.of());
 
   private final Supplier<ImmutableList<T>> list;
   private final Supplier<ImmutableMap<String, T>> map;
   private final Supplier<ImmutableMap<String, Integer>> indexMap;
 
-  public static <T extends Nameable> NamedList<T> namedList() {
+  public static <T extends Nameable> NList<T> nList() {
     // cast is safe as EMPTY is empty
-    return (NamedList<T>) EMPTY;
+    return (NList<T>) EMPTY;
   }
 
-  public static <E extends Nameable> NamedList<E> namedList(E... elements) {
-    return namedList(Lists.list(elements));
+  public static <E extends Nameable> NList<E> nList(E... elements) {
+    return nList(Lists.list(elements));
   }
 
-  public static <E extends Nameable> NamedList<E> namedList(ImmutableList<E> list) {
-    return new NamedList<>(
+  public static <E extends Nameable> NList<E> nList(ImmutableList<E> list) {
+    return new NList<>(
         () -> list,
         () -> calculateMap(list),
         () -> calculateIndexMap(list));
   }
 
-  public static <E extends Nameable> NamedList<E> namedList(ImmutableMap<String, E> map) {
-    return new NamedList<>(
+  public static <E extends Nameable> NList<E> nList(ImmutableMap<String, E> map) {
+    return new NList<>(
         () -> map.values().asList(),
         () -> map,
         () -> calculateIndexMap(map.values()));
   }
 
-  public static <E extends Nameable> NamedList<E> namedListWithDuplicates(ImmutableList<E> list) {
+  public static <E extends Nameable> NList<E> nListWithDuplicates(ImmutableList<E> list) {
     var withoutDuplicates = list.stream().collect(toImmutableSet());
-    return new NamedList<>(
+    return new NList<>(
         () -> list,
         () -> calculateMap(withoutDuplicates),
         () -> calculateIndexMap(withoutDuplicates));
   }
 
-  private NamedList(
+  private NList(
       Supplier<ImmutableList<T>> list,
       Supplier<ImmutableMap<String, T>> map,
       Supplier<ImmutableMap<String, Integer>> indexMap) {
@@ -86,8 +86,8 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
     return builder.build();
   }
 
-  public <R  extends Nameable> NamedList<R> map(Function<T, R> mapping) {
-    return namedList(Lists.map(list(), mapping));
+  public <R  extends Nameable> NList<R> map(Function<T, R> mapping) {
+    return nList(Lists.map(list(), mapping));
   }
 
   public T get(String name) {
@@ -103,7 +103,7 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
     if (this == object) {
       return true;
     }
-    return object instanceof NamedList<?> that
+    return object instanceof NList<?> that
         && list().equals(that.list());
   }
 
@@ -114,7 +114,7 @@ public class NamedList<T extends Nameable> extends AbstractList<T> {
 
   @Override
   public String toString() {
-    return "NamedList(" + valuesToString() + ")";
+    return "NList(" + valuesToString() + ")";
   }
 
   public String valuesToString() {

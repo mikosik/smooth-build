@@ -10,7 +10,7 @@ import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.AbstractTypeFactory;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -110,7 +110,7 @@ public class TypeFactoryS extends AbstractTypeFactory<TypeS> {
     return new VariableS(name);
   }
 
-  public StructTypeS struct(String name, NamedList<ItemSignature> fields) {
+  public StructTypeS struct(String name, NList<ItemSignature> fields) {
     return new StructTypeS(name, fields);
   }
 }

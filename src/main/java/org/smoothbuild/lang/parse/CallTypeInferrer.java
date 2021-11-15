@@ -22,7 +22,7 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -36,7 +36,7 @@ public class CallTypeInferrer {
   }
 
   public Maybe<TypeS> inferCallType(CallNode call, TypeS resultType,
-      NamedList<ItemSignature> parameters) {
+      NList<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
     findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, logBuffer);

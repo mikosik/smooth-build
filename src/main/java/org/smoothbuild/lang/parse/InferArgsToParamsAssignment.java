@@ -25,13 +25,13 @@ import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 public class InferArgsToParamsAssignment {
   public static Maybe<List<Optional<ArgNode>>> inferArgsToParamsAssignment(
-      CallNode call, NamedList<ItemSignature> parameters) {
+      CallNode call, NList<ItemSignature> parameters) {
     var logBuffer = new LogBuffer();
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
     logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call, parameters));
@@ -56,7 +56,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Optional<ArgNode>> assignedArgs(
-      CallNode call, NamedList<ItemSignature> parameters) {
+      CallNode call, NList<ItemSignature> parameters) {
     List<ArgNode> args = call.args();
     List<Optional<ArgNode>> assignedList =
         new ArrayList<>(nCopies(parameters.size(), Optional.empty()));
@@ -92,7 +92,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findUnknownParameterNameErrors(
-      CallNode call, NamedList<ItemSignature> parameters) {
+      CallNode call, NList<ItemSignature> parameters) {
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)
@@ -103,7 +103,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findDuplicateAssignmentErrors(
-      CallNode call, List<ArgNode> positionalArguments, NamedList<ItemSignature> parameters) {
+      CallNode call, List<ArgNode> positionalArguments, NList<ItemSignature> parameters) {
     Set<String> names = positionalArgumentNames(positionalArguments, parameters);
     return call.args()
         .stream()
@@ -114,7 +114,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static Set<String> positionalArgumentNames(List<ArgNode> positionalArguments,
-      NamedList<ItemSignature> parameters) {
+      NList<ItemSignature> parameters) {
     return parameters.stream()
         .limit(positionalArguments.size())
         .flatMap(p -> p.nameO().stream())
@@ -122,7 +122,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findUnassignedParametersWithoutDefaultArgumentsErrors(CallNode call,
-      List<Optional<ArgNode>> assignedList, NamedList<ItemSignature> parameters) {
+      List<Optional<ArgNode>> assignedList, NList<ItemSignature> parameters) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())
         .filter(i -> parameters.get(i).defaultValueType().isEmpty())

@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.Bounds;
@@ -23,7 +23,7 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VariableS;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -42,9 +42,9 @@ public class TestingTypesS {
   public static final NothingTypeS NOTHING = FACTORY.nothing();
   public static final StringTypeS STRING = FACTORY.string();
   public static final StructTypeS PERSON = struct("Person",
-      namedList(itemSignature("firstName", STRING), itemSignature("lastName", STRING)));
-  public static final StructTypeS FLAG = struct("Flag", namedList(itemSignature("flab", BOOL)));
-  public static final StructTypeS DATA = struct("Data", namedList(itemSignature("data", BLOB)));
+      nList(itemSignature("firstName", STRING), itemSignature("lastName", STRING)));
+  public static final StructTypeS FLAG = struct("Flag", nList(itemSignature("flab", BOOL)));
+  public static final StructTypeS DATA = struct("Data", nList(itemSignature("data", BLOB)));
   public static final VariableS A = variable("A");
   public static final VariableS B = variable("B");
   public static final VariableS C = variable("C");
@@ -103,7 +103,7 @@ public class TestingTypesS {
     return FACTORY.variable(a);
   }
 
-  public static StructTypeS struct(String name, NamedList<ItemSignature> fields) {
+  public static StructTypeS struct(String name, NList<ItemSignature> fields) {
     return FACTORY.struct(name, fields);
   }
 

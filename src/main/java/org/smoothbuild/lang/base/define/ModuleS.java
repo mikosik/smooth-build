@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
@@ -15,8 +15,8 @@ public record ModuleS(
     Hash hash,
     ModuleFiles files,
     ImmutableList<ModuleS> referencedModules,
-    NamedList<DefinedType> types,
-    NamedList<GlobalReferencable> referencables) {
+    NList<DefinedType> types,
+    NList<GlobalReferencable> referencables) {
 
   public static Hash calculateModuleHash(ModulePath path, Hash filesHash, List<ModuleS> modules) {
     return Hash.of(asList(

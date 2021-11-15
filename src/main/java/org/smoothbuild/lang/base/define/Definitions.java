@@ -1,26 +1,26 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.util.collect.Lists;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableMap;
 
 public record Definitions(
     ImmutableMap<ModulePath, ModuleS> modules,
-    NamedList<DefinedType> types,
-    NamedList<GlobalReferencable> referencables) {
+    NList<DefinedType> types,
+    NList<GlobalReferencable> referencables) {
 
   public static Definitions empty() {
-    return new Definitions(ImmutableMap.of(), namedList(), namedList());
+    return new Definitions(ImmutableMap.of(), nList(), nList());
   }
 
   public Definitions withModule(ModuleS module) {
     return new Definitions(
         concat(modules, module),
-        namedList(Lists.concat(types, module.types())),
-        namedList(Lists.concat(referencables, module.referencables()))
+        nList(Lists.concat(types, module.types())),
+        nList(Lists.concat(referencables, module.referencables()))
     );
   }
 

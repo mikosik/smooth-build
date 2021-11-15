@@ -11,7 +11,7 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.a;
 import static org.smoothbuild.lang.base.type.TestingTypesS.f;
 import static org.smoothbuild.testing.TestingModuleLoader.err;
 import static org.smoothbuild.util.Strings.unlines;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.stream.Stream;
 
@@ -238,7 +238,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
               .loadsSuccessfully()
-              .containsType(structST("MyStruct", namedList(isig("field", STRING))));
+              .containsType(structST("MyStruct", nList(isig("field", STRING))));
         }
 
         @Test

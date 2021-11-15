@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.struct;
 import static org.smoothbuild.lang.base.type.TestingTypesS.variable;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.List;
 import java.util.Objects;
@@ -73,21 +73,21 @@ public class TestedType {
       "abc"
   );
   public static final TestedType STRUCT = new TestedType(
-      struct("Person", namedList(itemSignature("name", TestingTypesS.STRING))),
+      struct("Person", nList(itemSignature("name", TestingTypesS.STRING))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", namedList(itemSignature("value", TestingTypesS.BLOB))),
+      struct("Data", nList(itemSignature("value", TestingTypesS.BLOB))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", namedList(itemSignature("value", TestingTypesS.BOOL))),
+      struct("Flag", nList(itemSignature("value", TestingTypesS.BOOL))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),

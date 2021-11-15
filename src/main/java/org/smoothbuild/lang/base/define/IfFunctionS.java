@@ -3,11 +3,11 @@ package org.smoothbuild.lang.base.define;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NamedList.namedList;
+import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 public class IfFunctionS extends FunctionS {
   public static final String IF_FUNCTION_NAME = "if";
@@ -21,15 +21,15 @@ public class IfFunctionS extends FunctionS {
     this(resultType, createParameters(resultType, boolType, modulePath), modulePath, factory);
   }
 
-  private IfFunctionS(TypeS resultType, NamedList<Item> parameters, ModulePath modulePath,
+  private IfFunctionS(TypeS resultType, NList<Item> parameters, ModulePath modulePath,
       TypeFactoryS factory) {
     super(factory.function(resultType, map(parameters, Defined::type)),
         modulePath, IF_FUNCTION_NAME, parameters, internal());
   }
 
-  private static NamedList<Item> createParameters(
+  private static NList<Item> createParameters(
       TypeS resultType, TypeS boolType, ModulePath modulePath) {
-    return namedList(
+    return nList(
         new Item(boolType, modulePath, "condition", empty(), internal()),
         new Item(resultType, modulePath, "then", empty(), internal()),
         new Item(resultType, modulePath, "else", empty(), internal()));

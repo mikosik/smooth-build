@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.util.collect.NamedList;
+import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -15,14 +15,14 @@ import com.google.common.collect.ImmutableSet;
  * This class is immutable.
  */
 public class StructTypeS extends TypeS {
-  private final NamedList<ItemSignature> fields;
+  private final NList<ItemSignature> fields;
 
-  public StructTypeS(String name, NamedList<ItemSignature> fields) {
+  public StructTypeS(String name, NList<ItemSignature> fields) {
     super(name, calculateVariables(fields));
     this.fields = fields;
   }
 
-  private static ImmutableSet<VariableS> calculateVariables(NamedList<ItemSignature> fields) {
+  private static ImmutableSet<VariableS> calculateVariables(NList<ItemSignature> fields) {
     return fields.stream()
         .map(f -> f.type().variables())
         .flatMap(Collection::stream)
@@ -30,7 +30,7 @@ public class StructTypeS extends TypeS {
         .collect(toImmutableSet());
   }
 
-  public NamedList<ItemSignature> fields() {
+  public NList<ItemSignature> fields() {
     return fields;
   }
 
