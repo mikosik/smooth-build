@@ -199,7 +199,7 @@ public class TopEvaluableLoader {
       var index = structType.fields().indexMap().get(selectNode.fieldName());
       var fieldType = structType.fields().get(index).type();
       ExprS expr = createExpression(selectNode.expr());
-      return new SelectS(fieldType, index, expr, selectNode.location());
+      return new SelectS(fieldType, expr, index, selectNode.location());
     }
 
     private ExprS createReference(RefNode ref) {

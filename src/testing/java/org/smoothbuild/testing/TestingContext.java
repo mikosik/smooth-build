@@ -729,7 +729,7 @@ public class TestingContext {
   }
 
   public SelectS selectS(int line, TypeS field, int index, ExprS expr) {
-    return new SelectS(field, index, expr, loc(line));
+    return new SelectS(field, expr, index, loc(line));
   }
 
   public StringS stringS(int line, String data) {
