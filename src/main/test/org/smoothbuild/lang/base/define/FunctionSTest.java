@@ -53,7 +53,7 @@ public class FunctionSTest extends TestingContext {
   }
 
   private FunctionS myFunction(TypeS resultType, ImmutableList<Item> parameters) {
-    return new DefinedFunction(functionST(resultType, toTypes(parameters)),
+    return new DefinedFunctionS(functionST(resultType, toTypes(parameters)),
         modulePath(), "name", nList(parameters),
         mock(ExprS.class), loc(1)
     );

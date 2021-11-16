@@ -9,10 +9,10 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public class DefinedFunction extends FunctionS implements DefinedEvaluable {
+public class DefinedFunctionS extends FunctionS implements DefinedEvaluableS {
   private final ExprS body;
 
-  public DefinedFunction(FunctionTypeS type, ModulePath modulePath, String name,
+  public DefinedFunctionS(FunctionTypeS type, ModulePath modulePath, String name,
       NList<Item> parameters, ExprS body, Location location) {
     super(type, modulePath, name, parameters, location);
     this.body = body;
@@ -28,7 +28,7 @@ public class DefinedFunction extends FunctionS implements DefinedEvaluable {
     if (this == object) {
       return true;
     }
-    return object instanceof DefinedFunction that
+    return object instanceof DefinedFunctionS that
         && this.resultType().equals(that.resultType())
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())

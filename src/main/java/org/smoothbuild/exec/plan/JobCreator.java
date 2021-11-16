@@ -42,15 +42,15 @@ import org.smoothbuild.exec.job.Task;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.exec.job.VirtualJob;
 import org.smoothbuild.lang.base.define.ConstructorS;
-import org.smoothbuild.lang.base.define.DefinedFunction;
-import org.smoothbuild.lang.base.define.DefinedValue;
+import org.smoothbuild.lang.base.define.DefinedFunctionS;
+import org.smoothbuild.lang.base.define.DefinedValueS;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.IfFunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.MapFunctionS;
-import org.smoothbuild.lang.base.define.NativeFunction;
-import org.smoothbuild.lang.base.define.NativeValue;
+import org.smoothbuild.lang.base.define.NativeFunctionS;
+import org.smoothbuild.lang.base.define.NativeValueS;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
@@ -370,9 +370,9 @@ public class JobCreator {
     var referencable = definitions.referencables().get(name);
     if (referencable instanceof ValueS value) {
       return valueEagerJob(scope, value, location);
-    } else if (referencable instanceof DefinedFunction definedFunction) {
+    } else if (referencable instanceof DefinedFunctionS definedFunction) {
       return definedFunctionEagerJob(scope, actualResultType, definedFunction, arguments, location);
-    } else if (referencable instanceof NativeFunction nativeFunction) {
+    } else if (referencable instanceof NativeFunctionS nativeFunction) {
       return callNativeFunctionEagerJob(scope, arguments, nativeFunction, nativeFunction.annotation(),
           variables, actualResultType, location);
     } else if (referencable instanceof IfFunctionS) {
@@ -395,9 +395,9 @@ public class JobCreator {
   }
 
   private Job valueEagerJob(Scope<Labeled<Job>> scope, ValueS value, Location location) {
-    if (value instanceof DefinedValue definedValue) {
+    if (value instanceof DefinedValueS definedValue) {
       return definedValueEagerJob(scope, definedValue, location);
-    } else if (value instanceof NativeValue nativeValue) {
+    } else if (value instanceof NativeValueS nativeValue) {
       return callNativeValueEagerJob(nativeValue, location);
     } else {
       throw new IllegalArgumentException(
@@ -405,7 +405,7 @@ public class JobCreator {
     }
   }
 
-  private Job definedValueEagerJob(Scope<Labeled<Job>> scope, DefinedValue definedValue,
+  private Job definedValueEagerJob(Scope<Labeled<Job>> scope, DefinedValueS definedValue,
       Location location) {
     var job = eagerJobFor(scope, definedValue.body());
     var convertedTask = convertIfNeededEagerJob(definedValue.type(), job);
@@ -413,7 +413,7 @@ public class JobCreator {
     return new VirtualJob(convertedTask, taskInfo);
   }
 
-  private Job callNativeValueEagerJob(NativeValue nativeValue, Location location) {
+  private Job callNativeValueEagerJob(NativeValueS nativeValue, Location location) {
     Annotation annotation = nativeValue.annotation();
     var algorithm = new CallNativeAlgorithm(
         methodLoader, toOTypeConverter.visit(nativeValue.type()), nativeValue, annotation.isPure());
@@ -424,7 +424,7 @@ public class JobCreator {
   }
 
   private Job definedFunctionEagerJob(Scope<Labeled<Job>> scope, TypeS actualResultType,
-      DefinedFunction function, List<Job> arguments, Location location) {
+      DefinedFunctionS function, List<Job> arguments, Location location) {
     var newScope = new Scope<>(scope, namedArguments(function.parameters(), arguments));
     var body = eagerJobFor(newScope, function.body());
     var convertedTask = convertIfNeededEagerJob(actualResultType, body);
@@ -438,7 +438,7 @@ public class JobCreator {
   }
 
   private Job callNativeFunctionEagerJob(Scope<Labeled<Job>> scope, List<Job> arguments,
-      NativeFunction function, Annotation annotation, BoundsMap<TypeS> variables,
+      NativeFunctionS function, Annotation annotation, BoundsMap<TypeS> variables,
       TypeS actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(
         methodLoader, toOTypeConverter.visit(actualResultType), function, annotation.isPure());
@@ -451,7 +451,7 @@ public class JobCreator {
   }
 
   private ImmutableList<Job> convertedArgumentEagerJob(
-      List<Job> arguments, NativeFunction function, BoundsMap<TypeS> variables) {
+      List<Job> arguments, NativeFunctionS function, BoundsMap<TypeS> variables) {
     var actualTypes = map(
         function.type().parameters(),
         t -> typing.mapVariables(t, variables, factory.lower()));

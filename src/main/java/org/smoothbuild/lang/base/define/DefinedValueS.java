@@ -8,10 +8,10 @@ import org.smoothbuild.lang.expr.ExprS;
 /**
  * This class is immutable.
  */
-public class DefinedValue extends ValueS implements DefinedEvaluable {
+public class DefinedValueS extends ValueS implements DefinedEvaluableS {
   private final ExprS body;
 
-  public DefinedValue(TypeS type, ModulePath modulePath, String name, ExprS body,
+  public DefinedValueS(TypeS type, ModulePath modulePath, String name, ExprS body,
       Location location) {
     super(type, modulePath, name, location);
     this.body = body;
@@ -27,7 +27,7 @@ public class DefinedValue extends ValueS implements DefinedEvaluable {
     if (this == object) {
       return true;
     }
-    return object instanceof DefinedValue that
+    return object instanceof DefinedValueS that
         && this.type().equals(that.type())
         && this.name().equals(that.name())
         && this.body().equals(that.body())

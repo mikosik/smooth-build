@@ -9,10 +9,10 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public class NativeFunction extends FunctionS implements NativeEvaluable {
+public class NativeFunctionS extends FunctionS implements NativeEvaluableS {
   private final Annotation annotation;
 
-  public NativeFunction(FunctionTypeS type, ModulePath modulePath, String name,
+  public NativeFunctionS(FunctionTypeS type, ModulePath modulePath, String name,
       NList<Item> parameters, Annotation annotation, Location location) {
     super(type, modulePath, name, parameters, location);
     this.annotation = annotation;
@@ -28,7 +28,7 @@ public class NativeFunction extends FunctionS implements NativeEvaluable {
     if (this == object) {
       return true;
     }
-    return object instanceof NativeFunction that
+    return object instanceof NativeFunctionS that
         && this.resultType().equals(that.resultType())
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())

@@ -8,10 +8,10 @@ import org.smoothbuild.lang.expr.Annotation;
 /**
  * This class is immutable.
  */
-public class NativeValue extends ValueS implements NativeEvaluable {
+public class NativeValueS extends ValueS implements NativeEvaluableS {
   private final Annotation annotation;
 
-  public NativeValue(TypeS type, ModulePath modulePath, String name, Annotation annotation,
+  public NativeValueS(TypeS type, ModulePath modulePath, String name, Annotation annotation,
       Location location) {
     super(type, modulePath, name, location);
     this.annotation = annotation;
@@ -27,7 +27,7 @@ public class NativeValue extends ValueS implements NativeEvaluable {
     if (this == object) {
       return true;
     }
-    return object instanceof NativeValue that
+    return object instanceof NativeValueS that
         && this.type().equals(that.type())
         && this.name().equals(that.name())
         && this.annotation().equals(that.annotation())

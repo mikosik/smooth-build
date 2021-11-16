@@ -9,14 +9,14 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.define.Defined;
-import org.smoothbuild.lang.base.define.DefinedFunction;
-import org.smoothbuild.lang.base.define.DefinedValue;
+import org.smoothbuild.lang.base.define.DefinedFunctionS;
+import org.smoothbuild.lang.base.define.DefinedValueS;
 import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.NativeFunction;
-import org.smoothbuild.lang.base.define.NativeValue;
+import org.smoothbuild.lang.base.define.NativeFunctionS;
+import org.smoothbuild.lang.base.define.NativeValueS;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
@@ -72,10 +72,10 @@ public class ReferencableLoader {
     var name = valueNode.name();
     var location = valueNode.location();
     if (valueNode.annotation().isPresent()) {
-      return new NativeValue(type, path, name, loadAnnotation(valueNode.annotation().get()), location);
+      return new NativeValueS(type, path, name, loadAnnotation(valueNode.annotation().get()), location);
     } else {
       ExpressionLoader loader = new ExpressionLoader(path, nList());
-      return new DefinedValue(
+      return new DefinedValueS(
           type, path, name, loader.createExpression(valueNode.body().get()), location);
     }
   }
@@ -87,12 +87,12 @@ public class ReferencableLoader {
     var location = realFuncNode.location();
     var type = factory.function(resultType, map(parameters, Defined::type));
     if (realFuncNode.annotation().isPresent()) {
-      return new NativeFunction(type,
+      return new NativeFunctionS(type,
           path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
       );
     } else {
       var expressionLoader = new ExpressionLoader(path, parameters);
-      return new DefinedFunction(type, path,
+      return new DefinedFunctionS(type, path,
           name, parameters, expressionLoader.createExpression(realFuncNode.body().get()), location);
     }
   }

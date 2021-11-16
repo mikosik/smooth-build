@@ -63,15 +63,15 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.base.define.ConstructorS;
-import org.smoothbuild.lang.base.define.DefinedFunction;
-import org.smoothbuild.lang.base.define.DefinedValue;
+import org.smoothbuild.lang.base.define.DefinedFunctionS;
+import org.smoothbuild.lang.base.define.DefinedValueS;
 import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.ModuleS;
-import org.smoothbuild.lang.base.define.NativeFunction;
-import org.smoothbuild.lang.base.define.NativeValue;
+import org.smoothbuild.lang.base.define.NativeFunctionS;
+import org.smoothbuild.lang.base.define.NativeValueS;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
@@ -682,24 +682,24 @@ public class TestingContext {
         nList(parameters), loc(line));
   }
 
-  public NativeFunction functionS(TypeS type, String name, Item... parameters) {
+  public NativeFunctionS functionS(TypeS type, String name, Item... parameters) {
     return functionS(1, type, name, annotation(1, stringS(1, "Impl.met")), parameters);
   }
 
-  public NativeFunction functionS(int line, TypeS type, String name, Annotation annotation,
+  public NativeFunctionS functionS(int line, TypeS type, String name, Annotation annotation,
       Item... parameters) {
-    return new NativeFunction(functionST(type, parameters), modulePath(), name,
+    return new NativeFunctionS(functionST(type, parameters), modulePath(), name,
         nList(parameters), annotation, loc(line)
     );
   }
 
-  public DefinedFunction functionS(TypeS type, String name, ExprS body, Item... parameters) {
+  public DefinedFunctionS functionS(TypeS type, String name, ExprS body, Item... parameters) {
     return functionS(1, type, name, body, parameters);
   }
 
-  public DefinedFunction functionS(
+  public DefinedFunctionS functionS(
       int line, TypeS type, String name, ExprS body, Item... parameters) {
-    return new DefinedFunction(functionST(type, parameters), modulePath(), name,
+    return new DefinedFunctionS(functionST(type, parameters), modulePath(), name,
         nList(parameters), body, loc(line)
     );
   }
@@ -766,12 +766,12 @@ public class TestingContext {
     return new Item(type, modulePath(), name, defaultArg, loc(line));
   }
 
-  public DefinedValue value(int line, TypeS type, String name, ExprS expr) {
-    return new DefinedValue(type, modulePath(), name, expr, loc(line));
+  public DefinedValueS value(int line, TypeS type, String name, ExprS expr) {
+    return new DefinedValueS(type, modulePath(), name, expr, loc(line));
   }
 
-  public NativeValue value(int line, TypeS type, String name, Annotation annotation) {
-    return new NativeValue(type, modulePath(), name, annotation, loc(line));
+  public NativeValueS value(int line, TypeS type, String name, Annotation annotation) {
+    return new NativeValueS(type, modulePath(), name, annotation, loc(line));
   }
 
   public ItemSignature isig(String name, TypeS type) {

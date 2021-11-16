@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
-public class DefinedFunctionTest extends TestingContext {
+public class DefinedFunctionSTest extends TestingContext {
   @Test
   public void to_string() {
     var function = functionS(stringST(), "myFunction", intS(17), param(intST(), "myParam"));
