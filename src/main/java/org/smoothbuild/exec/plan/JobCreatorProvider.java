@@ -8,21 +8,21 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 
 public class JobCreatorProvider {
-  private final TypeSToTypeOConverter typeSToTypeOConverter;
+  private final TypeShConverter typeShConverter;
   private final MethodLoader methodLoader;
   private final TypeFactoryS factory;
   private final TypingS typing;
 
   @Inject
-  public JobCreatorProvider(TypeSToTypeOConverter typeSToTypeOConverter, MethodLoader methodLoader,
+  public JobCreatorProvider(TypeShConverter typeShConverter, MethodLoader methodLoader,
       TypeFactoryS factory, TypingS typing) {
-    this.typeSToTypeOConverter = typeSToTypeOConverter;
+    this.typeShConverter = typeShConverter;
     this.methodLoader = methodLoader;
     this.factory = factory;
     this.typing = typing;
   }
 
   public JobCreator get(DefinitionsS definitions) {
-    return new JobCreator(definitions, typeSToTypeOConverter, methodLoader, factory, typing);
+    return new JobCreator(definitions, typeShConverter, methodLoader, factory, typing);
   }
 }

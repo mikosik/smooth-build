@@ -99,7 +99,7 @@ public class JobCreatorTest extends TestingContext {
   private JobCreator taskCreator(
       Map<Class<?>, Handler<?>> additionalHandlers, FunctionS... functions) {
     var definitions = definitions(functions);
-    return new JobCreator(definitions, new TypeSToTypeOConverter(objFactory()), null,
+    return new JobCreator(definitions, new TypeShConverter(objFactory()), null,
         typeFactoryS(), typingS(), additionalHandlers);
   }
 

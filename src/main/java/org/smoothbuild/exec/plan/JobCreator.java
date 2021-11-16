@@ -77,24 +77,24 @@ import com.google.common.collect.ImmutableMap;
 
 public class JobCreator {
   private final DefinitionsS definitions;
-  private final TypeSToTypeOConverter toOTypeConverter;
+  private final TypeShConverter typeShConverter;
   private final MethodLoader methodLoader;
   private final TypeFactoryS factory;
   private final TypingS typing;
   private final Map<Class<?>, Handler<?>> map;
 
   @Inject
-  public JobCreator(DefinitionsS definitions, TypeSToTypeOConverter toOTypeConverter,
+  public JobCreator(DefinitionsS definitions, TypeShConverter typeShConverter,
       MethodLoader methodLoader, TypeFactoryS factory, TypingS typing) {
-    this(definitions, toOTypeConverter, methodLoader, factory, typing, ImmutableMap.of());
+    this(definitions, typeShConverter, methodLoader, factory, typing, ImmutableMap.of());
   }
 
   // Visible for testing
-  JobCreator(DefinitionsS definitions, TypeSToTypeOConverter toOTypeConverter,
+  JobCreator(DefinitionsS definitions, TypeShConverter typeShConverter,
       MethodLoader methodLoader, TypeFactoryS factory, TypingS typing,
       Map<Class<?>, Handler<?>> additionalHandlers) {
     this.definitions = definitions;
-    this.toOTypeConverter = toOTypeConverter;
+    this.typeShConverter = typeShConverter;
     this.methodLoader = methodLoader;
     this.factory = factory;
     this.typing = typing;
@@ -230,7 +230,7 @@ public class JobCreator {
 
   private Job selectEager(Scope<Labeled<Job>> scope, SelectS expression, TypeS type) {
     var index = expression.index();
-    var algorithm = new SelectAlgorithm(index, toOTypeConverter.visit(type));
+    var algorithm = new SelectAlgorithm(index, typeShConverter.visit(type));
     var dependencies = list(eagerJobFor(scope, expression.expr()));
     var info = new TaskInfo(SELECT, "." + index, expression.location());
     return new Task(type, dependencies, info, algorithm);
@@ -258,7 +258,7 @@ public class JobCreator {
   private Job referenceEager(Scope<Labeled<Job>> scope, RefS reference, TypeS type) {
     var referencable = definitions.referencables().get(reference.name());
     var module = definitions.modules().get(referencable.modulePath());
-    var algorithm = new ReferenceAlgorithm(referencable, module, toOTypeConverter.functionType());
+    var algorithm = new ReferenceAlgorithm(referencable, module, typeShConverter.functionType());
     var info = new TaskInfo(REFERENCE, ":" + referencable.name(), reference.location());
     var job = new Task(type, list(), info, algorithm);
     if (referencable instanceof ValueS) {
@@ -301,7 +301,7 @@ public class JobCreator {
   }
 
   public Job arrayEager(ArrayTypeS type, ImmutableList<Job> elements, TaskInfo info) {
-    var algorithm = new OrderAlgorithm(toOTypeConverter.visit(type));
+    var algorithm = new OrderAlgorithm(typeShConverter.visit(type));
     return new Task(type, elements, info, algorithm);
   }
 
@@ -316,7 +316,7 @@ public class JobCreator {
   }
 
   private Job blobEagerJob(BlobS expression) {
-    var blobType = toOTypeConverter.visit(factory.blob());
+    var blobType = typeShConverter.visit(factory.blob());
     var algorithm = new FixedBlobAlgorithm(blobType, expression.byteString());
     var info = new TaskInfo(LITERAL, algorithm.shortedLiteral(), expression.location());
     return new Task(factory.blob(), list(), info, algorithm);
@@ -333,7 +333,7 @@ public class JobCreator {
   }
 
   private Job intEager(IntS expression) {
-    var intType = toOTypeConverter.visit(factory.int_());
+    var intType = typeShConverter.visit(factory.int_());
     var bigInteger = expression.bigInteger();
     var algorithm = new FixedIntAlgorithm(intType, bigInteger);
     var info = new TaskInfo(LITERAL, bigInteger.toString(), expression.location());
@@ -356,7 +356,7 @@ public class JobCreator {
   }
 
   private Job stringEagerJob(StringS stringLiteral) {
-    var stringType = toOTypeConverter.visit(factory.string());
+    var stringType = typeShConverter.visit(factory.string());
     var algorithm = new FixedStringAlgorithm(stringType, stringLiteral.string());
     var name = algorithm.shortedString();
     var info = new TaskInfo(LITERAL, name, stringLiteral.location());
@@ -381,7 +381,7 @@ public class JobCreator {
       return new MapJob(actualResultType, arguments, location, scope, this);
     } else if (referencable instanceof ConstructorS constructor) {
       var resultType = constructor.type().result();
-      var tupleType = (TupleTypeH) toOTypeConverter.visit(resultType);
+      var tupleType = (TupleTypeH) typeShConverter.visit(resultType);
       return constructorCallEagerJob(resultType, tupleType, constructor.extendedName(),
           arguments, location);
     } else {
@@ -416,7 +416,7 @@ public class JobCreator {
   private Job callNativeValueEagerJob(NativeValueS nativeValue, Location location) {
     Annotation annotation = nativeValue.annotation();
     var algorithm = new CallNativeAlgorithm(
-        methodLoader, toOTypeConverter.visit(nativeValue.type()), nativeValue, annotation.isPure());
+        methodLoader, typeShConverter.visit(nativeValue.type()), nativeValue, annotation.isPure());
     var nativeCode = nativeEagerJob(annotation);
     var info = new TaskInfo(VALUE, nativeValue.extendedName(), location);
     return new Task(nativeValue.type(), list(nativeCode), info, algorithm
@@ -441,7 +441,7 @@ public class JobCreator {
       NativeFunctionS function, Annotation annotation, BoundsMap<TypeS> variables,
       TypeS actualResultType, Location location) {
     var algorithm = new CallNativeAlgorithm(
-        methodLoader, toOTypeConverter.visit(actualResultType), function, annotation.isPure());
+        methodLoader, typeShConverter.visit(actualResultType), function, annotation.isPure());
     var dependencies = concat(
         nativeEager(scope, annotation),
         convertedArgumentEagerJob(arguments, function, variables));
@@ -475,7 +475,7 @@ public class JobCreator {
 
   private Job convertEagerJob(TypeS requiredType, Job job) {
     var description = requiredType.name() + "<-" + job.type().name();
-    var algorithm = new ConvertAlgorithm(toOTypeConverter.visit(requiredType));
+    var algorithm = new ConvertAlgorithm(typeShConverter.visit(requiredType));
     var info = new TaskInfo(CONVERSION, description, job.location());
     return new Task(requiredType, list(job), info, algorithm);
   }

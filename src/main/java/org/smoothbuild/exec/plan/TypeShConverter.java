@@ -23,11 +23,11 @@ import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.VariableS;
 
-public class TypeSToTypeOConverter {
+public class TypeShConverter {
   private final ObjFactory objFactory;
 
   @Inject
-  public TypeSToTypeOConverter(ObjFactory objFactory) {
+  public TypeShConverter(ObjFactory objFactory) {
     this.objFactory = objFactory;
   }
 
