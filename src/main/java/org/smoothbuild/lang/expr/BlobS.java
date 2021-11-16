@@ -5,6 +5,5 @@ import org.smoothbuild.lang.base.type.impl.BlobTypeS;
 
 import okio.ByteString;
 
-public record BlobS(BlobTypeS type, ByteString byteString, Location location)
-    implements ExprS {
+public record BlobS(BlobTypeS type, ByteString byteString, Location location) implements ExprS {
 }
