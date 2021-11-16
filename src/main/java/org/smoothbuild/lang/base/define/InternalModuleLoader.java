@@ -24,10 +24,10 @@ public class InternalModuleLoader {
     var types = nList(map(
         factory.baseTypes(), t -> (DefinedType) new DefinedBaseType(path, t)));
     Hash hash = calculateModuleHash(path, Hash.of(list()), list());
-    return new ModuleS(path, hash, null, list(), types, referencables(path));
+    return new ModuleS(path, hash, null, list(), types, evaluables(path));
   }
 
-  private NList<GlobalReferencable> referencables(ModulePath modulePath) {
+  private NList<TopEvaluableS> evaluables(ModulePath modulePath) {
     FunctionS ifFunction = new IfFunctionS(modulePath, factory);
     FunctionS mapFunction = new MapFunctionS(modulePath, factory);
     return nList(ifFunction, mapFunction);

@@ -1,10 +1,10 @@
 grammar Smooth;
 
-module       : ( struct | referencable )* EOF ;
+module       : ( struct | evaluable )* EOF ;
 struct       : TNAME '{' fieldList? '}' ;
 fieldList    : field ( ',' field )* ','? ;
 field        : type NAME ;
-referencable : annotation? type? NAME paramList? ('=' expr)? ';' ;
+evaluable    : annotation? type? NAME paramList? ('=' expr)? ';' ;
 annotation   : '@Native(' STRING (',' (pure='PURE' | impure='IMPURE'))? ')' ;
 paramList    : '(' ( param ( ',' param )* ','? )? ')' ;
 param        : type NAME ( '=' expr )? ;

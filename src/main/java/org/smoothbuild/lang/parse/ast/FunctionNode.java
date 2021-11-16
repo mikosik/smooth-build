@@ -14,7 +14,7 @@ import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public class FunctionNode extends ReferencableNode {
+public class FunctionNode extends EvaluableNode {
   private final NList<ItemNode> params;
 
   public FunctionNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> body,

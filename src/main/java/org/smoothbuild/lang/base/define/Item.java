@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public class Item extends Referencable {
+public class Item extends EvaluableImplS {
   private final Optional<ExprS> defaultValue;
   private final ItemSignature signature;
 

@@ -65,13 +65,13 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedFunctionS;
 import org.smoothbuild.lang.base.define.DefinedValueS;
-import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
 import org.smoothbuild.lang.base.define.NativeValueS;
+import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
@@ -720,7 +720,7 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public RefS refS(GlobalReferencable referencable) {
+  public RefS refS(TopEvaluableS referencable) {
     return refS(1, referencable.type(), referencable.name());
   }
 

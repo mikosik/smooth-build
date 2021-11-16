@@ -8,7 +8,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public abstract class ValueS extends GlobalReferencable {
+public abstract class ValueS extends TopEvaluableS {
   public ValueS(TypeS type, ModulePath modulePath, String name, Location location) {
     super(type, modulePath, name, location);
   }

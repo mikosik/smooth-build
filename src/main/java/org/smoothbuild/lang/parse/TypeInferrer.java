@@ -22,7 +22,7 @@ import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.like.ReferencableLike;
+import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
@@ -35,6 +35,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
+import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FunctionNode;
 import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
@@ -42,7 +43,6 @@ import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
-import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.SelectNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
@@ -88,13 +88,13 @@ public class TypeInferrer {
       public void visitRealFunc(RealFuncNode func) {
         visitParams(func.params());
         func.body().ifPresent(this::visitExpr);
-        func.setType(optionalFunctionType(evaluationTypeOfGlobalReferencable(func), func.optParameterTypes()));
+        func.setType(optionalFunctionType(evaluationTypeOfTopEvaluables(func), func.optParameterTypes()));
       }
 
       @Override
       public void visitValue(ValueNode value) {
         value.body().ifPresent(this::visitExpr);
-        value.setType(evaluationTypeOfGlobalReferencable(value));
+        value.setType(evaluationTypeOfTopEvaluables(value));
       }
 
       @Override
@@ -112,10 +112,10 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evaluationTypeOfGlobalReferencable(ReferencableNode referencable) {
-        return evaluationTypeOf(referencable, (target, source) -> {
+      private Optional<TypeS> evaluationTypeOfTopEvaluables(EvaluableNode evaluable) {
+        return evaluationTypeOf(evaluable, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
-            logBuffer.log(parseError(referencable, "`" + referencable.name()
+            logBuffer.log(parseError(evaluable, "`" + evaluable.name()
                 + "` has body which type is " + source.q()
                 + " and it is not convertible to its declared type " + target.q()
                 + "."));
@@ -123,7 +123,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evaluationTypeOf(ReferencableNode referencable,
+      private Optional<TypeS> evaluationTypeOf(EvaluableNode referencable,
           BiConsumer<TypeS, TypeS> assignmentChecker) {
         if (referencable.body().isPresent()) {
           Optional<TypeS> exprType = referencable.body().get().type();
@@ -288,7 +288,7 @@ public class TypeInferrer {
 
       public static Optional<NList<ItemSignature>> functionParameters(ExprNode called) {
         if (called instanceof RefNode refNode) {
-          ReferencableLike referenced = refNode.referenced();
+          EvaluableLike referenced = refNode.referenced();
           if (referenced instanceof FunctionS function) {
             return Optional.of(function.parameters().map(Item::signature));
           } else if (referenced instanceof FunctionNode functionNode) {

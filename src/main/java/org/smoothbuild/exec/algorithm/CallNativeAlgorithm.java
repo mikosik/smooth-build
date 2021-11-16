@@ -15,43 +15,43 @@ import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
-import org.smoothbuild.lang.base.define.GlobalReferencable;
+import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
 public class CallNativeAlgorithm extends Algorithm {
   private final MethodLoader methodLoader;
-  private final GlobalReferencable referencable;
+  private final TopEvaluableS evaluable;
 
-  public CallNativeAlgorithm(MethodLoader methodLoader, TypeHV outputType,
-      GlobalReferencable referencable, boolean isPure) {
+  public CallNativeAlgorithm(MethodLoader methodLoader, TypeHV outputType, TopEvaluableS evaluable,
+      boolean isPure) {
     super(outputType, isPure);
     this.methodLoader = methodLoader;
-    this.referencable = referencable;
+    this.evaluable = evaluable;
   }
 
   @Override
   public Hash hash() {
-    return callNativeAlgorithmHash(referencable.name());
+    return callNativeAlgorithmHash(evaluable.name());
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     String classBinaryName = ((StringH) input.vals().get(0)).jValue();
-    Method method = methodLoader.load(referencable, classBinaryName);
+    Method method = methodLoader.load(evaluable, classBinaryName);
     try {
       ImmutableList<ValueH> nativeArgs = skip(1, input.vals());
       ValueH result = (ValueH) method.invoke(null, createArguments(nativeApi, nativeArgs));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
-          nativeApi.log().error("`" + referencable.name()
+          nativeApi.log().error("`" + evaluable.name()
               + "` has faulty native implementation: it returned `null` but logged no error.");
         }
         return new Output(null, nativeApi.messages());
       }
       if (!outputType().equals(result.type())) {
-        nativeApi.log().error("`" + referencable.name()
+        nativeApi.log().error("`" + evaluable.name()
             + "` has faulty native implementation: Its declared result type == "
             + outputType().q()
             + " but it returned object with type == " + result.type().q() + ".");
@@ -61,7 +61,7 @@ public class CallNativeAlgorithm extends Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallException("`" + referencable.name()
+      throw new NativeCallException("`" + evaluable.name()
           + "` threw java exception from its native code.", e.getCause());
     }
   }

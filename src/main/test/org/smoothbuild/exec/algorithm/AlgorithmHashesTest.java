@@ -44,7 +44,7 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void call_native_algorithm_has_different_hash_for_different_referencable_names() {
+  public void call_native_algorithm_has_different_hash_for_different_evaluable_names() {
     assertThat(callNativeAlgorithmHash("referencableName1"))
         .isNotEqualTo(callNativeAlgorithmHash("referencableName2"));
   }

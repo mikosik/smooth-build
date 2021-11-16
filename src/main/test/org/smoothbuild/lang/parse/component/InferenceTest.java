@@ -23,7 +23,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myValue", STRING);
+          .containsEvaluableWithType("myValue", STRING);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myValue", BLOB);
+          .containsEvaluableWithType("myValue", BLOB);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myValue", INT);
+          .containsEvaluableWithType("myValue", INT);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myValue", a(STRING));
+          .containsEvaluableWithType("myValue", a(STRING));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myValue", STRING);
+          .containsEvaluableWithType("myValue", STRING);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myValue", f(STRING, BLOB));
+          .containsEvaluableWithType("myValue", f(STRING, BLOB));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myValue", STRING);
+          .containsEvaluableWithType("myValue", STRING);
     }
   }
 
@@ -99,7 +99,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(STRING));
+          .containsEvaluableWithType("myFunction", f(STRING));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(BLOB));
+          .containsEvaluableWithType("myFunction", f(BLOB));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(INT));
+          .containsEvaluableWithType("myFunction", f(INT));
     }
 
     @Test
@@ -129,7 +129,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(a(STRING)));
+          .containsEvaluableWithType("myFunction", f(a(STRING)));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(STRING));
+          .containsEvaluableWithType("myFunction", f(STRING));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(f(STRING, BLOB)));
+          .containsEvaluableWithType("myFunction", f(f(STRING, BLOB)));
     }
 
     @Test
@@ -162,7 +162,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(STRING));
+          .containsEvaluableWithType("myFunction", f(STRING));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(STRING, STRING));
+          .containsEvaluableWithType("myFunction", f(STRING, STRING));
     }
 
     @Test
@@ -182,7 +182,7 @@ public class InferenceTest extends TestingContext {
           """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("myFunction", f(A, A));
+          .containsEvaluableWithType("myFunction", f(A, A));
     }
   }
 
@@ -195,7 +195,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("result", a(STRING));
+          .containsEvaluableWithType("result", a(STRING));
     }
 
     @Test
@@ -207,7 +207,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("result", a(STRING));
+          .containsEvaluableWithType("result", a(STRING));
     }
 
     @Test
@@ -298,7 +298,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", NOTHING);
+            .containsEvaluableWithType("myValue", NOTHING);
       }
 
       @Test
@@ -309,7 +309,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", STRING);
+            .containsEvaluableWithType("myValue", STRING);
       }
 
       @Test
@@ -320,7 +320,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", a(STRING));
+            .containsEvaluableWithType("myValue", a(STRING));
       }
 
       @Test
@@ -332,7 +332,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", f(STRING, BLOB));
+            .containsEvaluableWithType("myValue", f(STRING, BLOB));
       }
     }
 
@@ -347,7 +347,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", NOTHING);
+            .containsEvaluableWithType("myValue", NOTHING);
       }
 
       @Test
@@ -359,7 +359,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", STRING);
+            .containsEvaluableWithType("myValue", STRING);
       }
 
       @Test
@@ -371,7 +371,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", a(STRING));
+            .containsEvaluableWithType("myValue", a(STRING));
       }
 
       @Test
@@ -385,7 +385,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", f(STRING, NOTHING));
+            .containsEvaluableWithType("myValue", f(STRING, NOTHING));
       }
     }
 
@@ -401,7 +401,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", a(NOTHING));
+            .containsEvaluableWithType("myValue", a(NOTHING));
       }
 
       @Test
@@ -412,7 +412,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", a(STRING));
+            .containsEvaluableWithType("myValue", a(STRING));
       }
 
       @Test
@@ -423,7 +423,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", a(a(STRING)));
+            .containsEvaluableWithType("myValue", a(a(STRING)));
       }
 
       @Test
@@ -435,7 +435,7 @@ public class InferenceTest extends TestingContext {
             """;
         module(code)
             .loadsSuccessfully()
-            .containsReferencableWithType("myValue", a(f(STRING, BLOB)));
+            .containsEvaluableWithType("myValue", a(f(STRING, BLOB)));
       }
     }
 
@@ -458,7 +458,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsSuccessfully()
-          .containsReferencableWithType("result", a(STRING));
+          .containsEvaluableWithType("result", a(STRING));
     }
   }
 }

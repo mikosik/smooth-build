@@ -3,15 +3,15 @@ package org.smoothbuild.lang.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.like.ReferencableLike;
+import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public class ReferencableNode extends NamedNode implements ReferencableLike {
+public class EvaluableNode extends NamedNode implements EvaluableLike {
   private final Optional<TypeNode> typeNode;
   private final Optional<ExprNode> body;
   private final Optional<AnnotationNode> annotation;
 
-  public ReferencableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> body,
+  public EvaluableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> body,
       Optional<AnnotationNode> annotation, Location location) {
     super(name, location);
     this.typeNode = typeNode;
@@ -38,7 +38,7 @@ public class ReferencableNode extends NamedNode implements ReferencableLike {
 
   @Override
   public final boolean equals(Object object) {
-    return object instanceof ReferencableNode that
+    return object instanceof EvaluableNode that
         && this.name().equals(that.name());
   }
 

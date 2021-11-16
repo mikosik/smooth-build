@@ -672,7 +672,7 @@ public class DeclarationTest extends TestingContext {
               String nonDefault);
             """)
               .loadsSuccessfully()
-              .containsReferencable(functionS(2, STRING, "myFunction",
+              .containsEvaluable(functionS(2, STRING, "myFunction",
                   annotation(1, stringS(1, "Impl.met")),
                   param(3, STRING, "default", stringS(3, "value")),
                   param(4, STRING, "nonDefault")));
@@ -702,7 +702,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(functionDeclaration("String param1,"))
               .loadsSuccessfully()
-              .containsReferencable(functionS(1, STRING, "myFunction",
+              .containsEvaluable(functionS(1, STRING, "myFunction",
                   stringS(1, "abc"), param(1, STRING, "param1")));
         }
 
@@ -737,7 +737,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(functionTypeDeclaration("String,"))
               .loadsSuccessfully()
-              .containsReferencable(value(2, f(BLOB, STRING), "myValue",
+              .containsEvaluable(value(2, f(BLOB, STRING), "myValue",
                   annotation(1, stringS(1, "Impl.met"))));
         }
 
@@ -963,7 +963,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(functionCall("0x07,"))
               .loadsSuccessfully()
-              .containsReferencable(value(2, BLOB, "result",
+              .containsEvaluable(value(2, BLOB, "result",
                   callS(2, BLOB,
                       refS(2, f(BLOB, BLOB), "myFunction"),
                       blobS(2, 7))));
@@ -1238,7 +1238,7 @@ public class DeclarationTest extends TestingContext {
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
                 .loadsSuccessfully()
-                .containsReferencable(value(1, a(BLOB), "result",
+                .containsEvaluable(value(1, a(BLOB), "result",
                     orderS(1, BLOB, blobS(1, 7))));
           }
 

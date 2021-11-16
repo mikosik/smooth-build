@@ -12,13 +12,13 @@ import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.DefinedFunctionS;
 import org.smoothbuild.lang.base.define.DefinedValueS;
 import org.smoothbuild.lang.base.define.FunctionS;
-import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
 import org.smoothbuild.lang.base.define.NativeValueS;
+import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.define.ValueS;
-import org.smoothbuild.lang.base.like.ReferencableLike;
+import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
@@ -37,37 +37,36 @@ import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
+import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FunctionNode;
 import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
-import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.SelectNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class ReferencableLoader {
+public class TopEvaluableLoader {
   private final TypeFactoryS factory;
 
   @Inject
-  public ReferencableLoader(TypeFactoryS factory) {
+  public TopEvaluableLoader(TypeFactoryS factory) {
     this.factory = factory;
   }
 
-  public GlobalReferencable loadReferencable(ModulePath path,
-      ReferencableNode referencableNode) {
-    if (referencableNode instanceof RealFuncNode realFuncNode) {
+  public TopEvaluableS loadEvaluables(ModulePath path, EvaluableNode evaluableNode) {
+    if (evaluableNode instanceof RealFuncNode realFuncNode) {
       return loadFunction(path, realFuncNode);
     } else {
-      return loadValue(path, referencableNode);
+      return loadValue(path, evaluableNode);
     }
   }
 
-  private ValueS loadValue(ModulePath path, ReferencableNode valueNode) {
+  private ValueS loadValue(ModulePath path, EvaluableNode valueNode) {
     var type = valueNode.type().get();
     var name = valueNode.name();
     var location = valueNode.location();
@@ -185,7 +184,7 @@ public class ReferencableLoader {
       // This means that this call is made on reference to actual function and that function
       // has default argument for given parameter, otherwise checkers that ran so far would
       // report an error.
-      ReferencableLike referenced = ((RefNode) call.function()).referenced();
+      EvaluableLike referenced = ((RefNode) call.function()).referenced();
       if (referenced instanceof FunctionS function) {
         return function.parameters().get(i).defaultValue().get();
       } else if (referenced instanceof FunctionNode functionNode) {
@@ -204,7 +203,7 @@ public class ReferencableLoader {
     }
 
     private ExprS createReference(RefNode ref) {
-      ReferencableLike referenced = ref.referenced();
+      EvaluableLike referenced = ref.referenced();
       if (referenced instanceof ItemNode) {
         String name = ref.name();
         return new ParamRefS(functionParameters.get(name).type(), name, ref.location());

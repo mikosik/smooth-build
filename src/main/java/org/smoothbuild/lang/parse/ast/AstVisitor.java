@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitReferencable(ast.referencables());
+    visitEvaluable(ast.evaluables());
   }
 
   public void visitStructs(List<StructNode> structs) {
@@ -25,18 +25,18 @@ public class AstVisitor {
     field.typeNode().ifPresent(this::visitType);
   }
 
-  public void visitReferencable(List<ReferencableNode> referencable) {
-    referencable.forEach(this::visitReferencable);
+  public void visitEvaluable(List<EvaluableNode> evaluable) {
+    evaluable.forEach(this::visitEvaluable);
   }
 
-  public void visitReferencable(ReferencableNode referencable) {
-    if (referencable instanceof RealFuncNode func) {
+  public void visitEvaluable(EvaluableNode evaluable) {
+    if (evaluable instanceof RealFuncNode func) {
       visitRealFunc(func);
-    } else if (referencable instanceof ValueNode value) {
+    } else if (evaluable instanceof ValueNode value) {
       visitValue(value);
     } else {
       throw new RuntimeException(
-          "Didn't expect instance of " + referencable.getClass().getCanonicalName());
+          "Didn't expect instance of " + evaluable.getClass().getCanonicalName());
     }
   }
 

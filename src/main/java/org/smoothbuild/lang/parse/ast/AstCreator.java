@@ -22,6 +22,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainCallContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
+import org.smoothbuild.antlr.lang.SmoothParser.EvaluableContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
@@ -31,7 +32,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ReferencableContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
@@ -45,7 +45,7 @@ import com.google.common.collect.ImmutableList;
 public class AstCreator {
   public static Ast fromParseTree(FilePath filePath, ModuleContext module) {
     List<StructNode> structs = new ArrayList<>();
-    List<ReferencableNode> referencables = new ArrayList<>();
+    List<EvaluableNode> referencables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
@@ -75,18 +75,18 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitReferencable(ReferencableContext referencable) {
-        TerminalNode nameNode = referencable.NAME();
-        visitChildren(referencable);
-        Optional<TypeNode> type = createTypeSane(referencable.type());
+      public Void visitEvaluable(EvaluableContext evaluable) {
+        TerminalNode nameNode = evaluable.NAME();
+        visitChildren(evaluable);
+        Optional<TypeNode> type = createTypeSane(evaluable.type());
         String name = nameNode.getText();
-        Optional<ExprNode> expr = createExprSane(referencable.expr());
-        Optional<AnnotationNode> annotation = createNativeSane(referencable.annotation());
+        Optional<ExprNode> expr = createExprSane(evaluable.expr());
+        Optional<AnnotationNode> annotation = createNativeSane(evaluable.annotation());
         Location location = locationOf(filePath, nameNode);
-        if (referencable.paramList() == null) {
+        if (evaluable.paramList() == null) {
           referencables.add(new ValueNode(type, name, expr, annotation, location));
         } else {
-          List<ItemNode> params = createParams(referencable.paramList());
+          List<ItemNode> params = createParams(evaluable.paramList());
           referencables.add(new RealFuncNode(type, name, params, expr, annotation, location));
         }
         return null;

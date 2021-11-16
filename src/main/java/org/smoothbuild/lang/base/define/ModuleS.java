@@ -16,7 +16,7 @@ public record ModuleS(
     ModuleFiles files,
     ImmutableList<ModuleS> referencedModules,
     NList<DefinedType> types,
-    NList<GlobalReferencable> referencables) {
+    NList<TopEvaluableS> referencables) {
 
   public static Hash calculateModuleHash(ModulePath path, Hash filesHash, List<ModuleS> modules) {
     return Hash.of(asList(

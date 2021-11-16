@@ -11,7 +11,7 @@ import org.smoothbuild.acceptance.testing.Random;
 
 public class CachingTest extends AcceptanceTestCase {
   @Nested
-  class _result_from_referencable_which_is_ {
+  class _result_from_evaluable_which_is_ {
     @ParameterizedTest
     @ValueSource(strings = {"", "()"})
     public void pure_is_cached_on_disk(String functionOrValue) throws Exception {

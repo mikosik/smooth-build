@@ -7,7 +7,7 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.like.ReferencableLike;
+import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
@@ -16,19 +16,19 @@ import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.util.Scope;
 
 public class ReferenceResolver extends AstVisitor {
-  private final Scope<? extends ReferencableLike> scope;
+  private final Scope<? extends EvaluableLike> scope;
   private final Logger logger;
 
   public static void resolveReferences(Logger logger, DefinitionsS imported, Ast ast) {
     var importedScope = new Scope<>(imported.referencables());
     var constructors = map(ast.structs(), StructNode::constructor);
-    var referencables = ast.referencables();
+    var referencables = ast.evaluables();
     var scope = new Scope<>(importedScope, nList(concat(referencables, constructors)));
     new ReferenceResolver(scope, logger)
         .visitAst(ast);
   }
 
-  public ReferenceResolver(Scope<? extends ReferencableLike> scope, Logger logger) {
+  public ReferenceResolver(Scope<? extends EvaluableLike> scope, Logger logger) {
     this.scope = scope;
     this.logger = logger;
   }

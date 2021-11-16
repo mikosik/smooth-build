@@ -19,15 +19,15 @@ import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedType;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.base.define.StructS;
+import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.parse.ast.Ast;
-import org.smoothbuild.lang.parse.ast.ReferencableNode;
+import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.util.collect.NList;
 
@@ -35,14 +35,14 @@ import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
   private final TypeInferrer typeInferrer;
-  private final ReferencableLoader referencableLoader;
+  private final TopEvaluableLoader topEvaluableLoader;
   private final TypeFactoryS typeFactory;
 
   @Inject
-  public ModuleLoader(TypeInferrer typeInferrer, ReferencableLoader referencableLoader,
+  public ModuleLoader(TypeInferrer typeInferrer, TopEvaluableLoader topEvaluableLoader,
       TypeFactoryS typeFactory) {
     this.typeInferrer = typeInferrer;
-    this.referencableLoader = referencableLoader;
+    this.topEvaluableLoader = topEvaluableLoader;
     this.typeFactory = typeFactory;
   }
 
@@ -81,7 +81,7 @@ public class ModuleLoader {
 
     var modules = imported.modules().values().asList();
     var types = sortedAst.structs().map(s -> (DefinedType) loadStruct(path, s));
-    var referencables = loadReferencables(path, sortedAst);
+    var referencables = loadEvaluables(path, sortedAst);
     ModuleS module = new ModuleS(path, hash, moduleFiles, modules, types, referencables);
     return maybeValueAndLogs(module, logBuffer);
   }
@@ -93,14 +93,14 @@ public class ModuleLoader {
     return new StructS(type, path, name, location);
   }
 
-  private NList<GlobalReferencable> loadReferencables(ModulePath path, Ast ast) {
-    var local = ImmutableList.<GlobalReferencable>builder();
+  private NList<TopEvaluableS> loadEvaluables(ModulePath path, Ast ast) {
+    var local = ImmutableList.<TopEvaluableS>builder();
     for (StructNode struct : ast.structs()) {
       ConstructorS constructor = loadConstructor(path, struct);
       local.add(constructor);
     }
-    for (ReferencableNode referencable : ast.referencables()) {
-      local.add(referencableLoader.loadReferencable(path, referencable));
+    for (EvaluableNode referencable : ast.evaluables()) {
+      local.add(topEvaluableLoader.loadEvaluables(path, referencable));
     }
     return nList(local.build());
   }

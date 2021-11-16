@@ -5,7 +5,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
-import static org.smoothbuild.run.FindReferencables.findReferencables;
+import static org.smoothbuild.run.FindTopEvaluables.findTopEvaluables;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class BuildRunner {
 
     public void execute(DefinitionsS definitions, List<String> names) {
       reporter.startNewPhase("Building");
-      findReferencables(reporter, definitions, names)
+      findTopEvaluables(reporter, definitions, names)
           .ifPresent((values) -> artifactBuilder.buildArtifacts(definitions, values));
     }
   }

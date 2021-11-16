@@ -23,12 +23,12 @@ import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
+import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
 import org.smoothbuild.lang.parse.ast.IntNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.NamedNode;
 import org.smoothbuild.lang.parse.ast.RealFuncNode;
-import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
@@ -145,7 +145,7 @@ public class AnalyzeSemantically {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
     nals.addAll(map(ast.structs(), StructNode::constructor));
-    nals.addAll(ast.referencables());
+    nals.addAll(ast.evaluables());
     nals.sort(comparing(n -> n.location().line()));
 
     for (Nal nal : nals) {
@@ -252,13 +252,13 @@ public class AnalyzeSemantically {
       }
 
       private void logErrorIfNeeded(
-          ReferencableNode node, ImmutableList<String> variablesUsedOnce) {
+          EvaluableNode node, ImmutableList<String> variablesUsedOnce) {
         if (!variablesUsedOnce.isEmpty()) {
           logError(node, variablesUsedOnce);
         }
       }
 
-      private void logError(ReferencableNode node, List<String> variablesUsedOnce) {
+      private void logError(EvaluableNode node, List<String> variablesUsedOnce) {
         logger.log(parseError(node.typeNode().get(), "Type variable(s) "
             + join(", ", map(variablesUsedOnce, v -> "`" + v + "`"))
             + " are used once in declaration of " + node.q()
@@ -281,7 +281,7 @@ public class AnalyzeSemantically {
         check(value, "value");
       }
 
-      private void check(ReferencableNode referencable, String referencableKind) {
+      private void check(EvaluableNode referencable, String referencableKind) {
         if (referencable.annotation().isPresent() && referencable.body().isPresent()) {
           logger.log(parseError(referencable, "Native " + referencableKind + " cannot have body."));
         }

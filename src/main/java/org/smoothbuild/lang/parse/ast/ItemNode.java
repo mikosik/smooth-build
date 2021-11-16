@@ -8,10 +8,10 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.like.ReferencableLike;
+import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public class ItemNode extends ReferencableNode implements ReferencableLike {
+public class ItemNode extends EvaluableNode implements EvaluableLike {
   private Optional<ItemSignature> signature;
 
   public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> body, Location location) {

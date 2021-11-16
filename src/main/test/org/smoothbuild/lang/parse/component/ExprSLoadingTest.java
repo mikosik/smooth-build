@@ -23,7 +23,7 @@ public class ExprSLoadingTest extends TestingContext {
           ];
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, a(BLOB), "result",
+        .containsEvaluable(value(1, a(BLOB), "result",
             orderS(2, BLOB, blobS(3, 7), blobS(4, 8))));
   }
 
@@ -34,7 +34,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, BLOB, "result", blobS(2, 7)));
+        .containsEvaluable(value(1, BLOB, "result", blobS(2, 7)));
   }
 
   @Test
@@ -44,7 +44,7 @@ public class ExprSLoadingTest extends TestingContext {
             123;
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, INT, "result", intS(2, 123)));
+        .containsEvaluable(value(1, INT, "result", intS(2, 123)));
   }
 
   @Nested
@@ -56,7 +56,7 @@ public class ExprSLoadingTest extends TestingContext {
           result = myFunction();
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(2, STRING, "result",
+          .containsEvaluable(value(2, STRING, "result",
               callS(2, STRING, refS(2, f(STRING), "myFunction"))));
     }
 
@@ -68,7 +68,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(2, STRING, "result",
+          .containsEvaluable(value(2, STRING, "result",
               callS(2, STRING, refS(2, f(STRING, BLOB), "myFunction"), blobS(3, 7))));
     }
 
@@ -80,7 +80,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(2, STRING, "result",
+          .containsEvaluable(value(2, STRING, "result",
               callS(2, STRING, refS(2, f(STRING, BLOB), "myFunction"), blobS(3, 7))));
     }
 
@@ -92,7 +92,7 @@ public class ExprSLoadingTest extends TestingContext {
           result = myValue();
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(3, STRING, "result",
+          .containsEvaluable(value(3, STRING, "result",
               callS(3, STRING, refS(3, f(STRING), "myValue"))));
     }
 
@@ -105,7 +105,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsSuccessfully()
-          .containsReferencable(
+          .containsEvaluable(
               value(3, STRING, "result", callS(3, STRING,
               refS(3, f(STRING, BLOB), "myValue"), blobS(4, 7))));
     }
@@ -120,7 +120,7 @@ public class ExprSLoadingTest extends TestingContext {
           }
           """)
           .loadsSuccessfully()
-          .containsReferencable(constr);
+          .containsEvaluable(constr);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class ExprSLoadingTest extends TestingContext {
             "aaa");
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(4, struct, "result",
+          .containsEvaluable(value(4, struct, "result",
               callS(4, struct, refS(4, f(struct, STRING), "myStruct"), stringS(5, "aaa"))));
     }
 
@@ -144,7 +144,7 @@ public class ExprSLoadingTest extends TestingContext {
           result(String() f) = f();
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionS(1, STRING, "result",
+          .containsEvaluable(functionS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING), "f")), param(1, f(STRING), "f")));
     }
 
@@ -154,7 +154,7 @@ public class ExprSLoadingTest extends TestingContext {
           result(String(Blob) f) = f(0x09);
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionS(1, STRING, "result",
+          .containsEvaluable(functionS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING, BLOB), "f"), blobS(1, 9)),
               param(1, f(STRING, BLOB), "f")));
     }
@@ -172,7 +172,7 @@ public class ExprSLoadingTest extends TestingContext {
             .field;
           """)
         .loadsSuccessfully()
-        .containsReferencable(
+        .containsEvaluable(
             value(5, STRING, "result", selectS(6, STRING, 0, refS(5, myStruct, "struct"))));
   }
 
@@ -185,7 +185,7 @@ public class ExprSLoadingTest extends TestingContext {
           String result;
           """)
           .loadsSuccessfully()
-          .containsReferencable(
+          .containsEvaluable(
               value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), true)));
     }
 
@@ -196,7 +196,7 @@ public class ExprSLoadingTest extends TestingContext {
           String result;
           """)
           .loadsSuccessfully()
-          .containsReferencable(
+          .containsEvaluable(
               value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), false)));
     }
 
@@ -207,7 +207,7 @@ public class ExprSLoadingTest extends TestingContext {
           String result;
           """)
           .loadsSuccessfully()
-          .containsReferencable(
+          .containsEvaluable(
               value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), true)));
     }
 
@@ -218,7 +218,7 @@ public class ExprSLoadingTest extends TestingContext {
           String myFunction();
           """)
           .loadsSuccessfully()
-          .containsReferencable(
+          .containsEvaluable(
               functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), true)));
     }
 
@@ -229,7 +229,7 @@ public class ExprSLoadingTest extends TestingContext {
           String myFunction();
           """)
           .loadsSuccessfully()
-          .containsReferencable(
+          .containsEvaluable(
               functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), false)));
     }
 
@@ -240,7 +240,7 @@ public class ExprSLoadingTest extends TestingContext {
           String myFunction();
           """)
           .loadsSuccessfully()
-          .containsReferencable(
+          .containsEvaluable(
               functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), true)));
     }
   }
@@ -252,7 +252,7 @@ public class ExprSLoadingTest extends TestingContext {
             = param1;
           """)
         .loadsSuccessfully()
-        .containsReferencable(functionS(
+        .containsEvaluable(functionS(
             1, BLOB, "myFunction", paramRefS(2, BLOB, "param1"), param(1, BLOB, "param1")));
   }
 
@@ -266,7 +266,7 @@ public class ExprSLoadingTest extends TestingContext {
             myValue;
           """)
           .loadsSuccessfully()
-          .containsReferencable(
+          .containsEvaluable(
               value(2, STRING, "result", refS(3, STRING, "myValue")));
     }
 
@@ -278,7 +278,7 @@ public class ExprSLoadingTest extends TestingContext {
             myFunction;
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(2, f(STRING), "result",
+          .containsEvaluable(value(2, f(STRING), "result",
               refS(3, f(STRING), "myFunction")));
     }
 
@@ -291,7 +291,7 @@ public class ExprSLoadingTest extends TestingContext {
             myStruct;
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(2, f(structType), "result",
+          .containsEvaluable(value(2, f(structType), "result",
               refS(3, f(structType), "myStruct")));
     }
   }
@@ -303,7 +303,7 @@ public class ExprSLoadingTest extends TestingContext {
             "abc";
           """)
         .loadsSuccessfully()
-        .containsReferencable(value(1, STRING, "result", stringS(2, "abc")));
+        .containsEvaluable(value(1, STRING, "result", stringS(2, "abc")));
   }
 
   @Nested
@@ -315,7 +315,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsSuccessfully()
-          .containsReferencable(value(1, BLOB, "myValue", blobS(2, 7)));
+          .containsEvaluable(value(1, BLOB, "myValue", blobS(2, 7)));
     }
 
     @Test
@@ -325,7 +325,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionS(1, BLOB, "myFunction", blobS(2, 7)));
+          .containsEvaluable(functionS(1, BLOB, "myFunction", blobS(2, 7)));
     }
 
     @Test
@@ -336,7 +336,7 @@ public class ExprSLoadingTest extends TestingContext {
             = "abc";
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionS(1, STRING, "myFunction",
+          .containsEvaluable(functionS(1, STRING, "myFunction",
               stringS(3, "abc"), param(2, BLOB, "param1")));
     }
 
@@ -349,7 +349,7 @@ public class ExprSLoadingTest extends TestingContext {
               = "abc";
           """)
           .loadsSuccessfully()
-          .containsReferencable(functionS(1, STRING, "myFunction",
+          .containsEvaluable(functionS(1, STRING, "myFunction",
               stringS(4, "abc"), param(2, BLOB, "param1", blobS(3, 7))));
     }
 

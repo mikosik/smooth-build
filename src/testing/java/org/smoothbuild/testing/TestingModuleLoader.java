@@ -11,15 +11,15 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.ModuleS;
+import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ModuleLoader;
-import org.smoothbuild.lang.parse.ReferencableLoader;
+import org.smoothbuild.lang.parse.TopEvaluableLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
 
 public class TestingModuleLoader {
@@ -52,20 +52,20 @@ public class TestingModuleLoader {
     return this;
   }
 
-  public void containsReferencable(GlobalReferencable expected) {
+  public void containsEvaluable(TopEvaluableS expected) {
     String name = expected.name();
-    GlobalReferencable actual = assertContainsReferencable(name);
+    TopEvaluableS actual = assertContainsEvaluable(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
-  public void containsReferencableWithType(String name, Type expectedType) {
-    GlobalReferencable referencable = assertContainsReferencable(name);
+  public void containsEvaluableWithType(String name, Type expectedType) {
+    TopEvaluableS referencable = assertContainsEvaluable(name);
     assertThat(referencable.type())
         .isEqualTo(expectedType);
   }
 
-  private GlobalReferencable assertContainsReferencable(String name) {
+  private TopEvaluableS assertContainsEvaluable(String name) {
     var referencables = module.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(referencables.containsName(name))
@@ -125,7 +125,7 @@ public class TestingModuleLoader {
     TypingS typing = testingContext.typingS();
     TypeFactoryS factory = testingContext.typeFactoryS();
     ModuleLoader moduleLoader = new ModuleLoader(
-        new TypeInferrer(factory, typing), new ReferencableLoader(factory), factory);
+        new TypeInferrer(factory, typing), new TopEvaluableLoader(factory), factory);
     DefinitionsS importedSane = imported != null ? imported
         : DefinitionsS.empty().withModule(testingContext.internalModule());
     ModuleFiles moduleFilesSane = this.moduleFiles != null ? moduleFiles : moduleFiles();

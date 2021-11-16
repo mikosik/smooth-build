@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableMap;
 public record DefinitionsS(
     ImmutableMap<ModulePath, ModuleS> modules,
     NList<DefinedType> types,
-    NList<GlobalReferencable> referencables) {
+    NList<TopEvaluableS> referencables) {
 
   public static DefinitionsS empty() {
     return new DefinitionsS(ImmutableMap.of(), nList(), nList());

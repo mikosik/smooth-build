@@ -9,17 +9,17 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.GlobalReferencable;
+import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.define.ValueS;
 
-public class FindReferencables {
-  public static Optional<List<ValueS>> findReferencables(
+public class FindTopEvaluables {
+  public static Optional<List<ValueS>> findTopEvaluables(
       Reporter reporter, DefinitionsS definitions, List<String> names) {
     var values = definitions.referencables();
     List<ValueS> referencables = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
-      GlobalReferencable referencable = values.get(name);
+      TopEvaluableS referencable = values.get(name);
       if (referencable != null) {
         if (referencable instanceof ValueS value) {
           referencables.add(value);

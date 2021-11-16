@@ -10,28 +10,28 @@ import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.lang.base.define.GlobalReferencable;
 import org.smoothbuild.lang.base.define.ModuleS;
+import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReferenceAlgorithm extends Algorithm {
-  private final GlobalReferencable referencable;
+  private final TopEvaluableS evaluable;
   private final ModuleS module;
 
-  public ReferenceAlgorithm(GlobalReferencable referencable, ModuleS module, TupleTypeH type) {
+  public ReferenceAlgorithm(TopEvaluableS evaluable, ModuleS module, TupleTypeH type) {
     super(type);
-    this.referencable = referencable;
+    this.evaluable = evaluable;
     this.module = module;
   }
 
   @Override
   public Hash hash() {
-    return referenceAlgorithmHash(module.hash(), referencable.name());
+    return referenceAlgorithmHash(module.hash(), evaluable.name());
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    StringH name = nativeApi.factory().string(referencable.name());
+    StringH name = nativeApi.factory().string(evaluable.name());
     BlobH moduleHash = nativeApi.factory().blob(sink -> sink.write(module.hash().toByteString()));
     TupleH functionTuple = nativeApi
         .factory()

@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.run.FindReferencables.findReferencables;
+import static org.smoothbuild.run.FindTopEvaluables.findTopEvaluables;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class PlanRunner {
 
     public void execute(DefinitionsS definitions, List<String> names) {
       reporter.startNewPhase("Creating execution plan");
-      findReferencables(reporter, definitions, names)
+      findTopEvaluables(reporter, definitions, names)
           .ifPresent(values -> printPlans(definitions, values));
     }
 

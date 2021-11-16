@@ -10,7 +10,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public abstract class FunctionS extends GlobalReferencable {
+public abstract class FunctionS extends TopEvaluableS {
   public static final String PARENTHESES = "()";
   private final NList<Item> parameters;
 
