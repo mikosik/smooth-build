@@ -176,7 +176,7 @@ public class JobCreator {
   }
 
   private Job callJob(Scope<Labeled<Job>> scope, CallS call, boolean eager) {
-    var function = jobFor(scope, call.function(), eager);
+    var function = jobFor(scope, call.functionExpr(), eager);
     var arguments = map(call.arguments(), a -> lazyJobFor(scope, a));
     Location location = call.location();
     var variables = inferVariablesInFunctionCall(function, arguments);
@@ -231,7 +231,7 @@ public class JobCreator {
   private Job selectEager(Scope<Labeled<Job>> scope, SelectS expression, TypeS type) {
     var index = expression.index();
     var algorithm = new SelectAlgorithm(index, typeShConverter.visit(type));
-    var dependencies = list(eagerJobFor(scope, expression.expr()));
+    var dependencies = list(eagerJobFor(scope, expression.structExpr()));
     var info = new TaskInfo(SELECT, "." + index, expression.location());
     return new Task(type, dependencies, info, algorithm);
   }

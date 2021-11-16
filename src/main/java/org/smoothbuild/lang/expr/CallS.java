@@ -8,6 +8,6 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public record CallS(TypeS type, ExprS function,
+public record CallS(TypeS type, ExprS functionExpr,
     ImmutableList<ExprS> arguments, Location location) implements ExprS {
 }
