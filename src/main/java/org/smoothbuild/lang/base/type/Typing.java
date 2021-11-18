@@ -101,10 +101,10 @@ public class Typing<T extends Type> {
   }
 
   public BoundsMap<T> inferVariableBoundsInCall(
-      T resultTypes, List<? extends T> parameterTypes, List<? extends T> argumentTypes) {
+      T resultType, List<? extends T> parameterTypes, List<? extends T> argumentTypes) {
     var result = new HashMap<Variable, Bounded<T>>();
     inferVariableBounds(parameterTypes, argumentTypes, factory.lower(), result);
-    resultTypes.variables().forEach(v -> result.merge(
+    resultType.variables().forEach(v -> result.merge(
         v, new Bounded<>(v, factory.unbounded()), this::merge));
     return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
