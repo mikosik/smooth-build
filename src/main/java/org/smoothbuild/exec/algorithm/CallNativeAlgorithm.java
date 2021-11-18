@@ -15,17 +15,17 @@ import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
-import org.smoothbuild.lang.base.define.TopEvaluableS;
+import org.smoothbuild.lang.base.define.NativeEvaluableS;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
 public class CallNativeAlgorithm extends Algorithm {
   private final MethodLoader methodLoader;
-  private final TopEvaluableS evaluable;
+  private final NativeEvaluableS evaluable;
 
-  public CallNativeAlgorithm(MethodLoader methodLoader, TypeHV outputType, TopEvaluableS evaluable,
-      boolean isPure) {
+  public CallNativeAlgorithm(MethodLoader methodLoader, TypeHV outputType,
+      NativeEvaluableS evaluable, boolean isPure) {
     super(outputType, isPure);
     this.methodLoader = methodLoader;
     this.evaluable = evaluable;

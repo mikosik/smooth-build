@@ -23,10 +23,10 @@ import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.io.fs.space.JPathResolver;
-import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.TopEvaluableS;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.base.define.NativeEvaluableS;
+import org.smoothbuild.lang.base.define.NativeFunctionS;
+import org.smoothbuild.lang.base.define.NativeValueS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -47,18 +47,19 @@ public class MethodLoader {
     this.methodCache = new HashMap<>();
   }
 
-  public synchronized Method load(TopEvaluableS referencable, String classBinaryName)
+  public synchronized Method load(NativeEvaluableS nativeEvaluableS, String classBinaryName)
       throws LoadingMethodException {
-    Method method = loadMethod(referencable, classBinaryName);
-    if (referencable instanceof FunctionS function) {
+    Method method = loadMethod(nativeEvaluableS, classBinaryName);
+    if (nativeEvaluableS instanceof NativeFunctionS function) {
       assertMethodMatchesFunctionRequirements(function, method, classBinaryName);
     } else {
-      assertMethodMatchesValueRequirements((ValueS) referencable, method, classBinaryName);
+      assertMethodMatchesValueRequirements(
+          (NativeValueS) nativeEvaluableS, method, classBinaryName);
     }
     return method;
   }
 
-  private Method loadMethod(TopEvaluableS referencable, String classBinaryName)
+  private Method loadMethod(NativeEvaluableS referencable, String classBinaryName)
       throws LoadingMethodException {
     FilePath jarFilePath = referencable.location().file().withExtension("jar");
     Hash jarHash = hashOf(referencable, classBinaryName, jarFilePath);
@@ -71,7 +72,7 @@ public class MethodLoader {
     return method;
   }
 
-  private Hash hashOf(TopEvaluableS referencable, String classBinaryName, FilePath jarFilePath)
+  private Hash hashOf(NativeEvaluableS referencable, String classBinaryName, FilePath jarFilePath)
       throws LoadingMethodException {
     try {
       return fileResolver.hashOf(jarFilePath);
@@ -84,7 +85,7 @@ public class MethodLoader {
     }
   }
 
-  private Method findMethod(TopEvaluableS referencable, FilePath jarFilePath,
+  private Method findMethod(NativeEvaluableS referencable, FilePath jarFilePath,
       String classBinaryName) throws LoadingMethodException {
     Method method = findClassMethod(referencable, jarFilePath, classBinaryName);
     if (!isPublic(method)) {
@@ -100,7 +101,7 @@ public class MethodLoader {
     }
   }
 
-  private Method findClassMethod(TopEvaluableS referencable, FilePath jarFilePath,
+  private Method findClassMethod(NativeEvaluableS referencable, FilePath jarFilePath,
       String classBinaryName) throws LoadingMethodException {
     Class<?> clazz = findClass(referencable, jarFilePath, classBinaryName);
     return stream(clazz.getDeclaredMethods())
@@ -110,7 +111,7 @@ public class MethodLoader {
             clazz.getCanonicalName() + "' does not have '" + NATIVE_METHOD_NAME + "' method."));
   }
 
-  private Class<?> findClass(TopEvaluableS referencable, FilePath jarFilePath,
+  private Class<?> findClass(NativeEvaluableS referencable, FilePath jarFilePath,
       String classBinaryName) throws LoadingMethodException {
       Path jarPath = jPathResolver.resolve(jarFilePath);
     try {
@@ -126,20 +127,20 @@ public class MethodLoader {
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
 
-  private void assertMethodMatchesFunctionRequirements(FunctionS function, Method method,
+  private void assertMethodMatchesFunctionRequirements(NativeFunctionS function, Method method,
       String classBinaryName) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(
         function, method, function.type().result(), classBinaryName);
     assertNativeParameterTypesMatchesFuncParameters(method, function, classBinaryName);
   }
 
-  private void assertMethodMatchesValueRequirements(ValueS value, Method method,
+  private void assertMethodMatchesValueRequirements(NativeValueS value, Method method,
       String classBinaryName) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(value, method, value.type(), classBinaryName);
     assertNativeHasOneParameter(method, value, classBinaryName);
   }
 
-  private static void assertNativeResultMatchesDeclared(TopEvaluableS referencable,
+  private static void assertNativeResultMatchesDeclared(NativeEvaluableS referencable,
       Method method, TypeS resultType, String classBinaryName) throws LoadingMethodException {
     Class<?> resultJType = method.getReturnType();
     if (!mapTypeToJType(resultType).equals(resultJType)) {
@@ -151,7 +152,7 @@ public class MethodLoader {
   }
 
   private static void assertNativeParameterTypesMatchesFuncParameters(Method method,
-      FunctionS function, String classBinaryName) throws LoadingMethodException {
+      NativeFunctionS function, String classBinaryName) throws LoadingMethodException {
     Parameter[] nativeParams = method.getParameters();
     List<Item> params = function.parameters();
     if (params.size() != nativeParams.length - 1) {
@@ -175,7 +176,7 @@ public class MethodLoader {
   }
 
   private static void assertNativeHasOneParameter(
-      Method method, ValueS value, String classBinaryName) throws LoadingMethodException {
+      Method method, NativeValueS value, String classBinaryName) throws LoadingMethodException {
     int paramCount = method.getParameters().length;
     if (paramCount != 1) {
       throw newLoadingException(value, classBinaryName, value.q()
@@ -184,11 +185,11 @@ public class MethodLoader {
   }
 
   private static LoadingMethodException newLoadingException(
-      TopEvaluableS referencable, String classBinaryName, String message) {
+      NativeEvaluableS referencable, String classBinaryName, String message) {
     return newLoadingException(referencable, classBinaryName, message, null);
   }
 
-  private static LoadingMethodException newLoadingException(TopEvaluableS referencable,
+  private static LoadingMethodException newLoadingException(NativeEvaluableS referencable,
       String classBinaryName, String message, Exception e) {
     return new LoadingMethodException("Error loading native implementation for "
         + referencable.q() + " specified as `" + classBinaryName + "`: " + message, e);
