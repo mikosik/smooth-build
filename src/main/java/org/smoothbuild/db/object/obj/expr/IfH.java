@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NativeMethodH;
-import org.smoothbuild.db.object.type.expr.InvokeTypeH;
+import org.smoothbuild.db.object.type.expr.IfTypeH;
 
 /**
  * This class is immutable.
@@ -21,12 +21,12 @@ public class IfH extends ExprH {
 
   public IfH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
-    checkArgument(merkleRoot.type() instanceof InvokeTypeH);
+    checkArgument(merkleRoot.type() instanceof IfTypeH);
   }
 
   @Override
-  public InvokeTypeH type() {
-    return (InvokeTypeH) super.type();
+  public IfTypeH type() {
+    return (IfTypeH) super.type();
   }
 
   public InvokeData data() {

@@ -8,7 +8,8 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NativeMethodH;
-import org.smoothbuild.db.object.type.expr.InvokeTypeH;
+import org.smoothbuild.db.object.type.expr.MapTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTypeH;
 
 /**
  * This class is immutable.
@@ -21,12 +22,17 @@ public class MapH extends ExprH {
 
   public MapH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
-    checkArgument(merkleRoot.type() instanceof InvokeTypeH);
+    checkArgument(merkleRoot.type() instanceof MapTypeH);
   }
 
   @Override
-  public InvokeTypeH type() {
-    return (InvokeTypeH) super.type();
+  public MapTypeH type() {
+    return (MapTypeH) super.type();
+  }
+
+  @Override
+  public ArrayTypeH evaluationType() {
+    return type().evaluationType();
   }
 
   public InvokeData data() {

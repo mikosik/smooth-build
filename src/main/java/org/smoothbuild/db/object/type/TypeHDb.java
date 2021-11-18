@@ -210,7 +210,7 @@ public class TypeHDb implements TypeFactory<TypeHV> {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evaluationType));
   }
 
-  public MapTypeH map(TypeHV evaluationType) {
+  public MapTypeH map(ArrayTypeH evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newMap(evaluationType));
   }
 
@@ -248,7 +248,7 @@ public class TypeHDb implements TypeFactory<TypeHV> {
       case FUNCTION -> readFunction(hash, rootSequence, kind);
       case IF -> newIf(hash, readDataAsValue(hash, rootSequence, kind));
       case INVOKE -> newInvoke(hash, readDataAsValue(hash, rootSequence, kind));
-      case MAP -> newMap(hash, readDataAsValue(hash, rootSequence, kind));
+      case MAP -> newMap(hash, readDataAsArray(hash, rootSequence, kind));
       case ORDER -> newOrder(hash, readDataAsArray(hash, rootSequence, kind));
       case REF -> newRef(hash, readDataAsValue(hash, rootSequence, kind));
       case SELECT -> newSelect(hash, readDataAsValue(hash, rootSequence, kind));
@@ -453,12 +453,12 @@ public class TypeHDb implements TypeFactory<TypeHV> {
     return cache(new InvokeTypeH(rootHash, evaluationType));
   }
 
-  private MapTypeH newMap(TypeHV evaluationType) throws HashedDbException {
+  private MapTypeH newMap(ArrayTypeH evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(MAP, evaluationType);
     return newMap(rootHash, evaluationType);
   }
 
-  private MapTypeH newMap(Hash rootHash, TypeHV evaluationType) {
+  private MapTypeH newMap(Hash rootHash, ArrayTypeH evaluationType) {
     return cache(new MapTypeH(rootHash, evaluationType));
   }
 

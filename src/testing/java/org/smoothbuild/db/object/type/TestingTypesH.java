@@ -63,15 +63,17 @@ public class TestingTypesH {
   public static final ArrayTypeH ARRAY2_PERSON = array(ARRAY_PERSON);
   public static final ArrayTypeH ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
-  public static final ImmutableList<TypeH> TYPESV_TO_TEST = list(
+  public static final ImmutableList<TypeH> BASE_TYPESV_TO_TEST = list(
       BLOB,
       BOOL,
       FUNCTION,
       INT,
       NOTHING,
       STRING,
-      PERSON,
+      PERSON
+  );
 
+  public static final ImmutableList<TypeH> ARRAY_TYPESV_TO_TEST = list(
       ARRAY_BLOB,
       ARRAY_BOOL,
       ARRAY_FUNCTION,
@@ -88,6 +90,9 @@ public class TestingTypesH {
       ARRAY2_STR,
       ARRAY2_PERSON_TUPLE
   );
+
+  public static final ImmutableList<TypeH> TYPESV_TO_TEST =
+      concat(BASE_TYPESV_TO_TEST, ARRAY_TYPESV_TO_TEST);
 
   private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
       "string", "any", "call", "select", "tuple", "blob", "bool", "int_", "nativeMethod", "nothing",
@@ -135,8 +140,8 @@ public class TestingTypesH {
         TYPEH_DB.if_(STRING),
         TYPEH_DB.invoke(BLOB),
         TYPEH_DB.invoke(STRING),
-        TYPEH_DB.map(BLOB),
-        TYPEH_DB.map(STRING),
+        TYPEH_DB.map(ARRAY_BLOB),
+        TYPEH_DB.map(ARRAY_STR),
         TYPEH_DB.order(BLOB),
         TYPEH_DB.order(STRING),
         TYPEH_DB.ref(BLOB),

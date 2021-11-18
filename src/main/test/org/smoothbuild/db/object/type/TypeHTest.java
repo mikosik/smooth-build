@@ -68,6 +68,7 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.base.TypeKindH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
@@ -149,7 +150,7 @@ public class TypeHTest extends TestingContext {
         args(f -> f.construct(f.tuple(list(f.string(), f.int_()))), "CONSTRUCT:{String,Int}"),
         args(f -> f.if_(f.int_()), "IF:Int"),
         args(f -> f.invoke(f.int_()), "INVOKE:Int"),
-        args(f -> f.map(f.int_()), "MAP:Int"),
+        args(f -> f.map(f.array(f.int_())), "MAP:[Int]"),
         args(f -> f.nativeMethod(), "NATIVE_METHOD"),
         args(f -> f.order(f.string()), "ORDER:[String]"),
         args(f -> f.ref(f.int_()), "REF:Int"),
@@ -448,8 +449,8 @@ public class TypeHTest extends TestingContext {
     }
 
     @ParameterizedTest
-    @MethodSource("types")
-    public void map_(TypeHV type) {
+    @MethodSource("arrayTypes")
+    public void map_(ArrayTypeH type) {
       assertThat(TYPEH_DB.map(type).evaluationType())
           .isEqualTo(type);
     }
@@ -477,6 +478,10 @@ public class TypeHTest extends TestingContext {
 
     public static ImmutableList<TypeH> types() {
       return TestingTypesH.TYPESV_TO_TEST;
+    }
+
+    public static ImmutableList<TypeH> arrayTypes() {
+      return TestingTypesH.ARRAY_TYPESV_TO_TEST;
     }
   }
 
