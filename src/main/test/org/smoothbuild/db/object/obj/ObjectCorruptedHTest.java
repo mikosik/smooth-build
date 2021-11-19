@@ -133,8 +133,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(anyHT()),
               hash("aaa"));
       assertCall(() -> objectHDb().get(objHash))
-          .throwsException(new UnsupportedOperationException(
-              "Cannot create object for ANY type."));
+          .throwsException(UnsupportedOperationException.class);
     }
   }
 
@@ -1328,8 +1327,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(nothingHT()),
               hash("aaa"));
       assertCall(() -> objectHDb().get(objHash))
-          .throwsException(new UnsupportedOperationException(
-              "Cannot create object for NOTHING type."));
+          .throwsException(UnsupportedOperationException.class);
     }
   }
 
@@ -1603,8 +1601,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(variableHT("A")),
               hash("aaa"));
       assertCall(() -> objectHDb().get(objHash))
-          .throwsException(new UnsupportedOperationException(
-              "Cannot create object for VARIABLE type."));
+          .throwsException(UnsupportedOperationException.class);
     }
   }
 

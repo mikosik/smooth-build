@@ -4,9 +4,6 @@ import static org.smoothbuild.db.object.type.base.TypeKindH.VARIABLE;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
-import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.lang.base.type.api.Variable;
 
@@ -25,10 +22,5 @@ public class VariableH extends TypeHV implements Variable {
   @Override
   public ImmutableSet<VariableH> variables() {
     return variables;
-  }
-
-  @Override
-  public ObjectH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    throw new UnsupportedOperationException("Cannot create object for " + VARIABLE + " type.");
   }
 }

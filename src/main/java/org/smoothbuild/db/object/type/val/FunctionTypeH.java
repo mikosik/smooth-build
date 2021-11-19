@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.type.val;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.db.object.type.base.TypeKindH.FUNCTION;
@@ -56,7 +55,6 @@ public class FunctionTypeH extends TypeHV implements FunctionType {
 
   @Override
   public FunctionH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    checkArgument(this.equals(merkleRoot.type()));
-    return new FunctionH(merkleRoot, objectHDb);
+    return (FunctionH) super.newObj(merkleRoot, objectHDb);
   }
 }

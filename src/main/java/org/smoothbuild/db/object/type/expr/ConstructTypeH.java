@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.type.expr;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.TypeKindH.CONSTRUCT;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -25,7 +24,6 @@ public class ConstructTypeH extends TypeHE {
 
   @Override
   public ConstructH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    checkArgument(this.equals(merkleRoot.type()));
-    return new ConstructH(merkleRoot, objectHDb);
+    return (ConstructH) super.newObj(merkleRoot, objectHDb);
   }
 }

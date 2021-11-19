@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.type.val;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.db.object.type.base.TypeKindH.ARRAY;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
@@ -30,7 +29,6 @@ public class ArrayTypeH extends TypeHV implements ArrayType {
 
   @Override
   public ArrayH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    checkArgument(this.equals(merkleRoot.type()));
-    return new ArrayH(merkleRoot, objectHDb);
+    return (ArrayH) super.newObj(merkleRoot, objectHDb);
   }
 }

@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.type.val;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.TypeKindH.NATIVE_METHOD;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -19,7 +18,6 @@ public class NativeMethodTypeH extends TypeHV {
 
   @Override
   public NativeMethodH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    checkArgument(this.equals(merkleRoot.type()));
-    return new NativeMethodH(merkleRoot, objectHDb);
+    return (NativeMethodH) super.newObj(merkleRoot, objectHDb);
   }
 }

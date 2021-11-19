@@ -1,10 +1,16 @@
 package org.smoothbuild.db.object.type.base;
 
+import java.util.function.BiFunction;
+
+import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
 import org.smoothbuild.db.object.obj.expr.IfH;
+import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -13,6 +19,7 @@ import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FunctionH;
 import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.NativeMethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 
@@ -20,29 +27,33 @@ import com.google.common.collect.ImmutableMap;
 
 public enum TypeKindH {
   // Obj-s
-  ARRAY((byte) 0, ArrayH.class),
-  BLOB((byte) 1, BlobH.class),
-  BOOL((byte) 2, BoolH.class),
-  FUNCTION((byte) 3, FunctionH.class),
-  INT((byte) 4, IntH.class),
-  IF((byte) 5, IfH.class),
-  NOTHING((byte) 6, null),
-  TUPLE((byte) 7, TupleH.class),
-  STRING((byte) 8, StringH.class),
+  ARRAY((byte) 0, ArrayH.class, ArrayH::new),
+  BLOB((byte) 1, BlobH.class, BlobH::new),
+  BOOL((byte) 2, BoolH.class, BoolH::new),
+  FUNCTION((byte) 3, FunctionH.class, FunctionH::new),
+  INT((byte) 4, IntH.class, IntH::new),
+  IF((byte) 5, IfH.class, IfH::new),
+  NOTHING((byte) 6, null, TypeKindH::throwException),
+  TUPLE((byte) 7, TupleH.class, TupleH::new),
+  STRING((byte) 8, StringH.class, StringH::new),
 
   // Expr-s
-  CALL((byte) 9, CallH.class),
-  CONST((byte) 10, ConstH.class),
-  ORDER((byte) 11, OrderH.class),
-  SELECT((byte) 12, SelectH.class),
-  REF((byte) 14, RefH.class),
-  CONSTRUCT((byte) 15, ConstructH.class),
+  CALL((byte) 9, CallH.class, CallH::new),
+  CONST((byte) 10, ConstH.class, ConstH::new),
+  ORDER((byte) 11, OrderH.class, OrderH::new),
+  SELECT((byte) 12, SelectH.class, SelectH::new),
+  REF((byte) 14, RefH.class, RefH::new),
+  CONSTRUCT((byte) 15, ConstructH.class, ConstructH::new),
 
-  VARIABLE((byte) 17, null),
-  ANY((byte) 18, null),
-  NATIVE_METHOD((byte) 19, null),
-  INVOKE((byte) 20, null),
-  MAP((byte) 21, null);
+  VARIABLE((byte) 17, null, TypeKindH::throwException),
+  ANY((byte) 18, null, TypeKindH::throwException),
+  NATIVE_METHOD((byte) 19, null, NativeMethodH::new),
+  INVOKE((byte) 20, null, InvokeH::new),
+  MAP((byte) 21, null, MapH::new);
+
+  private static ObjectH throwException(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
+    throw new UnsupportedOperationException();
+  }
 
   private static final ImmutableMap<Byte, TypeKindH> markerToObjKindMap =
       ImmutableMap.<Byte, TypeKindH>builder()
@@ -71,10 +82,13 @@ public enum TypeKindH {
 
   private final byte marker;
   private final Class<? extends ObjectH> jType;
+  private final BiFunction<MerkleRoot, ObjectHDb, ObjectH> instantiator;
 
-  TypeKindH(byte marker, Class<? extends ObjectH> jType) {
+  TypeKindH(byte marker, Class<? extends ObjectH> jType,
+      BiFunction<MerkleRoot, ObjectHDb, ObjectH> instantiator) {
     this.marker = marker;
     this.jType = jType;
+    this.instantiator = instantiator;
   }
 
   public static TypeKindH fromMarker(byte marker) {
@@ -87,5 +101,9 @@ public enum TypeKindH {
 
   public Class<? extends ObjectH> jType() {
     return jType;
+  }
+
+  public ObjectH newInstanceJ(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
+    return instantiator.apply(merkleRoot, objectHDb);
   }
 }

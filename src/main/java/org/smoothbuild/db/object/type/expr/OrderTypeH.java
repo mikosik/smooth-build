@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.type.expr;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.TypeKindH.ORDER;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -25,7 +24,6 @@ public class OrderTypeH extends TypeHE {
 
   @Override
   public OrderH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    checkArgument(this.equals(merkleRoot.type()));
-    return new OrderH(merkleRoot, objectHDb);
+    return (OrderH) super.newObj(merkleRoot, objectHDb);
   }
 }

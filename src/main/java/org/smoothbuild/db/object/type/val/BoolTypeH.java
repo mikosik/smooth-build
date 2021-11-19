@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.type.val;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.TypeKindH.BOOL;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -20,7 +19,6 @@ public class BoolTypeH extends TypeHV {
 
   @Override
   public BoolH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    checkArgument(this.equals(merkleRoot.type()));
-    return new BoolH(merkleRoot, objectHDb);
+    return (BoolH) super.newObj(merkleRoot, objectHDb);
   }
 }

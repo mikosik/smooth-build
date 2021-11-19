@@ -1,5 +1,7 @@
 package org.smoothbuild.db.object.type.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -29,7 +31,10 @@ public abstract class TypeH extends AbstractType {
   /**
    * Creates new java instance of Obj represented by merkleRoot.
    */
-  public abstract ObjectH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb);
+  public ObjectH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
+    checkArgument(this.equals(merkleRoot.type()));
+    return kind.newInstanceJ(merkleRoot, objectHDb);
+  }
 
   public Hash hash() {
     return hash;

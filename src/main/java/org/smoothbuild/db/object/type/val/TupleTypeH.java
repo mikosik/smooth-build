@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.type.val;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.object.type.base.TypeKindH.TUPLE;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
@@ -26,8 +25,7 @@ public class TupleTypeH extends TypeHV {
 
   @Override
   public TupleH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    checkArgument(this.equals(merkleRoot.type()));
-    return new TupleH(merkleRoot, objectHDb);
+    return (TupleH) super.newObj(merkleRoot, objectHDb);
   }
 
   public ImmutableList<TypeHV> items() {
