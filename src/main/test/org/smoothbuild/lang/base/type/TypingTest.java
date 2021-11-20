@@ -205,7 +205,7 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("inferVariableBounds_test_data")
-  public void inferVariableBounds(TypeS type, TypeS assigned, BoundsMap expected) {
+  public void inferVariableBounds(TypeS type, TypeS assigned, BoundsMap<TypeS> expected) {
     assertThat(TYPING.inferVariableBounds(type, assigned, LOWER))
         .isEqualTo(expected);
   }
@@ -371,7 +371,7 @@ public class TypingTest {
         .buildTestCases(ANY);
   }
 
-  private void testMergeBothWays(TypeS type1, TypeS type2, Type expected, Side direction) {
+  private void testMergeBothWays(TypeS type1, TypeS type2, Type expected, Side<TypeS> direction) {
     assertThat(TYPING.merge(type1, type2, direction))
         .isEqualTo(expected);
     assertThat(TYPING.merge(type2, type1, direction))
