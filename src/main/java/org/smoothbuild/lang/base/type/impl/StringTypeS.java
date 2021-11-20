@@ -5,7 +5,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class StringTypeS extends BaseTypeS {
+public final class StringTypeS extends BaseTypeS {
   public StringTypeS() {
     super(TypeNames.STRING);
   }

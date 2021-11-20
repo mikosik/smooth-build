@@ -8,7 +8,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class ArrayTypeS extends TypeS implements ArrayType {
+public final class ArrayTypeS extends TypeS implements ArrayType {
   private final TypeS element;
 
   public ArrayTypeS(TypeS element) {

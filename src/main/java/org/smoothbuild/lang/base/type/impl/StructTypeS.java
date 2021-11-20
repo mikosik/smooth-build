@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * This class is immutable.
  */
-public class StructTypeS extends TypeS {
+public final class StructTypeS extends TypeS {
   private final NList<ItemSignature> fields;
 
   public StructTypeS(String name, NList<ItemSignature> fields) {

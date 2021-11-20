@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * This class is immutable.
  */
-public class FunctionTypeS extends TypeS implements FunctionType {
+public final class FunctionTypeS extends TypeS implements FunctionType {
   private final TypeS result;
   private final ImmutableList<TypeS> parameters;
 

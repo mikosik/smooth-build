@@ -17,16 +17,12 @@ import org.smoothbuild.lang.base.type.impl.VariableS;
 
 public class MapTypeToJType {
   public static Class<? extends ObjectH> mapTypeToJType(TypeS type) {
-    if (type instanceof ArrayTypeS) {
-      return ArrayH.class;
-    } else if (type instanceof VariableS) {
-      return ValueH.class;
-    } else if (type instanceof StructTypeS) {
-      return TupleH.class;
-    } else if (type instanceof FunctionTypeS) {
-      return TupleH.class;
-    } else {
-      return switch (type.name()) {
+    return switch (type) {
+      case ArrayTypeS arrayTypeS -> ArrayH.class;
+      case VariableS variableS -> ValueH.class;
+      case StructTypeS structTypeS -> TupleH.class;
+      case FunctionTypeS functionTypeS -> TupleH.class;
+      case null, default -> switch (type.name()) {
         case TypeNames.BLOB -> BlobH.class;
         case TypeNames.BOOL -> BoolH.class;
         case TypeNames.INT -> IntH.class;
@@ -34,6 +30,6 @@ public class MapTypeToJType {
         case TypeNames.STRING -> StringH.class;
         default -> throw new IllegalArgumentException("Unknown type: " + type.q());
       };
-    }
+    };
   }
 }

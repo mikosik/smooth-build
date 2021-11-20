@@ -32,28 +32,18 @@ public class TypeShConverter {
   }
 
   public TypeHV visit(TypeS type) {
-    // TODO refactor to pattern matching once we have java 17
-    if (type instanceof BlobTypeS blob) {
-      return visit(blob);
-    } else if (type instanceof BoolTypeS) {
-      return objFactory.boolType();
-    } else if (type instanceof IntTypeS intType) {
-      return visit(intType);
-    } else if (type instanceof NothingTypeS) {
-      return objFactory.nothingType();
-    } else if (type instanceof StringTypeS stringType) {
-      return visit(stringType);
-    } else if (type instanceof StructTypeS structType) {
-      return visit(structType);
-    } else if (type instanceof VariableS) {
-      throw new UnsupportedOperationException();
-    } else if (type instanceof ArrayTypeS array) {
-      return visit(array);
-    } else if (type instanceof FunctionTypeS) {
-      return nativeCodeType();
-    } else {
-      throw new IllegalArgumentException("Unknown type " + type.getClass().getCanonicalName());
-    }
+    return switch (type) {
+      case BlobTypeS blob -> visit(blob);
+      case BoolTypeS boolTypeS -> objFactory.boolType();
+      case IntTypeS intType -> visit(intType);
+      case NothingTypeS nothingTypeS -> objFactory.nothingType();
+      case StringTypeS stringType -> visit(stringType);
+      case StructTypeS structType -> visit(structType);
+      case VariableS variableS -> throw new UnsupportedOperationException();
+      case ArrayTypeS array -> visit(array);
+      case FunctionTypeS functionTypeS -> nativeCodeType();
+      default -> throw new IllegalStateException("Unexpected value: " + type);
+    };
   }
 
   public BlobTypeH visit(BlobTypeS type) {

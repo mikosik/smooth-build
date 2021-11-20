@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableSet;
 /**
  * This class is immutable.
  */
-public class VariableS extends TypeS implements Variable {
+public final class VariableS extends TypeS implements Variable {
   private final ImmutableSet<VariableS> variables;
 
   public VariableS(String name) {

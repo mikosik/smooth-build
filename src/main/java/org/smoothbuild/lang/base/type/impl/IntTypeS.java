@@ -5,7 +5,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
 /**
  * This class is immutable.
  */
-public class IntTypeS extends BaseTypeS {
+public final class IntTypeS extends BaseTypeS {
   public IntTypeS() {
     super(TypeNames.INT);
   }
