@@ -62,10 +62,10 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
 
   @Override
   public Bounds<TypeS> oneSideBound(Side<TypeS> side, TypeS type) {
-    return side.dispatch(
-        () -> new Bounds<>(type, any()),
-        () -> new Bounds<>(nothing(), type)
-    );
+    return switch (side) {
+      case Sides.Lower l -> new Bounds<>(type, any());
+      case Sides.Upper u -> new Bounds<>(nothing(), type);
+    };
   }
 
   @Override

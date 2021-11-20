@@ -123,10 +123,10 @@ public class TypeHDb implements TypeFactory<TypeHV> {
 
   @Override
   public Bounds<TypeHV> oneSideBound(Side<TypeHV> side, TypeHV type) {
-    return side.dispatch(
-        () -> new Bounds<>(type, any()),
-        () -> new Bounds<>(nothing(), type)
-    );
+    return switch (side) {
+      case Sides.Lower l -> new Bounds<>(type, any());
+      case Sides.Upper u -> new Bounds<>(nothing(), type);
+    };
   }
 
   @Override
