@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.define.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallNode extends ExprNode {
+public final class CallNode extends ExprNode {
   private final ExprNode function;
   private final List<ArgNode> args;
   private List<Optional<ArgNode>> assignedArgs;

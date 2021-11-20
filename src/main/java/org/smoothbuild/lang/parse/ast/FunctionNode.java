@@ -14,7 +14,8 @@ import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public class FunctionNode extends EvaluableNode {
+public sealed class FunctionNode extends EvaluableNode
+    permits RealFuncNode, StructNode.ConstructorNode {
   private final NList<ItemNode> params;
 
   public FunctionNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> body,

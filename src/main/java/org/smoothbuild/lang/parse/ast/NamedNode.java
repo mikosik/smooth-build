@@ -3,7 +3,8 @@ package org.smoothbuild.lang.parse.ast;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Nal;
 
-public class NamedNode extends Node implements Nal {
+public sealed class NamedNode extends Node implements Nal
+    permits ArgNode, EvaluableNode, StructNode, TypeNode {
   private final String name;
 
   public NamedNode(String name, Location location) {

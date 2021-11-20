@@ -6,7 +6,7 @@ import org.smoothbuild.util.Hex;
 
 import okio.ByteString;
 
-public class BlobNode extends ExprNode {
+public final class BlobNode extends ExprNode {
   private final String literal;
   private ByteString byteString;
 

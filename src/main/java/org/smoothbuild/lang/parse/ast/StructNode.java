@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class StructNode extends NamedNode {
+public final class StructNode extends NamedNode {
   private final NList<ItemNode> fields;
   private final ConstructorNode constructor;
 
@@ -34,7 +34,7 @@ public class StructNode extends NamedNode {
     return fields;
   }
 
-  public class ConstructorNode extends FunctionNode {
+  public final class ConstructorNode extends FunctionNode {
     public ConstructorNode(String structName, List<ItemNode> params, Location location) {
       super(
           Optional.of(new TypeNode(structName, location)),

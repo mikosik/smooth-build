@@ -1,15 +1,12 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.base.define.TestingLocation;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public class ArgNodeTest {
@@ -65,8 +62,8 @@ public class ArgNodeTest {
   }
 
   private static ExprNode expr(TypeS type) {
-    ExprNode expr = mock(ExprNode.class);
-    when(expr.type()).thenReturn(Optional.of(type));
-    return expr;
+    RefNode ref = new RefNode("name", TestingLocation.loc());
+    ref.setType(type);
+    return ref;
   }
 }

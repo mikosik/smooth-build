@@ -7,7 +7,7 @@ import org.smoothbuild.util.collect.CountersMap;
 
 import com.google.common.collect.ImmutableList;
 
-public class TypeNode extends NamedNode {
+public sealed class TypeNode extends NamedNode permits ArrayTypeNode, FunctionTypeNode {
   public TypeNode(String name, Location location) {
     super(name, location);
   }

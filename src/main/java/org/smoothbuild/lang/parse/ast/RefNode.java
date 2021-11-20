@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.like.EvaluableLike;
 
-public class RefNode extends ExprNode {
+public final class RefNode extends ExprNode {
   private final String name;
   private EvaluableLike referenced;
 

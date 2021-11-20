@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public class Node {
+public sealed class Node permits ExprNode, NamedNode {
   private final Location location;
   private Optional<TypeS> type;
 

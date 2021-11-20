@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
 
-public class AnnotationNode extends ExprNode {
+public final class AnnotationNode extends ExprNode {
   private final StringNode path;
   private final boolean isPure;
 

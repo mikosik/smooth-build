@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.collect.CountersMap;
 
-public class ArrayTypeNode extends TypeNode {
+public final class ArrayTypeNode extends TypeNode {
   private final TypeNode elementType;
 
   public ArrayTypeNode(TypeNode elementType, Location location) {

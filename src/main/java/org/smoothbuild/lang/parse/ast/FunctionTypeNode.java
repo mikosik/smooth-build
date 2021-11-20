@@ -5,7 +5,7 @@ import org.smoothbuild.util.collect.CountersMap;
 
 import com.google.common.collect.ImmutableList;
 
-public class FunctionTypeNode extends TypeNode {
+public final class FunctionTypeNode extends TypeNode {
   private final TypeNode resultType;
   private final ImmutableList<TypeNode> parameterTypes;
 

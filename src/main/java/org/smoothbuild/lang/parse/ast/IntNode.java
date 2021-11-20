@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 import org.smoothbuild.lang.base.define.Location;
 
-public class IntNode extends ExprNode {
+public final class IntNode extends ExprNode {
   private final String literal;
   private BigInteger bigInteger;
 

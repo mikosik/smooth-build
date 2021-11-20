@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.api.Type;
 
-public class ArgNode extends NamedNode {
+public final class ArgNode extends NamedNode {
   private final ExprNode expr;
 
   public ArgNode(String name, ExprNode expr, Location location) {

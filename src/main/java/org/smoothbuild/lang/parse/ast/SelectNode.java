@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
 
-public class SelectNode extends ExprNode {
+public final class SelectNode extends ExprNode {
   private final ExprNode expr;
   private final String fieldName;
 

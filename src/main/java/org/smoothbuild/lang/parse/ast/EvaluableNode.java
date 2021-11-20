@@ -6,7 +6,8 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public class EvaluableNode extends NamedNode implements EvaluableLike {
+public sealed class EvaluableNode extends NamedNode implements EvaluableLike
+    permits FunctionNode, ItemNode, ValueNode {
   private final Optional<TypeNode> typeNode;
   private final Optional<ExprNode> body;
   private final Optional<AnnotationNode> annotation;

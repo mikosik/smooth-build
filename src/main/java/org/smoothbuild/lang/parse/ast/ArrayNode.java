@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.define.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public class ArrayNode extends ExprNode {
+public final class ArrayNode extends ExprNode {
   private final List<ExprNode> elements;
 
   public ArrayNode(List<ExprNode> elements, Location location) {

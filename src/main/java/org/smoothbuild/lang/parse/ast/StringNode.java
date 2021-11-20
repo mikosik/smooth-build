@@ -4,7 +4,7 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.Strings;
 import org.smoothbuild.util.UnescapingFailedException;
 
-public class StringNode extends ExprNode {
+public final class StringNode extends ExprNode {
   private final String value;
   private String unescaped;
 
