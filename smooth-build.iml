@@ -12,7 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testing/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/java" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="17" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.junit.vintage:junit-vintage-engine" level="project" />
     <orderEntry type="library" name="org.junit.jupiter:junit-jupiter-engine" level="project" />

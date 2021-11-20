@@ -1,5 +1,6 @@
 #!/bin/sh
 
 SMOOTH_HOME=$(dirname "$(readlink -f "${0}")")
-java -cp "${SMOOTH_HOME}"/smooth.jar org.smoothbuild.cli.Main ${*}
+java --enable-preview \
+     -cp "${SMOOTH_HOME}"/smooth.jar org.smoothbuild.cli.Main ${*}
 
