@@ -155,16 +155,16 @@ public class TypeInferrer {
       private Optional<TypeS> createType(TypeNode type) {
         if (isVariableName(type.name())) {
           return Optional.of(factory.variable(type.name()));
-        } else if (type instanceof ArrayTypeNode array) {
-          TypeNode elementType = array.elementType();
-          return createType(elementType).map(factory::array);
-        } else if (type instanceof FunctionTypeNode function) {
-          Optional<TypeS> result = createType(function.resultType());
-          var parameters = Optionals.pullUp(map(function.parameterTypes(), this::createType));
-          return optionalFunctionType(result, parameters);
-        } else {
-          return Optional.of(findType(type.name()));
         }
+        return switch (type) {
+          case ArrayTypeNode array -> createType(array.elementType()).map(factory::array);
+          case FunctionTypeNode function -> {
+            Optional<TypeS> result = createType(function.resultType());
+            var parameters = Optionals.pullUp(map(function.parameterTypes(), this::createType));
+            yield optionalFunctionType(result, parameters);
+          }
+          default -> Optional.of(findType(type.name()));
+        };
       }
 
       private Optional<TypeS> optionalFunctionType(

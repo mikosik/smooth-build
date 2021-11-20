@@ -30,12 +30,10 @@ public class AstVisitor {
   }
 
   public void visitEvaluable(EvaluableNode evaluable) {
-    if (evaluable instanceof RealFuncNode func) {
-      visitRealFunc(func);
-    } else if (evaluable instanceof ValueNode value) {
-      visitValue(value);
-    } else {
-      throw new RuntimeException(
+    switch (evaluable) {
+      case RealFuncNode func -> visitRealFunc(func);
+      case ValueNode value -> visitValue(value);
+      default -> throw new RuntimeException(
           "Didn't expect instance of " + evaluable.getClass().getCanonicalName());
     }
   }
@@ -69,22 +67,16 @@ public class AstVisitor {
   public void visitType(TypeNode type) {}
 
   public void visitExpr(ExprNode expr) {
-    if (expr instanceof ArrayNode arrayNode) {
-      visitArray(arrayNode);
-    } else if (expr instanceof BlobNode blobNode) {
-      visitBlobLiteral(blobNode);
-    } else if (expr instanceof CallNode callNode) {
-      visitCall(callNode);
-    } else if (expr instanceof SelectNode selectNode) {
-      visitSelect(selectNode);
-    } else if (expr instanceof IntNode intNode) {
-      visitIntLiteral(intNode);
-    } else if (expr instanceof RefNode refNode) {
-      visitRef(refNode);
-    } else if (expr instanceof StringNode stringNode) {
-      visitStringLiteral(stringNode);
-    } else {
-      throw new RuntimeException("Unknown node " + expr.getClass().getSimpleName());
+    switch (expr) {
+      case ArrayNode arrayNode -> visitArray(arrayNode);
+      case BlobNode blobNode -> visitBlobLiteral(blobNode);
+      case CallNode callNode -> visitCall(callNode);
+      case SelectNode selectNode -> visitSelect(selectNode);
+      case IntNode intNode -> visitIntLiteral(intNode);
+      case RefNode refNode -> visitRef(refNode);
+      case StringNode stringNode -> visitStringLiteral(stringNode);
+      case null, default -> throw new RuntimeException(
+          "Unknown node " + expr.getClass().getSimpleName());
     }
   }
 

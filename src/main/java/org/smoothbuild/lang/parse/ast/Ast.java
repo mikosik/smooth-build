@@ -101,14 +101,16 @@ public class Ast {
       }
 
       private void addToDependencies(TypeNode type) {
-        if (type instanceof ArrayTypeNode arrayType) {
-          addToDependencies(arrayType.elementType());
-        } else if (type instanceof FunctionTypeNode functionType) {
-          addToDependencies(functionType.resultType());
-          functionType.parameterTypes().forEach(this::addToDependencies);
-        } else {
-          if (funcNames.contains(type.name())) {
-            dependencies.add(new GraphEdge<>(type.location(), type.name()));
+        switch (type) {
+          case ArrayTypeNode arrayType -> addToDependencies(arrayType.elementType());
+          case FunctionTypeNode functionType -> {
+            addToDependencies(functionType.resultType());
+            functionType.parameterTypes().forEach(this::addToDependencies);
+          }
+          default -> {
+            if (funcNames.contains(type.name())) {
+              dependencies.add(new GraphEdge<>(type.location(), type.name()));
+            }
           }
         }
       }

@@ -123,28 +123,18 @@ public class TopEvaluableLoader {
     }
 
     private ExprS createExpression(ExprNode expr) {
-      if (expr instanceof ArrayNode arrayNode) {
-        return createArrayLiteral(arrayNode);
-      }
-      if (expr instanceof BlobNode blobNode) {
-        return createBlobLiteral(blobNode);
-      }
-      if (expr instanceof CallNode callNode) {
-        return createCall(callNode);
-      }
-      if (expr instanceof SelectNode selectNode) {
-        return createSelect(selectNode);
-      }
-      if (expr instanceof IntNode intNode) {
-        return createIntLiteral(intNode);
-      }
-      if (expr instanceof RefNode refNode) {
-        return createReference(refNode);
-      }
-      if (expr instanceof StringNode stringNode) {
-        return createStringLiteral(stringNode);
-      }
-      throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
+      return switch (expr) {
+        case ArrayNode arrayNode -> createArrayLiteral(arrayNode);
+        case BlobNode blobNode -> createBlobLiteral(blobNode);
+        case CallNode callNode -> createCall(callNode);
+        case IntNode intNode -> createIntLiteral(intNode);
+        case RefNode refNode -> createReference(refNode);
+        case SelectNode selectNode -> createSelect(selectNode);
+        case StringNode stringNode -> createStringLiteral(stringNode);
+        case AnnotationNode node -> null;
+        default -> throw new RuntimeException(
+            "Unknown AST node: " + expr.getClass().getSimpleName() + ".");
+      };
     }
 
     private ExprS createArrayLiteral(ArrayNode array) {
@@ -185,13 +175,11 @@ public class TopEvaluableLoader {
       // has default argument for given parameter, otherwise checkers that ran so far would
       // report an error.
       EvaluableLike referenced = ((RefNode) call.function()).referenced();
-      if (referenced instanceof FunctionS function) {
-        return function.parameters().get(i).defaultValue().get();
-      } else if (referenced instanceof FunctionNode functionNode) {
-        return createExpression(functionNode.params().get(i).body().get());
-      } else {
-        throw new RuntimeException("Unexpected case");
-      }
+      return switch (referenced) {
+        case FunctionS function -> function.parameters().get(i).defaultValue().get();
+        case FunctionNode node -> createExpression(node.params().get(i).body().get());
+        default -> throw new RuntimeException("Unexpected case");
+      };
     }
 
     private ExprS createSelect(SelectNode selectNode) {
@@ -204,11 +192,11 @@ public class TopEvaluableLoader {
 
     private ExprS createReference(RefNode ref) {
       EvaluableLike referenced = ref.referenced();
-      if (referenced instanceof ItemNode) {
-        String name = ref.name();
-        return new ParamRefS(functionParameters.get(name).type(), name, ref.location());
-      }
-      return new RefS(referenced.inferredType().get(), ref.name(), ref.location());
+      return switch (referenced) {
+        case ItemNode n ->  new ParamRefS(
+            functionParameters.get(ref.name()).type(), ref.name(), ref.location());
+        default -> new RefS(referenced.inferredType().get(), ref.name(), ref.location());
+      };
     }
   }
 

@@ -244,17 +244,13 @@ public class AstCreator {
       }
 
       private TypeNode createType(TypeContext type) {
-        if (type instanceof TypeNameContext typeIdentifier) {
-          return createType(typeIdentifier);
-        }
-        if (type instanceof ArrayTypeContext arrayType) {
-          return createArrayType(arrayType);
-        }
-        if (type instanceof FunctionTypeContext functionType) {
-          return createFunctionType(functionType);
-        }
-        throw new RuntimeException("Illegal parse tree: " + TypeContext.class.getSimpleName()
-            + " without children.");
+        return switch (type) {
+          case TypeNameContext typeIdentifier -> createType(typeIdentifier);
+          case ArrayTypeContext arrayType -> createArrayType(arrayType);
+          case FunctionTypeContext functionType -> createFunctionType(functionType);
+          default -> throw new RuntimeException(
+              "Illegal parse tree: " + TypeContext.class.getSimpleName() + " without children.");
+        };
       }
 
       private TypeNode createType(TypeNameContext type) {
