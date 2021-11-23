@@ -101,11 +101,9 @@ public class Typing<T extends Type> {
   }
 
   public BoundsMap<T> inferVariableBoundsInCall(
-      T resultType, List<? extends T> parameterTypes, List<? extends T> argumentTypes) {
+      List<? extends T> parameterTypes, List<? extends T> argumentTypes) {
     var result = new HashMap<Variable, Bounded<T>>();
     inferVariableBounds(parameterTypes, argumentTypes, factory.lower(), result);
-    resultType.variables().forEach(v -> result.merge(
-        v, new Bounded<>(v, factory.unbounded()), this::merge));
     return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
@@ -161,7 +159,12 @@ public class Typing<T extends Type> {
   public T mapVariables(T type, BoundsMap<T> boundsMap, Side<T> side) {
     if (type.isPolytype()) {
       if (type instanceof Variable variable) {
-        return boundsMap.map().get(variable).bounds().get(side);
+        Bounded<T> bounded = boundsMap.map().get(variable);
+        if (bounded == null) {
+          return type;
+        } else {
+          return bounded.bounds().get(side);
+        }
       } else if (type instanceof ArrayType arrayType) {
         T elemTypeM = mapVariables((T) arrayType.element(), boundsMap, side);
         return (T) createArrayType(arrayType, elemTypeM);

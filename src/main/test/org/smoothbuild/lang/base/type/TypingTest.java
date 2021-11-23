@@ -305,6 +305,8 @@ public class TypingTest {
   public static List<Arguments> mapVariables_test_data() {
     var result = new ArrayList<Arguments>();
     for (TypeS type : ALL_TESTED_TYPES) {
+      result.add(arguments(X, bm(), X));
+      result.add(arguments(a(X), bm(), a(X)));
       result.add(arguments(X, bm(X, LOWER, type), type));
       result.add(arguments(a(X), bm(X, LOWER, type), a(type)));
       result.add(arguments(X, bm(X, LOWER, a(type)), a(type)));
