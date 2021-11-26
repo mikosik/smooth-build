@@ -7,6 +7,11 @@ import org.smoothbuild.lang.base.type.impl.IntTypeS;
 
 public record IntS(IntTypeS type, BigInteger bigInteger, Location location) implements LiteralS {
   @Override
+  public String name() {
+    return toShortString();
+  }
+
+  @Override
   public String toShortString() {
     return bigInteger.toString();
   }

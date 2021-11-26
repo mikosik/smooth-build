@@ -1,24 +1,18 @@
 package org.smoothbuild.exec.algorithm;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.constAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.constructAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedIntAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.invokeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.orderAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.referenceAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.selectAlgorithmHash;
 import static org.smoothbuild.util.collect.Lists.list;
 
-import java.math.BigInteger;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -26,27 +20,32 @@ import okio.ByteString;
 public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
-    Set<Hash> hashes = new HashSet<>();
-    TupleTypeH constructedType = tupleHT();
+    HashSet<Hash> hashes = new HashSet<>();
+    var constructedType = tupleHT();
 
-    hashes.add(orderAlgorithmHash());
-    hashes.add(callNativeAlgorithmHash("referencableName"));
-    hashes.add(convertAlgorithmHash(stringHT()));
+    hashes.add(constAlgorithmHash(intH(0)));
     hashes.add(constructAlgorithmHash(constructedType));
-    hashes.add(selectAlgorithmHash(0));
-    hashes.add(fixedStringAlgorithmHash("abc"));
-    hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
-    hashes.add(referenceAlgorithmHash(Hash.of(""), "global-referencable-name"));
-    hashes.add(fixedIntAlgorithmHash(BigInteger.valueOf(123)));
+    hashes.add(convertAlgorithmHash(stringHT()));
+    hashes.add(invokeAlgorithmHash(nativeFunctionH(blobH(), stringH("class"))));
+    hashes.add(orderAlgorithmHash());
+    hashes.add(selectAlgorithmHash(intH(0)));
 
     assertThat(hashes.size())
-        .isEqualTo(9);
+        .isEqualTo(6);
   }
 
   @Test
-  public void call_native_algorithm_has_different_hash_for_different_evaluable_names() {
-    assertThat(callNativeAlgorithmHash("referencableName1"))
-        .isNotEqualTo(callNativeAlgorithmHash("referencableName2"));
+  public void const_algorithm_has_different_hash_for_different_byte_strings() {
+    assertThat(constAlgorithmHash(intH(1)))
+        .isNotEqualTo(constAlgorithmHash(intH(2)));
+  }
+
+  @Test
+  public void construct_algorithm_has_different_hash_for_different_fields() {
+    var tuple1 = tupleHT(list(boolHT()));
+    var tuple2 = tupleHT(list(blobHT()));
+    assertThat(constructAlgorithmHash(tuple1))
+        .isNotEqualTo(constructAlgorithmHash(tuple2));
   }
 
   @Test
@@ -56,47 +55,24 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void construct_algorithm_has_different_hash_for_different_fields() {
-    TupleTypeH constructedType = tupleHT(list());
-    TupleTypeH constructedType2 = tupleHT(list(blobHT()));
-
-    assertThat(constructAlgorithmHash(constructedType))
-        .isNotEqualTo(constructAlgorithmHash(constructedType2));
+  public void invoke_algorithm_has_different_hash_for_different_jars() {
+    var natFunc1 = nativeFunctionH(blobH(ByteString.of((byte) 1)), stringH("class"));
+    var natFunc2 = nativeFunctionH(blobH(ByteString.of((byte) 2)), stringH("class"));
+    assertThat(invokeAlgorithmHash(natFunc1))
+        .isNotEqualTo(invokeAlgorithmHash(natFunc2));
   }
 
   @Test
-  public void read_tuple_item_algorithm_has_different_hash_for_different_field_indexes() {
-    assertThat(selectAlgorithmHash(0))
-        .isNotEqualTo(selectAlgorithmHash(1));
+  public void invoke_algorithm_has_different_hash_for_class_binary_name() {
+    var natFunc1 = nativeFunctionH(blobH(), stringH("class 1"));
+    var natFunc2 = nativeFunctionH(blobH(), stringH("class 2"));
+    assertThat(invokeAlgorithmHash(natFunc1))
+        .isNotEqualTo(invokeAlgorithmHash(natFunc2));
   }
 
   @Test
-  public void fixed_string_algorithm_has_different_hash_for_different_strings() {
-    assertThat(fixedStringAlgorithmHash("abc"))
-        .isNotEqualTo(fixedStringAlgorithmHash("def"));
-  }
-
-  @Test
-  public void fixed_blob_algorithm_has_different_hash_for_different_byte_strings() {
-    assertThat(fixedBlobAlgorithmHash(ByteString.of((byte) 1)))
-        .isNotEqualTo(fixedBlobAlgorithmHash(ByteString.of((byte) 2)));
-  }
-
-  @Test
-  public void reference_algorithm_has_different_hash_for_different_modules() {
-    assertThat(referenceAlgorithmHash(Hash.of(123), "referencable-name"))
-        .isNotEqualTo(referenceAlgorithmHash(Hash.of(345), "referencable-name"));
-  }
-
-  @Test
-  public void reference_algorithm_has_different_hash_for_different_function_names() {
-    assertThat(referenceAlgorithmHash(Hash.of(123), "referencable-name"))
-        .isNotEqualTo(referenceAlgorithmHash(Hash.of(123), "other-name"));
-  }
-
-  @Test
-  public void fixed_int_algorithm_has_different_hash_for_different_integers() {
-    assertThat(fixedIntAlgorithmHash(BigInteger.valueOf(123)))
-        .isNotEqualTo(fixedIntAlgorithmHash(BigInteger.valueOf(124)));
+  public void select_algorithm_has_different_hash_for_different_field_indexes() {
+    assertThat(selectAlgorithmHash(intH(1)))
+        .isNotEqualTo(selectAlgorithmHash(intH(2)));
   }
 }

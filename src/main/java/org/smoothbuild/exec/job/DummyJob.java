@@ -3,9 +3,9 @@ package org.smoothbuild.exec.job;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Nal;
-import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 
@@ -15,7 +15,7 @@ import org.smoothbuild.util.concurrent.PromisedValue;
 public class DummyJob extends AbstractJob {
   private final ValueH val;
 
-  public DummyJob(TypeS type, ValueH val, Nal nal) {
+  public DummyJob(TypeHV type, ValueH val, Nal nal) {
     super(type, list(), nal);
     this.val = val;
   }

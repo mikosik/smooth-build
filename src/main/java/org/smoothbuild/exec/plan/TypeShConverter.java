@@ -9,9 +9,11 @@ import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.BlobTypeH;
+import org.smoothbuild.db.object.type.val.FunctionTypeH;
 import org.smoothbuild.db.object.type.val.IntTypeH;
 import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.val.VariableH;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
 import org.smoothbuild.lang.base.type.impl.BoolTypeS;
@@ -33,16 +35,16 @@ public class TypeShConverter {
 
   public TypeHV visit(TypeS type) {
     return switch (type) {
-      case BlobTypeS blob -> visit(blob);
-      case BoolTypeS boolTypeS -> objFactory.boolType();
-      case IntTypeS intType -> visit(intType);
-      case NothingTypeS nothingTypeS -> objFactory.nothingType();
-      case StringTypeS stringType -> visit(stringType);
-      case StructTypeS structType -> visit(structType);
-      case VariableS variableS -> throw new UnsupportedOperationException();
-      case ArrayTypeS array -> visit(array);
-      case FunctionTypeS functionTypeS -> nativeCodeType();
-      default -> throw new IllegalStateException("Unexpected value: " + type);
+      case BlobTypeS blobS -> visit(blobS);
+      case BoolTypeS boolS -> objFactory.boolType();
+      case IntTypeS intS -> visit(intS);
+      case NothingTypeS nothingS -> objFactory.nothingType();
+      case StringTypeS stringS -> visit(stringS);
+      case StructTypeS structS -> visit(structS);
+      case VariableS variableS ->  visit(variableS);
+      case ArrayTypeS arrayS -> visit(arrayS);
+      case FunctionTypeS functionS -> visit(functionS);
+      default -> throw new IllegalArgumentException("Unknown type " + type.getClass().getCanonicalName());
     };
   }
 
@@ -54,6 +56,10 @@ public class TypeShConverter {
     return objFactory.intType();
   }
 
+  public FunctionTypeH visit(FunctionTypeS type) {
+    return objFactory.definedFunctionType(visit(type.result()), map(type.parameters(), this::visit));
+  }
+
   public StringTypeH visit(StringTypeS string) {
     return objFactory.stringType();
   }
@@ -63,16 +69,12 @@ public class TypeShConverter {
     return objFactory.tupleType(itemTypes);
   }
 
-  public ArrayTypeH visit(ArrayTypeS array) {
-    if (array.isPolytype()) {
-      throw new UnsupportedOperationException();
-    }
-    return objFactory.arrayType(visit(array.element()));
+  public VariableH visit(VariableS variable) {
+    return objFactory.variable(variable.name());
   }
 
-  private TupleTypeH nativeCodeType() {
-    return objFactory.tupleType(
-        list(objFactory.stringType(), objFactory.blobType()));
+  public ArrayTypeH visit(ArrayTypeS array) {
+    return objFactory.arrayType(visit(array.element()));
   }
 
   public TupleTypeH functionType() {

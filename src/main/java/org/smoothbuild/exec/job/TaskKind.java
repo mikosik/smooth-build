@@ -2,10 +2,11 @@ package org.smoothbuild.exec.job;
 
 public enum TaskKind {
   CALL,
+  CONSTRUCT,
   CONVERSION,
-  SELECT,
   LITERAL,
   MAP,
   REFERENCE,
+  SELECT,
   VALUE
 }

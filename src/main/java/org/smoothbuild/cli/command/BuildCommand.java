@@ -33,7 +33,7 @@ public class BuildCommand extends ExclusiveCommand {
           
           Filter is a boolean expression made up of matchers (listed below), \
           boolean operators '&', '|', grouping brackets '(', ')'.
-          Default value is 'info|(user&(call|value|field))'
+          Default value is 'info|(user&(call|select))'
           
           For each matched tasks its name and properties are printed together with logs that \
           match filter specified with --log-level option. \
@@ -43,26 +43,26 @@ public class BuildCommand extends ExclusiveCommand {
           least warning level.
           
           Available task matchers:
-            a, all           - all tasks
-            d, default       - shortcut for 'info|(user&(call|value|field))'
-            n, none          - no tasks
+            a, all             - all tasks
+            d, default         - shortcut for 'info|(user&(call|select))'
+            n, none            - no tasks
           
-            f, fatal         - contains a log with fatal level
-            e, error         - contains a log with at least error level
-            w, warning       - contains a log with at least warning level
-            i, info          - contains any log
+            f, fatal           - contains a log with fatal level
+            e, error           - contains a log with at least error level
+            w, warning         - contains a log with at least warning level
+            i, info            - contains any log
           
-            p, prj, project  - evaluates expression from project module
-            sdk              - evaluates expression from smooth SDK module
+            p, prj, project    - evaluates expression from project module
+            sdk                - evaluates expression from smooth SDK module
           
-            c, call          - evaluates function call
-            conv, conversion - evaluates automatic conversion
-            s, select        - evaluates field selection
-            l, literal       - evaluates compile time literal
-            m, map           - evaluates single call to a function in evaluation of \
+            c, call            - evaluates function call
+            cons, construction - evaluates struct construction
+            conv, conversion   - evaluates automatic conversion
+            s, select          - evaluates field selection
+            l, literal         - evaluates compile time literal
+            m, map             - evaluates single call to a function in evaluation of \
           `map` function call
-            r, reference     - evaluates function reference expression
-            v, value         - evaluates value expression
+            r, reference       - evaluates function reference expression
           """
   )
   TaskMatcher showTasks;

@@ -2,6 +2,6 @@ package org.smoothbuild.lang.base.define;
 
 import org.smoothbuild.lang.expr.Annotation;
 
-public interface NativeEvaluableS extends EvaluableS {
+public sealed interface NativeEvaluableS extends EvaluableS permits NativeFunctionS, NativeValueS {
   public Annotation annotation();
 }

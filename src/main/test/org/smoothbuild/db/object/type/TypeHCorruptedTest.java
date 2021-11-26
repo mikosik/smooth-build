@@ -4,16 +4,14 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.type.TypeHDb.DATA_PATH;
 import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_PARAMS_PATH;
 import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_RESULT_PATH;
+import static org.smoothbuild.db.object.type.base.TypeKindH.ABSTRACT_FUNCTION;
 import static org.smoothbuild.db.object.type.base.TypeKindH.ANY;
 import static org.smoothbuild.db.object.type.base.TypeKindH.ARRAY;
 import static org.smoothbuild.db.object.type.base.TypeKindH.BLOB;
 import static org.smoothbuild.db.object.type.base.TypeKindH.BOOL;
 import static org.smoothbuild.db.object.type.base.TypeKindH.CALL;
-import static org.smoothbuild.db.object.type.base.TypeKindH.CONST;
 import static org.smoothbuild.db.object.type.base.TypeKindH.CONSTRUCT;
-import static org.smoothbuild.db.object.type.base.TypeKindH.FUNCTION;
 import static org.smoothbuild.db.object.type.base.TypeKindH.INT;
-import static org.smoothbuild.db.object.type.base.TypeKindH.NATIVE_METHOD;
 import static org.smoothbuild.db.object.type.base.TypeKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.TypeKindH.ORDER;
 import static org.smoothbuild.db.object.type.base.TypeKindH.REF;
@@ -46,7 +44,7 @@ import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
 import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
-import org.smoothbuild.db.object.type.expr.ConstTypeH;
+import org.smoothbuild.db.object.type.expr.RefTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.FunctionTypeH;
 import org.smoothbuild.db.object.type.val.IntTypeH;
@@ -118,11 +116,6 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void native_method_with_additional_child() throws Exception {
-      test_base_type_with_additional_child(NATIVE_METHOD);
-    }
-
-    @Test
     public void nothing_with_additional_child() throws Exception {
       test_base_type_with_additional_child(NOTHING);
     }
@@ -182,11 +175,11 @@ public class TypeHCorruptedTest extends TestingContext {
     public void with_element_type_being_expr_type() throws Exception {
       Hash hash = hash(
           hash(ARRAY.marker()),
-          hash(constHT(intHT()))
+          hash(refHT())
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, ARRAY, DATA_PATH, TypeHV.class, ConstTypeH.class));
+              hash, ARRAY, DATA_PATH, TypeHV.class, RefTypeH.class));
     }
   }
 
@@ -229,48 +222,6 @@ public class TypeHCorruptedTest extends TestingContext {
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
       test_type_with_data_being_expr_type(CALL, TypeHV.class);
-    }
-  }
-
-  @Nested
-  class _const {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save const type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(CONST.marker()),
-          hash(intHT())
-      );
-      assertThat(hash)
-          .isEqualTo(constHT(intHT()).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      test_type_without_data(CONST);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      test_type_with_additional_data(CONST);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(CONST);
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(CONST);
-    }
-
-    @Test
-    public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(CONST, TypeHV.class);
     }
   }
 
@@ -328,7 +279,7 @@ public class TypeHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _function {
+  class _abstract_function {
     @Test
     public void learning_test() throws Exception {
       /*
@@ -338,7 +289,7 @@ public class TypeHCorruptedTest extends TestingContext {
       ImmutableList<TypeHV> parameterTypes = list(stringHT(), boolHT());
       TupleTypeH parametersTuple = tupleHT(parameterTypes);
       Hash specHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT()),
               hash(parametersTuple)
@@ -350,17 +301,17 @@ public class TypeHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(FUNCTION);
+      test_type_without_data(ABSTRACT_FUNCTION);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(FUNCTION);
+      test_type_with_additional_data(ABSTRACT_FUNCTION);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_sequence(FUNCTION);
+      test_data_hash_pointing_nowhere_instead_of_being_sequence(ABSTRACT_FUNCTION);
     }
 
     @Test
@@ -368,18 +319,18 @@ public class TypeHCorruptedTest extends TestingContext {
       Hash notSequence = hash("abc");
       Hash hash =
           hash(
-              hash(FUNCTION.marker()),
+              hash(ABSTRACT_FUNCTION.marker()),
               notSequence
           );
       assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, FUNCTION, DATA_PATH));
+          .throwsException(new DecodeTypeNodeException(hash, ABSTRACT_FUNCTION, DATA_PATH));
     }
 
     @Test
     public void with_data_having_three_elements() throws Exception {
       TupleTypeH parameterTypes = tupleHT(list(stringHT(), boolHT()));
       Hash hash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT()),
               hash(parameterTypes),
@@ -387,19 +338,19 @@ public class TypeHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeSequenceException(hash, FUNCTION, DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedTypeSequenceException(hash, ABSTRACT_FUNCTION, DATA_PATH, 2, 3));
     }
 
     @Test
     public void with_data_having_one_elements() throws Exception {
       Hash hash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT())
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeSequenceException(hash, FUNCTION, DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedTypeSequenceException(hash, ABSTRACT_FUNCTION, DATA_PATH, 2, 1));
     }
 
     @ParameterizedTest
@@ -408,11 +359,11 @@ public class TypeHCorruptedTest extends TestingContext {
         int byteCount) throws Exception {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash typeHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           notHashOfSequence
       );
       assertCall(() -> ((FunctionTypeH) typeHDb().get(typeHash)).result())
-          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, DATA_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, ABSTRACT_FUNCTION, DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
@@ -422,14 +373,14 @@ public class TypeHCorruptedTest extends TestingContext {
       TupleTypeH parameterTypes = tupleHT(list(stringHT(), boolHT()));
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               nowhere,
               hash(parameterTypes)
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, FUNCTION_RESULT_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, ABSTRACT_FUNCTION, FUNCTION_RESULT_PATH))
           .withCause(new DecodeTypeException(nowhere));
     }
 
@@ -437,29 +388,29 @@ public class TypeHCorruptedTest extends TestingContext {
     public void with_result_being_expr_type() throws Exception {
       TupleTypeH parameterType = tupleHT(list(stringHT(), boolHT()));
       Hash typeHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
-              hash(constHT()),
+              hash(refHT()),
               hash(parameterType)
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, FUNCTION, FUNCTION_RESULT_PATH, TypeHV.class, ConstTypeH.class));
+              typeHash, ABSTRACT_FUNCTION, FUNCTION_RESULT_PATH, TypeHV.class, RefTypeH.class));
     }
 
     @Test
     public void with_result_type_corrupted() throws Exception {
       TupleTypeH parameterTypes = tupleHT(list(stringHT(), boolHT()));
       Hash typeHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               corruptedArrayTypeHash(),
               hash(parameterTypes)
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, FUNCTION_RESULT_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, ABSTRACT_FUNCTION, FUNCTION_RESULT_PATH))
           .withCause(corruptedArrayTypeException());
     }
 
@@ -467,21 +418,21 @@ public class TypeHCorruptedTest extends TestingContext {
     public void with_parameters_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT()),
               nowhere
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, FUNCTION_PARAMS_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, ABSTRACT_FUNCTION, FUNCTION_PARAMS_PATH))
           .withCause(new DecodeTypeException(nowhere));
     }
 
     @Test
     public void with_parameters_not_being_tuple() throws Exception {
       Hash typeHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT()),
               hash(stringHT())
@@ -489,34 +440,34 @@ public class TypeHCorruptedTest extends TestingContext {
       );
       assertThatGet(typeHash)
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, FUNCTION, DATA_PATH, 1, TupleTypeH.class, StringTypeH.class));
+              typeHash, ABSTRACT_FUNCTION, DATA_PATH, 1, TupleTypeH.class, StringTypeH.class));
     }
 
     @Test
     public void with_parameters_being_expr_type() throws Exception {
       Hash typeHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT()),
-              hash(constHT())
+              hash(refHT())
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, FUNCTION, FUNCTION_PARAMS_PATH, TupleTypeH.class, ConstTypeH.class));
+              typeHash, ABSTRACT_FUNCTION, FUNCTION_PARAMS_PATH, TupleTypeH.class, RefTypeH.class));
     }
 
     @Test
     public void with_parameters_type_corrupted() throws Exception {
       Hash typeHash = hash(
-          hash(FUNCTION.marker()),
+          hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT()),
               corruptedArrayTypeHash()
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, FUNCTION, FUNCTION_PARAMS_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, ABSTRACT_FUNCTION, FUNCTION_PARAMS_PATH))
           .withCause(corruptedArrayTypeException());
     }
   }
@@ -669,16 +620,15 @@ public class TypeHCorruptedTest extends TestingContext {
         .withCause(corruptedArrayTypeException());
   }
 
-  private void test_type_with_data_being_expr_type(
-      TypeKindH kind, Class<? extends TypeH> expected)
+  private void test_type_with_data_being_expr_type(TypeKindH kind, Class<? extends TypeH> expected)
       throws Exception {
     Hash hash = hash(
         hash(kind.marker()),
-        hash(constHT(intHT()))
+        hash(refHT())
     );
     assertThatGet(hash)
         .throwsException(new UnexpectedTypeNodeException(
-            hash, kind, DATA_PATH, expected, ConstTypeH.class));
+            hash, kind, DATA_PATH, expected, RefTypeH.class));
   }
 
   private ThrownExceptionSubject assertThatGet(Hash hash) {
@@ -845,12 +795,12 @@ public class TypeHCorruptedTest extends TestingContext {
           hash(
               hash(TUPLE.marker()),
               hash(
-                  hash(constHT())
+                  hash(refHT())
               )
           );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, TUPLE, "data", 0, TypeHV.class, ConstTypeH.class));
+              hash, TUPLE, "data", 0, TypeHV.class, RefTypeH.class));
     }
 
     @Test

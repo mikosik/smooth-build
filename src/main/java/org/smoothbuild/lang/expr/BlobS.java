@@ -9,6 +9,11 @@ import okio.ByteString;
 
 public record BlobS(BlobTypeS type, ByteString byteString, Location location) implements LiteralS {
   @Override
+  public String name() {
+    return toShortString();
+  }
+
+  @Override
   public String toShortString() {
     int limit = NAME_LENGTH_LIMIT;
     String string = "0x" + byteString.hex();

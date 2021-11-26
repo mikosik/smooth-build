@@ -7,9 +7,11 @@ import java.util.Objects;
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTypeH;
 
 import com.google.common.collect.ImmutableList;
 
@@ -27,8 +29,13 @@ public class OrderH extends ExprH {
     return (OrderTypeH) super.type();
   }
 
-  public ImmutableList<ExprH> elements() {
-    var elements = readSequenceObjs(DATA_PATH, dataHash(), ExprH.class);
+  @Override
+  public ArrayTypeH evaluationType() {
+    return type().evaluationType();
+  }
+
+  public ImmutableList<ObjectH> elements() {
+    var elements = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
     var expectedElementType = type().evaluationType().element();
     for (int i = 0; i < elements.size(); i++) {
       TypeHV actualType = elements.get(i).evaluationType();

@@ -12,26 +12,25 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
-import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.util.Scope;
-import org.smoothbuild.util.collect.Labeled;
+import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 
 public class MapJob extends AbstractJob {
   private static final String MAP_TASK_NAME = MAP_FUNCTION_NAME + PARENTHESES;
-  private final Scope<Labeled<Job>> scope;
+  private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeS type, List<Job> dependencies, Location location, Scope<Labeled<Job>> scope,
+  public MapJob(TypeHV typeS, Location location, List<Job> dependencies, IndexedScope<Job> scope,
       JobCreator jobCreator) {
-    super(type, dependencies, new NalImpl("building:" + MAP_TASK_NAME, location));
+    super(typeS, dependencies, new NalImpl("building:" + MAP_TASK_NAME, location));
     this.scope = scope;
     this.jobCreator = jobCreator;
   }
@@ -42,33 +41,35 @@ public class MapJob extends AbstractJob {
     Promise<ValueH> array = arrayJob().schedule(worker);
     Promise<ValueH> function = functionJob().schedule(worker);
     runWhenAllAvailable(list(array, function),
-        () -> onArrayCompleted((ArrayH) array.get(), (TupleH) function.get(), worker, result));
+        () -> onArrayCompleted((ArrayH) array.get(), (FunctionH) function.get(), worker, result));
     return result;
   }
 
-  private void onArrayCompleted(ArrayH array, TupleH function, Worker worker, Consumer<ValueH> result) {
-    var outputArrayType = (ArrayTypeS) type();
-    var outputElemType = outputArrayType.element();
-    Job functionJob = getJob(function);
+  private void onArrayCompleted(ArrayH array, FunctionH functionH, Worker worker,
+      Consumer<ValueH> result) {
+    var outputArrayTypeH = (ArrayTypeH) type();
+    var outputElemType = outputArrayTypeH.element();
+    var funcJob = getJob(functionH);
     var mapElemJobs = map(
         array.elements(ValueH.class),
-        o -> mapElementJob(outputElemType, functionJob, o));
+        o -> mapElementJob(outputElemType, funcJob, o));
     var info = new TaskInfo(CALL, MAP_TASK_NAME, location());
-    jobCreator.arrayEager(outputArrayType, mapElemJobs, info)
+    jobCreator.orderEager(outputArrayTypeH, mapElemJobs, info)
         .schedule(worker)
         .addConsumer(result);
   }
 
-  private Job getJob(TupleH function) {
-    return new DummyJob(functionJob().type(), function, functionJob());
+  private Job getJob(FunctionH function) {
+    var funcJob = functionJob();
+    return new DummyJob(funcJob.type(), function, funcJob);
   }
 
-  private Job mapElementJob(TypeS elemType, Job functionJob, ValueH element) {
-    Job elemJob = elemJob(elemType, element, arrayJob().location());
+  private Job mapElementJob(TypeHV elemType, Job functionJob, ValueH element) {
+    var elemJob = elemJob(elemType, element, arrayJob().location());
     return jobCreator.callEagerJob(scope, functionJob, list(elemJob), functionJob.location());
   }
 
-  private Job elemJob(TypeS elemType, ValueH element, Location location) {
+  private Job elemJob(TypeHV elemType, ValueH element, Location location) {
     return new DummyJob(elemType, element, new NalImpl("element-to-map", location));
   }
 

@@ -33,7 +33,6 @@ import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
 import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
-import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
@@ -46,7 +45,6 @@ import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
@@ -55,23 +53,20 @@ import org.smoothbuild.db.object.obj.expr.SelectH.SelectData;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NativeMethodH;
+import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
-import org.smoothbuild.db.object.type.expr.ConstTypeH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
-import org.smoothbuild.db.object.type.expr.OrderTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
+import org.smoothbuild.db.object.type.val.DefinedFunctionTypeH;
 import org.smoothbuild.db.object.type.val.FunctionTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.testing.TestingContext;
-
-import com.google.common.collect.ImmutableList;
 
 import okio.ByteString;
 
@@ -254,11 +249,11 @@ public class ObjectCorruptedHTest extends TestingContext {
                       hash(stringHT()),
                       hash("aaa")
                   ),
-                  hash(intHE(13))
+                  hash(refH(1))
               ));
       assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elements(StringH.class))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, type, DATA_PATH, 1, stringHT(), constHT(intHT())));
+              objHash, type, DATA_PATH, 1, ValueH.class, RefH.class));
     }
   }
 
@@ -386,21 +381,20 @@ public class ObjectCorruptedHTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var functionType = functionHT(intHT(), list(stringHT(), intHT()));
-      var function = functionH(functionType, intHE());
-      ConstH functionConst = constH(function);
-      ConstructH arguments = constructH(list(stringHE(), intHE()));
+      var functionType = definedFunctionHT(intHT(), list(stringHT(), intHT()));
+      var function = definedFunctionH(functionType, intH());
+      ConstructH arguments = constructH(list(stringH(), intH()));
       Hash objHash =
           hash(
               hash(callHT()),
               hash(
-                  hash(functionConst),
+                  hash(function),
                   hash(arguments)
               )
           );
 
       assertThat(((CallH) objectHDb().get(objHash)).data().function())
-          .isEqualTo(functionConst);
+          .isEqualTo(function);
       assertThat(((CallH) objectHDb().get(objHash)).data().arguments())
           .isEqualTo(arguments);
     }
@@ -412,8 +406,8 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      ConstH function = intHE(0);
-      ConstructH arguments = constructH(list(stringHE(), intHE()));
+      var function = intH(0);
+      var arguments = constructH(list(stringH(), intH()));
       Hash dataHash = hash(
           hash(function),
           hash(arguments)
@@ -433,7 +427,7 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void data_is_sequence_with_one_element() throws Exception {
-      ConstH function = intHE(0);
+      var function = intH(0);
       Hash dataHash = hash(
           hash(function)
       );
@@ -448,8 +442,8 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
-      ConstH function = intHE(0);
-      ConstructH arguments = constructH(list(stringHE(), intHE()));
+      var function = intH(0);
+      var arguments = constructH(list(stringH(), intH()));
       Hash dataHash = hash(
           hash(function),
           hash(arguments),
@@ -465,26 +459,9 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void function_is_val_instead_of_expr() throws Exception {
-      IntH val = intH(0);
-      ConstructH arguments = constructH(list(stringHE(), intHE()));
-      Hash objHash =
-          hash(
-              hash(callHT()),
-              hash(
-                  hash(val),
-                  hash(arguments)
-              )
-          );
-      assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, callHT(), DATA_PATH + "[0]", ExprH.class, IntH.class));
-    }
-
-    @Test
     public void function_component_evaluation_type_is_not_function() throws Exception {
-      ConstH function = intHE(3);
-      ConstructH arguments = constructH(list(stringHE(), intHE()));
+      var function = intH(3);
+      ConstructH arguments = constructH(list(stringH(), intH()));
       CallTypeH type = callHT(stringHT());
       Hash objHash =
           hash(
@@ -501,14 +478,13 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void arguments_is_val_instead_of_expr() throws Exception {
-      var functionType = functionHT(intHT(), list(stringHT(), intHT()));
-      var function = functionH(functionType, intHE());
-      ConstH functionConst = constH(function);
+      var functionType = definedFunctionHT(intHT(), list(stringHT(), intHT()));
+      var function = definedFunctionH(functionType, intH());
       Hash objHash =
           hash(
               hash(callHT()),
               hash(
-                  hash(functionConst),
+                  hash(function),
                   hash(intH())
               )
           );
@@ -520,29 +496,29 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void arguments_component_evaluation_type_is_not_construct_but_different_expr()
         throws Exception {
-      var functionType = functionHT(intHT(), list(stringHT(), intHT()));
-      var function = functionH(functionType, intHE());
-      ConstH functionConst = constH(function);
-      CallTypeH type = callHT();
+      var functionType = definedFunctionHT(intHT(), list(stringHT(), intHT()));
+      var function = definedFunctionH(functionType, intH());
+      var type = callHT();
       Hash objHash =
           hash(
               hash(type),
               hash(
-                  hash(functionConst),
-                  hash(intHE())
+                  hash(function),
+                  hash(refH(1))
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, type, DATA_PATH + "[1]", ConstructH.class, ConstH.class));
+              objHash, type, DATA_PATH + "[1]", ConstructH.class, RefH.class));
     }
 
     @Test
     public void evaluation_type_is_different_than_function_evaluation_type_result()
         throws Exception {
-      ConstH function = constH(functionH(functionHT(intHT(), list(stringHT())), intHE()));
-      ConstructH arguments = constructH(list(stringHE(), intHE()));
-      CallTypeH type = callHT(stringHT());
+      DefinedFunctionTypeH functionType = definedFunctionHT(intHT(), list(stringHT()));
+      var function = definedFunctionH(functionType, intH());
+      var arguments = constructH(list(stringH()));
+      var type = callHT(stringHT());
       Hash objHash =
           hash(
               hash(type),
@@ -559,10 +535,10 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void function_evaluation_type_parameters_does_not_match_arguments_evaluation_types()
         throws Exception {
-      FunctionTypeH functionType = functionHT(intHT(), list(stringHT(), boolHT()));
-      ConstH function = constH(functionH(functionType, intHE()));
-      ConstructH arguments = constructH(list(stringHE(), intHE()));
-      CallTypeH spec = callHT(intHT());
+      var functionType = definedFunctionHT(intHT(), list(stringHT(), boolHT()));
+      var function = definedFunctionH(functionType, intH());
+      var arguments = constructH(list(stringH(), intH()));
+      var spec = callHT(intHT());
       Hash objHash =
           hash(
               hash(spec),
@@ -581,142 +557,59 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   @Nested
-  class _const {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save const
-       * in HashedDb.
-       */
-      ValueH val = intH(123);
-      Hash objHash =
-          hash(
-              hash(constHT()),
-              hash(val));
-      assertThat(((ConstH) objectHDb().get(objHash)).value())
-          .isEqualTo(val);
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(constHT());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      obj_root_with_two_data_hashes(
-          constHT(),
-          intH(123).hash(),
-          (Hash objHash) -> ((ConstH) objectHDb().get(objHash)).value()
-      );
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          constHT(),
-          (Hash objHash) -> ((ConstH) objectHDb().get(objHash)).value());
-    }
-
-    @Test
-    public void data_hash_pointing_to_expr_instead_of_value() throws Exception {
-      ValueH val = intH(123);
-      Hash exprHash =
-          hash(
-              hash(constHT()),
-              hash(val));
-      Hash objHash =
-          hash(
-              hash(constHT()),
-              exprHash);
-      assertCall(() -> ((ConstH) objectHDb().get(objHash)).value())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, constHT(), DATA_PATH, ValueH.class, ConstH.class));
-    }
-
-    @Test
-    public void evaluation_type_is_different_than_type_of_wrapped_value()
-        throws Exception {
-      ValueH val = intH(123);
-      ConstTypeH type = constHT(stringHT());
-      Hash objHash =
-          hash(
-              hash(type),
-              hash(val));
-      assertCall(() -> ((ConstH) objectHDb().get(objHash)).value())
-          .throwsException(
-              new UnexpectedObjNodeException(objHash, type, DATA_PATH, stringHT(), intHT()));
-    }
-  }
-
-  @Nested
-  class _function {
+  class _defined_function {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save Lambda
        * in HashedDb.
        */
-      ConstH bodyExpr = boolHE();
-      FunctionTypeH type = functionHT(boolHT(), list(intHT(), stringHT()));
+      var bodyExpr = boolH(true);
+      FunctionTypeH type = definedFunctionHT(boolHT(), list(intHT(), stringHT()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertThat(((FunctionH) objectHDb().get(objHash)).body())
+      assertThat(((DefinedFunctionH) objectHDb().get(objHash)).body())
           .isEqualTo(bodyExpr);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(functionHT());
+      obj_root_without_data_hash(definedFunctionHT());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      ConstH bodyExpr = boolHE();
-      FunctionTypeH type = functionHT(boolHT(), list(intHT(), stringHT()));
-      Hash dataHash = hash(bodyExpr);
+      var bodyExpr = boolH(true);
+      var type = definedFunctionHT(boolHT(), list(intHT(), stringHT()));
+      var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           type,
           dataHash,
-          (Hash objHash) -> ((FunctionH) objectHDb().get(objHash)).body());
+          (Hash objHash) -> ((DefinedFunctionH) objectHDb().get(objHash)).body());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          functionHT(),
-          (Hash objHash) -> ((FunctionH) objectHDb().get(objHash)).body());
-    }
-
-    @Test
-    public void body_is_val_instead_of_expr() throws Exception {
-      BoolH bodyExpr = boolH(true);
-      FunctionTypeH type = functionHT(boolHT(), list(intHT(), stringHT()));
-      Hash objHash =
-          hash(
-              hash(type),
-              hash(bodyExpr)
-          );
-      assertCall(() -> ((FunctionH) objectHDb().get(objHash)).body())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, type, DATA_PATH, ExprH.class, BoolH.class));
+          definedFunctionHT(),
+          (Hash objHash) -> ((DefinedFunctionH) objectHDb().get(objHash)).body());
     }
 
     @Test
     public void body_evaluation_type_is_not_equal_function_type_result() throws Exception {
-      ConstH bodyExpr = intHE(3);
-      FunctionTypeH type = functionHT(boolHT(), list(intHT(), stringHT()));
+      var bodyExpr = intH(3);
+      var type = definedFunctionHT(boolHT(), list(intHT(), stringHT()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertCall(() -> ((FunctionH) objectHDb().get(objHash)).body())
+      assertCall(() -> ((DefinedFunctionH) objectHDb().get(objHash)).body())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
-              objHash, type, DATA_PATH, intHT(), boolHT()));
+              objHash, type, DATA_PATH, boolHT(), intHT()));
     }
   }
 
@@ -728,8 +621,8 @@ public class ObjectCorruptedHTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save Order expr
        * in HashedDb.
        */
-      ConstH expr1 = intHE(1);
-      ConstH expr2 = intHE(2);
+      var expr1 = intH(1);
+      var expr2 = intH(2);
       Hash objHash =
           hash(
               hash(orderHT()),
@@ -737,7 +630,7 @@ public class ObjectCorruptedHTest extends TestingContext {
                   hash(expr1),
                   hash(expr2)
               ));
-      ImmutableList<ExprH> elements = ((OrderH) objectHDb().get(objHash)).elements();
+      var elements = ((OrderH) objectHDb().get(objHash)).elements();
       assertThat(elements)
           .containsExactly(expr1, expr2)
           .inOrder();
@@ -750,9 +643,9 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      ConstH expr1 = intHE(1);
-      ConstH expr2 = intHE(2);
-      Hash dataHash = hash(
+      var expr1 = intH(1);
+      var expr2 = intH(2);
+      var dataHash = hash(
           hash(expr1),
           hash(expr2)
       );
@@ -802,27 +695,11 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void with_one_element_being_val() throws Exception {
-      ConstH expr1 = intHE(1);
-      IntH val = intH(123);
-      Hash objHash =
-          hash(
-              hash(orderHT()),
-              hash(
-                  hash(expr1),
-                  hash(val)
-              ));
-      assertCall(() -> ((OrderH) objectHDb().get(objHash)).elements())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, orderHT(), DATA_PATH + "[1]", ExprH.class, IntH.class));
-    }
-
-    @Test
     public void evaluation_type_element_is_different_than_evaluation_type_of_one_of_elements()
         throws Exception {
-      ConstH expr1 = intHE();
-      ConstH expr2 = stringHE();
-      OrderTypeH type = orderHT(intHT());
+      var expr1 = intH();
+      var expr2 = stringH();
+      var type = orderHT(intHT());
       Hash objHash =
           hash(
               hash(type),
@@ -845,8 +722,8 @@ public class ObjectCorruptedHTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save Construct
        * in HashedDb.
        */
-      ConstH expr1 = intHE(1);
-      ConstH expr2 = stringHE("abc");
+      var expr1 = intH(1);
+      var expr2 = stringH("abc");
       Hash objHash =
           hash(
               hash(constructHT(list(intHT(), stringHT()))),
@@ -854,7 +731,7 @@ public class ObjectCorruptedHTest extends TestingContext {
                   hash(expr1),
                   hash(expr2)
               ));
-      ImmutableList<ExprH> items = ((ConstructH) objectHDb().get(objHash)).items();
+      var items = ((ConstructH) objectHDb().get(objHash)).items();
       assertThat(items)
           .containsExactly(expr1, expr2)
           .inOrder();
@@ -867,8 +744,8 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      ConstH expr1 = intHE(1);
-      ConstH expr2 = stringHE("abc");
+      var expr1 = intH(1);
+      var expr2 = stringH("abc");
       Hash dataHash = hash(
           hash(expr1),
           hash(expr2)
@@ -919,26 +796,9 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void with_one_item_being_val() throws Exception {
-      ConstH expr1 = intHE(1);
-      IntH val = intH(123);
-      Hash objHash =
-          hash(
-              hash(constructHT(list(intHT(), stringHT()))),
-              hash(
-                  hash(expr1),
-                  hash(val)
-              ));
-
-      assertCall(() -> ((ConstructH) objectHDb().get(objHash)).items())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, constructHT(), DATA_PATH + "[1]", ExprH.class, IntH.class));
-    }
-
-    @Test
     public void evaluation_type_items_size_is_different_than_actual_items_size()
         throws Exception {
-      ConstH expr1 = intHE(1);
+      IntH expr1 =  intH();
       ConstructTypeH type = constructHT(list(intHT(), stringHT()));
       Hash objHash =
           hash(
@@ -954,9 +814,9 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void evaluation_type_item_is_different_than_evaluation_type_of_one_of_items()
         throws Exception {
-      ConstH expr1 = intHE(1);
-      ConstH expr2 = stringHE("abc");
-      ConstructTypeH type = constructHT(list(intHT(), boolHT()));
+      var expr1 = intH(1);
+      var expr2 = stringH("abc");
+      var type = constructHT(list(intHT(), boolHT()));
       Hash objHash =
           hash(
               hash(type),
@@ -982,7 +842,7 @@ public class ObjectCorruptedHTest extends TestingContext {
        */
       var tupleType = tupleHT(list(stringHT()));
       var tuple = tupleH(tupleType, list(stringH("abc")));
-      var expr = constH(tuple);
+      var expr = (ValueH) tuple;
       var index = intH(0);
       Hash objHash =
           hash(
@@ -1003,8 +863,8 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      ValueH index = intH(2);
-      ConstH expr = constH(intH(123));
+      var index = intH(2);
+      var expr = intH(123);
       Hash dataHash = hash(
           hash(expr),
           hash(index)
@@ -1024,8 +884,8 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void data_is_sequence_with_one_element() throws Exception {
-      ConstH expr = constH(intH(123));
-      Hash dataHash = hash(
+      var expr = intH(123);
+      var dataHash = hash(
           hash(expr)
       );
       Hash objHash =
@@ -1040,9 +900,9 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void data_is_sequence_with_three_elements() throws Exception {
-      ValueH index = intH(2);
-      ConstH expr = constH(intH(123));
-      Hash dataHash = hash(
+      var index = intH(2);
+      var expr = intH(123);
+      var dataHash = hash(
           hash(expr),
           hash(index),
           hash(index)
@@ -1058,25 +918,8 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void tuple_is_val_instead_of_expr() throws Exception {
-      ValueH val = intH(2);
-      ValueH index = intH(2);
-      Hash objHash =
-          hash(
-              hash(selectHT()),
-              hash(
-                  hash(val),
-                  hash(index)
-              )
-          );
-      assertCall(() -> ((SelectH) objectHDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeException(
-              objHash, selectHT(), DATA_PATH + "[0]", ExprH.class, IntH.class));
-    }
-
-    @Test
     public void tuple_is_not_tuple_expr() throws Exception {
-      var expr = intHE(3);
+      var expr = intH(3);
       var index = intH(0);
       var type = selectHT(stringHT());
       Hash objHash =
@@ -1097,14 +940,13 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void index_is_out_of_bounds() throws Exception {
       var tupleType = tupleHT(list(stringHT()));
       var tuple = tupleH(tupleType, list(stringH("abc")));
-      var expr = constH(tuple);
       var index = intH(1);
       var type = selectHT(stringHT());
       Hash objHash =
           hash(
               hash(type),
               hash(
-                  hash(expr),
+                  hash(tuple),
                   hash(index)
               )
           );
@@ -1118,14 +960,13 @@ public class ObjectCorruptedHTest extends TestingContext {
         throws Exception {
       var tupleType = tupleHT(list(stringHT()));
       var tuple = tupleH(tupleType, list(stringH("abc")));
-      var expr = constH(tuple);
       var index = intH(0);
       var type = selectHT(intHT());
       Hash objHash =
           hash(
               hash(type),
               hash(
-                  hash(expr),
+                  hash(tuple),
                   hash(index)
               )
           );
@@ -1139,13 +980,12 @@ public class ObjectCorruptedHTest extends TestingContext {
       var type = selectHT(stringHT());
       var tupleType = tupleHT(list(stringHT()));
       var tuple = tupleH(tupleType, list(stringH("abc")));
-      var expr = constH(tuple);
       var strVal = stringH("abc");
       Hash objHash =
           hash(
               hash(type),
               hash(
-                  hash(expr),
+                  hash(tuple),
                   hash(strVal)
               )
           );
@@ -1195,126 +1035,158 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   @Nested
-  class _native_method {
+  class _native_function {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save native_method
-       * in HashedDb.
+       * This test makes sure that other tests in this class use proper scheme to save
+       * native_function in HashedDb.
        */
       BlobH jarFile = blobH();
       StringH classBinaryName = stringH();
+      BoolH isPure = boolH(true);
       Hash objHash =
           hash(
-              hash(nativeMethodHT()),
+              hash(nativeFunctionHT()),
               hash(
                   hash(jarFile),
-                  hash(classBinaryName)
+                  hash(classBinaryName),
+                  hash(isPure)
               )
           );
 
-      assertThat(((NativeMethodH) objectHDb().get(objHash)).jarFile())
+      assertThat(((NativeFunctionH) objectHDb().get(objHash)).jarFile())
           .isEqualTo(jarFile);
-      assertThat(((NativeMethodH) objectHDb().get(objHash)).classBinaryName())
+      assertThat(((NativeFunctionH) objectHDb().get(objHash)).classBinaryName())
           .isEqualTo(classBinaryName);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(nativeMethodHT());
+      obj_root_without_data_hash(nativeFunctionHT());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       BlobH jarFile = blobH();
       StringH classBinaryName = stringH();
+      BoolH isPure = boolH(true);
       Hash dataHash = hash(
           hash(jarFile),
-          hash(classBinaryName)
+          hash(classBinaryName),
+          hash(isPure)
       );
       obj_root_with_two_data_hashes(
-          nativeMethodHT(),
+          nativeFunctionHT(),
           dataHash,
-          (Hash objHash) -> ((NativeMethodH) objectHDb().get(objHash)).classBinaryName());
+          (Hash objHash) -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          nativeMethodHT(),
-          (Hash objHash) -> ((NativeMethodH) objectHDb().get(objHash)).classBinaryName());
+          nativeFunctionHT(),
+          (Hash objHash) -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName());
     }
 
     @Test
-    public void data_is_sequence_with_one_element() throws Exception {
-      BlobH jarFile = blobH();
-      Hash dataHash = hash(
-          hash(jarFile)
-      );
-      Hash objHash =
-          hash(
-              hash(nativeMethodHT()),
-              dataHash
-          );
-
-      assertCall(() -> ((NativeMethodH) objectHDb().get(objHash)).classBinaryName())
-          .throwsException(new UnexpectedObjSequenceException(
-              objHash, nativeMethodHT(), DATA_PATH, 2, 1));
-    }
-
-    @Test
-    public void data_is_sequence_with_three_elements() throws Exception {
+    public void data_is_sequence_with_two_element() throws Exception {
       BlobH jarFile = blobH();
       StringH classBinaryName = stringH();
       Hash dataHash = hash(
           hash(jarFile),
-          hash(classBinaryName),
           hash(classBinaryName)
       );
       Hash objHash =
           hash(
-              hash(nativeMethodHT()),
+              hash(nativeFunctionHT()),
               dataHash
           );
 
-      assertCall(() -> ((NativeMethodH) objectHDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjSequenceException(
-              objHash, nativeMethodHT(), DATA_PATH, 2, 3));
+              objHash, nativeFunctionHT(), DATA_PATH, 3, 2));
+    }
+
+    @Test
+    public void data_is_sequence_with_four_elements() throws Exception {
+      BlobH jarFile = blobH();
+      StringH classBinaryName = stringH();
+      BoolH isPure = boolH(true);
+      Hash dataHash = hash(
+          hash(jarFile),
+          hash(classBinaryName),
+          hash(isPure),
+          hash(isPure)
+      );
+      Hash objHash =
+          hash(
+              hash(nativeFunctionHT()),
+              dataHash
+          );
+
+      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedObjSequenceException(
+              objHash, nativeFunctionHT(), DATA_PATH, 3, 4));
     }
 
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
       StringH jarFile = stringH();
       StringH classBinaryName = stringH();
+      BoolH isPure = boolH(true);
       Hash objHash =
           hash(
-              hash(nativeMethodHT()),
+              hash(nativeFunctionHT()),
               hash(
                   hash(jarFile),
-                  hash(classBinaryName)
+                  hash(classBinaryName),
+                  hash(isPure)
               )
           );
-      assertCall(() -> ((NativeMethodH) objectHDb().get(objHash)).jarFile())
+      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).jarFile())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, nativeMethodHT(), DATA_PATH + "[0]", BlobH.class, StringH.class));
+              objHash, nativeFunctionHT(), DATA_PATH + "[0]", BlobH.class, StringH.class));
     }
 
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
       BlobH jarFile = blobH();
       IntH classBinaryName = intH();
+      BoolH isPure = boolH(true);
       Hash objHash =
           hash(
-              hash(nativeMethodHT()),
+              hash(nativeFunctionHT()),
               hash(
                   hash(jarFile),
-                  hash(classBinaryName)
+                  hash(classBinaryName),
+                  hash(isPure)
               )
           );
 
-      assertCall(() -> ((NativeMethodH) objectHDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, nativeMethodHT(), DATA_PATH + "[1]", StringH.class, IntH.class));
+              objHash, nativeFunctionHT(), DATA_PATH + "[1]", StringH.class, IntH.class));
+    }
+
+    @Test
+    public void is_pure_is_not_bool_value() throws Exception {
+      BlobH jarFile = blobH();
+      StringH classBinaryName = stringH();
+      StringH isPure = stringH();
+      Hash objHash =
+          hash(
+              hash(nativeFunctionHT()),
+              hash(
+                  hash(jarFile),
+                  hash(classBinaryName),
+                  hash(isPure)
+              )
+          );
+
+      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).isPure())
+          .throwsException(new UnexpectedObjNodeException(
+              objHash, nativeFunctionHT(), DATA_PATH + "[2]", BoolH.class, StringH.class));
     }
   }
 
@@ -1502,11 +1374,11 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(personHT()),
               hash(
                   hash(stringH("John")),
-                  hash(intHE())));
+                  hash(refH(1))));
       TupleH tuple = (TupleH) objectHDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, personHT(), DATA_PATH + "[1]", ValueH.class, ConstH.class));
+              objHash, personHT(), DATA_PATH + "[1]", ValueH.class, RefH.class));
     }
   }
 

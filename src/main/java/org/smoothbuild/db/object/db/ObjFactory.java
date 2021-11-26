@@ -12,14 +12,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.obj.ObjectHDb;
-import org.smoothbuild.db.object.obj.base.ExprH;
+import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
-import org.smoothbuild.db.object.obj.expr.IfH;
-import org.smoothbuild.db.object.obj.expr.InvokeH;
-import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -27,21 +23,27 @@ import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
+import org.smoothbuild.db.object.obj.val.IfFunctionH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NativeMethodH;
+import org.smoothbuild.db.object.obj.val.MapFunctionH;
+import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.TypeHDb;
+import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.BlobTypeH;
 import org.smoothbuild.db.object.type.val.BoolTypeH;
+import org.smoothbuild.db.object.type.val.DefinedFunctionTypeH;
 import org.smoothbuild.db.object.type.val.FunctionTypeH;
 import org.smoothbuild.db.object.type.val.IntTypeH;
+import org.smoothbuild.db.object.type.val.NativeFunctionTypeH;
 import org.smoothbuild.db.object.type.val.NothingTypeH;
 import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.val.VariableH;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -56,13 +58,19 @@ public class ObjFactory {
   private final TypeHDb typeHDb;
   private final TupleTypeH messageType;
   private final TupleTypeH fileType;
+  private final TypingH typing;
 
   @Inject
-  public ObjFactory(ObjectHDb objectHDb, TypeHDb typeHDb) {
+  public ObjFactory(ObjectHDb objectHDb, TypeHDb typeHDb, TypingH typing) {
     this.objectHDb = objectHDb;
     this.typeHDb = typeHDb;
     this.messageType = createMessageType(typeHDb);
     this.fileType = createFileType(typeHDb);
+    this.typing = typing;
+  }
+
+  public TypingH typing() {
+    return typing;
   }
 
   // Objects
@@ -88,15 +96,11 @@ public class ObjFactory {
     return objectHDb.bool(value);
   }
 
-  public CallH call(ExprH function, ConstructH arguments) {
+  public CallH call(ObjectH function, ConstructH arguments) {
     return objectHDb.call(function, arguments);
   }
 
-  public ConstH const_(ValueH val) {
-    return objectHDb.const_(val);
-  }
-
-  public ConstructH construct(ImmutableList<ExprH> items) {
+  public ConstructH construct(ImmutableList<ObjectH> items) {
     return objectHDb.construct(items);
   }
 
@@ -104,36 +108,32 @@ public class ObjFactory {
     return objectHDb.tuple(fileType(), list(content, path));
   }
 
-  public FunctionH function(FunctionTypeH type, ExprH body) {
-    return objectHDb.function(type, body);
+  public DefinedFunctionH definedFunction(DefinedFunctionTypeH type, ObjectH body) {
+    return objectHDb.definedFunction(type, body);
   }
 
-  public IfH if_(ExprH condition, ExprH then, ExprH else_) {
-    return objectHDb.if_(condition, then, else_);
+  public IfFunctionH ifFunction() {
+    return objectHDb.ifFunction();
   }
 
   public IntH int_(BigInteger value) {
     return objectHDb.int_(value);
   }
 
-  public InvokeH invoke(
-      TypeHV evaluationSpec, NativeMethodH nativeMethod, BoolH isPure, IntH argumentCount) {
-    return objectHDb.invoke(evaluationSpec, nativeMethod, isPure, argumentCount);
+  public MapFunctionH mapFunction() {
+    return objectHDb.mapFunction();
   }
 
-  public MapH map(ExprH array, ExprH function) {
-    return objectHDb.map(array, function);
-  }
-
-  public NativeMethodH nativeMethod(BlobH jarFile, StringH classBinaryName) {
-    return objectHDb.nativeMethod(jarFile, classBinaryName);
+  public NativeFunctionH nativeFunction(
+      NativeFunctionTypeH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
+    return objectHDb.nativeFunction(type, jarFile, classBinaryName,isPure);
   }
 
   public RefH ref(BigInteger value, TypeHV evaluationType) {
     return objectHDb.ref(value, evaluationType);
   }
 
-  public SelectH select(ExprH tuple, IntH index) {
+  public SelectH select(ObjectH tuple, IntH index) {
     return objectHDb.select(tuple, index);
   }
 
@@ -145,7 +145,7 @@ public class ObjFactory {
     return objectHDb.tuple(type, items);
   }
 
-  public OrderH order(ImmutableList<ExprH> elements) {
+  public OrderH order(ImmutableList<ObjectH> elements) {
     return objectHDb.order(elements);
   }
 
@@ -163,15 +163,28 @@ public class ObjFactory {
     return typeHDb.bool();
   }
 
-  public FunctionTypeH functionType(TypeHV result, ImmutableList<TypeHV> parameters) {
-    return typeHDb.function(result, parameters);
+  public DefinedFunctionTypeH definedFunctionType(TypeHV result, ImmutableList<TypeHV> parameters) {
+    return typeHDb.definedFunction(result, parameters);
+  }
+
+  public FunctionTypeH ifFunctionType() {
+    return typeHDb.ifFunction();
   }
 
   public IntTypeH intType() {
     return typeHDb.int_();
   }
+
+  public FunctionTypeH mapFunctionType() {
+    return typeHDb.ifFunction();
+  }
+
   public TupleTypeH messageType() {
     return messageType;
+  }
+
+  public NativeFunctionTypeH nativeFunctionType(TypeHV result, ImmutableList<TypeHV> parameters) {
+    return typeHDb.nativeFunction(result, parameters);
   }
 
   public NothingTypeH nothingType() {
@@ -184,6 +197,10 @@ public class ObjFactory {
 
   public TupleTypeH tupleType(ImmutableList<TypeHV> itemTypes) {
     return typeHDb.tuple(itemTypes);
+  }
+
+  public VariableH variable(String name) {
+    return typeHDb.variable(name);
   }
 
   // other values and its types

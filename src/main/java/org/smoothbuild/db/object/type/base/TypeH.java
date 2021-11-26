@@ -50,6 +50,10 @@ public abstract class TypeH extends AbstractType {
     return hash().hashCode();
   }
 
+  public TypeKindH kind() {
+    return kind;
+  }
+
   public Class<? extends ObjectH> jType() {
     return kind.jType();
   }

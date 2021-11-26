@@ -1,7 +1,8 @@
 package org.smoothbuild.db.object.type;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -24,20 +25,22 @@ public class TestingTypesH {
   public static final TypeHV ANY = TYPEH_DB.any();
   public static final TypeHV BLOB = TYPEH_DB.blob();
   public static final TypeHV BOOL = TYPEH_DB.bool();
-  public static final TypeHV FUNCTION = TYPEH_DB.function(BLOB, list(BOOL));
-  public static final TypeHV VARIABLE = TYPEH_DB.variable("A");
   public static final TypeHV INT = TYPEH_DB.int_();
+  public static final TypeHV IF_FUNCTION = TYPEH_DB.ifFunction();
+  public static final TypeHV FUNCTION = TYPEH_DB.function(BLOB, list(BOOL));
+  public static final TypeHV MAP_FUNCTION = TYPEH_DB.mapFunction();
   public static final TypeHV NOTHING = TYPEH_DB.nothing();
   public static final TypeHV STRING = TYPEH_DB.string();
+  public static final TypeHV VARIABLE = TYPEH_DB.variable("A");
+
   public static final TupleTypeH PERSON = CONTEXT.personHT();
   public static final TupleTypeH FILE = CONTEXT.fileHT();
   public static final TupleTypeH TUPLE_EMPTY = CONTEXT.tupleEmptyHT();
   public static final TupleTypeH TUPLE_WITH_STRING = CONTEXT.tupleWithStrHT();
+
   public static final TypeH CALL = CONTEXT.callHT();
-  public static final TypeH CONST = CONTEXT.constHT(STRING);
   public static final TypeH ORDER = CONTEXT.orderHT();
   public static final TypeH CONSTRUCT = CONTEXT.constructHT(list(INT, STRING));
-  public static final TypeH INVOKE = CONTEXT.invokeHT(INT);
   public static final TypeH SELECT = CONTEXT.selectHT(INT);
   public static final TypeH REF = CONTEXT.refHT(INT);
 
@@ -95,15 +98,18 @@ public class TestingTypesH {
       concat(BASE_TYPESV_TO_TEST, ARRAY_TYPESV_TO_TEST);
 
   private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
-      "string", "any", "call", "select", "tuple", "blob", "bool", "int_", "nativeMethod", "nothing",
-      "variable", "const_", "construct", "oneSideBound", "if_", "invoke", "get", "map", "array",
-      "array", "ref", "function", "function", "upper", "lower", "order", "oneSideBound",
-      "unbounded", "wait", "wait", "wait", "equals", "toString", "hashCode", "getClass",
-      "notify", "notifyAll"
-  );
+      "any", "array", "array", "blob", "bool", "call", "construct", "definedFunction",
+      "equals", "function", "function", "get", "getClass", "hashCode", "ifFunction", "int_",
+      "lower", "mapFunction", "nativeFunction", "nothing", "notify", "notifyAll", "oneSideBound",
+      "oneSideBound", "order", "ref", "select", "string", "toString", "tuple", "unbounded", "upper",
+      "variable", "wait", "wait", "wait"
+      );
 
   private static final ImmutableList<String> TYPEH_DB_ACTUAL_METHOD_NAMES =
-      map(asList(TypeHDb.class.getMethods()), Method::getName);
+      stream(TypeHDb.class.getMethods())
+          .map(Method::getName)
+          .sorted()
+          .collect(toImmutableList());
 
   public static final ImmutableList<TypeH> ALL_TYPES_TO_TEST = createAllTypes();
 
@@ -116,7 +122,9 @@ public class TestingTypesH {
         TYPEH_DB.function(BLOB, list(BLOB)),
         TYPEH_DB.function(BLOB, list(BLOB, BLOB)),
         TYPEH_DB.function(STRING, list()),
+        IF_FUNCTION,
         INT,
+        MAP_FUNCTION,
         NOTHING,
         STRING,
         TYPEH_DB.tuple(list()),
@@ -134,14 +142,6 @@ public class TestingTypesH {
         TYPEH_DB.call(STRING),
         TYPEH_DB.construct(TYPEH_DB.tuple(list(BLOB))),
         TYPEH_DB.construct(TYPEH_DB.tuple(list(STRING))),
-        TYPEH_DB.const_(BLOB),
-        TYPEH_DB.const_(STRING),
-        TYPEH_DB.if_(BLOB),
-        TYPEH_DB.if_(STRING),
-        TYPEH_DB.invoke(BLOB),
-        TYPEH_DB.invoke(STRING),
-        TYPEH_DB.map(ARRAY_BLOB),
-        TYPEH_DB.map(ARRAY_STR),
         TYPEH_DB.order(BLOB),
         TYPEH_DB.order(STRING),
         TYPEH_DB.ref(BLOB),

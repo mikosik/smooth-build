@@ -9,35 +9,35 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.BoolH;
+import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 
 public class IfJob extends AbstractJob {
   private static final String IF_TASK_NAME = IF_FUNCTION_NAME + PARENTHESES;
 
-  public IfJob(TypeS type, List<Job> dependencies, Location location) {
-    super(type, dependencies, new NalImpl("building:" + IF_TASK_NAME, location));
+  public IfJob(TypeHV type, List<Job> deps, Location location) {
+    super(type, deps, new NalImpl("building:" + IF_TASK_NAME, location));
   }
 
   @Override
   public Promise<ValueH> schedule(Worker worker) {
-    PromisedValue<ValueH> result = new PromisedValue<>();
+    var res = new PromisedValue<ValueH>();
     conditionJob()
         .schedule(worker)
-        .addConsumer(obj -> onConditionCalculated(obj, worker, result));
-    return result;
+        .addConsumer(obj -> onConditionCalculated(obj, worker, res));
+    return res;
   }
 
-  private void onConditionCalculated(ValueH conditionVal, Worker worker, Consumer<ValueH> result) {
-    boolean condition = ((BoolH) conditionVal).jValue();
-    Job job = condition ? thenJob() : elseJob();
+  private void onConditionCalculated(ValueH conditionH, Worker worker, Consumer<ValueH> res) {
+    var conditionJ = ((BoolH) conditionH).jValue();
+    var job = conditionJ ? thenJob() : elseJob();
     new VirtualJob(job, new TaskInfo(CALL, IF_TASK_NAME, location()))
         .schedule(worker)
-        .addConsumer(result);
+        .addConsumer(res);
   }
 
   private Job conditionJob() {

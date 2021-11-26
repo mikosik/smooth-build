@@ -15,6 +15,7 @@ import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
 import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.TypeHV;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -53,6 +54,8 @@ public abstract class ObjectH {
   public TypeH type() {
     return merkleRoot.type();
   }
+
+  public abstract TypeHV evaluationType();
 
   public abstract String valueToString();
 

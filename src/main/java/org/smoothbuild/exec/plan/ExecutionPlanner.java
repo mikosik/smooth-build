@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.plan;
 
+import static org.smoothbuild.util.collect.Maps.mapValues;
 import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.List;
@@ -8,20 +9,25 @@ import javax.inject.Inject;
 
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.expr.RefS;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ExecutionPlanner {
   private final JobCreatorProvider jobCreatorProvider;
+  private final ShConverterProvider shConverterProvider;
 
   @Inject
-  public ExecutionPlanner(JobCreatorProvider jobCreatorProvider) {
+  public ExecutionPlanner(JobCreatorProvider jobCreatorProvider,
+      ShConverterProvider shConverterProvider) {
     this.jobCreatorProvider = jobCreatorProvider;
+    this.shConverterProvider = shConverterProvider;
   }
 
-  public ImmutableMap<ValueS, Job> createPlans(DefinitionsS definitions, List<ValueS> values) {
-    JobCreator jobCreator = jobCreatorProvider.get(definitions);
-    return toMap(values, jobCreator::commandLineValueEagerJob);
+  public ImmutableMap<RefS, Job> createPlans(DefinitionsS definitions, List<RefS> values) {
+    var shConverter = shConverterProvider.get(definitions);
+    var shMapping = toMap(values, shConverter::convertRef);
+    var jobCreator = jobCreatorProvider.get(shConverter.nals());
+    return mapValues(shMapping, jobCreator::commandLineExprEagerJob);
   }
 }

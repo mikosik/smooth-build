@@ -57,7 +57,7 @@ public class NativeTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("myValue");
       assertFinishedWithError();
-      assertSysOutContains(fileNotFoundErrorMessage("myValue", "MissingClass"));
+      assertSysOutContains(fileNotFoundErrorMessage("myValue"));
     }
 
     @Test
@@ -182,7 +182,8 @@ public class NativeTest extends AcceptanceTestCase {
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
-              "`stringIdentity` has native implementation that has too many parameter(s) = 2"));
+              "`stringIdentity` has 0 parameter(s) but its native implementation "
+                  + "has 1 parameter(s)."));
         }
 
         @Nested
@@ -348,7 +349,7 @@ public class NativeTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("result");
       assertFinishedWithError();
-      assertSysOutContains(fileNotFoundErrorMessage("myFunction", "MissingClass"));
+      assertSysOutContains(fileNotFoundErrorMessage("myFunction"));
     }
 
     @Test
@@ -425,7 +426,7 @@ public class NativeTest extends AcceptanceTestCase {
         runSmoothBuild("result");
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
-            "`stringIdentity` declares type `File` "
+            "`stringIdentity` declares type `{Blob,String}` "
                 + "so its native implementation result type must be "
                 + TupleH.class.getCanonicalName()
                 + " but it is " + StringH.class.getCanonicalName() + ".\n"));
@@ -443,7 +444,7 @@ public class NativeTest extends AcceptanceTestCase {
         runSmoothBuild("result");
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
-            "Function `stringIdentity` has 0 parameter(s) but its native implementation "
+            "`stringIdentity` has 0 parameter(s) but its native implementation "
                 + "has 1 parameter(s)."));
       }
 
@@ -459,7 +460,7 @@ public class NativeTest extends AcceptanceTestCase {
         runSmoothBuild("result");
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
-            "Function `stringIdentity` has 2 parameter(s) but its native implementation "
+            "`stringIdentity` has 2 parameter(s) but its native implementation "
                 + "has 1 parameter(s)."));
       }
 
@@ -475,7 +476,7 @@ public class NativeTest extends AcceptanceTestCase {
         runSmoothBuild("result");
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
-            "Function `stringIdentity` parameter `string` has type `[String]` "
+            "`stringIdentity` parameter at index 0 has type `[String]` "
             + "so its native implementation type must be " + ArrayH.class.getCanonicalName()
             + " but it is " + StringH.class.getCanonicalName() + "."));
       }
@@ -630,9 +631,9 @@ public class NativeTest extends AcceptanceTestCase {
         + declared + "` but it returned object with type == `" + actual + "`.";
   }
 
-  private String fileNotFoundErrorMessage(String memberName, String methodPath) {
-    return "Error loading native implementation for `" + memberName + "` specified as `" +
-        methodPath + "`: Error reading file '{prj}/build.jar'.";
+  private String fileNotFoundErrorMessage(String memberName) {
+    return
+        "Error loading native jar for `" + memberName +"`: File '{prj}/build.jar' doesn't exist.";
   }
 
   private static String fetchTimestamp(String text) {

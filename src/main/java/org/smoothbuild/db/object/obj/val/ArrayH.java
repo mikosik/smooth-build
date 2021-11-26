@@ -2,10 +2,10 @@ package org.smoothbuild.db.object.obj.val;
 
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 
 import com.google.common.collect.ImmutableList;
@@ -26,11 +26,11 @@ public class ArrayH extends ValueH {
   public <T extends ValueH> ImmutableList<T> elements(Class<T> elementJType) {
     assertIsIterableAs(elementJType);
     var elements = elementObjs();
-    return checkTypeOfSequenceObjs(elements, this.type().element());
+    return checkTypeOfSequenceObjs(elements, type().element());
   }
 
-  private ImmutableList<ObjectH> elementObjs() {
-    return readSequenceObjs(DATA_PATH, dataHash());
+  private ImmutableList<ValueH> elementObjs() {
+    return readSequenceObjs(DATA_PATH, dataHash(), ValueH.class);
   }
 
   private <T extends ValueH> void assertIsIterableAs(Class<T> clazz) {
@@ -42,11 +42,12 @@ public class ArrayH extends ValueH {
   }
 
   protected <T> ImmutableList<T> checkTypeOfSequenceObjs(
-      ImmutableList<ObjectH> elements, TypeH type) {
+      ImmutableList<ValueH> elements, TypeHV expectedElementType) {
     for (int i = 0; i < elements.size(); i++) {
-      TypeH elementType = elements.get(i).type();
-      if (!(type.equals(elementType))) {
-        throw new UnexpectedObjNodeException(hash(), this.type(), DATA_PATH, i, type, elementType);
+      var elementType = elements.get(i).type();
+      if (!(objectDb().typing().isAssignable(expectedElementType, elementType))) {
+        throw new UnexpectedObjNodeException(hash(), this.type(), DATA_PATH, i,
+            expectedElementType, elementType);
       }
     }
     @SuppressWarnings("unchecked")

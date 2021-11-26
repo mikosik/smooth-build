@@ -10,7 +10,8 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class and all its subclasses are immutable.
  */
-public abstract class FunctionS extends TopEvaluableS {
+public sealed abstract class FunctionS extends TopEvaluableS
+    permits ConstructorS, DefinedFunctionS, IfFunctionS, MapFunctionS, NativeFunctionS {
   public static final String PARENTHESES = "()";
   private final NList<Item> parameters;
 

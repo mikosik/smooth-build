@@ -26,18 +26,18 @@ public class ArrayHBuilder {
     return this;
   }
 
-  public ArrayHBuilder add(ValueH elements) {
-    if (!type.element().equals(elements.type())) {
+  public ArrayHBuilder add(ValueH elem) {
+    if (!objectHDb.typing().isAssignable(type.element(), elem.type())) {
       throw new IllegalArgumentException("Element type must be " + type.element().name()
-          + " but was " + elements.type().name() + ".");
+          + " but was " + elem.type().name() + ".");
     }
     Class<?> required = type.element().jType();
-    if (!required.equals(elements.getClass())) {
+    if (!required.equals(elem.getClass())) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "
-          + elements.getClass().getCanonicalName() + ".");
+          + elem.getClass().getCanonicalName() + ".");
     }
-    this.elements.add(elements);
+    this.elements.add(elem);
     return this;
   }
 

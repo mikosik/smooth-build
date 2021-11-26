@@ -17,6 +17,7 @@ public abstract class ExprH extends ObjectH implements EvaluableH {
     return (TypeHE) super.type();
   }
 
+  @Override
   public TypeHV evaluationType() {
     return type().evaluationType();
   }

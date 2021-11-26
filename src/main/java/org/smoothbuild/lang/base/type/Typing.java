@@ -257,4 +257,8 @@ public class Typing<T extends Type> {
       FunctionType type, Type result, ImmutableList<T> parameters) {
     return type.result() == result && type.parameters().equals(parameters);
   }
+
+  public TypeFactory<T> factory() {
+    return factory;
+  }
 }

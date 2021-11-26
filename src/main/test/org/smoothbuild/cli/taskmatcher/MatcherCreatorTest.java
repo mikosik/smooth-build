@@ -10,6 +10,7 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_FATAL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_INFO;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_WARNING;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CALL;
+import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CONSTRUCT;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CONVERSION;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.LITERAL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.MAP;
@@ -18,7 +19,6 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PRJ;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.REFERENCE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SELECT;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.VALUE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.and;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.or;
 import static org.smoothbuild.io.fs.base.Path.path;
@@ -97,8 +97,8 @@ public class MatcherCreatorTest {
     return Stream.of(
         arguments("all", ALL),
         arguments("a", ALL),
-        arguments("default", or(and(PRJ, or(or(CALL, VALUE), SELECT)), AT_LEAST_INFO)),
-        arguments("d", or(and(PRJ, or(or(CALL, VALUE), SELECT)), AT_LEAST_INFO)),
+        arguments("default", or(and(PRJ, or(CALL, SELECT)), AT_LEAST_INFO)),
+        arguments("d", or(and(PRJ, or(CALL, SELECT)), AT_LEAST_INFO)),
         arguments("none", NONE),
         arguments("n", NONE),
 
@@ -118,6 +118,8 @@ public class MatcherCreatorTest {
 
         arguments("call", CALL),
         arguments("c", CALL),
+        arguments("construction", CONSTRUCT),
+        arguments("cons", CONSTRUCT),
         arguments("conversion", CONVERSION),
         arguments("conv", CONVERSION),
         arguments("select", SELECT),
@@ -126,8 +128,6 @@ public class MatcherCreatorTest {
         arguments("l", LITERAL),
         arguments("map", MAP),
         arguments("m", MAP),
-        arguments("v", VALUE),
-        arguments("value", VALUE),
         arguments("r", REFERENCE),
         arguments("reference", REFERENCE),
 

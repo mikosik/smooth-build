@@ -8,6 +8,7 @@ import java.util.Objects;
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
@@ -34,10 +35,9 @@ public class ConstructH extends ExprH {
     return type().evaluationType();
   }
 
-  public ImmutableList<ExprH> items() {
+  public ImmutableList<ObjectH> items() {
     var expectedItemTypes = type().evaluationType().items();
-    var items = readSequenceObjs(DATA_PATH, dataHash(), ExprH.class);
-
+    var items = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
     allMatchOtherwise(
         expectedItemTypes,
         items,

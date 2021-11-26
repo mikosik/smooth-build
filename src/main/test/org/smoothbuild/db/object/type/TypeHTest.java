@@ -25,11 +25,9 @@ import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_VARIABLE;
 import static org.smoothbuild.db.object.type.TestingTypesH.BLOB;
 import static org.smoothbuild.db.object.type.TestingTypesH.BOOL;
 import static org.smoothbuild.db.object.type.TestingTypesH.CALL;
-import static org.smoothbuild.db.object.type.TestingTypesH.CONST;
 import static org.smoothbuild.db.object.type.TestingTypesH.CONSTRUCT;
 import static org.smoothbuild.db.object.type.TestingTypesH.FUNCTION;
 import static org.smoothbuild.db.object.type.TestingTypesH.INT;
-import static org.smoothbuild.db.object.type.TestingTypesH.INVOKE;
 import static org.smoothbuild.db.object.type.TestingTypesH.NOTHING;
 import static org.smoothbuild.db.object.type.TestingTypesH.ORDER;
 import static org.smoothbuild.db.object.type.TestingTypesH.PERSON;
@@ -51,8 +49,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
@@ -68,7 +66,6 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.base.TypeKindH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FunctionType;
@@ -85,7 +82,7 @@ public class TypeHTest extends TestingContext {
   @Test
   public void verify_all_base_TypeO_are_tested() {
     assertThat(TypeKindH.values())
-        .hasLength(20);
+        .hasLength(19);
   }
 
   @ParameterizedTest
@@ -142,16 +139,16 @@ public class TypeHTest extends TestingContext {
         args(f -> f.function(f.string(), list(f.string())), "String(String)"),
 
         args(f -> f.tuple(list()), "{}"),
-        args(f -> f.tuple(list(f.string(), f.string())), "{String,String}"),
+        args(f -> f.tuple(list(f.string(), f.bool())), "{String,Bool}"),
         args(f -> f.tuple(list(f.tuple(list(f.int_())))), "{{Int}}"),
 
         args(f -> f.call(f.int_()), "CALL:Int"),
-        args(f -> f.const_(f.int_()), "CONST:Int"),
         args(f -> f.construct(f.tuple(list(f.string(), f.int_()))), "CONSTRUCT:{String,Int}"),
-        args(f -> f.if_(f.int_()), "IF:Int"),
-        args(f -> f.invoke(f.int_()), "INVOKE:Int"),
-        args(f -> f.map(f.array(f.int_())), "MAP:[Int]"),
-        args(f -> f.nativeMethod(), "NATIVE_METHOD"),
+        args(f -> f.ifFunction(), "A(Bool, A, A)"),
+        args(f -> f.mapFunction(), "[B]([A], B(A))"),
+        args(f -> f.nativeFunction(f.blob(), list(f.bool())), "Blob(Bool)"),
+        args(f -> f.definedFunction(f.blob(), list(f.bool())), "Blob(Bool)"),
+        args(f -> f.function(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.order(f.string()), "ORDER:[String]"),
         args(f -> f.ref(f.int_()), "REF:Int"),
         args(f -> f.select(f.int_()), "SELECT:Int")
@@ -374,15 +371,15 @@ public class TypeHTest extends TestingContext {
 
   public static List<Arguments> jType_test_data() {
     return list(
-        arguments(ANY, null),
+        arguments(ANY, ValueH.class),
         arguments(BLOB, BlobH.class),
         arguments(BOOL, BoolH.class),
         arguments(FUNCTION, FunctionH.class),
         arguments(INT, IntH.class),
-        arguments(NOTHING, null),
+        arguments(NOTHING, ValueH.class),
         arguments(PERSON, TupleH.class),
         arguments(STRING, StringH.class),
-        arguments(VARIABLE, null),
+        arguments(VARIABLE, ValueH.class),
 
         arguments(ARRAY_ANY, ArrayH.class),
         arguments(ARRAY_BLOB, ArrayH.class),
@@ -395,7 +392,6 @@ public class TypeHTest extends TestingContext {
         arguments(ARRAY_VARIABLE, ArrayH.class),
 
         arguments(CALL, CallH.class),
-        arguments(CONST, ConstH.class),
         arguments(ORDER, OrderH.class),
         arguments(CONSTRUCT, ConstructH.class),
         arguments(SELECT, SelectH.class),
@@ -413,13 +409,6 @@ public class TypeHTest extends TestingContext {
     }
 
     @ParameterizedTest
-    @MethodSource("types")
-    public void const_(TypeHV type) {
-      assertThat(TYPEH_DB.const_(type).evaluationType())
-          .isEqualTo(type);
-    }
-
-    @ParameterizedTest
     @MethodSource("construct_cases")
     public void construct(ConstructTypeH type, TupleTypeH expected) {
       assertThat(type.evaluationType())
@@ -432,27 +421,6 @@ public class TypeHTest extends TestingContext {
           arguments(db.construct(db.tuple(list())), db.tuple(list())),
           arguments(db.construct(db.tuple(list(STRING))), db.tuple(list(STRING)))
       );
-    }
-
-    @ParameterizedTest
-    @MethodSource("types")
-    public void if_(TypeHV type) {
-      assertThat(TYPEH_DB.if_(type).evaluationType())
-          .isEqualTo(type);
-    }
-
-    @ParameterizedTest
-    @MethodSource("types")
-    public void invoke(TypeHV type) {
-      assertThat(TYPEH_DB.invoke(type).evaluationType())
-          .isEqualTo(type);
-    }
-
-    @ParameterizedTest
-    @MethodSource("arrayTypes")
-    public void map_(ArrayTypeH type) {
-      assertThat(TYPEH_DB.map(type).evaluationType())
-          .isEqualTo(type);
     }
 
     @ParameterizedTest
@@ -519,9 +487,7 @@ public class TypeHTest extends TestingContext {
     tester.addEqualityGroup(ARRAY2_PERSON_TUPLE, ARRAY2_PERSON_TUPLE);
 
     tester.addEqualityGroup(CALL, CALL);
-    tester.addEqualityGroup(CONST, CONST);
     tester.addEqualityGroup(CONSTRUCT, CONSTRUCT);
-    tester.addEqualityGroup(INVOKE, INVOKE);
     tester.addEqualityGroup(ORDER, ORDER);
     tester.addEqualityGroup(REF, REF);
     tester.addEqualityGroup(SELECT, SELECT);
@@ -530,7 +496,7 @@ public class TypeHTest extends TestingContext {
   }
 
   private <R> R invoke(Function<TypeHDb, R> f) {
-    return f.apply(typeFactoryH());
+    return f.apply(typeHDb());
   }
 
   /**

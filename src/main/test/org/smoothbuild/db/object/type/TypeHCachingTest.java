@@ -42,8 +42,6 @@ public class TypeHCachingTest extends TestingContext {
         TypeHCachingTest::tupleType,
 
         objTypeDb -> objTypeDb.call(objTypeDb.int_()),
-        objTypeDb -> objTypeDb.const_(objTypeDb.int_()),
-        objTypeDb -> objTypeDb.const_(objTypeDb.int_()),
         objTypeDb -> objTypeDb.order(objTypeDb.int_()),
         objTypeDb -> objTypeDb.select(objTypeDb.int_()),
         objTypeDb -> objTypeDb.ref(objTypeDb.int_()),

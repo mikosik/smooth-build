@@ -1,58 +1,54 @@
 package org.smoothbuild.exec.algorithm;
 
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.invokeAlgorithmHash;
 import static org.smoothbuild.exec.base.MessageStruct.containsErrors;
-import static org.smoothbuild.util.collect.Lists.skip;
+import static org.smoothbuild.util.Strings.q;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ValueH;
-import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
-import org.smoothbuild.lang.base.define.NativeEvaluableS;
 import org.smoothbuild.plugin.NativeApi;
 
-import com.google.common.collect.ImmutableList;
-
-public class CallNativeAlgorithm extends Algorithm {
+public class InvokeAlgorithm extends Algorithm {
+  private final NativeFunctionH nativeFunctionH;
+  private final String extendedName;
   private final MethodLoader methodLoader;
-  private final NativeEvaluableS evaluable;
 
-  public CallNativeAlgorithm(MethodLoader methodLoader, TypeHV outputType,
-      NativeEvaluableS evaluable, boolean isPure) {
-    super(outputType, isPure);
+  public InvokeAlgorithm(TypeHV outputType, String extendedName, NativeFunctionH nativeFunctionH,
+      MethodLoader methodLoader) {
+    super(outputType, nativeFunctionH.isPure().jValue());
+    this.extendedName = extendedName;
     this.methodLoader = methodLoader;
-    this.evaluable = evaluable;
+    this.nativeFunctionH = nativeFunctionH;
   }
 
   @Override
   public Hash hash() {
-    return callNativeAlgorithmHash(evaluable.name());
+    return invokeAlgorithmHash(nativeFunctionH);
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    String classBinaryName = ((StringH) input.vals().get(0)).jValue();
-    Method method = methodLoader.load(evaluable, classBinaryName);
+    var method = methodLoader.load(extendedName, nativeFunctionH);
     try {
-      ImmutableList<ValueH> nativeArgs = skip(1, input.vals());
-      ValueH result = (ValueH) method.invoke(null, createArguments(nativeApi, nativeArgs));
+      var result = (ValueH) method.invoke(null, createArguments(nativeApi, input.vals()));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
-          nativeApi.log().error("`" + evaluable.name()
-              + "` has faulty native implementation: it returned `null` but logged no error.");
+          nativeApi.log().error(q(extendedName)
+              + " has faulty native implementation: it returned `null` but logged no error.");
         }
         return new Output(null, nativeApi.messages());
       }
       if (!outputType().equals(result.type())) {
-        nativeApi.log().error("`" + evaluable.name()
-            + "` has faulty native implementation: Its declared result type == "
+        nativeApi.log().error(q(extendedName)
+            + " has faulty native implementation: Its declared result type == "
             + outputType().q()
             + " but it returned object with type == " + result.type().q() + ".");
         return new Output(null, nativeApi.messages());
@@ -61,8 +57,8 @@ public class CallNativeAlgorithm extends Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallException("`" + evaluable.name()
-          + "` threw java exception from its native code.", e.getCause());
+      throw new NativeCallException(q(extendedName)
+          + " threw java exception from its native code.", e.getCause());
     }
   }
 

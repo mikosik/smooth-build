@@ -59,6 +59,6 @@ public class ConvertAlgorithm extends Algorithm {
 
   private static RuntimeException newBuildBrokenException(String message) {
     return new RuntimeException(
-        "This should not happen. It means smooth build release is broken." + message);
+        "This should not happen. It means smooth build release is broken. " + message);
   }
 }

@@ -1,33 +1,24 @@
 package org.smoothbuild.exec.java;
 
 import static java.util.Arrays.stream;
-import static org.smoothbuild.exec.java.MapTypeToJType.mapTypeToJType;
+import static org.smoothbuild.util.Strings.q;
 import static org.smoothbuild.util.reflect.Classes.loadClass;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.val.NativeFunctionH;
+import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.io.fs.space.JPathResolver;
-import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.NativeEvaluableS;
-import org.smoothbuild.lang.base.define.NativeFunctionS;
-import org.smoothbuild.lang.base.define.NativeValueS;
-import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.plugin.NativeApi;
 
 /**
@@ -37,63 +28,40 @@ import org.smoothbuild.plugin.NativeApi;
 public class MethodLoader {
   private static final String NATIVE_METHOD_NAME = "function";
   private final JPathResolver jPathResolver;
-  private final FileResolver fileResolver;
-  private final HashMap<CacheKey, Method> methodCache;
+  private final FileLoader fileLoader;
+  private final HashMap<NativeFunctionH, Method> methodCache;
 
   @Inject
-  public MethodLoader(JPathResolver jPathResolver, FileResolver fileResolver) {
+  public MethodLoader(JPathResolver jPathResolver, FileLoader fileLoader) {
     this.jPathResolver = jPathResolver;
-    this.fileResolver = fileResolver;
+    this.fileLoader = fileLoader;
     this.methodCache = new HashMap<>();
   }
 
-  public synchronized Method load(NativeEvaluableS nativeEvaluableS, String classBinaryName)
+  public synchronized Method load(String extendedName, NativeFunctionH nativeFunctionH)
       throws LoadingMethodException {
-    Method method = loadMethod(nativeEvaluableS, classBinaryName);
-    if (nativeEvaluableS instanceof NativeFunctionS function) {
-      assertMethodMatchesFunctionRequirements(function, method, classBinaryName);
-    } else {
-      assertMethodMatchesValueRequirements(
-          (NativeValueS) nativeEvaluableS, method, classBinaryName);
-    }
+    String quotedName = q(extendedName);
+    String classBinaryName = nativeFunctionH.classBinaryName().jValue();
+    Method method = loadMethod(quotedName, nativeFunctionH, classBinaryName);
+    assertMethodMatchesFunctionRequirements(quotedName, nativeFunctionH, method, classBinaryName);
     return method;
   }
 
-  private Method loadMethod(NativeEvaluableS referencable, String classBinaryName)
-      throws LoadingMethodException {
-    FilePath jarFilePath = referencable.location().file().withExtension("jar");
-    Hash jarHash = hashOf(referencable, classBinaryName, jarFilePath);
-    CacheKey key = new CacheKey(jarHash, classBinaryName);
-    Method method = methodCache.get(key);
-    if (method == null) {
-      method = findMethod(referencable, jarFilePath, classBinaryName);
-      methodCache.put(key, method);
-    }
-    return method;
-  }
-
-  private Hash hashOf(NativeEvaluableS referencable, String classBinaryName, FilePath jarFilePath)
-      throws LoadingMethodException {
-    try {
-      return fileResolver.hashOf(jarFilePath);
-    } catch (FileNotFoundException e) {
-      throw newLoadingException(
-          referencable, classBinaryName, "File " + jarFilePath.q() + " doesn't exist.");
-    } catch (IOException e) {
-      throw newLoadingException(
-          referencable, classBinaryName, "Error reading file " + jarFilePath.q() + ".");
-    }
-  }
-
-  private Method findMethod(NativeEvaluableS referencable, FilePath jarFilePath,
+  private Method loadMethod(String extendedName, NativeFunctionH functionH,
       String classBinaryName) throws LoadingMethodException {
-    Method method = findClassMethod(referencable, jarFilePath, classBinaryName);
+    return methodCache.computeIfAbsent(functionH,
+        n -> findMethod(extendedName, functionH, classBinaryName));
+  }
+
+  private Method findMethod(String extendedName, NativeFunctionH functionH,
+      String classBinaryName) throws LoadingMethodException {
+    Method method = findClassMethod(extendedName, functionH, classBinaryName);
     if (!isPublic(method)) {
-      throw newLoadingException(referencable, classBinaryName, "Providing method is not public.");
+      throw newLoadingException(extendedName, classBinaryName, "Providing method is not public.");
     } else if (!isStatic(method)) {
-      throw newLoadingException(referencable, classBinaryName, "Providing method is not static.");
+      throw newLoadingException(extendedName, classBinaryName, "Providing method is not static.");
     } else if (!hasContainerParameter(method)) {
-      throw newLoadingException(referencable, classBinaryName,
+      throw newLoadingException(extendedName, classBinaryName,
           "Providing method first parameter is not of type " + NativeApi.class.getCanonicalName()
               + ".");
     } else {
@@ -101,24 +69,27 @@ public class MethodLoader {
     }
   }
 
-  private Method findClassMethod(NativeEvaluableS referencable, FilePath jarFilePath,
+  private Method findClassMethod(String extendedName, NativeFunctionH functionH,
       String classBinaryName) throws LoadingMethodException {
-    Class<?> clazz = findClass(referencable, jarFilePath, classBinaryName);
+    Class<?> clazz = findClass(extendedName, functionH, classBinaryName);
     return stream(clazz.getDeclaredMethods())
         .filter(m -> m.getName().equals(NATIVE_METHOD_NAME))
         .findFirst()
-        .orElseThrow(() -> newLoadingException(referencable, classBinaryName, "Class '" +
-            clazz.getCanonicalName() + "' does not have '" + NATIVE_METHOD_NAME + "' method."));
+        .orElseThrow(() -> newLoadingException(extendedName, classBinaryName, "Class '" +
+            clazz.getCanonicalName() + "' does not have '" + NATIVE_METHOD_NAME + "' method."
+        ));
   }
 
-  private Class<?> findClass(NativeEvaluableS referencable, FilePath jarFilePath,
+  private Class<?> findClass(String extendedName, NativeFunctionH functionH,
       String classBinaryName) throws LoadingMethodException {
-      Path jarPath = jPathResolver.resolve(jarFilePath);
+    FilePath originalJarFile = fileLoader.filePathOf(functionH.jarFile().hash());
+    Path jarPath = jPathResolver.resolve(originalJarFile);
     try {
       return loadClass(jarPath, classBinaryName);
     } catch (ClassNotFoundException e) {
-      throw newLoadingException(referencable, classBinaryName,
-          "Class '" + classBinaryName + "' does not exist in jar " + jarFilePath.q() + ".");
+      throw newLoadingException(extendedName, classBinaryName,
+          "Class '" + classBinaryName + "' does not exist in jar '" + originalJarFile + "'."
+      );
     }
   }
 
@@ -127,77 +98,60 @@ public class MethodLoader {
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
 
-  private void assertMethodMatchesFunctionRequirements(NativeFunctionS function, Method method,
-      String classBinaryName) throws LoadingMethodException {
+  private void assertMethodMatchesFunctionRequirements(String extendedName,
+      NativeFunctionH function, Method method, String classBinaryName) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(
-        function, method, function.type().result(), classBinaryName);
-    assertNativeParameterTypesMatchesFuncParameters(method, function, classBinaryName);
+        extendedName, method, function.type().result(), classBinaryName);
+    assertNativeParameterTypesMatchesFuncParameters(extendedName, method, function, classBinaryName);
   }
 
-  private void assertMethodMatchesValueRequirements(NativeValueS value, Method method,
-      String classBinaryName) throws LoadingMethodException {
-    assertNativeResultMatchesDeclared(value, method, value.type(), classBinaryName);
-    assertNativeHasOneParameter(method, value, classBinaryName);
-  }
-
-  private static void assertNativeResultMatchesDeclared(NativeEvaluableS referencable,
-      Method method, TypeS resultType, String classBinaryName) throws LoadingMethodException {
-    Class<?> resultJType = method.getReturnType();
-    if (!mapTypeToJType(resultType).equals(resultJType)) {
-      throw newLoadingException(referencable, classBinaryName, referencable.q() + " declares type "
+  private static void assertNativeResultMatchesDeclared(String extendedName, Method method,
+      TypeHV resultType, String classBinaryName) throws LoadingMethodException {
+    var methodResultTypeJ = method.getReturnType();
+    var resultTypeJ = resultType.jType();
+    if (!resultTypeJ.equals(methodResultTypeJ)) {
+      throw newLoadingException(extendedName, classBinaryName, extendedName + " declares type "
           + resultType.q() + " so its native implementation result type must be "
-          + mapTypeToJType(resultType).getCanonicalName() + " but it is "
-          + resultJType.getCanonicalName() + ".");
+          + resultTypeJ.getCanonicalName() + " but it is "
+          + methodResultTypeJ.getCanonicalName() + ".");
     }
   }
 
-  private static void assertNativeParameterTypesMatchesFuncParameters(Method method,
-      NativeFunctionS function, String classBinaryName) throws LoadingMethodException {
+  private static void assertNativeParameterTypesMatchesFuncParameters(String extendedName,
+      Method method, NativeFunctionH function, String classBinaryName) throws LoadingMethodException {
     Parameter[] nativeParams = method.getParameters();
-    List<Item> params = function.parameters();
+    var params = function.type().parameters();
     if (params.size() != nativeParams.length - 1) {
-      throw newLoadingException(function, classBinaryName, "Function " + function.q() + " has "
+      throw newLoadingException(extendedName, classBinaryName, extendedName + " has "
           + params.size() + " parameter(s) but its native implementation has "
           + (nativeParams.length - 1) + " parameter(s).");
     }
     for (int i = 0; i < params.size(); i++) {
-      Item param = params.get(i);
-      Parameter nativeParam = nativeParams[i + 1];
-      TypeS paramType = param.type();
-      Class<?> paramJType = nativeParam.getType();
-      Class<? extends ObjectH> expectedParamJType = mapTypeToJType(paramType);
-      if (!expectedParamJType.equals(paramJType)) {
-        throw newLoadingException(function, classBinaryName, "Function " + function.q()
-            + " parameter `" + param.name() + "` has type " + paramType.q()
-            + " so its native implementation type must be " + expectedParamJType.getCanonicalName()
-            + " but it is " + paramJType.getCanonicalName() + ".");
+      var paramJ = nativeParams[i + 1];
+      var typeH = params.get(i);
+      var paramTypeJ = paramJ.getType();
+      var expectedParamTypeJ = typeH.jType();
+      if (!expectedParamTypeJ.equals(paramTypeJ)) {
+        throw newLoadingException(extendedName, classBinaryName, extendedName
+            + " parameter at index " + i + " has type " + typeH.q()
+            + " so its native implementation type must be " + expectedParamTypeJ.getCanonicalName()
+            + " but it is " + paramTypeJ.getCanonicalName() + ".");
       }
     }
   }
 
-  private static void assertNativeHasOneParameter(
-      Method method, NativeValueS value, String classBinaryName) throws LoadingMethodException {
-    int paramCount = method.getParameters().length;
-    if (paramCount != 1) {
-      throw newLoadingException(value, classBinaryName, value.q()
-          + " has native implementation that has too many parameter(s) = " + paramCount);
-    }
-  }
-
   private static LoadingMethodException newLoadingException(
-      NativeEvaluableS referencable, String classBinaryName, String message) {
-    return newLoadingException(referencable, classBinaryName, message, null);
+      String extendedName, String classBinaryName, String message) {
+    return newLoadingException(extendedName, classBinaryName, message, null);
   }
 
-  private static LoadingMethodException newLoadingException(NativeEvaluableS referencable,
+  private static LoadingMethodException newLoadingException(String extendedName,
       String classBinaryName, String message, Exception e) {
     return new LoadingMethodException("Error loading native implementation for "
-        + referencable.q() + " specified as `" + classBinaryName + "`: " + message, e);
+        + extendedName + " specified as `" + classBinaryName + "`: " + message, e);
   }
 
-  private static record CacheKey(Hash jarHash, String path) {}
-
-  public static class LoadingMethodException extends Exception {
+  public static class LoadingMethodException extends RuntimeException {
     public LoadingMethodException(String message, Throwable e) {
       super(message, e);
     }

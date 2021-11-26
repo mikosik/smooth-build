@@ -10,4 +10,8 @@ import com.google.common.collect.ImmutableList;
  */
 public record CallS(TypeS type, ExprS functionExpr,
     ImmutableList<ExprS> arguments, Location location) implements ExprS {
+  @Override
+  public String name() {
+    return "()";
+  }
 }

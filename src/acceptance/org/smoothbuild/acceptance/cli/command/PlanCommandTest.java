@@ -27,9 +27,8 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          String result
-            String building-evaluation
-              String :myValue
+          String building-evaluation
+            String() result
           """);
     }
 
@@ -44,9 +43,8 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          String result
-            String building-evaluation
-              String :returnAbc
+          String building-evaluation
+            String() result
           """);
     }
 
@@ -59,10 +57,8 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          String result
-            String building-evaluation
-              String(String) :myFunction
-              String "abc"
+          String building-evaluation
+            String() result
           """);
     }
 
@@ -77,10 +73,8 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          String result
-            String building-evaluation
-              String(String) :stringIdentity
-              String "abc"
+          String building-evaluation
+            String() result
           """);
     }
 
@@ -95,9 +89,8 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          String result
-            String building-evaluation
-              String() :returnAbc
+          String building-evaluation
+            String() result
           """);
     }
 
@@ -112,10 +105,8 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          MyStruct result
-            MyStruct building-evaluation
-              MyStruct(String) :myStruct
-              String "abc"
+          {String} building-evaluation
+            {String}() result
           """);
     }
 
@@ -130,11 +121,8 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          String result
-            String .0
-              MyStruct building-evaluation
-                MyStruct(String) :myStruct
-                String "abc"
+          String building-evaluation
+            String() result
           """);
     }
 
@@ -146,11 +134,9 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-              [String] result
-                [String] []
-                  String "abc"
-                  String "def"
-              """);
+          [String] building-evaluation
+            [String]() result
+          """);
     }
 
     @Test
@@ -161,9 +147,9 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-              String result
-                String "abc"
-              """);
+          String building-evaluation
+            String() result
+          """);
     }
 
     @Test
@@ -174,9 +160,9 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-              String result
-                String "01234567890123456789012345678901234"...
-              """);
+          String building-evaluation
+            String() result
+          """);
     }
 
     @Test
@@ -187,9 +173,9 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-              Blob result
-                Blob 0x01
-              """);
+          Blob building-evaluation
+            Blob() result
+          """);
     }
 
     @Test
@@ -200,9 +186,9 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-              Blob result
-                Blob 0x01234567890abcdef789012345678901234...
-              """);
+          Blob building-evaluation
+            Blob() result
+          """);
     }
 
     @Test
@@ -213,23 +199,9 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-              Int result
-                Int -1234
-              """);
-    }
-
-    @Test
-    public void convert_computation() throws Exception {
-      createUserModule("""
-              [String] result = [];
-              """);
-      runSmoothPlan("result");
-      assertFinishedWithSuccess();
-      assertSysOutContains("""
-              [String] result
-                [String] [String]<-[Nothing]
-                  [Nothing] []
-              """);
+          Int building-evaluation
+            Int() result
+          """);
     }
   }
 

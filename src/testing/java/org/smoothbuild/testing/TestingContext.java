@@ -17,10 +17,9 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.ObjectHDb;
-import org.smoothbuild.db.object.obj.base.ExprH;
+import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
@@ -29,17 +28,19 @@ import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
+import org.smoothbuild.db.object.obj.val.IfFunctionH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NativeMethodH;
+import org.smoothbuild.db.object.obj.val.MapFunctionH;
+import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypeHDb;
+import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
-import org.smoothbuild.db.object.type.expr.ConstTypeH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
-import org.smoothbuild.db.object.type.expr.InvokeTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
 import org.smoothbuild.db.object.type.expr.RefTypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
@@ -47,9 +48,12 @@ import org.smoothbuild.db.object.type.val.AnyTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.BlobTypeH;
 import org.smoothbuild.db.object.type.val.BoolTypeH;
+import org.smoothbuild.db.object.type.val.DefinedFunctionTypeH;
 import org.smoothbuild.db.object.type.val.FunctionTypeH;
+import org.smoothbuild.db.object.type.val.IfFunctionTypeH;
 import org.smoothbuild.db.object.type.val.IntTypeH;
-import org.smoothbuild.db.object.type.val.NativeMethodTypeH;
+import org.smoothbuild.db.object.type.val.MapFunctionTypeH;
+import org.smoothbuild.db.object.type.val.NativeFunctionTypeH;
 import org.smoothbuild.db.object.type.val.NothingTypeH;
 import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
@@ -116,6 +120,7 @@ public class TestingContext {
   private FileSystem computationCacheFileSystem;
   private ObjectHDb objectHDb;
   private TypingS typingS;
+  private TypingH typingH;
   private TypeHDb typeHDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -159,7 +164,7 @@ public class TestingContext {
 
   public ObjFactory objFactory() {
     if (objFactory == null) {
-      objFactory = new ObjFactory(objectHDb(), typeHDb());
+      objFactory = new ObjFactory(objectHDb(), typeHDb(), typingH());
     }
     return objFactory;
   }
@@ -171,7 +176,14 @@ public class TestingContext {
     return typingS;
   }
 
-  public TypeHDb typeFactoryH() {
+  public TypingH typingH() {
+    if (typingH == null) {
+      typingH = new TypingH(typeHDb());
+    }
+    return typingH;
+  }
+
+  public TypeFactoryH typeFactoryH() {
     return typeHDb();
   }
 
@@ -191,7 +203,7 @@ public class TestingContext {
 
   public ObjectHDb objectHDb() {
     if (objectHDb == null) {
-      objectHDb = new ObjectHDb(hashedDb(), typeHDb());
+      objectHDb = new ObjectHDb(hashedDb(), typeHDb(), typingH());
     }
     return objectHDb;
   }
@@ -212,7 +224,7 @@ public class TestingContext {
   }
 
   public ObjectHDb objectHDbOther() {
-    return new ObjectHDb(hashedDb(), typeHDbOther());
+    return new ObjectHDb(hashedDb(), typeHDbOther(), typingH());
   }
 
   public TypeHDb typeHDbOther() {
@@ -248,26 +260,34 @@ public class TestingContext {
     return fullFileSystem;
   }
 
-  // Obj types
+  // H types
 
   public TupleTypeH animalHT() {
-    return typeFactoryH().tuple(list(stringHT(), intHT()));
+    return typeHDb().tuple(list(stringHT(), intHT()));
   }
 
   public AnyTypeH anyHT() {
-    return typeFactoryH().any();
+    return typeHDb().any();
   }
 
   public ArrayTypeH arrayHT(TypeHV elementSpec) {
-    return typeFactoryH().array(elementSpec);
+    return typeHDb().array(elementSpec);
   }
 
   public BlobTypeH blobHT() {
-    return typeFactoryH().blob();
+    return typeHDb().blob();
   }
 
   public BoolTypeH boolHT() {
-    return typeFactoryH().bool();
+    return typeHDb().bool();
+  }
+
+  public DefinedFunctionTypeH definedFunctionHT() {
+    return definedFunctionHT(intHT(), list(blobHT(), stringHT()));
+  }
+
+  public DefinedFunctionTypeH definedFunctionHT(TypeHV result, ImmutableList<TypeHV> parameters) {
+    return typeHDb().definedFunction(result, parameters);
   }
 
   public TupleTypeH fileHT() {
@@ -279,19 +299,31 @@ public class TestingContext {
   }
 
   public FunctionTypeH functionHT(TypeHV result, ImmutableList<TypeHV> parameters) {
-    return typeFactoryH().function(result, parameters);
+    return typeHDb().function(result, parameters);
+  }
+
+  public IfFunctionTypeH ifFunctionHT() {
+    return typeHDb().ifFunction();
   }
 
   public IntTypeH intHT() {
-    return typeFactoryH().int_();
+    return typeHDb().int_();
   }
 
-  public NativeMethodTypeH nativeMethodHT() {
-    return typeHDb().nativeMethod();
+  public MapFunctionTypeH mapFunctionHT() {
+    return typeHDb().mapFunction();
+  }
+
+  public NativeFunctionTypeH nativeFunctionHT() {
+    return typeHDb().nativeFunction(blobHT(), list(boolHT()));
+  }
+
+  public NativeFunctionTypeH nativeFunctionHT(TypeHV result, ImmutableList<TypeHV> parameters) {
+    return typeHDb().nativeFunction(result, parameters);
   }
 
   public NothingTypeH nothingHT() {
-    return typeFactoryH().nothing();
+    return typeHDb().nothing();
   }
 
   public TupleTypeH personHT() {
@@ -299,7 +331,7 @@ public class TestingContext {
   }
 
   public StringTypeH stringHT() {
-    return typeFactoryH().string();
+    return typeHDb().string();
   }
 
   public TupleTypeH tupleHT() {
@@ -319,7 +351,7 @@ public class TestingContext {
   }
 
   public VariableH variableHT(String name) {
-    return typeFactoryH().variable(name);
+    return typeHDb().variable(name);
   }
 
   public Side<TypeHV> lowerHT() {
@@ -340,24 +372,12 @@ public class TestingContext {
     return typeHDb().call(evaluationType);
   }
 
-  public ConstTypeH constHT() {
-    return constHT(intHT());
-  }
-
-  public ConstTypeH constHT(TypeHV evaluationType) {
-    return typeHDb().const_(evaluationType);
-  }
-
   public ConstructTypeH constructHT() {
     return constructHT(list(intHT(), stringHT()));
   }
 
   public ConstructTypeH constructHT(ImmutableList<TypeHV> itemSpecs) {
     return typeHDb().construct(tupleHT(itemSpecs));
-  }
-
-  public InvokeTypeH invokeHT(TypeHV evaluationType) {
-    return typeHDb().invoke(evaluationType);
   }
 
   public OrderTypeH orderHT() {
@@ -435,17 +455,21 @@ public class TestingContext {
     return objFactory().file(string, blob);
   }
 
-  public FunctionH functionH() {
-    return functionH(intHE());
+  public DefinedFunctionH definedFunctionH() {
+    return definedFunctionH(intH());
   }
 
-  public FunctionH functionH(ExprH body) {
-    FunctionTypeH spec = functionHT(body.evaluationType(), list(stringHT()));
-    return functionH(spec, body);
+  public DefinedFunctionH definedFunctionH(ObjectH body) {
+    var type = definedFunctionHT(body.evaluationType(), list(stringHT()));
+    return definedFunctionH(type, body);
   }
 
-  public FunctionH functionH(FunctionTypeH spec, ExprH body) {
-    return objectHDb().function(spec, body);
+  public DefinedFunctionH definedFunctionH(DefinedFunctionTypeH spec, ObjectH body) {
+    return objectHDb().definedFunction(spec, body);
+  }
+
+  public IfFunctionH ifFunctionH() {
+    return objectHDb().ifFunction();
   }
 
   public IntH intH() {
@@ -456,8 +480,12 @@ public class TestingContext {
     return objectHDb().int_(BigInteger.valueOf(value));
   }
 
-  public NativeMethodH nativeMethodH(BlobH jarFile, StringH classBinaryName) {
-    return objectHDb().nativeMethod(jarFile, classBinaryName);
+  public MapFunctionH mapFunctionH() {
+    return objectHDb().mapFunction();
+  }
+
+  public NativeFunctionH nativeFunctionH(BlobH jarFile, StringH classBinaryName) {
+    return objectHDb().nativeFunction(nativeFunctionHT(), jarFile, classBinaryName, boolH(true));
   }
 
   public TupleH personH(String firstName, String lastName) {
@@ -515,19 +543,15 @@ public class TestingContext {
 
   // Expr-s
 
-  public CallH callH(ExprH function, ImmutableList<ExprH> arguments) {
+  public CallH callH(ObjectH function, ImmutableList<ObjectH> arguments) {
     return objectHDb().call(function, constructH(arguments));
   }
 
-  public ConstH constH(ValueH val) {
-    return objectHDb().const_(val);
-  }
-
-  public ConstructH constructH(ImmutableList<ExprH> items) {
+  public ConstructH constructH(ImmutableList<ObjectH> items) {
     return objectHDb().construct(items);
   }
 
-  public OrderH orderH(ImmutableList<ExprH> elements) {
+  public OrderH orderH(ImmutableList<ObjectH> elements) {
     return objectHDb().order(elements);
   }
 
@@ -539,30 +563,8 @@ public class TestingContext {
     return objectHDb().ref(BigInteger.valueOf(pointer), evaluationType);
   }
 
-  public SelectH selectH(ExprH tuple, IntH index) {
+  public SelectH selectH(ObjectH tuple, IntH index) {
     return objectHDb().select(tuple, index);
-  }
-
-  // Expr with specific evaluation type
-
-  public ConstH boolHE() {
-    return constH(boolH(true));
-  }
-
-  public ConstH intHE() {
-    return intHE(17);
-  }
-
-  public ConstH intHE(int i) {
-    return constH(intH(i));
-  }
-
-  public ConstH stringHE() {
-    return stringHE("abc");
-  }
-
-  public ConstH stringHE(String string) {
-    return constH(stringH(string));
   }
 
   // Types Smooth

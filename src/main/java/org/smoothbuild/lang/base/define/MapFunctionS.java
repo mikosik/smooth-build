@@ -13,7 +13,7 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NList;
 
-public class MapFunctionS extends FunctionS {
+public final class MapFunctionS extends FunctionS {
   public static final String MAP_FUNCTION_NAME = "map";
 
   public MapFunctionS(ModulePath modulePath, TypeFactoryS factory) {

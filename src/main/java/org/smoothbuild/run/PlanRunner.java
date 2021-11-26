@@ -12,7 +12,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.expr.RefS;
 
 public class PlanRunner {
   private final Console console;
@@ -53,7 +53,7 @@ public class PlanRunner {
           .ifPresent(values -> printPlans(definitions, values));
     }
 
-    private void printPlans(DefinitionsS definitions, List<ValueS> values) {
+    private void printPlans(DefinitionsS definitions, List<RefS> values) {
       executionPlanner.createPlans(definitions, values)
           .values()
           .forEach(this::print);

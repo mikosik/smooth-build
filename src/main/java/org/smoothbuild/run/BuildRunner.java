@@ -69,8 +69,12 @@ public class BuildRunner {
 
     public void execute(DefinitionsS definitions, List<String> names) {
       reporter.startNewPhase("Building");
-      findTopEvaluables(reporter, definitions, names)
-          .ifPresent((values) -> artifactBuilder.buildArtifacts(definitions, values));
+      try {
+        findTopEvaluables(reporter, definitions, names)
+            .ifPresent((values) -> artifactBuilder.buildArtifacts(definitions, values));
+      } catch (QuitException e) {
+        reporter.printlnRawFatal(e.getMessage());
+      }
     }
   }
 }

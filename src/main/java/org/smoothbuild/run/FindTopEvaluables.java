@@ -1,6 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,18 +12,19 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.expr.RefS;
 
 public class FindTopEvaluables {
-  public static Optional<List<ValueS>> findTopEvaluables(
+  public static Optional<List<RefS>> findTopEvaluables(
       Reporter reporter, DefinitionsS definitions, List<String> names) {
     var values = definitions.referencables();
-    List<ValueS> referencables = new ArrayList<>();
+    List<RefS> referencables = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
       TopEvaluableS referencable = values.get(name);
       if (referencable != null) {
         if (referencable instanceof ValueS value) {
-          referencables.add(value);
+          referencables.add(new RefS(value.type(), value.name(), commandLineLocation()));
         } else {
           logs.add(error(
               "`" + name + "` cannot be calculated as it is not a value but a function."));

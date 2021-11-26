@@ -11,7 +11,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public class ConstructorS extends FunctionS {
+public final class ConstructorS extends FunctionS {
   public ConstructorS(FunctionTypeS type, ModulePath modulePath, String name,
       NList<Item> parameters, Location location) {
     super(type, modulePath, name, parameters, location);

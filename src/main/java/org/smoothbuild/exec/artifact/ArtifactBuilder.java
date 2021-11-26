@@ -21,7 +21,7 @@ import org.smoothbuild.exec.parallel.ParallelJobExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.expr.RefS;
 
 public class ArtifactBuilder {
   private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";
@@ -40,13 +40,13 @@ public class ArtifactBuilder {
     this.reporter = reporter;
   }
 
-  public void buildArtifacts(DefinitionsS definitions, List<ValueS> values) {
-    Map<ValueS, Job> plans = executionPlanner.createPlans(definitions, values);
+  public void buildArtifacts(DefinitionsS definitions, List<RefS> refs) {
+    Map<RefS, Job> plans = executionPlanner.createPlans(definitions, refs);
     if (reporter.isProblemReported()) {
       return;
     }
     try {
-      Map<ValueS, Optional<ObjectH>> artifacts = parallelExecutor.executeAll(plans);
+      Map<RefS, Optional<ObjectH>> artifacts = parallelExecutor.executeAll(plans);
       if (!artifacts.containsValue(Optional.<ObjectH>empty())) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
         artifacts.entrySet()
@@ -60,10 +60,10 @@ public class ArtifactBuilder {
     }
   }
 
-  private void save(ValueS value, ObjectH obj) {
-    String name = value.name();
+  private void save(RefS ref, ObjectH obj) {
+    String name = ref.name();
     try {
-      Path path = artifactSaver.save(value, obj);
+      Path path = artifactSaver.save(ref, obj);
       reportSuccess(name, path);
     } catch (IOException e) {
       reportFailure(name,

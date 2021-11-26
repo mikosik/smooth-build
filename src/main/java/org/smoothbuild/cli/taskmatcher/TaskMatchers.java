@@ -27,14 +27,14 @@ public class TaskMatchers {
   static final TaskMatcher SDK = spaceMatcher(Space.SDK);
 
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
+  static final TaskMatcher CONSTRUCT = kindMatcher(TaskKind.CONSTRUCT);
   static final TaskMatcher CONVERSION = kindMatcher(TaskKind.CONVERSION);
   static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
   static final TaskMatcher LITERAL = kindMatcher(TaskKind.LITERAL);
   static final TaskMatcher MAP = kindMatcher(TaskKind.MAP);
   static final TaskMatcher REFERENCE = kindMatcher(TaskKind.REFERENCE);
-  static final TaskMatcher VALUE = kindMatcher(TaskKind.VALUE);
 
-  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(or(CALL, VALUE), SELECT)));
+  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(CALL, SELECT)));
 
   private static final ImmutableMap<String, TaskMatcher> MATCHERS_MAP =
       ImmutableMap.<String, TaskMatcher>builder()
@@ -61,6 +61,8 @@ public class TaskMatchers {
 
           .put("call", CALL)
           .put("c", CALL)
+          .put("construction", CONSTRUCT)
+          .put("cons", CONSTRUCT)
           .put("conversion", CONVERSION)
           .put("conv", CONVERSION)
           .put("select", SELECT)
@@ -69,10 +71,8 @@ public class TaskMatchers {
           .put("l", LITERAL)
           .put("map", MAP)
           .put("m", MAP)
-          .put("r", REFERENCE)
           .put("reference", REFERENCE)
-          .put("value", VALUE)
-          .put("v", VALUE)
+          .put("r", REFERENCE)
 
           .build();
 

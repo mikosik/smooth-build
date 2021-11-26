@@ -5,6 +5,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.selectAlgorithmHash
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.base.Input;
@@ -14,16 +15,16 @@ import org.smoothbuild.plugin.NativeApi;
 import com.google.common.collect.ImmutableList;
 
 public class SelectAlgorithm extends Algorithm {
-  private final int itemIndex;
+  private final IntH index;
 
-  public SelectAlgorithm(int itemIndex, TypeHV outputType) {
+  public SelectAlgorithm(IntH index, TypeHV outputType) {
     super(outputType);
-    this.itemIndex = itemIndex;
+    this.index = index;
   }
 
   @Override
   public Hash hash() {
-    return selectAlgorithmHash(itemIndex);
+    return selectAlgorithmHash(index);
   }
 
   @Override
@@ -31,6 +32,6 @@ public class SelectAlgorithm extends Algorithm {
     ImmutableList<ValueH> objects = input.vals();
     checkArgument(objects.size() == 1);
     TupleH tuple = (TupleH) objects.get(0);
-    return new Output(tuple.get(itemIndex), nativeApi.messages());
+    return new Output(tuple.get(index.jValue().intValue()), nativeApi.messages());
   }
 }

@@ -1,12 +1,14 @@
 package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.Objects;
 
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.val.FunctionTypeH;
@@ -30,23 +32,32 @@ public class CallH extends ExprH {
   }
 
   public CallData data() {
-    ExprH function = readFunction();
+    ObjectH function = readFunction();
     ConstructH arguments = readArguments();
     validate(function, arguments);
     return new CallData(function, arguments);
   }
 
-  public record CallData(ExprH function, ConstructH arguments) {}
+  public record CallData(ObjectH function, ConstructH arguments) {}
 
-  private void validate(ExprH function, ConstructH arguments) {
+  private void validate(ObjectH function, ConstructH argumentsConstruct) {
     if (function.evaluationType() instanceof FunctionTypeH functionType) {
-      if (!Objects.equals(evaluationType(), functionType.result())) {
+      var typing = objectDb().typing();
+      var parameters = functionType.parameters();
+      var arguments = argumentsConstruct.type().evaluationType().items();
+      allMatchOtherwise(
+          parameters,
+          arguments,
+          typing::isParamAssignable,
+          (expectedSize, actualSize) -> illegalArguments(functionType, argumentsConstruct),
+          i -> illegalArguments(functionType, argumentsConstruct)
+      );
+      var variableBounds = typing.inferVariableBoundsInCall(parameters, arguments);
+      var actualResult = typing.mapVariables(
+          functionType.result(), variableBounds, typing.factory().lower());
+      if (!Objects.equals(evaluationType(), actualResult)) {
         throw new DecodeExprWrongEvaluationTypeOfComponentException(
-            hash(), type(), "function.result", evaluationType(), functionType.result());
-      }
-      if (!Objects.equals(functionType.parametersTuple(), arguments.type().evaluationType())) {
-        throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(), "arguments",
-            functionType.parametersTuple(), arguments.type().evaluationType());
+            hash(), type(), "function.result", evaluationType(), actualResult);
       }
     } else {
       throw new DecodeExprWrongEvaluationTypeOfComponentException(
@@ -54,9 +65,14 @@ public class CallH extends ExprH {
     }
   }
 
-  private ExprH readFunction() {
+  private void illegalArguments(FunctionTypeH functionType, ConstructH arguments) {
+    throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(), "arguments",
+        functionType.parametersTuple(), arguments.evaluationType());
+  }
+
+  private ObjectH readFunction() {
     return readSequenceElementObj(
-        DATA_PATH, dataHash(), FUNCTION_INDEX, DATA_SEQUENCE_SIZE, ExprH.class);
+        DATA_PATH, dataHash(), FUNCTION_INDEX, DATA_SEQUENCE_SIZE, ObjectH.class);
   }
 
   private ConstructH readArguments() {

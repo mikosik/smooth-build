@@ -21,7 +21,6 @@ import org.smoothbuild.acceptance.cli.command.common.ValuesArgTestCase;
 import org.smoothbuild.acceptance.testing.ReportError;
 import org.smoothbuild.acceptance.testing.ReportInfo;
 import org.smoothbuild.acceptance.testing.ReportWarning;
-import org.smoothbuild.acceptance.testing.ReturnAbc;
 import org.smoothbuild.cli.command.BuildCommand;
 
 public class BuildCommandTest {
@@ -117,13 +116,13 @@ public class BuildCommandTest {
           result = myFunction();
           """;
       private static final String DEFINED_CALL_TASK_HEADER = """
-          myFunction()                             build.smooth:2
+          myFunction                               build.smooth:2
           """;
       private static final String NATIVE_FUNCTION_CALL = """
             result = concat(["a"], ["b"]);
             """;
       private static final String NATIVE_CALL_TASK_HEADER = """
-          concat()                                 build.smooth:1                 exec
+          concat                                   build.smooth:1                 exec
           """;
       private static final String IF_FUNCTION_CALL = """
             result = if(true, "true", "false");
@@ -204,32 +203,6 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class conversion_matcher extends AcceptanceTestCase {
-      private static final String CONVERSION = """
-            [String] result = [];
-            """;
-      private static final String CONVERSION_TASK_HEADER = """
-          [String]<-[Nothing]                      build.smooth:1                 exec
-          """;
-
-      @Test
-      public void shows_conversion_when_enabled() throws IOException {
-        createUserModule(CONVERSION);
-        runSmooth(buildCommand("--show-tasks=conversion", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(CONVERSION_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_conversion_when_not_enabled() throws IOException {
-        createUserModule(CONVERSION);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(CONVERSION_TASK_HEADER);
-      }
-    }
-
-    @Nested
     class select_matcher extends AcceptanceTestCase {
       private static final String SELECT = """
             MyStruct {
@@ -282,59 +255,6 @@ public class BuildCommandTest {
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain(LITERAL_TASK_HEADER);
-      }
-    }
-
-    @Nested
-    class value_matcher extends AcceptanceTestCase {
-      private static final String DEFINED_VALUE = """
-            myValue = "abc";
-            result = myValue;
-            """;
-      private static final String DEFINED_VALUE_TASK_HEADER = """
-          myValue                                  build.smooth:2
-          """;
-      private static final String NATIVE_VALUE = format("""
-            @Native("%s")
-            String returnAbc;
-            result = returnAbc;
-            """, ReturnAbc.class.getCanonicalName());
-      private static final String NATIVE_VALUE_TASK_HEADER = """
-          returnAbc                                build.smooth:3                 exec
-          """;
-
-      @Test
-      public void shows_value_when_enabled() throws IOException {
-        createUserModule(DEFINED_VALUE);
-        runSmooth(buildCommand("--show-tasks=value", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(DEFINED_VALUE_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_value_when_not_enabled() throws IOException {
-        createUserModule(DEFINED_VALUE);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(DEFINED_VALUE_TASK_HEADER);
-      }
-
-      @Test
-      public void shows_native_value_when_enabled() throws IOException {
-        createNativeJar(ReturnAbc.class);
-        createUserModule(NATIVE_VALUE);
-        runSmooth(buildCommand("--show-tasks=value", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(NATIVE_VALUE_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_native_value_when_not_enabled() throws IOException {
-        createNativeJar(ReturnAbc.class);
-        createUserModule(NATIVE_VALUE);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(NATIVE_VALUE_TASK_HEADER);
       }
     }
   }
@@ -520,19 +440,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myFunction()                             build.smooth:2
-          """);
-    }
-
-    @Test
-    public void conversion() throws IOException {
-      createUserModule("""
-          [String] result = [];
-          """);
-      runSmooth(buildCommand("--show-tasks=all", "result"));
-      assertFinishedWithSuccess();
-      assertSysOutContains("""
-          [String]<-[Nothing]                      build.smooth:1                 exec
+          myFunction                               build.smooth:2
           """);
     }
 
@@ -559,7 +467,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          :if                                      build.smooth:1                 exec
+          if                                       smooth internal                exec
           """);
     }
 

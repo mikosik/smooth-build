@@ -9,7 +9,7 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NList;
 
-public class IfFunctionS extends FunctionS {
+public final class IfFunctionS extends FunctionS {
   public static final String IF_FUNCTION_NAME = "if";
 
   public IfFunctionS(ModulePath modulePath, TypeFactoryS factory) {

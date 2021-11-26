@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationTypeException;
@@ -34,7 +35,7 @@ public class SelectH extends ExprH {
   }
 
   public SelectData data() {
-    ExprH tuple = readTuple();
+    ObjectH tuple = readTuple();
     if (tuple.evaluationType() instanceof TupleTypeH tupleEvaluationType) {
       IntH index = readIndex();
       int i = index.jValue().intValue();
@@ -53,11 +54,11 @@ public class SelectH extends ExprH {
     }
   }
 
-  public static record SelectData(ExprH tuple, IntH index) {}
+  public static record SelectData(ObjectH tuple, IntH index) {}
 
-  private ExprH readTuple() {
+  private ObjectH readTuple() {
     return readSequenceElementObj(
-        DATA_PATH, dataHash(), TUPLE_INDEX, DATA_SEQUENCE_SIZE, ExprH.class);
+        DATA_PATH, dataHash(), TUPLE_INDEX, DATA_SEQUENCE_SIZE, ObjectH.class);
   }
 
   private IntH readIndex() {

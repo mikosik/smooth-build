@@ -2,21 +2,20 @@ package org.smoothbuild.exec.algorithm;
 
 import static java.util.Arrays.asList;
 
-import java.math.BigInteger;
-
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
-
-import okio.ByteString;
 
 public class AlgorithmHashes {
   public static Hash orderAlgorithmHash() {
     return hash(0);
   }
 
-  public static Hash callNativeAlgorithmHash(String referencableName) {
-    return hash(1, Hash.of(referencableName));
+  public static Hash invokeAlgorithmHash(NativeFunctionH nativeFunctionH) {
+    return hash(1, nativeFunctionH.hash());
   }
 
   public static Hash convertAlgorithmHash(TypeH destinationType) {
@@ -27,25 +26,19 @@ public class AlgorithmHashes {
     return hash(3, type.hash());
   }
 
-  public static Hash selectAlgorithmHash(int itemIndex) {
-    return hash(4, Hash.of(itemIndex));
+  public static Hash selectAlgorithmHash(IntH itemIndex) {
+    return hash(4, itemIndex.hash());
   }
 
-  public static Hash fixedStringAlgorithmHash(String string) {
-    return hash(5, Hash.of(string));
+  // TODO unused 5
+
+  public static Hash constAlgorithmHash(ValueH valueH) {
+    return hash(6, valueH.hash());
   }
 
-  public static Hash fixedBlobAlgorithmHash(ByteString byteString) {
-    return hash(6, Hash.of(byteString));
-  }
+  // TODO unused 7
 
-  public static Hash referenceAlgorithmHash(Hash moduleHash, String functionName) {
-    return hash(7, Hash.of(asList(moduleHash, Hash.of(functionName))));
-  }
-
-  public static Hash fixedIntAlgorithmHash(BigInteger bigInteger) {
-    return hash(8, Hash.of(ByteString.of(bigInteger.toByteArray())));
-  }
+  // TODO unused 8
 
   private static Hash hash(int id, Hash hash) {
     return Hash.of(asList(Hash.of(id), hash));

@@ -15,4 +15,9 @@ public abstract class ValueH extends ObjectH {
   public TypeHV type() {
     return (TypeHV) super.type();
   }
+
+  @Override
+  public TypeHV evaluationType() {
+    return type();
+  }
 }

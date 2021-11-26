@@ -16,18 +16,13 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.db.ObjectHDbException;
-import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.DecodeObjTypeException;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstH;
 import org.smoothbuild.db.object.obj.expr.ConstructH;
-import org.smoothbuild.db.object.obj.expr.IfH;
-import org.smoothbuild.db.object.obj.expr.InvokeH;
-import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -36,18 +31,25 @@ import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
+import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
 import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.obj.val.IfFunctionH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NativeMethodH;
+import org.smoothbuild.db.object.obj.val.MapFunctionH;
+import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.TypeHDb;
+import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
+import org.smoothbuild.db.object.type.val.DefinedFunctionTypeH;
 import org.smoothbuild.db.object.type.val.FunctionTypeH;
+import org.smoothbuild.db.object.type.val.NativeFunctionTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
@@ -58,10 +60,23 @@ import com.google.common.collect.ImmutableList;
 public class ObjectHDb {
   private final HashedDb hashedDb;
   private final TypeHDb typeHDb;
+  private final TypingH typing;
 
-  public ObjectHDb(HashedDb hashedDb, TypeHDb typeHDb) {
+  private final IfFunctionH ifFunction;
+  private final MapFunctionH mapFunction;
+
+  public ObjectHDb(HashedDb hashedDb, TypeHDb typeHDb,
+      TypingH typing) {
     this.hashedDb = hashedDb;
     this.typeHDb = typeHDb;
+    this.typing = typing;
+
+    try {
+      this.ifFunction = newIfFunction();
+      this.mapFunction = newMapFunction();
+    } catch (HashedDbException e) {
+      throw new ObjectHDbException(e);
+    }
   }
 
   // methods for creating ValueH subclasses
@@ -78,8 +93,8 @@ public class ObjectHDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
-  public FunctionH function(FunctionTypeH type, ExprH body) {
-    if (!Objects.equals(type.result(), body.evaluationType())) {
+  public DefinedFunctionH definedFunction(DefinedFunctionTypeH type, ObjectH body) {
+    if (!typing.isAssignable(type.result(), body.evaluationType())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.result().name()
           + " but body.evaluationType() is " + body.evaluationType().name() + ".");
     }
@@ -90,9 +105,10 @@ public class ObjectHDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInt(value));
   }
 
-  public NativeMethodH nativeMethod(BlobH jarFile, StringH classBinaryName) {
+  public NativeFunctionH nativeFunction(
+      NativeFunctionTypeH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newNativeMethod(jarFile, classBinaryName));
+        () -> newNativeFunction(type, jarFile, classBinaryName, isPure));
   }
 
   public StringH string(String value) {
@@ -118,33 +134,23 @@ public class ObjectHDb {
 
   // methods for creating ExprH subclasses
 
-  public CallH call(ExprH function, ConstructH arguments) {
+  public CallH call(ObjectH function, ConstructH arguments) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(function, arguments));
   }
 
-  public ConstH const_(ValueH val) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newConst(val));
-  }
-
-  public ConstructH construct(ImmutableList<ExprH> items) {
+  public ConstructH construct(ImmutableList<ObjectH> items) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(items));
   }
 
-  public IfH if_(ExprH condition, ExprH then, ExprH else_) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
+  public IfFunctionH ifFunction() {
+    return ifFunction;
   }
 
-  public InvokeH invoke(
-      TypeHV evaluationType, NativeMethodH nativeMethod, BoolH isPure, IntH argumentCount) {
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newInvoke(evaluationType, nativeMethod, isPure, argumentCount));
+  public MapFunctionH mapFunction() {
+    return mapFunction;
   }
 
-  public MapH map(ExprH array, ExprH function) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newMap(array, function));
-  }
-
-  public OrderH order(ImmutableList<ExprH> elements) {
+  public OrderH order(ImmutableList<ObjectH> elements) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elements));
   }
 
@@ -152,7 +158,7 @@ public class ObjectHDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType, value));
   }
 
-  public SelectH select(ExprH tuple, IntH index) {
+  public SelectH select(ObjectH tuple, IntH index) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(tuple, index));
   }
 
@@ -205,7 +211,8 @@ public class ObjectHDb {
     return typeHDb.bool().newObj(root, this);
   }
 
-  private FunctionH newFunction(FunctionTypeH type, ExprH body) throws HashedDbException {
+  private DefinedFunctionH newFunction(DefinedFunctionTypeH type, ObjectH body)
+      throws HashedDbException {
     var data = writeFunctionData(body);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -217,9 +224,9 @@ public class ObjectHDb {
     return typeHDb.int_().newObj(root, this);
   }
 
-  private NativeMethodH newNativeMethod(BlobH jarFile, StringH classBinaryName) throws HashedDbException {
-    var type = typeHDb.nativeMethod();
-    var data = writeNativeMethodData(jarFile, classBinaryName);
+  private NativeFunctionH newNativeFunction(NativeFunctionTypeH type, BlobH jarFile,
+      StringH classBinaryName, BoolH isPure) throws HashedDbException {
+    var data = writeNativeMethodData(jarFile, classBinaryName, isPure);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -238,24 +245,36 @@ public class ObjectHDb {
 
   // methods for creating Expr-s
 
-  private CallH newCall(ExprH function, ConstructH arguments) throws HashedDbException {
-    var functionType = functionEvaluationType(function);
-    verifyArguments(functionType, arguments);
-    var type = typeHDb.call(functionType.result());
+  private CallH newCall(ObjectH function, ConstructH arguments) throws HashedDbException {
+    var resultType = inferCallResultType(function, arguments);
+    var type = typeHDb.call(resultType);
     var data = writeCallData(function, arguments);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private static void verifyArguments(FunctionTypeH functionType, ConstructH arguments) {
-    if (!Objects.equals(functionType.parametersTuple(), arguments.evaluationType())) {
-      throw new IllegalArgumentException(("Arguments evaluation type %s should be equal to "
-          + "function evaluation type parameters %s.")
-          .formatted(arguments.evaluationType().name(), functionType.parametersTuple().name()));
-    }
+  private TypeHV inferCallResultType(ObjectH function, ConstructH arguments) {
+    var functionType = functionEvaluationType(function);
+    var argumentTypes = arguments.evaluationType().items();
+    var parameters = functionType.parameters();
+    allMatchOtherwise(
+        parameters,
+        argumentTypes,
+        typing::isParamAssignable,
+        (expectedSize, actualSize) -> illegalArguments(functionType, arguments),
+        i -> illegalArguments(functionType, arguments)
+    );
+    var variableBounds = typing.inferVariableBoundsInCall(parameters, argumentTypes);
+    return typing.mapVariables(functionType.result(), variableBounds, typeHDb.lower());
   }
 
-  private FunctionTypeH functionEvaluationType(ExprH function) {
+  private void illegalArguments(FunctionTypeH functionType, ConstructH arguments) {
+    throw new IllegalArgumentException(
+        "Arguments evaluation type %s should be equal to function evaluation type parameters %s."
+            .formatted(arguments.evaluationType().name(), functionType.parametersTuple().name()));
+  }
+
+  private FunctionTypeH functionEvaluationType(ObjectH function) {
     if (function.evaluationType() instanceof FunctionTypeH functionType) {
       return functionType;
     } else {
@@ -263,39 +282,21 @@ public class ObjectHDb {
     }
   }
 
-  private ConstH newConst(ValueH val) throws HashedDbException {
-    var type = typeHDb.const_(val.type());
-    var data = writeConstData(val);
-    var root = newRoot(type, data);
+  private IfFunctionH newIfFunction() throws HashedDbException {
+    var type = typeHDb.ifFunction();
+    return (IfFunctionH) newInternalFunction(type);
+  }
+
+  private FunctionH newInternalFunction(FunctionTypeH type) throws HashedDbException {
+    // Internal functions don't have any data. We use empty sequence as its data so
+    // code reading such function from hashedDb can be simpler and code that stores
+    // h-objects as artifacts doesn't need handle this special case.
+    Hash dataHash = hashedDb.writeSequence();
+    var root = newRoot(type, dataHash);
     return type.newObj(root, this);
   }
 
-  private IfH newIf(ExprH condition, ExprH then, ExprH else_) throws HashedDbException {
-    var evaluationType = then.evaluationType();
-    var type = typeHDb.if_(evaluationType);
-    var data = writeIfData(condition, then, else_);
-    var root = newRoot(type, data);
-    return type.newObj(root, this);
-  }
-
-  private InvokeH newInvoke(TypeHV evaluationType, NativeMethodH nativeMethod, BoolH isPure,
-      IntH argumentCount) throws HashedDbException {
-    var data = writeInvokeData(nativeMethod, isPure, argumentCount);
-    var type = typeHDb.invoke(evaluationType);
-    var root = newRoot(type, data);
-    return type.newObj(root, this);
-  }
-
-  private MapH newMap(ExprH array, ExprH function) throws HashedDbException {
-    // TODO type-variables are not handled by this line
-    var evaluationType = typeHDb.array(functionEvaluationType(function).result());
-    var type = typeHDb.map(evaluationType);
-    var data = writeMapData(array, function);
-    var root = newRoot(type, data);
-    return type.newObj(root, this);
-  }
-
-  private OrderH newOrder(ImmutableList<ExprH> elements) throws HashedDbException {
+  private OrderH newOrder(ImmutableList<ObjectH> elements) throws HashedDbException {
     TypeHV elementType = elementType(elements);
     var type = typeHDb.order(elementType);
     var data = writeOrderData(elements);
@@ -303,9 +304,9 @@ public class ObjectHDb {
     return type.newObj(root, this);
   }
 
-  private TypeHV elementType(ImmutableList<ExprH> elements) {
+  private TypeHV elementType(ImmutableList<ObjectH> elements) {
     Optional<TypeHV> elementType = elements.stream()
-        .map(expr -> expr.type().evaluationType())
+        .map(ObjectH::evaluationType)
         .reduce((type1, type2) -> {
           if (type1.equals(type2)) {
             return type1;
@@ -323,8 +324,8 @@ public class ObjectHDb {
     }
   }
 
-  private ConstructH newConstruct(ImmutableList<ExprH> items) throws HashedDbException {
-    var itemTypes = Lists.map(items, ExprH::evaluationType);
+  private ConstructH newConstruct(ImmutableList<ObjectH> items) throws HashedDbException {
+    var itemTypes = Lists.map(items, ObjectH::evaluationType);
     var evaluationType = typeHDb.tuple(itemTypes);
     var type = typeHDb.construct(evaluationType);
     var data = writeConstructData(items);
@@ -332,15 +333,20 @@ public class ObjectHDb {
     return type.newObj(root, this);
   }
 
-  private SelectH newSelect(ExprH tuple, IntH index) throws HashedDbException {
+  private MapFunctionH newMapFunction() throws HashedDbException {
+    var type = typeHDb.mapFunction();
+    return (MapFunctionH) newInternalFunction(type);
+  }
+
+  private SelectH newSelect(ObjectH tuple, IntH index) throws HashedDbException {
     var type = selectType(tuple, index);
     var data = writeSelectData(tuple, index);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private SelectTypeH selectType(ExprH expr, IntH index) {
-    if (expr.type().evaluationType() instanceof TupleTypeH tuple) {
+  private SelectTypeH selectType(ObjectH expr, IntH index) {
+    if (expr.evaluationType() instanceof TupleTypeH tuple) {
       int intIndex = index.jValue().intValue();
       ImmutableList<TypeHV> items = tuple.items();
       checkElementIndex(intIndex, items.size());
@@ -365,36 +371,20 @@ public class ObjectHDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ExprH function, ConstructH arguments) throws HashedDbException {
+  private Hash writeCallData(ObjectH function, ConstructH arguments) throws HashedDbException {
     return hashedDb.writeSequence(function.hash(), arguments.hash());
   }
 
-  private Hash writeConstData(ValueH val) {
-    return val.hash();
-  }
-
-  private Hash writeConstructData(ImmutableList<ExprH> items) throws HashedDbException {
+  private Hash writeConstructData(ImmutableList<ObjectH> items) throws HashedDbException {
     return writeSequence(items);
   }
 
-  private Hash writeIfData(ExprH condition, ExprH then, ExprH else_) throws HashedDbException {
-    return hashedDb.writeSequence(condition.hash(), then.hash(), else_.hash());
+  private Hash writeNativeMethodData(BlobH jarFile, StringH classBinaryName, BoolH isPure)
+      throws HashedDbException {
+    return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash(), isPure.hash());
   }
 
-  private Hash writeInvokeData(NativeMethodH nativeMethod,
-      BoolH isPure, IntH argumentCount) throws HashedDbException {
-    return hashedDb.writeSequence(nativeMethod.hash(), isPure.hash(), argumentCount.hash());
-  }
-
-  private Hash writeMapData(ExprH array, ExprH function) throws HashedDbException {
-    return hashedDb.writeSequence(array.hash(), function.hash());
-  }
-
-  private Hash writeNativeMethodData(BlobH jarFile, StringH classBinaryName) throws HashedDbException {
-    return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash());
-  }
-
-  private Hash writeOrderData(ImmutableList<ExprH> elements) throws HashedDbException {
+  private Hash writeOrderData(ImmutableList<ObjectH> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 
@@ -402,7 +392,7 @@ public class ObjectHDb {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeSelectData(ExprH tuple, IntH index) throws HashedDbException {
+  private Hash writeSelectData(ObjectH tuple, IntH index) throws HashedDbException {
     return hashedDb.writeSequence(tuple.hash(), index.hash());
   }
 
@@ -420,7 +410,7 @@ public class ObjectHDb {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeFunctionData(ExprH body) {
+  private Hash writeFunctionData(ObjectH body) {
     return body.hash();
   }
 
@@ -447,5 +437,9 @@ public class ObjectHDb {
   // moved completely to ObjectDb class
   public HashedDb hashedDb() {
     return hashedDb;
+  }
+
+  public Typing<TypeHV> typing() {
+    return typing;
   }
 }

@@ -46,7 +46,7 @@ import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.job.Task;
 import org.smoothbuild.exec.job.TaskInfo;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -181,9 +181,9 @@ public class ParallelJobExecutorTest extends TestingContext {
     parallelJobExecutor = new ParallelJobExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
     var job = job(throwingAlgorithm(exception));
-    var value = mock(ValueS.class);
+    var ref = new RefS(STRING, "name", loc());
 
-    assertThat(parallelJobExecutor.executeAll(Map.of(value, job)).get(value).isEmpty())
+    assertThat(parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref).isEmpty())
         .isTrue();
     verify(reporter).report(
         eq(job.info()),
@@ -201,17 +201,17 @@ public class ParallelJobExecutorTest extends TestingContext {
       }
     };
     parallelJobExecutor = new ParallelJobExecutor(computer, reporter);
-    var value = mock(ValueS.class);
+    var ref = new RefS(STRING, "name", loc());
     var job = job(valueAlgorithm("A"));
 
-    Optional<ObjectH> object = parallelJobExecutor.executeAll(Map.of(value, job)).get(value);
+    Optional<ObjectH> object = parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref);
 
     verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
     assertThat(object.isEmpty())
         .isTrue();
   }
 
-  private static Task concat(Job... dependencies) {
+  private Task concat(Job... dependencies) {
     var algorithm = concatAlgorithm();
     return job("concat", algorithm, dependencies);
   }
@@ -227,13 +227,13 @@ public class ParallelJobExecutorTest extends TestingContext {
     };
   }
 
-  private static Task job(Algorithm algorithm, Job... dependencies) {
+  private Task job(Algorithm algorithm, Job... dependencies) {
     return job("task_name", algorithm, dependencies);
   }
 
-  private static Task job(String name, Algorithm algorithm, Job... dependencies) {
+  private Task job(String name, Algorithm algorithm, Job... dependencies) {
     TaskInfo info = new TaskInfo(CALL, name, loc());
-    return new Task(STRING, list(dependencies), info, algorithm);
+    return new Task(stringHT(), list(dependencies), info, algorithm);
   }
 
   private Algorithm valueAlgorithm(String value) {
@@ -295,8 +295,8 @@ public class ParallelJobExecutorTest extends TestingContext {
 
   private static ObjectH executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
-    ValueS value = mock(ValueS.class);
-    return parallelJobExecutor.executeAll(Map.of(value, job)).get(value).get();
+    var ref = new RefS(STRING, "name", loc());
+    return parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref).get();
   }
 
   private static Output toStr(NativeApi nativeApi, int i) {

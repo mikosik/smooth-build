@@ -146,6 +146,11 @@ public class Reporter {
     return value + " " + name;
   }
 
+  public void printlnRawFatal(String message) {
+    counts.get(FATAL).incrementAndGet();
+    printlnRaw(message);
+  }
+
   public void printlnRaw(String line) {
     console.println(line);
   }

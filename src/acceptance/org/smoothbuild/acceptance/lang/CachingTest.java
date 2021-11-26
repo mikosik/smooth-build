@@ -74,32 +74,70 @@ public class CachingTest extends AcceptanceTestCase {
 
   @ParameterizedTest
   @ValueSource(strings = {"", "()"})
-  public void native_can_implement_two_things_each_with_different_pureness(
+  public void native_evaluables_with_same_pure_native_share_cache_results(
       String functionOrValue) throws Exception {
     createNativeJar(Random.class);
     createUserModule(format("""
-            @Native("%s")
-            String cachingRandom%s;
-            @Native("%s", IMPURE)
-            String notCachingRandom%s;
-            caching = cachingRandom%s;
-            notCaching = notCachingRandom%s;
+            @Native("%s", PURE)
+            String first%s;
+            @Native("%s", PURE)
+            String second%s;
+            random1 = first%s;
+            random2 = second%s;
             """, Random.class.getCanonicalName(), functionOrValue,
         Random.class.getCanonicalName(), functionOrValue, functionOrValue, functionOrValue));
 
-    runSmoothBuild("caching", "notCaching");
+    runSmoothBuild("random1", "random2");
     assertFinishedWithSuccess();
-    String cachingA = artifactFileContentAsString("caching");
-    String notCachingA = artifactFileContentAsString("notCaching");
+    String random1 = artifactFileContentAsString("random1");
+    String random2 = artifactFileContentAsString("random2");
 
-    runSmoothBuild("caching", "notCaching");
+    assertThat(random1).isEqualTo(random2);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"", "()"})
+  public void native_evaluables_with_same_impure_native_share_cache_results(
+      String functionOrValue) throws Exception {
+    createNativeJar(Random.class);
+    createUserModule(format("""
+            @Native("%s", IMPURE)
+            String first%s;
+            @Native("%s", IMPURE)
+            String second%s;
+            random1 = first%s;
+            random2 = second%s;
+            """, Random.class.getCanonicalName(), functionOrValue,
+        Random.class.getCanonicalName(), functionOrValue, functionOrValue, functionOrValue));
+
+    runSmoothBuild("random1", "random2");
     assertFinishedWithSuccess();
-    String cachingB = artifactFileContentAsString("caching");
-    String notCachingB = artifactFileContentAsString("notCaching");
+    String random1 = artifactFileContentAsString("random1");
+    String random2 = artifactFileContentAsString("random2");
 
-    assertThat(cachingA).isEqualTo(cachingB);
-    assertThat(cachingA).isNotEqualTo(notCachingA);
-    assertThat(cachingA).isNotEqualTo(notCachingB);
-    assertThat(notCachingA).isNotEqualTo(notCachingB);
+    assertThat(random1).isEqualTo(random2);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"", "()"})
+  public void native_evaluables_with_same_native_but_different_pureness_dont_share_cache_results(
+      String functionOrValue) throws Exception {
+    createNativeJar(Random.class);
+    createUserModule(format("""
+            @Native("%s", IMPURE)
+            String first%s;
+            @Native("%s", PURE)
+            String second%s;
+            random1 = first%s;
+            random2 = second%s;
+            """, Random.class.getCanonicalName(), functionOrValue,
+        Random.class.getCanonicalName(), functionOrValue, functionOrValue, functionOrValue));
+
+    runSmoothBuild("random1", "random2");
+    assertFinishedWithSuccess();
+    String random1 = artifactFileContentAsString("random1");
+    String random2 = artifactFileContentAsString("random2");
+
+    assertThat(random1).isNotEqualTo(random2);
   }
 }
