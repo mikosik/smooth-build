@@ -33,4 +33,17 @@ public class Maps {
             e -> keyFunction.apply(e.getKey()),
             e -> valueFunction.apply(e.getValue())));
   }
+
+  /**
+   * Works like Map.computeIfAbsent() but allows modifying map from mappingFunction
+   */
+  public static <K, V> V computeIfAbsent(Map<K, V> map, K key,
+      Function<? super K, ? extends V> mappingFunction) {
+    V value = map.get(key);
+    if (value == null) {
+      value = mappingFunction.apply(key);
+      map.put(key, value);
+    }
+    return value;
+  }
 }
