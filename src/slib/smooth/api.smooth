@@ -4,12 +4,6 @@ File {
   String path,
 }
 
-@Native("org.smoothbuild.slib.bool.TrueValue")
-Bool true;
-
-@Native("org.smoothbuild.slib.bool.FalseValue")
-Bool false;
-
 @Native("org.smoothbuild.slib.bool.NotFunction")
 Bool not(
   Bool value,

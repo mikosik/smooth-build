@@ -33,9 +33,7 @@ public class AssignmentTest extends TestingContext {
     TestedType source = testSpec.source();
     String sourceCode = unlines(
         target.name() + " result = " + source.literal() + ";",
-        testSpec.declarations(),
-        "@Native(\"impl\")",
-        "Bool true;");
+        testSpec.declarations());
     if (testSpec.allowed()) {
       module(sourceCode)
           .loadsSuccessfully();
@@ -54,9 +52,7 @@ public class AssignmentTest extends TestingContext {
     String sourceCode = unlines(
         "%s myFunction(%s param, %s probablyPolytype) = param;"
             .formatted(target.name(), source.name(), target.name()),
-        testSpec.typeDeclarations(),
-        "@Native(\"impl\")",
-        "Bool true;");
+        testSpec.typeDeclarations());
     if (testSpec.allowed()) {
       module(sourceCode)
           .loadsSuccessfully();
@@ -121,9 +117,7 @@ public class AssignmentTest extends TestingContext {
     TestedType source = testSpec.source();
     String sourceCode = unlines(
         "myFunction(" + target.name() + " param = " + source.literal() + ") = param; ",
-        testSpec.declarations(),
-        "@Native(\"impl\")",
-        "Bool true;");
+        testSpec.declarations());
     if (testSpec.allowed()) {
       module(sourceCode)
           .loadsSuccessfully();
@@ -140,9 +134,7 @@ public class AssignmentTest extends TestingContext {
       TestedType type1, TestedType type2, Type joinType) {
     String sourceCode = unlines(
         "[" + joinType.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
-        join("\n", union(type1.allDeclarations(), type2.allDeclarations())),
-        "@Native(\"impl\")",
-        "Bool true;");
+        join("\n", union(type1.allDeclarations(), type2.allDeclarations())));
     module(sourceCode)
         .loadsSuccessfully();
   }

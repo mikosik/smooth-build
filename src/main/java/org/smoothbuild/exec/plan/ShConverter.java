@@ -30,6 +30,7 @@ import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.java.FileLoader;
+import org.smoothbuild.lang.base.define.BoolValueS;
 import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedEvaluableS;
 import org.smoothbuild.lang.base.define.DefinedFunctionS;
@@ -167,11 +168,20 @@ public class ShConverter {
 
   private FunctionH convertValImpl(ValueS valueS) {
     FunctionH exprH = switch (valueS) {
-      case DefinedValueS defVal -> convertDefEval(defVal);
-      case NativeValueS natVal -> convertNatEval(natVal);
+      case DefinedValueS defValS -> convertDefEval(defValS);
+      case NativeValueS natValS -> convertNatEval(natValS);
+      case BoolValueS boolValS -> convertBoolVal(boolValS);
     };
     nals.put(exprH, valueS);
     return exprH;
+  }
+
+  private FunctionH convertBoolVal(BoolValueS boolValS) {
+    var boolH = objFactory.bool(boolValS.valJ());
+    nals.put(boolH, boolValS);
+    var resTypeH = boolH.type();
+    var type = objFactory.definedFunctionType(resTypeH, list());
+    return objFactory.definedFunction(type, boolH);
   }
 
   // handling expressions
