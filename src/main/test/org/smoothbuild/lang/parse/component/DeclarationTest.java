@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse.component;
 
-import static java.lang.String.format;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_SINGLE_VARIABLE_POLYTYPES;
@@ -284,7 +283,8 @@ public class DeclarationTest extends TestingContext {
         public void can_be_monotype(TestedType type) {
           module(unlines(
               "@Native(\"Impl.met\")",
-              type.name() + " myValue;",
+              type.name() + " myFunc();",
+              type.name() + " myValue = myFunc();",
               type.typeDeclarationsAsString()))
               .loadsSuccessfully();
         }
@@ -294,7 +294,8 @@ public class DeclarationTest extends TestingContext {
         public void can_be_valid_polytype(TestedType type) {
           module(unlines(
               "@Native(\"Impl.met\")",
-              type.name() + " myValue;",
+              type.name() + " myFunc();",
+              type.name() + " myValue = myFunc();",
               type.typeDeclarationsAsString()))
               .loadsSuccessfully();
         }
@@ -304,9 +305,10 @@ public class DeclarationTest extends TestingContext {
         public void cannot_be_single_variable_polytype(TestedType type) {
           module(unlines(
               "@Native(\"Impl.met\")",
-              type.name() + " myValue;",
+              type.name() + " myFunc(" + type.name() + " param);",
+              type.name() + " myValue = myFunc(\"abc\");",
               type.typeDeclarationsAsString()))
-              .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myValue`." +
+              .loadsWithError(3, "Type variable(s) `A` are used once in declaration of `myValue`." +
                   " This means each one can be replaced with `Any`.");
         }
 
@@ -314,8 +316,8 @@ public class DeclarationTest extends TestingContext {
         public void can_be_type_which_is_supertype_of_its_body_type() {
           module("""
               @Native("impl")
-              Nothing nothing;
-              String myValue = nothing;
+              Nothing nothingFunc();
+              String myValue = nothingFunc();
               """)
               .loadsSuccessfully();
         }
@@ -324,8 +326,8 @@ public class DeclarationTest extends TestingContext {
         public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_is_convertible() {
           module("""
               @Native("impl")
-              Nothing nothing;
-              String myValue = nothing;
+              Nothing nothingFunc();
+              String myValue = nothingFunc();
               Nothing result = myValue;
               """)
               .loadsWithError(4, "`result` has body which type is `String` and it is not "
@@ -378,28 +380,11 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void non_native_value_without_body_fails() {
+      public void without_body_fails() {
         module("""
             String result;
             """)
-            .loadsWithError(1, "Non native value cannot have empty body.");
-      }
-
-      @Test
-      public void native_value_with_body_fails() {
-        module("""
-            @Native("Impl.met")
-            String myValue = "abc";
-            """)
-            .loadsWithError(2, "Native value cannot have body.");
-      }
-
-      @Test
-      public void native_value_without_declared_result_type_fails() {
-        module("""
-        @Native("Impl.met")
-        myFunction;""")
-            .loadsWithError(2, "`myFunction` is native so it should have declared result type.");
+            .loadsWithError(1, "Value cannot have empty body.");
       }
     }
 
@@ -498,8 +483,8 @@ public class DeclarationTest extends TestingContext {
           public void can_be_supertype_of_function_expression() {
             module("""
                 @Native("impl")
-                Nothing nothing;
-                String myFunction() = nothing;
+                Nothing nothingFunc();
+                String myFunction() = nothingFunc();
                 """)
                 .loadsSuccessfully();
           }
@@ -508,8 +493,8 @@ public class DeclarationTest extends TestingContext {
           public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_type_is_convertible() {
             module("""
                 @Native("impl")
-                Nothing nothing;
-                String myFunction() = nothing;
+                Nothing nothingFunc();
+                String myFunction() = nothingFunc();
                 Nothing result = myFunction();
                 """)
                 .loadsWithError(4, "`result` has body which type is `String` and it is not "
@@ -737,7 +722,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(functionTypeDeclaration("String,"))
               .loadsSuccessfully()
-              .containsEvaluable(value(2, f(BLOB, STRING), "myValue",
+              .containsEvaluable(natFuncS(2, f(f(BLOB, STRING)), "myFunc", nList(),
                   annotation(1, stringS(1, "Impl.met"))));
         }
 
@@ -762,7 +747,7 @@ public class DeclarationTest extends TestingContext {
         private String functionTypeDeclaration(String string) {
           return """
               @Native("Impl.met")
-              Blob(PLACEHOLDER) myValue;
+              Blob(PLACEHOLDER) myFunc();
               """.replace("PLACEHOLDER", string);
         }
       }
@@ -1298,26 +1283,23 @@ public class DeclarationTest extends TestingContext {
       class _declaring_native_literal {
         @Nested
         class _causes_error_when {
-          @ParameterizedTest
-          @ValueSource(strings = {"", "()"})
-          public void path_has_illegal_escape_sequence(String valueOrFunction) {
-            var module = format("""
-          @Native("\\A")
-          String value%s;
-          """, valueOrFunction);
+          @Test
+          public void path_has_illegal_escape_sequence() {
+            var module = """
+                @Native("\\A")
+                String myFunc();
+                """;
             var error = err(1, "Illegal escape sequence at char index = 1. "
                 + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
 
             module(module).loadsWith(error);
           }
 
-          @ParameterizedTest
-          @ValueSource(strings = {"", "()"})
-          public void path_has_escape_sequence_without_code(String valueOrFunction) {
-            var module = format("""
-          @Native("\\")
-          String value%s;
-             """, valueOrFunction);
+          @Test
+          public void path_has_escape_sequence_without_code() {
+            var module = """
+                @Native("\\")
+                String myFunc();""";
             var error = err(1, "Missing escape code after backslash \\ at char index = 0.");
 
             module(module).loadsWith(error);

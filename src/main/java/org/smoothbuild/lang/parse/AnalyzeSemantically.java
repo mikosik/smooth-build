@@ -52,7 +52,7 @@ public class AnalyzeSemantically {
     detectDuplicateParamNames(logBuffer, ast);
     detectStructNameWithSingleCapitalLetter(logBuffer, ast);
     detectIllegalPolytypes(logBuffer, ast);
-    detectNativesWithBodyAndNonNativesWithoutBody(logBuffer, ast);
+    detectIllegalNatives(logBuffer, ast);
     return logBuffer.toImmutableLogs();
   }
 
@@ -267,27 +267,33 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void detectNativesWithBodyAndNonNativesWithoutBody(Logger logger, Ast ast) {
+  /**
+   * Detects:
+   *  - function with body and @Native annotation
+   *  - function without body nor @Native annotation
+   *  - value with @Native annotation
+   */
+  private static void detectIllegalNatives(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitRealFunc(RealFuncNode func) {
         super.visitRealFunc(func);
-        check(func, "function");
+        if (func.annotation().isPresent() && func.body().isPresent()) {
+          logger.log(parseError(func, "Native function cannot have body."));
+        }
+        if (func.annotation().isEmpty() && func.body().isEmpty()) {
+          logger.log(parseError(func, "Non native function cannot have empty body."));
+        }
       }
 
       @Override
       public void visitValue(ValueNode value) {
         super.visitValue(value);
-        check(value, "value");
-      }
-
-      private void check(EvaluableNode referencable, String referencableKind) {
-        if (referencable.annotation().isPresent() && referencable.body().isPresent()) {
-          logger.log(parseError(referencable, "Native " + referencableKind + " cannot have body."));
+        if (value.annotation().isPresent()) {
+          logger.log(parseError(value.annotation().get(), "Value cannot have @Native annotation."));
         }
-        if (referencable.annotation().isEmpty() && referencable.body().isEmpty()) {
-          logger.log(parseError(referencable,
-              "Non native " + referencableKind + " cannot have empty body."));
+        if (value.body().isEmpty()) {
+          logger.log(parseError(value, "Value cannot have empty body."));
         }
       }
     }.visitAst(ast);

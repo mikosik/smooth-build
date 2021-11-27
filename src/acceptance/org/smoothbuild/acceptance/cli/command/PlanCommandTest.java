@@ -33,22 +33,6 @@ public class PlanCommandTest {
     }
 
     @Test
-    public void native_value_reference() throws Exception {
-      this.createNativeJar(ReturnAbc.class);
-      createUserModule(format("""
-            @Native("%s.function")
-            String returnAbc;
-            result = returnAbc;
-            """, ReturnAbc.class.getCanonicalName()));
-      runSmoothPlan("result");
-      assertFinishedWithSuccess();
-      assertSysOutContains("""
-          String building-evaluation
-            String() result
-          """);
-    }
-
-    @Test
     public void defined_function_call_with_argument() throws Exception {
       createUserModule("""
               myFunction(String element) = element;

@@ -74,7 +74,7 @@ public class VisibilityTest extends TestingContext {
         module("""
              MyStruct {}
              @Native("impl.met")
-             MyStruct result;
+             MyStruct myFunc();
              """)
             .loadsSuccessfully();
       }
@@ -83,7 +83,7 @@ public class VisibilityTest extends TestingContext {
       public void struct_declared_below_is_visible() {
         module("""
              @Native("impl.met")
-             MyStruct result;
+             MyStruct myFunc();
              MyStruct {}
              """)
             .loadsSuccessfully();
@@ -143,7 +143,7 @@ public class VisibilityTest extends TestingContext {
             .getModuleAsDefinitions();
         module("""
           @Native("impl.met")
-          OtherModuleStruct result;
+          OtherModuleStruct myFunc();
           """)
             .withImported(imported)
             .loadsSuccessfully();

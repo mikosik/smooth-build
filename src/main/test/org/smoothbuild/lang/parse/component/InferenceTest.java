@@ -292,9 +292,9 @@ public class InferenceTest extends TestingContext {
       public void nothing() {
         String code = """
             @Native("impl.met")
-            Nothing nothingValue;
+            Nothing nothingFunc();
             A myIdentity(A a) = a;
-            myValue = myIdentity(nothingValue);
+            myValue = myIdentity(nothingFunc());
             """;
         module(code)
             .loadsSuccessfully()
@@ -395,9 +395,9 @@ public class InferenceTest extends TestingContext {
       public void nothing() {
         String code = """
             @Native("impl.met")
-            Nothing nothingValue;
+            Nothing nothingFunc();
             [A] singleElement(A a) = [a];
-            myValue = singleElement(nothingValue);
+            myValue = singleElement(nothingFunc());
             """;
         module(code)
             .loadsSuccessfully()

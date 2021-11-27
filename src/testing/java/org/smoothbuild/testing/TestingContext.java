@@ -74,7 +74,6 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
-import org.smoothbuild.lang.base.define.NativeValueS;
 import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
@@ -772,8 +771,14 @@ public class TestingContext {
     return new DefinedValueS(type, modulePath(), name, expr, loc(line));
   }
 
-  public NativeValueS value(int line, TypeS type, String name, Annotation annotation) {
-    return new NativeValueS(type, modulePath(), name, annotation, loc(line));
+  public DefinedFunctionS defFuncS(int line, FunctionTypeS type, String name, NList<Item> params,
+      ExprS expr) {
+    return new DefinedFunctionS(type, modulePath(), name, params, expr, loc(line));
+  }
+
+  public NativeFunctionS natFuncS(int line, FunctionTypeS type, String name, NList<Item> params,
+      Annotation ann) {
+    return new NativeFunctionS(type, modulePath(), name, params, ann, loc(line));
   }
 
   public ItemSignature isig(String name, TypeS type) {

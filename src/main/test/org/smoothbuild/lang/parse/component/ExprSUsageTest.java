@@ -858,7 +858,8 @@ public class ExprSUsageTest extends TestingContext {
     public void value_type() {
       module("""
           @Native("Impl.met")
-          MyStruct myValue;
+          MyStruct myFunc();
+          MyStruct myValue = myFunc();
           MyStruct {}
           """)
           .loadsSuccessfully();
@@ -868,7 +869,7 @@ public class ExprSUsageTest extends TestingContext {
     public void value_arrayed_type() {
       module("""
           @Native("Impl.met")
-          [MyStruct] myValue;
+          [MyStruct] myValue();
           MyStruct {}
           """)
           .loadsSuccessfully();
@@ -1081,9 +1082,10 @@ public class ExprSUsageTest extends TestingContext {
       public void value() {
         module("""
              @Native("Impl.met")
-             Undefined myValue;
+             Nothing nothingFunc();
+             Undefined myValue = nothingFunc();
              """)
-            .loadsWithError(2, "`Undefined` type is undefined.");
+            .loadsWithError(3, "`Undefined` type is undefined.");
       }
 
       @Test

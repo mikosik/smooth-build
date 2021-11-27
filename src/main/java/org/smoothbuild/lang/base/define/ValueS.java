@@ -8,8 +8,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public sealed abstract class ValueS extends TopEvaluableS permits BoolValueS, DefinedValueS,
-    NativeValueS {
+public sealed abstract class ValueS extends TopEvaluableS permits BoolValueS, DefinedValueS {
   public ValueS(TypeS type, ModulePath modulePath, String name, Location location) {
     super(type, modulePath, name, location);
   }

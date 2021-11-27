@@ -15,7 +15,6 @@ import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
-import org.smoothbuild.lang.base.define.NativeValueS;
 import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.like.EvaluableLike;
@@ -70,13 +69,9 @@ public class TopEvaluableLoader {
     var type = valueNode.type().get();
     var name = valueNode.name();
     var location = valueNode.location();
-    if (valueNode.annotation().isPresent()) {
-      return new NativeValueS(type, path, name, loadAnnotation(valueNode.annotation().get()), location);
-    } else {
-      ExpressionLoader loader = new ExpressionLoader(path, nList());
-      return new DefinedValueS(
-          type, path, name, loader.createExpression(valueNode.body().get()), location);
-    }
+    var loader = new ExpressionLoader(path, nList());
+    return new DefinedValueS(
+        type, path, name, loader.createExpression(valueNode.body().get()), location);
   }
 
   private FunctionS loadFunction(ModulePath path, RealFuncNode realFuncNode) {

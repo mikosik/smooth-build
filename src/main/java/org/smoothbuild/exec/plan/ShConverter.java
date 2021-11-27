@@ -44,7 +44,6 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NativeEvaluableS;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
-import org.smoothbuild.lang.base.define.NativeValueS;
 import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -100,7 +99,7 @@ public class ShConverter {
         case IfFunctionS i -> objFactory.ifFunction();
         case MapFunctionS m -> objFactory.mapFunction();
         case DefinedFunctionS d -> convertDefEval(d);
-        case NativeFunctionS n -> convertNatEval(n);
+        case NativeFunctionS n -> convertNatFunc(n);
       };
       nals.put(functionH, functionS);
       return functionH;
@@ -137,12 +136,12 @@ public class ShConverter {
     return objFactory.ref(index, typeH);
   }
 
-  private NativeFunctionH convertNatEval(NativeEvaluableS nativeEvaluableS) {
-    var resType = convertType(nativeEvaluableS.evaluationType());
-    var paramTypes = convertParams(nativeEvaluableS.evaluationParameters());
-    var jar = loadNatJar(nativeEvaluableS);
+  private NativeFunctionH convertNatFunc(NativeFunctionS nativeFunctionS) {
+    var resType = convertType(nativeFunctionS.evaluationType());
+    var paramTypes = convertParams(nativeFunctionS.evaluationParameters());
+    var jar = loadNatJar(nativeFunctionS);
     var type = objFactory.nativeFunctionType(resType, paramTypes);
-    var ann = nativeEvaluableS.annotation();
+    var ann = nativeFunctionS.annotation();
     var classBinaryName = objFactory.string(ann.path().string());
     var isPure = objFactory.bool(ann.isPure());
     return objFactory.nativeFunction(type, jar, classBinaryName, isPure);
@@ -169,7 +168,6 @@ public class ShConverter {
   private FunctionH convertValImpl(ValueS valueS) {
     FunctionH exprH = switch (valueS) {
       case DefinedValueS defValS -> convertDefEval(defValS);
-      case NativeValueS natValS -> convertNatEval(natValS);
       case BoolValueS boolValS -> convertBoolVal(boolValS);
     };
     nals.put(exprH, valueS);

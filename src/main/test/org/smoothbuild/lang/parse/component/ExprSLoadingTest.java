@@ -88,26 +88,29 @@ public class ExprSLoadingTest extends TestingContext {
     public void with_value_reference() {
       module("""
           @Native("Impl.met")
-          String() myValue;
+          String myFunc();
+          String() myValue = myFunc;
           result = myValue();
           """)
           .loadsSuccessfully()
-          .containsEvaluable(value(3, STRING, "result",
-              callS(3, STRING, refS(3, f(STRING), "myValue"))));
+          .containsEvaluable(
+              value(4, STRING, "result",
+                  callS(4, STRING, refS(4, f(STRING), "myValue"))));
     }
 
     @Test
     public void with_value_reference_and_argument() {
       module("""
           @Native("Impl.met")
-          String(Blob) myValue;
+          String myFunc(Blob blob);
+          String(Blob) myValue = myFunc;
           result = myValue(
             0x07);
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              value(3, STRING, "result", callS(3, STRING,
-              refS(3, f(STRING, BLOB), "myValue"), blobS(4, 7))));
+              value(4, STRING, "result",
+                  callS(4, STRING, refS(4, f(STRING, BLOB), "myValue"), blobS(5, 7))));
     }
 
     @Test
@@ -177,42 +180,9 @@ public class ExprSLoadingTest extends TestingContext {
   }
 
   @Nested
-  class _native_expression {
+  class _native_function {
     @Test
-    public void annotating_value() {
-      module("""
-          @Native("Impl.met")
-          String result;
-          """)
-          .loadsSuccessfully()
-          .containsEvaluable(
-              value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), true)));
-    }
-
-    @Test
-    public void that_is_impure_annotating_value() {
-      module("""
-          @Native("Impl.met", IMPURE)
-          String result;
-          """)
-          .loadsSuccessfully()
-          .containsEvaluable(
-              value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), false)));
-    }
-
-    @Test
-    public void that_is_explicitly_pure_annotating_value() {
-      module("""
-          @Native("Impl.met", PURE)
-          String result;
-          """)
-          .loadsSuccessfully()
-          .containsEvaluable(
-              value(2, STRING, "result", annotation(1, stringS(1, "Impl.met"), true)));
-    }
-
-    @Test
-    public void annotating_function() {
+    public void default_pureness() {
       module("""
           @Native("Impl.met")
           String myFunction();
@@ -223,7 +193,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void that_is_impure_annotating_function() {
+    public void impure() {
       module("""
           @Native("Impl.met", IMPURE)
           String myFunction();
@@ -234,7 +204,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void that_is_explicitly_pure_annotating_function() {
+    public void pure() {
       module("""
           @Native("Impl.met", PURE)
           String myFunction();
