@@ -9,7 +9,6 @@ import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
@@ -129,8 +128,8 @@ public class TestingModuleLoader {
     DefinitionsS importedSane = imported != null ? imported
         : DefinitionsS.empty().withModule(testingContext.internalModule());
     ModuleFiles moduleFilesSane = this.moduleFiles != null ? moduleFiles : moduleFiles();
-    return moduleLoader.loadModule(ModulePath.of(moduleFilesSane.smoothFile()), Hash.of(13),
-        moduleFilesSane, sourceCode, importedSane);
+    return moduleLoader.loadModule(
+        ModulePath.of(moduleFilesSane.smoothFile()), moduleFilesSane, sourceCode, importedSane);
   }
 
   public static Log err(int line, String message) {

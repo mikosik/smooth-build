@@ -6,24 +6,18 @@ import static org.smoothbuild.cli.console.ImmutableLogs.logs;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValue;
-import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
-import static org.smoothbuild.lang.base.define.ModuleS.calculateModuleHash;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.install.ModuleFilesDetector;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
@@ -88,13 +82,7 @@ public class RuntimeController {
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());
     } else {
-      Maybe<Hash> hash = moduleHash(path, moduleFiles, imported.modules().values().asList());
-      if (hash.containsProblem()) {
-        return maybeLogs(hash.logs());
-      } else {
-        return moduleLoader.loadModule(
-            path, hash.value(), moduleFiles, sourceCode.value(), imported);
-      }
+      return moduleLoader.loadModule(path, moduleFiles, sourceCode.value(), imported);
     }
   }
 
@@ -106,32 +94,5 @@ public class RuntimeController {
     } catch (IOException e) {
       return maybeLogs(logs(error("Cannot read build script file '" + filePath + "'.")));
     }
-  }
-
-  private Maybe<Hash> moduleHash(
-      ModulePath path, ModuleFiles moduleFiles, ImmutableList<ModuleS> modules) {
-    Maybe<Hash> moduleFilesHash = hashOfModuleFiles(moduleFiles);
-    if (moduleFilesHash.containsProblem()) {
-      return maybeLogs(moduleFilesHash.logs());
-    }
-    Hash filesHash = moduleFilesHash.value();
-    Hash hash = calculateModuleHash(path, filesHash, modules);
-    return maybeValue(hash);
-  }
-
-  private Maybe<Hash> hashOfModuleFiles(ModuleFiles moduleFiles) {
-    var logger = new LogBuffer();
-    List<Hash> hashes = new ArrayList<>();
-    for (FilePath filePath : moduleFiles.asList()) {
-      try {
-        hashes.add(fileResolver.hashOf(filePath));
-      } catch (NoSuchFileException e) {
-        logger.error("'" + filePath + "' doesn't exist.");
-      } catch (IOException e) {
-        logger.error("Cannot read file '" + filePath + "'.");
-      }
-    }
-    Hash hash = Hash.of(hashes);
-    return maybeValueAndLogs(hash, logger);
   }
 }

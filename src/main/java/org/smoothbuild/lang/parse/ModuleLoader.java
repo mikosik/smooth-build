@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.ConstructorS;
 import org.smoothbuild.lang.base.define.DefinedType;
@@ -46,8 +45,8 @@ public class ModuleLoader {
     this.typeFactory = typeFactory;
   }
 
-  public Maybe<ModuleS> loadModule(ModulePath path, Hash hash, ModuleFiles moduleFiles,
-      String sourceCode, DefinitionsS imported) {
+  public Maybe<ModuleS> loadModule(
+      ModulePath path, ModuleFiles moduleFiles, String sourceCode, DefinitionsS imported) {
     var logBuffer = new LogBuffer();
     FilePath filePath = moduleFiles.smoothFile();
     Maybe<ModuleContext> moduleContext = parseModule(filePath, sourceCode);
@@ -82,8 +81,8 @@ public class ModuleLoader {
     var modules = imported.modules().values().asList();
     var types = sortedAst.structs().map(s -> (DefinedType) loadStruct(path, s));
     var referencables = loadEvaluables(path, sortedAst);
-    ModuleS module = new ModuleS(path, hash, moduleFiles, modules, types, referencables);
-    return maybeValueAndLogs(module, logBuffer);
+    var moduleS = new ModuleS(path, moduleFiles, modules, types, referencables);
+    return maybeValueAndLogs(moduleS, logBuffer);
   }
 
   private StructS loadStruct(ModulePath path, StructNode struct) {
