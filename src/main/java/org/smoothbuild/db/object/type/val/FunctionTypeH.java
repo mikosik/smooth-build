@@ -31,8 +31,8 @@ public class FunctionTypeH extends TypeHV implements FunctionType {
   }
 
   public static ImmutableSet<VariableH> calculateVariables(
-      TypeHV resultType, ImmutableList<TypeHV> parameters) {
-    return concat(resultType, parameters).stream()
+      TypeHV resultType, ImmutableList<TypeHV> params) {
+    return concat(resultType, params).stream()
         .map(TypeHV::variables)
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))
@@ -45,11 +45,11 @@ public class FunctionTypeH extends TypeHV implements FunctionType {
   }
 
   @Override
-  public ImmutableList<TypeHV> parameters() {
+  public ImmutableList<TypeHV> params() {
     return paramsTuple.items();
   }
 
-  public TupleTypeH parametersTuple() {
+  public TupleTypeH paramsTuple() {
     return paramsTuple;
   }
 

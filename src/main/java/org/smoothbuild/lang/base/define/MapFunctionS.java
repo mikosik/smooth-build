@@ -31,17 +31,17 @@ public final class MapFunctionS extends FunctionS {
 
   private MapFunctionS(ArrayTypeS resultType, ArrayTypeS inputArrayType,
       FunctionTypeS mappingFunctionType, ModulePath modulePath, TypeFactoryS factory) {
-    this(resultType, createParameters(modulePath, inputArrayType, mappingFunctionType), modulePath,
+    this(resultType, createParams(modulePath, inputArrayType, mappingFunctionType), modulePath,
         factory);
   }
 
-  private MapFunctionS(ArrayTypeS resultType, NList<Item> parameters, ModulePath modulePath,
+  private MapFunctionS(ArrayTypeS resultType, NList<Item> params, ModulePath modulePath,
       TypeFactoryS factory) {
     super(
-        factory.function(resultType, map(parameters, Defined::type)),
+        factory.function(resultType, map(params, Defined::type)),
         modulePath,
         MAP_FUNCTION_NAME,
-        parameters,
+        params,
         internal()
     );
   }
@@ -51,7 +51,7 @@ public final class MapFunctionS extends FunctionS {
     return (ArrayTypeS) resultType();
   }
 
-  private static NList<Item> createParameters(ModulePath modulePath,
+  private static NList<Item> createParams(ModulePath modulePath,
       ArrayTypeS inputArrayType, FunctionTypeS mappingFunctionType) {
     return nList(
         new Item(inputArrayType, modulePath, "array", Optional.empty(), internal()),

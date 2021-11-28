@@ -127,7 +127,7 @@ public class AnalyzeSemantically {
           assertTypeIsDefined(array.elementType());
         } else if (type instanceof FunctionTypeNode function) {
           assertTypeIsDefined(function.resultType());
-          function.parameterTypes().forEach(this::assertTypeIsDefined);
+          function.paramTypes().forEach(this::assertTypeIsDefined);
         } else if (!isDefinedType(type)) {
           logger.log(parseError(type.location(), type.q() + " type is undefined."));
         }

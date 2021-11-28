@@ -105,7 +105,7 @@ public class Ast {
           case ArrayTypeNode arrayType -> addToDependencies(arrayType.elementType());
           case FunctionTypeNode functionType -> {
             addToDependencies(functionType.resultType());
-            functionType.parameterTypes().forEach(this::addToDependencies);
+            functionType.paramTypes().forEach(this::addToDependencies);
           }
           default -> {
             if (funcNames.contains(type.name())) {

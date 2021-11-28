@@ -13,11 +13,11 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class FunctionTest extends AcceptanceTestCase {
   @Nested
-  class parameter_default_argument {
+  class param_default_argument {
     @Nested
     class _in_defined_function {
       @Test
-      public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
+      public void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
         createUserModule("""
           func(String withDefault = "abc") = withDefault;
           result = func();
@@ -29,7 +29,7 @@ public class FunctionTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void is_ignored_when_parameter_is_assigned_in_a_call() throws Exception {
+      public void is_ignored_when_param_is_assigned_in_a_call() throws Exception {
         createUserModule("""
               func(String withDefault = "abc") = withDefault;
               result = func("def");
@@ -59,7 +59,7 @@ public class FunctionTest extends AcceptanceTestCase {
     @Nested
     class _in_native_function {
       @Test
-      public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
+      public void is_used_when_param_has_no_value_assigned_in_call() throws Exception {
         createNativeJar(StringIdentity.class);
         createUserModule(format("""
             @Native("%s")
@@ -73,7 +73,7 @@ public class FunctionTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void is_ignored_when_parameter_is_assigned_in_a_call() throws Exception {
+      public void is_ignored_when_param_is_assigned_in_a_call() throws Exception {
         createNativeJar(StringIdentity.class);
         createUserModule(format("""
             @Native("%s")
@@ -105,7 +105,7 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Nested
-  class parameter_that_shadows {
+  class param_that_shadows {
     @Nested
     class imported {
       @Test
@@ -164,7 +164,7 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void calling_defined_function_with_one_parameter() throws Exception {
+  public void calling_defined_function_with_one_param() throws Exception {
     createUserModule("""
             func(String string) = "abc";
             result = func("def");
@@ -176,7 +176,7 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void calling_defined_function_that_returns_parameter() throws Exception {
+  public void calling_defined_function_that_returns_param() throws Exception {
     createUserModule("""
             func(String string) = string;
             result = func("abc");
@@ -188,7 +188,7 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void argument_is_not_evaluated_when_assigned_to_not_used_parameter() throws Exception {
+  public void argument_is_not_evaluated_when_assigned_to_not_used_param() throws Exception {
     createNativeJar(ThrowException.class);
     createUserModule("""
             @Native("impl")

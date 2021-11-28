@@ -88,7 +88,7 @@ public class TypeInferrer {
       public void visitRealFunc(RealFuncNode func) {
         visitParams(func.params());
         func.body().ifPresent(this::visitExpr);
-        func.setType(optionalFunctionType(evaluationTypeOfTopEvaluables(func), func.optParameterTypes()));
+        func.setType(optionalFunctionType(evaluationTypeOfTopEvaluables(func), func.optParamTypes()));
       }
 
       @Override
@@ -100,10 +100,10 @@ public class TypeInferrer {
       @Override
       public void visitParam(int index, ItemNode param) {
         super.visitParam(index, param);
-        param.setType(typeOfParameter(param));
+        param.setType(typeOfParam(param));
       }
 
-      private Optional<TypeS> typeOfParameter(ItemNode param) {
+      private Optional<TypeS> typeOfParam(ItemNode param) {
         return evaluationTypeOf(param, (target, source) -> {
           if (!typing.isParamAssignable(target, source)) {
             logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + target.q()
@@ -160,17 +160,17 @@ public class TypeInferrer {
           case ArrayTypeNode array -> createType(array.elementType()).map(factory::array);
           case FunctionTypeNode function -> {
             Optional<TypeS> result = createType(function.resultType());
-            var parameters = Optionals.pullUp(map(function.parameterTypes(), this::createType));
-            yield optionalFunctionType(result, parameters);
+            var params = Optionals.pullUp(map(function.paramTypes(), this::createType));
+            yield optionalFunctionType(result, params);
           }
           default -> Optional.of(findType(type.name()));
         };
       }
 
       private Optional<TypeS> optionalFunctionType(
-          Optional<TypeS> result, Optional<ImmutableList<TypeS>> parameters) {
-        if (result.isPresent() && parameters.isPresent()) {
-          return Optional.of(factory.function(result.get(), parameters.get()));
+          Optional<TypeS> result, Optional<ImmutableList<TypeS>> params) {
+        if (result.isPresent() && params.isPresent()) {
+          return Optional.of(factory.function(result.get(), params.get()));
         } else {
           return empty();
         }
@@ -264,12 +264,12 @@ public class TypeInferrer {
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
         } else {
-          var functionParameters = functionParameters(called);
+          var functionParameters = funcParams(called);
           if (functionParameters.isEmpty()) {
             call.setType(empty());
           } else {
-            var parameters = functionParameters.get();
-            Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, parameters);
+            var params = functionParameters.get();
+            Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, params);
             if (args.containsProblem()) {
               logBuffer.logAll(args.logs());
               call.setType(empty());
@@ -278,7 +278,7 @@ public class TypeInferrer {
             } else {
               call.setAssignedArgs(args.value());
               Maybe<TypeS> type = callTypeInferrer.inferCallType(
-                  call, functionType.result(), parameters);
+                  call, functionType.result(), params);
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
             }
@@ -286,22 +286,22 @@ public class TypeInferrer {
         }
       }
 
-      public static Optional<NList<ItemSignature>> functionParameters(ExprNode called) {
+      public static Optional<NList<ItemSignature>> funcParams(ExprNode called) {
         if (called instanceof RefNode refNode) {
           EvaluableLike referenced = refNode.referenced();
           if (referenced instanceof FunctionS function) {
-            return Optional.of(function.parameters().map(Item::signature));
+            return Optional.of(function.params().map(Item::signature));
           } else if (referenced instanceof FunctionNode functionNode) {
             var itemSignatures = Optionals.pullUp(
                 map(functionNode.params(), ItemNode::itemSignature));
             return itemSignatures.map(NList::nList);
           } else {
-            var parameters = ((FunctionTypeS) referenced.inferredType().get()).parameters();
-            return Optional.of(nList(map(parameters, ItemSignature::itemSignature)));
+            var params = ((FunctionTypeS) referenced.inferredType().get()).params();
+            return Optional.of(nList(map(params, ItemSignature::itemSignature)));
           }
         } else {
           return called.type().map(
-              t -> nList(map(((FunctionTypeS) t).parameters(), ItemSignature::itemSignature)));
+              t -> nList(map(((FunctionTypeS) t).params(), ItemSignature::itemSignature)));
         }
       }
 

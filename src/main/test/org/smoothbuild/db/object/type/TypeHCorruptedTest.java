@@ -286,17 +286,17 @@ public class TypeHCorruptedTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme
        * to save function type in HashedDb.
        */
-      ImmutableList<TypeHV> parameterTypes = list(stringHT(), boolHT());
-      TupleTypeH parametersTuple = tupleHT(parameterTypes);
+      ImmutableList<TypeHV> paramTypes = list(stringHT(), boolHT());
+      TupleTypeH paramsTuple = tupleHT(paramTypes);
       Hash specHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT()),
-              hash(parametersTuple)
+              hash(paramsTuple)
           )
       );
       assertThat(specHash)
-          .isEqualTo(functionHT(intHT(), parameterTypes).hash());
+          .isEqualTo(functionHT(intHT(), paramTypes).hash());
     }
 
     @Test
@@ -328,13 +328,13 @@ public class TypeHCorruptedTest extends TestingContext {
 
     @Test
     public void with_data_having_three_elements() throws Exception {
-      TupleTypeH parameterTypes = tupleHT(list(stringHT(), boolHT()));
+      TupleTypeH paramTypes = tupleHT(list(stringHT(), boolHT()));
       Hash hash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(intHT()),
-              hash(parameterTypes),
-              hash(parameterTypes)
+              hash(paramTypes),
+              hash(paramTypes)
           )
       );
       assertThatGet(hash)
@@ -370,13 +370,13 @@ public class TypeHCorruptedTest extends TestingContext {
 
     @Test
     public void with_result_pointing_nowhere() throws Exception {
-      TupleTypeH parameterTypes = tupleHT(list(stringHT(), boolHT()));
+      TupleTypeH paramTypes = tupleHT(list(stringHT(), boolHT()));
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(
               nowhere,
-              hash(parameterTypes)
+              hash(paramTypes)
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
@@ -386,12 +386,12 @@ public class TypeHCorruptedTest extends TestingContext {
 
     @Test
     public void with_result_being_expr_type() throws Exception {
-      TupleTypeH parameterType = tupleHT(list(stringHT(), boolHT()));
+      TupleTypeH paramType = tupleHT(list(stringHT(), boolHT()));
       Hash typeHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(
               hash(refHT()),
-              hash(parameterType)
+              hash(paramType)
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
@@ -401,12 +401,12 @@ public class TypeHCorruptedTest extends TestingContext {
 
     @Test
     public void with_result_type_corrupted() throws Exception {
-      TupleTypeH parameterTypes = tupleHT(list(stringHT(), boolHT()));
+      TupleTypeH paramTypes = tupleHT(list(stringHT(), boolHT()));
       Hash typeHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(
               corruptedArrayTypeHash(),
-              hash(parameterTypes)
+              hash(paramTypes)
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
@@ -415,7 +415,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_parameters_pointing_nowhere() throws Exception {
+    public void with_params_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
@@ -430,7 +430,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_parameters_not_being_tuple() throws Exception {
+    public void with_params_not_being_tuple() throws Exception {
       Hash typeHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(
@@ -444,7 +444,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_parameters_being_expr_type() throws Exception {
+    public void with_params_being_expr_type() throws Exception {
       Hash typeHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(
@@ -458,7 +458,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_parameters_type_corrupted() throws Exception {
+    public void with_params_type_corrupted() throws Exception {
       Hash typeHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(

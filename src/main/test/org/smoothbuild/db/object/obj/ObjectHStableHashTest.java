@@ -118,21 +118,21 @@ public class ObjectHStableHashTest extends TestingContext {
   @Nested
   class _function {
     @Test
-    public void with_no_parameters() {
+    public void with_no_params() {
       var defFunc = definedFunctionH(definedFunctionHT(intHT(), list()), intH(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("5383db6241d12fca0a3c02848e3b6bf1b9700dcf"));
     }
 
     @Test
-    public void with_one_parameter() {
+    public void with_one_param() {
       var defFunc = definedFunctionH(definedFunctionHT(intHT(), list(intHT())), intH(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("ff9fe52538614230249bc26117b1921f320d3336"));
     }
 
     @Test
-    public void with_two_parameters() {
+    public void with_two_params() {
       var defFunc =
           definedFunctionH(definedFunctionHT(intHT(), list(intHT(), stringHT())), intH(1));
       assertThat(defFunc.hash())

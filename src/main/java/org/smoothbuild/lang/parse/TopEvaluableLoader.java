@@ -75,19 +75,19 @@ public class TopEvaluableLoader {
   }
 
   private FunctionS loadFunction(ModulePath path, RealFuncNode realFuncNode) {
-    var parameters = loadParameters(path, realFuncNode);
+    var params = loadParams(path, realFuncNode);
     var resultType = realFuncNode.resultType().get();
     var name = realFuncNode.name();
     var location = realFuncNode.location();
-    var type = factory.function(resultType, map(parameters, Defined::type));
+    var type = factory.function(resultType, map(params, Defined::type));
     if (realFuncNode.annotation().isPresent()) {
       return new NativeFunctionS(type,
-          path, name, parameters, loadAnnotation(realFuncNode.annotation().get()), location
+          path, name, params, loadAnnotation(realFuncNode.annotation().get()), location
       );
     } else {
-      var expressionLoader = new ExpressionLoader(path, parameters);
+      var expressionLoader = new ExpressionLoader(path, params);
       return new DefinedFunctionS(type, path,
-          name, parameters, expressionLoader.createExpression(realFuncNode.body().get()), location);
+          name, params, expressionLoader.createExpression(realFuncNode.body().get()), location);
     }
   }
 
@@ -96,21 +96,21 @@ public class TopEvaluableLoader {
     return new Annotation(path, annotationNode.isPure(), annotationNode.location());
   }
 
-  private NList<Item> loadParameters(ModulePath path, RealFuncNode realFuncNode) {
-    ExpressionLoader parameterLoader = new ExpressionLoader(path, nList());
-    return realFuncNode.params().map(parameterLoader::createParameter);
+  private NList<Item> loadParams(ModulePath path, RealFuncNode realFuncNode) {
+    ExpressionLoader paramLoader = new ExpressionLoader(path, nList());
+    return realFuncNode.params().map(paramLoader::createParam);
   }
 
   private class ExpressionLoader {
     private final ModulePath modulePath;
-    private final NList<Item> functionParameters;
+    private final NList<Item> funcParams;
 
-    public ExpressionLoader(ModulePath modulePath, NList<Item> functionParameters) {
+    public ExpressionLoader(ModulePath modulePath, NList<Item> funcParams) {
       this.modulePath = modulePath;
-      this.functionParameters = functionParameters;
+      this.funcParams = funcParams;
     }
 
-    public Item createParameter(ItemNode param) {
+    public Item createParam(ItemNode param) {
       var type = param.typeNode().get().type().get();
       var name = param.name();
       var defaultArgument = param.body().map(this::createExpression);
@@ -166,11 +166,11 @@ public class TopEvaluableLoader {
     private ExprS createDefaultArgumentExpression(CallNode call, int i) {
       // Argument is not present so we have to use function default argument.
       // This means that this call is made on reference to actual function and that function
-      // has default argument for given parameter, otherwise checkers that ran so far would
+      // has default argument for given param, otherwise checkers that ran so far would
       // report an error.
       EvaluableLike referenced = ((RefNode) call.function()).referenced();
       return switch (referenced) {
-        case FunctionS function -> function.parameters().get(i).defaultValue().get();
+        case FunctionS function -> function.params().get(i).defaultValue().get();
         case FunctionNode node -> createExpression(node.params().get(i).body().get());
         default -> throw new RuntimeException("Unexpected case");
       };
@@ -188,7 +188,7 @@ public class TopEvaluableLoader {
       EvaluableLike referenced = ref.referenced();
       return switch (referenced) {
         case ItemNode n ->  new ParamRefS(
-            functionParameters.get(ref.name()).type(), ref.name(), ref.location());
+            funcParams.get(ref.name()).type(), ref.name(), ref.location());
         default -> new RefS(referenced.inferredType().get(), ref.name(), ref.location());
       };
     }

@@ -18,17 +18,16 @@ public final class IfFunctionS extends FunctionS {
 
   private IfFunctionS(
       TypeS resultType, TypeS boolType, ModulePath modulePath, TypeFactoryS factory) {
-    this(resultType, createParameters(resultType, boolType, modulePath), modulePath, factory);
+    this(resultType, createParams(resultType, boolType, modulePath), modulePath, factory);
   }
 
-  private IfFunctionS(TypeS resultType, NList<Item> parameters, ModulePath modulePath,
+  private IfFunctionS(TypeS resultType, NList<Item> params, ModulePath modulePath,
       TypeFactoryS factory) {
-    super(factory.function(resultType, map(parameters, Defined::type)),
-        modulePath, IF_FUNCTION_NAME, parameters, internal());
+    super(factory.function(resultType, map(params, Defined::type)),
+        modulePath, IF_FUNCTION_NAME, params, internal());
   }
 
-  private static NList<Item> createParameters(
-      TypeS resultType, TypeS boolType, ModulePath modulePath) {
+  private static NList<Item> createParams(TypeS resultType, TypeS boolType, ModulePath modulePath) {
     return nList(
         new Item(boolType, modulePath, "condition", empty(), internal()),
         new Item(resultType, modulePath, "then", empty(), internal()),

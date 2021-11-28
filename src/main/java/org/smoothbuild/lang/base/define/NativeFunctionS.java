@@ -13,8 +13,8 @@ public final class NativeFunctionS extends FunctionS implements NativeEvaluableS
   private final Annotation annotation;
 
   public NativeFunctionS(FunctionTypeS type, ModulePath modulePath, String name,
-      NList<Item> parameters, Annotation annotation, Location location) {
-    super(type, modulePath, name, parameters, location);
+      NList<Item> params, Annotation annotation, Location location) {
+    super(type, modulePath, name, params, location);
     this.annotation = annotation;
   }
 
@@ -32,14 +32,14 @@ public final class NativeFunctionS extends FunctionS implements NativeEvaluableS
         && this.resultType().equals(that.resultType())
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())
-        && this.parameters().equals(that.parameters())
+        && this.params().equals(that.params())
         && this.annotation.equals(that.annotation)
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), parameters(), annotation, location());
+    return Objects.hash(resultType(), modulePath(), name(), params(), annotation, location());
   }
 
   @Override

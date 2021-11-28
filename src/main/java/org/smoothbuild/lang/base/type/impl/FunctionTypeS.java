@@ -19,17 +19,17 @@ import com.google.common.collect.ImmutableSet;
  */
 public final class FunctionTypeS extends TypeS implements FunctionType {
   private final TypeS result;
-  private final ImmutableList<TypeS> parameters;
+  private final ImmutableList<TypeS> params;
 
-  public FunctionTypeS(TypeS result, ImmutableList<TypeS> parameters) {
-    super(functionTypeName(result, parameters), calculateVariables(result, parameters));
+  public FunctionTypeS(TypeS result, ImmutableList<TypeS> params) {
+    super(functionTypeName(result, params), calculateVariables(result, params));
     this.result = requireNonNull(result);
-    this.parameters = requireNonNull(parameters);
+    this.params = requireNonNull(params);
   }
 
   public static ImmutableSet<VariableS> calculateVariables(
-      TypeS resultType, ImmutableList<TypeS> parameters) {
-    return concat(resultType, parameters).stream()
+      TypeS resultType, ImmutableList<TypeS> params) {
+    return concat(resultType, params).stream()
         .map(TypeS::variables)
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))
@@ -42,8 +42,8 @@ public final class FunctionTypeS extends TypeS implements FunctionType {
   }
 
   @Override
-  public ImmutableList<TypeS> parameters() {
-    return parameters;
+  public ImmutableList<TypeS> params() {
+    return params;
   }
 
   @Override
@@ -53,6 +53,6 @@ public final class FunctionTypeS extends TypeS implements FunctionType {
     }
     return object instanceof FunctionTypeS that
         && result.equals(that.result)
-        && parameters.equals(that.parameters);
+        && params.equals(that.params);
   }
 }

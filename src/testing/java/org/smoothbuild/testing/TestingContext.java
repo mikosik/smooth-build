@@ -285,8 +285,8 @@ public class TestingContext {
     return definedFunctionHT(intHT(), list(blobHT(), stringHT()));
   }
 
-  public DefinedFunctionTypeH definedFunctionHT(TypeHV result, ImmutableList<TypeHV> parameters) {
-    return typeHDb().definedFunction(result, parameters);
+  public DefinedFunctionTypeH definedFunctionHT(TypeHV result, ImmutableList<TypeHV> params) {
+    return typeHDb().definedFunction(result, params);
   }
 
   public TupleTypeH fileHT() {
@@ -297,8 +297,8 @@ public class TestingContext {
     return functionHT(intHT(), list(blobHT(), stringHT()));
   }
 
-  public FunctionTypeH functionHT(TypeHV result, ImmutableList<TypeHV> parameters) {
-    return typeHDb().function(result, parameters);
+  public FunctionTypeH functionHT(TypeHV result, ImmutableList<TypeHV> params) {
+    return typeHDb().function(result, params);
   }
 
   public IfFunctionTypeH ifFunctionHT() {
@@ -317,8 +317,8 @@ public class TestingContext {
     return typeHDb().nativeFunction(blobHT(), list(boolHT()));
   }
 
-  public NativeFunctionTypeH nativeFunctionHT(TypeHV result, ImmutableList<TypeHV> parameters) {
-    return typeHDb().nativeFunction(result, parameters);
+  public NativeFunctionTypeH nativeFunctionHT(TypeHV result, ImmutableList<TypeHV> params) {
+    return typeHDb().nativeFunction(result, params);
   }
 
   public NothingTypeH nothingHT() {
@@ -584,8 +584,8 @@ public class TestingContext {
     return typeFactoryS().bool();
   }
 
-  public FunctionTypeS functionST(TypeS resultType, Item... parameters) {
-    return functionST(resultType, toTypes(list(parameters)));
+  public FunctionTypeS functionST(TypeS resultType, Item... params) {
+    return functionST(resultType, toTypes(list(params)));
   }
 
   public FunctionTypeS functionST(TypeS resultType, ImmutableList<TypeS> types) {
@@ -674,34 +674,34 @@ public class TestingContext {
     return new CallS(type, expr, list(arguments), loc(line));
   }
 
-  public ConstructorS constructorS(TypeS resultType, String name, Item... parameters) {
-    return constructorS(1, resultType, name, parameters);
+  public ConstructorS constructorS(TypeS resultType, String name, Item... params) {
+    return constructorS(1, resultType, name, params);
   }
 
-  public ConstructorS constructorS(int line, TypeS resultType, String name, Item... parameters) {
-    return new ConstructorS(functionST(resultType, parameters), modulePath(), name,
-        nList(parameters), loc(line));
+  public ConstructorS constructorS(int line, TypeS resultType, String name, Item... params) {
+    return new ConstructorS(functionST(resultType, params), modulePath(), name,
+        nList(params), loc(line));
   }
 
-  public NativeFunctionS functionS(TypeS type, String name, Item... parameters) {
-    return functionS(1, type, name, annotation(1, stringS(1, "Impl.met")), parameters);
+  public NativeFunctionS functionS(TypeS type, String name, Item... params) {
+    return functionS(1, type, name, annotation(1, stringS(1, "Impl.met")), params);
   }
 
   public NativeFunctionS functionS(int line, TypeS type, String name, Annotation annotation,
-      Item... parameters) {
-    return new NativeFunctionS(functionST(type, parameters), modulePath(), name,
-        nList(parameters), annotation, loc(line)
+      Item... params) {
+    return new NativeFunctionS(functionST(type, params), modulePath(), name,
+        nList(params), annotation, loc(line)
     );
   }
 
-  public DefinedFunctionS functionS(TypeS type, String name, ExprS body, Item... parameters) {
-    return functionS(1, type, name, body, parameters);
+  public DefinedFunctionS functionS(TypeS type, String name, ExprS body, Item... params) {
+    return functionS(1, type, name, body, params);
   }
 
   public DefinedFunctionS functionS(
-      int line, TypeS type, String name, ExprS body, Item... parameters) {
-    return new DefinedFunctionS(functionST(type, parameters), modulePath(), name,
-        nList(parameters), body, loc(line)
+      int line, TypeS type, String name, ExprS body, Item... params) {
+    return new DefinedFunctionS(functionST(type, params), modulePath(), name,
+        nList(params), body, loc(line)
     );
   }
 

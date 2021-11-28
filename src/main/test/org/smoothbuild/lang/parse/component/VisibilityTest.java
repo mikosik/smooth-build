@@ -151,7 +151,7 @@ public class VisibilityTest extends TestingContext {
     }
 
     @Nested
-    class _parameter {
+    class _param {
       @Test
       public void in_function_body_is_visible() {
         module("""
@@ -170,7 +170,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void in_default_argument_body_of_other_parameter_is_not_visible() {
+      public void in_default_argument_body_of_other_param_is_not_visible() {
         module("""
         func(String param, String withDefault = param) = param;
         """)
@@ -248,7 +248,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_through_function_parameter() {
+      public void struct_through_function_param() {
         module("""
              MyStruct {
                Blob(MyStruct) myField
@@ -357,7 +357,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_struct_through_function_parameter() {
+      public void struct_struct_through_function_param() {
         module("""
              MyStruct1 {
                MyStruct2 myField
@@ -472,7 +472,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_struct_struct_through_function_parameter() {
+      public void struct_struct_struct_through_function_param() {
         module("""
              MyStruct1 {
                [MyStruct2] myField
@@ -680,9 +680,9 @@ public class VisibilityTest extends TestingContext {
     }
 
     @Nested
-    class _parameter_shadowing {
+    class _param_shadowing {
       @Test
-      public void other_parameter_fails() {
+      public void other_param_fails() {
         module("""
              String myFunction(
                String param,

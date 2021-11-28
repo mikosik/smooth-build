@@ -166,7 +166,7 @@ public class InferenceTest extends TestingContext {
     }
 
     @Test
-    public void function_parameter() {
+    public void function_param() {
       String code = """
           myFunction(String param) = param;
           """;
@@ -176,7 +176,7 @@ public class InferenceTest extends TestingContext {
     }
 
     @Test
-    public void function_generic_parameter() {
+    public void function_generic_param() {
       String code = """
           myFunction(A param) = param;
           """;
@@ -244,7 +244,7 @@ public class InferenceTest extends TestingContext {
   }
 
   @Nested
-  class _inferring_function_parameter_generic_types_fails_when_variable_has_two_inconvertible_lower_bounds {
+  class _inferring_function_param_generic_types_fails_when_variable_has_two_inconvertible_lower_bounds {
     @Test
     public void base_types() {
       String code = """

@@ -35,7 +35,7 @@ public class TypeShConverter {
       case StructTypeS st -> objFactory.tupleType(map(st.fields(), isig -> visit(isig.type())));
       case VariableS v ->  objFactory.variable(v.name());
       case ArrayTypeS a -> objFactory.arrayType(visit(a.element()));
-      case FunctionTypeS f -> objFactory.definedFunctionType(visit(f.result()), map(f.parameters(), this::visit));
+      case FunctionTypeS f -> objFactory.definedFunctionType(visit(f.result()), map(f.params(), this::visit));
       default -> throw new IllegalArgumentException("Unknown type " + type.getClass().getCanonicalName());
     };
   }

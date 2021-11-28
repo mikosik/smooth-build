@@ -107,9 +107,9 @@ public class ModuleLoader {
   private ConstructorS loadConstructor(ModulePath path, StructNode struct) {
     var resultType = struct.type().get();
     var name = struct.constructor().name();
-    var parameterTypes = map(struct.fields(), f -> f.type().get());
-    var type = typeFactory.function(resultType, parameterTypes);
-    var parameters = struct.fields().map(f -> f.toItem(path));
-    return new ConstructorS(type, path, name, parameters, struct.location());
+    var paramTypes = map(struct.fields(), f -> f.type().get());
+    var type = typeFactory.function(resultType, paramTypes);
+    var params = struct.fields().map(f -> f.toItem(path));
+    return new ConstructorS(type, path, name, params, struct.location());
   }
 }

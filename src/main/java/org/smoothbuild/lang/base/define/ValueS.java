@@ -19,7 +19,7 @@ public sealed abstract class ValueS extends TopEvaluableS permits BoolValueS, De
   }
 
   @Override
-  public NList<Item> evaluationParameters() {
+  public NList<Item> evaluationParams() {
     return nList();
   }
 }

@@ -19,7 +19,7 @@ public class FunctionTypeNodeTest {
     }
 
     @Test
-    public void function_with_variable_in_parameter_type() {
+    public void function_with_variable_in_param_type() {
       TypeNode function = new FunctionTypeNode(
           normalType(), list(variable()), internal());
       assertThat(function.isPolytype())
@@ -43,7 +43,7 @@ public class FunctionTypeNodeTest {
     }
 
     @Test
-    public void polytype_function_node_with_depth_2_in_parameter_type() {
+    public void polytype_function_node_with_depth_2_in_param_type() {
       TypeNode inner = new FunctionTypeNode(variable(), list(normalType()), internal());
       TypeNode function = new FunctionTypeNode(normalType(), list(inner), internal());
       assertThat(function.isPolytype())
@@ -79,7 +79,7 @@ public class FunctionTypeNodeTest {
     }
 
     @Test
-    public void function_with_variable_in_parameter_type() {
+    public void function_with_variable_in_param_type() {
       TypeNode function = new FunctionTypeNode(
           normalType(), list(variable("A")), internal());
       assertThat(function.variablesUsedOnce())
@@ -87,7 +87,7 @@ public class FunctionTypeNodeTest {
     }
 
     @Test
-    public void function_with_same_variable_in_result_type_and_parameter_type() {
+    public void function_with_same_variable_in_result_type_and_param_type() {
       TypeNode function = new FunctionTypeNode(
           variable("A"), list(variable("A")), internal());
       assertThat(function.variablesUsedOnce())
@@ -95,7 +95,7 @@ public class FunctionTypeNodeTest {
     }
 
     @Test
-    public void function_with_same_variable_in_two_parameter_types() {
+    public void function_with_same_variable_in_two_param_types() {
       TypeNode function = new FunctionTypeNode(
           normalType(), list(variable("A"), variable("A")), internal());
       assertThat(function.variablesUsedOnce())

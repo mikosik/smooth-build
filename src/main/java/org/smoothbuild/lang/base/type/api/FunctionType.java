@@ -5,5 +5,5 @@ import com.google.common.collect.ImmutableList;
 public interface FunctionType extends Type {
   public Type result();
 
-  public ImmutableList<? extends Type> parameters();
+  public ImmutableList<? extends Type> params();
 }

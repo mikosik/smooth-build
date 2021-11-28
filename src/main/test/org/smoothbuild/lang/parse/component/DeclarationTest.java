@@ -166,7 +166,7 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void cannot_declare_function_which_parameter_type_encloses_it() {
+          public void cannot_declare_function_which_param_type_encloses_it() {
             module("""
               MyStruct {
                 Blob(MyStruct) field
@@ -558,7 +558,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Nested
-      class _parameter {
+      class _param {
         @Nested
         class _type {
           @ParameterizedTest
@@ -649,7 +649,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void default_parameter_before_non_default_is_allowed() {
+        public void default_param_before_non_default_is_allowed() {
           module("""
             @Native("Impl.met")
             String myFunction(
@@ -664,7 +664,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void polytype_parameter_can_have_default_argument() {
+        public void polytype_param_can_have_default_argument() {
           module("""
         A myFunc(A value = "abc") = value;
         """)
@@ -672,7 +672,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void default_argument_gets_converted_to_polytype_parameter() {
+        public void default_argument_gets_converted_to_polytype_param() {
           module("""
         [A] myFunc(A param1, [A] param2 = []) = param2;
         [String] result = myFunc("abc");
@@ -682,7 +682,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Nested
-      class _parameter_list {
+      class _param_list {
         @Test
         public void can_have_trailing_comma() {
           module(functionDeclaration("String param1,"))
@@ -717,7 +717,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Nested
-      class _type_parameter_list {
+      class _type_param_list {
         @Test
         public void can_have_trailing_comma() {
           module(functionTypeDeclaration("String,"))
@@ -761,7 +761,7 @@ public class DeclarationTest extends TestingContext {
       @Nested
       class _function {
         @Test
-        public void passing_more_positional_arguments_than_parameters_causes_error() {
+        public void passing_more_positional_args_than_params_causes_error() {
           String code = """
               myIdentity(String param) = param;
               result = myIdentity("abc", "def");
@@ -772,7 +772,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void passing_less_positional_arguments_than_parameters_causes_error() {
+        public void passing_less_positional_args_than_params_causes_error() {
           String code = """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst("abc");
@@ -783,7 +783,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void passing_less_positional_arguments_than_parameters_causes_error_version_without_name() {
+        public void passing_less_positional_args_than_params_causes_error_version_without_name() {
           String code = """
               returnFirst(String param1, String param2) = param1;
               functionValue = returnFirst;
@@ -806,7 +806,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void named_arguments_can_be_passed_in_the_same_order_as_parameters() {
+        public void named_args_can_be_passed_in_the_same_order_as_params() {
           String code = """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param1="abc", param2="def");
@@ -816,7 +816,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void named_arguments_can_be_passed_in_different_order_than_parameters() {
+        public void named_args_can_be_passed_in_different_order_than_params() {
           String code = """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param2="def", param1="abc");
@@ -860,7 +860,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void parameter_with_default_argument_can_be_assigned_positionally() {
+        public void param_with_default_argument_can_be_assigned_positionally() {
           String code = """
               myIdentity(String param1="abc", String param2="def") = param1;
               result = myIdentity("abc", "def");
@@ -870,7 +870,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void parameter_with_default_argument_can_be_assigned_by_name() {
+        public void param_with_default_argument_can_be_assigned_by_name() {
           String code = """
             myIdentity(String param1="abc", String param2="def") = param1;
             result = myIdentity(param1="abc", param2="def");
@@ -880,7 +880,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void function_parameter_name_is_stripped_during_assignment() {
+        public void function_param_name_is_stripped_during_assignment() {
           String code = """
             myFunction(String param) = param;
             valueReferencingFunction = myFunction;
@@ -929,7 +929,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void calling_constructor_without_all_parameters_causes_error() {
+        public void calling_constructor_without_all_params_causes_error() {
           String code = """
               MyStruct {
                 String field,

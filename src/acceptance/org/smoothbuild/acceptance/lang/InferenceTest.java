@@ -50,7 +50,7 @@ public class InferenceTest extends AcceptanceTestCase {
   // testConcat([A] first, [A] second)
 
   @Test
-  public void infer_actual_type_of_parameters_in_concat_function_0() throws Exception {
+  public void infer_actual_type_of_params_in_concat_function_0() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
@@ -64,7 +64,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void infer_actual_type_of_parameters_in_concat_function_1() throws Exception {
+  public void infer_actual_type_of_params_in_concat_function_1() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
@@ -78,7 +78,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void infer_actual_type_of_parameters_in_concat_function_2() throws Exception {
+  public void infer_actual_type_of_params_in_concat_function_2() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
@@ -92,7 +92,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void infer_actual_type_of_parameters_in_concat_function_3() throws Exception {
+  public void infer_actual_type_of_params_in_concat_function_3() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
@@ -106,7 +106,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void infer_actual_type_of_parameters_in_concat_function_5() throws Exception {
+  public void infer_actual_type_of_params_in_concat_function_5() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
@@ -121,7 +121,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void infer_actual_type_of_parameters_in_concat_function_6() throws Exception {
+  public void infer_actual_type_of_params_in_concat_function_6() throws Exception {
     createNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
@@ -139,7 +139,7 @@ public class InferenceTest extends AcceptanceTestCase {
   // testAppend([A] array, a element)
 
   @Test
-  public void infer_actual_type_of_parameters_in_append_function_0() throws Exception {
+  public void infer_actual_type_of_params_in_append_function_0() throws Exception {
     createNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")
@@ -153,7 +153,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void infer_actual_type_of_parameters_in_append_function_1() throws Exception {
+  public void infer_actual_type_of_params_in_append_function_1() throws Exception {
     createNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")
@@ -168,7 +168,7 @@ public class InferenceTest extends AcceptanceTestCase {
 
 
   @Test
-  public void infer_actual_type_of_parameters_in_append_function_3() throws Exception {
+  public void infer_actual_type_of_params_in_append_function_3() throws Exception {
     createNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")

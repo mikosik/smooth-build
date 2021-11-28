@@ -268,7 +268,7 @@ public class TestedType {
     return type instanceof NothingTypeS;
   }
 
-  public boolean isFunction(Predicate<TestedType> result, Predicate<TestedType>... parameters) {
+  public boolean isFunction(Predicate<TestedType> result, Predicate<TestedType>... params) {
     return false;
   }
 
@@ -335,21 +335,21 @@ public class TestedType {
 
   public static class TestedFunctionType extends TestedType {
     public final TestedType resultType;
-    public final ImmutableList<TestedType> parameters;
+    public final ImmutableList<TestedType> params;
 
-    public TestedFunctionType(TestedType resultType, ImmutableList<TestedType> parameters,
+    public TestedFunctionType(TestedType resultType, ImmutableList<TestedType> params,
         FunctionTypeS type, String literal,
         Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.resultType = resultType;
-      this.parameters = parameters;
+      this.params = params;
     }
 
     @Override
-    public boolean isFunction(Predicate<TestedType> result, Predicate<TestedType>... parameters) {
-      if (result.test(resultType) && this.parameters.size() == parameters.length) {
-        for (int i = 0; i < this.parameters.size(); i++) {
-          if (!parameters[i].test(this.parameters.get(i))) {
+    public boolean isFunction(Predicate<TestedType> result, Predicate<TestedType>... params) {
+      if (result.test(resultType) && this.params.size() == params.length) {
+        for (int i = 0; i < this.params.size(); i++) {
+          if (!params[i].test(this.params.get(i))) {
             return false;
           }
         }

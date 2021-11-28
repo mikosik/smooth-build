@@ -142,7 +142,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_parameter_reference() {
+    public void with_param_reference() {
       module("""
           result(String() f) = f();
           """)
@@ -152,7 +152,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_parameter_reference_and_argument() {
+    public void with_param_reference_and_argument() {
       module("""
           result(String(Blob) f) = f(0x09);
           """)
@@ -216,7 +216,7 @@ public class ExprSLoadingTest extends TestingContext {
   }
 
   @Test
-  public void parameter_reference_expression() {
+  public void param_reference_expression() {
     module("""
           Blob myFunction(Blob param1)
             = param1;
@@ -299,7 +299,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void defined_function_with_parameter() {
+    public void defined_function_with_param() {
       module("""
           String myFunction(
             Blob param1)
@@ -311,7 +311,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void defined_function_with_parameter_with_default_argument() {
+    public void defined_function_with_param_with_default_argument() {
       module("""
           String myFunction(
             Blob param1 =

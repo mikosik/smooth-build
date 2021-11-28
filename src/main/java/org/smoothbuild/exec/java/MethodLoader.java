@@ -60,7 +60,7 @@ public class MethodLoader {
       throw newLoadingException(extendedName, classBinaryName, "Providing method is not public.");
     } else if (!isStatic(method)) {
       throw newLoadingException(extendedName, classBinaryName, "Providing method is not static.");
-    } else if (!hasContainerParameter(method)) {
+    } else if (!hasContainerParam(method)) {
       throw newLoadingException(extendedName, classBinaryName,
           "Providing method first parameter is not of type " + NativeApi.class.getCanonicalName()
               + ".");
@@ -93,7 +93,7 @@ public class MethodLoader {
     }
   }
 
-  private static boolean hasContainerParameter(Method method) {
+  private static boolean hasContainerParam(Method method) {
     Class<?>[] types = method.getParameterTypes();
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
@@ -102,7 +102,7 @@ public class MethodLoader {
       NativeFunctionH function, Method method, String classBinaryName) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(
         extendedName, method, function.type().result(), classBinaryName);
-    assertNativeParameterTypesMatchesFuncParameters(extendedName, method, function, classBinaryName);
+    assertNativeParamTypesMatchesFuncParams(extendedName, method, function, classBinaryName);
   }
 
   private static void assertNativeResultMatchesDeclared(String extendedName, Method method,
@@ -117,10 +117,10 @@ public class MethodLoader {
     }
   }
 
-  private static void assertNativeParameterTypesMatchesFuncParameters(String extendedName,
+  private static void assertNativeParamTypesMatchesFuncParams(String extendedName,
       Method method, NativeFunctionH function, String classBinaryName) throws LoadingMethodException {
     Parameter[] nativeParams = method.getParameters();
-    var params = function.type().parameters();
+    var params = function.type().params();
     if (params.size() != nativeParams.length - 1) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " has "
           + params.size() + " parameter(s) but its native implementation has "

@@ -533,7 +533,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void function_evaluation_type_parameters_does_not_match_arguments_evaluation_types()
+    public void function_evaluation_type_params_does_not_match_args_evaluation_types()
         throws Exception {
       var functionType = definedFunctionHT(intHT(), list(stringHT(), boolHT()));
       var function = definedFunctionH(functionType, intH());

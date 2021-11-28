@@ -256,22 +256,22 @@ public class ObjectHDb {
   private TypeHV inferCallResultType(ObjectH function, ConstructH arguments) {
     var functionType = functionEvaluationType(function);
     var argumentTypes = arguments.evaluationType().items();
-    var parameters = functionType.parameters();
+    var params = functionType.params();
     allMatchOtherwise(
-        parameters,
+        params,
         argumentTypes,
         typing::isParamAssignable,
         (expectedSize, actualSize) -> illegalArguments(functionType, arguments),
         i -> illegalArguments(functionType, arguments)
     );
-    var variableBounds = typing.inferVariableBoundsInCall(parameters, argumentTypes);
+    var variableBounds = typing.inferVariableBoundsInCall(params, argumentTypes);
     return typing.mapVariables(functionType.result(), variableBounds, typeHDb.lower());
   }
 
   private void illegalArguments(FunctionTypeH functionType, ConstructH arguments) {
     throw new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to function evaluation type parameters %s."
-            .formatted(arguments.evaluationType().name(), functionType.parametersTuple().name()));
+            .formatted(arguments.evaluationType().name(), functionType.paramsTuple().name()));
   }
 
   private FunctionTypeH functionEvaluationType(ObjectH function) {

@@ -4,7 +4,7 @@ import static com.google.common.collect.Sets.union;
 import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
-import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
+import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.param_assignment_test_specs;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -64,8 +64,8 @@ public class AssignmentTest extends TestingContext {
   }
 
   @ParameterizedTest
-  @MethodSource("parameter_assignment_test_data")
-  public void argument_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
+  @MethodSource("param_assignment_test_data")
+  public void argument_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
     TestingModuleLoader module = module(unlines(
@@ -85,8 +85,8 @@ public class AssignmentTest extends TestingContext {
   }
 
   @ParameterizedTest
-  @MethodSource("parameter_assignment_test_data")
-  public void argument_type_is_assignable_to_named_parameter_type(TestedAssignmentSpec testSpec) {
+  @MethodSource("param_assignment_test_data")
+  public void argument_type_is_assignable_to_named_param_type(TestedAssignmentSpec testSpec) {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
     TestingModuleLoader module = module(unlines(
@@ -106,13 +106,13 @@ public class AssignmentTest extends TestingContext {
     }
   }
 
-  private static List<TestedAssignmentSpec> parameter_assignment_test_data() {
-    return parameter_assignment_test_specs(false);
+  private static List<TestedAssignmentSpec> param_assignment_test_data() {
+    return param_assignment_test_specs(false);
   }
 
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
-  public void default_argument_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
+  public void default_argument_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target();
     TestedType source = testSpec.source();
     String sourceCode = unlines(

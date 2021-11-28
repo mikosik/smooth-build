@@ -199,14 +199,14 @@ public class TypeSTest extends TestingContext {
   }
 
   @ParameterizedTest
-  @MethodSource("function_parameters_cases")
-  public void function_parameters(Function<TypeFactoryS, FunctionType> factoryCall,
+  @MethodSource("function_params_cases")
+  public void function_params(Function<TypeFactoryS, FunctionType> factoryCall,
       Function<TypeFactoryS, List<Type>> expected) {
-    assertThat(invoke(factoryCall).parameters())
+    assertThat(invoke(factoryCall).params())
         .isEqualTo(invoke(expected));
   }
 
-  public static List<Arguments> function_parameters_cases() {
+  public static List<Arguments> function_params_cases() {
     return asList(
         args(f -> f.function(f.int_(), list()), f -> list()),
         args(f -> f.function(f.blob(), list(f.bool())), f -> list(f.bool())),

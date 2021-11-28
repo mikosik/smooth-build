@@ -93,7 +93,7 @@ public class JavacTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void illegal_source_parameter_causes_error() throws Exception {
+  public void illegal_source_param_causes_error() throws Exception {
     createUserModule("""
             result = [ file(toBlob("public class MyClass {}"), "MyClass.java") ]
               | javac(source="0.9");
@@ -104,7 +104,7 @@ public class JavacTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void illegal_target_parameter_causes_error() throws Exception {
+  public void illegal_target_param_causes_error() throws Exception {
     createUserModule("""
             result = [ file(toBlob("public class MyClass {}"), "MyClass.java") ]
               | javac(target="0.9");
@@ -115,7 +115,7 @@ public class JavacTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error()
+  public void compiling_enum_with_source_param_set_to_too_old_java_version_causes_error()
       throws Exception {
     createUserModule("""
             result = [ file(toBlob("public enum MyClass { VALUE }"), "MyClass.java") ]

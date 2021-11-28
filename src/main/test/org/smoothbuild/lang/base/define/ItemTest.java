@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 public class ItemTest {
   private final String name = "name";
-  private Item parameter;
+  private Item param;
 
   @Test
   public void null_type_is_forbidden() {
@@ -28,22 +28,22 @@ public class ItemTest {
 
   @Test
   public void type_getter() {
-    parameter = new Item(STRING, modulePath(), name, Optional.empty(), loc());
-    assertThat(parameter.type())
+    param = new Item(STRING, modulePath(), name, Optional.empty(), loc());
+    assertThat(param.type())
         .isEqualTo(STRING);
   }
 
   @Test
   public void name_getter() {
-    parameter = new Item(STRING, modulePath(), name, Optional.empty(), loc());
-    assertThat(parameter.name())
+    param = new Item(STRING, modulePath(), name, Optional.empty(), loc());
+    assertThat(param.name())
         .isEqualTo(name);
   }
 
   @Test
   public void to_string() {
-    parameter = new Item(STRING, modulePath(), name, Optional.empty(), loc());
-    assertThat(parameter.toString())
+    param = new Item(STRING, modulePath(), name, Optional.empty(), loc());
+    assertThat(param.toString())
         .isEqualTo("Item(`String name`)");
   }
 }

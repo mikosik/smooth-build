@@ -175,7 +175,7 @@ public class JobCreator {
 
   private BoundsMap<TypeHV> inferVariablesInFunctionCall(Job func, ImmutableList<TypeHV> argTypes) {
     var funcType = (FunctionTypeH) func.type();
-    return typing.inferVariableBounds(funcType.parameters(), argTypes, factory.lower());
+    return typing.inferVariableBounds(funcType.params(), argTypes, factory.lower());
   }
 
   // Value

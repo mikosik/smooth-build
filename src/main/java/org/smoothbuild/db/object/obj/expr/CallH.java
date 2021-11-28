@@ -43,16 +43,16 @@ public class CallH extends ExprH {
   private void validate(ObjectH function, ConstructH argumentsConstruct) {
     if (function.evaluationType() instanceof FunctionTypeH functionType) {
       var typing = objectDb().typing();
-      var parameters = functionType.parameters();
+      var params = functionType.params();
       var arguments = argumentsConstruct.type().evaluationType().items();
       allMatchOtherwise(
-          parameters,
+          params,
           arguments,
           typing::isParamAssignable,
           (expectedSize, actualSize) -> illegalArguments(functionType, argumentsConstruct),
           i -> illegalArguments(functionType, argumentsConstruct)
       );
-      var variableBounds = typing.inferVariableBoundsInCall(parameters, arguments);
+      var variableBounds = typing.inferVariableBoundsInCall(params, arguments);
       var actualResult = typing.mapVariables(
           functionType.result(), variableBounds, typing.factory().lower());
       if (!Objects.equals(evaluationType(), actualResult)) {
@@ -67,7 +67,7 @@ public class CallH extends ExprH {
 
   private void illegalArguments(FunctionTypeH functionType, ConstructH arguments) {
     throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(), "arguments",
-        functionType.parametersTuple(), arguments.evaluationType());
+        functionType.paramsTuple(), arguments.evaluationType());
   }
 
   private ObjectH readFunction() {

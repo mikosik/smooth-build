@@ -51,9 +51,9 @@ public class FunctionSTest extends TestingContext {
     return new Item(STRING, modulePath(), name, defaultArgument, loc());
   }
 
-  private FunctionS myFunction(TypeS resultType, ImmutableList<Item> parameters) {
-    return new DefinedFunctionS(functionST(resultType, toTypes(parameters)),
-        modulePath(), "name", nList(parameters), stringS(), loc(1)
+  private FunctionS myFunction(TypeS resultType, ImmutableList<Item> params) {
+    return new DefinedFunctionS(functionST(resultType, toTypes(params)),
+        modulePath(), "name", nList(params), stringS(), loc(1)
     );
   }
 }

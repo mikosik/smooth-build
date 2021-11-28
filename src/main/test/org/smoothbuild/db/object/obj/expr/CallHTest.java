@@ -28,25 +28,25 @@ public class CallHTest extends TestingContext {
   @Test
   public void creating_call_with_too_few_arguments_causes_exception() {
     assertCall(() -> callH(definedFunctionH(), list()))
-        .throwsException(argumentsNotMatchingParametersException("{}", "{String}"));
+        .throwsException(argumentsNotMatchingParamsException("{}", "{String}"));
   }
 
   @Test
   public void creating_call_with_too_many_arguments_causes_exception() {
     assertCall(() -> callH(definedFunctionH(), list(intH(), intH())))
-        .throwsException(argumentsNotMatchingParametersException("{Int,Int}", "{String}"));
+        .throwsException(argumentsNotMatchingParamsException("{Int,Int}", "{String}"));
   }
 
   @Test
-  public void creating_call_with_argument_not_matching_parameter_type_causes_exception() {
+  public void creating_call_with_argument_not_matching_param_type_causes_exception() {
     assertCall(() -> callH(definedFunctionH(), list(intH(3))))
-        .throwsException(argumentsNotMatchingParametersException("{Int}", "{String}"));
+        .throwsException(argumentsNotMatchingParamsException("{Int}", "{String}"));
   }
 
-  private static IllegalArgumentException argumentsNotMatchingParametersException(
-      String arguments, String parameters) {
+  private static IllegalArgumentException argumentsNotMatchingParamsException(
+      String arguments, String params) {
     return new IllegalArgumentException("Arguments evaluation type " + arguments + " should be"
-        + " equal to function evaluation type parameters " + parameters + ".");
+        + " equal to function evaluation type parameters " + params + ".");
   }
 
   @Test

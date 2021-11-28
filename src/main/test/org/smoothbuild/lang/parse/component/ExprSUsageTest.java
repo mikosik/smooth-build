@@ -43,7 +43,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
         String myFunction(Blob b = 0x01) = "abc";
         """)
@@ -110,7 +110,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
         String myFunction(Int i = 123) = "abc";
         """)
@@ -177,7 +177,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
         String myFunction(String s = "abc") = "abc";
         """)
@@ -244,7 +244,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
         String myFunction([String] s = ["abc"]) = "abc";
         """)
@@ -327,7 +327,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
         MyStruct {
           String field,
@@ -431,7 +431,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
           A myIdentity(A a) = a;
           String myFunction(String param = "abc" | myIdentity()) = "abc";
@@ -480,7 +480,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
         String myFunction() = "abc";
         String otherFunction(String value = myFunction()) = "abc";
@@ -552,7 +552,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
           String myFunction() = "abc";
           String otherFunction(String() value = myFunction) = "abc";
@@ -581,7 +581,7 @@ public class ExprSUsageTest extends TestingContext {
   }
 
   @Nested
-  class _function_parameter_used_as {
+  class _function_param_used_as {
     @Test
     public void function_argument() {
       module("""
@@ -616,7 +616,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void function_in_call_expression_fails_when_parameter_type_is_not_a_function() {
+    public void function_in_call_expression_fails_when_param_type_is_not_a_function() {
       module("""
           myFunction(String param) = param();
           """)
@@ -636,7 +636,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void struct_in_select_expression_fails_when_parameter_type_is_not_a_struct() {
+    public void struct_in_select_expression_fails_when_param_type_is_not_a_struct() {
       String code = """
             myFunction(String param) = param.myField;
             """;
@@ -685,7 +685,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument() {
+    public void param_default_argument() {
       module("""
           String myValue = "abc";
           String myFunction(String value = myValue) = "abc";
@@ -788,7 +788,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument_fails() {
+    public void param_default_argument_fails() {
       module("""
           MyStruct {}
           String myFunction(String value = MyStruct) = "abc";
@@ -876,7 +876,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void function_parameter_type() {
+    public void function_param_type() {
       module("""
           String myFunction(MyStruct param) = "abc";
           MyStruct {}
@@ -961,7 +961,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void parameter_default_argument_fails() {
+    public void param_default_argument_fails() {
       module("""
           String myFunction(String value = A) = "abc";
           """)
@@ -1068,7 +1068,7 @@ public class ExprSUsageTest extends TestingContext {
       }
 
       @Test
-      public void parameter_default_argument() {
+      public void param_default_argument() {
         module("""
         String myFunction(Blob b = undefined) = "abc";
         """)
@@ -1098,7 +1098,7 @@ public class ExprSUsageTest extends TestingContext {
       }
 
       @Test
-      public void parameter() {
+      public void param() {
         module("""
              String myFunction(Undefined param) = "abc";
              """)

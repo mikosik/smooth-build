@@ -163,8 +163,8 @@ public class ObjFactory {
     return typeHDb.bool();
   }
 
-  public DefinedFunctionTypeH definedFunctionType(TypeHV result, ImmutableList<TypeHV> parameters) {
-    return typeHDb.definedFunction(result, parameters);
+  public DefinedFunctionTypeH definedFunctionType(TypeHV result, ImmutableList<TypeHV> params) {
+    return typeHDb.definedFunction(result, params);
   }
 
   public FunctionTypeH ifFunctionType() {
@@ -183,8 +183,8 @@ public class ObjFactory {
     return messageType;
   }
 
-  public NativeFunctionTypeH nativeFunctionType(TypeHV result, ImmutableList<TypeHV> parameters) {
-    return typeHDb.nativeFunction(result, parameters);
+  public NativeFunctionTypeH nativeFunctionType(TypeHV result, ImmutableList<TypeHV> params) {
+    return typeHDb.nativeFunction(result, params);
   }
 
   public NothingTypeH nothingType() {

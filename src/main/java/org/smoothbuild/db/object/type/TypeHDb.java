@@ -316,9 +316,9 @@ public class TypeHDb implements TypeFactoryH {
     }
     TypeHV result = readTupleItemType(kind, rootHash, data.get(FUNCTION_RESULT_INDEX),
         FUNCTION_RESULT_PATH, TypeHV.class);
-    TupleTypeH parameters = readTupleItemType(kind, rootHash, data.get(FUNCTION_PARAMS_INDEX),
+    TupleTypeH params = readTupleItemType(kind, rootHash, data.get(FUNCTION_PARAMS_INDEX),
         FUNCTION_PARAMS_PATH, TupleTypeH.class);
-    return newFunction(rootHash, FunctionKind.from(kind), result, parameters);
+    return newFunction(rootHash, FunctionKind.from(kind), result, params);
   }
 
   private TupleTypeH readTuple(Hash rootHash, List<Hash> rootSequence) {

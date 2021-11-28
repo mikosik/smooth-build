@@ -8,7 +8,7 @@ public sealed interface EvaluableS extends Nal
     permits DefinedEvaluableS, NativeEvaluableS, TopEvaluableS {
   public TypeS evaluationType();
 
-  public NList<Item> evaluationParameters();
+  public NList<Item> evaluationParams();
 
   public String extendedName();
 }

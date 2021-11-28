@@ -36,17 +36,17 @@ public class CallTypeInferrer {
   }
 
   public Maybe<TypeS> inferCallType(CallNode call, TypeS resultType,
-      NList<ItemSignature> parameters) {
+      NList<ItemSignature> params) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
-    findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, logBuffer);
+    findIllegalTypeAssignmentErrors(call, assignedArgs, params, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
-    List<Optional<TypeS>> assignedTypes = assignedTypes(parameters, assignedArgs);
+    List<Optional<TypeS>> assignedTypes = assignedTypes(params, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
       var boundedVariables = typing.inferVariableBoundsInCall(
-          map(parameters, ItemSignature::type),
+          map(params, ItemSignature::type),
           map(assignedTypes, Optional::get));
       var variableProblems = findVariableProblems(call, boundedVariables);
       if (!variableProblems.isEmpty()) {
@@ -60,22 +60,22 @@ public class CallTypeInferrer {
   }
 
   private void findIllegalTypeAssignmentErrors(CallNode call,
-      List<Optional<ArgNode>> assignedList, List<ItemSignature> parameters, Logger logger) {
+      List<Optional<ArgNode>> assignedList, List<ItemSignature> params, Logger logger) {
     range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isPresent())
-        .filter(i -> !isAssignable(parameters.get(i), assignedList.get(i).get()))
-        .mapToObj(i -> illegalAssignmentError(call, parameters.get(i), assignedList.get(i).get()))
+        .filter(i -> !isAssignable(params.get(i), assignedList.get(i).get()))
+        .mapToObj(i -> illegalAssignmentError(call, params.get(i), assignedList.get(i).get()))
         .forEach(logger::log);
   }
 
-  private boolean isAssignable(ItemSignature parameter, ArgNode arg) {
-    return typing.isParamAssignable(parameter.type(), arg.type().get());
+  private boolean isAssignable(ItemSignature param, ArgNode arg) {
+    return typing.isParamAssignable(param.type(), arg.type().get());
   }
 
-  private static Log illegalAssignmentError(CallNode call, ItemSignature parameter, ArgNode arg) {
+  private static Log illegalAssignmentError(CallNode call, ItemSignature param, ArgNode arg) {
     return parseError(arg.location(), inCallToPrefix(call)
         + "Cannot assign argument of type " + arg.type().get().q() + " to parameter "
-        + parameter.q() + " of type " + parameter.type().q() + ".");
+        + param.q() + " of type " + param.type().q() + ".");
   }
 
   private static String inCallToPrefix(CallNode call) {
@@ -83,14 +83,14 @@ public class CallTypeInferrer {
   }
 
   private List<Optional<TypeS>> assignedTypes(
-      List<ItemSignature> parameters, List<Optional<ArgNode>> arguments) {
+      List<ItemSignature> params, List<Optional<ArgNode>> arguments) {
     List<Optional<TypeS>> assigned = new ArrayList<>();
-    for (int i = 0; i < parameters.size(); i++) {
+    for (int i = 0; i < params.size(); i++) {
       Optional<ArgNode> arg = arguments.get(i);
       if (arg.isPresent()) {
         assigned.add(arg.get().type());
       } else {
-        assigned.add(parameters.get(i).defaultValueType());
+        assigned.add(params.get(i).defaultValueType());
       }
     }
     return assigned;

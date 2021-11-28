@@ -21,11 +21,11 @@ public class TypeNames {
     return "[" + elemType.name() + "]";
   }
 
-  public static String functionTypeName(Type resultType, List<? extends Type> parameters) {
-    String parametersString = parameters
+  public static String functionTypeName(Type resultType, List<? extends Type> params) {
+    String paramsString = params
         .stream()
         .map(Type::name)
         .collect(joining(", "));
-    return resultType.name() + "(" + parametersString + ")";
+    return resultType.name() + "(" + paramsString + ")";
   }
 }

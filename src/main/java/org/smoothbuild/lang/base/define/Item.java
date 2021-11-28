@@ -12,7 +12,7 @@ import org.smoothbuild.lang.expr.ExprS;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Item is a function parameter or a struct field.
+ * Item is a function param or a struct field.
  *
  * This class is immutable.
  */

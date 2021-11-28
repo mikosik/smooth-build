@@ -167,7 +167,7 @@ public class NativeTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void has_too_many_parameters() throws Exception {
+      public void has_too_many_params() throws Exception {
         createNativeJar(StringIdentity.class);
         String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
@@ -183,7 +183,7 @@ public class NativeTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void has_too_few_parameters() throws Exception {
+      public void has_too_few_params() throws Exception {
         createNativeJar(StringIdentity.class);
         String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
@@ -199,7 +199,7 @@ public class NativeTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void has_different_parameter_type() throws Exception {
+      public void has_different_param_type() throws Exception {
         createNativeJar(StringIdentity.class);
         String classPath = StringIdentity.class.getCanonicalName();
         createUserModule(format("""
@@ -246,7 +246,7 @@ public class NativeTest extends AcceptanceTestCase {
       }
 
       @Test
-      public void does_not_have_container_as_first_parameter() throws Exception {
+      public void does_not_have_container_as_first_param() throws Exception {
         createNativeJar(WithoutContainer.class, ReturnAbc.class);
         String classPath = WithoutContainer.class.getCanonicalName();
         createUserModule(format("""

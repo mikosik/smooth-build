@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Strings.unlines;
 
 import org.smoothbuild.lang.base.type.TestedAssignment;
 
-public class ParameterDefaultArgumentConversionTest extends AbstractConversionTestCase {
+public class ParamDefaultArgumentConversionTest extends AbstractConversionTestCase {
   @Override
   protected String createTestScript(TestedAssignment spec) {
     return unlines(

@@ -13,12 +13,12 @@ import org.smoothbuild.util.collect.NList;
 public sealed abstract class FunctionS extends TopEvaluableS
     permits ConstructorS, DefinedFunctionS, IfFunctionS, MapFunctionS, NativeFunctionS {
   public static final String PARENTHESES = "()";
-  private final NList<Item> parameters;
+  private final NList<Item> params;
 
-  public FunctionS(FunctionTypeS type, ModulePath modulePath, String name, NList<Item> parameters,
+  public FunctionS(FunctionTypeS type, ModulePath modulePath, String name, NList<Item> params,
       Location location) {
     super(type, modulePath, name, location);
-    this.parameters = requireNonNull(parameters);
+    this.params = requireNonNull(params);
   }
 
   @Override
@@ -35,8 +35,8 @@ public sealed abstract class FunctionS extends TopEvaluableS
     return type().result();
   }
 
-  public NList<Item> parameters() {
-    return parameters;
+  public NList<Item> params() {
+    return params;
   }
 
   @Override
@@ -45,21 +45,21 @@ public sealed abstract class FunctionS extends TopEvaluableS
   }
 
   @Override
-  public NList<Item> evaluationParameters() {
-    return parameters;
+  public NList<Item> evaluationParams() {
+    return params;
   }
 
   public boolean canBeCalledArgless() {
-    return parameters.stream()
+    return params.stream()
         .allMatch(p -> p.defaultValue().isPresent());
   }
 
   protected String signature() {
-    return resultType().name() + " " + name() + "(" + parametersToString() + ")";
+    return resultType().name() + " " + name() + "(" + paramsToString() + ")";
   }
 
-  protected String parametersToString() {
-    return toCommaSeparatedString(parameters, Defined::typeAndName);
+  protected String paramsToString() {
+    return toCommaSeparatedString(params, Defined::typeAndName);
   }
 
   @Override

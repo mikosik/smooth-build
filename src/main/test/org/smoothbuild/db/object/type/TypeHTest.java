@@ -261,14 +261,14 @@ public class TypeHTest extends TestingContext {
     }
 
     @ParameterizedTest
-    @MethodSource("parameters_cases")
-    public void parameters(Function<TypeHDb, FunctionType> factoryCall,
+    @MethodSource("params_cases")
+    public void params(Function<TypeHDb, FunctionType> factoryCall,
         Function<TypeHDb, List<Type>> expected) {
-      assertThat(invoke(factoryCall).parameters())
+      assertThat(invoke(factoryCall).params())
           .isEqualTo(invoke(expected));
     }
 
-    public static List<Arguments> parameters_cases() {
+    public static List<Arguments> params_cases() {
       return asList(
           args(f -> f.function(f.int_(), list()), f -> list()),
           args(f -> f.function(f.blob(), list(f.bool())), f -> list(f.bool())),

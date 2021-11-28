@@ -28,7 +28,7 @@ public sealed class FunctionNode extends EvaluableNode
     return params;
   }
 
-  public Optional<ImmutableList<TypeS>> optParameterTypes() {
+  public Optional<ImmutableList<TypeS>> optParamTypes() {
     return Optionals.pullUp(map(params(), ItemNode::type));
   }
 

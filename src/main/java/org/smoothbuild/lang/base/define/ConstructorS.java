@@ -13,8 +13,8 @@ import org.smoothbuild.util.collect.NList;
  */
 public final class ConstructorS extends FunctionS {
   public ConstructorS(FunctionTypeS type, ModulePath modulePath, String name,
-      NList<Item> parameters, Location location) {
-    super(type, modulePath, name, parameters, location);
+      NList<Item> params, Location location) {
+    super(type, modulePath, name, params, location);
     checkArgument(type.result() instanceof StructTypeS);
   }
 
@@ -32,12 +32,12 @@ public final class ConstructorS extends FunctionS {
         && this.resultType().equals(that.resultType())
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())
-        && this.parameters().equals(that.parameters())
+        && this.params().equals(that.params())
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), parameters(), location());
+    return Objects.hash(resultType(), modulePath(), name(), params(), location());
   }
 }

@@ -58,19 +58,19 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
 
   public static List<TestedAssignmentSpec> assignment_test_specs(boolean includeAny) {
     var result = new ArrayList<TestedAssignmentSpec>();
-    result.addAll(testSpecsCommonForNormalCaseAndParameterAssignment(includeAny));
+    result.addAll(testSpecsCommonForNormalCaseAndParamAssignment(includeAny));
     result.addAll(testSpecSpecificForNormalAssignment(includeAny));
     return result;
   }
 
-  public static List<TestedAssignmentSpec> parameter_assignment_test_specs(boolean includeAny) {
+  public static List<TestedAssignmentSpec> param_assignment_test_specs(boolean includeAny) {
     var result = new ArrayList<TestedAssignmentSpec>();
-    result.addAll(testSpecsCommonForNormalCaseAndParameterAssignment(includeAny));
-    result.addAll(testSpecsSpecificForParameterAssignment(includeAny));
+    result.addAll(testSpecsCommonForNormalCaseAndParamAssignment(includeAny));
+    result.addAll(testSpecsSpecificForParamAssignment(includeAny));
     return result;
   }
 
-  private static List<TestedAssignmentSpec> testSpecsCommonForNormalCaseAndParameterAssignment(
+  private static List<TestedAssignmentSpec> testSpecsCommonForNormalCaseAndParamAssignment(
       boolean includeAny) {
     var r = new ArrayList<TestedAssignmentSpec>();
     if (includeAny) {
@@ -142,7 +142,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         illegalAssignment(f(f(f(BLOB, STRING))), f(f(f(BLOB, NOTHING)))),
         allowedAssignment(f(f(f(BLOB, NOTHING))), f(f(f(BLOB, STRING)))),
 
-        // functions (as function parameter type)
+        // functions (as function param type)
         allowedAssignment(f(BLOB, f(STRING)), f(BLOB, f(STRING))),
         illegalAssignment(f(BLOB, f(STRING)), f(BLOB, f(NOTHING))),
         allowedAssignment(f(BLOB, f(NOTHING)), f(BLOB, f(STRING))),
@@ -151,7 +151,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         allowedAssignment(f(BLOB, f(BLOB, STRING)), f(BLOB, f(BLOB, NOTHING))),
         illegalAssignment(f(BLOB, f(BLOB, NOTHING)), f(BLOB, f(BLOB, STRING))),
 
-        // functions (as function parameter type - nested twice)
+        // functions (as function param type - nested twice)
         allowedAssignment(f(BLOB, f(BLOB, f(STRING))), f(BLOB, f(BLOB, f(STRING)))),
         allowedAssignment(f(BLOB, f(BLOB, f(STRING))), f(BLOB, f(BLOB, f(NOTHING)))),
         illegalAssignment(f(BLOB, f(BLOB, f(NOTHING))), f(BLOB, f(BLOB, f(STRING)))),
@@ -236,7 +236,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     return r;
   }
 
-  private static List<TestedAssignmentSpec> testSpecsSpecificForParameterAssignment(
+  private static List<TestedAssignmentSpec> testSpecsSpecificForParamAssignment(
       boolean includeAny) {
     List<TestedAssignmentSpec> r = new ArrayList<>();
     gen(r, A, includeAny, mAll());
@@ -303,8 +303,8 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
    * Match a function.
    */
   private static Predicate<TestedType> mFunc(Predicate<TestedType> result,
-      Predicate<TestedType>... parameters) {
-    return t -> t.isFunction(result, parameters);
+      Predicate<TestedType>... params) {
+    return t -> t.isFunction(result, params);
   }
 
   /**

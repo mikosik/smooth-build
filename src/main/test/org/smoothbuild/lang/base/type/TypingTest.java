@@ -200,7 +200,7 @@ public class TypingTest {
   }
 
   public static List<TestedAssignmentSpec> isParamAssignable_test_data() {
-    return TestedAssignmentSpec.parameter_assignment_test_specs(true);
+    return TestedAssignmentSpec.param_assignment_test_specs(true);
   }
 
   @ParameterizedTest

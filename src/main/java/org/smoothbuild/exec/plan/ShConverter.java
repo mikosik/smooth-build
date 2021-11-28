@@ -93,7 +93,7 @@ public class ShConverter {
 
   private FunctionH convertFuncImpl(FunctionS functionS) {
     try {
-      callStack.push(functionS.evaluationParameters());
+      callStack.push(functionS.evaluationParams());
       var functionH = switch (functionS) {
         case ConstructorS c -> convertCtor(c);
         case IfFunctionS i -> objFactory.ifFunction();
@@ -111,7 +111,7 @@ public class ShConverter {
   private DefinedFunctionH convertCtor(ConstructorS constructorS) {
     var type = objFactory.definedFunctionType(
         convertType(constructorS.evaluationType()),
-        convertParams(constructorS.evaluationParameters()));
+        convertParams(constructorS.evaluationParams()));
     var paramRefs = ctorParamRefs(constructorS);
     var body = objFactory.construct(paramRefs);
     nals.put(body, constructorS);
@@ -119,10 +119,10 @@ public class ShConverter {
   }
 
   private ImmutableList<ObjectH> ctorParamRefs(ConstructorS constructorS) {
-    NList<Item> parameters = constructorS.parameters();
+    NList<Item> params = constructorS.params();
     ImmutableList<ObjectH> paramRefsH =
-        range(0, parameters.size())
-            .mapToObj(i -> newParamRef(parameters, i))
+        range(0, params.size())
+            .mapToObj(i -> newParamRef(params, i))
             .collect(toImmutableList());
     paramRefsH.forEach(p -> nals.put(p, constructorS));
     return paramRefsH;
@@ -138,7 +138,7 @@ public class ShConverter {
 
   private NativeFunctionH convertNatFunc(NativeFunctionS nativeFunctionS) {
     var resType = convertType(nativeFunctionS.evaluationType());
-    var paramTypes = convertParams(nativeFunctionS.evaluationParameters());
+    var paramTypes = convertParams(nativeFunctionS.evaluationParams());
     var jar = loadNatJar(nativeFunctionS);
     var type = objFactory.nativeFunctionType(resType, paramTypes);
     var ann = nativeFunctionS.annotation();
@@ -154,7 +154,7 @@ public class ShConverter {
   private DefinedFunctionH convertDefFunc(DefinedFunctionS definedFunctionS) {
     var body = convertExpr(definedFunctionS.body());
     var resTypeH = convertType(definedFunctionS.evaluationType());
-    var paramTypesH = convertParams(definedFunctionS.evaluationParameters());
+    var paramTypesH = convertParams(definedFunctionS.evaluationParams());
     var type = objFactory.definedFunctionType(resTypeH, paramTypesH);
     return objFactory.definedFunction(type, body);
   }
