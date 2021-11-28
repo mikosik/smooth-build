@@ -10,12 +10,10 @@ import org.smoothbuild.lang.base.type.api.Variable;
 import com.google.common.collect.ImmutableSet;
 
 public class VariableH extends TypeHV implements Variable {
-  private final String name;
   private final ImmutableSet<VariableH> variables;
 
   public VariableH(Hash hash, String name) {
     super(name, hash, VARIABLE);
-    this.name = name;
     this.variables = set(this);
   }
 
