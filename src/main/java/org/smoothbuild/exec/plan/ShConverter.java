@@ -2,7 +2,6 @@ package org.smoothbuild.exec.plan;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.IntStream.range;
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 
@@ -23,6 +22,7 @@ import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
 import org.smoothbuild.db.object.obj.val.FunctionH;
 import org.smoothbuild.db.object.obj.val.IntH;
@@ -32,7 +32,6 @@ import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.BoolValueS;
 import org.smoothbuild.lang.base.define.ConstructorS;
-import org.smoothbuild.lang.base.define.DefinedEvaluableS;
 import org.smoothbuild.lang.base.define.DefinedFunctionS;
 import org.smoothbuild.lang.base.define.DefinedValueS;
 import org.smoothbuild.lang.base.define.DefinitionsS;
@@ -44,7 +43,6 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NativeEvaluableS;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
-import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.BlobS;
@@ -68,7 +66,8 @@ public class ShConverter {
   private final TypeShConverter typeShConverter;
   private final FileLoader fileLoader;
   private final Deque<NList<Item>> callStack;
-  private final Map<String, FunctionH> cache;
+  private final Map<String, FunctionH> functionCache;
+  private final Map<String, ObjectH> valueCache;
   private final Map<ObjectH, Nal> nals;
 
   @Inject
@@ -79,7 +78,8 @@ public class ShConverter {
     this.typeShConverter = typeShConverter;
     this.fileLoader = fileLoader;
     this.callStack = new LinkedList<>();
-    this.cache = new HashMap<>();
+    this.functionCache = new HashMap<>();
+    this.valueCache = new HashMap<>();
     this.nals = new HashMap<>();
   }
 
@@ -88,7 +88,7 @@ public class ShConverter {
   }
 
   public FunctionH convertFunc(FunctionS functionS) {
-    return computeIfAbsent(cache, functionS.name(), name -> convertFuncImpl(functionS));
+    return computeIfAbsent(functionCache, functionS.name(), name -> convertFuncImpl(functionS));
   }
 
   private FunctionH convertFuncImpl(FunctionS functionS) {
@@ -98,7 +98,7 @@ public class ShConverter {
         case ConstructorS c -> convertCtor(c);
         case IfFunctionS i -> objFactory.ifFunction();
         case MapFunctionS m -> objFactory.mapFunction();
-        case DefinedFunctionS d -> convertDefEval(d);
+        case DefinedFunctionS d -> convertDefFunc(d);
         case NativeFunctionS n -> convertNatFunc(n);
       };
       nals.put(functionH, functionS);
@@ -151,35 +151,31 @@ public class ShConverter {
     return map(items, item -> convertType(item.type()));
   }
 
-  private DefinedFunctionH convertDefEval(DefinedEvaluableS definedEvaluableS) {
-    var body = convertExpr(definedEvaluableS.body());
-    var resTypeH = convertType(definedEvaluableS.evaluationType());
-    var paramTypesH = convertParams(definedEvaluableS.evaluationParameters());
+  private DefinedFunctionH convertDefFunc(DefinedFunctionS definedFunctionS) {
+    var body = convertExpr(definedFunctionS.body());
+    var resTypeH = convertType(definedFunctionS.evaluationType());
+    var paramTypesH = convertParams(definedFunctionS.evaluationParameters());
     var type = objFactory.definedFunctionType(resTypeH, paramTypesH);
     return objFactory.definedFunction(type, body);
   }
 
   // handling value
 
-  public FunctionH convertVal(ValueS valueS) {
-    return computeIfAbsent(cache, valueS.name(), name -> convertValImpl(valueS));
+  public ObjectH convertVal(ValueS valueS) {
+    return computeIfAbsent(valueCache, valueS.name(), name -> convertValImpl(valueS));
   }
 
-  private FunctionH convertValImpl(ValueS valueS) {
-    FunctionH exprH = switch (valueS) {
-      case DefinedValueS defValS -> convertDefEval(defValS);
+  private ObjectH convertValImpl(ValueS valueS) {
+    return switch (valueS) {
+      case DefinedValueS defValS -> convertExpr(defValS.body());
       case BoolValueS boolValS -> convertBoolVal(boolValS);
     };
-    nals.put(exprH, valueS);
-    return exprH;
   }
 
-  private FunctionH convertBoolVal(BoolValueS boolValS) {
+  private BoolH convertBoolVal(BoolValueS boolValS) {
     var boolH = objFactory.bool(boolValS.valJ());
     nals.put(boolH, boolValS);
-    var resTypeH = boolH.type();
-    var type = objFactory.definedFunctionType(resTypeH, list());
-    return objFactory.definedFunction(type, boolH);
+    return boolH;
   }
 
   // handling expressions
@@ -232,16 +228,9 @@ public class ShConverter {
   }
 
   public ObjectH convertRef(RefS refS) {
-    TopEvaluableS evalS = definitions.referencables().get(refS.name());
-    return switch (evalS) {
-      case FunctionS functionS -> convertFunc(functionS);
-      case ValueS valueS -> {
-        var args = objFactory.construct(list());
-        var func = convertVal(valueS);
-        var callH = objFactory.call(func, args);
-        nals.put(callH, refS);
-        yield callH;
-      }
+    return switch (definitions.referencables().get(refS.name())) {
+      case FunctionS f -> convertFunc(f);
+      case ValueS v -> convertVal(v);
     };
   }
 

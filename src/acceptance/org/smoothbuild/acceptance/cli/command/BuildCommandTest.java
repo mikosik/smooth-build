@@ -516,7 +516,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myValue                                  build.smooth:2
+            "abc"                                    build.smooth:1                 exec
           """);
     }
   }
