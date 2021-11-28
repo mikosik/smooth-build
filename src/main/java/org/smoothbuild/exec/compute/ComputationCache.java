@@ -79,7 +79,7 @@ public class ComputationCache {
       }
 
       ArrayH messages = (ArrayH) messagesObject;
-      Iterable<TupleH> tuples = messages.elements(TupleH.class);
+      Iterable<TupleH> tuples = messages.elems(TupleH.class);
       for (TupleH m : tuples) {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {

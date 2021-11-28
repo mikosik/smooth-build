@@ -35,7 +35,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
            result = [ 0x01 ];
            """)
@@ -102,7 +102,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
            result = [ 123 ];
            """)
@@ -169,7 +169,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
            result = [ "abc" ];
            """)
@@ -236,7 +236,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
            result = [ ["abc"] ];
            """)
@@ -315,7 +315,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
            MyStruct {
              String field,
@@ -422,7 +422,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
              String myIdentity(String string) = string;
              result = [ "abc" | myIdentity() ];
@@ -471,7 +471,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
            String myFunction() = "abc";
            result = [ myFunction() ];
@@ -543,7 +543,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
            String myFunction() = "abc";
            result = [ myFunction ];
@@ -600,7 +600,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
           myFunction(String string) = [ string ];
            """)
@@ -676,7 +676,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element() {
+    public void array_elem() {
       module("""
            String myValue = "abc";
            result = [ myValue ];
@@ -776,7 +776,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element_fails() {
+    public void array_elem_fails() {
       module("""
           MyStruct {}
           result = [ MyStruct ];
@@ -950,7 +950,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void array_element_fails() {
+    public void array_elem_fails() {
       module("""
           result = [ A ];
           """)
@@ -1060,7 +1060,7 @@ public class ExprSUsageTest extends TestingContext {
       }
 
       @Test
-      public void array_element() {
+      public void array_elem() {
         module("""
            result = [ undefined ];
            """)

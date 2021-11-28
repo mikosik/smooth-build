@@ -22,7 +22,7 @@ public class DecodeObjRootExceptionTest extends TestingContext {
     var exception = wrongSizeOfRootSequenceException(Hash.of(123), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode object at 1959893f68220459cbd800396e1eae7bfc382e97. "
-            + "Its root points to hash sequence with 3 elements when it should point to "
-            + "sequence with 2 elements.");
+            + "Its root points to hash sequence with 3 elems when it should point to "
+            + "sequence with 2 elems.");
   }
 }

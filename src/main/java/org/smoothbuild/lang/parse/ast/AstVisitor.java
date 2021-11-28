@@ -81,7 +81,7 @@ public class AstVisitor {
   }
 
   public void visitArray(ArrayNode array) {
-    array.elements().forEach(this::visitExpr);
+    array.elems().forEach(this::visitExpr);
   }
 
   public void visitBlobLiteral(BlobNode blob) {
@@ -112,9 +112,9 @@ public class AstVisitor {
   public void visitStringLiteral(StringNode string) {
   }
 
-  public <E> void visitIndexedElements(List<E> elements, BiConsumer<Integer, ? super E> consumer) {
-    for (int i = 0; i < elements.size(); i++) {
-      consumer.accept(i, elements.get(i));
+  public <E> void visitIndexedElements(List<E> elems, BiConsumer<Integer, ? super E> consumer) {
+    for (int i = 0; i < elems.size(); i++) {
+      consumer.accept(i, elems.get(i));
     }
   }
 }

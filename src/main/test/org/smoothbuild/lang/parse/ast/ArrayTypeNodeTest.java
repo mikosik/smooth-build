@@ -50,35 +50,35 @@ public class ArrayTypeNodeTest {
   @Nested
   class _variables_used_once {
     @Test
-    public void array_node_which_element_is_a_variable() {
-      TypeNode elementTypeNode = new TypeNode("A", internal());
-      TypeNode typeNode = new ArrayTypeNode(elementTypeNode, internal());
+    public void array_node_which_elem_is_a_variable() {
+      TypeNode elemTypeNode = new TypeNode("A", internal());
+      TypeNode typeNode = new ArrayTypeNode(elemTypeNode, internal());
       assertThat(typeNode.variablesUsedOnce())
           .containsExactly("A");
     }
 
     @Test
-    public void array_node_which_element_is_not_a_variable() {
-      TypeNode elementTypeNode = new TypeNode("MyType", internal());
-      TypeNode typeNode = new ArrayTypeNode(elementTypeNode, internal());
+    public void array_node_which_elem_is_not_a_variable() {
+      TypeNode elemTypeNode = new TypeNode("MyType", internal());
+      TypeNode typeNode = new ArrayTypeNode(elemTypeNode, internal());
       assertThat(typeNode.variablesUsedOnce())
           .isEmpty();
     }
 
     @Test
-    public void array_of_array_which_element_is_a_variable() {
-      TypeNode elementTypeNode = new TypeNode("A", internal());
+    public void array_of_array_which_elem_is_a_variable() {
+      TypeNode elemTypeNode = new TypeNode("A", internal());
       TypeNode typeNode =
-          new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, internal()), internal());
+          new ArrayTypeNode(new ArrayTypeNode(elemTypeNode, internal()), internal());
       assertThat(typeNode.variablesUsedOnce())
           .containsExactly("A");
     }
 
     @Test
-    public void array_of_array_which_element_is_not_a_variable() {
-      TypeNode elementTypeNode = new TypeNode("MyType", internal());
+    public void array_of_array_which_elem_is_not_a_variable() {
+      TypeNode elemTypeNode = new TypeNode("MyType", internal());
       TypeNode typeNode =
-          new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, internal()), internal());
+          new ArrayTypeNode(new ArrayTypeNode(elemTypeNode, internal()), internal());
       assertThat(typeNode.variablesUsedOnce())
           .isEmpty();
     }

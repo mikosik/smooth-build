@@ -12,13 +12,13 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void adding_first_element_returns_false() {
+  public void adding_first_elem_returns_false() {
     assertThat(new DuplicatesDetector<>().addValue("string1"))
         .isFalse();
   }
 
   @Test
-  public void has_no_duplicates_after_adding_first_element() {
+  public void has_no_duplicates_after_adding_first_elem() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     assertThat(duplicatesDetector.hasDuplicates())
@@ -26,7 +26,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void adding_element_for_the_second_time_returns_true() {
+  public void adding_elem_for_the_second_time_returns_true() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     assertThat(duplicatesDetector.addValue("string1"))
@@ -34,7 +34,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void has_duplicates_after_adding_element_twice() {
+  public void has_duplicates_after_adding_elem_twice() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");
@@ -43,7 +43,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void adding_second_but_different_element_returns_false() {
+  public void adding_second_but_different_elem_returns_false() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     assertThat(duplicatesDetector.addValue("string2"))
@@ -51,7 +51,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void has_no_duplicates_after_adding_two_different_elements() {
+  public void has_no_duplicates_after_adding_two_different_elems() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");
@@ -68,7 +68,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_duplicate_values_returns_empty_set_when_one_element_has_been_added() {
+  public void get_duplicate_values_returns_empty_set_when_one_elem_has_been_added() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     assertThat(duplicatesDetector.getDuplicateValues())
@@ -76,7 +76,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_duplicate_values_returns_empty_set_when_two_different_elements_have_been_added() {
+  public void get_duplicate_values_returns_empty_set_when_two_different_elems_have_been_added() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");
@@ -85,7 +85,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_duplicate_values_returns_set_with_element_that_has_been_added_twice() {
+  public void get_duplicate_values_returns_set_with_elem_that_has_been_added_twice() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");
@@ -94,7 +94,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_duplicate_values_returns_set_with_elements_that_have_been_added_twice_without_those_added_once() {
+  public void get_duplicate_values_returns_set_with_elems_that_have_been_added_twice_without_those_added_once() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");
@@ -116,7 +116,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_unique_values_returns_element_that_has_been_added() {
+  public void get_unique_values_returns_elem_that_has_been_added() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     assertThat(duplicatesDetector.getUniqueValues())
@@ -124,7 +124,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_unique_values_returns_both_added_elements() {
+  public void get_unique_values_returns_both_added_elems() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string2");
@@ -133,7 +133,7 @@ public class DuplicatesDetectorTest {
   }
 
   @Test
-  public void get_unique_values_returns_only_one_duplicated_element() {
+  public void get_unique_values_returns_only_one_duplicated_elem() {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     duplicatesDetector.addValue("string1");
     duplicatesDetector.addValue("string1");

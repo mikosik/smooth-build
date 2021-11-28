@@ -129,8 +129,8 @@ public class AssignmentTest extends TestingContext {
   }
 
   @ParameterizedTest
-  @MethodSource("array_element_assignment_test_specs")
-  public void array_literal_element_types_is_assignable_to_common_super_type(
+  @MethodSource("array_elem_assignment_test_specs")
+  public void array_literal_elem_types_is_assignable_to_common_super_type(
       TestedType type1, TestedType type2, Type joinType) {
     String sourceCode = unlines(
         "[" + joinType.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
@@ -139,7 +139,7 @@ public class AssignmentTest extends TestingContext {
         .loadsSuccessfully();
   }
 
-  private static List<Arguments> array_element_assignment_test_specs() {
+  private static List<Arguments> array_elem_assignment_test_specs() {
     TestingContext context = new TestingContext();
     TypingS typing = context.typingS();
     TypeFactoryS factory = context.typeFactoryS();

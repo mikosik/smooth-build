@@ -297,7 +297,7 @@ public abstract class AcceptanceTestCase {
 
   /**
    * Returns content of artifact as string
-   * or (when artifact is an array) returns list containing stringified elements.
+   * or (when artifact is an array) returns list containing stringified elems.
    * Works with array artifacts of any depth.
    */
   public Object artifactStringified(String name) {

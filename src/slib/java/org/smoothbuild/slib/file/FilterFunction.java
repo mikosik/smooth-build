@@ -25,7 +25,7 @@ public class FilterFunction {
     }
     ArrayHBuilder builder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileT());
 
-    for (TupleH file : files.elements(TupleH.class)) {
+    for (TupleH file : files.elems(TupleH.class)) {
       if (filter.test(path(filePath(file).jValue()))) {
         builder.add(file);
       }

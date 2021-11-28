@@ -10,10 +10,10 @@ import org.smoothbuild.acceptance.testing.Flatten;
 
 public class PolymorphismTest extends AcceptanceTestCase {
   @Test
-  public void single_element_array() throws Exception {
+  public void single_elem_array() throws Exception {
     createNativeJar(Flatten.class);
     createUserModule("""
-            [E] testSingleElement(E element) = [ element ];
+            [E] testSingleElement(E elem) = [ elem ];
             result = testSingleElement("abc");
             """);
     runSmoothBuild("result");

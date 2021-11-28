@@ -141,7 +141,7 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void cannot_be_array_type_which_element_type_encloses_it() {
+          public void cannot_be_array_type_which_elem_type_encloses_it() {
             module("""
               MyStruct {
                 String firstField,
@@ -1184,41 +1184,41 @@ public class DeclarationTest extends TestingContext {
       class _declaring_array_literal {
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
-        public void with_one_element(String literal) {
+        public void with_one_elem(String literal) {
           module("result = [" + literal + "];")
               .loadsSuccessfully();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
-        public void with_two_elements(String literal) {
+        public void with_two_elems(String literal) {
           module("result = [" + literal + ", " + literal + "];")
               .loadsSuccessfully();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
-        public void with_array_containing_one_element(String literal) {
+        public void with_array_containing_one_elem(String literal) {
           module("result = [[" + literal + "]];")
               .loadsSuccessfully();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
-        public void with_array_and_empty_array_elements(String literal) {
+        public void with_array_and_empty_array_elems(String literal) {
           module("result = [[" + literal + "], []];")
               .loadsSuccessfully();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
-        public void with_array_containing_two_elements(String literal) {
+        public void with_array_containing_two_elems(String literal) {
           module("result = [[" + literal + ", " + literal + "]];")
               .loadsSuccessfully();
         }
 
         @Nested
-        class _element_list {
+        class _elem_list {
           @Test
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
@@ -1264,7 +1264,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void error_in_first_element_doesnt_suppress_error_in_second_element() {
+        public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
           module("""
             myFunction() = "abc";
             result = [
@@ -1311,7 +1311,7 @@ public class DeclarationTest extends TestingContext {
     @Nested
     class _pipe {
       @Test
-      public void regression_test_error_in_expression_of_argument_of_not_first_element_of_pipe() {
+      public void regression_test_error_in_expression_of_argument_of_not_first_elem_of_pipe() {
         module("""
             String myFunction(String a, String b) = "abc";
             String myIdentity(String s) = s;

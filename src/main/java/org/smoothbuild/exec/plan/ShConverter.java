@@ -216,7 +216,7 @@ public class ShConverter {
   }
 
   private OrderH convertOrd(OrderS orderS) {
-    var elemsH = map(orderS.elements(), this::convertExpr);
+    var elemsH = map(orderS.elems(), this::convertExpr);
     return objFactory.order(elemsH);
   }
 

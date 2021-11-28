@@ -56,8 +56,8 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public void addChild(MemoryElement element) {
-    target.addChild(element);
+  public void addChild(MemoryElement elem) {
+    target.addChild(elem);
   }
 
   @Override

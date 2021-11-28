@@ -24,7 +24,7 @@ public interface MemoryElement {
 
   public List<Path> childNames();
 
-  public void addChild(MemoryElement element);
+  public void addChild(MemoryElement elem);
 
   public BufferedSource source() throws IOException;
 

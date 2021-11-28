@@ -24,54 +24,54 @@ public class OrderHTest extends TestingContext {
   }
 
   @Test
-  public void creating_array_with_elements_with_different_evaluation_type_causes_exception() {
+  public void creating_array_with_elems_with_different_evaluation_type_causes_exception() {
     assertCall(() -> orderH(list(intH(3), stringH("abc"))).type())
         .throwsException(new IllegalArgumentException("Element evaluation types are not equal "
             + intHT().name() + " != " + stringHT().name() + "."));
   }
 
   @Test
-  public void elements_returns_elements() {
-    ImmutableList<ObjectH> elements = list(intH(2));
-    assertThat(orderH(elements).elements())
-        .isEqualTo(elements);
+  public void elems_returns_elems() {
+    ImmutableList<ObjectH> elems = list(intH(2));
+    assertThat(orderH(elems).elems())
+        .isEqualTo(elems);
   }
 
   @Test
-  public void arrays_with_equal_elements_are_equal() {
-    ImmutableList<ObjectH> elements = list(intH(2)) ;
-    assertThat(orderH(elements))
-        .isEqualTo(orderH(elements));
+  public void arrays_with_equal_elems_are_equal() {
+    ImmutableList<ObjectH> elems = list(intH(2)) ;
+    assertThat(orderH(elems))
+        .isEqualTo(orderH(elems));
   }
 
   @Test
-  public void arrays_with_different_elements_are_not_equal() {
+  public void arrays_with_different_elems_are_not_equal() {
     assertThat(orderH(list(intH(1))))
         .isNotEqualTo(orderH(list(intH(2))));
   }
 
   @Test
-  public void hash_of_arrays_with_equal_elements_is_the_same() {
-    ImmutableList<ObjectH> elements = list(intH(1));
-    assertThat(orderH(elements).hash())
-        .isEqualTo(orderH(elements).hash());
+  public void hash_of_arrays_with_equal_elems_is_the_same() {
+    ImmutableList<ObjectH> elems = list(intH(1));
+    assertThat(orderH(elems).hash())
+        .isEqualTo(orderH(elems).hash());
   }
 
   @Test
-  public void hash_of_arrays_with_different_elements_is_not_the_same() {
+  public void hash_of_arrays_with_different_elems_is_not_the_same() {
     assertThat(orderH(list(intH(1))).hash())
         .isNotEqualTo(orderH(list(intH(2))).hash());
   }
 
   @Test
-  public void hash_code_of_arrays_with_equal_elements_is_the_same() {
-    ImmutableList<ObjectH> elements = list(intH(1));
-    assertThat(orderH(elements).hashCode())
-        .isEqualTo(orderH(elements).hashCode());
+  public void hash_code_of_arrays_with_equal_elems_is_the_same() {
+    ImmutableList<ObjectH> elems = list(intH(1));
+    assertThat(orderH(elems).hashCode())
+        .isEqualTo(orderH(elems).hashCode());
   }
 
   @Test
-  public void hash_code_of_arrays_with_different_elements_is_not_the_same() {
+  public void hash_code_of_arrays_with_different_elems_is_not_the_same() {
     assertThat(orderH(list(intH(1))).hashCode())
         .isNotEqualTo(orderH(list(intH(2))).hashCode());
   }
@@ -84,11 +84,11 @@ public class OrderHTest extends TestingContext {
   }
 
   @Test
-  public void array_read_back_by_hash_has_same_elements() {
-    ImmutableList<ObjectH> elements = list(intH(1));
-    OrderH array = orderH(elements);
-    assertThat(((OrderH) objectHDbOther().get(array.hash())).elements())
-        .isEqualTo(elements);
+  public void array_read_back_by_hash_has_same_elems() {
+    ImmutableList<ObjectH> elems = list(intH(1));
+    OrderH array = orderH(elems);
+    assertThat(((OrderH) objectHDbOther().get(array.hash())).elems())
+        .isEqualTo(elems);
   }
 
   @Test

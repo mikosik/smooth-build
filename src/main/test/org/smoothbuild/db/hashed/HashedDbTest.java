@@ -239,21 +239,21 @@ public class HashedDbTest extends TestingContext {
   @Nested
   class _sequence {
     @Test
-    public void with_no_elements_can_be_read_back() throws Exception {
+    public void with_no_elems_can_be_read_back() throws Exception {
       hash = hashedDb().writeSequence();
       assertThat(hashedDb().readSequence(hash))
           .isEqualTo(list());
     }
 
     @Test
-    public void with_one_element_can_be_read_back() throws Exception {
+    public void with_one_elem_can_be_read_back() throws Exception {
       hash = hashedDb().writeSequence(Hash.of("abc"));
       assertThat(hashedDb().readSequence(hash))
           .isEqualTo(list(Hash.of("abc")));
     }
 
     @Test
-    public void with_two_elements_can_be_read_back() throws Exception {
+    public void with_two_elems_can_be_read_back() throws Exception {
       hash = hashedDb().writeSequence(Hash.of("abc"), Hash.of("def"));
       assertThat(hashedDb().readSequence(hash))
           .isEqualTo(list(Hash.of("abc"), Hash.of("def")));

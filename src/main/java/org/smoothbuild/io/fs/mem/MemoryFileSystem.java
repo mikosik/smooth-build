@@ -35,11 +35,11 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public PathState pathState(Path path) {
-    MemoryElement element = findElement(path);
-    if (element == null) {
+    MemoryElement elem = findElement(path);
+    if (elem == null) {
       return NOTHING;
     }
-    if (element.isDir()) {
+    if (elem.isDir()) {
       return DIR;
     }
     return FILE;
@@ -72,12 +72,12 @@ public class MemoryFileSystem implements FileSystem {
       return;
     }
 
-    MemoryElement element = findElement(path);
-    if (element == null) {
+    MemoryElement elem = findElement(path);
+    if (elem == null) {
       return;
     }
 
-    element.parent().removeChild(element);
+    elem.parent().removeChild(elem);
   }
 
   @Override

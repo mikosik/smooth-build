@@ -31,8 +31,8 @@ public class NList<T extends Nameable> extends AbstractList<T> {
     return (NList<T>) EMPTY;
   }
 
-  public static <E extends Nameable> NList<E> nList(E... elements) {
-    return nList(Lists.list(elements));
+  public static <E extends Nameable> NList<E> nList(E... elems) {
+    return nList(Lists.list(elems));
   }
 
   public static <E extends Nameable> NList<E> nList(ImmutableList<E> list) {

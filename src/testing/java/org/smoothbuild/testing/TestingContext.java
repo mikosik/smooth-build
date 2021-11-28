@@ -269,8 +269,8 @@ public class TestingContext {
     return typeHDb().any();
   }
 
-  public ArrayTypeH arrayHT(TypeHV elementSpec) {
-    return typeHDb().array(elementSpec);
+  public ArrayTypeH arrayHT(TypeHV elemSpec) {
+    return typeHDb().array(elemSpec);
   }
 
   public BlobTypeH blobHT() {
@@ -383,8 +383,8 @@ public class TestingContext {
     return orderHT(intHT());
   }
 
-  public OrderTypeH orderHT(TypeHV elementSpec) {
-    return typeHDb().order(elementSpec);
+  public OrderTypeH orderHT(TypeHV elemSpec) {
+    return typeHDb().order(elemSpec);
   }
 
   public RefTypeH refHT() {
@@ -417,12 +417,12 @@ public class TestingContext {
     return tupleH(animalHT(), list(species, speed));
   }
 
-  public ArrayH arrayH(ValueH... elements) {
-    return arrayH(elements[0].type(), elements);
+  public ArrayH arrayH(ValueH... elems) {
+    return arrayH(elems[0].type(), elems);
   }
 
-  public ArrayH arrayH(TypeHV elementSpec, ValueH... elements) {
-    return objectHDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
+  public ArrayH arrayH(TypeHV elemSpec, ValueH... elems) {
+    return objectHDb().arrayBuilder(elemSpec).addAll(list(elems)).build();
   }
 
   public BlobH blobH() {
@@ -550,8 +550,8 @@ public class TestingContext {
     return objectHDb().construct(items);
   }
 
-  public OrderH orderH(ImmutableList<ObjectH> elements) {
-    return objectHDb().order(elements);
+  public OrderH orderH(ImmutableList<ObjectH> elems) {
+    return objectHDb().order(elems);
   }
 
   public RefH refH(int value) {

@@ -26,7 +26,7 @@ public class OutputClassFileTest extends TestingContext {
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().elements(TupleH.class))
+    assertThat(fileArrayBuilder.build().elems(TupleH.class))
         .containsExactly(fileH(path, bytes));
   }
 

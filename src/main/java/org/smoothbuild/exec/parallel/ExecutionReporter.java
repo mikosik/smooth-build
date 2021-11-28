@@ -52,7 +52,7 @@ public class ExecutionReporter {
   }
 
   private void print(TaskInfo taskInfo, ResultSource resultSource, ArrayH messages) {
-    var logs = map(messages.elements(TupleH.class), m -> new Log(level(m), text(m)));
+    var logs = map(messages.elems(TupleH.class), m -> new Log(level(m), text(m)));
     print(taskInfo, logs, resultSource);
   }
 

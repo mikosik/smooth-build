@@ -5,8 +5,8 @@ import org.smoothbuild.db.object.type.base.TypeKindH;
 
 public class DecodeTypeRootException extends DecodeTypeException {
   public DecodeTypeRootException(Hash hash, int actualSize) {
-    super(("Cannot decode type at %s. Its root points to hash sequence with %d elements when it "
-        + "should point to sequence with 1 or 2 elements.")
+    super(("Cannot decode type at %s. Its root points to hash sequence with %d elems when it "
+        + "should point to sequence with 1 or 2 elems.")
         .formatted(hash, actualSize));
   }
 

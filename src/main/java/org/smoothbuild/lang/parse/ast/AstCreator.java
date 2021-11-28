@@ -163,8 +163,8 @@ public class AstCreator {
 
       private ExprNode createLiteral(LiteralContext expr) {
         if (expr.array() != null) {
-          List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
-          return new ArrayNode(elements, locationOf(filePath, expr));
+          List<ExprNode> elems = map(expr.array().expr(), this::createExpr);
+          return new ArrayNode(elems, locationOf(filePath, expr));
         }
         if (expr.BLOB() != null) {
           return new BlobNode(expr.BLOB().getText().substring(2), locationOf(filePath, expr));
@@ -258,8 +258,8 @@ public class AstCreator {
       }
 
       private TypeNode createArrayType(ArrayTypeContext arrayType) {
-        TypeNode elementType = createType(arrayType.type());
-        return new ArrayTypeNode(elementType, locationOf(filePath, arrayType));
+        TypeNode elemType = createType(arrayType.type());
+        return new ArrayTypeNode(elemType, locationOf(filePath, arrayType));
       }
 
       private TypeNode createFunctionType(FunctionTypeContext functionType) {

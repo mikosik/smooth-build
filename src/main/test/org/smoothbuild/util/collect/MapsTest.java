@@ -27,13 +27,13 @@ public class MapsTest {
       }
 
       @Test
-      public void single_element() {
+      public void single_elem() {
         assertThat(toMap(list(13), Object::toString))
             .isEqualTo(Map.of(13, "13"));
       }
 
       @Test
-      public void many_elements() {
+      public void many_elems() {
         assertThat(toMap(list(1, 2, 3), Object::toString))
             .isEqualTo(Map.of(1, "1", 2, "2", 3, "3"));
       }
@@ -45,7 +45,7 @@ public class MapsTest {
       }
 
       @Test
-      public void null_element() {
+      public void null_elem() {
         List<Object> iterableWithNull = asList(null, null);
         assertCall(() -> toMap(iterableWithNull, Object::toString))
             .throwsException(NullPointerException.class);
@@ -67,13 +67,13 @@ public class MapsTest {
       }
 
       @Test
-      public void single_element() {
+      public void single_elem() {
         assertThat(toMap(list(5), Object::toString, i -> i * i))
             .isEqualTo(Map.of("5", 25));
       }
 
       @Test
-      public void many_elements() {
+      public void many_elems() {
         assertThat(toMap(list(2, 3, 4), Object::toString, i -> i * i))
             .isEqualTo(Map.of("2", 4, "3", 9, "4", 16));
       }
@@ -85,7 +85,7 @@ public class MapsTest {
       }
 
       @Test
-      public void null_element() {
+      public void null_elem() {
         List<Object> iterableWithNull = asList(null, null);
         assertCall(() -> toMap(iterableWithNull, Object::toString, Object::toString))
             .throwsException(NullPointerException.class);
@@ -114,7 +114,7 @@ public class MapsTest {
     }
 
     @Test
-    public void many_elements() {
+    public void many_elems() {
       assertThat(map(Map.of(2, "2", 3, "3"), i -> i * i, v -> v + "^2"))
           .isEqualTo(Map.of(4, "2^2", 9, "3^2"));
     }

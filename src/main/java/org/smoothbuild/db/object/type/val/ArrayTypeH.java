@@ -15,16 +15,16 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
  * This class is immutable.
  */
 public class ArrayTypeH extends TypeHV implements ArrayType {
-  private final TypeHV element;
+  private final TypeHV elem;
 
-  public ArrayTypeH(Hash hash, TypeHV element) {
-    super(arrayTypeName(element), hash, ARRAY, element.variables());
-    this.element = requireNonNull(element);
+  public ArrayTypeH(Hash hash, TypeHV elem) {
+    super(arrayTypeName(elem), hash, ARRAY, elem.variables());
+    this.elem = requireNonNull(elem);
   }
 
   @Override
-  public TypeHV element() {
-    return element;
+  public TypeHV elem() {
+    return elem;
   }
 
   @Override

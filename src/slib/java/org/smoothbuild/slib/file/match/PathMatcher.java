@@ -35,11 +35,11 @@ public class PathMatcher {
     }
     if (pattern.equals(".") || pattern.startsWith("./") || pattern.contains("/./")
         || pattern.endsWith("/.")) {
-      throw new IllegalPathPatternException("Pattern can't contain '.' element.");
+      throw new IllegalPathPatternException("Pattern can't contain '.' elem.");
     }
     if (pattern.equals("..") || pattern.startsWith("../") || pattern.contains("/../")
         || pattern.endsWith("/..")) {
-      throw new IllegalPathPatternException("Pattern can't contain '..' element.");
+      throw new IllegalPathPatternException("Pattern can't contain '..' elem.");
     }
   }
 }

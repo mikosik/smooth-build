@@ -228,10 +228,10 @@ public class TypeSTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
     public void elemType(Function<TypeFactoryS, TypeS> factoryCall) {
-      TypeS element = invoke(factoryCall);
-      ArrayType array = typeFactoryS().array(element);
-      assertThat(array.element())
-          .isEqualTo(element);
+      TypeS elem = invoke(factoryCall);
+      ArrayType array = typeFactoryS().array(elem);
+      assertThat(array.elem())
+          .isEqualTo(elem);
     }
 
     public static List<Arguments> elemType_test_data() {

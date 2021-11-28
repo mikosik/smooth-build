@@ -9,10 +9,10 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class Flatten {
   public static ArrayH function(NativeApi nativeApi, ArrayH array) {
-    TypeHV resultArrayElemType = ((ArrayTypeH) array.type().element()).element();
+    TypeHV resultArrayElemType = ((ArrayTypeH) array.type().elem()).elem();
     ArrayHBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemType);
-    for (ArrayH innerArray : array.elements(ArrayH.class)) {
-      builder.addAll(innerArray.elements(ValueH.class));
+    for (ArrayH innerArray : array.elems(ArrayH.class)) {
+      builder.addAll(innerArray.elems(ValueH.class));
     }
     return builder.build();
   }

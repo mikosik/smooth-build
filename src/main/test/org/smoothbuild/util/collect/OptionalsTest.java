@@ -13,7 +13,7 @@ public class OptionalsTest {
   @Nested
   class _pull_up {
     @Test
-    public void iterable_with_zero_elements() {
+    public void iterable_with_zero_elems() {
       assertThat(pullUp(list()))
           .isEqualTo(Optional.of(list()));
     }
@@ -25,7 +25,7 @@ public class OptionalsTest {
     }
 
     @Test
-    public void iterable_with_all_elements_present() {
+    public void iterable_with_all_elems_present() {
       assertThat(pullUp(list(Optional.of("abc"), Optional.of("def"))))
           .isEqualTo(Optional.of(list("abc", "def")));
     }

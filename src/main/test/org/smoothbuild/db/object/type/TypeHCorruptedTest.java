@@ -172,7 +172,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_element_type_being_expr_type() throws Exception {
+    public void with_elem_type_being_expr_type() throws Exception {
       Hash hash = hash(
           hash(ARRAY.marker()),
           hash(refHT())
@@ -327,7 +327,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_data_having_three_elements() throws Exception {
+    public void with_data_having_three_elems() throws Exception {
       TupleTypeH paramTypes = tupleHT(list(stringHT(), boolHT()));
       Hash hash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
@@ -342,7 +342,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_data_having_one_elements() throws Exception {
+    public void with_data_having_one_elems() throws Exception {
       Hash hash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
           hash(
@@ -763,7 +763,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_elements_not_being_sequence_of_hashes() throws Exception {
+    public void with_elems_not_being_sequence_of_hashes() throws Exception {
       Hash notSequence = hash("abc");
       Hash hash =
           hash(
@@ -775,7 +775,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_elements_being_array_of_non_type() throws Exception {
+    public void with_elems_being_array_of_non_type() throws Exception {
       Hash stringHash = hash(stringH("abc"));
       Hash hash =
           hash(
@@ -790,7 +790,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_elements_being_sequence_of_expr_type() throws Exception {
+    public void with_elems_being_sequence_of_expr_type() throws Exception {
       Hash hash =
           hash(
               hash(TUPLE.marker()),
@@ -804,7 +804,7 @@ public class TypeHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_corrupted_element_type() throws Exception {
+    public void with_corrupted_elem_type() throws Exception {
       Hash hash =
           hash(
               hash(TUPLE.marker()),

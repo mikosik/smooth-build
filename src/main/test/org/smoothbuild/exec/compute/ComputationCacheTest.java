@@ -69,7 +69,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayH(file), messageArrayEmtpy()));
     var arrayType = arrayHT(objFactory().fileT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(TupleH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(TupleH.class))
         .containsExactly(file);
   }
 
@@ -79,7 +79,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayH(blob), messageArrayEmtpy()));
     var arrayType = arrayHT(blobHT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(BlobH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(BlobH.class))
         .containsExactly(blob);
   }
 
@@ -89,7 +89,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayH(boolV), messageArrayEmtpy()));
     var arrayType = arrayHT(boolHT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(BoolH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(BoolH.class))
         .containsExactly(boolV);
   }
 
@@ -99,7 +99,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayH(intV), messageArrayEmtpy()));
     var arrayType = arrayHT(intHT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(IntH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(IntH.class))
         .containsExactly(intV);
   }
 
@@ -110,7 +110,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array, messageArrayEmtpy()));
     var arrayType = arrayHT(stringHT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elements(StringH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(StringH.class))
         .containsExactly(strV);
   }
 

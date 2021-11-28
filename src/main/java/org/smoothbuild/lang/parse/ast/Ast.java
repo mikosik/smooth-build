@@ -102,7 +102,7 @@ public class Ast {
 
       private void addToDependencies(TypeNode type) {
         switch (type) {
-          case ArrayTypeNode arrayType -> addToDependencies(arrayType.elementType());
+          case ArrayTypeNode arrayType -> addToDependencies(arrayType.elemType());
           case FunctionTypeNode functionType -> {
             addToDependencies(functionType.resultType());
             functionType.paramTypes().forEach(this::addToDependencies);

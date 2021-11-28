@@ -91,7 +91,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_convert_from_nothing_algorithm_and_one_element_input_is_stable() {
+  public void hash_of_computation_with_convert_from_nothing_algorithm_and_one_elem_input_is_stable() {
     var algorithm = new ConvertAlgorithm(stringHT());
     var input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
@@ -107,7 +107,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_construct_algorithm_and_one_element_input_is_stable() {
+  public void hash_of_computation_with_construct_algorithm_and_one_elem_input_is_stable() {
     var algorithm = new ConstructAlgorithm(PERSON);
     var input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
@@ -115,7 +115,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_construct_algorithm_and_two_elements_input_is_stable() {
+  public void hash_of_computation_with_construct_algorithm_and_two_elems_input_is_stable() {
     var algorithm = new ConstructAlgorithm(PERSON);
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
@@ -123,7 +123,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_select_algorithm_and_one_element_input_is_stable() {
+  public void hash_of_computation_with_select_algorithm_and_one_elem_input_is_stable() {
     var algorithm = new SelectAlgorithm(intH(0), TestingTypesH.STRING);
     var input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))

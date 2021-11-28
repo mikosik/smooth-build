@@ -4,24 +4,24 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.collect.CountersMap;
 
 public final class ArrayTypeNode extends TypeNode {
-  private final TypeNode elementType;
+  private final TypeNode elemType;
 
-  public ArrayTypeNode(TypeNode elementType, Location location) {
-    super("[" + elementType.name() + "]", location);
-    this.elementType = elementType;
+  public ArrayTypeNode(TypeNode elemType, Location location) {
+    super("[" + elemType.name() + "]", location);
+    this.elemType = elemType;
   }
 
   @Override
   public boolean isPolytype() {
-    return elementType.isPolytype();
+    return elemType.isPolytype();
   }
 
   @Override
   public void countVariables(CountersMap<String> countersMap) {
-    elementType.countVariables(countersMap);
+    elemType.countVariables(countersMap);
   }
 
-  public TypeNode elementType() {
-    return elementType;
+  public TypeNode elemType() {
+    return elemType;
   }
 }

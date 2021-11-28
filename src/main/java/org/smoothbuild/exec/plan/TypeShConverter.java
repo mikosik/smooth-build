@@ -36,7 +36,7 @@ public class TypeShConverter {
       case StringTypeS s -> objFactory.stringT();
       case StructTypeS st -> objFactory.tupleType(map(st.fields(), isig -> visit(isig.type())));
       case VariableS v ->  objFactory.variable(v.name());
-      case ArrayTypeS a -> objFactory.arrayT(visit(a.element()));
+      case ArrayTypeS a -> objFactory.arrayT(visit(a.elem()));
       case FunctionTypeS f -> objFactory.defFuncT(visit(f.result()), map(f.params(), this::visit));
     };
   }

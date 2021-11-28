@@ -10,8 +10,8 @@ import com.google.common.collect.ImmutableSet;
 
 public class Sets {
   @SafeVarargs
-  public static <E> ImmutableSet<E> set(E... elements) {
-    return ImmutableSet.copyOf(elements);
+  public static <E> ImmutableSet<E> set(E... elems) {
+    return ImmutableSet.copyOf(elems);
   }
 
   public static <E, R> ImmutableSet<R> map(

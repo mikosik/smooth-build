@@ -75,8 +75,8 @@ public class ObjFactory {
 
   // Objects
 
-  public ArrayHBuilder arrayBuilder(TypeHV elementType) {
-    return objectHDb.arrayBuilder(elementType);
+  public ArrayHBuilder arrayBuilder(TypeHV elemType) {
+    return objectHDb.arrayBuilder(elemType);
   }
 
   public BlobH blob(DataWriter dataWriter) {

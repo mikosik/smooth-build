@@ -190,7 +190,7 @@ public class VisibilityTest extends TestingContext {
   @Nested
   class _cycle {
     @Nested
-    class one_element_cycle {
+    class one_elem_cycle {
       @Test
       public void value() {
         module("""
@@ -261,7 +261,7 @@ public class VisibilityTest extends TestingContext {
     }
 
     @Nested
-    class two_elements_cycle {
+    class two_elems_cycle {
       @Test
       public void value_value() {
         module("""
@@ -374,7 +374,7 @@ public class VisibilityTest extends TestingContext {
     }
 
     @Nested
-    class three_element_cycle {
+    class three_elem_cycle {
       @Test
       public void value_value_value() {
         module("""

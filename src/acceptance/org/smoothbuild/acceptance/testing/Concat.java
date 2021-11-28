@@ -8,11 +8,11 @@ import org.smoothbuild.plugin.NativeApi;
 public class Concat {
   public static ArrayH function(NativeApi nativeApi, ArrayH first, ArrayH second) {
     var factory = nativeApi.factory();
-    var elemType = ((ArrayTypeH) factory.typing().mergeUp(first.type(), second.type())).element();
+    var elemType = ((ArrayTypeH) factory.typing().mergeUp(first.type(), second.type())).elem();
     return factory
         .arrayBuilder(elemType)
-        .addAll(first.elements(ValueH.class))
-        .addAll(second.elements(ValueH.class))
+        .addAll(first.elems(ValueH.class))
+        .addAll(second.elems(ValueH.class))
         .build();
   }
 }

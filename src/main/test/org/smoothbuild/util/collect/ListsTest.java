@@ -28,26 +28,26 @@ public class ListsTest {
   @Nested
   class _list {
     @Test
-    public void with_no_elements(){
+    public void with_no_elems(){
       assertThat(list())
           .isEmpty();
     }
 
     @Test
-    public void with_one_element(){
+    public void with_one_elem(){
       assertThat(list("abc"))
           .containsExactly("abc");
     }
 
     @Test
-    public void with_two_elements(){
+    public void with_two_elems(){
       assertThat(list("abc", "def"))
           .containsExactly("abc", "def")
           .inOrder();
     }
 
     @Test
-    public void with_three_elements(){
+    public void with_three_elems(){
       assertThat(list("abc", "def", "ghi"))
           .containsExactly("abc", "def", "ghi")
           .inOrder();
@@ -60,8 +60,8 @@ public class ListsTest {
     class _single_first {
       @Test
       public void with_empty(){
-        assertThat(concat("element", new ArrayList<>()))
-            .containsExactly("element");
+        assertThat(concat("elem", new ArrayList<>()))
+            .containsExactly("elem");
       }
 
       @Test
@@ -80,7 +80,7 @@ public class ListsTest {
       }
 
       @Test
-      public void first_can_be_subtype_of_list_elements(){
+      public void first_can_be_subtype_of_list_elems(){
         Integer one = 1;
         Integer two = 2;
         List<Number> list = asList(two);
@@ -89,7 +89,7 @@ public class ListsTest {
       }
 
       @Test
-      public void list_element_type_can_be_subtype_of_first(){
+      public void list_elem_type_can_be_subtype_of_first(){
         Integer one = 1;
         Integer two = 2;
         List<Integer> list = asList(two);
@@ -102,8 +102,8 @@ public class ListsTest {
     class _single_last {
       @Test
       public void with_empty(){
-        assertThat(concat(new ArrayList<>(), "element"))
-            .containsExactly("element");
+        assertThat(concat(new ArrayList<>(), "elem"))
+            .containsExactly("elem");
       }
 
       @Test
@@ -122,7 +122,7 @@ public class ListsTest {
       }
 
       @Test
-      public void last_can_be_subtype_of_list_element_types(){
+      public void last_can_be_subtype_of_list_elem_types(){
         Integer one = 1;
         Integer two = 2;
         List<Number> list = asList(one);
@@ -131,7 +131,7 @@ public class ListsTest {
       }
 
       @Test
-      public void list_element_type_can_be_subtype_of_last_type(){
+      public void list_elem_type_can_be_subtype_of_last_type(){
         Integer one = 1;
         Integer two = 2;
         List<Integer> list = asList(one);
@@ -174,7 +174,7 @@ public class ListsTest {
       }
 
       @Test
-      public void first_can_be_subtype_of_list_elements(){
+      public void first_can_be_subtype_of_list_elems(){
         Integer one = 1;
         Integer two = 2;
         List<Number> first = asList(one);
@@ -185,7 +185,7 @@ public class ListsTest {
       }
 
       @Test
-      public void second_can_be_subtype_of_list_elements(){
+      public void second_can_be_subtype_of_list_elems(){
         Integer one = 1;
         Integer two = 2;
         List<Integer> first = asList(one);
@@ -206,7 +206,7 @@ public class ListsTest {
     }
 
     @Test
-    public void returns_without_first_element_when_skipping_one(){
+    public void returns_without_first_elem_when_skipping_one(){
       assertThat(skip(1, list("first", "second", "third")))
           .isEqualTo(list("second", "third"));
     }
@@ -246,7 +246,7 @@ public class ListsTest {
     }
 
     @Test
-    public void leaves_only_elements_matching_predicate(){
+    public void leaves_only_elems_matching_predicate(){
       assertThat(filter(asList("first", "second", "third"), s -> s.startsWith("s")))
           .containsExactly("second")
           .inOrder();
@@ -262,13 +262,13 @@ public class ListsTest {
     }
 
     @Test
-    public void returns_mapped_one_element(){
+    public void returns_mapped_one_elem(){
       assertThat(map(asList("abc"), String::toUpperCase))
           .containsExactly("ABC");
     }
 
     @Test
-    public void mapping_with_two_elements(){
+    public void mapping_with_two_elems(){
       assertThat(map(asList("abc", "def"), String::toUpperCase))
           .containsExactly("ABC", "DEF");
     }
@@ -283,13 +283,13 @@ public class ListsTest {
     }
 
     @Test
-    public void returns_mapped_one_element(){
+    public void returns_mapped_one_elem(){
       assertThat(mapM(asList("abc"), String::toUpperCase))
           .containsExactly("ABC");
     }
 
     @Test
-    public void mapping_with_two_elements(){
+    public void mapping_with_two_elems(){
       assertThat(mapM(asList("abc", "def"), String::toUpperCase))
           .containsExactly("ABC", "DEF");
     }
@@ -316,13 +316,13 @@ public class ListsTest {
     }
 
     @Test
-    public void lists_elements_are_zipped_together() {
+    public void lists_elems_are_zipped_together() {
       assertThat(zip(list("a", "b"), list("1", "2"), (String a, String b) -> a + b))
           .isEqualTo(list("a1", "b2"));
     }
 
     @Test
-    public void different_type_lists_elements_are_zipped_together() {
+    public void different_type_lists_elems_are_zipped_together() {
       assertThat(zip(list("a", "b"), list(1, 2), (String a, Integer b) -> a + b))
           .isEqualTo(list("a1", "b2"));
     }
@@ -399,7 +399,7 @@ public class ListsTest {
     }
 
     @Test
-    public void elements_dont_match_handler_is_called_when_elements_differ() {
+    public void elems_dont_match_handler_is_called_when_elems_differ() {
       assertCall(() ->
           allMatchOtherwise(
               list("aaa", "bbb"),
@@ -426,7 +426,7 @@ public class ListsTest {
     }
 
     @Test
-    public void returns_unchanged_list_when_it_has_elements(){
+    public void returns_unchanged_list_when_it_has_elems(){
       assertThat(sane(asList("abc", "def")))
           .containsExactly("abc", "def")
           .inOrder();
@@ -452,19 +452,19 @@ public class ListsTest {
       }
 
       @Test
-      public void one_element_list(){
+      public void one_elem_list(){
         assertThat(toCommaSeparatedString(asList(" one "), String::trim))
             .isEqualTo("one");
       }
 
       @Test
-      public void two_elements_list(){
+      public void two_elems_list(){
         assertThat(toCommaSeparatedString(asList(" one ", " two "), String::trim))
             .isEqualTo("one,two");
       }
 
       @Test
-      public void three_elements_list(){
+      public void three_elems_list(){
         assertThat(toCommaSeparatedString(asList(" one ", " two ", " three "), String::trim))
             .isEqualTo("one,two,three");
       }
@@ -479,19 +479,19 @@ public class ListsTest {
       }
 
       @Test
-      public void one_element_list(){
+      public void one_elem_list(){
         assertThat(toCommaSeparatedString(asList(1)))
             .isEqualTo("1");
       }
 
       @Test
-      public void two_elements_list(){
+      public void two_elems_list(){
         assertThat(toCommaSeparatedString(asList(1, 2)))
             .isEqualTo("1,2");
       }
 
       @Test
-      public void three_elements_list(){
+      public void three_elems_list(){
         assertThat(toCommaSeparatedString(asList(1, 2, 3)))
             .isEqualTo("1,2,3");
       }

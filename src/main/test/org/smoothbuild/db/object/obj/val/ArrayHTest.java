@@ -24,7 +24,7 @@ public class ArrayHTest extends TestingContext {
   public void empty_nothing_array_can_be_iterated_as_tuple() {
     ArrayH array = objectHDb().arrayBuilder(nothingHT())
         .build();
-    assertThat(array.elements(TupleH.class))
+    assertThat(array.elems(TupleH.class))
         .isEmpty();
   }
 
@@ -33,7 +33,7 @@ public class ArrayHTest extends TestingContext {
     ArrayH array = objectHDb().arrayBuilder(stringHT())
         .add(stringH("abc"))
         .build();
-    assertCall(() -> array.elements(TupleH.class))
+    assertCall(() -> array.elems(TupleH.class))
         .throwsException(new IllegalArgumentException(
             "[String] cannot be viewed as Iterable of " + TupleH.class.getCanonicalName() + "."));
   }
@@ -42,7 +42,7 @@ public class ArrayHTest extends TestingContext {
   public void empty_array_is_empty() {
     ArrayH array = objectHDb().arrayBuilder(stringHT())
         .build();
-    assertThat(array.elements(StringH.class))
+    assertThat(array.elems(StringH.class))
         .isEmpty();
   }
 
@@ -54,35 +54,35 @@ public class ArrayHTest extends TestingContext {
   }
 
   @Test
-  public void adding_element_with_wrong_type_is_forbidden() {
+  public void adding_elem_with_wrong_type_is_forbidden() {
     ArrayHBuilder arrayBuilder = objectHDb().arrayBuilder(stringHT());
     assertCall(() -> arrayBuilder.add(blobH(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
-  public void array_contains_added_element() {
+  public void array_contains_added_elem() {
     ArrayH array = objectHDb().arrayBuilder(stringHT())
         .add(stringH("abc"))
         .build();
-    assertThat(array.elements(StringH.class))
+    assertThat(array.elems(StringH.class))
         .containsExactly(stringH("abc"));
   }
 
   @Test
-  public void array_contains_added_element_via_add_all_method() {
+  public void array_contains_added_elem_via_add_all_method() {
     StringH str = stringH("abc");
     StringH str2 = stringH("def");
     ArrayH array = objectHDb().arrayBuilder(stringHT())
         .addAll(list(str, str2))
         .build();
-    assertThat(array.elements(StringH.class))
+    assertThat(array.elems(StringH.class))
         .containsExactly(str, str2)
         .inOrder();
   }
 
   @Test
-  public void array_contains_added_elements_in_order() {
+  public void array_contains_added_elems_in_order() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
     StringH str3 = stringH("ghi");
@@ -91,24 +91,24 @@ public class ArrayHTest extends TestingContext {
         .add(str2)
         .add(str3)
         .build();
-    assertThat(array.elements(StringH.class))
+    assertThat(array.elems(StringH.class))
         .containsExactly(str1, str2, str3)
         .inOrder();
   }
 
   @Test
-  public void adding_same_element_twice_builds_array_with_two_elements() {
+  public void adding_same_elem_twice_builds_array_with_two_elems() {
     StringH str = stringH("abc");
     ArrayH array = objectHDb().arrayBuilder(stringHT())
         .add(str)
         .add(str)
         .build();
-    assertThat(array.elements(StringH.class))
+    assertThat(array.elems(StringH.class))
         .containsExactly(str, str);
   }
 
   @Test
-  public void arrays_with_same_elements_have_same_hash() {
+  public void arrays_with_same_elems_have_same_hash() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
     ArrayH array = objectHDb().arrayBuilder(stringHT())
@@ -124,7 +124,7 @@ public class ArrayHTest extends TestingContext {
   }
 
   @Test
-  public void one_element_array_hash_is_different_than_its_element_hash() {
+  public void one_elem_array_hash_is_different_than_its_elem_hash() {
     StringH str = stringH("abc");
     ArrayH array = objectHDb().arrayBuilder(stringHT())
         .add(str)
@@ -134,7 +134,7 @@ public class ArrayHTest extends TestingContext {
   }
 
   @Test
-  public void arrays_with_same_elements_but_in_different_order_have_different_hashes() {
+  public void arrays_with_same_elems_but_in_different_order_have_different_hashes() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
     ArrayH array = objectHDb().arrayBuilder(stringHT())
@@ -150,7 +150,7 @@ public class ArrayHTest extends TestingContext {
   }
 
   @Test
-  public void array_with_one_more_element_have_different_hash() {
+  public void array_with_one_more_elem_have_different_hash() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
     ArrayH array = objectHDb().arrayBuilder(stringHT())
@@ -177,14 +177,14 @@ public class ArrayHTest extends TestingContext {
   }
 
   @Test
-  public void array_read_by_hash_contains_same_elements() {
+  public void array_read_by_hash_contains_same_elems() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
     ArrayH array = objectHDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
-    assertThat(((ArrayH) objectHDbOther().get(array.hash())).elements(StringH.class))
+    assertThat(((ArrayH) objectHDbOther().get(array.hash())).elems(StringH.class))
         .containsExactly(str1, str2)
         .inOrder();
   }
@@ -237,7 +237,7 @@ public class ArrayHTest extends TestingContext {
 
     @Test
     public void nothing_array_is_empty() {
-      assertThat(emptyArrayOf(nothingHT()).elements(ValueH.class))
+      assertThat(emptyArrayOf(nothingHT()).elems(ValueH.class))
           .isEmpty();
     }
 
@@ -251,7 +251,7 @@ public class ArrayHTest extends TestingContext {
     @Test
     public void nothing_array_read_by_hash_is_empty() {
       ArrayH array = emptyArrayOf(nothingHT());
-      assertThat(((ArrayH) objectHDbOther().get(array.hash())).elements(ValueH.class))
+      assertThat(((ArrayH) objectHDbOther().get(array.hash())).elems(ValueH.class))
           .isEmpty();
     }
 

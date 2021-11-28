@@ -189,7 +189,7 @@ public class InferenceTest extends TestingContext {
   @Nested
   class _inferring_array_literal_type {
     @Test
-    public void when_elements_have_the_same_type() {
+    public void when_elems_have_the_same_type() {
       String code = """
             result = [ "abc", "def" ];
             """;
@@ -199,7 +199,7 @@ public class InferenceTest extends TestingContext {
     }
 
     @Test
-    public void when_elements_have_convertible_types() {
+    public void when_elems_have_convertible_types() {
       String code = """
             @Native("impl.met")
             Nothing myNothing();
@@ -211,7 +211,7 @@ public class InferenceTest extends TestingContext {
     }
 
     @Test
-    public void when_elements_have_base_types_that_have_no_common_super_type() {
+    public void when_elems_have_base_types_that_have_no_common_super_type() {
       String code = """
             result = [
               "abc",
@@ -220,13 +220,13 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsWithError(3,"""
-                  Array elements at indexes 0 and 1 doesn't have common super type.
+                  Array elems at indexes 0 and 1 doesn't have common super type.
                   Element at index 0 type = `String`
                   Element at index 1 type = `Blob`""");
     }
 
     @Test
-    public void when_elements_have_function_types_that_have_no_common_super_type() {
+    public void when_elems_have_function_types_that_have_no_common_super_type() {
       String code = """
             String firstFunction() = "abc";
             Blob secondFunction() = 0x01;
@@ -237,7 +237,7 @@ public class InferenceTest extends TestingContext {
             """;
       module(code)
           .loadsWithError(5, """
-                  Array elements at indexes 0 and 1 doesn't have common super type.
+                  Array elems at indexes 0 and 1 doesn't have common super type.
                   Element at index 0 type = `String()`
                   Element at index 1 type = `Blob()`""");
     }
@@ -337,7 +337,7 @@ public class InferenceTest extends TestingContext {
     }
 
     @Nested
-    class _first_element_function_applied_to {
+    class _first_elem_function_applied_to {
       @Test
       public void nothing_array() {
         String code = """
@@ -390,7 +390,7 @@ public class InferenceTest extends TestingContext {
     }
 
     @Nested
-    class _single_element_array_function_applied_to {
+    class _single_elem_array_function_applied_to {
       @Test
       public void nothing() {
         String code = """

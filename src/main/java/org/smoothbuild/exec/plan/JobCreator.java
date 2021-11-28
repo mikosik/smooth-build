@@ -236,9 +236,9 @@ public class JobCreator {
   private Task orderEager(IndexedScope<Job> scope, BoundsMap<TypeHV> vars, OrderH orderH, Nal nal) {
     var type = orderH.evaluationType();
     var actualType = (ArrayTypeH) typing.mapVariables(type, vars, factory.lower());
-    var elementsJ = map(orderH.elements(), e -> eagerJobFor(scope, vars, e));
+    var elemsJ = map(orderH.elems(), e -> eagerJobFor(scope, vars, e));
     var info = new TaskInfo(LITERAL, nal);
-    return orderEager(actualType, elementsJ, info);
+    return orderEager(actualType, elemsJ, info);
   }
 
   public Task orderEager(ArrayTypeH typeHV, ImmutableList<Job> elemsJ, TaskInfo info) {

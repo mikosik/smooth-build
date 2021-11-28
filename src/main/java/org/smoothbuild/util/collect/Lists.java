@@ -18,21 +18,21 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class Lists {
   @SafeVarargs
-  public static <E> ImmutableList<E> list(E... elements) {
-    return ImmutableList.copyOf(elements);
+  public static <E> ImmutableList<E> list(E... elems) {
+    return ImmutableList.copyOf(elems);
   }
 
-  public static <R, S extends R, T extends R> ImmutableList<R> concat(S element, Iterable<T> list) {
+  public static <R, S extends R, T extends R> ImmutableList<R> concat(S elem, Iterable<T> list) {
     return ImmutableList.<R>builder()
-        .add(element)
+        .add(elem)
         .addAll(list)
         .build();
   }
 
-  public static <R, S extends R, T extends R> ImmutableList<R> concat(Iterable<S> list, T element) {
+  public static <R, S extends R, T extends R> ImmutableList<R> concat(Iterable<S> list, T elem) {
     return ImmutableList.<R>builder()
         .addAll(list)
-        .add(element)
+        .add(elem)
         .build();
   }
 
@@ -100,7 +100,7 @@ public class Lists {
       List<U> listB,
       BiFunction<T, U, Boolean> comparator,
       BiConsumer<Integer, Integer> differentSizeHandler,
-      Consumer<Integer> elementsDontMatchHandler) {
+      Consumer<Integer> elemsDontMatchHandler) {
     int sizeA = listA.size();
     int sizeB = listB.size();
     if (sizeA != sizeB) {
@@ -108,7 +108,7 @@ public class Lists {
     }
     for (int i = 0; i < listA.size(); i++) {
       if (!comparator.apply(listA.get(i), listB.get(i))) {
-        elementsDontMatchHandler.accept(i);
+        elemsDontMatchHandler.accept(i);
       }
     }
   }

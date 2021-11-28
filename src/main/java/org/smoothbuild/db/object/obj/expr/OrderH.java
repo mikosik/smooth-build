@@ -34,17 +34,17 @@ public class OrderH extends ExprH {
     return type().evaluationType();
   }
 
-  public ImmutableList<ObjectH> elements() {
-    var elements = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
-    var expectedElementType = type().evaluationType().element();
-    for (int i = 0; i < elements.size(); i++) {
-      TypeHV actualType = elements.get(i).evaluationType();
+  public ImmutableList<ObjectH> elems() {
+    var elems = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
+    var expectedElementType = type().evaluationType().elem();
+    for (int i = 0; i < elems.size(); i++) {
+      TypeHV actualType = elems.get(i).evaluationType();
       if (!Objects.equals(expectedElementType, actualType)) {
         throw new DecodeExprWrongEvaluationTypeOfComponentException(
-            hash(), type(), "elements[" + i + "]", expectedElementType, actualType);
+            hash(), type(), "elems[" + i + "]", expectedElementType, actualType);
       }
     }
-    return elements;
+    return elems;
   }
 
   @Override

@@ -337,7 +337,7 @@ public class NativeTest extends AcceptanceTestCase {
         }
 
         @Test
-        public void array_with_added_element_of_wrong_type() throws Exception {
+        public void array_with_added_elem_of_wrong_type() throws Exception {
           createNativeJar(AddElementOfWrongTypeToArray.class);
           createUserModule(format("""
             @Native("%s")

@@ -29,7 +29,7 @@ public class BinaryNameToClassFile {
       } catch (ZipException e) {
         throw new JunitException("Cannot read archive. Corrupted data?", e);
       }
-      for (TupleH classFile : fileArray.elements(TupleH.class)) {
+      for (TupleH classFile : fileArray.elems(TupleH.class)) {
         String classFilePath = (filePath(classFile)).jValue();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {

@@ -81,8 +81,8 @@ public class ObjectHDb {
 
   // methods for creating ValueH subclasses
 
-  public ArrayHBuilder arrayBuilder(TypeHV elementType) {
-    return new ArrayHBuilder(typeHDb.array(elementType), this);
+  public ArrayHBuilder arrayBuilder(TypeHV elemType) {
+    return new ArrayHBuilder(typeHDb.array(elemType), this);
   }
 
   public BlobHBuilder blobBuilder() {
@@ -150,8 +150,8 @@ public class ObjectHDb {
     return mapFunction;
   }
 
-  public OrderH order(ImmutableList<ObjectH> elements) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elements));
+  public OrderH order(ImmutableList<ObjectH> elems) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elems));
   }
 
   public RefH ref(BigInteger value, TypeHV evaluationType) {
@@ -194,8 +194,8 @@ public class ObjectHDb {
 
   // methods for creating Val Obj-s
 
-  public ArrayH newArray(ArrayTypeH type, List<ValueH> elements) throws HashedDbException {
-    var data = writeArrayData(elements);
+  public ArrayH newArray(ArrayTypeH type, List<ValueH> elems) throws HashedDbException {
+    var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -296,16 +296,16 @@ public class ObjectHDb {
     return type.newObj(root, this);
   }
 
-  private OrderH newOrder(ImmutableList<ObjectH> elements) throws HashedDbException {
-    TypeHV elementType = elementType(elements);
-    var type = typeHDb.order(elementType);
-    var data = writeOrderData(elements);
+  private OrderH newOrder(ImmutableList<ObjectH> elems) throws HashedDbException {
+    TypeHV elemType = elemType(elems);
+    var type = typeHDb.order(elemType);
+    var data = writeOrderData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private TypeHV elementType(ImmutableList<ObjectH> elements) {
-    Optional<TypeHV> elementType = elements.stream()
+  private TypeHV elemType(ImmutableList<ObjectH> elems) {
+    Optional<TypeHV> elemType = elems.stream()
         .map(ObjectH::evaluationType)
         .reduce((type1, type2) -> {
           if (type1.equals(type2)) {
@@ -315,7 +315,7 @@ public class ObjectHDb {
                 + type1.name() + " != " + type2.name() + ".");
           }
         });
-    TypeH type = elementType.orElse(typeHDb.nothing());
+    TypeH type = elemType.orElse(typeHDb.nothing());
     if (type instanceof TypeHV typeHV) {
       return typeHV;
     } else {
@@ -384,8 +384,8 @@ public class ObjectHDb {
     return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash(), isPure.hash());
   }
 
-  private Hash writeOrderData(ImmutableList<ObjectH> elements) throws HashedDbException {
-    return writeSequence(elements);
+  private Hash writeOrderData(ImmutableList<ObjectH> elems) throws HashedDbException {
+    return writeSequence(elems);
   }
 
   private Hash writeRefData(BigInteger value) throws HashedDbException {
@@ -398,8 +398,8 @@ public class ObjectHDb {
 
   // methods for writing data of Val-s
 
-  private Hash writeArrayData(List<ValueH> elements) throws HashedDbException {
-    return writeSequence(elements);
+  private Hash writeArrayData(List<ValueH> elems) throws HashedDbException {
+    return writeSequence(elems);
   }
 
   private Hash writeBoolData(boolean value) throws HashedDbException {

@@ -34,7 +34,7 @@ public class Typing<T extends Type> {
     if (type.equals(inner)) {
       return true;
     } else if (type instanceof ArrayType arrayType) {
-      return contains((T) arrayType.element(), inner);
+      return contains((T) arrayType.elem(), inner);
     } else if (type instanceof FunctionType functionType) {
         return contains((T) functionType.result(), inner)
             || functionType.params().stream().anyMatch(t -> contains((T) t, inner));
@@ -75,7 +75,7 @@ public class Typing<T extends Type> {
       InequalFunction<T> isInequal) {
     if (typeA instanceof ArrayType arrayA) {
       if (that instanceof ArrayType arrayB) {
-        return isInequal.apply(arrayA.element(), arrayB.element(), side);
+        return isInequal.apply(arrayA.elem(), arrayB.elem(), side);
       }
     } else if (typeA instanceof FunctionType functionA) {
       if (that instanceof FunctionType functionB) {
@@ -134,9 +134,9 @@ public class Typing<T extends Type> {
       result.merge(variable, bounded, this::merge);
     } else if (typeA instanceof ArrayType arrayA) {
       if (typeB.equals(side.edge())) {
-        inferImpl((T) arrayA.element(), side.edge(), side, result);
+        inferImpl((T) arrayA.elem(), side.edge(), side, result);
       } else if (typeB instanceof ArrayType arrayB) {
-        inferImpl((T) arrayA.element(), (T) arrayB.element(), side, result);
+        inferImpl((T) arrayA.elem(), (T) arrayB.elem(), side, result);
       }
     } else if (typeA instanceof FunctionType functionA) {
       if (typeB.equals(side.edge())) {
@@ -166,7 +166,7 @@ public class Typing<T extends Type> {
           return bounded.bounds().get(side);
         }
       } else if (type instanceof ArrayType arrayType) {
-        T elemTypeM = mapVariables((T) arrayType.element(), boundsMap, side);
+        T elemTypeM = mapVariables((T) arrayType.elem(), boundsMap, side);
         return (T) createArrayType(arrayType, elemTypeM);
       } else if (type instanceof FunctionType functionType){
         var resultTypeM = mapVariables((T) functionType.result(), boundsMap, side);
@@ -197,8 +197,8 @@ public class Typing<T extends Type> {
       return typeA;
     } else if (typeA instanceof ArrayType arrayA) {
       if (typeB instanceof ArrayType arrayB) {
-        var elemA = (T) arrayA.element();
-        var elemB = (T) arrayB.element();
+        var elemA = (T) arrayA.elem();
+        var elemB = (T) arrayB.elem();
         var elemM = merge(elemA, elemB, direction);
         if (elemA == elemM) {
           return typeA;
@@ -238,7 +238,7 @@ public class Typing<T extends Type> {
   }
 
   private ArrayType createArrayType(ArrayType type, T elemType) {
-    if (type.element() == elemType) {
+    if (type.elem() == elemType) {
       return type;
     } else {
       return factory.array(elemType);

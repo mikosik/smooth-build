@@ -111,7 +111,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void reading_elements_from_not_stored_object_throws_exception() {
+    public void reading_elems_from_not_stored_object_throws_exception() {
       Hash objHash = Hash.of(33);
       assertCall(() -> objectHDb().get(objHash))
           .throwsException(new NoSuchObjException(objHash))
@@ -154,7 +154,7 @@ public class ObjectCorruptedHTest extends TestingContext {
                   )
               ));
       List<String> strings = ((ArrayH) objectHDb().get(objHash))
-          .elements(StringH.class)
+          .elems(StringH.class)
           .stream()
           .map(StringH::jValue)
           .collect(toList());
@@ -173,7 +173,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       obj_root_with_two_data_hashes(
           arrayHT(intHT()),
           hashedDb().writeSequence(),
-          (Hash objHash) -> ((ArrayH) objectHDb().get(objHash)).elements(IntH.class)
+          (Hash objHash) -> ((ArrayH) objectHDb().get(objHash)).elems(IntH.class)
       );
     }
 
@@ -181,7 +181,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           arrayHT(intHT()),
-          (Hash objHash) -> ((ArrayH) objectHDb().get(objHash)).elements(IntH.class));
+          (Hash objHash) -> ((ArrayH) objectHDb().get(objHash)).elems(IntH.class));
     }
 
     @ParameterizedTest
@@ -195,14 +195,14 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(type),
               notHashOfSequence
           );
-      assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elements(ValueH.class))
+      assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elems(ValueH.class))
           .throwsException(new DecodeObjNodeException(objHash, type, DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_sequence_element_pointing_nowhere() throws Exception {
+    public void with_sequence_elem_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash dataHash = hash(
           nowhere
@@ -212,13 +212,13 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(type),
               dataHash);
-      assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elements(StringH.class))
+      assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elems(StringH.class))
           .throwsException(new DecodeObjNodeException(objHash, type, DATA_PATH + "[0]"))
           .withCause(new NoSuchObjException(nowhere));
     }
 
     @Test
-    public void with_one_element_of_wrong_types() throws Exception {
+    public void with_one_elem_of_wrong_types() throws Exception {
       ArrayTypeH type = arrayHT(stringHT());
       Hash objHash =
           hash(
@@ -233,13 +233,13 @@ public class ObjectCorruptedHTest extends TestingContext {
                       hash(true)
                   )
               ));
-      assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elements(StringH.class))
+      assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elems(StringH.class))
           .throwsException(new UnexpectedObjNodeException(
               objHash, type, DATA_PATH, 1, stringHT(), boolHT()));
     }
 
     @Test
-    public void with_one_element_being_expr() throws Exception {
+    public void with_one_elem_being_expr() throws Exception {
       ArrayTypeH type = arrayHT(stringHT());
       Hash objHash =
           hash(
@@ -251,7 +251,7 @@ public class ObjectCorruptedHTest extends TestingContext {
                   ),
                   hash(refH(1))
               ));
-      assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elements(StringH.class))
+      assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elems(StringH.class))
           .throwsException(new UnexpectedObjNodeException(
               objHash, type, DATA_PATH, 1, ValueH.class, RefH.class));
     }
@@ -426,7 +426,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_one_element() throws Exception {
+    public void data_is_sequence_with_one_elem() throws Exception {
       var function = intH(0);
       Hash dataHash = hash(
           hash(function)
@@ -441,7 +441,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_three_elements() throws Exception {
+    public void data_is_sequence_with_three_elems() throws Exception {
       var function = intH(0);
       var arguments = constructH(list(stringH(), intH()));
       Hash dataHash = hash(
@@ -630,8 +630,8 @@ public class ObjectCorruptedHTest extends TestingContext {
                   hash(expr1),
                   hash(expr2)
               ));
-      var elements = ((OrderH) objectHDb().get(objHash)).elements();
-      assertThat(elements)
+      var elems = ((OrderH) objectHDb().get(objHash)).elems();
+      assertThat(elems)
           .containsExactly(expr1, expr2)
           .inOrder();
     }
@@ -652,7 +652,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       obj_root_with_two_data_hashes(
           orderHT(),
           dataHash,
-          (Hash objHash) -> ((OrderH) objectHDb().get(objHash)).elements()
+          (Hash objHash) -> ((OrderH) objectHDb().get(objHash)).elems()
       );
     }
 
@@ -660,7 +660,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           orderHT(),
-          (Hash objHash) -> ((OrderH) objectHDb().get(objHash)).elements());
+          (Hash objHash) -> ((OrderH) objectHDb().get(objHash)).elems());
     }
 
     @ParameterizedTest
@@ -673,14 +673,14 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(orderHT()),
               notHashOfSequence
           );
-      assertCall(() -> ((OrderH) objectHDb().get(objHash)).elements())
+      assertCall(() -> ((OrderH) objectHDb().get(objHash)).elems())
           .throwsException(new DecodeObjNodeException(objHash, orderHT(), DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_sequence_element_pointing_nowhere() throws Exception {
+    public void with_sequence_elem_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash objHash =
           hash(
@@ -689,13 +689,13 @@ public class ObjectCorruptedHTest extends TestingContext {
                   nowhere
               )
           );
-      assertCall(() -> ((OrderH) objectHDb().get(objHash)).elements())
+      assertCall(() -> ((OrderH) objectHDb().get(objHash)).elems())
           .throwsException(new DecodeObjNodeException(objHash, orderHT(), DATA_PATH + "[0]"))
           .withCause(new NoSuchObjException(nowhere));
     }
 
     @Test
-    public void evaluation_type_element_is_different_than_evaluation_type_of_one_of_elements()
+    public void evaluation_type_elem_is_different_than_evaluation_type_of_one_of_elems()
         throws Exception {
       var expr1 = intH();
       var expr2 = stringH();
@@ -707,10 +707,10 @@ public class ObjectCorruptedHTest extends TestingContext {
                   hash(expr1),
                   hash(expr2)
               ));
-      assertCall(() -> ((OrderH) objectHDb().get(objHash)).elements())
+      assertCall(() -> ((OrderH) objectHDb().get(objHash)).elems())
           .throwsException(
               new DecodeExprWrongEvaluationTypeOfComponentException(
-                  objHash, type, "elements[1]", intHT(), stringHT()));
+                  objHash, type, "elems[1]", intHT(), stringHT()));
     }
   }
 
@@ -883,7 +883,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_one_element() throws Exception {
+    public void data_is_sequence_with_one_elem() throws Exception {
       var expr = intH(123);
       var dataHash = hash(
           hash(expr)
@@ -899,7 +899,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_three_elements() throws Exception {
+    public void data_is_sequence_with_three_elems() throws Exception {
       var index = intH(2);
       var expr = intH(123);
       var dataHash = hash(
@@ -1090,7 +1090,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_two_element() throws Exception {
+    public void data_is_sequence_with_two_elem() throws Exception {
       BlobH jarFile = blobH();
       StringH classBinaryName = stringH();
       Hash dataHash = hash(
@@ -1109,7 +1109,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_four_elements() throws Exception {
+    public void data_is_sequence_with_four_elems() throws Exception {
       BlobH jarFile = blobH();
       StringH classBinaryName = stringH();
       BoolH isPure = boolH(true);
@@ -1307,7 +1307,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void with_sequence_element_pointing_nowhere() throws Exception {
+    public void with_sequence_elem_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash dataHash = hash(
           nowhere,
@@ -1324,7 +1324,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void with_too_few_elements() throws Exception {
+    public void with_too_few_elems() throws Exception {
       Hash dataHash =
           hash(
               hash(stringH("John")));
@@ -1338,7 +1338,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void with_too_many_elements() throws Exception {
+    public void with_too_many_elems() throws Exception {
       Hash dataHash =
           hash(
               hash(stringH("John")),
@@ -1354,7 +1354,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void with_element_of_wrong_type() throws Exception {
+    public void with_elem_of_wrong_type() throws Exception {
       Hash objHash =
           hash(
               hash(personHT()),
@@ -1368,7 +1368,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void with_element_being_expr() throws Exception {
+    public void with_elem_being_expr() throws Exception {
       Hash objHash =
           hash(
               hash(personHT()),

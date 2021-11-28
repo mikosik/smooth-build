@@ -14,7 +14,7 @@ public class IndexedScopeTest {
   @Nested
   class _get_by_index {
     @Test
-    public void returns_element_from_inner_scope_when_index_lower_or_equal_inner_scope_size() {
+    public void returns_elem_from_inner_scope_when_index_lower_or_equal_inner_scope_size() {
       innerScope = new IndexedScope<>(list("0", "1"));
       assertThat(innerScope.get(0))
           .isEqualTo("0");
@@ -23,7 +23,7 @@ public class IndexedScopeTest {
     }
 
     @Test
-    public void returns_element_from_outer_scope_when_index_greater_than_inner_scope_size() {
+    public void returns_elem_from_outer_scope_when_index_greater_than_inner_scope_size() {
       outerScope = new IndexedScope<>(list("1", "2"));
       innerScope = new IndexedScope<>(outerScope, list("0"));
       assertThat(innerScope.get(2))

@@ -6,24 +6,24 @@ import com.google.common.collect.ImmutableList;
 
 public class IndexedScope<E> {
   private final IndexedScope<E> outerScope;
-  private final ImmutableList<E> elements;
+  private final ImmutableList<E> elems;
 
-  public IndexedScope(ImmutableList<E> elements) {
-    this(null, elements);
+  public IndexedScope(ImmutableList<E> elems) {
+    this(null, elems);
   }
 
-  public IndexedScope(IndexedScope<E> outerScope, ImmutableList<E> elements) {
+  public IndexedScope(IndexedScope<E> outerScope, ImmutableList<E> elems) {
     this.outerScope = outerScope;
-    this.elements = elements;
+    this.elems = elems;
   }
 
   public E get(int index) {
-    if (index < elements.size()) {
-      return elements.get(index);
+    if (index < elems.size()) {
+      return elems.get(index);
     } else if (outerScope == null) {
       throw new IndexOutOfBoundsException(index);
     } else {
-      return outerScope.get(index - elements.size());
+      return outerScope.get(index - elems.size());
     }
   }
 
@@ -35,7 +35,7 @@ public class IndexedScope<E> {
   }
 
   private String prettyPrint() {
-    return elements.stream()
+    return elems.stream()
         .map(s -> indent() + s)
         .collect(joining("\n"));
   }

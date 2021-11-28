@@ -157,7 +157,7 @@ public class TypeInferrer {
           return Optional.of(factory.variable(type.name()));
         }
         return switch (type) {
-          case ArrayTypeNode array -> createType(array.elementType()).map(factory::array);
+          case ArrayTypeNode array -> createType(array.elemType()).map(factory::array);
           case FunctionTypeNode function -> {
             Optional<TypeS> result = createType(function.resultType());
             var params = Optionals.pullUp(map(function.paramTypes(), this::createType));
@@ -224,7 +224,7 @@ public class TypeInferrer {
       }
 
       private Optional<TypeS> findArrayType(ArrayNode array) {
-        List<ExprNode> expressions = array.elements();
+        List<ExprNode> expressions = array.elems();
         if (expressions.isEmpty()) {
           return Optional.of(factory.array(factory.nothing()));
         }
@@ -243,7 +243,7 @@ public class TypeInferrer {
           type = typing.mergeUp(type, elemType.get());
           if (typing.contains(type, factory.any())) {
             logBuffer.log(parseError(elem.location(),
-                "Array elements at indexes 0 and " + i + " doesn't have common super type."
+                "Array elems at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
                 + "\nElement at index " + i + " type = " + elemType.get().q()));
             return empty();

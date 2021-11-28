@@ -48,10 +48,10 @@ public class MapJob extends AbstractJob {
   private void onArrayCompleted(ArrayH array, FunctionH functionH, Worker worker,
       Consumer<ValueH> result) {
     var outputArrayTypeH = (ArrayTypeH) type();
-    var outputElemType = outputArrayTypeH.element();
+    var outputElemType = outputArrayTypeH.elem();
     var funcJob = getJob(functionH);
     var mapElemJobs = map(
-        array.elements(ValueH.class),
+        array.elems(ValueH.class),
         o -> mapElementJob(outputElemType, funcJob, o));
     var info = new TaskInfo(CALL, MAP_TASK_NAME, location());
     jobCreator.orderEager(outputArrayTypeH, mapElemJobs, info)
@@ -64,13 +64,13 @@ public class MapJob extends AbstractJob {
     return new DummyJob(funcJob.type(), function, funcJob);
   }
 
-  private Job mapElementJob(TypeHV elemType, Job functionJob, ValueH element) {
-    var elemJob = elemJob(elemType, element, arrayJob().location());
+  private Job mapElementJob(TypeHV elemType, Job functionJob, ValueH elem) {
+    var elemJob = elemJob(elemType, elem, arrayJob().location());
     return jobCreator.callEagerJob(scope, functionJob, list(elemJob), functionJob.location());
   }
 
-  private Job elemJob(TypeHV elemType, ValueH element, Location location) {
-    return new DummyJob(elemType, element, new NalImpl("element-to-map", location));
+  private Job elemJob(TypeHV elemType, ValueH elem, Location location) {
+    return new DummyJob(elemType, elem, new NalImpl("elem-to-map", location));
   }
 
   private Job arrayJob() {

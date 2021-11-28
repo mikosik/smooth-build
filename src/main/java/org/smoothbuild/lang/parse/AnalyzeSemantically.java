@@ -124,7 +124,7 @@ public class AnalyzeSemantically {
 
       private void assertTypeIsDefined(TypeNode type) {
         if (type instanceof ArrayTypeNode array) {
-          assertTypeIsDefined(array.elementType());
+          assertTypeIsDefined(array.elemType());
         } else if (type instanceof FunctionTypeNode function) {
           assertTypeIsDefined(function.resultType());
           function.paramTypes().forEach(this::assertTypeIsDefined);

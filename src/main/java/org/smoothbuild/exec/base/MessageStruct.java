@@ -18,7 +18,7 @@ public class MessageStruct {
   private static final int SEVERITY_INDEX = 1;
 
   public static boolean containsErrors(ArrayH messages) {
-    return messages.elements(TupleH.class)
+    return messages.elems(TupleH.class)
         .stream()
         .anyMatch(m -> severity(m).equals(ERROR.name()));
   }
@@ -28,7 +28,7 @@ public class MessageStruct {
   }
 
   public static boolean isEmpty(ArrayH messages) {
-    return !messages.elements(TupleH.class).iterator().hasNext();
+    return !messages.elems(TupleH.class).iterator().hasNext();
   }
 
   public static Level level(ObjectH message) {

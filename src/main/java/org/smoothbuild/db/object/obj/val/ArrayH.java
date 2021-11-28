@@ -23,40 +23,40 @@ public class ArrayH extends ValueH {
     return (ArrayTypeH) super.type();
   }
 
-  public <T extends ValueH> ImmutableList<T> elements(Class<T> elementJType) {
-    assertIsIterableAs(elementJType);
-    var elements = elementObjs();
-    return checkTypeOfSequenceObjs(elements, type().element());
+  public <T extends ValueH> ImmutableList<T> elems(Class<T> elemJType) {
+    assertIsIterableAs(elemJType);
+    var elems = elemObjs();
+    return checkTypeOfSequenceObjs(elems, type().elem());
   }
 
-  private ImmutableList<ValueH> elementObjs() {
+  private ImmutableList<ValueH> elemObjs() {
     return readSequenceObjs(DATA_PATH, dataHash(), ValueH.class);
   }
 
   private <T extends ValueH> void assertIsIterableAs(Class<T> clazz) {
-    TypeH element = this.type().element();
-    if (!(element.isNothing() || clazz.isAssignableFrom(element.jType()))) {
+    TypeH elem = this.type().elem();
+    if (!(elem.isNothing() || clazz.isAssignableFrom(elem.jType()))) {
       throw new IllegalArgumentException(this.type().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
     }
   }
 
   protected <T> ImmutableList<T> checkTypeOfSequenceObjs(
-      ImmutableList<ValueH> elements, TypeHV expectedElementType) {
-    for (int i = 0; i < elements.size(); i++) {
-      var elementType = elements.get(i).type();
-      if (!(objectDb().typing().isAssignable(expectedElementType, elementType))) {
+      ImmutableList<ValueH> elems, TypeHV expectedElementType) {
+    for (int i = 0; i < elems.size(); i++) {
+      var elemType = elems.get(i).type();
+      if (!(objectDb().typing().isAssignable(expectedElementType, elemType))) {
         throw new UnexpectedObjNodeException(hash(), this.type(), DATA_PATH, i,
-            expectedElementType, elementType);
+            expectedElementType, elemType);
       }
     }
     @SuppressWarnings("unchecked")
-    ImmutableList<T> result = (ImmutableList<T>) elements;
+    ImmutableList<T> result = (ImmutableList<T>) elems;
     return result;
   }
 
   @Override
   public String valueToString() {
-    return "[" + sequenceToString(elementObjs()) + ']';
+    return "[" + sequenceToString(elemObjs()) + ']';
   }
 }

@@ -58,15 +58,15 @@ public class ArtifactSaver {
   private Path saveArray(ArrayType arrayType, Path artifactPath,
       ArrayH array) throws IOException, DuplicatedPathsException {
     fileSystem.createDir(artifactPath);
-    Type elemType = arrayType.element();
+    Type elemType = arrayType.elem();
     if (elemType instanceof ArrayType elemArrayType) {
       int i = 0;
-      for (ArrayH element : array.elements(ArrayH.class)) {
-        saveArray(elemArrayType, artifactPath.appendPart(Integer.toString(i)), element);
+      for (ArrayH elem : array.elems(ArrayH.class)) {
+        saveArray(elemArrayType, artifactPath.appendPart(Integer.toString(i)), elem);
         i++;
       }
     } else if (elemType.name().equals(FileStruct.NAME)) {
-      saveFileArray(artifactPath, array.elements(TupleH.class));
+      saveFileArray(artifactPath, array.elems(TupleH.class));
     } else {
       saveObjectArray(artifactPath, array);
     }
@@ -75,7 +75,7 @@ public class ArtifactSaver {
 
   private void saveObjectArray(Path artifactPath, ArrayH array) throws IOException {
     int i = 0;
-    for (ValueH val : array.elements(ValueH.class)) {
+    for (ValueH val : array.elems(ValueH.class)) {
       Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       Path targetPath = targetPath(val);
       fileSystem.createLink(sourcePath, targetPath);

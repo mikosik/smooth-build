@@ -34,7 +34,7 @@ public class PlanCommandTest {
     @Test
     public void defined_function_call_with_argument() throws Exception {
       createUserModule("""
-              myFunction(String element) = element;
+              myFunction(String elem) = elem;
               result = myFunction("abc");
               """);
       runSmoothPlan("result");

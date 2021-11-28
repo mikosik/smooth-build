@@ -134,8 +134,8 @@ public class TopEvaluableLoader {
 
     private ExprS createArrayLiteral(ArrayNode array) {
       var type = (ArrayTypeS) array.type().get();
-      ImmutableList<ExprS> elements = map(array.elements(), this::createExpression);
-      return new OrderS(type, elements, array.location());
+      ImmutableList<ExprS> elems = map(array.elems(), this::createExpression);
+      return new OrderS(type, elems, array.location());
     }
 
     private ExprS createCall(CallNode call) {

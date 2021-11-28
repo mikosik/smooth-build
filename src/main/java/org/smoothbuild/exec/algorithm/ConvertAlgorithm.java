@@ -49,10 +49,10 @@ public class ConvertAlgorithm extends Algorithm {
   }
 
   private static ArrayH convertArray(TypeH destinationType, ArrayH array, NativeApi nativeApi) {
-    TypeHV elementType = ((ArrayTypeH) destinationType).element();
-    ArrayHBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elementType);
-    for (ValueH element : array.elements(ValueH.class)) {
-      arrayBuilder.add(convert(elementType, element, nativeApi));
+    TypeHV elemType = ((ArrayTypeH) destinationType).elem();
+    ArrayHBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elemType);
+    for (ValueH elem : array.elems(ValueH.class)) {
+      arrayBuilder.add(convert(elemType, elem, nativeApi));
     }
     return arrayBuilder.build();
   }

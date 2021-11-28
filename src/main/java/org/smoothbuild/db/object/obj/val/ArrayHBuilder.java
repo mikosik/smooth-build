@@ -13,12 +13,12 @@ import org.smoothbuild.db.object.type.val.ArrayTypeH;
 public class ArrayHBuilder {
   private final ArrayTypeH type;
   private final ObjectHDb objectHDb;
-  private final List<ValueH> elements;
+  private final List<ValueH> elems;
 
   public ArrayHBuilder(ArrayTypeH type, ObjectHDb objectHDb) {
     this.type = type;
     this.objectHDb = objectHDb;
-    this.elements = new ArrayList<>();
+    this.elems = new ArrayList<>();
   }
 
   public ArrayHBuilder addAll(Iterable<? extends ValueH> objs) {
@@ -27,21 +27,21 @@ public class ArrayHBuilder {
   }
 
   public ArrayHBuilder add(ValueH elem) {
-    if (!objectHDb.typing().isAssignable(type.element(), elem.type())) {
-      throw new IllegalArgumentException("Element type must be " + type.element().name()
+    if (!objectHDb.typing().isAssignable(type.elem(), elem.type())) {
+      throw new IllegalArgumentException("Element type must be " + type.elem().name()
           + " but was " + elem.type().name() + ".");
     }
-    Class<?> required = type.element().jType();
+    Class<?> required = type.elem().jType();
     if (!required.equals(elem.getClass())) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "
           + elem.getClass().getCanonicalName() + ".");
     }
-    this.elements.add(elem);
+    this.elems.add(elem);
     return this;
   }
 
   public ArrayH build() {
-    return wrapHashedDbExceptionAsObjectDbException(() -> objectHDb.newArray(type, elements));
+    return wrapHashedDbExceptionAsObjectDbException(() -> objectHDb.newArray(type, elems));
   }
 }

@@ -35,7 +35,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void actual_array_type_can_be_inferred_from_arguments_and_elements_are_converted()
+  public void actual_array_type_can_be_inferred_from_arguments_and_elems_are_converted()
       throws Exception {
     createUserModule("""
             pair(A first, A second) = [ first, second ];
@@ -136,15 +136,15 @@ public class InferenceTest extends AcceptanceTestCase {
         .isEqualTo(list(list("aaa")));
   }
 
-  // testAppend([A] array, a element)
+  // testAppend([A] array, a elem)
 
   @Test
   public void infer_actual_type_of_params_in_append_function_0() throws Exception {
     createNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")
-            [A] testAppend([A] array, A element);
-            result = testAppend(array = [], element = "bbb");
+            [A] testAppend([A] array, A elem);
+            result = testAppend(array = [], elem = "bbb");
             """, Append.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -157,8 +157,8 @@ public class InferenceTest extends AcceptanceTestCase {
     createNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")
-            [A] testAppend([A] array, A element);
-            result = testAppend(array = [ "aaa" ], element = "bbb");
+            [A] testAppend([A] array, A elem);
+            result = testAppend(array = [ "aaa" ], elem = "bbb");
             """, Append.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -172,7 +172,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")
-            [A] testAppend([A] array, A element);
+            [A] testAppend([A] array, A elem);
             StringStruct {
               String value
             }

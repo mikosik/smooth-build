@@ -62,17 +62,17 @@ public class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public void addChild(MemoryElement element) {
-    Path elementName = element.name();
-    if (map.containsKey(elementName)) {
-      throw new IllegalStateException("Dir already contains child with name '" + elementName
+  public void addChild(MemoryElement elem) {
+    Path elemName = elem.name();
+    if (map.containsKey(elemName)) {
+      throw new IllegalStateException("Dir already contains child with name '" + elemName
           + "'.");
     }
-    map.put(elementName, element);
+    map.put(elemName, elem);
   }
 
-  public void removeChild(MemoryElement element) {
-    map.remove(element.name());
+  public void removeChild(MemoryElement elem) {
+    map.remove(elem.name());
   }
 
   public void removeAllChildren() {

@@ -151,8 +151,8 @@ public class TypeHDb implements TypeFactoryH {
   }
 
   @Override
-  public ArrayTypeH array(TypeHV elementType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newArray(elementType));
+  public ArrayTypeH array(TypeHV elemType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newArray(elemType));
   }
 
   public BlobTypeH blob() {
@@ -221,8 +221,8 @@ public class TypeHDb implements TypeFactoryH {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(evaluationType));
   }
 
-  public OrderTypeH order(TypeHV elementType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elementType));
+  public OrderTypeH order(TypeHV elemType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elemType));
   }
 
   public RefTypeH ref(TypeHV evaluationType) {
@@ -373,13 +373,13 @@ public class TypeHDb implements TypeFactoryH {
 
   // methods for creating Val types
 
-  private ArrayTypeH newArray(TypeHV elementType) throws HashedDbException {
-    var rootHash = writeArrayRoot(elementType);
-    return newArray(rootHash, elementType);
+  private ArrayTypeH newArray(TypeHV elemType) throws HashedDbException {
+    var rootHash = writeArrayRoot(elemType);
+    return newArray(rootHash, elemType);
   }
 
-  private ArrayTypeH newArray(Hash rootHash, TypeHV elementType) {
-    return cache(new ArrayTypeH(rootHash, elementType));
+  private ArrayTypeH newArray(Hash rootHash, TypeHV elemType) {
+    return cache(new ArrayTypeH(rootHash, elemType));
   }
 
   private <T extends FunctionTypeH> T newFunction(
@@ -431,8 +431,8 @@ public class TypeHDb implements TypeFactoryH {
     return cache(new ConstructTypeH(rootHash, evaluationType));
   }
 
-  private OrderTypeH newOrder(TypeHV elementType) throws HashedDbException {
-    var evaluationType = array(elementType);
+  private OrderTypeH newOrder(TypeHV elemType) throws HashedDbException {
+    var evaluationType = array(elemType);
     var rootHash = writeExprRoot(ORDER, evaluationType);
     return newOrder(rootHash, evaluationType);
   }
@@ -467,8 +467,8 @@ public class TypeHDb implements TypeFactoryH {
 
   // Methods for writing Val type root
 
-  private Hash writeArrayRoot(TypeH elementType) throws HashedDbException {
-    return writeNonBaseRoot(ARRAY, elementType.hash());
+  private Hash writeArrayRoot(TypeH elemType) throws HashedDbException {
+    return writeNonBaseRoot(ARRAY, elemType.hash());
   }
 
   private Hash writeFunctionRoot(FunctionKind<?> kind, TypeHV res, TupleTypeH params)

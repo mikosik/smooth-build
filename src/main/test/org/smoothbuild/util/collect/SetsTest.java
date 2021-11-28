@@ -14,25 +14,25 @@ public class SetsTest {
   @Nested
   class create {
     @Test
-    public void set_with_no_elements() {
+    public void set_with_no_elems() {
       assertThat(set())
           .isEmpty();
     }
 
     @Test
-    public void set_with_one_element() {
+    public void set_with_one_elem() {
       assertThat(set("abc"))
           .containsExactly("abc");
     }
 
     @Test
-    public void set_with_two_elements() {
+    public void set_with_two_elems() {
       assertThat(set("abc", "def"))
           .containsExactly("abc", "def");
     }
 
     @Test
-    public void set_with_three_elements() {
+    public void set_with_three_elems() {
       assertThat(set("abc", "def", "ghi"))
           .containsExactly("abc", "def", "ghi");
     }
@@ -47,13 +47,13 @@ public class SetsTest {
     }
 
     @Test
-    public void one_element() {
+    public void one_elem() {
       assertThat(map(set("abc"), String::toUpperCase))
           .containsExactly("ABC");
     }
 
     @Test
-    public void two_elements() {
+    public void two_elems() {
       assertThat(map(set("abc", "def"), String::toUpperCase))
           .containsExactly("ABC", "DEF");
     }
@@ -80,7 +80,7 @@ public class SetsTest {
     }
 
     @Test
-    public void filter_elements_matching_predicate() {
+    public void filter_elems_matching_predicate() {
       assertThat(filter(set("first", "second", "third"), s -> s.startsWith("s")))
           .containsExactly("second");
     }
