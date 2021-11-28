@@ -1,6 +1,9 @@
 package org.smoothbuild.lang.base.type.api;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypesS.BOOL;
+import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.functionTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
@@ -8,7 +11,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.impl.BaseTypeS;
 
 public class TypeNamesTest {
   @Nested
@@ -60,8 +62,8 @@ public class TypeNamesTest {
   class _array_type_name {
     @Test
     public void array_type_name() {
-      assertThat(arrayTypeName(type("MyType")))
-          .isEqualTo("[MyType]");
+      assertThat(arrayTypeName(STRING))
+          .isEqualTo("[String]");
     }
   }
 
@@ -69,12 +71,8 @@ public class TypeNamesTest {
   class _function_type_name {
     @Test
     public void function_type_name() {
-      assertThat(functionTypeName(type("ResultType"), list(type("Type1"), type("Type2"))))
-          .isEqualTo("ResultType(Type1, Type2)");
+      assertThat(functionTypeName(STRING, list(BLOB, BOOL)))
+          .isEqualTo("String(Blob, Bool)");
     }
-  }
-
-  private BaseTypeS type(String resultType) {
-    return new BaseTypeS(resultType);
   }
 }

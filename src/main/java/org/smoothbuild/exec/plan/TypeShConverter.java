@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.lang.base.type.impl.AnyTypeS;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
 import org.smoothbuild.lang.base.type.impl.BoolTypeS;
@@ -27,6 +28,7 @@ public class TypeShConverter {
 
   public TypeHV visit(TypeS type) {
     return switch (type) {
+      case AnyTypeS any -> throw new RuntimeException("S-Any cannot be converted to H-type.");
       case BlobTypeS blob -> objFactory.blobT();
       case BoolTypeS bool -> objFactory.boolT();
       case IntTypeS i -> objFactory.intT();
@@ -36,7 +38,6 @@ public class TypeShConverter {
       case VariableS v ->  objFactory.variable(v.name());
       case ArrayTypeS a -> objFactory.arrayT(visit(a.element()));
       case FunctionTypeS f -> objFactory.defFuncT(visit(f.result()), map(f.params(), this::visit));
-      default -> throw new IllegalArgumentException("Unknown type " + type.getClass().getCanonicalName());
     };
   }
 }
