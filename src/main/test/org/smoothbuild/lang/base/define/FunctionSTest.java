@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLocation.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
@@ -41,7 +40,7 @@ public class FunctionSTest extends TestingContext {
   }
 
   private Item paramWithDefault(String name) {
-    return param(name, Optional.of(mock(ExprS.class)));
+    return param(name, Optional.of(stringS()));
   }
 
   private Item paramWithoutDefault(String name) {
@@ -54,8 +53,7 @@ public class FunctionSTest extends TestingContext {
 
   private FunctionS myFunction(TypeS resultType, ImmutableList<Item> parameters) {
     return new DefinedFunctionS(functionST(resultType, toTypes(parameters)),
-        modulePath(), "name", nList(parameters),
-        mock(ExprS.class), loc(1)
+        modulePath(), "name", nList(parameters), stringS(), loc(1)
     );
   }
 }

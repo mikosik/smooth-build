@@ -190,8 +190,6 @@ public class ShConverter {
       case RefS refS -> convertRef(refS);
       case SelectS selectS -> convertAndStoreMapping(selectS, this::convertSel);
       case StringS stringS -> convertAndStoreMapping(stringS, this::convertStr);
-      case default -> throw new RuntimeException(
-          "Unknown expression class " + exprS.getClass().getCanonicalName());
     };
   }
 

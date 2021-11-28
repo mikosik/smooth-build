@@ -733,6 +733,10 @@ public class TestingContext {
     return new SelectS(field, expr, index, loc(line));
   }
 
+  public StringS stringS() {
+    return stringS(1, "abc");
+  }
+
   public StringS stringS(int line, String data) {
     return new StringS(stringST(), data, loc(line));
   }
