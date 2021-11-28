@@ -139,7 +139,7 @@ public class TopEvaluableLoader {
     }
 
     private ExprS createCall(CallNode call) {
-      ExprS called = createExpression(call.function());
+      var called = createExpression(call.function());
       var argumentExpressions = createArgumentExpressions(call);
       var resultType = call.type().get();
       return new CallS(resultType, called, argumentExpressions, call.location());
@@ -154,8 +154,7 @@ public class TopEvaluableLoader {
       return builder.build();
     }
 
-    private ExprS createArgumentExpression(
-        CallNode call, List<Optional<ArgNode>> args, int i) {
+    private ExprS createArgumentExpression(CallNode call, List<Optional<ArgNode>> args, int i) {
       Optional<ArgNode> arg = args.get(i);
       if (arg.isPresent()) {
         return createExpression(arg.get().expr());
@@ -181,7 +180,7 @@ public class TopEvaluableLoader {
       var structType = (StructTypeS) selectNode.expr().type().get();
       var index = structType.fields().indexMap().get(selectNode.fieldName());
       var fieldType = structType.fields().get(index).type();
-      ExprS expr = createExpression(selectNode.expr());
+      var expr = createExpression(selectNode.expr());
       return new SelectS(fieldType, expr, index, selectNode.location());
     }
 
