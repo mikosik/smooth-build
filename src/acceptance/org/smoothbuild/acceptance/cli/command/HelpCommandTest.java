@@ -101,8 +101,6 @@ public class HelpCommandTest extends AcceptanceTestCase {
                    
                                       c, call            - evaluates function call
                                       cons, construction - evaluates struct construction
-                                      conv, conversion   - evaluates automatic
-                                      conversion
                                       s, select          - evaluates field selection
                                       l, literal         - evaluates compile time
                                       literal

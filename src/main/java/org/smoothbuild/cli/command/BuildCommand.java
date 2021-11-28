@@ -57,7 +57,6 @@ public class BuildCommand extends ExclusiveCommand {
           
             c, call            - evaluates function call
             cons, construction - evaluates struct construction
-            conv, conversion   - evaluates automatic conversion
             s, select          - evaluates field selection
             l, literal         - evaluates compile time literal
             m, map             - evaluates single call to a function in evaluation of \

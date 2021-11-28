@@ -28,7 +28,6 @@ public class TaskMatchers {
 
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
   static final TaskMatcher CONSTRUCT = kindMatcher(TaskKind.CONSTRUCT);
-  static final TaskMatcher CONVERSION = kindMatcher(TaskKind.CONVERSION);
   static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
   static final TaskMatcher LITERAL = kindMatcher(TaskKind.LITERAL);
   static final TaskMatcher MAP = kindMatcher(TaskKind.MAP);
@@ -63,8 +62,6 @@ public class TaskMatchers {
           .put("c", CALL)
           .put("construction", CONSTRUCT)
           .put("cons", CONSTRUCT)
-          .put("conversion", CONVERSION)
-          .put("conv", CONVERSION)
           .put("select", SELECT)
           .put("s", SELECT)
           .put("literal", LITERAL)
