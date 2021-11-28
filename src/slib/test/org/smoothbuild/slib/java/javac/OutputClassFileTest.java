@@ -21,7 +21,7 @@ public class OutputClassFileTest extends TestingContext {
 
   @Test
   public void open_output_stream() throws IOException {
-    ArrayHBuilder fileArrayBuilder = objectHDb().arrayBuilder(nativeApi().factory().fileType());
+    ArrayHBuilder fileArrayBuilder = objectHDb().arrayBuilder(nativeApi().factory().fileT());
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi());
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);

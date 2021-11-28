@@ -7,7 +7,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class AddElementOfWrongTypeToArray {
   public static ArrayH function(NativeApi nativeApi) {
-    ArrayHBuilder arrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().blobType());
+    ArrayHBuilder arrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().blobT());
     StringH string = nativeApi.factory().string("abc");
     arrayBuilder.add(string);
     return arrayBuilder.build();

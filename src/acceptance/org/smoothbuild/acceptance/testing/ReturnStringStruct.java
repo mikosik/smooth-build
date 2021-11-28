@@ -10,7 +10,7 @@ import org.smoothbuild.plugin.NativeApi;
 public class ReturnStringStruct {
   public static TupleH function(NativeApi nativeApi) {
     ObjFactory factory = nativeApi.factory();
-    TupleTypeH type = factory.tupleType(list(factory.stringType()));
+    TupleTypeH type = factory.tupleType(list(factory.stringT()));
     return factory.tuple(type, list(factory.string("abc")));
   }
 }

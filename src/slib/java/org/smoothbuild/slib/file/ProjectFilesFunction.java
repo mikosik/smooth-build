@@ -44,7 +44,7 @@ public class ProjectFilesFunction {
 
   private static ArrayH readFiles(Container container, FileSystem fileSystem, Path dir)
       throws IOException {
-    ArrayHBuilder fileArrayBuilder = container.factory().arrayBuilder(container.factory().fileType());
+    ArrayHBuilder fileArrayBuilder = container.factory().arrayBuilder(container.factory().fileT());
     FileReader reader = new FileReader(container);
     if (dir.isRoot()) {
       for (Path path : fileSystem.files(Path.root())) {

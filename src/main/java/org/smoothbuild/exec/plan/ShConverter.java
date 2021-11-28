@@ -109,7 +109,7 @@ public class ShConverter {
   }
 
   private DefinedFunctionH convertCtor(ConstructorS constructorS) {
-    var type = objFactory.definedFunctionType(
+    var type = objFactory.defFuncT(
         convertType(constructorS.evaluationType()),
         convertParams(constructorS.evaluationParams()));
     var paramRefs = ctorParamRefs(constructorS);
@@ -140,7 +140,7 @@ public class ShConverter {
     var resType = convertType(nativeFunctionS.evaluationType());
     var paramTypes = convertParams(nativeFunctionS.evaluationParams());
     var jar = loadNatJar(nativeFunctionS);
-    var type = objFactory.nativeFunctionType(resType, paramTypes);
+    var type = objFactory.natFuncT(resType, paramTypes);
     var ann = nativeFunctionS.annotation();
     var classBinaryName = objFactory.string(ann.path().string());
     var isPure = objFactory.bool(ann.isPure());
@@ -155,7 +155,7 @@ public class ShConverter {
     var body = convertExpr(definedFunctionS.body());
     var resTypeH = convertType(definedFunctionS.evaluationType());
     var paramTypesH = convertParams(definedFunctionS.evaluationParams());
-    var type = objFactory.definedFunctionType(resTypeH, paramTypesH);
+    var type = objFactory.defFuncT(resTypeH, paramTypesH);
     return objFactory.definedFunction(type, body);
   }
 

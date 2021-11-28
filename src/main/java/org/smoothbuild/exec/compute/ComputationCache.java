@@ -72,7 +72,7 @@ public class ComputationCache {
   public synchronized Output read(Hash taskHash, TypeHV type) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       ObjectH messagesObject = objectHDb.get(Hash.read(source));
-      ArrayTypeH messageArrayType = objFactory.arrayType(objFactory.messageType());
+      ArrayTypeH messageArrayType = objFactory.arrayT(objFactory.messageType());
       if (!messagesObject.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
             + " as first child of its Merkle root, but got " + messagesObject.type());

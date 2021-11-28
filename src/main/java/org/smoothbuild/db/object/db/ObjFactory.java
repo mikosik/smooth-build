@@ -65,7 +65,7 @@ public class ObjFactory {
     this.objectHDb = objectHDb;
     this.typeHDb = typeHDb;
     this.messageType = createMessageType(typeHDb);
-    this.fileType = createFileType(typeHDb);
+    this.fileType = createFileT(typeHDb);
     this.typing = typing;
   }
 
@@ -105,7 +105,7 @@ public class ObjFactory {
   }
 
   public TupleH file(StringH path, BlobH content) {
-    return objectHDb.tuple(fileType(), list(content, path));
+    return objectHDb.tuple(fileT(), list(content, path));
   }
 
   public DefinedFunctionH definedFunction(DefinedFunctionTypeH type, ObjectH body) {
@@ -145,37 +145,37 @@ public class ObjFactory {
     return objectHDb.tuple(type, items);
   }
 
-  public OrderH order(ImmutableList<ObjectH> elements) {
-    return objectHDb.order(elements);
+  public OrderH order(ImmutableList<ObjectH> elems) {
+    return objectHDb.order(elems);
   }
 
   // Types
 
-  public ArrayTypeH arrayType(TypeHV elementType) {
-    return typeHDb.array(elementType);
+  public ArrayTypeH arrayT(TypeHV elemType) {
+    return typeHDb.array(elemType);
   }
 
-  public BlobTypeH blobType() {
+  public BlobTypeH blobT() {
     return typeHDb.blob();
   }
 
-  public BoolTypeH boolType() {
+  public BoolTypeH boolT() {
     return typeHDb.bool();
   }
 
-  public DefinedFunctionTypeH definedFunctionType(TypeHV result, ImmutableList<TypeHV> params) {
+  public DefinedFunctionTypeH defFuncT(TypeHV result, ImmutableList<TypeHV> params) {
     return typeHDb.definedFunction(result, params);
   }
 
-  public FunctionTypeH ifFunctionType() {
+  public FunctionTypeH ifFuncT() {
     return typeHDb.ifFunction();
   }
 
-  public IntTypeH intType() {
+  public IntTypeH intT() {
     return typeHDb.int_();
   }
 
-  public FunctionTypeH mapFunctionType() {
+  public FunctionTypeH mapFuncT() {
     return typeHDb.ifFunction();
   }
 
@@ -183,15 +183,15 @@ public class ObjFactory {
     return messageType;
   }
 
-  public NativeFunctionTypeH nativeFunctionType(TypeHV result, ImmutableList<TypeHV> params) {
+  public NativeFunctionTypeH natFuncT(TypeHV result, ImmutableList<TypeHV> params) {
     return typeHDb.nativeFunction(result, params);
   }
 
-  public NothingTypeH nothingType() {
+  public NothingTypeH nothingT() {
     return typeHDb.nothing();
   }
 
-  public StringTypeH stringType() {
+  public StringTypeH stringT() {
     return typeHDb.string();
   }
 
@@ -205,7 +205,7 @@ public class ObjFactory {
 
   // other values and its types
 
-  public TupleTypeH fileType() {
+  public TupleTypeH fileT() {
     return fileType;
   }
 
@@ -232,7 +232,7 @@ public class ObjFactory {
     return typeHDb.tuple(list(stringType, stringType));
   }
 
-  private static TupleTypeH createFileType(TypeHDb typeHDb) {
+  private static TupleTypeH createFileT(TypeHDb typeHDb) {
     return typeHDb.tuple(list(typeHDb.blob(), typeHDb.string()));
   }
 }
