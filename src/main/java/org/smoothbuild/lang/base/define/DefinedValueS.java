@@ -8,7 +8,7 @@ import org.smoothbuild.lang.expr.ExprS;
 /**
  * This class is immutable.
  */
-public final class DefinedValueS extends ValueS implements DefinedEvaluableS {
+public final class DefinedValueS extends ValueS {
   private final ExprS body;
 
   public DefinedValueS(TypeS type, ModulePath modulePath, String name, ExprS body,
@@ -17,7 +17,6 @@ public final class DefinedValueS extends ValueS implements DefinedEvaluableS {
     this.body = body;
   }
 
-  @Override
   public ExprS body() {
     return body;
   }

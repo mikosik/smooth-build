@@ -22,7 +22,7 @@ import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.like.EvaluableLike;
+import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
@@ -35,7 +35,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobN;
 import org.smoothbuild.lang.parse.ast.CallN;
-import org.smoothbuild.lang.parse.ast.EvaluableN;
+import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.ExprN;
 import org.smoothbuild.lang.parse.ast.FunctionN;
 import org.smoothbuild.lang.parse.ast.FunctionTypeN;
@@ -112,7 +112,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evaluationTypeOfTopEvaluables(EvaluableN evaluable) {
+      private Optional<TypeS> evaluationTypeOfTopEvaluables(EvalN evaluable) {
         return evaluationTypeOf(evaluable, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
             logBuffer.log(parseError(evaluable, "`" + evaluable.name()
@@ -123,7 +123,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evaluationTypeOf(EvaluableN referencable,
+      private Optional<TypeS> evaluationTypeOf(EvalN referencable,
           BiConsumer<TypeS, TypeS> assignmentChecker) {
         if (referencable.body().isPresent()) {
           Optional<TypeS> exprType = referencable.body().get().type();
@@ -288,7 +288,7 @@ public class TypeInferrer {
 
       public static Optional<NList<ItemSignature>> funcParams(ExprN called) {
         if (called instanceof RefN refN) {
-          EvaluableLike referenced = refN.referenced();
+          EvalLike referenced = refN.referenced();
           if (referenced instanceof FunctionS function) {
             return Optional.of(function.params().map(Item::signature));
           } else if (referenced instanceof FunctionN functionN) {

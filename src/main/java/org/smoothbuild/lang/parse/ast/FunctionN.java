@@ -15,7 +15,7 @@ import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public sealed class FunctionN extends EvaluableN
+public sealed class FunctionN extends EvalN
     permits RealFuncN, ConstructorN {
   private final NList<ItemN> params;
 

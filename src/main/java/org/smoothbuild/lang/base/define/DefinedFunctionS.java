@@ -9,7 +9,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public final class DefinedFunctionS extends FunctionS implements DefinedEvaluableS {
+public final class DefinedFunctionS extends FunctionS {
   private final ExprS body;
 
   public DefinedFunctionS(FunctionTypeS type, ModulePath modulePath, String name,
@@ -18,7 +18,6 @@ public final class DefinedFunctionS extends FunctionS implements DefinedEvaluabl
     this.body = body;
   }
 
-  @Override
   public ExprS body() {
     return body;
   }

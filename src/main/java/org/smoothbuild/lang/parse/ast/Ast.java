@@ -28,14 +28,14 @@ import com.google.common.collect.ImmutableList;
 
 public class Ast {
   private final NList<StructN> structs;
-  private final ImmutableList<EvaluableN> evaluables;
+  private final ImmutableList<EvalN> evaluables;
 
-  public Ast(List<StructN> structs, List<EvaluableN> evaluables) {
+  public Ast(List<StructN> structs, List<EvalN> evaluables) {
     this.structs = nListWithDuplicates(ImmutableList.copyOf(structs));
     this.evaluables = ImmutableList.copyOf(evaluables);
   }
 
-  public ImmutableList<EvaluableN> evaluables() {
+  public ImmutableList<EvalN> evaluables() {
     return evaluables;
   }
 
@@ -58,17 +58,17 @@ public class Ast {
     return maybeValue(ast);
   }
 
-  private TopologicalSortingResult<String, EvaluableN, Location> sortEvaluablesByDependencies() {
+  private TopologicalSortingResult<String, EvalN, Location> sortEvaluablesByDependencies() {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(v -> names.add(v.name()));
 
-    HashSet<GraphNode<String, EvaluableN, Location>> nodes = new HashSet<>();
+    HashSet<GraphNode<String, EvalN, Location>> nodes = new HashSet<>();
     nodes.addAll(map(evaluables, value -> evaluableNodeToGraphNode(value, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, EvaluableN, Location> evaluableNodeToGraphNode(
-      EvaluableN evaluable, Set<String> names) {
+  private static GraphNode<String, EvalN, Location> evaluableNodeToGraphNode(
+      EvalN evaluable, Set<String> names) {
     Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override

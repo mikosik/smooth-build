@@ -13,12 +13,12 @@ import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.ModuleS;
-import org.smoothbuild.lang.base.define.TopEvaluableS;
+import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ModuleLoader;
-import org.smoothbuild.lang.parse.TopEvaluableLoader;
+import org.smoothbuild.lang.parse.TopEvalLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
 
 public class TestingModuleLoader {
@@ -51,20 +51,20 @@ public class TestingModuleLoader {
     return this;
   }
 
-  public void containsEvaluable(TopEvaluableS expected) {
+  public void containsEvaluable(TopEvalS expected) {
     String name = expected.name();
-    TopEvaluableS actual = assertContainsEvaluable(name);
+    TopEvalS actual = assertContainsEvaluable(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
   public void containsEvaluableWithType(String name, Type expectedType) {
-    TopEvaluableS referencable = assertContainsEvaluable(name);
+    TopEvalS referencable = assertContainsEvaluable(name);
     assertThat(referencable.type())
         .isEqualTo(expectedType);
   }
 
-  private TopEvaluableS assertContainsEvaluable(String name) {
+  private TopEvalS assertContainsEvaluable(String name) {
     var referencables = module.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(referencables.containsName(name))
@@ -124,7 +124,7 @@ public class TestingModuleLoader {
     TypingS typing = testingContext.typingS();
     TypeFactoryS factory = testingContext.typeFactoryS();
     ModuleLoader moduleLoader = new ModuleLoader(
-        new TypeInferrer(factory, typing), new TopEvaluableLoader(factory), factory);
+        new TypeInferrer(factory, typing), new TopEvalLoader(factory), factory);
     DefinitionsS importedSane = imported != null ? imported
         : DefinitionsS.empty().withModule(testingContext.internalModule());
     ModuleFiles moduleFilesSane = this.moduleFiles != null ? moduleFiles : moduleFiles();

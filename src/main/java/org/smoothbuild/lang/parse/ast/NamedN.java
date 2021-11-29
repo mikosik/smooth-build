@@ -4,7 +4,7 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Nal;
 
 public sealed class NamedN extends Node implements Nal
-    permits ArgNode, EvaluableN, StructN, TypeN {
+    permits ArgNode, EvalN, StructN, TypeN {
   private final String name;
 
   public NamedN(String name, Location location) {

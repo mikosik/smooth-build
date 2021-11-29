@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.run.FindTopEvaluables.findTopEvaluables;
+import static org.smoothbuild.run.FindTopEvals.findTopEvaluables;
 
 import java.util.List;
 

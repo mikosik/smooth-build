@@ -1025,7 +1025,7 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _undefined {
     @Nested
-    class _evaluable_cannot_be_used_as {
+    class _eval_cannot_be_used_as {
       @Test
       public void function_argument() {
         module("""

@@ -9,5 +9,5 @@ public record ModuleS(
     ModuleFiles files,
     ImmutableList<ModuleS> referencedModules,
     NList<DefinedType> types,
-    NList<TopEvaluableS> referencables) {
+    NList<TopEvalS> referencables) {
 }

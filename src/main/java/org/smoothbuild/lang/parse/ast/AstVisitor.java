@@ -25,11 +25,11 @@ public class AstVisitor {
     field.typeNode().ifPresent(this::visitType);
   }
 
-  public void visitEvaluable(List<EvaluableN> evaluable) {
+  public void visitEvaluable(List<EvalN> evaluable) {
     evaluable.forEach(this::visitEvaluable);
   }
 
-  public void visitEvaluable(EvaluableN evaluable) {
+  public void visitEvaluable(EvalN evaluable) {
     switch (evaluable) {
       case RealFuncN func -> visitRealFunc(func);
       case ValueN value -> visitValue(value);

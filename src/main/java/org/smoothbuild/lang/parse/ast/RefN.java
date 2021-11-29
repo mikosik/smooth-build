@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.like.EvaluableLike;
+import org.smoothbuild.lang.base.like.EvalLike;
 
 public final class RefN extends ExprN {
   private final String name;
-  private EvaluableLike referenced;
+  private EvalLike referenced;
 
   public RefN(String name, Location location) {
     super(location);
@@ -16,11 +16,11 @@ public final class RefN extends ExprN {
     return name;
   }
 
-  public void setReferenced(EvaluableLike referenced) {
+  public void setReferenced(EvalLike referenced) {
     this.referenced = referenced;
   }
 
-  public EvaluableLike referenced() {
+  public EvalLike referenced() {
     return referenced;
   }
 

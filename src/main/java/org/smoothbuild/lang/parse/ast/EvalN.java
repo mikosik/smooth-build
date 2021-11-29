@@ -3,16 +3,16 @@ package org.smoothbuild.lang.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.like.EvaluableLike;
+import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public sealed class EvaluableN extends NamedN implements EvaluableLike
+public sealed class EvalN extends NamedN implements EvalLike
     permits FunctionN, ItemN, ValueN {
   private final Optional<TypeN> typeNode;
   private final Optional<ExprN> body;
   private final Optional<AnnotationN> annotation;
 
-  public EvaluableN(Optional<TypeN> typeNode, String name, Optional<ExprN> body,
+  public EvalN(Optional<TypeN> typeNode, String name, Optional<ExprN> body,
       Optional<AnnotationN> annotation, Location location) {
     super(name, location);
     this.typeNode = typeNode;
@@ -39,7 +39,7 @@ public sealed class EvaluableN extends NamedN implements EvaluableLike
 
   @Override
   public final boolean equals(Object object) {
-    return object instanceof EvaluableN that
+    return object instanceof EvalN that
         && this.name().equals(that.name());
   }
 

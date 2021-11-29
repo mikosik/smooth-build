@@ -92,7 +92,7 @@ public class ShConverter {
 
   private FunctionH convertFuncImpl(FunctionS functionS) {
     try {
-      callStack.push(functionS.evaluationParams());
+      callStack.push(functionS.params());
       var functionH = switch (functionS) {
         case ConstructorS c -> convertCtor(c);
         case IfFunctionS i -> objFactory.ifFunction();
@@ -109,8 +109,8 @@ public class ShConverter {
 
   private DefinedFunctionH convertCtor(ConstructorS constructorS) {
     var type = objFactory.defFuncT(
-        convertType(constructorS.evaluationType()),
-        convertParams(constructorS.evaluationParams()));
+        convertType(constructorS.resultType()),
+        convertParams(constructorS.params()));
     var paramRefs = ctorParamRefs(constructorS);
     var body = objFactory.construct(paramRefs);
     nals.put(body, constructorS);
@@ -136,8 +136,8 @@ public class ShConverter {
   }
 
   private NativeFunctionH convertNatFunc(NativeFunctionS nativeFunctionS) {
-    var resType = convertType(nativeFunctionS.evaluationType());
-    var paramTypes = convertParams(nativeFunctionS.evaluationParams());
+    var resType = convertType(nativeFunctionS.resultType());
+    var paramTypes = convertParams(nativeFunctionS.params());
     var jar = loadNatJar(nativeFunctionS);
     var type = objFactory.natFuncT(resType, paramTypes);
     var ann = nativeFunctionS.annotation();
@@ -152,8 +152,8 @@ public class ShConverter {
 
   private DefinedFunctionH convertDefFunc(DefinedFunctionS definedFunctionS) {
     var body = convertExpr(definedFunctionS.body());
-    var resTypeH = convertType(definedFunctionS.evaluationType());
-    var paramTypesH = convertParams(definedFunctionS.evaluationParams());
+    var resTypeH = convertType(definedFunctionS.resultType());
+    var paramTypesH = convertParams(definedFunctionS.params());
     var type = objFactory.defFuncT(resTypeH, paramTypesH);
     return objFactory.definedFunction(type, body);
   }

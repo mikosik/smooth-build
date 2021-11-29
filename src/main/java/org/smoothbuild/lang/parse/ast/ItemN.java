@@ -8,10 +8,10 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.like.EvaluableLike;
+import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public final class ItemN extends EvaluableN implements EvaluableLike {
+public final class ItemN extends EvalN implements EvalLike {
   private Optional<ItemSignature> signature;
 
   public ItemN(TypeN typeN, String name, Optional<ExprN> body, Location location) {

@@ -5,7 +5,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
-import static org.smoothbuild.run.FindTopEvaluables.findTopEvaluables;
+import static org.smoothbuild.run.FindTopEvals.findTopEvaluables;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;

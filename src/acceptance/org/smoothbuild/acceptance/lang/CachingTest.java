@@ -10,7 +10,7 @@ import org.smoothbuild.acceptance.testing.Random;
 
 public class CachingTest extends AcceptanceTestCase {
   @Nested
-  class _result_from_evaluable_which_is_ {
+  class _result_from_eval_which_is_ {
     @Test
     public void pure_func_result_is_cached_on_disk() throws Exception {
       createNativeJar(Random.class);

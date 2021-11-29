@@ -22,7 +22,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainCallContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
-import org.smoothbuild.antlr.lang.SmoothParser.EvaluableContext;
+import org.smoothbuild.antlr.lang.SmoothParser.EvalContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
@@ -45,7 +45,7 @@ import com.google.common.collect.ImmutableList;
 public class AstCreator {
   public static Ast fromParseTree(FilePath filePath, ModuleContext module) {
     List<StructN> structs = new ArrayList<>();
-    List<EvaluableN> referencables = new ArrayList<>();
+    List<EvalN> referencables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
@@ -75,7 +75,7 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitEvaluable(EvaluableContext evaluable) {
+      public Void visitEval(EvalContext evaluable) {
         TerminalNode nameNode = evaluable.NAME();
         visitChildren(evaluable);
         Optional<TypeN> type = createTypeSane(evaluable.type());

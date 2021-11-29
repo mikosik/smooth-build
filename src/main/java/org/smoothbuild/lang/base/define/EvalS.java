@@ -2,11 +2,14 @@ package org.smoothbuild.lang.base.define;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.like.EvaluableLike;
+import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public class EvaluableImplS extends Defined implements EvaluableLike {
-  public EvaluableImplS(TypeS type, ModulePath modulePath, String name, Location location) {
+/**
+ * Evaluable.
+ */
+public class EvalS extends Defined implements EvalLike {
+  public EvalS(TypeS type, ModulePath modulePath, String name, Location location) {
     super(type, modulePath, name, location);
   }
 

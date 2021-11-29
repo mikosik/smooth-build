@@ -74,7 +74,7 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
-import org.smoothbuild.lang.base.define.TopEvaluableS;
+import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
@@ -721,7 +721,7 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public RefS refS(TopEvaluableS referencable) {
+  public RefS refS(TopEvalS referencable) {
     return refS(1, referencable.type(), referencable.name());
   }
 

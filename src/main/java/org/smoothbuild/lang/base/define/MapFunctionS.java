@@ -46,11 +46,6 @@ public final class MapFunctionS extends FunctionS {
     );
   }
 
-  @Override
-  public ArrayTypeS evaluationType() {
-    return (ArrayTypeS) resultType();
-  }
-
   private static NList<Item> createParams(ModulePath modulePath,
       ArrayTypeS inputArrayType, FunctionTypeS mappingFunctionType) {
     return nList(

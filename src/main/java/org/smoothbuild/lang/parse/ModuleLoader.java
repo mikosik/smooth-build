@@ -22,11 +22,11 @@ import org.smoothbuild.lang.base.define.ModuleFiles;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.ModuleS;
 import org.smoothbuild.lang.base.define.StructS;
-import org.smoothbuild.lang.base.define.TopEvaluableS;
+import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.parse.ast.Ast;
-import org.smoothbuild.lang.parse.ast.EvaluableN;
+import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.StructN;
 import org.smoothbuild.util.collect.NList;
 
@@ -34,14 +34,14 @@ import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
   private final TypeInferrer typeInferrer;
-  private final TopEvaluableLoader topEvaluableLoader;
+  private final TopEvalLoader topEvalLoader;
   private final TypeFactoryS typeFactory;
 
   @Inject
-  public ModuleLoader(TypeInferrer typeInferrer, TopEvaluableLoader topEvaluableLoader,
+  public ModuleLoader(TypeInferrer typeInferrer, TopEvalLoader topEvalLoader,
       TypeFactoryS typeFactory) {
     this.typeInferrer = typeInferrer;
-    this.topEvaluableLoader = topEvaluableLoader;
+    this.topEvalLoader = topEvalLoader;
     this.typeFactory = typeFactory;
   }
 
@@ -92,14 +92,14 @@ public class ModuleLoader {
     return new StructS(type, path, name, location);
   }
 
-  private NList<TopEvaluableS> loadEvaluables(ModulePath path, Ast ast) {
-    var local = ImmutableList.<TopEvaluableS>builder();
+  private NList<TopEvalS> loadEvaluables(ModulePath path, Ast ast) {
+    var local = ImmutableList.<TopEvalS>builder();
     for (StructN struct : ast.structs()) {
       ConstructorS constructor = loadConstructor(path, struct);
       local.add(constructor);
     }
-    for (EvaluableN referencable : ast.evaluables()) {
-      local.add(topEvaluableLoader.loadEvaluables(path, referencable));
+    for (EvalN referencable : ast.evaluables()) {
+      local.add(topEvalLoader.loadEvaluables(path, referencable));
     }
     return nList(local.build());
   }

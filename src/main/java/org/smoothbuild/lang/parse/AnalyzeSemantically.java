@@ -23,7 +23,7 @@ import org.smoothbuild.lang.parse.ast.ArrayTypeN;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobN;
-import org.smoothbuild.lang.parse.ast.EvaluableN;
+import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.FunctionTypeN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
@@ -252,13 +252,13 @@ public class AnalyzeSemantically {
       }
 
       private void logErrorIfNeeded(
-          EvaluableN node, ImmutableList<String> variablesUsedOnce) {
+          EvalN node, ImmutableList<String> variablesUsedOnce) {
         if (!variablesUsedOnce.isEmpty()) {
           logError(node, variablesUsedOnce);
         }
       }
 
-      private void logError(EvaluableN node, List<String> variablesUsedOnce) {
+      private void logError(EvalN node, List<String> variablesUsedOnce) {
         logger.log(parseError(node.typeNode().get(), "Type variable(s) "
             + join(", ", map(variablesUsedOnce, v -> "`" + v + "`"))
             + " are used once in declaration of " + node.q()

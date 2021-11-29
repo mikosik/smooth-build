@@ -15,9 +15,9 @@ import org.smoothbuild.lang.base.define.FunctionS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
-import org.smoothbuild.lang.base.define.TopEvaluableS;
+import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.define.ValueS;
-import org.smoothbuild.lang.base.like.EvaluableLike;
+import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
@@ -36,7 +36,7 @@ import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayN;
 import org.smoothbuild.lang.parse.ast.BlobN;
 import org.smoothbuild.lang.parse.ast.CallN;
-import org.smoothbuild.lang.parse.ast.EvaluableN;
+import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.ExprN;
 import org.smoothbuild.lang.parse.ast.FunctionN;
 import org.smoothbuild.lang.parse.ast.IntN;
@@ -49,23 +49,23 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class TopEvaluableLoader {
+public class TopEvalLoader {
   private final TypeFactoryS factory;
 
   @Inject
-  public TopEvaluableLoader(TypeFactoryS factory) {
+  public TopEvalLoader(TypeFactoryS factory) {
     this.factory = factory;
   }
 
-  public TopEvaluableS loadEvaluables(ModulePath path, EvaluableN evaluableN) {
-    if (evaluableN instanceof RealFuncN realFuncN) {
+  public TopEvalS loadEvaluables(ModulePath path, EvalN evalN) {
+    if (evalN instanceof RealFuncN realFuncN) {
       return loadFunction(path, realFuncN);
     } else {
-      return loadValue(path, evaluableN);
+      return loadValue(path, evalN);
     }
   }
 
-  private ValueS loadValue(ModulePath path, EvaluableN valueNode) {
+  private ValueS loadValue(ModulePath path, EvalN valueNode) {
     var type = valueNode.type().get();
     var name = valueNode.name();
     var location = valueNode.location();
@@ -168,7 +168,7 @@ public class TopEvaluableLoader {
       // This means that this call is made on reference to actual function and that function
       // has default argument for given param, otherwise checkers that ran so far would
       // report an error.
-      EvaluableLike referenced = ((RefN) call.function()).referenced();
+      EvalLike referenced = ((RefN) call.function()).referenced();
       return switch (referenced) {
         case FunctionS function -> function.params().get(i).defaultValue().get();
         case FunctionN node -> createExpression(node.params().get(i).body().get());
@@ -185,7 +185,7 @@ public class TopEvaluableLoader {
     }
 
     private ExprS createReference(RefN ref) {
-      EvaluableLike referenced = ref.referenced();
+      EvalLike referenced = ref.referenced();
       return switch (referenced) {
         case ItemN n ->  new ParamRefS(
             funcParams.get(ref.name()).type(), ref.name(), ref.location());
