@@ -41,7 +41,6 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.MapFunctionS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.define.NativeEvaluableS;
 import org.smoothbuild.lang.base.define.NativeFunctionS;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -245,13 +244,13 @@ public class ShConverter {
   // helpers
 
 
-  private BlobH loadNatJar(NativeEvaluableS nativeEvaluableS) {
-    var filePath = nativeEvaluableS.annotation().location().file().withExtension("jar");
+  private BlobH loadNatJar(NativeFunctionS nativeFunctionS) {
+    var filePath = nativeFunctionS.annotation().location().file().withExtension("jar");
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {
       String message = "Error loading native jar for `%s`: File %s doesn't exist."
-          .formatted(nativeEvaluableS.name(), filePath.q());
+          .formatted(nativeFunctionS.name(), filePath.q());
       throw new QuitException(message);
     }
   }

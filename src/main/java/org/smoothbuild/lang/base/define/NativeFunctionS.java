@@ -9,7 +9,7 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public final class NativeFunctionS extends FunctionS implements NativeEvaluableS {
+public final class NativeFunctionS extends FunctionS {
   private final Annotation annotation;
 
   public NativeFunctionS(FunctionTypeS type, ModulePath modulePath, String name,
@@ -18,7 +18,6 @@ public final class NativeFunctionS extends FunctionS implements NativeEvaluableS
     this.annotation = annotation;
   }
 
-  @Override
   public Annotation annotation() {
     return annotation;
   }
