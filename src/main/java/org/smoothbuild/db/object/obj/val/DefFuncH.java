@@ -5,7 +5,7 @@ import static org.smoothbuild.db.object.type.base.SpecKindH.DEF_FUNC;
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
 
 public class DefFuncH extends FuncH {
   public DefFuncH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
@@ -17,7 +17,7 @@ public class DefFuncH extends FuncH {
     var resultType = spec().result();
     var bodyType = body.type();
     if (!objectDb().typing().isAssignable(resultType, bodyType)) {
-      throw new DecodeExprWrongEvaluationTypeOfComponentException(
+      throw new DecodeExprWrongEvalTypeOfComponentException(
           hash(), spec(), DATA_PATH, resultType, bodyType);
     }
     return body;

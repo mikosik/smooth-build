@@ -4,13 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
 import org.smoothbuild.testing.TestingContext;
 
-public class DecodeExprWrongEvaluationTypeOfComponentExceptionTest extends TestingContext {
+public class DecodeExprWrongEvalTypeOfComponentExceptionTest extends TestingContext {
   @Test
   public void message() {
-    var exception = new DecodeExprWrongEvaluationTypeOfComponentException(
+    var exception = new DecodeExprWrongEvalTypeOfComponentException(
         Hash.of(13), selectHT(intHT()), "tuple", intHT(), stringHT());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `SELECT:Int` "

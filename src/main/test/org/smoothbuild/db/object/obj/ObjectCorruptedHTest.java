@@ -36,11 +36,11 @@ import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjTypeException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
-import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationTypeException;
+import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeException;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
@@ -472,7 +472,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+          .throwsException(new DecodeExprWrongEvalTypeOfComponentException(
               objHash, type, "func", FuncTypeH.class, intHT()));
     }
 
@@ -528,7 +528,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+          .throwsException(new DecodeExprWrongEvalTypeOfComponentException(
                   objHash, type, "func.result", stringHT(), intHT()));
     }
 
@@ -548,7 +548,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+          .throwsException(new DecodeExprWrongEvalTypeOfComponentException(
               objHash, spec, "arguments",
               tupleHT(list(stringHT(), boolHT())),
               tupleHT(list(stringHT(), intHT()))
@@ -608,7 +608,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(bodyExpr)
           );
       assertCall(() -> ((DefFuncH) objectHDb().get(objHash)).body())
-          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+          .throwsException(new DecodeExprWrongEvalTypeOfComponentException(
               objHash, type, DATA_PATH, boolHT(), intHT()));
     }
   }
@@ -709,7 +709,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               ));
       assertCall(() -> ((OrderH) objectHDb().get(objHash)).elems())
           .throwsException(
-              new DecodeExprWrongEvaluationTypeOfComponentException(
+              new DecodeExprWrongEvalTypeOfComponentException(
                   objHash, type, "elems[1]", intHT(), stringHT()));
     }
   }
@@ -827,7 +827,7 @@ public class ObjectCorruptedHTest extends TestingContext {
 
       assertCall(() -> ((ConstructH) objectHDb().get(objHash)).items())
           .throwsException(
-              new DecodeExprWrongEvaluationTypeOfComponentException(
+              new DecodeExprWrongEvalTypeOfComponentException(
                   objHash, type, "items[1]", boolHT(), stringHT()));
     }
   }
@@ -932,7 +932,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           );
 
       assertCall(() -> ((SelectH) objectHDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
+          .throwsException(new DecodeExprWrongEvalTypeOfComponentException(
               objHash, type, "tuple", TupleTypeH.class, intHT()));
     }
 
@@ -972,7 +972,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           );
 
       assertCall(() -> ((SelectH) objectHDb().get(objHash)).data())
-          .throwsException(new DecodeSelectWrongEvaluationTypeException(objHash, type, stringHT()));
+          .throwsException(new DecodeSelectWrongEvalTypeException(objHash, type, stringHT()));
     }
 
     @Test

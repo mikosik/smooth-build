@@ -4,13 +4,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
-public class DecodeExprWrongEvaluationTypeOfComponentException extends DecodeObjException {
-  public DecodeExprWrongEvaluationTypeOfComponentException(Hash hash, SpecH type,
+public class DecodeExprWrongEvalTypeOfComponentException extends DecodeObjException {
+  public DecodeExprWrongEvalTypeOfComponentException(Hash hash, SpecH type,
       String component, Class<?> expected, TypeH actual) {
     super(buildMessage(hash, type, component, expected.getCanonicalName(), actual));
   }
 
-  public DecodeExprWrongEvaluationTypeOfComponentException(Hash hash, SpecH type,
+  public DecodeExprWrongEvalTypeOfComponentException(Hash hash, SpecH type,
       String component, TypeH expected, TypeH actual) {
     super(buildMessage(hash, type, component, expected.q(), actual));
   }

@@ -4,8 +4,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
 
-public class DecodeSelectWrongEvaluationTypeException extends DecodeObjException {
-  public DecodeSelectWrongEvaluationTypeException(Hash hash, SelectTypeH type, TypeH actual) {
+public class DecodeSelectWrongEvalTypeException extends DecodeObjException {
+  public DecodeSelectWrongEvalTypeException(Hash hash, SelectTypeH type, TypeH actual) {
     super(buildMessage(hash, type, actual));
   }
 

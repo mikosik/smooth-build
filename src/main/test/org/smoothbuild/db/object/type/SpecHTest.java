@@ -400,7 +400,7 @@ public class SpecHTest extends TestingContext {
   }
 
   @Nested
-  class _evaluation_type {
+  class _eval_type {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeH type) {

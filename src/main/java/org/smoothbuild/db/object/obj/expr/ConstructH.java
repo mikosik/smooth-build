@@ -10,7 +10,7 @@ import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
@@ -46,7 +46,7 @@ public class ConstructH extends ExprH {
           throw new DecodeConstructWrongItemsSizeException(hash(), spec(), j);
         },
         (i) -> {
-          throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), spec(),
+          throw new DecodeExprWrongEvalTypeOfComponentException(hash(), spec(),
               "items[" + i + "]", expectedItemTypes.get(i), items.get(i).type());
         }
     );
