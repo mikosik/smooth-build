@@ -21,6 +21,11 @@ public abstract class FunctionH extends ValueH implements EvaluableH {
   }
 
   @Override
+  public FunctionTypeH type() {
+    return (FunctionTypeH) super.type();
+  }
+
+  @Override
   public FunctionTypeH spec() {
     return (FunctionTypeH) super.spec();
   }
