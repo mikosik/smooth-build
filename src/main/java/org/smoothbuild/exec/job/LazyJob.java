@@ -26,8 +26,8 @@ public record LazyJob(TypeH type, Loc loc, Supplier<Job> supplier) implements Jo
   }
 
   @Override
-  public ImmutableList<Job> dependencies() {
-    return job().dependencies();
+  public ImmutableList<Job> deps() {
+    return job().deps();
   }
 
   @Override

@@ -268,9 +268,9 @@ public class JobCreator {
     var data = selectH.data();
     var index = data.index();
     var algorithm = new SelectAlgorithm(index, selectH.type());
-    var dependencies = list(eagerJobFor(scope, vars, data.tuple()));
+    var deps = list(eagerJobFor(scope, vars, data.tuple()));
     var info = new TaskInfo(SELECT, nal);
-    return new Task(selectH.type(), dependencies, info, algorithm);
+    return new Task(selectH.type(), deps, info, algorithm);
   }
 
   // helper methods

@@ -211,9 +211,9 @@ public class ParallelJobExecutorTest extends TestingContext {
         .isTrue();
   }
 
-  private Task concat(Job... dependencies) {
+  private Task concat(Job... deps) {
     var algorithm = concatAlgorithm();
-    return job("concat", algorithm, dependencies);
+    return job("concat", algorithm, deps);
   }
 
   private static Algorithm concatAlgorithm() {
@@ -227,13 +227,13 @@ public class ParallelJobExecutorTest extends TestingContext {
     };
   }
 
-  private Task job(Algorithm algorithm, Job... dependencies) {
-    return job("task_name", algorithm, dependencies);
+  private Task job(Algorithm algorithm, Job... deps) {
+    return job("task_name", algorithm, deps);
   }
 
-  private Task job(String name, Algorithm algorithm, Job... dependencies) {
+  private Task job(String name, Algorithm algorithm, Job... deps) {
     TaskInfo info = new TaskInfo(CALL, name, loc());
-    return new Task(stringHT(), list(dependencies), info, algorithm);
+    return new Task(stringHT(), list(deps), info, algorithm);
   }
 
   private Algorithm valueAlgorithm(String value) {

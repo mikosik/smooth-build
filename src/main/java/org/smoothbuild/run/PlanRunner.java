@@ -65,7 +65,7 @@ public class PlanRunner {
 
     private void print(String indent, Job job) {
       reporter.printlnRaw(indent + job.type().name() + " " + job.name());
-      job.dependencies().forEach(d -> print(indent + "  ", d));
+      job.deps().forEach(d -> print(indent + "  ", d));
     }
   }
 }

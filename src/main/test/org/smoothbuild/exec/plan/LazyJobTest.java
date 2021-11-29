@@ -38,10 +38,10 @@ public class LazyJobTest {
   }
 
   @Test
-  public void multiple_calls_to_dependencies_causes_only_one_call_to_supplier() {
+  public void multiple_calls_to_deps_causes_only_one_call_to_supplier() {
     LazyJob lazyJob = new LazyJob(null, null, supplier);
-    lazyJob.dependencies();
-    lazyJob.dependencies();
+    lazyJob.deps();
+    lazyJob.deps();
     verify(supplier, times(1)).get();
   }
 

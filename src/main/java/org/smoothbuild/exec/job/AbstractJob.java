@@ -10,12 +10,12 @@ import com.google.common.collect.ImmutableList;
 
 public abstract class AbstractJob extends NalImpl implements Job {
   private final TypeH type;
-  private final ImmutableList<Job> dependencies;
+  private final ImmutableList<Job> deps;
 
-  public AbstractJob(TypeH type, List<Job> dependencies, Nal nal) {
+  public AbstractJob(TypeH type, List<Job> deps, Nal nal) {
     super(nal);
     this.type = type;
-    this.dependencies = ImmutableList.copyOf(dependencies);
+    this.deps = ImmutableList.copyOf(deps);
   }
 
   @Override
@@ -24,7 +24,7 @@ public abstract class AbstractJob extends NalImpl implements Job {
   }
 
   @Override
-  public ImmutableList<Job> dependencies() {
-    return dependencies;
+  public ImmutableList<Job> deps() {
+    return deps;
   }
 }

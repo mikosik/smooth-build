@@ -16,8 +16,8 @@ public class Task extends AbstractJob {
   private final TaskInfo info;
   private final Algorithm algorithm;
 
-  public Task(TypeH type, List<Job> dependencies, TaskInfo info, Algorithm algorithm) {
-    super(type, dependencies, info);
+  public Task(TypeH type, List<Job> deps, TaskInfo info, Algorithm algorithm) {
+    super(type, deps, info);
     this.info = info;
     this.algorithm = algorithm;
   }
@@ -33,7 +33,7 @@ public class Task extends AbstractJob {
   @Override
   public Promise<ValueH> schedule(Worker worker) {
     PromisedValue<ValueH> result = new PromisedValue<>();
-    var input = map(dependencies(), d -> d.schedule(worker));
+    var input = map(deps(), d -> d.schedule(worker));
     runWhenAllAvailable(input, () -> worker.enqueue(info, algorithm, input, result));
     return result;
   }

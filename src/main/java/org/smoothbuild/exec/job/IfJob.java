@@ -41,14 +41,14 @@ public class IfJob extends AbstractJob {
   }
 
   private Job conditionJob() {
-    return dependencies().get(0);
+    return deps().get(0);
   }
 
   private Job thenJob() {
-    return dependencies().get(1);
+    return deps().get(1);
   }
 
   private Job elseJob() {
-    return dependencies().get(2);
+    return deps().get(2);
   }
 }

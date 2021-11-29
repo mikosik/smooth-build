@@ -50,6 +50,6 @@ public class CallJob extends AbstractJob {
   }
 
   private Job funcJob() {
-    return dependencies().get(0);
+    return deps().get(0);
   }
 }

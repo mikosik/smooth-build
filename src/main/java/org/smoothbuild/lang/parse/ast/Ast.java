@@ -43,13 +43,13 @@ public class Ast {
     return structs;
   }
 
-  public Maybe<Ast> sortedByDependencies() {
-    var sortedTypes = sortStructsByDependencies();
+  public Maybe<Ast> sortedByDeps() {
+    var sortedTypes = sortStructsByDeps();
     if (sortedTypes.sorted() == null) {
       Log error = createCycleError("Type hierarchy", sortedTypes.cycle());
       return maybeLogs(logs(error));
     }
-    var sortedReferencables = sortEvaluablesByDependencies();
+    var sortedReferencables = sortEvalsByDeps();
     if (sortedReferencables.sorted() == null) {
       Log error = createCycleError("Dependency graph", sortedReferencables.cycle());
       return maybeLogs(logs(error));
@@ -58,64 +58,63 @@ public class Ast {
     return maybeValue(ast);
   }
 
-  private TopologicalSortingResult<String, EvalN, Loc> sortEvaluablesByDependencies() {
+  private TopologicalSortingResult<String, EvalN, Loc> sortEvalsByDeps() {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(v -> names.add(v.name()));
 
     HashSet<GraphNode<String, EvalN, Loc>> nodes = new HashSet<>();
-    nodes.addAll(map(evaluables, value -> evaluableNodeToGraphNode(value, names)));
+    nodes.addAll(map(evaluables, value -> evalToGraphNode(value, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, EvalN, Loc> evaluableNodeToGraphNode(
-      EvalN evaluable, Set<String> names) {
-    Set<GraphEdge<Loc, String>> dependencies = new HashSet<>();
+  private static GraphNode<String, EvalN, Loc> evalToGraphNode(EvalN evaluable, Set<String> names) {
+    Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {
       @Override
       public void visitRef(RefN ref) {
         super.visitRef(ref);
         if (names.contains(ref.name())) {
-          dependencies.add(new GraphEdge<>(ref.loc(), ref.name()));
+          deps.add(new GraphEdge<>(ref.loc(), ref.name()));
         }
       }
     }.visitEvaluable(evaluable);
-    return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(dependencies));
+    return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(deps));
   }
 
-  private TopologicalSortingResult<String, StructN, Loc> sortStructsByDependencies() {
+  private TopologicalSortingResult<String, StructN, Loc> sortStructsByDeps() {
     Set<String> structNames = structs.stream()
         .map(NamedN::name)
         .collect(toSet());
-    var nodes = map(structs, struct -> structNodeToGraphNode(struct, structNames));
+    var nodes = map(structs, struct -> structToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, StructN, Loc> structNodeToGraphNode(
+  private static GraphNode<String, StructN, Loc> structToGraphNode(
       StructN struct, Set<String> funcNames) {
-    Set<GraphEdge<Loc, String>> dependencies = new HashSet<>();
+    Set<GraphEdge<Loc, String>> deps = new HashSet<>();
     new AstVisitor() {
       @Override
       public void visitField(ItemN field) {
         super.visitField(field);
-        field.typeNode().ifPresent(this::addToDependencies);
+        field.typeNode().ifPresent(this::addToDeps);
       }
 
-      private void addToDependencies(TypeN type) {
+      private void addToDeps(TypeN type) {
         switch (type) {
-          case ArrayTypeN arrayType -> addToDependencies(arrayType.elemType());
+          case ArrayTypeN arrayType -> addToDeps(arrayType.elemType());
           case FuncTypeN funcType -> {
-            addToDependencies(funcType.resultType());
-            funcType.paramTypes().forEach(this::addToDependencies);
+            addToDeps(funcType.resultType());
+            funcType.paramTypes().forEach(this::addToDeps);
           }
           default -> {
             if (funcNames.contains(type.name())) {
-              dependencies.add(new GraphEdge<>(type.loc(), type.name()));
+              deps.add(new GraphEdge<>(type.loc(), type.name()));
             }
           }
         }
       }
     }.visitStruct(struct);
-    return new GraphNode<>(struct.name(), struct, ImmutableList.copyOf(dependencies));
+    return new GraphNode<>(struct.name(), struct, ImmutableList.copyOf(deps));
   }
 
   private static Log createCycleError(String name, List<GraphEdge<Loc, String>> cycle) {

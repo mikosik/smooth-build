@@ -28,9 +28,9 @@ public class MapJob extends AbstractJob {
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeH typeS, Loc loc, List<Job> dependencies, IndexedScope<Job> scope,
+  public MapJob(TypeH typeS, Loc loc, List<Job> deps, IndexedScope<Job> scope,
       JobCreator jobCreator) {
-    super(typeS, dependencies, new NalImpl("building:" + MAP_TASK_NAME, loc));
+    super(typeS, deps, new NalImpl("building:" + MAP_TASK_NAME, loc));
     this.scope = scope;
     this.jobCreator = jobCreator;
   }
@@ -74,10 +74,10 @@ public class MapJob extends AbstractJob {
   }
 
   private Job arrayJob() {
-    return dependencies().get(0);
+    return deps().get(0);
   }
 
   private Job funcJob() {
-    return dependencies().get(1);
+    return deps().get(1);
   }
 }

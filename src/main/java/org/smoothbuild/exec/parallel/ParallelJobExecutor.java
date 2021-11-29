@@ -74,12 +74,12 @@ public class ParallelJobExecutor {
       return mapValues(results, promise -> Optional.ofNullable(promise.get()));
     }
 
-    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<ValueH>> dependencies,
+    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<ValueH>> deps,
         Consumer<ValueH> consumer) {
       jobExecutor.enqueue(() -> {
         try {
           var resultHandler = new ResultHandler(info, consumer, reporter, jobExecutor);
-          Input input = Input.fromPromises(dependencies);
+          Input input = Input.fromPromises(deps);
           computer.compute(algorithm, input, resultHandler);
         } catch (Throwable e) {
           reporter.reportComputerException(info, e);

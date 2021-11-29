@@ -61,7 +61,7 @@ public class ModuleLoader {
       return maybeLogs(logBuffer);
     }
 
-    Maybe<Ast> maybeSortedAst = ast.sortedByDependencies();
+    Maybe<Ast> maybeSortedAst = ast.sortedByDeps();
     logBuffer.logAll(maybeSortedAst.logs());
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);

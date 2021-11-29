@@ -32,6 +32,6 @@ public class VirtualJob extends AbstractJob {
   }
 
   private Job wrappedJob() {
-    return dependencies().get(0);
+    return deps().get(0);
   }
 }

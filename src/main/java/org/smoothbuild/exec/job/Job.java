@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableList;
 public interface Job extends Nal {
   public TypeH type();
 
-  public ImmutableList<Job> dependencies();
+  public ImmutableList<Job> deps();
 
   public Promise<ValueH> schedule(Worker worker);
 }
