@@ -4,7 +4,7 @@ import static java.lang.String.join;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
-import static org.smoothbuild.lang.parse.ast.FunctionTypeN.countFunctionVariables;
+import static org.smoothbuild.lang.parse.ast.FuncTypeN.countFuncVariables;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobN;
 import org.smoothbuild.lang.parse.ast.EvalN;
-import org.smoothbuild.lang.parse.ast.FunctionTypeN;
+import org.smoothbuild.lang.parse.ast.FuncTypeN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.NamedN;
@@ -125,9 +125,9 @@ public class AnalyzeSemantically {
       private void assertTypeIsDefined(TypeN type) {
         if (type instanceof ArrayTypeN array) {
           assertTypeIsDefined(array.elemType());
-        } else if (type instanceof FunctionTypeN function) {
-          assertTypeIsDefined(function.resultType());
-          function.paramTypes().forEach(this::assertTypeIsDefined);
+        } else if (type instanceof FuncTypeN func) {
+          assertTypeIsDefined(func.resultType());
+          func.paramTypes().forEach(this::assertTypeIsDefined);
         } else if (!isDefinedType(type)) {
           logger.log(parseError(type.location(), type.q() + " type is undefined."));
         }
@@ -236,7 +236,7 @@ public class AnalyzeSemantically {
         super.visitRealFunc(func);
         if (func.typeNode().isPresent()) {
           var counters = new CountersMap<String>();
-          countFunctionVariables(counters, func.typeNode().get(),
+          countFuncVariables(counters, func.typeNode().get(),
               map(func.params(), itemNode -> itemNode.typeNode().get()));
           logErrorIfNeeded(func, counters.keysWithCounter(1));
         }
@@ -269,8 +269,8 @@ public class AnalyzeSemantically {
 
   /**
    * Detects:
-   *  - function with body and @Native annotation
-   *  - function without body nor @Native annotation
+   *  - func with body and @Native annotation
+   *  - func without body nor @Native annotation
    *  - value with @Native annotation
    */
   private static void detectIllegalNatives(Logger logger, Ast ast) {

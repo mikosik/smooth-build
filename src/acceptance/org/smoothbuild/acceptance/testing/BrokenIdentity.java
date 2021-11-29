@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class BrokenIdentity {
-  public static ValueH function(NativeApi nativeApi, ValueH value) {
+  public static ValueH func(NativeApi nativeApi, ValueH value) {
     return nativeApi.factory().string("abc");
   }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ValueH;
-import org.smoothbuild.db.object.obj.val.NativeFunctionH;
+import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -17,26 +17,26 @@ import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.plugin.NativeApi;
 
 public class InvokeAlgorithm extends Algorithm {
-  private final NativeFunctionH nativeFunctionH;
+  private final NatFuncH natFuncH;
   private final String extendedName;
   private final MethodLoader methodLoader;
 
-  public InvokeAlgorithm(TypeH outputType, String extendedName, NativeFunctionH nativeFunctionH,
+  public InvokeAlgorithm(TypeH outputType, String extendedName, NatFuncH natFuncH,
       MethodLoader methodLoader) {
-    super(outputType, nativeFunctionH.isPure().jValue());
+    super(outputType, natFuncH.isPure().jValue());
     this.extendedName = extendedName;
     this.methodLoader = methodLoader;
-    this.nativeFunctionH = nativeFunctionH;
+    this.natFuncH = natFuncH;
   }
 
   @Override
   public Hash hash() {
-    return invokeAlgorithmHash(nativeFunctionH);
+    return invokeAlgorithmHash(natFuncH);
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    var method = methodLoader.load(extendedName, nativeFunctionH);
+    var method = methodLoader.load(extendedName, natFuncH);
     try {
       var result = (ValueH) method.invoke(null, createArguments(nativeApi, input.vals()));
       if (result == null) {

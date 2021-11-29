@@ -69,9 +69,9 @@ public class PromisedValue<T> implements Consumer<T>, Promise<T> {
   }
 
   @Override
-  public <U> Promise<U> chain(Function<T, U> function) {
+  public <U> Promise<U> chain(Function<T, U> func) {
     PromisedValue<U> chained = new PromisedValue<>();
-    addConsumer(v -> chained.accept(function.apply(v)));
+    addConsumer(v -> chained.accept(func.apply(v)));
     return chained;
   }
 }

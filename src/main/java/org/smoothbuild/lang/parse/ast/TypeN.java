@@ -7,7 +7,7 @@ import org.smoothbuild.util.collect.CountersMap;
 
 import com.google.common.collect.ImmutableList;
 
-public sealed class TypeN extends NamedN permits ArrayTypeN, FunctionTypeN {
+public sealed class TypeN extends NamedN permits ArrayTypeN, FuncTypeN {
   public TypeN(String name, Location location) {
     super(name, location);
   }

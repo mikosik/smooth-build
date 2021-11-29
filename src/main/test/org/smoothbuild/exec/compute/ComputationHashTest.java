@@ -74,8 +74,8 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_invoke_algorithm_and_empty_input_is_stable() {
-    var nativeFunctionH = nativeFunctionH(blobH(), stringH("class path"));
-    var algorithm = new InvokeAlgorithm(stringHT(), "name", nativeFunctionH, null);
+    var natFuncH = natFuncH(blobH(), stringH("class path"));
+    var algorithm = new InvokeAlgorithm(stringHT(), "name", natFuncH, null);
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("dd834024bc0b342ee029b1e4cb590be8cd50aae4"));
@@ -83,8 +83,8 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_invoke_algorithm_and_non_empty_input_is_stable() {
-    var nativeFunctionH = nativeFunctionH(blobH(), stringH("class path"));
-    var algorithm = new InvokeAlgorithm(stringHT(), "name", nativeFunctionH, null);
+    var natFuncH = natFuncH(blobH(), stringH("class path"));
+    var algorithm = new InvokeAlgorithm(stringHT(), "name", natFuncH, null);
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("f98da45979f7d77b4d0a9e1444454d3775b8c221"));

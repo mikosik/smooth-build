@@ -8,8 +8,8 @@ public class NamedArgumentConversionTest extends AbstractConversionTestCase {
   @Override
   protected String createTestScript(TestedAssignment testSpec) {
     return unlines(
-        "  testFunction(" + testSpec.target().name() + " param) = param;      ",
-        "  result = testFunction(param=" + testSpec.source().literal() + ");  ",
+        "  testFunc(" + testSpec.target().name() + " param) = param;      ",
+        "  result = testFunc(param=" + testSpec.source().literal() + ");  ",
         testSpec.declarations()
     );
   }

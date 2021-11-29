@@ -15,7 +15,7 @@ import org.smoothbuild.util.collect.NameableImpl;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Item is a function param or a struct field.
+ * Item is a func param or a struct field.
  *
  * This class is immutable.
  */

@@ -108,7 +108,7 @@ public class ModuleLoader {
     var resultType = struct.type().get();
     var name = struct.constructor().name();
     var paramTypes = map(struct.fields(), f -> f.type().get());
-    var type = typeFactory.function(resultType, paramTypes);
+    var type = typeFactory.func(resultType, paramTypes);
     var params = struct.fields().map(f -> f.toItem(path));
     return new ConstructorS(type, path, name, params, struct.location());
   }

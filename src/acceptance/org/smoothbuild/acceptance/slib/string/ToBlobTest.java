@@ -9,7 +9,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ToBlobTest extends AcceptanceTestCase {
   @Test
-  public void to_blob_function() throws IOException {
+  public void to_blob_func() throws IOException {
     createFile("file.txt", "abc");
     createUserModule("""
             result = toBlob("abc");

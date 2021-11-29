@@ -59,7 +59,7 @@ public class NativeTest extends AcceptanceTestCase {
   }
 
   @Nested
-  class _native_function {
+  class _nat_func {
     @Test
     public void can_return_passed_argument() throws Exception {
       createNativeJar(StringIdentity.class);
@@ -78,12 +78,12 @@ public class NativeTest extends AcceptanceTestCase {
     public void without_native_jar_file_causes_error() throws Exception {
       createUserModule("""
             @Native("MissingClass")
-            String myFunction();
-            result = myFunction();
+            String myFunc();
+            result = myFunc();
             """);
       runSmoothBuild("result");
       assertFinishedWithError();
-      assertSysOutContains(fileNotFoundErrorMessage("myFunction"));
+      assertSysOutContains(fileNotFoundErrorMessage("myFunc"));
     }
 
     @Test
@@ -145,7 +145,7 @@ public class NativeTest extends AcceptanceTestCase {
         runSmoothBuild("result");
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("wrongMethodName", classPath,
-            "Class '" + classPath + "' does not have 'function' method."));
+            "Class '" + classPath + "' does not have 'func' method."));
       }
 
       @Test

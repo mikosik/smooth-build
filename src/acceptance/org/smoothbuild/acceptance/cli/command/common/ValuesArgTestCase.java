@@ -75,7 +75,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_that_requires_arguments_prints_error() throws Exception {
+  public void func_that_requires_arguments_prints_error() throws Exception {
     createUserModule("""
             String testStringIdentity(String value) = value;
             """);
@@ -91,7 +91,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_which_all_params_are_optional_prints_error() throws Exception {
+  public void func_which_all_params_are_optional_prints_error() throws Exception {
     createUserModule("""
             String testStringIdentity(String value = "default") = value;
             """);

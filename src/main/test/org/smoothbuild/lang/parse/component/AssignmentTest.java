@@ -16,9 +16,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
-import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.FuncType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -46,11 +46,11 @@ public class AssignmentTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("test_specs")
-  public void function_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
+  public void func_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target();
     TestedType source = testSpec.source();
     String sourceCode = unlines(
-        "%s myFunction(%s param, %s probablyPolytype) = param;"
+        "%s myFunc(%s param, %s probablyPolytype) = param;"
             .formatted(target.name(), source.name(), target.name()),
         testSpec.typeDeclarations());
     if (testSpec.allowed()) {
@@ -58,7 +58,7 @@ public class AssignmentTest extends TestingContext {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`myFunction` has body which type is " + source.q()
+          .loadsWithError(1, "`myFunc` has body which type is " + source.q()
                + " and it is not convertible to its declared type " + target.q() + ".");
     }
   }
@@ -70,15 +70,15 @@ public class AssignmentTest extends TestingContext {
     TestedType sourceType = testSpec.source();
     TestingModuleLoader module = module(unlines(
         "@Native(\"impl\")",
-        targetType.name() + " innerFunction(" + targetType.name() + " target);     ",
-        "outerFunction(" + sourceType.name() + " source) = innerFunction(source);  ",
+        targetType.name() + " innerFunc(" + targetType.name() + " target);     ",
+        "outerFunc(" + sourceType.name() + " source) = innerFunc(source);  ",
         testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
       var type = targetType.type();
-      FunctionType functionType = new FunctionTypeS(type, list(type));
-      module.loadsWithError(3, "In call to function with type " + functionType.q()
+      FuncType funcType = new FuncTypeS(type, list(type));
+      module.loadsWithError(3, "In call to function with type " + funcType.q()
           + ": Cannot assign argument of type " + sourceType.q()
           + " to parameter `target` of type " + targetType.q() + ".");
     }
@@ -91,16 +91,16 @@ public class AssignmentTest extends TestingContext {
     TestedType sourceType = testSpec.source();
     TestingModuleLoader module = module(unlines(
         "@Native(\"impl\")",
-        targetType.name() + " innerFunction(" + targetType.name() + " target);            ",
-        "outerFunction(" + sourceType.name() + " source) = innerFunction(target=source);  ",
+        targetType.name() + " innerFunc(" + targetType.name() + " target);            ",
+        "outerFunc(" + sourceType.name() + " source) = innerFunc(target=source);  ",
         testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
       var type = targetType.type();
-      FunctionType functionType = new FunctionTypeS(type, list(type));
+      FuncType funcType = new FuncTypeS(type, list(type));
       module.loadsWithError(3,
-          "In call to function with type " + functionType.q() +
+          "In call to function with type " + funcType.q() +
               ": Cannot assign argument of type " + sourceType.q()
               + " to parameter `target` of type " + targetType.q() + ".");
     }
@@ -116,7 +116,7 @@ public class AssignmentTest extends TestingContext {
     TestedType target = testSpec.target();
     TestedType source = testSpec.source();
     String sourceCode = unlines(
-        "myFunction(" + target.name() + " param = " + source.literal() + ") = param; ",
+        "myFunc(" + target.name() + " param = " + source.literal() + ") = param; ",
         testSpec.declarations());
     if (testSpec.allowed()) {
       module(sourceCode)

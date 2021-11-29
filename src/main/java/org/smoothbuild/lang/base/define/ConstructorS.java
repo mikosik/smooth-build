@@ -4,15 +4,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.util.collect.NList;
 
 /**
  * This class is immutable.
  */
-public final class ConstructorS extends FunctionS {
-  public ConstructorS(FunctionTypeS type, ModulePath modulePath, String name,
+public final class ConstructorS extends FuncS {
+  public ConstructorS(FuncTypeS type, ModulePath modulePath, String name,
       NList<Item> params, Location location) {
     super(type, modulePath, name, params, location);
     checkArgument(type.result() instanceof StructTypeS);

@@ -34,19 +34,19 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void function_declared_above_is_visible() {
+      public void func_declared_above_is_visible() {
         module("""
-             String myFunction() = "abc";
-             result = myFunction;
+             String myFunc() = "abc";
+             result = myFunc;
              """)
             .loadsSuccessfully();
       }
 
       @Test
-      public void function_declared_below_is_visible() {
+      public void func_declared_below_is_visible() {
         module("""
-             result = myFunction;
-             String myFunction() = "abc";
+             result = myFunc;
+             String myFunc() = "abc";
              """)
             .loadsSuccessfully();
       }
@@ -107,14 +107,14 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void function_is_visible() {
+      public void func_is_visible() {
         DefinitionsS imported = module("""
-          String otherModuleFunction() = "abc";
+          String otherModuleFunc() = "abc";
           """)
             .loadsSuccessfully()
             .getModuleAsDefinitions();
         module("""
-              myValue = otherModuleFunction;
+              myValue = otherModuleFunc;
               """)
             .withImported(imported)
             .loadsSuccessfully();
@@ -153,17 +153,17 @@ public class VisibilityTest extends TestingContext {
     @Nested
     class _param {
       @Test
-      public void in_function_body_is_visible() {
+      public void in_func_body_is_visible() {
         module("""
-             myFunction(String param) = param;
+             myFunc(String param) = param;
              """)
             .loadsSuccessfully();
       }
 
       @Test
-      public void outside_its_function_body_is_not_visible() {
+      public void outside_its_func_body_is_not_visible() {
         module("""
-             myFunction(String param) = "abc";
+             myFunc(String param) = "abc";
              result = param;
              """)
             .loadsWithError(2, "`param` is undefined.");
@@ -202,13 +202,13 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void function() {
+      public void func() {
         module("""
-             myFunction1() = myFunction1();
+             myFunc1() = myFunc1();
              """)
             .loadsWithError("""
               Dependency graph contains cycle:
-              myBuild.smooth:1: myFunction1 -> myFunction1""");
+              myBuild.smooth:1: myFunc1 -> myFunc1""");
       }
 
       @Test
@@ -236,7 +236,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_through_function_result() {
+      public void struct_through_func_result() {
         module("""
              MyStruct {
                MyStruct() myField
@@ -248,7 +248,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_through_function_param() {
+      public void struct_through_func_param() {
         module("""
              MyStruct {
                Blob(MyStruct) myField
@@ -275,26 +275,26 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void function_function() {
+      public void func_func() {
         module("""
-             myFunction1() = myFunction2();
-             myFunction2() = myFunction1();
+             myFunc1() = myFunc2();
+             myFunc2() = myFunc1();
              """)
             .loadsWithError("""
               Dependency graph contains cycle:
-              myBuild.smooth:1: myFunction1 -> myFunction2
-              myBuild.smooth:2: myFunction2 -> myFunction1""");
+              myBuild.smooth:1: myFunc1 -> myFunc2
+              myBuild.smooth:2: myFunc2 -> myFunc1""");
       }
 
       @Test
-      public void function_function_through_argument() {
+      public void func_func_through_argument() {
         module("""
-             String myFunction() = myIdentity(myFunction());
+             String myFunc() = myIdentity(myFunc());
              String myIdentity(String s) = s;
              """)
             .loadsWithError("""
               Dependency graph contains cycle:
-              myBuild.smooth:1: myFunction -> myFunction""");
+              myBuild.smooth:1: myFunc -> myFunc""");
       }
 
       @Test
@@ -341,7 +341,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_struct_through_function_result() {
+      public void struct_struct_through_func_result() {
         module("""
              MyStruct1 {
                MyStruct2 myField
@@ -357,7 +357,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_struct_through_function_param() {
+      public void struct_struct_through_func_param() {
         module("""
              MyStruct1 {
                MyStruct2 myField
@@ -390,45 +390,45 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void function_function_function() {
+      public void func_func_func() {
         module("""
-             myFunction1() = myFunction2();
-             myFunction2() = myFunction3();
-             myFunction3() = myFunction1();
+             myFunc1() = myFunc2();
+             myFunc2() = myFunc3();
+             myFunc3() = myFunc1();
              """)
             .loadsWithError("""
               Dependency graph contains cycle:
-              myBuild.smooth:1: myFunction1 -> myFunction2
-              myBuild.smooth:2: myFunction2 -> myFunction3
-              myBuild.smooth:3: myFunction3 -> myFunction1""");
+              myBuild.smooth:1: myFunc1 -> myFunc2
+              myBuild.smooth:2: myFunc2 -> myFunc3
+              myBuild.smooth:3: myFunc3 -> myFunc1""");
       }
 
       @Test
-      public void value_function_value() {
+      public void value_func_value() {
         module("""
-             myValue1 = myFunction();
-             myFunction() = myValue2;
+             myValue1 = myFunc();
+             myFunc() = myValue2;
              myValue2 = myValue1;
              """)
             .loadsWithError("""
               Dependency graph contains cycle:
-              myBuild.smooth:1: myValue1 -> myFunction
-              myBuild.smooth:2: myFunction -> myValue2
+              myBuild.smooth:1: myValue1 -> myFunc
+              myBuild.smooth:2: myFunc -> myValue2
               myBuild.smooth:3: myValue2 -> myValue1""");
       }
 
       @Test
-      public void function_value_function() {
+      public void func_value_func() {
         module("""
-             myFunction1() = myValue;
-             myValue = myFunction2();
-             myFunction2() = myFunction1();
+             myFunc1() = myValue;
+             myValue = myFunc2();
+             myFunc2() = myFunc1();
              """)
             .loadsWithError("""
               Dependency graph contains cycle:
-              myBuild.smooth:1: myFunction1 -> myValue
-              myBuild.smooth:2: myValue -> myFunction2
-              myBuild.smooth:3: myFunction2 -> myFunction1""");
+              myBuild.smooth:1: myFunc1 -> myValue
+              myBuild.smooth:2: myValue -> myFunc2
+              myBuild.smooth:3: myFunc2 -> myFunc1""");
       }
 
       @Test
@@ -452,7 +452,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_struct_struct_through_function_result() {
+      public void struct_struct_struct_through_func_result() {
         module("""
              MyStruct1 {
                [MyStruct2] myField
@@ -472,7 +472,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void struct_struct_struct_through_function_param() {
+      public void struct_struct_struct_through_func_param() {
         module("""
              MyStruct1 {
                [MyStruct2] myField
@@ -515,18 +515,18 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void function_fails() {
+        public void func_fails() {
           DefinitionsS imported = module("""
-            otherModuleFunction() = "abc";
+            otherModuleFunc() = "abc";
             """)
               .withImportedModuleFiles()
               .loadsSuccessfully()
               .getModuleAsDefinitions();
           module("""
-                otherModuleFunction = "def";
+                otherModuleFunc = "def";
                 """)
               .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunction"));
+              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunc"));
         }
 
         @Test
@@ -557,12 +557,12 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void function_fails() {
+        public void func_fails() {
           module("""
-               myFunction() = "abc";
-               myFunction = "def";
+               myFunc() = "abc";
+               myFunc = "def";
                """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunction"));
+              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
         }
 
         @Test
@@ -578,7 +578,7 @@ public class VisibilityTest extends TestingContext {
       @Nested
       class _internal {
         @Test
-        public void function_fails() {
+        public void func_fails() {
           module("""
                 if = "def";
                 """)
@@ -588,7 +588,7 @@ public class VisibilityTest extends TestingContext {
     }
 
     @Nested
-    class _function_shadowing {
+    class _func_shadowing {
       @Nested
       class _imported {
         @Test
@@ -607,18 +607,18 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void function_fails() {
+        public void func_fails() {
           DefinitionsS imported = module("""
-            otherModuleFunction() = "abc";
+            otherModuleFunc() = "abc";
             """)
               .withImportedModuleFiles()
               .loadsSuccessfully()
               .getModuleAsDefinitions();
           module("""
-                otherModuleFunction() = "def";
+                otherModuleFunc() = "def";
                 """)
               .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunction"));
+              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunc"));
         }
 
         @Test
@@ -649,12 +649,12 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void function_fails() {
+        public void func_fails() {
           module("""
-               myFunction() = "abc";
-               myFunction() = "def";
+               myFunc() = "abc";
+               myFunc() = "def";
                """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunction"));
+              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
         }
 
         @Test
@@ -670,7 +670,7 @@ public class VisibilityTest extends TestingContext {
       @Nested
       class _internal {
         @Test
-        public void function_fails() {
+        public void func_fails() {
           module("""
                 if() = "def";
                 """)
@@ -684,7 +684,7 @@ public class VisibilityTest extends TestingContext {
       @Test
       public void other_param_fails() {
         module("""
-             String myFunction(
+             String myFunc(
                String param,
                String param) = "abc";
                """)
@@ -702,22 +702,22 @@ public class VisibilityTest extends TestingContext {
               .loadsSuccessfully()
               .getModuleAsDefinitions();
           module("""
-              String myFunction(String otherModuleValue) = "abc";
+              String myFunc(String otherModuleValue) = "abc";
               """)
               .withImported(imported)
               .loadsSuccessfully();
         }
 
         @Test
-        public void function_succeeds() {
+        public void func_succeeds() {
           DefinitionsS imported = module("""
-              otherModuleFunction() = "abc";
+              otherModuleFunc() = "abc";
               """)
               .withImportedModuleFiles()
               .loadsSuccessfully()
               .getModuleAsDefinitions();
           module("""
-              String myFunction(String otherModuleFunction) = "abc";
+              String myFunc(String otherModuleFunc) = "abc";
               """)
               .withImported(imported)
               .loadsSuccessfully();
@@ -732,7 +732,7 @@ public class VisibilityTest extends TestingContext {
               .loadsSuccessfully()
               .getModuleAsDefinitions();
           module("""
-              String myFunction(String otherModuleStruct) = "abc";
+              String myFunc(String otherModuleStruct) = "abc";
               """)
               .withImported(imported)
               .loadsSuccessfully();
@@ -745,16 +745,16 @@ public class VisibilityTest extends TestingContext {
         public void value_succeeds() {
           module("""
               myValue = "abc";
-              String myFunction(String myValue) = "abc";
+              String myFunc(String myValue) = "abc";
               """)
               .loadsSuccessfully();
         }
 
         @Test
-        public void function_succeeds() {
+        public void func_succeeds() {
           module("""
-              myFunction() = "abc";
-              String myOtherFunction(String myFunction) = "abc";
+              myFunc() = "abc";
+              String myOtherFunc(String myFunc) = "abc";
               """)
               .loadsSuccessfully();
         }
@@ -763,7 +763,7 @@ public class VisibilityTest extends TestingContext {
         public void constructor_succeeds() {
           module("""
              MyStruct {}
-             String myFunction(String myStruct) = "abc";
+             String myFunc(String myStruct) = "abc";
              """)
               .loadsSuccessfully();
         }
@@ -772,10 +772,10 @@ public class VisibilityTest extends TestingContext {
       @Nested
       class _internal {
         @Test
-        public void function_succeeds() {
+        public void func_succeeds() {
           module("""
-              verifying_that_internal_if_function_is_defined = if;
-              String myFunction(String if) = "abc";
+              verifying_that_internal_if_func_is_defined = if;
+              String myFunc(String if) = "abc";
               """)
               .loadsSuccessfully();
         }
@@ -863,16 +863,16 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void function_succeeds() {
+        public void func_succeeds() {
           DefinitionsS imported = module("""
-              otherModuleFunction() = "abc";
+              otherModuleFunc() = "abc";
               """)
               .withImportedModuleFiles()
               .loadsSuccessfully()
               .getModuleAsDefinitions();
           module("""
               MyStruct {
-                String otherModuleFunction,
+                String otherModuleFunc,
               }
               """)
               .withImported(imported)
@@ -911,11 +911,11 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void function_succeeds() {
+        public void func_succeeds() {
           module("""
-              myFunction() = "abc";
+              myFunc() = "abc";
               MyStruct {
-                String myFunction,
+                String myFunc,
               }
               """)
               .loadsSuccessfully();
@@ -936,9 +936,9 @@ public class VisibilityTest extends TestingContext {
       @Nested
       class _internal {
         @Test
-        public void function_succeeds() {
+        public void func_succeeds() {
           module("""
-              verifying_that_internal_if_function_is_defined = if;
+              verifying_that_internal_if_func_is_defined = if;
               MyStruct {
                 String if,
               }
@@ -968,18 +968,18 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void function_fails() {
+        public void func_fails() {
           DefinitionsS imported = module("""
-            otherModuleFunction() = "abc";
+            otherModuleFunc() = "abc";
             """)
               .withImportedModuleFiles()
               .loadsSuccessfully()
               .getModuleAsDefinitions();
           module("""
-                OtherModuleFunction{}
+                OtherModuleFunc{}
                 """)
               .withImported(imported)
-              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunction"));
+              .loadsWithError(1, alreadyDefinedIn(importedFilePath(), "otherModuleFunc"));
         }
       }
 
@@ -995,19 +995,19 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void function_fails() {
+        public void func_fails() {
           module("""
-               myFunction() = "abc";
-               MyFunction{}
+               myFunc() = "abc";
+               MyFunc{}
                """)
-              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunction"));
+              .loadsWithError(2, alreadyDefinedIn(filePath(), "myFunc"));
         }
       }
 
       @Nested
       class _internal {
         @Test
-        public void function_fails() {
+        public void func_fails() {
           module("""
                 If{}
                 """)

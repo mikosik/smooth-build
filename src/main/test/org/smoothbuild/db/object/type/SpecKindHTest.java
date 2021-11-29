@@ -31,9 +31,9 @@ public class SpecKindHTest {
         Arguments.of(0, SpecKindH.ARRAY),
         Arguments.of(1, SpecKindH.BLOB),
         Arguments.of(2, SpecKindH.BOOL),
-        Arguments.of(3, SpecKindH.ABSTRACT_FUNCTION),
+        Arguments.of(3, SpecKindH.ABST_FUNC),
         Arguments.of(4, SpecKindH.INT),
-        Arguments.of(5, SpecKindH.IF_FUNCTION),
+        Arguments.of(5, SpecKindH.IF_FUNC),
         Arguments.of(6, SpecKindH.NOTHING),
         Arguments.of(7, SpecKindH.TUPLE),
         Arguments.of(8, SpecKindH.STRING),
@@ -45,9 +45,9 @@ public class SpecKindHTest {
         Arguments.of(15, SpecKindH.CONSTRUCT),
         Arguments.of(17, SpecKindH.VARIABLE),
         Arguments.of(18, SpecKindH.ANY),
-        Arguments.of(19, SpecKindH.NATIVE_FUNCTION),
-        Arguments.of(21, SpecKindH.MAP_FUNCTION),
-        Arguments.of(22, SpecKindH.DEFINED_FUNCTION)
+        Arguments.of(19, SpecKindH.NAT_FUNC),
+        Arguments.of(21, SpecKindH.MAP_FUNC),
+        Arguments.of(22, SpecKindH.DEF_FUNC)
     );
   }
 

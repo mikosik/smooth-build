@@ -227,7 +227,7 @@ public class TypingTest {
         r.add(arguments(a(a(A)), a(NOTHING), bm(A, LOWER, NOTHING)));
         r.add(arguments(a(a(A)), a(a(NOTHING)), bm(A, LOWER, NOTHING)));
 
-        // functions
+        // funcs
         r.add(arguments(f(A), NOTHING, bm(A, LOWER, NOTHING)));
         r.add(arguments(f(f(A)), NOTHING, bm(A, LOWER, NOTHING)));
         r.add(arguments(f(f(f(A))), NOTHING, bm(A, LOWER, NOTHING)));
@@ -240,7 +240,7 @@ public class TypingTest {
         r.add(arguments(f(BOOL, f(BLOB, f(A))), NOTHING, bm(A, LOWER, NOTHING)));
         r.add(arguments(f(BOOL, f(BLOB, f(f(A)))), NOTHING, bm(A, LOWER, NOTHING)));
 
-        // arrays + functions
+        // arrays + funcs
         r.add(arguments(a(f(A)), NOTHING, bm(A, LOWER, NOTHING)));
         r.add(arguments(a(f(STRING, A)), NOTHING, bm(A, UPPER, ANY)));
 
@@ -260,7 +260,7 @@ public class TypingTest {
         r.add(arguments(a(a(A)), a(type), bm()));
         r.add(arguments(a(a(A)), a(a(type)), bm(A, LOWER, type)));
 
-        // functions
+        // funcs
         r.add(arguments(f(A), type, bm()));
         r.add(arguments(f(A), f(type), bm(A, LOWER, type)));
         r.add(arguments(f(A), f(f(type)), bm(A, LOWER, f(type))));
@@ -284,7 +284,7 @@ public class TypingTest {
         r.add(arguments(f(BOOL, f(BLOB, f(A))), f(BOOL, f(BLOB, f(type))), bm(A, LOWER, type)));
         r.add(arguments(f(BOOL, f(BLOB, f(f(A)))), f(BOOL, f(BLOB, f(f(type)))), bm(A, LOWER, type)));
 
-        // arrays + functions
+        // arrays + funcs
         r.add(arguments(a(f(A)), a(f(type)), bm(A, LOWER, type)));
         r.add(arguments(a(f(BOOL, A)), a(f(BOOL, type)), bm(A, UPPER, type)));
 

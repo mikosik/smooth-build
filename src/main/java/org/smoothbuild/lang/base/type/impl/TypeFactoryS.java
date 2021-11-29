@@ -96,8 +96,8 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
   }
 
   @Override
-  public FunctionTypeS function(TypeS result, ImmutableList<TypeS> params) {
-    return new FunctionTypeS(result, ImmutableList.copyOf(params));
+  public FuncTypeS func(TypeS result, ImmutableList<TypeS> params) {
+    return new FuncTypeS(result, ImmutableList.copyOf(params));
   }
 
   public IntTypeS int_() {

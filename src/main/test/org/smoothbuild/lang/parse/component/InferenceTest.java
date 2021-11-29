@@ -68,10 +68,10 @@ public class InferenceTest extends TestingContext {
     }
 
     @Test
-    public void function_reference() {
+    public void func_reference() {
       String code = """
-          String myFunction(Blob param) = "abc";
-          myValue = myFunction;
+          String myFunc(Blob param) = "abc";
+          myValue = myFunc;
           """;
       module(code)
           .loadsSuccessfully()
@@ -79,10 +79,10 @@ public class InferenceTest extends TestingContext {
     }
 
     @Test
-    public void function_call() {
+    public void func_call() {
       String code = """
-          String myFunction() = "abc";
-          myValue = myFunction();
+          String myFunc() = "abc";
+          myValue = myFunc();
           """;
       module(code)
           .loadsSuccessfully()
@@ -91,98 +91,98 @@ public class InferenceTest extends TestingContext {
   }
 
   @Nested
-  class _inferring_function_result_type_from {
+  class _inferring_func_result_type_from {
     @Test
     public void string_literal() {
       String code = """
-          myFunction() = "abc";
+          myFunc() = "abc";
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(STRING));
+          .containsEvaluableWithType("myFunc", f(STRING));
     }
 
     @Test
     public void blob_literal() {
       String code = """
-          myFunction() = 0x07;
+          myFunc() = 0x07;
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(BLOB));
+          .containsEvaluableWithType("myFunc", f(BLOB));
     }
 
     @Test
     public void int_literal() {
       String code = """
-          myFunction() = 123;
+          myFunc() = 123;
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(INT));
+          .containsEvaluableWithType("myFunc", f(INT));
     }
 
     @Test
     public void array_literal() {
       String code = """
-          myFunction() = [ "abc" ];
+          myFunc() = [ "abc" ];
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(a(STRING)));
+          .containsEvaluableWithType("myFunc", f(a(STRING)));
     }
 
     @Test
     public void value_reference() {
       String code = """
           String stringValue = "abc";
-          myFunction() = stringValue;
+          myFunc() = stringValue;
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(STRING));
+          .containsEvaluableWithType("myFunc", f(STRING));
     }
 
     @Test
-    public void function_reference() {
+    public void func_reference() {
       String code = """
-          String otherFunction(Blob param) = "abc";
-          myFunction() = otherFunction;
+          String otherFunc(Blob param) = "abc";
+          myFunc() = otherFunc;
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(f(STRING, BLOB)));
+          .containsEvaluableWithType("myFunc", f(f(STRING, BLOB)));
     }
 
     @Test
-    public void function_call() {
+    public void func_call() {
       String code = """
-          String otherFunction() = "abc";
-          myFunction() = otherFunction();
+          String otherFunc() = "abc";
+          myFunc() = otherFunc();
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(STRING));
+          .containsEvaluableWithType("myFunc", f(STRING));
     }
 
     @Test
-    public void function_param() {
+    public void func_param() {
       String code = """
-          myFunction(String param) = param;
+          myFunc(String param) = param;
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(STRING, STRING));
+          .containsEvaluableWithType("myFunc", f(STRING, STRING));
     }
 
     @Test
-    public void function_generic_param() {
+    public void func_generic_param() {
       String code = """
-          myFunction(A param) = param;
+          myFunc(A param) = param;
           """;
       module(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunction", f(A, A));
+          .containsEvaluableWithType("myFunc", f(A, A));
     }
   }
 
@@ -226,13 +226,13 @@ public class InferenceTest extends TestingContext {
     }
 
     @Test
-    public void when_elems_have_function_types_that_have_no_common_super_type() {
+    public void when_elems_have_func_types_that_have_no_common_super_type() {
       String code = """
-            String firstFunction() = "abc";
-            Blob secondFunction() = 0x01;
+            String firstFunc() = "abc";
+            Blob secondFunc() = 0x01;
             result = [
-              firstFunction,
-              secondFunction,
+              firstFunc,
+              secondFunc,
             ];
             """;
       module(code)
@@ -244,7 +244,7 @@ public class InferenceTest extends TestingContext {
   }
 
   @Nested
-  class _inferring_function_param_generic_types_fails_when_variable_has_two_inconvertible_lower_bounds {
+  class _inferring_func_param_generic_types_fails_when_variable_has_two_inconvertible_lower_bounds {
     @Test
     public void base_types() {
       String code = """
@@ -287,7 +287,7 @@ public class InferenceTest extends TestingContext {
   @Nested
   class _inferring_call_result_type {
     @Nested
-    class _identity_function_applied_to {
+    class _identity_func_applied_to {
       @Test
       public void nothing() {
         String code = """
@@ -324,11 +324,11 @@ public class InferenceTest extends TestingContext {
       }
 
       @Test
-      public void function() {
+      public void func() {
         String code = """
             A myIdentity(A a) = a;
-            String myFunction(Blob param) = "abc";
-            myValue = myIdentity(myFunction);
+            String myFunc(Blob param) = "abc";
+            myValue = myIdentity(myFunc);
             """;
         module(code)
             .loadsSuccessfully()
@@ -337,7 +337,7 @@ public class InferenceTest extends TestingContext {
     }
 
     @Nested
-    class _first_elem_function_applied_to {
+    class _first_elem_func_applied_to {
       @Test
       public void nothing_array() {
         String code = """
@@ -375,13 +375,13 @@ public class InferenceTest extends TestingContext {
       }
 
       @Test
-      public void function_array_with_convertible_functions() {
+      public void func_array_with_convertible_funcs() {
         String code = """
             @Native("impl.met")
             A firstElement([A] array);
-            String myFunction1(Blob param) = "abc";
-            String myFunction2(String param) = "abc";
-            myValue = firstElement([ myFunction1, myFunction2 ]);
+            String myFunc1(Blob param) = "abc";
+            String myFunc2(String param) = "abc";
+            myValue = firstElement([ myFunc1, myFunc2 ]);
             """;
         module(code)
             .loadsSuccessfully()
@@ -390,7 +390,7 @@ public class InferenceTest extends TestingContext {
     }
 
     @Nested
-    class _single_elem_array_function_applied_to {
+    class _single_elem_array_func_applied_to {
       @Test
       public void nothing() {
         String code = """
@@ -427,11 +427,11 @@ public class InferenceTest extends TestingContext {
       }
 
       @Test
-      public void function() {
+      public void func() {
         String code = """
             [A] singleElement(A a) = [a];
-            String myFunction(Blob param) = "abc";
-            myValue = singleElement(myFunction);
+            String myFunc(Blob param) = "abc";
+            myValue = singleElement(myFunc);
             """;
         module(code)
             .loadsSuccessfully()
@@ -442,7 +442,7 @@ public class InferenceTest extends TestingContext {
     @Test
     @Disabled
     public void bug() {
-      // This test fails because call to function `f` will infer bounds for 2 variables:
+      // This test fails because call to func `f` will infer bounds for 2 variables:
       // A: (String, C)
       // B: ([C], Any)
       // Algorithm infers that B is upper than `[C]` so it takes `[C]` as call result, but

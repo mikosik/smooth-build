@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NativeFunctionH;
+import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
@@ -14,8 +14,8 @@ public class AlgorithmHashes {
     return hash(0);
   }
 
-  public static Hash invokeAlgorithmHash(NativeFunctionH nativeFunctionH) {
-    return hash(1, nativeFunctionH.hash());
+  public static Hash invokeAlgorithmHash(NatFuncH natFuncH) {
+    return hash(1, natFuncH.hash());
   }
 
   public static Hash convertAlgorithmHash(SpecH destinationType) {

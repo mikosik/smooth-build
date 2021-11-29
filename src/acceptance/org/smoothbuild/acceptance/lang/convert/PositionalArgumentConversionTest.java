@@ -8,8 +8,8 @@ public class PositionalArgumentConversionTest extends AbstractConversionTestCase
   @Override
   protected String createTestScript(TestedAssignment testSpec) {
     return unlines(
-        "  testFunction(" + testSpec.target().name() + " param) = param;    ",
-        "  result = testFunction(" + testSpec.source().literal() + ");      ",
+        "  testFunc(" + testSpec.target().name() + " param) = param;    ",
+        "  result = testFunc(" + testSpec.source().literal() + ");      ",
         testSpec.declarations()
     );
   }

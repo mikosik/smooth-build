@@ -15,5 +15,5 @@ public interface TypeFactory<T extends Type> {
 
   public ArrayType array(T elemType);
 
-  public FunctionType function(T result, ImmutableList<T> params);
+  public FuncType func(T result, ImmutableList<T> params);
 }

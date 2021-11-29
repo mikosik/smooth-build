@@ -21,7 +21,7 @@ public class TypeNames {
     return "[" + elemType.name() + "]";
   }
 
-  public static String functionTypeName(Type resultType, List<? extends Type> params) {
+  public static String funcTypeName(Type resultType, List<? extends Type> params) {
     String paramsString = params
         .stream()
         .map(Type::name)

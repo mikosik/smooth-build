@@ -24,7 +24,7 @@ array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
 select       : '.' NAME ;
 type         : TNAME                        # typeName
              | '[' type ']'                 # arrayType
-             | type '(' typeList ')'        # functionType
+             | type '(' typeList ')'        # funcType
              ;
 typeList     : ( type (',' type)* ','? )? ;
 

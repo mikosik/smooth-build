@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReturnAbc {
-  public static StringH function(NativeApi nativeApi) {
+  public static StringH func(NativeApi nativeApi) {
     return nativeApi.factory().string("abc");
   }
 }

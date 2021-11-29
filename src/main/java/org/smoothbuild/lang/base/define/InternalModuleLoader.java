@@ -24,10 +24,10 @@ public class InternalModuleLoader {
   }
 
   private NList<TopEvalS> evaluables(ModulePath modulePath) {
-    var ifFunction = new IfFunctionS(modulePath, factory);
-    var mapFunction = new MapFunctionS(modulePath, factory);
+    var ifFunc = new IfFuncS(modulePath, factory);
+    var mapFunc = new MapFuncS(modulePath, factory);
     var trueValue = new BoolValueS(true, modulePath, factory);
     var falseValue = new BoolValueS(false, modulePath, factory);
-    return nList(ifFunction, mapFunction, trueValue, falseValue);
+    return nList(ifFunc, mapFunc, trueValue, falseValue);
   }
 }

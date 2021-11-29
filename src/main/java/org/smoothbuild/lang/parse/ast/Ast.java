@@ -103,9 +103,9 @@ public class Ast {
       private void addToDependencies(TypeN type) {
         switch (type) {
           case ArrayTypeN arrayType -> addToDependencies(arrayType.elemType());
-          case FunctionTypeN functionType -> {
-            addToDependencies(functionType.resultType());
-            functionType.paramTypes().forEach(this::addToDependencies);
+          case FuncTypeN funcType -> {
+            addToDependencies(funcType.resultType());
+            funcType.paramTypes().forEach(this::addToDependencies);
           }
           default -> {
             if (funcNames.contains(type.name())) {

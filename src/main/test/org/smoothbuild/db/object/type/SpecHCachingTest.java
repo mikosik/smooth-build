@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.SpecH;
-import org.smoothbuild.db.object.type.val.FunctionTypeH;
+import org.smoothbuild.db.object.type.val.FuncTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.testing.TestingContext;
 
@@ -35,7 +35,7 @@ public class SpecHCachingTest extends TestingContext {
     return list(
         TypeHDb::blob,
         TypeHDb::bool,
-        SpecHCachingTest::functionType,
+        SpecHCachingTest::funcType,
         TypeHDb::int_,
         TypeHDb::nothing,
         TypeHDb::string,
@@ -52,7 +52,7 @@ public class SpecHCachingTest extends TestingContext {
         objTypeDb -> objTypeDb.array(objTypeDb.nothing()),
         objTypeDb -> objTypeDb.array(objTypeDb.string()),
         objTypeDb -> objTypeDb.array(tupleType(objTypeDb)),
-        objTypeDb -> objTypeDb.array(functionType(objTypeDb)),
+        objTypeDb -> objTypeDb.array(funcType(objTypeDb)),
 
         objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.blob())),
         objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.bool())),
@@ -60,7 +60,7 @@ public class SpecHCachingTest extends TestingContext {
         objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.nothing())),
         objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.string())),
         objTypeDb -> objTypeDb.array(objTypeDb.array(tupleType(objTypeDb))),
-        objTypeDb -> objTypeDb.array(objTypeDb.array(functionType(objTypeDb)))
+        objTypeDb -> objTypeDb.array(objTypeDb.array(funcType(objTypeDb)))
     );
   }
 
@@ -68,7 +68,7 @@ public class SpecHCachingTest extends TestingContext {
     return typeHDb.tuple(list(typeHDb.string(), typeHDb.string()));
   }
 
-  private static FunctionTypeH functionType(TypeHDb typeHDb) {
-    return typeHDb.function(typeHDb.string(), list(typeHDb.bool(), typeHDb.blob()));
+  private static FuncTypeH funcType(TypeHDb typeHDb) {
+    return typeHDb.func(typeHDb.string(), list(typeHDb.bool(), typeHDb.blob()));
   }
 }

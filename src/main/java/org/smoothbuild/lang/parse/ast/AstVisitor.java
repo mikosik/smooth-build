@@ -88,7 +88,7 @@ public class AstVisitor {
   }
 
   public void visitCall(CallN call) {
-    visitExpr(call.function());
+    visitExpr(call.func());
     visitArgs(call.args());
   }
 

@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Flatten {
-  public static ArrayH function(NativeApi nativeApi, ArrayH array) {
+  public static ArrayH func(NativeApi nativeApi, ArrayH array) {
     TypeH resultArrayElemType = ((ArrayTypeH) array.spec().elem()).elem();
     ArrayHBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemType);
     for (ArrayH innerArray : array.elems(ArrayH.class)) {

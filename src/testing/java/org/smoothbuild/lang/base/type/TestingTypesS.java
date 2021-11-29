@@ -13,7 +13,7 @@ import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.BaseTypeS;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
 import org.smoothbuild.lang.base.type.impl.BoolTypeS;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.IntTypeS;
 import org.smoothbuild.lang.base.type.impl.NothingTypeS;
 import org.smoothbuild.lang.base.type.impl.StringTypeS;
@@ -58,13 +58,13 @@ public class TestingTypesS {
       .add(PERSON)
       .build();
 
-  public static final FunctionTypeS STRING_GETTER_FUNCTION = f(STRING);
-  public static final FunctionTypeS PERSON_GETTER_FUNCTION = f(PERSON);
-  public static final FunctionTypeS STRING_MAP_FUNCTION = f(STRING, STRING);
-  public static final FunctionTypeS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
-  public static final FunctionTypeS IDENTITY_FUNCTION = f(A, A);
-  public static final FunctionTypeS ARRAY_HEAD_FUNCTION = f(A, a(A));
-  public static final FunctionTypeS ARRAY_LENGTH_FUNCTION = f(STRING, a(A));
+  public static final FuncTypeS STRING_GETTER_FUNCTION = f(STRING);
+  public static final FuncTypeS PERSON_GETTER_FUNCTION = f(PERSON);
+  public static final FuncTypeS STRING_MAP_FUNCTION = f(STRING, STRING);
+  public static final FuncTypeS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
+  public static final FuncTypeS IDENTITY_FUNCTION = f(A, A);
+  public static final FuncTypeS ARRAY_HEAD_FUNCTION = f(A, a(A));
+  public static final FuncTypeS ARRAY_LENGTH_FUNCTION = f(STRING, a(A));
 
   public static final ImmutableList<TypeS> FUNCTION_TYPES =
       list(
@@ -87,16 +87,16 @@ public class TestingTypesS {
     return FACTORY.array(elemType);
   }
 
-  public static FunctionTypeS f(TypeS resultType) {
-    return FACTORY.function(resultType, list());
+  public static FuncTypeS f(TypeS resultType) {
+    return FACTORY.func(resultType, list());
   }
 
-  public static FunctionTypeS f(TypeS resultType, TypeS... params) {
+  public static FuncTypeS f(TypeS resultType, TypeS... params) {
     return f(resultType, list(params));
   }
 
-  public static FunctionTypeS f(TypeS resultType, ImmutableList<TypeS> params) {
-    return FACTORY.function(resultType, params);
+  public static FuncTypeS f(TypeS resultType, ImmutableList<TypeS> params) {
+    return FACTORY.func(resultType, params);
   }
 
   public static VariableS variable(String a) {

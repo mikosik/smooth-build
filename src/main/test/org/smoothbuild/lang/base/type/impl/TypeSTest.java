@@ -22,7 +22,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.FuncType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContext;
@@ -87,11 +87,11 @@ public class TypeSTest extends TestingContext {
         args(f -> f.array(f.array(f.struct("MyStruct", nList()))), "[[MyStruct]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.function(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
-        args(f -> f.function(f.string(), list(f.array(f.variable("A")))), "String([A])"),
-        args(f -> f.function(f.variable("A"), list(f.variable("A"))), "A(A)"),
-        args(f -> f.function(f.string(), list()), "String()"),
-        args(f -> f.function(f.string(), list(f.string())), "String(String)")
+        args(f -> f.func(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
+        args(f -> f.func(f.string(), list(f.array(f.variable("A")))), "String([A])"),
+        args(f -> f.func(f.variable("A"), list(f.variable("A"))), "A(A)"),
+        args(f -> f.func(f.string(), list()), "String()"),
+        args(f -> f.func(f.string(), list(f.string())), "String(String)")
     );
   }
 
@@ -108,21 +108,21 @@ public class TypeSTest extends TestingContext {
         args(f -> f.array(f.variable("A")), true),
         args(f -> f.array(f.array(f.variable("A"))), true),
 
-        args(f -> f.function(f.variable("A"), list()), true),
-        args(f -> f.function(f.function(f.variable("A"), list()), list()), true),
-        args(f -> f.function(f.function(f.function(f.variable("A"), list()), list()), list()),
+        args(f -> f.func(f.variable("A"), list()), true),
+        args(f -> f.func(f.func(f.variable("A"), list()), list()), true),
+        args(f -> f.func(f.func(f.func(f.variable("A"), list()), list()), list()),
             true),
 
-        args(f -> f.function(f.bool(), list(f.variable("A"))), true),
-        args(f -> f.function(f.bool(), list(f.function(f.variable("A"), list()))), true),
+        args(f -> f.func(f.bool(), list(f.variable("A"))), true),
+        args(f -> f.func(f.bool(), list(f.func(f.variable("A"), list()))), true),
         args(f -> f
-                .function(f.bool(), list(f.function(f.function(f.variable("A"), list()), list()))),
+                .func(f.bool(), list(f.func(f.func(f.variable("A"), list()), list()))),
             true),
 
-        args(f -> f.function(f.bool(), list(f.function(f.blob(), list(f.variable("A"))))),
+        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.variable("A"))))),
             true),
 
-        args(f -> f.function(f.bool(), list(f.int_())), false),
+        args(f -> f.func(f.bool(), list(f.int_())), false),
 
         args(f -> f.any(), false),
         args(f -> f.blob(), false),
@@ -162,55 +162,55 @@ public class TypeSTest extends TestingContext {
         args(f -> f.array(f.string()), f -> set()),
         args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
 
-        args(f -> f.function(f.string(), list()), f -> set()),
-        args(f -> f.function(f.string(), list(f.bool())), f -> set()),
+        args(f -> f.func(f.string(), list()), f -> set()),
+        args(f -> f.func(f.string(), list(f.bool())), f -> set()),
 
         args(f -> f.variable("A"), f -> set(f.variable("A"))),
         args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
         args(f -> f.array(f.array(f.variable("A"))), f -> set(f.variable("A"))),
 
-        args(f -> f.function(f.variable("A"), list()), f -> set(f.variable("A"))),
-        args(f -> f.function(f.variable("A"), list(f.string())), f -> set(f.variable("A"))),
-        args(f -> f.function(f.string(), list(f.variable("A"))), f -> set(f.variable("A"))),
-        args(f -> f.function(f.variable("B"), list(f.variable("A"))),
+        args(f -> f.func(f.variable("A"), list()), f -> set(f.variable("A"))),
+        args(f -> f.func(f.variable("A"), list(f.string())), f -> set(f.variable("A"))),
+        args(f -> f.func(f.string(), list(f.variable("A"))), f -> set(f.variable("A"))),
+        args(f -> f.func(f.variable("B"), list(f.variable("A"))),
             f -> set(f.variable("A"), f.variable("B"))),
 
-        args(f -> f.function(f.function(f.variable("A"), list()), list()),
+        args(f -> f.func(f.func(f.variable("A"), list()), list()),
             f -> set(f.variable("A"))),
-        args(f -> f.function(f.variable("D"), list(f.variable("C"), f.variable("B"))),
+        args(f -> f.func(f.variable("D"), list(f.variable("C"), f.variable("B"))),
             f -> set(f.variable("B"), f.variable("C"), f.variable("D")))
     );
   }
 
   @ParameterizedTest
-  @MethodSource("function_result_cases")
-  public void function_result(Function<TypeFactoryS, FunctionType> factoryCall,
+  @MethodSource("func_result_cases")
+  public void func_result(Function<TypeFactoryS, FuncType> factoryCall,
       Function<TypeFactoryS, List<Type>> expected) {
     assertThat(invoke(factoryCall).result())
         .isEqualTo(invoke(expected));
   }
 
-  public static List<Arguments> function_result_cases() {
+  public static List<Arguments> func_result_cases() {
     return asList(
-        args(f -> f.function(f.int_(), list()), f -> f.int_()),
-        args(f -> f.function(f.blob(), list(f.bool())), f -> f.blob()),
-        args(f -> f.function(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+        args(f -> f.func(f.int_(), list()), f -> f.int_()),
+        args(f -> f.func(f.blob(), list(f.bool())), f -> f.blob()),
+        args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
     );
   }
 
   @ParameterizedTest
-  @MethodSource("function_params_cases")
-  public void function_params(Function<TypeFactoryS, FunctionType> factoryCall,
+  @MethodSource("func_params_cases")
+  public void func_params(Function<TypeFactoryS, FuncType> factoryCall,
       Function<TypeFactoryS, List<Type>> expected) {
     assertThat(invoke(factoryCall).params())
         .isEqualTo(invoke(expected));
   }
 
-  public static List<Arguments> function_params_cases() {
+  public static List<Arguments> func_params_cases() {
     return asList(
-        args(f -> f.function(f.int_(), list()), f -> list()),
-        args(f -> f.function(f.blob(), list(f.bool())), f -> list(f.bool())),
-        args(f -> f.function(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+        args(f -> f.func(f.int_(), list()), f -> list()),
+        args(f -> f.func(f.blob(), list(f.bool())), f -> list(f.bool())),
+        args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
     );
   }
 
@@ -239,7 +239,7 @@ public class TypeSTest extends TestingContext {
           args(f -> f.any()),
           args(f -> f.blob()),
           args(f -> f.bool()),
-          args(f -> f.function(f.string(), list())),
+          args(f -> f.func(f.string(), list())),
           args(f -> f.int_()),
           args(f -> f.nothing()),
           args(f -> f.string()),
@@ -249,7 +249,7 @@ public class TypeSTest extends TestingContext {
           args(f -> f.array(f.any())),
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
-          args(f -> f.array(f.function(f.string(), list()))),
+          args(f -> f.array(f.func(f.string(), list()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),
@@ -327,10 +327,10 @@ public class TypeSTest extends TestingContext {
         f.variable("B"),
         f.variable("C"),
 
-        f.function(f.blob(), list()),
-        f.function(f.string(), list()),
-        f.function(f.blob(), list(f.string())),
-        f.function(f.blob(), list(f.blob()))
+        f.func(f.blob(), list()),
+        f.func(f.string(), list()),
+        f.func(f.blob(), list(f.string())),
+        f.func(f.blob(), list(f.blob()))
     );
 
     for (TypeS type : types) {

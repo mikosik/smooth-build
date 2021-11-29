@@ -58,7 +58,7 @@ public record TestingTypeGraph(ImmutableMultimap<TypeS, TypeS> edges) {
     newDimension.put(NOTHING, a(NOTHING));
     newDimension.put(a(ANY), ANY);
 
-    // one param functions
+    // one param funcs
     Set<TypeS> allTypes = graph.allTypes();
 
     for (TypeS type : allTypes) {

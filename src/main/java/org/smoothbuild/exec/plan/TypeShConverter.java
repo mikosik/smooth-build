@@ -10,7 +10,7 @@ import org.smoothbuild.lang.base.type.impl.AnyTypeS;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
 import org.smoothbuild.lang.base.type.impl.BoolTypeS;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.IntTypeS;
 import org.smoothbuild.lang.base.type.impl.NothingTypeS;
 import org.smoothbuild.lang.base.type.impl.StringTypeS;
@@ -37,7 +37,7 @@ public class TypeShConverter {
       case StructTypeS st -> objFactory.tupleType(map(st.fields(), isig -> visit(isig.type())));
       case VariableS v ->  objFactory.variable(v.name());
       case ArrayTypeS a -> objFactory.arrayT(visit(a.elem()));
-      case FunctionTypeS f -> objFactory.defFuncT(visit(f.result()), map(f.params(), this::visit));
+      case FuncTypeS f -> objFactory.defFuncT(visit(f.result()), map(f.params(), this::visit));
     };
   }
 }

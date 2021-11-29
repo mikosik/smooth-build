@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.NothingTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
@@ -268,7 +268,7 @@ public class TestedType {
     return type instanceof NothingTypeS;
   }
 
-  public boolean isFunction(Predicate<TestedType> result, Predicate<TestedType>... params) {
+  public boolean isFunc(Predicate<TestedType> result, Predicate<TestedType>... params) {
     return false;
   }
 
@@ -314,7 +314,7 @@ public class TestedType {
             .flatMap(t -> t.typeDeclarations().stream())
             .collect(toList()))
         .build();
-    return new TestedFunctionType(
+    return new TestedFuncType(
         resultType,
         ImmutableList.copyOf(paramTestedTypes2),
         TestingTypesS.f(resultType.type, map(paramSignatures, ItemSignature::type)),
@@ -333,12 +333,12 @@ public class TestedType {
     return builder.build();
   }
 
-  public static class TestedFunctionType extends TestedType {
+  public static class TestedFuncType extends TestedType {
     public final TestedType resultType;
     public final ImmutableList<TestedType> params;
 
-    public TestedFunctionType(TestedType resultType, ImmutableList<TestedType> params,
-        FunctionTypeS type, String literal,
+    public TestedFuncType(TestedType resultType, ImmutableList<TestedType> params,
+        FuncTypeS type, String literal,
         Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.resultType = resultType;
@@ -346,7 +346,7 @@ public class TestedType {
     }
 
     @Override
-    public boolean isFunction(Predicate<TestedType> result, Predicate<TestedType>... params) {
+    public boolean isFunc(Predicate<TestedType> result, Predicate<TestedType>... params) {
       if (result.test(resultType) && this.params.size() == params.length) {
         for (int i = 0; i < this.params.size(); i++) {
           if (!params[i].test(this.params.get(i))) {

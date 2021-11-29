@@ -27,7 +27,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.FunctionTypeContext;
+import org.smoothbuild.antlr.lang.SmoothParser.FuncTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
@@ -234,9 +234,9 @@ public class AstCreator {
       }
 
       private ExprN createCall(
-          ExprN function, List<ArgNode> args, ArgListContext argListContext) {
+          ExprN func, List<ArgNode> args, ArgListContext argListContext) {
         Location location = locationOf(filePath, argListContext);
-        return new CallN(function, args, location);
+        return new CallN(func, args, location);
       }
 
       private Optional<TypeN> createTypeSane(TypeContext type) {
@@ -247,7 +247,7 @@ public class AstCreator {
         return switch (type) {
           case TypeNameContext typeIdentifier -> createType(typeIdentifier);
           case ArrayTypeContext arrayType -> createArrayType(arrayType);
-          case FunctionTypeContext functionType -> createFunctionType(functionType);
+          case FuncTypeContext funcType -> createFuncType(funcType);
           default -> throw new RuntimeException(
               "Illegal parse tree: " + TypeContext.class.getSimpleName() + " without children.");
         };
@@ -262,10 +262,10 @@ public class AstCreator {
         return new ArrayTypeN(elemType, locationOf(filePath, arrayType));
       }
 
-      private TypeN createFunctionType(FunctionTypeContext functionType) {
-        TypeN resultType = createType(functionType.type());
-        return new FunctionTypeN(resultType, createTypeList(functionType.typeList()),
-            locationOf(filePath, functionType));
+      private TypeN createFuncType(FuncTypeContext funcType) {
+        TypeN resultType = createType(funcType.type());
+        return new FuncTypeN(resultType, createTypeList(funcType.typeList()),
+            locationOf(filePath, funcType));
       }
 
       private ImmutableList<TypeN> createTypeList(TypeListContext typeList) {

@@ -32,25 +32,25 @@ public class PlanCommandTest {
     }
 
     @Test
-    public void defined_function_call_with_argument() throws Exception {
+    public void def_func_call_with_argument() throws Exception {
       createUserModule("""
-              myFunction(String elem) = elem;
-              result = myFunction("abc");
+              myFunc(String elem) = elem;
+              result = myFunc("abc");
               """);
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String building-evaluation
-            String(String) myFunction
+            String(String) myFunc
             String "abc"
           """);
     }
 
     @Test
-    public void native_function_call_with_argument() throws Exception {
+    public void nat_func_call_with_argument() throws Exception {
       createNativeJar(StringIdentity.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s.func")
             String stringIdentity(String value);
             result = stringIdentity("abc");
             """, StringIdentity.class.getCanonicalName()));
@@ -64,10 +64,10 @@ public class PlanCommandTest {
     }
 
     @Test
-    public void native_function_call_without_argument() throws Exception {
+    public void nat_func_call_without_argument() throws Exception {
       createNativeJar(ReturnAbc.class);
       createUserModule(format("""
-            @Native("%s.function")
+            @Native("%s.func")
             String returnAbc();
             result = returnAbc();
             """, ReturnAbc.class.getCanonicalName()));
@@ -206,7 +206,7 @@ public class PlanCommandTest {
   }
 
   @Nested
-  class FunctionArgs extends ValuesArgTestCase {
+  class FuncArgs extends ValuesArgTestCase {
     @Override
     protected String commandName() {
       return PlanCommand.NAME;

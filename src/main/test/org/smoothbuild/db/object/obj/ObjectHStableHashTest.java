@@ -102,31 +102,31 @@ public class ObjectHStableHashTest extends TestingContext {
   class _call {
     @Test
     public void call_expression_with_one_argument() {
-      assertThat(callH(definedFunctionH(), list(stringH("abc"))).hash())
+      assertThat(callH(defFuncH(), list(stringH("abc"))).hash())
           .isEqualTo(Hash.decode("3fa89051198dc400f7fde8391e6569986d03ef71"));
     }
 
     @Test
     public void call_expression_without_arguments() {
-      var type = definedFunctionHT(intHT(), list(stringHT()));
-      var defFunc = definedFunctionH(type, intH());
+      var type = defFuncHT(intHT(), list(stringHT()));
+      var defFunc = defFuncH(type, intH());
       assertThat(callH(defFunc, list(stringH("abc"))).hash())
           .isEqualTo(Hash.decode("3fa89051198dc400f7fde8391e6569986d03ef71"));
     }
   }
 
   @Nested
-  class _function {
+  class _func {
     @Test
     public void with_no_params() {
-      var defFunc = definedFunctionH(definedFunctionHT(intHT(), list()), intH(1));
+      var defFunc = defFuncH(defFuncHT(intHT(), list()), intH(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("5383db6241d12fca0a3c02848e3b6bf1b9700dcf"));
     }
 
     @Test
     public void with_one_param() {
-      var defFunc = definedFunctionH(definedFunctionHT(intHT(), list(intHT())), intH(1));
+      var defFunc = defFuncH(defFuncHT(intHT(), list(intHT())), intH(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("ff9fe52538614230249bc26117b1921f320d3336"));
     }
@@ -134,26 +134,26 @@ public class ObjectHStableHashTest extends TestingContext {
     @Test
     public void with_two_params() {
       var defFunc =
-          definedFunctionH(definedFunctionHT(intHT(), list(intHT(), stringHT())), intH(1));
+          defFuncH(defFuncHT(intHT(), list(intHT(), stringHT())), intH(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("f3971d03d206b546ef691128bd4dc1b78d69955c"));
     }
   }
 
   @Nested
-  class _if_function {
+  class _if_func {
     @Test
-    public void if_function() {
-      assertThat(ifFunctionH().hash())
+    public void if_func() {
+      assertThat(ifFuncH().hash())
           .isEqualTo(Hash.decode("71f3c48cb3cdea01e0a16281045dcd44648ed967"));
     }
   }
 
   @Nested
-  class _map_function {
+  class _map_func {
     @Test
-    public void map_function() {
-      assertThat(mapFunctionH().hash())
+    public void map_func() {
+      assertThat(mapFuncH().hash())
           .isEqualTo(Hash.decode("c136e8d6361b722fa1bc5994a5901ef0220e5485"));
     }
   }
@@ -204,10 +204,10 @@ public class ObjectHStableHashTest extends TestingContext {
   }
 
   @Nested
-  class _native_function {
+  class _nat_func {
     @Test
-    public void native_function() {
-      assertThat(nativeFunctionH(blobH(), stringH()).hash())
+    public void nat_func() {
+      assertThat(natFuncH(blobH(), stringH()).hash())
           .isEqualTo(Hash.decode("7f1ca2cc91e3ccddb77ef9881acc6588d2f90385"));
     }
   }

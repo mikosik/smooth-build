@@ -112,11 +112,11 @@ public class BuildCommandTest {
     @Nested
     class call_matcher extends AcceptanceTestCase {
       private static final String DEFINED_FUNCTION_CALL = """
-          myFunction() = "myLiteral";
-          result = myFunction();
+          myFunc() = "myLiteral";
+          result = myFunc();
           """;
       private static final String DEFINED_CALL_TASK_HEADER = """
-          myFunction                               build.smooth:2
+          myFunc                                   build.smooth:2
           """;
       private static final String NATIVE_FUNCTION_CALL = """
             result = concat(["a"], ["b"]);
@@ -154,7 +154,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void shows_call_to_native_function_when_enabled() throws IOException {
+      public void shows_call_to_nat_func_when_enabled() throws IOException {
         createUserModule(NATIVE_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
@@ -162,7 +162,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_call_to_native_function_when_not_enabled() throws IOException {
+      public void hides_call_to_nat_func_when_not_enabled() throws IOException {
         createUserModule(NATIVE_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -170,7 +170,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void shows_call_to_internal_if_function_when_enabled() throws IOException {
+      public void shows_call_to_internal_if_func_when_enabled() throws IOException {
         createUserModule(IF_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
@@ -178,7 +178,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_call_to_internal_if_function_when_not_enabled() throws IOException {
+      public void hides_call_to_internal_if_func_when_not_enabled() throws IOException {
         createUserModule(IF_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -186,7 +186,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void shows_call_to_internal_map_function_when_enabled() throws IOException {
+      public void shows_call_to_internal_map_func_when_enabled() throws IOException {
         createUserModule(MAP_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
@@ -194,7 +194,7 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_call_to_internal_map_function_when_not_enabled() throws IOException {
+      public void hides_call_to_internal_map_func_when_not_enabled() throws IOException {
         createUserModule(MAP_FUNCTION_CALL);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
@@ -434,13 +434,13 @@ public class BuildCommandTest {
     @Test
     public void call() throws IOException {
       createUserModule("""
-          myFunction() = "abc";
-          result = myFunction();
+          myFunc() = "abc";
+          result = myFunc();
           """);
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myFunction                               build.smooth:2
+          myFunc                                   build.smooth:2
           """);
     }
 
@@ -460,7 +460,7 @@ public class BuildCommandTest {
     }
 
     @Test
-    public void function_reference() throws IOException {
+    public void func_reference() throws IOException {
       createUserModule("""
           result = if;
           """);

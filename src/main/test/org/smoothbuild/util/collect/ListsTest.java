@@ -444,7 +444,7 @@ public class ListsTest {
   @Nested
   class _to_comma_separated_string {
     @Nested
-    class _with_function {
+    class _with_func {
       @Test
       public void empty_list(){
         assertThat(toCommaSeparatedString(asList(), String::trim))
@@ -471,7 +471,7 @@ public class ListsTest {
     }
 
     @Nested
-    class _without_function {
+    class _without_func {
       @Test
       public void empty_list(){
         assertThat(toCommaSeparatedString(asList()))

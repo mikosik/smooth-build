@@ -34,7 +34,7 @@ public final class StructN extends NamedN {
     return fields;
   }
 
-  public final class ConstructorN extends FunctionN {
+  public final class ConstructorN extends FuncN {
     public ConstructorN(String structName, List<ItemN> params, Location location) {
       super(
           Optional.of(new TypeN(structName, location)),

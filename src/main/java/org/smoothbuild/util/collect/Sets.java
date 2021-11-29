@@ -15,10 +15,10 @@ public class Sets {
   }
 
   public static <E, R> ImmutableSet<R> map(
-      Collection<E> set, Function<? super E, ? extends R> function) {
+      Collection<E> set, Function<? super E, ? extends R> func) {
     return set
         .stream()
-        .map(function)
+        .map(func)
         .collect(toImmutableSet());
   }
 

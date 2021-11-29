@@ -30,14 +30,14 @@ public class ScriptParsingTest extends AcceptanceTestCase {
   @Test
   public void lexer_error_contains_code_with_problematic_part_marked() throws Exception {
     createUserModule("""
-            function* = "abc";
+            func* = "abc";
             result = "abc";
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(1,
         "token recognition error at: '*'",
-        "function* = \"abc\";",
-        "        ^");
+        "func* = \"abc\";",
+        "    ^");
   }
 }

@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReturnStringStruct {
-  public static TupleH function(NativeApi nativeApi) {
+  public static TupleH func(NativeApi nativeApi) {
     ObjFactory factory = nativeApi.factory();
     TupleTypeH type = factory.tupleType(list(factory.stringT()));
     return factory.tuple(type, list(factory.string("abc")));

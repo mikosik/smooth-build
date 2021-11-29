@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ThrowException {
-  public static ValueH function(NativeApi nativeApi) {
+  public static ValueH func(NativeApi nativeApi) {
     throw new UnsupportedOperationException();
   }
 }

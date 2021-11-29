@@ -19,11 +19,11 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.FunctionS;
+import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.like.EvalLike;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -37,8 +37,8 @@ import org.smoothbuild.lang.parse.ast.BlobN;
 import org.smoothbuild.lang.parse.ast.CallN;
 import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.ExprN;
-import org.smoothbuild.lang.parse.ast.FunctionN;
-import org.smoothbuild.lang.parse.ast.FunctionTypeN;
+import org.smoothbuild.lang.parse.ast.FuncN;
+import org.smoothbuild.lang.parse.ast.FuncTypeN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.RealFuncN;
@@ -75,7 +75,7 @@ public class TypeInferrer {
         var fields = Optionals.pullUp(map(struct.fields(), ItemN::itemSignature));
         struct.setType(fields.map(f -> factory.struct(struct.name(), nList(f))));
         struct.constructor().setType(
-            fields.map(s -> factory.function(struct.type().get(), map(s, ItemSignature::type))));
+            fields.map(s -> factory.func(struct.type().get(), map(s, ItemSignature::type))));
       }
 
       @Override
@@ -88,7 +88,7 @@ public class TypeInferrer {
       public void visitRealFunc(RealFuncN func) {
         visitParams(func.params());
         func.body().ifPresent(this::visitExpr);
-        func.setType(optionalFunctionType(evaluationTypeOfTopEvaluables(func), func.optParamTypes()));
+        func.setType(optionalFuncType(evaluationTypeOfTopEvaluables(func), func.optParamTypes()));
       }
 
       @Override
@@ -158,19 +158,19 @@ public class TypeInferrer {
         }
         return switch (type) {
           case ArrayTypeN array -> createType(array.elemType()).map(factory::array);
-          case FunctionTypeN function -> {
-            Optional<TypeS> result = createType(function.resultType());
-            var params = Optionals.pullUp(map(function.paramTypes(), this::createType));
-            yield optionalFunctionType(result, params);
+          case FuncTypeN func -> {
+            Optional<TypeS> result = createType(func.resultType());
+            var params = Optionals.pullUp(map(func.paramTypes(), this::createType));
+            yield optionalFuncType(result, params);
           }
           default -> Optional.of(findType(type.name()));
         };
       }
 
-      private Optional<TypeS> optionalFunctionType(
+      private Optional<TypeS> optionalFuncType(
           Optional<TypeS> result, Optional<ImmutableList<TypeS>> params) {
         if (result.isPresent() && params.isPresent()) {
-          return Optional.of(factory.function(result.get(), params.get()));
+          return Optional.of(factory.func(result.get(), params.get()));
         } else {
           return empty();
         }
@@ -255,20 +255,20 @@ public class TypeInferrer {
       @Override
       public void visitCall(CallN call) {
         super.visitCall(call);
-        ExprN called = call.function();
+        ExprN called = call.func();
         Optional<TypeS> calledType = called.type();
         if (calledType.isEmpty()) {
           call.setType(empty());
-        } else if (!(calledType.get() instanceof FunctionTypeS functionType)) {
+        } else if (!(calledType.get() instanceof FuncTypeS funcType)) {
           logBuffer.log(parseError(call.location(), description(called)
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
         } else {
-          var functionParameters = funcParams(called);
-          if (functionParameters.isEmpty()) {
+          var funcParameters = funcParams(called);
+          if (funcParameters.isEmpty()) {
             call.setType(empty());
           } else {
-            var params = functionParameters.get();
+            var params = funcParameters.get();
             Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, params);
             if (args.containsProblem()) {
               logBuffer.logAll(args.logs());
@@ -278,7 +278,7 @@ public class TypeInferrer {
             } else {
               call.setAssignedArgs(args.value());
               Maybe<TypeS> type = callTypeInferrer.inferCallType(
-                  call, functionType.result(), params);
+                  call, funcType.result(), params);
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
             }
@@ -289,19 +289,19 @@ public class TypeInferrer {
       public static Optional<NList<ItemSignature>> funcParams(ExprN called) {
         if (called instanceof RefN refN) {
           EvalLike referenced = refN.referenced();
-          if (referenced instanceof FunctionS function) {
-            return Optional.of(function.params().map(Item::signature));
-          } else if (referenced instanceof FunctionN functionN) {
+          if (referenced instanceof FuncS func) {
+            return Optional.of(func.params().map(Item::signature));
+          } else if (referenced instanceof FuncN funcN) {
             var itemSignatures = Optionals.pullUp(
-                map(functionN.params(), ItemN::itemSignature));
+                map(funcN.params(), ItemN::itemSignature));
             return itemSignatures.map(NList::nList);
           } else {
-            var params = ((FunctionTypeS) referenced.inferredType().get()).params();
+            var params = ((FuncTypeS) referenced.inferredType().get()).params();
             return Optional.of(nList(map(params, ItemSignature::itemSignature)));
           }
         } else {
           return called.type().map(
-              t -> nList(map(((FunctionTypeS) t).params(), ItemSignature::itemSignature)));
+              t -> nList(map(((FuncTypeS) t).params(), ItemSignature::itemSignature)));
         }
       }
 

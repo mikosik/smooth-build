@@ -70,7 +70,7 @@ public class Hash {
    */
 
   public static Hash of(List<Hash> hashes) {
-    Hasher hasher = function().newHasher();
+    Hasher hasher = func().newHasher();
     for (Hash hash : hashes) {
       hasher.putBytes(hash.byteString.toByteArray());
     }
@@ -78,15 +78,15 @@ public class Hash {
   }
 
   public static Hash of(String string) {
-    return convert(function().hashString(string, CHARSET));
+    return convert(func().hashString(string, CHARSET));
   }
 
   public static Hash of(int value) {
-    return convert(function().hashInt(value));
+    return convert(func().hashInt(value));
   }
 
   public static Hash of(ByteString byteString) {
-    return convert(function().hashBytes(byteString.toByteArray()));
+    return convert(func().hashBytes(byteString.toByteArray()));
   }
 
   public static Hash decode(String string) {
@@ -98,11 +98,11 @@ public class Hash {
   }
 
   public static int lengthInBytes() {
-    return function().bits() / 8;
+    return func().bits() / 8;
   }
 
   @SuppressWarnings("deprecation")
-  private static HashFunction function() {
+  private static HashFunction func() {
     return Hashing.sha1();
   }
 

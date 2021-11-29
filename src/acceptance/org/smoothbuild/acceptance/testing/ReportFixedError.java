@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReportFixedError {
-  public static ValueH function(NativeApi nativeApi) {
+  public static ValueH func(NativeApi nativeApi) {
     nativeApi.log().error("some error message");
     return null;
   }

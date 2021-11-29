@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NonStaticMethod {
-  public StringH function(NativeApi nativeApi) {
+  public StringH func(NativeApi nativeApi) {
     return nativeApi.factory().string("abc");
   }
 }

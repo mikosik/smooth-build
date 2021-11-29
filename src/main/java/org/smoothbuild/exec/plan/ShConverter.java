@@ -23,25 +23,25 @@ import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
-import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.obj.val.DefFuncH;
+import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NativeFunctionH;
+import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.BoolValueS;
 import org.smoothbuild.lang.base.define.ConstructorS;
-import org.smoothbuild.lang.base.define.DefinedFunctionS;
+import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefinedValueS;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.FunctionS;
-import org.smoothbuild.lang.base.define.IfFunctionS;
+import org.smoothbuild.lang.base.define.FuncS;
+import org.smoothbuild.lang.base.define.IfFuncS;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.MapFunctionS;
+import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.define.NativeFunctionS;
+import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.BlobS;
@@ -65,7 +65,7 @@ public class ShConverter {
   private final TypeShConverter typeShConverter;
   private final FileLoader fileLoader;
   private final Deque<NList<Item>> callStack;
-  private final Map<String, FunctionH> functionCache;
+  private final Map<String, FuncH> funcCache;
   private final Map<String, ObjectH> valueCache;
   private final Map<ObjectH, Nal> nals;
 
@@ -77,7 +77,7 @@ public class ShConverter {
     this.typeShConverter = typeShConverter;
     this.fileLoader = fileLoader;
     this.callStack = new LinkedList<>();
-    this.functionCache = new HashMap<>();
+    this.funcCache = new HashMap<>();
     this.valueCache = new HashMap<>();
     this.nals = new HashMap<>();
   }
@@ -86,35 +86,35 @@ public class ShConverter {
     return ImmutableMap.copyOf(nals);
   }
 
-  public FunctionH convertFunc(FunctionS functionS) {
-    return computeIfAbsent(functionCache, functionS.name(), name -> convertFuncImpl(functionS));
+  public FuncH convertFunc(FuncS funcS) {
+    return computeIfAbsent(funcCache, funcS.name(), name -> convertFuncImpl(funcS));
   }
 
-  private FunctionH convertFuncImpl(FunctionS functionS) {
+  private FuncH convertFuncImpl(FuncS funcS) {
     try {
-      callStack.push(functionS.params());
-      var functionH = switch (functionS) {
+      callStack.push(funcS.params());
+      var funcH = switch (funcS) {
         case ConstructorS c -> convertCtor(c);
-        case IfFunctionS i -> objFactory.ifFunction();
-        case MapFunctionS m -> objFactory.mapFunction();
-        case DefinedFunctionS d -> convertDefFunc(d);
-        case NativeFunctionS n -> convertNatFunc(n);
+        case IfFuncS i -> objFactory.ifFunc();
+        case MapFuncS m -> objFactory.mapFunc();
+        case DefFuncS d -> convertDefFunc(d);
+        case NatFuncS n -> convertNatFunc(n);
       };
-      nals.put(functionH, functionS);
-      return functionH;
+      nals.put(funcH, funcS);
+      return funcH;
     } finally {
       callStack.pop();
     }
   }
 
-  private DefinedFunctionH convertCtor(ConstructorS constructorS) {
+  private DefFuncH convertCtor(ConstructorS constructorS) {
     var type = objFactory.defFuncT(
         convertType(constructorS.resultType()),
         convertParams(constructorS.params()));
     var paramRefs = ctorParamRefs(constructorS);
     var body = objFactory.construct(paramRefs);
     nals.put(body, constructorS);
-    return objFactory.definedFunction(type, body);
+    return objFactory.defFunc(type, body);
   }
 
   private ImmutableList<ObjectH> ctorParamRefs(ConstructorS constructorS) {
@@ -135,27 +135,27 @@ public class ShConverter {
     return objFactory.ref(index, typeH);
   }
 
-  private NativeFunctionH convertNatFunc(NativeFunctionS nativeFunctionS) {
-    var resType = convertType(nativeFunctionS.resultType());
-    var paramTypes = convertParams(nativeFunctionS.params());
-    var jar = loadNatJar(nativeFunctionS);
+  private NatFuncH convertNatFunc(NatFuncS natFuncS) {
+    var resType = convertType(natFuncS.resultType());
+    var paramTypes = convertParams(natFuncS.params());
+    var jar = loadNatJar(natFuncS);
     var type = objFactory.natFuncT(resType, paramTypes);
-    var ann = nativeFunctionS.annotation();
+    var ann = natFuncS.annotation();
     var classBinaryName = objFactory.string(ann.path().string());
     var isPure = objFactory.bool(ann.isPure());
-    return objFactory.nativeFunction(type, jar, classBinaryName, isPure);
+    return objFactory.natFunc(type, jar, classBinaryName, isPure);
   }
 
   private ImmutableList<TypeH> convertParams(NList<Item> items) {
     return map(items, item -> convertType(item.type()));
   }
 
-  private DefinedFunctionH convertDefFunc(DefinedFunctionS definedFunctionS) {
-    var body = convertExpr(definedFunctionS.body());
-    var resTypeH = convertType(definedFunctionS.resultType());
-    var paramTypesH = convertParams(definedFunctionS.params());
+  private DefFuncH convertDefFunc(DefFuncS defFuncS) {
+    var body = convertExpr(defFuncS.body());
+    var resTypeH = convertType(defFuncS.resultType());
+    var paramTypesH = convertParams(defFuncS.params());
     var type = objFactory.defFuncT(resTypeH, paramTypesH);
-    return objFactory.definedFunction(type, body);
+    return objFactory.defFunc(type, body);
   }
 
   // handling value
@@ -203,7 +203,7 @@ public class ShConverter {
   }
 
   private CallH convertCall(CallS callS) {
-    var funcExprH = convertExpr(callS.functionExpr());
+    var funcExprH = convertExpr(callS.funcExpr());
     var argsH = map(callS.arguments(), this::convertExpr);
     var construct = objFactory.construct(argsH);
     nals.put(construct, new NalImpl("{}", callS.location()));
@@ -226,7 +226,7 @@ public class ShConverter {
 
   public ObjectH convertRef(RefS refS) {
     return switch (definitions.referencables().get(refS.name())) {
-      case FunctionS f -> convertFunc(f);
+      case FuncS f -> convertFunc(f);
       case ValueS v -> convertVal(v);
     };
   }
@@ -244,13 +244,13 @@ public class ShConverter {
   // helpers
 
 
-  private BlobH loadNatJar(NativeFunctionS nativeFunctionS) {
-    var filePath = nativeFunctionS.annotation().location().file().withExtension("jar");
+  private BlobH loadNatJar(NatFuncS natFuncS) {
+    var filePath = natFuncS.annotation().location().file().withExtension("jar");
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {
       String message = "Error loading native jar for `%s`: File %s doesn't exist."
-          .formatted(nativeFunctionS.name(), filePath.q());
+          .formatted(natFuncS.name(), filePath.q());
       throw new QuitException(message);
     }
   }

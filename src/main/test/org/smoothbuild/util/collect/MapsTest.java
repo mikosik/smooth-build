@@ -19,7 +19,7 @@ public class MapsTest {
   @Nested
   class _to_map {
     @Nested
-    class _with_value_function {
+    class _with_value_func {
       @Test
       public void empty_iterable() {
         assertThat(toMap(list(), Object::toString))
@@ -59,7 +59,7 @@ public class MapsTest {
     }
 
     @Nested
-    class _with_key_and_value_function {
+    class _with_key_and_value_func {
       @Test
       public void empty_iterable() {
         assertThat(toMap(list(), Object::toString, Object::toString))
@@ -149,7 +149,7 @@ public class MapsTest {
     }
 
     @Test
-    public void when_map_does_not_contain_key_then_mapping_function_is_invoked() {
+    public void when_map_does_not_contain_key_then_mapping_func_is_invoked() {
       var map = new HashMap<Integer, String>();
       String result = computeIfAbsent(map, 3, Object::toString);
       assertThat(result)
@@ -165,7 +165,7 @@ public class MapsTest {
     }
 
     @Test
-    public void mapping_function_can_modify_map() {
+    public void mapping_func_can_modify_map() {
       var map = new HashMap<Integer, String>();
       map.put(1, "1");
       computeIfAbsent(map, 3, integer -> {

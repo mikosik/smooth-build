@@ -26,9 +26,9 @@ public class TestingTypesH {
   public static final TypeH BLOB = TYPEH_DB.blob();
   public static final TypeH BOOL = TYPEH_DB.bool();
   public static final TypeH INT = TYPEH_DB.int_();
-  public static final TypeH IF_FUNCTION = TYPEH_DB.ifFunction();
-  public static final TypeH FUNCTION = TYPEH_DB.function(BLOB, list(BOOL));
-  public static final TypeH MAP_FUNCTION = TYPEH_DB.mapFunction();
+  public static final TypeH IF_FUNCTION = TYPEH_DB.ifFunc();
+  public static final TypeH FUNCTION = TYPEH_DB.func(BLOB, list(BOOL));
+  public static final TypeH MAP_FUNCTION = TYPEH_DB.mapFunc();
   public static final TypeH NOTHING = TYPEH_DB.nothing();
   public static final TypeH STRING = TYPEH_DB.string();
   public static final TypeH VARIABLE = TYPEH_DB.variable("A");
@@ -98,9 +98,9 @@ public class TestingTypesH {
       concat(BASE_TYPESV_TO_TEST, ARRAY_TYPESV_TO_TEST);
 
   private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
-      "any", "array", "array", "blob", "bool", "call", "construct", "definedFunction",
-      "equals", "function", "function", "get", "getClass", "hashCode", "ifFunction", "int_",
-      "lower", "mapFunction", "nativeFunction", "nothing", "notify", "notifyAll", "oneSideBound",
+      "any", "array", "array", "blob", "bool", "call", "construct", "defFunc",
+      "equals", "func", "func", "get", "getClass", "hashCode", "ifFunc", "int_",
+      "lower", "mapFunc", "natFunc", "nothing", "notify", "notifyAll", "oneSideBound",
       "oneSideBound", "order", "ref", "select", "string", "toString", "tuple", "unbounded", "upper",
       "variable", "wait", "wait", "wait"
       );
@@ -118,10 +118,10 @@ public class TestingTypesH {
     var baseTypes = list(
         BLOB,
         BOOL,
-        TYPEH_DB.function(BLOB, list()),
-        TYPEH_DB.function(BLOB, list(BLOB)),
-        TYPEH_DB.function(BLOB, list(BLOB, BLOB)),
-        TYPEH_DB.function(STRING, list()),
+        TYPEH_DB.func(BLOB, list()),
+        TYPEH_DB.func(BLOB, list(BLOB)),
+        TYPEH_DB.func(BLOB, list(BLOB, BLOB)),
+        TYPEH_DB.func(STRING, list()),
         IF_FUNCTION,
         INT,
         MAP_FUNCTION,

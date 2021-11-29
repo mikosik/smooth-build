@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypesS.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
-import static org.smoothbuild.lang.base.type.api.TypeNames.functionTypeName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -68,10 +68,10 @@ public class TypeNamesTest {
   }
 
   @Nested
-  class _function_type_name {
+  class _func_type_name {
     @Test
-    public void function_type_name() {
-      assertThat(functionTypeName(STRING, list(BLOB, BOOL)))
+    public void func_type_name() {
+      assertThat(funcTypeName(STRING, list(BLOB, BOOL)))
           .isEqualTo("String(Blob, Bool)");
     }
   }

@@ -10,7 +10,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ConcatTest extends AcceptanceTestCase {
   @Test
-  public void concatenate_bool_arrays_function() throws Exception {
+  public void concatenate_bool_arrays_func() throws Exception {
     createUserModule("""
             result = concat([true], [false]);
             """);
@@ -21,7 +21,7 @@ public class ConcatTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void concatenate_string_arrays_function() throws Exception {
+  public void concatenate_string_arrays_func() throws Exception {
     createUserModule("""
             result = concat(["abc"], ["def"]);
             """);
@@ -46,7 +46,7 @@ public class ConcatTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void concatenate_blob_arrays_function() throws Exception {
+  public void concatenate_blob_arrays_func() throws Exception {
     createFile("0", "abc");
     createFile("1", "def");
     createUserModule("""

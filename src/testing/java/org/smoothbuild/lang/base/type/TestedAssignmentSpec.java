@@ -116,7 +116,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     r.addAll(list(
         illegalAssignment(f(BLOB, STRING), f(BLOB, STRING, INT)),
 
-        // functions
+        // funcs
         illegalAssignment(f(a(BLOB)), a(BLOB)),
         illegalAssignment(f(a(NOTHING)), a(NOTHING)),
         illegalAssignment(f(a(STRUCT)), a(STRUCT)),
@@ -124,7 +124,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         illegalAssignment(f(a2(NOTHING)), a2(NOTHING)),
         illegalAssignment(f(a2(STRUCT)), a2(STRUCT)),
 
-        // functions (as function result type)
+        // funcs (as func result type)
         allowedAssignment(f(f(BLOB)), f(f(BLOB))),
         allowedAssignment(f(f(BLOB)), f(f(NOTHING))),
         illegalAssignment(f(f(NOTHING)), f(f(BLOB))),
@@ -133,7 +133,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         illegalAssignment(f(f(BLOB, STRING)), f(f(BLOB, NOTHING))),
         allowedAssignment(f(f(BLOB, NOTHING)), f(f(BLOB, STRING))),
 
-        // functions (as function result type - nested twice)
+        // funcs (as func result type - nested twice)
         allowedAssignment(f(f(f(BLOB))), f(f(f(BLOB)))),
         allowedAssignment(f(f(f(BLOB))), f(f(f(NOTHING)))),
         illegalAssignment(f(f(f(NOTHING))), f(f(f(BLOB)))),
@@ -142,7 +142,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         illegalAssignment(f(f(f(BLOB, STRING))), f(f(f(BLOB, NOTHING)))),
         allowedAssignment(f(f(f(BLOB, NOTHING))), f(f(f(BLOB, STRING)))),
 
-        // functions (as function param type)
+        // funcs (as func param type)
         allowedAssignment(f(BLOB, f(STRING)), f(BLOB, f(STRING))),
         illegalAssignment(f(BLOB, f(STRING)), f(BLOB, f(NOTHING))),
         allowedAssignment(f(BLOB, f(NOTHING)), f(BLOB, f(STRING))),
@@ -151,7 +151,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         allowedAssignment(f(BLOB, f(BLOB, STRING)), f(BLOB, f(BLOB, NOTHING))),
         illegalAssignment(f(BLOB, f(BLOB, NOTHING)), f(BLOB, f(BLOB, STRING))),
 
-        // functions (as function param type - nested twice)
+        // funcs (as func param type - nested twice)
         allowedAssignment(f(BLOB, f(BLOB, f(STRING))), f(BLOB, f(BLOB, f(STRING)))),
         allowedAssignment(f(BLOB, f(BLOB, f(STRING))), f(BLOB, f(BLOB, f(NOTHING)))),
         illegalAssignment(f(BLOB, f(BLOB, f(NOTHING))), f(BLOB, f(BLOB, f(STRING)))),
@@ -177,7 +177,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     gen(r, f(A), includeAny, oneOf(NOTHING), mFunc(oneOf(A, NOTHING)));
 
     r.addAll(list(
-        // functions
+        // funcs
         illegalAssignment(f(a(A)), a(A)),
         illegalAssignment(f(a2(A)), a2(A)),
 
@@ -300,11 +300,11 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
   }
 
   /**
-   * Match a function.
+   * Match a func.
    */
   private static Predicate<TestedType> mFunc(Predicate<TestedType> result,
       Predicate<TestedType>... params) {
-    return t -> t.isFunction(result, params);
+    return t -> t.isFunc(result, params);
   }
 
   /**

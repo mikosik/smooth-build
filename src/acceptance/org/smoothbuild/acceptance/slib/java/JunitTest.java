@@ -24,7 +24,7 @@ public class JunitTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void junit_function_succeeds_when_all_junit_tests_succeed() throws Exception {
+  public void junit_func_succeeds_when_all_junit_tests_succeed() throws Exception {
     createJunitLibs();
     createFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createUserModule("""
@@ -37,7 +37,7 @@ public class JunitTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void junit_function_fails_when_junit_test_fails() throws Exception {
+  public void junit_func_fails_when_junit_test_fails() throws Exception {
     createJunitLibs();
     createFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
     createUserModule("""

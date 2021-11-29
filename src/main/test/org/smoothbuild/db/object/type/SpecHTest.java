@@ -58,7 +58,7 @@ import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
@@ -68,7 +68,7 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.FuncType;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Variable;
 import org.smoothbuild.testing.TestingContext;
@@ -132,11 +132,11 @@ public class SpecHTest extends TestingContext {
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.function(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
-        args(f -> f.function(f.string(), list(f.array(f.variable("A")))), "String([A])"),
-        args(f -> f.function(f.variable("A"), list(f.variable("A"))), "A(A)"),
-        args(f -> f.function(f.string(), list()), "String()"),
-        args(f -> f.function(f.string(), list(f.string())), "String(String)"),
+        args(f -> f.func(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
+        args(f -> f.func(f.string(), list(f.array(f.variable("A")))), "String([A])"),
+        args(f -> f.func(f.variable("A"), list(f.variable("A"))), "A(A)"),
+        args(f -> f.func(f.string(), list()), "String()"),
+        args(f -> f.func(f.string(), list(f.string())), "String(String)"),
 
         args(f -> f.tuple(list()), "{}"),
         args(f -> f.tuple(list(f.string(), f.bool())), "{String,Bool}"),
@@ -144,11 +144,11 @@ public class SpecHTest extends TestingContext {
 
         args(f -> f.call(f.int_()), "CALL:Int"),
         args(f -> f.construct(f.tuple(list(f.string(), f.int_()))), "CONSTRUCT:{String,Int}"),
-        args(f -> f.ifFunction(), "A(Bool, A, A)"),
-        args(f -> f.mapFunction(), "[B]([A], B(A))"),
-        args(f -> f.nativeFunction(f.blob(), list(f.bool())), "Blob(Bool)"),
-        args(f -> f.definedFunction(f.blob(), list(f.bool())), "Blob(Bool)"),
-        args(f -> f.function(f.blob(), list(f.bool())), "Blob(Bool)"),
+        args(f -> f.ifFunc(), "A(Bool, A, A)"),
+        args(f -> f.mapFunc(), "[B]([A], B(A))"),
+        args(f -> f.natFunc(f.blob(), list(f.bool())), "Blob(Bool)"),
+        args(f -> f.defFunc(f.blob(), list(f.bool())), "Blob(Bool)"),
+        args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.order(f.string()), "ORDER:[String]"),
         args(f -> f.ref(f.int_()), "REF:Int"),
         args(f -> f.select(f.int_()), "SELECT:Int")
@@ -168,18 +168,18 @@ public class SpecHTest extends TestingContext {
         args(f -> f.array(f.variable("A")), true),
         args(f -> f.array(f.array(f.variable("A"))), true),
 
-        args(f -> f.function(f.variable("A"), list()), true),
-        args(f -> f.function(f.function(f.variable("A"), list()), list()), true),
-        args(f -> f.function(f.function(f.function(f.variable("A"), list()), list()), list()),
+        args(f -> f.func(f.variable("A"), list()), true),
+        args(f -> f.func(f.func(f.variable("A"), list()), list()), true),
+        args(f -> f.func(f.func(f.func(f.variable("A"), list()), list()), list()),
             true),
 
-        args(f -> f.function(f.bool(), list(f.variable("A"))), true),
-        args(f -> f.function(f.bool(), list(f.function(f.variable("A"), list()))), true),
+        args(f -> f.func(f.bool(), list(f.variable("A"))), true),
+        args(f -> f.func(f.bool(), list(f.func(f.variable("A"), list()))), true),
         args(f -> f
-                .function(f.bool(), list(f.function(f.function(f.variable("A"), list()), list()))),
+                .func(f.bool(), list(f.func(f.func(f.variable("A"), list()), list()))),
             true),
 
-        args(f -> f.function(f.bool(), list(f.function(f.blob(), list(f.variable("A"))))),
+        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.variable("A"))))),
             true),
 
         args(f -> f.any(), false),
@@ -223,30 +223,30 @@ public class SpecHTest extends TestingContext {
         args(f -> f.array(f.string()), f -> set()),
         args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
 
-        args(f -> f.function(f.string(), list()), f -> set()),
-        args(f -> f.function(f.string(), list(f.bool())), f -> set()),
+        args(f -> f.func(f.string(), list()), f -> set()),
+        args(f -> f.func(f.string(), list(f.bool())), f -> set()),
 
         args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
         args(f -> f.array(f.array(f.variable("A"))), f -> set(f.variable("A"))),
 
-        args(f -> f.function(f.variable("A"), list()), f -> set(f.variable("A"))),
-        args(f -> f.function(f.variable("A"), list(f.string())), f -> set(f.variable("A"))),
-        args(f -> f.function(f.string(), list(f.variable("A"))), f -> set(f.variable("A"))),
-        args(f -> f.function(f.variable("B"), list(f.variable("A"))),
+        args(f -> f.func(f.variable("A"), list()), f -> set(f.variable("A"))),
+        args(f -> f.func(f.variable("A"), list(f.string())), f -> set(f.variable("A"))),
+        args(f -> f.func(f.string(), list(f.variable("A"))), f -> set(f.variable("A"))),
+        args(f -> f.func(f.variable("B"), list(f.variable("A"))),
             f -> set(f.variable("A"), f.variable("B"))),
 
-        args(f -> f.function(f.function(f.variable("A"), list()), list()),
+        args(f -> f.func(f.func(f.variable("A"), list()), list()),
             f -> set(f.variable("A"))),
-        args(f -> f.function(f.variable("D"), list(f.variable("C"), f.variable("B"))),
+        args(f -> f.func(f.variable("D"), list(f.variable("C"), f.variable("B"))),
             f -> set(f.variable("B"), f.variable("C"), f.variable("D")))
     );
   }
 
   @Nested
-  class _function {
+  class _func {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<TypeHDb, FunctionType> factoryCall,
+    public void result(Function<TypeHDb, FuncType> factoryCall,
         Function<TypeHDb, List<Type>> expected) {
       assertThat(invoke(factoryCall).result())
           .isEqualTo(invoke(expected));
@@ -254,15 +254,15 @@ public class SpecHTest extends TestingContext {
 
     public static List<Arguments> result_cases() {
       return asList(
-          args(f -> f.function(f.int_(), list()), f -> f.int_()),
-          args(f -> f.function(f.blob(), list(f.bool())), f -> f.blob()),
-          args(f -> f.function(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+          args(f -> f.func(f.int_(), list()), f -> f.int_()),
+          args(f -> f.func(f.blob(), list(f.bool())), f -> f.blob()),
+          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
       );
     }
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<TypeHDb, FunctionType> factoryCall,
+    public void params(Function<TypeHDb, FuncType> factoryCall,
         Function<TypeHDb, List<Type>> expected) {
       assertThat(invoke(factoryCall).params())
           .isEqualTo(invoke(expected));
@@ -270,9 +270,9 @@ public class SpecHTest extends TestingContext {
 
     public static List<Arguments> params_cases() {
       return asList(
-          args(f -> f.function(f.int_(), list()), f -> list()),
-          args(f -> f.function(f.blob(), list(f.bool())), f -> list(f.bool())),
-          args(f -> f.function(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+          args(f -> f.func(f.int_(), list()), f -> list()),
+          args(f -> f.func(f.blob(), list(f.bool())), f -> list(f.bool())),
+          args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
       );
     }
   }
@@ -308,7 +308,7 @@ public class SpecHTest extends TestingContext {
           args(f -> f.any()),
           args(f -> f.blob()),
           args(f -> f.bool()),
-          args(f -> f.function(f.string(), list())),
+          args(f -> f.func(f.string(), list())),
           args(f -> f.int_()),
           args(f -> f.nothing()),
           args(f -> f.string()),
@@ -318,7 +318,7 @@ public class SpecHTest extends TestingContext {
           args(f -> f.array(f.any())),
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
-          args(f -> f.array(f.function(f.string(), list()))),
+          args(f -> f.array(f.func(f.string(), list()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),
@@ -374,7 +374,7 @@ public class SpecHTest extends TestingContext {
         arguments(ANY, ValueH.class),
         arguments(BLOB, BlobH.class),
         arguments(BOOL, BoolH.class),
-        arguments(FUNCTION, FunctionH.class),
+        arguments(FUNCTION, FuncH.class),
         arguments(INT, IntH.class),
         arguments(NOTHING, ValueH.class),
         arguments(PERSON, TupleH.class),

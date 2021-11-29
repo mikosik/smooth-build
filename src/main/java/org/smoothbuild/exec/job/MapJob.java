@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.job;
 
 import static org.smoothbuild.exec.job.TaskKind.CALL;
-import static org.smoothbuild.lang.base.define.FunctionS.PARENTHESES;
-import static org.smoothbuild.lang.base.define.MapFunctionS.MAP_FUNCTION_NAME;
+import static org.smoothbuild.lang.base.define.FuncS.PARENTHESES;
+import static org.smoothbuild.lang.base.define.MapFuncS.MAP_FUNCTION_NAME;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.FunctionH;
+import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
@@ -39,17 +39,17 @@ public class MapJob extends AbstractJob {
   public Promise<ValueH> schedule(Worker worker) {
     PromisedValue<ValueH> result = new PromisedValue<>();
     Promise<ValueH> array = arrayJob().schedule(worker);
-    Promise<ValueH> function = functionJob().schedule(worker);
-    runWhenAllAvailable(list(array, function),
-        () -> onArrayCompleted((ArrayH) array.get(), (FunctionH) function.get(), worker, result));
+    Promise<ValueH> func = funcJob().schedule(worker);
+    runWhenAllAvailable(list(array, func),
+        () -> onArrayCompleted((ArrayH) array.get(), (FuncH) func.get(), worker, result));
     return result;
   }
 
-  private void onArrayCompleted(ArrayH array, FunctionH functionH, Worker worker,
+  private void onArrayCompleted(ArrayH array, FuncH funcH, Worker worker,
       Consumer<ValueH> result) {
     var outputArrayTypeH = (ArrayTypeH) type();
     var outputElemType = outputArrayTypeH.elem();
-    var funcJob = getJob(functionH);
+    var funcJob = getJob(funcH);
     var mapElemJobs = map(
         array.elems(ValueH.class),
         o -> mapElementJob(outputElemType, funcJob, o));
@@ -59,14 +59,14 @@ public class MapJob extends AbstractJob {
         .addConsumer(result);
   }
 
-  private Job getJob(FunctionH function) {
-    var funcJob = functionJob();
-    return new DummyJob(funcJob.type(), function, funcJob);
+  private Job getJob(FuncH func) {
+    var funcJob = funcJob();
+    return new DummyJob(funcJob.type(), func, funcJob);
   }
 
-  private Job mapElementJob(TypeH elemType, Job functionJob, ValueH elem) {
+  private Job mapElementJob(TypeH elemType, Job funcJob, ValueH elem) {
     var elemJob = elemJob(elemType, elem, arrayJob().location());
-    return jobCreator.callEagerJob(scope, functionJob, list(elemJob), functionJob.location());
+    return jobCreator.callEagerJob(scope, funcJob, list(elemJob), funcJob.location());
   }
 
   private Job elemJob(TypeH elemType, ValueH elem, Location location) {
@@ -77,7 +77,7 @@ public class MapJob extends AbstractJob {
     return dependencies().get(0);
   }
 
-  private Job functionJob() {
+  private Job funcJob() {
     return dependencies().get(1);
   }
 }

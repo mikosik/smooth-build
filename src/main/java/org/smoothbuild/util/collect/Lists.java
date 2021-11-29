@@ -56,16 +56,16 @@ public class Lists {
   }
 
   public static <E, R> ImmutableList<R> map(
-      Iterable<E> iterable, Function<? super E, ? extends R> function) {
+      Iterable<E> iterable, Function<? super E, ? extends R> func) {
     return stream(iterable)
-        .map(function)
+        .map(func)
         .collect(toImmutableList());
   }
 
   public static <E, R> List<R> mapM(
-      Iterable<E> iterable, Function<? super E, ? extends R> function) {
+      Iterable<E> iterable, Function<? super E, ? extends R> func) {
     return stream(iterable)
-        .map(function)
+        .map(func)
         .collect(toList());
   }
 
@@ -122,7 +122,7 @@ public class Lists {
   }
 
   public static <T> String toCommaSeparatedString(
-      Iterable<T> list, Function<? super T, String> function) {
-    return stream(list).map(function).collect(joining(","));
+      Iterable<T> list, Function<? super T, String> func) {
+    return stream(list).map(func).collect(joining(","));
   }
 }

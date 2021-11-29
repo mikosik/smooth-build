@@ -154,7 +154,7 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void cannot_declare_function_which_result_type_encloses_it() {
+          public void cannot_declare_func_which_result_type_encloses_it() {
             module("""
               MyStruct {
                 MyStruct() field
@@ -166,7 +166,7 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void cannot_declare_function_which_param_type_encloses_it() {
+          public void cannot_declare_func_which_param_type_encloses_it() {
             module("""
               MyStruct {
                 Blob(MyStruct) field
@@ -389,49 +389,49 @@ public class DeclarationTest extends TestingContext {
     }
 
     @Nested
-    class _function {
+    class _func {
       @Test
-      public void non_native_function_without_body() {
+      public void non_nat_func_without_body() {
         module("""
-          String myFunction();
+          String myFunc();
           """)
             .loadsWithError(1, "Non native function cannot have empty body.");
       }
 
       @Test
-      public void native_function_with_body() {
+      public void nat_func_with_body() {
         module("""
           @Native("Impl.met")
-          String myFunction() = "abc";
+          String myFunc() = "abc";
           """)
             .loadsWithError(2, "Native function cannot have body.");
       }
 
       @Test
-      public void native_function_without_declared_result_type_fails() {
+      public void nat_func_without_declared_result_type_fails() {
         module("""
         @Native("Impl.met")
-        myFunction();
+        myFunc();
         """)
-            .loadsWithError(2, "`myFunction` is native so it should have declared result type.");
+            .loadsWithError(2, "`myFunc` is native so it should have declared result type.");
       }
 
       @Test
       public void result_cannot_have_type_variable_that_is_not_present_elsewhere() {
         module("""
           @Native("Impl.met")
-          A myFunction(String param);
+          A myFunc(String param);
           """)
-            .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myFunction`."
+            .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myFunc`."
                 + " This means each one can be replaced with `Any`.");
       }
 
       @Test
       public void result_cannot_have_arrayed_type_variable_that_is_not_present_elsewhere() {
         module("""
-          [A] myFunction(String param) = [];
+          [A] myFunc(String param) = [];
           """)
-            .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myFunction`."
+            .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myFunc`."
                 + " This means each one can be replaced with `Any`.");
 
       }
@@ -443,7 +443,7 @@ public class DeclarationTest extends TestingContext {
           @Test
           public void result_type_can_be_omitted() {
             module("""
-            myFunction() = "abc";
+            myFunc() = "abc";
             """)
                 .loadsSuccessfully();
           }
@@ -453,7 +453,7 @@ public class DeclarationTest extends TestingContext {
           public void can_be_monotype(TestedType type) {
             module(unlines(
                 "@Native(\"impl\")",
-                type.name() + " myFunction();",
+                type.name() + " myFunc();",
                 type.declarationsAsString()))
                 .loadsSuccessfully();
           }
@@ -463,7 +463,7 @@ public class DeclarationTest extends TestingContext {
           public void can_be_valid_polytype(TestedType type) {
             module(unlines(
                 "@Native(\"impl\")",
-                type.name() + " myFunction();",
+                type.name() + " myFunc();",
                 type.typeDeclarationsAsString()))
                 .loadsSuccessfully();
           }
@@ -473,18 +473,18 @@ public class DeclarationTest extends TestingContext {
           public void cannot_be_single_variable_polytype(TestedType type) {
             module(unlines(
                 "@Native(\"impl\")",
-                type.name() + " myFunction();",
+                type.name() + " myFunc();",
                 type.typeDeclarationsAsString()))
-                .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myFunction`."
+                .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myFunc`."
                     + " This means each one can be replaced with `Any`.");
           }
 
           @Test
-          public void can_be_supertype_of_function_expression() {
+          public void can_be_supertype_of_func_expression() {
             module("""
                 @Native("impl")
                 Nothing nothingFunc();
-                String myFunction() = nothingFunc();
+                String myFunc() = nothingFunc();
                 """)
                 .loadsSuccessfully();
           }
@@ -494,8 +494,8 @@ public class DeclarationTest extends TestingContext {
             module("""
                 @Native("impl")
                 Nothing nothingFunc();
-                String myFunction() = nothingFunc();
-                Nothing result = myFunction();
+                String myFunc() = nothingFunc();
+                Nothing result = myFunc();
                 """)
                 .loadsWithError(4, "`result` has body which type is `String` and it is not "
                     + "convertible to its declared type `Nothing`.");
@@ -506,7 +506,7 @@ public class DeclarationTest extends TestingContext {
           public void can_be_single_variable_polytype_when_param_type_has_such_variable(TestedType type) {
             module(unlines(
                 "@Native(\"Impl.met\")",
-                type.name() + " myFunction(" + type.name() + " param);",
+                type.name() + " myFunc(" + type.name() + " param);",
                 type.typeDeclarationsAsString()))
                 .loadsSuccessfully();
           }
@@ -518,7 +518,7 @@ public class DeclarationTest extends TestingContext {
         @Test
         public void that_is_legal() {
           module("""
-             myFunction() = "abc";
+             myFunc() = "abc";
              """)
               .loadsSuccessfully();
         }
@@ -526,23 +526,23 @@ public class DeclarationTest extends TestingContext {
         @Test
         public void that_is_illegal_fails() {
           module("""
-             myFunction^() = "abc";
+             myFunc^() = "abc";
              """)
               .loadsWithError(1, """
             token recognition error at: '^'
-            myFunction^() = "abc";
-                      ^""");
+            myFunc^() = "abc";
+                  ^""");
         }
 
         @Test
         public void that_starts_with_large_letter_fails() {
           module("""
-             MyFunction() = "abc";
+             MyFunc() = "abc";
              """)
               .loadsWithError(1, """
                 missing NAME at '='
-                MyFunction() = "abc";
-                             ^""");
+                MyFunc() = "abc";
+                         ^""");
         }
 
         @Test
@@ -566,7 +566,7 @@ public class DeclarationTest extends TestingContext {
           public void can_be_monotype(TestedType type) {
             module(unlines(
                 "@Native(\"Impl.met\")",
-                "String myFunction(" + type.name() + " param);",
+                "String myFunc(" + type.name() + " param);",
                 type.typeDeclarationsAsString()))
                 .loadsSuccessfully();
           }
@@ -576,7 +576,7 @@ public class DeclarationTest extends TestingContext {
           public void can_be_valid_polytype(TestedType type) {
             module(unlines(
                 "@Native(\"Impl.met\")",
-                "String myFunction(" + type.name() + " param);",
+                "String myFunc(" + type.name() + " param);",
                 type.typeDeclarationsAsString()))
                 .loadsSuccessfully();
           }
@@ -586,10 +586,10 @@ public class DeclarationTest extends TestingContext {
           public void cannot_be_single_variable_polytype(TestedType type) {
             module(unlines(
                 "@Native(\"Impl.met\")",
-                "String myFunction(" + type.name() + " param);",
+                "String myFunc(" + type.name() + " param);",
                 type.typeDeclarationsAsString()))
                 .loadsWithError(2, "Type variable(s) `A` are used once in declaration of"
-                    + " `myFunction`. This means each one can be replaced with `Any`.");
+                    + " `myFunc`. This means each one can be replaced with `Any`.");
           }
 
           @ParameterizedTest
@@ -598,7 +598,7 @@ public class DeclarationTest extends TestingContext {
               TestedType type) {
             module(unlines(
                 "@Native(\"Impl.met\")",
-                "Blob myFunction(" + type.name() + " param, " + type.name() + " param2);",
+                "Blob myFunc(" + type.name() + " param, " + type.name() + " param2);",
                 type.typeDeclarationsAsString()))
                 .loadsSuccessfully();
           }
@@ -609,7 +609,7 @@ public class DeclarationTest extends TestingContext {
           @Test
           public void that_is_legal() {
             module("""
-             String myFunction(String name) = "abc";
+             String myFunc(String name) = "abc";
              """)
                 .loadsSuccessfully();
           }
@@ -617,34 +617,34 @@ public class DeclarationTest extends TestingContext {
           @Test
           public void that_is_illegal_fails() {
             module("""
-             String myFunction(String name^);
+             String myFunc(String name^);
              """)
                 .loadsWithError(1, """
               token recognition error at: '^'
-              String myFunction(String name^);
-                                           ^""");
+              String myFunc(String name^);
+                                       ^""");
           }
 
           @Test
           public void that_starts_with_large_letter_fails() {
             module("""
-             String myFunction(String Name);
+             String myFunc(String Name);
              """)
                 .loadsWithError(1, """
               mismatched input 'Name' expecting {'(', NAME}
-              String myFunction(String Name);
-                                       ^^^^""");
+              String myFunc(String Name);
+                                   ^^^^""");
           }
 
           @Test
           public void that_is_single_large_letter_fails() {
             module("""
-             String myFunction(String A);
+             String myFunc(String A);
              """)
                 .loadsWithError(1, """
               mismatched input 'A' expecting {'(', NAME}
-              String myFunction(String A);
-                                       ^""");
+              String myFunc(String A);
+                                   ^""");
           }
         }
 
@@ -652,12 +652,12 @@ public class DeclarationTest extends TestingContext {
         public void default_param_before_non_default_is_allowed() {
           module("""
             @Native("Impl.met")
-            String myFunction(
+            String myFunc(
               String default = "value",
               String nonDefault);
             """)
               .loadsSuccessfully()
-              .containsEvaluable(functionS(2, STRING, "myFunction",
+              .containsEvaluable(funcS(2, STRING, "myFunc",
                   annotation(1, stringS(1, "Impl.met")),
                   param(3, STRING, "default", stringS(3, "value")),
                   param(4, STRING, "nonDefault")));
@@ -685,33 +685,33 @@ public class DeclarationTest extends TestingContext {
       class _param_list {
         @Test
         public void can_have_trailing_comma() {
-          module(functionDeclaration("String param1,"))
+          module(funcDeclaration("String param1,"))
               .loadsSuccessfully()
-              .containsEvaluable(functionS(1, STRING, "myFunction",
+              .containsEvaluable(funcS(1, STRING, "myFunc",
                   stringS(1, "abc"), param(1, STRING, "param1")));
         }
 
         @Test
         public void cannot_have_only_comma() {
-          module(functionDeclaration(","))
+          module(funcDeclaration(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          module(functionDeclaration(",String string"))
+          module(funcDeclaration(",String string"))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          module(functionDeclaration("String string,,"))
+          module(funcDeclaration("String string,,"))
               .loadsWithProblems();
         }
 
-        private String functionDeclaration(String string) {
+        private String funcDeclaration(String string) {
           return """
-              String myFunction(PLACEHOLDER) = "abc";
+              String myFunc(PLACEHOLDER) = "abc";
               """.replace("PLACEHOLDER", string);
         }
       }
@@ -720,7 +720,7 @@ public class DeclarationTest extends TestingContext {
       class _type_param_list {
         @Test
         public void can_have_trailing_comma() {
-          module(functionTypeDeclaration("String,"))
+          module(funcTypeDeclaration("String,"))
               .loadsSuccessfully()
               .containsEvaluable(natFuncS(2, f(f(BLOB, STRING)), "myFunc", nList(),
                   annotation(1, stringS(1, "Impl.met"))));
@@ -728,23 +728,23 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void cannot_have_only_comma() {
-          module(functionTypeDeclaration(","))
+          module(funcTypeDeclaration(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          module(functionTypeDeclaration(",String"))
+          module(funcTypeDeclaration(",String"))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          module(functionTypeDeclaration("String,,"))
+          module(funcTypeDeclaration("String,,"))
               .loadsWithProblems();
         }
 
-        private String functionTypeDeclaration(String string) {
+        private String funcTypeDeclaration(String string) {
           return """
               @Native("Impl.met")
               Blob(PLACEHOLDER) myFunc();
@@ -759,7 +759,7 @@ public class DeclarationTest extends TestingContext {
     @Nested
     class _call {
       @Nested
-      class _function {
+      class _func {
         @Test
         public void passing_more_positional_args_than_params_causes_error() {
           String code = """
@@ -786,8 +786,8 @@ public class DeclarationTest extends TestingContext {
         public void passing_less_positional_args_than_params_causes_error_version_without_name() {
           String code = """
               returnFirst(String param1, String param2) = param1;
-              functionValue = returnFirst;
-              result = functionValue("abc");
+              funcValue = returnFirst;
+              result = funcValue("abc");
               """;
           module(code)
               .loadsWithError(3, "In call to function with type `String(String, String)`:"
@@ -880,11 +880,11 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void function_param_name_is_stripped_during_assignment() {
+        public void func_param_name_is_stripped_during_assignment() {
           String code = """
-            myFunction(String param) = param;
-            valueReferencingFunction = myFunction;
-            result = valueReferencingFunction(param="abc");
+            myFunc(String param) = param;
+            valueReferencingFunc = myFunc;
+            result = valueReferencingFunc(param="abc");
             """;
           module(code)
               .loadsWithError(3,
@@ -892,11 +892,11 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void function_default_argument_is_stripped_during_assignment() {
+        public void func_default_argument_is_stripped_during_assignment() {
           String code = """
-            myFunction(String param = "abc") = param;
-            valueReferencingFunction = myFunction;
-            result = valueReferencingFunction();
+            myFunc(String param = "abc") = param;
+            valueReferencingFunc = myFunc;
+            result = valueReferencingFunc();
             """;
           module(code)
               .loadsWithError(3, "In call to function with type `String(String)`: "
@@ -946,36 +946,36 @@ public class DeclarationTest extends TestingContext {
       class _argument_list {
         @Test
         public void can_have_trailing_comma() {
-          module(functionCall("0x07,"))
+          module(funcCall("0x07,"))
               .loadsSuccessfully()
               .containsEvaluable(value(2, BLOB, "result",
                   callS(2, BLOB,
-                      refS(2, f(BLOB, BLOB), "myFunction"),
+                      refS(2, f(BLOB, BLOB), "myFunc"),
                       blobS(2, 7))));
         }
 
         @Test
         public void cannot_have_only_comma() {
-          module(functionCall(","))
+          module(funcCall(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          module(functionCall(","))
+          module(funcCall(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          module(functionCall("0x01,,"))
+          module(funcCall("0x01,,"))
               .loadsWithProblems();
         }
 
-        private String functionCall(String string) {
+        private String funcCall(String string) {
           return """
-              Blob myFunction(Blob b) = b;
-              result = myFunction(PLACEHOLDER);
+              Blob myFunc(Blob b) = b;
+              result = myFunc(PLACEHOLDER);
               """.replace("PLACEHOLDER", string);
         }
       }
@@ -1266,10 +1266,10 @@ public class DeclarationTest extends TestingContext {
         @Test
         public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
           module("""
-            myFunction() = "abc";
+            myFunc() = "abc";
             result = [
-              myFunction(unknown1=""),
-              myFunction(unknown2="")
+              myFunc(unknown1=""),
+              myFunc(unknown2="")
             ];
             """)
               .loadsWith(
@@ -1313,9 +1313,9 @@ public class DeclarationTest extends TestingContext {
       @Test
       public void regression_test_error_in_expression_of_argument_of_not_first_elem_of_pipe() {
         module("""
-            String myFunction(String a, String b) = "abc";
+            String myFunc(String a, String b) = "abc";
             String myIdentity(String s) = s;
-            result = "abc" | myIdentity(myFunction(unknown=""));
+            result = "abc" | myIdentity(myFunc(unknown=""));
             """)
                 .loadsWith(
                     err(3, "In call to function with type `String(String a, String b)`:"
@@ -1326,7 +1326,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void non_first_chain_in_a_pipe_must_have_function_call() {
+      public void non_first_chain_in_a_pipe_must_have_func_call() {
         module("""
             MyStruct {
               String myField

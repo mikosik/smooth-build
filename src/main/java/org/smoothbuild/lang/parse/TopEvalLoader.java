@@ -8,13 +8,13 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.Defined;
-import org.smoothbuild.lang.base.define.DefinedFunctionS;
 import org.smoothbuild.lang.base.define.DefinedValueS;
-import org.smoothbuild.lang.base.define.FunctionS;
+import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.NativeFunctionS;
+import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.define.ValueS;
 import org.smoothbuild.lang.base.like.EvalLike;
@@ -38,7 +38,7 @@ import org.smoothbuild.lang.parse.ast.BlobN;
 import org.smoothbuild.lang.parse.ast.CallN;
 import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.ExprN;
-import org.smoothbuild.lang.parse.ast.FunctionN;
+import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.RealFuncN;
@@ -59,7 +59,7 @@ public class TopEvalLoader {
 
   public TopEvalS loadEvaluables(ModulePath path, EvalN evalN) {
     if (evalN instanceof RealFuncN realFuncN) {
-      return loadFunction(path, realFuncN);
+      return loadFunc(path, realFuncN);
     } else {
       return loadValue(path, evalN);
     }
@@ -74,19 +74,19 @@ public class TopEvalLoader {
         type, path, name, loader.createExpression(valueNode.body().get()), location);
   }
 
-  private FunctionS loadFunction(ModulePath path, RealFuncN realFuncN) {
+  private FuncS loadFunc(ModulePath path, RealFuncN realFuncN) {
     var params = loadParams(path, realFuncN);
     var resultType = realFuncN.resultType().get();
     var name = realFuncN.name();
     var location = realFuncN.location();
-    var type = factory.function(resultType, map(params, Defined::type));
+    var type = factory.func(resultType, map(params, Defined::type));
     if (realFuncN.annotation().isPresent()) {
-      return new NativeFunctionS(type,
+      return new NatFuncS(type,
           path, name, params, loadAnnotation(realFuncN.annotation().get()), location
       );
     } else {
       var expressionLoader = new ExpressionLoader(path, params);
-      return new DefinedFunctionS(type, path,
+      return new DefFuncS(type, path,
           name, params, expressionLoader.createExpression(realFuncN.body().get()), location);
     }
   }
@@ -139,7 +139,7 @@ public class TopEvalLoader {
     }
 
     private ExprS createCall(CallN call) {
-      var called = createExpression(call.function());
+      var called = createExpression(call.func());
       var argumentExpressions = createArgumentExpressions(call);
       var resultType = call.type().get();
       return new CallS(resultType, called, argumentExpressions, call.location());
@@ -164,14 +164,14 @@ public class TopEvalLoader {
     }
 
     private ExprS createDefaultArgumentExpression(CallN call, int i) {
-      // Argument is not present so we have to use function default argument.
-      // This means that this call is made on reference to actual function and that function
+      // Argument is not present so we have to use func default argument.
+      // This means that this call is made on reference to actual func and that func
       // has default argument for given param, otherwise checkers that ran so far would
       // report an error.
-      EvalLike referenced = ((RefN) call.function()).referenced();
+      EvalLike referenced = ((RefN) call.func()).referenced();
       return switch (referenced) {
-        case FunctionS function -> function.params().get(i).defaultValue().get();
-        case FunctionN node -> createExpression(node.params().get(i).body().get());
+        case FuncS func -> func.params().get(i).defaultValue().get();
+        case FuncN node -> createExpression(node.params().get(i).body().get());
         default -> throw new RuntimeException("Unexpected case");
       };
     }

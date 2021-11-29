@@ -10,16 +10,16 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _blob_literal_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
-          String myFunction(Blob b) = "abc";
-          result = myFunction(0x01);
+          String myFunc(Blob b) = "abc";
+          result = myFunc(0x01);
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
           result() = 0x01;
           """)
@@ -45,13 +45,13 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void param_default_argument() {
       module("""
-        String myFunction(Blob b = 0x01) = "abc";
+        String myFunc(Blob b = 0x01) = "abc";
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression_fails() {
+    public void func_in_call_expression_fails() {
       module("""
           result = 0x01("abc");
           """)
@@ -77,16 +77,16 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _int_literal_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
-          String myFunction(Int i) = "abc";
-          result = myFunction(123);
+          String myFunc(Int i) = "abc";
+          result = myFunc(123);
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
           result() = 123;
           """)
@@ -112,13 +112,13 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void param_default_argument() {
       module("""
-        String myFunction(Int i = 123) = "abc";
+        String myFunc(Int i = 123) = "abc";
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression_fails() {
+    public void func_in_call_expression_fails() {
       module("""
           result = 123("abc");
           """)
@@ -144,16 +144,16 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _string_literal_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
-        String myFunction(String param) = "abc";
-        result = myFunction("abc");
+        String myFunc(String param) = "abc";
+        result = myFunc("abc");
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
           result() = "abc";
           """)
@@ -179,13 +179,13 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void param_default_argument() {
       module("""
-        String myFunction(String s = "abc") = "abc";
+        String myFunc(String s = "abc") = "abc";
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression_fails() {
+    public void func_in_call_expression_fails() {
       module("""
           result = "text"("abc");
           """)
@@ -211,16 +211,16 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _array_literal_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
-        myFunction([String] param) = "abc";
-        result = myFunction(["abc"]);
+        myFunc([String] param) = "abc";
+        result = myFunc(["abc"]);
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
           result() = ["abc"];
           """)
@@ -246,13 +246,13 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void param_default_argument() {
       module("""
-        String myFunction([String] s = ["abc"]) = "abc";
+        String myFunc([String] s = ["abc"]) = "abc";
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression_fails() {
+    public void func_in_call_expression_fails() {
       module("""
           result = ["text"]("abc");
           """)
@@ -278,20 +278,20 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _select_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
         MyStruct {
           String field,
         }
         myValue = myStruct("abc");
-        String myFunction(String s) = "abc";
-        result = myFunction(myValue.field);
+        String myFunc(String s) = "abc";
+        result = myFunc(myValue.field);
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
           MyStruct {
             String field,
@@ -333,25 +333,25 @@ public class ExprSUsageTest extends TestingContext {
           String field,
         }
         value = myStruct("abc");
-        String myFunction(String value = value.field) = "abc";
+        String myFunc(String value = value.field) = "abc";
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression() {
+    public void func_in_call_expression() {
       module("""
         MyStruct {
-          String() myFunction
+          String() myFunc
         }
         String justAbc() = "abc";
-        result = myStruct(justAbc).myFunction();
+        result = myStruct(justAbc).myFunc();
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression_fails_when_field_type_is_not_a_function() {
+    public void func_in_call_expression_fails_when_field_type_is_not_a_func() {
       module("""
         MyStruct {
           String myField
@@ -392,20 +392,20 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _pipe_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
           A myIdentity(A a) = a;
-          String myFunction(String param) = "abc";
-          result = myFunction("abc" | myIdentity());
+          String myFunc(String param) = "abc";
+          result = myFunc("abc" | myIdentity());
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
           A myIdentity(A a) = a;
-          String myFunction(String param) = "abc";
+          String myFunc(String param) = "abc";
           result() = "abc" | myIdentity();
           """)
           .loadsSuccessfully();
@@ -415,7 +415,7 @@ public class ExprSUsageTest extends TestingContext {
     public void value_body() {
       module("""
           A myIdentity(A a) = a;
-          String myFunction(String param) = "abc";
+          String myFunc(String param) = "abc";
           result = "abc" | myIdentity();
           """)
           .loadsSuccessfully();
@@ -434,7 +434,7 @@ public class ExprSUsageTest extends TestingContext {
     public void param_default_argument() {
       module("""
           A myIdentity(A a) = a;
-          String myFunction(String param = "abc" | myIdentity()) = "abc";
+          String myFunc(String param = "abc" | myIdentity()) = "abc";
           """)
           .loadsSuccessfully();
     }
@@ -443,20 +443,20 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _call_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
-        String otherFunction() = "abc";
-        String myFunction(String param) = "abc";
-        result = myFunction(otherFunction());
+        String otherFunc() = "abc";
+        String myFunc(String param) = "abc";
+        result = myFunc(otherFunc());
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
-          String otherFunction() = "abc";
-          result() = otherFunction();
+          String otherFunc() = "abc";
+          result() = otherFunc();
           """)
           .loadsSuccessfully();
     }
@@ -464,8 +464,8 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void value_body() {
       module("""
-          String otherFunction() = "abc";
-          result = otherFunction();
+          String otherFunc() = "abc";
+          result = otherFunc();
           """)
           .loadsSuccessfully();
     }
@@ -473,8 +473,8 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem() {
       module("""
-           String myFunction() = "abc";
-           result = [ myFunction() ];
+           String myFunc() = "abc";
+           result = [ myFunc() ];
            """)
           .loadsSuccessfully();
     }
@@ -482,18 +482,18 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void param_default_argument() {
       module("""
-        String myFunction() = "abc";
-        String otherFunction(String value = myFunction()) = "abc";
+        String myFunc() = "abc";
+        String otherFunc(String value = myFunc()) = "abc";
         """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression() {
+    public void func_in_call_expression() {
       module("""
         String justAbc() = "abc";
-        String() highOrderFunction() = justAbc;
-        result = highOrderFunction()();
+        String() highOrderFunc() = justAbc;
+        result = highOrderFunc()();
         """)
           .loadsSuccessfully();
     }
@@ -504,8 +504,8 @@ public class ExprSUsageTest extends TestingContext {
             MyStruct {
               String myField
             }
-            myFunction() = myStruct("abc");
-            result = myFunction().myField;
+            myFunc() = myStruct("abc");
+            result = myFunc().myField;
             """;
       module(code)
           .loadsSuccessfully();
@@ -513,22 +513,22 @@ public class ExprSUsageTest extends TestingContext {
   }
 
   @Nested
-  class _function_reference_used_as {
+  class _func_reference_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
-          String otherFunction() = "abc";
-          String myFunction(String() param) = "abc";
-          result = myFunction(otherFunction);
+          String otherFunc() = "abc";
+          String myFunc(String() param) = "abc";
+          result = myFunc(otherFunc);
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
-          String otherFunction() = "abc";
-          result() = otherFunction;
+          String otherFunc() = "abc";
+          result() = otherFunc;
           """)
           .loadsSuccessfully();
     }
@@ -536,8 +536,8 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void value_body() {
       module("""
-          String otherFunction() = "abc";
-          result = otherFunction;
+          String otherFunc() = "abc";
+          result = otherFunc;
           """)
           .loadsSuccessfully();
     }
@@ -545,8 +545,8 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem() {
       module("""
-           String myFunction() = "abc";
-           result = [ myFunction ];
+           String myFunc() = "abc";
+           result = [ myFunc ];
            """)
           .loadsSuccessfully();
     }
@@ -554,14 +554,14 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void param_default_argument() {
       module("""
-          String myFunction() = "abc";
-          String otherFunction(String() value = myFunction) = "abc";
+          String myFunc() = "abc";
+          String otherFunc(String() value = myFunc) = "abc";
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression() {
+    public void func_in_call_expression() {
       module("""
           String justAbc() = "abc";
           result = justAbc();
@@ -572,8 +572,8 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void struct_in_select_expression_fails() {
       String code = """
-            myFunction() = "abc";
-            result = myFunction.myField;
+            myFunc() = "abc";
+            result = myFunc.myField;
             """;
       module(code)
           .loadsWithError(2, "Type `String()` is not a struct so it doesn't have `myField` field.");
@@ -581,20 +581,20 @@ public class ExprSUsageTest extends TestingContext {
   }
 
   @Nested
-  class _function_param_used_as {
+  class _func_param_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
           myIdentity(String string) = string;
-          myFunction(String string) = myIdentity(string);
+          myFunc(String string) = myIdentity(string);
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
-          myFunction(String string) = string;
+          myFunc(String string) = string;
           """)
           .loadsSuccessfully();
     }
@@ -602,23 +602,23 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void array_elem() {
       module("""
-          myFunction(String string) = [ string ];
+          myFunc(String string) = [ string ];
            """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression() {
+    public void func_in_call_expression() {
       module("""
-          myFunction(String() param) = param();
+          myFunc(String() param) = param();
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression_fails_when_param_type_is_not_a_function() {
+    public void func_in_call_expression_fails_when_param_type_is_not_a_func() {
       module("""
-          myFunction(String param) = param();
+          myFunc(String param) = param();
           """)
           .loadsWithError(1, "`param` cannot be called as it is not a function but `String`.");
     }
@@ -629,7 +629,7 @@ public class ExprSUsageTest extends TestingContext {
             MyStruct {
               String myField
             }
-            myFunction(MyStruct param) = param.myField;
+            myFunc(MyStruct param) = param.myField;
             """;
       module(code)
           .loadsSuccessfully();
@@ -638,7 +638,7 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void struct_in_select_expression_fails_when_param_type_is_not_a_struct() {
       String code = """
-            myFunction(String param) = param.myField;
+            myFunc(String param) = param.myField;
             """;
       module(code)
           .loadsWithError(1, "Type `String` is not a struct so it doesn't have `myField` field.");
@@ -648,17 +648,17 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _value_reference_used_as {
     @Test
-    public void function_argument() {
+    public void func_argument() {
       module("""
           String myValue = "abc";
-          String myFunction(String param) = "abc";
-          result = myFunction(myValue);
+          String myFunc(String param) = "abc";
+          result = myFunc(myValue);
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_body() {
+    public void func_body() {
       module("""
           String myValue = "abc";
           result() = myValue;
@@ -688,13 +688,13 @@ public class ExprSUsageTest extends TestingContext {
     public void param_default_argument() {
       module("""
           String myValue = "abc";
-          String myFunction(String value = myValue) = "abc";
+          String myFunc(String value = myValue) = "abc";
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_in_call_expression() {
+    public void func_in_call_expression() {
       module("""
         String justAbc() = "abc";
         myValue = justAbc;
@@ -704,7 +704,7 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void function_in_call_expression_fails_when_value_type_is_not_a_function() {
+    public void func_in_call_expression_fails_when_value_type_is_not_a_func() {
       module("""
         myValue = "abc";
         result = myValue();
@@ -739,20 +739,20 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _struct_type_used_as {
     @Test
-    public void function_argument_fails() {
+    public void func_argument_fails() {
       module("""
           MyStruct {}
-          String myFunction(String param) = "abc";
-          result = myFunction(MyStruct);
+          String myFunc(String param) = "abc";
+          result = myFunc(MyStruct);
           """)
           .loadsWithError(3, """
               extraneous input 'MyStruct' expecting {')', '[', NAME, INT, BLOB, STRING}
-              result = myFunction(MyStruct);
-                                  ^^^^^^^^""");
+              result = myFunc(MyStruct);
+                              ^^^^^^^^""");
     }
 
     @Test
-    public void function_body_fails() {
+    public void func_body_fails() {
       module("""
           MyStruct {}
           result() = MyStruct;
@@ -791,16 +791,16 @@ public class ExprSUsageTest extends TestingContext {
     public void param_default_argument_fails() {
       module("""
           MyStruct {}
-          String myFunction(String value = MyStruct) = "abc";
+          String myFunc(String value = MyStruct) = "abc";
           """)
           .loadsWithError(2, """
               mismatched input 'MyStruct' expecting {'[', NAME, INT, BLOB, STRING}
-              String myFunction(String value = MyStruct) = "abc";
-                                               ^^^^^^^^""");
+              String myFunc(String value = MyStruct) = "abc";
+                                           ^^^^^^^^""");
     }
 
     @Test
-    public void function_in_call_expression_fails() {
+    public void func_in_call_expression_fails() {
       module("""
             MyStruct {}
             result = MyStruct();
@@ -876,37 +876,37 @@ public class ExprSUsageTest extends TestingContext {
     }
 
     @Test
-    public void function_param_type() {
+    public void func_param_type() {
       module("""
-          String myFunction(MyStruct param) = "abc";
+          String myFunc(MyStruct param) = "abc";
           MyStruct {}
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_arrayed_type() {
+    public void func_arrayed_type() {
       module("""
-          String myFunction([MyStruct] param) = "abc";
+          String myFunc([MyStruct] param) = "abc";
           MyStruct {}
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_result_type() {
+    public void func_result_type() {
       module("""
           @Native("Impl.met")
-          MyStruct myFunction(String param);
+          MyStruct myFunc(String param);
           MyStruct {}
           """)
           .loadsSuccessfully();
     }
 
     @Test
-    public void function_arrayed_result_type() {
+    public void func_arrayed_result_type() {
       module("""
-          [MyStruct] myFunction(String param) = [];
+          [MyStruct] myFunc(String param) = [];
           MyStruct {}
           """)
           .loadsSuccessfully();
@@ -916,19 +916,19 @@ public class ExprSUsageTest extends TestingContext {
   @Nested
   class _type_variable_used_as {
     @Test
-    public void function_argument_fails() {
+    public void func_argument_fails() {
       module("""
-          String myFunction(String param) = "abc";
-          result = myFunction(A);
+          String myFunc(String param) = "abc";
+          result = myFunc(A);
           """)
           .loadsWithError(2, """
               extraneous input 'A' expecting {')', '[', NAME, INT, BLOB, STRING}
-              result = myFunction(A);
-                                  ^""");
+              result = myFunc(A);
+                              ^""");
     }
 
     @Test
-    public void function_body_fails() {
+    public void func_body_fails() {
       module("""
           result() = A;
           """)
@@ -963,16 +963,16 @@ public class ExprSUsageTest extends TestingContext {
     @Test
     public void param_default_argument_fails() {
       module("""
-          String myFunction(String value = A) = "abc";
+          String myFunc(String value = A) = "abc";
           """)
           .loadsWithError(1, """
               mismatched input 'A' expecting {'[', NAME, INT, BLOB, STRING}
-              String myFunction(String value = A) = "abc";
-                                               ^""");
+              String myFunc(String value = A) = "abc";
+                                           ^""");
     }
 
     @Test
-    public void function_in_call_expression_fails() {
+    public void func_in_call_expression_fails() {
       module("""
             result = A();
             """)
@@ -1027,16 +1027,16 @@ public class ExprSUsageTest extends TestingContext {
     @Nested
     class _eval_cannot_be_used_as {
       @Test
-      public void function_argument() {
+      public void func_argument() {
         module("""
-            String myFunction(Blob b) = "abc";
-            result = myFunction(undefined);
+            String myFunc(Blob b) = "abc";
+            result = myFunc(undefined);
             """)
             .loadsWithError(2, "`undefined` is undefined.");
       }
 
       @Test
-      public void function_body() {
+      public void func_body() {
         module("""
             result() = undefined;
             """)
@@ -1044,7 +1044,7 @@ public class ExprSUsageTest extends TestingContext {
       }
 
       @Test
-      public void function_in_call_expression() {
+      public void func_in_call_expression() {
         module("""
             result = undefined();
             """)
@@ -1070,7 +1070,7 @@ public class ExprSUsageTest extends TestingContext {
       @Test
       public void param_default_argument() {
         module("""
-        String myFunction(Blob b = undefined) = "abc";
+        String myFunc(Blob b = undefined) = "abc";
         """)
             .loadsWithError(1, "`undefined` is undefined.");
       }
@@ -1089,10 +1089,10 @@ public class ExprSUsageTest extends TestingContext {
       }
 
       @Test
-      public void function_result() {
+      public void func_result() {
         module("""
              @Native("Impl.met")
-             Undefined myFunction();
+             Undefined myFunc();
              """)
             .loadsWithError(2, "`Undefined` type is undefined.");
       }
@@ -1100,7 +1100,7 @@ public class ExprSUsageTest extends TestingContext {
       @Test
       public void param() {
         module("""
-             String myFunction(Undefined param) = "abc";
+             String myFunc(Undefined param) = "abc";
              """)
             .loadsWithError(1, "`Undefined` type is undefined.");
       }

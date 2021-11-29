@@ -1,72 +1,72 @@
 package org.smoothbuild.db.object.type;
 
-import static org.smoothbuild.db.object.type.base.SpecKindH.ABSTRACT_FUNCTION;
-import static org.smoothbuild.db.object.type.base.SpecKindH.DEFINED_FUNCTION;
-import static org.smoothbuild.db.object.type.base.SpecKindH.IF_FUNCTION;
-import static org.smoothbuild.db.object.type.base.SpecKindH.MAP_FUNCTION;
-import static org.smoothbuild.db.object.type.base.SpecKindH.NATIVE_FUNCTION;
+import static org.smoothbuild.db.object.type.base.SpecKindH.ABST_FUNC;
+import static org.smoothbuild.db.object.type.base.SpecKindH.DEF_FUNC;
+import static org.smoothbuild.db.object.type.base.SpecKindH.IF_FUNC;
+import static org.smoothbuild.db.object.type.base.SpecKindH.MAP_FUNC;
+import static org.smoothbuild.db.object.type.base.SpecKindH.NAT_FUNC;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.AbstractFunctionTypeH;
-import org.smoothbuild.db.object.type.val.DefinedFunctionTypeH;
-import org.smoothbuild.db.object.type.val.FunctionTypeH;
-import org.smoothbuild.db.object.type.val.IfFunctionTypeH;
-import org.smoothbuild.db.object.type.val.MapFunctionTypeH;
-import org.smoothbuild.db.object.type.val.NativeFunctionTypeH;
+import org.smoothbuild.db.object.type.val.AbstractFuncTypeH;
+import org.smoothbuild.db.object.type.val.DefFuncTypeH;
+import org.smoothbuild.db.object.type.val.FuncTypeH;
+import org.smoothbuild.db.object.type.val.IfFuncTypeH;
+import org.smoothbuild.db.object.type.val.MapFuncTypeH;
+import org.smoothbuild.db.object.type.val.NatFuncTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
-abstract class FunctionKind<T extends FunctionTypeH> {
-  public static final FunctionKind<AbstractFunctionTypeH> ABSTRACT_KIND =
-      new FunctionKind<>(ABSTRACT_FUNCTION) {
+abstract class FuncKind<T extends FuncTypeH> {
+  public static final FuncKind<AbstractFuncTypeH> ABSTRACT_KIND =
+      new FuncKind<>(ABST_FUNC) {
         @Override
-        public AbstractFunctionTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
-          return new AbstractFunctionTypeH(hash, result, params);
+        public AbstractFuncTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
+          return new AbstractFuncTypeH(hash, result, params);
         }
       };
-  public static final FunctionKind<NativeFunctionTypeH> NATIVE_KIND =
-      new FunctionKind<>(NATIVE_FUNCTION) {
+  public static final FuncKind<NatFuncTypeH> NATIVE_KIND =
+      new FuncKind<>(NAT_FUNC) {
         @Override
-        public NativeFunctionTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
-          return new NativeFunctionTypeH(hash, result, params);
+        public NatFuncTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
+          return new NatFuncTypeH(hash, result, params);
         }
       };
-  public static final FunctionKind<DefinedFunctionTypeH> DEFINED_KIND =
-      new FunctionKind<>(DEFINED_FUNCTION) {
+  public static final FuncKind<DefFuncTypeH> DEFINED_KIND =
+      new FuncKind<>(DEF_FUNC) {
         @Override
-        public DefinedFunctionTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
-          return new DefinedFunctionTypeH(hash, result, params);
+        public DefFuncTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
+          return new DefFuncTypeH(hash, result, params);
         }
       };
-  public static final FunctionKind<IfFunctionTypeH> IF_KIND =
-      new FunctionKind<>(IF_FUNCTION) {
+  public static final FuncKind<IfFuncTypeH> IF_KIND =
+      new FuncKind<>(IF_FUNC) {
         @Override
-        public IfFunctionTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
-          return new IfFunctionTypeH(hash, result, params);
+        public IfFuncTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
+          return new IfFuncTypeH(hash, result, params);
         }
       };
-  public static final FunctionKind<MapFunctionTypeH> MAP_KIND =
-      new FunctionKind<>(MAP_FUNCTION) {
+  public static final FuncKind<MapFuncTypeH> MAP_KIND =
+      new FuncKind<>(MAP_FUNC) {
         @Override
-        public MapFunctionTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
-          return new MapFunctionTypeH(hash, result, params);
+        public MapFuncTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
+          return new MapFuncTypeH(hash, result, params);
         }
       };
 
   private final SpecKindH kind;
 
-  private FunctionKind(SpecKindH kind) {
+  private FuncKind(SpecKindH kind) {
     this.kind = kind;
   }
 
-  public static FunctionKind<?> from(SpecKindH kind) {
+  public static FuncKind<?> from(SpecKindH kind) {
     return switch (kind) {
-      case ABSTRACT_FUNCTION -> ABSTRACT_KIND;
-      case DEFINED_FUNCTION -> DEFINED_KIND;
-      case NATIVE_FUNCTION -> NATIVE_KIND;
-      case IF_FUNCTION -> IF_KIND;
-      case MAP_FUNCTION -> MAP_KIND;
+      case ABST_FUNC -> ABSTRACT_KIND;
+      case DEF_FUNC -> DEFINED_KIND;
+      case NAT_FUNC -> NATIVE_KIND;
+      case IF_FUNC -> IF_KIND;
+      case MAP_FUNC -> MAP_KIND;
       default -> throw new IllegalArgumentException();
     };
   }

@@ -28,11 +28,11 @@ import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
-import org.smoothbuild.db.object.obj.val.IfFunctionH;
+import org.smoothbuild.db.object.obj.val.DefFuncH;
+import org.smoothbuild.db.object.obj.val.IfFuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MapFunctionH;
-import org.smoothbuild.db.object.obj.val.NativeFunctionH;
+import org.smoothbuild.db.object.obj.val.MapFuncH;
+import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.TypeFactoryH;
@@ -48,12 +48,12 @@ import org.smoothbuild.db.object.type.val.AnyTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.BlobTypeH;
 import org.smoothbuild.db.object.type.val.BoolTypeH;
-import org.smoothbuild.db.object.type.val.DefinedFunctionTypeH;
-import org.smoothbuild.db.object.type.val.FunctionTypeH;
-import org.smoothbuild.db.object.type.val.IfFunctionTypeH;
+import org.smoothbuild.db.object.type.val.DefFuncTypeH;
+import org.smoothbuild.db.object.type.val.FuncTypeH;
+import org.smoothbuild.db.object.type.val.IfFuncTypeH;
 import org.smoothbuild.db.object.type.val.IntTypeH;
-import org.smoothbuild.db.object.type.val.MapFunctionTypeH;
-import org.smoothbuild.db.object.type.val.NativeFunctionTypeH;
+import org.smoothbuild.db.object.type.val.MapFuncTypeH;
+import org.smoothbuild.db.object.type.val.NatFuncTypeH;
 import org.smoothbuild.db.object.type.val.NothingTypeH;
 import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
@@ -67,13 +67,13 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.base.define.ConstructorS;
-import org.smoothbuild.lang.base.define.DefinedFunctionS;
+import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefinedValueS;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
 import org.smoothbuild.lang.base.define.ModuleS;
-import org.smoothbuild.lang.base.define.NativeFunctionS;
+import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
@@ -83,7 +83,7 @@ import org.smoothbuild.lang.base.type.impl.AnyTypeS;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
 import org.smoothbuild.lang.base.type.impl.BoolTypeS;
-import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.IntTypeS;
 import org.smoothbuild.lang.base.type.impl.NothingTypeS;
 import org.smoothbuild.lang.base.type.impl.StringTypeS;
@@ -281,44 +281,44 @@ public class TestingContext {
     return typeHDb().bool();
   }
 
-  public DefinedFunctionTypeH definedFunctionHT() {
-    return definedFunctionHT(intHT(), list(blobHT(), stringHT()));
+  public DefFuncTypeH defFuncHT() {
+    return defFuncHT(intHT(), list(blobHT(), stringHT()));
   }
 
-  public DefinedFunctionTypeH definedFunctionHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb().definedFunction(result, params);
+  public DefFuncTypeH defFuncHT(TypeH result, ImmutableList<TypeH> params) {
+    return typeHDb().defFunc(result, params);
   }
 
   public TupleTypeH fileHT() {
     return tupleHT(list(blobHT(), stringHT()));
   }
 
-  public FunctionTypeH functionHT() {
-    return functionHT(intHT(), list(blobHT(), stringHT()));
+  public FuncTypeH funcHT() {
+    return funcHT(intHT(), list(blobHT(), stringHT()));
   }
 
-  public FunctionTypeH functionHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb().function(result, params);
+  public FuncTypeH funcHT(TypeH result, ImmutableList<TypeH> params) {
+    return typeHDb().func(result, params);
   }
 
-  public IfFunctionTypeH ifFunctionHT() {
-    return typeHDb().ifFunction();
+  public IfFuncTypeH ifFuncHT() {
+    return typeHDb().ifFunc();
   }
 
   public IntTypeH intHT() {
     return typeHDb().int_();
   }
 
-  public MapFunctionTypeH mapFunctionHT() {
-    return typeHDb().mapFunction();
+  public MapFuncTypeH mapFuncHT() {
+    return typeHDb().mapFunc();
   }
 
-  public NativeFunctionTypeH nativeFunctionHT() {
-    return typeHDb().nativeFunction(blobHT(), list(boolHT()));
+  public NatFuncTypeH natFuncHT() {
+    return typeHDb().natFunc(blobHT(), list(boolHT()));
   }
 
-  public NativeFunctionTypeH nativeFunctionHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb().nativeFunction(result, params);
+  public NatFuncTypeH natFuncHT(TypeH result, ImmutableList<TypeH> params) {
+    return typeHDb().natFunc(result, params);
   }
 
   public NothingTypeH nothingHT() {
@@ -454,21 +454,21 @@ public class TestingContext {
     return objFactory().file(string, blob);
   }
 
-  public DefinedFunctionH definedFunctionH() {
-    return definedFunctionH(intH());
+  public DefFuncH defFuncH() {
+    return defFuncH(intH());
   }
 
-  public DefinedFunctionH definedFunctionH(ObjectH body) {
-    var type = definedFunctionHT(body.type(), list(stringHT()));
-    return definedFunctionH(type, body);
+  public DefFuncH defFuncH(ObjectH body) {
+    var type = defFuncHT(body.type(), list(stringHT()));
+    return defFuncH(type, body);
   }
 
-  public DefinedFunctionH definedFunctionH(DefinedFunctionTypeH spec, ObjectH body) {
-    return objectHDb().definedFunction(spec, body);
+  public DefFuncH defFuncH(DefFuncTypeH spec, ObjectH body) {
+    return objectHDb().defFunc(spec, body);
   }
 
-  public IfFunctionH ifFunctionH() {
-    return objectHDb().ifFunction();
+  public IfFuncH ifFuncH() {
+    return objectHDb().ifFunc();
   }
 
   public IntH intH() {
@@ -479,12 +479,12 @@ public class TestingContext {
     return objectHDb().int_(BigInteger.valueOf(value));
   }
 
-  public MapFunctionH mapFunctionH() {
-    return objectHDb().mapFunction();
+  public MapFuncH mapFuncH() {
+    return objectHDb().mapFunc();
   }
 
-  public NativeFunctionH nativeFunctionH(BlobH jarFile, StringH classBinaryName) {
-    return objectHDb().nativeFunction(nativeFunctionHT(), jarFile, classBinaryName, boolH(true));
+  public NatFuncH natFuncH(BlobH jarFile, StringH classBinaryName) {
+    return objectHDb().natFunc(natFuncHT(), jarFile, classBinaryName, boolH(true));
   }
 
   public TupleH personH(String firstName, String lastName) {
@@ -542,8 +542,8 @@ public class TestingContext {
 
   // Expr-s
 
-  public CallH callH(ObjectH function, ImmutableList<ObjectH> arguments) {
-    return objectHDb().call(function, constructH(arguments));
+  public CallH callH(ObjectH func, ImmutableList<ObjectH> arguments) {
+    return objectHDb().call(func, constructH(arguments));
   }
 
   public ConstructH constructH(ImmutableList<ObjectH> items) {
@@ -584,12 +584,12 @@ public class TestingContext {
     return typeFactoryS().bool();
   }
 
-  public FunctionTypeS functionST(TypeS resultType, Item... params) {
-    return functionST(resultType, toTypes(list(params)));
+  public FuncTypeS funcST(TypeS resultType, Item... params) {
+    return funcST(resultType, toTypes(list(params)));
   }
 
-  public FunctionTypeS functionST(TypeS resultType, ImmutableList<TypeS> types) {
-    return typeFactoryS().function(resultType, types);
+  public FuncTypeS funcST(TypeS resultType, ImmutableList<TypeS> types) {
+    return typeFactoryS().func(resultType, types);
   }
 
   public IntTypeS intST() {
@@ -679,28 +679,28 @@ public class TestingContext {
   }
 
   public ConstructorS constructorS(int line, TypeS resultType, String name, Item... params) {
-    return new ConstructorS(functionST(resultType, params), modulePath(), name,
+    return new ConstructorS(funcST(resultType, params), modulePath(), name,
         nList(params), loc(line));
   }
 
-  public NativeFunctionS functionS(TypeS type, String name, Item... params) {
-    return functionS(1, type, name, annotation(1, stringS(1, "Impl.met")), params);
+  public NatFuncS funcS(TypeS type, String name, Item... params) {
+    return funcS(1, type, name, annotation(1, stringS(1, "Impl.met")), params);
   }
 
-  public NativeFunctionS functionS(int line, TypeS type, String name, Annotation annotation,
+  public NatFuncS funcS(int line, TypeS type, String name, Annotation annotation,
       Item... params) {
-    return new NativeFunctionS(functionST(type, params), modulePath(), name,
+    return new NatFuncS(funcST(type, params), modulePath(), name,
         nList(params), annotation, loc(line)
     );
   }
 
-  public DefinedFunctionS functionS(TypeS type, String name, ExprS body, Item... params) {
-    return functionS(1, type, name, body, params);
+  public DefFuncS funcS(TypeS type, String name, ExprS body, Item... params) {
+    return funcS(1, type, name, body, params);
   }
 
-  public DefinedFunctionS functionS(
+  public DefFuncS funcS(
       int line, TypeS type, String name, ExprS body, Item... params) {
-    return new DefinedFunctionS(functionST(type, params), modulePath(), name,
+    return new DefFuncS(funcST(type, params), modulePath(), name,
         nList(params), body, loc(line)
     );
   }
@@ -775,14 +775,14 @@ public class TestingContext {
     return new DefinedValueS(type, modulePath(), name, expr, loc(line));
   }
 
-  public DefinedFunctionS defFuncS(int line, FunctionTypeS type, String name, NList<Item> params,
+  public DefFuncS defFuncS(int line, FuncTypeS type, String name, NList<Item> params,
       ExprS expr) {
-    return new DefinedFunctionS(type, modulePath(), name, params, expr, loc(line));
+    return new DefFuncS(type, modulePath(), name, params, expr, loc(line));
   }
 
-  public NativeFunctionS natFuncS(int line, FunctionTypeS type, String name, NList<Item> params,
+  public NatFuncS natFuncS(int line, FuncTypeS type, String name, NList<Item> params,
       Annotation ann) {
-    return new NativeFunctionS(type, modulePath(), name, params, ann, loc(line));
+    return new NatFuncS(type, modulePath(), name, params, ann, loc(line));
   }
 
   public ItemSignature isig(String name, TypeS type) {

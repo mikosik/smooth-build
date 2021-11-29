@@ -50,38 +50,38 @@ public class ExprSLoadingTest extends TestingContext {
   @Nested
   class _call_expression {
     @Test
-    public void with_function_reference() {
+    public void with_func_reference() {
       module("""
-          String myFunction() = "abc";
-          result = myFunction();
+          String myFunc() = "abc";
+          result = myFunc();
           """)
           .loadsSuccessfully()
           .containsEvaluable(value(2, STRING, "result",
-              callS(2, STRING, refS(2, f(STRING), "myFunction"))));
+              callS(2, STRING, refS(2, f(STRING), "myFunc"))));
     }
 
     @Test
-    public void with_function_reference_and_argument() {
+    public void with_func_reference_and_argument() {
       module("""
-          String myFunction(Blob b) = "abc";
-          result = myFunction(
+          String myFunc(Blob b) = "abc";
+          result = myFunc(
             0x07);
           """)
           .loadsSuccessfully()
           .containsEvaluable(value(2, STRING, "result",
-              callS(2, STRING, refS(2, f(STRING, BLOB), "myFunction"), blobS(3, 7))));
+              callS(2, STRING, refS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
     }
 
     @Test
-    public void with_function_reference_and_named_argument() {
+    public void with_func_reference_and_named_argument() {
       module("""
-          String myFunction(Blob b) = "abc";
-          result = myFunction(b=
+          String myFunc(Blob b) = "abc";
+          result = myFunc(b=
             0x07);
           """)
           .loadsSuccessfully()
           .containsEvaluable(value(2, STRING, "result",
-              callS(2, STRING, refS(2, f(STRING, BLOB), "myFunction"), blobS(3, 7))));
+              callS(2, STRING, refS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
     }
 
     @Test
@@ -147,7 +147,7 @@ public class ExprSLoadingTest extends TestingContext {
           result(String() f) = f();
           """)
           .loadsSuccessfully()
-          .containsEvaluable(functionS(1, STRING, "result",
+          .containsEvaluable(funcS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING), "f")), param(1, f(STRING), "f")));
     }
 
@@ -157,7 +157,7 @@ public class ExprSLoadingTest extends TestingContext {
           result(String(Blob) f) = f(0x09);
           """)
           .loadsSuccessfully()
-          .containsEvaluable(functionS(1, STRING, "result",
+          .containsEvaluable(funcS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING, BLOB), "f"), blobS(1, 9)),
               param(1, f(STRING, BLOB), "f")));
     }
@@ -180,50 +180,50 @@ public class ExprSLoadingTest extends TestingContext {
   }
 
   @Nested
-  class _native_function {
+  class _nat_func {
     @Test
     public void default_pureness() {
       module("""
           @Native("Impl.met")
-          String myFunction();
+          String myFunc();
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), true)));
+              funcS(2, STRING, "myFunc", annotation(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
     public void impure() {
       module("""
           @Native("Impl.met", IMPURE)
-          String myFunction();
+          String myFunc();
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), false)));
+              funcS(2, STRING, "myFunc", annotation(1, stringS(1, "Impl.met"), false)));
     }
 
     @Test
     public void pure() {
       module("""
           @Native("Impl.met", PURE)
-          String myFunction();
+          String myFunc();
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              functionS(2, STRING, "myFunction", annotation(1, stringS(1, "Impl.met"), true)));
+              funcS(2, STRING, "myFunc", annotation(1, stringS(1, "Impl.met"), true)));
     }
   }
 
   @Test
   public void param_reference_expression() {
     module("""
-          Blob myFunction(Blob param1)
+          Blob myFunc(Blob param1)
             = param1;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(functionS(
-            1, BLOB, "myFunction", paramRefS(2, BLOB, "param1"), param(1, BLOB, "param1")));
+        .containsEvaluable(funcS(
+            1, BLOB, "myFunc", paramRefS(2, BLOB, "param1"), param(1, BLOB, "param1")));
   }
 
   @Nested
@@ -241,15 +241,15 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void to_function() {
+    public void to_func() {
       module("""
-          String myFunction() = "abc";
+          String myFunc() = "abc";
           String() result =
-            myFunction;
+            myFunc;
           """)
           .loadsSuccessfully()
           .containsEvaluable(value(2, f(STRING), "result",
-              refS(3, f(STRING), "myFunction")));
+              refS(3, f(STRING), "myFunc")));
     }
 
     @Test
@@ -289,37 +289,37 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void defined_function() {
+    public void def_func() {
       module("""
-          Blob myFunction() =
+          Blob myFunc() =
             0x07;
           """)
           .loadsSuccessfully()
-          .containsEvaluable(functionS(1, BLOB, "myFunction", blobS(2, 7)));
+          .containsEvaluable(funcS(1, BLOB, "myFunc", blobS(2, 7)));
     }
 
     @Test
-    public void defined_function_with_param() {
+    public void def_func_with_param() {
       module("""
-          String myFunction(
+          String myFunc(
             Blob param1)
             = "abc";
           """)
           .loadsSuccessfully()
-          .containsEvaluable(functionS(1, STRING, "myFunction",
+          .containsEvaluable(funcS(1, STRING, "myFunc",
               stringS(3, "abc"), param(2, BLOB, "param1")));
     }
 
     @Test
-    public void defined_function_with_param_with_default_argument() {
+    public void def_func_with_param_with_default_argument() {
       module("""
-          String myFunction(
+          String myFunc(
             Blob param1 =
               0x07)
               = "abc";
           """)
           .loadsSuccessfully()
-          .containsEvaluable(functionS(1, STRING, "myFunction",
+          .containsEvaluable(funcS(1, STRING, "myFunc",
               stringS(4, "abc"), param(2, BLOB, "param1", blobS(3, 7))));
     }
 

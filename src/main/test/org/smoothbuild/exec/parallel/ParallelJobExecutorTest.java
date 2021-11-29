@@ -115,7 +115,7 @@ public class ParallelJobExecutorTest extends TestingContext {
   @Nested
   class _result_source_for_computation_of_ {
     @Test
-    public void impure_function_is_memory()
+    public void impure_func_is_memory()
         throws Exception {
       parallelJobExecutor = new ParallelJobExecutor(computer(), reporter, 2);
       var counter = new AtomicInteger();
@@ -138,7 +138,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     @Test
-    public void pure_function_is_disk()
+    public void pure_func_is_disk()
         throws Exception {
       parallelJobExecutor = new ParallelJobExecutor(computer(), reporter, 2);
       AtomicInteger counter = new AtomicInteger();

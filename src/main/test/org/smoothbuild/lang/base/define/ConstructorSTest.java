@@ -8,8 +8,8 @@ import org.smoothbuild.testing.TestingContext;
 public class ConstructorSTest extends TestingContext {
   @Test
   public void to_string() {
-    var function = constructorS(personST(), "myConstructor", param(intST(), "myParam"));
-    assertThat(function.toString())
+    var func = constructorS(personST(), "myConstructor", param(intST(), "myParam"));
+    assertThat(func.toString())
         .isEqualTo("ConstructorS(`Person myConstructor(Int myParam)`)");
   }
 }

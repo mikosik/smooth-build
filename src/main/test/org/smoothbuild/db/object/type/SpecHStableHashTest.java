@@ -14,11 +14,11 @@ public class SpecHStableHashTest extends TestingContext {
     assertHash(anyHT(), "b35d79d5718f7bba2cda55c29e2408c13ffc8cd5");
     assertHash(blobHT(), "0a2b2a825165ae9742c63b0c6ddafc22f0bd3b1e");
     assertHash(boolHT(), "47f9cc533a5f0c6f650ff0528c0d54d6d2d9d9ab");
-    assertHash(functionHT(), "72f4e3d7262b25cf65222b035b02e520c32f7a30");
-    assertHash(ifFunctionHT(), "68d16d970d8838ccdb4a0afd0c098f9797bb54fb");
+    assertHash(funcHT(), "72f4e3d7262b25cf65222b035b02e520c32f7a30");
+    assertHash(ifFuncHT(), "68d16d970d8838ccdb4a0afd0c098f9797bb54fb");
     assertHash(intHT(), "8be891c7170d4d1bbca0ffcb3fce71285c55aee4");
-    assertHash(mapFunctionHT(), "d849636ac7abd499d3010ab59cee7a1726981e3b");
-    assertHash(nativeFunctionHT(), "2e252d8c6c89bfe0a596798718275974452761a6");
+    assertHash(mapFuncHT(), "d849636ac7abd499d3010ab59cee7a1726981e3b");
+    assertHash(natFuncHT(), "2e252d8c6c89bfe0a596798718275974452761a6");
     assertHash(nothingHT(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(stringHT(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
     assertHash(tupleHT(list(blobHT())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
@@ -27,7 +27,7 @@ public class SpecHStableHashTest extends TestingContext {
     assertHash(arrayHT(anyHT()), "2dfdcb5ccf6df3057cb84565af5b67f64c685e9c");
     assertHash(arrayHT(blobHT()), "7fbebe7b9e6730b6b49fbd19811677bbd1d8880b");
     assertHash(arrayHT(boolHT()), "b2d929df4b382081405170f09fbe0febb32f547d");
-    assertHash(arrayHT(functionHT()), "35f599db587ed8b7b52bb0ce3a07a2d4d9c1c223");
+    assertHash(arrayHT(funcHT()), "35f599db587ed8b7b52bb0ce3a07a2d4d9c1c223");
     assertHash(arrayHT(intHT()), "ff10a58462549d6f2a55c51be139ae52b62bf801");
     assertHash(arrayHT(nothingHT()), "223052eec1e2f74ed0234fd1ba43f4d49e7e43db");
     assertHash(arrayHT(stringHT()), "dfeac8190688130683d51d719055d46c47cec4d2");

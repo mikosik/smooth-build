@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
-import org.smoothbuild.db.object.type.val.FunctionTypeH;
+import org.smoothbuild.db.object.type.val.FuncTypeH;
 
 /**
  * This class is immutable.
@@ -32,45 +32,45 @@ public class CallH extends ExprH {
   }
 
   public CallData data() {
-    ObjectH function = readFunction();
+    ObjectH func = readFunc();
     ConstructH arguments = readArguments();
-    validate(function, arguments);
-    return new CallData(function, arguments);
+    validate(func, arguments);
+    return new CallData(func, arguments);
   }
 
-  public record CallData(ObjectH function, ConstructH arguments) {}
+  public record CallData(ObjectH func, ConstructH arguments) {}
 
-  private void validate(ObjectH function, ConstructH argumentsConstruct) {
-    if (function.type() instanceof FunctionTypeH functionType) {
+  private void validate(ObjectH func, ConstructH argumentsConstruct) {
+    if (func.type() instanceof FuncTypeH funcType) {
       var typing = objectDb().typing();
-      var params = functionType.params();
+      var params = funcType.params();
       var arguments = argumentsConstruct.spec().evaluationType().items();
       allMatchOtherwise(
           params,
           arguments,
           typing::isParamAssignable,
-          (expectedSize, actualSize) -> illegalArguments(functionType, argumentsConstruct),
-          i -> illegalArguments(functionType, argumentsConstruct)
+          (expectedSize, actualSize) -> illegalArguments(funcType, argumentsConstruct),
+          i -> illegalArguments(funcType, argumentsConstruct)
       );
       var variableBounds = typing.inferVariableBoundsInCall(params, arguments);
       var actualResult = typing.mapVariables(
-          functionType.result(), variableBounds, typing.factory().lower());
+          funcType.result(), variableBounds, typing.factory().lower());
       if (!Objects.equals(type(), actualResult)) {
         throw new DecodeExprWrongEvaluationTypeOfComponentException(
-            hash(), spec(), "function.result", type(), actualResult);
+            hash(), spec(), "func.result", type(), actualResult);
       }
     } else {
       throw new DecodeExprWrongEvaluationTypeOfComponentException(
-          hash(), spec(), "function", FunctionTypeH.class, function.type());
+          hash(), spec(), "func", FuncTypeH.class, func.type());
     }
   }
 
-  private void illegalArguments(FunctionTypeH functionType, ConstructH arguments) {
+  private void illegalArguments(FuncTypeH funcType, ConstructH arguments) {
     throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), spec(), "arguments",
-        functionType.paramsTuple(), arguments.type());
+        funcType.paramsTuple(), arguments.type());
   }
 
-  private ObjectH readFunction() {
+  private ObjectH readFunc() {
     return readSequenceElementObj(
         DATA_PATH, dataHash(), FUNCTION_INDEX, DATA_SEQUENCE_SIZE, ObjectH.class);
   }

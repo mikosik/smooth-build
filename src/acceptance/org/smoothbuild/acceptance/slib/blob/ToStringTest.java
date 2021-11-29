@@ -9,7 +9,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ToStringTest extends AcceptanceTestCase {
   @Test
-  public void to_string_function() throws IOException {
+  public void to_string_func() throws IOException {
     createUserModule("""
             result = toString(0x41);
             """);

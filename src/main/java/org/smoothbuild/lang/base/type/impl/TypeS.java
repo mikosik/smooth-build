@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableSet;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class TypeS extends AbstractType
-    permits ArrayTypeS, BaseTypeS, FunctionTypeS, StructTypeS, VariableS {
+    permits ArrayTypeS, BaseTypeS, FuncTypeS, StructTypeS, VariableS {
   protected TypeS(String name, ImmutableSet<VariableS> variables) {
     super(name, variables);
   }

@@ -23,18 +23,18 @@ import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
-import org.smoothbuild.db.object.obj.val.FunctionH;
-import org.smoothbuild.db.object.obj.val.IfFunctionH;
+import org.smoothbuild.db.object.obj.val.DefFuncH;
+import org.smoothbuild.db.object.obj.val.FuncH;
+import org.smoothbuild.db.object.obj.val.IfFuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MapFunctionH;
-import org.smoothbuild.db.object.obj.val.NativeFunctionH;
+import org.smoothbuild.db.object.obj.val.MapFuncH;
+import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
-import org.smoothbuild.db.object.type.val.FunctionTypeH;
+import org.smoothbuild.db.object.type.val.FuncTypeH;
 import org.smoothbuild.exec.algorithm.ConstAlgorithm;
 import org.smoothbuild.exec.algorithm.ConstructAlgorithm;
 import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
@@ -82,12 +82,12 @@ public class JobCreator {
         .put(BlobH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(CallH.class, new Handler<>(this::callLazy, this::callEager))
         .put(ConstructH.class, new Handler<>(this::constructLazy, this::constructEager))
-        .put(DefinedFunctionH.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(FunctionH.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(IfFunctionH.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(DefFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(FuncH.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(IfFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(IntH.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(MapFunctionH.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(NativeFunctionH.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(MapFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(NatFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(OrderH.class, new Handler<>(this::orderLazy, this::orderEager))
         .put(RefH.class, new Handler<>(this::paramRefLazy, this::paramRefLazy))
         .put(SelectH.class, new Handler<>(this::selectLazy, this::selectEager))
@@ -134,13 +134,13 @@ public class JobCreator {
 
   private Job callJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars, CallH call, boolean eager) {
     var callData = call.data();
-    var functionJ = jobFor(scope, vars, callData.function(), eager);
+    var funcJ = jobFor(scope, vars, callData.func(), eager);
     var argumentsJ = map(callData.arguments().items(), a -> lazyJobFor(scope, vars, a));
     var location = nals.get(call).location();
     var actualArgumentTypes =
         map(argumentsJ, a -> typing.mapVariables(a.type(), vars, factory.lower()));
-    var newVariables = inferVariablesInFunctionCall(functionJ, actualArgumentTypes);
-    return callJob(scope, functionJ, argumentsJ, location, newVariables, eager);
+    var newVariables = inferVariablesInFuncCall(funcJ, actualArgumentTypes);
+    return callJob(scope, funcJ, argumentsJ, location, newVariables, eager);
   }
 
   private Job callJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Location location,
@@ -148,8 +148,8 @@ public class JobCreator {
     if (eager) {
       return callEagerJob(scope, func, args, location, vars);
     } else {
-      var functionType = (FunctionTypeH) func.type();
-      var actualResultType = typing.mapVariables(functionType.result(), vars, factory.lower());
+      var funcType = (FuncTypeH) func.type();
+      var actualResultType = typing.mapVariables(funcType.result(), vars, factory.lower());
       return new LazyJob(actualResultType, location,
           () -> callEagerJob(scope, func, args, location, vars));
     }
@@ -157,24 +157,24 @@ public class JobCreator {
 
   public Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args,
       Location location) {
-    var variables = inferVariablesInFunctionCall(func, args);
+    var variables = inferVariablesInFuncCall(func, args);
     return callEagerJob(scope, func, args, location, variables);
   }
 
   private Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args,
       Location location, BoundsMap<TypeH> vars) {
-    var functionType = (FunctionTypeH) func.type();
-    var actualResultType = typing.mapVariables(functionType.result(), vars, factory.lower());
+    var funcType = (FuncTypeH) func.type();
+    var actualResultType = typing.mapVariables(funcType.result(), vars, factory.lower());
     return new CallJob(actualResultType, func, args, location, vars, scope, JobCreator.this);
   }
 
-  private BoundsMap<TypeH> inferVariablesInFunctionCall(Job func, List<Job> args) {
+  private BoundsMap<TypeH> inferVariablesInFuncCall(Job func, List<Job> args) {
     var argumentTypes = map(args, Job::type);
-    return inferVariablesInFunctionCall(func, argumentTypes);
+    return inferVariablesInFuncCall(func, argumentTypes);
   }
 
-  private BoundsMap<TypeH> inferVariablesInFunctionCall(Job func, ImmutableList<TypeH> argTypes) {
-    var funcType = (FunctionTypeH) func.type();
+  private BoundsMap<TypeH> inferVariablesInFuncCall(Job func, ImmutableList<TypeH> argTypes) {
+    var funcType = (FuncTypeH) func.type();
     return typing.inferVariableBounds(funcType.params(), argTypes, factory.lower());
   }
 
@@ -276,38 +276,38 @@ public class JobCreator {
 
   // helper methods
 
-  public Job evaluateFunctionEagerJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
-      TypeH actualResType, FunctionH functionH, ImmutableList<Job> args,
+  public Job evaluateFuncEagerJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
+      TypeH actualResType, FuncH funcH, ImmutableList<Job> args,
       Location location) {
-    return switch (functionH) {
-      case DefinedFunctionH def -> definedFunctionEager(def, args, scope, vars, location);
-      case NativeFunctionH nat -> nativeFunctionEager(nat, actualResType, args, location);
-      case IfFunctionH iff -> ifFunctionEager(actualResType, args, location);
-      case MapFunctionH map -> mapFunctionEager(actualResType, args, scope, location);
+    return switch (funcH) {
+      case DefFuncH def -> defFuncEager(def, args, scope, vars, location);
+      case NatFuncH nat -> natFuncEager(nat, actualResType, args, location);
+      case IfFuncH iff -> ifFuncEager(actualResType, args, location);
+      case MapFuncH map -> mapFuncEager(actualResType, args, scope, location);
       default -> throw new RuntimeException();
     };
   }
 
-  private Job definedFunctionEager(DefinedFunctionH definedFunctionH, ImmutableList<Job> args,
+  private Job defFuncEager(DefFuncH defFuncH, ImmutableList<Job> args,
       IndexedScope<Job> scope, BoundsMap<TypeH> vars, Location location) {
-    var job = eagerJobFor(new IndexedScope<>(scope, args), vars, definedFunctionH.body());
-    var name = nals.get(definedFunctionH).name();
+    var job = eagerJobFor(new IndexedScope<>(scope, args), vars, defFuncH.body());
+    var name = nals.get(defFuncH).name();
     return new VirtualJob(job, new TaskInfo(CALL, name, location));
   }
 
-  private Job nativeFunctionEager(NativeFunctionH nativeFunctionH, TypeH actualResType,
+  private Job natFuncEager(NatFuncH natFuncH, TypeH actualResType,
       ImmutableList<Job> args, Location location) {
-    var name = nals.get(nativeFunctionH).name();
-    var algorithm = new InvokeAlgorithm(actualResType, name, nativeFunctionH, methodLoader);
+    var name = nals.get(natFuncH).name();
+    var algorithm = new InvokeAlgorithm(actualResType, name, natFuncH, methodLoader);
     var info = new TaskInfo(CALL, name, location);
     return new Task(actualResType, args, info, algorithm);
   }
 
-  private Job ifFunctionEager(TypeH actualResType, ImmutableList<Job> args, Location location) {
+  private Job ifFuncEager(TypeH actualResType, ImmutableList<Job> args, Location location) {
     return new IfJob(actualResType, args, location);
   }
 
-  private Job mapFunctionEager(TypeH actualResType, ImmutableList<Job> args,
+  private Job mapFuncEager(TypeH actualResType, ImmutableList<Job> args,
       IndexedScope<Job> scope, Location location) {
     return new MapJob(actualResType, location, args, scope, this);
   }

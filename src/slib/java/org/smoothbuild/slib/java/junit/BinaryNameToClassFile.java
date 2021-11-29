@@ -13,7 +13,7 @@ import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.slib.compress.UnzipFunction;
+import org.smoothbuild.slib.compress.UnzipFunc;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 
 public class BinaryNameToClassFile {
@@ -25,7 +25,7 @@ public class BinaryNameToClassFile {
     for (BlobH jarBlob : libraryJars) {
       ArrayH fileArray;
       try {
-        fileArray = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
+        fileArray = UnzipFunc.unzip(nativeApi, jarBlob, isClassFilePredicate());
       } catch (ZipException e) {
         throw new JunitException("Cannot read archive. Corrupted data?", e);
       }

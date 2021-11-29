@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Concat {
-  public static ArrayH function(NativeApi nativeApi, ArrayH first, ArrayH second) {
+  public static ArrayH func(NativeApi nativeApi, ArrayH first, ArrayH second) {
     var factory = nativeApi.factory();
     var elemType = ((ArrayTypeH) factory.typing().mergeUp(first.spec(), second.spec())).elem();
     return factory

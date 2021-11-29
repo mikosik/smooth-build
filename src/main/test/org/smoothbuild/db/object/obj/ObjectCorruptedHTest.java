@@ -53,9 +53,9 @@ import org.smoothbuild.db.object.obj.expr.SelectH.SelectData;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefinedFunctionH;
+import org.smoothbuild.db.object.obj.val.DefFuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NativeFunctionH;
+import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.base.SpecH;
@@ -63,8 +63,8 @@ import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
-import org.smoothbuild.db.object.type.val.DefinedFunctionTypeH;
-import org.smoothbuild.db.object.type.val.FunctionTypeH;
+import org.smoothbuild.db.object.type.val.DefFuncTypeH;
+import org.smoothbuild.db.object.type.val.FuncTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.testing.TestingContext;
 
@@ -381,20 +381,20 @@ public class ObjectCorruptedHTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var functionType = definedFunctionHT(intHT(), list(stringHT(), intHT()));
-      var function = definedFunctionH(functionType, intH());
+      var funcType = defFuncHT(intHT(), list(stringHT(), intHT()));
+      var func = defFuncH(funcType, intH());
       ConstructH arguments = constructH(list(stringH(), intH()));
       Hash objHash =
           hash(
               hash(callHT()),
               hash(
-                  hash(function),
+                  hash(func),
                   hash(arguments)
               )
           );
 
-      assertThat(((CallH) objectHDb().get(objHash)).data().function())
-          .isEqualTo(function);
+      assertThat(((CallH) objectHDb().get(objHash)).data().func())
+          .isEqualTo(func);
       assertThat(((CallH) objectHDb().get(objHash)).data().arguments())
           .isEqualTo(arguments);
     }
@@ -406,10 +406,10 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var function = intH(0);
+      var func = intH(0);
       var arguments = constructH(list(stringH(), intH()));
       Hash dataHash = hash(
-          hash(function),
+          hash(func),
           hash(arguments)
       );
       obj_root_with_two_data_hashes(
@@ -427,9 +427,9 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void data_is_sequence_with_one_elem() throws Exception {
-      var function = intH(0);
+      var func = intH(0);
       Hash dataHash = hash(
-          hash(function)
+          hash(func)
       );
       Hash objHash =
           hash(
@@ -442,10 +442,10 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void data_is_sequence_with_three_elems() throws Exception {
-      var function = intH(0);
+      var func = intH(0);
       var arguments = constructH(list(stringH(), intH()));
       Hash dataHash = hash(
-          hash(function),
+          hash(func),
           hash(arguments),
           hash(arguments)
       );
@@ -459,32 +459,32 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void function_component_evaluation_type_is_not_function() throws Exception {
-      var function = intH(3);
+    public void func_component_evaluation_type_is_not_func() throws Exception {
+      var func = intH(3);
       ConstructH arguments = constructH(list(stringH(), intH()));
       CallTypeH type = callHT(stringHT());
       Hash objHash =
           hash(
               hash(type),
               hash(
-                  hash(function),
+                  hash(func),
                   hash(arguments)
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
-              objHash, type, "function", FunctionTypeH.class, intHT()));
+              objHash, type, "func", FuncTypeH.class, intHT()));
     }
 
     @Test
     public void arguments_is_val_instead_of_expr() throws Exception {
-      var functionType = definedFunctionHT(intHT(), list(stringHT(), intHT()));
-      var function = definedFunctionH(functionType, intH());
+      var funcType = defFuncHT(intHT(), list(stringHT(), intHT()));
+      var func = defFuncH(funcType, intH());
       Hash objHash =
           hash(
               hash(callHT()),
               hash(
-                  hash(function),
+                  hash(func),
                   hash(intH())
               )
           );
@@ -496,14 +496,14 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void arguments_component_evaluation_type_is_not_construct_but_different_expr()
         throws Exception {
-      var functionType = definedFunctionHT(intHT(), list(stringHT(), intHT()));
-      var function = definedFunctionH(functionType, intH());
+      var funcType = defFuncHT(intHT(), list(stringHT(), intHT()));
+      var func = defFuncH(funcType, intH());
       var type = callHT();
       Hash objHash =
           hash(
               hash(type),
               hash(
-                  hash(function),
+                  hash(func),
                   hash(refH(1))
               )
           );
@@ -513,37 +513,37 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void evaluation_type_is_different_than_function_evaluation_type_result()
+    public void evaluation_type_is_different_than_func_evaluation_type_result()
         throws Exception {
-      DefinedFunctionTypeH functionType = definedFunctionHT(intHT(), list(stringHT()));
-      var function = definedFunctionH(functionType, intH());
+      DefFuncTypeH funcType = defFuncHT(intHT(), list(stringHT()));
+      var func = defFuncH(funcType, intH());
       var arguments = constructH(list(stringH()));
       var type = callHT(stringHT());
       Hash objHash =
           hash(
               hash(type),
               hash(
-                  hash(function),
+                  hash(func),
                   hash(arguments)
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
-                  objHash, type, "function.result", stringHT(), intHT()));
+                  objHash, type, "func.result", stringHT(), intHT()));
     }
 
     @Test
-    public void function_evaluation_type_params_does_not_match_args_evaluation_types()
+    public void func_evaluation_type_params_does_not_match_args_evaluation_types()
         throws Exception {
-      var functionType = definedFunctionHT(intHT(), list(stringHT(), boolHT()));
-      var function = definedFunctionH(functionType, intH());
+      var funcType = defFuncHT(intHT(), list(stringHT(), boolHT()));
+      var func = defFuncH(funcType, intH());
       var arguments = constructH(list(stringH(), intH()));
       var spec = callHT(intHT());
       Hash objHash =
           hash(
               hash(spec),
               hash(
-                  hash(function),
+                  hash(func),
                   hash(arguments)
               )
           );
@@ -557,7 +557,7 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   @Nested
-  class _defined_function {
+  class _def_func {
     @Test
     public void learning_test() throws Exception {
       /*
@@ -565,49 +565,49 @@ public class ObjectCorruptedHTest extends TestingContext {
        * in HashedDb.
        */
       var bodyExpr = boolH(true);
-      FunctionTypeH type = definedFunctionHT(boolHT(), list(intHT(), stringHT()));
+      FuncTypeH type = defFuncHT(boolHT(), list(intHT(), stringHT()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertThat(((DefinedFunctionH) objectHDb().get(objHash)).body())
+      assertThat(((DefFuncH) objectHDb().get(objHash)).body())
           .isEqualTo(bodyExpr);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(definedFunctionHT());
+      obj_root_without_data_hash(defFuncHT());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var bodyExpr = boolH(true);
-      var type = definedFunctionHT(boolHT(), list(intHT(), stringHT()));
+      var type = defFuncHT(boolHT(), list(intHT(), stringHT()));
       var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           type,
           dataHash,
-          (Hash objHash) -> ((DefinedFunctionH) objectHDb().get(objHash)).body());
+          (Hash objHash) -> ((DefFuncH) objectHDb().get(objHash)).body());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          definedFunctionHT(),
-          (Hash objHash) -> ((DefinedFunctionH) objectHDb().get(objHash)).body());
+          defFuncHT(),
+          (Hash objHash) -> ((DefFuncH) objectHDb().get(objHash)).body());
     }
 
     @Test
-    public void body_evaluation_type_is_not_equal_function_type_result() throws Exception {
+    public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
       var bodyExpr = intH(3);
-      var type = definedFunctionHT(boolHT(), list(intHT(), stringHT()));
+      var type = defFuncHT(boolHT(), list(intHT(), stringHT()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertCall(() -> ((DefinedFunctionH) objectHDb().get(objHash)).body())
+      assertCall(() -> ((DefFuncH) objectHDb().get(objHash)).body())
           .throwsException(new DecodeExprWrongEvaluationTypeOfComponentException(
               objHash, type, DATA_PATH, boolHT(), intHT()));
     }
@@ -1035,19 +1035,19 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   @Nested
-  class _native_function {
+  class _nat_func {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save
-       * native_function in HashedDb.
+       * nat_func in HashedDb.
        */
       BlobH jarFile = blobH();
       StringH classBinaryName = stringH();
       BoolH isPure = boolH(true);
       Hash objHash =
           hash(
-              hash(nativeFunctionHT()),
+              hash(natFuncHT()),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
@@ -1055,15 +1055,15 @@ public class ObjectCorruptedHTest extends TestingContext {
               )
           );
 
-      assertThat(((NativeFunctionH) objectHDb().get(objHash)).jarFile())
+      assertThat(((NatFuncH) objectHDb().get(objHash)).jarFile())
           .isEqualTo(jarFile);
-      assertThat(((NativeFunctionH) objectHDb().get(objHash)).classBinaryName())
+      assertThat(((NatFuncH) objectHDb().get(objHash)).classBinaryName())
           .isEqualTo(classBinaryName);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(nativeFunctionHT());
+      obj_root_without_data_hash(natFuncHT());
     }
 
     @Test
@@ -1077,16 +1077,16 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(isPure)
       );
       obj_root_with_two_data_hashes(
-          nativeFunctionHT(),
+          natFuncHT(),
           dataHash,
-          (Hash objHash) -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName());
+          (Hash objHash) -> ((NatFuncH) objectHDb().get(objHash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          nativeFunctionHT(),
-          (Hash objHash) -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName());
+          natFuncHT(),
+          (Hash objHash) -> ((NatFuncH) objectHDb().get(objHash)).classBinaryName());
     }
 
     @Test
@@ -1099,13 +1099,13 @@ public class ObjectCorruptedHTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(nativeFunctionHT()),
+              hash(natFuncHT()),
               dataHash
           );
 
-      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((NatFuncH) objectHDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjSequenceException(
-              objHash, nativeFunctionHT(), DATA_PATH, 3, 2));
+              objHash, natFuncHT(), DATA_PATH, 3, 2));
     }
 
     @Test
@@ -1121,13 +1121,13 @@ public class ObjectCorruptedHTest extends TestingContext {
       );
       Hash objHash =
           hash(
-              hash(nativeFunctionHT()),
+              hash(natFuncHT()),
               dataHash
           );
 
-      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((NatFuncH) objectHDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjSequenceException(
-              objHash, nativeFunctionHT(), DATA_PATH, 3, 4));
+              objHash, natFuncHT(), DATA_PATH, 3, 4));
     }
 
     @Test
@@ -1137,16 +1137,16 @@ public class ObjectCorruptedHTest extends TestingContext {
       BoolH isPure = boolH(true);
       Hash objHash =
           hash(
-              hash(nativeFunctionHT()),
+              hash(natFuncHT()),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
                   hash(isPure)
               )
           );
-      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).jarFile())
+      assertCall(() -> ((NatFuncH) objectHDb().get(objHash)).jarFile())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, nativeFunctionHT(), DATA_PATH + "[0]", BlobH.class, StringH.class));
+              objHash, natFuncHT(), DATA_PATH + "[0]", BlobH.class, StringH.class));
     }
 
     @Test
@@ -1156,7 +1156,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       BoolH isPure = boolH(true);
       Hash objHash =
           hash(
-              hash(nativeFunctionHT()),
+              hash(natFuncHT()),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
@@ -1164,9 +1164,9 @@ public class ObjectCorruptedHTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((NatFuncH) objectHDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, nativeFunctionHT(), DATA_PATH + "[1]", StringH.class, IntH.class));
+              objHash, natFuncHT(), DATA_PATH + "[1]", StringH.class, IntH.class));
     }
 
     @Test
@@ -1176,7 +1176,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       StringH isPure = stringH();
       Hash objHash =
           hash(
-              hash(nativeFunctionHT()),
+              hash(natFuncHT()),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
@@ -1184,9 +1184,9 @@ public class ObjectCorruptedHTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((NativeFunctionH) objectHDb().get(objHash)).isPure())
+      assertCall(() -> ((NatFuncH) objectHDb().get(objHash)).isPure())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, nativeFunctionHT(), DATA_PATH + "[2]", BoolH.class, StringH.class));
+              objHash, natFuncHT(), DATA_PATH + "[2]", BoolH.class, StringH.class));
     }
   }
 

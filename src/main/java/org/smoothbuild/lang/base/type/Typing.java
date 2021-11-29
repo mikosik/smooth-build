@@ -13,7 +13,7 @@ import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
-import org.smoothbuild.lang.base.type.api.FunctionType;
+import org.smoothbuild.lang.base.type.api.FuncType;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
@@ -35,9 +35,9 @@ public class Typing<T extends Type> {
       return true;
     } else if (type instanceof ArrayType arrayType) {
       return contains((T) arrayType.elem(), inner);
-    } else if (type instanceof FunctionType functionType) {
-        return contains((T) functionType.result(), inner)
-            || functionType.params().stream().anyMatch(t -> contains((T) t, inner));
+    } else if (type instanceof FuncType funcType) {
+        return contains((T) funcType.result(), inner)
+            || funcType.params().stream().anyMatch(t -> contains((T) t, inner));
     }
     return false;
   }
@@ -61,9 +61,9 @@ public class Typing<T extends Type> {
   }
 
   private boolean inequalImpl(Type typeA, Type that, Side<T> side,
-      InequalFunction<T> inequalityFunction) {
+      InequalFunc<T> inequalityFunc) {
     return inequalByEdgeCases(typeA, that, side)
-        || inequalByConstruction(typeA, that, side, inequalityFunction);
+        || inequalByConstruction(typeA, that, side, inequalityFunc);
   }
 
   private boolean inequalByEdgeCases(Type typeA, Type that, Side<T> side) {
@@ -72,17 +72,17 @@ public class Typing<T extends Type> {
   }
 
   private boolean inequalByConstruction(Type typeA, Type that, Side<T> side,
-      InequalFunction<T> isInequal) {
+      InequalFunc<T> isInequal) {
     if (typeA instanceof ArrayType arrayA) {
       if (that instanceof ArrayType arrayB) {
         return isInequal.apply(arrayA.elem(), arrayB.elem(), side);
       }
-    } else if (typeA instanceof FunctionType functionA) {
-      if (that instanceof FunctionType functionB) {
-        return isInequal.apply(functionA.result(), functionB.result(), side)
+    } else if (typeA instanceof FuncType funcA) {
+      if (that instanceof FuncType funcB) {
+        return isInequal.apply(funcA.result(), funcB.result(), side)
             && allMatch(
-                functionA.params(),
-                functionB.params(),
+                funcA.params(),
+                funcB.params(),
                 (a, b) -> isInequal.apply(a, b, side.reversed()));
       }
     } else {
@@ -91,7 +91,7 @@ public class Typing<T extends Type> {
     return false;
   }
 
-  public static interface InequalFunction<T> {
+  public static interface InequalFunc<T> {
     public boolean apply(Type typeA, Type typeB, Side<T> side);
   }
 
@@ -138,18 +138,18 @@ public class Typing<T extends Type> {
       } else if (typeB instanceof ArrayType arrayB) {
         inferImpl((T) arrayA.elem(), (T) arrayB.elem(), side, result);
       }
-    } else if (typeA instanceof FunctionType functionA) {
+    } else if (typeA instanceof FuncType funcA) {
       if (typeB.equals(side.edge())) {
         var reversed = side.reversed();
-        inferImpl((T) functionA.result(), side.edge(), side, result);
-        functionA.params().forEach(t -> inferImpl((T) t, reversed.edge(), reversed, result));
-      } else if (typeB instanceof FunctionType functionB
-          && functionA.params().size() == functionB.params().size()) {
+        inferImpl((T) funcA.result(), side.edge(), side, result);
+        funcA.params().forEach(t -> inferImpl((T) t, reversed.edge(), reversed, result));
+      } else if (typeB instanceof FuncType funcB
+          && funcA.params().size() == funcB.params().size()) {
         var reversed = side.reversed();
-        inferImpl((T) functionA.result(), (T) functionB.result(), side, result);
-        for (int i = 0; i < functionA.params().size(); i++) {
-          Type thisParamType = functionA.params().get(i);
-          Type thatParamType = functionB.params().get(i);
+        inferImpl((T) funcA.result(), (T) funcB.result(), side, result);
+        for (int i = 0; i < funcA.params().size(); i++) {
+          Type thisParamType = funcA.params().get(i);
+          Type thatParamType = funcB.params().get(i);
           inferImpl((T) thisParamType, (T) thatParamType, reversed, result);
         }
       }
@@ -168,12 +168,12 @@ public class Typing<T extends Type> {
       } else if (type instanceof ArrayType arrayType) {
         T elemTypeM = mapVariables((T) arrayType.elem(), boundsMap, side);
         return (T) createArrayType(arrayType, elemTypeM);
-      } else if (type instanceof FunctionType functionType){
-        var resultTypeM = mapVariables((T) functionType.result(), boundsMap, side);
+      } else if (type instanceof FuncType funcType){
+        var resultTypeM = mapVariables((T) funcType.result(), boundsMap, side);
         ImmutableList<T> paramsM = map(
-            functionType.params(),
+            funcType.params(),
             p -> mapVariables((T) p, boundsMap, side.reversed()));
-        return (T) createFunctionType(functionType, resultTypeM, paramsM);
+        return (T) createFuncType(funcType, resultTypeM, paramsM);
       }
     }
     return type;
@@ -208,18 +208,18 @@ public class Typing<T extends Type> {
           return (T) factory.array(elemM);
         }
       }
-    } else if (typeA instanceof FunctionType functionA) {
-      if (typeB instanceof FunctionType functionB) {
-        if (functionA.params().size() == functionB.params().size()) {
-          var resultM = merge((T) functionA.result(), (T) functionB.result(), direction);
-          var paramsM = zip(functionA.params(), functionB.params(),
+    } else if (typeA instanceof FuncType funcA) {
+      if (typeB instanceof FuncType funcB) {
+        if (funcA.params().size() == funcB.params().size()) {
+          var resultM = merge((T) funcA.result(), (T) funcB.result(), direction);
+          var paramsM = zip(funcA.params(), funcB.params(),
               (a, b) -> merge((T) a, (T) b, direction.reversed()));
-          if (isFunctionTypeEqual(functionA, resultM, paramsM)) {
+          if (isFuncTypeEqual(funcA, resultM, paramsM)) {
             return typeA;
-          } else if (isFunctionTypeEqual(functionB, resultM, paramsM)){
+          } else if (isFuncTypeEqual(funcB, resultM, paramsM)){
             return typeB;
           } else {
-            return (T) factory.function(resultM, paramsM);
+            return (T) factory.func(resultM, paramsM);
           }
         }
       }
@@ -245,16 +245,16 @@ public class Typing<T extends Type> {
     }
   }
 
-  private FunctionType createFunctionType(
-      FunctionType type, T resultType, ImmutableList<T> params) {
-    if (isFunctionTypeEqual(type, resultType, params)) {
+  private FuncType createFuncType(
+      FuncType type, T resultType, ImmutableList<T> params) {
+    if (isFuncTypeEqual(type, resultType, params)) {
       return type;
     }
-    return factory.function(resultType, params);
+    return factory.func(resultType, params);
   }
 
-  private boolean isFunctionTypeEqual(
-      FunctionType type, Type result, ImmutableList<T> params) {
+  private boolean isFuncTypeEqual(
+      FuncType type, Type result, ImmutableList<T> params) {
     return type.result() == result && type.params().equals(params);
   }
 

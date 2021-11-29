@@ -26,7 +26,7 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(constAlgorithmHash(intH(0)));
     hashes.add(constructAlgorithmHash(constructedType));
     hashes.add(convertAlgorithmHash(stringHT()));
-    hashes.add(invokeAlgorithmHash(nativeFunctionH(blobH(), stringH("class"))));
+    hashes.add(invokeAlgorithmHash(natFuncH(blobH(), stringH("class"))));
     hashes.add(orderAlgorithmHash());
     hashes.add(selectAlgorithmHash(intH(0)));
 
@@ -56,16 +56,16 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void invoke_algorithm_has_different_hash_for_different_jars() {
-    var natFunc1 = nativeFunctionH(blobH(ByteString.of((byte) 1)), stringH("class"));
-    var natFunc2 = nativeFunctionH(blobH(ByteString.of((byte) 2)), stringH("class"));
+    var natFunc1 = natFuncH(blobH(ByteString.of((byte) 1)), stringH("class"));
+    var natFunc2 = natFuncH(blobH(ByteString.of((byte) 2)), stringH("class"));
     assertThat(invokeAlgorithmHash(natFunc1))
         .isNotEqualTo(invokeAlgorithmHash(natFunc2));
   }
 
   @Test
   public void invoke_algorithm_has_different_hash_for_class_binary_name() {
-    var natFunc1 = nativeFunctionH(blobH(), stringH("class 1"));
-    var natFunc2 = nativeFunctionH(blobH(), stringH("class 2"));
+    var natFunc1 = natFuncH(blobH(), stringH("class 1"));
+    var natFunc2 = natFuncH(blobH(), stringH("class 2"));
     assertThat(invokeAlgorithmHash(natFunc1))
         .isNotEqualTo(invokeAlgorithmHash(natFunc2));
   }
