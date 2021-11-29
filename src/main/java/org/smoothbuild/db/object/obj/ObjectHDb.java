@@ -226,7 +226,7 @@ public class ObjectHDb {
 
   private NativeFunctionH newNativeFunction(NativeFunctionTypeH type, BlobH jarFile,
       StringH classBinaryName, BoolH isPure) throws HashedDbException {
-    var data = writeNativeMethodData(jarFile, classBinaryName, isPure);
+    var data = writeNativeFunctionData(jarFile, classBinaryName, isPure);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -379,7 +379,7 @@ public class ObjectHDb {
     return writeSequence(items);
   }
 
-  private Hash writeNativeMethodData(BlobH jarFile, StringH classBinaryName, BoolH isPure)
+  private Hash writeNativeFunctionData(BlobH jarFile, StringH classBinaryName, BoolH isPure)
       throws HashedDbException {
     return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash(), isPure.hash());
   }

@@ -9,7 +9,7 @@ import okio.ByteString;
 
 public class NativeFunctionHTest extends TestingContext {
   @Test
-  public void type_of_native_method_expr_is_calculated_correctly() {
+  public void type_of_nat_func_expr_is_calculated_correctly() {
     assertThat(nativeFunctionH(blobH(), stringH()).type())
         .isEqualTo(nativeFunctionHT());
   }
@@ -31,7 +31,7 @@ public class NativeFunctionHTest extends TestingContext {
   }
 
   @Test
-  public void native_method_with_equal_values_are_equal() {
+  public void nat_func_with_equal_values_are_equal() {
     var jarFile = blobH();
     var classBinaryName = stringH();
     assertThat(nativeFunctionH(jarFile, classBinaryName))
@@ -39,21 +39,21 @@ public class NativeFunctionHTest extends TestingContext {
   }
 
   @Test
-  public void native_method_with_different_jar_files_are_not_equal() {
+  public void nat_func_with_different_jar_files_are_not_equal() {
     var classBinaryName = stringH();
     assertThat(nativeFunctionH(blobH(ByteString.of((byte) 1)), classBinaryName))
         .isNotEqualTo(nativeFunctionH(blobH(ByteString.of((byte) 2)), classBinaryName));
   }
 
   @Test
-  public void native_method_with_different_class_binary_names_are_not_equal() {
+  public void nat_func_with_different_class_binary_names_are_not_equal() {
     var jarFile = blobH();
     assertThat(nativeFunctionH(jarFile, stringH("a")))
         .isNotEqualTo(nativeFunctionH(jarFile, stringH("b")));
   }
 
   @Test
-  public void hash_of_native_method_with_equal_values_are_equal() {
+  public void hash_of_nat_func_with_equal_values_are_equal() {
     var jarFile = blobH();
     var classBinaryName = stringH();
     assertThat(nativeFunctionH(jarFile, classBinaryName).hash())
@@ -61,21 +61,21 @@ public class NativeFunctionHTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_native_method_with_different_jar_files_are_not_equal() {
+  public void hash_of_nat_func_with_different_jar_files_are_not_equal() {
     var classBinaryName = stringH();
     assertThat(nativeFunctionH(blobH(ByteString.of((byte) 1)), classBinaryName).hash())
         .isNotEqualTo(nativeFunctionH(blobH(ByteString.of((byte) 2)), classBinaryName).hash());
   }
 
   @Test
-  public void hash_of_native_method_with_different_class_binary_names_are_not_equal() {
+  public void hash_of_nat_func_with_different_class_binary_names_are_not_equal() {
     var jarFile = blobH();
     assertThat(nativeFunctionH(jarFile, stringH("a")).hash())
         .isNotEqualTo(nativeFunctionH(jarFile, stringH("b")).hash());
   }
 
   @Test
-  public void hash_code_of_native_method_with_equal_values_are_equal() {
+  public void hash_code_of_nat_func_with_equal_values_are_equal() {
     var jarFile = blobH();
     var classBinaryName = stringH();
     assertThat(nativeFunctionH(jarFile, classBinaryName).hashCode())
@@ -83,21 +83,21 @@ public class NativeFunctionHTest extends TestingContext {
   }
 
   @Test
-  public void hash_code_of_native_method_with_different_jar_files_are_not_equal() {
+  public void hash_code_of_nat_func_with_different_jar_files_are_not_equal() {
     var classBinaryName = stringH();
     assertThat(nativeFunctionH(blobH(ByteString.of((byte) 1)), classBinaryName).hashCode())
         .isNotEqualTo(nativeFunctionH(blobH(ByteString.of((byte) 2)), classBinaryName).hashCode());
   }
 
   @Test
-  public void hash_code_of_native_method_with_different_class_binary_names_are_not_equal() {
+  public void hash_code_of_nat_func_with_different_class_binary_names_are_not_equal() {
     var jarFile = blobH();
     assertThat(nativeFunctionH(jarFile, stringH("a")).hashCode())
         .isNotEqualTo(nativeFunctionH(jarFile, stringH("b")).hashCode());
   }
 
   @Test
-  public void native_method_can_be_read_back_by_hash() {
+  public void nat_func_can_be_read_back_by_hash() {
     var jarFile = blobH();
     var classBinaryName = stringH();
     var nativeFunctionH = nativeFunctionH(jarFile, classBinaryName);
@@ -106,14 +106,14 @@ public class NativeFunctionHTest extends TestingContext {
   }
 
   @Test
-  public void native_method_read_back_by_hash_has_same_data() {
+  public void nat_func_read_back_by_hash_has_same_data() {
     var jarFile = blobH();
     var classBinaryName = stringH();
     var nativeFunctionH = nativeFunctionH(jarFile, classBinaryName);
-    var readNativeMethod = (NativeFunctionH) objectHDbOther().get(nativeFunctionH.hash());
-    assertThat(readNativeMethod.classBinaryName())
+    var readNativeFunction = (NativeFunctionH) objectHDbOther().get(nativeFunctionH.hash());
+    assertThat(readNativeFunction.classBinaryName())
         .isEqualTo(classBinaryName);
-    assertThat(readNativeMethod.jarFile())
+    assertThat(readNativeFunction.jarFile())
         .isEqualTo(jarFile);
   }
 
