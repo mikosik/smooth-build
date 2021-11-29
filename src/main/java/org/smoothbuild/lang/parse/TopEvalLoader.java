@@ -21,7 +21,7 @@ import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
-import org.smoothbuild.lang.expr.Annotation;
+import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.ExprS;
@@ -31,7 +31,7 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
-import org.smoothbuild.lang.parse.ast.AnnotationN;
+import org.smoothbuild.lang.parse.ast.AnnN;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayN;
 import org.smoothbuild.lang.parse.ast.BlobN;
@@ -80,9 +80,9 @@ public class TopEvalLoader {
     var name = realFuncN.name();
     var location = realFuncN.location();
     var type = factory.func(resultType, map(params, Defined::type));
-    if (realFuncN.annotation().isPresent()) {
+    if (realFuncN.ann().isPresent()) {
       return new NatFuncS(type,
-          path, name, params, loadAnnotation(realFuncN.annotation().get()), location
+          path, name, params, loadAnn(realFuncN.ann().get()), location
       );
     } else {
       var expressionLoader = new ExpressionLoader(path, params);
@@ -91,9 +91,9 @@ public class TopEvalLoader {
     }
   }
 
-  private Annotation loadAnnotation(AnnotationN annotationN) {
-    var path = createStringLiteral(annotationN.path());
-    return new Annotation(path, annotationN.isPure(), annotationN.location());
+  private AnnS loadAnn(AnnN annN) {
+    var path = createStringLiteral(annN.path());
+    return new AnnS(path, annN.isPure(), annN.location());
   }
 
   private NList<Item> loadParams(ModulePath path, RealFuncN realFuncN) {
@@ -126,7 +126,7 @@ public class TopEvalLoader {
         case RefN refN -> createReference(refN);
         case SelectN selectN -> createSelect(selectN);
         case StringN stringN -> createStringLiteral(stringN);
-        case AnnotationN node -> null;
+        case AnnN node -> null;
         default -> throw new RuntimeException(
             "Unknown AST node: " + expr.getClass().getSimpleName() + ".");
       };

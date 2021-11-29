@@ -658,7 +658,7 @@ public class DeclarationTest extends TestingContext {
             """)
               .loadsSuccessfully()
               .containsEvaluable(funcS(2, STRING, "myFunc",
-                  annotation(1, stringS(1, "Impl.met")),
+                  annS(1, stringS(1, "Impl.met")),
                   param(3, STRING, "default", stringS(3, "value")),
                   param(4, STRING, "nonDefault")));
         }
@@ -723,7 +723,7 @@ public class DeclarationTest extends TestingContext {
           module(funcTypeDeclaration("String,"))
               .loadsSuccessfully()
               .containsEvaluable(natFuncS(2, f(f(BLOB, STRING)), "myFunc", nList(),
-                  annotation(1, stringS(1, "Impl.met"))));
+                  annS(1, stringS(1, "Impl.met"))));
         }
 
         @Test

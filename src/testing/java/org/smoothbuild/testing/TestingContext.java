@@ -92,7 +92,7 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VariableS;
-import org.smoothbuild.lang.expr.Annotation;
+import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.ExprS;
@@ -683,13 +683,13 @@ public class TestingContext {
   }
 
   public NatFuncS funcS(TypeS type, String name, Item... params) {
-    return funcS(1, type, name, annotation(1, stringS(1, "Impl.met")), params);
+    return funcS(1, type, name, annS(1, stringS(1, "Impl.met")), params);
   }
 
-  public NatFuncS funcS(int line, TypeS type, String name, Annotation annotation,
+  public NatFuncS funcS(int line, TypeS type, String name, AnnS annS,
       Item... params) {
     return new NatFuncS(funcST(type, params), modulePath(), name,
-        nList(params), annotation, loc(line)
+        nList(params), annS, loc(line)
     );
   }
 
@@ -742,12 +742,12 @@ public class TestingContext {
 
   // other smooth language thingies
 
-  public Annotation annotation(int line, StringS implementedBy) {
-    return annotation(line, implementedBy, true);
+  public AnnS annS(int line, StringS implementedBy) {
+    return annS(line, implementedBy, true);
   }
 
-  public Annotation annotation(int line, StringS implementedBy, boolean pure) {
-    return new Annotation(implementedBy, pure, loc(line));
+  public AnnS annS(int line, StringS implementedBy, boolean pure) {
+    return new AnnS(implementedBy, pure, loc(line));
   }
 
   public Item field(TypeS type, String name) {
@@ -779,7 +779,7 @@ public class TestingContext {
   }
 
   public NatFuncS natFuncS(int line, FuncTypeS type, String name, NList<Item> params,
-      Annotation ann) {
+      AnnS ann) {
     return new NatFuncS(type, modulePath(), name, params, ann, loc(line));
   }
 

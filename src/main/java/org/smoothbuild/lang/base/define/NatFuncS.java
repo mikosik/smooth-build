@@ -3,23 +3,23 @@ package org.smoothbuild.lang.base.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.impl.FuncTypeS;
-import org.smoothbuild.lang.expr.Annotation;
+import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.util.collect.NList;
 
 /**
  * This class is immutable.
  */
 public final class NatFuncS extends FuncS {
-  private final Annotation annotation;
+  private final AnnS annS;
 
   public NatFuncS(FuncTypeS type, ModulePath modulePath, String name,
-      NList<Item> params, Annotation annotation, Location location) {
+      NList<Item> params, AnnS annS, Location location) {
     super(type, modulePath, name, params, location);
-    this.annotation = annotation;
+    this.annS = annS;
   }
 
-  public Annotation annotation() {
-    return annotation;
+  public AnnS ann() {
+    return annS;
   }
 
   @Override
@@ -32,13 +32,13 @@ public final class NatFuncS extends FuncS {
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
-        && this.annotation.equals(that.annotation)
+        && this.annS.equals(that.annS)
         && this.location().equals(that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), params(), annotation, location());
+    return Objects.hash(resultType(), modulePath(), name(), params(), annS, location());
   }
 
   @Override
@@ -47,6 +47,6 @@ public final class NatFuncS extends FuncS {
   }
 
   private String code() {
-    return annotation + " " + signature();
+    return annS + " " + signature();
   }
 }

@@ -140,7 +140,7 @@ public class ShConverter {
     var paramTypes = convertParams(natFuncS.params());
     var jar = loadNatJar(natFuncS);
     var type = objFactory.natFuncT(resType, paramTypes);
-    var ann = natFuncS.annotation();
+    var ann = natFuncS.ann();
     var classBinaryName = objFactory.string(ann.path().string());
     var isPure = objFactory.bool(ann.isPure());
     return objFactory.natFunc(type, jar, classBinaryName, isPure);
@@ -245,7 +245,7 @@ public class ShConverter {
 
 
   private BlobH loadNatJar(NatFuncS natFuncS) {
-    var filePath = natFuncS.annotation().location().file().withExtension("jar");
+    var filePath = natFuncS.ann().location().file().withExtension("jar");
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {

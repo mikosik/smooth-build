@@ -10,14 +10,14 @@ public sealed class EvalN extends NamedN implements EvalLike
     permits FuncN, ItemN, ValN {
   private final Optional<TypeN> typeNode;
   private final Optional<ExprN> body;
-  private final Optional<AnnotationN> annotation;
+  private final Optional<AnnN> ann;
 
-  public EvalN(Optional<TypeN> typeNode, String name, Optional<ExprN> body,
-      Optional<AnnotationN> annotation, Location location) {
+  public EvalN(Optional<TypeN> typeNode, String name, Optional<ExprN> body, Optional<AnnN> ann,
+      Location location) {
     super(name, location);
     this.typeNode = typeNode;
     this.body = body;
-    this.annotation = annotation;
+    this.ann = ann;
   }
 
   public Optional<TypeN> typeNode() {
@@ -28,8 +28,8 @@ public sealed class EvalN extends NamedN implements EvalLike
     return body;
   }
 
-  public Optional<AnnotationN> annotation() {
-    return annotation;
+  public Optional<AnnN> ann() {
+    return ann;
   }
 
   @Override

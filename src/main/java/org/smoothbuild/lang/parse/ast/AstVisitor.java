@@ -39,19 +39,19 @@ public class AstVisitor {
   }
 
   public void visitValue(ValN valN) {
-    valN.annotation().ifPresent(this::visitNative);
+    valN.ann().ifPresent(this::visitNative);
     valN.typeNode().ifPresent(this::visitType);
     valN.body().ifPresent(this::visitExpr);
   }
 
   public void visitRealFunc(RealFuncN realFuncN) {
-    realFuncN.annotation().ifPresent(this::visitNative);
+    realFuncN.ann().ifPresent(this::visitNative);
     realFuncN.typeNode().ifPresent(this::visitType);
     visitParams(realFuncN.params());
     realFuncN.body().ifPresent(this::visitExpr);
   }
 
-  public void visitNative(AnnotationN annotation) {
+  public void visitNative(AnnN annotation) {
     visitStringLiteral(annotation.path());
   }
 

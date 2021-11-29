@@ -278,10 +278,10 @@ public class AnalyzeSemantically {
       @Override
       public void visitRealFunc(RealFuncN realFuncN) {
         super.visitRealFunc(realFuncN);
-        if (realFuncN.annotation().isPresent() && realFuncN.body().isPresent()) {
+        if (realFuncN.ann().isPresent() && realFuncN.body().isPresent()) {
           logger.log(parseError(realFuncN, "Native function cannot have body."));
         }
-        if (realFuncN.annotation().isEmpty() && realFuncN.body().isEmpty()) {
+        if (realFuncN.ann().isEmpty() && realFuncN.body().isEmpty()) {
           logger.log(parseError(realFuncN, "Non native function cannot have empty body."));
         }
       }
@@ -289,8 +289,8 @@ public class AnalyzeSemantically {
       @Override
       public void visitValue(ValN valN) {
         super.visitValue(valN);
-        if (valN.annotation().isPresent()) {
-          logger.log(parseError(valN.annotation().get(), "Value cannot have @Native annotation."));
+        if (valN.ann().isPresent()) {
+          logger.log(parseError(valN.ann().get(), "Value cannot have @Native annotation."));
         }
         if (valN.body().isEmpty()) {
           logger.log(parseError(valN, "Value cannot have empty body."));

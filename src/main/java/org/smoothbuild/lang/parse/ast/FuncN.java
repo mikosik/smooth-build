@@ -19,7 +19,7 @@ public sealed class FuncN extends EvalN permits RealFuncN, CtorN {
   private final NList<ItemN> params;
 
   public FuncN(Optional<TypeN> typeNode, String name, Optional<ExprN> body,
-      List<ItemN> params, Optional<AnnotationN> annotation, Location location) {
+      List<ItemN> params, Optional<AnnN> annotation, Location location) {
     super(typeNode, name, body, annotation, location);
     this.params = nListWithDuplicates(ImmutableList.copyOf(params));
   }

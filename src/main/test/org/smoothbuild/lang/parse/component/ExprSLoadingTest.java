@@ -189,7 +189,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              funcS(2, STRING, "myFunc", annotation(1, stringS(1, "Impl.met"), true)));
+              funcS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
@@ -200,7 +200,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              funcS(2, STRING, "myFunc", annotation(1, stringS(1, "Impl.met"), false)));
+              funcS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), false)));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              funcS(2, STRING, "myFunc", annotation(1, stringS(1, "Impl.met"), true)));
+              funcS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), true)));
     }
   }
 

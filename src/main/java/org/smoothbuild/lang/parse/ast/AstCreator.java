@@ -15,7 +15,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
-import org.smoothbuild.antlr.lang.SmoothParser.AnnotationContext;
+import org.smoothbuild.antlr.lang.SmoothParser.AnnContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
@@ -81,7 +81,7 @@ public class AstCreator {
         Optional<TypeN> type = createTypeSane(evaluable.type());
         String name = nameNode.getText();
         Optional<ExprN> expr = createExprSane(evaluable.expr());
-        Optional<AnnotationN> annotation = createNativeSane(evaluable.annotation());
+        Optional<AnnN> annotation = createNativeSane(evaluable.ann());
         Location location = locationOf(filePath, nameNode);
         if (evaluable.paramList() == null) {
           referencables.add(new ValN(type, name, expr, annotation, location));
@@ -92,18 +92,18 @@ public class AstCreator {
         return null;
       }
 
-      private Optional<AnnotationN> createNativeSane(AnnotationContext annotation) {
+      private Optional<AnnN> createNativeSane(AnnContext annotation) {
         if (annotation == null) {
           return Optional.empty();
         } else {
-          return Optional.of(new AnnotationN(
+          return Optional.of(new AnnN(
               createStringNode(annotation, annotation.STRING()),
               isPure(annotation),
               locationOf(filePath, annotation)));
         }
       }
 
-      private boolean isPure(AnnotationContext annotation) {
+      private boolean isPure(AnnContext annotation) {
         return annotation.pure != null || annotation.impure == null;
       }
 
