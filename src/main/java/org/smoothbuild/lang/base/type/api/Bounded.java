@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.base.type.api;
 
-public record Bounded<T extends Type>(Variable variable, Bounds<T> bounds) {
+public record Bounded<T extends Type>(Var var, Bounds<T> bounds) {
   @Override
   public String toString() {
-    return variable.name() + ":<" + bounds.lower().name() + "," + bounds.upper().name() + ">";
+    return var.name() + ":<" + bounds.lower().name() + "," + bounds.upper().name() + ">";
   }
 }

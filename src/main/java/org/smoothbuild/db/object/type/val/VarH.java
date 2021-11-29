@@ -5,20 +5,20 @@ import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.api.Var;
 
 import com.google.common.collect.ImmutableSet;
 
-public class VariableH extends TypeH implements Variable {
-  private final ImmutableSet<VariableH> variables;
+public class VarH extends TypeH implements Var {
+  private final ImmutableSet<VarH> vars;
 
-  public VariableH(Hash hash, String name) {
+  public VarH(Hash hash, String name) {
     super(name, hash, VARIABLE);
-    this.variables = set(this);
+    this.vars = set(this);
   }
 
   @Override
-  public ImmutableSet<VariableH> variables() {
-    return variables;
+  public ImmutableSet<VarH> vars() {
+    return vars;
   }
 }

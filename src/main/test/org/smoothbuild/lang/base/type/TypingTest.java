@@ -204,13 +204,13 @@ public class TypingTest {
   }
 
   @ParameterizedTest
-  @MethodSource("inferVariableBounds_test_data")
-  public void inferVariableBounds(TypeS type, TypeS assigned, BoundsMap<TypeS> expected) {
-    assertThat(TYPING.inferVariableBounds(type, assigned, LOWER))
+  @MethodSource("inferVarBounds_test_data")
+  public void inferVarBounds(TypeS type, TypeS assigned, BoundsMap<TypeS> expected) {
+    assertThat(TYPING.inferVarBounds(type, assigned, LOWER))
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> inferVariableBounds_test_data() {
+  public static List<Arguments> inferVarBounds_test_data() {
     var r = new ArrayList<Arguments>();
     for (TypeS type : concat(ELEMENTARY_TYPES, X)) {
       if (type instanceof NothingTypeS) {
@@ -296,13 +296,13 @@ public class TypingTest {
   }
 
   @ParameterizedTest
-  @MethodSource("mapVariables_test_data")
-  public void mapVariables(TypeS type, BoundsMap<TypeS> boundsMap, Type expected) {
-    assertThat(TYPING.mapVariables(type, boundsMap, LOWER))
+  @MethodSource("mapVars_test_data")
+  public void mapVars(TypeS type, BoundsMap<TypeS> boundsMap, Type expected) {
+    assertThat(TYPING.mapVars(type, boundsMap, LOWER))
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> mapVariables_test_data() {
+  public static List<Arguments> mapVars_test_data() {
     var result = new ArrayList<Arguments>();
     for (TypeS type : ALL_TESTED_TYPES) {
       result.add(arguments(X, bm(), X));
@@ -390,21 +390,21 @@ public class TypingTest {
   @Nested
   class _merge_bounds {
     @Test
-    public void variable_with_one_lower_bound() {
+    public void var_with_one_lower_bound() {
       var bounds = oneSideBound(LOWER, STRING);
       assertThat(bounds.upper()).isEqualTo(ANY);
       assertThat(bounds.lower()).isEqualTo(STRING);
     }
 
     @Test
-    public void variable_with_one_upper_bound() {
+    public void var_with_one_upper_bound() {
       var bounds = oneSideBound(UPPER, STRING);
       assertThat(bounds.upper()).isEqualTo(STRING);
       assertThat(bounds.lower()).isEqualTo(NOTHING);
     }
 
     @Test
-    public void variable_with_two_lower_bounds() {
+    public void var_with_two_lower_bounds() {
       var bounds = TYPING.merge(
           oneSideBound(LOWER, STRING),
           oneSideBound(LOWER, BOOL));
@@ -413,7 +413,7 @@ public class TypingTest {
     }
 
     @Test
-    public void variable_with_two_upper_bounds() {
+    public void var_with_two_upper_bounds() {
       var bounds = TYPING.merge(
           oneSideBound(UPPER, STRING),
           oneSideBound(UPPER, BOOL));

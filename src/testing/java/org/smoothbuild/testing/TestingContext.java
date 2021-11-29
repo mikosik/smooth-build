@@ -57,7 +57,7 @@ import org.smoothbuild.db.object.type.val.NatFuncTypeH;
 import org.smoothbuild.db.object.type.val.NothingTypeH;
 import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
-import org.smoothbuild.db.object.type.val.VariableH;
+import org.smoothbuild.db.object.type.val.VarH;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
@@ -91,7 +91,7 @@ import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
-import org.smoothbuild.lang.base.type.impl.VariableS;
+import org.smoothbuild.lang.base.type.impl.VarS;
 import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
@@ -349,8 +349,8 @@ public class TestingContext {
     return tupleHT(list(stringHT()));
   }
 
-  public VariableH variableHT(String name) {
-    return typeHDb().variable(name);
+  public VarH varHT(String name) {
+    return typeHDb().var(name);
   }
 
   public Side<TypeH> lowerHT() {
@@ -613,8 +613,8 @@ public class TestingContext {
     return typeFactoryS().struct(name, fields);
   }
 
-  public VariableS variableST(String name) {
-    return typeFactoryS().variable(name);
+  public VarS varST(String name) {
+    return typeFactoryS().var(name);
   }
 
   public Side<TypeS> lowerST() {
@@ -626,8 +626,8 @@ public class TestingContext {
   }
 
   public BoundsMap<TypeS> bmST(
-      VariableS var1, Side<TypeS> side1, TypeS bound1,
-      VariableS var2, Side<TypeS> side2, TypeS bound2) {
+      VarS var1, Side<TypeS> side1, TypeS bound1,
+      VarS var2, Side<TypeS> side2, TypeS bound2) {
     Bounds<TypeS> bounds1 = oneSideBoundST(side1, bound1);
     Bounds<TypeS> bounds2 = oneSideBoundST(side2, bound2);
     if (var1.equals(var2)) {
@@ -640,7 +640,7 @@ public class TestingContext {
     }
   }
 
-  public BoundsMap<TypeS> bmST(VariableS var, Side<TypeS> side, TypeS bound) {
+  public BoundsMap<TypeS> bmST(VarS var, Side<TypeS> side, TypeS bound) {
     return boundsMap(new Bounded<>(var, oneSideBoundST(side, bound)));
   }
 

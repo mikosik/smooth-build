@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -112,9 +112,9 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
     return STRING;
   }
 
-  public VariableS variable(String name) {
-    checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
-    return new VariableS(name);
+  public VarS var(String name) {
+    checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
+    return new VarS(name);
   }
 
   public StructTypeS struct(String name, NList<ItemSignature> fields) {

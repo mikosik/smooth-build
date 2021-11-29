@@ -22,7 +22,7 @@ public class SpecHStableHashTest extends TestingContext {
     assertHash(nothingHT(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(stringHT(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
     assertHash(tupleHT(list(blobHT())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
-    assertHash(variableHT("A"), "99f61661c131c5db3723bdaa5ad26229d06dc6ce");
+    assertHash(varHT("A"), "99f61661c131c5db3723bdaa5ad26229d06dc6ce");
 
     assertHash(arrayHT(anyHT()), "2dfdcb5ccf6df3057cb84565af5b67f64c685e9c");
     assertHash(arrayHT(blobHT()), "7fbebe7b9e6730b6b49fbd19811677bbd1d8880b");
@@ -32,7 +32,7 @@ public class SpecHStableHashTest extends TestingContext {
     assertHash(arrayHT(nothingHT()), "223052eec1e2f74ed0234fd1ba43f4d49e7e43db");
     assertHash(arrayHT(stringHT()), "dfeac8190688130683d51d719055d46c47cec4d2");
     assertHash(arrayHT(tupleHT(list(blobHT()))), "e843737d83eb150a51a81d9e43a00142982bd959");
-    assertHash(arrayHT(variableHT("A")), "5eae2a05ffe2fee34c07a74779e5eecde3521849");
+    assertHash(arrayHT(varHT("A")), "5eae2a05ffe2fee34c07a74779e5eecde3521849");
 
     assertHash(orderHT(intHT()), "04c4786e96bdac890b5089eee99173cd41cecb33");
     assertHash(callHT(intHT()), "f8e8b1d061fcdfb8be52b97cf80e50bc908e59ef");

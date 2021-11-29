@@ -13,7 +13,7 @@ public class TypeNames {
   public static final String NOTHING = "Nothing";
   public static final String STRING = "String";
 
-  public static boolean isVariableName(String name) {
+  public static boolean isVarName(String name) {
     return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 

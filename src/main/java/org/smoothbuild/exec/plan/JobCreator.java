@@ -137,9 +137,9 @@ public class JobCreator {
     var funcJ = jobFor(scope, vars, callData.func(), eager);
     var argsJ = map(callData.args().items(), a -> lazyJobFor(scope, vars, a));
     var loc = nals.get(call).loc();
-    var actualArgTypes = map(argsJ, a -> typing.mapVariables(a.type(), vars, factory.lower()));
-    var newVariables = inferVariablesInFuncCall(funcJ, actualArgTypes);
-    return callJob(scope, funcJ, argsJ, loc, newVariables, eager);
+    var actualArgTypes = map(argsJ, a -> typing.mapVars(a.type(), vars, factory.lower()));
+    var newVars = inferVarsInFuncCall(funcJ, actualArgTypes);
+    return callJob(scope, funcJ, argsJ, loc, newVars, eager);
   }
 
   private Job callJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Loc loc,
@@ -148,32 +148,32 @@ public class JobCreator {
       return callEagerJob(scope, func, args, loc, vars);
     } else {
       var funcType = (FuncTypeH) func.type();
-      var actualResultType = typing.mapVariables(funcType.result(), vars, factory.lower());
+      var actualResultType = typing.mapVars(funcType.result(), vars, factory.lower());
       return new LazyJob(actualResultType, loc,
           () -> callEagerJob(scope, func, args, loc, vars));
     }
   }
 
   public Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Loc loc) {
-    var variables = inferVariablesInFuncCall(func, args);
-    return callEagerJob(scope, func, args, loc, variables);
+    var vars = inferVarsInFuncCall(func, args);
+    return callEagerJob(scope, func, args, loc, vars);
   }
 
   private Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Loc loc,
       BoundsMap<TypeH> vars) {
     var funcType = (FuncTypeH) func.type();
-    var actualResultType = typing.mapVariables(funcType.result(), vars, factory.lower());
+    var actualResultType = typing.mapVars(funcType.result(), vars, factory.lower());
     return new CallJob(actualResultType, func, args, loc, vars, scope, JobCreator.this);
   }
 
-  private BoundsMap<TypeH> inferVariablesInFuncCall(Job func, List<Job> args) {
+  private BoundsMap<TypeH> inferVarsInFuncCall(Job func, List<Job> args) {
     var argTypes = map(args, Job::type);
-    return inferVariablesInFuncCall(func, argTypes);
+    return inferVarsInFuncCall(func, argTypes);
   }
 
-  private BoundsMap<TypeH> inferVariablesInFuncCall(Job func, ImmutableList<TypeH> argTypes) {
+  private BoundsMap<TypeH> inferVarsInFuncCall(Job func, ImmutableList<TypeH> argTypes) {
     var funcType = (FuncTypeH) func.type();
-    return typing.inferVariableBounds(funcType.params(), argTypes, factory.lower());
+    return typing.inferVarBounds(funcType.params(), argTypes, factory.lower());
   }
 
   // Value
@@ -232,7 +232,7 @@ public class JobCreator {
 
   private Task orderEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH order, Nal nal) {
     var type = order.type();
-    var actualType = (ArrayTypeH) typing.mapVariables(type, vars, factory.lower());
+    var actualType = (ArrayTypeH) typing.mapVars(type, vars, factory.lower());
     var elemsJ = map(order.elems(), e -> eagerJobFor(scope, vars, e));
     var info = new TaskInfo(LITERAL, nal);
     return orderEager(actualType, elemsJ, info);

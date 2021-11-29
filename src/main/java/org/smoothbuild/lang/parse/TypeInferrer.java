@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Strings.q;
@@ -152,8 +152,8 @@ public class TypeInferrer {
       }
 
       private Optional<TypeS> createType(TypeN type) {
-        if (isVariableName(type.name())) {
-          return Optional.of(factory.variable(type.name()));
+        if (isVarName(type.name())) {
+          return Optional.of(factory.var(type.name()));
         }
         return switch (type) {
           case ArrayTypeN array -> createType(array.elemType()).map(factory::array);

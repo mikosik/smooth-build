@@ -17,8 +17,8 @@ public final class ArrayTypeN extends TypeN {
   }
 
   @Override
-  public void countVariables(CountersMap<String> countersMap) {
-    elemType.countVariables(countersMap);
+  public void countVars(CountersMap<String> countersMap) {
+    elemType.countVars(countersMap);
   }
 
   public TypeN elemType() {

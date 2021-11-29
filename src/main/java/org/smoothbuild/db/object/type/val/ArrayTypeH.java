@@ -18,7 +18,7 @@ public class ArrayTypeH extends TypeH implements ArrayType {
   private final TypeH elem;
 
   public ArrayTypeH(Hash hash, TypeH elem) {
-    super(arrayTypeName(elem), hash, ARRAY, elem.variables());
+    super(arrayTypeName(elem), hash, ARRAY, elem.vars());
     this.elem = requireNonNull(elem);
   }
 

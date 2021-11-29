@@ -264,8 +264,8 @@ public class ObjectHDb {
         (expectedSize, actualSize) -> illegalArgs(funcType, args),
         i -> illegalArgs(funcType, args)
     );
-    var varBounds = typing.inferVariableBoundsInCall(paramTypes, argTypes);
-    return typing.mapVariables(funcType.result(), varBounds, typeHDb.lower());
+    var varBounds = typing.inferVarBoundsInCall(paramTypes, argTypes);
+    return typing.mapVars(funcType.result(), varBounds, typeHDb.lower());
   }
 
   private void illegalArgs(FuncTypeH funcType, CombineH args) {

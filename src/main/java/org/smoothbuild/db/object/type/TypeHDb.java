@@ -27,7 +27,7 @@ import static org.smoothbuild.db.object.type.base.SpecKindH.STRING;
 import static org.smoothbuild.db.object.type.base.SpecKindH.TUPLE;
 import static org.smoothbuild.db.object.type.base.SpecKindH.VARIABLE;
 import static org.smoothbuild.db.object.type.base.SpecKindH.fromMarker;
-import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
@@ -42,7 +42,7 @@ import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
-import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
+import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
@@ -64,7 +64,7 @@ import org.smoothbuild.db.object.type.val.NatFuncTypeH;
 import org.smoothbuild.db.object.type.val.NothingTypeH;
 import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
-import org.smoothbuild.db.object.type.val.VariableH;
+import org.smoothbuild.db.object.type.val.VarH;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -108,9 +108,9 @@ public class TypeHDb implements TypeFactoryH {
       this.nothing = cache(new NothingTypeH(writeBaseRoot(NOTHING)));
       this.string = cache(new StringTypeH(writeBaseRoot(STRING)));
 
-      VariableH a = cache(variable("A"));
+      VarH a = cache(var("A"));
       this.ifFunc = cache(abstFunc(IF_KIND, a, list(bool, a, a)));
-      VariableH r = cache(variable("B"));
+      VarH r = cache(var("B"));
       ArrayTypeH ar = cache(array(r));
       ArrayTypeH aa = cache(array(a));
       FuncTypeH f = cache(abstFunc(r, list(a)));
@@ -205,9 +205,9 @@ public class TypeHDb implements TypeFactoryH {
     return string;
   }
 
-  public VariableH variable(String name) {
-    checkArgument(isVariableName(name), "Illegal type variable name '%s'.", name);
-    return wrapHashedDbExceptionAsObjectDbException(() -> newVariable(name));
+  public VarH var(String name) {
+    checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
+    return wrapHashedDbExceptionAsObjectDbException(() -> newVar(name));
   }
 
   // methods for getting Expr-s types
@@ -256,7 +256,7 @@ public class TypeHDb implements TypeFactoryH {
       case PARAM_REF -> newRef(hash, readDataAsVal(hash, rootSeq, kind));
       case SELECT -> newSelect(hash, readDataAsVal(hash, rootSeq, kind));
       case TUPLE -> readTuple(hash, rootSeq);
-      case VARIABLE -> readVariable(hash, rootSeq);
+      case VARIABLE -> readVar(hash, rootSeq);
     };
   }
 
@@ -335,14 +335,14 @@ public class TypeHDb implements TypeFactoryH {
     return builder.build();
   }
 
-  private VariableH readVariable(Hash rootHash, List<Hash> rootSeq) {
+  private VarH readVar(Hash rootHash, List<Hash> rootSeq) {
     assertTypeRootSeqSize(rootHash, VARIABLE, rootSeq, 2);
     String name = wrapHashedDbExceptionAsDecodeTypeNodeException(
         rootHash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSeq.get(1)));
-    if (!isVariableName(name)) {
-      throw new DecodeVariableIllegalNameException(rootHash, name);
+    if (!isVarName(name)) {
+      throw new DecodeVarIllegalNameException(rootHash, name);
     }
-    return newVariable(rootHash, name);
+    return newVar(rootHash, name);
   }
 
   private <T> T readNode(SpecKindH kind, Hash outerHash, Hash hash, String path, Class<T> clazz) {
@@ -400,13 +400,13 @@ public class TypeHDb implements TypeFactoryH {
     return cache(new TupleTypeH(rootHash, itemTypes));
   }
 
-  private VariableH newVariable(String name) throws HashedDbException {
-    var rootHash = writeVariableRoot(name);
-    return newVariable(rootHash, name);
+  private VarH newVar(String name) throws HashedDbException {
+    var rootHash = writeVarRoot(name);
+    return newVar(rootHash, name);
   }
 
-  private VariableH newVariable(Hash rootHash, String name) {
-    return cache(new VariableH(rootHash, name));
+  private VarH newVar(Hash rootHash, String name) {
+    return cache(new VarH(rootHash, name));
   }
 
   // methods for creating Expr types
@@ -480,7 +480,7 @@ public class TypeHDb implements TypeFactoryH {
     return writeNonBaseRoot(TUPLE, itemsHash);
   }
 
-  private Hash writeVariableRoot(String name) throws HashedDbException {
+  private Hash writeVarRoot(String name) throws HashedDbException {
     var nameHash = hashedDb.writeString(name);
     return writeNonBaseRoot(VARIABLE, nameHash);
   }

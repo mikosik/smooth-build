@@ -43,7 +43,7 @@ import org.smoothbuild.db.object.type.val.NatFuncTypeH;
 import org.smoothbuild.db.object.type.val.NothingTypeH;
 import org.smoothbuild.db.object.type.val.StringTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
-import org.smoothbuild.db.object.type.val.VariableH;
+import org.smoothbuild.db.object.type.val.VarH;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -199,8 +199,8 @@ public class ObjFactory {
     return typeHDb.tuple(itemTypes);
   }
 
-  public VariableH variable(String name) {
-    return typeHDb.variable(name);
+  public VarH var(String name) {
+    return typeHDb.var(name);
   }
 
   // other values and its types

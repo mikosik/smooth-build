@@ -914,7 +914,7 @@ public class ExprSUsageTest extends TestingContext {
   }
 
   @Nested
-  class _type_variable_used_as {
+  class _type_var_used_as {
     @Test
     public void func_arg_fails() {
       mod("""
@@ -1006,7 +1006,7 @@ public class ExprSUsageTest extends TestingContext {
            A field
           }
           """)
-          .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `field`. "
+          .loadsWithError(2, "Type var(s) `A` are used once in declaration of `field`. "
               + "This means each one can be replaced with `Any`.");
     }
 
@@ -1017,7 +1017,7 @@ public class ExprSUsageTest extends TestingContext {
            [A] field
           }
           """)
-          .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `field`. "
+          .loadsWithError(2, "Type var(s) `A` are used once in declaration of `field`. "
               + "This means each one can be replaced with `Any`.");
     }
   }

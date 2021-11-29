@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypesS.struct;
-import static org.smoothbuild.lang.base.type.TestingTypesS.variable;
+import static org.smoothbuild.lang.base.type.TestingTypesS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -31,12 +31,12 @@ public class TestedType {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
   public static final TestedType A = new TestedType(
-      variable("A"),
+      var("A"),
       null,
       null
   );
   public static final TestedType B = new TestedType(
-      variable("B"),
+      var("B"),
       null,
       null
   );
@@ -126,7 +126,7 @@ public class TestedType {
   );
 
   /**
-   * Polytypes that can be used in any place. Each variable in such a polytype occurs more than
+   * Polytypes that can be used in any place. Each var in such a polytype occurs more than
    * once.
    */
   public static final List<TestedType> TESTED_VALID_POLYTYPES = list(
@@ -141,7 +141,7 @@ public class TestedType {
   );
 
   /**
-   * Polytypes that can be used in any place. Each variable in such a polytype occurs exactly once.
+   * Polytypes that can be used in any place. Each var in such a polytype occurs exactly once.
    */
   public static final List<TestedType> TESTED_SINGLE_VARIABLE_POLYTYPES = list(
       A,

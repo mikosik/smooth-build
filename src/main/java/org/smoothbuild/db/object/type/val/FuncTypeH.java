@@ -25,15 +25,15 @@ public class FuncTypeH extends TypeH implements FuncType {
 
   public FuncTypeH(Hash hash, SpecKindH kind, TypeH result, TupleTypeH paramsTuple) {
     super(funcTypeName(result, paramsTuple.items()), hash, kind,
-        calculateVariables(result, paramsTuple.items()));
+        calculateVars(result, paramsTuple.items()));
     this.result = result;
     this.paramsTuple = paramsTuple;
   }
 
-  public static ImmutableSet<VariableH> calculateVariables(
+  public static ImmutableSet<VarH> calculateVars(
       TypeH resultType, ImmutableList<TypeH> params) {
     return concat(resultType, params).stream()
-        .map(TypeH::variables)
+        .map(TypeH::vars)
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))
         .collect(toImmutableSet());

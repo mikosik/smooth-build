@@ -6,12 +6,12 @@ import com.google.common.collect.ImmutableSet;
 
 public abstract class AbstractType implements Type {
   protected final String name;
-  protected final ImmutableSet<? extends Variable> variables;
+  protected final ImmutableSet<? extends Var> vars;
 
-  public AbstractType(String name, ImmutableSet<? extends Variable> variables) {
+  public AbstractType(String name, ImmutableSet<? extends Var> vars) {
     checkArgument(!name.isBlank());
     this.name = name;
-    this.variables = variables;
+    this.vars = vars;
   }
 
   @Override
@@ -20,11 +20,11 @@ public abstract class AbstractType implements Type {
   }
 
   /**
-   * @return type variables sorted alphabetically
+   * @return type vars sorted alphabetically
    */
   @Override
-  public ImmutableSet<? extends Variable> variables() {
-    return variables;
+  public ImmutableSet<? extends Var> vars() {
+    return vars;
   }
 
   @Override

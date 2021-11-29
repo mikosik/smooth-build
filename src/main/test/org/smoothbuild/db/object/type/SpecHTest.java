@@ -70,7 +70,7 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FuncType;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.api.Var;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NList;
@@ -114,9 +114,9 @@ public class SpecHTest extends TestingContext {
         args(f -> f.int_(), "Int"),
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
-        args(f -> f.variable("A"), "A"),
+        args(f -> f.var("A"), "A"),
 
-        args(f -> f.array(f.variable("A")), "[A]"),
+        args(f -> f.array(f.var("A")), "[A]"),
         args(f -> f.array(f.any()), "[Any]"),
         args(f -> f.array(f.blob()), "[Blob]"),
         args(f -> f.array(f.bool()), "[Bool]"),
@@ -124,7 +124,7 @@ public class SpecHTest extends TestingContext {
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
 
-        args(f -> f.array(f.array(f.variable("A"))), "[[A]]"),
+        args(f -> f.array(f.array(f.var("A"))), "[[A]]"),
         args(f -> f.array(f.array(f.any())), "[[Any]]"),
         args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
@@ -132,9 +132,9 @@ public class SpecHTest extends TestingContext {
         args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.abstFunc(f.variable("A"), list(f.array(f.variable("A")))), "A([A])"),
-        args(f -> f.abstFunc(f.string(), list(f.array(f.variable("A")))), "String([A])"),
-        args(f -> f.abstFunc(f.variable("A"), list(f.variable("A"))), "A(A)"),
+        args(f -> f.abstFunc(f.var("A"), list(f.array(f.var("A")))), "A([A])"),
+        args(f -> f.abstFunc(f.string(), list(f.array(f.var("A")))), "String([A])"),
+        args(f -> f.abstFunc(f.var("A"), list(f.var("A"))), "A(A)"),
         args(f -> f.abstFunc(f.string(), list()), "String()"),
         args(f -> f.abstFunc(f.string(), list(f.string())), "String(String)"),
 
@@ -164,22 +164,22 @@ public class SpecHTest extends TestingContext {
 
   public static List<Arguments> isPolytype_test_data() {
     return asList(
-        args(f -> f.variable("A"), true),
-        args(f -> f.array(f.variable("A")), true),
-        args(f -> f.array(f.array(f.variable("A"))), true),
+        args(f -> f.var("A"), true),
+        args(f -> f.array(f.var("A")), true),
+        args(f -> f.array(f.array(f.var("A"))), true),
 
-        args(f -> f.abstFunc(f.variable("A"), list()), true),
-        args(f -> f.abstFunc(f.abstFunc(f.variable("A"), list()), list()), true),
-        args(f -> f.abstFunc(f.abstFunc(f.abstFunc(f.variable("A"), list()), list()), list()),
+        args(f -> f.abstFunc(f.var("A"), list()), true),
+        args(f -> f.abstFunc(f.abstFunc(f.var("A"), list()), list()), true),
+        args(f -> f.abstFunc(f.abstFunc(f.abstFunc(f.var("A"), list()), list()), list()),
             true),
 
-        args(f -> f.abstFunc(f.bool(), list(f.variable("A"))), true),
-        args(f -> f.abstFunc(f.bool(), list(f.abstFunc(f.variable("A"), list()))), true),
+        args(f -> f.abstFunc(f.bool(), list(f.var("A"))), true),
+        args(f -> f.abstFunc(f.bool(), list(f.abstFunc(f.var("A"), list()))), true),
         args(f -> f
-                .abstFunc(f.bool(), list(f.abstFunc(f.abstFunc(f.variable("A"), list()), list()))),
+                .abstFunc(f.bool(), list(f.abstFunc(f.abstFunc(f.var("A"), list()), list()))),
             true),
 
-        args(f -> f.abstFunc(f.bool(), list(f.abstFunc(f.blob(), list(f.variable("A"))))),
+        args(f -> f.abstFunc(f.bool(), list(f.abstFunc(f.blob(), list(f.var("A"))))),
             true),
 
         args(f -> f.any(), false),
@@ -194,16 +194,16 @@ public class SpecHTest extends TestingContext {
   }
 
   @ParameterizedTest
-  @MethodSource("variables_test_data")
-  public void variables(
+  @MethodSource("vars_test_data")
+  public void vars(
       Function<TypeHDb, SpecH> factoryCall,
-      Function<TypeHDb, Set<Variable>> resultCall) {
-    assertThat(invoke(factoryCall).variables())
+      Function<TypeHDb, Set<Var>> resultCall) {
+    assertThat(invoke(factoryCall).vars())
         .containsExactlyElementsIn(invoke(resultCall))
         .inOrder();
   }
 
-  public static List<Arguments> variables_test_data() {
+  public static List<Arguments> vars_test_data() {
     return asList(
         args(f -> f.any(), f -> set()),
         args(f -> f.blob(), f -> set()),
@@ -213,7 +213,7 @@ public class SpecHTest extends TestingContext {
         args(f -> f.string(), f -> set()),
         args(f -> f.tuple(list()), f -> set()),
         args(f -> f.tuple(list(f.int_())), f -> set()),
-        args(f -> f.variable("A"), f -> set(f.variable("A"))),
+        args(f -> f.var("A"), f -> set(f.var("A"))),
 
         args(f -> f.array(f.any()), f -> set()),
         args(f -> f.array(f.blob()), f -> set()),
@@ -221,24 +221,24 @@ public class SpecHTest extends TestingContext {
         args(f -> f.array(f.int_()), f -> set()),
         args(f -> f.array(f.nothing()), f -> set()),
         args(f -> f.array(f.string()), f -> set()),
-        args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
+        args(f -> f.array(f.var("A")), f -> set(f.var("A"))),
 
         args(f -> f.abstFunc(f.string(), list()), f -> set()),
         args(f -> f.abstFunc(f.string(), list(f.bool())), f -> set()),
 
-        args(f -> f.array(f.variable("A")), f -> set(f.variable("A"))),
-        args(f -> f.array(f.array(f.variable("A"))), f -> set(f.variable("A"))),
+        args(f -> f.array(f.var("A")), f -> set(f.var("A"))),
+        args(f -> f.array(f.array(f.var("A"))), f -> set(f.var("A"))),
 
-        args(f -> f.abstFunc(f.variable("A"), list()), f -> set(f.variable("A"))),
-        args(f -> f.abstFunc(f.variable("A"), list(f.string())), f -> set(f.variable("A"))),
-        args(f -> f.abstFunc(f.string(), list(f.variable("A"))), f -> set(f.variable("A"))),
-        args(f -> f.abstFunc(f.variable("B"), list(f.variable("A"))),
-            f -> set(f.variable("A"), f.variable("B"))),
+        args(f -> f.abstFunc(f.var("A"), list()), f -> set(f.var("A"))),
+        args(f -> f.abstFunc(f.var("A"), list(f.string())), f -> set(f.var("A"))),
+        args(f -> f.abstFunc(f.string(), list(f.var("A"))), f -> set(f.var("A"))),
+        args(f -> f.abstFunc(f.var("B"), list(f.var("A"))),
+            f -> set(f.var("A"), f.var("B"))),
 
-        args(f -> f.abstFunc(f.abstFunc(f.variable("A"), list()), list()),
-            f -> set(f.variable("A"))),
-        args(f -> f.abstFunc(f.variable("D"), list(f.variable("C"), f.variable("B"))),
-            f -> set(f.variable("B"), f.variable("C"), f.variable("D")))
+        args(f -> f.abstFunc(f.abstFunc(f.var("A"), list()), list()),
+            f -> set(f.var("A"))),
+        args(f -> f.abstFunc(f.var("D"), list(f.var("C"), f.var("B"))),
+            f -> set(f.var("B"), f.var("C"), f.var("D")))
     );
   }
 
@@ -278,17 +278,17 @@ public class SpecHTest extends TestingContext {
   }
 
   @Nested
-  class _variable {
+  class _var {
     @Test
     public void name() {
-      assertThat(variableST("A").name())
+      assertThat(varST("A").name())
           .isEqualTo("A");
     }
 
     @Test
     public void illegal_name() {
-      assertCall(() -> variableST("a"))
-          .throwsException(new IllegalArgumentException("Illegal type variable name 'a'."));
+      assertCall(() -> varST("a"))
+          .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
 
@@ -313,7 +313,7 @@ public class SpecHTest extends TestingContext {
           args(f -> f.nothing()),
           args(f -> f.string()),
           args(f -> f.tuple(list(f.int_()))),
-          args(f -> f.variable("A")),
+          args(f -> f.var("A")),
 
           args(f -> f.array(f.any())),
           args(f -> f.array(f.blob())),
@@ -322,7 +322,7 @@ public class SpecHTest extends TestingContext {
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),
-          args(f -> f.array(f.variable("A")))
+          args(f -> f.array(f.var("A")))
       );
     }
   }

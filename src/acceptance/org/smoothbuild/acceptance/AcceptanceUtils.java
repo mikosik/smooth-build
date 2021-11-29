@@ -34,7 +34,7 @@ public class AcceptanceUtils {
    */
   public static Path gitRepoRoot() {
     /*
-     * ant build script passes git repository root via repository_root env variable. If it's null
+     * ant build script passes git repository root via repository_root env var. If it's null
      * then we are run from IDE and working dir is repo's root.
      */
     String repositoryDir = System.getenv("repository_dir");

@@ -41,7 +41,7 @@ import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeNodeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
-import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
+import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqException;
 import org.smoothbuild.db.object.type.expr.RefTypeH;
@@ -818,19 +818,19 @@ public class SpecHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _variable {
+  class _var {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save Variable type in HashedDb.
+       * to save Var type in HashedDb.
        */
       Hash hash = hash(
           hash(VARIABLE.marker()),
           hash("A")
       );
       assertThat(hash)
-          .isEqualTo(variableHT("A").hash());
+          .isEqualTo(varHT("A").hash());
     }
 
     @Test
@@ -873,7 +873,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash("a")
       );
       assertThatGet(hash)
-          .throwsException(new DecodeVariableIllegalNameException(hash, "a"));
+          .throwsException(new DecodeVarIllegalNameException(hash, "a"));
     }
   }
 }

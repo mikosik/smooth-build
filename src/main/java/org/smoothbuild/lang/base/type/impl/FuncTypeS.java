@@ -22,15 +22,15 @@ public final class FuncTypeS extends TypeS implements FuncType {
   private final ImmutableList<TypeS> params;
 
   public FuncTypeS(TypeS result, ImmutableList<TypeS> params) {
-    super(funcTypeName(result, params), calculateVariables(result, params));
+    super(funcTypeName(result, params), calculateVars(result, params));
     this.result = requireNonNull(result);
     this.params = requireNonNull(params);
   }
 
-  public static ImmutableSet<VariableS> calculateVariables(
+  public static ImmutableSet<VarS> calculateVars(
       TypeS resultType, ImmutableList<TypeS> params) {
     return concat(resultType, params).stream()
-        .map(TypeS::variables)
+        .map(TypeS::vars)
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))
         .collect(toImmutableSet());

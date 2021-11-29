@@ -12,7 +12,7 @@ public final class ArrayTypeS extends TypeS implements ArrayType {
   private final TypeS elem;
 
   public ArrayTypeS(TypeS elem) {
-    super(TypeNames.arrayTypeName(elem), elem.variables());
+    super(TypeNames.arrayTypeName(elem), elem.vars());
     this.elem = requireNonNull(elem);
   }
 

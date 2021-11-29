@@ -21,7 +21,7 @@ import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
-import org.smoothbuild.lang.base.type.impl.VariableS;
+import org.smoothbuild.lang.base.type.impl.VarS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 
@@ -45,11 +45,11 @@ public class TestingTypesS {
       nList(itemSignature("firstName", STRING), itemSignature("lastName", STRING)));
   public static final StructTypeS FLAG = struct("Flag", nList(itemSignature("flab", BOOL)));
   public static final StructTypeS DATA = struct("Data", nList(itemSignature("data", BLOB)));
-  public static final VariableS A = variable("A");
-  public static final VariableS B = variable("B");
-  public static final VariableS C = variable("C");
-  public static final VariableS D = variable("D");
-  public static final VariableS X = variable("X");
+  public static final VarS A = var("A");
+  public static final VarS B = var("B");
+  public static final VarS C = var("C");
+  public static final VarS D = var("D");
+  public static final VarS X = var("X");
   public static final Side<TypeS> LOWER = FACTORY.lower();
   public static final Side<TypeS> UPPER = FACTORY.upper();
 
@@ -99,8 +99,8 @@ public class TestingTypesS {
     return FACTORY.abstFunc(resultType, params);
   }
 
-  public static VariableS variable(String a) {
-    return FACTORY.variable(a);
+  public static VarS var(String a) {
+    return FACTORY.var(a);
   }
 
   public static StructTypeS struct(String name, NList<ItemSignature> fields) {
@@ -112,12 +112,12 @@ public class TestingTypesS {
   }
 
   public static BoundsMap<TypeS> bm(
-      VariableS var1, Side<TypeS> side1, TypeS bound1,
-      VariableS var2, Side<TypeS> side2, TypeS bound2) {
+      VarS var1, Side<TypeS> side1, TypeS bound1,
+      VarS var2, Side<TypeS> side2, TypeS bound2) {
     return CONTEXT.bmST(var1, side1, bound1, var2, side2, bound2);
   }
 
-  public static BoundsMap<TypeS> bm(VariableS var, Side<TypeS> side, TypeS bound) {
+  public static BoundsMap<TypeS> bm(VarS var, Side<TypeS> side, TypeS bound) {
     return CONTEXT.bmST(var, side, bound);
   }
 

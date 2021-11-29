@@ -45,15 +45,15 @@ public class CallTypeInferrer {
     }
     List<Optional<TypeS>> assignedTypes = assignedTypes(params, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
-      var boundedVariables = typing.inferVariableBoundsInCall(
+      var boundedVars = typing.inferVarBoundsInCall(
           map(params, ItemSignature::type),
           map(assignedTypes, Optional::get));
-      var variableProblems = findVariableProblems(call, boundedVariables);
-      if (!variableProblems.isEmpty()) {
-        logBuffer.logAll(variableProblems);
+      var varProblems = findVarProblems(call, boundedVars);
+      if (!varProblems.isEmpty()) {
+        logBuffer.logAll(varProblems);
         return maybeLogs(logBuffer);
       }
-      TypeS mapped = typing.mapVariables(resultType, boundedVariables, factory.lower());
+      TypeS mapped = typing.mapVars(resultType, boundedVars, factory.lower());
       return maybeValueAndLogs(mapped, logBuffer);
     }
     return maybeLogs(logBuffer);
@@ -100,12 +100,12 @@ public class CallTypeInferrer {
     return assigned.stream().allMatch(Optional::isPresent);
   }
 
-  private ImmutableList<Log> findVariableProblems(
-      CallN call, BoundsMap<TypeS> boundedVariables) {
-    return boundedVariables.map().values().stream()
+  private ImmutableList<Log> findVarProblems(
+      CallN call, BoundsMap<TypeS> boundedVars) {
+    return boundedVars.map().values().stream()
         .filter(b -> typing.contains(b.bounds().lower(), factory.any()))
-        .map(b -> parseError(call, "Cannot infer actual type for type variable "
-            + b.variable().q() + "."))
+        .map(b -> parseError(call, "Cannot infer actual type for type var "
+            + b.var().q() + "."))
         .collect(toImmutableList());
   }
 }

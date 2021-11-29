@@ -2,9 +2,9 @@ package org.smoothbuild.lang.parse;
 
 import static java.lang.String.join;
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
-import static org.smoothbuild.lang.parse.ast.FuncTypeN.countFuncVariables;
+import static org.smoothbuild.lang.parse.ast.FuncTypeN.countFuncVars;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
@@ -134,7 +134,7 @@ public class AnalyzeSemantically {
       }
 
       private boolean isDefinedType(TypeN type) {
-        return isVariableName(type.name())
+        return isVarName(type.name())
             || ast.structs().containsName(type.name())
             || imported.types().containsName(type.name());
       }
@@ -213,7 +213,7 @@ public class AnalyzeSemantically {
       @Override
       public void visitStruct(StructN struct) {
         String name = struct.name();
-        if (isVariableName(name)) {
+        if (isVarName(name)) {
           logger.log(parseError(struct.loc(),
               "`" + name + "` is illegal struct name. It must have at least two characters."));
         }
@@ -227,7 +227,7 @@ public class AnalyzeSemantically {
       public void visitValue(ValN valN) {
         super.visitValue(valN);
         if (valN.typeNode().isPresent()) {
-          logErrorIfNeeded(valN, valN.typeNode().get().variablesUsedOnce());
+          logErrorIfNeeded(valN, valN.typeNode().get().varsUsedOnce());
         }
       }
 
@@ -236,7 +236,7 @@ public class AnalyzeSemantically {
         super.visitRealFunc(realFuncN);
         if (realFuncN.typeNode().isPresent()) {
           var counters = new CountersMap<String>();
-          countFuncVariables(counters, realFuncN.typeNode().get(),
+          countFuncVars(counters, realFuncN.typeNode().get(),
               map(realFuncN.params(), itemNode -> itemNode.typeNode().get()));
           logErrorIfNeeded(realFuncN, counters.keysWithCounter(1));
         }
@@ -247,20 +247,20 @@ public class AnalyzeSemantically {
         super.visitStruct(struct);
         List<ItemN> fields = struct.fields();
         for (ItemN field : fields) {
-          logErrorIfNeeded(field, field.typeNode().get().variablesUsedOnce());
+          logErrorIfNeeded(field, field.typeNode().get().varsUsedOnce());
         }
       }
 
       private void logErrorIfNeeded(
-          EvalN node, ImmutableList<String> variablesUsedOnce) {
-        if (!variablesUsedOnce.isEmpty()) {
-          logError(node, variablesUsedOnce);
+          EvalN node, ImmutableList<String> varsUsedOnce) {
+        if (!varsUsedOnce.isEmpty()) {
+          logError(node, varsUsedOnce);
         }
       }
 
-      private void logError(EvalN node, List<String> variablesUsedOnce) {
-        logger.log(parseError(node.typeNode().get(), "Type variable(s) "
-            + join(", ", map(variablesUsedOnce, v -> "`" + v + "`"))
+      private void logError(EvalN node, List<String> varsUsedOnce) {
+        logger.log(parseError(node.typeNode().get(), "Type var(s) "
+            + join(", ", map(varsUsedOnce, v -> "`" + v + "`"))
             + " are used once in declaration of " + node.q()
             + ". This means each one can be replaced with `Any`."));
       }

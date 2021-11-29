@@ -244,7 +244,7 @@ public class InferenceTest extends TestingContext {
   }
 
   @Nested
-  class _inferring_func_param_generic_types_fails_when_variable_has_two_inconvertible_lower_bounds {
+  class _inferring_func_param_generic_types_fails_when_var_has_two_inconvertible_lower_bounds {
     @Test
     public void base_types() {
       String code = """
@@ -252,7 +252,7 @@ public class InferenceTest extends TestingContext {
           result = myEqual("def", 0x01);
           """;
       mod(code)
-          .loadsWithError(2, "Cannot infer actual type for type variable `A`.");
+          .loadsWithError(2, "Cannot infer actual type for type var `A`.");
     }
 
     @Test
@@ -262,7 +262,7 @@ public class InferenceTest extends TestingContext {
           result = myEqual(["def"], [0x01]);
           """;
       mod(code)
-          .loadsWithError(2, "Cannot infer actual type for type variable `A`.");
+          .loadsWithError(2, "Cannot infer actual type for type var `A`.");
     }
 
     @Test
@@ -280,7 +280,7 @@ public class InferenceTest extends TestingContext {
           result = myEqual(vector("aaa", "bbb"), tuple("aaa", "bbb"));
           """;
       mod(code)
-          .loadsWithError(10, "Cannot infer actual type for type variable `A`.");
+          .loadsWithError(10, "Cannot infer actual type for type var `A`.");
     }
   }
 
@@ -442,7 +442,7 @@ public class InferenceTest extends TestingContext {
     @Test
     @Disabled
     public void bug() {
-      // This test fails because call to func `f` will infer bounds for 2 variables:
+      // This test fails because call to func `f` will infer bounds for 2 vars:
       // A: (String, C)
       // B: ([C], Any)
       // Algorithm infers that B is upper than `[C]` so it takes `[C]` as call result, but

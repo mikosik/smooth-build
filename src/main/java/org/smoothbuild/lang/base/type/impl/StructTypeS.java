@@ -18,13 +18,13 @@ public final class StructTypeS extends TypeS {
   private final NList<ItemSignature> fields;
 
   public StructTypeS(String name, NList<ItemSignature> fields) {
-    super(name, calculateVariables(fields));
+    super(name, calculateVars(fields));
     this.fields = fields;
   }
 
-  private static ImmutableSet<VariableS> calculateVariables(NList<ItemSignature> fields) {
+  private static ImmutableSet<VarS> calculateVars(NList<ItemSignature> fields) {
     return fields.stream()
-        .map(f -> f.type().variables())
+        .map(f -> f.type().vars())
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))
         .collect(toImmutableSet());

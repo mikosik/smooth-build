@@ -1464,12 +1464,12 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   @Nested
-  class _variable {
+  class _var {
     @Test
     public void learning_test() throws Exception {
       Hash objHash =
           hash(
-              hash(variableHT("A")),
+              hash(varHT("A")),
               hash("aaa"));
       assertCall(() -> objectHDb().get(objHash))
           .throwsException(UnsupportedOperationException.class);

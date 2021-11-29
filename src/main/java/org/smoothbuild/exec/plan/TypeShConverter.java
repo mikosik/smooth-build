@@ -16,7 +16,7 @@ import org.smoothbuild.lang.base.type.impl.NothingTypeS;
 import org.smoothbuild.lang.base.type.impl.StringTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.base.type.impl.VariableS;
+import org.smoothbuild.lang.base.type.impl.VarS;
 
 public class TypeShConverter {
   private final ObjFactory objFactory;
@@ -35,7 +35,7 @@ public class TypeShConverter {
       case NothingTypeS n -> objFactory.nothingT();
       case StringTypeS s -> objFactory.stringT();
       case StructTypeS st -> objFactory.tupleType(map(st.fields(), isig -> visit(isig.type())));
-      case VariableS v ->  objFactory.variable(v.name());
+      case VarS v ->  objFactory.var(v.name());
       case ArrayTypeS a -> objFactory.arrayT(visit(a.elem()));
       case FuncTypeS f -> objFactory.defFuncT(visit(f.result()), map(f.params(), this::visit));
     };

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.util.collect.CountersMap;
@@ -13,17 +13,17 @@ public sealed class TypeN extends NamedN permits ArrayTypeN, FuncTypeN {
   }
 
   public boolean isPolytype() {
-    return isVariableName(name());
+    return isVarName(name());
   }
 
-  public ImmutableList<String> variablesUsedOnce() {
+  public ImmutableList<String> varsUsedOnce() {
     var counters = new CountersMap<String>();
-    countVariables(counters);
+    countVars(counters);
     return counters.keysWithCounter(1);
   }
 
-  public void countVariables(CountersMap<String> countersMap) {
-    if (isVariableName(name())) {
+  public void countVars(CountersMap<String> countersMap) {
+    if (isVarName(name())) {
       countersMap.increment(name());
     }
   }

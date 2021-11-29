@@ -12,12 +12,12 @@ public interface Type extends Named {
   @Override
   public String name();
 
-  public ImmutableSet<? extends Variable> variables();
+  public ImmutableSet<? extends Var> vars();
 
   /**
-   * @return true iff this type contains type variable(s).
+   * @return true iff this type contains type var(s).
    */
   public default boolean isPolytype() {
-    return !variables().isEmpty();
+    return !vars().isEmpty();
   }
 }

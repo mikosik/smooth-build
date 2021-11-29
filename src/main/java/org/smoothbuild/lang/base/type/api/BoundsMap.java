@@ -4,7 +4,7 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import com.google.common.collect.ImmutableMap;
 
-public record BoundsMap<T extends Type>(ImmutableMap<Variable, Bounded<T>> map) {
+public record BoundsMap<T extends Type>(ImmutableMap<Var, Bounded<T>> map) {
   private static final BoundsMap<?> EMPTY = new BoundsMap<>(ImmutableMap.of());
 
   public static <R extends Type> BoundsMap<R> boundsMap() {
@@ -12,7 +12,7 @@ public record BoundsMap<T extends Type>(ImmutableMap<Variable, Bounded<T>> map) 
   }
 
   public static <R extends Type> BoundsMap<R> boundsMap(Bounded<R> bounded) {
-    return new BoundsMap<>(ImmutableMap.of(bounded.variable(), bounded));
+    return new BoundsMap<>(ImmutableMap.of(bounded.var(), bounded));
   }
 
   @Override

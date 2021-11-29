@@ -117,14 +117,14 @@ public class DeclarationTest extends TestingContext {
           }
 
           @ParameterizedTest
-          @ArgumentsSource(TestedSingleVariablePolytypes.class)
-          public void cannot_be_single_variable_polytype(TestedType testedType) {
+          @ArgumentsSource(TestedSingleVarPolytypes.class)
+          public void cannot_be_single_var_polytype(TestedType testedType) {
             TestingModLoader module = mod(unlines(
                 testedType.typeDeclarationsAsString(),
                 "MyStruct {",
                 "  " + testedType.name() + " field,",
                 "}"));
-            module.loadsWithError(3, "Type variable(s) `A` are used once in declaration of `field`. " +
+            module.loadsWithError(3, "Type var(s) `A` are used once in declaration of `field`. " +
                 "This means each one can be replaced with `Any`.");
           }
 
@@ -301,14 +301,14 @@ public class DeclarationTest extends TestingContext {
         }
 
         @ParameterizedTest
-        @ArgumentsSource(TestedSingleVariablePolytypes.class)
-        public void cannot_be_single_variable_polytype(TestedType type) {
+        @ArgumentsSource(TestedSingleVarPolytypes.class)
+        public void cannot_be_single_var_polytype(TestedType type) {
           mod(unlines(
               "@Native(\"Impl.met\")",
               type.name() + " myFunc(" + type.name() + " param);",
               type.name() + " myValue = myFunc(\"abc\");",
               type.typeDeclarationsAsString()))
-              .loadsWithError(3, "Type variable(s) `A` are used once in declaration of `myValue`." +
+              .loadsWithError(3, "Type var(s) `A` are used once in declaration of `myValue`." +
                   " This means each one can be replaced with `Any`.");
         }
 
@@ -417,21 +417,21 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Test
-      public void result_cannot_have_type_variable_that_is_not_present_elsewhere() {
+      public void result_cannot_have_type_var_that_is_not_present_elsewhere() {
         mod("""
           @Native("Impl.met")
           A myFunc(String param);
           """)
-            .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myFunc`."
+            .loadsWithError(2, "Type var(s) `A` are used once in declaration of `myFunc`."
                 + " This means each one can be replaced with `Any`.");
       }
 
       @Test
-      public void result_cannot_have_arrayed_type_variable_that_is_not_present_elsewhere() {
+      public void result_cannot_have_arrayed_type_var_that_is_not_present_elsewhere() {
         mod("""
           [A] myFunc(String param) = [];
           """)
-            .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myFunc`."
+            .loadsWithError(1, "Type var(s) `A` are used once in declaration of `myFunc`."
                 + " This means each one can be replaced with `Any`.");
 
       }
@@ -469,13 +469,13 @@ public class DeclarationTest extends TestingContext {
           }
 
           @ParameterizedTest
-          @ArgumentsSource(TestedSingleVariablePolytypes.class)
-          public void cannot_be_single_variable_polytype(TestedType type) {
+          @ArgumentsSource(TestedSingleVarPolytypes.class)
+          public void cannot_be_single_var_polytype(TestedType type) {
             mod(unlines(
                 "@Native(\"impl\")",
                 type.name() + " myFunc();",
                 type.typeDeclarationsAsString()))
-                .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myFunc`."
+                .loadsWithError(2, "Type var(s) `A` are used once in declaration of `myFunc`."
                     + " This means each one can be replaced with `Any`.");
           }
 
@@ -502,8 +502,8 @@ public class DeclarationTest extends TestingContext {
           }
 
           @ParameterizedTest
-          @ArgumentsSource(TestedSingleVariablePolytypes.class)
-          public void can_be_single_variable_polytype_when_param_type_has_such_variable(TestedType type) {
+          @ArgumentsSource(TestedSingleVarPolytypes.class)
+          public void can_be_single_var_polytype_when_param_type_has_such_var(TestedType type) {
             mod(unlines(
                 "@Native(\"Impl.met\")",
                 type.name() + " myFunc(" + type.name() + " param);",
@@ -582,19 +582,19 @@ public class DeclarationTest extends TestingContext {
           }
 
           @ParameterizedTest
-          @ArgumentsSource(TestedSingleVariablePolytypes.class)
-          public void cannot_be_single_variable_polytype(TestedType type) {
+          @ArgumentsSource(TestedSingleVarPolytypes.class)
+          public void cannot_be_single_var_polytype(TestedType type) {
             mod(unlines(
                 "@Native(\"Impl.met\")",
                 "String myFunc(" + type.name() + " param);",
                 type.typeDeclarationsAsString()))
-                .loadsWithError(2, "Type variable(s) `A` are used once in declaration of"
+                .loadsWithError(2, "Type var(s) `A` are used once in declaration of"
                     + " `myFunc`. This means each one can be replaced with `Any`.");
           }
 
           @ParameterizedTest
-          @ArgumentsSource(TestedSingleVariablePolytypes.class)
-          public void can_be_single_variable_polytype_param_when_some_other_param_has_such_type(
+          @ArgumentsSource(TestedSingleVarPolytypes.class)
+          public void can_be_single_var_polytype_param_when_some_other_param_has_such_type(
               TestedType type) {
             mod(unlines(
                 "@Native(\"Impl.met\")",
@@ -1378,7 +1378,7 @@ public class DeclarationTest extends TestingContext {
     }
   }
 
-  private static class TestedSingleVariablePolytypes implements ArgumentsProvider {
+  private static class TestedSingleVarPolytypes implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
       return TESTED_SINGLE_VARIABLE_POLYTYPES.stream()

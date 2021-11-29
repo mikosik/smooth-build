@@ -17,7 +17,7 @@ public final class MapFuncS extends FuncS {
   public static final String MAP_FUNCTION_NAME = "map";
 
   public MapFuncS(ModPath modPath, TypeFactoryS factory) {
-    this(modPath, factory.variable("E"), factory.variable("R"), factory);
+    this(modPath, factory.var("E"), factory.var("R"), factory);
   }
 
   public MapFuncS(

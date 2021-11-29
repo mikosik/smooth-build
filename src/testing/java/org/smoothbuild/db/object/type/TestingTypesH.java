@@ -31,7 +31,7 @@ public class TestingTypesH {
   public static final TypeH MAP_FUNC = TYPEH_DB.mapFunc();
   public static final TypeH NOTHING = TYPEH_DB.nothing();
   public static final TypeH STRING = TYPEH_DB.string();
-  public static final TypeH VARIABLE = TYPEH_DB.variable("A");
+  public static final TypeH VARIABLE = TYPEH_DB.var("A");
 
   public static final TupleTypeH PERSON = CONTEXT.personHT();
   public static final TupleTypeH FILE = CONTEXT.fileHT();
@@ -101,7 +101,7 @@ public class TestingTypesH {
       "equals", "abstFunc", "abstFunc", "get", "getClass", "hashCode", "ifFunc", "int_",
       "lower", "mapFunc", "natFunc", "nothing", "notify", "notifyAll", "oneSideBound",
       "oneSideBound", "order", "ref", "select", "string", "toString", "tuple", "unbounded", "upper",
-      "variable", "wait", "wait", "wait"
+      "var", "wait", "wait", "wait"
       );
 
   private static final ImmutableList<String> TYPEH_DB_ACTUAL_METHOD_NAMES =
@@ -128,8 +128,8 @@ public class TestingTypesH {
         TYPEH_DB.tuple(list(BLOB)),
         TYPEH_DB.tuple(list(BLOB, BLOB)),
         TYPEH_DB.tuple(list(STRING)),
-        TYPEH_DB.variable("A"),
-        TYPEH_DB.variable("B")
+        TYPEH_DB.var("A"),
+        TYPEH_DB.var("B")
     );
     var arrayTypes = map(baseTypes, TYPEH_DB::array);
     ImmutableList<SpecH> valueTypes = concat(baseTypes, arrayTypes);

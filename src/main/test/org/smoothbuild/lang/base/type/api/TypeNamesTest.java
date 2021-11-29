@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.base.type.TestingTypesS.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
-import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
+import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
@@ -14,46 +14,46 @@ import org.junit.jupiter.api.Test;
 
 public class TypeNamesTest {
   @Nested
-  class _variable_name {
+  class _var_name {
     @Test
-    public void empty_string_is_not_type_variable_name() {
-      assertThat(isVariableName(""))
+    public void empty_string_is_not_type_var_name() {
+      assertThat(isVarName(""))
           .isFalse();
     }
 
     @Test
-    public void lowercase_a_character_is_not_type_variable_name() {
-      assertThat(isVariableName("a"))
+    public void lowercase_a_character_is_not_type_var_name() {
+      assertThat(isVarName("a"))
           .isFalse();
     }
 
     @Test
-    public void lowercase_b_character_is_not_type_variable_name() {
-      assertThat(isVariableName("b"))
+    public void lowercase_b_character_is_not_type_var_name() {
+      assertThat(isVarName("b"))
           .isFalse();
     }
 
     @Test
-    public void uppercase_a_character_is_type_variable_name() {
-      assertThat(isVariableName("A"))
+    public void uppercase_a_character_is_type_var_name() {
+      assertThat(isVarName("A"))
           .isTrue();
     }
 
     @Test
-    public void uppercase_b_character_is_type_variable_name() {
-      assertThat(isVariableName("B"))
+    public void uppercase_b_character_is_type_var_name() {
+      assertThat(isVarName("B"))
           .isTrue();
     }
 
     @Test
-    public void longer_string_starting_with_lowercase_is_not_type_variable_name() {
-      assertThat(isVariableName("alphabet"))
+    public void longer_string_starting_with_lowercase_is_not_type_var_name() {
+      assertThat(isVarName("alphabet"))
           .isFalse();
     }
 
     @Test
-    public void longer_string_starting_with_uppercase_is_not_type_variable_name() {
-      assertThat(isVariableName("Alphabet"))
+    public void longer_string_starting_with_uppercase_is_not_type_var_name() {
+      assertThat(isVarName("Alphabet"))
           .isFalse();
     }
   }

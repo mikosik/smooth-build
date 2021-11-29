@@ -22,14 +22,14 @@ public final class FuncTypeN extends TypeN {
   }
 
   @Override
-  public void countVariables(CountersMap<String> countersMap) {
-    countFuncVariables(countersMap, resultType, paramTypes);
+  public void countVars(CountersMap<String> countersMap) {
+    countFuncVars(countersMap, resultType, paramTypes);
   }
 
-  public static void countFuncVariables(CountersMap<String> countersMap, TypeN resultType,
+  public static void countFuncVars(CountersMap<String> countersMap, TypeN resultType,
       ImmutableList<TypeN> paramTypes) {
-    resultType.countVariables(countersMap);
-    paramTypes.forEach(p -> p.countVariables(countersMap));
+    resultType.countVars(countersMap);
+    paramTypes.forEach(p -> p.countVars(countersMap));
   }
 
   public TypeN resultType() {

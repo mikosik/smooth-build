@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.lang.base.type.api.AbstractType;
-import org.smoothbuild.lang.base.type.api.Variable;
+import org.smoothbuild.lang.base.type.api.Var;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -22,8 +22,8 @@ public abstract class SpecH extends AbstractType {
   }
 
   protected SpecH(String name, Hash hash, SpecKindH kind,
-      ImmutableSet<? extends Variable> variables) {
-    super(name, variables);
+      ImmutableSet<? extends Var> vars) {
+    super(name, vars);
     this.hash = hash;
     this.kind = kind;
   }
