@@ -95,9 +95,9 @@ public class JobCreator {
         .build();
   }
 
-  private ImmutableList<Job> eagerJobsFor(IndexedScope<Job> scope, BoundsMap<TypeH> variables,
-      ImmutableList<? extends ObjectH> objs) {
-    return map(objs, e -> eagerJobFor(scope, variables, e));
+  private ImmutableList<Job> eagerJobsFor(
+      IndexedScope<Job> scope, BoundsMap<TypeH> vars, ImmutableList<ObjectH> objs) {
+    return map(objs, e -> eagerJobFor(scope, vars, e));
   }
 
   public Job jobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjectH expr,
@@ -113,11 +113,11 @@ public class JobCreator {
     return handlerFor(expr).lazyJob().apply(scope, vars, expr);
   }
 
-  public <T> Handler<T> handlerFor(ObjectH expr) {
+  public <T> Handler<T> handlerFor(ObjectH obj) {
     @SuppressWarnings("unchecked")
-    Handler<T> result = (Handler<T>) handler.get(expr.getClass());
+    Handler<T> result = (Handler<T>) handler.get(obj.getClass());
     if (result == null) {
-      System.out.println("expression.getClass() = " + expr.getClass());
+      System.out.println("expression.getClass() = " + obj.getClass());
     }
     return result;
   }
@@ -159,8 +159,8 @@ public class JobCreator {
     return callEagerJob(scope, func, args, loc, variables);
   }
 
-  private Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args,
-      Loc loc, BoundsMap<TypeH> vars) {
+  private Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Loc loc,
+      BoundsMap<TypeH> vars) {
     var funcType = (FuncTypeH) func.type();
     var actualResultType = typing.mapVariables(funcType.result(), vars, factory.lower());
     return new CallJob(actualResultType, func, args, loc, vars, scope, JobCreator.this);
@@ -197,44 +197,43 @@ public class JobCreator {
 
   // Combine
 
-  private Job combineLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, CombineH combineH) {
-    var nal = nals.get(combineH);
+  private Job combineLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, CombineH combine) {
+    var nal = nals.get(combine);
     var loc = nal.loc();
-    return new LazyJob(combineH.type(), loc,
-        () -> combineEager(scope, vars, combineH, nal));
+    return new LazyJob(combine.type(), loc,
+        () -> combineEager(scope, vars, combine, nal));
   }
 
-  private Job combineEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
-      CombineH combineH) {
-    var nal = nals.get(combineH);
-    return combineEager(scope, vars, combineH, nal);
+  private Job combineEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, CombineH combine) {
+    var nal = nals.get(combine);
+    return combineEager(scope, vars, combine, nal);
   }
-  private Job combineEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
-      CombineH combineH, Nal nal) {
-    var type = combineH.type();
-    var argsJ = eagerJobsFor(scope, vars, combineH.items());
+  private Job combineEager(
+      IndexedScope<Job> scope, BoundsMap<TypeH> vars, CombineH combine, Nal nal) {
+    var type = combine.type();
+    var argsJ = eagerJobsFor(scope, vars, combine.items());
     var info = new TaskInfo(COMBINE, nal);
-    var algorithm = new CombineAlgorithm(combineH.type());
+    var algorithm = new CombineAlgorithm(combine.type());
     return new Task(type, argsJ, info, algorithm);
   }
 
   // Order
 
-  private Job orderLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH orderH) {
-    var nal = nals.get(orderH);
-    return new LazyJob(orderH.type(), nal.loc(),
-        () -> orderEager(scope, vars, orderH));
+  private Job orderLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH order) {
+    var nal = nals.get(order);
+    return new LazyJob(order.type(), nal.loc(),
+        () -> orderEager(scope, vars, order));
   }
 
-  private Job orderEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH orderH) {
-    var nal = nals.get(orderH);
-    return orderEager(scope, vars, orderH, nal);
+  private Job orderEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH order) {
+    var nal = nals.get(order);
+    return orderEager(scope, vars, order, nal);
   }
 
-  private Task orderEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH orderH, Nal nal) {
-    var type = orderH.type();
+  private Task orderEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH order, Nal nal) {
+    var type = order.type();
     var actualType = (ArrayTypeH) typing.mapVariables(type, vars, factory.lower());
-    var elemsJ = map(orderH.elems(), e -> eagerJobFor(scope, vars, e));
+    var elemsJ = map(order.elems(), e -> eagerJobFor(scope, vars, e));
     var info = new TaskInfo(LITERAL, nal);
     return orderEager(actualType, elemsJ, info);
   }
@@ -275,8 +274,8 @@ public class JobCreator {
   // helper methods
 
   public Job evaluateFuncEagerJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
-      TypeH actualResType, FuncH funcH, ImmutableList<Job> args, Loc loc) {
-    return switch (funcH) {
+      TypeH actualResType, FuncH func, ImmutableList<Job> args, Loc loc) {
+    return switch (func) {
       case DefFuncH def -> defFuncEager(def, args, scope, vars, loc);
       case NatFuncH nat -> natFuncEager(nat, actualResType, args, loc);
       case IfFuncH iff -> ifFuncEager(actualResType, args, loc);
@@ -292,10 +291,9 @@ public class JobCreator {
     return new VirtualJob(job, new TaskInfo(CALL, name, loc));
   }
 
-  private Job natFuncEager(NatFuncH natFuncH, TypeH actualResType, ImmutableList<Job> args,
-      Loc loc) {
-    var name = nals.get(natFuncH).name();
-    var algorithm = new InvokeAlgorithm(actualResType, name, natFuncH, methodLoader);
+  private Job natFuncEager(NatFuncH func, TypeH actualResType, ImmutableList<Job> args, Loc loc) {
+    var name = nals.get(func).name();
+    var algorithm = new InvokeAlgorithm(actualResType, name, func, methodLoader);
     var info = new TaskInfo(CALL, name, loc);
     return new Task(actualResType, args, info, algorithm);
   }
