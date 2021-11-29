@@ -9,7 +9,7 @@ import static org.smoothbuild.db.object.type.base.SpecKindH.NAT_FUNC;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.AbstractFuncTypeH;
+import org.smoothbuild.db.object.type.val.AbstFuncTypeH;
 import org.smoothbuild.db.object.type.val.DefFuncTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
 import org.smoothbuild.db.object.type.val.IfFuncTypeH;
@@ -18,11 +18,11 @@ import org.smoothbuild.db.object.type.val.NatFuncTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
 abstract class FuncKind<T extends FuncTypeH> {
-  public static final FuncKind<AbstractFuncTypeH> ABSTRACT_KIND =
+  public static final FuncKind<AbstFuncTypeH> ABSTRACT_KIND =
       new FuncKind<>(ABST_FUNC) {
         @Override
-        public AbstractFuncTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
-          return new AbstractFuncTypeH(hash, result, params);
+        public AbstFuncTypeH newInstance(Hash hash, TypeH result, TupleTypeH params) {
+          return new AbstFuncTypeH(hash, result, params);
         }
       };
   public static final FuncKind<NatFuncTypeH> NATIVE_KIND =

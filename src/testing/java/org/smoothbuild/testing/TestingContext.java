@@ -293,12 +293,12 @@ public class TestingContext {
     return tupleHT(list(blobHT(), stringHT()));
   }
 
-  public FuncTypeH funcHT() {
-    return funcHT(intHT(), list(blobHT(), stringHT()));
+  public FuncTypeH abstFuncHT() {
+    return abstFuncHT(intHT(), list(blobHT(), stringHT()));
   }
 
-  public FuncTypeH funcHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb().func(result, params);
+  public FuncTypeH abstFuncHT(TypeH result, ImmutableList<TypeH> params) {
+    return typeHDb().abstFunc(result, params);
   }
 
   public IfFuncTypeH ifFuncHT() {
@@ -589,7 +589,7 @@ public class TestingContext {
   }
 
   public FuncTypeS funcST(TypeS resultType, ImmutableList<TypeS> types) {
-    return typeFactoryS().func(resultType, types);
+    return typeFactoryS().abstFunc(resultType, types);
   }
 
   public IntTypeS intST() {

@@ -296,7 +296,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertThat(specHash)
-          .isEqualTo(funcHT(intHT(), paramTypes).hash());
+          .isEqualTo(abstFuncHT(intHT(), paramTypes).hash());
     }
 
     @Test

@@ -24,7 +24,7 @@ public final class MapFuncS extends FuncS {
       ModulePath modulePath, TypeS inputElemType, TypeS resultElemType, TypeFactoryS factory) {
     this(factory.array(resultElemType),
         factory.array(inputElemType),
-        factory.func(resultElemType, list(inputElemType)),
+        factory.abstFunc(resultElemType, list(inputElemType)),
         modulePath,
         factory);
   }
@@ -38,7 +38,7 @@ public final class MapFuncS extends FuncS {
   private MapFuncS(ArrayTypeS resultType, NList<Item> params, ModulePath modulePath,
       TypeFactoryS factory) {
     super(
-        factory.func(resultType, map(params, Defined::type)),
+        factory.abstFunc(resultType, map(params, Defined::type)),
         modulePath,
         MAP_FUNCTION_NAME,
         params,

@@ -219,7 +219,7 @@ public class Typing<T extends Type> {
           } else if (isFuncTypeEqual(funcB, resultM, paramsM)){
             return typeB;
           } else {
-            return (T) factory.func(resultM, paramsM);
+            return (T) factory.abstFunc(resultM, paramsM);
           }
         }
       }
@@ -250,7 +250,7 @@ public class Typing<T extends Type> {
     if (isFuncTypeEqual(type, resultType, params)) {
       return type;
     }
-    return factory.func(resultType, params);
+    return factory.abstFunc(resultType, params);
   }
 
   private boolean isFuncTypeEqual(

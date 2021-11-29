@@ -88,7 +88,7 @@ public class TestingTypesS {
   }
 
   public static FuncTypeS f(TypeS resultType) {
-    return FACTORY.func(resultType, list());
+    return FACTORY.abstFunc(resultType, list());
   }
 
   public static FuncTypeS f(TypeS resultType, TypeS... params) {
@@ -96,7 +96,7 @@ public class TestingTypesS {
   }
 
   public static FuncTypeS f(TypeS resultType, ImmutableList<TypeS> params) {
-    return FACTORY.func(resultType, params);
+    return FACTORY.abstFunc(resultType, params);
   }
 
   public static VariableS variable(String a) {

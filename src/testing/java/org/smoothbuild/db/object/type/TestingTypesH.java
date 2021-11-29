@@ -26,9 +26,9 @@ public class TestingTypesH {
   public static final TypeH BLOB = TYPEH_DB.blob();
   public static final TypeH BOOL = TYPEH_DB.bool();
   public static final TypeH INT = TYPEH_DB.int_();
-  public static final TypeH IF_FUNCTION = TYPEH_DB.ifFunc();
-  public static final TypeH FUNCTION = TYPEH_DB.func(BLOB, list(BOOL));
-  public static final TypeH MAP_FUNCTION = TYPEH_DB.mapFunc();
+  public static final TypeH IF_FUNC = TYPEH_DB.ifFunc();
+  public static final TypeH ABST_FUNC = TYPEH_DB.abstFunc(BLOB, list(BOOL));
+  public static final TypeH MAP_FUNC = TYPEH_DB.mapFunc();
   public static final TypeH NOTHING = TYPEH_DB.nothing();
   public static final TypeH STRING = TYPEH_DB.string();
   public static final TypeH VARIABLE = TYPEH_DB.variable("A");
@@ -47,7 +47,7 @@ public class TestingTypesH {
   public static final ArrayTypeH ARRAY_ANY = array(ANY);
   public static final ArrayTypeH ARRAY_BLOB = array(BLOB);
   public static final ArrayTypeH ARRAY_BOOL = array(BOOL);
-  public static final ArrayTypeH ARRAY_FUNCTION = array(FUNCTION);
+  public static final ArrayTypeH ARRAY_FUNCTION = array(ABST_FUNC);
   public static final ArrayTypeH ARRAY_INT = array(INT);
   public static final ArrayTypeH ARRAY_NOTHING = array(NOTHING);
   public static final ArrayTypeH ARRAY_STR = array(STRING);
@@ -68,8 +68,7 @@ public class TestingTypesH {
 
   public static final ImmutableList<SpecH> BASE_TYPESV_TO_TEST = list(
       BLOB,
-      BOOL,
-      FUNCTION,
+      BOOL, ABST_FUNC,
       INT,
       NOTHING,
       STRING,
@@ -99,7 +98,7 @@ public class TestingTypesH {
 
   private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
       "any", "array", "array", "blob", "bool", "call", "combine", "defFunc",
-      "equals", "func", "func", "get", "getClass", "hashCode", "ifFunc", "int_",
+      "equals", "abstFunc", "abstFunc", "get", "getClass", "hashCode", "ifFunc", "int_",
       "lower", "mapFunc", "natFunc", "nothing", "notify", "notifyAll", "oneSideBound",
       "oneSideBound", "order", "ref", "select", "string", "toString", "tuple", "unbounded", "upper",
       "variable", "wait", "wait", "wait"
@@ -118,13 +117,11 @@ public class TestingTypesH {
     var baseTypes = list(
         BLOB,
         BOOL,
-        TYPEH_DB.func(BLOB, list()),
-        TYPEH_DB.func(BLOB, list(BLOB)),
-        TYPEH_DB.func(BLOB, list(BLOB, BLOB)),
-        TYPEH_DB.func(STRING, list()),
-        IF_FUNCTION,
-        INT,
-        MAP_FUNCTION,
+        TYPEH_DB.abstFunc(BLOB, list()),
+        TYPEH_DB.abstFunc(BLOB, list(BLOB)),
+        TYPEH_DB.abstFunc(BLOB, list(BLOB, BLOB)),
+        TYPEH_DB.abstFunc(STRING, list()), IF_FUNC,
+        INT, MAP_FUNC,
         NOTHING,
         STRING,
         TYPEH_DB.tuple(list()),

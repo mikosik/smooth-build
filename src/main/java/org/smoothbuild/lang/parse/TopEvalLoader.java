@@ -79,7 +79,7 @@ public class TopEvalLoader {
     var resultType = realFuncN.resultType().get();
     var name = realFuncN.name();
     var loc = realFuncN.loc();
-    var type = factory.func(resultType, map(params, Defined::type));
+    var type = factory.abstFunc(resultType, map(params, Defined::type));
     if (realFuncN.ann().isPresent()) {
       return new NatFuncS(type,
           path, name, params, loadAnn(realFuncN.ann().get()), loc

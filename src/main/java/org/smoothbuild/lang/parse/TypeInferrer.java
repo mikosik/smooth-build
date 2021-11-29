@@ -75,7 +75,7 @@ public class TypeInferrer {
         var fields = Optionals.pullUp(map(struct.fields(), ItemN::itemSignature));
         struct.setType(fields.map(f -> factory.struct(struct.name(), nList(f))));
         struct.ctor().setType(
-            fields.map(s -> factory.func(struct.type().get(), map(s, ItemSignature::type))));
+            fields.map(s -> factory.abstFunc(struct.type().get(), map(s, ItemSignature::type))));
       }
 
       @Override
@@ -169,7 +169,7 @@ public class TypeInferrer {
       private Optional<TypeS> optionalFuncType(
           Optional<TypeS> result, Optional<ImmutableList<TypeS>> params) {
         if (result.isPresent() && params.isPresent()) {
-          return Optional.of(factory.func(result.get(), params.get()));
+          return Optional.of(factory.abstFunc(result.get(), params.get()));
         } else {
           return empty();
         }
