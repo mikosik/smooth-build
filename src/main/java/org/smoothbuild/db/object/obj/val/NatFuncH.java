@@ -19,17 +19,17 @@ public class NatFuncH extends FuncH {
   }
 
   public BlobH jarFile() {
-    return readSequenceElementObj(
+    return readSeqElemObj(
         DATA_PATH, dataHash(), JAR_FILE_INDEX, DATA_SEQ_SIZE, BlobH.class);
   }
 
   public StringH classBinaryName() {
-    return readSequenceElementObj(
+    return readSeqElemObj(
         DATA_PATH, dataHash(), CLASS_BINARY_NAME_INDEX, DATA_SEQ_SIZE, StringH.class);
   }
 
   public BoolH isPure() {
-    return readSequenceElementObj(
+    return readSeqElemObj(
         DATA_PATH, dataHash(), IS_PURE_INDEX, DATA_SEQ_SIZE, BoolH.class);
   }
 

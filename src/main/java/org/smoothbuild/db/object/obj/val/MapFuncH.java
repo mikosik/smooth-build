@@ -28,17 +28,17 @@ public class MapFuncH extends FuncH {
   public static record MapData(NatFuncH natFuncH, BoolH isPure, IntH argCount) {}
 
   private NatFuncH readNatFunc() {
-    return readSequenceElementObj(
+    return readSeqElemObj(
         DATA_PATH, dataHash(), NAT_FUN_INDEX, DATA_SEQ_SIZE, NatFuncH.class);
   }
 
   private BoolH readIsPure() {
-    return readSequenceElementObj(
+    return readSeqElemObj(
         DATA_PATH, dataHash(), IS_PURE_INDEX, DATA_SEQ_SIZE, BoolH.class);
   }
 
   private IntH readArgCount() {
-    return readSequenceElementObj(
+    return readSeqElemObj(
         DATA_PATH, dataHash(), ARG_COUNT_INDEX, DATA_SEQ_SIZE, IntH.class);
   }
 

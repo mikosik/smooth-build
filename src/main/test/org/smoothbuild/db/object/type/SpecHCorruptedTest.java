@@ -28,7 +28,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
-import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
+import org.smoothbuild.db.hashed.exc.DecodeHashSeqException;
 import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
@@ -43,7 +43,7 @@ import org.smoothbuild.db.object.type.exc.DecodeTypeNodeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
 import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
-import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
+import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqException;
 import org.smoothbuild.db.object.type.expr.RefTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
@@ -311,16 +311,16 @@ public class SpecHCorruptedTest extends TestingContext {
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_sequence(ABST_FUNC);
+      test_data_hash_pointing_nowhere_instead_of_being_seq(ABST_FUNC);
     }
 
     @Test
-    public void with_data_not_being_sequence_of_hashes() throws Exception {
-      Hash notSequence = hash("abc");
+    public void with_data_not_being_seq_of_hashes() throws Exception {
+      Hash notHashOfSeq = hash("abc");
       Hash hash =
           hash(
               hash(ABST_FUNC.marker()),
-              notSequence
+              notHashOfSeq
           );
       assertThatGet(hash)
           .throwsException(new DecodeTypeNodeException(hash, ABST_FUNC, DATA_PATH));
@@ -338,7 +338,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeSequenceException(hash, ABST_FUNC, DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedTypeSeqException(hash, ABST_FUNC, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -350,22 +350,22 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeSequenceException(hash, ABST_FUNC, DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedTypeSeqException(hash, ABST_FUNC, DATA_PATH, 2, 1));
     }
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_data_sequence_size_different_than_multiple_of_hash_size(
+    public void with_data_seq_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
-      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
       Hash typeHash = hash(
           hash(ABST_FUNC.marker()),
-          notHashOfSequence
+          notHashOfSeq
       );
       assertCall(() -> ((FuncTypeH) typeHDb().get(typeHash)).result())
           .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, DATA_PATH))
-          .withCause(new DecodeHashSequenceException(
-              notHashOfSequence, byteCount % Hash.lengthInBytes()));
+          .withCause(new DecodeHashSeqException(
+              notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
@@ -598,7 +598,7 @@ public class SpecHCorruptedTest extends TestingContext {
         .withCause(new DecodeTypeException(dataHash));
   }
 
-  private void test_data_hash_pointing_nowhere_instead_of_being_sequence(SpecKindH kind)
+  private void test_data_hash_pointing_nowhere_instead_of_being_seq(SpecKindH kind)
       throws Exception {
     Hash dataHash = Hash.of(33);
     Hash typeHash = hash(
@@ -683,7 +683,7 @@ public class SpecHCorruptedTest extends TestingContext {
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
-    return hashedDb().writeSequence(hashes);
+    return hashedDb().writeSeq(hashes);
   }
 
   @Nested
@@ -759,16 +759,16 @@ public class SpecHCorruptedTest extends TestingContext {
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_sequence(TUPLE);
+      test_data_hash_pointing_nowhere_instead_of_being_seq(TUPLE);
     }
 
     @Test
-    public void with_elems_not_being_sequence_of_hashes() throws Exception {
-      Hash notSequence = hash("abc");
+    public void with_elems_not_being_seq_of_hashes() throws Exception {
+      Hash notHashOfSeq = hash("abc");
       Hash hash =
           hash(
               hash(TUPLE.marker()),
-              notSequence
+              notHashOfSeq
           );
       assertThatGet(hash)
           .throwsException(new DecodeTypeNodeException(hash, TUPLE, DATA_PATH));
@@ -790,7 +790,7 @@ public class SpecHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_elems_being_sequence_of_expr_type() throws Exception {
+    public void with_elems_being_seq_of_expr_type() throws Exception {
       Hash hash =
           hash(
               hash(TUPLE.marker()),

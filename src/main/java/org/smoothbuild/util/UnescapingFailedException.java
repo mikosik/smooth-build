@@ -6,7 +6,7 @@ public class UnescapingFailedException extends RuntimeException {
         "Missing escape code after backslash \\ at char index = " + charIndex + ".");
   }
 
-  public static UnescapingFailedException illegalEscapeSequenceException(int charIndex) {
+  public static UnescapingFailedException illegalEscapeSeqException(int charIndex) {
     return new UnescapingFailedException("Illegal escape sequence at char index = " + charIndex
         + ". Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
   }

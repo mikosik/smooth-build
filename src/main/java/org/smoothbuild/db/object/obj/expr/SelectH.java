@@ -20,7 +20,7 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
  * This class is immutable.
  */
 public class SelectH extends ExprH {
-  private static final int DATA_SEQUENCE_SIZE = 2;
+  private static final int DATA_SEQ_SIZE = 2;
   private static final int TUPLE_INDEX = 0;
   private static final int INDEX_INDEX = 1;
 
@@ -57,13 +57,13 @@ public class SelectH extends ExprH {
   public static record SelectData(ObjectH tuple, IntH index) {}
 
   private ObjectH readTuple() {
-    return readSequenceElementObj(
-        DATA_PATH, dataHash(), TUPLE_INDEX, DATA_SEQUENCE_SIZE, ObjectH.class);
+    return readSeqElemObj(
+        DATA_PATH, dataHash(), TUPLE_INDEX, DATA_SEQ_SIZE, ObjectH.class);
   }
 
   private IntH readIndex() {
-    return readSequenceElementObj(
-        DATA_PATH, dataHash(), INDEX_INDEX, DATA_SEQUENCE_SIZE, IntH.class);
+    return readSeqElemObj(
+        DATA_PATH, dataHash(), INDEX_INDEX, DATA_SEQ_SIZE, IntH.class);
   }
 
   @Override

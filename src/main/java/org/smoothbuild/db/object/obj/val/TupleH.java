@@ -46,7 +46,7 @@ public class TupleH extends ValueH {
 
   private ImmutableList<ValueH> instantiateItems() {
     var itemTypes = spec().items();
-    var objs = readSequenceObjs(DATA_PATH, dataHash(), itemTypes.size(), ValueH.class);
+    var objs = readSeqObjs(DATA_PATH, dataHash(), itemTypes.size(), ValueH.class);
     for (int i = 0; i < itemTypes.size(); i++) {
       ValueH obj = objs.get(i);
       SpecH expectedType = itemTypes.get(i);
@@ -61,6 +61,6 @@ public class TupleH extends ValueH {
 
   @Override
   public String valToString() {
-    return "{" + sequenceToString(items()) + '}';
+    return "{" + seqToString(items()) + '}';
   }
 }

@@ -35,7 +35,7 @@ public class OrderH extends ExprH {
   }
 
   public ImmutableList<ObjectH> elems() {
-    var elems = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
+    var elems = readSeqObjs(DATA_PATH, dataHash(), ObjectH.class);
     var expectedElementType = spec().evalType().elem();
     for (int i = 0; i < elems.size(); i++) {
       TypeH actualType = elems.get(i).type();

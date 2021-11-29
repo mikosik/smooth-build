@@ -1162,7 +1162,7 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void has_illegal_escape_sequence() {
+          public void has_illegal_escape_seq() {
             module("""
              result = "\\A";
              """)
@@ -1171,7 +1171,7 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void has_escape_sequence_without_code() {
+          public void has_escape_seq_without_code() {
             module("""
              result = "\\";
              """)
@@ -1284,7 +1284,7 @@ public class DeclarationTest extends TestingContext {
         @Nested
         class _causes_error_when {
           @Test
-          public void path_has_illegal_escape_sequence() {
+          public void path_has_illegal_escape_seq() {
             var module = """
                 @Native("\\A")
                 String myFunc();
@@ -1296,7 +1296,7 @@ public class DeclarationTest extends TestingContext {
           }
 
           @Test
-          public void path_has_escape_sequence_without_code() {
+          public void path_has_escape_seq_without_code() {
             var module = """
                 @Native("\\")
                 String myFunc();""";

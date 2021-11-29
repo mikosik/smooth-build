@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.Strings.unescaped;
 import static org.smoothbuild.util.Strings.unlines;
-import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSequenceException;
+import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSeqException;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -129,7 +129,7 @@ public class StringsTest {
     @Test
     public void exception_points_to_illegal_escape_code() {
       assertCall(() -> unescaped("abc\\x"))
-          .throwsException(illegalEscapeSequenceException(4));
+          .throwsException(illegalEscapeSeqException(4));
     }
   }
 

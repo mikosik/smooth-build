@@ -44,7 +44,7 @@ import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
 import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
-import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
+import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
@@ -240,33 +240,33 @@ public class TypeHDb implements TypeFactoryH {
   }
 
   private SpecH read(Hash hash) {
-    List<Hash> rootSequence = readTypeRootSequence(hash);
-    SpecKindH kind = decodeTypeMarker(hash, rootSequence.get(0));
+    List<Hash> rootSeq = readTypeRootSeq(hash);
+    SpecKindH kind = decodeTypeMarker(hash, rootSeq.get(0));
     return switch (kind) {
       case ANY, BLOB, BOOL, INT, NOTHING, STRING -> {
-        assertTypeRootSequenceSize(hash, kind, rootSequence, 1);
+        assertTypeRootSeqSize(hash, kind, rootSeq, 1);
         throw new RuntimeException(
             "Internal error: Type with kind " + kind + " should be found in cache.");
       }
-      case ARRAY -> newArray(hash, readDataAsVal(hash, rootSequence, kind));
-      case CALL -> newCall(hash, readDataAsVal(hash, rootSequence, kind));
-      case CONSTRUCT -> newCombine(hash, readDataAsTuple(hash, rootSequence, kind));
+      case ARRAY -> newArray(hash, readDataAsVal(hash, rootSeq, kind));
+      case CALL -> newCall(hash, readDataAsVal(hash, rootSeq, kind));
+      case CONSTRUCT -> newCombine(hash, readDataAsTuple(hash, rootSeq, kind));
       case ABST_FUNC, DEF_FUNC, NAT_FUNC, IF_FUNC, MAP_FUNC ->
-          readFunc(hash, rootSequence, kind);
-      case ORDER -> newOrder(hash, readDataAsArray(hash, rootSequence, kind));
-      case REF -> newRef(hash, readDataAsVal(hash, rootSequence, kind));
-      case SELECT -> newSelect(hash, readDataAsVal(hash, rootSequence, kind));
-      case TUPLE -> readTuple(hash, rootSequence);
-      case VARIABLE -> readVariable(hash, rootSequence);
+          readFunc(hash, rootSeq, kind);
+      case ORDER -> newOrder(hash, readDataAsArray(hash, rootSeq, kind));
+      case REF -> newRef(hash, readDataAsVal(hash, rootSeq, kind));
+      case SELECT -> newSelect(hash, readDataAsVal(hash, rootSeq, kind));
+      case TUPLE -> readTuple(hash, rootSeq);
+      case VARIABLE -> readVariable(hash, rootSeq);
     };
   }
 
-  private List<Hash> readTypeRootSequence(Hash hash) {
+  private List<Hash> readTypeRootSeq(Hash hash) {
     List<Hash> hashes = wrapHashedDbExceptionAsDecodeTypeException(
-        hash, () -> hashedDb.readSequence(hash));
-    int sequenceSize = hashes.size();
-    if (sequenceSize != 1 && sequenceSize != 2) {
-      throw new DecodeTypeRootException(hash, sequenceSize);
+        hash, () -> hashedDb.readSeq(hash));
+    int seqSize = hashes.size();
+    if (seqSize != 1 && seqSize != 2) {
+      throw new DecodeTypeRootException(hash, seqSize);
     }
     return hashes;
   }
@@ -281,38 +281,38 @@ public class TypeHDb implements TypeFactoryH {
     return kind;
   }
 
-  private static void assertTypeRootSequenceSize(
+  private static void assertTypeRootSeqSize(
       Hash rootHash, SpecKindH kind, List<Hash> hashes, int expectedSize) {
     if (hashes.size() != expectedSize) {
       throw new DecodeTypeRootException(rootHash, kind, hashes.size(), expectedSize);
     }
   }
 
-  private TypeH readDataAsVal(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
-    return readDataAsClass(rootHash, rootSequence, kind, TypeH.class);
+  private TypeH readDataAsVal(Hash rootHash, List<Hash> rootSeq, SpecKindH kind) {
+    return readDataAsClass(rootHash, rootSeq, kind, TypeH.class);
   }
 
-  private ArrayTypeH readDataAsArray(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
-    return readDataAsClass(rootHash, rootSequence, kind, ArrayTypeH.class);
+  private ArrayTypeH readDataAsArray(Hash rootHash, List<Hash> rootSeq, SpecKindH kind) {
+    return readDataAsClass(rootHash, rootSeq, kind, ArrayTypeH.class);
   }
 
-  private TupleTypeH readDataAsTuple(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
-    return readDataAsClass(rootHash, rootSequence, kind, TupleTypeH.class);
+  private TupleTypeH readDataAsTuple(Hash rootHash, List<Hash> rootSeq, SpecKindH kind) {
+    return readDataAsClass(rootHash, rootSeq, kind, TupleTypeH.class);
   }
 
-  private <T extends SpecH> T readDataAsClass(Hash rootHash, List<Hash> rootSequence,
+  private <T extends SpecH> T readDataAsClass(Hash rootHash, List<Hash> rootSeq,
       SpecKindH kind, Class<T> expectedTypeClass) {
-    assertTypeRootSequenceSize(rootHash, kind, rootSequence, 2);
-    Hash hash = rootSequence.get(DATA_INDEX);
+    assertTypeRootSeqSize(rootHash, kind, rootSeq, 2);
+    Hash hash = rootSeq.get(DATA_INDEX);
     return readTupleItemType(kind, rootHash, hash, DATA_PATH, expectedTypeClass);
   }
 
-  private SpecH readFunc(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
-    assertTypeRootSequenceSize(rootHash, kind, rootSequence, 2);
-    Hash dataHash = rootSequence.get(DATA_INDEX);
-    List<Hash> data = readSequenceHashes(rootHash, dataHash, kind, DATA_PATH);
+  private SpecH readFunc(Hash rootHash, List<Hash> rootSeq, SpecKindH kind) {
+    assertTypeRootSeqSize(rootHash, kind, rootSeq, 2);
+    Hash dataHash = rootSeq.get(DATA_INDEX);
+    List<Hash> data = readSeqHashes(rootHash, dataHash, kind, DATA_PATH);
     if (data.size() != 2) {
-      throw new UnexpectedTypeSequenceException(rootHash, kind, DATA_PATH, 2, data.size());
+      throw new UnexpectedTypeSeqException(rootHash, kind, DATA_PATH, 2, data.size());
     }
     TypeH result = readTupleItemType(kind, rootHash, data.get(FUNCTION_RESULT_INDEX),
         FUNCTION_RESULT_PATH, TypeH.class);
@@ -321,25 +321,25 @@ public class TypeHDb implements TypeFactoryH {
     return newFunc(rootHash, FuncKind.from(kind), result, params);
   }
 
-  private TupleTypeH readTuple(Hash rootHash, List<Hash> rootSequence) {
-    assertTypeRootSequenceSize(rootHash, TUPLE, rootSequence, 2);
-    var items = readTupleItems(rootHash, rootSequence.get(DATA_INDEX));
+  private TupleTypeH readTuple(Hash rootHash, List<Hash> rootSeq) {
+    assertTypeRootSeqSize(rootHash, TUPLE, rootSeq, 2);
+    var items = readTupleItems(rootHash, rootSeq.get(DATA_INDEX));
     return newTuple(rootHash, items);
   }
 
   private ImmutableList<TypeH> readTupleItems(Hash rootHash, Hash hash) {
     var builder = ImmutableList.<TypeH>builder();
-    var itemTypeHashes = readSequenceHashes(rootHash, hash, TUPLE, DATA_PATH);
+    var itemTypeHashes = readSeqHashes(rootHash, hash, TUPLE, DATA_PATH);
     for (int i = 0; i < itemTypeHashes.size(); i++) {
       builder.add(readTupleItemType(rootHash, itemTypeHashes.get(i), DATA_PATH, i));
     }
     return builder.build();
   }
 
-  private VariableH readVariable(Hash rootHash, List<Hash> rootSequence) {
-    assertTypeRootSequenceSize(rootHash, VARIABLE, rootSequence, 2);
+  private VariableH readVariable(Hash rootHash, List<Hash> rootSeq) {
+    assertTypeRootSeqSize(rootHash, VARIABLE, rootSeq, 2);
     String name = wrapHashedDbExceptionAsDecodeTypeNodeException(
-        rootHash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSequence.get(1)));
+        rootHash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSeq.get(1)));
     if (!isVariableName(name)) {
       throw new DecodeVariableIllegalNameException(rootHash, name);
     }
@@ -473,12 +473,12 @@ public class TypeHDb implements TypeFactoryH {
 
   private Hash writeFuncRoot(FuncKind<?> kind, TypeH res, TupleTypeH params)
       throws HashedDbException {
-    var hash = hashedDb.writeSequence(res.hash(), params.hash());
+    var hash = hashedDb.writeSeq(res.hash(), params.hash());
     return writeNonBaseRoot(kind.kind(), hash);
   }
 
   private Hash writeTupleRoot(ImmutableList<TypeH> itemTypes) throws HashedDbException {
-    var itemsHash = hashedDb.writeSequence(Lists.map(itemTypes, SpecH::hash));
+    var itemsHash = hashedDb.writeSeq(Lists.map(itemTypes, SpecH::hash));
     return writeNonBaseRoot(TUPLE, itemsHash);
   }
 
@@ -494,18 +494,18 @@ public class TypeHDb implements TypeFactoryH {
   }
 
   private Hash writeNonBaseRoot(SpecKindH kind, Hash dataHash) throws HashedDbException {
-    return hashedDb.writeSequence(hashedDb.writeByte(kind.marker()), dataHash);
+    return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()), dataHash);
   }
 
   private Hash writeBaseRoot(SpecKindH kind) throws HashedDbException {
-    return hashedDb.writeSequence(hashedDb.writeByte(kind.marker()));
+    return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()));
   }
 
   // Helper methods for reading
 
-  private ImmutableList<Hash> readSequenceHashes(
-      Hash rootHash, Hash sequenceHash, SpecKindH kind, String path) {
+  private ImmutableList<Hash> readSeqHashes(
+      Hash rootHash, Hash seqHash, SpecKindH kind, String path) {
     return wrapHashedDbExceptionAsDecodeTypeNodeException(
-        rootHash, kind, path, () -> hashedDb.readSequence(sequenceHash));
+        rootHash, kind, path, () -> hashedDb.readSeq(seqHash));
   }
 }

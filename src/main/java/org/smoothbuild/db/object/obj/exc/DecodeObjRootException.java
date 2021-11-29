@@ -7,7 +7,7 @@ public class DecodeObjRootException extends DecodeObjException {
     return new DecodeObjRootException(hash, "Cannot decode root.", cause);
   }
 
-  public static DecodeObjRootException wrongSizeOfRootSequenceException(Hash hash, int actualSize) {
+  public static DecodeObjRootException wrongSizeOfRootSeqException(Hash hash, int actualSize) {
     return new DecodeObjRootException(hash, "Its root points to hash sequence with " + actualSize
         + " elems when it should point to sequence with 2 elems.");
   }

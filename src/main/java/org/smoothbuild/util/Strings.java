@@ -1,6 +1,6 @@
 package org.smoothbuild.util;
 
-import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSequenceException;
+import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSeqException;
 import static org.smoothbuild.util.UnescapingFailedException.missingEscapeCodeException;
 
 import java.util.Optional;
@@ -144,7 +144,7 @@ public class Strings {
       case 'f' -> FORM_FEED;
       case '"' -> DOUBLE_QUOTE;
       case '\\' -> BACKSLASH;
-      default -> throw illegalEscapeSequenceException(charIndex);
+      default -> throw illegalEscapeSeqException(charIndex);
     };
   }
 

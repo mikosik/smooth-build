@@ -15,7 +15,7 @@ import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
 import org.smoothbuild.db.hashed.exc.DecodeBigIntegerException;
 import org.smoothbuild.db.hashed.exc.DecodeBooleanException;
 import org.smoothbuild.db.hashed.exc.DecodeByteException;
-import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
+import org.smoothbuild.db.hashed.exc.DecodeHashSeqException;
 import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
@@ -130,11 +130,11 @@ public class HashedDb {
     }
   }
 
-  public Hash writeSequence(Hash... hashes) throws HashedDbException {
-    return writeSequence(asList(hashes));
+  public Hash writeSeq(Hash... hashes) throws HashedDbException {
+    return writeSeq(asList(hashes));
   }
 
-  public Hash writeSequence(Iterable<Hash> hashes) throws HashedDbException {
+  public Hash writeSeq(Iterable<Hash> hashes) throws HashedDbException {
     try (HashingBufferedSink sink = sink()) {
       for (Hash hash : hashes) {
         sink.write(hash.toByteString());
@@ -146,14 +146,14 @@ public class HashedDb {
     }
   }
 
-  public ImmutableList<Hash> readSequence(Hash hash) throws HashedDbException {
+  public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbException {
     Builder<Hash> builder = ImmutableList.builder();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {
         if (source.request(Hash.lengthInBytes())) {
           builder.add(Hash.read(source));
         } else {
-          throw new DecodeHashSequenceException(hash, source.readByteArray().length);
+          throw new DecodeHashSeqException(hash, source.readByteArray().length);
         }
       }
     } catch (IOException e) {

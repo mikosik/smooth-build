@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.exc;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSeqException;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
@@ -19,7 +19,7 @@ public class DecodeObjRootExceptionTest extends TestingContext {
 
   @Test
   public void wrong_size_of_root_exception() {
-    var exception = wrongSizeOfRootSequenceException(Hash.of(123), 3);
+    var exception = wrongSizeOfRootSeqException(Hash.of(123), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode object at 1959893f68220459cbd800396e1eae7bfc382e97. "
             + "Its root points to hash sequence with 3 elems when it should point to "

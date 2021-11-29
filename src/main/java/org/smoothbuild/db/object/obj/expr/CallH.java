@@ -17,7 +17,7 @@ import org.smoothbuild.db.object.type.val.FuncTypeH;
  * This class is immutable.
  */
 public class CallH extends ExprH {
-  private static final int DATA_SEQUENCE_SIZE = 2;
+  private static final int DATA_SEQ_SIZE = 2;
   private static final int FUNC_INDEX = 0;
   private static final int ARGS_INDEX = 1;
 
@@ -71,13 +71,13 @@ public class CallH extends ExprH {
   }
 
   private ObjectH readFunc() {
-    return readSequenceElementObj(
-        DATA_PATH, dataHash(), FUNC_INDEX, DATA_SEQUENCE_SIZE, ObjectH.class);
+    return readSeqElemObj(
+        DATA_PATH, dataHash(), FUNC_INDEX, DATA_SEQ_SIZE, ObjectH.class);
   }
 
   private CombineH readArgs() {
-    return readSequenceElementObj(
-        DATA_PATH, dataHash(), ARGS_INDEX, DATA_SEQUENCE_SIZE, CombineH.class);
+    return readSeqElemObj(
+        DATA_PATH, dataHash(), ARGS_INDEX, DATA_SEQ_SIZE, CombineH.class);
   }
 
   @Override

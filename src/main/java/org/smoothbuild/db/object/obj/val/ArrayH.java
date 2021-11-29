@@ -26,11 +26,11 @@ public class ArrayH extends ValueH {
   public <T extends ValueH> ImmutableList<T> elems(Class<T> elemJType) {
     assertIsIterableAs(elemJType);
     var elems = elemObjs();
-    return checkTypeOfSequenceObjs(elems, spec().elem());
+    return checkTypeOfSeqObjs(elems, spec().elem());
   }
 
   private ImmutableList<ValueH> elemObjs() {
-    return readSequenceObjs(DATA_PATH, dataHash(), ValueH.class);
+    return readSeqObjs(DATA_PATH, dataHash(), ValueH.class);
   }
 
   private <T extends ValueH> void assertIsIterableAs(Class<T> clazz) {
@@ -41,7 +41,7 @@ public class ArrayH extends ValueH {
     }
   }
 
-  protected <T> ImmutableList<T> checkTypeOfSequenceObjs(
+  protected <T> ImmutableList<T> checkTypeOfSeqObjs(
       ImmutableList<ValueH> elems, TypeH expectedElementType) {
     for (int i = 0; i < elems.size(); i++) {
       var elemType = elems.get(i).spec();
@@ -57,6 +57,6 @@ public class ArrayH extends ValueH {
 
   @Override
   public String valToString() {
-    return "[" + sequenceToString(elemObjs()) + ']';
+    return "[" + seqToString(elemObjs()) + ']';
   }
 }

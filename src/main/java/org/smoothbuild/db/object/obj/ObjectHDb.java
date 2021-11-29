@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.obj;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSeqException;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.math.BigInteger;
@@ -165,9 +165,9 @@ public class ObjectHDb {
   // generic getter
 
   public ObjectH get(Hash rootHash) {
-    List<Hash> hashes = decodeRootSequence(rootHash);
+    List<Hash> hashes = decodeRootSeq(rootHash);
     if (hashes.size() != 2) {
-      throw wrongSizeOfRootSequenceException(rootHash, hashes.size());
+      throw wrongSizeOfRootSeqException(rootHash, hashes.size());
     }
     SpecH type = getTypeOrChainException(rootHash, hashes.get(0));
     Hash dataHash = hashes.get(1);
@@ -182,9 +182,9 @@ public class ObjectHDb {
     }
   }
 
-  private List<Hash> decodeRootSequence(Hash rootHash) {
+  private List<Hash> decodeRootSeq(Hash rootHash) {
     try {
-      return hashedDb.readSequence(rootHash);
+      return hashedDb.readSeq(rootHash);
     } catch (NoSuchDataException e) {
       throw new NoSuchObjException(rootHash, e);
     } catch (HashedDbException e) {
@@ -291,7 +291,7 @@ public class ObjectHDb {
     // Internal funcs don't have any data. We use empty sequence as its data so
     // code reading such func from hashedDb can be simpler and code that stores
     // h-objects as artifacts doesn't need handle this special case.
-    Hash dataHash = hashedDb.writeSequence();
+    Hash dataHash = hashedDb.writeSeq();
     var root = newRoot(type, dataHash);
     return type.newObj(root, this);
   }
@@ -365,27 +365,27 @@ public class ObjectHDb {
   }
 
   private MerkleRoot newRoot(SpecH type, Hash dataHash) throws HashedDbException {
-    Hash rootHash = hashedDb.writeSequence(type.hash(), dataHash);
+    Hash rootHash = hashedDb.writeSeq(type.hash(), dataHash);
     return new MerkleRoot(rootHash, type, dataHash);
   }
 
   // methods for writing data of Expr-s
 
   private Hash writeCallData(ObjectH func, CombineH args) throws HashedDbException {
-    return hashedDb.writeSequence(func.hash(), args.hash());
+    return hashedDb.writeSeq(func.hash(), args.hash());
   }
 
   private Hash writeCombineData(ImmutableList<ObjectH> items) throws HashedDbException {
-    return writeSequence(items);
+    return writeSeq(items);
   }
 
   private Hash writeNatFuncData(BlobH jarFile, StringH classBinaryName, BoolH isPure)
       throws HashedDbException {
-    return hashedDb.writeSequence(jarFile.hash(), classBinaryName.hash(), isPure.hash());
+    return hashedDb.writeSeq(jarFile.hash(), classBinaryName.hash(), isPure.hash());
   }
 
   private Hash writeOrderData(ImmutableList<ObjectH> elems) throws HashedDbException {
-    return writeSequence(elems);
+    return writeSeq(elems);
   }
 
   private Hash writeRefData(BigInteger value) throws HashedDbException {
@@ -393,13 +393,13 @@ public class ObjectHDb {
   }
 
   private Hash writeSelectData(ObjectH tuple, IntH index) throws HashedDbException {
-    return hashedDb.writeSequence(tuple.hash(), index.hash());
+    return hashedDb.writeSeq(tuple.hash(), index.hash());
   }
 
   // methods for writing data of Val-s
 
   private Hash writeArrayData(List<ValueH> elems) throws HashedDbException {
-    return writeSequence(elems);
+    return writeSeq(elems);
   }
 
   private Hash writeBoolData(boolean value) throws HashedDbException {
@@ -419,18 +419,18 @@ public class ObjectHDb {
   }
 
   private Hash writeTupleData(ImmutableList<ValueH> items) throws HashedDbException {
-    return writeSequence(items);
+    return writeSeq(items);
   }
 
   // helpers
 
-  private Hash writeSequence(List<? extends ObjectH> objs) throws HashedDbException {
+  private Hash writeSeq(List<? extends ObjectH> objs) throws HashedDbException {
     var hashes = Lists.map(objs, ObjectH::hash);
-    return hashedDb.writeSequence(hashes);
+    return hashedDb.writeSeq(hashes);
   }
 
-  public ImmutableList<Hash> readSequence(Hash hash) throws HashedDbException {
-    return hashedDb().readSequence(hash);
+  public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbException {
+    return hashedDb().readSeq(hash);
   }
 
   // TODO visible for classes from db.object package tree until creating Obj is cached and

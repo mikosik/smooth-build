@@ -81,7 +81,7 @@ public class SortTopologically {
 
     var keyToNode = toMap(nodes, Node::key, n -> n);
     var currentPath = new LinkedList<PathElem<K, N, E>>();
-    var resultSequence = new ArrayDeque<Node<K, N, E>>(nodes.size());
+    var resultSeq = new ArrayDeque<Node<K, N, E>>(nodes.size());
 
     for (K rootKey : rootKeys) {
       addToPath(currentPath, keyToNode.get(rootKey));
@@ -105,13 +105,13 @@ public class SortTopologically {
         } else {
           var processedNode = currentPath.removeLast().node();
           processedNode.setState(PROCESSED);
-          resultSequence.addFirst(processedNode);
+          resultSeq.addFirst(processedNode);
         }
       }
     }
 
-    if (resultSequence.size() == nodes.size()) {
-      return createSortedResult(resultSequence);
+    if (resultSeq.size() == nodes.size()) {
+      return createSortedResult(resultSeq);
     } else {
       return findCycleInUnprocessedNodes(nodes);
     }
@@ -134,8 +134,8 @@ public class SortTopologically {
   }
 
   private static <K, N, E> TopologicalSortingResult<K, N, E> createSortedResult(
-      ArrayDeque<Node<K, N, E>> resultSequence) {
-    var graphNodes = resultSequence.stream()
+      ArrayDeque<Node<K, N, E>> resultSeq) {
+    var graphNodes = resultSeq.stream()
         .map(Node::node)
         .collect(toImmutableList());
     return new TopologicalSortingResult<>(graphNodes, null);

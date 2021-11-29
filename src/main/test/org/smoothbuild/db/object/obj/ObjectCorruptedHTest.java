@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.db.object.obj.base.ObjectH.DATA_PATH;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSequenceException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSeqException;
 import static org.smoothbuild.testing.StringCreators.illegalString;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -29,7 +29,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.exc.DecodeBooleanException;
 import org.smoothbuild.db.hashed.exc.DecodeByteException;
-import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
+import org.smoothbuild.db.hashed.exc.DecodeHashSeqException;
 import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
@@ -43,7 +43,7 @@ import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeException;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
+import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqException;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -95,7 +95,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(ByteString.of(new byte[byteCount]));
       assertCall(() -> objectHDb().get(objHash))
           .throwsException(cannotReadRootException(objHash, null))
-          .withCause(new DecodeHashSequenceException(objHash, byteCount % Hash.lengthInBytes()));
+          .withCause(new DecodeHashSeqException(objHash, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void root_with_two_data_hashes() throws Exception {
       obj_root_with_two_data_hashes(
           arrayHT(intHT()),
-          hashedDb().writeSequence(),
+          hashedDb().writeSeq(),
           (Hash objHash) -> ((ArrayH) objectHDb().get(objHash)).elems(IntH.class)
       );
     }
@@ -186,23 +186,22 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_sequence_size_different_than_multiple_of_hash_size(
-        int byteCount) throws Exception {
-      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+    public void with_seq_size_different_than_multiple_of_hash_size(int byteCount) throws Exception {
+      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
       ArrayTypeH type = arrayHT(stringHT());
       Hash objHash =
           hash(
               hash(type),
-              notHashOfSequence
+              notHashOfSeq
           );
       assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elems(ValueH.class))
           .throwsException(new DecodeObjNodeException(objHash, type, DATA_PATH))
-          .withCause(new DecodeHashSequenceException(
-              notHashOfSequence, byteCount % Hash.lengthInBytes()));
+          .withCause(new DecodeHashSeqException(
+              notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_sequence_elem_pointing_nowhere() throws Exception {
+    public void with_seq_elem_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash dataHash = hash(
           nowhere
@@ -426,7 +425,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_one_elem() throws Exception {
+    public void data_is_seq_with_one_elem() throws Exception {
       var func = intH(0);
       Hash dataHash = hash(
           hash(func)
@@ -437,11 +436,11 @@ public class ObjectCorruptedHTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(objHash, callHT(), DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedObjSeqException(objHash, callHT(), DATA_PATH, 2, 1));
     }
 
     @Test
-    public void data_is_sequence_with_three_elems() throws Exception {
+    public void data_is_seq_with_three_elems() throws Exception {
       var func = intH(0);
       var args = combineH(list(stringH(), intH()));
       Hash dataHash = hash(
@@ -455,7 +454,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(objHash, callHT(), DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedObjSeqException(objHash, callHT(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -665,22 +664,22 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_sequence_size_different_than_multiple_of_hash_size(
+    public void with_seq_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
-      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
               hash(orderHT()),
-              notHashOfSequence
+              notHashOfSeq
           );
       assertCall(() -> ((OrderH) objectHDb().get(objHash)).elems())
           .throwsException(new DecodeObjNodeException(objHash, orderHT(), DATA_PATH))
-          .withCause(new DecodeHashSequenceException(
-              notHashOfSequence, byteCount % Hash.lengthInBytes()));
+          .withCause(new DecodeHashSeqException(
+              notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_sequence_elem_pointing_nowhere() throws Exception {
+    public void with_seq_elem_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash objHash =
           hash(
@@ -766,22 +765,22 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_sequence_size_different_than_multiple_of_hash_size(
+    public void with_seq_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
-      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
               hash(combineHT()),
-              notHashOfSequence
+              notHashOfSeq
           );
       assertCall(() -> ((CombineH) objectHDb().get(objHash)).items())
           .throwsException(new DecodeObjNodeException(objHash, combineHT(), DATA_PATH))
-          .withCause(new DecodeHashSequenceException(
-              notHashOfSequence, byteCount % Hash.lengthInBytes()));
+          .withCause(new DecodeHashSeqException(
+              notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_sequence_item_pointing_nowhere() throws Exception {
+    public void with_seq_item_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash objHash =
           hash(
@@ -883,7 +882,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_one_elem() throws Exception {
+    public void data_is_seq_with_one_elem() throws Exception {
       var expr = intH(123);
       var dataHash = hash(
           hash(expr)
@@ -894,12 +893,12 @@ public class ObjectCorruptedHTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((SelectH) objectHDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(
+          .throwsException(new UnexpectedObjSeqException(
               objHash, selectHT(), DATA_PATH, 2, 1));
     }
 
     @Test
-    public void data_is_sequence_with_three_elems() throws Exception {
+    public void data_is_seq_with_three_elems() throws Exception {
       var index = intH(2);
       var expr = intH(123);
       var dataHash = hash(
@@ -913,7 +912,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((SelectH) objectHDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSequenceException(
+          .throwsException(new UnexpectedObjSeqException(
               objHash, selectHT(), DATA_PATH, 2, 3));
     }
 
@@ -1090,7 +1089,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_is_sequence_with_two_elem() throws Exception {
+    public void data_is_seq_with_two_elem() throws Exception {
       BlobH jarFile = blobH();
       StringH classBinaryName = stringH();
       Hash dataHash = hash(
@@ -1104,12 +1103,12 @@ public class ObjectCorruptedHTest extends TestingContext {
           );
 
       assertCall(() -> ((NatFuncH) objectHDb().get(objHash)).classBinaryName())
-          .throwsException(new UnexpectedObjSequenceException(
+          .throwsException(new UnexpectedObjSeqException(
               objHash, natFuncHT(), DATA_PATH, 3, 2));
     }
 
     @Test
-    public void data_is_sequence_with_four_elems() throws Exception {
+    public void data_is_seq_with_four_elems() throws Exception {
       BlobH jarFile = blobH();
       StringH classBinaryName = stringH();
       BoolH isPure = boolH(true);
@@ -1126,7 +1125,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           );
 
       assertCall(() -> ((NatFuncH) objectHDb().get(objHash)).classBinaryName())
-          .throwsException(new UnexpectedObjSequenceException(
+          .throwsException(new UnexpectedObjSeqException(
               objHash, natFuncHT(), DATA_PATH, 3, 4));
     }
 
@@ -1241,7 +1240,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void data_being_invalid_utf8_sequence() throws Exception {
+    public void data_being_invalid_utf8_seq() throws Exception {
       Hash notStringHash = hash(illegalString());
       Hash objHash =
           hash(
@@ -1293,21 +1292,21 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_sequence_size_different_than_multiple_of_hash_size(
+    public void with_seq_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
-      Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
+      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
               hash(personHT()),
-              notHashOfSequence);
+              notHashOfSeq);
       assertCall(() -> ((TupleH) objectHDb().get(objHash)).get(0))
           .throwsException(new DecodeObjNodeException(objHash, personHT(), DATA_PATH))
-          .withCause(new DecodeHashSequenceException(
-              notHashOfSequence, byteCount % Hash.lengthInBytes()));
+          .withCause(new DecodeHashSeqException(
+              notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
 
     @Test
-    public void with_sequence_elem_pointing_nowhere() throws Exception {
+    public void with_seq_elem_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash dataHash = hash(
           nowhere,
@@ -1334,7 +1333,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               dataHash);
       TupleH tuple = (TupleH) objectHDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new UnexpectedObjSequenceException(objHash, personHT(), DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedObjSeqException(objHash, personHT(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1350,7 +1349,7 @@ public class ObjectCorruptedHTest extends TestingContext {
               dataHash);
       TupleH tuple = (TupleH) objectHDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new UnexpectedObjSequenceException(objHash, personHT(), DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedObjSeqException(objHash, personHT(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1426,7 +1425,7 @@ public class ObjectCorruptedHTest extends TestingContext {
         hash(
             hash(type));
     assertCall(() -> objectHDb().get(objHash))
-        .throwsException(wrongSizeOfRootSequenceException(objHash, 1));
+        .throwsException(wrongSizeOfRootSeqException(objHash, 1));
   }
 
   private void obj_root_with_two_data_hashes(
@@ -1437,7 +1436,7 @@ public class ObjectCorruptedHTest extends TestingContext {
             dataHash,
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
-        .throwsException(wrongSizeOfRootSequenceException(objHash, 3));
+        .throwsException(wrongSizeOfRootSeqException(objHash, 3));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
@@ -1523,6 +1522,6 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {
-    return hashedDb().writeSequence(hashes);
+    return hashedDb().writeSeq(hashes);
   }
 }

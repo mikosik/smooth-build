@@ -37,7 +37,7 @@ public class CombineH extends ExprH {
 
   public ImmutableList<ObjectH> items() {
     var expectedItemTypes = spec().evalType().items();
-    var items = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
+    var items = readSeqObjs(DATA_PATH, dataHash(), ObjectH.class);
     allMatchOtherwise(
         expectedItemTypes,
         items,

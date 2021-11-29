@@ -23,7 +23,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
-import org.smoothbuild.db.hashed.exc.DecodeHashSequenceException;
+import org.smoothbuild.db.hashed.exc.DecodeHashSeqException;
 import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.testing.TestingContext;
@@ -240,37 +240,37 @@ public class HashedDbTest extends TestingContext {
   class _sequence {
     @Test
     public void with_no_elems_can_be_read_back() throws Exception {
-      hash = hashedDb().writeSequence();
-      assertThat(hashedDb().readSequence(hash))
+      hash = hashedDb().writeSeq();
+      assertThat(hashedDb().readSeq(hash))
           .isEqualTo(list());
     }
 
     @Test
     public void with_one_elem_can_be_read_back() throws Exception {
-      hash = hashedDb().writeSequence(Hash.of("abc"));
-      assertThat(hashedDb().readSequence(hash))
+      hash = hashedDb().writeSeq(Hash.of("abc"));
+      assertThat(hashedDb().readSeq(hash))
           .isEqualTo(list(Hash.of("abc")));
     }
 
     @Test
     public void with_two_elems_can_be_read_back() throws Exception {
-      hash = hashedDb().writeSequence(Hash.of("abc"), Hash.of("def"));
-      assertThat(hashedDb().readSequence(hash))
+      hash = hashedDb().writeSeq(Hash.of("abc"), Hash.of("def"));
+      assertThat(hashedDb().readSeq(hash))
           .isEqualTo(list(Hash.of("abc"), Hash.of("def")));
     }
 
     @Test
-    public void not_written_sequence_of_hashes_cannot_be_read_back() {
+    public void not_written_seq_of_hashes_cannot_be_read_back() {
       hash = Hash.of("abc");
-      assertCall(() -> hashedDb().readSequence(hash))
+      assertCall(() -> hashedDb().readSeq(hash))
           .throwsException(new NoSuchDataException(hash));
     }
 
     @Test
-    public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
+    public void corrupted_seq_of_hashes_cannot_be_read_back() throws Exception {
       hash = hashedDb().writeString("12345");
-      assertCall(() -> hashedDb().readSequence(hash))
-          .throwsException(new DecodeHashSequenceException(hash, 5));
+      assertCall(() -> hashedDb().readSeq(hash))
+          .throwsException(new DecodeHashSeqException(hash, 5));
     }
   }
 }

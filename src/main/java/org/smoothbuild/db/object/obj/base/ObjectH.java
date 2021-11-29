@@ -13,7 +13,7 @@ import org.smoothbuild.db.object.obj.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
+import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqException;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
@@ -84,62 +84,61 @@ public abstract class ObjectH {
     return castObj(obj, path, clazz);
   }
 
-  protected <T> T readSequenceElementObj(String path, Hash hash, int i, int expectedSize,
-      Class<T> clazz) {
-    Hash elemHash = readSequenceElementHash(path, hash, i, expectedSize);
+  protected <T> T readSeqElemObj(String path, Hash hash, int i, int expectedSize, Class<T> clazz) {
+    Hash elemHash = readSeqElemHash(path, hash, i, expectedSize);
     ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
         hash(), spec(), path, i, () -> objectDb().get(elemHash));
     return castObj(obj, path, i, clazz);
   }
 
-  protected Hash readSequenceElementHash(String path, Hash hash, int i, int expectedSize) {
+  protected Hash readSeqElemHash(String path, Hash hash, int i, int expectedSize) {
     checkElementIndex(i, expectedSize);
-    return readSequenceHashes(path, hash, expectedSize)
+    return readSeqHashes(path, hash, expectedSize)
         .get(i);
   }
 
-  protected <T> ImmutableList<T> readSequenceObjs(String path, Hash hash, int expectedSize,
-      Class<T> clazz) {
-    var sequenceHashes = readSequenceHashes(path, hash, expectedSize);
-    var objs = readSequenceObjs(path, sequenceHashes);
-    return castSequence(objs, path, clazz);
+  protected <T> ImmutableList<T> readSeqObjs(
+      String path, Hash hash, int expectedSize, Class<T> clazz) {
+    var seqHashes = readSeqHashes(path, hash, expectedSize);
+    var objs = readSeqObjs(path, seqHashes);
+    return castSeq(objs, path, clazz);
   }
 
-  protected <T> ImmutableList<T> readSequenceObjs(String path, Hash hash, Class<T> clazz) {
-    var objs = readSequenceObjs(path, hash);
-    return castSequence(objs, path, clazz);
+  protected <T> ImmutableList<T> readSeqObjs(String path, Hash hash, Class<T> clazz) {
+    var objs = readSeqObjs(path, hash);
+    return castSeq(objs, path, clazz);
   }
 
-  protected ImmutableList<ObjectH> readSequenceObjs(String path, Hash hash) {
-    var sequenceHashes = readSequenceHashes(path, hash);
-    return readSequenceObjs(path, sequenceHashes);
+  protected ImmutableList<ObjectH> readSeqObjs(String path, Hash hash) {
+    var seqHashes = readSeqHashes(path, hash);
+    return readSeqObjs(path, seqHashes);
   }
 
-  private ImmutableList<ObjectH> readSequenceObjs(String path, ImmutableList<Hash> sequence) {
+  private ImmutableList<ObjectH> readSeqObjs(String path, ImmutableList<Hash> seq) {
     Builder<ObjectH> builder = ImmutableList.builder();
-    for (int i = 0; i < sequence.size(); i++) {
+    for (int i = 0; i < seq.size(); i++) {
       int index = i;
       ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), spec(), path, index,
-          () -> objectHDb.get(sequence.get(index)));
+          () -> objectHDb.get(seq.get(index)));
       builder.add(obj);
     }
     return builder.build();
   }
 
-  private ImmutableList<Hash> readSequenceHashes(String path, Hash hash, int expectedSize) {
-    ImmutableList<Hash> data = readSequenceHashes(path, hash);
+  private ImmutableList<Hash> readSeqHashes(String path, Hash hash, int expectedSize) {
+    ImmutableList<Hash> data = readSeqHashes(path, hash);
     if (data.size() != expectedSize) {
-      throw new UnexpectedObjSequenceException(hash(), spec(), path, expectedSize, data.size());
+      throw new UnexpectedObjSeqException(hash(), spec(), path, expectedSize, data.size());
     }
     return data;
   }
 
-  private ImmutableList<Hash> readSequenceHashes(String path, Hash hash) {
+  private ImmutableList<Hash> readSeqHashes(String path, Hash hash) {
     return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), path,
-        () -> objectHDb.readSequence(hash));
+        () -> objectHDb.readSeq(hash));
   }
 
-  protected static String sequenceToString(ImmutableList<? extends ObjectH> objects) {
+  protected static String seqToString(ImmutableList<? extends ObjectH> objects) {
     return toCommaSeparatedString(objects, ObjectH::valToStringSafe);
   }
 
@@ -164,8 +163,7 @@ public abstract class ObjectH {
     }
   }
 
-  private <T> ImmutableList<T> castSequence(
-      ImmutableList<ObjectH> elems, String path, Class<T> clazz) {
+  private <T> ImmutableList<T> castSeq(ImmutableList<ObjectH> elems, String path, Class<T> clazz) {
     for (int i = 0; i < elems.size(); i++) {
       ObjectH elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
