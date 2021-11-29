@@ -11,9 +11,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class CommandExecutor {
-  public static CommandResult execute(Path workingDir, String[] allArguments)
+  public static CommandResult execute(Path workingDir, String[] allArgs)
       throws IOException, InterruptedException, ExecutionException {
-    ProcessBuilder processBuilder = new ProcessBuilder(allArguments);
+    ProcessBuilder processBuilder = new ProcessBuilder(allArgs);
     processBuilder.directory(workingDir.toFile());
     Process process = processBuilder.start();
     ExecutorService executor = Executors.newFixedThreadPool(2);

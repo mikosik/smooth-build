@@ -32,21 +32,21 @@ public class ArgNodeTest {
   }
 
   @Test
-  public void sanitized_name_of_named_argument_is_equal_its_name() {
+  public void sanitized_name_of_named_arg_is_equal_its_name() {
     ArgNode arg = new ArgNode("name", null, internal());
     assertThat(arg.nameSanitized())
         .isEqualTo("name");
   }
 
   @Test
-  public void sanitized_name_of_nameless_argument_is_equal_to_nameless() {
+  public void sanitized_name_of_nameless_arg_is_equal_to_nameless() {
     ArgNode arg = new ArgNode(null, null, internal());
     assertThat(arg.nameSanitized())
         .isEqualTo("<nameless>");
   }
 
   @Test
-  public void type_and_name_of_named_argument() {
+  public void type_and_name_of_named_arg() {
     ArgNode arg = new ArgNode("name", expr(STRING), internal());
     arg.setType(STRING);
     assertThat(arg.typeAndName())
@@ -54,7 +54,7 @@ public class ArgNodeTest {
   }
 
   @Test
-  public void nameless_argument_to_string() {
+  public void nameless_arg_to_string() {
     ArgNode arg = new ArgNode(null, expr(STRING), internal());
     arg.setType(STRING);
     assertThat(arg.typeAndName())

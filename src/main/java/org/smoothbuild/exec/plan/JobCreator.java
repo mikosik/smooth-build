@@ -135,12 +135,12 @@ public class JobCreator {
   private Job callJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars, CallH call, boolean eager) {
     var callData = call.data();
     var funcJ = jobFor(scope, vars, callData.func(), eager);
-    var argumentsJ = map(callData.arguments().items(), a -> lazyJobFor(scope, vars, a));
+    var argsJ = map(callData.args().items(), a -> lazyJobFor(scope, vars, a));
     var location = nals.get(call).location();
-    var actualArgumentTypes =
-        map(argumentsJ, a -> typing.mapVariables(a.type(), vars, factory.lower()));
-    var newVariables = inferVariablesInFuncCall(funcJ, actualArgumentTypes);
-    return callJob(scope, funcJ, argumentsJ, location, newVariables, eager);
+    var actualArgTypes =
+        map(argsJ, a -> typing.mapVariables(a.type(), vars, factory.lower()));
+    var newVariables = inferVariablesInFuncCall(funcJ, actualArgTypes);
+    return callJob(scope, funcJ, argsJ, location, newVariables, eager);
   }
 
   private Job callJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Location location,
@@ -169,8 +169,8 @@ public class JobCreator {
   }
 
   private BoundsMap<TypeH> inferVariablesInFuncCall(Job func, List<Job> args) {
-    var argumentTypes = map(args, Job::type);
-    return inferVariablesInFuncCall(func, argumentTypes);
+    var argTypes = map(args, Job::type);
+    return inferVariablesInFuncCall(func, argTypes);
   }
 
   private BoundsMap<TypeH> inferVariablesInFuncCall(Job func, ImmutableList<TypeH> argTypes) {
@@ -214,10 +214,10 @@ public class JobCreator {
   private Job constructEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
       ConstructH constructH, Nal nal) {
     var type = constructH.type();
-    var argumentsJ = eagerJobsFor(scope, vars, constructH.items());
+    var argsJ = eagerJobsFor(scope, vars, constructH.items());
     var info = new TaskInfo(CONSTRUCT, nal);
     var algorithm = new ConstructAlgorithm(constructH.type());
-    return new Task(type, argumentsJ, info, algorithm);
+    return new Task(type, argsJ, info, algorithm);
   }
 
   // Order

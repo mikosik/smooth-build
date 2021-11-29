@@ -383,20 +383,20 @@ public class ObjectCorruptedHTest extends TestingContext {
        */
       var funcType = defFuncHT(intHT(), list(stringHT(), intHT()));
       var func = defFuncH(funcType, intH());
-      ConstructH arguments = constructH(list(stringH(), intH()));
+      ConstructH args = constructH(list(stringH(), intH()));
       Hash objHash =
           hash(
               hash(callHT()),
               hash(
                   hash(func),
-                  hash(arguments)
+                  hash(args)
               )
           );
 
       assertThat(((CallH) objectHDb().get(objHash)).data().func())
           .isEqualTo(func);
-      assertThat(((CallH) objectHDb().get(objHash)).data().arguments())
-          .isEqualTo(arguments);
+      assertThat(((CallH) objectHDb().get(objHash)).data().args())
+          .isEqualTo(args);
     }
 
     @Test
@@ -407,10 +407,10 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var func = intH(0);
-      var arguments = constructH(list(stringH(), intH()));
+      var args = constructH(list(stringH(), intH()));
       Hash dataHash = hash(
           hash(func),
-          hash(arguments)
+          hash(args)
       );
       obj_root_with_two_data_hashes(
           callHT(),
@@ -443,11 +443,11 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void data_is_sequence_with_three_elems() throws Exception {
       var func = intH(0);
-      var arguments = constructH(list(stringH(), intH()));
+      var args = constructH(list(stringH(), intH()));
       Hash dataHash = hash(
           hash(func),
-          hash(arguments),
-          hash(arguments)
+          hash(args),
+          hash(args)
       );
       Hash objHash =
           hash(
@@ -461,14 +461,14 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void func_component_evaluation_type_is_not_func() throws Exception {
       var func = intH(3);
-      ConstructH arguments = constructH(list(stringH(), intH()));
+      ConstructH args = constructH(list(stringH(), intH()));
       CallTypeH type = callHT(stringHT());
       Hash objHash =
           hash(
               hash(type),
               hash(
                   hash(func),
-                  hash(arguments)
+                  hash(args)
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
@@ -477,7 +477,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void arguments_is_val_instead_of_expr() throws Exception {
+    public void args_is_val_instead_of_expr() throws Exception {
       var funcType = defFuncHT(intHT(), list(stringHT(), intHT()));
       var func = defFuncH(funcType, intH());
       Hash objHash =
@@ -494,7 +494,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
 
     @Test
-    public void arguments_component_evaluation_type_is_not_construct_but_different_expr()
+    public void args_component_evaluation_type_is_not_construct_but_different_expr()
         throws Exception {
       var funcType = defFuncHT(intHT(), list(stringHT(), intHT()));
       var func = defFuncH(funcType, intH());
@@ -517,14 +517,14 @@ public class ObjectCorruptedHTest extends TestingContext {
         throws Exception {
       DefFuncTypeH funcType = defFuncHT(intHT(), list(stringHT()));
       var func = defFuncH(funcType, intH());
-      var arguments = constructH(list(stringH()));
+      var args = constructH(list(stringH()));
       var type = callHT(stringHT());
       Hash objHash =
           hash(
               hash(type),
               hash(
                   hash(func),
-                  hash(arguments)
+                  hash(args)
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
@@ -537,19 +537,19 @@ public class ObjectCorruptedHTest extends TestingContext {
         throws Exception {
       var funcType = defFuncHT(intHT(), list(stringHT(), boolHT()));
       var func = defFuncH(funcType, intH());
-      var arguments = constructH(list(stringH(), intH()));
+      var args = constructH(list(stringH(), intH()));
       var spec = callHT(intHT());
       Hash objHash =
           hash(
               hash(spec),
               hash(
                   hash(func),
-                  hash(arguments)
+                  hash(args)
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
           .throwsException(new DecodeExprWrongEvalTypeOfComponentException(
-              objHash, spec, "arguments",
+              objHash, spec, "args",
               tupleHT(list(stringHT(), boolHT())),
               tupleHT(list(stringHT(), intHT()))
           ));

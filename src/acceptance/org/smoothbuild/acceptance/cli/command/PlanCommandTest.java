@@ -32,7 +32,7 @@ public class PlanCommandTest {
     }
 
     @Test
-    public void def_func_call_with_argument() throws Exception {
+    public void def_func_call_with_arg() throws Exception {
       createUserModule("""
               myFunc(String elem) = elem;
               result = myFunc("abc");
@@ -47,7 +47,7 @@ public class PlanCommandTest {
     }
 
     @Test
-    public void nat_func_call_with_argument() throws Exception {
+    public void nat_func_call_with_arg() throws Exception {
       createNativeJar(StringIdentity.class);
       createUserModule(format("""
             @Native("%s")
@@ -64,7 +64,7 @@ public class PlanCommandTest {
     }
 
     @Test
-    public void nat_func_call_without_argument() throws Exception {
+    public void nat_func_call_without_arg() throws Exception {
       createNativeJar(ReturnAbc.class);
       createUserModule(format("""
             @Native("%s")
@@ -192,7 +192,7 @@ public class PlanCommandTest {
   @Nested
   class DefaultModule extends DefaultModuleTestCase {
     @Override
-    protected CommandWithArgs commandNameWithArgument() {
+    protected CommandWithArgs commandNameWithArg() {
       return planCommand("result");
     }
   }
@@ -200,7 +200,7 @@ public class PlanCommandTest {
   @Nested
   class LockFile extends LockFileTestCase {
     @Override
-    protected CommandWithArgs commandNameWithArgument() {
+    protected CommandWithArgs commandNameWithArg() {
       return planCommand("result");
     }
   }

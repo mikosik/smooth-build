@@ -204,7 +204,7 @@ public class ShConverter {
 
   private CallH convertCall(CallS callS) {
     var funcExprH = convertExpr(callS.funcExpr());
-    var argsH = map(callS.arguments(), this::convertExpr);
+    var argsH = map(callS.args(), this::convertExpr);
     var construct = objFactory.construct(argsH);
     nals.put(construct, new NalImpl("{}", callS.location()));
     return objFactory.call(funcExprH, construct);

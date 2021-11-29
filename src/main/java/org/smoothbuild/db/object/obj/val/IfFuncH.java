@@ -22,11 +22,11 @@ public class IfFuncH extends FuncH {
   public IfData data() {
     var natFuncH = readNatFunc();
     var isPure = readIsPure();
-    var argCount = readArgumentCount();
+    var argCount = readArgCount();
     return new IfData(natFuncH, isPure, argCount);
   }
 
-  public static record IfData(NatFuncH natFuncH, BoolH isPure, IntH argumentCount) {}
+  public static record IfData(NatFuncH natFuncH, BoolH isPure, IntH argCount) {}
 
   private NatFuncH readNatFunc() {
     return readSequenceElementObj(
@@ -38,7 +38,7 @@ public class IfFuncH extends FuncH {
         DATA_PATH, dataHash(), IS_PURE_INDEX, DATA_SEQ_SIZE, BoolH.class);
   }
 
-  private IntH readArgumentCount() {
+  private IntH readArgCount() {
     return readSequenceElementObj(
         DATA_PATH, dataHash(), ARG_COUNT_INDEX, DATA_SEQ_SIZE, IntH.class);
   }

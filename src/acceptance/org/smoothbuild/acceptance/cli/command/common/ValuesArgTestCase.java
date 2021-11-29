@@ -6,7 +6,7 @@ import org.smoothbuild.acceptance.CommandWithArgs;
 
 public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   @Test
-  public void missing_value_argument_causes_error() throws Exception {
+  public void missing_value_arg_causes_error() throws Exception {
     createUserModule("""
             result = "abc";
             """);
@@ -18,7 +18,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void nonexistent_value_argument_causes_error() throws Exception {
+  public void nonexistent_value_arg_causes_error() throws Exception {
     createUserModule("""
             result = "abc";
             """);
@@ -75,7 +75,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void func_that_requires_arguments_prints_error() throws Exception {
+  public void func_that_requires_args_prints_error() throws Exception {
     createUserModule("""
             String testStringIdentity(String value) = value;
             """);

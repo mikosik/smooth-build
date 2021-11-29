@@ -256,7 +256,7 @@ public class ListsTest {
   @Nested
   class _map {
     @Test
-    public void returns_empty_list_for_empty_argument(){
+    public void returns_empty_list_for_empty_arg(){
       assertThat(map(new ArrayList<String>(), String::toUpperCase))
           .isEmpty();
     }
@@ -277,7 +277,7 @@ public class ListsTest {
   @Nested
   class _mapM {
     @Test
-    public void returns_empty_list_for_empty_argument(){
+    public void returns_empty_list_for_empty_arg(){
       assertThat(mapM(new ArrayList<String>(), String::toUpperCase))
           .isEmpty();
     }
@@ -420,7 +420,7 @@ public class ListsTest {
     }
 
     @Test
-    public void returns_empty_list_for_empty_list_argument(){
+    public void returns_empty_list_for_empty_list_arg(){
       assertThat(sane(new ArrayList<>()))
           .isEmpty();
     }

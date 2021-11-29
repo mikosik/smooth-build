@@ -134,8 +134,8 @@ public class ObjectHDb {
 
   // methods for creating ExprH subclasses
 
-  public CallH call(ObjectH func, ConstructH arguments) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(func, arguments));
+  public CallH call(ObjectH func, ConstructH args) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(func, args));
   }
 
   public ConstructH construct(ImmutableList<ObjectH> items) {
@@ -245,33 +245,33 @@ public class ObjectHDb {
 
   // methods for creating Expr-s
 
-  private CallH newCall(ObjectH func, ConstructH arguments) throws HashedDbException {
-    var resultType = inferCallResultType(func, arguments);
+  private CallH newCall(ObjectH func, ConstructH args) throws HashedDbException {
+    var resultType = inferCallResultType(func, args);
     var type = typeHDb.call(resultType);
-    var data = writeCallData(func, arguments);
+    var data = writeCallData(func, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private TypeH inferCallResultType(ObjectH func, ConstructH arguments) {
+  private TypeH inferCallResultType(ObjectH func, ConstructH args) {
     var funcType = funcEvaluationType(func);
-    var argTypes = arguments.type().items();
+    var argTypes = args.type().items();
     var paramTypes = funcType.params();
     allMatchOtherwise(
         paramTypes,
         argTypes,
         typing::isParamAssignable,
-        (expectedSize, actualSize) -> illegalArguments(funcType, arguments),
-        i -> illegalArguments(funcType, arguments)
+        (expectedSize, actualSize) -> illegalArgs(funcType, args),
+        i -> illegalArgs(funcType, args)
     );
     var varBounds = typing.inferVariableBoundsInCall(paramTypes, argTypes);
     return typing.mapVariables(funcType.result(), varBounds, typeHDb.lower());
   }
 
-  private void illegalArguments(FuncTypeH funcType, ConstructH arguments) {
+  private void illegalArgs(FuncTypeH funcType, ConstructH args) {
     throw new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to function evaluation type parameters %s."
-            .formatted(arguments.type().name(), funcType.paramsTuple().name()));
+            .formatted(args.type().name(), funcType.paramsTuple().name()));
   }
 
   private FuncTypeH funcEvaluationType(ObjectH func) {
@@ -371,8 +371,8 @@ public class ObjectHDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ObjectH func, ConstructH arguments) throws HashedDbException {
-    return hashedDb.writeSequence(func.hash(), arguments.hash());
+  private Hash writeCallData(ObjectH func, ConstructH args) throws HashedDbException {
+    return hashedDb.writeSequence(func.hash(), args.hash());
   }
 
   private Hash writeConstructData(ImmutableList<ObjectH> items) throws HashedDbException {

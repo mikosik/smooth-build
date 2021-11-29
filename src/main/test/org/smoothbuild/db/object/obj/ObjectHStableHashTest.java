@@ -101,13 +101,13 @@ public class ObjectHStableHashTest extends TestingContext {
   @Nested
   class _call {
     @Test
-    public void call_expression_with_one_argument() {
+    public void call_expression_with_one_arg() {
       assertThat(callH(defFuncH(), list(stringH("abc"))).hash())
           .isEqualTo(Hash.decode("3fa89051198dc400f7fde8391e6569986d03ef71"));
     }
 
     @Test
-    public void call_expression_without_arguments() {
+    public void call_expression_without_args() {
       var type = defFuncHT(intHT(), list(stringHT()));
       var defFunc = defFuncH(type, intH());
       assertThat(callH(defFunc, list(stringH("abc"))).hash())

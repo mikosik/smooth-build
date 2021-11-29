@@ -21,11 +21,11 @@ public class MapFuncH extends FuncH {
   public MapData data() {
     var natFuncH = readNatFunc();
     var isPure = readIsPure();
-    var argCount = readArgumentCount();
+    var argCount = readArgCount();
     return new MapData(natFuncH, isPure, argCount);
   }
 
-  public static record MapData(NatFuncH natFuncH, BoolH isPure, IntH argumentCount) {}
+  public static record MapData(NatFuncH natFuncH, BoolH isPure, IntH argCount) {}
 
   private NatFuncH readNatFunc() {
     return readSequenceElementObj(
@@ -37,7 +37,7 @@ public class MapFuncH extends FuncH {
         DATA_PATH, dataHash(), IS_PURE_INDEX, DATA_SEQ_SIZE, BoolH.class);
   }
 
-  private IntH readArgumentCount() {
+  private IntH readArgCount() {
     return readSequenceElementObj(
         DATA_PATH, dataHash(), ARG_COUNT_INDEX, DATA_SEQ_SIZE, IntH.class);
   }

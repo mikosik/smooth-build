@@ -144,9 +144,9 @@ public abstract class AcceptanceTestCase {
         "--INTERNAL-installation-dir=" + SMOOTH_BINARY.getParent().toAbsolutePath());
   }
 
-  private void runSmoothInProperJvm(CommandWithArgs command, String... additionalArguments) {
+  private void runSmoothInProperJvm(CommandWithArgs command, String... additionalArgs) {
     switch (AcceptanceUtils.TEST_MODE) {
-      case SINGLE_JVM -> runSmoothInCurrentJvm(command, additionalArguments);
+      case SINGLE_JVM -> runSmoothInCurrentJvm(command, additionalArgs);
       case FULL_BINARY -> runSmoothInForkedJvm(command);
       default -> fail("Unknown mode: " + AcceptanceUtils.TEST_MODE);
     }
@@ -172,9 +172,9 @@ public abstract class AcceptanceTestCase {
 
   private void runSmoothInForkedJvm(CommandWithArgs command) {
     try {
-      String[] allArguments = processArgs(command.commandPlusArgs());
+      String[] allArgs = processArgs(command.commandPlusArgs());
       Path workingDir = projectDirAbsolutePath();
-      CommandResult r = CommandExecutor.execute(workingDir, allArguments);
+      CommandResult r = CommandExecutor.execute(workingDir, allArgs);
       exitCode = r.exitCode();
       sysOut = r.sysOut();
       sysErr = r.sysErr();

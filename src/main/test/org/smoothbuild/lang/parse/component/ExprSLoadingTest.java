@@ -61,7 +61,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_func_reference_and_argument() {
+    public void with_func_reference_and_arg() {
       module("""
           String myFunc(Blob b) = "abc";
           result = myFunc(
@@ -73,7 +73,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_func_reference_and_named_argument() {
+    public void with_func_reference_and_named_arg() {
       module("""
           String myFunc(Blob b) = "abc";
           result = myFunc(b=
@@ -99,7 +99,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_value_reference_and_argument() {
+    public void with_value_reference_and_arg() {
       module("""
           @Native("Impl.met")
           String myFunc(Blob blob);
@@ -127,7 +127,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_ctor_reference_and_argument() {
+    public void with_ctor_reference_and_arg() {
       var struct = structST("MyStruct", nList(isig("field", STRING)));
       module("""
           MyStruct {
@@ -152,7 +152,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_param_reference_and_argument() {
+    public void with_param_reference_and_arg() {
       module("""
           result(String(Blob) f) = f(0x09);
           """)
@@ -311,7 +311,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void def_func_with_param_with_default_argument() {
+    public void def_func_with_param_with_default_arg() {
       module("""
           String myFunc(
             Blob param1 =

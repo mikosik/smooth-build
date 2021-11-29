@@ -13,7 +13,7 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class FuncTest extends AcceptanceTestCase {
   @Nested
-  class param_default_argument {
+  class param_default_arg {
     @Nested
     class _in_def_func {
       @Test
@@ -188,7 +188,7 @@ public class FuncTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void argument_is_not_evaluated_when_assigned_to_not_used_param() throws Exception {
+  public void arg_is_not_evaluated_when_assigned_to_not_used_param() throws Exception {
     createNativeJar(ThrowException.class);
     createUserModule("""
             @Native("impl")
@@ -203,7 +203,7 @@ public class FuncTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void func_can_be_argument_to_other_func() throws Exception {
+  public void func_can_be_arg_to_other_func() throws Exception {
     createNativeJar(ThrowException.class);
     createUserModule("""
             String returnAbc() = "abc";

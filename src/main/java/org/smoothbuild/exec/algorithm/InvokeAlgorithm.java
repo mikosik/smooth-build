@@ -38,7 +38,7 @@ public class InvokeAlgorithm extends Algorithm {
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     var method = methodLoader.load(extendedName, natFuncH);
     try {
-      var result = (ValueH) method.invoke(null, createArguments(nativeApi, input.vals()));
+      var result = (ValueH) method.invoke(null, createArgs(nativeApi, input.vals()));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
           nativeApi.log().error(q(extendedName)
@@ -62,12 +62,12 @@ public class InvokeAlgorithm extends Algorithm {
     }
   }
 
-  private static Object[] createArguments(NativeApi nativeApi, List<ValueH> arguments) {
-    Object[] nativeArguments = new Object[1 + arguments.size()];
-    nativeArguments[0] = nativeApi;
-    for (int i = 0; i < arguments.size(); i++) {
-      nativeArguments[i + 1] = arguments.get(i);
+  private static Object[] createArgs(NativeApi nativeApi, List<ValueH> args) {
+    Object[] nativeArgs = new Object[1 + args.size()];
+    nativeArgs[0] = nativeApi;
+    for (int i = 0; i < args.size(); i++) {
+      nativeArgs[i + 1] = args.get(i);
     }
-    return nativeArguments;
+    return nativeArgs;
   }
 }

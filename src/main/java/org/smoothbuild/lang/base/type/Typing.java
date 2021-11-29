@@ -101,9 +101,9 @@ public class Typing<T extends Type> {
   }
 
   public BoundsMap<T> inferVariableBoundsInCall(
-      List<? extends T> paramTypes, List<? extends T> argumentTypes) {
+      List<? extends T> paramTypes, List<? extends T> argTypes) {
     var result = new HashMap<Variable, Bounded<T>>();
-    inferVariableBounds(paramTypes, argumentTypes, factory.lower(), result);
+    inferVariableBounds(paramTypes, argTypes, factory.lower(), result);
     return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 

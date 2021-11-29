@@ -113,8 +113,8 @@ public class TopEvalLoader {
     public Item createParam(ItemN param) {
       var type = param.typeNode().get().type().get();
       var name = param.name();
-      var defaultArgument = param.body().map(this::createExpression);
-      return new Item(type, modulePath, name, defaultArgument, param.location());
+      var defaultArg = param.body().map(this::createExpression);
+      return new Item(type, modulePath, name, defaultArg, param.location());
     }
 
     private ExprS createExpression(ExprN expr) {
@@ -140,33 +140,33 @@ public class TopEvalLoader {
 
     private ExprS createCall(CallN call) {
       var called = createExpression(call.func());
-      var argumentExpressions = createArgumentExpressions(call);
+      var argExpressions = createArgExpressions(call);
       var resultType = call.type().get();
-      return new CallS(resultType, called, argumentExpressions, call.location());
+      return new CallS(resultType, called, argExpressions, call.location());
     }
 
-    private ImmutableList<ExprS> createArgumentExpressions(CallN call) {
+    private ImmutableList<ExprS> createArgExpressions(CallN call) {
       var builder = ImmutableList.<ExprS>builder();
       List<Optional<ArgNode>> args = call.assignedArgs();
       for (int i = 0; i < args.size(); i++) {
-        builder.add(createArgumentExpression(call, args, i));
+        builder.add(createArgExpression(call, args, i));
       }
       return builder.build();
     }
 
-    private ExprS createArgumentExpression(CallN call, List<Optional<ArgNode>> args, int i) {
+    private ExprS createArgExpression(CallN call, List<Optional<ArgNode>> args, int i) {
       Optional<ArgNode> arg = args.get(i);
       if (arg.isPresent()) {
         return createExpression(arg.get().expr());
       } else {
-        return createDefaultArgumentExpression(call, i);
+        return createDefaultArgExpression(call, i);
       }
     }
 
-    private ExprS createDefaultArgumentExpression(CallN call, int i) {
-      // Argument is not present so we have to use func default argument.
+    private ExprS createDefaultArgExpression(CallN call, int i) {
+      // Arg is not present so we have to use func default arg.
       // This means that this call is made on reference to actual func and that func
-      // has default argument for given param, otherwise checkers that ran so far would
+      // has default arg for given param, otherwise checkers that ran so far would
       // report an error.
       EvalLike referenced = ((RefN) call.func()).referenced();
       return switch (referenced) {

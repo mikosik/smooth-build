@@ -170,7 +170,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void in_default_argument_body_of_other_param_is_not_visible() {
+      public void in_default_arg_body_of_other_param_is_not_visible() {
         module("""
         func(String param, String withDefault = param) = param;
         """)
@@ -178,7 +178,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void in_its_default_argument_body_is_not_visible() {
+      public void in_its_default_arg_body_is_not_visible() {
         module("""
         func(String withDefault = withDefault) = withDefault;
         """)
@@ -287,7 +287,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void func_func_through_argument() {
+      public void func_func_through_arg() {
         module("""
              String myFunc() = myIdentity(myFunc());
              String myIdentity(String s) = s;
@@ -298,7 +298,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void value_value_through_argument() {
+      public void value_value_through_arg() {
         module("""
              String myIdentity(String s) = s;
              String myValue = myIdentity(myValue);

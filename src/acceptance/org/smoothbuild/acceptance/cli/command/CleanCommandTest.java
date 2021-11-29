@@ -57,7 +57,7 @@ public class CleanCommandTest {
     }
 
     @Test
-    public void with_arguments_prints_error() throws Exception {
+    public void with_args_prints_error() throws Exception {
       createUserModule("""
               result = "abc";
               """);
@@ -75,7 +75,7 @@ public class CleanCommandTest {
   @Nested
   class DefaultModule extends DefaultModuleTestCase {
     @Override
-    protected CommandWithArgs commandNameWithArgument() {
+    protected CommandWithArgs commandNameWithArg() {
       return cleanCommand();
     }
   }
@@ -83,7 +83,7 @@ public class CleanCommandTest {
   @Nested
   class LockFile extends LockFileTestCase {
     @Override
-    protected CommandWithArgs commandNameWithArgument() {
+    protected CommandWithArgs commandNameWithArg() {
       return cleanCommand();
     }
   }

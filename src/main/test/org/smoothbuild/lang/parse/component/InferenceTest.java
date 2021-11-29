@@ -302,7 +302,7 @@ public class InferenceTest extends TestingContext {
       }
 
       @Test
-      public void argument_of_base_type() {
+      public void arg_of_base_type() {
         String code = """
             A myIdentity(A a) = a;
             myValue = myIdentity("abc");
@@ -405,7 +405,7 @@ public class InferenceTest extends TestingContext {
       }
 
       @Test
-      public void argument_of_base_type() {
+      public void arg_of_base_type() {
         String code = """
             [A] singleElement(A a) = [a];
             myValue = singleElement("abc");

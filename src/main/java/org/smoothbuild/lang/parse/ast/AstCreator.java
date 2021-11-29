@@ -120,9 +120,9 @@ public class AstCreator {
       private ItemN createParam(ParamContext param) {
         var type = createType(param.type());
         var name = param.NAME().getText();
-        var defaultArgument = Optional.ofNullable(param.expr()).map(this::createExpr);
+        var defaultArg = Optional.ofNullable(param.expr()).map(this::createExpr);
         var location = locationOf(filePath, param);
-        return new ItemN(type, name, defaultArgument, location);
+        return new ItemN(type, name, defaultArg, location);
       }
 
       private Optional<ExprN> createExprSane(ExprContext expr) {
@@ -133,7 +133,7 @@ public class AstCreator {
         ExprN result = createExprHead(expr.exprHead());
         List<ChainCallContext> chainCallsInPipe = expr.chainCall();
         for (int i = 0; i < chainCallsInPipe.size(); i++) {
-          var pipedArg = pipedArgument(result, expr.p.get(i));
+          var pipedArg = pipedArg(result, expr.p.get(i));
           ChainCallContext chain = chainCallsInPipe.get(i);
           result = createChainCallExpr(pipedArg, chain);
         }
@@ -155,8 +155,8 @@ public class AstCreator {
         return createChainParts(result, chain.chainPart());
       }
 
-      private ArgNode pipedArgument(ExprN result, Token pipeCharacter) {
-        // Location of nameless piped argument is set to the location of pipe character '|'.
+      private ArgNode pipedArg(ExprN result, Token pipeCharacter) {
+        // Location of nameless piped arg is set to the location of pipe character '|'.
         Location location = locationOf(filePath, pipeCharacter);
         return new ArgNode(null, result, location);
       }

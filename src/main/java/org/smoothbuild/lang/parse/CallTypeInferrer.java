@@ -83,10 +83,10 @@ public class CallTypeInferrer {
   }
 
   private List<Optional<TypeS>> assignedTypes(
-      List<ItemSignature> params, List<Optional<ArgNode>> arguments) {
+      List<ItemSignature> params, List<Optional<ArgNode>> args) {
     List<Optional<TypeS>> assigned = new ArrayList<>();
     for (int i = 0; i < params.size(); i++) {
-      Optional<ArgNode> arg = arguments.get(i);
+      Optional<ArgNode> arg = args.get(i);
       if (arg.isPresent()) {
         assigned.add(arg.get().type());
       } else {

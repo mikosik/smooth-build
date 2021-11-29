@@ -542,8 +542,8 @@ public class TestingContext {
 
   // Expr-s
 
-  public CallH callH(ObjectH func, ImmutableList<ObjectH> arguments) {
-    return objectHDb().call(func, constructH(arguments));
+  public CallH callH(ObjectH func, ImmutableList<ObjectH> args) {
+    return objectHDb().call(func, constructH(args));
   }
 
   public ConstructH constructH(ImmutableList<ObjectH> items) {
@@ -666,12 +666,12 @@ public class TestingContext {
     return new BlobS(blobST(), ByteString.of((byte) data), loc(line));
   }
 
-  public CallS callS(TypeS type, ExprS expr, ExprS... arguments) {
-    return callS(1, type, expr, arguments);
+  public CallS callS(TypeS type, ExprS expr, ExprS... args) {
+    return callS(1, type, expr, args);
   }
 
-  public CallS callS(int line, TypeS type, ExprS expr, ExprS... arguments) {
-    return new CallS(type, expr, list(arguments), loc(line));
+  public CallS callS(int line, TypeS type, ExprS expr, ExprS... args) {
+    return new CallS(type, expr, list(args), loc(line));
   }
 
   public CtorS ctorS(TypeS resultType, String name, Item... params) {

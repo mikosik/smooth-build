@@ -41,7 +41,7 @@ public class SetsTest {
   @Nested
   class map {
     @Test
-    public void returns_empty_for_empty_argument() {
+    public void returns_empty_for_empty_arg() {
       assertThat(map(new HashSet<String>(), String::toUpperCase))
           .isEmpty();
     }
@@ -62,7 +62,7 @@ public class SetsTest {
   @Nested
   class filter {
     @Test
-    public void returns_empty_for_empty_argument() {
+    public void returns_empty_for_empty_arg() {
       assertThat(filter(new HashSet<>(), e -> true))
           .isEmpty();
     }

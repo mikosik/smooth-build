@@ -11,7 +11,7 @@ import org.smoothbuild.acceptance.CommandWithArgs;
 public abstract class DefaultModuleTestCase extends AcceptanceTestCase {
   @Test
   public void missing_default_module_causes_error_without_creating_smooth_dir() {
-    runSmooth(commandNameWithArgument());
+    runSmooth(commandNameWithArg());
     assertFinishedWithError();
     assertSysOutContains(
         "smooth: error: Directory '" + projectDirOption() + "' doesn't have 'build.smooth'. " +
@@ -20,5 +20,5 @@ public abstract class DefaultModuleTestCase extends AcceptanceTestCase {
         .isFalse();
   }
 
-  protected abstract CommandWithArgs commandNameWithArgument();
+  protected abstract CommandWithArgs commandNameWithArg();
 }

@@ -55,7 +55,7 @@ public class JavacFunc {
     }
 
     public ArrayH compile(ArrayH files) throws IOException {
-      // prepare arguments for compilation
+      // prepare args for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
       LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(nativeApi);

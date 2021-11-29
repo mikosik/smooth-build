@@ -33,11 +33,11 @@ public class InferArgsToParamsAssignment {
   public static Maybe<List<Optional<ArgNode>>> inferArgsToParamsAssignment(
       CallN call, NList<ItemSignature> params) {
     var logBuffer = new LogBuffer();
-    ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
-    logBuffer.logAll(findPositionalArgumentAfterNamedArgumentError(call, params));
-    logBuffer.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, params));
+    ImmutableList<ArgNode> positionalArgs = leadingPositionalArgs(call);
+    logBuffer.logAll(findPositionalArgAfterNamedArgError(call, params));
+    logBuffer.logAll(findTooManyPositionalArgsError(call, positionalArgs, params));
     logBuffer.logAll(findUnknownParamNameErrors(call, params));
-    logBuffer.logAll(findDuplicateAssignmentErrors(call, positionalArguments, params));
+    logBuffer.logAll(findDuplicateAssignmentErrors(call, positionalArgs, params));
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
@@ -48,7 +48,7 @@ public class InferArgsToParamsAssignment {
     return maybeValueAndLogs(assignedArgs, logBuffer);
   }
 
-  private static ImmutableList<ArgNode> leadingPositionalArguments(CallN call) {
+  private static ImmutableList<ArgNode> leadingPositionalArgs(CallN call) {
     return call.args()
         .stream()
         .takeWhile(not(ArgNode::declaresName))
@@ -71,7 +71,7 @@ public class InferArgsToParamsAssignment {
     return assignedList;
   }
 
-  private static List<Log> findPositionalArgumentAfterNamedArgumentError(
+  private static List<Log> findPositionalArgAfterNamedArgError(
       CallN call, List<ItemSignature> params) {
     return call.args()
         .stream()
@@ -82,9 +82,9 @@ public class InferArgsToParamsAssignment {
         .collect(toList());
   }
 
-  private static List<Log> findTooManyPositionalArgumentsError(
-      CallN call, List<ArgNode> positionalArguments, List<ItemSignature> params) {
-    if (params.size() < positionalArguments.size()) {
+  private static List<Log> findTooManyPositionalArgsError(
+      CallN call, List<ArgNode> positionalArgs, List<ItemSignature> params) {
+    if (params.size() < positionalArgs.size()) {
       return list(parseError(
           call, inCallToPrefix(call, params) + "Too many positional arguments."));
     }
@@ -103,8 +103,8 @@ public class InferArgsToParamsAssignment {
   }
 
   private static List<Log> findDuplicateAssignmentErrors(
-      CallN call, List<ArgNode> positionalArguments, NList<ItemSignature> params) {
-    Set<String> names = positionalArgumentNames(positionalArguments, params);
+      CallN call, List<ArgNode> positionalArgs, NList<ItemSignature> params) {
+    Set<String> names = positionalArgNames(positionalArgs, params);
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)
@@ -113,10 +113,10 @@ public class InferArgsToParamsAssignment {
         .collect(toList());
   }
 
-  private static Set<String> positionalArgumentNames(List<ArgNode> positionalArguments,
+  private static Set<String> positionalArgNames(List<ArgNode> positionalArgs,
       NList<ItemSignature> params) {
     return params.stream()
-        .limit(positionalArguments.size())
+        .limit(positionalArgs.size())
         .flatMap(p -> p.nameO().stream())
         .collect(toSet());
   }

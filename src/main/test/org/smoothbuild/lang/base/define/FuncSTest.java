@@ -26,14 +26,14 @@ public class FuncSTest extends TestingContext {
   }
 
   @Test
-  public void func_with_all_params_with_default_arguments_can_be_called_without_args() {
+  public void func_with_all_params_with_default_args_can_be_called_without_args() {
     FuncS func = myFunc(STRING, list(paramWithDefault("a"), paramWithDefault("b")));
     assertThat(func.canBeCalledArgless())
         .isTrue();
   }
 
   @Test
-  public void func_with_one_param_without_default_arguments_cannot_be_called_without_args() {
+  public void func_with_one_param_without_default_args_cannot_be_called_without_args() {
     FuncS func = myFunc(STRING, list(paramWithDefault("a"), paramWithoutDefault("b")));
     assertThat(func.canBeCalledArgless())
         .isFalse();
@@ -47,8 +47,8 @@ public class FuncSTest extends TestingContext {
     return param(name, Optional.empty());
   }
 
-  private Item param(String name, Optional<ExprS> defaultArgument) {
-    return new Item(STRING, modulePath(), name, defaultArgument, loc());
+  private Item param(String name, Optional<ExprS> defaultArg) {
+    return new Item(STRING, modulePath(), name, defaultArg, loc());
   }
 
   private FuncS myFunc(TypeS resultType, ImmutableList<Item> params) {

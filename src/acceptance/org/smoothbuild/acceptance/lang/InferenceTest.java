@@ -11,7 +11,7 @@ import org.smoothbuild.acceptance.testing.Concat;
 
 public class InferenceTest extends AcceptanceTestCase {
   @Test
-  public void actual_result_type_can_be_inferred_from_arguments() throws Exception {
+  public void actual_result_type_can_be_inferred_from_args() throws Exception {
     createUserModule("""
             testIdentity(A value) = value;
             result = testIdentity(value="abc");
@@ -23,7 +23,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void actual_result_type_can_be_inferred_from_arguments_and_converted() throws Exception {
+  public void actual_result_type_can_be_inferred_from_args_and_converted() throws Exception {
     createUserModule("""
             A myfunc(A res, A forcedType) = res;
             result = myfunc(res = [], forcedType = [ [ "abc" ] ]);
@@ -35,7 +35,7 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void actual_array_type_can_be_inferred_from_arguments_and_elems_are_converted()
+  public void actual_array_type_can_be_inferred_from_args_and_elems_are_converted()
       throws Exception {
     createUserModule("""
             pair(A first, A second) = [ first, second ];

@@ -18,8 +18,8 @@ import org.smoothbuild.db.object.type.val.FuncTypeH;
  */
 public class CallH extends ExprH {
   private static final int DATA_SEQUENCE_SIZE = 2;
-  private static final int FUNCTION_INDEX = 0;
-  private static final int ARGUMENTS_INDEX = 1;
+  private static final int FUNC_INDEX = 0;
+  private static final int ARGS_INDEX = 1;
 
   public CallH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
@@ -33,26 +33,26 @@ public class CallH extends ExprH {
 
   public CallData data() {
     ObjectH func = readFunc();
-    ConstructH arguments = readArguments();
-    validate(func, arguments);
-    return new CallData(func, arguments);
+    ConstructH args = readArgs();
+    validate(func, args);
+    return new CallData(func, args);
   }
 
-  public record CallData(ObjectH func, ConstructH arguments) {}
+  public record CallData(ObjectH func, ConstructH args) {}
 
-  private void validate(ObjectH func, ConstructH argumentsConstruct) {
+  private void validate(ObjectH func, ConstructH argsConstruct) {
     if (func.type() instanceof FuncTypeH funcType) {
       var typing = objectDb().typing();
       var params = funcType.params();
-      var arguments = argumentsConstruct.spec().evalType().items();
+      var args = argsConstruct.spec().evalType().items();
       allMatchOtherwise(
           params,
-          arguments,
+          args,
           typing::isParamAssignable,
-          (expectedSize, actualSize) -> illegalArguments(funcType, argumentsConstruct),
-          i -> illegalArguments(funcType, argumentsConstruct)
+          (expectedSize, actualSize) -> illegalArgs(funcType, argsConstruct),
+          i -> illegalArgs(funcType, argsConstruct)
       );
-      var variableBounds = typing.inferVariableBoundsInCall(params, arguments);
+      var variableBounds = typing.inferVariableBoundsInCall(params, args);
       var actualResult = typing.mapVariables(
           funcType.result(), variableBounds, typing.factory().lower());
       if (!Objects.equals(type(), actualResult)) {
@@ -65,19 +65,19 @@ public class CallH extends ExprH {
     }
   }
 
-  private void illegalArguments(FuncTypeH funcType, ConstructH arguments) {
-    throw new DecodeExprWrongEvalTypeOfComponentException(hash(), spec(), "arguments",
-        funcType.paramsTuple(), arguments.type());
+  private void illegalArgs(FuncTypeH funcType, ConstructH args) {
+    throw new DecodeExprWrongEvalTypeOfComponentException(hash(), spec(), "args",
+        funcType.paramsTuple(), args.type());
   }
 
   private ObjectH readFunc() {
     return readSequenceElementObj(
-        DATA_PATH, dataHash(), FUNCTION_INDEX, DATA_SEQUENCE_SIZE, ObjectH.class);
+        DATA_PATH, dataHash(), FUNC_INDEX, DATA_SEQUENCE_SIZE, ObjectH.class);
   }
 
-  private ConstructH readArguments() {
+  private ConstructH readArgs() {
     return readSequenceElementObj(
-        DATA_PATH, dataHash(), ARGUMENTS_INDEX, DATA_SEQUENCE_SIZE, ConstructH.class);
+        DATA_PATH, dataHash(), ARGS_INDEX, DATA_SEQUENCE_SIZE, ConstructH.class);
   }
 
   @Override

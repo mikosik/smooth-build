@@ -61,7 +61,7 @@ public class NativeTest extends AcceptanceTestCase {
   @Nested
   class _nat_func {
     @Test
-    public void can_return_passed_argument() throws Exception {
+    public void can_return_passed_arg() throws Exception {
       createNativeJar(StringIdentity.class);
       createUserModule(format("""
             @Native("%s")

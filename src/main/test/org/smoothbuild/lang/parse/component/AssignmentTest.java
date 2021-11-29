@@ -65,7 +65,7 @@ public class AssignmentTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("param_assignment_test_data")
-  public void argument_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
+  public void arg_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
     TestingModuleLoader module = module(unlines(
@@ -86,7 +86,7 @@ public class AssignmentTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("param_assignment_test_data")
-  public void argument_type_is_assignable_to_named_param_type(TestedAssignmentSpec testSpec) {
+  public void arg_type_is_assignable_to_named_param_type(TestedAssignmentSpec testSpec) {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
     TestingModuleLoader module = module(unlines(
@@ -112,7 +112,7 @@ public class AssignmentTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
-  public void default_argument_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
+  public void default_arg_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target();
     TestedType source = testSpec.source();
     String sourceCode = unlines(

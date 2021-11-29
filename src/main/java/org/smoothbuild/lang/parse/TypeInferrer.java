@@ -273,7 +273,7 @@ public class TypeInferrer {
             if (args.containsProblem()) {
               logBuffer.logAll(args.logs());
               call.setType(empty());
-            } else if (someArgumentHasNotInferredType(args.value())) {
+            } else if (someArgHasNotInferredType(args.value())) {
               call.setType(empty());
             } else {
               call.setAssignedArgs(args.value());
@@ -305,7 +305,7 @@ public class TypeInferrer {
         }
       }
 
-      private static boolean someArgumentHasNotInferredType(List<Optional<ArgNode>> assignedArgs) {
+      private static boolean someArgHasNotInferredType(List<Optional<ArgNode>> assignedArgs) {
         return assignedArgs.stream()
             .flatMap(Optional::stream)
             .anyMatch(a -> a.type().isEmpty());

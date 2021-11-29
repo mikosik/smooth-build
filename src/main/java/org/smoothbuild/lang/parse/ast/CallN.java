@@ -31,9 +31,9 @@ public final class CallN extends ExprN {
   }
 
   /**
-   * @return List of arguments where position of argument specifies to which parameter that
-   * argument has been assigned. Optional.empty() value means that given parameter has no
-   * argument assigned explicitly and parameter's default argument should be used.
+   * @return List of args where position of arg specifies to which parameter that
+   * arg has been assigned. Optional.empty() value means that given parameter has no
+   * arg assigned explicitly and parameter's default arg should be used.
    */
   public List<Optional<ArgNode>> assignedArgs() {
     return assignedArgs;

@@ -35,7 +35,7 @@ public class ListCommandTest {
   @Nested
   class DefaultModule extends DefaultModuleTestCase {
     @Override
-    protected CommandWithArgs commandNameWithArgument() {
+    protected CommandWithArgs commandNameWithArg() {
       return listCommand();
     }
   }
@@ -43,7 +43,7 @@ public class ListCommandTest {
   @Nested
   class LockFile extends LockFileTestCase {
     @Override
-    protected CommandWithArgs commandNameWithArgument() {
+    protected CommandWithArgs commandNameWithArg() {
       return listCommand();
     }
   }

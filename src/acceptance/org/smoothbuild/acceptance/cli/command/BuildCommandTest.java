@@ -56,7 +56,7 @@ public class BuildCommandTest {
   @Nested
   class _default_module extends DefaultModuleTestCase {
     @Override
-    protected CommandWithArgs commandNameWithArgument() {
+    protected CommandWithArgs commandNameWithArg() {
       return buildCommand("result");
     }
   }
@@ -64,13 +64,13 @@ public class BuildCommandTest {
   @Nested
   class _lock_file extends LockFileTestCase {
     @Override
-    protected CommandWithArgs commandNameWithArgument() {
+    protected CommandWithArgs commandNameWithArg() {
       return buildCommand("result");
     }
   }
 
   @Nested
-  class _value_arguments extends ValuesArgTestCase {
+  class _value_args extends ValuesArgTestCase {
     @Override
     protected String commandName() {
       return BuildCommand.NAME;

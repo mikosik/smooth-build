@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public record CallS(TypeS type, ExprS funcExpr,
-    ImmutableList<ExprS> arguments, Location location) implements ExprS {
+    ImmutableList<ExprS> args, Location location) implements ExprS {
   @Override
   public String name() {
     return "()";

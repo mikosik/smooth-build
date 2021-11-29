@@ -96,8 +96,8 @@ public class ObjFactory {
     return objectHDb.bool(value);
   }
 
-  public CallH call(ObjectH func, ConstructH arguments) {
-    return objectHDb.call(func, arguments);
+  public CallH call(ObjectH func, ConstructH args) {
+    return objectHDb.call(func, args);
   }
 
   public ConstructH construct(ImmutableList<ObjectH> items) {

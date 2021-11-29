@@ -664,7 +664,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void polytype_param_can_have_default_argument() {
+        public void polytype_param_can_have_default_arg() {
           module("""
         A myFunc(A value = "abc") = value;
         """)
@@ -672,7 +672,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void default_argument_gets_converted_to_polytype_param() {
+        public void default_arg_gets_converted_to_polytype_param() {
           module("""
         [A] myFunc(A param1, [A] param2 = []) = param2;
         [String] result = myFunc("abc");
@@ -795,7 +795,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void named_argument_which_doesnt_exist_causes_error() {
+        public void named_arg_which_doesnt_exist_causes_error() {
           String code = """
               myIdentity(String param) = param;
               result = myIdentity(wrongName="abc");
@@ -826,7 +826,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void all_named_arguments_must_come_after_positional() {
+        public void all_named_args_must_come_after_positional() {
           String code = """
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param2="def", "abc");
@@ -838,7 +838,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void assigning_argument_by_name_twice_causes_error() {
+        public void assigning_arg_by_name_twice_causes_error() {
           String code = """
               myIdentity(String param) = param;
               result = myIdentity(param="abc", param="abc");
@@ -849,7 +849,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void assigning_by_name_argument_that_is_assigned_by_position_causes_error() {
+        public void assigning_by_name_arg_that_is_assigned_by_position_causes_error() {
           String code = """
               myIdentity(String param) = param;
               result = myIdentity("abc", param="abc");
@@ -860,7 +860,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void param_with_default_argument_can_be_assigned_positionally() {
+        public void param_with_default_arg_can_be_assigned_positionally() {
           String code = """
               myIdentity(String param1="abc", String param2="def") = param1;
               result = myIdentity("abc", "def");
@@ -870,7 +870,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void param_with_default_argument_can_be_assigned_by_name() {
+        public void param_with_default_arg_can_be_assigned_by_name() {
           String code = """
             myIdentity(String param1="abc", String param2="def") = param1;
             result = myIdentity(param1="abc", param2="def");
@@ -892,7 +892,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void func_default_argument_is_stripped_during_assignment() {
+        public void func_default_arg_is_stripped_during_assignment() {
           String code = """
             myFunc(String param = "abc") = param;
             valueReferencingFunc = myFunc;
@@ -943,7 +943,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Nested
-      class _argument_list {
+      class _arg_list {
         @Test
         public void can_have_trailing_comma() {
           module(funcCall("0x07,"))
@@ -1311,7 +1311,7 @@ public class DeclarationTest extends TestingContext {
     @Nested
     class _pipe {
       @Test
-      public void regression_test_error_in_expression_of_argument_of_not_first_elem_of_pipe() {
+      public void regression_test_error_in_expression_of_arg_of_not_first_elem_of_pipe() {
         module("""
             String myFunc(String a, String b) = "abc";
             String myIdentity(String s) = s;
