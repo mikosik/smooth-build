@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.type.base.ExprSpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
-public abstract class ExprH extends ObjectH implements EvaluableH {
+public abstract class ExprH extends ObjectH {
   public ExprH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
     checkArgument(merkleRoot.spec() instanceof ExprSpecH);
