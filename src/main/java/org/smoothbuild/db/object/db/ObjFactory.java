@@ -15,7 +15,7 @@ import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -96,12 +96,12 @@ public class ObjFactory {
     return objectHDb.bool(value);
   }
 
-  public CallH call(ObjectH func, ConstructH args) {
+  public CallH call(ObjectH func, CombineH args) {
     return objectHDb.call(func, args);
   }
 
-  public ConstructH construct(ImmutableList<ObjectH> items) {
-    return objectHDb.construct(items);
+  public CombineH combine(ImmutableList<ObjectH> items) {
+    return objectHDb.combine(items);
   }
 
   public TupleH file(StringH path, BlobH content) {

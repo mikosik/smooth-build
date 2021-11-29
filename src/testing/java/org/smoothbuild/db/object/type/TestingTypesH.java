@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.testing.TestingContext;
@@ -40,7 +40,7 @@ public class TestingTypesH {
 
   public static final SpecH CALL = CONTEXT.callHT();
   public static final SpecH ORDER = CONTEXT.orderHT();
-  public static final SpecH CONSTRUCT = CONTEXT.constructHT(list(INT, STRING));
+  public static final SpecH CONSTRUCT = CONTEXT.combineHT(list(INT, STRING));
   public static final SpecH SELECT = CONTEXT.selectHT(INT);
   public static final SpecH REF = CONTEXT.refHT(INT);
 
@@ -98,7 +98,7 @@ public class TestingTypesH {
       concat(BASE_TYPESV_TO_TEST, ARRAY_TYPESV_TO_TEST);
 
   private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
-      "any", "array", "array", "blob", "bool", "call", "construct", "defFunc",
+      "any", "array", "array", "blob", "bool", "call", "combine", "defFunc",
       "equals", "func", "func", "get", "getClass", "hashCode", "ifFunc", "int_",
       "lower", "mapFunc", "natFunc", "nothing", "notify", "notifyAll", "oneSideBound",
       "oneSideBound", "order", "ref", "select", "string", "toString", "tuple", "unbounded", "upper",
@@ -140,8 +140,8 @@ public class TestingTypesH {
     var exprTypes = list(
         TYPEH_DB.call(BLOB),
         TYPEH_DB.call(STRING),
-        TYPEH_DB.construct(TYPEH_DB.tuple(list(BLOB))),
-        TYPEH_DB.construct(TYPEH_DB.tuple(list(STRING))),
+        TYPEH_DB.combine(TYPEH_DB.tuple(list(BLOB))),
+        TYPEH_DB.combine(TYPEH_DB.tuple(list(STRING))),
         TYPEH_DB.order(BLOB),
         TYPEH_DB.order(STRING),
         TYPEH_DB.ref(BLOB),
@@ -168,7 +168,7 @@ public class TestingTypesH {
     return TYPEH_DB.tuple(itemTypes);
   }
 
-  public static ConstructTypeH construct(TupleTypeH tupleType) {
-    return TYPEH_DB.construct(tupleType);
+  public static CombineTypeH combine(TupleTypeH tupleType) {
+    return TYPEH_DB.combine(tupleType);
   }
 }

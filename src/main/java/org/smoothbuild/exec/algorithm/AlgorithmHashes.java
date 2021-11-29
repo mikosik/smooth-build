@@ -22,7 +22,7 @@ public class AlgorithmHashes {
     return hash(2, destinationType.hash());
   }
 
-  public static Hash constructAlgorithmHash(TupleTypeH type) {
+  public static Hash combineAlgorithmHash(TupleTypeH type) {
     return hash(3, type.hash());
   }
 

@@ -20,7 +20,7 @@ import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -40,7 +40,7 @@ import org.smoothbuild.db.object.type.TypeHDb;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
-import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
 import org.smoothbuild.db.object.type.expr.RefTypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
@@ -371,12 +371,12 @@ public class TestingContext {
     return typeHDb().call(evaluationType);
   }
 
-  public ConstructTypeH constructHT() {
-    return constructHT(list(intHT(), stringHT()));
+  public CombineTypeH combineHT() {
+    return combineHT(list(intHT(), stringHT()));
   }
 
-  public ConstructTypeH constructHT(ImmutableList<TypeH> itemSpecs) {
-    return typeHDb().construct(tupleHT(itemSpecs));
+  public CombineTypeH combineHT(ImmutableList<TypeH> itemSpecs) {
+    return typeHDb().combine(tupleHT(itemSpecs));
   }
 
   public OrderTypeH orderHT() {
@@ -543,11 +543,11 @@ public class TestingContext {
   // Expr-s
 
   public CallH callH(ObjectH func, ImmutableList<ObjectH> args) {
-    return objectHDb().call(func, constructH(args));
+    return objectHDb().call(func, combineH(args));
   }
 
-  public ConstructH constructH(ImmutableList<ObjectH> items) {
-    return objectHDb().construct(items);
+  public CombineH combineH(ImmutableList<ObjectH> items) {
+    return objectHDb().combine(items);
   }
 
   public OrderH orderH(ImmutableList<ObjectH> elems) {

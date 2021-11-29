@@ -35,7 +35,7 @@ import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
-import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
+import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.obj.exc.DecodeObjTypeException;
@@ -45,7 +45,7 @@ import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -61,7 +61,7 @@ import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
-import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.DefFuncTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
@@ -383,7 +383,7 @@ public class ObjectCorruptedHTest extends TestingContext {
        */
       var funcType = defFuncHT(intHT(), list(stringHT(), intHT()));
       var func = defFuncH(funcType, intH());
-      ConstructH args = constructH(list(stringH(), intH()));
+      CombineH args = combineH(list(stringH(), intH()));
       Hash objHash =
           hash(
               hash(callHT()),
@@ -407,7 +407,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var func = intH(0);
-      var args = constructH(list(stringH(), intH()));
+      var args = combineH(list(stringH(), intH()));
       Hash dataHash = hash(
           hash(func),
           hash(args)
@@ -443,7 +443,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void data_is_sequence_with_three_elems() throws Exception {
       var func = intH(0);
-      var args = constructH(list(stringH(), intH()));
+      var args = combineH(list(stringH(), intH()));
       Hash dataHash = hash(
           hash(func),
           hash(args),
@@ -461,7 +461,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     @Test
     public void func_component_evaluation_type_is_not_func() throws Exception {
       var func = intH(3);
-      ConstructH args = constructH(list(stringH(), intH()));
+      CombineH args = combineH(list(stringH(), intH()));
       CallTypeH type = callHT(stringHT());
       Hash objHash =
           hash(
@@ -490,11 +490,11 @@ public class ObjectCorruptedHTest extends TestingContext {
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, callHT(), DATA_PATH + "[1]", ConstructH.class, IntH.class));
+              objHash, callHT(), DATA_PATH + "[1]", CombineH.class, IntH.class));
     }
 
     @Test
-    public void args_component_evaluation_type_is_not_construct_but_different_expr()
+    public void args_component_evaluation_type_is_not_combine_but_different_expr()
         throws Exception {
       var funcType = defFuncHT(intHT(), list(stringHT(), intHT()));
       var func = defFuncH(funcType, intH());
@@ -509,7 +509,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, type, DATA_PATH + "[1]", ConstructH.class, RefH.class));
+              objHash, type, DATA_PATH + "[1]", CombineH.class, RefH.class));
     }
 
     @Test
@@ -517,7 +517,7 @@ public class ObjectCorruptedHTest extends TestingContext {
         throws Exception {
       DefFuncTypeH funcType = defFuncHT(intHT(), list(stringHT()));
       var func = defFuncH(funcType, intH());
-      var args = constructH(list(stringH()));
+      var args = combineH(list(stringH()));
       var type = callHT(stringHT());
       Hash objHash =
           hash(
@@ -537,7 +537,7 @@ public class ObjectCorruptedHTest extends TestingContext {
         throws Exception {
       var funcType = defFuncHT(intHT(), list(stringHT(), boolHT()));
       var func = defFuncH(funcType, intH());
-      var args = constructH(list(stringH(), intH()));
+      var args = combineH(list(stringH(), intH()));
       var spec = callHT(intHT());
       Hash objHash =
           hash(
@@ -715,23 +715,23 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   @Nested
-  class _construct {
+  class _combine {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save Construct
+       * This test makes sure that other tests in this class use proper scheme to save Combine
        * in HashedDb.
        */
       var expr1 = intH(1);
       var expr2 = stringH("abc");
       Hash objHash =
           hash(
-              hash(constructHT(list(intHT(), stringHT()))),
+              hash(combineHT(list(intHT(), stringHT()))),
               hash(
                   hash(expr1),
                   hash(expr2)
               ));
-      var items = ((ConstructH) objectHDb().get(objHash)).items();
+      var items = ((CombineH) objectHDb().get(objHash)).items();
       assertThat(items)
           .containsExactly(expr1, expr2)
           .inOrder();
@@ -739,7 +739,7 @@ public class ObjectCorruptedHTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(constructHT());
+      obj_root_without_data_hash(combineHT());
     }
 
     @Test
@@ -753,15 +753,15 @@ public class ObjectCorruptedHTest extends TestingContext {
       obj_root_with_two_data_hashes(
           orderHT(),
           dataHash,
-          (Hash objHash) -> ((ConstructH) objectHDb().get(objHash)).items()
+          (Hash objHash) -> ((CombineH) objectHDb().get(objHash)).items()
       );
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          constructHT(),
-          (Hash objHash) -> ((ConstructH) objectHDb().get(objHash)).items());
+          combineHT(),
+          (Hash objHash) -> ((CombineH) objectHDb().get(objHash)).items());
     }
 
     @ParameterizedTest
@@ -771,11 +771,11 @@ public class ObjectCorruptedHTest extends TestingContext {
       Hash notHashOfSequence = hash(ByteString.of(new byte[byteCount]));
       Hash objHash =
           hash(
-              hash(constructHT()),
+              hash(combineHT()),
               notHashOfSequence
           );
-      assertCall(() -> ((ConstructH) objectHDb().get(objHash)).items())
-          .throwsException(new DecodeObjNodeException(objHash, constructHT(), DATA_PATH))
+      assertCall(() -> ((CombineH) objectHDb().get(objHash)).items())
+          .throwsException(new DecodeObjNodeException(objHash, combineHT(), DATA_PATH))
           .withCause(new DecodeHashSequenceException(
               notHashOfSequence, byteCount % Hash.lengthInBytes()));
     }
@@ -785,13 +785,13 @@ public class ObjectCorruptedHTest extends TestingContext {
       Hash nowhere = Hash.of(33);
       Hash objHash =
           hash(
-              hash(constructHT()),
+              hash(combineHT()),
               hash(
                   nowhere
               )
           );
-      assertCall(() -> ((ConstructH) objectHDb().get(objHash)).items())
-          .throwsException(new DecodeObjNodeException(objHash, constructHT(), DATA_PATH + "[0]"))
+      assertCall(() -> ((CombineH) objectHDb().get(objHash)).items())
+          .throwsException(new DecodeObjNodeException(objHash, combineHT(), DATA_PATH + "[0]"))
           .withCause(new NoSuchObjException(nowhere));
     }
 
@@ -799,7 +799,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void evaluation_type_items_size_is_different_than_actual_items_size()
         throws Exception {
       IntH expr1 =  intH();
-      ConstructTypeH type = constructHT(list(intHT(), stringHT()));
+      CombineTypeH type = combineHT(list(intHT(), stringHT()));
       Hash objHash =
           hash(
               hash(type),
@@ -807,8 +807,8 @@ public class ObjectCorruptedHTest extends TestingContext {
                   hash(expr1)
               ));
 
-      assertCall(() -> ((ConstructH) objectHDb().get(objHash)).items())
-          .throwsException(new DecodeConstructWrongItemsSizeException(objHash, type, 1));
+      assertCall(() -> ((CombineH) objectHDb().get(objHash)).items())
+          .throwsException(new DecodeCombineWrongItemsSizeException(objHash, type, 1));
     }
 
     @Test
@@ -816,7 +816,7 @@ public class ObjectCorruptedHTest extends TestingContext {
         throws Exception {
       var expr1 = intH(1);
       var expr2 = stringH("abc");
-      var type = constructHT(list(intHT(), boolHT()));
+      var type = combineHT(list(intHT(), boolHT()));
       Hash objHash =
           hash(
               hash(type),
@@ -825,7 +825,7 @@ public class ObjectCorruptedHTest extends TestingContext {
                   hash(expr2)
               ));
 
-      assertCall(() -> ((ConstructH) objectHDb().get(objHash)).items())
+      assertCall(() -> ((CombineH) objectHDb().get(objHash)).items())
           .throwsException(
               new DecodeExprWrongEvalTypeOfComponentException(
                   objHash, type, "items[1]", boolHT(), stringHT()));

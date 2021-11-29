@@ -9,9 +9,9 @@ import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
-import org.smoothbuild.db.object.obj.exc.DecodeConstructWrongItemsSizeException;
+import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
-import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
 import com.google.common.collect.ImmutableList;
@@ -19,15 +19,15 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class ConstructH extends ExprH {
-  public ConstructH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
+public class CombineH extends ExprH {
+  public CombineH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
-    checkArgument(merkleRoot.spec() instanceof ConstructTypeH);
+    checkArgument(merkleRoot.spec() instanceof CombineTypeH);
   }
 
   @Override
-  public ConstructTypeH spec() {
-    return (ConstructTypeH) super.spec();
+  public CombineTypeH spec() {
+    return (CombineTypeH) super.spec();
   }
 
   @Override
@@ -43,7 +43,7 @@ public class ConstructH extends ExprH {
         items,
         (s, i) -> Objects.equals(s, i.type()),
         (i, j) -> {
-          throw new DecodeConstructWrongItemsSizeException(hash(), spec(), j);
+          throw new DecodeCombineWrongItemsSizeException(hash(), spec(), j);
         },
         (i) -> {
           throw new DecodeExprWrongEvalTypeOfComponentException(hash(), spec(),

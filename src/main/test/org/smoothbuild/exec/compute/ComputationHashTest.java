@@ -11,7 +11,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.TestingTypesH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.algorithm.Algorithm;
-import org.smoothbuild.exec.algorithm.ConstructAlgorithm;
+import org.smoothbuild.exec.algorithm.CombineAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
 import org.smoothbuild.exec.algorithm.OrderAlgorithm;
@@ -99,24 +99,24 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_construct_algorithm_and_empty_input_is_stable() {
-    var algorithm = new ConstructAlgorithm(PERSON);
+  public void hash_of_computation_with_combine_algorithm_and_empty_input_is_stable() {
+    var algorithm = new CombineAlgorithm(PERSON);
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("ff45a42fc341a33b8835f873f94a083181e665a4"));
   }
 
   @Test
-  public void hash_of_computation_with_construct_algorithm_and_one_elem_input_is_stable() {
-    var algorithm = new ConstructAlgorithm(PERSON);
+  public void hash_of_computation_with_combine_algorithm_and_one_elem_input_is_stable() {
+    var algorithm = new CombineAlgorithm(PERSON);
     var input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("b7f6067462bee16b2bf3e9ab5c54c3e4bd1eba54"));
   }
 
   @Test
-  public void hash_of_computation_with_construct_algorithm_and_two_elems_input_is_stable() {
-    var algorithm = new ConstructAlgorithm(PERSON);
+  public void hash_of_computation_with_combine_algorithm_and_two_elems_input_is_stable() {
+    var algorithm = new CombineAlgorithm(PERSON);
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("b598a215e92550d41b2772ff96ba134e4b544dbf"));

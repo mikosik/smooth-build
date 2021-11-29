@@ -7,7 +7,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -41,7 +41,7 @@ public enum SpecKindH {
   ORDER((byte) 11, OrderH.class, OrderH::new),
   SELECT((byte) 12, SelectH.class, SelectH::new),
   REF((byte) 14, RefH.class, RefH::new),
-  CONSTRUCT((byte) 15, ConstructH.class, ConstructH::new),
+  CONSTRUCT((byte) 15, CombineH.class, CombineH::new),
 
   VARIABLE((byte) 17, ValueH.class, SpecKindH::throwException),
   ANY((byte) 18, ValueH.class, SpecKindH::throwException),

@@ -112,7 +112,7 @@ public class ShConverter {
         convertType(ctorS.resultType()),
         convertParams(ctorS.params()));
     var paramRefs = ctorParamRefs(ctorS);
-    var body = objFactory.construct(paramRefs);
+    var body = objFactory.combine(paramRefs);
     nals.put(body, ctorS);
     return objFactory.defFunc(type, body);
   }
@@ -205,9 +205,9 @@ public class ShConverter {
   private CallH convertCall(CallS callS) {
     var funcExprH = convertExpr(callS.funcExpr());
     var argsH = map(callS.args(), this::convertExpr);
-    var construct = objFactory.construct(argsH);
-    nals.put(construct, new NalImpl("{}", callS.location()));
-    return objFactory.call(funcExprH, construct);
+    var combine = objFactory.combine(argsH);
+    nals.put(combine, new NalImpl("{}", callS.location()));
+    return objFactory.call(funcExprH, combine);
   }
 
   private IntH convertInt(IntS intS) {

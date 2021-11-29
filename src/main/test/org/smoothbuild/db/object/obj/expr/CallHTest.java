@@ -61,7 +61,7 @@ public class CallHTest extends TestingContext {
     var func = defFuncH();
     ImmutableList<ObjectH> args = list(stringH()) ;
     assertThat(callH(func, args).data().args())
-        .isEqualTo(constructH(args));
+        .isEqualTo(combineH(args));
   }
 
   @Test
@@ -150,7 +150,7 @@ public class CallHTest extends TestingContext {
     ImmutableList<ObjectH> args = list(stringH());
     var call = callH(func, args);
     assertThat(((CallH) objectHDbOther().get(call.hash())).data())
-        .isEqualTo(new CallData(func, constructH(args)));
+        .isEqualTo(new CallData(func, combineH(args)));
   }
 
   @Test

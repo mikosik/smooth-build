@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.exec.job.TaskKind.CALL;
-import static org.smoothbuild.exec.job.TaskKind.CONSTRUCT;
+import static org.smoothbuild.exec.job.TaskKind.COMBINE;
 import static org.smoothbuild.exec.job.TaskKind.LITERAL;
 import static org.smoothbuild.exec.job.TaskKind.SELECT;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -35,8 +35,8 @@ import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
+import org.smoothbuild.exec.algorithm.CombineAlgorithm;
 import org.smoothbuild.exec.algorithm.ConstAlgorithm;
-import org.smoothbuild.exec.algorithm.ConstructAlgorithm;
 import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
 import org.smoothbuild.exec.algorithm.OrderAlgorithm;
 import org.smoothbuild.exec.algorithm.SelectAlgorithm;
@@ -72,16 +72,16 @@ public class JobCreator {
     this.factory = factory;
     this.typing = typing;
     this.nals = nals;
-    this.handler = constructHandlers();
+    this.handler = combineHandlers();
   }
 
-  private ImmutableMap<Class<?>, Handler<?>> constructHandlers() {
+  private ImmutableMap<Class<?>, Handler<?>> combineHandlers() {
     return ImmutableMap.<Class<?>, Handler<?>>builder()
         .put(ArrayH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(BoolH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(BlobH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(CallH.class, new Handler<>(this::callLazy, this::callEager))
-        .put(ConstructH.class, new Handler<>(this::constructLazy, this::constructEager))
+        .put(CombineH.class, new Handler<>(this::combineLazy, this::combineEager))
         .put(DefFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(FuncH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(IfFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
@@ -197,26 +197,26 @@ public class JobCreator {
     return new Task(val.spec(), list(), info, algorithm);
   }
 
-  // Construct
+  // Combine
 
-  private Job constructLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ConstructH constructH) {
-    var nal = nals.get(constructH);
+  private Job combineLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, CombineH combineH) {
+    var nal = nals.get(combineH);
     var location = nal.location();
-    return new LazyJob(constructH.type(), location,
-        () -> constructEager(scope, vars, constructH, nal));
+    return new LazyJob(combineH.type(), location,
+        () -> combineEager(scope, vars, combineH, nal));
   }
 
-  private Job constructEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
-      ConstructH constructH) {
-    var nal = nals.get(constructH);
-    return constructEager(scope, vars, constructH, nal);
+  private Job combineEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
+      CombineH combineH) {
+    var nal = nals.get(combineH);
+    return combineEager(scope, vars, combineH, nal);
   }
-  private Job constructEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
-      ConstructH constructH, Nal nal) {
-    var type = constructH.type();
-    var argsJ = eagerJobsFor(scope, vars, constructH.items());
-    var info = new TaskInfo(CONSTRUCT, nal);
-    var algorithm = new ConstructAlgorithm(constructH.type());
+  private Job combineEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
+      CombineH combineH, Nal nal) {
+    var type = combineH.type();
+    var argsJ = eagerJobsFor(scope, vars, combineH.items());
+    var info = new TaskInfo(COMBINE, nal);
+    var algorithm = new CombineAlgorithm(combineH.type());
     return new Task(type, argsJ, info, algorithm);
   }
 

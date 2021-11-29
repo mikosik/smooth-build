@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.algorithm;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.combineAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.constAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.constructAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.invokeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.orderAlgorithmHash;
@@ -21,10 +21,10 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     HashSet<Hash> hashes = new HashSet<>();
-    var constructedType = tupleHT();
+    var combineedType = tupleHT();
 
     hashes.add(constAlgorithmHash(intH(0)));
-    hashes.add(constructAlgorithmHash(constructedType));
+    hashes.add(combineAlgorithmHash(combineedType));
     hashes.add(convertAlgorithmHash(stringHT()));
     hashes.add(invokeAlgorithmHash(natFuncH(blobH(), stringH("class"))));
     hashes.add(orderAlgorithmHash());
@@ -41,11 +41,11 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void construct_algorithm_has_different_hash_for_different_fields() {
+  public void combine_algorithm_has_different_hash_for_different_fields() {
     var tuple1 = tupleHT(list(boolHT()));
     var tuple2 = tupleHT(list(blobHT()));
-    assertThat(constructAlgorithmHash(tuple1))
-        .isNotEqualTo(constructAlgorithmHash(tuple2));
+    assertThat(combineAlgorithmHash(tuple1))
+        .isNotEqualTo(combineAlgorithmHash(tuple2));
   }
 
   @Test

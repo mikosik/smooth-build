@@ -51,7 +51,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -65,7 +65,7 @@ import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FuncType;
@@ -143,7 +143,7 @@ public class SpecHTest extends TestingContext {
         args(f -> f.tuple(list(f.tuple(list(f.int_())))), "{{Int}}"),
 
         args(f -> f.call(f.int_()), "CALL:Int"),
-        args(f -> f.construct(f.tuple(list(f.string(), f.int_()))), "CONSTRUCT:{String,Int}"),
+        args(f -> f.combine(f.tuple(list(f.string(), f.int_()))), "CONSTRUCT:{String,Int}"),
         args(f -> f.ifFunc(), "A(Bool, A, A)"),
         args(f -> f.mapFunc(), "[B]([A], B(A))"),
         args(f -> f.natFunc(f.blob(), list(f.bool())), "Blob(Bool)"),
@@ -393,7 +393,7 @@ public class SpecHTest extends TestingContext {
 
         arguments(CALL, CallH.class),
         arguments(ORDER, OrderH.class),
-        arguments(CONSTRUCT, ConstructH.class),
+        arguments(CONSTRUCT, CombineH.class),
         arguments(SELECT, SelectH.class),
         arguments(REF, RefH.class)
     );
@@ -409,17 +409,17 @@ public class SpecHTest extends TestingContext {
     }
 
     @ParameterizedTest
-    @MethodSource("construct_cases")
-    public void construct(ConstructTypeH type, TupleTypeH expected) {
+    @MethodSource("combine_cases")
+    public void combine(CombineTypeH type, TupleTypeH expected) {
       assertThat(type.evalType())
           .isEqualTo(expected);
     }
 
-    public static List<Arguments> construct_cases() {
+    public static List<Arguments> combine_cases() {
       TypeHDb db = TYPEH_DB;
       return list(
-          arguments(db.construct(db.tuple(list())), db.tuple(list())),
-          arguments(db.construct(db.tuple(list(STRING))), db.tuple(list(STRING)))
+          arguments(db.combine(db.tuple(list())), db.tuple(list())),
+          arguments(db.combine(db.tuple(list(STRING))), db.tuple(list(STRING)))
       );
     }
 

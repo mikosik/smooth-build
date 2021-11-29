@@ -33,24 +33,24 @@ public class CallH extends ExprH {
 
   public CallData data() {
     ObjectH func = readFunc();
-    ConstructH args = readArgs();
+    CombineH args = readArgs();
     validate(func, args);
     return new CallData(func, args);
   }
 
-  public record CallData(ObjectH func, ConstructH args) {}
+  public record CallData(ObjectH func, CombineH args) {}
 
-  private void validate(ObjectH func, ConstructH argsConstruct) {
+  private void validate(ObjectH func, CombineH argsCombine) {
     if (func.type() instanceof FuncTypeH funcType) {
       var typing = objectDb().typing();
       var params = funcType.params();
-      var args = argsConstruct.spec().evalType().items();
+      var args = argsCombine.spec().evalType().items();
       allMatchOtherwise(
           params,
           args,
           typing::isParamAssignable,
-          (expectedSize, actualSize) -> illegalArgs(funcType, argsConstruct),
-          i -> illegalArgs(funcType, argsConstruct)
+          (expectedSize, actualSize) -> illegalArgs(funcType, argsCombine),
+          i -> illegalArgs(funcType, argsCombine)
       );
       var variableBounds = typing.inferVariableBoundsInCall(params, args);
       var actualResult = typing.mapVariables(
@@ -65,7 +65,7 @@ public class CallH extends ExprH {
     }
   }
 
-  private void illegalArgs(FuncTypeH funcType, ConstructH args) {
+  private void illegalArgs(FuncTypeH funcType, CombineH args) {
     throw new DecodeExprWrongEvalTypeOfComponentException(hash(), spec(), "args",
         funcType.paramsTuple(), args.type());
   }
@@ -75,9 +75,9 @@ public class CallH extends ExprH {
         DATA_PATH, dataHash(), FUNC_INDEX, DATA_SEQUENCE_SIZE, ObjectH.class);
   }
 
-  private ConstructH readArgs() {
+  private CombineH readArgs() {
     return readSequenceElementObj(
-        DATA_PATH, dataHash(), ARGS_INDEX, DATA_SEQUENCE_SIZE, ConstructH.class);
+        DATA_PATH, dataHash(), ARGS_INDEX, DATA_SEQUENCE_SIZE, CombineH.class);
   }
 
   @Override

@@ -22,7 +22,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.DecodeObjTypeException;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.ConstructH;
+import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.RefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -134,12 +134,12 @@ public class ObjectHDb {
 
   // methods for creating ExprH subclasses
 
-  public CallH call(ObjectH func, ConstructH args) {
+  public CallH call(ObjectH func, CombineH args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(func, args));
   }
 
-  public ConstructH construct(ImmutableList<ObjectH> items) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(items));
+  public CombineH combine(ImmutableList<ObjectH> items) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(items));
   }
 
   public IfFuncH ifFunc() {
@@ -245,7 +245,7 @@ public class ObjectHDb {
 
   // methods for creating Expr-s
 
-  private CallH newCall(ObjectH func, ConstructH args) throws HashedDbException {
+  private CallH newCall(ObjectH func, CombineH args) throws HashedDbException {
     var resultType = inferCallResultType(func, args);
     var type = typeHDb.call(resultType);
     var data = writeCallData(func, args);
@@ -253,7 +253,7 @@ public class ObjectHDb {
     return type.newObj(root, this);
   }
 
-  private TypeH inferCallResultType(ObjectH func, ConstructH args) {
+  private TypeH inferCallResultType(ObjectH func, CombineH args) {
     var funcType = funcEvaluationType(func);
     var argTypes = args.type().items();
     var paramTypes = funcType.params();
@@ -268,7 +268,7 @@ public class ObjectHDb {
     return typing.mapVariables(funcType.result(), varBounds, typeHDb.lower());
   }
 
-  private void illegalArgs(FuncTypeH funcType, ConstructH args) {
+  private void illegalArgs(FuncTypeH funcType, CombineH args) {
     throw new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to function evaluation type parameters %s."
             .formatted(args.type().name(), funcType.paramsTuple().name()));
@@ -324,11 +324,11 @@ public class ObjectHDb {
     }
   }
 
-  private ConstructH newConstruct(ImmutableList<ObjectH> items) throws HashedDbException {
+  private CombineH newCombine(ImmutableList<ObjectH> items) throws HashedDbException {
     var itemTypes = Lists.map(items, ObjectH::type);
     var evaluationType = typeHDb.tuple(itemTypes);
-    var type = typeHDb.construct(evaluationType);
-    var data = writeConstructData(items);
+    var type = typeHDb.combine(evaluationType);
+    var data = writeCombineData(items);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -371,11 +371,11 @@ public class ObjectHDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ObjectH func, ConstructH args) throws HashedDbException {
+  private Hash writeCallData(ObjectH func, CombineH args) throws HashedDbException {
     return hashedDb.writeSequence(func.hash(), args.hash());
   }
 
-  private Hash writeConstructData(ImmutableList<ObjectH> items) throws HashedDbException {
+  private Hash writeCombineData(ImmutableList<ObjectH> items) throws HashedDbException {
     return writeSequence(items);
   }
 

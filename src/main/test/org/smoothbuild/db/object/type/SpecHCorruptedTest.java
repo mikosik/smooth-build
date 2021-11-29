@@ -226,19 +226,19 @@ public class SpecHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _construct {
+  class _combine {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save Construct type in HashedDb.
+       * to save Combine type in HashedDb.
        */
       Hash hash = hash(
           hash(CONSTRUCT.marker()),
           hash(tupleHT(list(intHT(), stringHT())))
       );
       assertThat(hash)
-          .isEqualTo(constructHT(list(intHT(), stringHT())).hash());
+          .isEqualTo(combineHT(list(intHT(), stringHT())).hash());
     }
 
     @Test

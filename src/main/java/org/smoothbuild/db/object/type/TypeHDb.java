@@ -46,7 +46,7 @@ import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSequenceException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
-import org.smoothbuild.db.object.type.expr.ConstructTypeH;
+import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
 import org.smoothbuild.db.object.type.expr.RefTypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
@@ -217,8 +217,8 @@ public class TypeHDb implements TypeFactoryH {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evaluationType));
   }
 
-  public ConstructTypeH construct(TupleTypeH evaluationType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(evaluationType));
+  public CombineTypeH combine(TupleTypeH evaluationType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evaluationType));
   }
 
   public OrderTypeH order(TypeH elemType) {
@@ -250,7 +250,7 @@ public class TypeHDb implements TypeFactoryH {
       }
       case ARRAY -> newArray(hash, readDataAsValue(hash, rootSequence, kind));
       case CALL -> newCall(hash, readDataAsValue(hash, rootSequence, kind));
-      case CONSTRUCT -> newConstruct(hash, readDataAsTuple(hash, rootSequence, kind));
+      case CONSTRUCT -> newCombine(hash, readDataAsTuple(hash, rootSequence, kind));
       case ABST_FUNC, DEF_FUNC, NAT_FUNC, IF_FUNC, MAP_FUNC ->
           readFunc(hash, rootSequence, kind);
       case ORDER -> newOrder(hash, readDataAsArray(hash, rootSequence, kind));
@@ -422,13 +422,13 @@ public class TypeHDb implements TypeFactoryH {
     return cache(new CallTypeH(rootHash, evaluationType));
   }
 
-  private ConstructTypeH newConstruct(TupleTypeH evaluationType) throws HashedDbException {
+  private CombineTypeH newCombine(TupleTypeH evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(CONSTRUCT, evaluationType);
-    return newConstruct(rootHash, evaluationType);
+    return newCombine(rootHash, evaluationType);
   }
 
-  private ConstructTypeH newConstruct(Hash rootHash, TupleTypeH evaluationType) {
-    return cache(new ConstructTypeH(rootHash, evaluationType));
+  private CombineTypeH newCombine(Hash rootHash, TupleTypeH evaluationType) {
+    return cache(new CombineTypeH(rootHash, evaluationType));
   }
 
   private OrderTypeH newOrder(TypeH elemType) throws HashedDbException {

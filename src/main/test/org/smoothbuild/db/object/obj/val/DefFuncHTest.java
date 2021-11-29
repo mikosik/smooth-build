@@ -31,7 +31,7 @@ public class DefFuncHTest extends TestingContext {
   }
 
   @Test
-  public void body_contains_object_passed_during_construction() {
+  public void body_contains_object_passed_during_combineion() {
     var funcType = defFuncHT(intHT(), list(boolHT()));
     var body = intH(33);
     assertThat(defFuncH(funcType, body).body())
