@@ -32,11 +32,11 @@ public class ConstructH extends ExprH {
 
   @Override
   public TupleTypeH type() {
-    return spec().evaluationType();
+    return spec().evalType();
   }
 
   public ImmutableList<ObjectH> items() {
-    var expectedItemTypes = spec().evaluationType().items();
+    var expectedItemTypes = spec().evalType().items();
     var items = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
     allMatchOtherwise(
         expectedItemTypes,

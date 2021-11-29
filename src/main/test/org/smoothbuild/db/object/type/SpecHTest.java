@@ -404,14 +404,14 @@ public class SpecHTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeH type) {
-      assertThat(TYPEH_DB.call(type).evaluationType())
+      assertThat(TYPEH_DB.call(type).evalType())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("construct_cases")
     public void construct(ConstructTypeH type, TupleTypeH expected) {
-      assertThat(type.evaluationType())
+      assertThat(type.evalType())
           .isEqualTo(expected);
     }
 
@@ -426,21 +426,21 @@ public class SpecHTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("types")
     public void order(TypeH type) {
-      assertThat(TYPEH_DB.order(type).evaluationType())
+      assertThat(TYPEH_DB.order(type).evalType())
           .isEqualTo(TYPEH_DB.array(type));
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void ref(TypeH type) {
-      assertThat(TYPEH_DB.ref(type).evaluationType())
+      assertThat(TYPEH_DB.ref(type).evalType())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeH type) {
-      assertThat(TYPEH_DB.select(type).evaluationType())
+      assertThat(TYPEH_DB.select(type).evalType())
           .isEqualTo(type);
     }
 

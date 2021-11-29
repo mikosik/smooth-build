@@ -31,12 +31,12 @@ public class OrderH extends ExprH {
 
   @Override
   public ArrayTypeH type() {
-    return spec().evaluationType();
+    return spec().evalType();
   }
 
   public ImmutableList<ObjectH> elems() {
     var elems = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
-    var expectedElementType = spec().evaluationType().elem();
+    var expectedElementType = spec().evalType().elem();
     for (int i = 0; i < elems.size(); i++) {
       TypeH actualType = elems.get(i).type();
       if (!Objects.equals(expectedElementType, actualType)) {

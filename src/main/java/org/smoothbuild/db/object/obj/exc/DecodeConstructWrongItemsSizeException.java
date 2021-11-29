@@ -14,7 +14,7 @@ public class DecodeConstructWrongItemsSizeException extends DecodeObjException {
         .formatted(
             type.q(),
             hash,
-            type.evaluationType().items().size(),
+            type.evalType().items().size(),
             actual);
   }
 }

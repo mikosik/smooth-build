@@ -18,8 +18,8 @@ public class ConstructTypeH extends ExprSpecH {
   }
 
   @Override
-  public TupleTypeH evaluationType() {
-    return (TupleTypeH) super.evaluationType();
+  public TupleTypeH evalType() {
+    return (TupleTypeH) super.evalType();
   }
 
   @Override

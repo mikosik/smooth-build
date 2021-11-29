@@ -19,6 +19,6 @@ public abstract class ExprH extends ObjectH {
 
   @Override
   public TypeH type() {
-    return spec().evaluationType();
+    return spec().evalType();
   }
 }

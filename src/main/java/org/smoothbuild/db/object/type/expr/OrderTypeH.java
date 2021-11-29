@@ -18,8 +18,8 @@ public class OrderTypeH extends ExprSpecH {
   }
 
   @Override
-  public ArrayTypeH evaluationType() {
-    return (ArrayTypeH) super.evaluationType();
+  public ArrayTypeH evalType() {
+    return (ArrayTypeH) super.evalType();
   }
 
   @Override

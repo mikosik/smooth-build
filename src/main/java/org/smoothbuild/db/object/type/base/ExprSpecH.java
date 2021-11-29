@@ -3,14 +3,14 @@ package org.smoothbuild.db.object.type.base;
 import org.smoothbuild.db.hashed.Hash;
 
 public abstract class ExprSpecH extends SpecH {
-  private final TypeH evaluationType;
+  private final TypeH evalType;
 
-  protected ExprSpecH(String name, Hash hash, SpecKindH kind, TypeH evaluationType) {
-    super(name + ":" + evaluationType.name(), hash, kind);
-    this.evaluationType = evaluationType;
+  protected ExprSpecH(String name, Hash hash, SpecKindH kind, TypeH evalType) {
+    super(name + ":" + evalType.name(), hash, kind);
+    this.evalType = evalType;
   }
 
-  public TypeH evaluationType() {
-    return evaluationType;
+  public TypeH evalType() {
+    return evalType;
   }
 }

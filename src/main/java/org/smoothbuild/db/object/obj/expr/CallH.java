@@ -44,7 +44,7 @@ public class CallH extends ExprH {
     if (func.type() instanceof FuncTypeH funcType) {
       var typing = objectDb().typing();
       var params = funcType.params();
-      var arguments = argumentsConstruct.spec().evaluationType().items();
+      var arguments = argumentsConstruct.spec().evalType().items();
       allMatchOtherwise(
           params,
           arguments,
