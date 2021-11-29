@@ -202,11 +202,11 @@ public class TypeInferrer {
             t -> {
               if (!(t instanceof StructTypeS st)) {
                 expr.setType(empty());
-                logBuffer.log(parseError(expr.location(), "Type " + t.q()
+                logBuffer.log(parseError(expr.loc(), "Type " + t.q()
                     + " is not a struct so it doesn't have " + q(expr.fieldName()) + " field."));
               } else if (!st.fields().containsName(expr.fieldName())) {
                 expr.setType(empty());
-                logBuffer.log(parseError(expr.location(), "Struct " + t.q()
+                logBuffer.log(parseError(expr.loc(), "Struct " + t.q()
                     + " doesn't have field `" + expr.fieldName() + "`."));
               } else {
                 expr.setType(((StructTypeS) t).fields().get(expr.fieldName()).type());
@@ -241,7 +241,7 @@ public class TypeInferrer {
           }
           type = typing.mergeUp(type, elemType.get());
           if (typing.contains(type, factory.any())) {
-            logBuffer.log(parseError(elem.location(),
+            logBuffer.log(parseError(elem.loc(),
                 "Array elems at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
                 + "\nElement at index " + i + " type = " + elemType.get().q()));
@@ -259,7 +259,7 @@ public class TypeInferrer {
         if (calledType.isEmpty()) {
           call.setType(empty());
         } else if (!(calledType.get() instanceof FuncTypeS funcType)) {
-          logBuffer.log(parseError(call.location(), description(called)
+          logBuffer.log(parseError(call.loc(), description(called)
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
         } else {

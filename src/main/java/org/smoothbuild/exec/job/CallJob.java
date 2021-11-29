@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.util.IndexedScope;
@@ -24,9 +24,9 @@ public class CallJob extends AbstractJob {
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public CallJob(TypeH type, Job referencable, ImmutableList<Job> args, Location location,
+  public CallJob(TypeH type, Job referencable, ImmutableList<Job> args, Loc loc,
       BoundsMap<TypeH> vars, IndexedScope<Job> scope, JobCreator jobCreator) {
-    super(type, concat(referencable, args), new NalImpl("building-evaluation", location));
+    super(type, concat(referencable, args), new NalImpl("building-evaluation", loc));
     this.args = args;
     this.vars = vars;
     this.scope = scope;
@@ -44,7 +44,7 @@ public class CallJob extends AbstractJob {
 
   private void onFuncJobCompleted(ValueH valueH, Worker worker, Consumer<ValueH> result) {
     var funcH = (FuncH) valueH;
-    jobCreator.evaluateFuncEagerJob(scope, vars, type(), funcH, args, location())
+    jobCreator.evaluateFuncEagerJob(scope, vars, type(), funcH, args, loc())
         .schedule(worker)
         .addConsumer(result);
   }

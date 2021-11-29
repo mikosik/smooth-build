@@ -2,14 +2,14 @@ package org.smoothbuild.lang.parse.ast;
 
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.util.collect.CountersMap;
 
 import com.google.common.collect.ImmutableList;
 
 public sealed class TypeN extends NamedN permits ArrayTypeN, FuncTypeN {
-  public TypeN(String name, Location location) {
-    super(name, location);
+  public TypeN(String name, Loc loc) {
+    super(name, loc);
   }
 
   public boolean isPolytype() {

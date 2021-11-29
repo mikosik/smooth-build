@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -19,8 +19,8 @@ import org.smoothbuild.util.concurrent.PromisedValue;
 public class IfJob extends AbstractJob {
   private static final String IF_TASK_NAME = IF_FUNCTION_NAME + PARENTHESES;
 
-  public IfJob(TypeH type, List<Job> deps, Location location) {
-    super(type, deps, new NalImpl("building:" + IF_TASK_NAME, location));
+  public IfJob(TypeH type, List<Job> deps, Loc loc) {
+    super(type, deps, new NalImpl("building:" + IF_TASK_NAME, loc));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class IfJob extends AbstractJob {
   private void onConditionCalculated(ValueH conditionH, Worker worker, Consumer<ValueH> res) {
     var conditionJ = ((BoolH) conditionH).toJ();
     var job = conditionJ ? thenJob() : elseJob();
-    new VirtualJob(job, new TaskInfo(CALL, IF_TASK_NAME, location()))
+    new VirtualJob(job, new TaskInfo(CALL, IF_TASK_NAME, loc()))
         .schedule(worker)
         .addConsumer(res);
   }

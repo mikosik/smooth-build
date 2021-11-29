@@ -2,19 +2,19 @@ package org.smoothbuild.lang.parse.ast;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public sealed class Node permits ExprN, NamedN {
-  private final Location location;
+  private final Loc loc;
   private Optional<TypeS> type;
 
-  public Node(Location location) {
-    this.location = location;
+  public Node(Loc loc) {
+    this.loc = loc;
   }
 
-  public Location location() {
-    return location;
+  public Loc loc() {
+    return loc;
   }
 
   public Optional<TypeS> type() {

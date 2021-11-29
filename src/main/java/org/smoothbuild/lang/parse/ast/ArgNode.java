@@ -2,14 +2,14 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.api.Type;
 
 public final class ArgNode extends NamedN {
   private final ExprN expr;
 
-  public ArgNode(String name, ExprN expr, Location location) {
-    super(name, location);
+  public ArgNode(String name, ExprN expr, Loc loc) {
+    super(name, loc);
     this.expr = expr;
   }
 

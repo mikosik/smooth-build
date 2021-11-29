@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
+import static org.smoothbuild.lang.base.define.Loc.commandLineLoc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class FindTopEvals {
       TopEvalS referencable = values.get(name);
       if (referencable != null) {
         if (referencable instanceof ValS value) {
-          referencables.add(new RefS(value.type(), value.name(), commandLineLocation()));
+          referencables.add(new RefS(value.type(), value.name(), commandLineLoc()));
         } else {
           logs.add(error(
               "`" + name + "` cannot be calculated as it is not a value but a function."));

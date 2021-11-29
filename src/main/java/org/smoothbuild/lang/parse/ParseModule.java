@@ -2,8 +2,8 @@ package org.smoothbuild.lang.parse;
 
 import static java.lang.String.join;
 import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
-import static org.smoothbuild.lang.base.define.Location.location;
-import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.lang.base.define.Loc.loc;
+import static org.smoothbuild.lang.parse.LocHelpers.locOf;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Antlr.errorLine;
 import static org.smoothbuild.util.Antlr.markingLine;
@@ -27,7 +27,7 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 
 public class ParseModule {
   public static Maybe<ModuleContext> parseModule(FilePath filePath, String sourceCode) {
@@ -55,19 +55,19 @@ public class ParseModule {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int lineNumber,
         int charNumber, String message, RecognitionException e) {
-      Location location = createLocation(offendingSymbol, lineNumber);
+      Loc loc = createLoc(offendingSymbol, lineNumber);
       String text = unlines(
           message,
           errorLine(recognizer, lineNumber),
           markingLine((Token) offendingSymbol, charNumber));
-      logger.log(parseError(location, text));
+      logger.log(parseError(loc, text));
     }
 
-    private Location createLocation(Object offendingSymbol, int line) {
+    private Loc createLoc(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
-        return location(filePath, line);
+        return loc(filePath, line);
       } else {
-        return locationOf(filePath, (Token) offendingSymbol);
+        return locOf(filePath, (Token) offendingSymbol);
       }
     }
 
@@ -100,7 +100,7 @@ public class ParseModule {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      logger.log(parseError(locationOf(filePath, token), message));
+      logger.log(parseError(locOf(filePath, token), message));
     }
   }
 }

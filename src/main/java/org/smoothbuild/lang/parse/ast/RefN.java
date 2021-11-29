@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.parse.ast;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.like.EvalLike;
 
 public final class RefN extends ExprN {
   private final String name;
   private EvalLike referenced;
 
-  public RefN(String name, Location location) {
-    super(location);
+  public RefN(String name, Loc loc) {
+    super(loc);
     this.name = name;
   }
 

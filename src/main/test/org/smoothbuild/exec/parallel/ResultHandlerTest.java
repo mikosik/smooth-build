@@ -17,7 +17,7 @@ import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.job.TaskInfo;
-import org.smoothbuild.lang.base.define.TestingLocation;
+import org.smoothbuild.lang.base.define.TestingLoc;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResultHandlerTest {
@@ -95,6 +95,6 @@ public class ResultHandlerTest {
   }
 
   private TaskInfo taskInfo() {
-    return new TaskInfo(CALL, "name", TestingLocation.loc());
+    return new TaskInfo(CALL, "name", TestingLoc.loc());
   }
 }

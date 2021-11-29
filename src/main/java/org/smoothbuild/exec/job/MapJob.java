@@ -17,7 +17,7 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.concurrent.Promise;
@@ -28,9 +28,9 @@ public class MapJob extends AbstractJob {
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeH typeS, Location location, List<Job> dependencies, IndexedScope<Job> scope,
+  public MapJob(TypeH typeS, Loc loc, List<Job> dependencies, IndexedScope<Job> scope,
       JobCreator jobCreator) {
-    super(typeS, dependencies, new NalImpl("building:" + MAP_TASK_NAME, location));
+    super(typeS, dependencies, new NalImpl("building:" + MAP_TASK_NAME, loc));
     this.scope = scope;
     this.jobCreator = jobCreator;
   }
@@ -53,7 +53,7 @@ public class MapJob extends AbstractJob {
     var mapElemJobs = map(
         array.elems(ValueH.class),
         o -> mapElementJob(outputElemType, funcJob, o));
-    var info = new TaskInfo(CALL, MAP_TASK_NAME, location());
+    var info = new TaskInfo(CALL, MAP_TASK_NAME, loc());
     jobCreator.orderEager(outputArrayTypeH, mapElemJobs, info)
         .schedule(worker)
         .addConsumer(result);
@@ -65,12 +65,12 @@ public class MapJob extends AbstractJob {
   }
 
   private Job mapElementJob(TypeH elemType, Job funcJob, ValueH elem) {
-    var elemJob = elemJob(elemType, elem, arrayJob().location());
-    return jobCreator.callEagerJob(scope, funcJob, list(elemJob), funcJob.location());
+    var elemJob = elemJob(elemType, elem, arrayJob().loc());
+    return jobCreator.callEagerJob(scope, funcJob, list(elemJob), funcJob.loc());
   }
 
-  private Job elemJob(TypeH elemType, ValueH elem, Location location) {
-    return new DummyJob(elemType, elem, new NalImpl("elem-to-map", location));
+  private Job elemJob(TypeH elemType, ValueH elem, Loc loc) {
+    return new DummyJob(elemType, elem, new NalImpl("elem-to-map", loc));
   }
 
   private Job arrayJob() {

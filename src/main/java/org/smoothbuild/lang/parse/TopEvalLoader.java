@@ -9,8 +9,8 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.define.DefFuncS;
-import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.DefValS;
+import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
@@ -68,32 +68,32 @@ public class TopEvalLoader {
   private ValS loadVal(ModulePath path, EvalN valN) {
     var type = valN.type().get();
     var name = valN.name();
-    var location = valN.location();
+    var loc = valN.loc();
     var loader = new ExpressionLoader(path, nList());
     return new DefValS(
-        type, path, name, loader.createExpression(valN.body().get()), location);
+        type, path, name, loader.createExpression(valN.body().get()), loc);
   }
 
   private FuncS loadFunc(ModulePath path, RealFuncN realFuncN) {
     var params = loadParams(path, realFuncN);
     var resultType = realFuncN.resultType().get();
     var name = realFuncN.name();
-    var location = realFuncN.location();
+    var loc = realFuncN.loc();
     var type = factory.func(resultType, map(params, Defined::type));
     if (realFuncN.ann().isPresent()) {
       return new NatFuncS(type,
-          path, name, params, loadAnn(realFuncN.ann().get()), location
+          path, name, params, loadAnn(realFuncN.ann().get()), loc
       );
     } else {
       var expressionLoader = new ExpressionLoader(path, params);
       return new DefFuncS(type, path,
-          name, params, expressionLoader.createExpression(realFuncN.body().get()), location);
+          name, params, expressionLoader.createExpression(realFuncN.body().get()), loc);
     }
   }
 
   private AnnS loadAnn(AnnN annN) {
     var path = createStringLiteral(annN.path());
-    return new AnnS(path, annN.isPure(), annN.location());
+    return new AnnS(path, annN.isPure(), annN.loc());
   }
 
   private NList<Item> loadParams(ModulePath path, RealFuncN realFuncN) {
@@ -114,7 +114,7 @@ public class TopEvalLoader {
       var type = param.typeNode().get().type().get();
       var name = param.name();
       var defaultArg = param.body().map(this::createExpression);
-      return new Item(type, modulePath, name, defaultArg, param.location());
+      return new Item(type, modulePath, name, defaultArg, param.loc());
     }
 
     private ExprS createExpression(ExprN expr) {
@@ -135,14 +135,14 @@ public class TopEvalLoader {
     private ExprS createArrayLiteral(ArrayN array) {
       var type = (ArrayTypeS) array.type().get();
       ImmutableList<ExprS> elems = map(array.elems(), this::createExpression);
-      return new OrderS(type, elems, array.location());
+      return new OrderS(type, elems, array.loc());
     }
 
     private ExprS createCall(CallN call) {
       var called = createExpression(call.func());
       var argExpressions = createArgExpressions(call);
       var resultType = call.type().get();
-      return new CallS(resultType, called, argExpressions, call.location());
+      return new CallS(resultType, called, argExpressions, call.loc());
     }
 
     private ImmutableList<ExprS> createArgExpressions(CallN call) {
@@ -181,15 +181,15 @@ public class TopEvalLoader {
       var index = structType.fields().indexMap().get(selectN.fieldName());
       var fieldType = structType.fields().get(index).type();
       var expr = createExpression(selectN.expr());
-      return new SelectS(fieldType, expr, index, selectN.location());
+      return new SelectS(fieldType, expr, index, selectN.loc());
     }
 
     private ExprS createReference(RefN ref) {
       EvalLike referenced = ref.referenced();
       return switch (referenced) {
         case ItemN n ->  new ParamRefS(
-            funcParams.get(ref.name()).type(), ref.name(), ref.location());
-        default -> new RefS(referenced.inferredType().get(), ref.name(), ref.location());
+            funcParams.get(ref.name()).type(), ref.name(), ref.loc());
+        default -> new RefS(referenced.inferredType().get(), ref.name(), ref.loc());
       };
     }
   }
@@ -198,20 +198,20 @@ public class TopEvalLoader {
     return new BlobS(
         factory.blob(),
         blob.byteString(),
-        blob.location());
+        blob.loc());
   }
 
   public IntS createIntLiteral(IntN intN) {
     return new IntS(
         factory.int_(),
         intN.bigInteger(),
-        intN.location());
+        intN.loc());
   }
 
   public StringS createStringLiteral(StringN string) {
     return new StringS(
         factory.string(),
         string.unescapedValue(),
-        string.location());
+        string.loc());
   }
 }

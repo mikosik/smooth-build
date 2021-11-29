@@ -9,24 +9,25 @@ import static org.smoothbuild.io.fs.space.Space.PRJ;
 import org.smoothbuild.io.fs.space.FilePath;
 
 /**
+ * Location.
  * This class is immutable.
  */
-public record Location(FilePath file, int line) {
+public record Loc(FilePath file, int line) {
 
-  public static Location commandLineLocation() {
-    return new Location(filePath(PRJ, null), 1);
+  public static Loc commandLineLoc() {
+    return new Loc(filePath(PRJ, null), 1);
   }
 
-  public static Location internal() {
-    return new Location(filePath(INTERNAL, null), -1);
+  public static Loc internal() {
+    return new Loc(filePath(INTERNAL, null), -1);
   }
 
-  public static Location location(FilePath filePath, int line) {
+  public static Loc loc(FilePath filePath, int line) {
     checkArgument(0 < line);
-    return new Location(filePath, line);
+    return new Loc(filePath, line);
   }
 
-  public Location(FilePath file, int line) {
+  public Loc(FilePath file, int line) {
     this.file = requireNonNull(file);
     this.line = line;
   }

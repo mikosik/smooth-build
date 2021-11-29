@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.define.Location.internal;
+import static org.smoothbuild.lang.base.define.Loc.internal;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.define.TestingLocation;
+import org.smoothbuild.lang.base.define.TestingLoc;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public class ArgNodeTest {
@@ -62,7 +62,7 @@ public class ArgNodeTest {
   }
 
   private static ExprN expr(TypeS type) {
-    RefN ref = new RefN("name", TestingLocation.loc());
+    RefN ref = new RefN("name", TestingLoc.loc());
     ref.setType(type);
     return ref;
   }

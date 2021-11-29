@@ -22,7 +22,7 @@ public class ListRunner {
     return runtimeController.setUpRuntimeAndRun(defintions -> defintions
         .referencables()
         .stream()
-        .filter(f -> f.location().file().space().equals(PRJ))
+        .filter(f -> f.loc().file().space().equals(PRJ))
         .filter(ValS.class::isInstance)
         .map(Defined::name)
         .sorted()

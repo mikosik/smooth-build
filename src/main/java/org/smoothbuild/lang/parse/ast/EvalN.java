@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
@@ -13,8 +13,8 @@ public sealed class EvalN extends NamedN implements EvalLike
   private final Optional<AnnN> ann;
 
   public EvalN(Optional<TypeN> typeNode, String name, Optional<ExprN> body, Optional<AnnN> ann,
-      Location location) {
-    super(name, location);
+      Loc loc) {
+    super(name, loc);
     this.typeNode = typeNode;
     this.body = body;
     this.ann = ann;
@@ -50,6 +50,6 @@ public sealed class EvalN extends NamedN implements EvalLike
 
   @Override
   public String toString() {
-    return "[" + name() + ":" + location() + "]";
+    return "[" + name() + ":" + loc() + "]";
   }
 }

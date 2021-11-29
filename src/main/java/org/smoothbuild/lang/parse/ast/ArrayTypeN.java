@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.parse.ast;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.util.collect.CountersMap;
 
 public final class ArrayTypeN extends TypeN {
   private final TypeN elemType;
 
-  public ArrayTypeN(TypeN elemType, Location location) {
-    super("[" + elemType.name() + "]", location);
+  public ArrayTypeN(TypeN elemType, Loc loc) {
+    super("[" + elemType.name() + "]", loc);
     this.elemType = elemType;
   }
 

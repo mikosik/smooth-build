@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.expr;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 
 /**
  * Annotation.
  */
-public record AnnS(StringS path, boolean isPure, Location location) {
+public record AnnS(StringS path, boolean isPure, Loc loc) {
   @Override
   public String toString() {
     return """

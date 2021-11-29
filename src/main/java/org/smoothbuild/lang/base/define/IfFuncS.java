@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.define.Location.internal;
+import static org.smoothbuild.lang.base.define.Loc.internal;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 

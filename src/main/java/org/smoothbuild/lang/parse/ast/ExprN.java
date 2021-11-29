@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.parse.ast;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 
 public sealed class ExprN extends Node
     permits AnnN, ArrayN, BlobN, CallN, IntN, RefN, SelectN, StringN {
-  public ExprN(Location location) {
-    super(location);
+  public ExprN(Loc loc) {
+    super(loc);
   }
 }

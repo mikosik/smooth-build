@@ -49,7 +49,7 @@ public class ReferenceResolver extends AstVisitor {
     if (scope.contains(name)) {
       ref.setReferenced(scope.get(name));
     } else {
-      logger.log(parseError(ref.location(), "`" + name + "` is undefined."));
+      logger.log(parseError(ref.loc(), "`" + name + "` is undefined."));
     }
   }
 }

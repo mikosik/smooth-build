@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.util.collect.CountersMap;
 
 import com.google.common.collect.ImmutableList;
@@ -10,8 +10,8 @@ public final class FuncTypeN extends TypeN {
   private final ImmutableList<TypeN> paramTypes;
 
   public FuncTypeN(
-      TypeN resultType, ImmutableList<TypeN> paramTypes, Location location) {
-    super("[" + resultType.name() + "]", location);
+      TypeN resultType, ImmutableList<TypeN> paramTypes, Loc loc) {
+    super("[" + resultType.name() + "]", loc);
     this.resultType = resultType;
     this.paramTypes = paramTypes;
   }

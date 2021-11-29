@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.lang.parse.LocHelpers.locOf;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -38,7 +38,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 
 import com.google.common.collect.ImmutableList;
 
@@ -50,9 +50,9 @@ public class AstCreator {
       @Override
       public Void visitStruct(StructContext struct) {
         String name = struct.TNAME().getText();
-        Location location = locationOf(filePath, struct.TNAME().getSymbol());
+        Loc loc = locOf(filePath, struct.TNAME().getSymbol());
         List<ItemN> fields = createFields(struct.fieldList());
-        structs.add(new StructN(name, fields, location));
+        structs.add(new StructN(name, fields, loc));
         return null;
       }
 
@@ -70,8 +70,8 @@ public class AstCreator {
         TypeN type = createType(field.type());
         TerminalNode nameNode = field.NAME();
         String name = nameNode.getText();
-        Location location = locationOf(filePath, nameNode);
-        return new ItemN(type, name, Optional.empty(), location);
+        Loc loc = locOf(filePath, nameNode);
+        return new ItemN(type, name, Optional.empty(), loc);
       }
 
       @Override
@@ -82,12 +82,12 @@ public class AstCreator {
         String name = nameNode.getText();
         Optional<ExprN> expr = createExprSane(evaluable.expr());
         Optional<AnnN> annotation = createNativeSane(evaluable.ann());
-        Location location = locationOf(filePath, nameNode);
+        Loc loc = locOf(filePath, nameNode);
         if (evaluable.paramList() == null) {
-          referencables.add(new ValN(type, name, expr, annotation, location));
+          referencables.add(new ValN(type, name, expr, annotation, loc));
         } else {
           List<ItemN> params = createParams(evaluable.paramList());
-          referencables.add(new RealFuncN(type, name, params, expr, annotation, location));
+          referencables.add(new RealFuncN(type, name, params, expr, annotation, loc));
         }
         return null;
       }
@@ -99,7 +99,7 @@ public class AstCreator {
           return Optional.of(new AnnN(
               createStringNode(annotation, annotation.STRING()),
               isPure(annotation),
-              locationOf(filePath, annotation)));
+              locOf(filePath, annotation)));
         }
       }
 
@@ -121,8 +121,8 @@ public class AstCreator {
         var type = createType(param.type());
         var name = param.NAME().getText();
         var defaultArg = Optional.ofNullable(param.expr()).map(this::createExpr);
-        var location = locationOf(filePath, param);
-        return new ItemN(type, name, defaultArg, location);
+        var loc = locOf(filePath, param);
+        return new ItemN(type, name, defaultArg, loc);
       }
 
       private Optional<ExprN> createExprSane(ExprContext expr) {
@@ -156,21 +156,21 @@ public class AstCreator {
       }
 
       private ArgNode pipedArg(ExprN result, Token pipeCharacter) {
-        // Location of nameless piped arg is set to the location of pipe character '|'.
-        Location location = locationOf(filePath, pipeCharacter);
-        return new ArgNode(null, result, location);
+        // Loc of nameless piped arg is set to the loc of pipe character '|'.
+        Loc loc = locOf(filePath, pipeCharacter);
+        return new ArgNode(null, result, loc);
       }
 
       private ExprN createLiteral(LiteralContext expr) {
         if (expr.array() != null) {
           List<ExprN> elems = map(expr.array().expr(), this::createExpr);
-          return new ArrayN(elems, locationOf(filePath, expr));
+          return new ArrayN(elems, locOf(filePath, expr));
         }
         if (expr.BLOB() != null) {
-          return new BlobN(expr.BLOB().getText().substring(2), locationOf(filePath, expr));
+          return new BlobN(expr.BLOB().getText().substring(2), locOf(filePath, expr));
         }
         if (expr.INT() != null) {
-          return new IntN(expr.INT().getText(), locationOf(filePath, expr));
+          return new IntN(expr.INT().getText(), locOf(filePath, expr));
         }
         if (expr.STRING() != null) {
           return createStringNode(expr, expr.STRING());
@@ -180,8 +180,8 @@ public class AstCreator {
 
       private StringN createStringNode(ParserRuleContext expr, TerminalNode quotedString) {
         String unquoted = unquote(quotedString.getText());
-        Location location = locationOf(filePath, expr);
-        return new StringN(unquoted, location);
+        Loc loc = locOf(filePath, expr);
+        return new StringN(unquoted, loc);
       }
 
       private ExprN createChainCallExpr(ArgNode pipedArg, ChainCallContext chainCall) {
@@ -197,13 +197,13 @@ public class AstCreator {
       }
 
       private RefN newRefNode(TerminalNode name) {
-        return new RefN(name.getText(), locationOf(filePath, name));
+        return new RefN(name.getText(), locOf(filePath, name));
       }
 
       private SelectN createSelect(ExprN result, SelectContext fieldRead) {
         String name = fieldRead.NAME().getText();
-        Location location = locationOf(filePath, fieldRead);
-        return new SelectN(result, name, location);
+        Loc loc = locOf(filePath, fieldRead);
+        return new SelectN(result, name, loc);
       }
 
       private ExprN createChainParts(ExprN expr, List<ChainPartContext> chainParts) {
@@ -228,15 +228,15 @@ public class AstCreator {
           TerminalNode nameNode = arg.NAME();
           String name = nameNode == null ? null : nameNode.getText();
           ExprN exprN = createExpr(expr);
-          result.add(new ArgNode(name, exprN, locationOf(filePath, arg)));
+          result.add(new ArgNode(name, exprN, locOf(filePath, arg)));
         }
         return result;
       }
 
       private ExprN createCall(
           ExprN func, List<ArgNode> args, ArgListContext argListContext) {
-        Location location = locationOf(filePath, argListContext);
-        return new CallN(func, args, location);
+        Loc loc = locOf(filePath, argListContext);
+        return new CallN(func, args, loc);
       }
 
       private Optional<TypeN> createTypeSane(TypeContext type) {
@@ -254,18 +254,18 @@ public class AstCreator {
       }
 
       private TypeN createType(TypeNameContext type) {
-        return new TypeN(type.getText(), locationOf(filePath, type.TNAME()));
+        return new TypeN(type.getText(), locOf(filePath, type.TNAME()));
       }
 
       private TypeN createArrayType(ArrayTypeContext arrayType) {
         TypeN elemType = createType(arrayType.type());
-        return new ArrayTypeN(elemType, locationOf(filePath, arrayType));
+        return new ArrayTypeN(elemType, locOf(filePath, arrayType));
       }
 
       private TypeN createFuncType(FuncTypeContext funcType) {
         TypeN resultType = createType(funcType.type());
         return new FuncTypeN(resultType, createTypeList(funcType.typeList()),
-            locationOf(filePath, funcType));
+            locOf(filePath, funcType));
       }
 
       private ImmutableList<TypeN> createTypeList(TypeListContext typeList) {

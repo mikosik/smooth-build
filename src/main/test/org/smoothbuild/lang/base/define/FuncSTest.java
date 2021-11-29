@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
-import static org.smoothbuild.lang.base.define.TestingLocation.loc;
+import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;

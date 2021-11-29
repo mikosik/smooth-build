@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 
 import com.google.common.collect.ImmutableList;
 
@@ -12,8 +12,8 @@ public final class CallN extends ExprN {
   private final List<ArgNode> args;
   private List<Optional<ArgNode>> assignedArgs;
 
-  public CallN(ExprN func, List<ArgNode> args, Location location) {
-    super(location);
+  public CallN(ExprN func, List<ArgNode> args, Loc loc) {
+    super(loc);
     this.func = func;
     this.args = ImmutableList.copyOf(args);
   }

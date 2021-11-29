@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
@@ -58,31 +58,31 @@ public class Ast {
     return maybeValue(ast);
   }
 
-  private TopologicalSortingResult<String, EvalN, Location> sortEvaluablesByDependencies() {
+  private TopologicalSortingResult<String, EvalN, Loc> sortEvaluablesByDependencies() {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(v -> names.add(v.name()));
 
-    HashSet<GraphNode<String, EvalN, Location>> nodes = new HashSet<>();
+    HashSet<GraphNode<String, EvalN, Loc>> nodes = new HashSet<>();
     nodes.addAll(map(evaluables, value -> evaluableNodeToGraphNode(value, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, EvalN, Location> evaluableNodeToGraphNode(
+  private static GraphNode<String, EvalN, Loc> evaluableNodeToGraphNode(
       EvalN evaluable, Set<String> names) {
-    Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
+    Set<GraphEdge<Loc, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
       public void visitRef(RefN ref) {
         super.visitRef(ref);
         if (names.contains(ref.name())) {
-          dependencies.add(new GraphEdge<>(ref.location(), ref.name()));
+          dependencies.add(new GraphEdge<>(ref.loc(), ref.name()));
         }
       }
     }.visitEvaluable(evaluable);
     return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(dependencies));
   }
 
-  private TopologicalSortingResult<String, StructN, Location> sortStructsByDependencies() {
+  private TopologicalSortingResult<String, StructN, Loc> sortStructsByDependencies() {
     Set<String> structNames = structs.stream()
         .map(NamedN::name)
         .collect(toSet());
@@ -90,9 +90,9 @@ public class Ast {
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, StructN, Location> structNodeToGraphNode(
+  private static GraphNode<String, StructN, Loc> structNodeToGraphNode(
       StructN struct, Set<String> funcNames) {
-    Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
+    Set<GraphEdge<Loc, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
       public void visitField(ItemN field) {
@@ -109,7 +109,7 @@ public class Ast {
           }
           default -> {
             if (funcNames.contains(type.name())) {
-              dependencies.add(new GraphEdge<>(type.location(), type.name()));
+              dependencies.add(new GraphEdge<>(type.loc(), type.name()));
             }
           }
         }
@@ -118,7 +118,7 @@ public class Ast {
     return new GraphNode<>(struct.name(), struct, ImmutableList.copyOf(dependencies));
   }
 
-  private static Log createCycleError(String name, List<GraphEdge<Location, String>> cycle) {
+  private static Log createCycleError(String name, List<GraphEdge<Loc, String>> cycle) {
     // Choosing edge with lowest line number and printing a cycle starting from that edge
     // is a way to make report deterministic and (as a result) to make testing those reports simple.
     int edgeIndex = chooseEdgeWithLowestLineNumber(cycle);
@@ -134,7 +134,7 @@ public class Ast {
     return error(name + " contains cycle:\n" + join("\n", lines));
   }
 
-  private static int chooseEdgeWithLowestLineNumber(List<GraphEdge<Location, String>> cycle) {
+  private static int chooseEdgeWithLowestLineNumber(List<GraphEdge<Loc, String>> cycle) {
     int lowestLineNumber = Integer.MAX_VALUE;
     int result = 0;
     for (int i = 0; i < cycle.size(); i++) {

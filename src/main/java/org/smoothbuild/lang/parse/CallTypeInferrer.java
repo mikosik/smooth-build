@@ -73,7 +73,7 @@ public class CallTypeInferrer {
   }
 
   private static Log illegalAssignmentError(CallN call, ItemSignature param, ArgNode arg) {
-    return parseError(arg.location(), inCallToPrefix(call)
+    return parseError(arg.loc(), inCallToPrefix(call)
         + "Cannot assign argument of type " + arg.type().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");
   }

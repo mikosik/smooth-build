@@ -13,8 +13,8 @@ import org.smoothbuild.util.collect.NList;
  */
 public final class CtorS extends FuncS {
   public CtorS(FuncTypeS type, ModulePath modulePath, String name, NList<Item> params,
-      Location location) {
-    super(type, modulePath, name, params, location);
+      Loc loc) {
+    super(type, modulePath, name, params, loc);
     checkArgument(type.result() instanceof StructTypeS);
   }
 
@@ -33,11 +33,11 @@ public final class CtorS extends FuncS {
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
-        && this.location().equals(that.location());
+        && this.loc().equals(that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), params(), location());
+    return Objects.hash(resultType(), modulePath(), name(), params(), loc());
   }
 }

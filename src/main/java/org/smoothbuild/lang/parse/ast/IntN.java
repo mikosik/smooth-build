@@ -4,14 +4,14 @@ import static java.lang.Character.isDigit;
 
 import java.math.BigInteger;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 
 public final class IntN extends ExprN {
   private final String literal;
   private BigInteger bigInteger;
 
-  public IntN(String literal, Location location) {
-    super(location);
+  public IntN(String literal, Loc loc) {
+    super(loc);
     this.literal = literal;
   }
 

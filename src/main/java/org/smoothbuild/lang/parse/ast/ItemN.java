@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -14,8 +14,8 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 public final class ItemN extends EvalN implements EvalLike {
   private Optional<ItemSignature> signature;
 
-  public ItemN(TypeN typeN, String name, Optional<ExprN> body, Location location) {
-    super(Optional.of(typeN), name, body, Optional.empty(), location);
+  public ItemN(TypeN typeN, String name, Optional<ExprN> body, Loc loc) {
+    super(Optional.of(typeN), name, body, Optional.empty(), loc);
   }
 
   @Override
@@ -36,6 +36,6 @@ public final class ItemN extends EvalN implements EvalLike {
 
   public Item toItem(ModulePath path) {
     checkState(body().isEmpty());
-    return new Item(type().get(), path, name(), Optional.empty(), location());
+    return new Item(type().get(), path, name(), Optional.empty(), loc());
   }
 }

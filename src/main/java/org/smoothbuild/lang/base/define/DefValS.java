@@ -12,8 +12,8 @@ public final class DefValS extends ValS {
   private final ExprS body;
 
   public DefValS(TypeS type, ModulePath modulePath, String name, ExprS body,
-      Location location) {
-    super(type, modulePath, name, location);
+      Loc loc) {
+    super(type, modulePath, name, loc);
     this.body = body;
   }
 
@@ -30,12 +30,12 @@ public final class DefValS extends ValS {
         && this.type().equals(that.type())
         && this.name().equals(that.name())
         && this.body().equals(that.body())
-        && this.location().equals(that.location());
+        && this.loc().equals(that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), name(), body(), location());
+    return Objects.hash(type(), name(), body(), loc());
   }
 
   @Override

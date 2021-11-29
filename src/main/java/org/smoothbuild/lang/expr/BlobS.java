@@ -2,12 +2,12 @@ package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.exec.job.TaskInfo.NAME_LENGTH_LIMIT;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
 
 import okio.ByteString;
 
-public record BlobS(BlobTypeS type, ByteString byteString, Location location) implements LiteralS {
+public record BlobS(BlobTypeS type, ByteString byteString, Loc loc) implements LiteralS {
   @Override
   public String name() {
     return toShortString();

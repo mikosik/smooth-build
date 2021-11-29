@@ -17,7 +17,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.parse.ast.ArrayTypeN;
 import org.smoothbuild.lang.parse.ast.Ast;
@@ -129,7 +129,7 @@ public class AnalyzeSemantically {
           assertTypeIsDefined(func.resultType());
           func.paramTypes().forEach(this::assertTypeIsDefined);
         } else if (!isDefinedType(type)) {
-          logger.log(parseError(type.location(), type.q() + " type is undefined."));
+          logger.log(parseError(type.loc(), type.q() + " type is undefined."));
         }
       }
 
@@ -146,7 +146,7 @@ public class AnalyzeSemantically {
     nals.addAll(ast.structs());
     nals.addAll(map(ast.structs(), StructN::ctor));
     nals.addAll(ast.evaluables());
-    nals.sort(comparing(n -> n.location().line()));
+    nals.sort(comparing(n -> n.loc().line()));
 
     for (Nal nal : nals) {
       logIfDuplicate(logger, imported.types(), nal);
@@ -163,8 +163,8 @@ public class AnalyzeSemantically {
     String name = nal.name();
     if (others.containsName(name)) {
       Nal otherNal = others.get(name);
-      Location location = otherNal.location();
-      logger.log(alreadyDefinedError(nal, location));
+      Loc loc = otherNal.loc();
+      logger.log(alreadyDefinedError(nal, loc));
     }
   }
 
@@ -172,8 +172,8 @@ public class AnalyzeSemantically {
     String name = nal.name();
     if (others.containsKey(name)) {
       Nal otherNal = others.get(name);
-      Location location = otherNal.location();
-      logger.log(alreadyDefinedError(nal, location));
+      Loc loc = otherNal.loc();
+      logger.log(alreadyDefinedError(nal, loc));
     }
   }
 
@@ -198,13 +198,13 @@ public class AnalyzeSemantically {
   }
 
   private static void findDuplicateNames(Logger logger, List<? extends NamedN> nodes) {
-    Map<String, Location> alreadyDefined = new HashMap<>();
+    Map<String, Loc> alreadyDefined = new HashMap<>();
     for (NamedN named : nodes) {
       String name = named.name();
       if (alreadyDefined.containsKey(name)) {
         logger.log(alreadyDefinedError(named, alreadyDefined.get(name)));
       }
-      alreadyDefined.put(name, named.location());
+      alreadyDefined.put(name, named.loc());
     }
   }
 
@@ -214,7 +214,7 @@ public class AnalyzeSemantically {
       public void visitStruct(StructN struct) {
         String name = struct.name();
         if (isVariableName(name)) {
-          logger.log(parseError(struct.location(),
+          logger.log(parseError(struct.loc(),
               "`" + name + "` is illegal struct name. It must have at least two characters."));
         }
       }
@@ -299,10 +299,10 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static Log alreadyDefinedError(Nal nal, Location location) {
-    String atLocation = location.equals(Location.internal())
+  private static Log alreadyDefinedError(Nal nal, Loc loc) {
+    String atLoc = loc.equals(Loc.internal())
         ? " internally."
-        : " at " + location + ".";
-    return parseError(nal.location(), "`" + nal.name() + "` is already defined" + atLocation);
+        : " at " + loc + ".";
+    return parseError(nal.loc(), "`" + nal.name() + "` is already defined" + atLoc);
   }
 }

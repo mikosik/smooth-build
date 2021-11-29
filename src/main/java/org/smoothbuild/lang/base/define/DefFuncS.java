@@ -13,8 +13,8 @@ public final class DefFuncS extends FuncS {
   private final ExprS body;
 
   public DefFuncS(FuncTypeS type, ModulePath modulePath, String name,
-      NList<Item> params, ExprS body, Location location) {
-    super(type, modulePath, name, params, location);
+      NList<Item> params, ExprS body, Loc loc) {
+    super(type, modulePath, name, params, loc);
     this.body = body;
   }
 
@@ -33,12 +33,12 @@ public final class DefFuncS extends FuncS {
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.body.equals(that.body)
-        && this.location().equals(that.location());
+        && this.loc().equals(that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), params(), body, location());
+    return Objects.hash(resultType(), modulePath(), name(), params(), body, loc());
   }
 
   @Override

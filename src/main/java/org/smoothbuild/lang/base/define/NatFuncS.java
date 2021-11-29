@@ -13,8 +13,8 @@ public final class NatFuncS extends FuncS {
   private final AnnS annS;
 
   public NatFuncS(FuncTypeS type, ModulePath modulePath, String name,
-      NList<Item> params, AnnS annS, Location location) {
-    super(type, modulePath, name, params, location);
+      NList<Item> params, AnnS annS, Loc loc) {
+    super(type, modulePath, name, params, loc);
     this.annS = annS;
   }
 
@@ -33,12 +33,12 @@ public final class NatFuncS extends FuncS {
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.annS.equals(that.annS)
-        && this.location().equals(that.location());
+        && this.loc().equals(that.loc());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), params(), annS, location());
+    return Objects.hash(resultType(), modulePath(), name(), params(), annS, loc());
   }
 
   @Override

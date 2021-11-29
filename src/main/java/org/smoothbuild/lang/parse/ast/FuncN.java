@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.NList.nListWithDuplicates;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.parse.ast.StructN.CtorN;
@@ -19,8 +19,8 @@ public sealed class FuncN extends EvalN permits RealFuncN, CtorN {
   private final NList<ItemN> params;
 
   public FuncN(Optional<TypeN> typeNode, String name, Optional<ExprN> body,
-      List<ItemN> params, Optional<AnnN> annotation, Location location) {
-    super(typeNode, name, body, annotation, location);
+      List<ItemN> params, Optional<AnnN> annotation, Loc loc) {
+    super(typeNode, name, body, annotation, loc);
     this.params = nListWithDuplicates(ImmutableList.copyOf(params));
   }
 

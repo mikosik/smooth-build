@@ -45,8 +45,8 @@ public class FilePathTest {
 
   @Test
   public void to_string() {
-    FilePath location = new FilePath(PRJ, path("abc"));
-    assertThat(location.toString())
+    FilePath loc = new FilePath(PRJ, path("abc"));
+    assertThat(loc.toString())
         .isEqualTo("{prj}/abc");
   }
 }

@@ -88,8 +88,8 @@ public class ModuleLoader {
   private StructS loadStruct(ModulePath path, StructN struct) {
     var type = (StructTypeS) struct.type().get();
     var name = struct.name();
-    var location = struct.location();
-    return new StructS(type, path, name, location);
+    var loc = struct.loc();
+    return new StructS(type, path, name, loc);
   }
 
   private NList<TopEvalS> loadEvaluables(ModulePath path, Ast ast) {
@@ -110,6 +110,6 @@ public class ModuleLoader {
     var paramTypes = map(struct.fields(), f -> f.type().get());
     var type = typeFactory.func(resultType, paramTypes);
     var params = struct.fields().map(f -> f.toItem(path));
-    return new CtorS(type, path, name, params, struct.location());
+    return new CtorS(type, path, name, params, struct.loc());
   }
 }

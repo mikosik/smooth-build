@@ -16,8 +16,8 @@ public sealed abstract class FuncS extends TopEvalS
   private final NList<Item> params;
 
   public FuncS(FuncTypeS type, ModulePath modulePath, String name, NList<Item> params,
-      Location location) {
-    super(type, modulePath, name, location);
+      Loc loc) {
+    super(type, modulePath, name, loc);
     this.params = requireNonNull(params);
   }
 

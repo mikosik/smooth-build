@@ -39,7 +39,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.exec.job.TaskKind;
 import org.smoothbuild.io.fs.space.Space;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 
 import picocli.CommandLine.TypeConversionException;
 
@@ -87,8 +87,8 @@ public class MatcherCreatorTest {
   }
 
   private static TaskInfo taskInfo(TaskKind kind, Space space) {
-    Location location = new Location(filePath(space, path("path")), 3);
-    return new TaskInfo(kind, "name", location);
+    Loc loc = new Loc(filePath(space, path("path")), 3);
+    return new TaskInfo(kind, "name", loc);
   }
 
   public static Stream<? extends Arguments> provideArguments() {

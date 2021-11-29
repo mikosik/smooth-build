@@ -3,7 +3,7 @@ package org.smoothbuild.exec.job;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.util.concurrent.Promise;
 
 import com.google.common.base.Supplier;
@@ -13,10 +13,10 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public record LazyJob(TypeH type, Location location, Supplier<Job> supplier) implements Job {
-  public LazyJob(TypeH type, Location location, Supplier<Job> supplier) {
+public record LazyJob(TypeH type, Loc loc, Supplier<Job> supplier) implements Job {
+  public LazyJob(TypeH type, Loc loc, Supplier<Job> supplier) {
     this.type = type;
-    this.location = location;
+    this.loc = loc;
     this.supplier = Suppliers.memoize(supplier);
   }
 

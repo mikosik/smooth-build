@@ -206,7 +206,7 @@ public class ShConverter {
     var funcExprH = convertExpr(callS.funcExpr());
     var argsH = map(callS.args(), this::convertExpr);
     var combine = objFactory.combine(argsH);
-    nals.put(combine, new NalImpl("{}", callS.location()));
+    nals.put(combine, new NalImpl("{}", callS.loc()));
     return objFactory.call(funcExprH, combine);
   }
 
@@ -245,7 +245,7 @@ public class ShConverter {
 
 
   private BlobH loadNatJar(NatFuncS natFuncS) {
-    var filePath = natFuncS.ann().location().file().withExtension("jar");
+    var filePath = natFuncS.ann().loc().file().withExtension("jar");
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {

@@ -7,7 +7,7 @@ import static org.smoothbuild.util.collect.NList.nListWithDuplicates;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -16,14 +16,14 @@ public final class StructN extends NamedN {
   private final NList<ItemN> fields;
   private final CtorN ctor;
 
-  public StructN(String name, List<ItemN> fields, Location location) {
-    this(name, nListWithDuplicates(ImmutableList.copyOf(fields)), location);
+  public StructN(String name, List<ItemN> fields, Loc loc) {
+    this(name, nListWithDuplicates(ImmutableList.copyOf(fields)), loc);
   }
 
-  private StructN(String name, NList<ItemN> fields, Location location) {
-    super(name, location);
+  private StructN(String name, NList<ItemN> fields, Loc loc) {
+    super(name, loc);
     this.fields = fields;
-    this.ctor = new CtorN(name, fields, location);
+    this.ctor = new CtorN(name, fields, loc);
   }
 
   public CtorN ctor() {
@@ -35,14 +35,14 @@ public final class StructN extends NamedN {
   }
 
   public final class CtorN extends FuncN {
-    public CtorN(String structName, List<ItemN> params, Location location) {
+    public CtorN(String structName, List<ItemN> params, Loc loc) {
       super(
-          Optional.of(new TypeN(structName, location)),
+          Optional.of(new TypeN(structName, loc)),
           UPPER_CAMEL.to(LOWER_CAMEL, structName),
           Optional.empty(),
           params,
           Optional.empty(),
-          location);
+          loc);
     }
 
     @Override

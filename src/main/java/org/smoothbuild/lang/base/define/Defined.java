@@ -11,8 +11,8 @@ public class Defined extends NalImpl {
   private final TypeS type;
   private final ModulePath modulePath;
 
-  public Defined(TypeS type, ModulePath modulePath, String name, Location location) {
-    super(name, location);
+  public Defined(TypeS type, ModulePath modulePath, String name, Loc loc) {
+    super(name, loc);
     this.type = requireNonNull(type);
     this.modulePath = requireNonNull(modulePath);
   }

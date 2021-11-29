@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.expr;
 
-import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public record CallS(TypeS type, ExprS funcExpr,
-    ImmutableList<ExprS> args, Location location) implements ExprS {
+    ImmutableList<ExprS> args, Loc loc) implements ExprS {
   @Override
   public String name() {
     return "()";
