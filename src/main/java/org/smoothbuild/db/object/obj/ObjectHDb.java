@@ -154,8 +154,8 @@ public class ObjectHDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elems));
   }
 
-  public ParamRefH newParamRef(BigInteger value, TypeH evaluationType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evaluationType, value));
+  public ParamRefH newParamRef(BigInteger value, TypeH evalType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalType, value));
   }
 
   public SelectH select(ObjectH tuple, IntH index) {
@@ -326,8 +326,8 @@ public class ObjectHDb {
 
   private CombineH newCombine(ImmutableList<ObjectH> items) throws HashedDbException {
     var itemTypes = Lists.map(items, ObjectH::type);
-    var evaluationType = typeHDb.tuple(itemTypes);
-    var type = typeHDb.combine(evaluationType);
+    var evalType = typeHDb.tuple(itemTypes);
+    var type = typeHDb.combine(evalType);
     var data = writeCombineData(items);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -357,9 +357,9 @@ public class ObjectHDb {
     }
   }
 
-  private ParamRefH newParamRef(TypeH evaluationType, BigInteger index) throws HashedDbException {
+  private ParamRefH newParamRef(TypeH evalType, BigInteger index) throws HashedDbException {
     var data = writeParamRefData(index);
-    var type = typeHDb.ref(evaluationType);
+    var type = typeHDb.ref(evalType);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
