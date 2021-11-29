@@ -47,7 +47,7 @@ import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqException;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.expr.SelectH.SelectData;
 import org.smoothbuild.db.object.obj.val.ArrayH;
@@ -248,11 +248,11 @@ public class ObjectCorruptedHTest extends TestingContext {
                       hash(stringHT()),
                       hash("aaa")
                   ),
-                  hash(refH(1))
+                  hash(paramRefH(1))
               ));
       assertCall(() -> ((ArrayH) objectHDb().get(objHash)).elems(StringH.class))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, type, DATA_PATH, 1, ValueH.class, RefH.class));
+              objHash, type, DATA_PATH, 1, ValueH.class, ParamRefH.class));
     }
   }
 
@@ -503,12 +503,12 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(type),
               hash(
                   hash(func),
-                  hash(refH(1))
+                  hash(paramRefH(1))
               )
           );
       assertCall(() -> ((CallH) objectHDb().get(objHash)).data())
           .throwsException(new UnexpectedObjNodeException(
-              objHash, type, DATA_PATH + "[1]", CombineH.class, RefH.class));
+              objHash, type, DATA_PATH + "[1]", CombineH.class, ParamRefH.class));
     }
 
     @Test
@@ -1373,11 +1373,11 @@ public class ObjectCorruptedHTest extends TestingContext {
               hash(personHT()),
               hash(
                   hash(stringH("John")),
-                  hash(refH(1))));
+                  hash(paramRefH(1))));
       TupleH tuple = (TupleH) objectHDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new UnexpectedObjNodeException(
-              objHash, personHT(), DATA_PATH + "[1]", ValueH.class, RefH.class));
+              objHash, personHT(), DATA_PATH + "[1]", ValueH.class, ParamRefH.class));
     }
   }
 
@@ -1394,7 +1394,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(refHT(stringHT())),
               hash(byteString));
-      assertThat(((RefH) objectHDb().get(objHash)).value())
+      assertThat(((ParamRefH) objectHDb().get(objHash)).value())
           .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
     }
 
@@ -1408,7 +1408,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       obj_root_with_two_data_hashes(
           refHT(),
           hashedDb().writeByte((byte) 1),
-          (Hash objHash) -> ((RefH) objectHDb().get(objHash)).value()
+          (Hash objHash) -> ((ParamRefH) objectHDb().get(objHash)).value()
       );
     }
 
@@ -1416,7 +1416,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           refHT(),
-          (Hash objHash) -> ((RefH) objectHDb().get(objHash)).value());
+          (Hash objHash) -> ((ParamRefH) objectHDb().get(objHash)).value());
     }
   }
 

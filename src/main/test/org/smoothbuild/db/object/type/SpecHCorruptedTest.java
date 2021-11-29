@@ -14,7 +14,7 @@ import static org.smoothbuild.db.object.type.base.SpecKindH.CONSTRUCT;
 import static org.smoothbuild.db.object.type.base.SpecKindH.INT;
 import static org.smoothbuild.db.object.type.base.SpecKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ORDER;
-import static org.smoothbuild.db.object.type.base.SpecKindH.REF;
+import static org.smoothbuild.db.object.type.base.SpecKindH.PARAM_REF;
 import static org.smoothbuild.db.object.type.base.SpecKindH.SELECT;
 import static org.smoothbuild.db.object.type.base.SpecKindH.STRING;
 import static org.smoothbuild.db.object.type.base.SpecKindH.TUPLE;
@@ -534,7 +534,7 @@ public class SpecHCorruptedTest extends TestingContext {
        * to save call type in HashedDb.
        */
       Hash hash = hash(
-          hash(REF.marker()),
+          hash(PARAM_REF.marker()),
           hash(intHT())
       );
       assertThat(hash)
@@ -543,27 +543,27 @@ public class SpecHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(REF);
+      test_type_without_data(PARAM_REF);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(REF);
+      test_type_with_additional_data(PARAM_REF);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(REF);
+      test_data_hash_pointing_nowhere_instead_of_being_type(PARAM_REF);
     }
 
     @Test
     public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(REF);
+      test_type_with_corrupted_type_as_data(PARAM_REF);
     }
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(REF, TypeH.class);
+      test_type_with_data_being_expr_type(PARAM_REF, TypeH.class);
     }
   }
 

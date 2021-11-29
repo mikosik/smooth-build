@@ -42,7 +42,7 @@ public class TestingTypesH {
   public static final SpecH ORDER = CONTEXT.orderHT();
   public static final SpecH CONSTRUCT = CONTEXT.combineHT(list(INT, STRING));
   public static final SpecH SELECT = CONTEXT.selectHT(INT);
-  public static final SpecH REF = CONTEXT.refHT(INT);
+  public static final SpecH PARAM_REF = CONTEXT.refHT(INT);
 
   public static final ArrayTypeH ARRAY_ANY = array(ANY);
   public static final ArrayTypeH ARRAY_BLOB = array(BLOB);

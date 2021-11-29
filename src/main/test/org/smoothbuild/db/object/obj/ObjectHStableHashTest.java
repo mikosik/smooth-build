@@ -246,19 +246,19 @@ public class ObjectHStableHashTest extends TestingContext {
   class _ref {
     @Test
     public void zero_ref() {
-      assertThat(refH(intHT(), 0).hash())
+      assertThat(paramRefH(intHT(), 0).hash())
           .isEqualTo(Hash.decode("c41708244b3367007e1a216c7712cb2235371707"));
     }
 
     @Test
     public void positive_ref() {
-      assertThat(refH(intHT(), 123).hash())
+      assertThat(paramRefH(intHT(), 123).hash())
           .isEqualTo(Hash.decode("130112c820a58abd4b90086ff7abfcf29f39a8e8"));
     }
 
     @Test
     public void negative_ref() {
-      assertThat(refH(intHT(), -123).hash())
+      assertThat(paramRefH(intHT(), -123).hash())
           .isEqualTo(Hash.decode("f7ccbc4c95d78604753662395b5c5357f833fd64"));
     }
   }

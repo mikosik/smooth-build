@@ -24,7 +24,7 @@ import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
@@ -154,8 +154,8 @@ public class ObjectHDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elems));
   }
 
-  public RefH ref(BigInteger value, TypeH evaluationType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType, value));
+  public ParamRefH newParamRef(BigInteger value, TypeH evaluationType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evaluationType, value));
   }
 
   public SelectH select(ObjectH tuple, IntH index) {
@@ -357,8 +357,8 @@ public class ObjectHDb {
     }
   }
 
-  private RefH newRef(TypeH evaluationType, BigInteger index) throws HashedDbException {
-    var data = writeRefData(index);
+  private ParamRefH newParamRef(TypeH evaluationType, BigInteger index) throws HashedDbException {
+    var data = writeParamRefData(index);
     var type = typeHDb.ref(evaluationType);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -388,7 +388,7 @@ public class ObjectHDb {
     return writeSeq(elems);
   }
 
-  private Hash writeRefData(BigInteger value) throws HashedDbException {
+  private Hash writeParamRefData(BigInteger value) throws HashedDbException {
     return hashedDb.writeBigInteger(value);
   }
 

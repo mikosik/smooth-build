@@ -22,7 +22,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
@@ -554,12 +554,12 @@ public class TestingContext {
     return objectHDb().order(elems);
   }
 
-  public RefH refH(int value) {
-    return objectHDb().ref(BigInteger.valueOf(value), intHT());
+  public ParamRefH paramRefH(int value) {
+    return objectHDb().newParamRef(BigInteger.valueOf(value), intHT());
   }
 
-  public RefH refH(TypeH evaluationType, int pointer) {
-    return objectHDb().ref(BigInteger.valueOf(pointer), evaluationType);
+  public ParamRefH paramRefH(TypeH evaluationType, int pointer) {
+    return objectHDb().newParamRef(BigInteger.valueOf(pointer), evaluationType);
   }
 
   public SelectH selectH(ObjectH tuple, IntH index) {

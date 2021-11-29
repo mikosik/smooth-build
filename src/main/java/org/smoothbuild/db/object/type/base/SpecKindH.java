@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
@@ -40,7 +40,7 @@ public enum SpecKindH {
   // 10 unused
   ORDER((byte) 11, OrderH.class, OrderH::new),
   SELECT((byte) 12, SelectH.class, SelectH::new),
-  REF((byte) 14, RefH.class, RefH::new),
+  PARAM_REF((byte) 14, ParamRefH.class, ParamRefH::new),
   CONSTRUCT((byte) 15, CombineH.class, CombineH::new),
 
   VARIABLE((byte) 17, ValueH.class, SpecKindH::throwException),
@@ -70,7 +70,7 @@ public enum SpecKindH {
           // 10 unused
           .put((byte) 11, ORDER)
           .put((byte) 12, SELECT)
-          .put((byte) 14, REF)
+          .put((byte) 14, PARAM_REF)
           .put((byte) 15, CONSTRUCT)
           .put((byte) 17, VARIABLE)
           .put((byte) 18, ANY)

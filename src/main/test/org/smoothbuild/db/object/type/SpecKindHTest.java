@@ -41,7 +41,7 @@ public class SpecKindHTest {
         Arguments.of(9, SpecKindH.CALL),
         Arguments.of(11, SpecKindH.ORDER),
         Arguments.of(12, SpecKindH.SELECT),
-        Arguments.of(14, SpecKindH.REF),
+        Arguments.of(14, SpecKindH.PARAM_REF),
         Arguments.of(15, SpecKindH.CONSTRUCT),
         Arguments.of(17, SpecKindH.VARIABLE),
         Arguments.of(18, SpecKindH.ANY),

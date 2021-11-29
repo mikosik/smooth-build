@@ -18,7 +18,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
@@ -89,7 +89,7 @@ public class JobCreator {
         .put(MapFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(NatFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(OrderH.class, new Handler<>(this::orderLazy, this::orderEager))
-        .put(RefH.class, new Handler<>(this::paramRefLazy, this::paramRefLazy))
+        .put(ParamRefH.class, new Handler<>(this::paramRefLazy, this::paramRefLazy))
         .put(SelectH.class, new Handler<>(this::selectLazy, this::selectEager))
         .put(StringH.class, new Handler<>(this::valueLazy, this::valueEager))
         .build();
@@ -247,8 +247,8 @@ public class JobCreator {
 
   // ParamRef
 
-  private Job paramRefLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, RefH ref) {
-    return scope.get(ref.value().intValue());
+  private Job paramRefLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ParamRefH paramRef) {
+    return scope.get(paramRef.value().intValue());
   }
 
   // Select

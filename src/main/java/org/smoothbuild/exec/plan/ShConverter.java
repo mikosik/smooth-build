@@ -19,7 +19,7 @@ import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
@@ -127,12 +127,12 @@ public class ShConverter {
     return paramRefsH;
   }
 
-  private RefH newParamRef(NList<Item> items, int i) {
+  private ParamRefH newParamRef(NList<Item> items, int i) {
     var index = BigInteger.valueOf(i);
     var item = items.get(i);
     var typeS = item.type();
     var typeH = convertType(typeS);
-    return objFactory.ref(index, typeH);
+    return objFactory.paramRef(index, typeH);
   }
 
   private NatFuncH convertNatFunc(NatFuncS natFuncS) {
@@ -219,9 +219,9 @@ public class ShConverter {
     return objFactory.order(elemsH);
   }
 
-  private RefH convertParamRef(ParamRefS paramRefS) {
+  private ParamRefH convertParamRef(ParamRefS paramRefS) {
     var index = callStack.peek().indexMap().get(paramRefS.paramName());
-    return objFactory.ref(BigInteger.valueOf(index), convertType(paramRefS.type()));
+    return objFactory.paramRef(BigInteger.valueOf(index), convertType(paramRefS.type()));
   }
 
   public ObjectH convertRef(RefS refS) {

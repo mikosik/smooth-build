@@ -17,7 +17,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.obj.val.BlobH;
@@ -129,8 +129,8 @@ public class ObjFactory {
     return objectHDb.natFunc(type, jarFile, classBinaryName,isPure);
   }
 
-  public RefH ref(BigInteger value, TypeH evaluationType) {
-    return objectHDb.ref(value, evaluationType);
+  public ParamRefH paramRef(BigInteger value, TypeH evaluationType) {
+    return objectHDb.newParamRef(value, evaluationType);
   }
 
   public SelectH select(ObjectH tuple, IntH index) {

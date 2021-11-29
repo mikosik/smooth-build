@@ -21,7 +21,7 @@ import static org.smoothbuild.db.object.type.base.SpecKindH.CONSTRUCT;
 import static org.smoothbuild.db.object.type.base.SpecKindH.INT;
 import static org.smoothbuild.db.object.type.base.SpecKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ORDER;
-import static org.smoothbuild.db.object.type.base.SpecKindH.REF;
+import static org.smoothbuild.db.object.type.base.SpecKindH.PARAM_REF;
 import static org.smoothbuild.db.object.type.base.SpecKindH.SELECT;
 import static org.smoothbuild.db.object.type.base.SpecKindH.STRING;
 import static org.smoothbuild.db.object.type.base.SpecKindH.TUPLE;
@@ -253,7 +253,7 @@ public class TypeHDb implements TypeFactoryH {
       case ABST_FUNC, DEF_FUNC, NAT_FUNC, IF_FUNC, MAP_FUNC ->
           readFunc(hash, rootSeq, kind);
       case ORDER -> newOrder(hash, readDataAsArray(hash, rootSeq, kind));
-      case REF -> newRef(hash, readDataAsVal(hash, rootSeq, kind));
+      case PARAM_REF -> newRef(hash, readDataAsVal(hash, rootSeq, kind));
       case SELECT -> newSelect(hash, readDataAsVal(hash, rootSeq, kind));
       case TUPLE -> readTuple(hash, rootSeq);
       case VARIABLE -> readVariable(hash, rootSeq);
@@ -441,7 +441,7 @@ public class TypeHDb implements TypeFactoryH {
   }
 
   private RefTypeH newRef(TypeH evaluationType) throws HashedDbException {
-    var rootHash = writeExprRoot(REF, evaluationType);
+    var rootHash = writeExprRoot(PARAM_REF, evaluationType);
     return newRef(rootHash, evaluationType);
   }
 

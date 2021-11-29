@@ -31,7 +31,7 @@ import static org.smoothbuild.db.object.type.TestingTypesH.INT;
 import static org.smoothbuild.db.object.type.TestingTypesH.NOTHING;
 import static org.smoothbuild.db.object.type.TestingTypesH.ORDER;
 import static org.smoothbuild.db.object.type.TestingTypesH.PERSON;
-import static org.smoothbuild.db.object.type.TestingTypesH.REF;
+import static org.smoothbuild.db.object.type.TestingTypesH.PARAM_REF;
 import static org.smoothbuild.db.object.type.TestingTypesH.SELECT;
 import static org.smoothbuild.db.object.type.TestingTypesH.STRING;
 import static org.smoothbuild.db.object.type.TestingTypesH.TYPEH_DB;
@@ -53,7 +53,7 @@ import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.RefH;
+import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
@@ -395,7 +395,7 @@ public class SpecHTest extends TestingContext {
         arguments(ORDER, OrderH.class),
         arguments(CONSTRUCT, CombineH.class),
         arguments(SELECT, SelectH.class),
-        arguments(REF, RefH.class)
+        arguments(PARAM_REF, ParamRefH.class)
     );
   }
 
@@ -489,7 +489,7 @@ public class SpecHTest extends TestingContext {
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(CONSTRUCT, CONSTRUCT);
     tester.addEqualityGroup(ORDER, ORDER);
-    tester.addEqualityGroup(REF, REF);
+    tester.addEqualityGroup(PARAM_REF, PARAM_REF);
     tester.addEqualityGroup(SELECT, SELECT);
 
     tester.testEquals();
