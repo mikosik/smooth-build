@@ -6,11 +6,11 @@ import java.math.BigInteger;
 
 import org.smoothbuild.lang.base.define.Location;
 
-public final class IntNode extends ExprNode {
+public final class IntN extends ExprN {
   private final String literal;
   private BigInteger bigInteger;
 
-  public IntNode(String literal, Location location) {
+  public IntN(String literal, Location location) {
     super(location);
     this.literal = literal;
   }

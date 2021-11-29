@@ -29,25 +29,25 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
-import org.smoothbuild.lang.parse.ast.ArrayNode;
-import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
+import org.smoothbuild.lang.parse.ast.ArrayN;
+import org.smoothbuild.lang.parse.ast.ArrayTypeN;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
-import org.smoothbuild.lang.parse.ast.BlobNode;
-import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.lang.parse.ast.EvaluableNode;
-import org.smoothbuild.lang.parse.ast.ExprNode;
-import org.smoothbuild.lang.parse.ast.FunctionNode;
-import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
-import org.smoothbuild.lang.parse.ast.IntNode;
-import org.smoothbuild.lang.parse.ast.ItemNode;
-import org.smoothbuild.lang.parse.ast.RealFuncNode;
-import org.smoothbuild.lang.parse.ast.RefNode;
-import org.smoothbuild.lang.parse.ast.SelectNode;
-import org.smoothbuild.lang.parse.ast.StringNode;
-import org.smoothbuild.lang.parse.ast.StructNode;
-import org.smoothbuild.lang.parse.ast.TypeNode;
-import org.smoothbuild.lang.parse.ast.ValueNode;
+import org.smoothbuild.lang.parse.ast.BlobN;
+import org.smoothbuild.lang.parse.ast.CallN;
+import org.smoothbuild.lang.parse.ast.EvaluableN;
+import org.smoothbuild.lang.parse.ast.ExprN;
+import org.smoothbuild.lang.parse.ast.FunctionN;
+import org.smoothbuild.lang.parse.ast.FunctionTypeN;
+import org.smoothbuild.lang.parse.ast.IntN;
+import org.smoothbuild.lang.parse.ast.ItemN;
+import org.smoothbuild.lang.parse.ast.RealFuncN;
+import org.smoothbuild.lang.parse.ast.RefN;
+import org.smoothbuild.lang.parse.ast.SelectN;
+import org.smoothbuild.lang.parse.ast.StringN;
+import org.smoothbuild.lang.parse.ast.StructN;
+import org.smoothbuild.lang.parse.ast.TypeN;
+import org.smoothbuild.lang.parse.ast.ValueN;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 
@@ -70,40 +70,40 @@ public class TypeInferrer {
 
     new AstVisitor() {
       @Override
-      public void visitStruct(StructNode struct) {
+      public void visitStruct(StructN struct) {
         super.visitStruct(struct);
-        var fields = Optionals.pullUp(map(struct.fields(), ItemNode::itemSignature));
+        var fields = Optionals.pullUp(map(struct.fields(), ItemN::itemSignature));
         struct.setType(fields.map(f -> factory.struct(struct.name(), nList(f))));
         struct.constructor().setType(
             fields.map(s -> factory.function(struct.type().get(), map(s, ItemSignature::type))));
       }
 
       @Override
-      public void visitField(ItemNode fieldNode) {
+      public void visitField(ItemN fieldNode) {
         super.visitField(fieldNode);
         fieldNode.setType(fieldNode.typeNode().get().type());
       }
 
       @Override
-      public void visitRealFunc(RealFuncNode func) {
+      public void visitRealFunc(RealFuncN func) {
         visitParams(func.params());
         func.body().ifPresent(this::visitExpr);
         func.setType(optionalFunctionType(evaluationTypeOfTopEvaluables(func), func.optParamTypes()));
       }
 
       @Override
-      public void visitValue(ValueNode value) {
+      public void visitValue(ValueN value) {
         value.body().ifPresent(this::visitExpr);
         value.setType(evaluationTypeOfTopEvaluables(value));
       }
 
       @Override
-      public void visitParam(int index, ItemNode param) {
+      public void visitParam(int index, ItemN param) {
         super.visitParam(index, param);
         param.setType(typeOfParam(param));
       }
 
-      private Optional<TypeS> typeOfParam(ItemNode param) {
+      private Optional<TypeS> typeOfParam(ItemN param) {
         return evaluationTypeOf(param, (target, source) -> {
           if (!typing.isParamAssignable(target, source)) {
             logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + target.q()
@@ -112,7 +112,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evaluationTypeOfTopEvaluables(EvaluableNode evaluable) {
+      private Optional<TypeS> evaluationTypeOfTopEvaluables(EvaluableN evaluable) {
         return evaluationTypeOf(evaluable, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
             logBuffer.log(parseError(evaluable, "`" + evaluable.name()
@@ -123,7 +123,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evaluationTypeOf(EvaluableNode referencable,
+      private Optional<TypeS> evaluationTypeOf(EvaluableN referencable,
           BiConsumer<TypeS, TypeS> assignmentChecker) {
         if (referencable.body().isPresent()) {
           Optional<TypeS> exprType = referencable.body().get().type();
@@ -147,18 +147,18 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitType(TypeNode type) {
+      public void visitType(TypeN type) {
         super.visitType(type);
         type.setType(createType(type));
       }
 
-      private Optional<TypeS> createType(TypeNode type) {
+      private Optional<TypeS> createType(TypeN type) {
         if (isVariableName(type.name())) {
           return Optional.of(factory.variable(type.name()));
         }
         return switch (type) {
-          case ArrayTypeNode array -> createType(array.elemType()).map(factory::array);
-          case FunctionTypeNode function -> {
+          case ArrayTypeN array -> createType(array.elemType()).map(factory::array);
+          case FunctionTypeN function -> {
             Optional<TypeS> result = createType(function.resultType());
             var params = Optionals.pullUp(map(function.paramTypes(), this::createType));
             yield optionalFunctionType(result, params);
@@ -186,7 +186,7 @@ public class TypeInferrer {
       }
 
       private TypeS findLocalType(String name) {
-        StructNode localStruct = ast.structs().get(name);
+        StructN localStruct = ast.structs().get(name);
         if (localStruct == null) {
           throw new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structs());
@@ -197,7 +197,7 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitSelect(SelectNode expr) {
+      public void visitSelect(SelectN expr) {
         super.visitSelect(expr);
         expr.expr().type().ifPresentOrElse(
             t -> {
@@ -218,13 +218,13 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitArray(ArrayNode array) {
+      public void visitArray(ArrayN array) {
         super.visitArray(array);
         array.setType(findArrayType(array));
       }
 
-      private Optional<TypeS> findArrayType(ArrayNode array) {
-        List<ExprNode> expressions = array.elems();
+      private Optional<TypeS> findArrayType(ArrayN array) {
+        List<ExprN> expressions = array.elems();
         if (expressions.isEmpty()) {
           return Optional.of(factory.array(factory.nothing()));
         }
@@ -235,7 +235,7 @@ public class TypeInferrer {
 
         TypeS type = firstType.get();
         for (int i = 1; i < expressions.size(); i++) {
-          ExprNode elem = expressions.get(i);
+          ExprN elem = expressions.get(i);
           Optional<TypeS> elemType = elem.type();
           if (elemType.isEmpty()) {
             return empty();
@@ -253,9 +253,9 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitCall(CallNode call) {
+      public void visitCall(CallN call) {
         super.visitCall(call);
-        ExprNode called = call.function();
+        ExprN called = call.function();
         Optional<TypeS> calledType = called.type();
         if (calledType.isEmpty()) {
           call.setType(empty());
@@ -286,14 +286,14 @@ public class TypeInferrer {
         }
       }
 
-      public static Optional<NList<ItemSignature>> funcParams(ExprNode called) {
-        if (called instanceof RefNode refNode) {
-          EvaluableLike referenced = refNode.referenced();
+      public static Optional<NList<ItemSignature>> funcParams(ExprN called) {
+        if (called instanceof RefN refN) {
+          EvaluableLike referenced = refN.referenced();
           if (referenced instanceof FunctionS function) {
             return Optional.of(function.params().map(Item::signature));
-          } else if (referenced instanceof FunctionNode functionNode) {
+          } else if (referenced instanceof FunctionN functionN) {
             var itemSignatures = Optionals.pullUp(
-                map(functionNode.params(), ItemNode::itemSignature));
+                map(functionN.params(), ItemN::itemSignature));
             return itemSignatures.map(NList::nList);
           } else {
             var params = ((FunctionTypeS) referenced.inferredType().get()).params();
@@ -311,15 +311,15 @@ public class TypeInferrer {
             .anyMatch(a -> a.type().isEmpty());
       }
 
-      private static String description(ExprNode node) {
-        if (node instanceof RefNode refNode) {
-          return "`" + refNode.name() + "`";
+      private static String description(ExprN node) {
+        if (node instanceof RefN refN) {
+          return "`" + refN.name() + "`";
         }
         return "expression";
       }
 
       @Override
-      public void visitRef(RefNode ref) {
+      public void visitRef(RefN ref) {
         super.visitRef(ref);
         ref.setType(ref.referenced().inferredType());
       }
@@ -331,21 +331,21 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitStringLiteral(StringNode string) {
+      public void visitStringLiteral(StringN string) {
         super.visitStringLiteral(string);
         string.setType(factory.string());
       }
 
       @Override
-      public void visitBlobLiteral(BlobNode blob) {
+      public void visitBlobLiteral(BlobN blob) {
         super.visitBlobLiteral(blob);
         blob.setType(factory.blob());
       }
 
       @Override
-      public void visitIntLiteral(IntNode intNode) {
-        super.visitIntLiteral(intNode);
-        intNode.setType(factory.int_());
+      public void visitIntLiteral(IntN intN) {
+        super.visitIntLiteral(intN);
+        intN.setType(factory.int_());
       }
     }.visitAst(ast);
     return logBuffer.toList();

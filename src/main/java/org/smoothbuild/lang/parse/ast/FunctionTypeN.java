@@ -5,12 +5,12 @@ import org.smoothbuild.util.collect.CountersMap;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FunctionTypeNode extends TypeNode {
-  private final TypeNode resultType;
-  private final ImmutableList<TypeNode> paramTypes;
+public final class FunctionTypeN extends TypeN {
+  private final TypeN resultType;
+  private final ImmutableList<TypeN> paramTypes;
 
-  public FunctionTypeNode(
-      TypeNode resultType, ImmutableList<TypeNode> paramTypes, Location location) {
+  public FunctionTypeN(
+      TypeN resultType, ImmutableList<TypeN> paramTypes, Location location) {
     super("[" + resultType.name() + "]", location);
     this.resultType = resultType;
     this.paramTypes = paramTypes;
@@ -18,7 +18,7 @@ public final class FunctionTypeNode extends TypeNode {
 
   @Override
   public boolean isPolytype() {
-    return resultType.isPolytype() || paramTypes.stream().anyMatch(TypeNode::isPolytype);
+    return resultType.isPolytype() || paramTypes.stream().anyMatch(TypeN::isPolytype);
   }
 
   @Override
@@ -26,17 +26,17 @@ public final class FunctionTypeNode extends TypeNode {
     countFunctionVariables(countersMap, resultType, paramTypes);
   }
 
-  public static void countFunctionVariables(CountersMap<String> countersMap, TypeNode resultType,
-      ImmutableList<TypeNode> paramTypes) {
+  public static void countFunctionVariables(CountersMap<String> countersMap, TypeN resultType,
+      ImmutableList<TypeN> paramTypes) {
     resultType.countVariables(countersMap);
     paramTypes.forEach(p -> p.countVariables(countersMap));
   }
 
-  public TypeNode resultType() {
+  public TypeN resultType() {
     return resultType;
   }
 
-  public ImmutableList<TypeNode> paramTypes() {
+  public ImmutableList<TypeN> paramTypes() {
     return paramTypes;
   }
 }

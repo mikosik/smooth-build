@@ -9,27 +9,28 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.impl.FunctionTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.parse.ast.StructN.ConstructorN;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public sealed class FunctionNode extends EvaluableNode
-    permits RealFuncNode, StructNode.ConstructorNode {
-  private final NList<ItemNode> params;
+public sealed class FunctionN extends EvaluableN
+    permits RealFuncN, ConstructorN {
+  private final NList<ItemN> params;
 
-  public FunctionNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> body,
-      List<ItemNode> params, Optional<AnnotationNode> annotation, Location location) {
+  public FunctionN(Optional<TypeN> typeNode, String name, Optional<ExprN> body,
+      List<ItemN> params, Optional<AnnotationN> annotation, Location location) {
     super(typeNode, name, body, annotation, location);
     this.params = nListWithDuplicates(ImmutableList.copyOf(params));
   }
 
-  public NList<ItemNode> params() {
+  public NList<ItemN> params() {
     return params;
   }
 
   public Optional<ImmutableList<TypeS>> optParamTypes() {
-    return Optionals.pullUp(map(params(), ItemNode::type));
+    return Optionals.pullUp(map(params(), ItemN::type));
   }
 
   public Optional<TypeS> resultType() {

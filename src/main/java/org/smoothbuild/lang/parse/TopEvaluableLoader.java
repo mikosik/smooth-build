@@ -31,20 +31,20 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
-import org.smoothbuild.lang.parse.ast.AnnotationNode;
+import org.smoothbuild.lang.parse.ast.AnnotationN;
 import org.smoothbuild.lang.parse.ast.ArgNode;
-import org.smoothbuild.lang.parse.ast.ArrayNode;
-import org.smoothbuild.lang.parse.ast.BlobNode;
-import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.lang.parse.ast.EvaluableNode;
-import org.smoothbuild.lang.parse.ast.ExprNode;
-import org.smoothbuild.lang.parse.ast.FunctionNode;
-import org.smoothbuild.lang.parse.ast.IntNode;
-import org.smoothbuild.lang.parse.ast.ItemNode;
-import org.smoothbuild.lang.parse.ast.RealFuncNode;
-import org.smoothbuild.lang.parse.ast.RefNode;
-import org.smoothbuild.lang.parse.ast.SelectNode;
-import org.smoothbuild.lang.parse.ast.StringNode;
+import org.smoothbuild.lang.parse.ast.ArrayN;
+import org.smoothbuild.lang.parse.ast.BlobN;
+import org.smoothbuild.lang.parse.ast.CallN;
+import org.smoothbuild.lang.parse.ast.EvaluableN;
+import org.smoothbuild.lang.parse.ast.ExprN;
+import org.smoothbuild.lang.parse.ast.FunctionN;
+import org.smoothbuild.lang.parse.ast.IntN;
+import org.smoothbuild.lang.parse.ast.ItemN;
+import org.smoothbuild.lang.parse.ast.RealFuncN;
+import org.smoothbuild.lang.parse.ast.RefN;
+import org.smoothbuild.lang.parse.ast.SelectN;
+import org.smoothbuild.lang.parse.ast.StringN;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -57,15 +57,15 @@ public class TopEvaluableLoader {
     this.factory = factory;
   }
 
-  public TopEvaluableS loadEvaluables(ModulePath path, EvaluableNode evaluableNode) {
-    if (evaluableNode instanceof RealFuncNode realFuncNode) {
-      return loadFunction(path, realFuncNode);
+  public TopEvaluableS loadEvaluables(ModulePath path, EvaluableN evaluableN) {
+    if (evaluableN instanceof RealFuncN realFuncN) {
+      return loadFunction(path, realFuncN);
     } else {
-      return loadValue(path, evaluableNode);
+      return loadValue(path, evaluableN);
     }
   }
 
-  private ValueS loadValue(ModulePath path, EvaluableNode valueNode) {
+  private ValueS loadValue(ModulePath path, EvaluableN valueNode) {
     var type = valueNode.type().get();
     var name = valueNode.name();
     var location = valueNode.location();
@@ -74,31 +74,31 @@ public class TopEvaluableLoader {
         type, path, name, loader.createExpression(valueNode.body().get()), location);
   }
 
-  private FunctionS loadFunction(ModulePath path, RealFuncNode realFuncNode) {
-    var params = loadParams(path, realFuncNode);
-    var resultType = realFuncNode.resultType().get();
-    var name = realFuncNode.name();
-    var location = realFuncNode.location();
+  private FunctionS loadFunction(ModulePath path, RealFuncN realFuncN) {
+    var params = loadParams(path, realFuncN);
+    var resultType = realFuncN.resultType().get();
+    var name = realFuncN.name();
+    var location = realFuncN.location();
     var type = factory.function(resultType, map(params, Defined::type));
-    if (realFuncNode.annotation().isPresent()) {
+    if (realFuncN.annotation().isPresent()) {
       return new NativeFunctionS(type,
-          path, name, params, loadAnnotation(realFuncNode.annotation().get()), location
+          path, name, params, loadAnnotation(realFuncN.annotation().get()), location
       );
     } else {
       var expressionLoader = new ExpressionLoader(path, params);
       return new DefinedFunctionS(type, path,
-          name, params, expressionLoader.createExpression(realFuncNode.body().get()), location);
+          name, params, expressionLoader.createExpression(realFuncN.body().get()), location);
     }
   }
 
-  private Annotation loadAnnotation(AnnotationNode annotationNode) {
-    var path = createStringLiteral(annotationNode.path());
-    return new Annotation(path, annotationNode.isPure(), annotationNode.location());
+  private Annotation loadAnnotation(AnnotationN annotationN) {
+    var path = createStringLiteral(annotationN.path());
+    return new Annotation(path, annotationN.isPure(), annotationN.location());
   }
 
-  private NList<Item> loadParams(ModulePath path, RealFuncNode realFuncNode) {
+  private NList<Item> loadParams(ModulePath path, RealFuncN realFuncN) {
     ExpressionLoader paramLoader = new ExpressionLoader(path, nList());
-    return realFuncNode.params().map(paramLoader::createParam);
+    return realFuncN.params().map(paramLoader::createParam);
   }
 
   private class ExpressionLoader {
@@ -110,42 +110,42 @@ public class TopEvaluableLoader {
       this.funcParams = funcParams;
     }
 
-    public Item createParam(ItemNode param) {
+    public Item createParam(ItemN param) {
       var type = param.typeNode().get().type().get();
       var name = param.name();
       var defaultArgument = param.body().map(this::createExpression);
       return new Item(type, modulePath, name, defaultArgument, param.location());
     }
 
-    private ExprS createExpression(ExprNode expr) {
+    private ExprS createExpression(ExprN expr) {
       return switch (expr) {
-        case ArrayNode arrayNode -> createArrayLiteral(arrayNode);
-        case BlobNode blobNode -> createBlobLiteral(blobNode);
-        case CallNode callNode -> createCall(callNode);
-        case IntNode intNode -> createIntLiteral(intNode);
-        case RefNode refNode -> createReference(refNode);
-        case SelectNode selectNode -> createSelect(selectNode);
-        case StringNode stringNode -> createStringLiteral(stringNode);
-        case AnnotationNode node -> null;
+        case ArrayN arrayN -> createArrayLiteral(arrayN);
+        case BlobN blobN -> createBlobLiteral(blobN);
+        case CallN callN -> createCall(callN);
+        case IntN intN -> createIntLiteral(intN);
+        case RefN refN -> createReference(refN);
+        case SelectN selectN -> createSelect(selectN);
+        case StringN stringN -> createStringLiteral(stringN);
+        case AnnotationN node -> null;
         default -> throw new RuntimeException(
             "Unknown AST node: " + expr.getClass().getSimpleName() + ".");
       };
     }
 
-    private ExprS createArrayLiteral(ArrayNode array) {
+    private ExprS createArrayLiteral(ArrayN array) {
       var type = (ArrayTypeS) array.type().get();
       ImmutableList<ExprS> elems = map(array.elems(), this::createExpression);
       return new OrderS(type, elems, array.location());
     }
 
-    private ExprS createCall(CallNode call) {
+    private ExprS createCall(CallN call) {
       var called = createExpression(call.function());
       var argumentExpressions = createArgumentExpressions(call);
       var resultType = call.type().get();
       return new CallS(resultType, called, argumentExpressions, call.location());
     }
 
-    private ImmutableList<ExprS> createArgumentExpressions(CallNode call) {
+    private ImmutableList<ExprS> createArgumentExpressions(CallN call) {
       var builder = ImmutableList.<ExprS>builder();
       List<Optional<ArgNode>> args = call.assignedArgs();
       for (int i = 0; i < args.size(); i++) {
@@ -154,7 +154,7 @@ public class TopEvaluableLoader {
       return builder.build();
     }
 
-    private ExprS createArgumentExpression(CallNode call, List<Optional<ArgNode>> args, int i) {
+    private ExprS createArgumentExpression(CallN call, List<Optional<ArgNode>> args, int i) {
       Optional<ArgNode> arg = args.get(i);
       if (arg.isPresent()) {
         return createExpression(arg.get().expr());
@@ -163,52 +163,52 @@ public class TopEvaluableLoader {
       }
     }
 
-    private ExprS createDefaultArgumentExpression(CallNode call, int i) {
+    private ExprS createDefaultArgumentExpression(CallN call, int i) {
       // Argument is not present so we have to use function default argument.
       // This means that this call is made on reference to actual function and that function
       // has default argument for given param, otherwise checkers that ran so far would
       // report an error.
-      EvaluableLike referenced = ((RefNode) call.function()).referenced();
+      EvaluableLike referenced = ((RefN) call.function()).referenced();
       return switch (referenced) {
         case FunctionS function -> function.params().get(i).defaultValue().get();
-        case FunctionNode node -> createExpression(node.params().get(i).body().get());
+        case FunctionN node -> createExpression(node.params().get(i).body().get());
         default -> throw new RuntimeException("Unexpected case");
       };
     }
 
-    private ExprS createSelect(SelectNode selectNode) {
-      var structType = (StructTypeS) selectNode.expr().type().get();
-      var index = structType.fields().indexMap().get(selectNode.fieldName());
+    private ExprS createSelect(SelectN selectN) {
+      var structType = (StructTypeS) selectN.expr().type().get();
+      var index = structType.fields().indexMap().get(selectN.fieldName());
       var fieldType = structType.fields().get(index).type();
-      var expr = createExpression(selectNode.expr());
-      return new SelectS(fieldType, expr, index, selectNode.location());
+      var expr = createExpression(selectN.expr());
+      return new SelectS(fieldType, expr, index, selectN.location());
     }
 
-    private ExprS createReference(RefNode ref) {
+    private ExprS createReference(RefN ref) {
       EvaluableLike referenced = ref.referenced();
       return switch (referenced) {
-        case ItemNode n ->  new ParamRefS(
+        case ItemN n ->  new ParamRefS(
             funcParams.get(ref.name()).type(), ref.name(), ref.location());
         default -> new RefS(referenced.inferredType().get(), ref.name(), ref.location());
       };
     }
   }
 
-  public BlobS createBlobLiteral(BlobNode blob) {
+  public BlobS createBlobLiteral(BlobN blob) {
     return new BlobS(
         factory.blob(),
         blob.byteString(),
         blob.location());
   }
 
-  public IntS createIntLiteral(IntNode intNode) {
+  public IntS createIntLiteral(IntN intN) {
     return new IntS(
         factory.int_(),
-        intNode.bigInteger(),
-        intNode.location());
+        intN.bigInteger(),
+        intN.location());
   }
 
-  public StringS createStringLiteral(StringNode string) {
+  public StringS createStringLiteral(StringN string) {
     return new StringS(
         factory.string(),
         string.unescapedValue(),

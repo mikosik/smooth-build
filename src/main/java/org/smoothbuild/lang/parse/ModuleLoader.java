@@ -26,8 +26,8 @@ import org.smoothbuild.lang.base.define.TopEvaluableS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.parse.ast.Ast;
-import org.smoothbuild.lang.parse.ast.EvaluableNode;
-import org.smoothbuild.lang.parse.ast.StructNode;
+import org.smoothbuild.lang.parse.ast.EvaluableN;
+import org.smoothbuild.lang.parse.ast.StructN;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -85,7 +85,7 @@ public class ModuleLoader {
     return maybeValueAndLogs(moduleS, logBuffer);
   }
 
-  private StructS loadStruct(ModulePath path, StructNode struct) {
+  private StructS loadStruct(ModulePath path, StructN struct) {
     var type = (StructTypeS) struct.type().get();
     var name = struct.name();
     var location = struct.location();
@@ -94,17 +94,17 @@ public class ModuleLoader {
 
   private NList<TopEvaluableS> loadEvaluables(ModulePath path, Ast ast) {
     var local = ImmutableList.<TopEvaluableS>builder();
-    for (StructNode struct : ast.structs()) {
+    for (StructN struct : ast.structs()) {
       ConstructorS constructor = loadConstructor(path, struct);
       local.add(constructor);
     }
-    for (EvaluableNode referencable : ast.evaluables()) {
+    for (EvaluableN referencable : ast.evaluables()) {
       local.add(topEvaluableLoader.loadEvaluables(path, referencable));
     }
     return nList(local.build());
   }
 
-  private ConstructorS loadConstructor(ModulePath path, StructNode struct) {
+  private ConstructorS loadConstructor(ModulePath path, StructN struct) {
     var resultType = struct.type().get();
     var name = struct.constructor().name();
     var paramTypes = map(struct.fields(), f -> f.type().get());

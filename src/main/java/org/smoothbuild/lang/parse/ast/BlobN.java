@@ -6,11 +6,11 @@ import org.smoothbuild.util.Hex;
 
 import okio.ByteString;
 
-public final class BlobNode extends ExprNode {
+public final class BlobN extends ExprN {
   private final String literal;
   private ByteString byteString;
 
-  public BlobNode(String literal, Location location) {
+  public BlobN(String literal, Location location) {
     super(location);
     this.literal = literal;
   }

@@ -3,10 +3,10 @@ package org.smoothbuild.lang.parse.ast;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.collect.CountersMap;
 
-public final class ArrayTypeNode extends TypeNode {
-  private final TypeNode elemType;
+public final class ArrayTypeN extends TypeN {
+  private final TypeN elemType;
 
-  public ArrayTypeNode(TypeNode elemType, Location location) {
+  public ArrayTypeN(TypeN elemType, Location location) {
     super("[" + elemType.name() + "]", location);
     this.elemType = elemType;
   }
@@ -21,7 +21,7 @@ public final class ArrayTypeNode extends TypeNode {
     elemType.countVariables(countersMap);
   }
 
-  public TypeNode elemType() {
+  public TypeN elemType() {
     return elemType;
   }
 }

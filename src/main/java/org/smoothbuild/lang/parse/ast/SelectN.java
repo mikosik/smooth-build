@@ -2,17 +2,17 @@ package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
 
-public final class SelectNode extends ExprNode {
-  private final ExprNode expr;
+public final class SelectN extends ExprN {
+  private final ExprN expr;
   private final String fieldName;
 
-  public SelectNode(ExprNode expr, String fieldName, Location location) {
+  public SelectN(ExprN expr, String fieldName, Location location) {
     super(location);
     this.expr = expr;
     this.fieldName = fieldName;
   }
 
-  public ExprNode expr() {
+  public ExprN expr() {
     return expr;
   }
 

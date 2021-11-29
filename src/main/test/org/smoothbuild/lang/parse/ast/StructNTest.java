@@ -7,19 +7,19 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class StructNodeTest {
+public class StructNTest {
   @Nested
   class constructorNameToTypeName {
     @Test
     public void constructor_name_is_lower_camelcase_of_type_name() {
-      StructNode struct = new StructNode("MyType", list(), internal());
+      StructN struct = new StructN("MyType", list(), internal());
       assertThat(struct.constructor().name())
           .isEqualTo("myType");
     }
 
     @Test
     public void constructor_name_is_lower_camelcase_of_type_name_preserving_underscores() {
-      StructNode struct = new StructNode("My_Pretty_Type", list(), internal());
+      StructN struct = new StructN("My_Pretty_Type", list(), internal());
       assertThat(struct.constructor().name())
           .isEqualTo("my_Pretty_Type");
     }

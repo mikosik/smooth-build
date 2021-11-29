@@ -9,85 +9,85 @@ public class AstVisitor {
     visitEvaluable(ast.evaluables());
   }
 
-  public void visitStructs(List<StructNode> structs) {
+  public void visitStructs(List<StructN> structs) {
     structs.forEach(this::visitStruct);
   }
 
-  public void visitStruct(StructNode struct) {
+  public void visitStruct(StructN struct) {
     visitFields(struct.fields());
   }
 
-  public void visitFields(List<ItemNode> fields) {
+  public void visitFields(List<ItemN> fields) {
     fields.forEach(this::visitField);
   }
 
-  public void visitField(ItemNode field) {
+  public void visitField(ItemN field) {
     field.typeNode().ifPresent(this::visitType);
   }
 
-  public void visitEvaluable(List<EvaluableNode> evaluable) {
+  public void visitEvaluable(List<EvaluableN> evaluable) {
     evaluable.forEach(this::visitEvaluable);
   }
 
-  public void visitEvaluable(EvaluableNode evaluable) {
+  public void visitEvaluable(EvaluableN evaluable) {
     switch (evaluable) {
-      case RealFuncNode func -> visitRealFunc(func);
-      case ValueNode value -> visitValue(value);
+      case RealFuncN func -> visitRealFunc(func);
+      case ValueN value -> visitValue(value);
       default -> throw new RuntimeException(
           "Didn't expect instance of " + evaluable.getClass().getCanonicalName());
     }
   }
 
-  public void visitValue(ValueNode value) {
+  public void visitValue(ValueN value) {
     value.annotation().ifPresent(this::visitNative);
     value.typeNode().ifPresent(this::visitType);
     value.body().ifPresent(this::visitExpr);
   }
 
-  public void visitRealFunc(RealFuncNode func) {
+  public void visitRealFunc(RealFuncN func) {
     func.annotation().ifPresent(this::visitNative);
     func.typeNode().ifPresent(this::visitType);
     visitParams(func.params());
     func.body().ifPresent(this::visitExpr);
   }
 
-  public void visitNative(AnnotationNode annotation) {
+  public void visitNative(AnnotationN annotation) {
     visitStringLiteral(annotation.path());
   }
 
-  public void visitParams(List<ItemNode> params) {
+  public void visitParams(List<ItemN> params) {
     visitIndexedElements(params, this::visitParam);
   }
 
-  public void visitParam(int index, ItemNode param) {
+  public void visitParam(int index, ItemN param) {
     param.typeNode().ifPresent(this::visitType);
     param.body().ifPresent(this::visitExpr);
   }
 
-  public void visitType(TypeNode type) {}
+  public void visitType(TypeN type) {}
 
-  public void visitExpr(ExprNode expr) {
+  public void visitExpr(ExprN expr) {
     switch (expr) {
-      case ArrayNode arrayNode -> visitArray(arrayNode);
-      case BlobNode blobNode -> visitBlobLiteral(blobNode);
-      case CallNode callNode -> visitCall(callNode);
-      case SelectNode selectNode -> visitSelect(selectNode);
-      case IntNode intNode -> visitIntLiteral(intNode);
-      case RefNode refNode -> visitRef(refNode);
-      case StringNode stringNode -> visitStringLiteral(stringNode);
+      case ArrayN arrayN -> visitArray(arrayN);
+      case BlobN blobN -> visitBlobLiteral(blobN);
+      case CallN callN -> visitCall(callN);
+      case SelectN selectN -> visitSelect(selectN);
+      case IntN intN -> visitIntLiteral(intN);
+      case RefN refN -> visitRef(refN);
+      case StringN stringN -> visitStringLiteral(stringN);
       case null, default -> throw new RuntimeException(
           "Unknown node " + expr.getClass().getSimpleName());
     }
   }
 
-  public void visitArray(ArrayNode array) {
+  public void visitArray(ArrayN array) {
     array.elems().forEach(this::visitExpr);
   }
 
-  public void visitBlobLiteral(BlobNode blob) {
+  public void visitBlobLiteral(BlobN blob) {
   }
 
-  public void visitCall(CallNode call) {
+  public void visitCall(CallN call) {
     visitExpr(call.function());
     visitArgs(call.args());
   }
@@ -100,16 +100,16 @@ public class AstVisitor {
     visitExpr(arg.expr());
   }
 
-  public void visitSelect(SelectNode expr) {
+  public void visitSelect(SelectN expr) {
     visitExpr(expr.expr());
   }
 
-  public void visitIntLiteral(IntNode int_) {
+  public void visitIntLiteral(IntN int_) {
   }
 
-  public void visitRef(RefNode ref) {}
+  public void visitRef(RefN ref) {}
 
-  public void visitStringLiteral(StringNode string) {
+  public void visitStringLiteral(StringN string) {
   }
 
   public <E> void visitIndexedElements(List<E> elems, BiConsumer<Integer, ? super E> consumer) {

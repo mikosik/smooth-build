@@ -12,32 +12,32 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public final class StructNode extends NamedNode {
-  private final NList<ItemNode> fields;
-  private final ConstructorNode constructor;
+public final class StructN extends NamedN {
+  private final NList<ItemN> fields;
+  private final ConstructorN constructor;
 
-  public StructNode(String name, List<ItemNode> fields, Location location) {
+  public StructN(String name, List<ItemN> fields, Location location) {
     this(name, nListWithDuplicates(ImmutableList.copyOf(fields)), location);
   }
 
-  private StructNode(String name, NList<ItemNode> fields, Location location) {
+  private StructN(String name, NList<ItemN> fields, Location location) {
     super(name, location);
     this.fields = fields;
-    this.constructor = new ConstructorNode(name, fields, location);
+    this.constructor = new ConstructorN(name, fields, location);
   }
 
-  public ConstructorNode constructor() {
+  public ConstructorN constructor() {
     return constructor;
   }
 
-  public NList<ItemNode> fields() {
+  public NList<ItemN> fields() {
     return fields;
   }
 
-  public final class ConstructorNode extends FunctionNode {
-    public ConstructorNode(String structName, List<ItemNode> params, Location location) {
+  public final class ConstructorN extends FunctionN {
+    public ConstructorN(String structName, List<ItemN> params, Location location) {
       super(
-          Optional.of(new TypeNode(structName, location)),
+          Optional.of(new TypeN(structName, location)),
           UPPER_CAMEL.to(LOWER_CAMEL, structName),
           Optional.empty(),
           params,
@@ -46,7 +46,7 @@ public final class StructNode extends NamedNode {
     }
 
     @Override
-    public NList<ItemNode> params() {
+    public NList<ItemN> params() {
       return fields;
     }
   }

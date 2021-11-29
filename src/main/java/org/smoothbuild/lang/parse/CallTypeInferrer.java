@@ -21,7 +21,7 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
-import org.smoothbuild.lang.parse.ast.CallNode;
+import org.smoothbuild.lang.parse.ast.CallN;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -35,7 +35,7 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Maybe<TypeS> inferCallType(CallNode call, TypeS resultType,
+  public Maybe<TypeS> inferCallType(CallN call, TypeS resultType,
       NList<ItemSignature> params) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
@@ -59,7 +59,7 @@ public class CallTypeInferrer {
     return maybeLogs(logBuffer);
   }
 
-  private void findIllegalTypeAssignmentErrors(CallNode call,
+  private void findIllegalTypeAssignmentErrors(CallN call,
       List<Optional<ArgNode>> assignedList, List<ItemSignature> params, Logger logger) {
     range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isPresent())
@@ -72,13 +72,13 @@ public class CallTypeInferrer {
     return typing.isParamAssignable(param.type(), arg.type().get());
   }
 
-  private static Log illegalAssignmentError(CallNode call, ItemSignature param, ArgNode arg) {
+  private static Log illegalAssignmentError(CallN call, ItemSignature param, ArgNode arg) {
     return parseError(arg.location(), inCallToPrefix(call)
         + "Cannot assign argument of type " + arg.type().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");
   }
 
-  private static String inCallToPrefix(CallNode call) {
+  private static String inCallToPrefix(CallN call) {
     return "In call to function with type " + call.function().type().get().q() + ": ";
   }
 
@@ -101,7 +101,7 @@ public class CallTypeInferrer {
   }
 
   private ImmutableList<Log> findVariableProblems(
-      CallNode call, BoundsMap<TypeS> boundedVariables) {
+      CallN call, BoundsMap<TypeS> boundedVariables) {
     return boundedVariables.map().values().stream()
         .filter(b -> typing.contains(b.bounds().lower(), factory.any()))
         .map(b -> parseError(call, "Cannot infer actual type for type variable "

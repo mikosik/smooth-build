@@ -10,9 +10,9 @@ import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
-import org.smoothbuild.lang.parse.ast.RealFuncNode;
-import org.smoothbuild.lang.parse.ast.RefNode;
-import org.smoothbuild.lang.parse.ast.StructNode;
+import org.smoothbuild.lang.parse.ast.RealFuncN;
+import org.smoothbuild.lang.parse.ast.RefN;
+import org.smoothbuild.lang.parse.ast.StructN;
 import org.smoothbuild.util.Scope;
 
 public class ReferenceResolver extends AstVisitor {
@@ -21,7 +21,7 @@ public class ReferenceResolver extends AstVisitor {
 
   public static void resolveReferences(Logger logger, DefinitionsS imported, Ast ast) {
     var importedScope = new Scope<>(imported.referencables());
-    var constructors = map(ast.structs(), StructNode::constructor);
+    var constructors = map(ast.structs(), StructN::constructor);
     var referencables = ast.evaluables();
     var scope = new Scope<>(importedScope, nList(concat(referencables, constructors)));
     new ReferenceResolver(scope, logger)
@@ -34,7 +34,7 @@ public class ReferenceResolver extends AstVisitor {
   }
 
   @Override
-  public void visitRealFunc(RealFuncNode func) {
+  public void visitRealFunc(RealFuncN func) {
     visitParams(func.params());
     func.body().ifPresent(expr -> {
       var referenceResolver = new ReferenceResolver(new Scope<>(scope, func.params()), logger);
@@ -43,7 +43,7 @@ public class ReferenceResolver extends AstVisitor {
   }
 
   @Override
-  public void visitRef(RefNode ref) {
+  public void visitRef(RefN ref) {
     super.visitRef(ref);
     String name = ref.name();
     if (scope.contains(name)) {

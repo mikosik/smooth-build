@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 
-public class RealFuncNodeTest {
+public class RealFuncNTest {
   @Test
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
@@ -22,7 +22,7 @@ public class RealFuncNodeTest {
     tester.testEquals();
   }
 
-  private static RealFuncNode node(String name, int line) {
-    return new RealFuncNode(null, name, list(), null, null, loc(line));
+  private static RealFuncN node(String name, int line) {
+    return new RealFuncN(null, name, list(), null, null, loc(line));
   }
 }

@@ -11,11 +11,11 @@ import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public final class ItemNode extends EvaluableNode implements EvaluableLike {
+public final class ItemN extends EvaluableN implements EvaluableLike {
   private Optional<ItemSignature> signature;
 
-  public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> body, Location location) {
-    super(Optional.of(typeNode), name, body, Optional.empty(), location);
+  public ItemN(TypeN typeN, String name, Optional<ExprN> body, Location location) {
+    super(Optional.of(typeN), name, body, Optional.empty(), location);
   }
 
   @Override

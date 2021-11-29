@@ -4,7 +4,7 @@ import static java.lang.String.join;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
-import static org.smoothbuild.lang.parse.ast.FunctionTypeNode.countFunctionVariables;
+import static org.smoothbuild.lang.parse.ast.FunctionTypeN.countFunctionVariables;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
@@ -19,20 +19,20 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Nal;
-import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
+import org.smoothbuild.lang.parse.ast.ArrayTypeN;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
-import org.smoothbuild.lang.parse.ast.BlobNode;
-import org.smoothbuild.lang.parse.ast.EvaluableNode;
-import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
-import org.smoothbuild.lang.parse.ast.IntNode;
-import org.smoothbuild.lang.parse.ast.ItemNode;
-import org.smoothbuild.lang.parse.ast.NamedNode;
-import org.smoothbuild.lang.parse.ast.RealFuncNode;
-import org.smoothbuild.lang.parse.ast.StringNode;
-import org.smoothbuild.lang.parse.ast.StructNode;
-import org.smoothbuild.lang.parse.ast.TypeNode;
-import org.smoothbuild.lang.parse.ast.ValueNode;
+import org.smoothbuild.lang.parse.ast.BlobN;
+import org.smoothbuild.lang.parse.ast.EvaluableN;
+import org.smoothbuild.lang.parse.ast.FunctionTypeN;
+import org.smoothbuild.lang.parse.ast.IntN;
+import org.smoothbuild.lang.parse.ast.ItemN;
+import org.smoothbuild.lang.parse.ast.NamedN;
+import org.smoothbuild.lang.parse.ast.RealFuncN;
+import org.smoothbuild.lang.parse.ast.StringN;
+import org.smoothbuild.lang.parse.ast.StructN;
+import org.smoothbuild.lang.parse.ast.TypeN;
+import org.smoothbuild.lang.parse.ast.ValueN;
 import org.smoothbuild.util.DecodeHexException;
 import org.smoothbuild.util.UnescapingFailedException;
 import org.smoothbuild.util.collect.CountersMap;
@@ -59,7 +59,7 @@ public class AnalyzeSemantically {
   private static void decodeBlobLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitBlobLiteral(BlobNode blob) {
+      public void visitBlobLiteral(BlobN blob) {
         super.visitBlobLiteral(blob);
         try {
           blob.decodeByteString();
@@ -73,12 +73,12 @@ public class AnalyzeSemantically {
   private static void decodeIntLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitIntLiteral(IntNode intNode) {
-        super.visitIntLiteral(intNode);
+      public void visitIntLiteral(IntN intN) {
+        super.visitIntLiteral(intN);
         try {
-          intNode.decodeBigInteger();
+          intN.decodeBigInteger();
         } catch (NumberFormatException e) {
-          logger.log(parseError(intNode, "Illegal Int literal: `" + intNode.literal() + "`."));
+          logger.log(parseError(intN, "Illegal Int literal: `" + intN.literal() + "`."));
         }
       }
     }.visitAst(ast);
@@ -87,7 +87,7 @@ public class AnalyzeSemantically {
   private static void decodeStringLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitStringLiteral(StringNode string) {
+      public void visitStringLiteral(StringN string) {
         super.visitStringLiteral(string);
         try {
           string.calculateUnescaped();
@@ -101,31 +101,31 @@ public class AnalyzeSemantically {
   private static void detectUndefinedTypes(Logger logger, DefinitionsS imported, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitRealFunc(RealFuncNode func) {
+      public void visitRealFunc(RealFuncN func) {
         super.visitRealFunc(func);
         func.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
-      public void visitValue(ValueNode value) {
+      public void visitValue(ValueN value) {
         super.visitValue(value);
         value.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
-      public void visitParam(int index, ItemNode param) {
+      public void visitParam(int index, ItemN param) {
         param.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
-      public void visitField(ItemNode field) {
+      public void visitField(ItemN field) {
         field.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
-      private void assertTypeIsDefined(TypeNode type) {
-        if (type instanceof ArrayTypeNode array) {
+      private void assertTypeIsDefined(TypeN type) {
+        if (type instanceof ArrayTypeN array) {
           assertTypeIsDefined(array.elemType());
-        } else if (type instanceof FunctionTypeNode function) {
+        } else if (type instanceof FunctionTypeN function) {
           assertTypeIsDefined(function.resultType());
           function.paramTypes().forEach(this::assertTypeIsDefined);
         } else if (!isDefinedType(type)) {
@@ -133,7 +133,7 @@ public class AnalyzeSemantically {
         }
       }
 
-      private boolean isDefinedType(TypeNode type) {
+      private boolean isDefinedType(TypeN type) {
         return isVariableName(type.name())
             || ast.structs().containsName(type.name())
             || imported.types().containsName(type.name());
@@ -144,7 +144,7 @@ public class AnalyzeSemantically {
   private static void detectDuplicateGlobalNames(Logger logger, DefinitionsS imported, Ast ast) {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
-    nals.addAll(map(ast.structs(), StructNode::constructor));
+    nals.addAll(map(ast.structs(), StructN::constructor));
     nals.addAll(ast.evaluables());
     nals.sort(comparing(n -> n.location().line()));
 
@@ -180,7 +180,7 @@ public class AnalyzeSemantically {
   private static void detectDuplicateFieldNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitFields(List<ItemNode> fields) {
+      public void visitFields(List<ItemN> fields) {
         super.visitFields(fields);
         findDuplicateNames(logger, fields);
       }
@@ -190,16 +190,16 @@ public class AnalyzeSemantically {
   private static void detectDuplicateParamNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitParams(List<ItemNode> params) {
+      public void visitParams(List<ItemN> params) {
         super.visitParams(params);
         findDuplicateNames(logger, params);
       }
     }.visitAst(ast);
   }
 
-  private static void findDuplicateNames(Logger logger, List<? extends NamedNode> nodes) {
+  private static void findDuplicateNames(Logger logger, List<? extends NamedN> nodes) {
     Map<String, Location> alreadyDefined = new HashMap<>();
-    for (NamedNode named : nodes) {
+    for (NamedN named : nodes) {
       String name = named.name();
       if (alreadyDefined.containsKey(name)) {
         logger.log(alreadyDefinedError(named, alreadyDefined.get(name)));
@@ -211,7 +211,7 @@ public class AnalyzeSemantically {
   private static void detectStructNameWithSingleCapitalLetter(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitStruct(StructNode struct) {
+      public void visitStruct(StructN struct) {
         String name = struct.name();
         if (isVariableName(name)) {
           logger.log(parseError(struct.location(),
@@ -224,7 +224,7 @@ public class AnalyzeSemantically {
   private static void detectIllegalPolytypes(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitValue(ValueNode value) {
+      public void visitValue(ValueN value) {
         super.visitValue(value);
         if (value.typeNode().isPresent()) {
           logErrorIfNeeded(value, value.typeNode().get().variablesUsedOnce());
@@ -232,7 +232,7 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitRealFunc(RealFuncNode func) {
+      public void visitRealFunc(RealFuncN func) {
         super.visitRealFunc(func);
         if (func.typeNode().isPresent()) {
           var counters = new CountersMap<String>();
@@ -243,22 +243,22 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitStruct(StructNode struct) {
+      public void visitStruct(StructN struct) {
         super.visitStruct(struct);
-        List<ItemNode> fields = struct.fields();
-        for (ItemNode field : fields) {
+        List<ItemN> fields = struct.fields();
+        for (ItemN field : fields) {
           logErrorIfNeeded(field, field.typeNode().get().variablesUsedOnce());
         }
       }
 
       private void logErrorIfNeeded(
-          EvaluableNode node, ImmutableList<String> variablesUsedOnce) {
+          EvaluableN node, ImmutableList<String> variablesUsedOnce) {
         if (!variablesUsedOnce.isEmpty()) {
           logError(node, variablesUsedOnce);
         }
       }
 
-      private void logError(EvaluableNode node, List<String> variablesUsedOnce) {
+      private void logError(EvaluableN node, List<String> variablesUsedOnce) {
         logger.log(parseError(node.typeNode().get(), "Type variable(s) "
             + join(", ", map(variablesUsedOnce, v -> "`" + v + "`"))
             + " are used once in declaration of " + node.q()
@@ -276,7 +276,7 @@ public class AnalyzeSemantically {
   private static void detectIllegalNatives(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitRealFunc(RealFuncNode func) {
+      public void visitRealFunc(RealFuncN func) {
         super.visitRealFunc(func);
         if (func.annotation().isPresent() && func.body().isPresent()) {
           logger.log(parseError(func, "Native function cannot have body."));
@@ -287,7 +287,7 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitValue(ValueNode value) {
+      public void visitValue(ValueN value) {
         super.visitValue(value);
         if (value.annotation().isPresent()) {
           logger.log(parseError(value.annotation().get(), "Value cannot have @Native annotation."));

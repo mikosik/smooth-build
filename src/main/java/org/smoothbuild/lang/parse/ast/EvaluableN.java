@@ -6,29 +6,29 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.like.EvaluableLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public sealed class EvaluableNode extends NamedNode implements EvaluableLike
-    permits FunctionNode, ItemNode, ValueNode {
-  private final Optional<TypeNode> typeNode;
-  private final Optional<ExprNode> body;
-  private final Optional<AnnotationNode> annotation;
+public sealed class EvaluableN extends NamedN implements EvaluableLike
+    permits FunctionN, ItemN, ValueN {
+  private final Optional<TypeN> typeNode;
+  private final Optional<ExprN> body;
+  private final Optional<AnnotationN> annotation;
 
-  public EvaluableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> body,
-      Optional<AnnotationNode> annotation, Location location) {
+  public EvaluableN(Optional<TypeN> typeNode, String name, Optional<ExprN> body,
+      Optional<AnnotationN> annotation, Location location) {
     super(name, location);
     this.typeNode = typeNode;
     this.body = body;
     this.annotation = annotation;
   }
 
-  public Optional<TypeNode> typeNode() {
+  public Optional<TypeN> typeNode() {
     return typeNode;
   }
 
-  public Optional<ExprNode> body() {
+  public Optional<ExprN> body() {
     return body;
   }
 
-  public Optional<AnnotationNode> annotation() {
+  public Optional<AnnotationN> annotation() {
     return annotation;
   }
 
@@ -39,7 +39,7 @@ public sealed class EvaluableNode extends NamedNode implements EvaluableLike
 
   @Override
   public final boolean equals(Object object) {
-    return object instanceof EvaluableNode that
+    return object instanceof EvaluableN that
         && this.name().equals(that.name());
   }
 

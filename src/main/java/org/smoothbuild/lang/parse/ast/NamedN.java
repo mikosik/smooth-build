@@ -3,11 +3,11 @@ package org.smoothbuild.lang.parse.ast;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.Nal;
 
-public sealed class NamedNode extends Node implements Nal
-    permits ArgNode, EvaluableNode, StructNode, TypeNode {
+public sealed class NamedN extends Node implements Nal
+    permits ArgNode, EvaluableN, StructN, TypeN {
   private final String name;
 
-  public NamedNode(String name, Location location) {
+  public NamedN(String name, Location location) {
     super(location);
     this.name = name;
   }
@@ -19,7 +19,7 @@ public sealed class NamedNode extends Node implements Nal
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof NamedNode that
+    return object instanceof NamedN that
         && this.name.equals(that.name);
   }
 

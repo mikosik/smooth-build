@@ -61,8 +61,8 @@ public class ArgNodeTest {
         .isEqualTo("String:<nameless>");
   }
 
-  private static ExprNode expr(TypeS type) {
-    RefNode ref = new RefNode("name", TestingLocation.loc());
+  private static ExprN expr(TypeS type) {
+    RefN ref = new RefN("name", TestingLocation.loc());
     ref.setType(type);
     return ref;
   }

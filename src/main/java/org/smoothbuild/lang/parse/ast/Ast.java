@@ -27,19 +27,19 @@ import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
 import com.google.common.collect.ImmutableList;
 
 public class Ast {
-  private final NList<StructNode> structs;
-  private final ImmutableList<EvaluableNode> evaluables;
+  private final NList<StructN> structs;
+  private final ImmutableList<EvaluableN> evaluables;
 
-  public Ast(List<StructNode> structs, List<EvaluableNode> evaluables) {
+  public Ast(List<StructN> structs, List<EvaluableN> evaluables) {
     this.structs = nListWithDuplicates(ImmutableList.copyOf(structs));
     this.evaluables = ImmutableList.copyOf(evaluables);
   }
 
-  public ImmutableList<EvaluableNode> evaluables() {
+  public ImmutableList<EvaluableN> evaluables() {
     return evaluables;
   }
 
-  public NList<StructNode> structs() {
+  public NList<StructN> structs() {
     return structs;
   }
 
@@ -58,21 +58,21 @@ public class Ast {
     return maybeValue(ast);
   }
 
-  private TopologicalSortingResult<String, EvaluableNode, Location> sortEvaluablesByDependencies() {
+  private TopologicalSortingResult<String, EvaluableN, Location> sortEvaluablesByDependencies() {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(v -> names.add(v.name()));
 
-    HashSet<GraphNode<String, EvaluableNode, Location>> nodes = new HashSet<>();
+    HashSet<GraphNode<String, EvaluableN, Location>> nodes = new HashSet<>();
     nodes.addAll(map(evaluables, value -> evaluableNodeToGraphNode(value, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, EvaluableNode, Location> evaluableNodeToGraphNode(
-      EvaluableNode evaluable, Set<String> names) {
+  private static GraphNode<String, EvaluableN, Location> evaluableNodeToGraphNode(
+      EvaluableN evaluable, Set<String> names) {
     Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
-      public void visitRef(RefNode ref) {
+      public void visitRef(RefN ref) {
         super.visitRef(ref);
         if (names.contains(ref.name())) {
           dependencies.add(new GraphEdge<>(ref.location(), ref.name()));
@@ -82,28 +82,28 @@ public class Ast {
     return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(dependencies));
   }
 
-  private TopologicalSortingResult<String, StructNode, Location> sortStructsByDependencies() {
+  private TopologicalSortingResult<String, StructN, Location> sortStructsByDependencies() {
     Set<String> structNames = structs.stream()
-        .map(NamedNode::name)
+        .map(NamedN::name)
         .collect(toSet());
     var nodes = map(structs, struct -> structNodeToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, StructNode, Location> structNodeToGraphNode(
-      StructNode struct, Set<String> funcNames) {
+  private static GraphNode<String, StructN, Location> structNodeToGraphNode(
+      StructN struct, Set<String> funcNames) {
     Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
-      public void visitField(ItemNode field) {
+      public void visitField(ItemN field) {
         super.visitField(field);
         field.typeNode().ifPresent(this::addToDependencies);
       }
 
-      private void addToDependencies(TypeNode type) {
+      private void addToDependencies(TypeN type) {
         switch (type) {
-          case ArrayTypeNode arrayType -> addToDependencies(arrayType.elemType());
-          case FunctionTypeNode functionType -> {
+          case ArrayTypeN arrayType -> addToDependencies(arrayType.elemType());
+          case FunctionTypeN functionType -> {
             addToDependencies(functionType.resultType());
             functionType.paramTypes().forEach(this::addToDependencies);
           }

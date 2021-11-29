@@ -5,10 +5,10 @@ import static com.google.common.base.Preconditions.checkState;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.api.Type;
 
-public final class ArgNode extends NamedNode {
-  private final ExprNode expr;
+public final class ArgNode extends NamedN {
+  private final ExprN expr;
 
-  public ArgNode(String name, ExprNode expr, Location location) {
+  public ArgNode(String name, ExprN expr, Location location) {
     super(name, location);
     this.expr = expr;
   }
@@ -31,7 +31,7 @@ public final class ArgNode extends NamedNode {
     return type().map(Type::name).orElse("<missing type>") + ":" + nameSanitized();
   }
 
-  public ExprNode expr() {
+  public ExprN expr() {
     return expr;
   }
 }

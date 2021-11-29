@@ -4,11 +4,11 @@ import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.Strings;
 import org.smoothbuild.util.UnescapingFailedException;
 
-public final class StringNode extends ExprNode {
+public final class StringN extends ExprN {
   private final String value;
   private String unescaped;
 
-  public StringNode(String value, Location location) {
+  public StringN(String value, Location location) {
     super(location);
     this.value = value;
   }

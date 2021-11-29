@@ -3,11 +3,11 @@ package org.smoothbuild.lang.parse.ast;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.like.EvaluableLike;
 
-public final class RefNode extends ExprNode {
+public final class RefN extends ExprN {
   private final String name;
   private EvaluableLike referenced;
 
-  public RefNode(String name, Location location) {
+  public RefN(String name, Location location) {
     super(location);
     this.name = name;
   }
@@ -26,6 +26,6 @@ public final class RefNode extends ExprNode {
 
   @Override
   public String toString() {
-    return RefNode.class.getName() + "(" + name + ")";
+    return RefN.class.getName() + "(" + name + ")";
   }
 }

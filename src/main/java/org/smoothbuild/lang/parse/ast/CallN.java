@@ -7,18 +7,18 @@ import org.smoothbuild.lang.base.define.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public final class CallNode extends ExprNode {
-  private final ExprNode function;
+public final class CallN extends ExprN {
+  private final ExprN function;
   private final List<ArgNode> args;
   private List<Optional<ArgNode>> assignedArgs;
 
-  public CallNode(ExprNode function, List<ArgNode> args, Location location) {
+  public CallN(ExprN function, List<ArgNode> args, Location location) {
     super(location);
     this.function = function;
     this.args = ImmutableList.copyOf(args);
   }
 
-  public ExprNode function() {
+  public ExprN function() {
     return function;
   }
 
