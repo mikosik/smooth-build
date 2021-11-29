@@ -6,7 +6,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NativeFunctionH;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
 public class AlgorithmHashes {
@@ -18,7 +18,7 @@ public class AlgorithmHashes {
     return hash(1, nativeFunctionH.hash());
   }
 
-  public static Hash convertAlgorithmHash(TypeH destinationType) {
+  public static Hash convertAlgorithmHash(SpecH destinationType) {
     return hash(2, destinationType.hash());
   }
 

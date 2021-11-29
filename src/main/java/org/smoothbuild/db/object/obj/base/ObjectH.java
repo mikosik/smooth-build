@@ -14,8 +14,8 @@ import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSequenceException;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -51,11 +51,11 @@ public abstract class ObjectH {
     return merkleRoot.dataHash();
   }
 
-  public TypeH type() {
-    return merkleRoot.type();
+  public SpecH spec() {
+    return merkleRoot.spec();
   }
 
-  public abstract TypeHV evaluationType();
+  public abstract TypeH type();
 
   public abstract String valueToString();
 
@@ -75,12 +75,12 @@ public abstract class ObjectH {
   }
 
   protected <T> T readData(HashedDbCallable<T> reader) {
-    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), type(), DATA_PATH, reader);
+    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), DATA_PATH, reader);
   }
 
   protected <T> T readObj(String path, Hash hash, Class<T> clazz) {
     ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
-        hash(), type(), path, () -> objectDb().get(hash));
+        hash(), spec(), path, () -> objectDb().get(hash));
     return castObj(obj, path, clazz);
   }
 
@@ -88,7 +88,7 @@ public abstract class ObjectH {
       Class<T> clazz) {
     Hash elemHash = readSequenceElementHash(path, hash, i, expectedSize);
     ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
-        hash(), type(), path, i, () -> objectDb().get(elemHash));
+        hash(), spec(), path, i, () -> objectDb().get(elemHash));
     return castObj(obj, path, i, clazz);
   }
 
@@ -119,7 +119,7 @@ public abstract class ObjectH {
     Builder<ObjectH> builder = ImmutableList.builder();
     for (int i = 0; i < sequence.size(); i++) {
       int index = i;
-      ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), type(), path, index,
+      ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), spec(), path, index,
           () -> objectHDb.get(sequence.get(index)));
       builder.add(obj);
     }
@@ -129,13 +129,13 @@ public abstract class ObjectH {
   private ImmutableList<Hash> readSequenceHashes(String path, Hash hash, int expectedSize) {
     ImmutableList<Hash> data = readSequenceHashes(path, hash);
     if (data.size() != expectedSize) {
-      throw new UnexpectedObjSequenceException(hash(), type(), path, expectedSize, data.size());
+      throw new UnexpectedObjSequenceException(hash(), spec(), path, expectedSize, data.size());
     }
     return data;
   }
 
   private ImmutableList<Hash> readSequenceHashes(String path, Hash hash) {
-    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), type(), path,
+    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), path,
         () -> objectHDb.readSequence(hash));
   }
 
@@ -149,7 +149,7 @@ public abstract class ObjectH {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedObjNodeException(hash(), type(), path, clazz, obj.getClass());
+      throw new UnexpectedObjNodeException(hash(), spec(), path, clazz, obj.getClass());
     }
   }
 
@@ -160,7 +160,7 @@ public abstract class ObjectH {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedObjNodeException(hash(), type(), path, index, clazz, obj.getClass());
+      throw new UnexpectedObjNodeException(hash(), spec(), path, index, clazz, obj.getClass());
     }
   }
 
@@ -169,7 +169,7 @@ public abstract class ObjectH {
     for (int i = 0; i < elems.size(); i++) {
       ObjectH elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
-        throw new UnexpectedObjNodeException(hash(), type(), path, i, clazz, elem.getClass());
+        throw new UnexpectedObjNodeException(hash(), spec(), path, i, clazz, elem.getClass());
       }
     }
     @SuppressWarnings("unchecked")

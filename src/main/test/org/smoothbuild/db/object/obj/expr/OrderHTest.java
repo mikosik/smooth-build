@@ -13,19 +13,19 @@ import com.google.common.collect.ImmutableList;
 public class OrderHTest extends TestingContext {
   @Test
   public void type_of_empty_array_is_inferred_correctly() {
-    assertThat(orderH(list()).type())
+    assertThat(orderH(list()).spec())
         .isEqualTo(orderHT(nothingHT()));
   }
 
   @Test
   public void type_of_array_is_inferred_correctly() {
-    assertThat(orderH(list(intH(3))).type())
+    assertThat(orderH(list(intH(3))).spec())
         .isEqualTo(orderHT(intHT()));
   }
 
   @Test
   public void creating_array_with_elems_with_different_evaluation_type_causes_exception() {
-    assertCall(() -> orderH(list(intH(3), stringH("abc"))).type())
+    assertCall(() -> orderH(list(intH(3), stringH("abc"))).spec())
         .throwsException(new IllegalArgumentException("Element evaluation types are not equal "
             + intHT().name() + " != " + stringHT().name() + "."));
   }

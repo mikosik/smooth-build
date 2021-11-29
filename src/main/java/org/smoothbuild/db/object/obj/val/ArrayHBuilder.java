@@ -27,9 +27,9 @@ public class ArrayHBuilder {
   }
 
   public ArrayHBuilder add(ValueH elem) {
-    if (!objectHDb.typing().isAssignable(type.elem(), elem.type())) {
+    if (!objectHDb.typing().isAssignable(type.elem(), elem.spec())) {
       throw new IllegalArgumentException("Element type must be " + type.elem().name()
-          + " but was " + elem.type().name() + ".");
+          + " but was " + elem.spec().name() + ".");
     }
     Class<?> required = type.elem().jType();
     if (!required.equals(elem.getClass())) {

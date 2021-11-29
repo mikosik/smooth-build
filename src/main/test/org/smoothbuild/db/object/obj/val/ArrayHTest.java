@@ -12,8 +12,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.type.TestingTypesH;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.val.NothingTypeH;
 import org.smoothbuild.testing.TestingContext;
 
@@ -203,13 +203,13 @@ public class ArrayHTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("type_test_data")
-  public void type(TypeHV type) {
+  public void type(TypeH type) {
     ArrayH array = objectHDb().arrayBuilder(type).build();
-    assertThat(array.type())
+    assertThat(array.spec())
         .isEqualTo(arrayHT(type));
   }
 
-  private static List<TypeH> type_test_data() {
+  private static List<SpecH> type_test_data() {
     return TestingTypesH.TYPESV_TO_TEST;
   }
 
@@ -231,7 +231,7 @@ public class ArrayHTest extends TestingContext {
     @Test
     public void type_of_nothing_array_is_nothing_array() {
       ArrayH array = emptyArrayOf(nothingHT());
-      assertThat(array.type())
+      assertThat(array.spec())
           .isEqualTo(arrayHT(nothingHT()));
     }
 

@@ -5,10 +5,10 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.testing.TestingContext;
 
-public class TypeHStableHashTest extends TestingContext {
+public class SpecHStableHashTest extends TestingContext {
   @Test
   public void hashes_of_types_are_stable() {
     assertHash(anyHT(), "b35d79d5718f7bba2cda55c29e2408c13ffc8cd5");
@@ -40,7 +40,7 @@ public class TypeHStableHashTest extends TestingContext {
     assertHash(selectHT(intHT()), "bc511a321ba8a722155574c39f0cb5f58ee84a71");
   }
 
-  private static void assertHash(TypeH type, String hash) {
+  private static void assertHash(SpecH type, String hash) {
     assertThat(type.hash())
         .isEqualTo(Hash.decode(hash));
   }

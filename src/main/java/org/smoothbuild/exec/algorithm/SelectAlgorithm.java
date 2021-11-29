@@ -7,7 +7,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 public class SelectAlgorithm extends Algorithm {
   private final IntH index;
 
-  public SelectAlgorithm(IntH index, TypeHV outputType) {
+  public SelectAlgorithm(IntH index, TypeH outputType) {
     super(outputType);
     this.index = index;
   }

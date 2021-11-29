@@ -2,15 +2,15 @@ package org.smoothbuild.db.object.type.base;
 
 import org.smoothbuild.db.hashed.Hash;
 
-public abstract class TypeHE extends TypeH {
-  private final TypeHV evaluationType;
+public abstract class ExprSpecH extends SpecH {
+  private final TypeH evaluationType;
 
-  protected TypeHE(String name, Hash hash, TypeKindH kind, TypeHV evaluationType) {
+  protected ExprSpecH(String name, Hash hash, SpecKindH kind, TypeH evaluationType) {
     super(name + ":" + evaluationType.name(), hash, kind);
     this.evaluationType = evaluationType;
   }
 
-  public TypeHV evaluationType() {
+  public TypeH evaluationType() {
     return evaluationType;
   }
 }

@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static org.smoothbuild.db.object.type.base.TypeKindH.NATIVE_FUNCTION;
+import static org.smoothbuild.db.object.type.base.SpecKindH.NATIVE_FUNCTION;
 
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;

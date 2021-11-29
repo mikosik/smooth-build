@@ -6,7 +6,7 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import java.util.List;
 
 import org.smoothbuild.db.object.obj.base.ValueH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.util.concurrent.Promise;
@@ -16,7 +16,7 @@ public class Task extends AbstractJob {
   private final TaskInfo info;
   private final Algorithm algorithm;
 
-  public Task(TypeHV type, List<Job> dependencies, TaskInfo info, Algorithm algorithm) {
+  public Task(TypeH type, List<Job> dependencies, TaskInfo info, Algorithm algorithm) {
     super(type, dependencies, info);
     this.info = info;
     this.algorithm = algorithm;

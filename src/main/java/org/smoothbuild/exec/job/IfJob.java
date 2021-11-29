@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.NalImpl;
@@ -19,7 +19,7 @@ import org.smoothbuild.util.concurrent.PromisedValue;
 public class IfJob extends AbstractJob {
   private static final String IF_TASK_NAME = IF_FUNCTION_NAME + PARENTHESES;
 
-  public IfJob(TypeHV type, List<Job> deps, Location location) {
+  public IfJob(TypeH type, List<Job> deps, Location location) {
     super(type, deps, new NalImpl("building:" + IF_TASK_NAME, location));
   }
 

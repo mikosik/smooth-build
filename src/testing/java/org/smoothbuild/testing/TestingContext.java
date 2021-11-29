@@ -38,7 +38,7 @@ import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypeHDb;
 import org.smoothbuild.db.object.type.TypingH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
@@ -269,7 +269,7 @@ public class TestingContext {
     return typeHDb().any();
   }
 
-  public ArrayTypeH arrayHT(TypeHV elemSpec) {
+  public ArrayTypeH arrayHT(TypeH elemSpec) {
     return typeHDb().array(elemSpec);
   }
 
@@ -285,7 +285,7 @@ public class TestingContext {
     return definedFunctionHT(intHT(), list(blobHT(), stringHT()));
   }
 
-  public DefinedFunctionTypeH definedFunctionHT(TypeHV result, ImmutableList<TypeHV> params) {
+  public DefinedFunctionTypeH definedFunctionHT(TypeH result, ImmutableList<TypeH> params) {
     return typeHDb().definedFunction(result, params);
   }
 
@@ -297,7 +297,7 @@ public class TestingContext {
     return functionHT(intHT(), list(blobHT(), stringHT()));
   }
 
-  public FunctionTypeH functionHT(TypeHV result, ImmutableList<TypeHV> params) {
+  public FunctionTypeH functionHT(TypeH result, ImmutableList<TypeH> params) {
     return typeHDb().function(result, params);
   }
 
@@ -317,7 +317,7 @@ public class TestingContext {
     return typeHDb().nativeFunction(blobHT(), list(boolHT()));
   }
 
-  public NativeFunctionTypeH nativeFunctionHT(TypeHV result, ImmutableList<TypeHV> params) {
+  public NativeFunctionTypeH nativeFunctionHT(TypeH result, ImmutableList<TypeH> params) {
     return typeHDb().nativeFunction(result, params);
   }
 
@@ -337,7 +337,7 @@ public class TestingContext {
     return typeHDb().tuple(list(intHT()));
   }
 
-  public TupleTypeH tupleHT(ImmutableList<TypeHV> itemSpecs) {
+  public TupleTypeH tupleHT(ImmutableList<TypeH> itemSpecs) {
     return typeHDb().tuple(itemSpecs);
   }
 
@@ -353,11 +353,11 @@ public class TestingContext {
     return typeHDb().variable(name);
   }
 
-  public Side<TypeHV> lowerHT() {
+  public Side<TypeH> lowerHT() {
     return typeFactoryH().lower();
   }
 
-  public Side<TypeHV> upperHT() {
+  public Side<TypeH> upperHT() {
     return typeFactoryH().upper();
   }
 
@@ -367,7 +367,7 @@ public class TestingContext {
     return callHT(intHT());
   }
 
-  public CallTypeH callHT(TypeHV evaluationType) {
+  public CallTypeH callHT(TypeH evaluationType) {
     return typeHDb().call(evaluationType);
   }
 
@@ -375,7 +375,7 @@ public class TestingContext {
     return constructHT(list(intHT(), stringHT()));
   }
 
-  public ConstructTypeH constructHT(ImmutableList<TypeHV> itemSpecs) {
+  public ConstructTypeH constructHT(ImmutableList<TypeH> itemSpecs) {
     return typeHDb().construct(tupleHT(itemSpecs));
   }
 
@@ -383,7 +383,7 @@ public class TestingContext {
     return orderHT(intHT());
   }
 
-  public OrderTypeH orderHT(TypeHV elemSpec) {
+  public OrderTypeH orderHT(TypeH elemSpec) {
     return typeHDb().order(elemSpec);
   }
 
@@ -391,7 +391,7 @@ public class TestingContext {
     return refHT(intHT());
   }
 
-  public RefTypeH refHT(TypeHV evaluationType) {
+  public RefTypeH refHT(TypeH evaluationType) {
     return typeHDb().ref(evaluationType);
   }
 
@@ -399,7 +399,7 @@ public class TestingContext {
     return selectHT(intHT());
   }
 
-  public SelectTypeH selectHT(TypeHV evaluationType) {
+  public SelectTypeH selectHT(TypeH evaluationType) {
     return typeHDb().select(evaluationType);
   }
 
@@ -418,10 +418,10 @@ public class TestingContext {
   }
 
   public ArrayH arrayH(ValueH... elems) {
-    return arrayH(elems[0].type(), elems);
+    return arrayH(elems[0].spec(), elems);
   }
 
-  public ArrayH arrayH(TypeHV elemSpec, ValueH... elems) {
+  public ArrayH arrayH(TypeH elemSpec, ValueH... elems) {
     return objectHDb().arrayBuilder(elemSpec).addAll(list(elems)).build();
   }
 
@@ -459,7 +459,7 @@ public class TestingContext {
   }
 
   public DefinedFunctionH definedFunctionH(ObjectH body) {
-    var type = definedFunctionHT(body.evaluationType(), list(stringHT()));
+    var type = definedFunctionHT(body.type(), list(stringHT()));
     return definedFunctionH(type, body);
   }
 
@@ -500,7 +500,7 @@ public class TestingContext {
   }
 
   public TupleH tupleH(ImmutableList<ValueH> items) {
-    var spec = tupleHT(map(items, ValueH::type));
+    var spec = tupleHT(map(items, ValueH::spec));
     return tupleH(spec, items);
   }
 
@@ -558,7 +558,7 @@ public class TestingContext {
     return objectHDb().ref(BigInteger.valueOf(value), intHT());
   }
 
-  public RefH refH(TypeHV evaluationType, int pointer) {
+  public RefH refH(TypeH evaluationType, int pointer) {
     return objectHDb().ref(BigInteger.valueOf(pointer), evaluationType);
   }
 

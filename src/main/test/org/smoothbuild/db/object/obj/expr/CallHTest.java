@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 public class CallHTest extends TestingContext {
   @Test
   public void type_of_call_expr_is_inferred_correctly() {
-    assertThat(callH(definedFunctionH(), list(stringH())).type())
+    assertThat(callH(definedFunctionH(), list(stringH())).spec())
         .isEqualTo(callHT(intHT()));
   }
 

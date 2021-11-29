@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static org.smoothbuild.db.object.type.base.TypeKindH.MAP_FUNCTION;
+import static org.smoothbuild.db.object.type.base.SpecKindH.MAP_FUNCTION;
 
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;

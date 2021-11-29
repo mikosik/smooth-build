@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.FunctionH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
@@ -28,7 +28,7 @@ public class MapJob extends AbstractJob {
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeHV typeS, Location location, List<Job> dependencies, IndexedScope<Job> scope,
+  public MapJob(TypeH typeS, Location location, List<Job> dependencies, IndexedScope<Job> scope,
       JobCreator jobCreator) {
     super(typeS, dependencies, new NalImpl("building:" + MAP_TASK_NAME, location));
     this.scope = scope;
@@ -64,12 +64,12 @@ public class MapJob extends AbstractJob {
     return new DummyJob(funcJob.type(), function, funcJob);
   }
 
-  private Job mapElementJob(TypeHV elemType, Job functionJob, ValueH elem) {
+  private Job mapElementJob(TypeH elemType, Job functionJob, ValueH elem) {
     var elemJob = elemJob(elemType, elem, arrayJob().location());
     return jobCreator.callEagerJob(scope, functionJob, list(elemJob), functionJob.location());
   }
 
-  private Job elemJob(TypeHV elemType, ValueH elem, Location location) {
+  private Job elemJob(TypeH elemType, ValueH elem, Location location) {
     return new DummyJob(elemType, elem, new NalImpl("elem-to-map", location));
   }
 

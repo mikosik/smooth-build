@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.obj.val.NativeFunctionH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.JPathResolver;
@@ -101,12 +101,12 @@ public class MethodLoader {
   private void assertMethodMatchesFunctionRequirements(String extendedName,
       NativeFunctionH function, Method method, String classBinaryName) throws LoadingMethodException {
     assertNativeResultMatchesDeclared(
-        extendedName, method, function.type().result(), classBinaryName);
+        extendedName, method, function.spec().result(), classBinaryName);
     assertNativeParamTypesMatchesFuncParams(extendedName, method, function, classBinaryName);
   }
 
   private static void assertNativeResultMatchesDeclared(String extendedName, Method method,
-      TypeHV resultType, String classBinaryName) throws LoadingMethodException {
+      TypeH resultType, String classBinaryName) throws LoadingMethodException {
     var methodResultTypeJ = method.getReturnType();
     var resultTypeJ = resultType.jType();
     if (!resultTypeJ.equals(methodResultTypeJ)) {
@@ -120,7 +120,7 @@ public class MethodLoader {
   private static void assertNativeParamTypesMatchesFuncParams(String extendedName,
       Method method, NativeFunctionH function, String classBinaryName) throws LoadingMethodException {
     Parameter[] nativeParams = method.getParameters();
-    var params = function.type().params();
+    var params = function.spec().params();
     if (params.size() != nativeParams.length - 1) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " has "
           + params.size() + " parameter(s) but its native implementation has "

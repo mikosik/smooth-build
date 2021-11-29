@@ -8,7 +8,7 @@ public class Append {
   public static ArrayH function(NativeApi nativeApi, ArrayH array, ValueH elem) {
     var factory = nativeApi.factory();
     return factory
-        .arrayBuilder(factory.typing().mergeUp(array.type().elem(), elem.type()))
+        .arrayBuilder(factory.typing().mergeUp(array.spec().elem(), elem.spec()))
         .addAll(array.elems(ValueH.class))
         .add(elem)
         .build();

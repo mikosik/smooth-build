@@ -22,32 +22,32 @@ import com.google.common.collect.ImmutableList;
 public class ConstructH extends ExprH {
   public ConstructH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
-    checkArgument(merkleRoot.type() instanceof ConstructTypeH);
+    checkArgument(merkleRoot.spec() instanceof ConstructTypeH);
   }
 
   @Override
-  public ConstructTypeH type() {
-    return (ConstructTypeH) super.type();
+  public ConstructTypeH spec() {
+    return (ConstructTypeH) super.spec();
   }
 
   @Override
-  public TupleTypeH evaluationType() {
-    return type().evaluationType();
+  public TupleTypeH type() {
+    return spec().evaluationType();
   }
 
   public ImmutableList<ObjectH> items() {
-    var expectedItemTypes = type().evaluationType().items();
+    var expectedItemTypes = spec().evaluationType().items();
     var items = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
     allMatchOtherwise(
         expectedItemTypes,
         items,
-        (s, i) -> Objects.equals(s, i.evaluationType()),
+        (s, i) -> Objects.equals(s, i.type()),
         (i, j) -> {
-          throw new DecodeConstructWrongItemsSizeException(hash(), type(), j);
+          throw new DecodeConstructWrongItemsSizeException(hash(), spec(), j);
         },
         (i) -> {
-          throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(),
-              "items[" + i + "]", expectedItemTypes.get(i), items.get(i).evaluationType());
+          throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), spec(),
+              "items[" + i + "]", expectedItemTypes.get(i), items.get(i).type());
         }
     );
     return items;

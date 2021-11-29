@@ -32,7 +32,7 @@ import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.TypeHDb;
 import org.smoothbuild.db.object.type.TypingH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.BlobTypeH;
 import org.smoothbuild.db.object.type.val.BoolTypeH;
@@ -75,7 +75,7 @@ public class ObjFactory {
 
   // Objects
 
-  public ArrayHBuilder arrayBuilder(TypeHV elemType) {
+  public ArrayHBuilder arrayBuilder(TypeH elemType) {
     return objectHDb.arrayBuilder(elemType);
   }
 
@@ -129,7 +129,7 @@ public class ObjFactory {
     return objectHDb.nativeFunction(type, jarFile, classBinaryName,isPure);
   }
 
-  public RefH ref(BigInteger value, TypeHV evaluationType) {
+  public RefH ref(BigInteger value, TypeH evaluationType) {
     return objectHDb.ref(value, evaluationType);
   }
 
@@ -151,7 +151,7 @@ public class ObjFactory {
 
   // Types
 
-  public ArrayTypeH arrayT(TypeHV elemType) {
+  public ArrayTypeH arrayT(TypeH elemType) {
     return typeHDb.array(elemType);
   }
 
@@ -163,7 +163,7 @@ public class ObjFactory {
     return typeHDb.bool();
   }
 
-  public DefinedFunctionTypeH defFuncT(TypeHV result, ImmutableList<TypeHV> params) {
+  public DefinedFunctionTypeH defFuncT(TypeH result, ImmutableList<TypeH> params) {
     return typeHDb.definedFunction(result, params);
   }
 
@@ -183,7 +183,7 @@ public class ObjFactory {
     return messageType;
   }
 
-  public NativeFunctionTypeH natFuncT(TypeHV result, ImmutableList<TypeHV> params) {
+  public NativeFunctionTypeH natFuncT(TypeH result, ImmutableList<TypeH> params) {
     return typeHDb.nativeFunction(result, params);
   }
 
@@ -195,7 +195,7 @@ public class ObjFactory {
     return typeHDb.string();
   }
 
-  public TupleTypeH tupleType(ImmutableList<TypeHV> itemTypes) {
+  public TupleTypeH tupleType(ImmutableList<TypeH> itemTypes) {
     return typeHDb.tuple(itemTypes);
   }
 

@@ -9,37 +9,37 @@ import java.util.function.Function;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.val.FunctionTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.testing.TestingContext;
 
-public class TypeHCachingTest extends TestingContext {
+public class SpecHCachingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("type_creators")
-  public void created_type_is_cached(Function<TypeHDb, TypeH> typeCreator) {
+  public void created_type_is_cached(Function<TypeHDb, SpecH> typeCreator) {
     assertThat(typeCreator.apply(typeHDb()))
         .isSameInstanceAs(typeCreator.apply(typeHDb()));
   }
 
   @ParameterizedTest
   @MethodSource("type_creators")
-  public void read_type_is_cached(Function<TypeHDb, TypeH> typeCreator) {
+  public void read_type_is_cached(Function<TypeHDb, SpecH> typeCreator) {
     Hash hash = typeCreator.apply(typeHDb()).hash();
     TypeHDb typeHDb = typeHDbOther();
     assertThat(typeHDb.get(hash))
         .isSameInstanceAs(typeHDb.get(hash));
   }
 
-  private static List<Function<TypeHDb, TypeH>> type_creators() {
+  private static List<Function<TypeHDb, SpecH>> type_creators() {
     return list(
         TypeHDb::blob,
         TypeHDb::bool,
-        TypeHCachingTest::functionType,
+        SpecHCachingTest::functionType,
         TypeHDb::int_,
         TypeHDb::nothing,
         TypeHDb::string,
-        TypeHCachingTest::tupleType,
+        SpecHCachingTest::tupleType,
 
         objTypeDb -> objTypeDb.call(objTypeDb.int_()),
         objTypeDb -> objTypeDb.order(objTypeDb.int_()),

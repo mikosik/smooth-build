@@ -1,15 +1,15 @@
 package org.smoothbuild.db.object.type.val;
 
-import static org.smoothbuild.db.object.type.base.TypeKindH.NATIVE_FUNCTION;
+import static org.smoothbuild.db.object.type.base.SpecKindH.NATIVE_FUNCTION;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.NativeFunctionH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 
 public class NativeFunctionTypeH extends FunctionTypeH {
-  public NativeFunctionTypeH(Hash hash, TypeHV result, TupleTypeH paramsTuple) {
+  public NativeFunctionTypeH(Hash hash, TypeH result, TupleTypeH paramsTuple) {
     super(hash, NATIVE_FUNCTION, result, paramsTuple);
   }
 

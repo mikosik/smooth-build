@@ -9,8 +9,8 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import java.lang.reflect.Method;
 
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
@@ -22,27 +22,27 @@ public class TestingTypesH {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final TypeHDb TYPEH_DB = CONTEXT.typeHDb();
 
-  public static final TypeHV ANY = TYPEH_DB.any();
-  public static final TypeHV BLOB = TYPEH_DB.blob();
-  public static final TypeHV BOOL = TYPEH_DB.bool();
-  public static final TypeHV INT = TYPEH_DB.int_();
-  public static final TypeHV IF_FUNCTION = TYPEH_DB.ifFunction();
-  public static final TypeHV FUNCTION = TYPEH_DB.function(BLOB, list(BOOL));
-  public static final TypeHV MAP_FUNCTION = TYPEH_DB.mapFunction();
-  public static final TypeHV NOTHING = TYPEH_DB.nothing();
-  public static final TypeHV STRING = TYPEH_DB.string();
-  public static final TypeHV VARIABLE = TYPEH_DB.variable("A");
+  public static final TypeH ANY = TYPEH_DB.any();
+  public static final TypeH BLOB = TYPEH_DB.blob();
+  public static final TypeH BOOL = TYPEH_DB.bool();
+  public static final TypeH INT = TYPEH_DB.int_();
+  public static final TypeH IF_FUNCTION = TYPEH_DB.ifFunction();
+  public static final TypeH FUNCTION = TYPEH_DB.function(BLOB, list(BOOL));
+  public static final TypeH MAP_FUNCTION = TYPEH_DB.mapFunction();
+  public static final TypeH NOTHING = TYPEH_DB.nothing();
+  public static final TypeH STRING = TYPEH_DB.string();
+  public static final TypeH VARIABLE = TYPEH_DB.variable("A");
 
   public static final TupleTypeH PERSON = CONTEXT.personHT();
   public static final TupleTypeH FILE = CONTEXT.fileHT();
   public static final TupleTypeH TUPLE_EMPTY = CONTEXT.tupleEmptyHT();
   public static final TupleTypeH TUPLE_WITH_STRING = CONTEXT.tupleWithStrHT();
 
-  public static final TypeH CALL = CONTEXT.callHT();
-  public static final TypeH ORDER = CONTEXT.orderHT();
-  public static final TypeH CONSTRUCT = CONTEXT.constructHT(list(INT, STRING));
-  public static final TypeH SELECT = CONTEXT.selectHT(INT);
-  public static final TypeH REF = CONTEXT.refHT(INT);
+  public static final SpecH CALL = CONTEXT.callHT();
+  public static final SpecH ORDER = CONTEXT.orderHT();
+  public static final SpecH CONSTRUCT = CONTEXT.constructHT(list(INT, STRING));
+  public static final SpecH SELECT = CONTEXT.selectHT(INT);
+  public static final SpecH REF = CONTEXT.refHT(INT);
 
   public static final ArrayTypeH ARRAY_ANY = array(ANY);
   public static final ArrayTypeH ARRAY_BLOB = array(BLOB);
@@ -66,7 +66,7 @@ public class TestingTypesH {
   public static final ArrayTypeH ARRAY2_PERSON = array(ARRAY_PERSON);
   public static final ArrayTypeH ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
-  public static final ImmutableList<TypeH> BASE_TYPESV_TO_TEST = list(
+  public static final ImmutableList<SpecH> BASE_TYPESV_TO_TEST = list(
       BLOB,
       BOOL,
       FUNCTION,
@@ -76,7 +76,7 @@ public class TestingTypesH {
       PERSON
   );
 
-  public static final ImmutableList<TypeH> ARRAY_TYPESV_TO_TEST = list(
+  public static final ImmutableList<SpecH> ARRAY_TYPESV_TO_TEST = list(
       ARRAY_BLOB,
       ARRAY_BOOL,
       ARRAY_FUNCTION,
@@ -94,7 +94,7 @@ public class TestingTypesH {
       ARRAY2_PERSON_TUPLE
   );
 
-  public static final ImmutableList<TypeH> TYPESV_TO_TEST =
+  public static final ImmutableList<SpecH> TYPESV_TO_TEST =
       concat(BASE_TYPESV_TO_TEST, ARRAY_TYPESV_TO_TEST);
 
   private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
@@ -111,9 +111,9 @@ public class TestingTypesH {
           .sorted()
           .collect(toImmutableList());
 
-  public static final ImmutableList<TypeH> ALL_TYPES_TO_TEST = createAllTypes();
+  public static final ImmutableList<SpecH> ALL_TYPES_TO_TEST = createAllTypes();
 
-  private static ImmutableList<TypeH> createAllTypes() {
+  private static ImmutableList<SpecH> createAllTypes() {
     assertTypeHDbIsNotChanged();
     var baseTypes = list(
         BLOB,
@@ -135,7 +135,7 @@ public class TestingTypesH {
         TYPEH_DB.variable("B")
     );
     var arrayTypes = map(baseTypes, TYPEH_DB::array);
-    ImmutableList<TypeH> valueTypes = concat(baseTypes, arrayTypes);
+    ImmutableList<SpecH> valueTypes = concat(baseTypes, arrayTypes);
 
     var exprTypes = list(
         TYPEH_DB.call(BLOB),
@@ -160,11 +160,11 @@ public class TestingTypesH {
         .containsExactlyElementsIn(TYPEH_DB_METHOD_NAMES);
   }
 
-  private static ArrayTypeH array(TypeHV elemType) {
+  private static ArrayTypeH array(TypeH elemType) {
     return TYPEH_DB.array(elemType);
   }
 
-  public static TupleTypeH tuple(ImmutableList<TypeHV> itemTypes) {
+  public static TupleTypeH tuple(ImmutableList<TypeH> itemTypes) {
     return TYPEH_DB.tuple(itemTypes);
   }
 

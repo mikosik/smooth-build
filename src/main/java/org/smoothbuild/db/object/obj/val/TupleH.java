@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
 import com.google.common.collect.ImmutableList;
@@ -22,8 +22,8 @@ public class TupleH extends ValueH {
   }
 
   @Override
-  public TupleTypeH type() {
-    return (TupleTypeH) super.type();
+  public TupleTypeH spec() {
+    return (TupleTypeH) super.spec();
   }
 
   public ValueH get(int index) {
@@ -45,15 +45,15 @@ public class TupleH extends ValueH {
   }
 
   private ImmutableList<ValueH> instantiateItems() {
-    var itemTypes = this.type().items();
+    var itemTypes = spec().items();
     var objs = readSequenceObjs(DATA_PATH, dataHash(), itemTypes.size(), ValueH.class);
     for (int i = 0; i < itemTypes.size(); i++) {
       ValueH obj = objs.get(i);
-      TypeH expectedType = itemTypes.get(i);
-      TypeH actualType = obj.type();
+      SpecH expectedType = itemTypes.get(i);
+      SpecH actualType = obj.spec();
       if (!expectedType.equals(actualType)) {
         throw new UnexpectedObjNodeException(
-            hash(), this.type(), DATA_PATH, i, expectedType, actualType);
+            hash(), spec(), DATA_PATH, i, expectedType, actualType);
       }
     }
     return objs;

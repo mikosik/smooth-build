@@ -62,9 +62,9 @@ import org.smoothbuild.db.object.obj.val.FunctionH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
-import org.smoothbuild.db.object.type.base.TypeKindH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 import org.smoothbuild.lang.base.type.api.ArrayType;
@@ -78,30 +78,30 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
-public class TypeHTest extends TestingContext {
+public class SpecHTest extends TestingContext {
   @Test
   public void verify_all_base_TypeO_are_tested() {
-    assertThat(TypeKindH.values())
+    assertThat(SpecKindH.values())
         .hasLength(19);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void name(Function<TypeHDb, TypeH> factoryCall, String name) {
+  public void name(Function<TypeHDb, SpecH> factoryCall, String name) {
     assertThat(invoke(factoryCall).name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(Function<TypeHDb, TypeH> factoryCall, String name) {
+  public void quoted_name(Function<TypeHDb, SpecH> factoryCall, String name) {
     assertThat(invoke(factoryCall).q())
         .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(Function<TypeHDb, TypeH> factoryCall, String name) {
+  public void to_string(Function<TypeHDb, SpecH> factoryCall, String name) {
     assertThat(invoke(factoryCall).toString())
         .isEqualTo("Type(`" + name + "`)");
   }
@@ -157,7 +157,7 @@ public class TypeHTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
-  public void isPolytype(Function<TypeHDb, TypeH> factoryCall, boolean expected) {
+  public void isPolytype(Function<TypeHDb, SpecH> factoryCall, boolean expected) {
     assertThat(invoke(factoryCall).isPolytype())
         .isEqualTo(expected);
   }
@@ -196,7 +196,7 @@ public class TypeHTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("variables_test_data")
   public void variables(
-      Function<TypeHDb, TypeH> factoryCall,
+      Function<TypeHDb, SpecH> factoryCall,
       Function<TypeHDb, Set<Variable>> resultCall) {
     assertThat(invoke(factoryCall).variables())
         .containsExactlyElementsIn(invoke(resultCall))
@@ -296,8 +296,8 @@ public class TypeHTest extends TestingContext {
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
-    public void elemType(Function<TypeHDb, TypeHV> factoryCall) {
-      TypeHV elem = invoke(factoryCall);
+    public void elemType(Function<TypeHDb, TypeH> factoryCall) {
+      TypeH elem = invoke(factoryCall);
       ArrayType array = typeFactoryH().array(elem);
       assertThat(array.elem())
           .isEqualTo(elem);
@@ -364,7 +364,7 @@ public class TypeHTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("jType_test_data")
-  public void jType(TypeH type, Class<?> expected) {
+  public void jType(SpecH type, Class<?> expected) {
     assertThat(type.jType())
         .isEqualTo(expected);
   }
@@ -403,7 +403,7 @@ public class TypeHTest extends TestingContext {
   class _evaluation_type {
     @ParameterizedTest
     @MethodSource("types")
-    public void call(TypeHV type) {
+    public void call(TypeH type) {
       assertThat(TYPEH_DB.call(type).evaluationType())
           .isEqualTo(type);
     }
@@ -425,30 +425,30 @@ public class TypeHTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("types")
-    public void order(TypeHV type) {
+    public void order(TypeH type) {
       assertThat(TYPEH_DB.order(type).evaluationType())
           .isEqualTo(TYPEH_DB.array(type));
     }
 
     @ParameterizedTest
     @MethodSource("types")
-    public void ref(TypeHV type) {
+    public void ref(TypeH type) {
       assertThat(TYPEH_DB.ref(type).evaluationType())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
-    public void select(TypeHV type) {
+    public void select(TypeH type) {
       assertThat(TYPEH_DB.select(type).evaluationType())
           .isEqualTo(type);
     }
 
-    public static ImmutableList<TypeH> types() {
+    public static ImmutableList<SpecH> types() {
       return TestingTypesH.TYPESV_TO_TEST;
     }
 
-    public static ImmutableList<TypeH> arrayTypes() {
+    public static ImmutableList<SpecH> arrayTypes() {
       return TestingTypesH.ARRAY_TYPESV_TO_TEST;
     }
   }

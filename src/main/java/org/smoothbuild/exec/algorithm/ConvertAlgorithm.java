@@ -7,15 +7,15 @@ import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConvertAlgorithm extends Algorithm {
-  public ConvertAlgorithm(TypeHV outputType) {
+  public ConvertAlgorithm(TypeH outputType) {
     super(outputType);
   }
 
@@ -35,21 +35,21 @@ public class ConvertAlgorithm extends Algorithm {
   }
 
   private void assertThatTypesAreNotEqual(ObjectH obj) {
-    if (outputType().equals(obj.type())) {
+    if (outputType().equals(obj.spec())) {
       throw newBuildBrokenException(
-          "Expected non equal types but got " + outputType() + " " + obj.type());
+          "Expected non equal types but got " + outputType() + " " + obj.spec());
     }
   }
 
-  private static ValueH convert(TypeH destinationType, ObjectH obj, NativeApi nativeApi) {
+  private static ValueH convert(SpecH destinationType, ObjectH obj, NativeApi nativeApi) {
     if (obj instanceof ArrayH array) {
       return convertArray(destinationType, array, nativeApi);
     }
     throw newBuildBrokenException("Expected `Array` type but got " + obj.getClass());
   }
 
-  private static ArrayH convertArray(TypeH destinationType, ArrayH array, NativeApi nativeApi) {
-    TypeHV elemType = ((ArrayTypeH) destinationType).elem();
+  private static ArrayH convertArray(SpecH destinationType, ArrayH array, NativeApi nativeApi) {
+    TypeH elemType = ((ArrayTypeH) destinationType).elem();
     ArrayHBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elemType);
     for (ValueH elem : array.elems(ValueH.class)) {
       arrayBuilder.add(convert(elemType, elem, nativeApi));

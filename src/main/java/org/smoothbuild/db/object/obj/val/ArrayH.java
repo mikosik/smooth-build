@@ -4,8 +4,8 @@ import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 
 import com.google.common.collect.ImmutableList;
@@ -19,14 +19,14 @@ public class ArrayH extends ValueH {
   }
 
   @Override
-  public ArrayTypeH type() {
-    return (ArrayTypeH) super.type();
+  public ArrayTypeH spec() {
+    return (ArrayTypeH) super.spec();
   }
 
   public <T extends ValueH> ImmutableList<T> elems(Class<T> elemJType) {
     assertIsIterableAs(elemJType);
     var elems = elemObjs();
-    return checkTypeOfSequenceObjs(elems, type().elem());
+    return checkTypeOfSequenceObjs(elems, spec().elem());
   }
 
   private ImmutableList<ValueH> elemObjs() {
@@ -34,19 +34,19 @@ public class ArrayH extends ValueH {
   }
 
   private <T extends ValueH> void assertIsIterableAs(Class<T> clazz) {
-    TypeH elem = this.type().elem();
+    SpecH elem = spec().elem();
     if (!(elem.isNothing() || clazz.isAssignableFrom(elem.jType()))) {
-      throw new IllegalArgumentException(this.type().name() + " cannot be viewed as Iterable of "
+      throw new IllegalArgumentException(spec().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
     }
   }
 
   protected <T> ImmutableList<T> checkTypeOfSequenceObjs(
-      ImmutableList<ValueH> elems, TypeHV expectedElementType) {
+      ImmutableList<ValueH> elems, TypeH expectedElementType) {
     for (int i = 0; i < elems.size(); i++) {
-      var elemType = elems.get(i).type();
+      var elemType = elems.get(i).spec();
       if (!(objectDb().typing().isAssignable(expectedElementType, elemType))) {
-        throw new UnexpectedObjNodeException(hash(), this.type(), DATA_PATH, i,
+        throw new UnexpectedObjNodeException(hash(), spec(), DATA_PATH, i,
             expectedElementType, elemType);
       }
     }

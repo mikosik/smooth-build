@@ -58,7 +58,7 @@ import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.expr.ConstructTypeH;
@@ -1421,7 +1421,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     }
   }
 
-  private void obj_root_without_data_hash(TypeH type) throws HashedDbException {
+  private void obj_root_without_data_hash(SpecH type) throws HashedDbException {
     Hash objHash =
         hash(
             hash(type));
@@ -1430,7 +1430,7 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   private void obj_root_with_two_data_hashes(
-      TypeH type, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbException {
+      SpecH type, Hash dataHash, Function<Hash, ?> readClosure) throws HashedDbException {
     Hash objHash =
         hash(
             hash(type),
@@ -1441,7 +1441,7 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   private void obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-      TypeH type, Function<Hash, ?> readClosure) throws HashedDbException {
+      SpecH type, Function<Hash, ?> readClosure) throws HashedDbException {
     Hash dataHash = Hash.of(33);
     Hash objHash =
         hash(
@@ -1453,7 +1453,7 @@ public class ObjectCorruptedHTest extends TestingContext {
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-      TypeH type, Consumer<Hash> readClosure) throws HashedDbException {
+      SpecH type, Consumer<Hash> readClosure) throws HashedDbException {
     Hash dataHash = Hash.of(33);
     Hash objHash =
         hash(
@@ -1518,7 +1518,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     return obj.hash();
   }
 
-  protected Hash hash(TypeH type) {
+  protected Hash hash(SpecH type) {
     return type.hash();
   }
 

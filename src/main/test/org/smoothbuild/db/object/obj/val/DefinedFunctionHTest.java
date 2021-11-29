@@ -26,7 +26,7 @@ public class DefinedFunctionHTest extends TestingContext {
   @Test
   public void type_of_function_is_function_type() {
     var functionType = definedFunctionHT(intHT(), list(stringHT()));
-    assertThat(definedFunctionH(functionType, intH()).type())
+    assertThat(definedFunctionH(functionType, intH()).spec())
         .isEqualTo(functionType);
   }
 

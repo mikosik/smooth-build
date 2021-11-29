@@ -12,7 +12,7 @@ import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponen
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvaluationTypeException;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
@@ -26,31 +26,31 @@ public class SelectH extends ExprH {
 
   public SelectH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
-    checkArgument(merkleRoot.type() instanceof SelectTypeH);
+    checkArgument(merkleRoot.spec() instanceof SelectTypeH);
   }
 
   @Override
-  public SelectTypeH type() {
-    return (SelectTypeH) super.type();
+  public SelectTypeH spec() {
+    return (SelectTypeH) super.spec();
   }
 
   public SelectData data() {
     ObjectH tuple = readTuple();
-    if (tuple.evaluationType() instanceof TupleTypeH tupleEvaluationType) {
+    if (tuple.type() instanceof TupleTypeH tupleEvaluationType) {
       IntH index = readIndex();
       int i = index.jValue().intValue();
       int size = tupleEvaluationType.items().size();
       if (i < 0 || size <= i) {
-        throw new DecodeSelectIndexOutOfBoundsException(hash(), type(), i, size);
+        throw new DecodeSelectIndexOutOfBoundsException(hash(), spec(), i, size);
       }
-      TypeHV fieldType = tupleEvaluationType.items().get(i);
-      if (!Objects.equals(evaluationType(), fieldType)) {
-        throw new DecodeSelectWrongEvaluationTypeException(hash(), type(), fieldType);
+      TypeH fieldType = tupleEvaluationType.items().get(i);
+      if (!Objects.equals(type(), fieldType)) {
+        throw new DecodeSelectWrongEvaluationTypeException(hash(), spec(), fieldType);
       }
       return new SelectData(tuple, index);
     } else {
       throw new DecodeExprWrongEvaluationTypeOfComponentException(
-          hash(), type(), "tuple", TupleTypeH.class, tuple.evaluationType());
+          hash(), spec(), "tuple", TupleTypeH.class, tuple.type());
     }
   }
 

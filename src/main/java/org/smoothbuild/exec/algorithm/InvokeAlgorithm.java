@@ -10,7 +10,7 @@ import java.util.List;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.NativeFunctionH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
@@ -21,7 +21,7 @@ public class InvokeAlgorithm extends Algorithm {
   private final String extendedName;
   private final MethodLoader methodLoader;
 
-  public InvokeAlgorithm(TypeHV outputType, String extendedName, NativeFunctionH nativeFunctionH,
+  public InvokeAlgorithm(TypeH outputType, String extendedName, NativeFunctionH nativeFunctionH,
       MethodLoader methodLoader) {
     super(outputType, nativeFunctionH.isPure().jValue());
     this.extendedName = extendedName;
@@ -46,11 +46,11 @@ public class InvokeAlgorithm extends Algorithm {
         }
         return new Output(null, nativeApi.messages());
       }
-      if (!outputType().equals(result.type())) {
+      if (!outputType().equals(result.spec())) {
         nativeApi.log().error(q(extendedName)
             + " has faulty native implementation: Its declared result type == "
             + outputType().q()
-            + " but it returned object with type == " + result.type().q() + ".");
+            + " but it returned object with type == " + result.spec().q() + ".");
         return new Output(null, nativeApi.messages());
       }
       return new Output(result, nativeApi.messages());

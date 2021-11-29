@@ -25,14 +25,14 @@ import org.smoothbuild.db.object.obj.val.TupleH;
 
 import com.google.common.collect.ImmutableMap;
 
-public enum TypeKindH {
+public enum SpecKindH {
   ARRAY((byte) 0, ArrayH.class, ArrayH::new),
   BLOB((byte) 1, BlobH.class, BlobH::new),
   BOOL((byte) 2, BoolH.class, BoolH::new),
-  ABSTRACT_FUNCTION((byte) 3, FunctionH.class, TypeKindH::throwException),
+  ABSTRACT_FUNCTION((byte) 3, FunctionH.class, SpecKindH::throwException),
   INT((byte) 4, IntH.class, IntH::new),
   IF_FUNCTION((byte) 5, IfFunctionH.class, IfFunctionH::new),
-  NOTHING((byte) 6, ValueH.class, TypeKindH::throwException),
+  NOTHING((byte) 6, ValueH.class, SpecKindH::throwException),
   TUPLE((byte) 7, TupleH.class, TupleH::new),
   STRING((byte) 8, StringH.class, StringH::new),
 
@@ -43,8 +43,8 @@ public enum TypeKindH {
   REF((byte) 14, RefH.class, RefH::new),
   CONSTRUCT((byte) 15, ConstructH.class, ConstructH::new),
 
-  VARIABLE((byte) 17, ValueH.class, TypeKindH::throwException),
-  ANY((byte) 18, ValueH.class, TypeKindH::throwException),
+  VARIABLE((byte) 17, ValueH.class, SpecKindH::throwException),
+  ANY((byte) 18, ValueH.class, SpecKindH::throwException),
   NATIVE_FUNCTION((byte) 19, NativeFunctionH.class, NativeFunctionH::new),
   // 20 IS UNUSED
   MAP_FUNCTION((byte) 21, MapFunctionH.class, MapFunctionH::new),
@@ -53,8 +53,8 @@ public enum TypeKindH {
     throw new UnsupportedOperationException();
   }
 
-  private static final ImmutableMap<Byte, TypeKindH> markerToObjKindMap =
-      ImmutableMap.<Byte, TypeKindH>builder()
+  private static final ImmutableMap<Byte, SpecKindH> markerToObjKindMap =
+      ImmutableMap.<Byte, SpecKindH>builder()
           .put((byte) 0, ARRAY)
           .put((byte) 1, BLOB)
           .put((byte) 2, BOOL)
@@ -83,14 +83,14 @@ public enum TypeKindH {
   private final Class<? extends ObjectH> jType;
   private final BiFunction<MerkleRoot, ObjectHDb, ObjectH> instantiator;
 
-  TypeKindH(byte marker, Class<? extends ObjectH> jType,
+  SpecKindH(byte marker, Class<? extends ObjectH> jType,
       BiFunction<MerkleRoot, ObjectHDb, ObjectH> instantiator) {
     this.marker = marker;
     this.jType = jType;
     this.instantiator = instantiator;
   }
 
-  public static TypeKindH fromMarker(byte marker) {
+  public static SpecKindH fromMarker(byte marker) {
     return markerToObjKindMap.get(marker);
   }
 

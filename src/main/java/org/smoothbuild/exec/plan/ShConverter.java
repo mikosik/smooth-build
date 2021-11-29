@@ -28,7 +28,7 @@ import org.smoothbuild.db.object.obj.val.FunctionH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NativeFunctionH;
 import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.BoolValueS;
 import org.smoothbuild.lang.base.define.ConstructorS;
@@ -147,7 +147,7 @@ public class ShConverter {
     return objFactory.nativeFunction(type, jar, classBinaryName, isPure);
   }
 
-  private ImmutableList<TypeHV> convertParams(NList<Item> items) {
+  private ImmutableList<TypeH> convertParams(NList<Item> items) {
     return map(items, item -> convertType(item.type()));
   }
 
@@ -256,7 +256,7 @@ public class ShConverter {
     }
   }
 
-  private TypeHV convertType(TypeS typeS) {
+  private TypeH convertType(TypeS typeS) {
     return typeShConverter.visit(typeS);
   }
 }

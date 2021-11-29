@@ -9,7 +9,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.TestingTypesH;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.ConstructAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -138,7 +138,7 @@ public class ComputationHashTest extends TestingContext {
       }
 
       @Override
-      public TypeHV outputType() {
+      public TypeH outputType() {
         return null;
       }
 

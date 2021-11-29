@@ -12,13 +12,13 @@ import com.google.common.collect.ImmutableList;
 public class ConstructHTest extends TestingContext {
   @Test
   public void type_of_empty_construct_is_inferred_correctly() {
-    assertThat(constructH(list()).type())
+    assertThat(constructH(list()).spec())
         .isEqualTo(constructHT(list()));
   }
 
   @Test
   public void type_of_construct_is_inferred_correctly() {
-    assertThat(constructH(list(intH(3))).type())
+    assertThat(constructH(list(intH(3))).spec())
         .isEqualTo(constructHT(list(intHT())));
   }
 

@@ -11,19 +11,19 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.FunctionH;
-import org.smoothbuild.db.object.type.base.TypeHV;
-import org.smoothbuild.db.object.type.base.TypeKindH;
+import org.smoothbuild.db.object.type.base.SpecKindH;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.lang.base.type.api.FunctionType;
 import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public class FunctionTypeH extends TypeHV implements FunctionType {
-  private final TypeHV result;
+public class FunctionTypeH extends TypeH implements FunctionType {
+  private final TypeH result;
   private final TupleTypeH paramsTuple;
 
-  public FunctionTypeH(Hash hash, TypeKindH kind, TypeHV result, TupleTypeH paramsTuple) {
+  public FunctionTypeH(Hash hash, SpecKindH kind, TypeH result, TupleTypeH paramsTuple) {
     super(functionTypeName(result, paramsTuple.items()), hash, kind,
         calculateVariables(result, paramsTuple.items()));
     this.result = result;
@@ -31,21 +31,21 @@ public class FunctionTypeH extends TypeHV implements FunctionType {
   }
 
   public static ImmutableSet<VariableH> calculateVariables(
-      TypeHV resultType, ImmutableList<TypeHV> params) {
+      TypeH resultType, ImmutableList<TypeH> params) {
     return concat(resultType, params).stream()
-        .map(TypeHV::variables)
+        .map(TypeH::variables)
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))
         .collect(toImmutableSet());
   }
 
   @Override
-  public TypeHV result() {
+  public TypeH result() {
     return result;
   }
 
   @Override
-  public ImmutableList<TypeHV> params() {
+  public ImmutableList<TypeH> params() {
     return paramsTuple.items();
   }
 

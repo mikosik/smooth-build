@@ -10,7 +10,7 @@ import okio.ByteString;
 public class NativeFunctionHTest extends TestingContext {
   @Test
   public void type_of_nat_func_expr_is_calculated_correctly() {
-    assertThat(nativeFunctionH(blobH(), stringH()).type())
+    assertThat(nativeFunctionH(blobH(), stringH()).spec())
         .isEqualTo(nativeFunctionHT());
   }
 

@@ -4,21 +4,21 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.type.TypeHDb.DATA_PATH;
 import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_PARAMS_PATH;
 import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_RESULT_PATH;
-import static org.smoothbuild.db.object.type.base.TypeKindH.ABSTRACT_FUNCTION;
-import static org.smoothbuild.db.object.type.base.TypeKindH.ANY;
-import static org.smoothbuild.db.object.type.base.TypeKindH.ARRAY;
-import static org.smoothbuild.db.object.type.base.TypeKindH.BLOB;
-import static org.smoothbuild.db.object.type.base.TypeKindH.BOOL;
-import static org.smoothbuild.db.object.type.base.TypeKindH.CALL;
-import static org.smoothbuild.db.object.type.base.TypeKindH.CONSTRUCT;
-import static org.smoothbuild.db.object.type.base.TypeKindH.INT;
-import static org.smoothbuild.db.object.type.base.TypeKindH.NOTHING;
-import static org.smoothbuild.db.object.type.base.TypeKindH.ORDER;
-import static org.smoothbuild.db.object.type.base.TypeKindH.REF;
-import static org.smoothbuild.db.object.type.base.TypeKindH.SELECT;
-import static org.smoothbuild.db.object.type.base.TypeKindH.STRING;
-import static org.smoothbuild.db.object.type.base.TypeKindH.TUPLE;
-import static org.smoothbuild.db.object.type.base.TypeKindH.VARIABLE;
+import static org.smoothbuild.db.object.type.base.SpecKindH.ABSTRACT_FUNCTION;
+import static org.smoothbuild.db.object.type.base.SpecKindH.ANY;
+import static org.smoothbuild.db.object.type.base.SpecKindH.ARRAY;
+import static org.smoothbuild.db.object.type.base.SpecKindH.BLOB;
+import static org.smoothbuild.db.object.type.base.SpecKindH.BOOL;
+import static org.smoothbuild.db.object.type.base.SpecKindH.CALL;
+import static org.smoothbuild.db.object.type.base.SpecKindH.CONSTRUCT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.INT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.NOTHING;
+import static org.smoothbuild.db.object.type.base.SpecKindH.ORDER;
+import static org.smoothbuild.db.object.type.base.SpecKindH.REF;
+import static org.smoothbuild.db.object.type.base.SpecKindH.SELECT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.STRING;
+import static org.smoothbuild.db.object.type.base.SpecKindH.TUPLE;
+import static org.smoothbuild.db.object.type.base.SpecKindH.VARIABLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -34,9 +34,9 @@ import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.obj.IllegalArrayByteSizesProvider;
 import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
-import org.smoothbuild.db.object.type.base.TypeKindH;
 import org.smoothbuild.db.object.type.exc.DecodeTypeException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeNodeException;
@@ -57,7 +57,7 @@ import com.google.common.collect.ImmutableList;
 
 import okio.ByteString;
 
-public class TypeHCorruptedTest extends TestingContext {
+public class SpecHCorruptedTest extends TestingContext {
   @Nested
   class _illegal_type_marker {
     @Test
@@ -125,7 +125,7 @@ public class TypeHCorruptedTest extends TestingContext {
       test_base_type_with_additional_child(STRING);
     }
 
-    private void test_base_type_with_additional_child(TypeKindH kind) throws Exception {
+    private void test_base_type_with_additional_child(SpecKindH kind) throws Exception {
       Hash hash = hash(
           hash(kind.marker()),
           hash("abc")
@@ -179,7 +179,7 @@ public class TypeHCorruptedTest extends TestingContext {
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, ARRAY, DATA_PATH, TypeHV.class, RefTypeH.class));
+              hash, ARRAY, DATA_PATH, TypeH.class, RefTypeH.class));
     }
   }
 
@@ -221,7 +221,7 @@ public class TypeHCorruptedTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(CALL, TypeHV.class);
+      test_type_with_data_being_expr_type(CALL, TypeH.class);
     }
   }
 
@@ -286,7 +286,7 @@ public class TypeHCorruptedTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme
        * to save function type in HashedDb.
        */
-      ImmutableList<TypeHV> paramTypes = list(stringHT(), boolHT());
+      ImmutableList<TypeH> paramTypes = list(stringHT(), boolHT());
       TupleTypeH paramsTuple = tupleHT(paramTypes);
       Hash specHash = hash(
           hash(ABSTRACT_FUNCTION.marker()),
@@ -396,7 +396,7 @@ public class TypeHCorruptedTest extends TestingContext {
       );
       assertCall(() -> typeHDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, ABSTRACT_FUNCTION, FUNCTION_RESULT_PATH, TypeHV.class, RefTypeH.class));
+              typeHash, ABSTRACT_FUNCTION, FUNCTION_RESULT_PATH, TypeH.class, RefTypeH.class));
     }
 
     @Test
@@ -563,11 +563,11 @@ public class TypeHCorruptedTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(REF, TypeHV.class);
+      test_type_with_data_being_expr_type(REF, TypeH.class);
     }
   }
 
-  private void test_type_without_data(TypeKindH speckKind) throws Exception {
+  private void test_type_without_data(SpecKindH speckKind) throws Exception {
     Hash hash =
         hash(
             hash(speckKind.marker())
@@ -576,7 +576,7 @@ public class TypeHCorruptedTest extends TestingContext {
         .throwsException(new DecodeTypeRootException(hash, speckKind, 1, 2));
   }
 
-  private void test_type_with_additional_data(TypeKindH kind) throws Exception {
+  private void test_type_with_additional_data(SpecKindH kind) throws Exception {
     Hash hash = hash(
         hash(kind.marker()),
         hash(stringHT()),
@@ -586,7 +586,7 @@ public class TypeHCorruptedTest extends TestingContext {
         .throwsException(new DecodeTypeRootException(hash, 3));
   }
 
-  private void test_data_hash_pointing_nowhere_instead_of_being_type(TypeKindH kind)
+  private void test_data_hash_pointing_nowhere_instead_of_being_type(SpecKindH kind)
       throws Exception {
     Hash dataHash = Hash.of(33);
     Hash typeHash = hash(
@@ -598,7 +598,7 @@ public class TypeHCorruptedTest extends TestingContext {
         .withCause(new DecodeTypeException(dataHash));
   }
 
-  private void test_data_hash_pointing_nowhere_instead_of_being_sequence(TypeKindH kind)
+  private void test_data_hash_pointing_nowhere_instead_of_being_sequence(SpecKindH kind)
       throws Exception {
     Hash dataHash = Hash.of(33);
     Hash typeHash = hash(
@@ -610,7 +610,7 @@ public class TypeHCorruptedTest extends TestingContext {
         .withCause(new NoSuchDataException(dataHash));
   }
 
-  private void test_type_with_corrupted_type_as_data(TypeKindH kind) throws Exception {
+  private void test_type_with_corrupted_type_as_data(SpecKindH kind) throws Exception {
     Hash hash =
         hash(
             hash(kind.marker()),
@@ -620,7 +620,7 @@ public class TypeHCorruptedTest extends TestingContext {
         .withCause(corruptedArrayTypeException());
   }
 
-  private void test_type_with_data_being_expr_type(TypeKindH kind, Class<? extends TypeH> expected)
+  private void test_type_with_data_being_expr_type(SpecKindH kind, Class<? extends SpecH> expected)
       throws Exception {
     Hash hash = hash(
         hash(kind.marker()),
@@ -678,7 +678,7 @@ public class TypeHCorruptedTest extends TestingContext {
     return obj.hash();
   }
 
-  protected Hash hash(TypeH type) {
+  protected Hash hash(SpecH type) {
     return type.hash();
   }
 
@@ -724,7 +724,7 @@ public class TypeHCorruptedTest extends TestingContext {
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(SELECT, TypeHV.class);
+      test_type_with_data_being_expr_type(SELECT, TypeH.class);
     }
   }
 
@@ -800,7 +800,7 @@ public class TypeHCorruptedTest extends TestingContext {
           );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeException(
-              hash, TUPLE, "data", 0, TypeHV.class, RefTypeH.class));
+              hash, TUPLE, "data", 0, TypeH.class, RefTypeH.class));
     }
 
     @Test

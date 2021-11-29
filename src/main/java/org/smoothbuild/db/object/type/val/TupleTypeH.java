@@ -1,24 +1,24 @@
 package org.smoothbuild.db.object.type.val;
 
-import static org.smoothbuild.db.object.type.base.TypeKindH.TUPLE;
+import static org.smoothbuild.db.object.type.base.SpecKindH.TUPLE;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjectHDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class TupleTypeH extends TypeHV {
-  private final ImmutableList<TypeHV> itemTypes;
+public class TupleTypeH extends TypeH {
+  private final ImmutableList<TypeH> itemTypes;
 
-  public TupleTypeH(Hash hash, Iterable<? extends TypeHV> itemTypes) {
+  public TupleTypeH(Hash hash, Iterable<? extends TypeH> itemTypes) {
     super(calculateName(itemTypes), hash, TUPLE);
     this.itemTypes = ImmutableList.copyOf(itemTypes);
   }
@@ -28,11 +28,11 @@ public class TupleTypeH extends TypeHV {
     return (TupleH) super.newObj(merkleRoot, objectHDb);
   }
 
-  public ImmutableList<TypeHV> items() {
+  public ImmutableList<TypeH> items() {
     return itemTypes;
   }
 
-  private static String calculateName(Iterable<? extends TypeHV> itemTypes) {
-    return "{" + toCommaSeparatedString(itemTypes, TypeH::name) + "}";
+  private static String calculateName(Iterable<? extends TypeH> itemTypes) {
+    return "{" + toCommaSeparatedString(itemTypes, SpecH::name) + "}";
   }
 }

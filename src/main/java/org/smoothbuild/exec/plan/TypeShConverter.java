@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.lang.base.type.impl.AnyTypeS;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.BlobTypeS;
@@ -26,7 +26,7 @@ public class TypeShConverter {
     this.objFactory = objFactory;
   }
 
-  public TypeHV visit(TypeS type) {
+  public TypeH visit(TypeS type) {
     return switch (type) {
       case AnyTypeS any -> throw new RuntimeException("S-Any cannot be converted to H-type.");
       case BlobTypeS blob -> objFactory.blobT();

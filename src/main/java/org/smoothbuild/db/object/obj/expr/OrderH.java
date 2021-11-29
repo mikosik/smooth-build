@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjectH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvaluationTypeOfComponentException;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 
@@ -21,27 +21,27 @@ import com.google.common.collect.ImmutableList;
 public class OrderH extends ExprH {
   public OrderH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
-    checkArgument(merkleRoot.type() instanceof OrderTypeH);
+    checkArgument(merkleRoot.spec() instanceof OrderTypeH);
   }
 
   @Override
-  public OrderTypeH type() {
-    return (OrderTypeH) super.type();
+  public OrderTypeH spec() {
+    return (OrderTypeH) super.spec();
   }
 
   @Override
-  public ArrayTypeH evaluationType() {
-    return type().evaluationType();
+  public ArrayTypeH type() {
+    return spec().evaluationType();
   }
 
   public ImmutableList<ObjectH> elems() {
     var elems = readSequenceObjs(DATA_PATH, dataHash(), ObjectH.class);
-    var expectedElementType = type().evaluationType().elem();
+    var expectedElementType = spec().evaluationType().elem();
     for (int i = 0; i < elems.size(); i++) {
-      TypeHV actualType = elems.get(i).evaluationType();
+      TypeH actualType = elems.get(i).type();
       if (!Objects.equals(expectedElementType, actualType)) {
         throw new DecodeExprWrongEvaluationTypeOfComponentException(
-            hash(), type(), "elems[" + i + "]", expectedElementType, actualType);
+            hash(), spec(), "elems[" + i + "]", expectedElementType, actualType);
       }
     }
     return elems;

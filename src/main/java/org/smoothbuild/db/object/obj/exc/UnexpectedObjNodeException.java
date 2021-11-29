@@ -1,24 +1,24 @@
 package org.smoothbuild.db.object.obj.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.SpecH;
 
 public class UnexpectedObjNodeException extends DecodeObjNodeException {
-  public UnexpectedObjNodeException(Hash hash, TypeH type, String path, int pathIndex,
-      TypeH expected, TypeH actual) {
+  public UnexpectedObjNodeException(Hash hash, SpecH type, String path, int pathIndex,
+      SpecH expected, SpecH actual) {
     this(hash, type, indexedPath(path, pathIndex), expected, actual);
   }
 
   public UnexpectedObjNodeException(
-      Hash hash, TypeH type, String path, TypeH expected, TypeH actual) {
+      Hash hash, SpecH type, String path, SpecH expected, SpecH actual) {
     super(hash, type, path, buildMessage(expected, actual));
   }
 
-  private static String buildMessage(TypeH expected, TypeH actual) {
+  private static String buildMessage(SpecH expected, SpecH actual) {
     return "Node has unexpected type. Expected " + expected.q() + " but was " + actual.q() + ".";
   }
 
-  public UnexpectedObjNodeException(Hash hash, TypeH type, String memberPath, int pathIndex,
+  public UnexpectedObjNodeException(Hash hash, SpecH type, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, type, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -27,7 +27,7 @@ public class UnexpectedObjNodeException extends DecodeObjNodeException {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public UnexpectedObjNodeException(Hash hash, TypeH type, String path, Class<?> expected,
+  public UnexpectedObjNodeException(Hash hash, SpecH type, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, type, path, buildMessage(expected, actual));
   }

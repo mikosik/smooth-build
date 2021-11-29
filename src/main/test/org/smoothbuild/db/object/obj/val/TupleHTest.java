@@ -42,14 +42,14 @@ public class TupleHTest extends TestingContext {
   @Test
   public void type_of_person_tuple_is_person_type() {
     TupleH person = johnDoePerson();
-    assertThat(person.type())
+    assertThat(person.spec())
         .isEqualTo(personHT());
   }
 
   @Test
   public void item_contains_object_passed_to_builder() {
     TupleH person = johnDoePerson();
-    assertThat(person.type())
+    assertThat(person.spec())
         .isEqualTo(personHT());
     assertThat(person.get(0))
         .isEqualTo(stringH("John"));

@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.obj.base;
 
 import org.smoothbuild.db.object.obj.ObjectHDb;
-import org.smoothbuild.db.object.type.base.TypeHV;
+import org.smoothbuild.db.object.type.base.TypeH;
 
 /**
  * This class is immutable.
@@ -12,12 +12,12 @@ public abstract class ValueH extends ObjectH {
   }
 
   @Override
-  public TypeHV type() {
-    return (TypeHV) super.type();
+  public TypeH spec() {
+    return (TypeH) super.spec();
   }
 
   @Override
-  public TypeHV evaluationType() {
-    return type();
+  public TypeH type() {
+    return spec();
   }
 }

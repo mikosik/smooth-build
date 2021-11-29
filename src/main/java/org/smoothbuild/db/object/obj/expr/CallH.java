@@ -23,12 +23,12 @@ public class CallH extends ExprH {
 
   public CallH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
     super(merkleRoot, objectHDb);
-    checkArgument(merkleRoot.type() instanceof CallTypeH);
+    checkArgument(merkleRoot.spec() instanceof CallTypeH);
   }
 
   @Override
-  public CallTypeH type() {
-    return (CallTypeH) super.type();
+  public CallTypeH spec() {
+    return (CallTypeH) super.spec();
   }
 
   public CallData data() {
@@ -41,10 +41,10 @@ public class CallH extends ExprH {
   public record CallData(ObjectH function, ConstructH arguments) {}
 
   private void validate(ObjectH function, ConstructH argumentsConstruct) {
-    if (function.evaluationType() instanceof FunctionTypeH functionType) {
+    if (function.type() instanceof FunctionTypeH functionType) {
       var typing = objectDb().typing();
       var params = functionType.params();
-      var arguments = argumentsConstruct.type().evaluationType().items();
+      var arguments = argumentsConstruct.spec().evaluationType().items();
       allMatchOtherwise(
           params,
           arguments,
@@ -55,19 +55,19 @@ public class CallH extends ExprH {
       var variableBounds = typing.inferVariableBoundsInCall(params, arguments);
       var actualResult = typing.mapVariables(
           functionType.result(), variableBounds, typing.factory().lower());
-      if (!Objects.equals(evaluationType(), actualResult)) {
+      if (!Objects.equals(type(), actualResult)) {
         throw new DecodeExprWrongEvaluationTypeOfComponentException(
-            hash(), type(), "function.result", evaluationType(), actualResult);
+            hash(), spec(), "function.result", type(), actualResult);
       }
     } else {
       throw new DecodeExprWrongEvaluationTypeOfComponentException(
-          hash(), type(), "function", FunctionTypeH.class, function.evaluationType());
+          hash(), spec(), "function", FunctionTypeH.class, function.type());
     }
   }
 
   private void illegalArguments(FunctionTypeH functionType, ConstructH arguments) {
-    throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), type(), "arguments",
-        functionType.paramsTuple(), arguments.evaluationType());
+    throw new DecodeExprWrongEvaluationTypeOfComponentException(hash(), spec(), "arguments",
+        functionType.paramsTuple(), arguments.type());
   }
 
   private ObjectH readFunction() {

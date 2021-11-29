@@ -12,21 +12,21 @@ import static org.smoothbuild.db.object.type.FunctionKind.NATIVE_KIND;
 import static org.smoothbuild.db.object.type.Helpers.wrapHashedDbExceptionAsDecodeTypeException;
 import static org.smoothbuild.db.object.type.Helpers.wrapHashedDbExceptionAsDecodeTypeNodeException;
 import static org.smoothbuild.db.object.type.Helpers.wrapObjectDbExceptionAsDecodeTypeNodeException;
-import static org.smoothbuild.db.object.type.base.TypeKindH.ANY;
-import static org.smoothbuild.db.object.type.base.TypeKindH.ARRAY;
-import static org.smoothbuild.db.object.type.base.TypeKindH.BLOB;
-import static org.smoothbuild.db.object.type.base.TypeKindH.BOOL;
-import static org.smoothbuild.db.object.type.base.TypeKindH.CALL;
-import static org.smoothbuild.db.object.type.base.TypeKindH.CONSTRUCT;
-import static org.smoothbuild.db.object.type.base.TypeKindH.INT;
-import static org.smoothbuild.db.object.type.base.TypeKindH.NOTHING;
-import static org.smoothbuild.db.object.type.base.TypeKindH.ORDER;
-import static org.smoothbuild.db.object.type.base.TypeKindH.REF;
-import static org.smoothbuild.db.object.type.base.TypeKindH.SELECT;
-import static org.smoothbuild.db.object.type.base.TypeKindH.STRING;
-import static org.smoothbuild.db.object.type.base.TypeKindH.TUPLE;
-import static org.smoothbuild.db.object.type.base.TypeKindH.VARIABLE;
-import static org.smoothbuild.db.object.type.base.TypeKindH.fromMarker;
+import static org.smoothbuild.db.object.type.base.SpecKindH.ANY;
+import static org.smoothbuild.db.object.type.base.SpecKindH.ARRAY;
+import static org.smoothbuild.db.object.type.base.SpecKindH.BLOB;
+import static org.smoothbuild.db.object.type.base.SpecKindH.BOOL;
+import static org.smoothbuild.db.object.type.base.SpecKindH.CALL;
+import static org.smoothbuild.db.object.type.base.SpecKindH.CONSTRUCT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.INT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.NOTHING;
+import static org.smoothbuild.db.object.type.base.SpecKindH.ORDER;
+import static org.smoothbuild.db.object.type.base.SpecKindH.REF;
+import static org.smoothbuild.db.object.type.base.SpecKindH.SELECT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.STRING;
+import static org.smoothbuild.db.object.type.base.SpecKindH.TUPLE;
+import static org.smoothbuild.db.object.type.base.SpecKindH.VARIABLE;
+import static org.smoothbuild.db.object.type.base.SpecKindH.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVariableName;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -37,9 +37,9 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.object.db.ObjectHDbException;
+import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
-import org.smoothbuild.db.object.type.base.TypeKindH;
 import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
 import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
 import org.smoothbuild.db.object.type.exc.DecodeVariableIllegalNameException;
@@ -84,7 +84,7 @@ public class TypeHDb implements TypeFactoryH {
   public static final String FUNCTION_PARAMS_PATH = DATA_PATH + "[" + FUNCTION_PARAMS_INDEX + "]";
 
   private final HashedDb hashedDb;
-  private final ConcurrentHashMap<Hash, TypeH> cache;
+  private final ConcurrentHashMap<Hash, SpecH> cache;
 
   private final AnyTypeH any;
   private final BlobTypeH blob;
@@ -94,7 +94,7 @@ public class TypeHDb implements TypeFactoryH {
   private final StringTypeH string;
   private final IfFunctionTypeH ifFunction;
   private final MapFunctionTypeH mapFunction;
-  private final Sides<TypeHV> sides;
+  private final Sides<TypeH> sides;
 
   public TypeHDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -122,12 +122,12 @@ public class TypeHDb implements TypeFactoryH {
   }
 
   @Override
-  public Bounds<TypeHV> unbounded() {
+  public Bounds<TypeH> unbounded() {
     return new Bounds<>(nothing(), any());
   }
 
   @Override
-  public Bounds<TypeHV> oneSideBound(Side<TypeHV> side, TypeHV type) {
+  public Bounds<TypeH> oneSideBound(Side<TypeH> side, TypeH type) {
     return switch (side) {
       case Sides.Lower l -> new Bounds<>(type, any());
       case Sides.Upper u -> new Bounds<>(nothing(), type);
@@ -135,12 +135,12 @@ public class TypeHDb implements TypeFactoryH {
   }
 
   @Override
-  public Side<TypeHV> upper() {
+  public Side<TypeH> upper() {
     return sides.upper();
   }
 
   @Override
-  public Side<TypeHV> lower() {
+  public Side<TypeH> lower() {
     return sides.lower();
   }
 
@@ -151,7 +151,7 @@ public class TypeHDb implements TypeFactoryH {
   }
 
   @Override
-  public ArrayTypeH array(TypeHV elemType) {
+  public ArrayTypeH array(TypeH elemType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newArray(elemType));
   }
 
@@ -163,17 +163,17 @@ public class TypeHDb implements TypeFactoryH {
     return bool;
   }
 
-  public DefinedFunctionTypeH definedFunction(TypeHV res, ImmutableList<TypeHV> params) {
+  public DefinedFunctionTypeH definedFunction(TypeH res, ImmutableList<TypeH> params) {
     return function(DEFINED_KIND, res, params);
   }
 
   @Override
-  public AbstractFunctionTypeH function(TypeHV res, ImmutableList<TypeHV> params) {
+  public AbstractFunctionTypeH function(TypeH res, ImmutableList<TypeH> params) {
     return function(ABSTRACT_KIND, res, params);
   }
 
-  private <T extends FunctionTypeH> T function(FunctionKind<T> kind, TypeHV res,
-      ImmutableList<TypeHV> params) {
+  private <T extends FunctionTypeH> T function(FunctionKind<T> kind, TypeH res,
+      ImmutableList<TypeH> params) {
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newFunction(kind, res, tuple(params)));
   }
@@ -190,7 +190,7 @@ public class TypeHDb implements TypeFactoryH {
     return mapFunction;
   }
 
-  public NativeFunctionTypeH nativeFunction(TypeHV res, ImmutableList<TypeHV> params) {
+  public NativeFunctionTypeH nativeFunction(TypeH res, ImmutableList<TypeH> params) {
     return function(NATIVE_KIND, res, params);
   }
 
@@ -198,7 +198,7 @@ public class TypeHDb implements TypeFactoryH {
     return nothing;
   }
 
-  public TupleTypeH tuple(ImmutableList<TypeHV> itemTypes) {
+  public TupleTypeH tuple(ImmutableList<TypeH> itemTypes) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(itemTypes));
   }
 
@@ -213,7 +213,7 @@ public class TypeHDb implements TypeFactoryH {
 
   // methods for getting Expr-s types
 
-  public CallTypeH call(TypeHV evaluationType) {
+  public CallTypeH call(TypeH evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evaluationType));
   }
 
@@ -221,27 +221,27 @@ public class TypeHDb implements TypeFactoryH {
     return wrapHashedDbExceptionAsObjectDbException(() -> newConstruct(evaluationType));
   }
 
-  public OrderTypeH order(TypeHV elemType) {
+  public OrderTypeH order(TypeH elemType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elemType));
   }
 
-  public RefTypeH ref(TypeHV evaluationType) {
+  public RefTypeH ref(TypeH evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType));
   }
 
-  public SelectTypeH select(TypeHV evaluationType) {
+  public SelectTypeH select(TypeH evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evaluationType));
   }
 
   // methods for reading from db
 
-  public TypeH get(Hash hash) {
+  public SpecH get(Hash hash) {
     return requireNonNullElseGet(cache.get(hash), () -> read(hash));
   }
 
-  private TypeH read(Hash hash) {
+  private SpecH read(Hash hash) {
     List<Hash> rootSequence = readTypeRootSequence(hash);
-    TypeKindH kind = decodeTypeMarker(hash, rootSequence.get(0));
+    SpecKindH kind = decodeTypeMarker(hash, rootSequence.get(0));
     return switch (kind) {
       case ANY, BLOB, BOOL, INT, NOTHING, STRING -> {
         assertTypeRootSequenceSize(hash, kind, rootSequence, 1);
@@ -271,10 +271,10 @@ public class TypeHDb implements TypeFactoryH {
     return hashes;
   }
 
-  private TypeKindH decodeTypeMarker(Hash hash, Hash markerHash) {
+  private SpecKindH decodeTypeMarker(Hash hash, Hash markerHash) {
     byte marker = wrapHashedDbExceptionAsDecodeTypeException(
         hash, () -> hashedDb.readByte(markerHash));
-    TypeKindH kind = fromMarker(marker);
+    SpecKindH kind = fromMarker(marker);
     if (kind == null) {
       throw new DecodeTypeIllegalKindException(hash, marker);
     }
@@ -282,40 +282,40 @@ public class TypeHDb implements TypeFactoryH {
   }
 
   private static void assertTypeRootSequenceSize(
-      Hash rootHash, TypeKindH kind, List<Hash> hashes, int expectedSize) {
+      Hash rootHash, SpecKindH kind, List<Hash> hashes, int expectedSize) {
     if (hashes.size() != expectedSize) {
       throw new DecodeTypeRootException(rootHash, kind, hashes.size(), expectedSize);
     }
   }
 
-  private TypeHV readDataAsValue(Hash rootHash, List<Hash> rootSequence, TypeKindH kind) {
-    return readDataAsClass(rootHash, rootSequence, kind, TypeHV.class);
+  private TypeH readDataAsValue(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
+    return readDataAsClass(rootHash, rootSequence, kind, TypeH.class);
   }
 
-  private ArrayTypeH readDataAsArray(Hash rootHash, List<Hash> rootSequence, TypeKindH kind) {
+  private ArrayTypeH readDataAsArray(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
     return readDataAsClass(rootHash, rootSequence, kind, ArrayTypeH.class);
   }
 
-  private TupleTypeH readDataAsTuple(Hash rootHash, List<Hash> rootSequence, TypeKindH kind) {
+  private TupleTypeH readDataAsTuple(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
     return readDataAsClass(rootHash, rootSequence, kind, TupleTypeH.class);
   }
 
-  private <T extends TypeH> T readDataAsClass(Hash rootHash, List<Hash> rootSequence,
-      TypeKindH kind, Class<T> expectedTypeClass) {
+  private <T extends SpecH> T readDataAsClass(Hash rootHash, List<Hash> rootSequence,
+      SpecKindH kind, Class<T> expectedTypeClass) {
     assertTypeRootSequenceSize(rootHash, kind, rootSequence, 2);
     Hash hash = rootSequence.get(DATA_INDEX);
     return readTupleItemType(kind, rootHash, hash, DATA_PATH, expectedTypeClass);
   }
 
-  private TypeH readFunction(Hash rootHash, List<Hash> rootSequence, TypeKindH kind) {
+  private SpecH readFunction(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
     assertTypeRootSequenceSize(rootHash, kind, rootSequence, 2);
     Hash dataHash = rootSequence.get(DATA_INDEX);
     List<Hash> data = readSequenceHashes(rootHash, dataHash, kind, DATA_PATH);
     if (data.size() != 2) {
       throw new UnexpectedTypeSequenceException(rootHash, kind, DATA_PATH, 2, data.size());
     }
-    TypeHV result = readTupleItemType(kind, rootHash, data.get(FUNCTION_RESULT_INDEX),
-        FUNCTION_RESULT_PATH, TypeHV.class);
+    TypeH result = readTupleItemType(kind, rootHash, data.get(FUNCTION_RESULT_INDEX),
+        FUNCTION_RESULT_PATH, TypeH.class);
     TupleTypeH params = readTupleItemType(kind, rootHash, data.get(FUNCTION_PARAMS_INDEX),
         FUNCTION_PARAMS_PATH, TupleTypeH.class);
     return newFunction(rootHash, FunctionKind.from(kind), result, params);
@@ -327,8 +327,8 @@ public class TypeHDb implements TypeFactoryH {
     return newTuple(rootHash, items);
   }
 
-  private ImmutableList<TypeHV> readTupleItems(Hash rootHash, Hash hash) {
-    var builder = ImmutableList.<TypeHV>builder();
+  private ImmutableList<TypeH> readTupleItems(Hash rootHash, Hash hash) {
+    var builder = ImmutableList.<TypeH>builder();
     var itemTypeHashes = readSequenceHashes(rootHash, hash, TUPLE, DATA_PATH);
     for (int i = 0; i < itemTypeHashes.size(); i++) {
       builder.add(readTupleItemType(rootHash, itemTypeHashes.get(i), DATA_PATH, i));
@@ -346,9 +346,9 @@ public class TypeHDb implements TypeFactoryH {
     return newVariable(rootHash, name);
   }
 
-  private <T> T readTupleItemType(TypeKindH kind, Hash outerHash, Hash hash, String path,
+  private <T> T readTupleItemType(SpecKindH kind, Hash outerHash, Hash hash, String path,
       Class<T> expectedClass) {
-    TypeH result = wrapObjectDbExceptionAsDecodeTypeNodeException(
+    SpecH result = wrapObjectDbExceptionAsDecodeTypeNodeException(
         kind, outerHash, path, () -> get(hash));
     if (expectedClass.isInstance(result)) {
       @SuppressWarnings("unchecked")
@@ -360,45 +360,45 @@ public class TypeHDb implements TypeFactoryH {
     }
   }
 
-  private TypeHV readTupleItemType(Hash outerHash, Hash hash, String path, int index) {
-    TypeH result = wrapObjectDbExceptionAsDecodeTypeNodeException(
+  private TypeH readTupleItemType(Hash outerHash, Hash hash, String path, int index) {
+    SpecH result = wrapObjectDbExceptionAsDecodeTypeNodeException(
         TUPLE, outerHash, path, index, () -> get(hash));
-    if (result instanceof TypeHV typeHV) {
-      return typeHV;
+    if (result instanceof TypeH typeH) {
+      return typeH;
     } else {
       throw new UnexpectedTypeNodeException(
-          outerHash, TUPLE, path, index, TypeHV.class, result.getClass());
+          outerHash, TUPLE, path, index, TypeH.class, result.getClass());
     }
   }
 
   // methods for creating Val types
 
-  private ArrayTypeH newArray(TypeHV elemType) throws HashedDbException {
+  private ArrayTypeH newArray(TypeH elemType) throws HashedDbException {
     var rootHash = writeArrayRoot(elemType);
     return newArray(rootHash, elemType);
   }
 
-  private ArrayTypeH newArray(Hash rootHash, TypeHV elemType) {
+  private ArrayTypeH newArray(Hash rootHash, TypeH elemType) {
     return cache(new ArrayTypeH(rootHash, elemType));
   }
 
   private <T extends FunctionTypeH> T newFunction(
-      FunctionKind<T> kind, TypeHV res, TupleTypeH params) throws HashedDbException {
+      FunctionKind<T> kind, TypeH res, TupleTypeH params) throws HashedDbException {
     var rootHash = writeFunctionRoot(kind, res, params);
     return newFunction(rootHash, kind, res, params);
   }
 
   private <T extends FunctionTypeH> T newFunction(
-      Hash rootHash, FunctionKind<T> kind, TypeHV res, TupleTypeH params) {
+      Hash rootHash, FunctionKind<T> kind, TypeH res, TupleTypeH params) {
     return cache(kind.newInstance(rootHash, res, params));
   }
 
-  private TupleTypeH newTuple(ImmutableList<TypeHV> itemTypes) throws HashedDbException {
+  private TupleTypeH newTuple(ImmutableList<TypeH> itemTypes) throws HashedDbException {
     var hash = writeTupleRoot(itemTypes);
     return newTuple(hash, itemTypes);
   }
 
-  private TupleTypeH newTuple(Hash rootHash, ImmutableList<TypeHV> itemTypes) {
+  private TupleTypeH newTuple(Hash rootHash, ImmutableList<TypeH> itemTypes) {
     return cache(new TupleTypeH(rootHash, itemTypes));
   }
 
@@ -413,12 +413,12 @@ public class TypeHDb implements TypeFactoryH {
 
   // methods for creating Expr types
 
-  private CallTypeH newCall(TypeHV evaluationType) throws HashedDbException {
+  private CallTypeH newCall(TypeH evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(CALL, evaluationType);
     return newCall(rootHash, evaluationType);
   }
 
-  private CallTypeH newCall(Hash rootHash, TypeHV evaluationType) {
+  private CallTypeH newCall(Hash rootHash, TypeH evaluationType) {
     return cache(new CallTypeH(rootHash, evaluationType));
   }
 
@@ -431,7 +431,7 @@ public class TypeHDb implements TypeFactoryH {
     return cache(new ConstructTypeH(rootHash, evaluationType));
   }
 
-  private OrderTypeH newOrder(TypeHV elemType) throws HashedDbException {
+  private OrderTypeH newOrder(TypeH elemType) throws HashedDbException {
     var evaluationType = array(elemType);
     var rootHash = writeExprRoot(ORDER, evaluationType);
     return newOrder(rootHash, evaluationType);
@@ -441,25 +441,25 @@ public class TypeHDb implements TypeFactoryH {
     return cache(new OrderTypeH(rootHash, evaluationType));
   }
 
-  private RefTypeH newRef(TypeHV evaluationType) throws HashedDbException {
+  private RefTypeH newRef(TypeH evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(REF, evaluationType);
     return newRef(rootHash, evaluationType);
   }
 
-  private RefTypeH newRef(Hash rootHash, TypeHV evaluationType) {
+  private RefTypeH newRef(Hash rootHash, TypeH evaluationType) {
     return cache(new RefTypeH(rootHash, evaluationType));
   }
 
-  private SelectTypeH newSelect(TypeHV evaluationType) throws HashedDbException {
+  private SelectTypeH newSelect(TypeH evaluationType) throws HashedDbException {
     var rootHash = writeExprRoot(SELECT, evaluationType);
     return newSelect(rootHash, evaluationType);
   }
 
-  private SelectTypeH newSelect(Hash rootHash, TypeHV evaluationType) {
+  private SelectTypeH newSelect(Hash rootHash, TypeH evaluationType) {
     return cache(new SelectTypeH(rootHash, evaluationType));
   }
 
-  private <T extends TypeH> T cache(T type) {
+  private <T extends SpecH> T cache(T type) {
     @SuppressWarnings("unchecked")
     T result = (T) requireNonNullElse(cache.putIfAbsent(type.hash(), type), type);
     return result;
@@ -467,18 +467,18 @@ public class TypeHDb implements TypeFactoryH {
 
   // Methods for writing Val type root
 
-  private Hash writeArrayRoot(TypeH elemType) throws HashedDbException {
+  private Hash writeArrayRoot(SpecH elemType) throws HashedDbException {
     return writeNonBaseRoot(ARRAY, elemType.hash());
   }
 
-  private Hash writeFunctionRoot(FunctionKind<?> kind, TypeHV res, TupleTypeH params)
+  private Hash writeFunctionRoot(FunctionKind<?> kind, TypeH res, TupleTypeH params)
       throws HashedDbException {
     var hash = hashedDb.writeSequence(res.hash(), params.hash());
     return writeNonBaseRoot(kind.kind(), hash);
   }
 
-  private Hash writeTupleRoot(ImmutableList<TypeHV> itemTypes) throws HashedDbException {
-    var itemsHash = hashedDb.writeSequence(Lists.map(itemTypes, TypeH::hash));
+  private Hash writeTupleRoot(ImmutableList<TypeH> itemTypes) throws HashedDbException {
+    var itemsHash = hashedDb.writeSequence(Lists.map(itemTypes, SpecH::hash));
     return writeNonBaseRoot(TUPLE, itemsHash);
   }
 
@@ -489,22 +489,22 @@ public class TypeHDb implements TypeFactoryH {
 
   // Helper methods for writing roots
 
-  private Hash writeExprRoot(TypeKindH kind, TypeH evaluationType) throws HashedDbException {
+  private Hash writeExprRoot(SpecKindH kind, SpecH evaluationType) throws HashedDbException {
     return writeNonBaseRoot(kind, evaluationType.hash());
   }
 
-  private Hash writeNonBaseRoot(TypeKindH kind, Hash dataHash) throws HashedDbException {
+  private Hash writeNonBaseRoot(SpecKindH kind, Hash dataHash) throws HashedDbException {
     return hashedDb.writeSequence(hashedDb.writeByte(kind.marker()), dataHash);
   }
 
-  private Hash writeBaseRoot(TypeKindH kind) throws HashedDbException {
+  private Hash writeBaseRoot(SpecKindH kind) throws HashedDbException {
     return hashedDb.writeSequence(hashedDb.writeByte(kind.marker()));
   }
 
   // Helper methods for reading
 
   private ImmutableList<Hash> readSequenceHashes(
-      Hash rootHash, Hash sequenceHash, TypeKindH kind, String path) {
+      Hash rootHash, Hash sequenceHash, SpecKindH kind, String path) {
     return wrapHashedDbExceptionAsDecodeTypeNodeException(
         rootHash, kind, path, () -> hashedDb.readSequence(sequenceHash));
   }

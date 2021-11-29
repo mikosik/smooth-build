@@ -1,26 +1,26 @@
 package org.smoothbuild.db.object.type.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeKindH;
+import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.SpecKindH;
 
 public class UnexpectedTypeNodeException extends DecodeTypeNodeException {
-  public UnexpectedTypeNodeException(Hash hash, TypeKindH kind, String path, int pathIndex,
-      TypeH expected, TypeH actual) {
+  public UnexpectedTypeNodeException(Hash hash, SpecKindH kind, String path, int pathIndex,
+      SpecH expected, SpecH actual) {
     this(hash, kind, indexedPath(path, pathIndex), expected, actual);
   }
 
-  public UnexpectedTypeNodeException(Hash hash, TypeKindH kind, String path, TypeH expected,
-      TypeH actual) {
+  public UnexpectedTypeNodeException(Hash hash, SpecKindH kind, String path, SpecH expected,
+      SpecH actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }
 
-  private static String buildMessage(TypeH expected, TypeH actual) {
+  private static String buildMessage(SpecH expected, SpecH actual) {
     return "Node has unexpected type. Expected " + expected.name() + " but was " + actual.name()
         + ".";
   }
 
-  public UnexpectedTypeNodeException(Hash hash, TypeKindH kind, String memberPath, int pathIndex,
+  public UnexpectedTypeNodeException(Hash hash, SpecKindH kind, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, kind, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -29,7 +29,7 @@ public class UnexpectedTypeNodeException extends DecodeTypeNodeException {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public UnexpectedTypeNodeException(Hash hash, TypeKindH kind, String path, Class<?> expected,
+  public UnexpectedTypeNodeException(Hash hash, SpecKindH kind, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }

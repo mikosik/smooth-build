@@ -10,7 +10,7 @@ import org.smoothbuild.testing.TestingContext;
 public class RefHTest extends TestingContext {
   @Test
   public void type_of_ref_expr_is_ref_type() {
-    assertThat(refH(intHT(), 123).type())
+    assertThat(refH(intHT(), 123).spec())
         .isEqualTo(refHT(intHT()));
   }
 

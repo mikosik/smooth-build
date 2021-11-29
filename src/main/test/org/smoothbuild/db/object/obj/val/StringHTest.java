@@ -11,7 +11,7 @@ public class StringHTest extends TestingContext {
 
   @Test
   public void type_of_string_is_string_type() {
-    assertThat(stringH(string).type())
+    assertThat(stringH(string).spec())
         .isEqualTo(stringHT());
   }
 

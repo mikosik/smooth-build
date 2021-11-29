@@ -41,8 +41,8 @@ import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.TypeHDb;
 import org.smoothbuild.db.object.type.TypingH;
+import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.base.TypeHV;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.DefinedFunctionTypeH;
@@ -81,7 +81,7 @@ public class ObjectHDb {
 
   // methods for creating ValueH subclasses
 
-  public ArrayHBuilder arrayBuilder(TypeHV elemType) {
+  public ArrayHBuilder arrayBuilder(TypeH elemType) {
     return new ArrayHBuilder(typeHDb.array(elemType), this);
   }
 
@@ -94,9 +94,9 @@ public class ObjectHDb {
   }
 
   public DefinedFunctionH definedFunction(DefinedFunctionTypeH type, ObjectH body) {
-    if (!typing.isAssignable(type.result(), body.evaluationType())) {
+    if (!typing.isAssignable(type.result(), body.type())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.result().name()
-          + " but body.evaluationType() is " + body.evaluationType().name() + ".");
+          + " but body.evaluationType() is " + body.type().name() + ".");
     }
     return wrapHashedDbExceptionAsObjectDbException(() -> newFunction(type, body));
   }
@@ -117,7 +117,7 @@ public class ObjectHDb {
 
   public TupleH tuple(TupleTypeH tupleType, ImmutableList<ValueH> items) {
     var types = tupleType.items();
-    allMatchOtherwise(types, items, (s, i) -> Objects.equals(s, i.type()),
+    allMatchOtherwise(types, items, (s, i) -> Objects.equals(s, i.spec()),
         (i, j) -> {
           throw new IllegalArgumentException(
               "tupleType specifies " + i + " items but provided " + j + ".");
@@ -125,7 +125,7 @@ public class ObjectHDb {
         (i) -> {
           throw new IllegalArgumentException("tupleType specifies item at index " + i
               + " with type " + types.get(i).name() + " but provided item has type "
-              + items.get(i).type().name() + " at that index.");
+              + items.get(i).spec().name() + " at that index.");
         }
     );
 
@@ -154,7 +154,7 @@ public class ObjectHDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elems));
   }
 
-  public RefH ref(BigInteger value, TypeHV evaluationType) {
+  public RefH ref(BigInteger value, TypeH evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType, value));
   }
 
@@ -169,12 +169,12 @@ public class ObjectHDb {
     if (hashes.size() != 2) {
       throw wrongSizeOfRootSequenceException(rootHash, hashes.size());
     }
-    TypeH type = getTypeOrChainException(rootHash, hashes.get(0));
+    SpecH type = getTypeOrChainException(rootHash, hashes.get(0));
     Hash dataHash = hashes.get(1);
     return type.newObj(new MerkleRoot(rootHash, type, dataHash), this);
   }
 
-  private TypeH getTypeOrChainException(Hash rootHash, Hash typeHash) {
+  private SpecH getTypeOrChainException(Hash rootHash, Hash typeHash) {
     try {
       return typeHDb.get(typeHash);
     } catch (ObjectHDbException e) {
@@ -253,9 +253,9 @@ public class ObjectHDb {
     return type.newObj(root, this);
   }
 
-  private TypeHV inferCallResultType(ObjectH function, ConstructH arguments) {
+  private TypeH inferCallResultType(ObjectH function, ConstructH arguments) {
     var functionType = functionEvaluationType(function);
-    var argumentTypes = arguments.evaluationType().items();
+    var argumentTypes = arguments.type().items();
     var params = functionType.params();
     allMatchOtherwise(
         params,
@@ -271,11 +271,11 @@ public class ObjectHDb {
   private void illegalArguments(FunctionTypeH functionType, ConstructH arguments) {
     throw new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to function evaluation type parameters %s."
-            .formatted(arguments.evaluationType().name(), functionType.paramsTuple().name()));
+            .formatted(arguments.type().name(), functionType.paramsTuple().name()));
   }
 
   private FunctionTypeH functionEvaluationType(ObjectH function) {
-    if (function.evaluationType() instanceof FunctionTypeH functionType) {
+    if (function.type() instanceof FunctionTypeH functionType) {
       return functionType;
     } else {
       throw new IllegalArgumentException("`function` component doesn't evaluate to Function.");
@@ -297,16 +297,16 @@ public class ObjectHDb {
   }
 
   private OrderH newOrder(ImmutableList<ObjectH> elems) throws HashedDbException {
-    TypeHV elemType = elemType(elems);
+    TypeH elemType = elemType(elems);
     var type = typeHDb.order(elemType);
     var data = writeOrderData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private TypeHV elemType(ImmutableList<ObjectH> elems) {
-    Optional<TypeHV> elemType = elems.stream()
-        .map(ObjectH::evaluationType)
+  private TypeH elemType(ImmutableList<ObjectH> elems) {
+    Optional<TypeH> elemType = elems.stream()
+        .map(ObjectH::type)
         .reduce((type1, type2) -> {
           if (type1.equals(type2)) {
             return type1;
@@ -315,9 +315,9 @@ public class ObjectHDb {
                 + type1.name() + " != " + type2.name() + ".");
           }
         });
-    TypeH type = elemType.orElse(typeHDb.nothing());
-    if (type instanceof TypeHV typeHV) {
-      return typeHV;
+    SpecH type = elemType.orElse(typeHDb.nothing());
+    if (type instanceof TypeH typeH) {
+      return typeH;
     } else {
       throw new IllegalArgumentException(
           "Element type should be ValOType but was " + type.getClass().getCanonicalName());
@@ -325,7 +325,7 @@ public class ObjectHDb {
   }
 
   private ConstructH newConstruct(ImmutableList<ObjectH> items) throws HashedDbException {
-    var itemTypes = Lists.map(items, ObjectH::evaluationType);
+    var itemTypes = Lists.map(items, ObjectH::type);
     var evaluationType = typeHDb.tuple(itemTypes);
     var type = typeHDb.construct(evaluationType);
     var data = writeConstructData(items);
@@ -346,9 +346,9 @@ public class ObjectHDb {
   }
 
   private SelectTypeH selectType(ObjectH expr, IntH index) {
-    if (expr.evaluationType() instanceof TupleTypeH tuple) {
+    if (expr.type() instanceof TupleTypeH tuple) {
       int intIndex = index.jValue().intValue();
-      ImmutableList<TypeHV> items = tuple.items();
+      ImmutableList<TypeH> items = tuple.items();
       checkElementIndex(intIndex, items.size());
       var itemType = items.get(intIndex);
       return typeHDb.select(itemType);
@@ -357,14 +357,14 @@ public class ObjectHDb {
     }
   }
 
-  private RefH newRef(TypeHV evaluationType, BigInteger index) throws HashedDbException {
+  private RefH newRef(TypeH evaluationType, BigInteger index) throws HashedDbException {
     var data = writeRefData(index);
     var type = typeHDb.ref(evaluationType);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private MerkleRoot newRoot(TypeH type, Hash dataHash) throws HashedDbException {
+  private MerkleRoot newRoot(SpecH type, Hash dataHash) throws HashedDbException {
     Hash rootHash = hashedDb.writeSequence(type.hash(), dataHash);
     return new MerkleRoot(rootHash, type, dataHash);
   }
@@ -439,7 +439,7 @@ public class ObjectHDb {
     return hashedDb;
   }
 
-  public Typing<TypeHV> typing() {
+  public Typing<TypeH> typing() {
     return typing;
   }
 }
