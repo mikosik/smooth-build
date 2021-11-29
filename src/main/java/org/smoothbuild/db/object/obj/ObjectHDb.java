@@ -254,18 +254,18 @@ public class ObjectHDb {
   }
 
   private TypeH inferCallResultType(ObjectH function, ConstructH arguments) {
-    var functionType = functionEvaluationType(function);
-    var argumentTypes = arguments.type().items();
-    var params = functionType.params();
+    var funcType = functionEvaluationType(function);
+    var argTypes = arguments.type().items();
+    var paramTypes = funcType.params();
     allMatchOtherwise(
-        params,
-        argumentTypes,
+        paramTypes,
+        argTypes,
         typing::isParamAssignable,
-        (expectedSize, actualSize) -> illegalArguments(functionType, arguments),
-        i -> illegalArguments(functionType, arguments)
+        (expectedSize, actualSize) -> illegalArguments(funcType, arguments),
+        i -> illegalArguments(funcType, arguments)
     );
-    var variableBounds = typing.inferVariableBoundsInCall(params, argumentTypes);
-    return typing.mapVariables(functionType.result(), variableBounds, typeHDb.lower());
+    var varBounds = typing.inferVariableBoundsInCall(paramTypes, argTypes);
+    return typing.mapVariables(funcType.result(), varBounds, typeHDb.lower());
   }
 
   private void illegalArguments(FunctionTypeH functionType, ConstructH arguments) {
