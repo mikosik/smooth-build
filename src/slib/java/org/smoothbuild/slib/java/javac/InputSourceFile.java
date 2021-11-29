@@ -15,7 +15,7 @@ public class InputSourceFile extends SimpleJavaFileObject {
   private final TupleH file;
 
   public InputSourceFile(TupleH file) {
-    super(URI.create("string:///" + filePath(file).jValue()), Kind.SOURCE);
+    super(URI.create("string:///" + filePath(file).toJ()), Kind.SOURCE);
     this.file = file;
   }
 

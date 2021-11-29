@@ -34,7 +34,7 @@ public class JarTester {
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, TupleH file) throws IOException {
-    JarEntry entry = new JarEntry(filePath(file).jValue());
+    JarEntry entry = new JarEntry(filePath(file).toJ());
     jarOutputStream.putNextEntry(entry);
     try (BufferedSource source = fileContent(file).source()) {
       source.readAll(sink(jarOutputStream));

@@ -30,7 +30,7 @@ public class BinaryNameToClassFile {
         throw new JunitException("Cannot read archive. Corrupted data?", e);
       }
       for (TupleH classFile : fileArray.elems(TupleH.class)) {
-        String classFilePath = (filePath(classFile)).jValue();
+        String classFilePath = (filePath(classFile)).toJ();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {
           throw new JunitException(

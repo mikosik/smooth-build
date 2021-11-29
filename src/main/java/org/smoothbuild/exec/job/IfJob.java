@@ -33,7 +33,7 @@ public class IfJob extends AbstractJob {
   }
 
   private void onConditionCalculated(ValueH conditionH, Worker worker, Consumer<ValueH> res) {
-    var conditionJ = ((BoolH) conditionH).jValue();
+    var conditionJ = ((BoolH) conditionH).toJ();
     var job = conditionJ ? thenJob() : elseJob();
     new VirtualJob(job, new TaskInfo(CALL, IF_TASK_NAME, location()))
         .schedule(worker)

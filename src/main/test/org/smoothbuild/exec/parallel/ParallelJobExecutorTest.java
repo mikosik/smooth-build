@@ -220,7 +220,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        String joinedArgs = toCommaSeparatedString(input.vals(), v -> ((StringH) v).jValue());
+        String joinedArgs = toCommaSeparatedString(input.vals(), v -> ((StringH) v).toJ());
         StringH result = nativeApi.factory().string("(" + joinedArgs + ")");
         return new Output(result, nativeApi.messages());
       }

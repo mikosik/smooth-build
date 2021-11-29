@@ -23,7 +23,7 @@ public class ZipFunc {
     BlobHBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
       for (TupleH file : files.elems(TupleH.class)) {
-        String path = filePath(file).jValue();
+        String path = filePath(file).toJ();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
           return null;
@@ -35,7 +35,7 @@ public class ZipFunc {
   }
 
   private static void zipFile(TupleH file, ZipOutputStream zipOutputStream) throws IOException {
-    ZipEntry entry = new ZipEntry(filePath(file).jValue());
+    ZipEntry entry = new ZipEntry(filePath(file).toJ());
     zipOutputStream.putNextEntry(entry);
     try (BufferedSource source = fileContent(file).source()) {
       source.readAll(sink(zipOutputStream));

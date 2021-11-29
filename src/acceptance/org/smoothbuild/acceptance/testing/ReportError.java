@@ -6,7 +6,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class ReportError {
   public static ValueH func(NativeApi nativeApi, StringH message) {
-    nativeApi.log().error(message.jValue());
+    nativeApi.log().error(message.toJ());
     return null;
   }
 }

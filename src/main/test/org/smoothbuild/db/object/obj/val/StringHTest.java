@@ -16,14 +16,14 @@ public class StringHTest extends TestingContext {
   }
 
   @Test
-  public void jvalue_returns_java_string() {
-    assertThat(stringH(string).jValue())
+  public void to_j_returns_java_string() {
+    assertThat(stringH(string).toJ())
         .isEqualTo(string);
   }
 
   @Test
-  public void jvalue_returns_empty_java_string_for_empty_str() {
-    assertThat(stringH("").jValue())
+  public void to_j_returns_empty_java_string_for_empty_str() {
+    assertThat(stringH("").toJ())
         .isEqualTo("");
   }
 
@@ -71,9 +71,9 @@ public class StringHTest extends TestingContext {
   }
 
   @Test
-  public void str_read_back_by_hash_has_same_jvalue() {
+  public void str_read_back_by_hash_has_same_to_j() {
     StringH str = stringH(string);
-    assertThat(((StringH) objectHDbOther().get(str.hash())).jValue())
+    assertThat(((StringH) objectHDbOther().get(str.hash())).toJ())
         .isEqualTo(string);
   }
 

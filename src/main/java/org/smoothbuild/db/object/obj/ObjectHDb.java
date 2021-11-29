@@ -347,7 +347,7 @@ public class ObjectHDb {
 
   private SelectTypeH selectType(ObjectH expr, IntH index) {
     if (expr.type() instanceof TupleTypeH tuple) {
-      int intIndex = index.jValue().intValue();
+      int intIndex = index.toJ().intValue();
       ImmutableList<TypeH> items = tuple.items();
       checkElementIndex(intIndex, items.size());
       var itemType = items.get(intIndex);

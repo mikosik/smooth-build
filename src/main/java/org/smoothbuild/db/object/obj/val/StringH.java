@@ -14,12 +14,12 @@ public class StringH extends ValueH {
     super(merkleRoot, objectHDb);
   }
 
-  public String jValue() {
+  public String toJ() {
     return readData(() -> hashedDb().readString(dataHash()));
   }
 
   @Override
   public String valToString() {
-    return escapedAndLimitedWithEllipsis(jValue(), 30);
+    return escapedAndLimitedWithEllipsis(toJ(), 30);
   }
 }

@@ -28,7 +28,7 @@ public class JarFunc {
     BlobHBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
       for (TupleH file : files.elems(TupleH.class)) {
-        String path = filePath(file).jValue();
+        String path = filePath(file).toJ();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot jar two files with the same path = " + path);
           return null;
@@ -52,7 +52,7 @@ public class JarFunc {
   }
 
   private static void jarFile(TupleH file, JarOutputStream jarOutputStream) throws IOException {
-    jarOutputStream.putNextEntry(new JarEntry(filePath(file).jValue()));
+    jarOutputStream.putNextEntry(new JarEntry(filePath(file).toJ()));
     try (BufferedSource source = fileContent(file).source()) {
       BufferedSink sink = buffer(sink(jarOutputStream));
       source.readAll(sink);

@@ -23,7 +23,7 @@ public class InvokeAlgorithm extends Algorithm {
 
   public InvokeAlgorithm(TypeH outputType, String extendedName, NatFuncH natFuncH,
       MethodLoader methodLoader) {
-    super(outputType, natFuncH.isPure().jValue());
+    super(outputType, natFuncH.isPure().toJ());
     this.extendedName = extendedName;
     this.methodLoader = methodLoader;
     this.natFuncH = natFuncH;

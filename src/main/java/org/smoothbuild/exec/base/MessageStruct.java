@@ -36,11 +36,11 @@ public class MessageStruct {
   }
 
   public static String severity(ObjectH message) {
-    return messageSeverity((TupleH) message).jValue();
+    return messageSeverity((TupleH) message).toJ();
   }
 
   public static String text(ObjectH message) {
-    return messageText((TupleH) message).jValue();
+    return messageText((TupleH) message).toJ();
   }
 
   public static StringH messageText(TupleH message) {

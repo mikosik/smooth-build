@@ -18,7 +18,7 @@ public class FilterFunc {
   public static ArrayH func(NativeApi nativeApi, ArrayH files, StringH pattern) {
     Predicate<Path> filter;
     try {
-      filter = pathMatcher(pattern.jValue());
+      filter = pathMatcher(pattern.toJ());
     } catch (IllegalPathPatternException e) {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;
@@ -26,7 +26,7 @@ public class FilterFunc {
     ArrayHBuilder builder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileT());
 
     for (TupleH file : files.elems(TupleH.class)) {
-      if (filter.test(path(filePath(file).jValue()))) {
+      if (filter.test(path(filePath(file).toJ()))) {
         builder.add(file);
       }
     }

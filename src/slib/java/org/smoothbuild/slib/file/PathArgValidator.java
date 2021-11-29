@@ -9,7 +9,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class PathArgValidator {
   public static Path validatedProjectPath(NativeApi nativeApi, String name, StringH path) {
-    String value = path.jValue();
+    String value = path.toJ();
     switch (value) {
       case ".":
         return Path.root();

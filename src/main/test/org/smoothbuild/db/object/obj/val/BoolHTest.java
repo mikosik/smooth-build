@@ -14,16 +14,16 @@ public class BoolHTest extends TestingContext {
   }
 
   @Test
-  public void jvalue_returns_java_true_from_true_bool() {
+  public void to_j_returns_java_true_from_true_bool() {
     BoolH bool = boolH(true);
-    assertThat(bool.jValue())
+    assertThat(bool.toJ())
         .isTrue();
   }
 
   @Test
   public void javlue_returns_java_false_from_false_bool() {
     BoolH bool = boolH(false);
-    assertThat(bool.jValue())
+    assertThat(bool.toJ())
         .isFalse();
   }
 
@@ -84,9 +84,9 @@ public class BoolHTest extends TestingContext {
   }
 
   @Test
-  public void bool_read_back_by_hash_has_same_jvalue() {
+  public void bool_read_back_by_hash_has_same_to_j() {
     BoolH bool = boolH(true);
-    assertThat(((BoolH) objectHDbOther().get(bool.hash())).jValue())
+    assertThat(((BoolH) objectHDbOther().get(bool.hash())).toJ())
         .isTrue();
   }
 

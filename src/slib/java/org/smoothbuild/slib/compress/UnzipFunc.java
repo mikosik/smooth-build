@@ -48,7 +48,7 @@ public class UnzipFunc {
         if (!name.endsWith("/") && filter.test(name)) {
           TupleH unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
           if (unzippedEntry != null) {
-            String fileName = filePath(unzippedEntry).jValue();
+            String fileName = filePath(unzippedEntry).toJ();
             if (duplicatesDetector.addValue(fileName)) {
               nativeApi.log().warning(
                   "Archive contains two files with the same path = " + fileName);

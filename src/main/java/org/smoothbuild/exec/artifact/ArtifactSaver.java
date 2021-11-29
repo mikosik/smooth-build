@@ -119,6 +119,6 @@ public class ArtifactSaver {
   }
 
   private static Path fileObjectPath(TupleH file) {
-    return path(filePath(file).jValue());
+    return path(filePath(file).toJ());
   }
 }

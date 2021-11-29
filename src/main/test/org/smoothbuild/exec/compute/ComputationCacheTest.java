@@ -137,7 +137,7 @@ public class ComputationCacheTest extends TestingContext {
     var boolV = boolH(true);
     computationCache().write(hash, new Output(boolV, messageArrayEmtpy()));
 
-    assertThat(((BoolH) computationCache().read(hash, boolHT()).value()).jValue())
+    assertThat(((BoolH) computationCache().read(hash, boolHT()).value()).toJ())
         .isTrue();
   }
 
@@ -146,7 +146,7 @@ public class ComputationCacheTest extends TestingContext {
     var intV = intH(123);
     computationCache().write(hash, new Output(intV, messageArrayEmtpy()));
 
-    assertThat(((IntH) computationCache().read(hash, intHT()).value()).jValue())
+    assertThat(((IntH) computationCache().read(hash, intHT()).value()).toJ())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -155,7 +155,7 @@ public class ComputationCacheTest extends TestingContext {
     var string = "some string";
     var strV = stringH(string);
     computationCache().write(hash, new Output(strV, messageArrayEmtpy()));
-    assertThat(((StringH) computationCache().read(hash, stringHT()).value()).jValue())
+    assertThat(((StringH) computationCache().read(hash, stringHT()).value()).toJ())
         .isEqualTo(string);
   }
 }

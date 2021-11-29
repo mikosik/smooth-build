@@ -36,7 +36,7 @@ public class JunitFunc {
     try {
       ArrayH unzipped = unzipTestFiles(nativeApi, tests);
       Map<String, TupleH> testFiles = stream(unzipped.elems(TupleH.class).spliterator(), false)
-          .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
+          .collect(toMap(f -> toBinaryName(filePath(f).toJ()), identity()));
       Map<String, TupleH> allFiles = buildNameFileMap(nativeApi, deps, testFiles);
 
       FileClassLoader classLoader = new FileClassLoader(allFiles);
@@ -47,7 +47,7 @@ public class JunitFunc {
         Predicate<Path> filter = createFilter(include);
         int testCount = 0;
         for (String binaryName : testFiles.keySet()) {
-          Path filePath = path(filePath(testFiles.get(binaryName)).jValue());
+          Path filePath = path(filePath(testFiles.get(binaryName)).toJ());
           if (filter.test(filePath)) {
             testCount++;
             Class<?> testClass = loadClass(classLoader, binaryName);
@@ -123,7 +123,7 @@ public class JunitFunc {
 
   private static Predicate<Path> createFilter(StringH includeParam) throws JunitException {
     try {
-      return pathMatcher(includeParam.jValue());
+      return pathMatcher(includeParam.toJ());
     } catch (IllegalPathPatternException e) {
       throw new JunitException("Parameter 'include' has illegal value. " + e.getMessage());
     }

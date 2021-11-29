@@ -32,6 +32,6 @@ public class SelectAlgorithm extends Algorithm {
     ImmutableList<ValueH> objects = input.vals();
     checkArgument(objects.size() == 1);
     TupleH tuple = (TupleH) objects.get(0);
-    return new Output(tuple.get(index.jValue().intValue()), nativeApi.messages());
+    return new Output(tuple.get(index.toJ().intValue()), nativeApi.messages());
   }
 }

@@ -38,7 +38,7 @@ public class SelectH extends ExprH {
     ObjectH tuple = readTuple();
     if (tuple.type() instanceof TupleTypeH tupleEvaluationType) {
       IntH index = readIndex();
-      int i = index.jValue().intValue();
+      int i = index.toJ().intValue();
       int size = tupleEvaluationType.items().size();
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsException(hash(), spec(), i, size);

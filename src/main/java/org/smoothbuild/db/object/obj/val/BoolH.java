@@ -12,12 +12,12 @@ public class BoolH extends ValueH {
     super(merkleRoot, objectHDb);
   }
 
-  public boolean jValue() {
+  public boolean toJ() {
     return readData(() -> hashedDb().readBoolean(dataHash()));
   }
 
   @Override
   public String valToString() {
-    return Boolean.toString(jValue());
+    return Boolean.toString(toJ());
   }
 }

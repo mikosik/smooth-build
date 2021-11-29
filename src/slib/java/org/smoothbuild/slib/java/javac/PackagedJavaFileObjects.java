@@ -25,7 +25,7 @@ public class PackagedJavaFileObjects {
       for (TupleH file : files.elems(TupleH.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
-          nativeApi.log().error("File " + filePath(file).jValue()
+          nativeApi.log().error("File " + filePath(file).toJ()
               + " is contained by two different library jar files.");
           return null;
         } else {

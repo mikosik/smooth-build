@@ -14,12 +14,12 @@ public class IntH extends ValueH {
     super(merkleRoot, objectHDb);
   }
 
-  public BigInteger jValue() {
+  public BigInteger toJ() {
     return readData(() -> hashedDb().readBigInteger(dataHash()));
   }
 
   @Override
   public String valToString() {
-    return jValue().toString();
+    return toJ().toString();
   }
 }

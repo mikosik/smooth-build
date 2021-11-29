@@ -15,8 +15,8 @@ public class IntHTest extends TestingContext {
   }
 
   @Test
-  public void jvalue_returns_java_big_integer() {
-    assertThat(intH(123).jValue())
+  public void to_j_returns_java_big_integer() {
+    assertThat(intH(123).toJ())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -64,9 +64,9 @@ public class IntHTest extends TestingContext {
   }
 
   @Test
-  public void int_read_back_by_hash_has_same_jvalue() {
+  public void int_read_back_by_hash_has_same_to_J() {
     IntH i = intH(123);
-    assertThat(((IntH) objectHDbOther().get(i.hash())).jValue())
+    assertThat(((IntH) objectHDbOther().get(i.hash())).toJ())
         .isEqualTo(BigInteger.valueOf(123));
   }
 

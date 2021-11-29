@@ -5,7 +5,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class ReportWarning {
   public static StringH func(NativeApi nativeApi, StringH message) {
-    nativeApi.log().warning(message.jValue());
+    nativeApi.log().warning(message.toJ());
     return message;
   }
 }

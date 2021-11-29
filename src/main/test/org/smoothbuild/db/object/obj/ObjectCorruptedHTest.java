@@ -83,7 +83,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(stringHT()),
               hash("aaa"));
-      assertThat(((StringH) objectHDb().get(objHash)).jValue())
+      assertThat(((StringH) objectHDb().get(objHash)).toJ())
           .isEqualTo("aaa");
     }
 
@@ -156,7 +156,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       List<String> strings = ((ArrayH) objectHDb().get(objHash))
           .elems(StringH.class)
           .stream()
-          .map(StringH::jValue)
+          .map(StringH::toJ)
           .collect(toList());
       assertThat(strings)
           .containsExactly("aaa", "bbb")
@@ -309,7 +309,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(boolHT()),
               hash(value));
-      assertThat(((BoolH) objectHDb().get(objHash)).jValue())
+      assertThat(((BoolH) objectHDb().get(objHash)).toJ())
           .isEqualTo(value);
     }
 
@@ -323,7 +323,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       obj_root_with_two_data_hashes(
           boolHT(),
           hashedDb().writeBoolean(true),
-          (Hash objHash) -> ((BoolH) objectHDb().get(objHash)).jValue()
+          (Hash objHash) -> ((BoolH) objectHDb().get(objHash)).toJ()
       );
     }
 
@@ -331,7 +331,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           boolHT(),
-          (Hash objHash) -> ((BoolH) objectHDb().get(objHash)).jValue());
+          (Hash objHash) -> ((BoolH) objectHDb().get(objHash)).toJ());
     }
 
     @Test
@@ -341,7 +341,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(boolHT()),
               dataHash);
-      assertCall(() -> ((BoolH) objectHDb().get(objHash)).jValue())
+      assertCall(() -> ((BoolH) objectHDb().get(objHash)).toJ())
           .throwsException(new DecodeObjNodeException(objHash, boolHT(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash, new DecodeByteException(dataHash)));
     }
@@ -353,7 +353,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(boolHT()),
               dataHash);
-      assertCall(() -> ((BoolH) objectHDb().get(objHash)).jValue())
+      assertCall(() -> ((BoolH) objectHDb().get(objHash)).toJ())
           .throwsException(new DecodeObjNodeException(objHash, boolHT(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash, new DecodeByteException(dataHash)));
     }
@@ -367,7 +367,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(boolHT()),
               dataHash);
-      assertCall(() -> ((BoolH) objectHDb().get(objHash)).jValue())
+      assertCall(() -> ((BoolH) objectHDb().get(objHash)).toJ())
           .throwsException(new DecodeObjNodeException(objHash, boolHT(), DATA_PATH))
           .withCause(new DecodeBooleanException(dataHash));
     }
@@ -1008,7 +1008,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(intHT()),
               hash(byteString));
-      assertThat(((IntH) objectHDb().get(objHash)).jValue())
+      assertThat(((IntH) objectHDb().get(objHash)).toJ())
           .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
     }
 
@@ -1022,7 +1022,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       obj_root_with_two_data_hashes(
           intHT(),
           hashedDb().writeByte((byte) 1),
-          (Hash objHash) -> ((IntH) objectHDb().get(objHash)).jValue()
+          (Hash objHash) -> ((IntH) objectHDb().get(objHash)).toJ()
       );
     }
 
@@ -1030,7 +1030,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           intHT(),
-          (Hash objHash) -> ((IntH) objectHDb().get(objHash)).jValue());
+          (Hash objHash) -> ((IntH) objectHDb().get(objHash)).toJ());
     }
   }
 
@@ -1215,7 +1215,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(stringHT()),
               hash("aaa"));
-      assertThat(((StringH) objectHDb().get(objHash)).jValue())
+      assertThat(((StringH) objectHDb().get(objHash)).toJ())
           .isEqualTo("aaa");
     }
 
@@ -1229,7 +1229,7 @@ public class ObjectCorruptedHTest extends TestingContext {
       obj_root_with_two_data_hashes(
           stringHT(),
           hashedDb().writeBoolean(true),
-          (Hash objHash) -> ((StringH) objectHDb().get(objHash)).jValue()
+          (Hash objHash) -> ((StringH) objectHDb().get(objHash)).toJ()
       );
     }
 
@@ -1237,7 +1237,7 @@ public class ObjectCorruptedHTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           stringHT(),
-          (Hash objHash) -> ((StringH) objectHDb().get(objHash)).jValue());
+          (Hash objHash) -> ((StringH) objectHDb().get(objHash)).toJ());
     }
 
     @Test
@@ -1247,7 +1247,7 @@ public class ObjectCorruptedHTest extends TestingContext {
           hash(
               hash(stringHT()),
               notStringHash);
-      assertCall(() -> ((StringH) objectHDb().get(objHash)).jValue())
+      assertCall(() -> ((StringH) objectHDb().get(objHash)).toJ())
           .throwsException(new DecodeObjNodeException(objHash, stringHT(), DATA_PATH))
           .withCause(new DecodeStringException(notStringHash, null));
     }

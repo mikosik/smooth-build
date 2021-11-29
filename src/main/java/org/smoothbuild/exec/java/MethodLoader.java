@@ -41,7 +41,7 @@ public class MethodLoader {
   public synchronized Method load(String extendedName, NatFuncH natFuncH)
       throws LoadingMethodException {
     String quotedName = q(extendedName);
-    String classBinaryName = natFuncH.classBinaryName().jValue();
+    String classBinaryName = natFuncH.classBinaryName().toJ();
     Method method = loadMethod(quotedName, natFuncH, classBinaryName);
     assertMethodMatchesFuncRequirements(quotedName, natFuncH, method, classBinaryName);
     return method;

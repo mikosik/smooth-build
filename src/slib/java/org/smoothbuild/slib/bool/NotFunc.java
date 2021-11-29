@@ -5,6 +5,6 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class NotFunc {
   public static BoolH func(NativeApi nativeApi, BoolH value) {
-    return nativeApi.factory().bool(!value.jValue());
+    return nativeApi.factory().bool(!value.toJ());
   }
 }

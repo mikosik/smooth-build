@@ -102,7 +102,7 @@ public class JavacFunc {
 
     private Iterable<String> options() {
       return StreamSupport.stream(options.elems(StringH.class).spliterator(), false)
-          .map(StringH::jValue)
+          .map(StringH::toJ)
           .collect(Collectors.toList());
     }
 
