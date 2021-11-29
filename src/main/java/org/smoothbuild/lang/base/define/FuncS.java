@@ -15,9 +15,9 @@ public sealed abstract class FuncS extends TopEvalS
   public static final String PARENTHESES = "()";
   private final NList<Item> params;
 
-  public FuncS(FuncTypeS type, ModulePath modulePath, String name, NList<Item> params,
+  public FuncS(FuncTypeS type, ModPath modPath, String name, NList<Item> params,
       Loc loc) {
-    super(type, modulePath, name, loc);
+    super(type, modPath, name, loc);
     this.params = requireNonNull(params);
   }
 

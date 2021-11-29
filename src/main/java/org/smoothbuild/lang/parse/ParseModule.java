@@ -22,7 +22,7 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothLexer;
 import org.smoothbuild.antlr.lang.SmoothParser;
-import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
@@ -30,7 +30,7 @@ import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Loc;
 
 public class ParseModule {
-  public static Maybe<ModuleContext> parseModule(FilePath filePath, String sourceCode) {
+  public static Maybe<ModContext> parseModule(FilePath filePath, String sourceCode) {
     var logBuffer = new LogBuffer();
     ErrorListener errorListener = new ErrorListener(filePath, logBuffer);
     SmoothLexer lexer = new SmoothLexer(CharStreams.fromString(sourceCode));
@@ -40,7 +40,7 @@ public class ParseModule {
     SmoothParser parser = new SmoothParser(new CommonTokenStream(lexer));
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
-    return maybeValueAndLogs(parser.module(), logBuffer);
+    return maybeValueAndLogs(parser.mod(), logBuffer);
   }
 
   public static class ErrorListener implements ANTLRErrorListener {

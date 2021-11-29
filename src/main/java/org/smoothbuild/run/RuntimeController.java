@@ -18,15 +18,15 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.install.ModuleFilesDetector;
+import org.smoothbuild.install.ModFilesDetector;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.InternalModuleLoader;
-import org.smoothbuild.lang.base.define.ModuleFiles;
-import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.ModuleS;
-import org.smoothbuild.lang.parse.ModuleLoader;
+import org.smoothbuild.lang.base.define.InternalModLoader;
+import org.smoothbuild.lang.base.define.ModFiles;
+import org.smoothbuild.lang.base.define.ModPath;
+import org.smoothbuild.lang.base.define.ModS;
+import org.smoothbuild.lang.parse.ModLoader;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -40,31 +40,31 @@ public class RuntimeController {
 
 
   private final FileResolver fileResolver;
-  private final ModuleFilesDetector moduleFilesDetector;
-  private final ModuleLoader moduleLoader;
-  private final InternalModuleLoader internalModuleLoader;
+  private final ModFilesDetector modFilesDetector;
+  private final ModLoader modLoader;
+  private final InternalModLoader internalModLoader;
   private final Reporter reporter;
 
   @Inject
-  public RuntimeController(FileResolver fileResolver, ModuleFilesDetector moduleFilesDetector,
-      ModuleLoader moduleLoader, InternalModuleLoader internalModuleLoader, Reporter reporter) {
+  public RuntimeController(FileResolver fileResolver, ModFilesDetector modFilesDetector,
+      ModLoader modLoader, InternalModLoader internalModLoader, Reporter reporter) {
     this.fileResolver = fileResolver;
-    this.moduleFilesDetector = moduleFilesDetector;
-    this.moduleLoader = moduleLoader;
-    this.internalModuleLoader = internalModuleLoader;
+    this.modFilesDetector = modFilesDetector;
+    this.modLoader = modLoader;
+    this.internalModLoader = internalModLoader;
     this.reporter = reporter;
   }
 
   public int setUpRuntimeAndRun(Consumer<DefinitionsS> runner) {
     reporter.startNewPhase("Parsing");
 
-    ModuleS internalModule = internalModuleLoader.loadModule();
+    ModS internalModule = internalModLoader.load();
     DefinitionsS allDefinitions = DefinitionsS.empty().withModule(internalModule);
-    ImmutableMap<ModulePath, ModuleFiles> files = moduleFilesDetector.detect(MODULES);
-    for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
-      ModuleFiles moduleFiles = entry.getValue();
-      Maybe<ModuleS> module = load(allDefinitions, entry.getKey(), moduleFiles);
-      reporter.report(moduleFiles.smoothFile().toString(), module.logs().toList());
+    ImmutableMap<ModPath, ModFiles> files = modFilesDetector.detect(MODULES);
+    for (Entry<ModPath, ModFiles> entry : files.entrySet()) {
+      ModFiles modFiles = entry.getValue();
+      Maybe<ModS> module = load(allDefinitions, entry.getKey(), modFiles);
+      reporter.report(modFiles.smoothFile().toString(), module.logs().toList());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
         return EXIT_CODE_ERROR;
@@ -77,12 +77,12 @@ public class RuntimeController {
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private Maybe<ModuleS> load(DefinitionsS imported, ModulePath path, ModuleFiles moduleFiles) {
-    var sourceCode = readFileContent(moduleFiles.smoothFile());
+  private Maybe<ModS> load(DefinitionsS imported, ModPath path, ModFiles modFiles) {
+    var sourceCode = readFileContent(modFiles.smoothFile());
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());
     } else {
-      return moduleLoader.loadModule(path, moduleFiles, sourceCode.value(), imported);
+      return modLoader.loadModule(path, modFiles, sourceCode.value(), imported);
     }
   }
 

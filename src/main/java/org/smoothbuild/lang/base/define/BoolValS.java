@@ -10,8 +10,8 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 public final class BoolValS extends ValS {
   private final boolean valJ;
 
-  public BoolValS(boolean valJ, ModulePath modulePath, TypeFactoryS factory) {
-    super(factory.bool(), modulePath, Boolean.toString(valJ), internal());
+  public BoolValS(boolean valJ, ModPath modPath, TypeFactoryS factory) {
+    super(factory.bool(), modPath, Boolean.toString(valJ), internal());
     this.valJ = valJ;
   }
 

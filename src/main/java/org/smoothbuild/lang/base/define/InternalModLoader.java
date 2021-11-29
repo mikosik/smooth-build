@@ -9,25 +9,25 @@ import javax.inject.Inject;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.util.collect.NList;
 
-public class InternalModuleLoader {
+public class InternalModLoader {
   private final TypeFactoryS factory;
 
   @Inject
-  public InternalModuleLoader(TypeFactoryS factory) {
+  public InternalModLoader(TypeFactoryS factory) {
     this.factory = factory;
   }
 
-  public ModuleS loadModule() {
-    ModulePath path = new ModulePath("internal-module");
+  public ModS load() {
+    ModPath path = new ModPath("internal-module");
     var types = nList(map(factory.baseTypes(), t -> (DefinedType) new DefinedBaseType(path, t)));
-    return new ModuleS(path, null, list(), types, evaluables(path));
+    return new ModS(path, null, list(), types, evaluables(path));
   }
 
-  private NList<TopEvalS> evaluables(ModulePath modulePath) {
-    var ifFunc = new IfFuncS(modulePath, factory);
-    var mapFunc = new MapFuncS(modulePath, factory);
-    var trueValue = new BoolValS(true, modulePath, factory);
-    var falseValue = new BoolValS(false, modulePath, factory);
+  private NList<TopEvalS> evaluables(ModPath modPath) {
+    var ifFunc = new IfFuncS(modPath, factory);
+    var mapFunc = new MapFuncS(modPath, factory);
+    var trueValue = new BoolValS(true, modPath, factory);
+    var falseValue = new BoolValS(false, modPath, factory);
     return nList(ifFunc, mapFunc, trueValue, falseValue);
   }
 }

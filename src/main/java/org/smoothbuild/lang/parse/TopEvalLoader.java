@@ -13,7 +13,7 @@ import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.ModulePath;
+import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.define.ValS;
@@ -57,7 +57,7 @@ public class TopEvalLoader {
     this.factory = factory;
   }
 
-  public TopEvalS loadEvaluables(ModulePath path, EvalN evalN) {
+  public TopEvalS loadEvaluables(ModPath path, EvalN evalN) {
     if (evalN instanceof RealFuncN realFuncN) {
       return loadFunc(path, realFuncN);
     } else {
@@ -65,7 +65,7 @@ public class TopEvalLoader {
     }
   }
 
-  private ValS loadVal(ModulePath path, EvalN valN) {
+  private ValS loadVal(ModPath path, EvalN valN) {
     var type = valN.type().get();
     var name = valN.name();
     var loc = valN.loc();
@@ -74,7 +74,7 @@ public class TopEvalLoader {
         type, path, name, loader.createExpression(valN.body().get()), loc);
   }
 
-  private FuncS loadFunc(ModulePath path, RealFuncN realFuncN) {
+  private FuncS loadFunc(ModPath path, RealFuncN realFuncN) {
     var params = loadParams(path, realFuncN);
     var resultType = realFuncN.resultType().get();
     var name = realFuncN.name();
@@ -96,17 +96,17 @@ public class TopEvalLoader {
     return new AnnS(path, annN.isPure(), annN.loc());
   }
 
-  private NList<Item> loadParams(ModulePath path, RealFuncN realFuncN) {
+  private NList<Item> loadParams(ModPath path, RealFuncN realFuncN) {
     ExpressionLoader paramLoader = new ExpressionLoader(path, nList());
     return realFuncN.params().map(paramLoader::createParam);
   }
 
   private class ExpressionLoader {
-    private final ModulePath modulePath;
+    private final ModPath modPath;
     private final NList<Item> funcParams;
 
-    public ExpressionLoader(ModulePath modulePath, NList<Item> funcParams) {
-      this.modulePath = modulePath;
+    public ExpressionLoader(ModPath modPath, NList<Item> funcParams) {
+      this.modPath = modPath;
       this.funcParams = funcParams;
     }
 
@@ -114,7 +114,7 @@ public class TopEvalLoader {
       var type = param.typeNode().get().type().get();
       var name = param.name();
       var defaultArg = param.body().map(this::createExpression);
-      return new Item(type, modulePath, name, defaultArg, param.loc());
+      return new Item(type, modPath, name, defaultArg, param.loc());
     }
 
     private ExprS createExpression(ExprN expr) {

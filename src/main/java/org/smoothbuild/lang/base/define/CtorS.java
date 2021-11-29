@@ -12,9 +12,8 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class CtorS extends FuncS {
-  public CtorS(FuncTypeS type, ModulePath modulePath, String name, NList<Item> params,
-      Loc loc) {
-    super(type, modulePath, name, params, loc);
+  public CtorS(FuncTypeS type, ModPath modPath, String name, NList<Item> params, Loc loc) {
+    super(type, modPath, name, params, loc);
     checkArgument(type.result() instanceof StructTypeS);
   }
 
@@ -30,7 +29,7 @@ public final class CtorS extends FuncS {
     }
     return object instanceof CtorS that
         && this.resultType().equals(that.resultType())
-        && this.modulePath().equals(that.modulePath())
+        && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.loc().equals(that.loc());
@@ -38,6 +37,6 @@ public final class CtorS extends FuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), params(), loc());
+    return Objects.hash(resultType(), modPath(), name(), params(), loc());
   }
 }

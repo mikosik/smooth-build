@@ -12,9 +12,9 @@ import org.smoothbuild.util.collect.NList;
 public final class DefFuncS extends FuncS {
   private final ExprS body;
 
-  public DefFuncS(FuncTypeS type, ModulePath modulePath, String name,
+  public DefFuncS(FuncTypeS type, ModPath modPath, String name,
       NList<Item> params, ExprS body, Loc loc) {
-    super(type, modulePath, name, params, loc);
+    super(type, modPath, name, params, loc);
     this.body = body;
   }
 
@@ -29,7 +29,7 @@ public final class DefFuncS extends FuncS {
     }
     return object instanceof DefFuncS that
         && this.resultType().equals(that.resultType())
-        && this.modulePath().equals(that.modulePath())
+        && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.body.equals(that.body)
@@ -38,7 +38,7 @@ public final class DefFuncS extends FuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), params(), body, loc());
+    return Objects.hash(resultType(), modPath(), name(), params(), body, loc());
   }
 
   @Override

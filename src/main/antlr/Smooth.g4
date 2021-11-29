@@ -1,6 +1,6 @@
 grammar Smooth;
 
-module       : ( struct | eval )* EOF ;
+mod          : ( struct | eval )* EOF ;
 struct       : TNAME '{' fieldList? '}' ;
 fieldList    : field ( ',' field )* ','? ;
 field        : type NAME ;

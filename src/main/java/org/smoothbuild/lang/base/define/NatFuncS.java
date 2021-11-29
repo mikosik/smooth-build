@@ -12,9 +12,9 @@ import org.smoothbuild.util.collect.NList;
 public final class NatFuncS extends FuncS {
   private final AnnS annS;
 
-  public NatFuncS(FuncTypeS type, ModulePath modulePath, String name,
+  public NatFuncS(FuncTypeS type, ModPath modPath, String name,
       NList<Item> params, AnnS annS, Loc loc) {
-    super(type, modulePath, name, params, loc);
+    super(type, modPath, name, params, loc);
     this.annS = annS;
   }
 
@@ -29,7 +29,7 @@ public final class NatFuncS extends FuncS {
     }
     return object instanceof NatFuncS that
         && this.resultType().equals(that.resultType())
-        && this.modulePath().equals(that.modulePath())
+        && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
         && this.annS.equals(that.annS)
@@ -38,7 +38,7 @@ public final class NatFuncS extends FuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resultType(), modulePath(), name(), params(), annS, loc());
+    return Objects.hash(resultType(), modPath(), name(), params(), annS, loc());
   }
 
   @Override

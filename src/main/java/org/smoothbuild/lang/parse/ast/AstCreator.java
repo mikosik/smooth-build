@@ -29,7 +29,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.SelectContext;
@@ -43,7 +43,7 @@ import org.smoothbuild.lang.base.define.Loc;
 import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
-  public static Ast fromParseTree(FilePath filePath, ModuleContext module) {
+  public static Ast fromParseTree(FilePath filePath, ModContext module) {
     List<StructN> structs = new ArrayList<>();
     List<EvalN> referencables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {

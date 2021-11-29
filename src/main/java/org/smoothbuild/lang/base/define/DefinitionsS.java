@@ -8,7 +8,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableMap;
 
 public record DefinitionsS(
-    ImmutableMap<ModulePath, ModuleS> modules,
+    ImmutableMap<ModPath, ModS> modules,
     NList<DefinedType> types,
     NList<TopEvalS> referencables) {
 
@@ -16,7 +16,7 @@ public record DefinitionsS(
     return new DefinitionsS(ImmutableMap.of(), nList(), nList());
   }
 
-  public DefinitionsS withModule(ModuleS module) {
+  public DefinitionsS withModule(ModS module) {
     return new DefinitionsS(
         concat(modules, module),
         nList(Lists.concat(types, module.types())),
@@ -24,9 +24,9 @@ public record DefinitionsS(
     );
   }
 
-  private static ImmutableMap<ModulePath, ModuleS> concat(
-      ImmutableMap<ModulePath, ModuleS> modules, ModuleS module) {
-    var builder = ImmutableMap.<ModulePath, ModuleS>builder();
+  private static ImmutableMap<ModPath, ModS> concat(
+      ImmutableMap<ModPath, ModS> modules, ModS module) {
+    var builder = ImmutableMap.<ModPath, ModS>builder();
     builder.putAll(modules);
     builder.put(module.path(), module);
     return builder.build();

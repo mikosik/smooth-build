@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
-import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
+import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -16,33 +16,33 @@ public class ItemTest {
 
   @Test
   public void null_type_is_forbidden() {
-    assertCall(() -> new Item(null, modulePath(), name, Optional.empty(), loc()))
+    assertCall(() -> new Item(null, modPath(), name, Optional.empty(), loc()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    assertCall(() -> new Item(STRING, modulePath(), null, Optional.empty(), loc()))
+    assertCall(() -> new Item(STRING, modPath(), null, Optional.empty(), loc()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void type_getter() {
-    param = new Item(STRING, modulePath(), name, Optional.empty(), loc());
+    param = new Item(STRING, modPath(), name, Optional.empty(), loc());
     assertThat(param.type())
         .isEqualTo(STRING);
   }
 
   @Test
   public void name_getter() {
-    param = new Item(STRING, modulePath(), name, Optional.empty(), loc());
+    param = new Item(STRING, modPath(), name, Optional.empty(), loc());
     assertThat(param.name())
         .isEqualTo(name);
   }
 
   @Test
   public void to_string() {
-    param = new Item(STRING, modulePath(), name, Optional.empty(), loc());
+    param = new Item(STRING, modPath(), name, Optional.empty(), loc());
     assertThat(param.toString())
         .isEqualTo("Item(`String name`)");
   }

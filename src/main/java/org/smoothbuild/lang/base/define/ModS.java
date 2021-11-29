@@ -4,10 +4,10 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public record ModuleS(
-    ModulePath path,
-    ModuleFiles files,
-    ImmutableList<ModuleS> referencedModules,
+public record ModS(
+    ModPath path,
+    ModFiles files,
+    ImmutableList<ModS> referencedMods,
     NList<DefinedType> types,
     NList<TopEvalS> referencables) {
 }

@@ -137,8 +137,7 @@ public class JobCreator {
     var funcJ = jobFor(scope, vars, callData.func(), eager);
     var argsJ = map(callData.args().items(), a -> lazyJobFor(scope, vars, a));
     var loc = nals.get(call).loc();
-    var actualArgTypes =
-        map(argsJ, a -> typing.mapVariables(a.type(), vars, factory.lower()));
+    var actualArgTypes = map(argsJ, a -> typing.mapVariables(a.type(), vars, factory.lower()));
     var newVariables = inferVariablesInFuncCall(funcJ, actualArgTypes);
     return callJob(scope, funcJ, argsJ, loc, newVariables, eager);
   }

@@ -7,23 +7,23 @@ import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
-import org.smoothbuild.lang.base.define.ModuleFiles;
-import org.smoothbuild.lang.base.define.ModulePath;
+import org.smoothbuild.lang.base.define.ModFiles;
+import org.smoothbuild.lang.base.define.ModPath;
 
 import com.google.common.collect.ImmutableMap;
 
-public class ModuleFilesDetector {
+public class ModFilesDetector {
   private final FileResolver fileResolver;
 
   @Inject
-  public ModuleFilesDetector(FileResolver fileResolver) {
+  public ModFilesDetector(FileResolver fileResolver) {
     this.fileResolver = fileResolver;
   }
 
-  public ImmutableMap<ModulePath, ModuleFiles> detect(List<FilePath> smoothFiles) {
-    var builder = ImmutableMap.<ModulePath, ModuleFiles>builder();
+  public ImmutableMap<ModPath, ModFiles> detect(List<FilePath> smoothFiles) {
+    var builder = ImmutableMap.<ModPath, ModFiles>builder();
     for (FilePath file : smoothFiles) {
-      builder.put(ModulePath.of(file), new ModuleFiles(file, nativeFileFor(file)));
+      builder.put(ModPath.of(file), new ModFiles(file, nativeFileFor(file)));
     }
     return builder.build();
   }

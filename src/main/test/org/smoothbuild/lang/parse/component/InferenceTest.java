@@ -21,9 +21,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myValue = "abc";
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myValue", STRING);
+          .containsEvalWithType("myValue", STRING);
     }
 
     @Test
@@ -31,9 +31,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myValue = 0x07;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myValue", BLOB);
+          .containsEvalWithType("myValue", BLOB);
     }
 
     @Test
@@ -41,9 +41,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myValue = 123;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myValue", INT);
+          .containsEvalWithType("myValue", INT);
     }
 
     @Test
@@ -51,9 +51,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myValue = [ "abc" ];
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myValue", a(STRING));
+          .containsEvalWithType("myValue", a(STRING));
     }
 
     @Test
@@ -62,9 +62,9 @@ public class InferenceTest extends TestingContext {
           String stringValue = "abc";
           myValue = stringValue;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myValue", STRING);
+          .containsEvalWithType("myValue", STRING);
     }
 
     @Test
@@ -73,9 +73,9 @@ public class InferenceTest extends TestingContext {
           String myFunc(Blob param) = "abc";
           myValue = myFunc;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myValue", f(STRING, BLOB));
+          .containsEvalWithType("myValue", f(STRING, BLOB));
     }
 
     @Test
@@ -84,9 +84,9 @@ public class InferenceTest extends TestingContext {
           String myFunc() = "abc";
           myValue = myFunc();
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myValue", STRING);
+          .containsEvalWithType("myValue", STRING);
     }
   }
 
@@ -97,9 +97,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc() = "abc";
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(STRING));
+          .containsEvalWithType("myFunc", f(STRING));
     }
 
     @Test
@@ -107,9 +107,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc() = 0x07;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(BLOB));
+          .containsEvalWithType("myFunc", f(BLOB));
     }
 
     @Test
@@ -117,9 +117,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc() = 123;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(INT));
+          .containsEvalWithType("myFunc", f(INT));
     }
 
     @Test
@@ -127,9 +127,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc() = [ "abc" ];
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(a(STRING)));
+          .containsEvalWithType("myFunc", f(a(STRING)));
     }
 
     @Test
@@ -138,9 +138,9 @@ public class InferenceTest extends TestingContext {
           String stringValue = "abc";
           myFunc() = stringValue;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(STRING));
+          .containsEvalWithType("myFunc", f(STRING));
     }
 
     @Test
@@ -149,9 +149,9 @@ public class InferenceTest extends TestingContext {
           String otherFunc(Blob param) = "abc";
           myFunc() = otherFunc;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(f(STRING, BLOB)));
+          .containsEvalWithType("myFunc", f(f(STRING, BLOB)));
     }
 
     @Test
@@ -160,9 +160,9 @@ public class InferenceTest extends TestingContext {
           String otherFunc() = "abc";
           myFunc() = otherFunc();
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(STRING));
+          .containsEvalWithType("myFunc", f(STRING));
     }
 
     @Test
@@ -170,9 +170,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc(String param) = param;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(STRING, STRING));
+          .containsEvalWithType("myFunc", f(STRING, STRING));
     }
 
     @Test
@@ -180,9 +180,9 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc(A param) = param;
           """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("myFunc", f(A, A));
+          .containsEvalWithType("myFunc", f(A, A));
     }
   }
 
@@ -193,9 +193,9 @@ public class InferenceTest extends TestingContext {
       String code = """
             result = [ "abc", "def" ];
             """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("result", a(STRING));
+          .containsEvalWithType("result", a(STRING));
     }
 
     @Test
@@ -205,9 +205,9 @@ public class InferenceTest extends TestingContext {
             Nothing myNothing();
             result = [ "abc", myNothing() ];
             """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("result", a(STRING));
+          .containsEvalWithType("result", a(STRING));
     }
 
     @Test
@@ -218,7 +218,7 @@ public class InferenceTest extends TestingContext {
               0x01,
             ];
             """;
-      module(code)
+      mod(code)
           .loadsWithError(3,"""
                   Array elems at indexes 0 and 1 doesn't have common super type.
                   Element at index 0 type = `String`
@@ -235,7 +235,7 @@ public class InferenceTest extends TestingContext {
               secondFunc,
             ];
             """;
-      module(code)
+      mod(code)
           .loadsWithError(5, """
                   Array elems at indexes 0 and 1 doesn't have common super type.
                   Element at index 0 type = `String()`
@@ -251,7 +251,7 @@ public class InferenceTest extends TestingContext {
           String myEqual(A p1, A p2) = "true";
           result = myEqual("def", 0x01);
           """;
-      module(code)
+      mod(code)
           .loadsWithError(2, "Cannot infer actual type for type variable `A`.");
     }
 
@@ -261,7 +261,7 @@ public class InferenceTest extends TestingContext {
           String myEqual(A p1, A p2) = "true";
           result = myEqual(["def"], [0x01]);
           """;
-      module(code)
+      mod(code)
           .loadsWithError(2, "Cannot infer actual type for type variable `A`.");
     }
 
@@ -279,7 +279,7 @@ public class InferenceTest extends TestingContext {
           String myEqual(A p1, A p2) = "true";
           result = myEqual(vector("aaa", "bbb"), tuple("aaa", "bbb"));
           """;
-      module(code)
+      mod(code)
           .loadsWithError(10, "Cannot infer actual type for type variable `A`.");
     }
   }
@@ -296,9 +296,9 @@ public class InferenceTest extends TestingContext {
             A myIdentity(A a) = a;
             myValue = myIdentity(nothingFunc());
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", NOTHING);
+            .containsEvalWithType("myValue", NOTHING);
       }
 
       @Test
@@ -307,9 +307,9 @@ public class InferenceTest extends TestingContext {
             A myIdentity(A a) = a;
             myValue = myIdentity("abc");
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", STRING);
+            .containsEvalWithType("myValue", STRING);
       }
 
       @Test
@@ -318,9 +318,9 @@ public class InferenceTest extends TestingContext {
             A myIdentity(A a) = a;
             myValue = myIdentity(["abc"]);
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", a(STRING));
+            .containsEvalWithType("myValue", a(STRING));
       }
 
       @Test
@@ -330,9 +330,9 @@ public class InferenceTest extends TestingContext {
             String myFunc(Blob param) = "abc";
             myValue = myIdentity(myFunc);
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", f(STRING, BLOB));
+            .containsEvalWithType("myValue", f(STRING, BLOB));
       }
     }
 
@@ -345,9 +345,9 @@ public class InferenceTest extends TestingContext {
             A firstElement([A] array);
             myValue = firstElement([]);
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", NOTHING);
+            .containsEvalWithType("myValue", NOTHING);
       }
 
       @Test
@@ -357,9 +357,9 @@ public class InferenceTest extends TestingContext {
             A firstElement([A] array);
             myValue = firstElement(["abc"]);
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", STRING);
+            .containsEvalWithType("myValue", STRING);
       }
 
       @Test
@@ -369,9 +369,9 @@ public class InferenceTest extends TestingContext {
             A firstElement([A] array);
             myValue = firstElement([["abc"]]);
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", a(STRING));
+            .containsEvalWithType("myValue", a(STRING));
       }
 
       @Test
@@ -383,9 +383,9 @@ public class InferenceTest extends TestingContext {
             String myFunc2(String param) = "abc";
             myValue = firstElement([ myFunc1, myFunc2 ]);
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", f(STRING, NOTHING));
+            .containsEvalWithType("myValue", f(STRING, NOTHING));
       }
     }
 
@@ -399,9 +399,9 @@ public class InferenceTest extends TestingContext {
             [A] singleElement(A a) = [a];
             myValue = singleElement(nothingFunc());
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", a(NOTHING));
+            .containsEvalWithType("myValue", a(NOTHING));
       }
 
       @Test
@@ -410,9 +410,9 @@ public class InferenceTest extends TestingContext {
             [A] singleElement(A a) = [a];
             myValue = singleElement("abc");
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", a(STRING));
+            .containsEvalWithType("myValue", a(STRING));
       }
 
       @Test
@@ -421,9 +421,9 @@ public class InferenceTest extends TestingContext {
             [A] singleElement(A a) = [a];
             myValue = singleElement(["abc"]);
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", a(a(STRING)));
+            .containsEvalWithType("myValue", a(a(STRING)));
       }
 
       @Test
@@ -433,9 +433,9 @@ public class InferenceTest extends TestingContext {
             String myFunc(Blob param) = "abc";
             myValue = singleElement(myFunc);
             """;
-        module(code)
+        mod(code)
             .loadsSuccessfully()
-            .containsEvaluableWithType("myValue", a(f(STRING, BLOB)));
+            .containsEvalWithType("myValue", a(f(STRING, BLOB)));
       }
     }
 
@@ -456,9 +456,9 @@ public class InferenceTest extends TestingContext {
             [C] single(C elem) = [elem];
             result = f("abc", single);
             """;
-      module(code)
+      mod(code)
           .loadsSuccessfully()
-          .containsEvaluableWithType("result", a(STRING));
+          .containsEvalWithType("result", a(STRING));
     }
   }
 }

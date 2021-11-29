@@ -4,68 +4,68 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.io.fs.base.TestingFilePath.BUILD_FILE_PATH;
-import static org.smoothbuild.lang.base.define.TestingModuleFiles.importedModuleFiles;
-import static org.smoothbuild.lang.base.define.TestingModuleFiles.moduleFiles;
+import static org.smoothbuild.lang.base.define.TestingModFiles.importedModFiles;
+import static org.smoothbuild.lang.base.define.TestingModFiles.modFiles;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.DefinitionsS;
-import org.smoothbuild.lang.base.define.ModuleFiles;
-import org.smoothbuild.lang.base.define.ModulePath;
-import org.smoothbuild.lang.base.define.ModuleS;
+import org.smoothbuild.lang.base.define.ModFiles;
+import org.smoothbuild.lang.base.define.ModPath;
+import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
-import org.smoothbuild.lang.parse.ModuleLoader;
+import org.smoothbuild.lang.parse.ModLoader;
 import org.smoothbuild.lang.parse.TopEvalLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
 
-public class TestingModuleLoader {
+public class TestingModLoader {
   private final TestingContext testingContext;
   private final String sourceCode;
-  private ModuleFiles moduleFiles;
+  private ModFiles modFiles;
   private DefinitionsS imported;
-  private Maybe<ModuleS> module;
+  private Maybe<ModS> modS;
 
-  TestingModuleLoader(TestingContext testingContext, String sourceCode) {
+  TestingModLoader(TestingContext testingContext, String sourceCode) {
     this.testingContext = testingContext;
     this.sourceCode = sourceCode;
   }
 
-  public TestingModuleLoader withImportedModuleFiles() {
-    this.moduleFiles = importedModuleFiles();
+  public TestingModLoader withImportedModFiles() {
+    this.modFiles = importedModFiles();
     return this;
   }
 
-  public TestingModuleLoader withImported(DefinitionsS imported) {
+  public TestingModLoader withImported(DefinitionsS imported) {
     this.imported = imported;
     return this;
   }
 
-  public TestingModuleLoader loadsSuccessfully() {
-    module = load();
+  public TestingModLoader loadsSuccessfully() {
+    modS = load();
     assertWithMessage(messageWithSourceCode())
-        .that(module.logs().toList())
+        .that(modS.logs().toList())
         .isEmpty();
     return this;
   }
 
-  public void containsEvaluable(TopEvalS expected) {
+  public void containsEval(TopEvalS expected) {
     String name = expected.name();
-    TopEvalS actual = assertContainsEvaluable(name);
+    TopEvalS actual = assertContainsEval(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
-  public void containsEvaluableWithType(String name, Type expectedType) {
-    TopEvalS referencable = assertContainsEvaluable(name);
+  public void containsEvalWithType(String name, Type expectedType) {
+    TopEvalS referencable = assertContainsEval(name);
     assertThat(referencable.type())
         .isEqualTo(expectedType);
   }
 
-  private TopEvalS assertContainsEvaluable(String name) {
-    var referencables = module.value().referencables();
+  private TopEvalS assertContainsEval(String name) {
+    var referencables = modS.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(referencables.containsName(name))
         .isTrue();
@@ -74,7 +74,7 @@ public class TestingModuleLoader {
 
   public void containsType(Type expected) {
     var name = expected.name();
-    var types = module.value().types();
+    var types = modS.value().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types.containsName(name))
         .isTrue();
@@ -85,10 +85,10 @@ public class TestingModuleLoader {
         .isEqualTo(expected);
   }
 
-  public DefinitionsS getModuleAsDefinitions() {
+  public DefinitionsS getModAsDefinitions() {
     return DefinitionsS.empty()
-        .withModule(testingContext.internalModule())
-        .withModule(module.value());
+        .withModule(testingContext.internalMod())
+        .withModule(modS.value());
   }
 
   public void loadsWithProblems() {
@@ -120,16 +120,16 @@ public class TestingModuleLoader {
         + "\n====================\n";
   }
 
-  private Maybe<ModuleS> load() {
+  private Maybe<ModS> load() {
     TypingS typing = testingContext.typingS();
     TypeFactoryS factory = testingContext.typeFactoryS();
-    ModuleLoader moduleLoader = new ModuleLoader(
+    ModLoader modLoader = new ModLoader(
         new TypeInferrer(factory, typing), new TopEvalLoader(factory), factory);
     DefinitionsS importedSane = imported != null ? imported
-        : DefinitionsS.empty().withModule(testingContext.internalModule());
-    ModuleFiles moduleFilesSane = this.moduleFiles != null ? moduleFiles : moduleFiles();
-    return moduleLoader.loadModule(
-        ModulePath.of(moduleFilesSane.smoothFile()), moduleFilesSane, sourceCode, importedSane);
+        : DefinitionsS.empty().withModule(testingContext.internalMod());
+    ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();
+    return modLoader.loadModule(
+        ModPath.of(modFilesSane.smoothFile()), modFilesSane, sourceCode, importedSane);
   }
 
   public static Log err(int line, String message) {

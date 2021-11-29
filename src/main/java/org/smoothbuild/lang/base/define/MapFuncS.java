@@ -16,40 +16,38 @@ import org.smoothbuild.util.collect.NList;
 public final class MapFuncS extends FuncS {
   public static final String MAP_FUNCTION_NAME = "map";
 
-  public MapFuncS(ModulePath modulePath, TypeFactoryS factory) {
-    this(modulePath, factory.variable("E"), factory.variable("R"), factory);
+  public MapFuncS(ModPath modPath, TypeFactoryS factory) {
+    this(modPath, factory.variable("E"), factory.variable("R"), factory);
   }
 
   public MapFuncS(
-      ModulePath modulePath, TypeS inputElemType, TypeS resultElemType, TypeFactoryS factory) {
+      ModPath modPath, TypeS inputElemType, TypeS resultElemType, TypeFactoryS factory) {
     this(factory.array(resultElemType),
         factory.array(inputElemType),
-        factory.abstFunc(resultElemType, list(inputElemType)),
-        modulePath,
+        factory.abstFunc(resultElemType, list(inputElemType)), modPath,
         factory);
   }
 
   private MapFuncS(ArrayTypeS resultType, ArrayTypeS inputArrayType,
-      FuncTypeS mappingFuncType, ModulePath modulePath, TypeFactoryS factory) {
-    this(resultType, createParams(modulePath, inputArrayType, mappingFuncType), modulePath,
+      FuncTypeS mappingFuncType, ModPath modPath, TypeFactoryS factory) {
+    this(resultType, createParams(modPath, inputArrayType, mappingFuncType), modPath,
         factory);
   }
 
-  private MapFuncS(ArrayTypeS resultType, NList<Item> params, ModulePath modulePath,
+  private MapFuncS(ArrayTypeS resultType, NList<Item> params, ModPath modPath,
       TypeFactoryS factory) {
     super(
-        factory.abstFunc(resultType, map(params, Defined::type)),
-        modulePath,
+        factory.abstFunc(resultType, map(params, Defined::type)), modPath,
         MAP_FUNCTION_NAME,
         params,
         internal()
     );
   }
 
-  private static NList<Item> createParams(ModulePath modulePath,
+  private static NList<Item> createParams(ModPath modPath,
       ArrayTypeS inputArrayType, FuncTypeS mappingFuncType) {
     return nList(
-        new Item(inputArrayType, modulePath, "array", Optional.empty(), internal()),
-        new Item(mappingFuncType, modulePath, "func", Optional.empty(), internal()));
+        new Item(inputArrayType, modPath, "array", Optional.empty(), internal()),
+        new Item(mappingFuncType, modPath, "func", Optional.empty(), internal()));
   }
 }

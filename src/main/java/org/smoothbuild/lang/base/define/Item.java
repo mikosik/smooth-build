@@ -20,9 +20,9 @@ public class Item extends EvalS {
   private final Optional<ExprS> defaultVal;
   private final ItemSignature signature;
 
-  public Item(TypeS type, ModulePath modulePath, String name, Optional<ExprS> defaultVal,
+  public Item(TypeS type, ModPath modPath, String name, Optional<ExprS> defaultVal,
       Loc loc) {
-    super(type, modulePath, name, loc);
+    super(type, modPath, name, loc);
     this.defaultVal = defaultVal;
     this.signature = new ItemSignature(type(), name(), defaultVal.map(ExprS::type));
   }
@@ -55,7 +55,7 @@ public class Item extends EvalS {
     }
     return (o instanceof Item that)
         && Objects.equals(this.type(), that.type())
-        && Objects.equals(this.modulePath(), that.modulePath())
+        && Objects.equals(this.modPath(), that.modPath())
         && Objects.equals(this.name(), that.name())
         && Objects.equals(this.defaultVal, that.defaultVal)
         && Objects.equals(this.loc(), that.loc());
@@ -63,6 +63,6 @@ public class Item extends EvalS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), modulePath(), name(), defaultVal, loc());
+    return Objects.hash(type(), modPath(), name(), defaultVal, loc());
   }
 }

@@ -4,7 +4,7 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.define.Item.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
-import static org.smoothbuild.lang.base.define.TestingModulePath.modulePath;
+import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -69,10 +69,10 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
-import org.smoothbuild.lang.base.define.InternalModuleLoader;
+import org.smoothbuild.lang.base.define.InternalModLoader;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
-import org.smoothbuild.lang.base.define.ModuleS;
+import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.api.Bounded;
@@ -125,22 +125,22 @@ public class TestingContext {
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
   private TempManager tempManager;
-  private ModuleS internalModule;
+  private ModS internalMod;
   private TypeFactoryS typeFactoryS;
 
   public NativeApi nativeApi() {
     return container();
   }
 
-  public TestingModuleLoader module(String sourceCode) {
-    return new TestingModuleLoader(this, sourceCode);
+  public TestingModLoader mod(String sourceCode) {
+    return new TestingModLoader(this, sourceCode);
   }
 
-  public ModuleS internalModule() {
-    if (internalModule == null) {
-      internalModule = new InternalModuleLoader(typeFactoryS()).loadModule();
+  public ModS internalMod() {
+    if (internalMod == null) {
+      internalMod = new InternalModLoader(typeFactoryS()).load();
     }
-    return internalModule;
+    return internalMod;
   }
 
   public Computer computer() {
@@ -679,7 +679,7 @@ public class TestingContext {
   }
 
   public CtorS ctorS(int line, TypeS resultType, String name, Item... params) {
-    return new CtorS(funcST(resultType, params), modulePath(), name, nList(params), loc(line));
+    return new CtorS(funcST(resultType, params), modPath(), name, nList(params), loc(line));
   }
 
   public NatFuncS funcS(TypeS type, String name, Item... params) {
@@ -688,7 +688,7 @@ public class TestingContext {
 
   public NatFuncS funcS(int line, TypeS type, String name, AnnS annS,
       Item... params) {
-    return new NatFuncS(funcST(type, params), modulePath(), name,
+    return new NatFuncS(funcST(type, params), modPath(), name,
         nList(params), annS, loc(line)
     );
   }
@@ -699,7 +699,7 @@ public class TestingContext {
 
   public DefFuncS funcS(
       int line, TypeS type, String name, ExprS body, Item... params) {
-    return new DefFuncS(funcST(type, params), modulePath(), name,
+    return new DefFuncS(funcST(type, params), modPath(), name,
         nList(params), body, loc(line)
     );
   }
@@ -751,7 +751,7 @@ public class TestingContext {
   }
 
   public Item field(TypeS type, String name) {
-    return new Item(type, modulePath(), name, empty(), loc(1));
+    return new Item(type, modPath(), name, empty(), loc(1));
   }
 
   public Item param(TypeS type, String name) {
@@ -767,20 +767,20 @@ public class TestingContext {
   }
 
   private Item param(int line, TypeS type, String name, Optional<ExprS> defaultArg) {
-    return new Item(type, modulePath(), name, defaultArg, loc(line));
+    return new Item(type, modPath(), name, defaultArg, loc(line));
   }
 
   public DefValS defValS(int line, TypeS type, String name, ExprS expr) {
-    return new DefValS(type, modulePath(), name, expr, loc(line));
+    return new DefValS(type, modPath(), name, expr, loc(line));
   }
 
   public DefFuncS defFuncS(int line, FuncTypeS type, String name, NList<Item> params, ExprS expr) {
-    return new DefFuncS(type, modulePath(), name, params, expr, loc(line));
+    return new DefFuncS(type, modPath(), name, params, expr, loc(line));
   }
 
   public NatFuncS natFuncS(int line, FuncTypeS type, String name, NList<Item> params,
       AnnS ann) {
-    return new NatFuncS(type, modulePath(), name, params, ann, loc(line));
+    return new NatFuncS(type, modPath(), name, params, ann, loc(line));
   }
 
   public ItemSignature isig(String name, TypeS type) {

@@ -16,22 +16,22 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
-import org.smoothbuild.lang.base.define.ModuleFiles;
-import org.smoothbuild.lang.base.define.ModulePath;
+import org.smoothbuild.lang.base.define.ModFiles;
+import org.smoothbuild.lang.base.define.ModPath;
 
 import com.google.common.collect.ImmutableList;
 
 public class InstallationHashes {
   private final InstallationPaths installationPaths;
   private final FileResolver fileResolver;
-  private final ModuleFilesDetector moduleFilesDetector;
+  private final ModFilesDetector modFilesDetector;
 
   @Inject
   public InstallationHashes(InstallationPaths installationPaths, FileResolver fileResolver,
-      ModuleFilesDetector moduleFilesDetector) {
+      ModFilesDetector modFilesDetector) {
     this.installationPaths = installationPaths;
     this.fileResolver = fileResolver;
-    this.moduleFilesDetector = moduleFilesDetector;
+    this.modFilesDetector = modFilesDetector;
   }
 
   public HashNode installationNode() throws IOException {
@@ -68,16 +68,16 @@ public class InstallationHashes {
 
   private HashNode standardLibsNode() throws IOException {
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    var files = moduleFilesDetector.detect(SDK_MODULES);
-    for (Entry<ModulePath, ModuleFiles> entry : files.entrySet()) {
-      builder.add(moduleNode(entry.getKey(), entry.getValue()));
+    var files = modFilesDetector.detect(SDK_MODULES);
+    for (Entry<ModPath, ModFiles> entry : files.entrySet()) {
+      builder.add(modNode(entry.getKey(), entry.getValue()));
     }
     return new HashNode("standard libraries", builder.build());
   }
 
-  private HashNode moduleNode(ModulePath path, ModuleFiles moduleFiles) throws IOException {
-    Optional<HashNode> smoothNode = nodeFor(Optional.of(moduleFiles.smoothFile()));
-    Optional<HashNode> nativeNode = nodeFor(moduleFiles.nativeFile());
+  private HashNode modNode(ModPath path, ModFiles modFiles) throws IOException {
+    Optional<HashNode> smoothNode = nodeFor(Optional.of(modFiles.smoothFile()));
+    Optional<HashNode> nativeNode = nodeFor(modFiles.nativeFile());
     var nodes = Stream.of(smoothNode, nativeNode)
         .flatMap(Optional::stream)
         .collect(toImmutableList());

@@ -12,25 +12,24 @@ import org.smoothbuild.util.collect.NList;
 public final class IfFuncS extends FuncS {
   public static final String IF_FUNCTION_NAME = "if";
 
-  public IfFuncS(ModulePath modulePath, TypeFactoryS factory) {
-    this(factory.variable("A"), factory.bool(), modulePath, factory);
+  public IfFuncS(ModPath modPath, TypeFactoryS factory) {
+    this(factory.variable("A"), factory.bool(), modPath, factory);
   }
 
   private IfFuncS(
-      TypeS resultType, TypeS boolType, ModulePath modulePath, TypeFactoryS factory) {
-    this(resultType, createParams(resultType, boolType, modulePath), modulePath, factory);
+      TypeS resultType, TypeS boolType, ModPath modPath, TypeFactoryS factory) {
+    this(resultType, createParams(resultType, boolType, modPath), modPath, factory);
   }
 
-  private IfFuncS(TypeS resultType, NList<Item> params, ModulePath modulePath,
+  private IfFuncS(TypeS resultType, NList<Item> params, ModPath modPath,
       TypeFactoryS factory) {
-    super(factory.abstFunc(resultType, map(params, Defined::type)),
-        modulePath, IF_FUNCTION_NAME, params, internal());
+    super(factory.abstFunc(resultType, map(params, Defined::type)), modPath, IF_FUNCTION_NAME, params, internal());
   }
 
-  private static NList<Item> createParams(TypeS resultType, TypeS boolType, ModulePath modulePath) {
+  private static NList<Item> createParams(TypeS resultType, TypeS boolType, ModPath modPath) {
     return nList(
-        new Item(boolType, modulePath, "condition", empty(), internal()),
-        new Item(resultType, modulePath, "then", empty(), internal()),
-        new Item(resultType, modulePath, "else", empty(), internal()));
+        new Item(boolType, modPath, "condition", empty(), internal()),
+        new Item(resultType, modPath, "then", empty(), internal()),
+        new Item(resultType, modPath, "else", empty(), internal()));
   }
 }

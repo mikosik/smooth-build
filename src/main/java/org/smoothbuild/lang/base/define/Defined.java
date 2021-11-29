@@ -9,20 +9,20 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
  */
 public class Defined extends NalImpl {
   private final TypeS type;
-  private final ModulePath modulePath;
+  private final ModPath modPath;
 
-  public Defined(TypeS type, ModulePath modulePath, String name, Loc loc) {
+  public Defined(TypeS type, ModPath modPath, String name, Loc loc) {
     super(name, loc);
     this.type = requireNonNull(type);
-    this.modulePath = requireNonNull(modulePath);
+    this.modPath = requireNonNull(modPath);
   }
 
   public TypeS type() {
     return type;
   }
 
-  public ModulePath modulePath() {
-    return modulePath;
+  public ModPath modPath() {
+    return modPath;
   }
 
   public String extendedName() {

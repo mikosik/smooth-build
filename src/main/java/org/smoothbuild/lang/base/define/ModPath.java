@@ -6,15 +6,15 @@ import java.util.Objects;
 
 import org.smoothbuild.io.fs.space.FilePath;
 
-public class ModulePath {
+public class ModPath {
   private final String path;
 
-  public ModulePath(String path) {
+  public ModPath(String path) {
     this.path = path;
   }
 
-  public static ModulePath of(FilePath filePath) {
-    return new ModulePath(removeExtension(filePath.toString()));
+  public static ModPath of(FilePath filePath) {
+    return new ModPath(removeExtension(filePath.toString()));
   }
 
   @Override
@@ -22,7 +22,7 @@ public class ModulePath {
     if (this == o) {
       return true;
     }
-    return o instanceof ModulePath that
+    return o instanceof ModPath that
         && path.equals(that.path);
   }
 
