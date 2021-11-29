@@ -106,8 +106,6 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       literal
                                       m, map             - evaluates single call to a
                                       function in evaluation of `map` function call
-                                      r, reference       - evaluates function reference
-                                      expression
            """);
   }
 

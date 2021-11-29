@@ -31,7 +31,6 @@ public class TaskMatchers {
   static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
   static final TaskMatcher LITERAL = kindMatcher(TaskKind.LITERAL);
   static final TaskMatcher MAP = kindMatcher(TaskKind.MAP);
-  static final TaskMatcher REFERENCE = kindMatcher(TaskKind.REFERENCE);
 
   static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(CALL, SELECT)));
 
@@ -68,8 +67,6 @@ public class TaskMatchers {
           .put("l", LITERAL)
           .put("map", MAP)
           .put("m", MAP)
-          .put("reference", REFERENCE)
-          .put("r", REFERENCE)
 
           .build();
 

@@ -61,7 +61,6 @@ public class BuildCommand extends ExclusiveCommand {
             l, literal         - evaluates compile time literal
             m, map             - evaluates single call to a function in evaluation of \
           `map` function call
-            r, reference       - evaluates function reference expression
           """
   )
   TaskMatcher showTasks;

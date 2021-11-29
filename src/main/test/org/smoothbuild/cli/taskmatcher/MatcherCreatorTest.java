@@ -15,7 +15,6 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.LITERAL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.MAP;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PRJ;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.REFERENCE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SELECT;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.and;
@@ -125,8 +124,6 @@ public class MatcherCreatorTest {
         arguments("l", LITERAL),
         arguments("map", MAP),
         arguments("m", MAP),
-        arguments("r", REFERENCE),
-        arguments("reference", REFERENCE),
 
         arguments("   project", PRJ),
         arguments("project   ", PRJ),
