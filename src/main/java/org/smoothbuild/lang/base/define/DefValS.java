@@ -8,10 +8,10 @@ import org.smoothbuild.lang.expr.ExprS;
 /**
  * This class is immutable.
  */
-public final class DefinedValueS extends ValueS {
+public final class DefValS extends ValS {
   private final ExprS body;
 
-  public DefinedValueS(TypeS type, ModulePath modulePath, String name, ExprS body,
+  public DefValS(TypeS type, ModulePath modulePath, String name, ExprS body,
       Location location) {
     super(type, modulePath, name, location);
     this.body = body;
@@ -26,7 +26,7 @@ public final class DefinedValueS extends ValueS {
     if (this == object) {
       return true;
     }
-    return object instanceof DefinedValueS that
+    return object instanceof DefValS that
         && this.type().equals(that.type())
         && this.name().equals(that.name())
         && this.body().equals(that.body())

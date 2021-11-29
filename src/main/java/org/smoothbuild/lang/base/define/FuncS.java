@@ -41,7 +41,7 @@ public sealed abstract class FuncS extends TopEvalS
 
   public boolean canBeCalledArgless() {
     return params.stream()
-        .allMatch(p -> p.defaultValue().isPresent());
+        .allMatch(p -> p.defaultVal().isPresent());
   }
 
   protected String signature() {

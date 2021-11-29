@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.lang.base.define.Defined;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.base.define.ValS;
 
 public class ListRunner {
   private final Console console;
@@ -23,7 +23,7 @@ public class ListRunner {
         .referencables()
         .stream()
         .filter(f -> f.location().file().space().equals(PRJ))
-        .filter(ValueS.class::isInstance)
+        .filter(ValS.class::isInstance)
         .map(Defined::name)
         .sorted()
         .forEach(console::println));

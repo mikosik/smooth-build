@@ -19,7 +19,7 @@ public class StringH extends ValueH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return escapedAndLimitedWithEllipsis(jValue(), 30);
   }
 }

@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
  * Top level evaluable.
  */
 public sealed abstract class TopEvalS extends EvalS implements Nal
-    permits FuncS, ValueS {
+    permits FuncS, ValS {
   public TopEvalS(TypeS type, ModulePath modulePath, String name, Location location) {
     super(type, modulePath, name, location);
   }

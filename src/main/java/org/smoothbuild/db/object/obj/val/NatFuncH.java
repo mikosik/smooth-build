@@ -34,7 +34,7 @@ public class NatFuncH extends FuncH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "NatFuncH(???)";
   }
 }

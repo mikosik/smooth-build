@@ -67,7 +67,7 @@ public class SelectH extends ExprH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "Select(???)";
   }
 }

@@ -57,7 +57,7 @@ public abstract class ObjectH {
 
   public abstract TypeH type();
 
-  public abstract String valueToString();
+  public abstract String valToString();
 
   @Override
   public boolean equals(Object object) {
@@ -71,7 +71,7 @@ public abstract class ObjectH {
 
   @Override
   public String toString() {
-    return valueToStringSafe() + "@" + hash();
+    return valToStringSafe() + "@" + hash();
   }
 
   protected <T> T readData(HashedDbCallable<T> reader) {
@@ -140,7 +140,7 @@ public abstract class ObjectH {
   }
 
   protected static String sequenceToString(ImmutableList<? extends ObjectH> objects) {
-    return toCommaSeparatedString(objects, ObjectH::valueToStringSafe);
+    return toCommaSeparatedString(objects, ObjectH::valToStringSafe);
   }
 
   private <T> T castObj(ObjectH obj, String path, Class<T> clazz) {
@@ -177,9 +177,9 @@ public abstract class ObjectH {
     return result;
   }
 
-  private String valueToStringSafe() {
+  private String valToStringSafe() {
     try {
-      return valueToString();
+      return valToString();
     } catch (DecodeObjNodeException e) {
       return "?Exception?@" + hash();
     }

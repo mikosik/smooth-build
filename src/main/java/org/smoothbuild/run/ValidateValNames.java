@@ -11,17 +11,17 @@ import org.smoothbuild.util.collect.DuplicatesDetector;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public class ValidateValueNames {
-  public static List<String> validateValueNames(List<String> args) {
+public class ValidateValNames {
+  public static List<String> validateValNames(List<String> args) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     args.forEach(duplicatesDetector::addValue);
     return ImmutableList.<String>builder()
-        .addAll(illegalValueNameErrors(args))
-        .addAll(duplicateValueNameErrors(duplicatesDetector))
+        .addAll(illegalValNameErrors(args))
+        .addAll(duplicateValNameErrors(duplicatesDetector))
         .build();
   }
 
-  private static ImmutableList<String> illegalValueNameErrors(List<String> args) {
+  private static ImmutableList<String> illegalValNameErrors(List<String> args) {
     return args
         .stream()
         .filter(a -> !isLegalName(a))
@@ -29,7 +29,7 @@ public class ValidateValueNames {
         .collect(toImmutableList());
   }
 
-  private static ImmutableSet<String> duplicateValueNameErrors(
+  private static ImmutableSet<String> duplicateValNameErrors(
       DuplicatesDetector<String> duplicatesDetector) {
     return map(
         duplicatesDetector.getDuplicateValues(),

@@ -7,10 +7,10 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 /**
  * This class is immutable.
  */
-public final class BoolValueS extends ValueS {
+public final class BoolValS extends ValS {
   private final boolean valJ;
 
-  public BoolValueS(boolean valJ, ModulePath modulePath, TypeFactoryS factory) {
+  public BoolValS(boolean valJ, ModulePath modulePath, TypeFactoryS factory) {
     super(factory.bool(), modulePath, Boolean.toString(valJ), internal());
     this.valJ = valJ;
   }

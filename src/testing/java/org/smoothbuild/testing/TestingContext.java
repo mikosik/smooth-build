@@ -68,7 +68,7 @@ import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefFuncS;
-import org.smoothbuild.lang.base.define.DefinedValueS;
+import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ItemSignature;
@@ -770,12 +770,11 @@ public class TestingContext {
     return new Item(type, modulePath(), name, defaultArg, loc(line));
   }
 
-  public DefinedValueS value(int line, TypeS type, String name, ExprS expr) {
-    return new DefinedValueS(type, modulePath(), name, expr, loc(line));
+  public DefValS defValS(int line, TypeS type, String name, ExprS expr) {
+    return new DefValS(type, modulePath(), name, expr, loc(line));
   }
 
-  public DefFuncS defFuncS(int line, FuncTypeS type, String name, NList<Item> params,
-      ExprS expr) {
+  public DefFuncS defFuncS(int line, FuncTypeS type, String name, NList<Item> params, ExprS expr) {
     return new DefFuncS(type, modulePath(), name, params, expr, loc(line));
   }
 

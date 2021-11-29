@@ -84,7 +84,7 @@ public class AstCreator {
         Optional<AnnotationN> annotation = createNativeSane(evaluable.annotation());
         Location location = locationOf(filePath, nameNode);
         if (evaluable.paramList() == null) {
-          referencables.add(new ValueN(type, name, expr, annotation, location));
+          referencables.add(new ValN(type, name, expr, annotation, location));
         } else {
           List<ItemN> params = createParams(evaluable.paramList());
           referencables.add(new RealFuncN(type, name, params, expr, annotation, location));

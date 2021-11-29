@@ -19,7 +19,7 @@ public class BlobH extends ValueH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "0x??";
   }
 }

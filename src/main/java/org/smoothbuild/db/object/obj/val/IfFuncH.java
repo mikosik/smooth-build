@@ -44,7 +44,7 @@ public class IfFuncH extends FuncH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "IfH(???)";
   }
 }

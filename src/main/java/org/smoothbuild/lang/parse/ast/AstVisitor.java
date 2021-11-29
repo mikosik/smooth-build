@@ -32,23 +32,23 @@ public class AstVisitor {
   public void visitEvaluable(EvalN evaluable) {
     switch (evaluable) {
       case RealFuncN func -> visitRealFunc(func);
-      case ValueN value -> visitValue(value);
+      case ValN value -> visitValue(value);
       default -> throw new RuntimeException(
           "Didn't expect instance of " + evaluable.getClass().getCanonicalName());
     }
   }
 
-  public void visitValue(ValueN value) {
-    value.annotation().ifPresent(this::visitNative);
-    value.typeNode().ifPresent(this::visitType);
-    value.body().ifPresent(this::visitExpr);
+  public void visitValue(ValN valN) {
+    valN.annotation().ifPresent(this::visitNative);
+    valN.typeNode().ifPresent(this::visitType);
+    valN.body().ifPresent(this::visitExpr);
   }
 
-  public void visitRealFunc(RealFuncN func) {
-    func.annotation().ifPresent(this::visitNative);
-    func.typeNode().ifPresent(this::visitType);
-    visitParams(func.params());
-    func.body().ifPresent(this::visitExpr);
+  public void visitRealFunc(RealFuncN realFuncN) {
+    realFuncN.annotation().ifPresent(this::visitNative);
+    realFuncN.typeNode().ifPresent(this::visitType);
+    visitParams(realFuncN.params());
+    realFuncN.body().ifPresent(this::visitExpr);
   }
 
   public void visitNative(AnnotationN annotation) {

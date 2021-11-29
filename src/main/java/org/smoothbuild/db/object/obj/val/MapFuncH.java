@@ -43,7 +43,7 @@ public class MapFuncH extends FuncH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "MapH(???)";
   }
 }

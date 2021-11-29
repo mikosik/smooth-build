@@ -34,10 +34,10 @@ public class ReferenceResolver extends AstVisitor {
   }
 
   @Override
-  public void visitRealFunc(RealFuncN func) {
-    visitParams(func.params());
-    func.body().ifPresent(expr -> {
-      var referenceResolver = new ReferenceResolver(new Scope<>(scope, func.params()), logger);
+  public void visitRealFunc(RealFuncN realFuncN) {
+    visitParams(realFuncN.params());
+    realFuncN.body().ifPresent(expr -> {
+      var referenceResolver = new ReferenceResolver(new Scope<>(scope, realFuncN.params()), logger);
       referenceResolver.visitExpr(expr);
     });
   }

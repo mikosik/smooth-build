@@ -10,13 +10,13 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.Defined;
-import org.smoothbuild.lang.base.define.DefinedValueS;
+import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
@@ -61,17 +61,17 @@ public class TopEvalLoader {
     if (evalN instanceof RealFuncN realFuncN) {
       return loadFunc(path, realFuncN);
     } else {
-      return loadValue(path, evalN);
+      return loadVal(path, evalN);
     }
   }
 
-  private ValueS loadValue(ModulePath path, EvalN valueNode) {
-    var type = valueNode.type().get();
-    var name = valueNode.name();
-    var location = valueNode.location();
+  private ValS loadVal(ModulePath path, EvalN valN) {
+    var type = valN.type().get();
+    var name = valN.name();
+    var location = valN.location();
     var loader = new ExpressionLoader(path, nList());
-    return new DefinedValueS(
-        type, path, name, loader.createExpression(valueNode.body().get()), location);
+    return new DefValS(
+        type, path, name, loader.createExpression(valN.body().get()), location);
   }
 
   private FuncS loadFunc(ModulePath path, RealFuncN realFuncN) {
@@ -170,7 +170,7 @@ public class TopEvalLoader {
       // report an error.
       EvalLike referenced = ((RefN) call.func()).referenced();
       return switch (referenced) {
-        case FuncS func -> func.params().get(i).defaultValue().get();
+        case FuncS func -> func.params().get(i).defaultVal().get();
         case FuncN node -> createExpression(node.params().get(i).body().get());
         default -> throw new RuntimeException("Unexpected case");
       };

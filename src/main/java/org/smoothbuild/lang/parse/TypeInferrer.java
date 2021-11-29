@@ -47,7 +47,7 @@ import org.smoothbuild.lang.parse.ast.SelectN;
 import org.smoothbuild.lang.parse.ast.StringN;
 import org.smoothbuild.lang.parse.ast.StructN;
 import org.smoothbuild.lang.parse.ast.TypeN;
-import org.smoothbuild.lang.parse.ast.ValueN;
+import org.smoothbuild.lang.parse.ast.ValN;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 
@@ -85,16 +85,16 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitRealFunc(RealFuncN func) {
-        visitParams(func.params());
-        func.body().ifPresent(this::visitExpr);
-        func.setType(optionalFuncType(evaluationTypeOfTopEvaluables(func), func.optParamTypes()));
+      public void visitRealFunc(RealFuncN realFuncN) {
+        visitParams(realFuncN.params());
+        realFuncN.body().ifPresent(this::visitExpr);
+        realFuncN.setType(optionalFuncType(evalTypeOfTopEvals(realFuncN), realFuncN.optParamTypes()));
       }
 
       @Override
-      public void visitValue(ValueN value) {
-        value.body().ifPresent(this::visitExpr);
-        value.setType(evaluationTypeOfTopEvaluables(value));
+      public void visitValue(ValN valN) {
+        valN.body().ifPresent(this::visitExpr);
+        valN.setType(evalTypeOfTopEvals(valN));
       }
 
       @Override
@@ -104,7 +104,7 @@ public class TypeInferrer {
       }
 
       private Optional<TypeS> typeOfParam(ItemN param) {
-        return evaluationTypeOf(param, (target, source) -> {
+        return evalTypeOf(param, (target, source) -> {
           if (!typing.isParamAssignable(target, source)) {
             logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + target.q()
                 + " so it cannot have default argument of type " + source.q() + "."));
@@ -112,10 +112,10 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evaluationTypeOfTopEvaluables(EvalN evaluable) {
-        return evaluationTypeOf(evaluable, (target, source) -> {
+      private Optional<TypeS> evalTypeOfTopEvals(EvalN evalN) {
+        return evalTypeOf(evalN, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
-            logBuffer.log(parseError(evaluable, "`" + evaluable.name()
+            logBuffer.log(parseError(evalN, "`" + evalN.name()
                 + "` has body which type is " + source.q()
                 + " and it is not convertible to its declared type " + target.q()
                 + "."));
@@ -123,12 +123,11 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evaluationTypeOf(EvalN referencable,
-          BiConsumer<TypeS, TypeS> assignmentChecker) {
-        if (referencable.body().isPresent()) {
-          Optional<TypeS> exprType = referencable.body().get().type();
-          if (referencable.typeNode().isPresent()) {
-            Optional<TypeS> type = createType(referencable.typeNode().get());
+      private Optional<TypeS> evalTypeOf(EvalN eval, BiConsumer<TypeS, TypeS> assignmentChecker) {
+        if (eval.body().isPresent()) {
+          Optional<TypeS> exprType = eval.body().get().type();
+          if (eval.typeNode().isPresent()) {
+            Optional<TypeS> type = createType(eval.typeNode().get());
             type.ifPresent(target -> exprType.ifPresent(
                 source -> assignmentChecker.accept(target, source)));
             return type;
@@ -136,10 +135,10 @@ public class TypeInferrer {
             return exprType;
           }
         } else {
-          if (referencable.typeNode().isPresent()) {
-            return createType(referencable.typeNode().get());
+          if (eval.typeNode().isPresent()) {
+            return createType(eval.typeNode().get());
           } else {
-            logBuffer.log(parseError(referencable, referencable.q()
+            logBuffer.log(parseError(eval, eval.q()
                 + " is native so it should have declared result type."));
             return empty();
           }

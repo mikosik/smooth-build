@@ -56,7 +56,7 @@ public class ArrayH extends ValueH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "[" + sequenceToString(elemObjs()) + ']';
   }
 }

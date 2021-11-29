@@ -17,7 +17,7 @@ public class BoolH extends ValueH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return Boolean.toString(jValue());
   }
 }

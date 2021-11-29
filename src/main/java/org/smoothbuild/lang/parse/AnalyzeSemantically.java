@@ -32,7 +32,7 @@ import org.smoothbuild.lang.parse.ast.RealFuncN;
 import org.smoothbuild.lang.parse.ast.StringN;
 import org.smoothbuild.lang.parse.ast.StructN;
 import org.smoothbuild.lang.parse.ast.TypeN;
-import org.smoothbuild.lang.parse.ast.ValueN;
+import org.smoothbuild.lang.parse.ast.ValN;
 import org.smoothbuild.util.DecodeHexException;
 import org.smoothbuild.util.UnescapingFailedException;
 import org.smoothbuild.util.collect.CountersMap;
@@ -101,15 +101,15 @@ public class AnalyzeSemantically {
   private static void detectUndefinedTypes(Logger logger, DefinitionsS imported, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitRealFunc(RealFuncN func) {
-        super.visitRealFunc(func);
-        func.typeNode().ifPresent(this::assertTypeIsDefined);
+      public void visitRealFunc(RealFuncN realFuncN) {
+        super.visitRealFunc(realFuncN);
+        realFuncN.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
-      public void visitValue(ValueN value) {
-        super.visitValue(value);
-        value.typeNode().ifPresent(this::assertTypeIsDefined);
+      public void visitValue(ValN valN) {
+        super.visitValue(valN);
+        valN.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
@@ -224,21 +224,21 @@ public class AnalyzeSemantically {
   private static void detectIllegalPolytypes(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitValue(ValueN value) {
-        super.visitValue(value);
-        if (value.typeNode().isPresent()) {
-          logErrorIfNeeded(value, value.typeNode().get().variablesUsedOnce());
+      public void visitValue(ValN valN) {
+        super.visitValue(valN);
+        if (valN.typeNode().isPresent()) {
+          logErrorIfNeeded(valN, valN.typeNode().get().variablesUsedOnce());
         }
       }
 
       @Override
-      public void visitRealFunc(RealFuncN func) {
-        super.visitRealFunc(func);
-        if (func.typeNode().isPresent()) {
+      public void visitRealFunc(RealFuncN realFuncN) {
+        super.visitRealFunc(realFuncN);
+        if (realFuncN.typeNode().isPresent()) {
           var counters = new CountersMap<String>();
-          countFuncVariables(counters, func.typeNode().get(),
-              map(func.params(), itemNode -> itemNode.typeNode().get()));
-          logErrorIfNeeded(func, counters.keysWithCounter(1));
+          countFuncVariables(counters, realFuncN.typeNode().get(),
+              map(realFuncN.params(), itemNode -> itemNode.typeNode().get()));
+          logErrorIfNeeded(realFuncN, counters.keysWithCounter(1));
         }
       }
 
@@ -276,24 +276,24 @@ public class AnalyzeSemantically {
   private static void detectIllegalNatives(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitRealFunc(RealFuncN func) {
-        super.visitRealFunc(func);
-        if (func.annotation().isPresent() && func.body().isPresent()) {
-          logger.log(parseError(func, "Native function cannot have body."));
+      public void visitRealFunc(RealFuncN realFuncN) {
+        super.visitRealFunc(realFuncN);
+        if (realFuncN.annotation().isPresent() && realFuncN.body().isPresent()) {
+          logger.log(parseError(realFuncN, "Native function cannot have body."));
         }
-        if (func.annotation().isEmpty() && func.body().isEmpty()) {
-          logger.log(parseError(func, "Non native function cannot have empty body."));
+        if (realFuncN.annotation().isEmpty() && realFuncN.body().isEmpty()) {
+          logger.log(parseError(realFuncN, "Non native function cannot have empty body."));
         }
       }
 
       @Override
-      public void visitValue(ValueN value) {
-        super.visitValue(value);
-        if (value.annotation().isPresent()) {
-          logger.log(parseError(value.annotation().get(), "Value cannot have @Native annotation."));
+      public void visitValue(ValN valN) {
+        super.visitValue(valN);
+        if (valN.annotation().isPresent()) {
+          logger.log(parseError(valN.annotation().get(), "Value cannot have @Native annotation."));
         }
-        if (value.body().isEmpty()) {
-          logger.log(parseError(value, "Value cannot have empty body."));
+        if (valN.body().isEmpty()) {
+          logger.log(parseError(valN, "Value cannot have empty body."));
         }
       }
     }.visitAst(ast);

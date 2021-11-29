@@ -37,7 +37,7 @@ public class BuildRunner {
   }
 
   public int run(List<String> names) {
-    List<String> errors = ValidateValueNames.validateValueNames(names);
+    List<String> errors = ValidateValNames.validateValNames(names);
     if (!errors.isEmpty()) {
       console.errors(errors);
       return EXIT_CODE_ERROR;

@@ -948,7 +948,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           module(funcCall("0x07,"))
               .loadsSuccessfully()
-              .containsEvaluable(value(2, BLOB, "result",
+              .containsEvaluable(defValS(2, BLOB, "result",
                   callS(2, BLOB,
                       refS(2, f(BLOB, BLOB), "myFunc"),
                       blobS(2, 7))));
@@ -1223,7 +1223,7 @@ public class DeclarationTest extends TestingContext {
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
                 .loadsSuccessfully()
-                .containsEvaluable(value(1, a(BLOB), "result",
+                .containsEvaluable(defValS(1, a(BLOB), "result",
                     orderS(1, BLOB, blobS(1, 7))));
           }
 

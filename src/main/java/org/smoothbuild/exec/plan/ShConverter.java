@@ -30,10 +30,10 @@ import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.java.FileLoader;
-import org.smoothbuild.lang.base.define.BoolValueS;
+import org.smoothbuild.lang.base.define.BoolValS;
 import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefFuncS;
-import org.smoothbuild.lang.base.define.DefinedValueS;
+import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.IfFuncS;
@@ -42,7 +42,7 @@ import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NatFuncS;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
@@ -66,7 +66,7 @@ public class ShConverter {
   private final FileLoader fileLoader;
   private final Deque<NList<Item>> callStack;
   private final Map<String, FuncH> funcCache;
-  private final Map<String, ObjectH> valueCache;
+  private final Map<String, ObjectH> valCache;
   private final Map<ObjectH, Nal> nals;
 
   @Inject
@@ -78,7 +78,7 @@ public class ShConverter {
     this.fileLoader = fileLoader;
     this.callStack = new LinkedList<>();
     this.funcCache = new HashMap<>();
-    this.valueCache = new HashMap<>();
+    this.valCache = new HashMap<>();
     this.nals = new HashMap<>();
   }
 
@@ -160,18 +160,18 @@ public class ShConverter {
 
   // handling value
 
-  public ObjectH convertVal(ValueS valueS) {
-    return computeIfAbsent(valueCache, valueS.name(), name -> convertValImpl(valueS));
+  public ObjectH convertVal(ValS valS) {
+    return computeIfAbsent(valCache, valS.name(), name -> convertValImpl(valS));
   }
 
-  private ObjectH convertValImpl(ValueS valueS) {
-    return switch (valueS) {
-      case DefinedValueS defValS -> convertExpr(defValS.body());
-      case BoolValueS boolValS -> convertBoolVal(boolValS);
+  private ObjectH convertValImpl(ValS valS) {
+    return switch (valS) {
+      case DefValS defValS -> convertExpr(defValS.body());
+      case BoolValS boolValS -> convertBoolVal(boolValS);
     };
   }
 
-  private BoolH convertBoolVal(BoolValueS boolValS) {
+  private BoolH convertBoolVal(BoolValS boolValS) {
     var boolH = objFactory.bool(boolValS.valJ());
     nals.put(boolH, boolValS);
     return boolH;
@@ -227,7 +227,7 @@ public class ShConverter {
   public ObjectH convertRef(RefS refS) {
     return switch (definitions.referencables().get(refS.name())) {
       case FuncS f -> convertFunc(f);
-      case ValueS v -> convertVal(v);
+      case ValS v -> convertVal(v);
     };
   }
 

@@ -21,16 +21,16 @@ import com.google.common.collect.ImmutableList;
  */
 public class ItemSignature extends NameableImpl {
   private final TypeS type;
-  private final Optional<TypeS> defaultValueType;
+  private final Optional<TypeS> defaultValType;
 
-  public ItemSignature(TypeS type, String name, Optional<TypeS> defaultValueType) {
-    this(type, Optional.of(name), defaultValueType);
+  public ItemSignature(TypeS type, String name, Optional<TypeS> defaultValType) {
+    this(type, Optional.of(name), defaultValType);
   }
 
-  public ItemSignature(TypeS type, Optional<String> name, Optional<TypeS> defaultValueType) {
+  public ItemSignature(TypeS type, Optional<String> name, Optional<TypeS> defaultValType) {
     super(name);
     this.type = requireNonNull(type);
-    this.defaultValueType = requireNonNull(defaultValueType);
+    this.defaultValType = requireNonNull(defaultValType);
   }
 
   public static ItemSignature itemSignature(TypeS type) {
@@ -49,8 +49,8 @@ public class ItemSignature extends NameableImpl {
     return type;
   }
 
-  public Optional<TypeS> defaultValueType() {
-    return defaultValueType;
+  public Optional<TypeS> defaultValType() {
+    return defaultValType;
   }
 
   public String typeAndName() {
@@ -76,11 +76,11 @@ public class ItemSignature extends NameableImpl {
     return object instanceof ItemSignature that
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.nameO(), that.nameO())
-        && Objects.equals(this.defaultValueType, that.defaultValueType);
+        && Objects.equals(this.defaultValType, that.defaultValType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), nameO(), defaultValueType);
+    return Objects.hash(type(), nameO(), defaultValType);
   }
 }

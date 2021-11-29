@@ -248,14 +248,14 @@ public class TypeHDb implements TypeFactoryH {
         throw new RuntimeException(
             "Internal error: Type with kind " + kind + " should be found in cache.");
       }
-      case ARRAY -> newArray(hash, readDataAsValue(hash, rootSequence, kind));
-      case CALL -> newCall(hash, readDataAsValue(hash, rootSequence, kind));
+      case ARRAY -> newArray(hash, readDataAsVal(hash, rootSequence, kind));
+      case CALL -> newCall(hash, readDataAsVal(hash, rootSequence, kind));
       case CONSTRUCT -> newCombine(hash, readDataAsTuple(hash, rootSequence, kind));
       case ABST_FUNC, DEF_FUNC, NAT_FUNC, IF_FUNC, MAP_FUNC ->
           readFunc(hash, rootSequence, kind);
       case ORDER -> newOrder(hash, readDataAsArray(hash, rootSequence, kind));
-      case REF -> newRef(hash, readDataAsValue(hash, rootSequence, kind));
-      case SELECT -> newSelect(hash, readDataAsValue(hash, rootSequence, kind));
+      case REF -> newRef(hash, readDataAsVal(hash, rootSequence, kind));
+      case SELECT -> newSelect(hash, readDataAsVal(hash, rootSequence, kind));
       case TUPLE -> readTuple(hash, rootSequence);
       case VARIABLE -> readVariable(hash, rootSequence);
     };
@@ -288,7 +288,7 @@ public class TypeHDb implements TypeFactoryH {
     }
   }
 
-  private TypeH readDataAsValue(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
+  private TypeH readDataAsVal(Hash rootHash, List<Hash> rootSequence, SpecKindH kind) {
     return readDataAsClass(rootHash, rootSequence, kind, TypeH.class);
   }
 

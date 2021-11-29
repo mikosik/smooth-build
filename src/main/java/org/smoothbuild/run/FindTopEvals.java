@@ -11,7 +11,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.TopEvalS;
-import org.smoothbuild.lang.base.define.ValueS;
+import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.expr.RefS;
 
 public class FindTopEvals {
@@ -23,7 +23,7 @@ public class FindTopEvals {
     for (String name : names) {
       TopEvalS referencable = values.get(name);
       if (referencable != null) {
-        if (referencable instanceof ValueS value) {
+        if (referencable instanceof ValS value) {
           referencables.add(new RefS(value.type(), value.name(), commandLineLocation()));
         } else {
           logs.add(error(

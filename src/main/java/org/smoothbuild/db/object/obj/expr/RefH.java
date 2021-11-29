@@ -16,6 +16,6 @@ public class RefH extends ExprH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "Ref(" + value() + ")";
   }}

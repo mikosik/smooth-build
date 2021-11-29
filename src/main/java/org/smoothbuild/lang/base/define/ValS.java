@@ -5,8 +5,8 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 /**
  * This class is immutable.
  */
-public sealed abstract class ValueS extends TopEvalS permits BoolValueS, DefinedValueS {
-  public ValueS(TypeS type, ModulePath modulePath, String name, Location location) {
+public sealed abstract class ValS extends TopEvalS permits BoolValS, DefValS {
+  public ValS(TypeS type, ModulePath modulePath, String name, Location location) {
     super(type, modulePath, name, location);
   }
 }

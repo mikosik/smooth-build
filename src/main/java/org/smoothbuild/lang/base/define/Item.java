@@ -17,26 +17,26 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Item extends EvalS {
-  private final Optional<ExprS> defaultValue;
+  private final Optional<ExprS> defaultVal;
   private final ItemSignature signature;
 
-  public Item(TypeS type, ModulePath modulePath, String name, Optional<ExprS> defaultValue,
+  public Item(TypeS type, ModulePath modulePath, String name, Optional<ExprS> defaultVal,
       Location location) {
     super(type, modulePath, name, location);
-    this.defaultValue = defaultValue;
-    this.signature = new ItemSignature(type(), name(), defaultValue.map(ExprS::type));
+    this.defaultVal = defaultVal;
+    this.signature = new ItemSignature(type(), name(), defaultVal.map(ExprS::type));
   }
 
   public ItemSignature signature() {
     return signature;
   }
 
-  public Optional<ExprS> defaultValue() {
-    return defaultValue;
+  public Optional<ExprS> defaultVal() {
+    return defaultVal;
   }
 
-  private String defaultValueToString() {
-    return defaultValue.map(v -> " = " + v).orElse("");
+  private String defaultValToString() {
+    return defaultVal.map(v -> " = " + v).orElse("");
   }
 
   public static ImmutableList<TypeS> toTypes(List<Item> items) {
@@ -45,7 +45,7 @@ public class Item extends EvalS {
 
   @Override
   public String toString() {
-    return "Item(`" + type().name() + " " + name() + defaultValueToString() + "`)";
+    return "Item(`" + type().name() + " " + name() + defaultValToString() + "`)";
   }
 
   @Override
@@ -57,12 +57,12 @@ public class Item extends EvalS {
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.modulePath(), that.modulePath())
         && Objects.equals(this.name(), that.name())
-        && Objects.equals(this.defaultValue, that.defaultValue)
+        && Objects.equals(this.defaultVal, that.defaultVal)
         && Objects.equals(this.location(), that.location());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), modulePath(), name(), defaultValue, location());
+    return Objects.hash(type(), modulePath(), name(), defaultVal, location());
   }
 }

@@ -90,7 +90,7 @@ public class CallTypeInferrer {
       if (arg.isPresent()) {
         assigned.add(arg.get().type());
       } else {
-        assigned.add(params.get(i).defaultValueType());
+        assigned.add(params.get(i).defaultValType());
       }
     }
     return assigned;

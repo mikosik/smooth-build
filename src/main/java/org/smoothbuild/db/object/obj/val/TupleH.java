@@ -60,7 +60,7 @@ public class TupleH extends ValueH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "{" + sequenceToString(items()) + '}';
   }
 }

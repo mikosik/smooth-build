@@ -48,7 +48,7 @@ public class OrderH extends ExprH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return "Order(???)";
   }
 }

@@ -23,7 +23,7 @@ public class ExprSLoadingTest extends TestingContext {
           ];
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, a(BLOB), "result",
+        .containsEvaluable(defValS(1, a(BLOB), "result",
             orderS(2, BLOB, blobS(3, 7), blobS(4, 8))));
   }
 
@@ -34,7 +34,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, BLOB, "result", blobS(2, 7)));
+        .containsEvaluable(defValS(1, BLOB, "result", blobS(2, 7)));
   }
 
   @Test
@@ -44,7 +44,7 @@ public class ExprSLoadingTest extends TestingContext {
             123;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, INT, "result", intS(2, 123)));
+        .containsEvaluable(defValS(1, INT, "result", intS(2, 123)));
   }
 
   @Nested
@@ -56,7 +56,7 @@ public class ExprSLoadingTest extends TestingContext {
           result = myFunc();
           """)
           .loadsSuccessfully()
-          .containsEvaluable(value(2, STRING, "result",
+          .containsEvaluable(defValS(2, STRING, "result",
               callS(2, STRING, refS(2, f(STRING), "myFunc"))));
     }
 
@@ -68,7 +68,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsSuccessfully()
-          .containsEvaluable(value(2, STRING, "result",
+          .containsEvaluable(defValS(2, STRING, "result",
               callS(2, STRING, refS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
     }
 
@@ -80,7 +80,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07);
           """)
           .loadsSuccessfully()
-          .containsEvaluable(value(2, STRING, "result",
+          .containsEvaluable(defValS(2, STRING, "result",
               callS(2, STRING, refS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
     }
 
@@ -94,7 +94,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              value(4, STRING, "result",
+              defValS(4, STRING, "result",
                   callS(4, STRING, refS(4, f(STRING), "myValue"))));
     }
 
@@ -109,7 +109,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              value(4, STRING, "result",
+              defValS(4, STRING, "result",
                   callS(4, STRING, refS(4, f(STRING, BLOB), "myValue"), blobS(5, 7))));
     }
 
@@ -137,7 +137,7 @@ public class ExprSLoadingTest extends TestingContext {
             "aaa");
           """)
           .loadsSuccessfully()
-          .containsEvaluable(value(4, struct, "result",
+          .containsEvaluable(defValS(4, struct, "result",
               callS(4, struct, refS(4, f(struct, STRING), "myStruct"), stringS(5, "aaa"))));
     }
 
@@ -176,7 +176,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
         .loadsSuccessfully()
         .containsEvaluable(
-            value(5, STRING, "result", selectS(6, STRING, 0, refS(5, myStruct, "struct"))));
+            defValS(5, STRING, "result", selectS(6, STRING, 0, refS(5, myStruct, "struct"))));
   }
 
   @Nested
@@ -237,7 +237,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEvaluable(
-              value(2, STRING, "result", refS(3, STRING, "myValue")));
+              defValS(2, STRING, "result", refS(3, STRING, "myValue")));
     }
 
     @Test
@@ -248,7 +248,7 @@ public class ExprSLoadingTest extends TestingContext {
             myFunc;
           """)
           .loadsSuccessfully()
-          .containsEvaluable(value(2, f(STRING), "result",
+          .containsEvaluable(defValS(2, f(STRING), "result",
               refS(3, f(STRING), "myFunc")));
     }
 
@@ -261,7 +261,7 @@ public class ExprSLoadingTest extends TestingContext {
             myStruct;
           """)
           .loadsSuccessfully()
-          .containsEvaluable(value(2, f(structType), "result",
+          .containsEvaluable(defValS(2, f(structType), "result",
               refS(3, f(structType), "myStruct")));
     }
   }
@@ -273,7 +273,7 @@ public class ExprSLoadingTest extends TestingContext {
             "abc";
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, STRING, "result", stringS(2, "abc")));
+        .containsEvaluable(defValS(1, STRING, "result", stringS(2, "abc")));
   }
 
   @Nested
@@ -285,7 +285,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsSuccessfully()
-          .containsEvaluable(value(1, BLOB, "myValue", blobS(2, 7)));
+          .containsEvaluable(defValS(1, BLOB, "myValue", blobS(2, 7)));
     }
 
     @Test

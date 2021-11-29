@@ -19,7 +19,7 @@ public class IntH extends ValueH {
   }
 
   @Override
-  public String valueToString() {
+  public String valToString() {
     return jValue().toString();
   }
 }
