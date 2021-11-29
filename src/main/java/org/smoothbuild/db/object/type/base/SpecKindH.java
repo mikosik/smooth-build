@@ -80,13 +80,13 @@ public enum SpecKindH {
           .build();
 
   private final byte marker;
-  private final Class<? extends ObjectH> jType;
+  private final Class<? extends ObjectH> typeJ;
   private final BiFunction<MerkleRoot, ObjectHDb, ObjectH> instantiator;
 
-  SpecKindH(byte marker, Class<? extends ObjectH> jType,
+  SpecKindH(byte marker, Class<? extends ObjectH> typeJ,
       BiFunction<MerkleRoot, ObjectHDb, ObjectH> instantiator) {
     this.marker = marker;
-    this.jType = jType;
+    this.typeJ = typeJ;
     this.instantiator = instantiator;
   }
 
@@ -98,8 +98,8 @@ public enum SpecKindH {
     return marker;
   }
 
-  public Class<? extends ObjectH> jType() {
-    return jType;
+  public Class<? extends ObjectH> typeJ() {
+    return typeJ;
   }
 
   public ObjectH newInstanceJ(MerkleRoot merkleRoot, ObjectHDb objectHDb) {

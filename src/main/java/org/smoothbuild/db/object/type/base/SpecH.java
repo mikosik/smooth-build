@@ -54,8 +54,8 @@ public abstract class SpecH extends AbstractType {
     return kind;
   }
 
-  public Class<? extends ObjectH> jType() {
-    return kind.jType();
+  public Class<? extends ObjectH> typeJ() {
+    return kind.typeJ();
   }
 
   public boolean isNothing() {

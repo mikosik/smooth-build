@@ -363,13 +363,13 @@ public class SpecHTest extends TestingContext {
   }
 
   @ParameterizedTest
-  @MethodSource("jType_test_data")
-  public void jType(SpecH type, Class<?> expected) {
-    assertThat(type.jType())
+  @MethodSource("typeJ_test_data")
+  public void typeJ(SpecH type, Class<?> expected) {
+    assertThat(type.typeJ())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> jType_test_data() {
+  public static List<Arguments> typeJ_test_data() {
     return list(
         arguments(ANY, ValueH.class),
         arguments(BLOB, BlobH.class),

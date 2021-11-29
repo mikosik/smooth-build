@@ -35,7 +35,7 @@ public class ArrayH extends ValueH {
 
   private <T extends ValueH> void assertIsIterableAs(Class<T> clazz) {
     SpecH elem = spec().elem();
-    if (!(elem.isNothing() || clazz.isAssignableFrom(elem.jType()))) {
+    if (!(elem.isNothing() || clazz.isAssignableFrom(elem.typeJ()))) {
       throw new IllegalArgumentException(spec().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
     }

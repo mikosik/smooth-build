@@ -108,7 +108,7 @@ public class MethodLoader {
   private static void assertNativeResultMatchesDeclared(String extendedName, Method method,
       TypeH resultType, String classBinaryName) throws LoadingMethodException {
     var methodResultTypeJ = method.getReturnType();
-    var resultTypeJ = resultType.jType();
+    var resultTypeJ = resultType.typeJ();
     if (!resultTypeJ.equals(methodResultTypeJ)) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " declares type "
           + resultType.q() + " so its native implementation result type must be "
@@ -130,7 +130,7 @@ public class MethodLoader {
       var paramJ = nativeParams[i + 1];
       var typeH = params.get(i);
       var paramTypeJ = paramJ.getType();
-      var expectedParamTypeJ = typeH.jType();
+      var expectedParamTypeJ = typeH.typeJ();
       if (!expectedParamTypeJ.equals(paramTypeJ)) {
         throw newLoadingException(extendedName, classBinaryName, extendedName
             + " parameter at index " + i + " has type " + typeH.q()

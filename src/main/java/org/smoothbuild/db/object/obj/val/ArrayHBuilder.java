@@ -31,7 +31,7 @@ public class ArrayHBuilder {
       throw new IllegalArgumentException("Element type must be " + type.elem().name()
           + " but was " + elem.spec().name() + ".");
     }
-    Class<?> required = type.elem().jType();
+    Class<?> required = type.elem().typeJ();
     if (!required.equals(elem.getClass())) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "
