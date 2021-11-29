@@ -8,19 +8,19 @@ import org.smoothbuild.plugin.NativeApi;
 
 public abstract class Algorithm {
   private final boolean isPure;
-  private final TypeHV outputTypes;
+  private final TypeHV outputType;
 
-  protected Algorithm(TypeHV outputTypes) {
-    this(outputTypes, true);
+  protected Algorithm(TypeHV outputType) {
+    this(outputType, true);
   }
 
-  protected Algorithm(TypeHV outputTypes, boolean isPure) {
-    this.outputTypes = outputTypes;
+  protected Algorithm(TypeHV outputType, boolean isPure) {
+    this.outputType = outputType;
     this.isPure = isPure;
   }
 
   public TypeHV outputType() {
-    return outputTypes;
+    return outputType;
   }
 
   public boolean isPure() {
