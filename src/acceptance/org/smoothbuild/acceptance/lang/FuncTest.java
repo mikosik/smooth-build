@@ -44,7 +44,7 @@ public class FuncTest extends AcceptanceTestCase {
       public void is_not_evaluated_when_not_needed() throws Exception {
         createNativeJar(ThrowException.class);
         createUserModule(format("""
-          @Native("%s.func")
+          @Native("%s")
           Nothing throwException();
           func(String withDefault = throwException()) = withDefault;
           result = func("def");

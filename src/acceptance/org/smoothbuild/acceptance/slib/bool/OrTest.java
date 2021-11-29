@@ -59,7 +59,7 @@ public class OrTest extends AcceptanceTestCase {
   public void second_value_should_not_be_evaluated_when_first_is_true() throws Exception {
     createNativeJar(ThrowException.class);
     createUserModule(format("""
-            @Native("%s.func")
+            @Native("%s")
             Nothing throwException();
             result = or(true, throwException());
             """, ThrowException.class.getCanonicalName()));

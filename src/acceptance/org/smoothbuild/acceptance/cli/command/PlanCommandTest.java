@@ -50,7 +50,7 @@ public class PlanCommandTest {
     public void nat_func_call_with_argument() throws Exception {
       createNativeJar(StringIdentity.class);
       createUserModule(format("""
-            @Native("%s.func")
+            @Native("%s")
             String stringIdentity(String value);
             result = stringIdentity("abc");
             """, StringIdentity.class.getCanonicalName()));
@@ -67,7 +67,7 @@ public class PlanCommandTest {
     public void nat_func_call_without_argument() throws Exception {
       createNativeJar(ReturnAbc.class);
       createUserModule(format("""
-            @Native("%s.func")
+            @Native("%s")
             String returnAbc();
             result = returnAbc();
             """, ReturnAbc.class.getCanonicalName()));
