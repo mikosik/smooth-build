@@ -303,7 +303,7 @@ public class TypeHDb implements TypeFactoryH {
       SpecKindH kind, Class<T> expectedTypeClass) {
     assertTypeRootSeqSize(rootHash, kind, rootSeq, 2);
     Hash hash = rootSeq.get(DATA_INDEX);
-    return readTupleItemType(kind, rootHash, hash, DATA_PATH, expectedTypeClass);
+    return readNode(kind, rootHash, hash, DATA_PATH, expectedTypeClass);
   }
 
   private SpecH readFunc(Hash rootHash, List<Hash> rootSeq, SpecKindH kind) {
@@ -313,9 +313,9 @@ public class TypeHDb implements TypeFactoryH {
     if (data.size() != 2) {
       throw new UnexpectedTypeSeqException(rootHash, kind, DATA_PATH, 2, data.size());
     }
-    TypeH result = readTupleItemType(kind, rootHash, data.get(FUNCTION_RESULT_INDEX),
+    TypeH result = readNode(kind, rootHash, data.get(FUNCTION_RESULT_INDEX),
         FUNCTION_RESULT_PATH, TypeH.class);
-    TupleTypeH params = readTupleItemType(kind, rootHash, data.get(FUNCTION_PARAMS_INDEX),
+    TupleTypeH params = readNode(kind, rootHash, data.get(FUNCTION_PARAMS_INDEX),
         FUNCTION_PARAMS_PATH, TupleTypeH.class);
     return newFunc(rootHash, FuncKind.from(kind), result, params);
   }
@@ -330,7 +330,7 @@ public class TypeHDb implements TypeFactoryH {
     var builder = ImmutableList.<TypeH>builder();
     var itemTypeHashes = readSeqHashes(rootHash, hash, TUPLE, DATA_PATH);
     for (int i = 0; i < itemTypeHashes.size(); i++) {
-      builder.add(readTupleItemType(rootHash, itemTypeHashes.get(i), DATA_PATH, i));
+      builder.add(readNode(TUPLE, rootHash, itemTypeHashes.get(i), DATA_PATH, i));
     }
     return builder.build();
   }
@@ -345,28 +345,27 @@ public class TypeHDb implements TypeFactoryH {
     return newVariable(rootHash, name);
   }
 
-  private <T> T readTupleItemType(SpecKindH kind, Hash outerHash, Hash hash, String path,
-      Class<T> expectedClass) {
+  private <T> T readNode(SpecKindH kind, Hash outerHash, Hash hash, String path, Class<T> clazz) {
     SpecH result = wrapObjectDbExceptionAsDecodeTypeNodeException(
         kind, outerHash, path, () -> get(hash));
-    if (expectedClass.isInstance(result)) {
+    if (clazz.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
       return castResult;
     } else {
       throw new UnexpectedTypeNodeException(
-          outerHash, kind, path, expectedClass, result.getClass());
+          outerHash, kind, path, clazz, result.getClass());
     }
   }
 
-  private TypeH readTupleItemType(Hash outerHash, Hash hash, String path, int index) {
+  private TypeH readNode(SpecKindH kind, Hash outerHash, Hash hash, String path, int index) {
     SpecH result = wrapObjectDbExceptionAsDecodeTypeNodeException(
-        TUPLE, outerHash, path, index, () -> get(hash));
+        kind, outerHash, path, index, () -> get(hash));
     if (result instanceof TypeH typeH) {
       return typeH;
     } else {
       throw new UnexpectedTypeNodeException(
-          outerHash, TUPLE, path, index, TypeH.class, result.getClass());
+          outerHash, kind, path, index, TypeH.class, result.getClass());
     }
   }
 
