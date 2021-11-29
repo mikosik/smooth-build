@@ -9,18 +9,18 @@ import org.junit.jupiter.api.Test;
 
 public class StructNTest {
   @Nested
-  class constructorNameToTypeName {
+  class ctorNameToTypeName {
     @Test
-    public void constructor_name_is_lower_camelcase_of_type_name() {
+    public void ctor_name_is_lower_camelcase_of_type_name() {
       StructN struct = new StructN("MyType", list(), internal());
-      assertThat(struct.constructor().name())
+      assertThat(struct.ctor().name())
           .isEqualTo("myType");
     }
 
     @Test
-    public void constructor_name_is_lower_camelcase_of_type_name_preserving_underscores() {
+    public void ctor_name_is_lower_camelcase_of_type_name_preserving_underscores() {
       StructN struct = new StructN("My_Pretty_Type", list(), internal());
-      assertThat(struct.constructor().name())
+      assertThat(struct.ctor().name())
           .isEqualTo("my_Pretty_Type");
     }
   }

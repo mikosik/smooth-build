@@ -52,7 +52,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void constructor_declared_above_is_visible() {
+      public void ctor_declared_above_is_visible() {
         module("""
              MyStruct {}
              result = myStruct;
@@ -61,7 +61,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void constructor_declared_below_is_visible() {
+      public void ctor_declared_below_is_visible() {
         module("""
              result = myStruct;
              MyStruct {}
@@ -121,7 +121,7 @@ public class VisibilityTest extends TestingContext {
       }
 
       @Test
-      public void constructor_is_visible() {
+      public void ctor_is_visible() {
         DefinitionsS imported = module("""
           OtherModuleStruct{}
           """)
@@ -530,7 +530,7 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void constructor_fails() {
+        public void ctor_fails() {
           DefinitionsS imported = module("""
             OtherModuleStruct {}
             """)
@@ -566,7 +566,7 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void constructor_fails() {
+        public void ctor_fails() {
           module("""
                MyStruct {}
                myStruct = "abc";
@@ -622,7 +622,7 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void constructor_fails() {
+        public void ctor_fails() {
           DefinitionsS imported = module("""
             OtherModuleStruct {}
             """)
@@ -658,7 +658,7 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void constructor_fails() {
+        public void ctor_fails() {
           module("""
                MyStruct {}
                myStruct() = "abc";
@@ -724,7 +724,7 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void constructor_succeeds() {
+        public void ctor_succeeds() {
           DefinitionsS imported = module("""
               OtherModuleStruct {}
               """)
@@ -760,7 +760,7 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void constructor_succeeds() {
+        public void ctor_succeeds() {
           module("""
              MyStruct {}
              String myFunc(String myStruct) = "abc";
@@ -880,7 +880,7 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void constructor_succeeds() {
+        public void ctor_succeeds() {
           DefinitionsS imported = module("""
               OtherModuleStruct {}
               """)
@@ -922,7 +922,7 @@ public class VisibilityTest extends TestingContext {
         }
 
         @Test
-        public void constructor_succeeds() {
+        public void ctor_succeeds() {
           module("""
              MyStruct {}
              MyOtherStruct {
@@ -949,7 +949,7 @@ public class VisibilityTest extends TestingContext {
     }
 
     @Nested
-    class _constructor_shadowing {
+    class _ctor_shadowing {
       @Nested
       class _imported {
         @Test

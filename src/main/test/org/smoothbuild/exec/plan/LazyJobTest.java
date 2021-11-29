@@ -24,7 +24,7 @@ public class LazyJobTest {
   }
 
   @Test
-  public void supplier_is_not_called_in_constructor() {
+  public void supplier_is_not_called_in_ctor() {
     new LazyJob(null, null, supplier);
     verifyNoInteractions(supplier);
   }

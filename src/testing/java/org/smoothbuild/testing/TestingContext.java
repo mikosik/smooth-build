@@ -66,7 +66,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.lang.base.define.ConstructorS;
+import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefinedValueS;
 import org.smoothbuild.lang.base.define.InternalModuleLoader;
@@ -674,13 +674,12 @@ public class TestingContext {
     return new CallS(type, expr, list(arguments), loc(line));
   }
 
-  public ConstructorS constructorS(TypeS resultType, String name, Item... params) {
-    return constructorS(1, resultType, name, params);
+  public CtorS ctorS(TypeS resultType, String name, Item... params) {
+    return ctorS(1, resultType, name, params);
   }
 
-  public ConstructorS constructorS(int line, TypeS resultType, String name, Item... params) {
-    return new ConstructorS(funcST(resultType, params), modulePath(), name,
-        nList(params), loc(line));
+  public CtorS ctorS(int line, TypeS resultType, String name, Item... params) {
+    return new CtorS(funcST(resultType, params), modulePath(), name, nList(params), loc(line));
   }
 
   public NatFuncS funcS(TypeS type, String name, Item... params) {

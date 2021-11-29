@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Test;
 
 public class LabeledTest {
   @Test
-  public void constructor_throws_exception_when_object_is_null() {
+  public void ctor_throws_exception_when_object_is_null() {
     assertCall(() -> new Labeled<Integer>(Optional.of("name"), null))
       .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void constructor_throws_exception_when_name_is_null() {
+  public void ctor_throws_exception_when_name_is_null() {
     assertCall(() -> new Labeled<>(null, 7))
       .throwsException(NullPointerException.class);
   }

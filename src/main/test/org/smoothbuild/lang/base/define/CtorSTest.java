@@ -5,11 +5,11 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
-public class ConstructorSTest extends TestingContext {
+public class CtorSTest extends TestingContext {
   @Test
   public void to_string() {
-    var func = constructorS(personST(), "myConstructor", param(intST(), "myParam"));
+    var func = ctorS(personST(), "myConstructor", param(intST(), "myParam"));
     assertThat(func.toString())
-        .isEqualTo("ConstructorS(`Person myConstructor(Int myParam)`)");
+        .isEqualTo("CtorS(`Person myConstructor(Int myParam)`)");
   }
 }

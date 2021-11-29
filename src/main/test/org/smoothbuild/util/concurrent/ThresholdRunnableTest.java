@@ -23,7 +23,7 @@ public class ThresholdRunnableTest {
   }
 
   @Test
-  public void runnable_is_called_from_constructor_when_threshold_is_0() {
+  public void runnable_is_called_from_ctor_when_threshold_is_0() {
     Runnable runnable = mock(Runnable.class);
     new ThresholdRunnable(0, runnable);
 

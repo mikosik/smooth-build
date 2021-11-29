@@ -15,7 +15,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.lang.base.define.ConstructorS;
+import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefinedType;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.ModuleFiles;
@@ -95,8 +95,8 @@ public class ModuleLoader {
   private NList<TopEvalS> loadEvaluables(ModulePath path, Ast ast) {
     var local = ImmutableList.<TopEvalS>builder();
     for (StructN struct : ast.structs()) {
-      ConstructorS constructor = loadConstructor(path, struct);
-      local.add(constructor);
+      var ctorS = loadCtor(path, struct);
+      local.add(ctorS);
     }
     for (EvalN referencable : ast.evaluables()) {
       local.add(topEvalLoader.loadEvaluables(path, referencable));
@@ -104,12 +104,12 @@ public class ModuleLoader {
     return nList(local.build());
   }
 
-  private ConstructorS loadConstructor(ModulePath path, StructN struct) {
+  private CtorS loadCtor(ModulePath path, StructN struct) {
     var resultType = struct.type().get();
-    var name = struct.constructor().name();
+    var name = struct.ctor().name();
     var paramTypes = map(struct.fields(), f -> f.type().get());
     var type = typeFactory.func(resultType, paramTypes);
     var params = struct.fields().map(f -> f.toItem(path));
-    return new ConstructorS(type, path, name, params, struct.location());
+    return new CtorS(type, path, name, params, struct.location());
   }
 }

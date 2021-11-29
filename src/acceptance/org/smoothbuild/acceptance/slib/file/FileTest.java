@@ -7,7 +7,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class FileTest extends AcceptanceTestCase {
   @Test
-  public void file_constructor() throws Exception {
+  public void file_ctor() throws Exception {
     createUserModule("""
             result = file(0x41, "name.txt");
             """);

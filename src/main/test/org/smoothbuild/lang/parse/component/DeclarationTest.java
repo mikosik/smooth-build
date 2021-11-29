@@ -905,7 +905,7 @@ public class DeclarationTest extends TestingContext {
       }
 
       @Nested
-      class _constructor {
+      class _ctor {
         @Test
         public void creating_empty_struct_instance_is_allowed() {
           String code = """
@@ -929,7 +929,7 @@ public class DeclarationTest extends TestingContext {
         }
 
         @Test
-        public void calling_constructor_without_all_params_causes_error() {
+        public void calling_ctor_without_all_params_causes_error() {
           String code = """
               MyStruct {
                 String field,

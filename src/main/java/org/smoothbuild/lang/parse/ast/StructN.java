@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 public final class StructN extends NamedN {
   private final NList<ItemN> fields;
-  private final ConstructorN constructor;
+  private final CtorN ctor;
 
   public StructN(String name, List<ItemN> fields, Location location) {
     this(name, nListWithDuplicates(ImmutableList.copyOf(fields)), location);
@@ -23,19 +23,19 @@ public final class StructN extends NamedN {
   private StructN(String name, NList<ItemN> fields, Location location) {
     super(name, location);
     this.fields = fields;
-    this.constructor = new ConstructorN(name, fields, location);
+    this.ctor = new CtorN(name, fields, location);
   }
 
-  public ConstructorN constructor() {
-    return constructor;
+  public CtorN ctor() {
+    return ctor;
   }
 
   public NList<ItemN> fields() {
     return fields;
   }
 
-  public final class ConstructorN extends FuncN {
-    public ConstructorN(String structName, List<ItemN> params, Location location) {
+  public final class CtorN extends FuncN {
+    public CtorN(String structName, List<ItemN> params, Location location) {
       super(
           Optional.of(new TypeN(structName, location)),
           UPPER_CAMEL.to(LOWER_CAMEL, structName),

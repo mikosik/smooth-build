@@ -9,7 +9,7 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.define.ConstructorS;
+import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.testing.TestingContext;
 
 public class ExprSLoadingTest extends TestingContext {
@@ -114,9 +114,9 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_constructor_reference() {
+    public void with_ctor_reference() {
       var struct = structST("MyStruct", nList(isig("field", STRING)));
-      ConstructorS constr = constructorS(1, struct, "myStruct", param(2, STRING, "field"));
+      CtorS constr = ctorS(1, struct, "myStruct", param(2, STRING, "field"));
       module("""
           MyStruct {
             String field
@@ -127,7 +127,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void with_constructor_reference_and_argument() {
+    public void with_ctor_reference_and_argument() {
       var struct = structST("MyStruct", nList(isig("field", STRING)));
       module("""
           MyStruct {
@@ -253,7 +253,7 @@ public class ExprSLoadingTest extends TestingContext {
     }
 
     @Test
-    public void to_constructor() {
+    public void to_ctor() {
       var structType = structST("MyStruct", nList());
       module("""
           MyStruct {}

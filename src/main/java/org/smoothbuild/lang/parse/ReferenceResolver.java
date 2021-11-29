@@ -21,9 +21,9 @@ public class ReferenceResolver extends AstVisitor {
 
   public static void resolveReferences(Logger logger, DefinitionsS imported, Ast ast) {
     var importedScope = new Scope<>(imported.referencables());
-    var constructors = map(ast.structs(), StructN::constructor);
+    var ctors = map(ast.structs(), StructN::ctor);
     var referencables = ast.evaluables();
-    var scope = new Scope<>(importedScope, nList(concat(referencables, constructors)));
+    var scope = new Scope<>(importedScope, nList(concat(referencables, ctors)));
     new ReferenceResolver(scope, logger)
         .visitAst(ast);
   }

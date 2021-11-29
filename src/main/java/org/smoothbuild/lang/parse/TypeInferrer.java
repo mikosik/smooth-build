@@ -74,7 +74,7 @@ public class TypeInferrer {
         super.visitStruct(struct);
         var fields = Optionals.pullUp(map(struct.fields(), ItemN::itemSignature));
         struct.setType(fields.map(f -> factory.struct(struct.name(), nList(f))));
-        struct.constructor().setType(
+        struct.ctor().setType(
             fields.map(s -> factory.func(struct.type().get(), map(s, ItemSignature::type))));
       }
 

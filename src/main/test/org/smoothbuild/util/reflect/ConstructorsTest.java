@@ -7,42 +7,42 @@ import org.junit.jupiter.api.Test;
 
 public class ConstructorsTest {
   @Test
-  public void private_constructor() throws NoSuchMethodException {
-    assertThat(isPublic(MyPrivateConstructorClass.class.getDeclaredConstructor()))
+  public void private_ctor() throws NoSuchMethodException {
+    assertThat(isPublic(MyPrivateCtorClass.class.getDeclaredConstructor()))
         .isFalse();
   }
 
-  public static class MyPrivateConstructorClass {
-    private MyPrivateConstructorClass() {}
+  public static class MyPrivateCtorClass {
+    private MyPrivateCtorClass() {}
   }
 
   @Test
-  public void protected_constructor() throws NoSuchMethodException {
-    assertThat(isPublic(MyProtectedConstructorClass.class.getDeclaredConstructor()))
+  public void protected_ctor() throws NoSuchMethodException {
+    assertThat(isPublic(MyProtectedCtorClass.class.getDeclaredConstructor()))
         .isFalse();
   }
 
-  public static class MyProtectedConstructorClass {
-    protected MyProtectedConstructorClass() {}
+  public static class MyProtectedCtorClass {
+    protected MyProtectedCtorClass() {}
   }
 
   @Test
-  public void package_private_constructor() throws NoSuchMethodException {
-    assertThat(isPublic(MyPackageConstructorClass.class.getDeclaredConstructor()))
+  public void package_private_ctor() throws NoSuchMethodException {
+    assertThat(isPublic(MyPackageCtorClass.class.getDeclaredConstructor()))
         .isFalse();
   }
 
-  public static class MyPackageConstructorClass {
-    MyPackageConstructorClass() {}
+  public static class MyPackageCtorClass {
+    MyPackageCtorClass() {}
   }
 
   @Test
-  public void public_constructor() throws NoSuchMethodException {
-    assertThat(isPublic(MyPublicConstructorClass.class.getDeclaredConstructor()))
+  public void public_ctor() throws NoSuchMethodException {
+    assertThat(isPublic(MyPublicCtorClass.class.getDeclaredConstructor()))
         .isTrue();
   }
 
-  public static class MyPublicConstructorClass {
-    public MyPublicConstructorClass() {}
+  public static class MyPublicCtorClass {
+    public MyPublicCtorClass() {}
   }
 }

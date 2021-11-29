@@ -11,9 +11,9 @@ import org.smoothbuild.util.collect.NList;
 /**
  * This class is immutable.
  */
-public final class ConstructorS extends FuncS {
-  public ConstructorS(FuncTypeS type, ModulePath modulePath, String name,
-      NList<Item> params, Location location) {
+public final class CtorS extends FuncS {
+  public CtorS(FuncTypeS type, ModulePath modulePath, String name, NList<Item> params,
+      Location location) {
     super(type, modulePath, name, params, location);
     checkArgument(type.result() instanceof StructTypeS);
   }
@@ -28,7 +28,7 @@ public final class ConstructorS extends FuncS {
     if (this == object) {
       return true;
     }
-    return object instanceof ConstructorS that
+    return object instanceof CtorS that
         && this.resultType().equals(that.resultType())
         && this.modulePath().equals(that.modulePath())
         && this.name().equals(that.name())

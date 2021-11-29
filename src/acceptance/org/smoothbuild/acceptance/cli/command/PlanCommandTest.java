@@ -80,7 +80,7 @@ public class PlanCommandTest {
     }
 
     @Test
-    public void constructor_call() throws Exception {
+    public void ctor_call() throws Exception {
       createUserModule("""
               MyStruct {
                 String field

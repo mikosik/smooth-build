@@ -144,7 +144,7 @@ public class AnalyzeSemantically {
   private static void detectDuplicateGlobalNames(Logger logger, DefinitionsS imported, Ast ast) {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
-    nals.addAll(map(ast.structs(), StructN::constructor));
+    nals.addAll(map(ast.structs(), StructN::ctor));
     nals.addAll(ast.evaluables());
     nals.sort(comparing(n -> n.location().line()));
 
