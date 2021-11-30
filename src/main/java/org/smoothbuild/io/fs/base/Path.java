@@ -31,7 +31,7 @@ public class Path {
 
   private static void failIf(boolean illegal, String message) {
     if (illegal) {
-      throw new IllegalPathException(message);
+      throw new IllegalPathExc(message);
     }
   }
 

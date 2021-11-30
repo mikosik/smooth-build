@@ -1,25 +1,25 @@
 package org.smoothbuild.db.object.obj;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.db.ObjDbException;
-import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
+import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.object.db.ObjDbExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.db.object.type.base.SpecH;
 
 public class Helpers {
   public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {
     try {
       runnable.run();
-    } catch (HashedDbException e) {
-      throw new ObjDbException(e);
+    } catch (HashedDbExc e) {
+      throw new ObjDbExc(e);
     }
   }
 
   public static <T> T wrapHashedDbExceptionAsObjectDbException(HashedDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (HashedDbException e) {
-      throw new ObjDbException(e);
+    } catch (HashedDbExc e) {
+      throw new ObjDbExc(e);
     }
   }
 
@@ -27,8 +27,8 @@ public class Helpers {
       Hash hash, SpecH type, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (HashedDbException e) {
-      throw new DecodeObjNodeException(hash, type, path, e);
+    } catch (HashedDbExc e) {
+      throw new DecodeObjNodeExc(hash, type, path, e);
     }
   }
 
@@ -36,8 +36,8 @@ public class Helpers {
       Hash hash, SpecH type, String path, ObjDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjDbException e) {
-      throw new DecodeObjNodeException(hash, type, path, e);
+    } catch (ObjDbExc e) {
+      throw new DecodeObjNodeExc(hash, type, path, e);
     }
   }
 
@@ -45,23 +45,23 @@ public class Helpers {
       Hash hash, SpecH type, String path, int pathIndex, ObjDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjDbException e) {
-      throw new DecodeObjNodeException(hash, type, path + "[" + pathIndex + "]", e);
+    } catch (ObjDbExc e) {
+      throw new DecodeObjNodeExc(hash, type, path + "[" + pathIndex + "]", e);
     }
   }
 
   @FunctionalInterface
   public static interface ObjDbCallable<T> {
-    public T call() throws ObjDbException;
+    public T call() throws ObjDbExc;
   }
 
   @FunctionalInterface
   public static interface HashedDbCallable<T> {
-    public T call() throws HashedDbException;
+    public T call() throws HashedDbExc;
   }
 
   @FunctionalInterface
   public static interface HashedDbRunnable {
-    public void run() throws HashedDbException;
+    public void run() throws HashedDbExc;
   }
 }

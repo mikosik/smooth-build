@@ -5,7 +5,7 @@ import static java.util.Objects.checkIndex;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ValueH;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
+import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
@@ -52,7 +52,7 @@ public class TupleH extends ValueH {
       SpecH expectedType = itemTypes.get(i);
       SpecH actualType = obj.spec();
       if (!expectedType.equals(actualType)) {
-        throw new UnexpectedObjNodeException(
+        throw new UnexpectedObjNodeExc(
             hash(), spec(), DATA_PATH, i, expectedType, actualType);
       }
     }

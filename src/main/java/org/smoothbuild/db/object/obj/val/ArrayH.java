@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.obj.val;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ValueH;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
+import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
@@ -46,7 +46,7 @@ public class ArrayH extends ValueH {
     for (int i = 0; i < elems.size(); i++) {
       var elemType = elems.get(i).spec();
       if (!(objDb().typing().isAssignable(expectedElementType, elemType))) {
-        throw new UnexpectedObjNodeException(hash(), spec(), DATA_PATH, i,
+        throw new UnexpectedObjNodeExc(hash(), spec(), DATA_PATH, i,
             expectedElementType, elemType);
       }
     }

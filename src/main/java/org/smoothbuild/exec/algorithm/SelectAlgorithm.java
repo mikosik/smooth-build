@@ -4,15 +4,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.selectAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
-
-import com.google.common.collect.ImmutableList;
 
 public class SelectAlgorithm extends Algorithm {
   private final IntH index;

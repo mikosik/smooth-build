@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
+import static org.smoothbuild.exec.compute.ComputationCacheExc.corruptedValueException;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -49,7 +49,7 @@ public class ComputationCacheTest extends TestingContext {
   @Test
   public void reading_not_written_value_fails() {
     assertCall(() -> computationCache().read(hash, stringHT()))
-        .throwsException(ComputationCacheException.class);
+        .throwsException(ComputationCacheExc.class);
   }
 
   @Test

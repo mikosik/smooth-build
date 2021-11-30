@@ -26,7 +26,7 @@ public class PathTest {
       path(value);
     } else {
       assertCall(() -> path(value))
-          .throwsException(IllegalPathException.class);
+          .throwsException(IllegalPathExc.class);
     }
   }
 

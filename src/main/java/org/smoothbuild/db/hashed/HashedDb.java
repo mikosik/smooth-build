@@ -11,14 +11,14 @@ import java.math.BigInteger;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 
-import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
-import org.smoothbuild.db.hashed.exc.DecodeBigIntegerException;
-import org.smoothbuild.db.hashed.exc.DecodeBooleanException;
-import org.smoothbuild.db.hashed.exc.DecodeByteException;
-import org.smoothbuild.db.hashed.exc.DecodeHashSeqException;
-import org.smoothbuild.db.hashed.exc.DecodeStringException;
-import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.hashed.exc.NoSuchDataException;
+import org.smoothbuild.db.hashed.exc.CorruptedHashedDbExc;
+import org.smoothbuild.db.hashed.exc.DecodeBigIntegerExc;
+import org.smoothbuild.db.hashed.exc.DecodeBooleanExc;
+import org.smoothbuild.db.hashed.exc.DecodeByteExc;
+import org.smoothbuild.db.hashed.exc.DecodeHashSeqExc;
+import org.smoothbuild.db.hashed.exc.DecodeStringExc;
+import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -43,98 +43,98 @@ public class HashedDb {
     this.tempManager = tempManager;
   }
 
-  public Hash writeBigInteger(BigInteger value) throws HashedDbException {
+  public Hash writeBigInteger(BigInteger value) throws HashedDbExc {
     try (HashingBufferedSink sink = sink()) {
       sink.write(value.toByteArray());
       sink.close();
       return sink.hash();
     } catch (IOException e) {
-      throw new HashedDbException(e);
+      throw new HashedDbExc(e);
     }
   }
 
-  public BigInteger readBigInteger(Hash hash) throws HashedDbException {
+  public BigInteger readBigInteger(Hash hash) throws HashedDbExc {
     try (BufferedSource source = source(hash)) {
       byte[] bytes = source.readByteArray();
       if (bytes.length == 0) {
-        throw new DecodeBigIntegerException(hash);
+        throw new DecodeBigIntegerExc(hash);
       }
       return new BigInteger(bytes);
     } catch (IOException e) {
-      throw new HashedDbException(hash, e);
+      throw new HashedDbExc(hash, e);
     }
   }
 
-  public Hash writeBoolean(boolean value) throws HashedDbException {
+  public Hash writeBoolean(boolean value) throws HashedDbExc {
     return writeByte(value ? (byte) 1 : (byte) 0);
   }
 
-  public boolean readBoolean(Hash hash) throws HashedDbException {
+  public boolean readBoolean(Hash hash) throws HashedDbExc {
     try {
       byte value = readByte(hash);
       return switch (value) {
         case 0 -> false;
         case 1 -> true;
-        default -> throw new DecodeBooleanException(hash);
+        default -> throw new DecodeBooleanExc(hash);
       };
-    } catch (DecodeByteException e) {
-      throw new DecodeBooleanException(hash, e);
+    } catch (DecodeByteExc e) {
+      throw new DecodeBooleanExc(hash, e);
     }
   }
 
-  public Hash writeByte(byte value) throws HashedDbException {
+  public Hash writeByte(byte value) throws HashedDbExc {
     try (HashingBufferedSink sink = sink()) {
       sink.writeByte(value);
       sink.close();
       return sink.hash();
     } catch (IOException e) {
-      throw new HashedDbException(e);
+      throw new HashedDbExc(e);
     }
   }
 
-  public byte readByte(Hash hash) throws HashedDbException {
+  public byte readByte(Hash hash) throws HashedDbExc {
     try (BufferedSource source = source(hash)) {
       if (source.exhausted()) {
-        throw new DecodeByteException(hash);
+        throw new DecodeByteExc(hash);
       }
       byte value = source.readByte();
       if (!source.exhausted()) {
-        throw new DecodeByteException(hash);
+        throw new DecodeByteExc(hash);
       }
       return value;
     } catch (IOException e) {
-      throw new HashedDbException(hash, e);
+      throw new HashedDbExc(hash, e);
     }
   }
 
-  public Hash writeString(String string) throws HashedDbException {
+  public Hash writeString(String string) throws HashedDbExc {
     try (HashingBufferedSink sink = sink()) {
       sink.writeString(string, CHARSET);
       sink.close();
       return sink.hash();
     } catch (IOException e) {
-      throw new HashedDbException(e);
+      throw new HashedDbExc(e);
     }
   }
 
-  public String readString(Hash hash) throws HashedDbException {
+  public String readString(Hash hash) throws HashedDbExc {
     try (BufferedSource source = source(hash)) {
       CharsetDecoder charsetDecoder = CHARSET.newDecoder();
       charsetDecoder.onMalformedInput(REPORT);
       charsetDecoder.onUnmappableCharacter(REPORT);
       return charsetDecoder.decode(wrap(source.readByteArray())).toString();
     } catch (CharacterCodingException e) {
-      throw new DecodeStringException(hash, e);
+      throw new DecodeStringExc(hash, e);
     } catch (IOException e) {
-      throw new HashedDbException(hash, e);
+      throw new HashedDbExc(hash, e);
     }
   }
 
-  public Hash writeSeq(Hash... hashes) throws HashedDbException {
+  public Hash writeSeq(Hash... hashes) throws HashedDbExc {
     return writeSeq(asList(hashes));
   }
 
-  public Hash writeSeq(Iterable<Hash> hashes) throws HashedDbException {
+  public Hash writeSeq(Iterable<Hash> hashes) throws HashedDbExc {
     try (HashingBufferedSink sink = sink()) {
       for (Hash hash : hashes) {
         sink.write(hash.toByteString());
@@ -142,61 +142,61 @@ public class HashedDb {
       sink.close();
       return sink.hash();
     } catch (IOException e) {
-      throw new HashedDbException(e);
+      throw new HashedDbExc(e);
     }
   }
 
-  public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbException {
+  public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbExc {
     Builder<Hash> builder = ImmutableList.builder();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {
         if (source.request(Hash.lengthInBytes())) {
           builder.add(Hash.read(source));
         } else {
-          throw new DecodeHashSeqException(hash, source.readByteArray().length);
+          throw new DecodeHashSeqExc(hash, source.readByteArray().length);
         }
       }
     } catch (IOException e) {
-      throw new HashedDbException(hash, e);
+      throw new HashedDbExc(hash, e);
     }
     return builder.build();
   }
 
-  public boolean contains(Hash hash) throws CorruptedHashedDbException {
+  public boolean contains(Hash hash) throws CorruptedHashedDbExc {
     Path path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> true;
-      case DIR -> throw new CorruptedHashedDbException(
+      case DIR -> throw new CorruptedHashedDbExc(
           "Corrupted HashedDb. " + path.q() + " is a directory not a data file.");
       case NOTHING -> false;
     };
   }
 
-  public BufferedSource source(Hash hash) throws HashedDbException {
+  public BufferedSource source(Hash hash) throws HashedDbExc {
     Path path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> sourceFile(hash, path);
-      case DIR -> throw new CorruptedHashedDbException(
+      case DIR -> throw new CorruptedHashedDbExc(
           format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
-      case NOTHING -> throw new NoSuchDataException(hash);
+      case NOTHING -> throw new NoSuchDataExc(hash);
     };
   }
 
-  private BufferedSource sourceFile(Hash hash, Path path) throws HashedDbException {
+  private BufferedSource sourceFile(Hash hash, Path path) throws HashedDbExc {
     try {
       return fileSystem.source(path);
     } catch (IOException e) {
-      throw new HashedDbException(hash, e);
+      throw new HashedDbExc(hash, e);
     }
   }
 
-  public HashingBufferedSink sink() throws HashedDbException {
+  public HashingBufferedSink sink() throws HashedDbExc {
     try {
       return new HashingBufferedSink(fileSystem, tempManager.tempPath(), rootPath);
     } catch (IOException e) {
-      throw new HashedDbException(e);
+      throw new HashedDbExc(e);
     }
   }
 

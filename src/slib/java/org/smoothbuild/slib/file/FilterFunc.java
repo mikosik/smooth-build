@@ -12,14 +12,14 @@ import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.slib.file.match.IllegalPathPatternException;
+import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 
 public class FilterFunc {
   public static ArrayH func(NativeApi nativeApi, ArrayH files, StringH pattern) {
     Predicate<Path> filter;
     try {
       filter = pathMatcher(pattern.toJ());
-    } catch (IllegalPathPatternException e) {
+    } catch (IllegalPathPatternExc e) {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;
     }

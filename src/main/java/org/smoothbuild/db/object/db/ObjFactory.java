@@ -84,7 +84,7 @@ public class ObjFactory {
       builder.write(dataWriter);
       return builder.build();
     } catch (IOException e) {
-      throw new ObjDbException(e);
+      throw new ObjDbExc(e);
     }
   }
 

@@ -69,7 +69,7 @@ public class ArtifactBuilder {
       reportFailure(name,
           "Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
               + getStackTraceAsString(e));
-    } catch (DuplicatedPathsException e) {
+    } catch (DuplicatedPathsExc e) {
       reportFailure(name, e.getMessage());
     }
   }

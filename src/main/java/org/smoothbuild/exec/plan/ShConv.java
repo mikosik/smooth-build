@@ -53,7 +53,7 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.RefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
-import org.smoothbuild.run.QuitException;
+import org.smoothbuild.run.QuitExc;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -250,7 +250,7 @@ public class ShConv {
     } catch (FileNotFoundException e) {
       String message = "Error loading native jar for `%s`: File %s doesn't exist."
           .formatted(natFuncS.name(), filePath.q());
-      throw new QuitException(message);
+      throw new QuitExc(message);
     }
   }
 

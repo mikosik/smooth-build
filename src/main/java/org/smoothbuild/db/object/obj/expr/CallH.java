@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
 
@@ -56,17 +56,17 @@ public class CallH extends ExprH {
       var actualResult = typing.mapVars(
           funcType.res(), varBounds, typing.factory().lower());
       if (!Objects.equals(type(), actualResult)) {
-        throw new DecodeExprWrongEvalTypeOfComponentException(
+        throw new DecodeExprWrongEvalTypeOfCompExc(
             hash(), spec(), "func.result", type(), actualResult);
       }
     } else {
-      throw new DecodeExprWrongEvalTypeOfComponentException(
+      throw new DecodeExprWrongEvalTypeOfCompExc(
           hash(), spec(), "func", FuncTypeH.class, func.type());
     }
   }
 
   private void illegalArgs(FuncTypeH funcType, CombineH args) {
-    throw new DecodeExprWrongEvalTypeOfComponentException(hash(), spec(), "args",
+    throw new DecodeExprWrongEvalTypeOfCompExc(hash(), spec(), "args",
         funcType.paramsTuple(), args.type());
   }
 

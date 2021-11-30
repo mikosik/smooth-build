@@ -3,7 +3,7 @@ package org.smoothbuild.slib.file;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.io.fs.base.IllegalPathException;
+import org.smoothbuild.io.fs.base.IllegalPathExc;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 
@@ -19,7 +19,7 @@ public class PathArgValidator {
       default:
         try {
           return path(value);
-        } catch (IllegalPathException e) {
+        } catch (IllegalPathExc e) {
           nativeApi.log().error("Param `" + name + "` has illegal value. " + e.getMessage());
           return null;
         }

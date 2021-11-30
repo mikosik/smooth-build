@@ -1,19 +1,19 @@
 package org.smoothbuild.db.object.type;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.db.ObjDbException;
+import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.object.db.ObjDbExc;
 import org.smoothbuild.db.object.type.base.SpecKindH;
-import org.smoothbuild.db.object.type.exc.DecodeTypeException;
-import org.smoothbuild.db.object.type.exc.DecodeTypeNodeException;
+import org.smoothbuild.db.object.type.exc.DecodeTypeExc;
+import org.smoothbuild.db.object.type.exc.DecodeTypeNodeExc;
 
 public class Helpers {
   public static <T> T wrapHashedDbExceptionAsDecodeTypeException(
       Hash hash, HashedDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (HashedDbException e) {
-      throw new DecodeTypeException(hash, e);
+    } catch (HashedDbExc e) {
+      throw new DecodeTypeExc(hash, e);
     }
   }
 
@@ -21,8 +21,8 @@ public class Helpers {
       Hash hash, SpecKindH kind, String path, int index, HashedDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (HashedDbException e) {
-      throw new DecodeTypeNodeException(hash, kind, path, index, e);
+    } catch (HashedDbExc e) {
+      throw new DecodeTypeNodeExc(hash, kind, path, index, e);
     }
   }
 
@@ -30,8 +30,8 @@ public class Helpers {
       Hash hash, SpecKindH kind, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (HashedDbException e) {
-      throw new DecodeTypeNodeException(hash, kind, path, e);
+    } catch (HashedDbExc e) {
+      throw new DecodeTypeNodeExc(hash, kind, path, e);
     }
   }
 
@@ -39,8 +39,8 @@ public class Helpers {
       SpecKindH kind, Hash hash, String path, int index, ObjDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjDbException e) {
-      throw new DecodeTypeNodeException(hash, kind, path, index, e);
+    } catch (ObjDbExc e) {
+      throw new DecodeTypeNodeExc(hash, kind, path, index, e);
     }
   }
 
@@ -48,17 +48,17 @@ public class Helpers {
       SpecKindH kind, Hash hash, String path, ObjDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjDbException e) {
-      throw new DecodeTypeNodeException(hash, kind, path, e);
+    } catch (ObjDbExc e) {
+      throw new DecodeTypeNodeExc(hash, kind, path, e);
     }
   }
   @FunctionalInterface
   public static interface ObjDbCallable<T> {
-    public T call() throws ObjDbException;
+    public T call() throws ObjDbExc;
   }
 
   @FunctionalInterface
   public static interface HashedDbCallable<T> {
-    public T call() throws HashedDbException;
+    public T call() throws HashedDbExc;
   }
 }

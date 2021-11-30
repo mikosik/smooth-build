@@ -6,7 +6,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashingBufferedSink;
-import org.smoothbuild.db.hashed.exc.HashedDbException;
+import org.smoothbuild.db.hashed.exc.HashedDbExc;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -38,12 +38,12 @@ public class BlobHBuilder implements Closeable {
     return wrapHashedDbExceptionAsObjectDbException(this::buildImpl);
   }
 
-  private BlobH buildImpl() throws HashedDbException {
+  private BlobH buildImpl() throws HashedDbExc {
     try {
       sink.close();
       return objDb.newBlob(sink.hash());
     } catch (IOException e) {
-      throw new HashedDbException(e);
+      throw new HashedDbExc(e);
     }
   }
 }

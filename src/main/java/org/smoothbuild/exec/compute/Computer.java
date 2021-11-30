@@ -38,7 +38,7 @@ public class Computer {
   }
 
   public void compute(Algorithm algorithm, Input input, Consumer<Computed> consumer)
-      throws ComputationCacheException, IOException {
+      throws ComputationCacheExc, IOException {
     Hash hash = computationHash(algorithm, input);
     PromisedValue<Computed> newPromised = new PromisedValue<>();
     PromisedValue<Computed> prevPromised = promisedValues.putIfAbsent(hash, newPromised);

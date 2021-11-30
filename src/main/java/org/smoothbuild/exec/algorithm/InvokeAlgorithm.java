@@ -57,7 +57,7 @@ public class InvokeAlgorithm extends Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallException(q(extendedName)
+      throw new NativeCallExc(q(extendedName)
           + " threw java exception from its native code.", e.getCause());
     }
   }

@@ -28,22 +28,22 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
-import org.smoothbuild.db.hashed.exc.DecodeHashSeqException;
-import org.smoothbuild.db.hashed.exc.DecodeStringException;
-import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.hashed.exc.NoSuchDataException;
+import org.smoothbuild.db.hashed.exc.DecodeHashSeqExc;
+import org.smoothbuild.db.hashed.exc.DecodeStringExc;
+import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.obj.IllegalArrayByteSizesProvider;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.exc.DecodeTypeException;
-import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
-import org.smoothbuild.db.object.type.exc.DecodeTypeNodeException;
-import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
-import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameException;
-import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
-import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqException;
+import org.smoothbuild.db.object.type.exc.DecodeTypeExc;
+import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindExc;
+import org.smoothbuild.db.object.type.exc.DecodeTypeNodeExc;
+import org.smoothbuild.db.object.type.exc.DecodeTypeRootExc;
+import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameExc;
+import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeExc;
+import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqExc;
 import org.smoothbuild.db.object.type.expr.RefTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
@@ -131,7 +131,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash("abc")
       );
       assertThatGet(hash)
-          .throwsException(new DecodeTypeRootException(hash, kind, 2, 1));
+          .throwsException(new DecodeTypeRootExc(hash, kind, 2, 1));
     }
   }
 
@@ -178,7 +178,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash(refHT())
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeNodeException(
+          .throwsException(new UnexpectedTypeNodeExc(
               hash, ARRAY, DATA_PATH, TypeH.class, RefTypeH.class));
     }
   }
@@ -273,7 +273,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash(intHT())
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeNodeException(
+          .throwsException(new UnexpectedTypeNodeExc(
               hash, CONSTRUCT, DATA_PATH, TupleTypeH.class, IntTypeH.class));
     }
   }
@@ -323,7 +323,7 @@ public class SpecHCorruptedTest extends TestingContext {
               notHashOfSeq
           );
       assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, ABST_FUNC, DATA_PATH));
+          .throwsException(new DecodeTypeNodeExc(hash, ABST_FUNC, DATA_PATH));
     }
 
     @Test
@@ -338,7 +338,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeSeqException(hash, ABST_FUNC, DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedTypeSeqExc(hash, ABST_FUNC, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -350,7 +350,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeSeqException(hash, ABST_FUNC, DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedTypeSeqExc(hash, ABST_FUNC, DATA_PATH, 2, 1));
     }
 
     @ParameterizedTest
@@ -363,8 +363,8 @@ public class SpecHCorruptedTest extends TestingContext {
           notHashOfSeq
       );
       assertCall(() -> ((FuncTypeH) typeDb().get(typeHash)).res())
-          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, DATA_PATH))
-          .withCause(new DecodeHashSeqException(
+          .throwsException(new DecodeTypeNodeExc(typeHash, ABST_FUNC, DATA_PATH))
+          .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
 
@@ -380,8 +380,8 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> typeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_RES_PATH))
-          .withCause(new DecodeTypeException(nowhere));
+          .throwsException(new DecodeTypeNodeExc(typeHash, ABST_FUNC, FUNCTION_RES_PATH))
+          .withCause(new DecodeTypeExc(nowhere));
     }
 
     @Test
@@ -395,7 +395,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> typeDb().get(typeHash))
-          .throwsException(new UnexpectedTypeNodeException(
+          .throwsException(new UnexpectedTypeNodeExc(
               typeHash, ABST_FUNC, FUNCTION_RES_PATH, TypeH.class, RefTypeH.class));
     }
 
@@ -410,7 +410,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> typeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_RES_PATH))
+          .throwsException(new DecodeTypeNodeExc(typeHash, ABST_FUNC, FUNCTION_RES_PATH))
           .withCause(corruptedArrayTypeException());
     }
 
@@ -425,8 +425,8 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> typeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH))
-          .withCause(new DecodeTypeException(nowhere));
+          .throwsException(new DecodeTypeNodeExc(typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH))
+          .withCause(new DecodeTypeExc(nowhere));
     }
 
     @Test
@@ -439,7 +439,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(typeHash)
-          .throwsException(new UnexpectedTypeNodeException(
+          .throwsException(new UnexpectedTypeNodeExc(
               typeHash, ABST_FUNC, DATA_PATH, 1, TupleTypeH.class, StringTypeH.class));
     }
 
@@ -453,7 +453,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> typeDb().get(typeHash))
-          .throwsException(new UnexpectedTypeNodeException(
+          .throwsException(new UnexpectedTypeNodeExc(
               typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH, TupleTypeH.class, RefTypeH.class));
     }
 
@@ -467,7 +467,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> typeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH))
+          .throwsException(new DecodeTypeNodeExc(typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH))
           .withCause(corruptedArrayTypeException());
     }
   }
@@ -520,7 +520,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash(intHT())
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeNodeException(
+          .throwsException(new UnexpectedTypeNodeExc(
               hash, ORDER, DATA_PATH, ArrayTypeH.class, IntTypeH.class));
     }
   }
@@ -573,7 +573,7 @@ public class SpecHCorruptedTest extends TestingContext {
             hash(speckKind.marker())
         );
     assertThatGet(hash)
-        .throwsException(new DecodeTypeRootException(hash, speckKind, 1, 2));
+        .throwsException(new DecodeTypeRootExc(hash, speckKind, 1, 2));
   }
 
   private void test_type_with_additional_data(SpecKindH kind) throws Exception {
@@ -583,7 +583,7 @@ public class SpecHCorruptedTest extends TestingContext {
         hash("corrupted")
     );
     assertThatGet(hash)
-        .throwsException(new DecodeTypeRootException(hash, 3));
+        .throwsException(new DecodeTypeRootExc(hash, 3));
   }
 
   private void test_data_hash_pointing_nowhere_instead_of_being_type(SpecKindH kind)
@@ -594,8 +594,8 @@ public class SpecHCorruptedTest extends TestingContext {
         dataHash
     );
     assertCall(() -> typeDb().get(typeHash))
-        .throwsException(new DecodeTypeNodeException(typeHash, kind, DATA_PATH))
-        .withCause(new DecodeTypeException(dataHash));
+        .throwsException(new DecodeTypeNodeExc(typeHash, kind, DATA_PATH))
+        .withCause(new DecodeTypeExc(dataHash));
   }
 
   private void test_data_hash_pointing_nowhere_instead_of_being_seq(SpecKindH kind)
@@ -606,8 +606,8 @@ public class SpecHCorruptedTest extends TestingContext {
         dataHash
     );
     assertCall(() -> typeDb().get(typeHash))
-        .throwsException(new DecodeTypeNodeException(typeHash, kind, DATA_PATH))
-        .withCause(new NoSuchDataException(dataHash));
+        .throwsException(new DecodeTypeNodeExc(typeHash, kind, DATA_PATH))
+        .withCause(new NoSuchDataExc(dataHash));
   }
 
   private void test_type_with_corrupted_type_as_data(SpecKindH kind) throws Exception {
@@ -616,7 +616,7 @@ public class SpecHCorruptedTest extends TestingContext {
             hash(kind.marker()),
             corruptedArrayTypeHash());
     assertThatGet(hash)
-        .throwsException(new DecodeTypeNodeException(hash, kind, DATA_PATH))
+        .throwsException(new DecodeTypeNodeExc(hash, kind, DATA_PATH))
         .withCause(corruptedArrayTypeException());
   }
 
@@ -627,7 +627,7 @@ public class SpecHCorruptedTest extends TestingContext {
         hash(refHT())
     );
     assertThatGet(hash)
-        .throwsException(new UnexpectedTypeNodeException(
+        .throwsException(new UnexpectedTypeNodeExc(
             hash, kind, DATA_PATH, expected, RefTypeH.class));
   }
 
@@ -635,12 +635,12 @@ public class SpecHCorruptedTest extends TestingContext {
       return assertCall(() -> typeDb().get(hash));
   }
 
-  private DecodeTypeException illegalTypeMarkerException(Hash hash, int marker) {
-    return new DecodeTypeIllegalKindException(hash, (byte) marker);
+  private DecodeTypeExc illegalTypeMarkerException(Hash hash, int marker) {
+    return new DecodeTypeIllegalKindExc(hash, (byte) marker);
   }
 
-  private DecodeTypeNodeException corruptedArrayTypeException() throws Exception {
-    return new DecodeTypeNodeException(corruptedArrayTypeHash(), ARRAY, DATA_PATH);
+  private DecodeTypeNodeExc corruptedArrayTypeException() throws Exception {
+    return new DecodeTypeNodeExc(corruptedArrayTypeHash(), ARRAY, DATA_PATH);
   }
 
   private Hash corruptedArrayTypeHash() throws Exception {
@@ -650,7 +650,7 @@ public class SpecHCorruptedTest extends TestingContext {
     );
   }
 
-  protected Hash hash(String string) throws HashedDbException {
+  protected Hash hash(String string) throws HashedDbExc {
     return hashedDb().writeString(string);
   }
 
@@ -682,7 +682,7 @@ public class SpecHCorruptedTest extends TestingContext {
     return type.hash();
   }
 
-  protected Hash hash(Hash... hashes) throws HashedDbException {
+  protected Hash hash(Hash... hashes) throws HashedDbExc {
     return hashedDb().writeSeq(hashes);
   }
 
@@ -771,7 +771,7 @@ public class SpecHCorruptedTest extends TestingContext {
               notHashOfSeq
           );
       assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, TUPLE, DATA_PATH));
+          .throwsException(new DecodeTypeNodeExc(hash, TUPLE, DATA_PATH));
     }
 
     @Test
@@ -785,8 +785,8 @@ public class SpecHCorruptedTest extends TestingContext {
               )
           );
       assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, TUPLE, "data[0]"))
-          .withCause(new DecodeTypeException(stringHash));
+          .throwsException(new DecodeTypeNodeExc(hash, TUPLE, "data[0]"))
+          .withCause(new DecodeTypeExc(stringHash));
     }
 
     @Test
@@ -799,7 +799,7 @@ public class SpecHCorruptedTest extends TestingContext {
               )
           );
       assertThatGet(hash)
-          .throwsException(new UnexpectedTypeNodeException(
+          .throwsException(new UnexpectedTypeNodeExc(
               hash, TUPLE, "data", 0, TypeH.class, RefTypeH.class));
     }
 
@@ -812,7 +812,7 @@ public class SpecHCorruptedTest extends TestingContext {
                   corruptedArrayTypeHash(),
                   hash(stringHT())));
       assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, TUPLE, "data[0]"))
+          .throwsException(new DecodeTypeNodeExc(hash, TUPLE, "data[0]"))
           .withCause(corruptedArrayTypeException());
     }
   }
@@ -851,8 +851,8 @@ public class SpecHCorruptedTest extends TestingContext {
           dataHash
       );
       assertCall(() -> typeDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, VARIABLE, DATA_PATH))
-          .withCause(new NoSuchDataException(dataHash));
+          .throwsException(new DecodeTypeNodeExc(typeHash, VARIABLE, DATA_PATH))
+          .withCause(new NoSuchDataExc(dataHash));
     }
 
     @Test
@@ -862,8 +862,8 @@ public class SpecHCorruptedTest extends TestingContext {
               hash(VARIABLE.marker()),
               corruptedArrayTypeHash());
       assertThatGet(hash)
-          .throwsException(new DecodeTypeNodeException(hash, VARIABLE, DATA_PATH))
-          .withCause(DecodeStringException.class);
+          .throwsException(new DecodeTypeNodeExc(hash, VARIABLE, DATA_PATH))
+          .withCause(DecodeStringExc.class);
     }
 
     @Test
@@ -873,7 +873,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash("a")
       );
       assertThatGet(hash)
-          .throwsException(new DecodeVarIllegalNameException(hash, "a"));
+          .throwsException(new DecodeVarIllegalNameExc(hash, "a"));
     }
   }
 }

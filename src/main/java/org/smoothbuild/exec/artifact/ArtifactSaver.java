@@ -38,7 +38,7 @@ public class ArtifactSaver {
     this.fileSystem = fileSystem;
   }
 
-  public Path save(RefS ref, ObjH obj) throws IOException, DuplicatedPathsException {
+  public Path save(RefS ref, ObjH obj) throws IOException, DuplicatedPathsExc {
     Path artifactPath = artifactPath(ref.name());
     if (ref.type() instanceof ArrayType arrayType) {
       return saveArray(arrayType, artifactPath, (ArrayH) obj);
@@ -50,13 +50,13 @@ public class ArtifactSaver {
   }
 
   private Path saveFile(Path artifactPath, TupleH file)
-      throws IOException, DuplicatedPathsException {
+      throws IOException, DuplicatedPathsExc {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileObjectPath(file));
   }
 
   private Path saveArray(ArrayType arrayType, Path artifactPath,
-      ArrayH array) throws IOException, DuplicatedPathsException {
+      ArrayH array) throws IOException, DuplicatedPathsExc {
     fileSystem.createDir(artifactPath);
     Type elemType = arrayType.elem();
     if (elemType instanceof ArrayType elemArrayType) {
@@ -84,7 +84,7 @@ public class ArtifactSaver {
   }
 
   private void saveFileArray(Path artifactPath, Iterable<TupleH> files) throws IOException,
-      DuplicatedPathsException {
+      DuplicatedPathsExc {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     for (TupleH file : files) {
       Path filePath = fileObjectPath(file);
@@ -101,12 +101,12 @@ public class ArtifactSaver {
     }
   }
 
-  private DuplicatedPathsException duplicatedPathsMessage(Set<Path> duplicates) {
+  private DuplicatedPathsExc duplicatedPathsMessage(Set<Path> duplicates) {
     String delimiter = "\n  ";
     String list = duplicates.stream()
         .map(Path::q)
         .collect(joining(delimiter));
-    return new DuplicatedPathsException(
+    return new DuplicatedPathsExc(
         "Can't store array of Files as it contains files with duplicated paths:"
             + delimiter + list);
   }

@@ -2,8 +2,8 @@ package org.smoothbuild.db.object.obj;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.cannotReadRootException;
-import static org.smoothbuild.db.object.obj.exc.DecodeObjRootException.wrongSizeOfRootSeqException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootExc.cannotReadRootException;
+import static org.smoothbuild.db.object.obj.exc.DecodeObjRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.math.BigInteger;
@@ -13,14 +13,14 @@ import java.util.Optional;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.hashed.exc.NoSuchDataException;
-import org.smoothbuild.db.object.db.ObjDbException;
+import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
+import org.smoothbuild.db.object.db.ObjDbExc;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
-import org.smoothbuild.db.object.obj.exc.DecodeObjTypeException;
-import org.smoothbuild.db.object.obj.exc.NoSuchObjException;
+import org.smoothbuild.db.object.obj.exc.DecodeObjTypeExc;
+import org.smoothbuild.db.object.obj.exc.NoSuchObjExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -73,8 +73,8 @@ public class ObjDb {
     try {
       this.ifFunc = newIfFunc();
       this.mapFunc = newMapFunc();
-    } catch (HashedDbException e) {
-      throw new ObjDbException(e);
+    } catch (HashedDbExc e) {
+      throw new ObjDbExc(e);
     }
   }
 
@@ -176,67 +176,67 @@ public class ObjDb {
   private SpecH getTypeOrChainException(Hash rootHash, Hash typeHash) {
     try {
       return typeDb.get(typeHash);
-    } catch (ObjDbException e) {
-      throw new DecodeObjTypeException(rootHash, e);
+    } catch (ObjDbExc e) {
+      throw new DecodeObjTypeExc(rootHash, e);
     }
   }
 
   private List<Hash> decodeRootSeq(Hash rootHash) {
     try {
       return hashedDb.readSeq(rootHash);
-    } catch (NoSuchDataException e) {
-      throw new NoSuchObjException(rootHash, e);
-    } catch (HashedDbException e) {
+    } catch (NoSuchDataExc e) {
+      throw new NoSuchObjExc(rootHash, e);
+    } catch (HashedDbExc e) {
       throw cannotReadRootException(rootHash, e);
     }
   }
 
   // methods for creating Val Obj-s
 
-  public ArrayH newArray(ArrayTypeH type, List<ValueH> elems) throws HashedDbException {
+  public ArrayH newArray(ArrayTypeH type, List<ValueH> elems) throws HashedDbExc {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  public BlobH newBlob(Hash dataHash) throws HashedDbException {
+  public BlobH newBlob(Hash dataHash) throws HashedDbExc {
     var root = newRoot(typeDb.blob(), dataHash);
     return typeDb.blob().newObj(root, this);
   }
 
-  private BoolH newBool(boolean value) throws HashedDbException {
+  private BoolH newBool(boolean value) throws HashedDbExc {
     var data = writeBoolData(value);
     var root = newRoot(typeDb.bool(), data);
     return typeDb.bool().newObj(root, this);
   }
 
   private DefFuncH newFunc(DefFuncTypeH type, ObjH body)
-      throws HashedDbException {
+      throws HashedDbExc {
     var data = writeFuncData(body);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private IntH newInt(BigInteger value) throws HashedDbException {
+  private IntH newInt(BigInteger value) throws HashedDbExc {
     var data = writeIntData(value);
     var root = newRoot(typeDb.int_(), data);
     return typeDb.int_().newObj(root, this);
   }
 
   private NatFuncH newNatFunc(NatFuncTypeH type, BlobH jarFile,
-      StringH classBinaryName, BoolH isPure) throws HashedDbException {
+      StringH classBinaryName, BoolH isPure) throws HashedDbExc {
     var data = writeNatFuncData(jarFile, classBinaryName, isPure);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private StringH newString(String string) throws HashedDbException {
+  private StringH newString(String string) throws HashedDbExc {
     var data = writeStringData(string);
     var root = newRoot(typeDb.string(), data);
     return typeDb.string().newObj(root, this);
   }
 
-  private TupleH newTuple(TupleTypeH type, ImmutableList<ValueH> vals) throws HashedDbException {
+  private TupleH newTuple(TupleTypeH type, ImmutableList<ValueH> vals) throws HashedDbExc {
     var data = writeTupleData(vals);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -244,7 +244,7 @@ public class ObjDb {
 
   // methods for creating Expr-s
 
-  private CallH newCall(ObjH func, CombineH args) throws HashedDbException {
+  private CallH newCall(ObjH func, CombineH args) throws HashedDbExc {
     var resultType = inferCallResType(func, args);
     var type = typeDb.call(resultType);
     var data = writeCallData(func, args);
@@ -281,12 +281,12 @@ public class ObjDb {
     }
   }
 
-  private IfFuncH newIfFunc() throws HashedDbException {
+  private IfFuncH newIfFunc() throws HashedDbExc {
     var type = typeDb.ifFunc();
     return (IfFuncH) newInternalFunc(type);
   }
 
-  private FuncH newInternalFunc(FuncTypeH type) throws HashedDbException {
+  private FuncH newInternalFunc(FuncTypeH type) throws HashedDbExc {
     // Internal funcs don't have any data. We use empty sequence as its data so
     // code reading such func from hashedDb can be simpler and code that stores
     // h-objects as artifacts doesn't need handle this special case.
@@ -295,7 +295,7 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private OrderH newOrder(ImmutableList<ObjH> elems) throws HashedDbException {
+  private OrderH newOrder(ImmutableList<ObjH> elems) throws HashedDbExc {
     TypeH elemType = elemType(elems);
     var type = typeDb.order(elemType);
     var data = writeOrderData(elems);
@@ -323,7 +323,7 @@ public class ObjDb {
     }
   }
 
-  private CombineH newCombine(ImmutableList<ObjH> items) throws HashedDbException {
+  private CombineH newCombine(ImmutableList<ObjH> items) throws HashedDbExc {
     var itemTypes = Lists.map(items, ObjH::type);
     var evalType = typeDb.tuple(itemTypes);
     var type = typeDb.combine(evalType);
@@ -332,12 +332,12 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private MapFuncH newMapFunc() throws HashedDbException {
+  private MapFuncH newMapFunc() throws HashedDbExc {
     var type = typeDb.mapFunc();
     return (MapFuncH) newInternalFunc(type);
   }
 
-  private SelectH newSelect(ObjH tuple, IntH index) throws HashedDbException {
+  private SelectH newSelect(ObjH tuple, IntH index) throws HashedDbExc {
     var type = selectType(tuple, index);
     var data = writeSelectData(tuple, index);
     var root = newRoot(type, data);
@@ -356,56 +356,56 @@ public class ObjDb {
     }
   }
 
-  private ParamRefH newParamRef(TypeH evalType, BigInteger index) throws HashedDbException {
+  private ParamRefH newParamRef(TypeH evalType, BigInteger index) throws HashedDbExc {
     var data = writeParamRefData(index);
     var type = typeDb.ref(evalType);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private MerkleRoot newRoot(SpecH type, Hash dataHash) throws HashedDbException {
+  private MerkleRoot newRoot(SpecH type, Hash dataHash) throws HashedDbExc {
     Hash rootHash = hashedDb.writeSeq(type.hash(), dataHash);
     return new MerkleRoot(rootHash, type, dataHash);
   }
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ObjH func, CombineH args) throws HashedDbException {
+  private Hash writeCallData(ObjH func, CombineH args) throws HashedDbExc {
     return hashedDb.writeSeq(func.hash(), args.hash());
   }
 
-  private Hash writeCombineData(ImmutableList<ObjH> items) throws HashedDbException {
+  private Hash writeCombineData(ImmutableList<ObjH> items) throws HashedDbExc {
     return writeSeq(items);
   }
 
   private Hash writeNatFuncData(BlobH jarFile, StringH classBinaryName, BoolH isPure)
-      throws HashedDbException {
+      throws HashedDbExc {
     return hashedDb.writeSeq(jarFile.hash(), classBinaryName.hash(), isPure.hash());
   }
 
-  private Hash writeOrderData(ImmutableList<ObjH> elems) throws HashedDbException {
+  private Hash writeOrderData(ImmutableList<ObjH> elems) throws HashedDbExc {
     return writeSeq(elems);
   }
 
-  private Hash writeParamRefData(BigInteger value) throws HashedDbException {
+  private Hash writeParamRefData(BigInteger value) throws HashedDbExc {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeSelectData(ObjH tuple, IntH index) throws HashedDbException {
+  private Hash writeSelectData(ObjH tuple, IntH index) throws HashedDbExc {
     return hashedDb.writeSeq(tuple.hash(), index.hash());
   }
 
   // methods for writing data of Val-s
 
-  private Hash writeArrayData(List<ValueH> elems) throws HashedDbException {
+  private Hash writeArrayData(List<ValueH> elems) throws HashedDbExc {
     return writeSeq(elems);
   }
 
-  private Hash writeBoolData(boolean value) throws HashedDbException {
+  private Hash writeBoolData(boolean value) throws HashedDbExc {
     return hashedDb.writeBoolean(value);
   }
 
-  private Hash writeIntData(BigInteger value) throws HashedDbException {
+  private Hash writeIntData(BigInteger value) throws HashedDbExc {
     return hashedDb.writeBigInteger(value);
   }
 
@@ -413,22 +413,22 @@ public class ObjDb {
     return body.hash();
   }
 
-  private Hash writeStringData(String string) throws HashedDbException {
+  private Hash writeStringData(String string) throws HashedDbExc {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeTupleData(ImmutableList<ValueH> items) throws HashedDbException {
+  private Hash writeTupleData(ImmutableList<ValueH> items) throws HashedDbExc {
     return writeSeq(items);
   }
 
   // helpers
 
-  private Hash writeSeq(List<? extends ObjH> objs) throws HashedDbException {
+  private Hash writeSeq(List<? extends ObjH> objs) throws HashedDbExc {
     var hashes = Lists.map(objs, ObjH::hash);
     return hashedDb.writeSeq(hashes);
   }
 
-  public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbException {
+  public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbExc {
     return hashedDb().readSeq(hash);
   }
 

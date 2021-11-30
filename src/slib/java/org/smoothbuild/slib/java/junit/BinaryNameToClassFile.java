@@ -19,7 +19,7 @@ import org.smoothbuild.util.collect.DuplicatesDetector;
 public class BinaryNameToClassFile {
 
   public static Map<String, TupleH> binaryNameToClassFile(NativeApi nativeApi,
-      Iterable<BlobH> libraryJars) throws IOException, JunitException {
+      Iterable<BlobH> libraryJars) throws IOException, JunitExc {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, TupleH> binaryNameToClassFile = new HashMap<>();
     for (BlobH jarBlob : libraryJars) {
@@ -27,13 +27,13 @@ public class BinaryNameToClassFile {
       try {
         fileArray = UnzipFunc.unzip(nativeApi, jarBlob, isClassFilePredicate());
       } catch (ZipException e) {
-        throw new JunitException("Cannot read archive. Corrupted data?", e);
+        throw new JunitExc("Cannot read archive. Corrupted data?", e);
       }
       for (TupleH classFile : fileArray.elems(TupleH.class)) {
         String classFilePath = (filePath(classFile)).toJ();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {
-          throw new JunitException(
+          throw new JunitExc(
               "File " + classFilePath + " is contained by two different library jar files.");
         } else {
           binaryNameToClassFile.put(binaryName, classFile);

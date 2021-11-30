@@ -7,8 +7,8 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypeDb;
+import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;

@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 import static org.smoothbuild.util.Strings.stringToOptionalString;
 import static org.smoothbuild.util.Strings.unescaped;
 import static org.smoothbuild.util.Strings.unlines;
-import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSeqException;
+import static org.smoothbuild.util.UnescapingFailedExc.illegalEscapeSeqException;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -116,14 +116,14 @@ public class StringsTest {
     @ValueSource(strings = {"\\", "abc\\", "\\a", "\\ "})
     public void fails_when_escape_code_is_missing(String string) {
       assertCall(() -> unescaped(string))
-          .throwsException(UnescapingFailedException.class);
+          .throwsException(UnescapingFailedExc.class);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"\\x", "abc\\x"})
     public void fails_when_escape_code_is_illegal(String string) {
       assertCall(() -> unescaped(string))
-          .throwsException(UnescapingFailedException.class);
+          .throwsException(UnescapingFailedExc.class);
     }
 
     @Test

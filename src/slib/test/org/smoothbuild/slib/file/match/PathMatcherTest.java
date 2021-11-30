@@ -287,7 +287,7 @@ public class PathMatcherTest {
   @SuppressWarnings("ReturnValueIgnored")
   public void illegal_pattern(String pattern) {
     assertCall(() -> pathMatcher(pattern).test(path("abc")))
-        .throwsException(IllegalPathPatternException.class);
+        .throwsException(IllegalPathPatternExc.class);
   }
 
   public static Stream<Arguments> illegal_pattern_data_set() {

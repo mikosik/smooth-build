@@ -1,7 +1,7 @@
 package org.smoothbuild.util;
 
-import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSeqException;
-import static org.smoothbuild.util.UnescapingFailedException.missingEscapeCodeException;
+import static org.smoothbuild.util.UnescapingFailedExc.illegalEscapeSeqException;
+import static org.smoothbuild.util.UnescapingFailedExc.missingEscapeCodeException;
 
 import java.util.Optional;
 

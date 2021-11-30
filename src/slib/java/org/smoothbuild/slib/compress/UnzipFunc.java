@@ -21,7 +21,7 @@ import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.io.fs.base.IllegalPathException;
+import org.smoothbuild.io.fs.base.IllegalPathExc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 
@@ -71,7 +71,7 @@ public class UnzipFunc {
     String fileName = entry.getName();
     try {
       path(fileName);
-    } catch (IllegalPathException e) {
+    } catch (IllegalPathExc e) {
       nativeApi.log().error("File in archive has illegal name = '" + fileName + "'");
       return null;
     }

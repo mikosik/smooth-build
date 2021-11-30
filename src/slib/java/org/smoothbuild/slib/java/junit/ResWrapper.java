@@ -12,11 +12,11 @@ public class ResWrapper {
     this.result = result;
   }
 
-  public boolean wasSuccessful() throws JunitException {
+  public boolean wasSuccessful() throws JunitExc {
     return runReflexivelyAndCast(Boolean.class, result, "wasSuccessful");
   }
 
-  public List<FailureWrapper> getFailures() throws JunitException {
+  public List<FailureWrapper> getFailures() throws JunitExc {
     List<?> failures = runReflexivelyAndCast(List.class, result, "getFailures");
     return failures
         .stream()

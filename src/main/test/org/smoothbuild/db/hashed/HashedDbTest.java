@@ -22,10 +22,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.db.hashed.exc.CorruptedHashedDbException;
-import org.smoothbuild.db.hashed.exc.DecodeHashSeqException;
-import org.smoothbuild.db.hashed.exc.DecodeStringException;
-import org.smoothbuild.db.hashed.exc.NoSuchDataException;
+import org.smoothbuild.db.hashed.exc.CorruptedHashedDbExc;
+import org.smoothbuild.db.hashed.exc.DecodeHashSeqExc;
+import org.smoothbuild.db.hashed.exc.DecodeStringExc;
+import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -38,7 +38,7 @@ public class HashedDbTest extends TestingContext {
   private ByteString byteString;
 
   @Test
-  public void db_doesnt_contain_not_written_data() throws CorruptedHashedDbException {
+  public void db_doesnt_contain_not_written_data() throws CorruptedHashedDbExc {
     assertThat(hashedDb().contains(Hash.of(33)))
         .isFalse();
   }
@@ -56,7 +56,7 @@ public class HashedDbTest extends TestingContext {
   public void reading_not_written_value_fails() {
     hash = Hash.of("abc");
     assertCall(() -> hashedDb().source(hash))
-        .throwsException(new NoSuchDataException(hash));
+        .throwsException(new NoSuchDataExc(hash));
   }
 
   @Test
@@ -114,7 +114,7 @@ public class HashedDbTest extends TestingContext {
     sink.write(byteString);
 
     assertCall(() -> hashedDb().source(hash))
-        .throwsException(new NoSuchDataException(hash));
+        .throwsException(new NoSuchDataExc(hash));
   }
 
   @Test
@@ -133,7 +133,7 @@ public class HashedDbTest extends TestingContext {
     hashedDbFileSystem().createDir(path(hash.toString()));
 
     assertCall(() -> hashedDb().contains(hash))
-        .throwsException(new CorruptedHashedDbException(
+        .throwsException(new CorruptedHashedDbExc(
             "Corrupted HashedDb. '" + hash + "' is a directory not a data file."));
   }
 
@@ -144,7 +144,7 @@ public class HashedDbTest extends TestingContext {
     hashedDbFileSystem().createDir(path(hash.toString()));
 
     assertCall(() -> hashedDb().source(hash))
-        .throwsException(new CorruptedHashedDbException(
+        .throwsException(new CorruptedHashedDbExc(
             format("Corrupted HashedDb at %s. '%s' is a directory not a data file.", hash, hash)));
   }
 
@@ -232,7 +232,7 @@ public class HashedDbTest extends TestingContext {
       hash = Hash.of("abc");
       writeAndClose(hashedDbFileSystem().sink(path(hash.toHexString())), s -> s.write(illegalString()));
       assertCall(() -> hashedDb().readString(hash))
-          .throwsException(new DecodeStringException(hash, null));
+          .throwsException(new DecodeStringExc(hash, null));
     }
   }
 
@@ -263,14 +263,14 @@ public class HashedDbTest extends TestingContext {
     public void not_written_seq_of_hashes_cannot_be_read_back() {
       hash = Hash.of("abc");
       assertCall(() -> hashedDb().readSeq(hash))
-          .throwsException(new NoSuchDataException(hash));
+          .throwsException(new NoSuchDataExc(hash));
     }
 
     @Test
     public void corrupted_seq_of_hashes_cannot_be_read_back() throws Exception {
       hash = hashedDb().writeString("12345");
       assertCall(() -> hashedDb().readSeq(hash))
-          .throwsException(new DecodeHashSeqException(hash, 5));
+          .throwsException(new DecodeHashSeqExc(hash, 5));
     }
   }
 }

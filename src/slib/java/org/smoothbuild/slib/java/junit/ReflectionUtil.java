@@ -1,12 +1,12 @@
 package org.smoothbuild.slib.java.junit;
 
-import static org.smoothbuild.slib.java.junit.JunitException.brokenJunitImplementation;
+import static org.smoothbuild.slib.java.junit.JunitExc.brokenJunitImplementation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public class ReflectionUtil {
-  public static Object newInstance(Class<?> clazz) throws JunitException {
+  public static Object newInstance(Class<?> clazz) throws JunitExc {
     try {
       return clazz.getDeclaredConstructor().newInstance();
     } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
@@ -16,7 +16,7 @@ public class ReflectionUtil {
   }
 
   public static <T> T runReflexivelyAndCast(Class<T> resultType, Object object,
-      String method, Object... args) throws JunitException {
+      String method, Object... args) throws JunitExc {
     Object result = runReflexively(object, method, args);
     if (resultType.isInstance(result)) {
       @SuppressWarnings("unchecked")
@@ -29,7 +29,7 @@ public class ReflectionUtil {
   }
 
   public static Object runReflexively(Object object, String method,
-      Object... args) throws JunitException {
+      Object... args) throws JunitExc {
     try {
       Class<?>[] paramTypes = Arrays.stream(args)
           .map(Object::getClass)

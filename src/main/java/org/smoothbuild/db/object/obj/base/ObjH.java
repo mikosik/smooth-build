@@ -11,9 +11,9 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.obj.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqException;
+import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
+import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
+import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqExc;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
@@ -128,7 +128,7 @@ public abstract class ObjH {
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash, int expectedSize) {
     ImmutableList<Hash> data = readSeqHashes(path, hash);
     if (data.size() != expectedSize) {
-      throw new UnexpectedObjSeqException(hash(), spec(), path, expectedSize, data.size());
+      throw new UnexpectedObjSeqExc(hash(), spec(), path, expectedSize, data.size());
     }
     return data;
   }
@@ -148,7 +148,7 @@ public abstract class ObjH {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedObjNodeException(hash(), spec(), path, clazz, obj.getClass());
+      throw new UnexpectedObjNodeExc(hash(), spec(), path, clazz, obj.getClass());
     }
   }
 
@@ -159,7 +159,7 @@ public abstract class ObjH {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedObjNodeException(hash(), spec(), path, index, clazz, obj.getClass());
+      throw new UnexpectedObjNodeExc(hash(), spec(), path, index, clazz, obj.getClass());
     }
   }
 
@@ -167,7 +167,7 @@ public abstract class ObjH {
     for (int i = 0; i < elems.size(); i++) {
       ObjH elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
-        throw new UnexpectedObjNodeException(hash(), spec(), path, i, clazz, elem.getClass());
+        throw new UnexpectedObjNodeExc(hash(), spec(), path, i, clazz, elem.getClass());
       }
     }
     @SuppressWarnings("unchecked")
@@ -178,7 +178,7 @@ public abstract class ObjH {
   private String valToStringSafe() {
     try {
       return valToString();
-    } catch (DecodeObjNodeException e) {
+    } catch (DecodeObjNodeExc e) {
       return "?Exception?@" + hash();
     }
   }

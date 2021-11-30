@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-import org.smoothbuild.db.hashed.exc.HashedDbException;
+import org.smoothbuild.db.hashed.exc.HashedDbExc;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
@@ -51,7 +51,7 @@ public class HashingBufferedSink implements BufferedSink {
     return hash;
   }
 
-  public void write(DataWriter dataWriter) throws HashedDbException {
+  public void write(DataWriter dataWriter) throws HashedDbExc {
     wrapIOExceptionAsHashedDbException(() -> dataWriter.writeTo(this));
   }
 

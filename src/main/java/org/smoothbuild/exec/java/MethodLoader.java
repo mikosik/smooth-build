@@ -39,7 +39,7 @@ public class MethodLoader {
   }
 
   public synchronized Method load(String extendedName, NatFuncH natFuncH)
-      throws LoadingMethodException {
+      throws LoadingMethodExc {
     String quotedName = q(extendedName);
     String classBinaryName = natFuncH.classBinaryName().toJ();
     Method method = loadMethod(quotedName, natFuncH, classBinaryName);
@@ -48,13 +48,13 @@ public class MethodLoader {
   }
 
   private Method loadMethod(String extendedName, NatFuncH funcH,
-      String classBinaryName) throws LoadingMethodException {
+      String classBinaryName) throws LoadingMethodExc {
     return methodCache.computeIfAbsent(funcH,
         n -> findMethod(extendedName, funcH, classBinaryName));
   }
 
   private Method findMethod(String extendedName, NatFuncH funcH,
-      String classBinaryName) throws LoadingMethodException {
+      String classBinaryName) throws LoadingMethodExc {
     Method method = findClassMethod(extendedName, funcH, classBinaryName);
     if (!isPublic(method)) {
       throw newLoadingException(extendedName, classBinaryName, "Providing method is not public.");
@@ -70,7 +70,7 @@ public class MethodLoader {
   }
 
   private Method findClassMethod(String extendedName, NatFuncH funcH,
-      String classBinaryName) throws LoadingMethodException {
+      String classBinaryName) throws LoadingMethodExc {
     Class<?> clazz = findClass(extendedName, funcH, classBinaryName);
     return stream(clazz.getDeclaredMethods())
         .filter(m -> m.getName().equals(NATIVE_METHOD_NAME))
@@ -81,7 +81,7 @@ public class MethodLoader {
   }
 
   private Class<?> findClass(String extendedName, NatFuncH funcH,
-      String classBinaryName) throws LoadingMethodException {
+      String classBinaryName) throws LoadingMethodExc {
     FilePath originalJarFile = fileLoader.filePathOf(funcH.jarFile().hash());
     Path jarPath = jPathResolver.resolve(originalJarFile);
     try {
@@ -99,14 +99,14 @@ public class MethodLoader {
   }
 
   private void assertMethodMatchesFuncRequirements(String extendedName,
-      NatFuncH func, Method method, String classBinaryName) throws LoadingMethodException {
+      NatFuncH func, Method method, String classBinaryName) throws LoadingMethodExc {
     assertNativeResMatchesDeclared(
         extendedName, method, func.spec().res(), classBinaryName);
     assertNativeParamTypesMatchesFuncParams(extendedName, method, func, classBinaryName);
   }
 
   private static void assertNativeResMatchesDeclared(String extendedName, Method method,
-      TypeH resType, String classBinaryName) throws LoadingMethodException {
+      TypeH resType, String classBinaryName) throws LoadingMethodExc {
     var methodResultTypeJ = method.getReturnType();
     var resultTypeJ = resType.typeJ();
     if (!resultTypeJ.equals(methodResultTypeJ)) {
@@ -118,7 +118,7 @@ public class MethodLoader {
   }
 
   private static void assertNativeParamTypesMatchesFuncParams(String extendedName,
-      Method method, NatFuncH func, String classBinaryName) throws LoadingMethodException {
+      Method method, NatFuncH func, String classBinaryName) throws LoadingMethodExc {
     Parameter[] nativeParams = method.getParameters();
     var params = func.spec().params();
     if (params.size() != nativeParams.length - 1) {
@@ -140,19 +140,19 @@ public class MethodLoader {
     }
   }
 
-  private static LoadingMethodException newLoadingException(
+  private static LoadingMethodExc newLoadingException(
       String extendedName, String classBinaryName, String message) {
     return newLoadingException(extendedName, classBinaryName, message, null);
   }
 
-  private static LoadingMethodException newLoadingException(String extendedName,
+  private static LoadingMethodExc newLoadingException(String extendedName,
       String classBinaryName, String message, Exception e) {
-    return new LoadingMethodException("Error loading native implementation for "
+    return new LoadingMethodExc("Error loading native implementation for "
         + extendedName + " specified as `" + classBinaryName + "`: " + message, e);
   }
 
-  public static class LoadingMethodException extends RuntimeException {
-    public LoadingMethodException(String message, Throwable e) {
+  public static class LoadingMethodExc extends RuntimeException {
+    public LoadingMethodExc(String message, Throwable e) {
       super(message, e);
     }
   }

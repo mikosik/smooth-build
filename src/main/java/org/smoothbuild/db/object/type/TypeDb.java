@@ -35,16 +35,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.db.ObjDbException;
+import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.object.db.ObjDbExc;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindException;
-import org.smoothbuild.db.object.type.exc.DecodeTypeRootException;
-import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameException;
-import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeException;
-import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqException;
+import org.smoothbuild.db.object.type.exc.DecodeTypeIllegalKindExc;
+import org.smoothbuild.db.object.type.exc.DecodeTypeRootExc;
+import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameExc;
+import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeExc;
+import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqExc;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
@@ -115,8 +115,8 @@ public class TypeDb implements TypeFactoryH {
       ArrayTypeH aa = cache(array(a));
       FuncTypeH f = cache(abstFunc(r, list(a)));
       this.mapFunc = abstFunc(MAP_KIND, ar, list(aa, f));
-    } catch (HashedDbException e) {
-      throw new ObjDbException(e);
+    } catch (HashedDbExc e) {
+      throw new ObjDbExc(e);
     }
     this.sides = new Sides<>(this.any, this.nothing);
   }
@@ -265,7 +265,7 @@ public class TypeDb implements TypeFactoryH {
         hash, () -> hashedDb.readSeq(hash));
     int seqSize = hashes.size();
     if (seqSize != 1 && seqSize != 2) {
-      throw new DecodeTypeRootException(hash, seqSize);
+      throw new DecodeTypeRootExc(hash, seqSize);
     }
     return hashes;
   }
@@ -275,7 +275,7 @@ public class TypeDb implements TypeFactoryH {
         hash, () -> hashedDb.readByte(markerHash));
     SpecKindH kind = fromMarker(marker);
     if (kind == null) {
-      throw new DecodeTypeIllegalKindException(hash, marker);
+      throw new DecodeTypeIllegalKindExc(hash, marker);
     }
     return kind;
   }
@@ -283,7 +283,7 @@ public class TypeDb implements TypeFactoryH {
   private static void assertTypeRootSeqSize(
       Hash rootHash, SpecKindH kind, List<Hash> hashes, int expectedSize) {
     if (hashes.size() != expectedSize) {
-      throw new DecodeTypeRootException(rootHash, kind, hashes.size(), expectedSize);
+      throw new DecodeTypeRootExc(rootHash, kind, hashes.size(), expectedSize);
     }
   }
 
@@ -311,7 +311,7 @@ public class TypeDb implements TypeFactoryH {
     Hash dataHash = rootSeq.get(DATA_INDEX);
     List<Hash> data = readSeqHashes(rootHash, dataHash, kind, DATA_PATH);
     if (data.size() != 2) {
-      throw new UnexpectedTypeSeqException(rootHash, kind, DATA_PATH, 2, data.size());
+      throw new UnexpectedTypeSeqExc(rootHash, kind, DATA_PATH, 2, data.size());
     }
     TypeH result = readNode(kind, rootHash, data.get(FUNCTION_RES_INDEX), FUNCTION_RES_PATH, TypeH.class);
     TupleTypeH params = readNode(kind, rootHash, data.get(FUNCTION_PARAMS_INDEX),
@@ -339,7 +339,7 @@ public class TypeDb implements TypeFactoryH {
     String name = wrapHashedDbExceptionAsDecodeTypeNodeException(
         rootHash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSeq.get(1)));
     if (!isVarName(name)) {
-      throw new DecodeVarIllegalNameException(rootHash, name);
+      throw new DecodeVarIllegalNameExc(rootHash, name);
     }
     return newVar(rootHash, name);
   }
@@ -352,7 +352,7 @@ public class TypeDb implements TypeFactoryH {
       T castResult = (T) result;
       return castResult;
     } else {
-      throw new UnexpectedTypeNodeException(
+      throw new UnexpectedTypeNodeExc(
           outerHash, kind, path, clazz, result.getClass());
     }
   }
@@ -363,14 +363,14 @@ public class TypeDb implements TypeFactoryH {
     if (result instanceof TypeH typeH) {
       return typeH;
     } else {
-      throw new UnexpectedTypeNodeException(
+      throw new UnexpectedTypeNodeExc(
           outerHash, kind, path, index, TypeH.class, result.getClass());
     }
   }
 
   // methods for creating Val types
 
-  private ArrayTypeH newArray(TypeH elemType) throws HashedDbException {
+  private ArrayTypeH newArray(TypeH elemType) throws HashedDbExc {
     var rootHash = writeArrayRoot(elemType);
     return newArray(rootHash, elemType);
   }
@@ -380,7 +380,7 @@ public class TypeDb implements TypeFactoryH {
   }
 
   private <T extends FuncTypeH> T newFunc(
-      FuncKind<T> kind, TypeH res, TupleTypeH params) throws HashedDbException {
+      FuncKind<T> kind, TypeH res, TupleTypeH params) throws HashedDbExc {
     var rootHash = writeFuncRoot(kind, res, params);
     return newFunc(rootHash, kind, res, params);
   }
@@ -390,7 +390,7 @@ public class TypeDb implements TypeFactoryH {
     return cache(kind.newInstance(rootHash, res, params));
   }
 
-  private TupleTypeH newTuple(ImmutableList<TypeH> itemTypes) throws HashedDbException {
+  private TupleTypeH newTuple(ImmutableList<TypeH> itemTypes) throws HashedDbExc {
     var hash = writeTupleRoot(itemTypes);
     return newTuple(hash, itemTypes);
   }
@@ -399,7 +399,7 @@ public class TypeDb implements TypeFactoryH {
     return cache(new TupleTypeH(rootHash, itemTypes));
   }
 
-  private VarH newVar(String name) throws HashedDbException {
+  private VarH newVar(String name) throws HashedDbExc {
     var rootHash = writeVarRoot(name);
     return newVar(rootHash, name);
   }
@@ -410,7 +410,7 @@ public class TypeDb implements TypeFactoryH {
 
   // methods for creating Expr types
 
-  private CallTypeH newCall(TypeH evaluationType) throws HashedDbException {
+  private CallTypeH newCall(TypeH evaluationType) throws HashedDbExc {
     var rootHash = writeExprRoot(CALL, evaluationType);
     return newCall(rootHash, evaluationType);
   }
@@ -419,7 +419,7 @@ public class TypeDb implements TypeFactoryH {
     return cache(new CallTypeH(rootHash, evaluationType));
   }
 
-  private CombineTypeH newCombine(TupleTypeH evaluationType) throws HashedDbException {
+  private CombineTypeH newCombine(TupleTypeH evaluationType) throws HashedDbExc {
     var rootHash = writeExprRoot(CONSTRUCT, evaluationType);
     return newCombine(rootHash, evaluationType);
   }
@@ -428,7 +428,7 @@ public class TypeDb implements TypeFactoryH {
     return cache(new CombineTypeH(rootHash, evaluationType));
   }
 
-  private OrderTypeH newOrder(TypeH elemType) throws HashedDbException {
+  private OrderTypeH newOrder(TypeH elemType) throws HashedDbExc {
     var evaluationType = array(elemType);
     var rootHash = writeExprRoot(ORDER, evaluationType);
     return newOrder(rootHash, evaluationType);
@@ -438,7 +438,7 @@ public class TypeDb implements TypeFactoryH {
     return cache(new OrderTypeH(rootHash, evaluationType));
   }
 
-  private RefTypeH newRef(TypeH evaluationType) throws HashedDbException {
+  private RefTypeH newRef(TypeH evaluationType) throws HashedDbExc {
     var rootHash = writeExprRoot(PARAM_REF, evaluationType);
     return newRef(rootHash, evaluationType);
   }
@@ -447,7 +447,7 @@ public class TypeDb implements TypeFactoryH {
     return cache(new RefTypeH(rootHash, evaluationType));
   }
 
-  private SelectTypeH newSelect(TypeH evaluationType) throws HashedDbException {
+  private SelectTypeH newSelect(TypeH evaluationType) throws HashedDbExc {
     var rootHash = writeExprRoot(SELECT, evaluationType);
     return newSelect(rootHash, evaluationType);
   }
@@ -464,37 +464,37 @@ public class TypeDb implements TypeFactoryH {
 
   // Methods for writing Val type root
 
-  private Hash writeArrayRoot(SpecH elemType) throws HashedDbException {
+  private Hash writeArrayRoot(SpecH elemType) throws HashedDbExc {
     return writeNonBaseRoot(ARRAY, elemType.hash());
   }
 
   private Hash writeFuncRoot(FuncKind<?> kind, TypeH res, TupleTypeH params)
-      throws HashedDbException {
+      throws HashedDbExc {
     var hash = hashedDb.writeSeq(res.hash(), params.hash());
     return writeNonBaseRoot(kind.kind(), hash);
   }
 
-  private Hash writeTupleRoot(ImmutableList<TypeH> itemTypes) throws HashedDbException {
+  private Hash writeTupleRoot(ImmutableList<TypeH> itemTypes) throws HashedDbExc {
     var itemsHash = hashedDb.writeSeq(Lists.map(itemTypes, SpecH::hash));
     return writeNonBaseRoot(TUPLE, itemsHash);
   }
 
-  private Hash writeVarRoot(String name) throws HashedDbException {
+  private Hash writeVarRoot(String name) throws HashedDbExc {
     var nameHash = hashedDb.writeString(name);
     return writeNonBaseRoot(VARIABLE, nameHash);
   }
 
   // Helper methods for writing roots
 
-  private Hash writeExprRoot(SpecKindH kind, SpecH evaluationType) throws HashedDbException {
+  private Hash writeExprRoot(SpecKindH kind, SpecH evaluationType) throws HashedDbExc {
     return writeNonBaseRoot(kind, evaluationType.hash());
   }
 
-  private Hash writeNonBaseRoot(SpecKindH kind, Hash dataHash) throws HashedDbException {
+  private Hash writeNonBaseRoot(SpecKindH kind, Hash dataHash) throws HashedDbExc {
     return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()), dataHash);
   }
 
-  private Hash writeBaseRoot(SpecKindH kind) throws HashedDbException {
+  private Hash writeBaseRoot(SpecKindH kind) throws HashedDbExc {
     return hashedDb.writeSeq(hashedDb.writeByte(kind.marker()));
   }
 

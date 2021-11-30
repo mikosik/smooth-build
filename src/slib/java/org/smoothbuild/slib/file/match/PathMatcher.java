@@ -16,30 +16,30 @@ public class PathMatcher {
     try {
       return FileSystems.getDefault().getPathMatcher("glob:" + patternString);
     } catch (PatternSyntaxException e) {
-      throw new IllegalPathPatternException(e.getMessage(), e);
+      throw new IllegalPathPatternExc(e.getMessage(), e);
     }
   }
   private static void validatePattern(String pattern) {
     if (pattern.isEmpty()) {
-      throw new IllegalPathPatternException("Empty pattern is not allowed");
+      throw new IllegalPathPatternExc("Empty pattern is not allowed");
     }
     if (pattern.startsWith("/")) {
-      throw new IllegalPathPatternException("Pattern can't start with slash character '/'.");
+      throw new IllegalPathPatternExc("Pattern can't start with slash character '/'.");
     }
     if (pattern.endsWith("/")) {
-      throw new IllegalPathPatternException("Pattern can't end with slash character '/'.");
+      throw new IllegalPathPatternExc("Pattern can't end with slash character '/'.");
     }
 
     if (pattern.contains("//")) {
-      throw new IllegalPathPatternException("Pattern can't contain two slashes (//) in a row");
+      throw new IllegalPathPatternExc("Pattern can't contain two slashes (//) in a row");
     }
     if (pattern.equals(".") || pattern.startsWith("./") || pattern.contains("/./")
         || pattern.endsWith("/.")) {
-      throw new IllegalPathPatternException("Pattern can't contain '.' elem.");
+      throw new IllegalPathPatternExc("Pattern can't contain '.' elem.");
     }
     if (pattern.equals("..") || pattern.startsWith("../") || pattern.contains("/../")
         || pattern.endsWith("/..")) {
-      throw new IllegalPathPatternException("Pattern can't contain '..' elem.");
+      throw new IllegalPathPatternExc("Pattern can't contain '..' elem.");
     }
   }
 }

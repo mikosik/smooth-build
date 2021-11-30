@@ -27,7 +27,7 @@ import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.slib.file.match.IllegalPathPatternException;
+import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 
 public class JunitFunc {
   public static StringH func(NativeApi nativeApi, TupleH tests, ArrayH deps, StringH include)
@@ -68,14 +68,14 @@ public class JunitFunc {
       } finally {
         Thread.currentThread().setContextClassLoader(origClassLoader);
       }
-    } catch (JunitException e) {
+    } catch (JunitExc e) {
       nativeApi.log().error(e.getMessage());
       return null;
     }
   }
 
   private static Map<String, TupleH> buildNameFileMap(NativeApi nativeApi, ArrayH deps,
-      Map<String, TupleH> testFiles) throws IOException, JunitException {
+      Map<String, TupleH> testFiles) throws IOException, JunitExc {
     Iterable<BlobH> libraryJars = deps.elems(TupleH.class)
         .stream()
         .map(FileStruct::fileContent)
@@ -83,7 +83,7 @@ public class JunitFunc {
     Map<String, TupleH> allFiles = binaryNameToClassFile(nativeApi, libraryJars);
     for (Entry<String, TupleH> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
-        throw new JunitException("Both 'tests' and 'deps' contains class " + entry.getValue());
+        throw new JunitExc("Both 'tests' and 'deps' contains class " + entry.getValue());
       } else {
         allFiles.put(entry.getKey(), entry.getValue());
       }
@@ -92,40 +92,40 @@ public class JunitFunc {
   }
 
   private static ArrayH unzipTestFiles(NativeApi nativeApi, TupleH tests) throws IOException,
-      JunitException {
+      JunitExc {
     try {
       return unzip(nativeApi, fileContent(tests), isClassFilePredicate());
     } catch (ZipException e) {
-      throw new JunitException("Cannot read archive from 'tests' param. Corrupted data?");
+      throw new JunitExc("Cannot read archive from 'tests' param. Corrupted data?");
     }
   }
 
   private static JUnitCoreWrapper createJUnitCore(NativeApi nativeApi,
       Map<String, TupleH> binaryNameToClassFile, FileClassLoader classLoader)
-      throws JunitException {
+      throws JunitExc {
     if (binaryNameToClassFile.containsKey("org.junit.runner.JUnitCore")) {
       return newInstance(
           nativeApi, loadClass(classLoader, "org.junit.runner.JUnitCore"));
     } else {
-      throw new JunitException(
+      throw new JunitExc(
           "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
     }
   }
 
   private static Class<?> loadClass(FileClassLoader classLoader, String binaryName)
-      throws JunitException {
+      throws JunitExc {
     try {
       return classLoader.loadClass(binaryName);
     } catch (ClassNotFoundException e) {
-      throw new JunitException("Couldn't find class for binaryName = " + binaryName);
+      throw new JunitExc("Couldn't find class for binaryName = " + binaryName);
     }
   }
 
-  private static Predicate<Path> createFilter(StringH includeParam) throws JunitException {
+  private static Predicate<Path> createFilter(StringH includeParam) throws JunitExc {
     try {
       return pathMatcher(includeParam.toJ());
-    } catch (IllegalPathPatternException e) {
-      throw new JunitException("Parameter 'include' has illegal value. " + e.getMessage());
+    } catch (IllegalPathPatternExc e) {
+      throw new JunitExc("Parameter 'include' has illegal value. " + e.getMessage());
     }
   }
 }

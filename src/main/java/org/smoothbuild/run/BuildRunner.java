@@ -72,7 +72,7 @@ public class BuildRunner {
       try {
         findTopEvaluables(reporter, defs, names)
             .ifPresent((values) -> artifactBuilder.buildArtifacts(defs, values));
-      } catch (QuitException e) {
+      } catch (QuitExc e) {
         reporter.printlnRawFatal(e.getMessage());
       }
     }

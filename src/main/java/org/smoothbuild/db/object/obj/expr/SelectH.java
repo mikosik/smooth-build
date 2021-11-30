@@ -8,9 +8,9 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
-import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsException;
-import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeException;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
+import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsExc;
+import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
@@ -41,15 +41,15 @@ public class SelectH extends ExprH {
       int i = index.toJ().intValue();
       int size = tupleEvaluationType.items().size();
       if (i < 0 || size <= i) {
-        throw new DecodeSelectIndexOutOfBoundsException(hash(), spec(), i, size);
+        throw new DecodeSelectIndexOutOfBoundsExc(hash(), spec(), i, size);
       }
       TypeH fieldType = tupleEvaluationType.items().get(i);
       if (!Objects.equals(type(), fieldType)) {
-        throw new DecodeSelectWrongEvalTypeException(hash(), spec(), fieldType);
+        throw new DecodeSelectWrongEvalTypeExc(hash(), spec(), fieldType);
       }
       return new SelectData(tuple, index);
     } else {
-      throw new DecodeExprWrongEvalTypeOfComponentException(
+      throw new DecodeExprWrongEvalTypeOfCompExc(
           hash(), spec(), "tuple", TupleTypeH.class, tuple.type());
     }
   }

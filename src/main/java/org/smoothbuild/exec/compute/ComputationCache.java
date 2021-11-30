@@ -3,8 +3,8 @@ package org.smoothbuild.exec.compute;
 import static org.smoothbuild.exec.base.MessageStruct.containsErrors;
 import static org.smoothbuild.exec.base.MessageStruct.isValidSeverity;
 import static org.smoothbuild.exec.base.MessageStruct.severity;
-import static org.smoothbuild.exec.compute.ComputationCacheException.computationCacheException;
-import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
+import static org.smoothbuild.exec.compute.ComputationCacheExc.computationCacheException;
+import static org.smoothbuild.exec.compute.ComputationCacheExc.corruptedValueException;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 
@@ -47,7 +47,7 @@ public class ComputationCache {
   }
 
   public synchronized void write(Hash computationHash, Output output)
-      throws ComputationCacheException {
+      throws ComputationCacheExc {
     try (BufferedSink sink = fileSystem.sink(toPath(computationHash))) {
       ArrayH messages = output.messages();
       sink.write(messages.hash().toByteString());
@@ -59,7 +59,7 @@ public class ComputationCache {
     }
   }
 
-  public synchronized boolean contains(Hash taskHash) throws ComputationCacheException {
+  public synchronized boolean contains(Hash taskHash) throws ComputationCacheExc {
     Path path = toPath(taskHash);
     PathState pathState = fileSystem.pathState(path);
     return switch (pathState) {
@@ -69,7 +69,7 @@ public class ComputationCache {
     };
   }
 
-  public synchronized Output read(Hash taskHash, TypeH type) throws ComputationCacheException {
+  public synchronized Output read(Hash taskHash, TypeH type) throws ComputationCacheExc {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       ObjH messagesObject = objDb.get(Hash.read(source));
       ArrayTypeH messageArrayType = objFactory.arrayT(objFactory.messageType());
