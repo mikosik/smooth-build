@@ -17,7 +17,7 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefTypeS;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
@@ -46,7 +46,7 @@ public class ModLoader {
   }
 
   public Maybe<ModS> loadModule(
-      ModPath path, ModFiles modFiles, String sourceCode, DefinitionsS imported) {
+      ModPath path, ModFiles modFiles, String sourceCode, DefsS imported) {
     var logBuffer = new LogBuffer();
     FilePath filePath = modFiles.smoothFile();
     Maybe<ModContext> moduleContext = parseModule(filePath, sourceCode);

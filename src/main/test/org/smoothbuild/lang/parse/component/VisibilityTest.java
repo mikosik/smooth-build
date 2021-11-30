@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.TestingModLoader.err;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.testing.TestingContext;
 
 public class VisibilityTest extends TestingContext {
@@ -94,7 +94,7 @@ public class VisibilityTest extends TestingContext {
     class _imported {
       @Test
       public void value_is_visible() {
-        DefinitionsS imported = mod("""
+        DefsS imported = mod("""
           String otherModuleValue = "abc";
           """)
             .loadsSuccessfully()
@@ -108,7 +108,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func_is_visible() {
-        DefinitionsS imported = mod("""
+        DefsS imported = mod("""
           String otherModuleFunc() = "abc";
           """)
             .loadsSuccessfully()
@@ -122,7 +122,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void ctor_is_visible() {
-        DefinitionsS imported = mod("""
+        DefsS imported = mod("""
           OtherModuleStruct{}
           """)
             .loadsSuccessfully()
@@ -136,7 +136,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_is_visible() {
-        DefinitionsS imported = mod("""
+        DefsS imported = mod("""
           OtherModuleStruct{}
           """)
             .loadsSuccessfully()
@@ -501,7 +501,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
@@ -516,7 +516,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
@@ -531,7 +531,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
@@ -593,7 +593,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
@@ -608,7 +608,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
@@ -623,7 +623,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
@@ -695,7 +695,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
               otherModuleValue = "abc";
               """)
               .withImportedModFiles()
@@ -710,7 +710,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_succeeds() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
               otherModuleFunc() = "abc";
               """)
               .withImportedModFiles()
@@ -725,7 +725,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_succeeds() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
               OtherModuleStruct {}
               """)
               .withImportedModFiles()
@@ -796,7 +796,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void struct_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
@@ -847,7 +847,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
               otherModuleValue = "abc";
               """)
               .withImportedModFiles()
@@ -864,7 +864,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_succeeds() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
               otherModuleFunc() = "abc";
               """)
               .withImportedModFiles()
@@ -881,7 +881,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_succeeds() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
               OtherModuleStruct {}
               """)
               .withImportedModFiles()
@@ -954,7 +954,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
@@ -969,7 +969,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          DefinitionsS imported = mod("""
+          DefsS imported = mod("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()

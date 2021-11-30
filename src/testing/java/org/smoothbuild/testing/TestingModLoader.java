@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.base.define.TestingModFiles.modFiles;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
@@ -25,7 +25,7 @@ public class TestingModLoader {
   private final TestingContext testingContext;
   private final String sourceCode;
   private ModFiles modFiles;
-  private DefinitionsS imported;
+  private DefsS imported;
   private Maybe<ModS> modS;
 
   TestingModLoader(TestingContext testingContext, String sourceCode) {
@@ -38,7 +38,7 @@ public class TestingModLoader {
     return this;
   }
 
-  public TestingModLoader withImported(DefinitionsS imported) {
+  public TestingModLoader withImported(DefsS imported) {
     this.imported = imported;
     return this;
   }
@@ -85,8 +85,8 @@ public class TestingModLoader {
         .isEqualTo(expected);
   }
 
-  public DefinitionsS getModAsDefinitions() {
-    return DefinitionsS.empty()
+  public DefsS getModAsDefinitions() {
+    return DefsS.empty()
         .withModule(testingContext.internalMod())
         .withModule(modS.value());
   }
@@ -125,8 +125,8 @@ public class TestingModLoader {
     TypeFactoryS factory = testingContext.typeFactoryS();
     ModLoader modLoader = new ModLoader(
         new TypeInferrer(factory, typing), new TopEvalLoader(factory), factory);
-    DefinitionsS importedSane = imported != null ? imported
-        : DefinitionsS.empty().withModule(testingContext.internalMod());
+    DefsS importedSane = imported != null ? imported
+        : DefsS.empty().withModule(testingContext.internalMod());
     ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();
     return modLoader.loadModule(
         ModPath.of(modFilesSane.smoothFile()), modFilesSane, sourceCode, importedSane);

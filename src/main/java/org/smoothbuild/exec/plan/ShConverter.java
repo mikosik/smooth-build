@@ -34,7 +34,7 @@ import org.smoothbuild.lang.base.define.BoolValS;
 import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.IfFuncS;
 import org.smoothbuild.lang.base.define.ItemS;
@@ -61,7 +61,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class ShConverter {
   private final ObjFactory objFactory;
-  private final DefinitionsS definitions;
+  private final DefsS definitions;
   private final TypeShConverter typeShConverter;
   private final FileLoader fileLoader;
   private final Deque<NList<ItemS>> callStack;
@@ -70,10 +70,10 @@ public class ShConverter {
   private final Map<ObjectH, Nal> nals;
 
   @Inject
-  public ShConverter(ObjFactory objFactory, DefinitionsS definitions,
-      TypeShConverter typeShConverter, FileLoader fileLoader) {
+  public ShConverter(ObjFactory objFactory, DefsS defs, TypeShConverter typeShConverter,
+      FileLoader fileLoader) {
     this.objFactory = objFactory;
-    this.definitions = definitions;
+    this.definitions = defs;
     this.typeShConverter = typeShConverter;
     this.fileLoader = fileLoader;
     this.callStack = new LinkedList<>();

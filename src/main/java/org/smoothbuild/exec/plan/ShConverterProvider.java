@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.exec.java.FileLoader;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 
 public class ShConverterProvider {
   private final TypeShConverter typeShConverter;
@@ -19,7 +19,7 @@ public class ShConverterProvider {
     this.fileLoader = fileLoader;
   }
 
-  public ShConverter get(DefinitionsS definitionsS) {
-    return new ShConverter(objectFactory, definitionsS, typeShConverter, fileLoader);
+  public ShConverter get(DefsS defsS) {
+    return new ShConverter(objectFactory, defsS, typeShConverter, fileLoader);
   }
 }

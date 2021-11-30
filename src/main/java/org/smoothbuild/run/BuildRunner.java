@@ -19,7 +19,7 @@ import org.smoothbuild.exec.artifact.ArtifactBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.space.ForSpace;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 
 public class BuildRunner {
   private final Console console;
@@ -67,11 +67,11 @@ public class BuildRunner {
       this.reporter = reporter;
     }
 
-    public void execute(DefinitionsS definitions, List<String> names) {
+    public void execute(DefsS defs, List<String> names) {
       reporter.startNewPhase("Building");
       try {
-        findTopEvaluables(reporter, definitions, names)
-            .ifPresent((values) -> artifactBuilder.buildArtifacts(definitions, values));
+        findTopEvaluables(reporter, defs, names)
+            .ifPresent((values) -> artifactBuilder.buildArtifacts(defs, values));
       } catch (QuitException e) {
         reporter.printlnRawFatal(e.getMessage());
       }

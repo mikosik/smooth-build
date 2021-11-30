@@ -20,7 +20,7 @@ import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.expr.RefS;
 
 public class ArtifactBuilder {
@@ -40,8 +40,8 @@ public class ArtifactBuilder {
     this.reporter = reporter;
   }
 
-  public void buildArtifacts(DefinitionsS definitions, List<RefS> refs) {
-    Map<RefS, Job> plans = executionPlanner.createPlans(definitions, refs);
+  public void buildArtifacts(DefsS defs, List<RefS> refs) {
+    Map<RefS, Job> plans = executionPlanner.createPlans(defs, refs);
     if (reporter.isProblemReported()) {
       return;
     }

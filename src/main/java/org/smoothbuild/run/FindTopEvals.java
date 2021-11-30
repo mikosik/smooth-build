@@ -9,15 +9,15 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.expr.RefS;
 
 public class FindTopEvals {
   public static Optional<List<RefS>> findTopEvaluables(
-      Reporter reporter, DefinitionsS definitions, List<String> names) {
-    var values = definitions.referencables();
+      Reporter reporter, DefsS defs, List<String> names) {
+    var values = defs.referencables();
     List<RefS> referencables = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {

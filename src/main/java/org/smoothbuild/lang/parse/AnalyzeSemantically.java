@@ -16,7 +16,7 @@ import org.smoothbuild.cli.console.ImmutableLogs;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.parse.ast.ArrayTypeN;
@@ -41,7 +41,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class AnalyzeSemantically {
-  public static ImmutableLogs analyzeSemantically(DefinitionsS imported, Ast ast) {
+  public static ImmutableLogs analyzeSemantically(DefsS imported, Ast ast) {
     var logBuffer = new LogBuffer();
     decodeBlobLiterals(logBuffer, ast);
     decodeIntLiterals(logBuffer, ast);
@@ -98,7 +98,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void detectUndefinedTypes(Logger logger, DefinitionsS imported, Ast ast) {
+  private static void detectUndefinedTypes(Logger logger, DefsS imported, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitRealFunc(RealFuncN realFuncN) {
@@ -141,7 +141,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void detectDuplicateGlobalNames(Logger logger, DefinitionsS imported, Ast ast) {
+  private static void detectDuplicateGlobalNames(Logger logger, DefsS imported, Ast ast) {
     List<Nal> nals = new ArrayList<>();
     nals.addAll(ast.structs());
     nals.addAll(map(ast.structs(), StructN::ctor));

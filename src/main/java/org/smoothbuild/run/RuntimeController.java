@@ -21,7 +21,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.install.ModFilesDetector;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
@@ -55,29 +55,29 @@ public class RuntimeController {
     this.reporter = reporter;
   }
 
-  public int setUpRuntimeAndRun(Consumer<DefinitionsS> runner) {
+  public int setUpRuntimeAndRun(Consumer<DefsS> runner) {
     reporter.startNewPhase("Parsing");
 
-    ModS internalModule = internalModLoader.load();
-    DefinitionsS allDefinitions = DefinitionsS.empty().withModule(internalModule);
-    ImmutableMap<ModPath, ModFiles> files = modFilesDetector.detect(MODULES);
+    var internalMod = internalModLoader.load();
+    var allDefs = DefsS.empty().withModule(internalMod);
+    var files = modFilesDetector.detect(MODULES);
     for (Entry<ModPath, ModFiles> entry : files.entrySet()) {
       ModFiles modFiles = entry.getValue();
-      Maybe<ModS> module = load(allDefinitions, entry.getKey(), modFiles);
+      Maybe<ModS> module = load(allDefs, entry.getKey(), modFiles);
       reporter.report(modFiles.smoothFile().toString(), module.logs().toList());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
         return EXIT_CODE_ERROR;
       } else {
-        allDefinitions = allDefinitions.withModule(module.value());
+        allDefs = allDefs.withModule(module.value());
       }
     }
-    runner.accept(allDefinitions);
+    runner.accept(allDefs);
     reporter.printSummary();
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private Maybe<ModS> load(DefinitionsS imported, ModPath path, ModFiles modFiles) {
+  private Maybe<ModS> load(DefsS imported, ModPath path, ModFiles modFiles) {
     var sourceCode = readFileContent(modFiles.smoothFile());
     if (sourceCode.containsProblem()) {
       return maybeLogs(sourceCode.logs());

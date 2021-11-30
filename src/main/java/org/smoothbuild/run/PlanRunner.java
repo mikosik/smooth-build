@@ -11,7 +11,7 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
-import org.smoothbuild.lang.base.define.DefinitionsS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.expr.RefS;
 
 public class PlanRunner {
@@ -47,14 +47,14 @@ public class PlanRunner {
       this.executionPlanner = executionPlanner;
     }
 
-    public void execute(DefinitionsS definitions, List<String> names) {
+    public void execute(DefsS defs, List<String> names) {
       reporter.startNewPhase("Creating execution plan");
-      findTopEvaluables(reporter, definitions, names)
-          .ifPresent(values -> printPlans(definitions, values));
+      findTopEvaluables(reporter, defs, names)
+          .ifPresent(values -> printPlans(defs, values));
     }
 
-    private void printPlans(DefinitionsS definitions, List<RefS> values) {
-      executionPlanner.createPlans(definitions, values)
+    private void printPlans(DefsS defs, List<RefS> values) {
+      executionPlanner.createPlans(defs, values)
           .values()
           .forEach(this::print);
     }
