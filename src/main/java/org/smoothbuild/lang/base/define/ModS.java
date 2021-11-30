@@ -8,6 +8,6 @@ public record ModS(
     ModPath path,
     ModFiles files,
     ImmutableList<ModS> referencedMods,
-    NList<DefinedType> types,
+    NList<DefTypeS> types,
     NList<TopEvalS> referencables) {
 }

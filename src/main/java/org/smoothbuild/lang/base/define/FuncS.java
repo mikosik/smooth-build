@@ -49,7 +49,7 @@ public sealed abstract class FuncS extends TopEvalS
   }
 
   protected String paramsToString() {
-    return toCommaSeparatedString(params, Defined::typeAndName);
+    return toCommaSeparatedString(params, DefinedS::typeAndName);
   }
 
   @Override

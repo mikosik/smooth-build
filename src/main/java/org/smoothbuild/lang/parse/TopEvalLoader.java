@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
-import org.smoothbuild.lang.base.define.Defined;
+import org.smoothbuild.lang.base.define.DefinedS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ModPath;
@@ -79,7 +79,7 @@ public class TopEvalLoader {
     var resultType = realFuncN.resType().get();
     var name = realFuncN.name();
     var loc = realFuncN.loc();
-    var type = factory.abstFunc(resultType, map(params, Defined::type));
+    var type = factory.abstFunc(resultType, map(params, DefinedS::type));
     if (realFuncN.ann().isPresent()) {
       return new NatFuncS(type,
           path, name, params, loadAnn(realFuncN.ann().get()), loc

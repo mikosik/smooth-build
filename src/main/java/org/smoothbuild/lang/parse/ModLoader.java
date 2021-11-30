@@ -16,7 +16,7 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.CtorS;
-import org.smoothbuild.lang.base.define.DefinedType;
+import org.smoothbuild.lang.base.define.DefTypeS;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
@@ -79,7 +79,7 @@ public class ModLoader {
     }
 
     var modules = imported.modules().values().asList();
-    var types = sortedAst.structs().map(s -> (DefinedType) loadStruct(path, s));
+    var types = sortedAst.structs().map(s -> (DefTypeS) loadStruct(path, s));
     var referencables = loadEvaluables(path, sortedAst);
     var moduleS = new ModS(path, modFiles, modules, types, referencables);
     return maybeValueAndLogs(moduleS, logBuffer);

@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.define.Defined;
+import org.smoothbuild.lang.base.define.DefinedS;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.ItemS;
@@ -176,7 +176,7 @@ public class TypeInferrer {
       }
 
       private TypeS findType(String name) {
-        Defined type = imported.types().get(name);
+        DefinedS type = imported.types().get(name);
         if (type != null) {
           return type.type();
         } else {

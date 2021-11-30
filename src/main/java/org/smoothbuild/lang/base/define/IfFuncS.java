@@ -23,7 +23,7 @@ public final class IfFuncS extends FuncS {
 
   private IfFuncS(TypeS resultType, NList<ItemS> params, ModPath modPath,
       TypeFactoryS factory) {
-    super(factory.abstFunc(resultType, map(params, Defined::type)), modPath, IF_FUNCTION_NAME, params, internal());
+    super(factory.abstFunc(resultType, map(params, DefinedS::type)), modPath, IF_FUNCTION_NAME, params, internal());
   }
 
   private static NList<ItemS> createParams(TypeS resultType, TypeS boolType, ModPath modPath) {

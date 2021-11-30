@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableMap;
 
 public record DefinitionsS(
     ImmutableMap<ModPath, ModS> modules,
-    NList<DefinedType> types,
+    NList<DefTypeS> types,
     NList<TopEvalS> referencables) {
 
   public static DefinitionsS empty() {

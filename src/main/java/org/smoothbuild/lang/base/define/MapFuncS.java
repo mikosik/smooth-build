@@ -37,7 +37,7 @@ public final class MapFuncS extends FuncS {
   private MapFuncS(ArrayTypeS resultType, NList<ItemS> params, ModPath modPath,
       TypeFactoryS factory) {
     super(
-        factory.abstFunc(resultType, map(params, Defined::type)), modPath,
+        factory.abstFunc(resultType, map(params, DefinedS::type)), modPath,
         MAP_FUNCTION_NAME,
         params,
         internal()

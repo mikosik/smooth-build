@@ -5,7 +5,7 @@ import static org.smoothbuild.io.fs.space.Space.PRJ;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
-import org.smoothbuild.lang.base.define.Defined;
+import org.smoothbuild.lang.base.define.DefinedS;
 import org.smoothbuild.lang.base.define.ValS;
 
 public class ListRunner {
@@ -24,7 +24,7 @@ public class ListRunner {
         .stream()
         .filter(f -> f.loc().file().space().equals(PRJ))
         .filter(ValS.class::isInstance)
-        .map(Defined::name)
+        .map(DefinedS::name)
         .sorted()
         .forEach(console::println));
   }
