@@ -23,7 +23,7 @@ public class OrderAlgorithm extends Algorithm {
   public Output run(Input input, NativeApi nativeApi) {
     ArrayH array = nativeApi
         .factory()
-        .arrayBuilder(((ArrayTypeH) outputType()).elem())
+        .arrayBuilder((ArrayTypeH) outputType())
         .addAll(input.vals())
         .build();
     return new Output(array, nativeApi.messages());

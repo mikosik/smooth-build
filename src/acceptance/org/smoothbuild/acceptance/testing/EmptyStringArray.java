@@ -5,6 +5,6 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class EmptyStringArray {
   public static ArrayH func(NativeApi nativeApi) {
-    return nativeApi.factory().arrayBuilder(nativeApi.factory().stringT()).build();
+    return nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().stringT()).build();
   }
 }

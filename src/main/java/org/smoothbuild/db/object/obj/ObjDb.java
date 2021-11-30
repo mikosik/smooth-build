@@ -80,8 +80,8 @@ public class ObjDb {
 
   // methods for creating ValueH subclasses
 
-  public ArrayHBuilder arrayBuilder(TypeH elemType) {
-    return new ArrayHBuilder(typeDb.array(elemType), this);
+  public ArrayHBuilder arrayBuilder(ArrayTypeH type) {
+    return new ArrayHBuilder(type, this);
   }
 
   public BlobHBuilder blobBuilder() {

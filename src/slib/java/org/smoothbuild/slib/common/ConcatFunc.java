@@ -7,7 +7,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class ConcatFunc {
   public static ArrayH func(NativeApi nativeApi, ArrayH array1, ArrayH array2) {
-    ArrayHBuilder builder = nativeApi.factory().arrayBuilder(array1.spec().elem());
+    ArrayHBuilder builder = nativeApi.factory().arrayBuilderWithElems(array1.spec().elem());
     builder.addAll(array1.elems(ValH.class));
     builder.addAll(array2.elems(ValH.class));
     return builder.build();

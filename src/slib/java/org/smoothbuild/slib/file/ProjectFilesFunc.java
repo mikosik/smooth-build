@@ -7,7 +7,6 @@ import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 import java.io.IOException;
 
 import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -44,8 +43,8 @@ public class ProjectFilesFunc {
 
   private static ArrayH readFiles(Container container, FileSystem fileSystem, Path dir)
       throws IOException {
-    ArrayHBuilder fileArrayBuilder = container.factory().arrayBuilder(container.factory().fileT());
-    FileReader reader = new FileReader(container);
+    var fileArrayBuilder = container.factory().arrayBuilderWithElems(container.factory().fileT());
+    var reader = new FileReader(container);
     if (dir.isRoot()) {
       for (Path path : fileSystem.files(Path.root())) {
         if (!path.equals(SMOOTH_DIR)) {

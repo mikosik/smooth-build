@@ -29,7 +29,7 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(selectAlgorithmHash(intH(0)));
 
     assertThat(hashes.size())
-        .isEqualTo(6);
+        .isEqualTo(5);
   }
 
   @Test

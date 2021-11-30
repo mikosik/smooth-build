@@ -17,7 +17,6 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
@@ -38,7 +37,7 @@ public class UnzipFunc {
   public static ArrayH unzip(NativeApi nativeApi, BlobH blob, Predicate<String> filter)
       throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayHBuilder fileArrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileT());
+    var fileArrayBuilder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
     File tempFile = copyToTempFile(blob);
     try (ZipFile zipFile = new ZipFile(tempFile)) {
       Enumeration<? extends ZipEntry> entries = zipFile.entries();

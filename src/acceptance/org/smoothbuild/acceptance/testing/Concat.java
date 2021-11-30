@@ -10,7 +10,7 @@ public class Concat {
     var factory = nativeApi.factory();
     var elemType = ((ArrayTypeH) factory.typing().mergeUp(first.spec(), second.spec())).elem();
     return factory
-        .arrayBuilder(elemType)
+        .arrayBuilderWithElems(elemType)
         .addAll(first.elems(ValH.class))
         .addAll(second.elems(ValH.class))
         .build();

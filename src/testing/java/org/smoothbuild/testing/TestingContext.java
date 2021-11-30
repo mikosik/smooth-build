@@ -269,6 +269,10 @@ public class TestingContext {
     return typeDb().any();
   }
 
+  public ArrayTypeH arrayHT() {
+    return arrayHT(stringHT());
+  }
+
   public ArrayTypeH arrayHT(TypeH elemSpec) {
     return typeDb().array(elemSpec);
   }
@@ -422,7 +426,10 @@ public class TestingContext {
   }
 
   public ArrayH arrayH(TypeH elemSpec, ValH... elems) {
-    return objDb().arrayBuilder(elemSpec).addAll(list(elems)).build();
+    return objDb()
+        .arrayBuilder(arrayHT(elemSpec))
+        .addAll(list(elems))
+        .build();
   }
 
   public BlobH blobH() {

@@ -75,8 +75,12 @@ public class ObjFactory {
 
   // Objects
 
-  public ArrayHBuilder arrayBuilder(TypeH elemType) {
-    return objDb.arrayBuilder(elemType);
+  public ArrayHBuilder arrayBuilderWithElems(TypeH elemType) {
+    return objDb.arrayBuilder(typeDb.array(elemType));
+  }
+
+  public ArrayHBuilder arrayBuilder(ArrayTypeH type) {
+    return objDb.arrayBuilder(type);
   }
 
   public BlobH blob(DataWriter dataWriter) {

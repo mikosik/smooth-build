@@ -6,7 +6,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NatFuncH;
-import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
 public class AlgorithmHashes {

@@ -46,7 +46,7 @@ public class Container implements NativeApi {
 
   @Override
   public ArrayH messages() {
-    return objFactory.arrayBuilder(objFactory.messageType())
+    return objFactory.arrayBuilderWithElems(objFactory.messageType())
         .addAll(messageLogger.messages)
         .build();
   }
