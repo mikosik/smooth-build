@@ -59,10 +59,10 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class ShConverter {
+public class ShConv {
   private final ObjFactory objFactory;
   private final DefsS definitions;
-  private final TypeShConverter typeShConverter;
+  private final TypeShConv typeShConv;
   private final FileLoader fileLoader;
   private final Deque<NList<ItemS>> callStack;
   private final Map<String, FuncH> funcCache;
@@ -70,11 +70,10 @@ public class ShConverter {
   private final Map<ObjectH, Nal> nals;
 
   @Inject
-  public ShConverter(ObjFactory objFactory, DefsS defs, TypeShConverter typeShConverter,
-      FileLoader fileLoader) {
+  public ShConv(ObjFactory objFactory, DefsS defs, TypeShConv typeShConv, FileLoader fileLoader) {
     this.objFactory = objFactory;
     this.definitions = defs;
-    this.typeShConverter = typeShConverter;
+    this.typeShConv = typeShConv;
     this.fileLoader = fileLoader;
     this.callStack = new LinkedList<>();
     this.funcCache = new HashMap<>();
@@ -256,6 +255,6 @@ public class ShConverter {
   }
 
   private TypeH convertType(TypeS typeS) {
-    return typeShConverter.visit(typeS);
+    return typeShConv.visit(typeS);
   }
 }

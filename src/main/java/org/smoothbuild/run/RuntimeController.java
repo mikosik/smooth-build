@@ -29,7 +29,6 @@ import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.parse.ModLoader;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class RuntimeController {
   private static final ImmutableList<FilePath> MODULES =

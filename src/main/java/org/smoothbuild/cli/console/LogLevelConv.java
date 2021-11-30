@@ -10,7 +10,10 @@ import com.google.common.collect.ImmutableMap;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.TypeConversionException;
 
-public class LogLevelConverter implements ITypeConverter<Level> {
+/**
+ * Log level converter.
+ */
+public class LogLevelConv implements ITypeConverter<Level> {
   private static final ImmutableMap<String, Level> MAP =
       ImmutableMap.<String, Level>builder()
           .put("f", FATAL)

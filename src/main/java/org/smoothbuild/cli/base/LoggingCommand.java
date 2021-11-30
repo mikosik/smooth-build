@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.base;
 
 import org.smoothbuild.cli.console.Level;
-import org.smoothbuild.cli.console.LogLevelConverter;
+import org.smoothbuild.cli.console.LogLevelConv;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -12,7 +12,7 @@ public class LoggingCommand extends ACommand {
       names = { "--log-level", "-l" },
       defaultValue = "info",
       paramLabel = "<level>",
-      converter = LogLevelConverter.class,
+      converter = LogLevelConv.class,
       description =
           """
               Show logs with specified level or above.
