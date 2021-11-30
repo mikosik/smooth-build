@@ -263,11 +263,11 @@ public class TypeInferrer {
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
         } else {
-          var funcParameters = funcParams(called);
-          if (funcParameters.isEmpty()) {
+          var funcParams = funcParams(called);
+          if (funcParams.isEmpty()) {
             call.setType(empty());
           } else {
-            var params = funcParameters.get();
+            var params = funcParams.get();
             Maybe<List<Optional<ArgNode>>> args = inferArgsToParamsAssignment(call, params);
             if (args.containsProblem()) {
               logBuffer.logAll(args.logs());
@@ -276,8 +276,7 @@ public class TypeInferrer {
               call.setType(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<TypeS> type = callTypeInferrer.inferCallType(
-                  call, funcType.result(), params);
+              Maybe<TypeS> type = callTypeInferrer.inferCallType(call, funcType.result(), params);
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
             }

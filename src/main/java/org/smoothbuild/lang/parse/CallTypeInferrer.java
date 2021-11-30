@@ -35,8 +35,7 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Maybe<TypeS> inferCallType(CallN call, TypeS resultType,
-      NList<ItemSignature> params) {
+  public Maybe<TypeS> inferCallType(CallN call, TypeS resultType, NList<ItemSignature> params) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
     findIllegalTypeAssignmentErrors(call, assignedArgs, params, logBuffer);

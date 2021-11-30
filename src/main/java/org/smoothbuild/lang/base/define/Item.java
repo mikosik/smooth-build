@@ -20,8 +20,7 @@ public class Item extends EvalS {
   private final Optional<ExprS> defaultVal;
   private final ItemSignature signature;
 
-  public Item(TypeS type, ModPath modPath, String name, Optional<ExprS> defaultVal,
-      Loc loc) {
+  public Item(TypeS type, ModPath modPath, String name, Optional<ExprS> defaultVal, Loc loc) {
     super(type, modPath, name, loc);
     this.defaultVal = defaultVal;
     this.signature = new ItemSignature(type(), name(), defaultVal.map(ExprS::type));
