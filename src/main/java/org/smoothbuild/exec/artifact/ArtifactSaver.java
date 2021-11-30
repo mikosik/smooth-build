@@ -15,7 +15,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.exec.base.FileStruct;
@@ -75,7 +75,7 @@ public class ArtifactSaver {
 
   private void saveObjectArray(Path artifactPath, ArrayH array) throws IOException {
     int i = 0;
-    for (ValueH val : array.elems(ValueH.class)) {
+    for (ValH val : array.elems(ValH.class)) {
       Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       Path targetPath = targetPath(val);
       fileSystem.createLink(sourcePath, targetPath);

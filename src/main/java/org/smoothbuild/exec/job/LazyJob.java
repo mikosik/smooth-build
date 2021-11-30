@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.job;
 
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Loc;
@@ -31,7 +31,7 @@ public record LazyJob(TypeH type, Loc loc, Supplier<Job> supplier) implements Jo
   }
 
   @Override
-  public Promise<ValueH> schedule(Worker worker) {
+  public Promise<ValH> schedule(Worker worker) {
     return job().schedule(worker);
   }
 

@@ -4,12 +4,12 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 
 /**
  * This class is immutable.
  */
-public class StringH extends ValueH {
+public class StringH extends ValH {
   public StringH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
   }

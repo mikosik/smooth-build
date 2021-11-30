@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.define.IfFuncS.IF_FUNCTION_NAME;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
@@ -24,16 +24,16 @@ public class IfJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValueH> schedule(Worker worker) {
-    var res = new PromisedValue<ValueH>();
+  public Promise<ValH> schedule(Worker worker) {
+    var res = new PromisedValue<ValH>();
     conditionJob()
         .schedule(worker)
         .addConsumer(obj -> onConditionCalculated(obj, worker, res));
     return res;
   }
 
-  private void onConditionCalculated(ValueH conditionH, Worker worker, Consumer<ValueH> res) {
-    var conditionJ = ((BoolH) conditionH).toJ();
+  private void onConditionCalculated(ValH condition, Worker worker, Consumer<ValH> res) {
+    var conditionJ = ((BoolH) condition).toJ();
     var job = conditionJ ? thenJob() : elseJob();
     new VirtualJob(job, new TaskInfo(CALL, IF_TASK_NAME, loc()))
         .schedule(worker)

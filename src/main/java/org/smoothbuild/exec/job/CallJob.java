@@ -4,7 +4,7 @@ import static org.smoothbuild.util.collect.Lists.concat;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
@@ -34,19 +34,19 @@ public class CallJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValueH> schedule(Worker worker) {
-    var result = new PromisedValue<ValueH>();
+  public Promise<ValH> schedule(Worker worker) {
+    var result = new PromisedValue<ValH>();
     funcJob()
         .schedule(worker)
         .addConsumer(valueH -> onFuncJobCompleted(valueH, worker, result));
     return result;
   }
 
-  private void onFuncJobCompleted(ValueH valueH, Worker worker, Consumer<ValueH> result) {
-    var funcH = (FuncH) valueH;
+  private void onFuncJobCompleted(ValH val, Worker worker, Consumer<ValH> res) {
+    var funcH = (FuncH) val;
     jobCreator.evaluateFuncEagerJob(scope, vars, type(), funcH, args, loc())
         .schedule(worker)
-        .addConsumer(result);
+        .addConsumer(res);
   }
 
   private Job funcJob() {

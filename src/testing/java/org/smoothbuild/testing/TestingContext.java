@@ -18,7 +18,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -417,11 +417,11 @@ public class TestingContext {
     return tupleH(animalHT(), list(species, speed));
   }
 
-  public ArrayH arrayH(ValueH... elems) {
+  public ArrayH arrayH(ValH... elems) {
     return arrayH(elems[0].spec(), elems);
   }
 
-  public ArrayH arrayH(TypeH elemSpec, ValueH... elems) {
+  public ArrayH arrayH(TypeH elemSpec, ValH... elems) {
     return objDb().arrayBuilder(elemSpec).addAll(list(elems)).build();
   }
 
@@ -499,12 +499,12 @@ public class TestingContext {
     return objDb().string(string);
   }
 
-  public TupleH tupleH(ImmutableList<ValueH> items) {
-    var spec = tupleHT(map(items, ValueH::spec));
+  public TupleH tupleH(ImmutableList<ValH> items) {
+    var spec = tupleHT(map(items, ValH::spec));
     return tupleH(spec, items);
   }
 
-  public TupleH tupleH(TupleTypeH tupleType, ImmutableList<ValueH> items) {
+  public TupleH tupleH(TupleTypeH tupleType, ImmutableList<ValH> items) {
     return objDb().tuple(tupleType, items);
   }
 

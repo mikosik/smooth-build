@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -32,7 +32,7 @@ public enum SpecKindH {
   ABST_FUNC((byte) 3, FuncH.class, SpecKindH::throwException),
   INT((byte) 4, IntH.class, IntH::new),
   IF_FUNC((byte) 5, IfFuncH.class, IfFuncH::new),
-  NOTHING((byte) 6, ValueH.class, SpecKindH::throwException),
+  NOTHING((byte) 6, ValH.class, SpecKindH::throwException),
   TUPLE((byte) 7, TupleH.class, TupleH::new),
   STRING((byte) 8, StringH.class, StringH::new),
 
@@ -43,8 +43,8 @@ public enum SpecKindH {
   PARAM_REF((byte) 14, ParamRefH.class, ParamRefH::new),
   CONSTRUCT((byte) 15, CombineH.class, CombineH::new),
 
-  VARIABLE((byte) 17, ValueH.class, SpecKindH::throwException),
-  ANY((byte) 18, ValueH.class, SpecKindH::throwException),
+  VARIABLE((byte) 17, ValH.class, SpecKindH::throwException),
+  ANY((byte) 18, ValH.class, SpecKindH::throwException),
   NAT_FUNC((byte) 19, NatFuncH.class, NatFuncH::new),
   // 20 IS UNUSED
   MAP_FUNC((byte) 21, MapFuncH.class, MapFuncH::new),

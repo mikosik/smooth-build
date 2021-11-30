@@ -5,25 +5,25 @@ import static org.smoothbuild.util.collect.Lists.map;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.util.concurrent.Promise;
 
 import com.google.common.collect.ImmutableList;
 
-public record Input(ImmutableList<ValueH> vals, Hash hash) {
-  public static Input fromPromises(List<Promise<ValueH>> results) {
+public record Input(ImmutableList<ValH> vals, Hash hash) {
+  public static Input fromPromises(List<Promise<ValH>> results) {
     return input(map(results, Promise::get));
   }
 
-  public static Input input(Iterable<? extends ValueH> vals) {
+  public static Input input(Iterable<? extends ValH> vals) {
     return new Input(ImmutableList.copyOf(vals));
   }
 
-  private Input(ImmutableList<ValueH> vals) {
+  private Input(ImmutableList<ValH> vals) {
     this(vals, calculateHash(vals));
   }
 
-  private static Hash calculateHash(Iterable<? extends ValueH> vals) {
-    return Hash.of(map(vals, ValueH::hash));
+  private static Hash calculateHash(Iterable<? extends ValH> vals) {
+    return Hash.of(map(vals, ValH::hash));
   }
 }

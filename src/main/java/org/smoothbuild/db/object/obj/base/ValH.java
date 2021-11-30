@@ -6,8 +6,8 @@ import org.smoothbuild.db.object.type.base.TypeH;
 /**
  * This class is immutable.
  */
-public abstract class ValueH extends ObjH {
-  public ValueH(MerkleRoot merkleRoot, ObjDb objDb) {
+public abstract class ValH extends ObjH {
+  public ValH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
   }
 

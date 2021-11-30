@@ -4,7 +4,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHas
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.type.base.SpecH;
@@ -41,7 +41,7 @@ public class ConvertAlgorithm extends Algorithm {
     }
   }
 
-  private static ValueH convert(SpecH destinationType, ObjH obj, NativeApi nativeApi) {
+  private static ValH convert(SpecH destinationType, ObjH obj, NativeApi nativeApi) {
     if (obj instanceof ArrayH array) {
       return convertArray(destinationType, array, nativeApi);
     }
@@ -51,7 +51,7 @@ public class ConvertAlgorithm extends Algorithm {
   private static ArrayH convertArray(SpecH destinationType, ArrayH array, NativeApi nativeApi) {
     TypeH elemType = ((ArrayTypeH) destinationType).elem();
     ArrayHBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elemType);
-    for (ValueH elem : array.elems(ValueH.class)) {
+    for (ValH elem : array.elems(ValH.class)) {
       arrayBuilder.add(convert(elemType, elem, nativeApi));
     }
     return arrayBuilder.build();

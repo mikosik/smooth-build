@@ -49,7 +49,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -371,15 +371,15 @@ public class SpecHTest extends TestingContext {
 
   public static List<Arguments> typeJ_test_data() {
     return list(
-        arguments(ANY, ValueH.class),
+        arguments(ANY, ValH.class),
         arguments(BLOB, BlobH.class),
         arguments(BOOL, BoolH.class),
         arguments(ABST_FUNC, FuncH.class),
         arguments(INT, IntH.class),
-        arguments(NOTHING, ValueH.class),
+        arguments(NOTHING, ValH.class),
         arguments(PERSON, TupleH.class),
         arguments(STRING, StringH.class),
-        arguments(VARIABLE, ValueH.class),
+        arguments(VARIABLE, ValH.class),
 
         arguments(ARRAY_ANY, ArrayH.class),
         arguments(ARRAY_BLOB, ArrayH.class),

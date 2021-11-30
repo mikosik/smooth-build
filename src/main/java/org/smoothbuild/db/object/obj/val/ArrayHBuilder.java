@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 
 public class ArrayHBuilder {
   private final ArrayTypeH type;
   private final ObjDb objDb;
-  private final List<ValueH> elems;
+  private final List<ValH> elems;
 
   public ArrayHBuilder(ArrayTypeH type, ObjDb objDb) {
     this.type = type;
@@ -21,12 +21,12 @@ public class ArrayHBuilder {
     this.elems = new ArrayList<>();
   }
 
-  public ArrayHBuilder addAll(Iterable<? extends ValueH> objs) {
+  public ArrayHBuilder addAll(Iterable<? extends ValH> objs) {
     stream(objs).forEach(this::add);
     return this;
   }
 
-  public ArrayHBuilder add(ValueH elem) {
+  public ArrayHBuilder add(ValH elem) {
     if (!objDb.typing().isAssignable(type.elem(), elem.spec())) {
       throw new IllegalArgumentException("Element type must be " + type.elem().name()
           + " but was " + elem.spec().name() + ".");

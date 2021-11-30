@@ -69,7 +69,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayH(file), messageArrayEmtpy()));
     var arrayType = arrayHT(objFactory().fileT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(TupleH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(TupleH.class))
         .containsExactly(file);
   }
 
@@ -79,7 +79,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayH(blob), messageArrayEmtpy()));
     var arrayType = arrayHT(blobHT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(BlobH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(BlobH.class))
         .containsExactly(blob);
   }
 
@@ -89,7 +89,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayH(boolV), messageArrayEmtpy()));
     var arrayType = arrayHT(boolHT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(BoolH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(BoolH.class))
         .containsExactly(boolV);
   }
 
@@ -99,7 +99,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(arrayH(intV), messageArrayEmtpy()));
     var arrayType = arrayHT(intHT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(IntH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(IntH.class))
         .containsExactly(intV);
   }
 
@@ -110,7 +110,7 @@ public class ComputationCacheTest extends TestingContext {
     computationCache().write(hash, new Output(array, messageArrayEmtpy()));
     var arrayType = arrayHT(stringHT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).value()).elems(StringH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(StringH.class))
         .containsExactly(strV);
   }
 
@@ -119,7 +119,7 @@ public class ComputationCacheTest extends TestingContext {
     var file = fileH(path("file/path"), bytes);
     computationCache().write(hash, new Output(file, messageArrayEmtpy()));
 
-    assertThat(computationCache().read(hash, objFactory().fileT()).value())
+    assertThat(computationCache().read(hash, objFactory().fileT()).val())
         .isEqualTo(file);
   }
 
@@ -128,7 +128,7 @@ public class ComputationCacheTest extends TestingContext {
     var blob = blobH(bytes);
     computationCache().write(hash, new Output(blob, messageArrayEmtpy()));
 
-    assertThat(computationCache().read(hash, blobHT()).value())
+    assertThat(computationCache().read(hash, blobHT()).val())
         .isEqualTo(blob);
   }
 
@@ -137,7 +137,7 @@ public class ComputationCacheTest extends TestingContext {
     var boolV = boolH(true);
     computationCache().write(hash, new Output(boolV, messageArrayEmtpy()));
 
-    assertThat(((BoolH) computationCache().read(hash, boolHT()).value()).toJ())
+    assertThat(((BoolH) computationCache().read(hash, boolHT()).val()).toJ())
         .isTrue();
   }
 
@@ -146,7 +146,7 @@ public class ComputationCacheTest extends TestingContext {
     var intV = intH(123);
     computationCache().write(hash, new Output(intV, messageArrayEmtpy()));
 
-    assertThat(((IntH) computationCache().read(hash, intHT()).value()).toJ())
+    assertThat(((IntH) computationCache().read(hash, intHT()).val()).toJ())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
@@ -155,7 +155,7 @@ public class ComputationCacheTest extends TestingContext {
     var string = "some string";
     var strV = stringH(string);
     computationCache().write(hash, new Output(strV, messageArrayEmtpy()));
-    assertThat(((StringH) computationCache().read(hash, stringHT()).value()).toJ())
+    assertThat(((StringH) computationCache().read(hash, stringHT()).val()).toJ())
         .isEqualTo(string);
   }
 }

@@ -18,7 +18,7 @@ public class OutputTest extends TestingContext {
 
   @Test
   public void value_returns_value() {
-    assertThat(new Output(aString(), messages()).value())
+    assertThat(new Output(aString(), messages()).val())
         .isEqualTo(aString());
   }
 
@@ -39,7 +39,7 @@ public class OutputTest extends TestingContext {
   @Test
   public void value_throws_exception_when_no_value_is_present() {
     Output output = new Output(null, messages());
-    assertCall(output::value)
+    assertCall(output::val)
         .throwsException(IllegalStateException.class);
   }
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.plugin.NativeApi;
@@ -11,8 +11,8 @@ public class Concat {
     var elemType = ((ArrayTypeH) factory.typing().mergeUp(first.spec(), second.spec())).elem();
     return factory
         .arrayBuilder(elemType)
-        .addAll(first.elems(ValueH.class))
-        .addAll(second.elems(ValueH.class))
+        .addAll(first.elems(ValH.class))
+        .addAll(second.elems(ValH.class))
         .build();
   }
 }

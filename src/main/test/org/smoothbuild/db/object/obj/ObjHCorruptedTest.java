@@ -34,7 +34,7 @@ import org.smoothbuild.db.hashed.exc.DecodeStringExc;
 import org.smoothbuild.db.hashed.exc.HashedDbExc;
 import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
@@ -194,7 +194,7 @@ public class ObjHCorruptedTest extends TestingContext {
               hash(type),
               notHashOfSeq
           );
-      assertCall(() -> ((ArrayH) objDb().get(objHash)).elems(ValueH.class))
+      assertCall(() -> ((ArrayH) objDb().get(objHash)).elems(ValH.class))
           .throwsException(new DecodeObjNodeExc(objHash, type, DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -252,7 +252,7 @@ public class ObjHCorruptedTest extends TestingContext {
               ));
       assertCall(() -> ((ArrayH) objDb().get(objHash)).elems(StringH.class))
           .throwsException(new UnexpectedObjNodeExc(
-              objHash, type, DATA_PATH, 1, ValueH.class, ParamRefH.class));
+              objHash, type, DATA_PATH, 1, ValH.class, ParamRefH.class));
     }
   }
 
@@ -841,7 +841,7 @@ public class ObjHCorruptedTest extends TestingContext {
        */
       var tupleType = tupleHT(list(stringHT()));
       var tuple = tupleH(tupleType, list(stringH("abc")));
-      var expr = (ValueH) tuple;
+      var expr = (ValH) tuple;
       var index = intH(0);
       Hash objHash =
           hash(
@@ -1377,7 +1377,7 @@ public class ObjHCorruptedTest extends TestingContext {
       TupleH tuple = (TupleH) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new UnexpectedObjNodeExc(
-              objHash, personHT(), DATA_PATH + "[1]", ValueH.class, ParamRefH.class));
+              objHash, personHT(), DATA_PATH + "[1]", ValH.class, ParamRefH.class));
     }
   }
 

@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class ArrayH extends ValueH {
+public class ArrayH extends ValH {
   public ArrayH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
   }
@@ -23,17 +23,17 @@ public class ArrayH extends ValueH {
     return (ArrayTypeH) super.spec();
   }
 
-  public <T extends ValueH> ImmutableList<T> elems(Class<T> elemJType) {
+  public <T extends ValH> ImmutableList<T> elems(Class<T> elemJType) {
     assertIsIterableAs(elemJType);
     var elems = elemObjs();
     return checkTypeOfSeqObjs(elems, spec().elem());
   }
 
-  private ImmutableList<ValueH> elemObjs() {
-    return readSeqObjs(DATA_PATH, dataHash(), ValueH.class);
+  private ImmutableList<ValH> elemObjs() {
+    return readSeqObjs(DATA_PATH, dataHash(), ValH.class);
   }
 
-  private <T extends ValueH> void assertIsIterableAs(Class<T> clazz) {
+  private <T extends ValH> void assertIsIterableAs(Class<T> clazz) {
     SpecH elem = spec().elem();
     if (!(elem.isNothing() || clazz.isAssignableFrom(elem.typeJ()))) {
       throw new IllegalArgumentException(spec().name() + " cannot be viewed as Iterable of "
@@ -42,7 +42,7 @@ public class ArrayH extends ValueH {
   }
 
   protected <T> ImmutableList<T> checkTypeOfSeqObjs(
-      ImmutableList<ValueH> elems, TypeH expectedElementType) {
+      ImmutableList<ValH> elems, TypeH expectedElementType) {
     for (int i = 0; i < elems.size(); i++) {
       var elemType = elems.get(i).spec();
       if (!(objDb().typing().isAssignable(expectedElementType, elemType))) {

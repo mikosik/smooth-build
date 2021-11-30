@@ -2,12 +2,12 @@ package org.smoothbuild.db.object.obj.val;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 
 /**
  * This class is immutable.
  */
-public class BoolH extends ValueH {
+public class BoolH extends ValH {
   public BoolH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
   }

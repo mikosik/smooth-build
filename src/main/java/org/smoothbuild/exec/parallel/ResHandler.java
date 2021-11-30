@@ -2,18 +2,18 @@ package org.smoothbuild.exec.parallel;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResHandler implements Consumer<Computed> {
   private final TaskInfo taskInfo;
-  private final Consumer<ValueH> consumer;
+  private final Consumer<ValH> consumer;
   private final ExecutionReporter reporter;
   private final SoftTerminationExecutor jobExecutor;
 
-  public ResHandler(TaskInfo taskInfo, Consumer<ValueH> consumer,
+  public ResHandler(TaskInfo taskInfo, Consumer<ValH> consumer,
       ExecutionReporter reporter, SoftTerminationExecutor jobExecutor) {
     this.taskInfo = taskInfo;
     this.consumer = consumer;
@@ -25,7 +25,7 @@ public class ResHandler implements Consumer<Computed> {
   public void accept(Computed computed) {
     reporter.report(taskInfo, computed);
     if (computed.hasOutputWithValue()) {
-      consumer.accept(computed.output().value());
+      consumer.accept(computed.output().val());
     } else {
       jobExecutor.terminate();
     }

@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.Computer;
@@ -74,8 +74,8 @@ public class ParallelJobExecutor {
       return mapValues(results, promise -> Optional.ofNullable(promise.get()));
     }
 
-    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<ValueH>> deps,
-        Consumer<ValueH> consumer) {
+    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<ValH>> deps,
+        Consumer<ValH> consumer) {
       jobExecutor.enqueue(() -> {
         try {
           var resultHandler = new ResHandler(info, consumer, reporter, jobExecutor);

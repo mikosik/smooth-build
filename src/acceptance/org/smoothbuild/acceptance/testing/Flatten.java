@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -12,7 +12,7 @@ public class Flatten {
     TypeH resultArrayElemType = ((ArrayTypeH) array.spec().elem()).elem();
     ArrayHBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemType);
     for (ArrayH innerArray : array.elems(ArrayH.class)) {
-      builder.addAll(innerArray.elems(ValueH.class));
+      builder.addAll(innerArray.elems(ValH.class));
     }
     return builder.build();
   }

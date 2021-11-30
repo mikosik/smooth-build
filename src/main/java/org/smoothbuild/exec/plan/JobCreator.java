@@ -14,7 +14,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -178,18 +178,18 @@ public class JobCreator {
 
   // Value
 
-  private Job valueLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValueH val) {
+  private Job valueLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
     Nal nal = nals.get(val);
     var loc = nal.loc();
     return new LazyJob(val.spec(), loc, () -> valueEagerJob(nal, val));
   }
 
-  private Job valueEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValueH val) {
+  private Job valueEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
     var nal = nals.get(val);
     return valueEagerJob(nal, val);
   }
 
-  private Task valueEagerJob(Nal nal, ValueH val) {
+  private Task valueEagerJob(Nal nal, ValH val) {
     var info = new TaskInfo(LITERAL, nal);
     var algorithm = new ConstAlgorithm(val);
     return new Task(val.spec(), list(), info, algorithm);

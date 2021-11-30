@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.type.TestingTypesH;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -237,7 +237,7 @@ public class ArrayHTest extends TestingContext {
 
     @Test
     public void nothing_array_is_empty() {
-      assertThat(emptyArrayOf(nothingHT()).elems(ValueH.class))
+      assertThat(emptyArrayOf(nothingHT()).elems(ValH.class))
           .isEmpty();
     }
 
@@ -251,7 +251,7 @@ public class ArrayHTest extends TestingContext {
     @Test
     public void nothing_array_read_by_hash_is_empty() {
       ArrayH array = emptyArrayOf(nothingHT());
-      assertThat(((ArrayH) objDbOther().get(array.hash())).elems(ValueH.class))
+      assertThat(((ArrayH) objDbOther().get(array.hash())).elems(ValH.class))
           .isEmpty();
     }
 

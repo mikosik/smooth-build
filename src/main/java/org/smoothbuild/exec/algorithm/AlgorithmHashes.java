@@ -3,7 +3,7 @@ package org.smoothbuild.exec.algorithm;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.type.base.SpecH;
@@ -32,8 +32,8 @@ public class AlgorithmHashes {
 
   // TODO unused 5
 
-  public static Hash constAlgorithmHash(ValueH valueH) {
-    return hash(6, valueH.hash());
+  public static Hash constAlgorithmHash(ValH val) {
+    return hash(6, val.hash());
   }
 
   // TODO unused 7

@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -141,7 +141,7 @@ public class ObjFactory {
     return objDb.string(string);
   }
 
-  public TupleH tuple(TupleTypeH type, ImmutableList<ValueH> items) {
+  public TupleH tuple(TupleTypeH type, ImmutableList<ValH> items) {
     return objDb.tuple(type, items);
   }
 
@@ -222,8 +222,8 @@ public class ObjFactory {
   }
 
   private TupleH message(String severity, String text) {
-    ValueH textObject = objDb.string(text);
-    ValueH severityObject = objDb.string(severity);
+    ValH textObject = objDb.string(text);
+    ValH severityObject = objDb.string(severity);
     return objDb.tuple(messageType(), list(textObject, severityObject));
   }
 

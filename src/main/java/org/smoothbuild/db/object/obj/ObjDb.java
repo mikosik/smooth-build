@@ -18,7 +18,7 @@ import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.db.ObjDbExc;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.exc.DecodeObjTypeExc;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
@@ -114,7 +114,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
   }
 
-  public TupleH tuple(TupleTypeH tupleType, ImmutableList<ValueH> items) {
+  public TupleH tuple(TupleTypeH tupleType, ImmutableList<ValH> items) {
     var types = tupleType.items();
     allMatchOtherwise(types, items, (s, i) -> Objects.equals(s, i.spec()),
         (i, j) -> {
@@ -193,7 +193,7 @@ public class ObjDb {
 
   // methods for creating Val Obj-s
 
-  public ArrayH newArray(ArrayTypeH type, List<ValueH> elems) throws HashedDbExc {
+  public ArrayH newArray(ArrayTypeH type, List<ValH> elems) throws HashedDbExc {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -236,7 +236,7 @@ public class ObjDb {
     return typeDb.string().newObj(root, this);
   }
 
-  private TupleH newTuple(TupleTypeH type, ImmutableList<ValueH> vals) throws HashedDbExc {
+  private TupleH newTuple(TupleTypeH type, ImmutableList<ValH> vals) throws HashedDbExc {
     var data = writeTupleData(vals);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -397,7 +397,7 @@ public class ObjDb {
 
   // methods for writing data of Val-s
 
-  private Hash writeArrayData(List<ValueH> elems) throws HashedDbExc {
+  private Hash writeArrayData(List<ValH> elems) throws HashedDbExc {
     return writeSeq(elems);
   }
 
@@ -417,7 +417,7 @@ public class ObjDb {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeTupleData(ImmutableList<ValueH> items) throws HashedDbExc {
+  private Hash writeTupleData(ImmutableList<ValH> items) throws HashedDbExc {
     return writeSeq(items);
   }
 

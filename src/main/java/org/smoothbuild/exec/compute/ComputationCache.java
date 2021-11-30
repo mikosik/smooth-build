@@ -16,7 +16,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValueH;
+import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -52,7 +52,7 @@ public class ComputationCache {
       ArrayH messages = output.messages();
       sink.write(messages.hash().toByteString());
       if (!containsErrors(messages)) {
-        sink.write(output.value().hash().toByteString());
+        sink.write(output.val().hash().toByteString());
       }
     } catch (IOException e) {
       throw computationCacheException(e);
@@ -96,7 +96,7 @@ public class ComputationCache {
           throw corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its Merkle root, but got " + obj.spec());
         } else {
-          return new Output((ValueH) obj, messages);
+          return new Output((ValH) obj, messages);
         }
       }
     } catch (IOException e) {
