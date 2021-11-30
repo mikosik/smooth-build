@@ -352,8 +352,7 @@ public class TypeDb implements TypeFactoryH {
       T castResult = (T) result;
       return castResult;
     } else {
-      throw new UnexpectedTypeNodeExc(
-          outerHash, kind, path, clazz, result.getClass());
+      throw new UnexpectedTypeNodeExc(outerHash, kind, path, clazz, result.getClass());
     }
   }
 
@@ -363,8 +362,7 @@ public class TypeDb implements TypeFactoryH {
     if (result instanceof TypeH typeH) {
       return typeH;
     } else {
-      throw new UnexpectedTypeNodeExc(
-          outerHash, kind, path, index, TypeH.class, result.getClass());
+      throw new UnexpectedTypeNodeExc(outerHash, kind, path, index, TypeH.class, result.getClass());
     }
   }
 
