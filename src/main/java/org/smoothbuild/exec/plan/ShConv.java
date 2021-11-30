@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.expr.CallH;
+import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -46,6 +47,7 @@ import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
+import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
@@ -178,10 +180,15 @@ public class ShConv {
 
   // handling expressions
 
+  private ImmutableList<ObjH> convertExprs(ImmutableList<ExprS> exprs) {
+    return map(exprs, this::convertExpr);
+  }
+
   private ObjH convertExpr(ExprS exprS) {
     return switch (exprS) {
       case BlobS blobS -> convertAndStoreMapping(blobS, this::convertBlob);
       case CallS callS -> convertAndStoreMapping(callS, this::convertCall);
+      case CombineS combineS -> convertAndStoreMapping(combineS, this::convertCombine);
       case IntS intS -> convertAndStoreMapping(intS, this::convertInt);
       case OrderS orderS -> convertAndStoreMapping(orderS, this::convertOrd);
       case ParamRefS paramRefS -> convertAndStoreMapping(paramRefS, this::convertParamRef);
@@ -203,10 +210,14 @@ public class ShConv {
 
   private CallH convertCall(CallS callS) {
     var funcExprH = convertExpr(callS.funcExpr());
-    var argsH = map(callS.args(), this::convertExpr);
+    var argsH = convertExprs(callS.args());
     var combine = objFactory.combine(argsH);
     nals.put(combine, new NalImpl("{}", callS.loc()));
     return objFactory.call(funcExprH, combine);
+  }
+
+  private CombineH convertCombine(CombineS combineS) {
+    return objFactory.combine(convertExprs(combineS.elems()));
   }
 
   private IntH convertInt(IntS intS) {
@@ -214,8 +225,7 @@ public class ShConv {
   }
 
   private OrderH convertOrd(OrderS orderS) {
-    var elemsH = map(orderS.elems(), this::convertExpr);
-    return objFactory.order(elemsH);
+    return objFactory.order(convertExprs(orderS.elems()));
   }
 
   private ParamRefH convertParamRef(ParamRefS paramRefS) {
@@ -241,7 +251,6 @@ public class ShConv {
   }
 
   // helpers
-
 
   private BlobH loadNatJar(NatFuncS natFuncS) {
     var filePath = natFuncS.ann().loc().file().withExtension("jar");
