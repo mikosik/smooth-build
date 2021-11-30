@@ -66,7 +66,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
@@ -684,14 +683,6 @@ public class TestingContext {
 
   public CombineS combineS(int line, StructTypeS type, ExprS... expr) {
     return new CombineS(type, ImmutableList.copyOf(expr), loc(line));
-  }
-
-  public CtorS ctorS(TypeS resultType, String name, ItemS... params) {
-    return ctorS(1, resultType, name, params);
-  }
-
-  public CtorS ctorS(int line, TypeS resultType, String name, ItemS... params) {
-    return new CtorS(funcST(resultType, params), modPath(), name, nList(params), loc(line));
   }
 
   public NatFuncS funcS(TypeS type, String name, ItemS... params) {

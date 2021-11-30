@@ -1,7 +1,5 @@
 package org.smoothbuild.exec.plan;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.stream.IntStream.range;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 
@@ -32,7 +30,6 @@ import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.BoolValS;
-import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
@@ -95,7 +92,6 @@ public class ShConv {
     try {
       callStack.push(funcS.params());
       var funcH = switch (funcS) {
-        case CtorS c -> convertCtor(c);
         case IfFuncS i -> objFactory.ifFunc();
         case MapFuncS m -> objFactory.mapFunc();
         case DefFuncS d -> convertDefFunc(d);
@@ -106,26 +102,6 @@ public class ShConv {
     } finally {
       callStack.pop();
     }
-  }
-
-  private DefFuncH convertCtor(CtorS ctorS) {
-    var type = objFactory.defFuncT(
-        convertType(ctorS.resType()),
-        convertParams(ctorS.params()));
-    var paramRefs = ctorParamRefs(ctorS);
-    var body = objFactory.combine(paramRefs);
-    nals.put(body, ctorS);
-    return objFactory.defFunc(type, body);
-  }
-
-  private ImmutableList<ObjH> ctorParamRefs(CtorS ctorS) {
-    NList<ItemS> params = ctorS.params();
-    ImmutableList<ObjH> paramRefsH =
-        range(0, params.size())
-            .mapToObj(i -> newParamRef(params, i))
-            .collect(toImmutableList());
-    paramRefsH.forEach(p -> nals.put(p, ctorS));
-    return paramRefsH;
   }
 
   private ParamRefH newParamRef(NList<ItemS> items, int i) {
