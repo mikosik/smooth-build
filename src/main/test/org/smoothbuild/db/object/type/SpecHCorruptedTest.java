@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.type.TypeHDb.DATA_PATH;
 import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_PARAMS_PATH;
-import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_RESULT_PATH;
+import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_RES_PATH;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ABST_FUNC;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ANY;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ARRAY;
@@ -362,7 +362,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash(ABST_FUNC.marker()),
           notHashOfSeq
       );
-      assertCall(() -> ((FuncTypeH) typeHDb().get(typeHash)).result())
+      assertCall(() -> ((FuncTypeH) typeHDb().get(typeHash)).res())
           .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, DATA_PATH))
           .withCause(new DecodeHashSeqException(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -380,7 +380,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_RESULT_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_RES_PATH))
           .withCause(new DecodeTypeException(nowhere));
     }
 
@@ -396,7 +396,7 @@ public class SpecHCorruptedTest extends TestingContext {
       );
       assertCall(() -> typeHDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
-              typeHash, ABST_FUNC, FUNCTION_RESULT_PATH, TypeH.class, RefTypeH.class));
+              typeHash, ABST_FUNC, FUNCTION_RES_PATH, TypeH.class, RefTypeH.class));
     }
 
     @Test
@@ -410,7 +410,7 @@ public class SpecHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> typeHDb().get(typeHash))
-          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_RESULT_PATH))
+          .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_RES_PATH))
           .withCause(corruptedArrayTypeException());
     }
 

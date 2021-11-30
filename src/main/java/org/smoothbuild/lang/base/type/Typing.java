@@ -36,7 +36,7 @@ public class Typing<T extends Type> {
     } else if (type instanceof ArrayType arrayType) {
       return contains((T) arrayType.elem(), inner);
     } else if (type instanceof FuncType funcType) {
-        return contains((T) funcType.result(), inner)
+        return contains((T) funcType.res(), inner)
             || funcType.params().stream().anyMatch(t -> contains((T) t, inner));
     }
     return false;
@@ -79,7 +79,7 @@ public class Typing<T extends Type> {
       }
     } else if (typeA instanceof FuncType funcA) {
       if (that instanceof FuncType funcB) {
-        return isInequal.apply(funcA.result(), funcB.result(), side)
+        return isInequal.apply(funcA.res(), funcB.res(), side)
             && allMatch(
                 funcA.params(),
                 funcB.params(),
@@ -141,12 +141,12 @@ public class Typing<T extends Type> {
     } else if (typeA instanceof FuncType funcA) {
       if (typeB.equals(side.edge())) {
         var reversed = side.reversed();
-        inferImpl((T) funcA.result(), side.edge(), side, result);
+        inferImpl((T) funcA.res(), side.edge(), side, result);
         funcA.params().forEach(t -> inferImpl((T) t, reversed.edge(), reversed, result));
       } else if (typeB instanceof FuncType funcB
           && funcA.params().size() == funcB.params().size()) {
         var reversed = side.reversed();
-        inferImpl((T) funcA.result(), (T) funcB.result(), side, result);
+        inferImpl((T) funcA.res(), (T) funcB.res(), side, result);
         for (int i = 0; i < funcA.params().size(); i++) {
           Type thisParamType = funcA.params().get(i);
           Type thatParamType = funcB.params().get(i);
@@ -169,7 +169,7 @@ public class Typing<T extends Type> {
         T elemTypeM = mapVars((T) arrayType.elem(), boundsMap, side);
         return (T) createArrayType(arrayType, elemTypeM);
       } else if (type instanceof FuncType funcType){
-        var resultTypeM = mapVars((T) funcType.result(), boundsMap, side);
+        var resultTypeM = mapVars((T) funcType.res(), boundsMap, side);
         ImmutableList<T> paramsM = map(
             funcType.params(),
             p -> mapVars((T) p, boundsMap, side.reversed()));
@@ -211,7 +211,7 @@ public class Typing<T extends Type> {
     } else if (typeA instanceof FuncType funcA) {
       if (typeB instanceof FuncType funcB) {
         if (funcA.params().size() == funcB.params().size()) {
-          var resultM = merge((T) funcA.result(), (T) funcB.result(), direction);
+          var resultM = merge((T) funcA.res(), (T) funcB.res(), direction);
           var paramsM = zip(funcA.params(), funcB.params(),
               (a, b) -> merge((T) a, (T) b, direction.reversed()));
           if (isFuncTypeEqual(funcA, resultM, paramsM)) {
@@ -255,7 +255,7 @@ public class Typing<T extends Type> {
 
   private boolean isFuncTypeEqual(
       FuncType type, Type result, ImmutableList<T> params) {
-    return type.result() == result && type.params().equals(params);
+    return type.res() == result && type.params().equals(params);
   }
 
   public TypeFactory<T> factory() {

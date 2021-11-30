@@ -76,7 +76,7 @@ public class TopEvalLoader {
 
   private FuncS loadFunc(ModPath path, RealFuncN realFuncN) {
     var params = loadParams(path, realFuncN);
-    var resultType = realFuncN.resultType().get();
+    var resultType = realFuncN.resType().get();
     var name = realFuncN.name();
     var loc = realFuncN.loc();
     var type = factory.abstFunc(resultType, map(params, Defined::type));

@@ -32,7 +32,7 @@ public sealed class FuncN extends EvalN permits RealFuncN, CtorN {
     return Optionals.pullUp(map(params(), ItemN::type));
   }
 
-  public Optional<TypeS> resultType() {
-    return type().map(f -> ((FuncTypeS) f).result());
+  public Optional<TypeS> resType() {
+    return type().map(f -> ((FuncTypeS) f).res());
   }
 }

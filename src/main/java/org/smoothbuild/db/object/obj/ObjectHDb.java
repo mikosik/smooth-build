@@ -94,8 +94,8 @@ public class ObjectHDb {
   }
 
   public DefFuncH defFunc(DefFuncTypeH type, ObjectH body) {
-    if (!typing.isAssignable(type.result(), body.type())) {
-      throw new IllegalArgumentException("`type` specifies result as " + type.result().name()
+    if (!typing.isAssignable(type.res(), body.type())) {
+      throw new IllegalArgumentException("`type` specifies result as " + type.res().name()
           + " but body.evaluationType() is " + body.type().name() + ".");
     }
     return wrapHashedDbExceptionAsObjectDbException(() -> newFunc(type, body));
@@ -246,14 +246,14 @@ public class ObjectHDb {
   // methods for creating Expr-s
 
   private CallH newCall(ObjectH func, CombineH args) throws HashedDbException {
-    var resultType = inferCallResultType(func, args);
+    var resultType = inferCallResType(func, args);
     var type = typeHDb.call(resultType);
     var data = writeCallData(func, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private TypeH inferCallResultType(ObjectH func, CombineH args) {
+  private TypeH inferCallResType(ObjectH func, CombineH args) {
     var funcType = funcEvaluationType(func);
     var argTypes = args.type().items();
     var paramTypes = funcType.params();
@@ -265,7 +265,7 @@ public class ObjectHDb {
         i -> illegalArgs(funcType, args)
     );
     var varBounds = typing.inferVarBoundsInCall(paramTypes, argTypes);
-    return typing.mapVars(funcType.result(), varBounds, typeHDb.lower());
+    return typing.mapVars(funcType.res(), varBounds, typeHDb.lower());
   }
 
   private void illegalArgs(FuncTypeH funcType, CombineH args) {

@@ -109,7 +109,7 @@ public class ShConverter {
 
   private DefFuncH convertCtor(CtorS ctorS) {
     var type = objFactory.defFuncT(
-        convertType(ctorS.resultType()),
+        convertType(ctorS.resType()),
         convertParams(ctorS.params()));
     var paramRefs = ctorParamRefs(ctorS);
     var body = objFactory.combine(paramRefs);
@@ -136,7 +136,7 @@ public class ShConverter {
   }
 
   private NatFuncH convertNatFunc(NatFuncS natFuncS) {
-    var resType = convertType(natFuncS.resultType());
+    var resType = convertType(natFuncS.resType());
     var paramTypes = convertParams(natFuncS.params());
     var jar = loadNatJar(natFuncS);
     var type = objFactory.natFuncT(resType, paramTypes);
@@ -152,7 +152,7 @@ public class ShConverter {
 
   private DefFuncH convertDefFunc(DefFuncS defFuncS) {
     var body = convertExpr(defFuncS.body());
-    var resTypeH = convertType(defFuncS.resultType());
+    var resTypeH = convertType(defFuncS.resType());
     var paramTypesH = convertParams(defFuncS.params());
     var type = objFactory.defFuncT(resTypeH, paramTypesH);
     return objFactory.defFunc(type, body);

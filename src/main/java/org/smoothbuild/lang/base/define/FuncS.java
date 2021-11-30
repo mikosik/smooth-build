@@ -31,8 +31,8 @@ public sealed abstract class FuncS extends TopEvalS
     return name() + PARENTHESES;
   }
 
-  public TypeS resultType() {
-    return type().result();
+  public TypeS resType() {
+    return type().res();
   }
 
   public NList<Item> params() {
@@ -45,7 +45,7 @@ public sealed abstract class FuncS extends TopEvalS
   }
 
   protected String signature() {
-    return resultType().name() + " " + name() + "(" + paramsToString() + ")";
+    return resType().name() + " " + name() + "(" + paramsToString() + ")";
   }
 
   protected String paramsToString() {

@@ -5,10 +5,10 @@ import static org.smoothbuild.slib.java.junit.ReflectionUtil.runReflexivelyAndCa
 
 import java.util.List;
 
-public class ResultWrapper {
+public class ResWrapper {
   private final Object result;
 
-  public ResultWrapper(Object result) {
+  public ResWrapper(Object result) {
     this.result = result;
   }
 

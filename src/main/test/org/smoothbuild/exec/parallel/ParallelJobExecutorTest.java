@@ -11,9 +11,9 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.exec.compute.ResultSource.DISK;
-import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
+import static org.smoothbuild.exec.compute.ResSource.DISK;
+import static org.smoothbuild.exec.compute.ResSource.EXECUTION;
+import static org.smoothbuild.exec.compute.ResSource.MEMORY;
 import static org.smoothbuild.exec.job.TaskKind.CALL;
 import static org.smoothbuild.exec.parallel.ExecutionReporter.header;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
@@ -42,7 +42,7 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Computer;
-import org.smoothbuild.exec.compute.ResultSource;
+import org.smoothbuild.exec.compute.ResSource;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.job.Task;
 import org.smoothbuild.exec.job.TaskInfo;
@@ -103,9 +103,9 @@ public class ParallelJobExecutorTest extends TestingContext {
     ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
     ExecutionReporter reporter = this.reporter;
     verify(reporter, times(4)).report(eq(job1.info()), captor.capture());
-    List<ResultSource> reportedSources = captor.getAllValues()
+    List<ResSource> reportedSources = captor.getAllValues()
         .stream()
-        .map(Computed::resultSource)
+        .map(Computed::resSource)
         .collect(toList());
 
     assertThat(reportedSources)
@@ -128,9 +128,9 @@ public class ParallelJobExecutorTest extends TestingContext {
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
       verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
-      List<ResultSource> reportedSources = captor.getAllValues()
+      List<ResSource> reportedSources = captor.getAllValues()
           .stream()
-          .map(Computed::resultSource)
+          .map(Computed::resSource)
           .collect(toList());
 
       assertThat(reportedSources)
@@ -151,9 +151,9 @@ public class ParallelJobExecutorTest extends TestingContext {
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
       verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
-      List<ResultSource> reportedSources = captor.getAllValues()
+      List<ResSource> reportedSources = captor.getAllValues()
           .stream()
-          .map(Computed::resultSource)
+          .map(Computed::resSource)
           .collect(toList());
 
       assertThat(reportedSources)

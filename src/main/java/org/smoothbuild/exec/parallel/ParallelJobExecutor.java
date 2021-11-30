@@ -78,7 +78,7 @@ public class ParallelJobExecutor {
         Consumer<ValueH> consumer) {
       jobExecutor.enqueue(() -> {
         try {
-          var resultHandler = new ResultHandler(info, consumer, reporter, jobExecutor);
+          var resultHandler = new ResHandler(info, consumer, reporter, jobExecutor);
           Input input = Input.fromPromises(deps);
           computer.compute(algorithm, input, resultHandler);
         } catch (Throwable e) {

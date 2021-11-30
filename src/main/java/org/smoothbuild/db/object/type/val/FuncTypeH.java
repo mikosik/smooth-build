@@ -20,13 +20,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class FuncTypeH extends TypeH implements FuncType {
-  private final TypeH result;
+  private final TypeH res;
   private final TupleTypeH paramsTuple;
 
-  public FuncTypeH(Hash hash, SpecKindH kind, TypeH result, TupleTypeH paramsTuple) {
-    super(funcTypeName(result, paramsTuple.items()), hash, kind,
-        calculateVars(result, paramsTuple.items()));
-    this.result = result;
+  public FuncTypeH(Hash hash, SpecKindH kind, TypeH res, TupleTypeH paramsTuple) {
+    super(funcTypeName(res, paramsTuple.items()), hash, kind,
+        calculateVars(res, paramsTuple.items()));
+    this.res = res;
     this.paramsTuple = paramsTuple;
   }
 
@@ -40,8 +40,8 @@ public class FuncTypeH extends TypeH implements FuncType {
   }
 
   @Override
-  public TypeH result() {
-    return result;
+  public TypeH res() {
+    return res;
   }
 
   @Override

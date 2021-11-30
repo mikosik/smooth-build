@@ -18,8 +18,8 @@ public class JUnitCoreWrapper {
     this.jUnitCore = jUnitCore;
   }
 
-  public ResultWrapper run(Class<?> testClass) throws JunitException {
-    return new ResultWrapper(
+  public ResWrapper run(Class<?> testClass) throws JunitException {
+    return new ResWrapper(
         runReflexively(jUnitCore, "run", new Object[] {new Class<?>[] {testClass}}));
   }
 }

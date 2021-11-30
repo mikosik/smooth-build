@@ -54,7 +54,7 @@ public class CallH extends ExprH {
       );
       var varBounds = typing.inferVarBoundsInCall(params, args);
       var actualResult = typing.mapVars(
-          funcType.result(), varBounds, typing.factory().lower());
+          funcType.res(), varBounds, typing.factory().lower());
       if (!Objects.equals(type(), actualResult)) {
         throw new DecodeExprWrongEvalTypeOfComponentException(
             hash(), spec(), "func.result", type(), actualResult);

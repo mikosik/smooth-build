@@ -100,18 +100,18 @@ public class MethodLoader {
 
   private void assertMethodMatchesFuncRequirements(String extendedName,
       NatFuncH func, Method method, String classBinaryName) throws LoadingMethodException {
-    assertNativeResultMatchesDeclared(
-        extendedName, method, func.spec().result(), classBinaryName);
+    assertNativeResMatchesDeclared(
+        extendedName, method, func.spec().res(), classBinaryName);
     assertNativeParamTypesMatchesFuncParams(extendedName, method, func, classBinaryName);
   }
 
-  private static void assertNativeResultMatchesDeclared(String extendedName, Method method,
-      TypeH resultType, String classBinaryName) throws LoadingMethodException {
+  private static void assertNativeResMatchesDeclared(String extendedName, Method method,
+      TypeH resType, String classBinaryName) throws LoadingMethodException {
     var methodResultTypeJ = method.getReturnType();
-    var resultTypeJ = resultType.typeJ();
+    var resultTypeJ = resType.typeJ();
     if (!resultTypeJ.equals(methodResultTypeJ)) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " declares type "
-          + resultType.q() + " so its native implementation result type must be "
+          + resType.q() + " so its native implementation result type must be "
           + resultTypeJ.getCanonicalName() + " but it is "
           + methodResultTypeJ.getCanonicalName() + ".");
     }

@@ -186,7 +186,7 @@ public class TypeSTest extends TestingContext {
   @MethodSource("func_result_cases")
   public void func_result(Function<TypeFactoryS, FuncType> factoryCall,
       Function<TypeFactoryS, List<Type>> expected) {
-    assertThat(invoke(factoryCall).result())
+    assertThat(invoke(factoryCall).res())
         .isEqualTo(invoke(expected));
   }
 

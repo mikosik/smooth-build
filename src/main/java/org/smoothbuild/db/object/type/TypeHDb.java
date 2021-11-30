@@ -78,8 +78,8 @@ import com.google.common.collect.ImmutableList;
 public class TypeHDb implements TypeFactoryH {
   public static final String DATA_PATH = "data";
   private static final int DATA_INDEX = 1;
-  private static final int FUNCTION_RESULT_INDEX = 0;
-  public static final String FUNCTION_RESULT_PATH = DATA_PATH + "[" + FUNCTION_RESULT_INDEX + "]";
+  private static final int FUNCTION_RES_INDEX = 0;
+  public static final String FUNCTION_RES_PATH = DATA_PATH + "[" + FUNCTION_RES_INDEX + "]";
   private static final int FUNCTION_PARAMS_INDEX = 1;
   public static final String FUNCTION_PARAMS_PATH = DATA_PATH + "[" + FUNCTION_PARAMS_INDEX + "]";
 
@@ -313,8 +313,7 @@ public class TypeHDb implements TypeFactoryH {
     if (data.size() != 2) {
       throw new UnexpectedTypeSeqException(rootHash, kind, DATA_PATH, 2, data.size());
     }
-    TypeH result = readNode(kind, rootHash, data.get(FUNCTION_RESULT_INDEX),
-        FUNCTION_RESULT_PATH, TypeH.class);
+    TypeH result = readNode(kind, rootHash, data.get(FUNCTION_RES_INDEX), FUNCTION_RES_PATH, TypeH.class);
     TupleTypeH params = readNode(kind, rootHash, data.get(FUNCTION_PARAMS_INDEX),
         FUNCTION_PARAMS_PATH, TupleTypeH.class);
     return newFunc(rootHash, FuncKind.from(kind), result, params);

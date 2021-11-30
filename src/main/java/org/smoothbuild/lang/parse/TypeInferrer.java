@@ -158,7 +158,7 @@ public class TypeInferrer {
         return switch (type) {
           case ArrayTypeN array -> createType(array.elemType()).map(factory::array);
           case FuncTypeN func -> {
-            Optional<TypeS> result = createType(func.resultType());
+            Optional<TypeS> result = createType(func.resType());
             var params = Optionals.pullUp(map(func.paramTypes(), this::createType));
             yield optionalFuncType(result, params);
           }
@@ -276,7 +276,7 @@ public class TypeInferrer {
               call.setType(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<TypeS> type = callTypeInferrer.inferCallType(call, funcType.result(), params);
+              Maybe<TypeS> type = callTypeInferrer.inferCallType(call, funcType.res(), params);
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
             }

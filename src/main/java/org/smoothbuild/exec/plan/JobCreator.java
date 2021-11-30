@@ -148,7 +148,7 @@ public class JobCreator {
       return callEagerJob(scope, func, args, loc, vars);
     } else {
       var funcType = (FuncTypeH) func.type();
-      var actualResultType = typing.mapVars(funcType.result(), vars, factory.lower());
+      var actualResultType = typing.mapVars(funcType.res(), vars, factory.lower());
       return new LazyJob(actualResultType, loc,
           () -> callEagerJob(scope, func, args, loc, vars));
     }
@@ -162,7 +162,7 @@ public class JobCreator {
   private Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Loc loc,
       BoundsMap<TypeH> vars) {
     var funcType = (FuncTypeH) func.type();
-    var actualResultType = typing.mapVars(funcType.result(), vars, factory.lower());
+    var actualResultType = typing.mapVars(funcType.res(), vars, factory.lower());
     return new CallJob(actualResultType, func, args, loc, vars, scope, JobCreator.this);
   }
 

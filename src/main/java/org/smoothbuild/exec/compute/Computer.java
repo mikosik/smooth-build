@@ -1,9 +1,9 @@
 package org.smoothbuild.exec.compute;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.exec.compute.ResultSource.DISK;
-import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
-import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
+import static org.smoothbuild.exec.compute.ResSource.DISK;
+import static org.smoothbuild.exec.compute.ResSource.EXECUTION;
+import static org.smoothbuild.exec.compute.ResSource.MEMORY;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,7 +70,7 @@ public class Computer {
     return new Computed(
         computed.output(),
         computed.exception(),
-        computed.resultSource() == EXECUTION && isPure ? DISK : MEMORY);
+        computed.resSource() == EXECUTION && isPure ? DISK : MEMORY);
   }
 
   private Computed runAlgorithm(Algorithm algorithm, Input input) {

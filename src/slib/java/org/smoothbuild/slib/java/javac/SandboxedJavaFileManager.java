@@ -24,14 +24,14 @@ import org.smoothbuild.util.collect.Lists;
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final NativeApi nativeApi;
   private final Map<String, Set<JavaFileObject>> packageToJavaFileObjects;
-  private final ArrayHBuilder resultClassFiles;
+  private final ArrayHBuilder resClassFiles;
 
   SandboxedJavaFileManager(StandardJavaFileManager fileManager, NativeApi nativeApi,
       Iterable<InputClassFile> objects) {
     super(fileManager);
     this.nativeApi = nativeApi;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
-    this.resultClassFiles = nativeApi.factory().arrayBuilder(nativeApi.factory().fileT());
+    this.resClassFiles = nativeApi.factory().arrayBuilder(nativeApi.factory().fileT());
   }
 
   private static Map<String, Set<JavaFileObject>> groupIntoPackages(
@@ -46,7 +46,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
   }
 
   public ArrayH resultClassfiles() {
-    return resultClassFiles.build();
+    return resClassFiles.build();
   }
 
   @Override
@@ -54,7 +54,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       FileObject sibling) throws IOException {
     if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
       Path classFilePath = path(className.replace('.', '/') + ".class");
-      return new OutputClassFile(resultClassFiles, classFilePath, nativeApi);
+      return new OutputClassFile(resClassFiles, classFilePath, nativeApi);
     } else {
       return super.getJavaFileForOutput(location, className, kind, sibling);
     }

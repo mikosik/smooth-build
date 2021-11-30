@@ -248,7 +248,7 @@ public class SpecHTest extends TestingContext {
     @MethodSource("result_cases")
     public void result(Function<TypeHDb, FuncType> factoryCall,
         Function<TypeHDb, List<Type>> expected) {
-      assertThat(invoke(factoryCall).result())
+      assertThat(invoke(factoryCall).res())
           .isEqualTo(invoke(expected));
     }
 

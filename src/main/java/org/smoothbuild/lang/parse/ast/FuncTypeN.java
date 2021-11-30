@@ -6,24 +6,24 @@ import org.smoothbuild.util.collect.CountersMap;
 import com.google.common.collect.ImmutableList;
 
 public final class FuncTypeN extends TypeN {
-  private final TypeN resultType;
+  private final TypeN resType;
   private final ImmutableList<TypeN> paramTypes;
 
   public FuncTypeN(
-      TypeN resultType, ImmutableList<TypeN> paramTypes, Loc loc) {
-    super("[" + resultType.name() + "]", loc);
-    this.resultType = resultType;
+      TypeN resType, ImmutableList<TypeN> paramTypes, Loc loc) {
+    super("[" + resType.name() + "]", loc);
+    this.resType = resType;
     this.paramTypes = paramTypes;
   }
 
   @Override
   public boolean isPolytype() {
-    return resultType.isPolytype() || paramTypes.stream().anyMatch(TypeN::isPolytype);
+    return resType.isPolytype() || paramTypes.stream().anyMatch(TypeN::isPolytype);
   }
 
   @Override
   public void countVars(CountersMap<String> countersMap) {
-    countFuncVars(countersMap, resultType, paramTypes);
+    countFuncVars(countersMap, resType, paramTypes);
   }
 
   public static void countFuncVars(CountersMap<String> countersMap, TypeN resultType,
@@ -32,8 +32,8 @@ public final class FuncTypeN extends TypeN {
     paramTypes.forEach(p -> p.countVars(countersMap));
   }
 
-  public TypeN resultType() {
-    return resultType;
+  public TypeN resType() {
+    return resType;
   }
 
   public ImmutableList<TypeN> paramTypes() {

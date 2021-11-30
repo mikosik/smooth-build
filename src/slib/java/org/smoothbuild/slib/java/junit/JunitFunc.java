@@ -51,7 +51,7 @@ public class JunitFunc {
           if (filter.test(filePath)) {
             testCount++;
             Class<?> testClass = loadClass(classLoader, binaryName);
-            ResultWrapper result = jUnitCore.run(testClass);
+            ResWrapper result = jUnitCore.run(testClass);
             if (!result.wasSuccessful()) {
               for (FailureWrapper failure : result.getFailures()) {
                 nativeApi.log().error(

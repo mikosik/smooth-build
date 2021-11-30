@@ -7,13 +7,13 @@ import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
-public class ResultHandler implements Consumer<Computed> {
+public class ResHandler implements Consumer<Computed> {
   private final TaskInfo taskInfo;
   private final Consumer<ValueH> consumer;
   private final ExecutionReporter reporter;
   private final SoftTerminationExecutor jobExecutor;
 
-  public ResultHandler(TaskInfo taskInfo, Consumer<ValueH> consumer,
+  public ResHandler(TaskInfo taskInfo, Consumer<ValueH> consumer,
       ExecutionReporter reporter, SoftTerminationExecutor jobExecutor) {
     this.taskInfo = taskInfo;
     this.consumer = consumer;

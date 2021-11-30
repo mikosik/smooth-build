@@ -334,20 +334,19 @@ public class TestedType {
   }
 
   public static class TestedFuncType extends TestedType {
-    public final TestedType resultType;
+    public final TestedType resType;
     public final ImmutableList<TestedType> params;
 
-    public TestedFuncType(TestedType resultType, ImmutableList<TestedType> params,
-        FuncTypeS type, String literal,
-        Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
+    public TestedFuncType(TestedType resType, ImmutableList<TestedType> params, FuncTypeS type,
+        String literal, Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
-      this.resultType = resultType;
+      this.resType = resType;
       this.params = params;
     }
 
     @Override
     public boolean isFunc(Predicate<TestedType> result, Predicate<TestedType>... params) {
-      if (result.test(resultType) && this.params.size() == params.length) {
+      if (result.test(resType) && this.params.size() == params.length) {
         for (int i = 0; i < this.params.size(); i++) {
           if (!params[i].test(this.params.get(i))) {
             return false;

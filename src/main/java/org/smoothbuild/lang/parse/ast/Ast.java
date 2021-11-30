@@ -22,7 +22,7 @@ import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
-import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
+import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingRes;
 
 import com.google.common.collect.ImmutableList;
 
@@ -58,7 +58,7 @@ public class Ast {
     return maybeValue(ast);
   }
 
-  private TopologicalSortingResult<String, EvalN, Loc> sortEvalsByDeps() {
+  private TopologicalSortingRes<String, EvalN, Loc> sortEvalsByDeps() {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(v -> names.add(v.name()));
 
@@ -81,7 +81,7 @@ public class Ast {
     return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(deps));
   }
 
-  private TopologicalSortingResult<String, StructN, Loc> sortStructsByDeps() {
+  private TopologicalSortingRes<String, StructN, Loc> sortStructsByDeps() {
     Set<String> structNames = structs.stream()
         .map(NamedN::name)
         .collect(toSet());
@@ -103,7 +103,7 @@ public class Ast {
         switch (type) {
           case ArrayTypeN arrayType -> addToDeps(arrayType.elemType());
           case FuncTypeN funcType -> {
-            addToDeps(funcType.resultType());
+            addToDeps(funcType.resType());
             funcType.paramTypes().forEach(this::addToDeps);
           }
           default -> {

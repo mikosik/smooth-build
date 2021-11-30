@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.smoothbuild.exec.compute.ResultSource.DISK;
+import static org.smoothbuild.exec.compute.ResSource.DISK;
 import static org.smoothbuild.exec.job.TaskKind.CALL;
 
 import java.util.function.Consumer;
@@ -20,7 +20,7 @@ import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.lang.base.define.TestingLoc;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
-public class ResultHandlerTest {
+public class ResHandlerTest {
   private ExecutionReporter reporter;
   private SoftTerminationExecutor executor;
   private Consumer<ValueH> consumer;
@@ -39,15 +39,15 @@ public class ResultHandlerTest {
   class when_output_with_value_is_passed {
     @Test
     public void object_is_forwarded_to_consumer() {
-      ResultHandler resultHandler = new ResultHandler(taskInfo(), consumer, reporter, executor);
-      resultHandler.accept(maybeComputed(val));
+      ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
+      resHandler.accept(maybeComputed(val));
       verify(consumer, only()).accept(val);
     }
 
     @Test
     public void executor_is_not_stopped() {
-      ResultHandler resultHandler = new ResultHandler(taskInfo(), consumer, reporter, executor);
-      resultHandler.accept(maybeComputed(val));
+      ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
+      resHandler.accept(maybeComputed(val));
       verifyNoInteractions(executor);
     }
   }
@@ -56,15 +56,15 @@ public class ResultHandlerTest {
   class when_output_without_value_is_passed {
     @Test
     public void object_is_not_forwarded_to_consumer() {
-      ResultHandler resultHandler = new ResultHandler(taskInfo(), consumer, reporter, executor);
-      resultHandler.accept(maybeComputed(null));
+      ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
+      resHandler.accept(maybeComputed(null));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
-      ResultHandler resultHandler = new ResultHandler(taskInfo(), consumer, reporter, executor);
-      resultHandler.accept(maybeComputed(null));
+      ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
+      resHandler.accept(maybeComputed(null));
       verify(executor, only()).terminate();
     }
   }
@@ -73,15 +73,15 @@ public class ResultHandlerTest {
   class when_maybe_output_with_exception_is_passed {
     @Test
     public void object_is_not_forwarded_to_consumer() {
-      ResultHandler resultHandler = new ResultHandler(taskInfo(), consumer, reporter, executor);
-      resultHandler.accept(new Computed(new ArithmeticException(), DISK));
+      ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
+      resHandler.accept(new Computed(new ArithmeticException(), DISK));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
-      ResultHandler resultHandler = new ResultHandler(taskInfo(), consumer, reporter, executor);
-      resultHandler.accept(new Computed(new ArithmeticException(), DISK));
+      ResHandler resHandler = new ResHandler(taskInfo(), consumer, reporter, executor);
+      resHandler.accept(new Computed(new ArithmeticException(), DISK));
       verify(executor, only()).terminate();
     }
   }

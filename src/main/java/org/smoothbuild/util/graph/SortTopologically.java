@@ -20,10 +20,10 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 
 public class SortTopologically {
-  public static <K, N, E> TopologicalSortingResult<K, N, E> sortTopologically(
+  public static <K, N, E> TopologicalSortingRes<K, N, E> sortTopologically(
       Collection<GraphNode<K, N, E>> nodes) {
     if (nodes.isEmpty()) {
-      return new TopologicalSortingResult<>(list(), null);
+      return new TopologicalSortingRes<>(list(), null);
     }
     ImmutableList<Node<K, N, E>> wrappedNodes = nodes.stream()
         .map(Node::new)
@@ -45,7 +45,7 @@ public class SortTopologically {
     }
   }
 
-  public static <K, N, E> TopologicalSortingResult<K, N, E> sortTopologicallyImpl(
+  public static <K, N, E> TopologicalSortingRes<K, N, E> sortTopologicallyImpl(
       ImmutableList<Node<K, N, E>> nodes) {
 
     // For each root node (node without incoming edges) algorithm processes it with the following
@@ -97,7 +97,7 @@ public class SortTopologically {
                 addToPath(currentPath, targetNode);
                 break;
               case BEING_PROCESSED:
-                return createCycleResult(currentPath, targetKey);
+                return createCycleRes(currentPath, targetKey);
               case PROCESSED:
                 break;
             }
@@ -111,7 +111,7 @@ public class SortTopologically {
     }
 
     if (resultSeq.size() == nodes.size()) {
-      return createSortedResult(resultSeq);
+      return createSortedRes(resultSeq);
     } else {
       return findCycleInUnprocessedNodes(nodes);
     }
@@ -133,24 +133,24 @@ public class SortTopologically {
     currentPath.addLast(new PathElem<>(node));
   }
 
-  private static <K, N, E> TopologicalSortingResult<K, N, E> createSortedResult(
+  private static <K, N, E> TopologicalSortingRes<K, N, E> createSortedRes(
       ArrayDeque<Node<K, N, E>> resultSeq) {
     var graphNodes = resultSeq.stream()
         .map(Node::node)
         .collect(toImmutableList());
-    return new TopologicalSortingResult<>(graphNodes, null);
+    return new TopologicalSortingRes<>(graphNodes, null);
   }
 
-  private static <K, N, E> TopologicalSortingResult<K, N, E> createCycleResult(
+  private static <K, N, E> TopologicalSortingRes<K, N, E> createCycleRes(
       LinkedList<PathElem<K, N, E>> currentPath, K key) {
     var cycle = currentPath.stream()
         .dropWhile(e -> !e.node().key().equals(key))
         .map(elem -> elem.node().edges().get(elem.edgeIndex()))
         .collect(toList());
-    return new TopologicalSortingResult<>(null, cycle);
+    return new TopologicalSortingRes<>(null, cycle);
   }
 
-  private static <K, N, E> TopologicalSortingResult<K, N, E> findCycleInUnprocessedNodes(
+  private static <K, N, E> TopologicalSortingRes<K, N, E> findCycleInUnprocessedNodes(
       ImmutableList<Node<K, N, E>> nodes) {
     var notVisited = filter(nodes, n -> n.state() == NOT_VISITED);
     return sortTopologicallyImpl(notVisited);
@@ -224,7 +224,7 @@ public class SortTopologically {
     }
   }
 
-  public static record TopologicalSortingResult<K, N, E>(
+  public static record TopologicalSortingRes<K, N, E>(
       List<GraphNode<K, N, E>>sorted,
       List<GraphEdge<E, K>> cycle) {
     public ImmutableList<N> valuesReversed() {

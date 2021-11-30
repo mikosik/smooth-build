@@ -18,12 +18,12 @@ import com.google.common.collect.ImmutableSet;
  * This class is immutable.
  */
 public final class FuncTypeS extends TypeS implements FuncType {
-  private final TypeS result;
+  private final TypeS res;
   private final ImmutableList<TypeS> params;
 
-  public FuncTypeS(TypeS result, ImmutableList<TypeS> params) {
-    super(funcTypeName(result, params), calculateVars(result, params));
-    this.result = requireNonNull(result);
+  public FuncTypeS(TypeS res, ImmutableList<TypeS> params) {
+    super(funcTypeName(res, params), calculateVars(res, params));
+    this.res = requireNonNull(res);
     this.params = requireNonNull(params);
   }
 
@@ -37,8 +37,8 @@ public final class FuncTypeS extends TypeS implements FuncType {
   }
 
   @Override
-  public TypeS result() {
-    return result;
+  public TypeS res() {
+    return res;
   }
 
   @Override
@@ -52,7 +52,7 @@ public final class FuncTypeS extends TypeS implements FuncType {
       return true;
     }
     return object instanceof FuncTypeS that
-        && result.equals(that.result)
+        && res.equals(that.res)
         && params.equals(that.params);
   }
 }

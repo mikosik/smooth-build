@@ -14,7 +14,7 @@ public class DefFuncH extends FuncH {
 
   public ObjectH body() {
     var body = readObj(DATA_PATH, dataHash(), ObjectH.class);
-    var resultType = spec().result();
+    var resultType = spec().res();
     var bodyType = body.type();
     if (!objectDb().typing().isAssignable(resultType, bodyType)) {
       throw new DecodeExprWrongEvalTypeOfComponentException(
