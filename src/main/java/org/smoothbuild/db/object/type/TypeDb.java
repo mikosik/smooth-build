@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.db.ObjectHDbException;
+import org.smoothbuild.db.object.db.ObjDbException;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -75,7 +75,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public class TypeHDb implements TypeFactoryH {
+public class TypeDb implements TypeFactoryH {
   public static final String DATA_PATH = "data";
   private static final int DATA_INDEX = 1;
   private static final int FUNCTION_RES_INDEX = 0;
@@ -96,7 +96,7 @@ public class TypeHDb implements TypeFactoryH {
   private final MapFuncTypeH mapFunc;
   private final Sides<TypeH> sides;
 
-  public TypeHDb(HashedDb hashedDb) {
+  public TypeDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.cache = new ConcurrentHashMap<>();
 
@@ -116,7 +116,7 @@ public class TypeHDb implements TypeFactoryH {
       FuncTypeH f = cache(abstFunc(r, list(a)));
       this.mapFunc = abstFunc(MAP_KIND, ar, list(aa, f));
     } catch (HashedDbException e) {
-      throw new ObjectHDbException(e);
+      throw new ObjDbException(e);
     }
     this.sides = new Sides<>(this.any, this.nothing);
   }

@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.type.Typing;
 
 public class TypingH extends Typing<TypeH> {
   @Inject
-  public TypingH(TypeHDb factory) {
+  public TypingH(TypeDb factory) {
     super(factory);
   }
 }

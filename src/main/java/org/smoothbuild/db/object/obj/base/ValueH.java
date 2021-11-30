@@ -1,14 +1,14 @@
 package org.smoothbuild.db.object.obj.base;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.type.base.TypeH;
 
 /**
  * This class is immutable.
  */
-public abstract class ValueH extends ObjectH {
-  public ValueH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb);
+public abstract class ValueH extends ObjH {
+  public ValueH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override

@@ -11,8 +11,8 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.ObjDb;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
@@ -30,7 +30,7 @@ import org.smoothbuild.db.object.obj.val.MapFuncH;
 import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.db.object.type.TypeHDb;
+import org.smoothbuild.db.object.type.TypeDb;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
@@ -54,18 +54,18 @@ import com.google.common.collect.ImmutableList;
  */
 @Singleton
 public class ObjFactory {
-  private final ObjectHDb objectHDb;
-  private final TypeHDb typeHDb;
+  private final ObjDb objDb;
+  private final TypeDb typeDb;
   private final TupleTypeH messageType;
   private final TupleTypeH fileType;
   private final TypingH typing;
 
   @Inject
-  public ObjFactory(ObjectHDb objectHDb, TypeHDb typeHDb, TypingH typing) {
-    this.objectHDb = objectHDb;
-    this.typeHDb = typeHDb;
-    this.messageType = createMessageType(typeHDb);
-    this.fileType = createFileT(typeHDb);
+  public ObjFactory(ObjDb objDb, TypeDb typeDb, TypingH typing) {
+    this.objDb = objDb;
+    this.typeDb = typeDb;
+    this.messageType = createMessageType(typeDb);
+    this.fileType = createFileT(typeDb);
     this.typing = typing;
   }
 
@@ -76,7 +76,7 @@ public class ObjFactory {
   // Objects
 
   public ArrayHBuilder arrayBuilder(TypeH elemType) {
-    return objectHDb.arrayBuilder(elemType);
+    return objDb.arrayBuilder(elemType);
   }
 
   public BlobH blob(DataWriter dataWriter) {
@@ -84,99 +84,99 @@ public class ObjFactory {
       builder.write(dataWriter);
       return builder.build();
     } catch (IOException e) {
-      throw new ObjectHDbException(e);
+      throw new ObjDbException(e);
     }
   }
 
   public BlobHBuilder blobBuilder() {
-    return objectHDb.blobBuilder();
+    return objDb.blobBuilder();
   }
 
   public BoolH bool(boolean value) {
-    return objectHDb.bool(value);
+    return objDb.bool(value);
   }
 
-  public CallH call(ObjectH func, CombineH args) {
-    return objectHDb.call(func, args);
+  public CallH call(ObjH func, CombineH args) {
+    return objDb.call(func, args);
   }
 
-  public CombineH combine(ImmutableList<ObjectH> items) {
-    return objectHDb.combine(items);
+  public CombineH combine(ImmutableList<ObjH> items) {
+    return objDb.combine(items);
   }
 
   public TupleH file(StringH path, BlobH content) {
-    return objectHDb.tuple(fileT(), list(content, path));
+    return objDb.tuple(fileT(), list(content, path));
   }
 
-  public DefFuncH defFunc(DefFuncTypeH type, ObjectH body) {
-    return objectHDb.defFunc(type, body);
+  public DefFuncH defFunc(DefFuncTypeH type, ObjH body) {
+    return objDb.defFunc(type, body);
   }
 
   public IfFuncH ifFunc() {
-    return objectHDb.ifFunc();
+    return objDb.ifFunc();
   }
 
   public IntH int_(BigInteger value) {
-    return objectHDb.int_(value);
+    return objDb.int_(value);
   }
 
   public MapFuncH mapFunc() {
-    return objectHDb.mapFunc();
+    return objDb.mapFunc();
   }
 
   public NatFuncH natFunc(
       NatFuncTypeH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
-    return objectHDb.natFunc(type, jarFile, classBinaryName,isPure);
+    return objDb.natFunc(type, jarFile, classBinaryName,isPure);
   }
 
   public ParamRefH paramRef(BigInteger value, TypeH evaluationType) {
-    return objectHDb.newParamRef(value, evaluationType);
+    return objDb.newParamRef(value, evaluationType);
   }
 
-  public SelectH select(ObjectH tuple, IntH index) {
-    return objectHDb.select(tuple, index);
+  public SelectH select(ObjH tuple, IntH index) {
+    return objDb.select(tuple, index);
   }
 
   public StringH string(String string) {
-    return objectHDb.string(string);
+    return objDb.string(string);
   }
 
   public TupleH tuple(TupleTypeH type, ImmutableList<ValueH> items) {
-    return objectHDb.tuple(type, items);
+    return objDb.tuple(type, items);
   }
 
-  public OrderH order(ImmutableList<ObjectH> elems) {
-    return objectHDb.order(elems);
+  public OrderH order(ImmutableList<ObjH> elems) {
+    return objDb.order(elems);
   }
 
   // Types
 
   public ArrayTypeH arrayT(TypeH elemType) {
-    return typeHDb.array(elemType);
+    return typeDb.array(elemType);
   }
 
   public BlobTypeH blobT() {
-    return typeHDb.blob();
+    return typeDb.blob();
   }
 
   public BoolTypeH boolT() {
-    return typeHDb.bool();
+    return typeDb.bool();
   }
 
   public DefFuncTypeH defFuncT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb.defFunc(result, params);
+    return typeDb.defFunc(result, params);
   }
 
   public FuncTypeH ifFuncT() {
-    return typeHDb.ifFunc();
+    return typeDb.ifFunc();
   }
 
   public IntTypeH intT() {
-    return typeHDb.int_();
+    return typeDb.int_();
   }
 
   public FuncTypeH mapFuncT() {
-    return typeHDb.ifFunc();
+    return typeDb.ifFunc();
   }
 
   public TupleTypeH messageType() {
@@ -184,23 +184,23 @@ public class ObjFactory {
   }
 
   public NatFuncTypeH natFuncT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb.natFunc(result, params);
+    return typeDb.natFunc(result, params);
   }
 
   public NothingTypeH nothingT() {
-    return typeHDb.nothing();
+    return typeDb.nothing();
   }
 
   public StringTypeH stringT() {
-    return typeHDb.string();
+    return typeDb.string();
   }
 
   public TupleTypeH tupleType(ImmutableList<TypeH> itemTypes) {
-    return typeHDb.tuple(itemTypes);
+    return typeDb.tuple(itemTypes);
   }
 
   public VarH var(String name) {
-    return typeHDb.var(name);
+    return typeDb.var(name);
   }
 
   // other values and its types
@@ -222,17 +222,17 @@ public class ObjFactory {
   }
 
   private TupleH message(String severity, String text) {
-    ValueH textObject = objectHDb.string(text);
-    ValueH severityObject = objectHDb.string(severity);
-    return objectHDb.tuple(messageType(), list(textObject, severityObject));
+    ValueH textObject = objDb.string(text);
+    ValueH severityObject = objDb.string(severity);
+    return objDb.tuple(messageType(), list(textObject, severityObject));
   }
 
-  private static TupleTypeH createMessageType(TypeHDb typeHDb) {
-    StringTypeH stringType = typeHDb.string();
-    return typeHDb.tuple(list(stringType, stringType));
+  private static TupleTypeH createMessageType(TypeDb typeDb) {
+    StringTypeH stringType = typeDb.string();
+    return typeDb.tuple(list(stringType, stringType));
   }
 
-  private static TupleTypeH createFileT(TypeHDb typeHDb) {
-    return typeHDb.tuple(list(typeHDb.blob(), typeHDb.string()));
+  private static TupleTypeH createFileT(TypeDb typeDb) {
+    return typeDb.tuple(list(typeDb.blob(), typeDb.string()));
   }
 }

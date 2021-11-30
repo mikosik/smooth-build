@@ -5,10 +5,10 @@ import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
@@ -21,8 +21,8 @@ public class CallH extends ExprH {
   private static final int FUNC_INDEX = 0;
   private static final int ARGS_INDEX = 1;
 
-  public CallH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb);
+  public CallH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.spec() instanceof CallTypeH);
   }
 
@@ -32,17 +32,17 @@ public class CallH extends ExprH {
   }
 
   public CallData data() {
-    ObjectH func = readFunc();
+    ObjH func = readFunc();
     CombineH args = readArgs();
     validate(func, args);
     return new CallData(func, args);
   }
 
-  public record CallData(ObjectH func, CombineH args) {}
+  public record CallData(ObjH func, CombineH args) {}
 
-  private void validate(ObjectH func, CombineH argsCombine) {
+  private void validate(ObjH func, CombineH argsCombine) {
     if (func.type() instanceof FuncTypeH funcType) {
-      var typing = objectDb().typing();
+      var typing = objDb().typing();
       var params = funcType.params();
       var args = argsCombine.spec().evalType().items();
       allMatchOtherwise(
@@ -70,9 +70,9 @@ public class CallH extends ExprH {
         funcType.paramsTuple(), args.type());
   }
 
-  private ObjectH readFunc() {
+  private ObjH readFunc() {
     return readSeqElemObj(
-        DATA_PATH, dataHash(), FUNC_INDEX, DATA_SEQ_SIZE, ObjectH.class);
+        DATA_PATH, dataHash(), FUNC_INDEX, DATA_SEQ_SIZE, ObjH.class);
   }
 
   private CombineH readArgs() {

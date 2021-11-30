@@ -5,10 +5,10 @@ import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeException;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
 import org.smoothbuild.db.object.type.expr.CombineTypeH;
@@ -20,8 +20,8 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class CombineH extends ExprH {
-  public CombineH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb);
+  public CombineH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.spec() instanceof CombineTypeH);
   }
 
@@ -35,9 +35,9 @@ public class CombineH extends ExprH {
     return spec().evalType();
   }
 
-  public ImmutableList<ObjectH> items() {
+  public ImmutableList<ObjH> items() {
     var expectedItemTypes = spec().evalType().items();
-    var items = readSeqObjs(DATA_PATH, dataHash(), ObjectH.class);
+    var items = readSeqObjs(DATA_PATH, dataHash(), ObjH.class);
     allMatchOtherwise(
         expectedItemTypes,
         items,

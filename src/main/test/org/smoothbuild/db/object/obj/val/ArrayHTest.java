@@ -22,7 +22,7 @@ import okio.ByteString;
 public class ArrayHTest extends TestingContext {
   @Test
   public void empty_nothing_array_can_be_iterated_as_tuple() {
-    ArrayH array = objectHDb().arrayBuilder(nothingHT())
+    ArrayH array = objDb().arrayBuilder(nothingHT())
         .build();
     assertThat(array.elems(TupleH.class))
         .isEmpty();
@@ -30,7 +30,7 @@ public class ArrayHTest extends TestingContext {
 
   @Test
   public void string_array_cannot_be_iterated_as_tuple() {
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(stringH("abc"))
         .build();
     assertCall(() -> array.elems(TupleH.class))
@@ -40,7 +40,7 @@ public class ArrayHTest extends TestingContext {
 
   @Test
   public void empty_array_is_empty() {
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .build();
     assertThat(array.elems(StringH.class))
         .isEmpty();
@@ -48,21 +48,21 @@ public class ArrayHTest extends TestingContext {
 
   @Test
   public void adding_null_is_forbidden() {
-    ArrayHBuilder arrayBuilder = objectHDb().arrayBuilder(stringHT());
+    ArrayHBuilder arrayBuilder = objDb().arrayBuilder(stringHT());
     assertCall(() -> arrayBuilder.add(null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void adding_elem_with_wrong_type_is_forbidden() {
-    ArrayHBuilder arrayBuilder = objectHDb().arrayBuilder(stringHT());
+    ArrayHBuilder arrayBuilder = objDb().arrayBuilder(stringHT());
     assertCall(() -> arrayBuilder.add(blobH(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void array_contains_added_elem() {
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(stringH("abc"))
         .build();
     assertThat(array.elems(StringH.class))
@@ -73,7 +73,7 @@ public class ArrayHTest extends TestingContext {
   public void array_contains_added_elem_via_add_all_method() {
     StringH str = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .addAll(list(str, str2))
         .build();
     assertThat(array.elems(StringH.class))
@@ -86,7 +86,7 @@ public class ArrayHTest extends TestingContext {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
     StringH str3 = stringH("ghi");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .add(str3)
@@ -99,7 +99,7 @@ public class ArrayHTest extends TestingContext {
   @Test
   public void adding_same_elem_twice_builds_array_with_two_elems() {
     StringH str = stringH("abc");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str)
         .add(str)
         .build();
@@ -111,11 +111,11 @@ public class ArrayHTest extends TestingContext {
   public void arrays_with_same_elems_have_same_hash() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
-    ArrayH array2 = objectHDb().arrayBuilder(stringHT())
+    ArrayH array2 = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
@@ -126,7 +126,7 @@ public class ArrayHTest extends TestingContext {
   @Test
   public void one_elem_array_hash_is_different_than_its_elem_hash() {
     StringH str = stringH("abc");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str)
         .build();
     assertThat(array.hash())
@@ -137,11 +137,11 @@ public class ArrayHTest extends TestingContext {
   public void arrays_with_same_elems_but_in_different_order_have_different_hashes() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
-    ArrayH array2 = objectHDb().arrayBuilder(stringHT())
+    ArrayH array2 = objDb().arrayBuilder(stringHT())
         .add(str2)
         .add(str1)
         .build();
@@ -153,10 +153,10 @@ public class ArrayHTest extends TestingContext {
   public void array_with_one_more_elem_have_different_hash() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str1)
         .build();
-    ArrayH array2 = objectHDb().arrayBuilder(stringHT())
+    ArrayH array2 = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
@@ -168,11 +168,11 @@ public class ArrayHTest extends TestingContext {
   public void array_can_be_read_by_hash() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
-    assertThat(objectHDbOther().get(array.hash()))
+    assertThat(objDbOther().get(array.hash()))
         .isEqualTo(array);
   }
 
@@ -180,11 +180,11 @@ public class ArrayHTest extends TestingContext {
   public void array_read_by_hash_contains_same_elems() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
-    assertThat(((ArrayH) objectHDbOther().get(array.hash())).elems(StringH.class))
+    assertThat(((ArrayH) objDbOther().get(array.hash())).elems(StringH.class))
         .containsExactly(str1, str2)
         .inOrder();
   }
@@ -193,18 +193,18 @@ public class ArrayHTest extends TestingContext {
   public void array_read_by_hash_has_same_hash() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
-    assertThat(objectHDbOther().get(array.hash()).hash())
+    assertThat(objDbOther().get(array.hash()).hash())
         .isEqualTo(array.hash());
   }
 
   @ParameterizedTest
   @MethodSource("type_test_data")
   public void type(TypeH type) {
-    ArrayH array = objectHDb().arrayBuilder(type).build();
+    ArrayH array = objDb().arrayBuilder(type).build();
     assertThat(array.spec())
         .isEqualTo(arrayHT(type));
   }
@@ -217,7 +217,7 @@ public class ArrayHTest extends TestingContext {
   public void to_string() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objectHDb().arrayBuilder(stringHT())
+    ArrayH array = objDb().arrayBuilder(stringHT())
         .add(str1)
         .add(str2)
         .build();
@@ -244,14 +244,14 @@ public class ArrayHTest extends TestingContext {
     @Test
     public void nothing_array_can_be_read_by_hash() {
       ArrayH array = emptyArrayOf(nothingHT());
-      assertThat(objectHDbOther().get(array.hash()))
+      assertThat(objDbOther().get(array.hash()))
           .isEqualTo(array);
     }
 
     @Test
     public void nothing_array_read_by_hash_is_empty() {
       ArrayH array = emptyArrayOf(nothingHT());
-      assertThat(((ArrayH) objectHDbOther().get(array.hash())).elems(ValueH.class))
+      assertThat(((ArrayH) objDbOther().get(array.hash())).elems(ValueH.class))
           .isEmpty();
     }
 
@@ -263,7 +263,7 @@ public class ArrayHTest extends TestingContext {
     }
 
     private ArrayH emptyArrayOf(NothingTypeH elemType) {
-      return objectHDb().arrayBuilder(elemType).build();
+      return objDb().arrayBuilder(elemType).build();
     }
   }
 }

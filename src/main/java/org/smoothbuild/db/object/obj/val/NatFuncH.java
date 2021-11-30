@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static org.smoothbuild.db.object.type.base.SpecKindH.NAT_FUNC;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 
 /**
@@ -14,8 +14,8 @@ public class NatFuncH extends FuncH {
   private static final int CLASS_BINARY_NAME_INDEX = 1;
   private static final int IS_PURE_INDEX = 2;
 
-  public NatFuncH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb, NAT_FUNC);
+  public NatFuncH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb, NAT_FUNC);
   }
 
   public BlobH jarFile() {

@@ -2,9 +2,9 @@ package org.smoothbuild.db.object.type.base;
 
 import java.util.function.BiFunction;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
@@ -50,7 +50,7 @@ public enum SpecKindH {
   MAP_FUNC((byte) 21, MapFuncH.class, MapFuncH::new),
   DEF_FUNC((byte) 22, DefFuncH.class, DefFuncH::new);
 
-  private static ObjectH throwException(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
+  private static ObjH throwException(MerkleRoot merkleRoot, ObjDb objDb) {
     throw new UnsupportedOperationException();
   }
 
@@ -81,11 +81,11 @@ public enum SpecKindH {
           .build();
 
   private final byte marker;
-  private final Class<? extends ObjectH> typeJ;
-  private final BiFunction<MerkleRoot, ObjectHDb, ObjectH> instantiator;
+  private final Class<? extends ObjH> typeJ;
+  private final BiFunction<MerkleRoot, ObjDb, ObjH> instantiator;
 
-  SpecKindH(byte marker, Class<? extends ObjectH> typeJ,
-      BiFunction<MerkleRoot, ObjectHDb, ObjectH> instantiator) {
+  SpecKindH(byte marker, Class<? extends ObjH> typeJ,
+      BiFunction<MerkleRoot, ObjDb, ObjH> instantiator) {
     this.marker = marker;
     this.typeJ = typeJ;
     this.instantiator = instantiator;
@@ -99,11 +99,11 @@ public enum SpecKindH {
     return marker;
   }
 
-  public Class<? extends ObjectH> typeJ() {
+  public Class<? extends ObjH> typeJ() {
     return typeJ;
   }
 
-  public ObjectH newInstanceJ(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    return instantiator.apply(merkleRoot, objectHDb);
+  public ObjH newInstanceJ(MerkleRoot merkleRoot, ObjDb objDb) {
+    return instantiator.apply(merkleRoot, objDb);
   }
 }

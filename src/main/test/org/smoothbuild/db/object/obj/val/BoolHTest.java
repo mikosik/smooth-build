@@ -79,14 +79,14 @@ public class BoolHTest extends TestingContext {
   public void bool_can_be_read_back_by_hash() {
     BoolH bool = boolH(true);
     Hash hash = bool.hash();
-    assertThat(objectHDbOther().get(hash))
+    assertThat(objDbOther().get(hash))
         .isEqualTo(bool);
   }
 
   @Test
   public void bool_read_back_by_hash_has_same_to_j() {
     BoolH bool = boolH(true);
-    assertThat(((BoolH) objectHDbOther().get(bool.hash())).toJ())
+    assertThat(((BoolH) objDbOther().get(bool.hash())).toJ())
         .isTrue();
   }
 

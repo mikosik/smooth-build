@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
@@ -43,7 +43,7 @@ public class ParallelJobExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<RefS, Optional<ObjectH>> executeAll(Map<RefS, Job> jobs) throws InterruptedException {
+  public Map<RefS, Optional<ObjH>> executeAll(Map<RefS, Job> jobs) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(jobs);
   }
@@ -65,7 +65,7 @@ public class ParallelJobExecutor {
       return reporter;
     }
 
-    public Map<RefS, Optional<ObjectH>> executeAll(Map<RefS, Job> jobs)
+    public Map<RefS, Optional<ObjH>> executeAll(Map<RefS, Job> jobs)
         throws InterruptedException {
       var results = mapValues(jobs, job -> job.schedule(this));
       runWhenAllAvailable(results.values(), jobExecutor::terminate);

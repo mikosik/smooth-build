@@ -101,7 +101,7 @@ public class NatFuncHTest extends TestingContext {
     var jarFile = blobH();
     var classBinaryName = stringH();
     var natFuncH = natFuncH(jarFile, classBinaryName);
-    assertThat(objectHDbOther().get(natFuncH.hash()))
+    assertThat(objDbOther().get(natFuncH.hash()))
         .isEqualTo(natFuncH);
   }
 
@@ -110,7 +110,7 @@ public class NatFuncHTest extends TestingContext {
     var jarFile = blobH();
     var classBinaryName = stringH();
     var natFuncH = natFuncH(jarFile, classBinaryName);
-    var readNatFunc = (NatFuncH) objectHDbOther().get(natFuncH.hash());
+    var readNatFunc = (NatFuncH) objDbOther().get(natFuncH.hash());
     assertThat(readNatFunc.classBinaryName())
         .isEqualTo(classBinaryName);
     assertThat(readNatFunc.jarFile())

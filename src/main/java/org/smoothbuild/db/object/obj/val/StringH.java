@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ValueH;
 
@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.obj.base.ValueH;
  * This class is immutable.
  */
 public class StringH extends ValueH {
-  public StringH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb);
+  public StringH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   public String toJ() {

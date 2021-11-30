@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static org.smoothbuild.db.object.type.base.SpecKindH.MAP_FUNC;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 
 /**
@@ -14,8 +14,8 @@ public class MapFuncH extends FuncH {
   private static final int IS_PURE_INDEX = 1;
   private static final int ARG_COUNT_INDEX = 2;
 
-  public MapFuncH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb, MAP_FUNC);
+  public MapFuncH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb, MAP_FUNC);
   }
 
   public MapData data() {

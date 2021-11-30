@@ -10,32 +10,32 @@ import org.smoothbuild.testing.TestingContext;
 public class TupleHTest extends TestingContext {
   @Test
   public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> objectHDb().tuple(personHT(), list(stringH("John"))))
+    assertCall(() -> objDb().tuple(personHT(), list(stringH("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_item_with_different_type_than_specified_in_tuple_type_causes_exception() {
-    assertCall(() -> objectHDb().tuple(personHT(), list(stringH(), intH())))
+    assertCall(() -> objDb().tuple(personHT(), list(stringH(), intH())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_more_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> objectHDb().tuple(
+    assertCall(() -> objDb().tuple(
         personHT(), list(stringH("John"), stringH("Doe"), stringH("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> objectHDb().tuple(personHT(), list(stringH("John"), null)))
+    assertCall(() -> objDb().tuple(personHT(), list(stringH("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_item_to_object_of_wrong_type_throws_exception() {
-    assertCall(() -> objectHDb().tuple(personHT(), list(stringH("John"), intH(123))))
+    assertCall(() -> objDb().tuple(personHT(), list(stringH("John"), intH(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -142,14 +142,14 @@ public class TupleHTest extends TestingContext {
   @Test
   public void tuples_can_be_read_by_hash() {
     TupleH person = johnDoePerson();
-    assertThat(objectHDbOther().get(person.hash()))
+    assertThat(objDbOther().get(person.hash()))
         .isEqualTo(person);
   }
 
   @Test
   public void tuples_read_by_hash_have_equal_items() {
     TupleH person = johnDoePerson();
-    TupleH personRead = (TupleH) objectHDbOther().get(person.hash());
+    TupleH personRead = (TupleH) objDbOther().get(person.hash());
     assertThat(personRead.get(0))
         .isEqualTo(person.get(0));
     assertThat(personRead.get(1))

@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.type.expr;
 import static org.smoothbuild.db.object.type.base.SpecKindH.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.type.base.ExprSpecH;
@@ -18,7 +18,7 @@ public class CallTypeH extends ExprSpecH {
   }
 
   @Override
-  public CallH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    return (CallH) super.newObj(merkleRoot, objectHDb);
+  public CallH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+    return (CallH) super.newObj(merkleRoot, objDb);
   }
 }

@@ -7,7 +7,7 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import java.util.Set;
 
 import org.smoothbuild.cli.console.Level;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
@@ -31,15 +31,15 @@ public class MessageStruct {
     return !messages.elems(TupleH.class).iterator().hasNext();
   }
 
-  public static Level level(ObjectH message) {
+  public static Level level(ObjH message) {
     return Level.valueOf(severity(message));
   }
 
-  public static String severity(ObjectH message) {
+  public static String severity(ObjH message) {
     return messageSeverity((TupleH) message).toJ();
   }
 
-  public static String text(ObjectH message) {
+  public static String text(ObjH message) {
     return messageText((TupleH) message).toJ();
   }
 

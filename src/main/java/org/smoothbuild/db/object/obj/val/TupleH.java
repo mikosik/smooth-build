@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import static java.util.Objects.checkIndex;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
@@ -17,8 +17,8 @@ import com.google.common.collect.ImmutableList;
 public class TupleH extends ValueH {
   private ImmutableList<ValueH> items;
 
-  public TupleH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb);
+  public TupleH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override

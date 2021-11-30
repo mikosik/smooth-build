@@ -1,9 +1,9 @@
 package org.smoothbuild.db.object.type.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.db.ObjectHDbException;
+import org.smoothbuild.db.object.db.ObjDbException;
 
-public class DecodeTypeException extends ObjectHDbException {
+public class DecodeTypeException extends ObjDbException {
   public DecodeTypeException(Hash hash) {
     this(hash, null, null);
   }

@@ -17,28 +17,28 @@ import org.smoothbuild.testing.TestingContext;
 public class SpecHCachingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("type_creators")
-  public void created_type_is_cached(Function<TypeHDb, SpecH> typeCreator) {
-    assertThat(typeCreator.apply(typeHDb()))
-        .isSameInstanceAs(typeCreator.apply(typeHDb()));
+  public void created_type_is_cached(Function<TypeDb, SpecH> typeCreator) {
+    assertThat(typeCreator.apply(typeDb()))
+        .isSameInstanceAs(typeCreator.apply(typeDb()));
   }
 
   @ParameterizedTest
   @MethodSource("type_creators")
-  public void read_type_is_cached(Function<TypeHDb, SpecH> typeCreator) {
-    Hash hash = typeCreator.apply(typeHDb()).hash();
-    TypeHDb typeHDb = typeHDbOther();
-    assertThat(typeHDb.get(hash))
-        .isSameInstanceAs(typeHDb.get(hash));
+  public void read_type_is_cached(Function<TypeDb, SpecH> typeCreator) {
+    Hash hash = typeCreator.apply(typeDb()).hash();
+    TypeDb typeDb = typeDbOther();
+    assertThat(typeDb.get(hash))
+        .isSameInstanceAs(typeDb.get(hash));
   }
 
-  private static List<Function<TypeHDb, SpecH>> type_creators() {
+  private static List<Function<TypeDb, SpecH>> type_creators() {
     return list(
-        TypeHDb::blob,
-        TypeHDb::bool,
+        TypeDb::blob,
+        TypeDb::bool,
         SpecHCachingTest::funcType,
-        TypeHDb::int_,
-        TypeHDb::nothing,
-        TypeHDb::string,
+        TypeDb::int_,
+        TypeDb::nothing,
+        TypeDb::string,
         SpecHCachingTest::tupleType,
 
         objTypeDb -> objTypeDb.call(objTypeDb.int_()),
@@ -64,11 +64,11 @@ public class SpecHCachingTest extends TestingContext {
     );
   }
 
-  private static TupleTypeH tupleType(TypeHDb typeHDb) {
-    return typeHDb.tuple(list(typeHDb.string(), typeHDb.string()));
+  private static TupleTypeH tupleType(TypeDb typeDb) {
+    return typeDb.tuple(list(typeDb.string(), typeDb.string()));
   }
 
-  private static FuncTypeH funcType(TypeHDb typeHDb) {
-    return typeHDb.abstFunc(typeHDb.string(), list(typeHDb.bool(), typeHDb.blob()));
+  private static FuncTypeH funcType(TypeDb typeDb) {
+    return typeDb.abstFunc(typeDb.string(), list(typeDb.bool(), typeDb.blob()));
   }
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.exec.algorithm;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
@@ -29,19 +29,19 @@ public class ConvertAlgorithm extends Algorithm {
     if (input.vals().size() != 1) {
       throw newBuildBrokenException("Expected input size == 1 but was " + input.vals().size());
     }
-    ObjectH obj = input.vals().get(0);
+    ObjH obj = input.vals().get(0);
     assertThatTypesAreNotEqual(obj);
     return new Output(convert(outputType(), obj, nativeApi), nativeApi.messages());
   }
 
-  private void assertThatTypesAreNotEqual(ObjectH obj) {
+  private void assertThatTypesAreNotEqual(ObjH obj) {
     if (outputType().equals(obj.spec())) {
       throw newBuildBrokenException(
           "Expected non equal types but got " + outputType() + " " + obj.spec());
     }
   }
 
-  private static ValueH convert(SpecH destinationType, ObjectH obj, NativeApi nativeApi) {
+  private static ValueH convert(SpecH destinationType, ObjH obj, NativeApi nativeApi) {
     if (obj instanceof ArrayH array) {
       return convertArray(destinationType, array, nativeApi);
     }

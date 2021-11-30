@@ -87,21 +87,21 @@ public class SpecHTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("names")
-  public void name(Function<TypeHDb, SpecH> factoryCall, String name) {
+  public void name(Function<TypeDb, SpecH> factoryCall, String name) {
     assertThat(invoke(factoryCall).name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(Function<TypeHDb, SpecH> factoryCall, String name) {
+  public void quoted_name(Function<TypeDb, SpecH> factoryCall, String name) {
     assertThat(invoke(factoryCall).q())
         .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(Function<TypeHDb, SpecH> factoryCall, String name) {
+  public void to_string(Function<TypeDb, SpecH> factoryCall, String name) {
     assertThat(invoke(factoryCall).toString())
         .isEqualTo("Type(`" + name + "`)");
   }
@@ -157,7 +157,7 @@ public class SpecHTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
-  public void isPolytype(Function<TypeHDb, SpecH> factoryCall, boolean expected) {
+  public void isPolytype(Function<TypeDb, SpecH> factoryCall, boolean expected) {
     assertThat(invoke(factoryCall).isPolytype())
         .isEqualTo(expected);
   }
@@ -196,8 +196,8 @@ public class SpecHTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("vars_test_data")
   public void vars(
-      Function<TypeHDb, SpecH> factoryCall,
-      Function<TypeHDb, Set<Var>> resultCall) {
+      Function<TypeDb, SpecH> factoryCall,
+      Function<TypeDb, Set<Var>> resultCall) {
     assertThat(invoke(factoryCall).vars())
         .containsExactlyElementsIn(invoke(resultCall))
         .inOrder();
@@ -246,8 +246,8 @@ public class SpecHTest extends TestingContext {
   class _func {
     @ParameterizedTest
     @MethodSource("result_cases")
-    public void result(Function<TypeHDb, FuncType> factoryCall,
-        Function<TypeHDb, List<Type>> expected) {
+    public void result(Function<TypeDb, FuncType> factoryCall,
+        Function<TypeDb, List<Type>> expected) {
       assertThat(invoke(factoryCall).res())
           .isEqualTo(invoke(expected));
     }
@@ -262,8 +262,8 @@ public class SpecHTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("params_cases")
-    public void params(Function<TypeHDb, FuncType> factoryCall,
-        Function<TypeHDb, List<Type>> expected) {
+    public void params(Function<TypeDb, FuncType> factoryCall,
+        Function<TypeDb, List<Type>> expected) {
       assertThat(invoke(factoryCall).params())
           .isEqualTo(invoke(expected));
     }
@@ -296,7 +296,7 @@ public class SpecHTest extends TestingContext {
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
-    public void elemType(Function<TypeHDb, TypeH> factoryCall) {
+    public void elemType(Function<TypeDb, TypeH> factoryCall) {
       TypeH elem = invoke(factoryCall);
       ArrayType array = typeFactoryH().array(elem);
       assertThat(array.elem())
@@ -347,8 +347,8 @@ public class SpecHTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("tuple_item_cases")
     public void tuple_item(
-        Function<TypeHDb, TupleTypeH> factoryCall,
-        Function<TypeHDb, NList<Labeled<Type>>> expected) {
+        Function<TypeDb, TupleTypeH> factoryCall,
+        Function<TypeDb, NList<Labeled<Type>>> expected) {
       assertThat(invoke(factoryCall).items())
           .isEqualTo(invoke(expected));
     }
@@ -416,7 +416,7 @@ public class SpecHTest extends TestingContext {
     }
 
     public static List<Arguments> combine_cases() {
-      TypeHDb db = TYPEH_DB;
+      TypeDb db = TYPEH_DB;
       return list(
           arguments(db.combine(db.tuple(list())), db.tuple(list())),
           arguments(db.combine(db.tuple(list(STRING))), db.tuple(list(STRING)))
@@ -495,8 +495,8 @@ public class SpecHTest extends TestingContext {
     tester.testEquals();
   }
 
-  private <R> R invoke(Function<TypeHDb, R> f) {
-    return f.apply(typeHDb());
+  private <R> R invoke(Function<TypeDb, R> f) {
+    return f.apply(typeDb());
   }
 
   /**
@@ -504,8 +504,8 @@ public class SpecHTest extends TestingContext {
    * exact type of lambda expression passed to factoryCall.
    */
   private static <R> Arguments args(
-      Function<TypeHDb, R> factoryCall1,
-      Function<TypeHDb, R> factoryCall2) {
+      Function<TypeDb, R> factoryCall1,
+      Function<TypeDb, R> factoryCall2) {
     return arguments(factoryCall1, factoryCall2);
   }
 
@@ -513,7 +513,7 @@ public class SpecHTest extends TestingContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <R> Arguments args(Function<TypeHDb, R> factoryCall, Object arg) {
+  private static <R> Arguments args(Function<TypeDb, R> factoryCall, Object arg) {
     return arguments(factoryCall, arg);
   }
 
@@ -521,7 +521,7 @@ public class SpecHTest extends TestingContext {
    * We need this chaining method because without it java compiler is not able to infer
    * exact type of lambda expression passed to factoryCall.
    */
-  private static <R> Arguments args(Function<TypeHDb, R> factoryCall) {
+  private static <R> Arguments args(Function<TypeDb, R> factoryCall) {
     return arguments(factoryCall);
   }
 }

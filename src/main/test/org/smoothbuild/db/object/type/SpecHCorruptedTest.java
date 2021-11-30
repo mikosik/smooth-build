@@ -1,9 +1,9 @@
 package org.smoothbuild.db.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.object.type.TypeHDb.DATA_PATH;
-import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_PARAMS_PATH;
-import static org.smoothbuild.db.object.type.TypeHDb.FUNCTION_RES_PATH;
+import static org.smoothbuild.db.object.type.TypeDb.DATA_PATH;
+import static org.smoothbuild.db.object.type.TypeDb.FUNCTION_PARAMS_PATH;
+import static org.smoothbuild.db.object.type.TypeDb.FUNCTION_RES_PATH;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ABST_FUNC;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ANY;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ARRAY;
@@ -33,7 +33,7 @@ import org.smoothbuild.db.hashed.exc.DecodeStringException;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
 import org.smoothbuild.db.hashed.exc.NoSuchDataException;
 import org.smoothbuild.db.object.obj.IllegalArrayByteSizesProvider;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -362,7 +362,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash(ABST_FUNC.marker()),
           notHashOfSeq
       );
-      assertCall(() -> ((FuncTypeH) typeHDb().get(typeHash)).res())
+      assertCall(() -> ((FuncTypeH) typeDb().get(typeHash)).res())
           .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, DATA_PATH))
           .withCause(new DecodeHashSeqException(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -379,7 +379,7 @@ public class SpecHCorruptedTest extends TestingContext {
               hash(paramTypes)
           )
       );
-      assertCall(() -> typeHDb().get(typeHash))
+      assertCall(() -> typeDb().get(typeHash))
           .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_RES_PATH))
           .withCause(new DecodeTypeException(nowhere));
     }
@@ -394,7 +394,7 @@ public class SpecHCorruptedTest extends TestingContext {
               hash(paramType)
           )
       );
-      assertCall(() -> typeHDb().get(typeHash))
+      assertCall(() -> typeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
               typeHash, ABST_FUNC, FUNCTION_RES_PATH, TypeH.class, RefTypeH.class));
     }
@@ -409,7 +409,7 @@ public class SpecHCorruptedTest extends TestingContext {
               hash(paramTypes)
           )
       );
-      assertCall(() -> typeHDb().get(typeHash))
+      assertCall(() -> typeDb().get(typeHash))
           .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_RES_PATH))
           .withCause(corruptedArrayTypeException());
     }
@@ -424,7 +424,7 @@ public class SpecHCorruptedTest extends TestingContext {
               nowhere
           )
       );
-      assertCall(() -> typeHDb().get(typeHash))
+      assertCall(() -> typeDb().get(typeHash))
           .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH))
           .withCause(new DecodeTypeException(nowhere));
     }
@@ -452,7 +452,7 @@ public class SpecHCorruptedTest extends TestingContext {
               hash(refHT())
           )
       );
-      assertCall(() -> typeHDb().get(typeHash))
+      assertCall(() -> typeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeException(
               typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH, TupleTypeH.class, RefTypeH.class));
     }
@@ -466,7 +466,7 @@ public class SpecHCorruptedTest extends TestingContext {
               corruptedArrayTypeHash()
           )
       );
-      assertCall(() -> typeHDb().get(typeHash))
+      assertCall(() -> typeDb().get(typeHash))
           .throwsException(new DecodeTypeNodeException(typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH))
           .withCause(corruptedArrayTypeException());
     }
@@ -593,7 +593,7 @@ public class SpecHCorruptedTest extends TestingContext {
         hash(kind.marker()),
         dataHash
     );
-    assertCall(() -> typeHDb().get(typeHash))
+    assertCall(() -> typeDb().get(typeHash))
         .throwsException(new DecodeTypeNodeException(typeHash, kind, DATA_PATH))
         .withCause(new DecodeTypeException(dataHash));
   }
@@ -605,7 +605,7 @@ public class SpecHCorruptedTest extends TestingContext {
         hash(kind.marker()),
         dataHash
     );
-    assertCall(() -> typeHDb().get(typeHash))
+    assertCall(() -> typeDb().get(typeHash))
         .throwsException(new DecodeTypeNodeException(typeHash, kind, DATA_PATH))
         .withCause(new NoSuchDataException(dataHash));
   }
@@ -632,7 +632,7 @@ public class SpecHCorruptedTest extends TestingContext {
   }
 
   private ThrownExceptionSubject assertThatGet(Hash hash) {
-      return assertCall(() -> typeHDb().get(hash));
+      return assertCall(() -> typeDb().get(hash));
   }
 
   private DecodeTypeException illegalTypeMarkerException(Hash hash, int marker) {
@@ -674,7 +674,7 @@ public class SpecHCorruptedTest extends TestingContext {
     }
   }
 
-  protected Hash hash(ObjectH obj) {
+  protected Hash hash(ObjH obj) {
     return obj.hash();
   }
 
@@ -850,7 +850,7 @@ public class SpecHCorruptedTest extends TestingContext {
           hash(VARIABLE.marker()),
           dataHash
       );
-      assertCall(() -> typeHDb().get(typeHash))
+      assertCall(() -> typeDb().get(typeHash))
           .throwsException(new DecodeTypeNodeException(typeHash, VARIABLE, DATA_PATH))
           .withCause(new NoSuchDataException(dataHash));
     }

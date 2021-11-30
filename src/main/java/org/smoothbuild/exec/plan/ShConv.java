@@ -16,7 +16,7 @@ import java.util.function.Function;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
@@ -66,8 +66,8 @@ public class ShConv {
   private final FileLoader fileLoader;
   private final Deque<NList<ItemS>> callStack;
   private final Map<String, FuncH> funcCache;
-  private final Map<String, ObjectH> valCache;
-  private final Map<ObjectH, Nal> nals;
+  private final Map<String, ObjH> valCache;
+  private final Map<ObjH, Nal> nals;
 
   @Inject
   public ShConv(ObjFactory objFactory, DefsS defs, TypeShConv typeShConv, FileLoader fileLoader) {
@@ -81,7 +81,7 @@ public class ShConv {
     this.nals = new HashMap<>();
   }
 
-  public ImmutableMap<ObjectH, Nal> nals() {
+  public ImmutableMap<ObjH, Nal> nals() {
     return ImmutableMap.copyOf(nals);
   }
 
@@ -116,9 +116,9 @@ public class ShConv {
     return objFactory.defFunc(type, body);
   }
 
-  private ImmutableList<ObjectH> ctorParamRefs(CtorS ctorS) {
+  private ImmutableList<ObjH> ctorParamRefs(CtorS ctorS) {
     NList<ItemS> params = ctorS.params();
-    ImmutableList<ObjectH> paramRefsH =
+    ImmutableList<ObjH> paramRefsH =
         range(0, params.size())
             .mapToObj(i -> newParamRef(params, i))
             .collect(toImmutableList());
@@ -159,11 +159,11 @@ public class ShConv {
 
   // handling value
 
-  public ObjectH convertVal(ValS valS) {
+  public ObjH convertVal(ValS valS) {
     return computeIfAbsent(valCache, valS.name(), name -> convertValImpl(valS));
   }
 
-  private ObjectH convertValImpl(ValS valS) {
+  private ObjH convertValImpl(ValS valS) {
     return switch (valS) {
       case DefValS defValS -> convertExpr(defValS.body());
       case BoolValS boolValS -> convertBoolVal(boolValS);
@@ -178,7 +178,7 @@ public class ShConv {
 
   // handling expressions
 
-  private ObjectH convertExpr(ExprS exprS) {
+  private ObjH convertExpr(ExprS exprS) {
     return switch (exprS) {
       case BlobS blobS -> convertAndStoreMapping(blobS, this::convertBlob);
       case CallS callS -> convertAndStoreMapping(callS, this::convertCall);
@@ -191,7 +191,7 @@ public class ShConv {
     };
   }
 
-  private <T extends ExprS> ObjectH convertAndStoreMapping(T exprS, Function<T, ObjectH> mapping) {
+  private <T extends ExprS> ObjH convertAndStoreMapping(T exprS, Function<T, ObjH> mapping) {
     var objH = mapping.apply(exprS);
     nals.put(objH, exprS);
     return objH;
@@ -223,7 +223,7 @@ public class ShConv {
     return objFactory.paramRef(BigInteger.valueOf(index), convertType(paramRefS.type()));
   }
 
-  public ObjectH convertRef(RefS refS) {
+  public ObjH convertRef(RefS refS) {
     return switch (definitions.referencables().get(refS.name())) {
       case FuncS f -> convertFunc(f);
       case ValS v -> convertVal(v);

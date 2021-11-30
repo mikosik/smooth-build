@@ -79,7 +79,7 @@ public class BlobHTest extends TestingContext {
   public void blob_can_be_read_by_hash() {
     BlobH blob = blobH(bytes);
     Hash hash = blob.hash();
-    assertThat(objectHDbOther().get(hash))
+    assertThat(objDbOther().get(hash))
         .isEqualTo(blob);
   }
 
@@ -87,7 +87,7 @@ public class BlobHTest extends TestingContext {
   public void blob_read_by_hash_has_same_content() throws Exception {
     BlobH blob = blobH(bytes);
     Hash hash = blob.hash();
-    assertThat(((BlobH) objectHDbOther().get(hash)).source().readByteString())
+    assertThat(((BlobH) objDbOther().get(hash)).source().readByteString())
         .isEqualTo(blob.source().readByteString());
   }
 

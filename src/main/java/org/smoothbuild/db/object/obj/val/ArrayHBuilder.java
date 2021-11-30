@@ -6,18 +6,18 @@ import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjec
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 
 public class ArrayHBuilder {
   private final ArrayTypeH type;
-  private final ObjectHDb objectHDb;
+  private final ObjDb objDb;
   private final List<ValueH> elems;
 
-  public ArrayHBuilder(ArrayTypeH type, ObjectHDb objectHDb) {
+  public ArrayHBuilder(ArrayTypeH type, ObjDb objDb) {
     this.type = type;
-    this.objectHDb = objectHDb;
+    this.objDb = objDb;
     this.elems = new ArrayList<>();
   }
 
@@ -27,7 +27,7 @@ public class ArrayHBuilder {
   }
 
   public ArrayHBuilder add(ValueH elem) {
-    if (!objectHDb.typing().isAssignable(type.elem(), elem.spec())) {
+    if (!objDb.typing().isAssignable(type.elem(), elem.spec())) {
       throw new IllegalArgumentException("Element type must be " + type.elem().name()
           + " but was " + elem.spec().name() + ".");
     }
@@ -42,6 +42,6 @@ public class ArrayHBuilder {
   }
 
   public ArrayH build() {
-    return wrapHashedDbExceptionAsObjectDbException(() -> objectHDb.newArray(type, elems));
+    return wrapHashedDbExceptionAsObjectDbException(() -> objDb.newArray(type, elems));
   }
 }

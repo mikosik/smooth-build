@@ -7,17 +7,17 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.hashed.exc.HashedDbException;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.util.io.DataWriter;
 
 import okio.BufferedSink;
 
 public class BlobHBuilder implements Closeable {
-  private final ObjectHDb objectHDb;
+  private final ObjDb objDb;
   private final HashingBufferedSink sink;
 
-  public BlobHBuilder(ObjectHDb objectHDb, HashingBufferedSink sink) {
-    this.objectHDb = objectHDb;
+  public BlobHBuilder(ObjDb objDb, HashingBufferedSink sink) {
+    this.objDb = objDb;
     this.sink = sink;
   }
 
@@ -41,7 +41,7 @@ public class BlobHBuilder implements Closeable {
   private BlobH buildImpl() throws HashedDbException {
     try {
       sink.close();
-      return objectHDb.newBlob(sink.hash());
+      return objDb.newBlob(sink.hash());
     } catch (IOException e) {
       throw new HashedDbException(e);
     }

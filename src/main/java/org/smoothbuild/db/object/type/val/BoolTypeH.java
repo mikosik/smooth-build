@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.type.val;
 import static org.smoothbuild.db.object.type.base.SpecKindH.BOOL;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -18,7 +18,7 @@ public class BoolTypeH extends TypeH {
   }
 
   @Override
-  public BoolH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    return (BoolH) super.newObj(merkleRoot, objectHDb);
+  public BoolH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+    return (BoolH) super.newObj(merkleRoot, objDb);
   }
 }

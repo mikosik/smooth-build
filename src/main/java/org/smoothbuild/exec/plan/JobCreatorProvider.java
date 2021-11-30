@@ -2,7 +2,7 @@ package org.smoothbuild.exec.plan;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.exec.java.MethodLoader;
@@ -22,7 +22,7 @@ public class JobCreatorProvider {
     this.typingH = typingH;
   }
 
-  public JobCreator get(ImmutableMap<ObjectH, Nal> nals) {
+  public JobCreator get(ImmutableMap<ObjH, Nal> nals) {
     return new JobCreator(methodLoader, typeFactoryH, typingH, nals);
   }
 }

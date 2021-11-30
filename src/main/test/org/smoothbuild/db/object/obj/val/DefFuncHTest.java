@@ -96,7 +96,7 @@ public class DefFuncHTest extends TestingContext {
   public void func_can_be_read_by_hash() {
     var funcType = defFuncHT(intHT(), list(stringHT()));
     var func = defFuncH(funcType, intH());
-    assertThat(objectHDbOther().get(func.hash()))
+    assertThat(objDbOther().get(func.hash()))
         .isEqualTo(func);
   }
 
@@ -104,7 +104,7 @@ public class DefFuncHTest extends TestingContext {
   public void funcs_read_by_hash_have_equal_bodies() {
     var funcType = defFuncHT(intHT(), list(stringHT()));
     var func = defFuncH(funcType, intH());
-    var funcRead = (DefFuncH) objectHDbOther().get(func.hash());
+    var funcRead = (DefFuncH) objDbOther().get(func.hash());
     assertThat(func.body())
         .isEqualTo(funcRead.body());
   }

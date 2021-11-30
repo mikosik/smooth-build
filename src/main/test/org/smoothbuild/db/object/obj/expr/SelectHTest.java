@@ -116,7 +116,7 @@ public class SelectHTest extends TestingContext {
   public void select_can_be_read_back_by_hash() {
     TupleH tuple = animalH("rabbit", 7);
     SelectH select = selectH(tuple, intH(0));
-    assertThat(objectHDbOther().get(select.hash()))
+    assertThat(objDbOther().get(select.hash()))
         .isEqualTo(select);
   }
 
@@ -125,7 +125,7 @@ public class SelectHTest extends TestingContext {
     var tuple = animalH();
     var index = intH(0);
     var select = selectH(tuple, index);
-    assertThat(((SelectH) objectHDbOther().get(select.hash())).data())
+    assertThat(((SelectH) objDbOther().get(select.hash())).data())
         .isEqualTo(new SelectData(tuple, index));
   }
 

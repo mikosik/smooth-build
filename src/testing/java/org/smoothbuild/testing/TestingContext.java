@@ -16,8 +16,8 @@ import java.util.Optional;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.ObjectHDb;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.ObjDb;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
@@ -36,7 +36,7 @@ import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.type.TypeFactoryH;
-import org.smoothbuild.db.object.type.TypeHDb;
+import org.smoothbuild.db.object.type.TypeDb;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
@@ -117,10 +117,10 @@ public class TestingContext {
   private ObjFactory objFactory;
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
-  private ObjectHDb objectHDb;
+  private ObjDb objDb;
   private TypingS typingS;
   private TypingH typingH;
-  private TypeHDb typeHDb;
+  private TypeDb typeDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
@@ -163,7 +163,7 @@ public class TestingContext {
 
   public ObjFactory objFactory() {
     if (objFactory == null) {
-      objFactory = new ObjFactory(objectHDb(), typeHDb(), typingH());
+      objFactory = new ObjFactory(objDb(), typeDb(), typingH());
     }
     return objFactory;
   }
@@ -177,13 +177,13 @@ public class TestingContext {
 
   public TypingH typingH() {
     if (typingH == null) {
-      typingH = new TypingH(typeHDb());
+      typingH = new TypingH(typeDb());
     }
     return typingH;
   }
 
   public TypeFactoryH typeFactoryH() {
-    return typeHDb();
+    return typeDb();
   }
 
   public TypeFactoryS typeFactoryS() {
@@ -193,24 +193,24 @@ public class TestingContext {
     return typeFactoryS;
   }
 
-  public TypeHDb typeHDb() {
-    if (typeHDb == null) {
-      typeHDb = new TypeHDb(hashedDb());
+  public TypeDb typeDb() {
+    if (typeDb == null) {
+      typeDb = new TypeDb(hashedDb());
     }
-    return typeHDb;
+    return typeDb;
   }
 
-  public ObjectHDb objectHDb() {
-    if (objectHDb == null) {
-      objectHDb = new ObjectHDb(hashedDb(), typeHDb(), typingH());
+  public ObjDb objDb() {
+    if (objDb == null) {
+      objDb = new ObjDb(hashedDb(), typeDb(), typingH());
     }
-    return objectHDb;
+    return objDb;
   }
 
   public ComputationCache computationCache() {
     if (computationCache == null) {
       computationCache = new ComputationCache(
-          computationCacheFileSystem(), objectHDb(), objFactory());
+          computationCacheFileSystem(), objDb(), objFactory());
     }
     return computationCache;
   }
@@ -222,12 +222,12 @@ public class TestingContext {
     return computationCacheFileSystem;
   }
 
-  public ObjectHDb objectHDbOther() {
-    return new ObjectHDb(hashedDb(), typeHDbOther(), typingH());
+  public ObjDb objDbOther() {
+    return new ObjDb(hashedDb(), typeDbOther(), typingH());
   }
 
-  public TypeHDb typeHDbOther() {
-    return new TypeHDb(hashedDb());
+  public TypeDb typeDbOther() {
+    return new TypeDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -262,23 +262,23 @@ public class TestingContext {
   // H types
 
   public TupleTypeH animalHT() {
-    return typeHDb().tuple(list(stringHT(), intHT()));
+    return typeDb().tuple(list(stringHT(), intHT()));
   }
 
   public AnyTypeH anyHT() {
-    return typeHDb().any();
+    return typeDb().any();
   }
 
   public ArrayTypeH arrayHT(TypeH elemSpec) {
-    return typeHDb().array(elemSpec);
+    return typeDb().array(elemSpec);
   }
 
   public BlobTypeH blobHT() {
-    return typeHDb().blob();
+    return typeDb().blob();
   }
 
   public BoolTypeH boolHT() {
-    return typeHDb().bool();
+    return typeDb().bool();
   }
 
   public DefFuncTypeH defFuncHT() {
@@ -286,7 +286,7 @@ public class TestingContext {
   }
 
   public DefFuncTypeH defFuncHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb().defFunc(result, params);
+    return typeDb().defFunc(result, params);
   }
 
   public TupleTypeH fileHT() {
@@ -298,31 +298,31 @@ public class TestingContext {
   }
 
   public FuncTypeH abstFuncHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb().abstFunc(result, params);
+    return typeDb().abstFunc(result, params);
   }
 
   public IfFuncTypeH ifFuncHT() {
-    return typeHDb().ifFunc();
+    return typeDb().ifFunc();
   }
 
   public IntTypeH intHT() {
-    return typeHDb().int_();
+    return typeDb().int_();
   }
 
   public MapFuncTypeH mapFuncHT() {
-    return typeHDb().mapFunc();
+    return typeDb().mapFunc();
   }
 
   public NatFuncTypeH natFuncHT() {
-    return typeHDb().natFunc(blobHT(), list(boolHT()));
+    return typeDb().natFunc(blobHT(), list(boolHT()));
   }
 
   public NatFuncTypeH natFuncHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeHDb().natFunc(result, params);
+    return typeDb().natFunc(result, params);
   }
 
   public NothingTypeH nothingHT() {
-    return typeHDb().nothing();
+    return typeDb().nothing();
   }
 
   public TupleTypeH personHT() {
@@ -330,15 +330,15 @@ public class TestingContext {
   }
 
   public StringTypeH stringHT() {
-    return typeHDb().string();
+    return typeDb().string();
   }
 
   public TupleTypeH tupleHT() {
-    return typeHDb().tuple(list(intHT()));
+    return typeDb().tuple(list(intHT()));
   }
 
   public TupleTypeH tupleHT(ImmutableList<TypeH> itemSpecs) {
-    return typeHDb().tuple(itemSpecs);
+    return typeDb().tuple(itemSpecs);
   }
 
   public TupleTypeH tupleEmptyHT() {
@@ -350,7 +350,7 @@ public class TestingContext {
   }
 
   public VarH varHT(String name) {
-    return typeHDb().var(name);
+    return typeDb().var(name);
   }
 
   public Side<TypeH> lowerHT() {
@@ -368,7 +368,7 @@ public class TestingContext {
   }
 
   public CallTypeH callHT(TypeH evaluationType) {
-    return typeHDb().call(evaluationType);
+    return typeDb().call(evaluationType);
   }
 
   public CombineTypeH combineHT() {
@@ -376,7 +376,7 @@ public class TestingContext {
   }
 
   public CombineTypeH combineHT(ImmutableList<TypeH> itemSpecs) {
-    return typeHDb().combine(tupleHT(itemSpecs));
+    return typeDb().combine(tupleHT(itemSpecs));
   }
 
   public OrderTypeH orderHT() {
@@ -384,7 +384,7 @@ public class TestingContext {
   }
 
   public OrderTypeH orderHT(TypeH elemSpec) {
-    return typeHDb().order(elemSpec);
+    return typeDb().order(elemSpec);
   }
 
   public RefTypeH refHT() {
@@ -392,7 +392,7 @@ public class TestingContext {
   }
 
   public RefTypeH refHT(TypeH evaluationType) {
-    return typeHDb().ref(evaluationType);
+    return typeDb().ref(evaluationType);
   }
 
   public SelectTypeH selectHT() {
@@ -400,7 +400,7 @@ public class TestingContext {
   }
 
   public SelectTypeH selectHT(TypeH evaluationType) {
-    return typeHDb().select(evaluationType);
+    return typeDb().select(evaluationType);
   }
 
   // Obj-s (values)
@@ -422,7 +422,7 @@ public class TestingContext {
   }
 
   public ArrayH arrayH(TypeH elemSpec, ValueH... elems) {
-    return objectHDb().arrayBuilder(elemSpec).addAll(list(elems)).build();
+    return objDb().arrayBuilder(elemSpec).addAll(list(elems)).build();
   }
 
   public BlobH blobH() {
@@ -434,11 +434,11 @@ public class TestingContext {
   }
 
   public BlobHBuilder blobHBuilder() {
-    return objectHDb().blobBuilder();
+    return objDb().blobBuilder();
   }
 
   public BoolH boolH(boolean value) {
-    return objectHDb().bool(value);
+    return objDb().bool(value);
   }
 
   public TupleH fileH(Path path) {
@@ -458,17 +458,17 @@ public class TestingContext {
     return defFuncH(intH());
   }
 
-  public DefFuncH defFuncH(ObjectH body) {
+  public DefFuncH defFuncH(ObjH body) {
     var type = defFuncHT(body.type(), list(stringHT()));
     return defFuncH(type, body);
   }
 
-  public DefFuncH defFuncH(DefFuncTypeH spec, ObjectH body) {
-    return objectHDb().defFunc(spec, body);
+  public DefFuncH defFuncH(DefFuncTypeH spec, ObjH body) {
+    return objDb().defFunc(spec, body);
   }
 
   public IfFuncH ifFuncH() {
-    return objectHDb().ifFunc();
+    return objDb().ifFunc();
   }
 
   public IntH intH() {
@@ -476,15 +476,15 @@ public class TestingContext {
   }
 
   public IntH intH(int value) {
-    return objectHDb().int_(BigInteger.valueOf(value));
+    return objDb().int_(BigInteger.valueOf(value));
   }
 
   public MapFuncH mapFuncH() {
-    return objectHDb().mapFunc();
+    return objDb().mapFunc();
   }
 
   public NatFuncH natFuncH(BlobH jarFile, StringH classBinaryName) {
-    return objectHDb().natFunc(natFuncHT(), jarFile, classBinaryName, boolH(true));
+    return objDb().natFunc(natFuncHT(), jarFile, classBinaryName, boolH(true));
   }
 
   public TupleH personH(String firstName, String lastName) {
@@ -492,11 +492,11 @@ public class TestingContext {
   }
 
   public StringH stringH() {
-    return objectHDb().string("abc");
+    return objDb().string("abc");
   }
 
   public StringH stringH(String string) {
-    return objectHDb().string(string);
+    return objDb().string(string);
   }
 
   public TupleH tupleH(ImmutableList<ValueH> items) {
@@ -505,7 +505,7 @@ public class TestingContext {
   }
 
   public TupleH tupleH(TupleTypeH tupleType, ImmutableList<ValueH> items) {
-    return objectHDb().tuple(tupleType, items);
+    return objDb().tuple(tupleType, items);
   }
 
   public TupleH tupleHEmpty() {
@@ -542,28 +542,28 @@ public class TestingContext {
 
   // Expr-s
 
-  public CallH callH(ObjectH func, ImmutableList<ObjectH> args) {
-    return objectHDb().call(func, combineH(args));
+  public CallH callH(ObjH func, ImmutableList<ObjH> args) {
+    return objDb().call(func, combineH(args));
   }
 
-  public CombineH combineH(ImmutableList<ObjectH> items) {
-    return objectHDb().combine(items);
+  public CombineH combineH(ImmutableList<ObjH> items) {
+    return objDb().combine(items);
   }
 
-  public OrderH orderH(ImmutableList<ObjectH> elems) {
-    return objectHDb().order(elems);
+  public OrderH orderH(ImmutableList<ObjH> elems) {
+    return objDb().order(elems);
   }
 
   public ParamRefH paramRefH(int value) {
-    return objectHDb().newParamRef(BigInteger.valueOf(value), intHT());
+    return objDb().newParamRef(BigInteger.valueOf(value), intHT());
   }
 
   public ParamRefH paramRefH(TypeH evaluationType, int pointer) {
-    return objectHDb().newParamRef(BigInteger.valueOf(pointer), evaluationType);
+    return objDb().newParamRef(BigInteger.valueOf(pointer), evaluationType);
   }
 
-  public SelectH selectH(ObjectH tuple, IntH index) {
-    return objectHDb().select(tuple, index);
+  public SelectH selectH(ObjH tuple, IntH index) {
+    return objDb().select(tuple, index);
   }
 
   // Types Smooth

@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.TestingTypesH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -204,10 +204,10 @@ public class ParallelJobExecutorTest extends TestingContext {
     var ref = new RefS(STRING, "name", loc());
     var job = job(valueAlgorithm("A"));
 
-    Optional<ObjectH> object = parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref);
+    Optional<ObjH> obj = parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref);
 
     verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
-    assertThat(object.isEmpty())
+    assertThat(obj.isEmpty())
         .isTrue();
   }
 
@@ -289,11 +289,11 @@ public class ParallelJobExecutorTest extends TestingContext {
     };
   }
 
-  private ObjectH executeSingleJob(Job job) throws InterruptedException {
+  private ObjH executeSingleJob(Job job) throws InterruptedException {
     return executeSingleJob(parallelJobExecutor, job);
   }
 
-  private static ObjectH executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
+  private static ObjH executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
     var ref = new RefS(STRING, "name", loc());
     return parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref).get();

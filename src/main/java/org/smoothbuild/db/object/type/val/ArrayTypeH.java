@@ -5,7 +5,7 @@ import static org.smoothbuild.db.object.type.base.SpecKindH.ARRAY;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -28,7 +28,7 @@ public class ArrayTypeH extends TypeH implements ArrayType {
   }
 
   @Override
-  public ArrayH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    return (ArrayH) super.newObj(merkleRoot, objectHDb);
+  public ArrayH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+    return (ArrayH) super.newObj(merkleRoot, objDb);
   }
 }

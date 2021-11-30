@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.type.expr;
 import static org.smoothbuild.db.object.type.base.SpecKindH.CONSTRUCT;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.type.base.ExprSpecH;
@@ -23,7 +23,7 @@ public class CombineTypeH extends ExprSpecH {
   }
 
   @Override
-  public CombineH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    return (CombineH) super.newObj(merkleRoot, objectHDb);
+  public CombineH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+    return (CombineH) super.newObj(merkleRoot, objDb);
   }
 }

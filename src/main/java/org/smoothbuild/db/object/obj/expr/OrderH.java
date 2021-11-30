@@ -4,10 +4,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfComponentException;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
@@ -19,8 +19,8 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class OrderH extends ExprH {
-  public OrderH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb);
+  public OrderH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.spec() instanceof OrderTypeH);
   }
 
@@ -34,8 +34,8 @@ public class OrderH extends ExprH {
     return spec().evalType();
   }
 
-  public ImmutableList<ObjectH> elems() {
-    var elems = readSeqObjs(DATA_PATH, dataHash(), ObjectH.class);
+  public ImmutableList<ObjH> elems() {
+    var elems = readSeqObjs(DATA_PATH, dataHash(), ObjH.class);
     var expectedElementType = spec().evalType().elem();
     for (int i = 0; i < elems.size(); i++) {
       TypeH actualType = elems.get(i).type();

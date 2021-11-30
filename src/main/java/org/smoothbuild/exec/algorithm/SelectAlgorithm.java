@@ -29,9 +29,9 @@ public class SelectAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    ImmutableList<ValueH> objects = input.vals();
-    checkArgument(objects.size() == 1);
-    TupleH tuple = (TupleH) objects.get(0);
+    var vals = input.vals();
+    checkArgument(vals.size() == 1);
+    var tuple = (TupleH) vals.get(0);
     return new Output(tuple.get(index.toJ().intValue()), nativeApi.messages());
   }
 }

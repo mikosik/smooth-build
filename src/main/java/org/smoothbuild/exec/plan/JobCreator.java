@@ -13,7 +13,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
@@ -62,12 +62,12 @@ public class JobCreator {
   private final MethodLoader methodLoader;
   private final TypeFactoryH factory;
   private final TypingH typing;
-  private final ImmutableMap<ObjectH, Nal> nals;
+  private final ImmutableMap<ObjH, Nal> nals;
   private final Map<Class<?>, Handler<?>> handler;
 
   @Inject
   public JobCreator(MethodLoader methodLoader, TypeFactoryH factory, TypingH typing,
-      ImmutableMap<ObjectH, Nal> nals) {
+      ImmutableMap<ObjH, Nal> nals) {
     this.methodLoader = methodLoader;
     this.factory = factory;
     this.typing = typing;
@@ -96,24 +96,24 @@ public class JobCreator {
   }
 
   private ImmutableList<Job> eagerJobsFor(
-      IndexedScope<Job> scope, BoundsMap<TypeH> vars, ImmutableList<ObjectH> objs) {
+      IndexedScope<Job> scope, BoundsMap<TypeH> vars, ImmutableList<ObjH> objs) {
     return map(objs, e -> eagerJobFor(scope, vars, e));
   }
 
-  public Job jobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjectH expr,
+  public Job jobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjH expr,
       boolean eager) {
     return handlerFor(expr).job(eager).apply(scope, vars, expr);
   }
 
-  public Job eagerJobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjectH expr) {
+  public Job eagerJobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjH expr) {
     return handlerFor(expr).eagerJob().apply(scope, vars, expr);
   }
 
-  private Job lazyJobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjectH expr) {
+  private Job lazyJobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjH expr) {
     return handlerFor(expr).lazyJob().apply(scope, vars, expr);
   }
 
-  public <T> Handler<T> handlerFor(ObjectH obj) {
+  public <T> Handler<T> handlerFor(ObjH obj) {
     @SuppressWarnings("unchecked")
     Handler<T> result = (Handler<T>) handler.get(obj.getClass());
     if (result == null) {
@@ -307,7 +307,7 @@ public class JobCreator {
     return new MapJob(actualResType, loc, args, scope, this);
   }
 
-  public Job commandLineExprEagerJob(ObjectH obj) {
+  public Job commandLineExprEagerJob(ObjH obj) {
     return eagerJobFor(new IndexedScope<>(list()), boundsMap(), obj);
   }
 

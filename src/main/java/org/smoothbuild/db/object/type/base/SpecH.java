@@ -5,9 +5,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.lang.base.type.api.AbstractType;
 import org.smoothbuild.lang.base.type.api.Var;
 
@@ -31,9 +31,9 @@ public abstract class SpecH extends AbstractType {
   /**
    * Creates new java instance of Obj represented by merkleRoot.
    */
-  public ObjectH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
+  public ObjH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return kind.newInstanceJ(merkleRoot, objectHDb);
+    return kind.newInstanceJ(merkleRoot, objDb);
   }
 
   public Hash hash() {
@@ -54,7 +54,7 @@ public abstract class SpecH extends AbstractType {
     return kind;
   }
 
-  public Class<? extends ObjectH> typeJ() {
+  public Class<? extends ObjH> typeJ() {
     return kind.typeJ();
   }
 

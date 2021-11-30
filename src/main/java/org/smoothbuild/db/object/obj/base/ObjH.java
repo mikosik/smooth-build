@@ -10,7 +10,7 @@ import java.util.Objects;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.obj.Helpers.HashedDbCallable;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqException;
@@ -20,27 +20,27 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public abstract class ObjectH {
+public abstract class ObjH {
   public static final String DATA_PATH = "data";
 
   private final MerkleRoot merkleRoot;
-  private final ObjectHDb objectHDb;
+  private final ObjDb objDb;
 
-  public ObjectH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
+  public ObjH(MerkleRoot merkleRoot, ObjDb objDb) {
     this.merkleRoot = merkleRoot;
-    this.objectHDb = objectHDb;
+    this.objDb = objDb;
   }
 
   protected MerkleRoot merkleRoot() {
     return merkleRoot;
   }
 
-  protected ObjectHDb objectDb() {
-    return objectHDb;
+  protected ObjDb objDb() {
+    return objDb;
   }
 
   protected HashedDb hashedDb() {
-    return objectHDb.hashedDb();
+    return objDb.hashedDb();
   }
 
   public Hash hash() {
@@ -61,7 +61,7 @@ public abstract class ObjectH {
 
   @Override
   public boolean equals(Object object) {
-    return (object instanceof ObjectH that) && Objects.equals(hash(), that.hash());
+    return (object instanceof ObjH that) && Objects.equals(hash(), that.hash());
   }
 
   @Override
@@ -79,15 +79,15 @@ public abstract class ObjectH {
   }
 
   protected <T> T readObj(String path, Hash hash, Class<T> clazz) {
-    ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
-        hash(), spec(), path, () -> objectDb().get(hash));
+    ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
+        hash(), spec(), path, () -> objDb().get(hash));
     return castObj(obj, path, clazz);
   }
 
   protected <T> T readSeqElemObj(String path, Hash hash, int i, int expectedSize, Class<T> clazz) {
     Hash elemHash = readSeqElemHash(path, hash, i, expectedSize);
-    ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
-        hash(), spec(), path, i, () -> objectDb().get(elemHash));
+    ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
+        hash(), spec(), path, i, () -> objDb().get(elemHash));
     return castObj(obj, path, i, clazz);
   }
 
@@ -109,17 +109,17 @@ public abstract class ObjectH {
     return castSeq(objs, path, clazz);
   }
 
-  protected ImmutableList<ObjectH> readSeqObjs(String path, Hash hash) {
+  protected ImmutableList<ObjH> readSeqObjs(String path, Hash hash) {
     var seqHashes = readSeqHashes(path, hash);
     return readSeqObjs(path, seqHashes);
   }
 
-  private ImmutableList<ObjectH> readSeqObjs(String path, ImmutableList<Hash> seq) {
-    Builder<ObjectH> builder = ImmutableList.builder();
+  private ImmutableList<ObjH> readSeqObjs(String path, ImmutableList<Hash> seq) {
+    Builder<ObjH> builder = ImmutableList.builder();
     for (int i = 0; i < seq.size(); i++) {
       int index = i;
-      ObjectH obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), spec(), path, index,
-          () -> objectHDb.get(seq.get(index)));
+      ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), spec(), path, index,
+          () -> objDb.get(seq.get(index)));
       builder.add(obj);
     }
     return builder.build();
@@ -135,14 +135,14 @@ public abstract class ObjectH {
 
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash) {
     return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), path,
-        () -> objectHDb.readSeq(hash));
+        () -> objDb.readSeq(hash));
   }
 
-  protected static String seqToString(ImmutableList<? extends ObjectH> objects) {
-    return toCommaSeparatedString(objects, ObjectH::valToStringSafe);
+  protected static String seqToString(ImmutableList<? extends ObjH> objects) {
+    return toCommaSeparatedString(objects, ObjH::valToStringSafe);
   }
 
-  private <T> T castObj(ObjectH obj, String path, Class<T> clazz) {
+  private <T> T castObj(ObjH obj, String path, Class<T> clazz) {
     if (clazz.isInstance(obj)) {
       @SuppressWarnings("unchecked")
       T result = (T) obj;
@@ -153,7 +153,7 @@ public abstract class ObjectH {
   }
 
 
-  private <T> T castObj(ObjectH obj, String path, int index, Class<T> clazz) {
+  private <T> T castObj(ObjH obj, String path, int index, Class<T> clazz) {
     if (clazz.isInstance(obj)) {
       @SuppressWarnings("unchecked")
       T result = (T) obj;
@@ -163,9 +163,9 @@ public abstract class ObjectH {
     }
   }
 
-  private <T> ImmutableList<T> castSeq(ImmutableList<ObjectH> elems, String path, Class<T> clazz) {
+  private <T> ImmutableList<T> castSeq(ImmutableList<ObjH> elems, String path, Class<T> clazz) {
     for (int i = 0; i < elems.size(); i++) {
-      ObjectH elem = elems.get(i);
+      ObjH elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
         throw new UnexpectedObjNodeException(hash(), spec(), path, i, clazz, elem.getClass());
       }

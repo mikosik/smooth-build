@@ -10,7 +10,7 @@ import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class ObjectHStableHashTest extends TestingContext {
+public class ObjHStableHashTest extends TestingContext {
   @Nested
   class _array {
     @Test

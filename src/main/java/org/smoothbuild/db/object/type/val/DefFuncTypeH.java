@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.type.val;
 import static org.smoothbuild.db.object.type.base.SpecKindH.DEF_FUNC;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.DefFuncH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -14,7 +14,7 @@ public class DefFuncTypeH extends FuncTypeH {
   }
 
   @Override
-  public DefFuncH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    return (DefFuncH) super.newObj(merkleRoot, objectHDb);
+  public DefFuncH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+    return (DefFuncH) super.newObj(merkleRoot, objDb);
   }
 }

@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeException;
@@ -14,8 +14,8 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class ArrayH extends ValueH {
-  public ArrayH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb);
+  public ArrayH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override
@@ -45,7 +45,7 @@ public class ArrayH extends ValueH {
       ImmutableList<ValueH> elems, TypeH expectedElementType) {
     for (int i = 0; i < elems.size(); i++) {
       var elemType = elems.get(i).spec();
-      if (!(objectDb().typing().isAssignable(expectedElementType, elemType))) {
+      if (!(objDb().typing().isAssignable(expectedElementType, elemType))) {
         throw new UnexpectedObjNodeException(hash(), spec(), DATA_PATH, i,
             expectedElementType, elemType);
       }

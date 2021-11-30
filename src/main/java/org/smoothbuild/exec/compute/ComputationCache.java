@@ -14,8 +14,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.ObjectHDb;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.ObjDb;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.TupleH;
@@ -35,14 +35,14 @@ import okio.BufferedSource;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final ObjectHDb objectHDb;
+  private final ObjDb objDb;
   private final ObjFactory objFactory;
 
   @Inject
-  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjectHDb objectHDb,
+  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjDb objDb,
       ObjFactory objFactory) {
     this.fileSystem = fileSystem;
-    this.objectHDb = objectHDb;
+    this.objDb = objDb;
     this.objFactory = objFactory;
   }
 
@@ -71,7 +71,7 @@ public class ComputationCache {
 
   public synchronized Output read(Hash taskHash, TypeH type) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      ObjectH messagesObject = objectHDb.get(Hash.read(source));
+      ObjH messagesObject = objDb.get(Hash.read(source));
       ArrayTypeH messageArrayType = objFactory.arrayT(objFactory.messageType());
       if (!messagesObject.spec().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
@@ -91,7 +91,7 @@ public class ComputationCache {
         return new Output(null, messages);
       } else {
         Hash resultObjectHash = Hash.read(source);
-        ObjectH obj = objectHDb.get(resultObjectHash);
+        ObjH obj = objDb.get(resultObjectHash);
         if (!type.equals(obj.spec())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its Merkle root, but got " + obj.spec());

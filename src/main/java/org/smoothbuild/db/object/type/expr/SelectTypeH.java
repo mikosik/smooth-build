@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.type.expr;
 import static org.smoothbuild.db.object.type.base.SpecKindH.SELECT;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.type.base.ExprSpecH;
@@ -18,7 +18,7 @@ public class SelectTypeH extends ExprSpecH {
   }
 
   @Override
-  public SelectH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    return (SelectH) super.newObj(merkleRoot, objectHDb);
+  public SelectH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+    return (SelectH) super.newObj(merkleRoot, objDb);
   }
 }

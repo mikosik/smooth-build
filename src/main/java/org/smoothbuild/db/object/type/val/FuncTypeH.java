@@ -8,7 +8,7 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import java.util.Collection;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.type.base.SpecKindH;
@@ -54,7 +54,7 @@ public class FuncTypeH extends TypeH implements FuncType {
   }
 
   @Override
-  public FuncH newObj(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    return (FuncH) super.newObj(merkleRoot, objectHDb);
+  public FuncH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+    return (FuncH) super.newObj(merkleRoot, objDb);
   }
 }

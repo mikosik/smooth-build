@@ -5,7 +5,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.expr.CallH.CallData;
 import org.smoothbuild.testing.TestingContext;
 
@@ -59,7 +59,7 @@ public class CallHTest extends TestingContext {
   @Test
   public void args_returns_arg_exprs() {
     var func = defFuncH();
-    ImmutableList<ObjectH> args = list(stringH()) ;
+    ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func, args).data().args())
         .isEqualTo(combineH(args));
   }
@@ -67,7 +67,7 @@ public class CallHTest extends TestingContext {
   @Test
   public void call_with_equal_values_are_equal() {
     var func = defFuncH();
-    ImmutableList<ObjectH> args = list(stringH()) ;
+    ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func, args))
         .isEqualTo(callH(func, args));
   }
@@ -76,7 +76,7 @@ public class CallHTest extends TestingContext {
   public void call_with_different_funcs_are_not_equal() {
     var func1 = defFuncH(intH(1));
     var func2 = defFuncH(intH(2));
-    ImmutableList<ObjectH> args = list(stringH()) ;
+    ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func1, args))
         .isNotEqualTo(callH(func2, args));
   }
@@ -91,7 +91,7 @@ public class CallHTest extends TestingContext {
   @Test
   public void hash_of_calls_with_equal_values_is_the_same() {
     var func = defFuncH();
-    ImmutableList<ObjectH> args = list(stringH()) ;
+    ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func, args).hash())
         .isEqualTo(callH(func, args).hash());
   }
@@ -101,7 +101,7 @@ public class CallHTest extends TestingContext {
     var type = defFuncHT(intHT(), list(stringHT()));
     var func1 = defFuncH(type, intH(1));
     var func2 = defFuncH(type, intH(2));
-    ImmutableList<ObjectH> args = list(stringH()) ;
+    ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func1, args).hash())
         .isNotEqualTo(callH(func2, args).hash());
   }
@@ -116,7 +116,7 @@ public class CallHTest extends TestingContext {
   @Test
   public void hash_code_of_calls_with_equal_values_is_the_same() {
     var func = defFuncH();
-    ImmutableList<ObjectH> args = list(stringH()) ;
+    ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func, args).hashCode())
         .isEqualTo(callH(func, args).hashCode());
   }
@@ -125,7 +125,7 @@ public class CallHTest extends TestingContext {
   public void hash_code_of_calls_with_different_func_is_not_the_same() {
     var func1 = defFuncH(intH(1));
     var func2 = defFuncH(intH(2));
-    ImmutableList<ObjectH> args = list(stringH()) ;
+    ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func1, args).hashCode())
         .isNotEqualTo(callH(func2, args).hashCode());
   }
@@ -140,16 +140,16 @@ public class CallHTest extends TestingContext {
   @Test
   public void call_can_be_read_back_by_hash() {
     var call = callH(defFuncH(), list(stringH()));
-    assertThat(objectHDbOther().get(call.hash()))
+    assertThat(objDbOther().get(call.hash()))
         .isEqualTo(call);
   }
 
   @Test
   public void call_read_back_by_hash_has_same_data() {
     var func = defFuncH();
-    ImmutableList<ObjectH> args = list(stringH());
+    ImmutableList<ObjH> args = list(stringH());
     var call = callH(func, args);
-    assertThat(((CallH) objectHDbOther().get(call.hash())).data())
+    assertThat(((CallH) objDbOther().get(call.hash())).data())
         .isEqualTo(new CallData(func, combineH(args)));
   }
 

@@ -66,14 +66,14 @@ public class StringHTest extends TestingContext {
   @Test
   public void str_can_be_read_back_by_hash() {
     StringH str = stringH(string);
-    assertThat(objectHDbOther().get(str.hash()))
+    assertThat(objDbOther().get(str.hash()))
         .isEqualTo(str);
   }
 
   @Test
   public void str_read_back_by_hash_has_same_to_j() {
     StringH str = stringH(string);
-    assertThat(((StringH) objectHDbOther().get(str.hash())).toJ())
+    assertThat(((StringH) objDbOther().get(str.hash())).toJ())
         .isEqualTo(string);
   }
 

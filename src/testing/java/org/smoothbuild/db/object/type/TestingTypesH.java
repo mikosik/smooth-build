@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 
 public class TestingTypesH {
   private static final TestingContext CONTEXT = new TestingContext();
-  public static final TypeHDb TYPEH_DB = CONTEXT.typeHDb();
+  public static final TypeDb TYPEH_DB = CONTEXT.typeDb();
 
   public static final TypeH ANY = TYPEH_DB.any();
   public static final TypeH BLOB = TYPEH_DB.blob();
@@ -105,7 +105,7 @@ public class TestingTypesH {
       );
 
   private static final ImmutableList<String> TYPEH_DB_ACTUAL_METHOD_NAMES =
-      stream(TypeHDb.class.getMethods())
+      stream(TypeDb.class.getMethods())
           .map(Method::getName)
           .sorted()
           .collect(toImmutableList());
@@ -113,7 +113,7 @@ public class TestingTypesH {
   public static final ImmutableList<SpecH> ALL_TYPES_TO_TEST = createAllTypes();
 
   private static ImmutableList<SpecH> createAllTypes() {
-    assertTypeHDbIsNotChanged();
+    assertTypeDbIsNotChanged();
     var baseTypes = list(
         BLOB,
         BOOL,
@@ -150,7 +150,7 @@ public class TestingTypesH {
     return concat(valueTypes, exprTypes);
   }
 
-  public static void assertTypeHDbIsNotChanged() {
+  public static void assertTypeDbIsNotChanged() {
     assertWithMessage(
         "TypeHDb API changed (method was changed). Update all tests that call this method.")
         .that(TYPEH_DB_ACTUAL_METHOD_NAMES)

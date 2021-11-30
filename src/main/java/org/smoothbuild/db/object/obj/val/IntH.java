@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import java.math.BigInteger;
 
-import org.smoothbuild.db.object.obj.ObjectHDb;
+import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ValueH;
 
@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.obj.base.ValueH;
  * This class is immutable.
  */
 public class IntH extends ValueH {
-  public IntH(MerkleRoot merkleRoot, ObjectHDb objectHDb) {
-    super(merkleRoot, objectHDb);
+  public IntH(MerkleRoot merkleRoot, ObjDb objDb) {
+    super(merkleRoot, objDb);
   }
 
   public BigInteger toJ() {

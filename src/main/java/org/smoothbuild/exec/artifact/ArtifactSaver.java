@@ -14,7 +14,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.ObjectH;
+import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.base.ValueH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.TupleH;
@@ -38,7 +38,7 @@ public class ArtifactSaver {
     this.fileSystem = fileSystem;
   }
 
-  public Path save(RefS ref, ObjectH obj) throws IOException, DuplicatedPathsException {
+  public Path save(RefS ref, ObjH obj) throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(ref.name());
     if (ref.type() instanceof ArrayType arrayType) {
       return saveArray(arrayType, artifactPath, (ArrayH) obj);
@@ -111,8 +111,8 @@ public class ArtifactSaver {
             + delimiter + list);
   }
 
-  private Path saveBaseObject(Path artifactPath, ObjectH object) throws IOException {
-    Path targetPath = targetPath(object);
+  private Path saveBaseObject(Path artifactPath, ObjH obj) throws IOException {
+    Path targetPath = targetPath(obj);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;
