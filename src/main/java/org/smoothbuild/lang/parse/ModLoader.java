@@ -108,7 +108,7 @@ public class ModLoader {
     var resultType = struct.type().get();
     var name = struct.ctor().name();
     var paramTypes = map(struct.fields(), f -> f.type().get());
-    var type = typeFactory.abstFunc(resultType, paramTypes);
+    var type = typeFactory.func(resultType, paramTypes);
     var params = struct.fields().map(f -> f.toItem(path));
     return new CtorS(type, path, name, params, struct.loc());
   }

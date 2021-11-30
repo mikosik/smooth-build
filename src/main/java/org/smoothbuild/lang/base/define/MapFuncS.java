@@ -20,32 +20,30 @@ public final class MapFuncS extends FuncS {
     this(modPath, factory.var("E"), factory.var("R"), factory);
   }
 
-  public MapFuncS(
-      ModPath modPath, TypeS inputElemType, TypeS resultElemType, TypeFactoryS factory) {
-    this(factory.array(resultElemType),
+  public MapFuncS(ModPath modPath, TypeS inputElemType, TypeS resElemType, TypeFactoryS factory) {
+    this(factory.array(resElemType),
         factory.array(inputElemType),
-        factory.abstFunc(resultElemType, list(inputElemType)), modPath,
+        factory.func(resElemType, list(inputElemType)), modPath,
         factory);
   }
 
-  private MapFuncS(ArrayTypeS resultType, ArrayTypeS inputArrayType,
+  private MapFuncS(ArrayTypeS resType, ArrayTypeS inputArrayType,
       FuncTypeS mappingFuncType, ModPath modPath, TypeFactoryS factory) {
-    this(resultType, createParams(modPath, inputArrayType, mappingFuncType), modPath,
+    this(resType, createParams(modPath, inputArrayType, mappingFuncType), modPath,
         factory);
   }
 
-  private MapFuncS(ArrayTypeS resultType, NList<ItemS> params, ModPath modPath,
-      TypeFactoryS factory) {
+  private MapFuncS(ArrayTypeS resType, NList<ItemS> params, ModPath modPath, TypeFactoryS factory) {
     super(
-        factory.abstFunc(resultType, map(params, DefinedS::type)), modPath,
+        factory.func(resType, map(params, DefinedS::type)), modPath,
         MAP_FUNCTION_NAME,
         params,
         internal()
     );
   }
 
-  private static NList<ItemS> createParams(ModPath modPath,
-      ArrayTypeS inputArrayType, FuncTypeS mappingFuncType) {
+  private static NList<ItemS> createParams(
+      ModPath modPath, ArrayTypeS inputArrayType, FuncTypeS mappingFuncType) {
     return nList(
         new ItemS(inputArrayType, modPath, "array", Optional.empty(), internal()),
         new ItemS(mappingFuncType, modPath, "func", Optional.empty(), internal()));

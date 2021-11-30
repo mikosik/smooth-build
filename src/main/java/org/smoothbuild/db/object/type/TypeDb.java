@@ -113,7 +113,7 @@ public class TypeDb implements TypeFactoryH {
       VarH r = cache(var("B"));
       ArrayTypeH ar = cache(array(r));
       ArrayTypeH aa = cache(array(a));
-      FuncTypeH f = cache(abstFunc(r, list(a)));
+      FuncTypeH f = cache(func(r, list(a)));
       this.mapFunc = abstFunc(MAP_KIND, ar, list(aa, f));
     } catch (HashedDbExc e) {
       throw new ObjDbExc(e);
@@ -168,7 +168,7 @@ public class TypeDb implements TypeFactoryH {
   }
 
   @Override
-  public AbstFuncTypeH abstFunc(TypeH res, ImmutableList<TypeH> params) {
+  public AbstFuncTypeH func(TypeH res, ImmutableList<TypeH> params) {
     return abstFunc(ABSTRACT_KIND, res, params);
   }
 

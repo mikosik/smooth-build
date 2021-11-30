@@ -302,7 +302,7 @@ public class TestingContext {
   }
 
   public FuncTypeH abstFuncHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeDb().abstFunc(result, params);
+    return typeDb().func(result, params);
   }
 
   public IfFuncTypeH ifFuncHT() {
@@ -596,7 +596,7 @@ public class TestingContext {
   }
 
   public FuncTypeS funcST(TypeS resultType, ImmutableList<TypeS> types) {
-    return typeFactoryS().abstFunc(resultType, types);
+    return typeFactoryS().func(resultType, types);
   }
 
   public IntTypeS intST() {

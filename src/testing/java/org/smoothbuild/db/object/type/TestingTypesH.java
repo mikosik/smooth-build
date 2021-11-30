@@ -27,7 +27,7 @@ public class TestingTypesH {
   public static final TypeH BOOL = TYPEH_DB.bool();
   public static final TypeH INT = TYPEH_DB.int_();
   public static final TypeH IF_FUNC = TYPEH_DB.ifFunc();
-  public static final TypeH ABST_FUNC = TYPEH_DB.abstFunc(BLOB, list(BOOL));
+  public static final TypeH ABST_FUNC = TYPEH_DB.func(BLOB, list(BOOL));
   public static final TypeH MAP_FUNC = TYPEH_DB.mapFunc();
   public static final TypeH NOTHING = TYPEH_DB.nothing();
   public static final TypeH STRING = TYPEH_DB.string();
@@ -98,7 +98,7 @@ public class TestingTypesH {
 
   private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
       "any", "array", "array", "blob", "bool", "call", "combine", "defFunc",
-      "equals", "abstFunc", "abstFunc", "get", "getClass", "hashCode", "ifFunc", "int_",
+      "equals", "func", "func", "get", "getClass", "hashCode", "ifFunc", "int_",
       "lower", "mapFunc", "natFunc", "nothing", "notify", "notifyAll", "oneSideBound",
       "oneSideBound", "order", "ref", "select", "string", "toString", "tuple", "unbounded", "upper",
       "var", "wait", "wait", "wait"
@@ -117,10 +117,10 @@ public class TestingTypesH {
     var baseTypes = list(
         BLOB,
         BOOL,
-        TYPEH_DB.abstFunc(BLOB, list()),
-        TYPEH_DB.abstFunc(BLOB, list(BLOB)),
-        TYPEH_DB.abstFunc(BLOB, list(BLOB, BLOB)),
-        TYPEH_DB.abstFunc(STRING, list()), IF_FUNC,
+        TYPEH_DB.func(BLOB, list()),
+        TYPEH_DB.func(BLOB, list(BLOB)),
+        TYPEH_DB.func(BLOB, list(BLOB, BLOB)),
+        TYPEH_DB.func(STRING, list()), IF_FUNC,
         INT, MAP_FUNC,
         NOTHING,
         STRING,

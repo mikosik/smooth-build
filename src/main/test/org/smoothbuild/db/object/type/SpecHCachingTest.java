@@ -69,6 +69,6 @@ public class SpecHCachingTest extends TestingContext {
   }
 
   private static FuncTypeH funcType(TypeDb typeDb) {
-    return typeDb.abstFunc(typeDb.string(), list(typeDb.bool(), typeDb.blob()));
+    return typeDb.func(typeDb.string(), list(typeDb.bool(), typeDb.blob()));
   }
 }

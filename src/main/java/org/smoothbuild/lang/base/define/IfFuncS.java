@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.base.define.Loc.internal;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
+import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NList;
@@ -16,20 +17,22 @@ public final class IfFuncS extends FuncS {
     this(factory.var("A"), factory.bool(), modPath, factory);
   }
 
-  private IfFuncS(
-      TypeS resultType, TypeS boolType, ModPath modPath, TypeFactoryS factory) {
-    this(resultType, createParams(resultType, boolType, modPath), modPath, factory);
+  private IfFuncS(TypeS resType, TypeS boolType, ModPath modPath, TypeFactoryS factory) {
+    this(resType, createParams(resType, boolType, modPath), modPath, factory);
   }
 
-  private IfFuncS(TypeS resultType, NList<ItemS> params, ModPath modPath,
-      TypeFactoryS factory) {
-    super(factory.abstFunc(resultType, map(params, DefinedS::type)), modPath, IF_FUNCTION_NAME, params, internal());
+  private IfFuncS(TypeS resType, NList<ItemS> params, ModPath modPath, TypeFactoryS factory) {
+    super(funcType(resType, params, factory), modPath, IF_FUNCTION_NAME, params, internal());
   }
 
-  private static NList<ItemS> createParams(TypeS resultType, TypeS boolType, ModPath modPath) {
+  private static FuncTypeS funcType(TypeS resType, NList<ItemS> params, TypeFactoryS factory) {
+    return factory.func(resType, map(params, DefinedS::type));
+  }
+
+  private static NList<ItemS> createParams(TypeS resType, TypeS boolType, ModPath modPath) {
     return nList(
         new ItemS(boolType, modPath, "condition", empty(), internal()),
-        new ItemS(resultType, modPath, "then", empty(), internal()),
-        new ItemS(resultType, modPath, "else", empty(), internal()));
+        new ItemS(resType, modPath, "then", empty(), internal()),
+        new ItemS(resType, modPath, "else", empty(), internal()));
   }
 }
