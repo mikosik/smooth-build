@@ -2,7 +2,7 @@ package org.smoothbuild.testing;
 
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.lang.base.define.Item.toTypes;
+import static org.smoothbuild.lang.base.define.ItemS.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
@@ -70,7 +70,7 @@ import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
-import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.NatFuncS;
@@ -584,7 +584,7 @@ public class TestingContext {
     return typeFactoryS().bool();
   }
 
-  public FuncTypeS funcST(TypeS resultType, Item... params) {
+  public FuncTypeS funcST(TypeS resultType, ItemS... params) {
     return funcST(resultType, toTypes(list(params)));
   }
 
@@ -674,31 +674,31 @@ public class TestingContext {
     return new CallS(type, expr, list(args), loc(line));
   }
 
-  public CtorS ctorS(TypeS resultType, String name, Item... params) {
+  public CtorS ctorS(TypeS resultType, String name, ItemS... params) {
     return ctorS(1, resultType, name, params);
   }
 
-  public CtorS ctorS(int line, TypeS resultType, String name, Item... params) {
+  public CtorS ctorS(int line, TypeS resultType, String name, ItemS... params) {
     return new CtorS(funcST(resultType, params), modPath(), name, nList(params), loc(line));
   }
 
-  public NatFuncS funcS(TypeS type, String name, Item... params) {
+  public NatFuncS funcS(TypeS type, String name, ItemS... params) {
     return funcS(1, type, name, annS(1, stringS(1, "Impl.met")), params);
   }
 
   public NatFuncS funcS(int line, TypeS type, String name, AnnS annS,
-      Item... params) {
+      ItemS... params) {
     return new NatFuncS(funcST(type, params), modPath(), name,
         nList(params), annS, loc(line)
     );
   }
 
-  public DefFuncS funcS(TypeS type, String name, ExprS body, Item... params) {
+  public DefFuncS funcS(TypeS type, String name, ExprS body, ItemS... params) {
     return funcS(1, type, name, body, params);
   }
 
   public DefFuncS funcS(
-      int line, TypeS type, String name, ExprS body, Item... params) {
+      int line, TypeS type, String name, ExprS body, ItemS... params) {
     return new DefFuncS(funcST(type, params), modPath(), name,
         nList(params), body, loc(line)
     );
@@ -750,35 +750,35 @@ public class TestingContext {
     return new AnnS(implementedBy, pure, loc(line));
   }
 
-  public Item field(TypeS type, String name) {
-    return new Item(type, modPath(), name, empty(), loc(1));
+  public ItemS field(TypeS type, String name) {
+    return new ItemS(type, modPath(), name, empty(), loc(1));
   }
 
-  public Item param(TypeS type, String name) {
+  public ItemS param(TypeS type, String name) {
     return param(1, type, name);
   }
 
-  public Item param(int line, TypeS type, String name) {
+  public ItemS param(int line, TypeS type, String name) {
     return param(line, type, name, empty());
   }
 
-  public Item param(int line, TypeS type, String name, ExprS defaultArg) {
+  public ItemS param(int line, TypeS type, String name, ExprS defaultArg) {
     return param(line, type, name, Optional.of(defaultArg));
   }
 
-  private Item param(int line, TypeS type, String name, Optional<ExprS> defaultArg) {
-    return new Item(type, modPath(), name, defaultArg, loc(line));
+  private ItemS param(int line, TypeS type, String name, Optional<ExprS> defaultArg) {
+    return new ItemS(type, modPath(), name, defaultArg, loc(line));
   }
 
   public DefValS defValS(int line, TypeS type, String name, ExprS expr) {
     return new DefValS(type, modPath(), name, expr, loc(line));
   }
 
-  public DefFuncS defFuncS(int line, FuncTypeS type, String name, NList<Item> params, ExprS expr) {
+  public DefFuncS defFuncS(int line, FuncTypeS type, String name, NList<ItemS> params, ExprS expr) {
     return new DefFuncS(type, modPath(), name, params, expr, loc(line));
   }
 
-  public NatFuncS natFuncS(int line, FuncTypeS type, String name, NList<Item> params,
+  public NatFuncS natFuncS(int line, FuncTypeS type, String name, NList<ItemS> params,
       AnnS ann) {
     return new NatFuncS(type, modPath(), name, params, ann, loc(line));
   }

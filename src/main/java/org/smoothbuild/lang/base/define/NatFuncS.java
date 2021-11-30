@@ -13,7 +13,7 @@ public final class NatFuncS extends FuncS {
   private final AnnS annS;
 
   public NatFuncS(FuncTypeS type, ModPath modPath, String name,
-      NList<Item> params, AnnS annS, Loc loc) {
+      NList<ItemS> params, AnnS annS, Loc loc) {
     super(type, modPath, name, params, loc);
     this.annS = annS;
   }

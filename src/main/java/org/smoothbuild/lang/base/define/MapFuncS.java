@@ -34,7 +34,7 @@ public final class MapFuncS extends FuncS {
         factory);
   }
 
-  private MapFuncS(ArrayTypeS resultType, NList<Item> params, ModPath modPath,
+  private MapFuncS(ArrayTypeS resultType, NList<ItemS> params, ModPath modPath,
       TypeFactoryS factory) {
     super(
         factory.abstFunc(resultType, map(params, Defined::type)), modPath,
@@ -44,10 +44,10 @@ public final class MapFuncS extends FuncS {
     );
   }
 
-  private static NList<Item> createParams(ModPath modPath,
+  private static NList<ItemS> createParams(ModPath modPath,
       ArrayTypeS inputArrayType, FuncTypeS mappingFuncType) {
     return nList(
-        new Item(inputArrayType, modPath, "array", Optional.empty(), internal()),
-        new Item(mappingFuncType, modPath, "func", Optional.empty(), internal()));
+        new ItemS(inputArrayType, modPath, "array", Optional.empty(), internal()),
+        new ItemS(mappingFuncType, modPath, "func", Optional.empty(), internal()));
   }
 }

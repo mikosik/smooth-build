@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
  * This class is immutable.
  */
 public final class CtorS extends FuncS {
-  public CtorS(FuncTypeS type, ModPath modPath, String name, NList<Item> params, Loc loc) {
+  public CtorS(FuncTypeS type, ModPath modPath, String name, NList<ItemS> params, Loc loc) {
     super(type, modPath, name, params, loc);
     checkArgument(type.res() instanceof StructTypeS);
   }

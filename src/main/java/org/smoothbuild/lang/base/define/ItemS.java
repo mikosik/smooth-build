@@ -16,11 +16,11 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public class Item extends EvalS {
+public class ItemS extends EvalS {
   private final Optional<ExprS> defaultVal;
   private final ItemSigS sig;
 
-  public Item(TypeS type, ModPath modPath, String name, Optional<ExprS> defaultVal, Loc loc) {
+  public ItemS(TypeS type, ModPath modPath, String name, Optional<ExprS> defaultVal, Loc loc) {
     super(type, modPath, name, loc);
     this.defaultVal = defaultVal;
     this.sig = new ItemSigS(type(), name(), defaultVal.map(ExprS::type));
@@ -38,8 +38,8 @@ public class Item extends EvalS {
     return defaultVal.map(v -> " = " + v).orElse("");
   }
 
-  public static ImmutableList<TypeS> toTypes(List<Item> items) {
-    return map(items, Item::type);
+  public static ImmutableList<TypeS> toTypes(List<ItemS> items) {
+    return map(items, ItemS::type);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class Item extends EvalS {
     if (this == o) {
       return true;
     }
-    return (o instanceof Item that)
+    return (o instanceof ItemS that)
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.modPath(), that.modPath())
         && Objects.equals(this.name(), that.name())

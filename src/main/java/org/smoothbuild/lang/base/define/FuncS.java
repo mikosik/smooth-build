@@ -13,9 +13,9 @@ import org.smoothbuild.util.collect.NList;
 public sealed abstract class FuncS extends TopEvalS
     permits CtorS, DefFuncS, IfFuncS, MapFuncS, NatFuncS {
   public static final String PARENTHESES = "()";
-  private final NList<Item> params;
+  private final NList<ItemS> params;
 
-  public FuncS(FuncTypeS type, ModPath modPath, String name, NList<Item> params,
+  public FuncS(FuncTypeS type, ModPath modPath, String name, NList<ItemS> params,
       Loc loc) {
     super(type, modPath, name, loc);
     this.params = requireNonNull(params);
@@ -35,7 +35,7 @@ public sealed abstract class FuncS extends TopEvalS
     return type().res();
   }
 
-  public NList<Item> params() {
+  public NList<ItemS> params() {
     return params;
   }
 

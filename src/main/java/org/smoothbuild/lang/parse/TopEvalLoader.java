@@ -12,7 +12,7 @@ import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.FuncS;
-import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
@@ -96,25 +96,25 @@ public class TopEvalLoader {
     return new AnnS(path, annN.isPure(), annN.loc());
   }
 
-  private NList<Item> loadParams(ModPath path, RealFuncN realFuncN) {
+  private NList<ItemS> loadParams(ModPath path, RealFuncN realFuncN) {
     ExpressionLoader paramLoader = new ExpressionLoader(path, nList());
     return realFuncN.params().map(paramLoader::createParam);
   }
 
   private class ExpressionLoader {
     private final ModPath modPath;
-    private final NList<Item> funcParams;
+    private final NList<ItemS> funcParams;
 
-    public ExpressionLoader(ModPath modPath, NList<Item> funcParams) {
+    public ExpressionLoader(ModPath modPath, NList<ItemS> funcParams) {
       this.modPath = modPath;
       this.funcParams = funcParams;
     }
 
-    public Item createParam(ItemN param) {
+    public ItemS createParam(ItemN param) {
       var type = param.typeNode().get().type().get();
       var name = param.name();
       var defaultArg = param.body().map(this::createExpression);
-      return new Item(type, modPath, name, defaultArg, param.loc());
+      return new ItemS(type, modPath, name, defaultArg, param.loc());
     }
 
     private ExprS createExpression(ExprN expr) {

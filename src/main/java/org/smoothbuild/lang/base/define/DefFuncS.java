@@ -13,7 +13,7 @@ public final class DefFuncS extends FuncS {
   private final ExprS body;
 
   public DefFuncS(FuncTypeS type, ModPath modPath, String name,
-      NList<Item> params, ExprS body, Loc loc) {
+      NList<ItemS> params, ExprS body, Loc loc) {
     super(type, modPath, name, params, loc);
     this.body = body;
   }

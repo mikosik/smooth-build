@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.ModPath;
@@ -33,8 +33,8 @@ public final class ItemN extends EvalN implements EvalLike {
     return type();
   }
 
-  public Item toItem(ModPath path) {
+  public ItemS toItem(ModPath path) {
     checkState(body().isEmpty());
-    return new Item(type().get(), path, name(), Optional.empty(), loc());
+    return new ItemS(type().get(), path, name(), Optional.empty(), loc());
   }
 }

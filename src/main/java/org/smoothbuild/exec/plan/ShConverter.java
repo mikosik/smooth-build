@@ -37,7 +37,7 @@ import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.IfFuncS;
-import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
@@ -64,7 +64,7 @@ public class ShConverter {
   private final DefinitionsS definitions;
   private final TypeShConverter typeShConverter;
   private final FileLoader fileLoader;
-  private final Deque<NList<Item>> callStack;
+  private final Deque<NList<ItemS>> callStack;
   private final Map<String, FuncH> funcCache;
   private final Map<String, ObjectH> valCache;
   private final Map<ObjectH, Nal> nals;
@@ -118,7 +118,7 @@ public class ShConverter {
   }
 
   private ImmutableList<ObjectH> ctorParamRefs(CtorS ctorS) {
-    NList<Item> params = ctorS.params();
+    NList<ItemS> params = ctorS.params();
     ImmutableList<ObjectH> paramRefsH =
         range(0, params.size())
             .mapToObj(i -> newParamRef(params, i))
@@ -127,7 +127,7 @@ public class ShConverter {
     return paramRefsH;
   }
 
-  private ParamRefH newParamRef(NList<Item> items, int i) {
+  private ParamRefH newParamRef(NList<ItemS> items, int i) {
     var index = BigInteger.valueOf(i);
     var item = items.get(i);
     var typeS = item.type();
@@ -146,7 +146,7 @@ public class ShConverter {
     return objFactory.natFunc(type, jar, classBinaryName, isPure);
   }
 
-  private ImmutableList<TypeH> convertParams(NList<Item> items) {
+  private ImmutableList<TypeH> convertParams(NList<ItemS> items) {
     return map(items, item -> convertType(item.type()));
   }
 

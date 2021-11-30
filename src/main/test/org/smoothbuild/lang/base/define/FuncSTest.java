@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.define.Item.toTypes;
+import static org.smoothbuild.lang.base.define.ItemS.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
 import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
@@ -39,19 +39,19 @@ public class FuncSTest extends TestingContext {
         .isFalse();
   }
 
-  private Item paramWithDefault(String name) {
+  private ItemS paramWithDefault(String name) {
     return param(name, Optional.of(stringS()));
   }
 
-  private Item paramWithoutDefault(String name) {
+  private ItemS paramWithoutDefault(String name) {
     return param(name, Optional.empty());
   }
 
-  private Item param(String name, Optional<ExprS> defaultArg) {
-    return new Item(STRING, modPath(), name, defaultArg, loc());
+  private ItemS param(String name, Optional<ExprS> defaultArg) {
+    return new ItemS(STRING, modPath(), name, defaultArg, loc());
   }
 
-  private FuncS myFunc(TypeS resultType, ImmutableList<Item> params) {
+  private FuncS myFunc(TypeS resultType, ImmutableList<ItemS> params) {
     return new DefFuncS(funcST(resultType, toTypes(params)),
         modPath(), "name", nList(params), stringS(), loc(1)
     );

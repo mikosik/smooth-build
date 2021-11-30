@@ -21,15 +21,15 @@ public final class IfFuncS extends FuncS {
     this(resultType, createParams(resultType, boolType, modPath), modPath, factory);
   }
 
-  private IfFuncS(TypeS resultType, NList<Item> params, ModPath modPath,
+  private IfFuncS(TypeS resultType, NList<ItemS> params, ModPath modPath,
       TypeFactoryS factory) {
     super(factory.abstFunc(resultType, map(params, Defined::type)), modPath, IF_FUNCTION_NAME, params, internal());
   }
 
-  private static NList<Item> createParams(TypeS resultType, TypeS boolType, ModPath modPath) {
+  private static NList<ItemS> createParams(TypeS resultType, TypeS boolType, ModPath modPath) {
     return nList(
-        new Item(boolType, modPath, "condition", empty(), internal()),
-        new Item(resultType, modPath, "then", empty(), internal()),
-        new Item(resultType, modPath, "else", empty(), internal()));
+        new ItemS(boolType, modPath, "condition", empty(), internal()),
+        new ItemS(resultType, modPath, "then", empty(), internal()),
+        new ItemS(resultType, modPath, "else", empty(), internal()));
   }
 }
