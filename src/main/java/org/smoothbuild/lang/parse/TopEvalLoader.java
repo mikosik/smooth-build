@@ -41,7 +41,6 @@ import org.smoothbuild.lang.parse.ast.ExprN;
 import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
-import org.smoothbuild.lang.parse.ast.RealFuncN;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.SelectN;
 import org.smoothbuild.lang.parse.ast.StringN;
@@ -58,8 +57,8 @@ public class TopEvalLoader {
   }
 
   public TopEvalS loadEvaluables(ModPath path, EvalN evalN) {
-    if (evalN instanceof RealFuncN realFuncN) {
-      return loadFunc(path, realFuncN);
+    if (evalN instanceof FuncN funcN) {
+      return loadFunc(path, funcN);
     } else {
       return loadVal(path, evalN);
     }
@@ -74,20 +73,20 @@ public class TopEvalLoader {
         type, path, name, loader.createExpression(valN.body().get()), loc);
   }
 
-  private FuncS loadFunc(ModPath path, RealFuncN realFuncN) {
-    var params = loadParams(path, realFuncN);
-    var resultType = realFuncN.resType().get();
-    var name = realFuncN.name();
-    var loc = realFuncN.loc();
+  private FuncS loadFunc(ModPath path, FuncN funcN) {
+    var params = loadParams(path, funcN);
+    var resultType = funcN.resType().get();
+    var name = funcN.name();
+    var loc = funcN.loc();
     var type = factory.func(resultType, map(params, DefinedS::type));
-    if (realFuncN.ann().isPresent()) {
+    if (funcN.ann().isPresent()) {
       return new NatFuncS(type,
-          path, name, params, loadAnn(realFuncN.ann().get()), loc
+          path, name, params, loadAnn(funcN.ann().get()), loc
       );
     } else {
       var expressionLoader = new ExpressionLoader(path, params);
       return new DefFuncS(type, path,
-          name, params, expressionLoader.createExpression(realFuncN.body().get()), loc);
+          name, params, expressionLoader.createExpression(funcN.body().get()), loc);
     }
   }
 
@@ -96,9 +95,9 @@ public class TopEvalLoader {
     return new AnnS(path, annN.isPure(), annN.loc());
   }
 
-  private NList<ItemS> loadParams(ModPath path, RealFuncN realFuncN) {
+  private NList<ItemS> loadParams(ModPath path, FuncN funcN) {
     ExpressionLoader paramLoader = new ExpressionLoader(path, nList());
-    return realFuncN.params().map(paramLoader::createParam);
+    return funcN.params().map(paramLoader::createParam);
   }
 
   private class ExpressionLoader {

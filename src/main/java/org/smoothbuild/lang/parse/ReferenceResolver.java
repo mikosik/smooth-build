@@ -10,7 +10,7 @@ import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
-import org.smoothbuild.lang.parse.ast.RealFuncN;
+import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.StructN;
 import org.smoothbuild.util.Scope;
@@ -34,10 +34,10 @@ public class ReferenceResolver extends AstVisitor {
   }
 
   @Override
-  public void visitRealFunc(RealFuncN realFuncN) {
-    visitParams(realFuncN.params());
-    realFuncN.body().ifPresent(expr -> {
-      var referenceResolver = new ReferenceResolver(new Scope<>(scope, realFuncN.params()), logger);
+  public void visitFunc(FuncN funcN) {
+    visitParams(funcN.params());
+    funcN.body().ifPresent(expr -> {
+      var referenceResolver = new ReferenceResolver(new Scope<>(scope, funcN.params()), logger);
       referenceResolver.visitExpr(expr);
     });
   }

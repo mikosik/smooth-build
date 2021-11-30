@@ -87,7 +87,7 @@ public class AstCreator {
           referencables.add(new ValN(type, name, expr, annotation, loc));
         } else {
           List<ItemN> params = createParams(evaluable.paramList());
-          referencables.add(new RealFuncN(type, name, params, expr, annotation, loc));
+          referencables.add(new FuncN(type, name, params, expr, annotation, loc));
         }
         return null;
       }

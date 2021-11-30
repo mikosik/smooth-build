@@ -22,7 +22,7 @@ public class RealFuncNTest {
     tester.testEquals();
   }
 
-  private static RealFuncN node(String name, int line) {
-    return new RealFuncN(null, name, list(), null, null, loc(line));
+  private static FuncN node(String name, int line) {
+    return new FuncN(null, name, list(), null, null, loc(line));
   }
 }

@@ -9,19 +9,23 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.parse.ast.StructN.CtorN;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 
 import com.google.common.collect.ImmutableList;
 
-public sealed class FuncN extends EvalN permits RealFuncN, CtorN {
+public final class FuncN extends EvalN {
   private final NList<ItemN> params;
 
-  public FuncN(Optional<TypeN> typeNode, String name, Optional<ExprN> body,
-      List<ItemN> params, Optional<AnnN> annotation, Loc loc) {
-    super(typeNode, name, body, annotation, loc);
-    this.params = nListWithDuplicates(ImmutableList.copyOf(params));
+  public FuncN(Optional<TypeN> type, String name, List<ItemN> params, Optional<ExprN> body,
+      Optional<AnnN> ann, Loc loc) {
+    this(type, name, nListWithDuplicates(ImmutableList.copyOf(params)), body, ann, loc);
+  }
+
+  public FuncN(Optional<TypeN> type, String name, NList<ItemN> params, Optional<ExprN> body,
+      Optional<AnnN> ann, Loc loc) {
+    super(type, name, body, ann, loc);
+    this.params = params;
   }
 
   public NList<ItemN> params() {

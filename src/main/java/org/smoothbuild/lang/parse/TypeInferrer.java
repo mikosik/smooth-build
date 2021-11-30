@@ -41,7 +41,6 @@ import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.FuncTypeN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
-import org.smoothbuild.lang.parse.ast.RealFuncN;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.SelectN;
 import org.smoothbuild.lang.parse.ast.StringN;
@@ -85,10 +84,10 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitRealFunc(RealFuncN realFuncN) {
-        visitParams(realFuncN.params());
-        realFuncN.body().ifPresent(this::visitExpr);
-        realFuncN.setType(optionalFuncType(evalTypeOfTopEvals(realFuncN), realFuncN.optParamTypes()));
+      public void visitFunc(FuncN funcN) {
+        visitParams(funcN.params());
+        funcN.body().ifPresent(this::visitExpr);
+        funcN.setType(optionalFuncType(evalTypeOfTopEvals(funcN), funcN.optParamTypes()));
       }
 
       @Override

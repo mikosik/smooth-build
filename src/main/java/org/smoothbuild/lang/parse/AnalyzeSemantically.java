@@ -24,11 +24,11 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobN;
 import org.smoothbuild.lang.parse.ast.EvalN;
+import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.FuncTypeN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.NamedN;
-import org.smoothbuild.lang.parse.ast.RealFuncN;
 import org.smoothbuild.lang.parse.ast.StringN;
 import org.smoothbuild.lang.parse.ast.StructN;
 import org.smoothbuild.lang.parse.ast.TypeN;
@@ -101,9 +101,9 @@ public class AnalyzeSemantically {
   private static void detectUndefinedTypes(Logger logger, DefsS imported, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitRealFunc(RealFuncN realFuncN) {
-        super.visitRealFunc(realFuncN);
-        realFuncN.typeNode().ifPresent(this::assertTypeIsDefined);
+      public void visitFunc(FuncN funcN) {
+        super.visitFunc(funcN);
+        funcN.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
@@ -232,13 +232,13 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitRealFunc(RealFuncN realFuncN) {
-        super.visitRealFunc(realFuncN);
-        if (realFuncN.typeNode().isPresent()) {
+      public void visitFunc(FuncN funcN) {
+        super.visitFunc(funcN);
+        if (funcN.typeNode().isPresent()) {
           var counters = new CountersMap<String>();
-          countFuncVars(counters, realFuncN.typeNode().get(),
-              map(realFuncN.params(), itemNode -> itemNode.typeNode().get()));
-          logErrorIfNeeded(realFuncN, counters.keysWithCounter(1));
+          countFuncVars(counters, funcN.typeNode().get(),
+              map(funcN.params(), itemNode -> itemNode.typeNode().get()));
+          logErrorIfNeeded(funcN, counters.keysWithCounter(1));
         }
       }
 
@@ -276,13 +276,13 @@ public class AnalyzeSemantically {
   private static void detectIllegalNatives(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitRealFunc(RealFuncN realFuncN) {
-        super.visitRealFunc(realFuncN);
-        if (realFuncN.ann().isPresent() && realFuncN.body().isPresent()) {
-          logger.log(parseError(realFuncN, "Native function cannot have body."));
+      public void visitFunc(FuncN funcN) {
+        super.visitFunc(funcN);
+        if (funcN.ann().isPresent() && funcN.body().isPresent()) {
+          logger.log(parseError(funcN, "Native function cannot have body."));
         }
-        if (realFuncN.ann().isEmpty() && realFuncN.body().isEmpty()) {
-          logger.log(parseError(realFuncN, "Non native function cannot have empty body."));
+        if (funcN.ann().isEmpty() && funcN.body().isEmpty()) {
+          logger.log(parseError(funcN, "Non native function cannot have empty body."));
         }
       }
 
