@@ -5,8 +5,7 @@ import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
 
 import com.google.common.collect.ImmutableList;
 
-public record OrderS(ArrayTypeS type, ImmutableList<ExprS> elems, Loc loc)
-    implements ExprS {
+public record OrderS(ArrayTypeS type, ImmutableList<ExprS> elems, Loc loc) implements ExprS {
   @Override
   public String name() {
     return "[]";
