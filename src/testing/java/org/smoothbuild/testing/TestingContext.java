@@ -661,10 +661,6 @@ public class TestingContext {
 
   // Expressions
 
-  public OrderS orderS(int line, TypeS elemType, ExprS... expr) {
-    return new OrderS(arrayST(elemType), ImmutableList.copyOf(expr), loc(line));
-  }
-
   public BlobS blobS(int data) {
     return blobS(1, data);
   }
@@ -713,6 +709,10 @@ public class TestingContext {
 
   public IntS intS(int line, int value) {
     return new IntS(intST(), BigInteger.valueOf(value), loc(line));
+  }
+
+  public OrderS orderS(int line, TypeS elemType, ExprS... expr) {
+    return new OrderS(arrayST(elemType), ImmutableList.copyOf(expr), loc(line));
   }
 
   public ParamRefS paramRefS(TypeS type, String name) {
