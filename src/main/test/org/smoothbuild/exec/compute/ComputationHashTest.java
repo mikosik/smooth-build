@@ -12,7 +12,6 @@ import org.smoothbuild.db.object.type.TestingTypesH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
-import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
 import org.smoothbuild.exec.algorithm.OrderAlgorithm;
 import org.smoothbuild.exec.algorithm.SelectAlgorithm;
@@ -88,14 +87,6 @@ public class ComputationHashTest extends TestingContext {
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("f98da45979f7d77b4d0a9e1444454d3775b8c221"));
-  }
-
-  @Test
-  public void hash_of_computation_with_convert_from_nothing_algorithm_and_one_elem_input_is_stable() {
-    var algorithm = new ConvertAlgorithm(stringHT());
-    var input = input(list(stringH("abc")));
-    assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("a025bfcacf9dadbc72256e41fbc60f4f5355233b"));
   }
 
   @Test

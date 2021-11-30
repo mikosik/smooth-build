@@ -3,7 +3,6 @@ package org.smoothbuild.exec.algorithm;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.combineAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.constAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.invokeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.orderAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.selectAlgorithmHash;
@@ -25,7 +24,6 @@ public class AlgorithmHashesTest extends TestingContext {
 
     hashes.add(constAlgorithmHash(intH(0)));
     hashes.add(combineAlgorithmHash(combineedType));
-    hashes.add(convertAlgorithmHash(stringHT()));
     hashes.add(invokeAlgorithmHash(natFuncH(blobH(), stringH("class"))));
     hashes.add(orderAlgorithmHash());
     hashes.add(selectAlgorithmHash(intH(0)));
@@ -46,12 +44,6 @@ public class AlgorithmHashesTest extends TestingContext {
     var tuple2 = tupleHT(list(blobHT()));
     assertThat(combineAlgorithmHash(tuple1))
         .isNotEqualTo(combineAlgorithmHash(tuple2));
-  }
-
-  @Test
-  public void convert_algorithm_has_different_hash_for_different_types() {
-    assertThat(convertAlgorithmHash(stringHT()))
-        .isNotEqualTo(convertAlgorithmHash(blobHT()));
   }
 
   @Test

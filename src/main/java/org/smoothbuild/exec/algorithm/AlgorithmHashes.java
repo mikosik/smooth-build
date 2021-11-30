@@ -18,9 +18,7 @@ public class AlgorithmHashes {
     return hash(1, natFuncH.hash());
   }
 
-  public static Hash convertAlgorithmHash(SpecH destinationType) {
-    return hash(2, destinationType.hash());
-  }
+  // TODO UNUSED 2
 
   public static Hash combineAlgorithmHash(TupleTypeH type) {
     return hash(3, type.hash());
