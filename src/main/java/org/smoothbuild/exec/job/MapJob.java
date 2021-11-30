@@ -28,9 +28,9 @@ public class MapJob extends AbstractJob {
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeH typeS, Loc loc, List<Job> deps, IndexedScope<Job> scope,
+  public MapJob(TypeH type, Loc loc, List<Job> deps, IndexedScope<Job> scope,
       JobCreator jobCreator) {
-    super(typeS, deps, new NalImpl("building:" + MAP_TASK_NAME, loc));
+    super(type, deps, new NalImpl("building:" + MAP_TASK_NAME, loc));
     this.scope = scope;
     this.jobCreator = jobCreator;
   }
