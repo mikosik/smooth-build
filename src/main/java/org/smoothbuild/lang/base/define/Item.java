@@ -18,16 +18,16 @@ import com.google.common.collect.ImmutableList;
  */
 public class Item extends EvalS {
   private final Optional<ExprS> defaultVal;
-  private final ItemSignature signature;
+  private final ItemSigS sig;
 
   public Item(TypeS type, ModPath modPath, String name, Optional<ExprS> defaultVal, Loc loc) {
     super(type, modPath, name, loc);
     this.defaultVal = defaultVal;
-    this.signature = new ItemSignature(type(), name(), defaultVal.map(ExprS::type));
+    this.sig = new ItemSigS(type(), name(), defaultVal.map(ExprS::type));
   }
 
-  public ItemSignature signature() {
-    return signature;
+  public ItemSigS sig() {
+    return sig;
   }
 
   public Optional<ExprS> defaultVal() {

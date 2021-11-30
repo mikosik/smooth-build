@@ -15,7 +15,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -35,7 +35,7 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Maybe<TypeS> inferCallType(CallN call, TypeS resultType, NList<ItemSignature> params) {
+  public Maybe<TypeS> inferCallType(CallN call, TypeS resultType, NList<ItemSigS> params) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
     findIllegalTypeAssignmentErrors(call, assignedArgs, params, logBuffer);
@@ -45,7 +45,7 @@ public class CallTypeInferrer {
     List<Optional<TypeS>> assignedTypes = assignedTypes(params, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTypes)) {
       var boundedVars = typing.inferVarBoundsInCall(
-          map(params, ItemSignature::type),
+          map(params, ItemSigS::type),
           map(assignedTypes, Optional::get));
       var varProblems = findVarProblems(call, boundedVars);
       if (!varProblems.isEmpty()) {
@@ -59,7 +59,7 @@ public class CallTypeInferrer {
   }
 
   private void findIllegalTypeAssignmentErrors(CallN call,
-      List<Optional<ArgNode>> assignedList, List<ItemSignature> params, Logger logger) {
+      List<Optional<ArgNode>> assignedList, List<ItemSigS> params, Logger logger) {
     range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isPresent())
         .filter(i -> !isAssignable(params.get(i), assignedList.get(i).get()))
@@ -67,11 +67,11 @@ public class CallTypeInferrer {
         .forEach(logger::log);
   }
 
-  private boolean isAssignable(ItemSignature param, ArgNode arg) {
+  private boolean isAssignable(ItemSigS param, ArgNode arg) {
     return typing.isParamAssignable(param.type(), arg.type().get());
   }
 
-  private static Log illegalAssignmentError(CallN call, ItemSignature param, ArgNode arg) {
+  private static Log illegalAssignmentError(CallN call, ItemSigS param, ArgNode arg) {
     return parseError(arg.loc(), inCallToPrefix(call)
         + "Cannot assign argument of type " + arg.type().get().q() + " to parameter "
         + param.q() + " of type " + param.type().q() + ".");
@@ -81,8 +81,7 @@ public class CallTypeInferrer {
     return "In call to function with type " + call.func().type().get().q() + ": ";
   }
 
-  private List<Optional<TypeS>> assignedTypes(
-      List<ItemSignature> params, List<Optional<ArgNode>> args) {
+  private List<Optional<TypeS>> assignedTypes(List<ItemSigS> params, List<Optional<ArgNode>> args) {
     List<Optional<TypeS>> assigned = new ArrayList<>();
     for (int i = 0; i < params.size(); i++) {
       Optional<ArgNode> arg = args.get(i);

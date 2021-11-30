@@ -71,7 +71,7 @@ import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
@@ -602,14 +602,14 @@ public class TestingContext {
 
   public StructTypeS personST() {
     return typeFactoryS().struct("Person",
-        nList(isig("firstName", stringST()), isig("lastName", stringST())));
+        nList(sigS("firstName", stringST()), sigS("lastName", stringST())));
   }
 
   public StringTypeS stringST() {
     return typeFactoryS().string();
   }
 
-  public StructTypeS structST(String name, NList<ItemSignature> fields) {
+  public StructTypeS structST(String name, NList<ItemSigS> fields) {
     return typeFactoryS().struct(name, fields);
   }
 
@@ -783,7 +783,7 @@ public class TestingContext {
     return new NatFuncS(type, modPath(), name, params, ann, loc(line));
   }
 
-  public ItemSignature isig(String name, TypeS type) {
-    return new ItemSignature(type, name, empty());
+  public ItemSigS sigS(String name, TypeS type) {
+    return new ItemSigS(type, name, empty());
   }
 }

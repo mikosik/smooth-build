@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type.impl;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
+import static org.smoothbuild.lang.base.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.base.type.TestingTypesS.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -20,7 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.ArrayType;
 import org.smoothbuild.lang.base.type.api.FuncType;
 import org.smoothbuild.lang.base.type.api.Type;
@@ -267,12 +267,12 @@ public class TypeSTest extends TestingContext {
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structST("MyStruct", nList(isig("fieldName", nothingST())));
+      structST("MyStruct", nList(sigS("fieldName", nothingST())));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structST("MyStruct", nList(isig("fieldName", arrayST(nothingST()))));
+      structST("MyStruct", nList(sigS("fieldName", arrayST(nothingST()))));
     }
 
     @Test
@@ -293,7 +293,7 @@ public class TypeSTest extends TestingContext {
     @MethodSource("struct_fields_cases")
     public void struct_fields(
         Function<TypeFactoryS, StructTypeS> factoryCall,
-        Function<TypeFactoryS, NList<ItemSignature>> expected) {
+        Function<TypeFactoryS, NList<ItemSigS>> expected) {
       assertThat(invoke(factoryCall).fields())
           .isEqualTo(invoke(expected));
     }
@@ -301,11 +301,11 @@ public class TypeSTest extends TestingContext {
     public static List<Arguments> struct_fields_cases() {
       return asList(
           args(f -> f.struct("Person", nList()), f -> nList()),
-          args(f -> f.struct("Person", nList(itemSignature("field", f.string()))),
-              f -> nList(itemSignature("field", f.string()))),
+          args(f -> f.struct("Person", nList(itemSigS("field", f.string()))),
+              f -> nList(itemSigS("field", f.string()))),
           args(f -> f.struct("Person",
-              nList(itemSignature("field", f.string()), itemSignature("field2", f.int_()))),
-              f -> nList(itemSignature("field", f.string()), itemSignature("field2", f.int_())))
+              nList(itemSigS("field", f.string()), itemSigS("field2", f.int_()))),
+              f -> nList(itemSigS("field", f.string()), itemSigS("field2", f.int_())))
       );
     }
   }
@@ -322,7 +322,7 @@ public class TypeSTest extends TestingContext {
         f.nothing(),
         f.string(),
         f.struct("MyStruct", nList()),
-        f.struct("MyStruct", nList(isig("field", f.int_()))),
+        f.struct("MyStruct", nList(sigS("field", f.int_()))),
         f.var("A"),
         f.var("B"),
         f.var("C"),

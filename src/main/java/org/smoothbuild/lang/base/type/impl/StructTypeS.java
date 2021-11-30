@@ -5,7 +5,7 @@ import static java.util.Comparator.comparing;
 
 import java.util.Collection;
 
-import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.util.collect.NList;
 
@@ -15,14 +15,14 @@ import com.google.common.collect.ImmutableSet;
  * This class is immutable.
  */
 public final class StructTypeS extends TypeS {
-  private final NList<ItemSignature> fields;
+  private final NList<ItemSigS> fields;
 
-  public StructTypeS(String name, NList<ItemSignature> fields) {
+  public StructTypeS(String name, NList<ItemSigS> fields) {
     super(name, calculateVars(fields));
     this.fields = fields;
   }
 
-  private static ImmutableSet<VarS> calculateVars(NList<ItemSignature> fields) {
+  private static ImmutableSet<VarS> calculateVars(NList<ItemSigS> fields) {
     return fields.stream()
         .map(f -> f.type().vars())
         .flatMap(Collection::stream)
@@ -30,7 +30,7 @@ public final class StructTypeS extends TypeS {
         .collect(toImmutableSet());
   }
 
-  public NList<ItemSignature> fields() {
+  public NList<ItemSigS> fields() {
     return fields;
   }
 

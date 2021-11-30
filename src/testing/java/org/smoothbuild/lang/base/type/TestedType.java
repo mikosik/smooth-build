@@ -4,7 +4,7 @@ import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
-import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
+import static org.smoothbuild.lang.base.define.ItemSigS.itemSigS;
 import static org.smoothbuild.lang.base.type.TestingTypesS.struct;
 import static org.smoothbuild.lang.base.type.TestingTypesS.var;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
-import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.NothingTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -73,21 +73,21 @@ public class TestedType {
       "abc"
   );
   public static final TestedType STRUCT = new TestedType(
-      struct("Person", nList(itemSignature("name", TestingTypesS.STRING))),
+      struct("Person", nList(itemSigS("name", TestingTypesS.STRING))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", nList(itemSignature("value", TestingTypesS.BLOB))),
+      struct("Data", nList(itemSigS("value", TestingTypesS.BLOB))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", nList(itemSignature("value", TestingTypesS.BOOL))),
+      struct("Flag", nList(itemSigS("value", TestingTypesS.BOOL))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),
@@ -295,12 +295,12 @@ public class TestedType {
 
   public static TestedType f(TestedType resultType, TestedType... paramTestedTypes2) {
     ImmutableList<TestedType> paramTestedTypes3 = list(paramTestedTypes2);
-    var paramSignatures = toSignatures(paramTestedTypes3);
+    var paramSignatures = toSigs(paramTestedTypes3);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
     String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
         resultType.name(),
         name,
-        join(",", map(paramSignatures, ItemSignature::toString)));
+        join(",", map(paramSignatures, ItemSigS::toString)));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
         .addAll(resultType.allDeclarations())
@@ -317,7 +317,7 @@ public class TestedType {
     return new TestedFuncType(
         resultType,
         ImmutableList.copyOf(paramTestedTypes2),
-        TestingTypesS.f(resultType.type, map(paramSignatures, ItemSignature::type)),
+        TestingTypesS.f(resultType.type, map(paramSignatures, ItemSigS::type)),
         name,
         null,
         typeDeclarations,
@@ -325,10 +325,10 @@ public class TestedType {
     );
   }
 
-  private static ImmutableList<ItemSignature> toSignatures(List<TestedType> paramTestedTypes) {
-    Builder<ItemSignature> builder = ImmutableList.builder();
+  private static ImmutableList<ItemSigS> toSigs(List<TestedType> paramTestedTypes) {
+    Builder<ItemSigS> builder = ImmutableList.builder();
     for (int i = 0; i < paramTestedTypes.size(); i++) {
-      builder.add(new ItemSignature(paramTestedTypes.get(i).type(), "p" + i, Optional.empty()));
+      builder.add(new ItemSigS(paramTestedTypes.get(i).type(), "p" + i, Optional.empty()));
     }
     return builder.build();
   }

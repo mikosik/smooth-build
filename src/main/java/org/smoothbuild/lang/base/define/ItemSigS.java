@@ -15,34 +15,34 @@ import org.smoothbuild.util.collect.NameableImpl;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Item is a func param or a struct field.
+ * Item signature.
  *
  * This class is immutable.
  */
-public class ItemSignature extends NameableImpl {
+public class ItemSigS extends NameableImpl {
   private final TypeS type;
   private final Optional<TypeS> defaultValType;
 
-  public ItemSignature(TypeS type, String name, Optional<TypeS> defaultValType) {
+  public ItemSigS(TypeS type, String name, Optional<TypeS> defaultValType) {
     this(type, Optional.of(name), defaultValType);
   }
 
-  public ItemSignature(TypeS type, Optional<String> name, Optional<TypeS> defaultValType) {
+  public ItemSigS(TypeS type, Optional<String> name, Optional<TypeS> defaultValType) {
     super(name);
     this.type = requireNonNull(type);
     this.defaultValType = requireNonNull(defaultValType);
   }
 
-  public static ItemSignature itemSignature(TypeS type) {
-    return new ItemSignature(type, empty(), empty());
+  public static ItemSigS itemSigS(TypeS type) {
+    return new ItemSigS(type, empty(), empty());
   }
 
-  public static ItemSignature itemSignature(String name, TypeS type) {
-    return new ItemSignature(type, name, empty());
+  public static ItemSigS itemSigS(String name, TypeS type) {
+    return new ItemSigS(type, name, empty());
   }
 
-  public static ImmutableList<ItemSignature> toItemSignatures(List<? extends TypeS> types) {
-    return map(types, ItemSignature::itemSignature);
+  public static ImmutableList<ItemSigS> toItemSigS(List<? extends TypeS> types) {
+    return map(types, ItemSigS::itemSigS);
   }
 
   public TypeS type() {
@@ -73,7 +73,7 @@ public class ItemSignature extends NameableImpl {
     if (object == this) {
       return true;
     }
-    return object instanceof ItemSignature that
+    return object instanceof ItemSigS that
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.nameO(), that.nameO())
         && Objects.equals(this.defaultValType, that.defaultValType);

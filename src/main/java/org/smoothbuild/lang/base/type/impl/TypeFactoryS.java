@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -117,7 +117,7 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
     return new VarS(name);
   }
 
-  public StructTypeS struct(String name, NList<ItemSignature> fields) {
+  public StructTypeS struct(String name, NList<ItemSigS> fields) {
     return new StructTypeS(name, fields);
   }
 }

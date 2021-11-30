@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.define.ItemSignature.itemSignature;
+import static org.smoothbuild.lang.base.define.ItemSigS.itemSigS;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
-import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
@@ -42,9 +42,9 @@ public class TestingTypesS {
   public static final NothingTypeS NOTHING = FACTORY.nothing();
   public static final StringTypeS STRING = FACTORY.string();
   public static final StructTypeS PERSON = struct("Person",
-      nList(itemSignature("firstName", STRING), itemSignature("lastName", STRING)));
-  public static final StructTypeS FLAG = struct("Flag", nList(itemSignature("flab", BOOL)));
-  public static final StructTypeS DATA = struct("Data", nList(itemSignature("data", BLOB)));
+      nList(itemSigS("firstName", STRING), itemSigS("lastName", STRING)));
+  public static final StructTypeS FLAG = struct("Flag", nList(itemSigS("flab", BOOL)));
+  public static final StructTypeS DATA = struct("Data", nList(itemSigS("data", BLOB)));
   public static final VarS A = var("A");
   public static final VarS B = var("B");
   public static final VarS C = var("C");
@@ -103,7 +103,7 @@ public class TestingTypesS {
     return FACTORY.var(a);
   }
 
-  public static StructTypeS struct(String name, NList<ItemSignature> fields) {
+  public static StructTypeS struct(String name, NList<ItemSigS> fields) {
     return FACTORY.struct(name, fields);
   }
 

@@ -21,7 +21,7 @@ import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.DefinitionsS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.ItemSignature;
+import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.FuncTypeS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
@@ -72,10 +72,10 @@ public class TypeInferrer {
       @Override
       public void visitStruct(StructN struct) {
         super.visitStruct(struct);
-        var fields = Optionals.pullUp(map(struct.fields(), ItemN::itemSignature));
+        var fields = Optionals.pullUp(map(struct.fields(), ItemN::sig));
         struct.setType(fields.map(f -> factory.struct(struct.name(), nList(f))));
         struct.ctor().setType(
-            fields.map(s -> factory.abstFunc(struct.type().get(), map(s, ItemSignature::type))));
+            fields.map(s -> factory.abstFunc(struct.type().get(), map(s, ItemSigS::type))));
       }
 
       @Override
@@ -284,22 +284,22 @@ public class TypeInferrer {
         }
       }
 
-      public static Optional<NList<ItemSignature>> funcParams(ExprN called) {
+      public static Optional<NList<ItemSigS>> funcParams(ExprN called) {
         if (called instanceof RefN refN) {
           EvalLike referenced = refN.referenced();
           if (referenced instanceof FuncS func) {
-            return Optional.of(func.params().map(Item::signature));
+            return Optional.of(func.params().map(Item::sig));
           } else if (referenced instanceof FuncN funcN) {
             var itemSignatures = Optionals.pullUp(
-                map(funcN.params(), ItemN::itemSignature));
+                map(funcN.params(), ItemN::sig));
             return itemSignatures.map(NList::nList);
           } else {
             var params = ((FuncTypeS) referenced.inferredType().get()).params();
-            return Optional.of(nList(map(params, ItemSignature::itemSignature)));
+            return Optional.of(nList(map(params, ItemSigS::itemSigS)));
           }
         } else {
           return called.type().map(
-              t -> nList(map(((FuncTypeS) t).params(), ItemSignature::itemSignature)));
+              t -> nList(map(((FuncTypeS) t).params(), ItemSigS::itemSigS)));
         }
       }
 
