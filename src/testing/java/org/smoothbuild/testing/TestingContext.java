@@ -95,6 +95,7 @@ import org.smoothbuild.lang.base.type.impl.VarS;
 import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
+import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
@@ -679,6 +680,10 @@ public class TestingContext {
 
   public CallS callS(int line, TypeS type, ExprS expr, ExprS... args) {
     return new CallS(type, expr, list(args), loc(line));
+  }
+
+  public CombineS combineS(int line, StructTypeS type, ExprS... expr) {
+    return new CombineS(type, ImmutableList.copyOf(expr), loc(line));
   }
 
   public CtorS ctorS(TypeS resultType, String name, ItemS... params) {

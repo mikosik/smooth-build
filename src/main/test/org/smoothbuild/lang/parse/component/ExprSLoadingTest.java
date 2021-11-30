@@ -9,7 +9,6 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.define.CtorS;
 import org.smoothbuild.testing.TestingContext;
 
 public class ExprSLoadingTest extends TestingContext {
@@ -116,14 +115,15 @@ public class ExprSLoadingTest extends TestingContext {
     @Test
     public void with_ctor_reference() {
       var struct = structST("MyStruct", nList(sigS("field", STRING)));
-      CtorS constr = ctorS(1, struct, "myStruct", param(2, STRING, "field"));
+      var combine = combineS(1, struct, paramRefS(1, stringST(), "field"));
+      var ctor = funcS(1, struct, "myStruct", combine, param(2, STRING, "field"));
       mod("""
           MyStruct {
             String field
           }
           """)
           .loadsSuccessfully()
-          .containsEval(constr);
+          .containsEval(ctor);
     }
 
     @Test

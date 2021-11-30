@@ -15,9 +15,11 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.lang.base.define.CtorS;
+import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefTypeS;
 import org.smoothbuild.lang.base.define.DefsS;
+import org.smoothbuild.lang.base.define.ItemS;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
@@ -25,6 +27,9 @@ import org.smoothbuild.lang.base.define.StructS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.expr.CombineS;
+import org.smoothbuild.lang.expr.ExprS;
+import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.StructN;
@@ -104,12 +109,19 @@ public class ModLoader {
     return nList(local.build());
   }
 
-  private CtorS loadCtor(ModPath path, StructN struct) {
-    var resultType = struct.type().get();
+  private DefFuncS loadCtor(ModPath path, StructN struct) {
+    var resultType = (StructTypeS) struct.type().get();
     var name = struct.ctor().name();
     var paramTypes = map(struct.fields(), f -> f.type().get());
     var type = typeFactory.func(resultType, paramTypes);
     var params = struct.fields().map(f -> f.toItem(path));
-    return new CtorS(type, path, name, params, struct.loc());
+    var loc = struct.loc();
+    var body = ctorBody(resultType, params, loc);
+    return new DefFuncS(type, path, name, params, body, loc);
+  }
+
+  private CombineS ctorBody(StructTypeS resultType, NList<ItemS> params, Loc loc) {
+    var paramRefs = map(params, p -> (ExprS) new ParamRefS(p.type(), p.name(), loc));
+    return new CombineS(resultType, paramRefs, loc);
   }
 }
