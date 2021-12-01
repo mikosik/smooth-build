@@ -17,7 +17,7 @@ import org.smoothbuild.db.object.type.expr.SelectTypeH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
 
 /**
- * This class is immutable.
+ * This class is thread-safe.
  */
 public class SelectH extends ExprH {
   private static final int DATA_SEQ_SIZE = 2;

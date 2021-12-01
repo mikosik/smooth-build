@@ -16,7 +16,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import com.google.common.collect.ImmutableList;
 
 /**
- * This class is immutable.
+ * This class is thread-safe.
  */
 public class OrderH extends ExprH {
   public OrderH(MerkleRoot merkleRoot, ObjDb objDb) {

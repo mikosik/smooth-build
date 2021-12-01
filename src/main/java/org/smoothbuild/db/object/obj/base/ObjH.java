@@ -20,6 +20,10 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
+/**
+ * Object.
+ * This class is thread-safe.
+ */
 public abstract class ObjH {
   public static final String DATA_PATH = "data";
 

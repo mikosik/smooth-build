@@ -107,13 +107,13 @@ public class MethodLoader {
 
   private static void assertNativeResMatchesDeclared(String extendedName, Method method,
       TypeH resType, String classBinaryName) throws LoadingMethodExc {
-    var methodResultTypeJ = method.getReturnType();
-    var resultTypeJ = resType.typeJ();
-    if (!resultTypeJ.equals(methodResultTypeJ)) {
+    var methodResTypeJ = method.getReturnType();
+    var resTypeJ = resType.typeJ();
+    if (!resTypeJ.equals(methodResTypeJ)) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " declares type "
           + resType.q() + " so its native implementation result type must be "
-          + resultTypeJ.getCanonicalName() + " but it is "
-          + methodResultTypeJ.getCanonicalName() + ".");
+          + resTypeJ.getCanonicalName() + " but it is "
+          + methodResTypeJ.getCanonicalName() + ".");
     }
   }
 

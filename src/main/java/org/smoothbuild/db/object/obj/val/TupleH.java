@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
 import com.google.common.collect.ImmutableList;
 
 /**
- * This class is immutable.
+ * This class is thread-safe.
  */
 public final class TupleH extends ValH {
   private ImmutableList<ValH> items;

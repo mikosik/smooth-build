@@ -10,7 +10,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import com.google.common.collect.ImmutableList;
 
 /**
- * This class is immutable.
+ * This class is thread-safe.
  */
 public final class ArrayH extends ValH {
   public ArrayH(MerkleRoot merkleRoot, ObjDb objDb) {

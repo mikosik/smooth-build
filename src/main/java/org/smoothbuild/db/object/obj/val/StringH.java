@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 
 /**
- * This class is immutable.
+ * This class is thread-safe.
  */
 public final class StringH extends ValH {
   public StringH(MerkleRoot merkleRoot, ObjDb objDb) {

@@ -6,6 +6,10 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 
+/**
+ * Parameter reference.
+ * This class is thread-safe.
+ */
 public class ParamRefH extends ExprH {
   public ParamRefH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);

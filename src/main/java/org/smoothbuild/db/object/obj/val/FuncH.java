@@ -7,6 +7,10 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
 
+/**
+ * Function.
+ * This class is thread-safe.
+ */
 public sealed abstract class FuncH extends ValH
     permits DefFuncH, IfFuncH, MapFuncH, NatFuncH {
   public FuncH(MerkleRoot merkleRoot, ObjDb objDb, SpecKindH kind) {

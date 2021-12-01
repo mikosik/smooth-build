@@ -17,7 +17,7 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
 import com.google.common.collect.ImmutableList;
 
 /**
- * This class is immutable.
+ * This class is thread-safe.
  */
 public class CombineH extends ExprH {
   public CombineH(MerkleRoot merkleRoot, ObjDb objDb) {

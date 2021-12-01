@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import okio.BufferedSource;
 
 /**
- * This class is immutable.
+ * This class is thread-safe.
  */
 public final class BlobH extends ValH {
   public BlobH(MerkleRoot merkleRoot, ObjDb objDb) {

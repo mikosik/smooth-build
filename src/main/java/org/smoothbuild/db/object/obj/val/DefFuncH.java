@@ -7,6 +7,10 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
 
+/**
+ * Defined function.
+ * This class is thread-safe.
+ */
 public final class DefFuncH extends FuncH {
   public DefFuncH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb, DEF_FUNC);

@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
 
 /**
- * This class is immutable.
+ * This class is thread-safe.
  */
 public class CallH extends ExprH {
   private static final int DATA_SEQ_SIZE = 2;

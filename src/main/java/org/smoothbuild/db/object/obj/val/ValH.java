@@ -6,7 +6,8 @@ import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
 /**
- * This class is immutable.
+ * Value.
+ * This class is thread-safe.
  */
 public sealed abstract class ValH extends ObjH
     permits ArrayH, BlobH, BoolH, FuncH, IntH, StringH, TupleH {

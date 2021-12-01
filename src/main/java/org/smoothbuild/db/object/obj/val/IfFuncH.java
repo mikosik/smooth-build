@@ -6,7 +6,8 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 
 /**
- * This class is immutable.
+ * If function.
+ * This class is thread-safe.
  */
 public final class IfFuncH extends FuncH {
   private static final int DATA_SEQ_SIZE = 3;
