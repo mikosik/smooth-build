@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse;
 
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -44,6 +45,7 @@ import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.SelectN;
 import org.smoothbuild.lang.parse.ast.StringN;
+import org.smoothbuild.slib.util.Throwables;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -168,7 +170,7 @@ public class TopEvalLoader {
       return switch (referenced) {
         case FuncS func -> func.params().get(i).defaultVal().get();
         case FuncN node -> createExpression(node.params().get(i).body().get());
-        default -> throw new RuntimeException("Unexpected case");
+        default -> throw unexpectedCaseExc(referenced);
       };
     }
 

@@ -286,8 +286,7 @@ public abstract class AcceptanceTestCase {
         return switch (value.getByte(0)) {
           case 0 -> false;
           case 1 -> true;
-          default -> throw new RuntimeException(
-              "Expected boolean artifact but got " + value);
+          default -> throw new RuntimeException("Expected boolean artifact but got " + value);
         };
       });
     } catch (IOException e) {

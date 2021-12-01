@@ -3,6 +3,7 @@ package org.smoothbuild.slib.file;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.slib.util.Throwables;
 
 public class ProjectFilesFunc {
   public static ArrayH func(Container container, StringH dir) throws IOException {
@@ -61,7 +63,7 @@ public class ProjectFilesFunc {
               fileArrayBuilder.add(reader.createFile(path, path));
               break;
             default:
-              throw new RuntimeException("Unexpected case: " + pathState);
+              throw unexpectedCaseExc(pathState);
           }
         }
       }

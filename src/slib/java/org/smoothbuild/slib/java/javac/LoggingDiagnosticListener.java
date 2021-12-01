@@ -1,10 +1,13 @@
 package org.smoothbuild.slib.java.javac;
 
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.slib.util.Throwables;
 
 public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
   private final NativeApi nativeApi;
@@ -21,7 +24,7 @@ public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObj
       case ERROR -> nativeApi.log().error(diagnostic.getMessage(null));
       case MANDATORY_WARNING, WARNING -> nativeApi.log().warning(diagnostic.getMessage(null));
       case NOTE, OTHER -> nativeApi.log().info(diagnostic.getMessage(null));
-      default -> throw new RuntimeException("Unknown diagnostic kind " + diagnostic.getKind());
+      default -> throw unexpectedCaseExc(diagnostic.getKind());
     }
     errorReported = true;
   }

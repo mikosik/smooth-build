@@ -3,10 +3,13 @@ package org.smoothbuild.io.fs.base;
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
 import static org.smoothbuild.io.fs.base.Path.root;
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.NoSuchElementException;
+
+import org.smoothbuild.slib.util.Throwables;
 
 public class RecursivePathsIterator implements PathIterator {
   private final FileSystem fileSystem;
@@ -78,7 +81,7 @@ public class RecursivePathsIterator implements PathIterator {
                 "FileSystem changed when iterating tree of directory %s. Cannot find %s.",
                 baseDir.q(), baseDir.append(file).q()));
           default:
-            throw new RuntimeException("Unexpected case: " + state);
+            throw unexpectedCaseExc(state);
         }
       }
     }

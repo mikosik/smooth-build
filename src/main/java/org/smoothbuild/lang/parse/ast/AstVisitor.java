@@ -1,7 +1,11 @@
 package org.smoothbuild.lang.parse.ast;
 
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import org.smoothbuild.slib.util.Throwables;
 
 public class AstVisitor {
   public void visitAst(Ast ast) {
@@ -33,8 +37,7 @@ public class AstVisitor {
     switch (eval) {
       case FuncN func -> visitFunc(func);
       case ValN value -> visitValue(value);
-      case ItemN item -> throw new RuntimeException(
-          "Didn't expect instance of " + eval.getClass().getCanonicalName());
+      case ItemN item -> throw unexpectedCaseExc(item);
     }
   }
 

@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.parse.LocHelpers.locOf;
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -39,6 +40,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Loc;
+import org.smoothbuild.slib.util.Throwables;
 
 import com.google.common.collect.ImmutableList;
 
@@ -248,8 +250,7 @@ public class AstCreator {
           case TypeNameContext typeIdentifier -> createType(typeIdentifier);
           case ArrayTypeContext arrayType -> createArrayType(arrayType);
           case FuncTypeContext funcType -> createFuncType(funcType);
-          default -> throw new RuntimeException(
-              "Illegal parse tree: " + TypeContext.class.getSimpleName() + " without children.");
+          default -> throw unexpectedCaseExc(type);
         };
       }
 

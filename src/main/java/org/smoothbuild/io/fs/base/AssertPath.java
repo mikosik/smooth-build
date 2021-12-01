@@ -1,5 +1,7 @@
 package org.smoothbuild.io.fs.base;
 
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+
 import java.io.IOException;
 
 public class AssertPath {
@@ -55,11 +57,11 @@ public class AssertPath {
       case NOTHING:
         return;
       default:
-        throw newUnknownPathState(state);
+        throw unexpectedCaseExc(state);
     }
   }
 
-  public  static RuntimeException newUnknownPathState(PathState state) {
+  public static RuntimeException newUnknownPathState(PathState state) {
     return new RuntimeException("Unknown " + PathState.class.getName() + ": " + state);
   }
 }
