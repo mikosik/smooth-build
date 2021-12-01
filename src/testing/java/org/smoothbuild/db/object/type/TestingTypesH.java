@@ -1,13 +1,8 @@
 package org.smoothbuild.db.object.type;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.truth.Truth.assertWithMessage;
-import static java.util.Arrays.stream;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
-
-import java.lang.reflect.Method;
 
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -96,24 +91,9 @@ public class TestingTypesH {
   public static final ImmutableList<SpecH> TYPESV_TO_TEST =
       concat(BASE_TYPESV_TO_TEST, ARRAY_TYPESV_TO_TEST);
 
-  private static final ImmutableList<String> TYPEH_DB_METHOD_NAMES = ImmutableList.of(
-      "any", "array", "array", "blob", "bool", "call", "combine", "defFunc",
-      "equals", "func", "func", "get", "getClass", "hashCode", "ifFunc", "int_",
-      "lower", "mapFunc", "natFunc", "nothing", "notify", "notifyAll", "oneSideBound",
-      "oneSideBound", "order", "ref", "select", "string", "toString", "tuple", "unbounded", "upper",
-      "var", "wait", "wait", "wait"
-      );
-
-  private static final ImmutableList<String> TYPEH_DB_ACTUAL_METHOD_NAMES =
-      stream(TypeDb.class.getMethods())
-          .map(Method::getName)
-          .sorted()
-          .collect(toImmutableList());
-
   public static final ImmutableList<SpecH> ALL_TYPES_TO_TEST = createAllTypes();
 
   private static ImmutableList<SpecH> createAllTypes() {
-    assertTypeDbIsNotChanged();
     var baseTypes = list(
         BLOB,
         BOOL,
@@ -148,13 +128,6 @@ public class TestingTypesH {
     );
 
     return concat(valueTypes, exprTypes);
-  }
-
-  public static void assertTypeDbIsNotChanged() {
-    assertWithMessage(
-        "TypeHDb API changed (method was changed). Update all tests that call this method.")
-        .that(TYPEH_DB_ACTUAL_METHOD_NAMES)
-        .containsExactlyElementsIn(TYPEH_DB_METHOD_NAMES);
   }
 
   private static ArrayTypeH array(TypeH elemType) {
