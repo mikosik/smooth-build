@@ -52,8 +52,7 @@ public class TupleH extends ValH {
       SpecH expectedType = itemTypes.get(i);
       SpecH actualType = val.spec();
       if (!expectedType.equals(actualType)) {
-        throw new UnexpectedObjNodeExc(
-            hash(), spec(), DATA_PATH, i, expectedType, actualType);
+        throw new UnexpectedObjNodeExc(hash(), spec(), DATA_PATH, i, expectedType, actualType);
       }
     }
     return objs;
