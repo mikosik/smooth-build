@@ -95,13 +95,18 @@ public class TestingTypesH {
 
   private static ImmutableList<SpecH> createAllTypes() {
     var baseTypes = list(
+        ANY,
         BLOB,
         BOOL,
         TYPEH_DB.func(BLOB, list()),
         TYPEH_DB.func(BLOB, list(BLOB)),
         TYPEH_DB.func(BLOB, list(BLOB, BLOB)),
-        TYPEH_DB.func(STRING, list()), IF_FUNC,
-        INT, MAP_FUNC,
+        TYPEH_DB.func(STRING, list()),
+        TYPEH_DB.defFunc(BLOB, list()),
+        TYPEH_DB.natFunc(BLOB, list()),
+        IF_FUNC,
+        INT,
+        MAP_FUNC,
         NOTHING,
         STRING,
         TYPEH_DB.tuple(list()),
