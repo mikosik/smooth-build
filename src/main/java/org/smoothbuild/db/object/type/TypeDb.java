@@ -108,17 +108,26 @@ public class TypeDb implements TypeFactoryH {
       this.nothing = cache(new NothingTypeH(writeBaseRoot(NOTHING)));
       this.string = cache(new StringTypeH(writeBaseRoot(STRING)));
 
-      VarH a = cache(var("A"));
-      this.ifFunc = cache(func(IF_KIND, a, list(bool, a, a)));
-      VarH r = cache(var("B"));
-      ArrayTypeH ar = cache(array(r));
-      ArrayTypeH aa = cache(array(a));
-      FuncTypeH f = cache(func(r, list(a)));
-      this.mapFunc = func(MAP_KIND, ar, list(aa, f));
+      this.ifFunc = createIfFunc();
+      this.mapFunc = createMapFunc();
     } catch (HashedDbExc e) {
       throw new ObjDbExc(e);
     }
     this.sides = new Sides<>(this.any, this.nothing);
+  }
+
+  private IfFuncTypeH createIfFunc() {
+    VarH a = cache(var("A"));
+    return cache(func(IF_KIND, a, list(bool, a, a)));
+  }
+
+  private MapFuncTypeH createMapFunc() {
+    VarH a = cache(var("A"));
+    VarH r = cache(var("B"));
+    ArrayTypeH ar = cache(array(r));
+    ArrayTypeH aa = cache(array(a));
+    FuncTypeH f = cache(func(r, list(a)));
+    return func(MAP_KIND, ar, list(aa, f));
   }
 
   @Override
