@@ -53,8 +53,7 @@ public class CallH extends ExprH {
           i -> illegalArgs(funcType, argsCombine)
       );
       var varBounds = typing.inferVarBoundsInCall(params, args);
-      var actualResult = typing.mapVars(
-          funcType.res(), varBounds, typing.factory().lower());
+      var actualResult = typing.mapVars(funcType.res(), varBounds, typing.factory().lower());
       if (!Objects.equals(type(), actualResult)) {
         throw new DecodeExprWrongEvalTypeOfCompExc(
             hash(), spec(), "func.result", type(), actualResult);
