@@ -17,7 +17,7 @@ import static org.smoothbuild.db.object.type.base.SpecKindH.ARRAY;
 import static org.smoothbuild.db.object.type.base.SpecKindH.BLOB;
 import static org.smoothbuild.db.object.type.base.SpecKindH.BOOL;
 import static org.smoothbuild.db.object.type.base.SpecKindH.CALL;
-import static org.smoothbuild.db.object.type.base.SpecKindH.CONSTRUCT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.COMBINE;
 import static org.smoothbuild.db.object.type.base.SpecKindH.INT;
 import static org.smoothbuild.db.object.type.base.SpecKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ORDER;
@@ -257,7 +257,7 @@ public class TypeDb implements TypeFactoryH {
       }
       case ARRAY -> newArray(hash, readDataAsVal(hash, rootSeq, kind));
       case CALL -> newCall(hash, readDataAsVal(hash, rootSeq, kind));
-      case CONSTRUCT -> newCombine(hash, readDataAsTuple(hash, rootSeq, kind));
+      case COMBINE -> newCombine(hash, readDataAsTuple(hash, rootSeq, kind));
       case ABST_FUNC, DEF_FUNC, NAT_FUNC, IF_FUNC, MAP_FUNC ->
           readFunc(hash, rootSeq, kind);
       case ORDER -> newOrder(hash, readDataAsArray(hash, rootSeq, kind));
@@ -426,7 +426,7 @@ public class TypeDb implements TypeFactoryH {
   }
 
   private CombineTypeH newCombine(TupleTypeH evaluationType) throws HashedDbExc {
-    var rootHash = writeExprRoot(CONSTRUCT, evaluationType);
+    var rootHash = writeExprRoot(COMBINE, evaluationType);
     return newCombine(rootHash, evaluationType);
   }
 

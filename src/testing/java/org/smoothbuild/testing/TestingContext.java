@@ -421,10 +421,6 @@ public class TestingContext {
     return tupleH(animalHT(), list(species, speed));
   }
 
-  public ArrayH arrayH() {
-    return arrayH(stringH());
-  }
-
   public ArrayH arrayH(ValH... elems) {
     return arrayH(elems[0].spec(), elems);
   }

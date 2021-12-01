@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.type.expr;
 
-import static org.smoothbuild.db.object.type.base.SpecKindH.CONSTRUCT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.COMBINE;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
  */
 public class CombineTypeH extends ExprSpecH {
   public CombineTypeH(Hash hash, TupleTypeH evaluationType) {
-    super("CONSTRUCT", hash, CONSTRUCT, evaluationType);
+    super("CONSTRUCT", hash, COMBINE, evaluationType);
   }
 
   @Override

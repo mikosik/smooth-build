@@ -60,7 +60,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new OrderAlgorithm(arrayHT(stringHT()));
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("16457f3457ec260bb4be0161933c32010b162123"));
+        .isEqualTo(Hash.decode("5c7516a24023883079ab5322ca2a208adf83734e"));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new OrderAlgorithm(arrayHT(stringHT()));
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("3afcc3677dc2662b5ae660ca82b6755dd89b9f6a"));
+        .isEqualTo(Hash.decode("26ca327d87fe70373d6bb568b4af332331b6ea34"));
   }
 
   @Test
@@ -77,7 +77,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new InvokeAlgorithm(stringHT(), "name", natFuncH, null);
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("dd834024bc0b342ee029b1e4cb590be8cd50aae4"));
+        .isEqualTo(Hash.decode("f8891fe1c53f463d5917970ca0b51bda154ecdaa"));
   }
 
   @Test
@@ -86,7 +86,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new InvokeAlgorithm(stringHT(), "name", natFuncH, null);
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("f98da45979f7d77b4d0a9e1444454d3775b8c221"));
+        .isEqualTo(Hash.decode("33d8dc290cb161e148bf90770978131e423ea046"));
   }
 
   @Test
@@ -94,7 +94,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new CombineAlgorithm(PERSON);
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("ff45a42fc341a33b8835f873f94a083181e665a4"));
+        .isEqualTo(Hash.decode("6f10f67d3aae226d273a3b334a75b04885a94a58"));
   }
 
   @Test
@@ -102,7 +102,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new CombineAlgorithm(PERSON);
     var input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("b7f6067462bee16b2bf3e9ab5c54c3e4bd1eba54"));
+        .isEqualTo(Hash.decode("7f71c36dc7c56b6415492174e8fab4c70a000778"));
   }
 
   @Test
@@ -110,7 +110,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new CombineAlgorithm(PERSON);
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("b598a215e92550d41b2772ff96ba134e4b544dbf"));
+        .isEqualTo(Hash.decode("cd2121b413875e2b612119751ef9fec7dbd4834f"));
   }
 
   @Test

@@ -10,7 +10,7 @@ import static org.smoothbuild.db.object.type.base.SpecKindH.ARRAY;
 import static org.smoothbuild.db.object.type.base.SpecKindH.BLOB;
 import static org.smoothbuild.db.object.type.base.SpecKindH.BOOL;
 import static org.smoothbuild.db.object.type.base.SpecKindH.CALL;
-import static org.smoothbuild.db.object.type.base.SpecKindH.CONSTRUCT;
+import static org.smoothbuild.db.object.type.base.SpecKindH.COMBINE;
 import static org.smoothbuild.db.object.type.base.SpecKindH.INT;
 import static org.smoothbuild.db.object.type.base.SpecKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.SpecKindH.ORDER;
@@ -234,7 +234,7 @@ public class SpecHCorruptedTest extends TestingContext {
        * to save Combine type in HashedDb.
        */
       Hash hash = hash(
-          hash(CONSTRUCT.marker()),
+          hash(COMBINE.marker()),
           hash(tupleHT(list(intHT(), stringHT())))
       );
       assertThat(hash)
@@ -243,38 +243,38 @@ public class SpecHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(CONSTRUCT);
+      test_type_without_data(COMBINE);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(CONSTRUCT);
+      test_type_with_additional_data(COMBINE);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(CONSTRUCT);
+      test_data_hash_pointing_nowhere_instead_of_being_type(COMBINE);
     }
 
     @Test
     public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(CONSTRUCT);
+      test_type_with_corrupted_type_as_data(COMBINE);
     }
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(CONSTRUCT, TupleTypeH.class);
+      test_type_with_data_being_expr_type(COMBINE, TupleTypeH.class);
     }
 
     @Test
     public void with_evaluation_type_not_being_tuple_type() throws Exception {
       Hash hash = hash(
-          hash(CONSTRUCT.marker()),
+          hash(COMBINE.marker()),
           hash(intHT())
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeExc(
-              hash, CONSTRUCT, DATA_PATH, TupleTypeH.class, IntTypeH.class));
+              hash, COMBINE, DATA_PATH, TupleTypeH.class, IntTypeH.class));
     }
   }
 

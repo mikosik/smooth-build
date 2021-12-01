@@ -39,20 +39,20 @@ public class SpecKindHTest {
         Arguments.of(8, SpecKindH.STRING),
 
         Arguments.of(9, SpecKindH.CALL),
+        Arguments.of(10, SpecKindH.DEF_FUNC),
         Arguments.of(11, SpecKindH.ORDER),
         Arguments.of(12, SpecKindH.SELECT),
         Arguments.of(14, SpecKindH.PARAM_REF),
-        Arguments.of(15, SpecKindH.CONSTRUCT),
+        Arguments.of(15, SpecKindH.COMBINE),
         Arguments.of(17, SpecKindH.VARIABLE),
         Arguments.of(18, SpecKindH.ANY),
         Arguments.of(19, SpecKindH.NAT_FUNC),
-        Arguments.of(21, SpecKindH.MAP_FUNC),
-        Arguments.of(22, SpecKindH.DEF_FUNC)
+        Arguments.of(20, SpecKindH.MAP_FUNC)
     );
   }
 
   @ParameterizedTest
-  @ValueSource(bytes = {-1, 23})
+  @ValueSource(bytes = {-1, 21})
   public void from_marker_returns_null_for_illegal_marker(int marker) {
     assertThat(SpecKindH.fromMarker((byte) marker))
         .isNull();

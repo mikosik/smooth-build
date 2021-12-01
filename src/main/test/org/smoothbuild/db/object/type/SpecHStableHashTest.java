@@ -17,7 +17,7 @@ public class SpecHStableHashTest extends TestingContext {
     assertHash(abstFuncHT(), "72f4e3d7262b25cf65222b035b02e520c32f7a30");
     assertHash(ifFuncHT(), "68d16d970d8838ccdb4a0afd0c098f9797bb54fb");
     assertHash(intHT(), "8be891c7170d4d1bbca0ffcb3fce71285c55aee4");
-    assertHash(mapFuncHT(), "d849636ac7abd499d3010ab59cee7a1726981e3b");
+    assertHash(mapFuncHT(), "32ffed4cade9499f1500c03b059e6d8a8acac6f5");
     assertHash(natFuncHT(), "2e252d8c6c89bfe0a596798718275974452761a6");
     assertHash(nothingHT(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(stringHT(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
