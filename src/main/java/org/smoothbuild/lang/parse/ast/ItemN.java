@@ -8,10 +8,9 @@ import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.ModPath;
-import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public final class ItemN extends EvalN implements EvalLike {
+public final class ItemN extends EvalN {
   private Optional<ItemSigS> sig;
 
   public ItemN(TypeN typeN, String name, Optional<ExprN> body, Loc loc) {
