@@ -2,7 +2,6 @@ package org.smoothbuild.db.object.obj.val;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -13,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class ArrayH extends ValH {
+public final class ArrayH extends ValH {
   public ArrayH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
   }

@@ -4,11 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.type.base.SpecKindH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
 
-public abstract class FuncH extends ValH {
+public sealed abstract class FuncH extends ValH
+    permits DefFuncH, IfFuncH, MapFuncH, NatFuncH {
   public FuncH(MerkleRoot merkleRoot, ObjDb objDb, SpecKindH kind) {
     super(merkleRoot, objDb);
     checkType(merkleRoot, kind);

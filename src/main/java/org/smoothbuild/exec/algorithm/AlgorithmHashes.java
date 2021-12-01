@@ -3,7 +3,7 @@ package org.smoothbuild.exec.algorithm;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ValH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;

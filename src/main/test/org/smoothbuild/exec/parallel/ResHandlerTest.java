@@ -12,15 +12,15 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.base.ValH;
-import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.lang.base.define.TestingLoc;
+import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
-public class ResHandlerTest {
+public class ResHandlerTest extends TestingContext {
   private ExecutionReporter reporter;
   private SoftTerminationExecutor executor;
   private Consumer<ValH> consumer;
@@ -32,7 +32,7 @@ public class ResHandlerTest {
     reporter = mock(ExecutionReporter.class);
     executor = mock(SoftTerminationExecutor.class);
     consumer = mock(Consumer.class);
-    val = mock(ValH.class);
+    val = stringH();
   }
 
   @Nested
@@ -90,8 +90,8 @@ public class ResHandlerTest {
     return new Computed(output(val), DISK);
   }
 
-  private static Output output(ValH val) {
-    return new Output(val, mock(ArrayH.class));
+  private Output output(ValH val) {
+    return new Output(val, arrayH());
   }
 
   private TaskInfo taskInfo() {

@@ -4,12 +4,11 @@ import java.math.BigInteger;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ValH;
 
 /**
  * This class is immutable.
  */
-public class IntH extends ValH {
+public final class IntH extends ValH {
   public IntH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
   }

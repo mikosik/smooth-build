@@ -18,7 +18,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -419,6 +419,10 @@ public class TestingContext {
 
   public TupleH animalH(StringH species, IntH speed) {
     return tupleH(animalHT(), list(species, speed));
+  }
+
+  public ArrayH arrayH() {
+    return arrayH(stringH());
   }
 
   public ArrayH arrayH(ValH... elems) {

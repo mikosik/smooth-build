@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.Computer;

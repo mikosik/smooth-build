@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.common;
 
-import org.smoothbuild.db.object.obj.base.ValH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.plugin.NativeApi;

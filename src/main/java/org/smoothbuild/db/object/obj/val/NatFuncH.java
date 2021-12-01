@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 /**
  * This class is immutable.
  */
-public class NatFuncH extends FuncH {
+public final class NatFuncH extends FuncH {
   private static final int DATA_SEQ_SIZE = 3;
   private static final int JAR_FILE_INDEX = 0;
   private static final int CLASS_BINARY_NAME_INDEX = 1;

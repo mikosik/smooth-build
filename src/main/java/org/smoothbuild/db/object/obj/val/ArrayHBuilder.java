@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 
 public class ArrayHBuilder {

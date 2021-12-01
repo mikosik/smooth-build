@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ValH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.util.concurrent.Promise;
 
 import com.google.common.collect.ImmutableList;

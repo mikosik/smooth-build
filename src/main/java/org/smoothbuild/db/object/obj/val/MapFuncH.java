@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 /**
  * This class is immutable.
  */
-public class MapFuncH extends FuncH {
+public final class MapFuncH extends FuncH {
   private static final int DATA_SEQ_SIZE = 3;
   private static final int NAT_FUN_INDEX = 0;
   private static final int IS_PURE_INDEX = 1;

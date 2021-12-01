@@ -18,7 +18,7 @@ import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.db.ObjDbExc;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.obj.exc.DecodeObjTypeExc;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjExc;
 import org.smoothbuild.db.object.obj.expr.CallH;

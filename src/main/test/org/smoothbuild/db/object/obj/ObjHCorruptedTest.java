@@ -34,7 +34,7 @@ import org.smoothbuild.db.hashed.exc.DecodeStringExc;
 import org.smoothbuild.db.hashed.exc.HashedDbExc;
 import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.base.ValH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;

@@ -4,7 +4,6 @@ import static java.util.Objects.checkIndex;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.base.ValH;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.type.base.SpecH;
 import org.smoothbuild.db.object.type.val.TupleTypeH;
@@ -14,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class TupleH extends ValH {
+public final class TupleH extends ValH {
   private ImmutableList<ValH> items;
 
   public TupleH(MerkleRoot merkleRoot, ObjDb objDb) {
