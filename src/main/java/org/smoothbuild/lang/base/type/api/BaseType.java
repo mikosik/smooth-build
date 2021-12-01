@@ -1,5 +1,5 @@
 package org.smoothbuild.lang.base.type.api;
 
-public interface BaseType extends Type {
+public non-sealed interface BaseType extends Type {
 }
 

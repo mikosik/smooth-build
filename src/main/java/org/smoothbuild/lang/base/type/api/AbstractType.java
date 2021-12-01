@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableSet;
 
-public abstract class AbstractType implements Type {
+public non-sealed abstract class AbstractType implements Type {
   protected final String name;
   protected final ImmutableSet<? extends Var> vars;
 
