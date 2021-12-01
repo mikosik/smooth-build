@@ -125,7 +125,6 @@ public class TopEvalLoader {
         case RefN refN -> createReference(refN);
         case SelectN selectN -> createSelect(selectN);
         case StringN stringN -> createStringLiteral(stringN);
-        case AnnN node -> null;
         default -> throw new RuntimeException(
             "Unknown AST node: " + expr.getClass().getSimpleName() + ".");
       };
