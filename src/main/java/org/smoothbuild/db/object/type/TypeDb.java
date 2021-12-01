@@ -109,12 +109,12 @@ public class TypeDb implements TypeFactoryH {
       this.string = cache(new StringTypeH(writeBaseRoot(STRING)));
 
       VarH a = cache(var("A"));
-      this.ifFunc = cache(abstFunc(IF_KIND, a, list(bool, a, a)));
+      this.ifFunc = cache(func(IF_KIND, a, list(bool, a, a)));
       VarH r = cache(var("B"));
       ArrayTypeH ar = cache(array(r));
       ArrayTypeH aa = cache(array(a));
       FuncTypeH f = cache(func(r, list(a)));
-      this.mapFunc = abstFunc(MAP_KIND, ar, list(aa, f));
+      this.mapFunc = func(MAP_KIND, ar, list(aa, f));
     } catch (HashedDbExc e) {
       throw new ObjDbExc(e);
     }
@@ -164,16 +164,15 @@ public class TypeDb implements TypeFactoryH {
   }
 
   public DefFuncTypeH defFunc(TypeH res, ImmutableList<TypeH> params) {
-    return abstFunc(DEFINED_KIND, res, params);
+    return func(DEFINED_KIND, res, params);
   }
 
   @Override
   public AbstFuncTypeH func(TypeH res, ImmutableList<TypeH> params) {
-    return abstFunc(ABSTRACT_KIND, res, params);
+    return func(ABSTRACT_KIND, res, params);
   }
 
-  private <T extends FuncTypeH> T abstFunc(
-      FuncKind<T> kind, TypeH res, ImmutableList<TypeH> params) {
+  private <T extends FuncTypeH> T func(FuncKind<T> kind, TypeH res, ImmutableList<TypeH> params) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newFunc(kind, res, tuple(params)));
   }
 
@@ -190,7 +189,7 @@ public class TypeDb implements TypeFactoryH {
   }
 
   public NatFuncTypeH natFunc(TypeH res, ImmutableList<TypeH> params) {
-    return abstFunc(NATIVE_KIND, res, params);
+    return func(NATIVE_KIND, res, params);
   }
 
   public NothingTypeH nothing() {
