@@ -40,7 +40,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.slib.util.Throwables;
 
 import com.google.common.collect.ImmutableList;
 

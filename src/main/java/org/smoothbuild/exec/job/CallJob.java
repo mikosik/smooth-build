@@ -4,8 +4,8 @@ import static org.smoothbuild.util.collect.Lists.concat;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.obj.val.FuncH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;

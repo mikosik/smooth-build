@@ -8,8 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.obj.val.NatFuncH;
+import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;

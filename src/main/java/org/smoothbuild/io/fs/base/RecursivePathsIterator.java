@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.NoSuchElementException;
 
-import org.smoothbuild.slib.util.Throwables;
-
 public class RecursivePathsIterator implements PathIterator {
   private final FileSystem fileSystem;
   private final Path baseDir;

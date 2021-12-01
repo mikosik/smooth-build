@@ -5,8 +5,6 @@ import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import org.smoothbuild.slib.util.Throwables;
-
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());

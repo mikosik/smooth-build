@@ -45,7 +45,6 @@ import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.SelectN;
 import org.smoothbuild.lang.parse.ast.StringN;
-import org.smoothbuild.slib.util.Throwables;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;

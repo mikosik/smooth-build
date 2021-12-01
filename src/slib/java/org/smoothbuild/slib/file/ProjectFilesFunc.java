@@ -14,7 +14,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.slib.util.Throwables;
 
 public class ProjectFilesFunc {
   public static ArrayH func(Container container, StringH dir) throws IOException {
