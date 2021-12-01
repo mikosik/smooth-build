@@ -50,24 +50,24 @@ public class Typing<T extends Type> {
         && areConsistent(inferVarBounds(target, source, factory.lower()));
   }
 
-  public boolean inequal(Type typeA, Type that, Side<T> side) {
-    return inequalImpl(typeA, that, side, this::inequal);
+  public boolean inequal(Type type1, Type type2, Side<T> side) {
+    return inequalImpl(type1, type2, side, this::inequal);
   }
 
-  public boolean inequalParam(Type typeA, Type that, Side<T> side) {
-    return (typeA instanceof Var)
-        || inequalImpl(typeA, that, side, this::inequalParam);
+  public boolean inequalParam(Type type1, Type type2, Side<T> side) {
+    return (type1 instanceof Var)
+        || inequalImpl(type1, type2, side, this::inequalParam);
   }
 
-  private boolean inequalImpl(Type typeA, Type that, Side<T> side,
+  private boolean inequalImpl(Type type1, Type type2, Side<T> side,
       InequalFunc<T> inequalityFunc) {
-    return inequalByEdgeCases(typeA, that, side)
-        || inequalByConstruction(typeA, that, side, inequalityFunc);
+    return inequalByEdgeCases(type1, type2, side)
+        || inequalByConstruction(type1, type2, side, inequalityFunc);
   }
 
-  private boolean inequalByEdgeCases(Type typeA, Type that, Side<T> side) {
-    return that.equals(side.edge())
-        || typeA.equals(side.reversed().edge());
+  private boolean inequalByEdgeCases(Type type1, Type type2, Side<T> side) {
+    return type2.equals(side.edge())
+        || type1.equals(side.reversed().edge());
   }
 
   private boolean inequalByConstruction(Type t1, Type t2, Side<T> side,
@@ -82,7 +82,7 @@ public class Typing<T extends Type> {
   }
 
   public static interface InequalFunc<T> {
-    public boolean apply(Type typeA, Type typeB, Side<T> side);
+    public boolean apply(Type type1, Type type2, Side<T> side);
   }
 
   private boolean areConsistent(BoundsMap<T> boundsMap) {
@@ -97,24 +97,24 @@ public class Typing<T extends Type> {
     return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
-  public BoundsMap<T> inferVarBounds(List<? extends T> typesA, List<? extends T> typesB,
-      Side<T> side) {
+  public BoundsMap<T> inferVarBounds(
+      List<? extends T> types1, List<? extends T> types2, Side<T> side) {
     var result = new HashMap<Var, Bounded<T>>();
-    inferVarBounds(typesA, typesB, side, result);
+    inferVarBounds(types1, types2, side, result);
     return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
-  private void inferVarBounds(List<? extends T> typesA, List<? extends T> typesB,
+  private void inferVarBounds(List<? extends T> types1, List<? extends T> types2,
       Side<T> side, Map<Var, Bounded<T>> result) {
-    checkArgument(typesA.size() == typesB.size());
-    for (int i = 0; i < typesA.size(); i++) {
-      inferImpl(typesA.get(i), typesB.get(i), side, result);
+    checkArgument(types1.size() == types2.size());
+    for (int i = 0; i < types1.size(); i++) {
+      inferImpl(types1.get(i), types2.get(i), side, result);
     }
   }
 
-  public BoundsMap<T> inferVarBounds(T typeA, T typeB, Side<T> side) {
+  public BoundsMap<T> inferVarBounds(T type1, T type2, Side<T> side) {
     var result = new HashMap<Var, Bounded<T>>();
-    inferImpl(typeA, typeB, side, result);
+    inferImpl(type1, type2, side, result);
     return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
@@ -175,45 +175,45 @@ public class Typing<T extends Type> {
     return type;
   }
 
-  public T mergeUp(T typeA, T typeB) {
-    return merge(typeA, typeB, factory.upper());
+  public T mergeUp(T type1, T type2) {
+    return merge(type1, type2, factory.upper());
   }
 
-  public T mergeDown(T typeA, T typeB) {
-    return merge(typeA, typeB, factory.lower());
+  public T mergeDown(T type1, T type2) {
+    return merge(type1, type2, factory.lower());
   }
 
-  public T merge(T typeA, T typeB, Side<T> direction) {
+  public T merge(T type1, T type2, Side<T> direction) {
     Type reversedEdge = direction.reversed().edge();
-    if (reversedEdge.equals(typeB)) {
-      return typeA;
-    } else if (reversedEdge.equals(typeA)) {
-      return typeB;
-    } else if (typeA.equals(typeB)) {
-      return typeA;
-    } else if (typeA instanceof ArrayType arrayA) {
-      if (typeB instanceof ArrayType arrayB) {
+    if (reversedEdge.equals(type2)) {
+      return type1;
+    } else if (reversedEdge.equals(type1)) {
+      return type2;
+    } else if (type1.equals(type2)) {
+      return type1;
+    } else if (type1 instanceof ArrayType arrayA) {
+      if (type2 instanceof ArrayType arrayB) {
         var elemA = (T) arrayA.elem();
         var elemB = (T) arrayB.elem();
         var elemM = merge(elemA, elemB, direction);
         if (elemA == elemM) {
-          return typeA;
+          return type1;
         } else if (elemB == elemM) {
-          return typeB;
+          return type2;
         } else {
           return (T) factory.array(elemM);
         }
       }
-    } else if (typeA instanceof FuncType funcA) {
-      if (typeB instanceof FuncType funcB) {
+    } else if (type1 instanceof FuncType funcA) {
+      if (type2 instanceof FuncType funcB) {
         if (funcA.params().size() == funcB.params().size()) {
           var resultM = merge((T) funcA.res(), (T) funcB.res(), direction);
           var paramsM = zip(funcA.params(), funcB.params(),
               (a, b) -> merge((T) a, (T) b, direction.reversed()));
           if (isFuncTypeEqual(funcA, resultM, paramsM)) {
-            return typeA;
+            return type1;
           } else if (isFuncTypeEqual(funcB, resultM, paramsM)){
-            return typeB;
+            return type2;
           } else {
             return (T) factory.func(resultM, paramsM);
           }
@@ -227,10 +227,10 @@ public class Typing<T extends Type> {
     return new Bounded<>(a.var(), merge(a.bounds(), b.bounds()));
   }
 
-  public Bounds<T> merge(Bounds<T> boundsA, Bounds<T> boundsB) {
+  public Bounds<T> merge(Bounds<T> bounds1, Bounds<T> bounds2) {
     return new Bounds<>(
-        merge(boundsA.lower(), boundsB.lower(), factory.upper()),
-        merge(boundsA.upper(), boundsB.upper(), factory.lower()));
+        merge(bounds1.lower(), bounds2.lower(), factory.upper()),
+        merge(bounds1.upper(), bounds2.upper(), factory.lower()));
   }
 
   private ArrayType createArrayType(ArrayType type, T elemType) {
@@ -241,16 +241,14 @@ public class Typing<T extends Type> {
     }
   }
 
-  private FuncType createFuncType(
-      FuncType type, T resultType, ImmutableList<T> params) {
+  private FuncType createFuncType(FuncType type, T resultType, ImmutableList<T> params) {
     if (isFuncTypeEqual(type, resultType, params)) {
       return type;
     }
     return factory.func(resultType, params);
   }
 
-  private boolean isFuncTypeEqual(
-      FuncType type, Type result, ImmutableList<T> params) {
+  private boolean isFuncTypeEqual(FuncType type, Type result, ImmutableList<T> params) {
     return type.res() == result && type.params().equals(params);
   }
 
