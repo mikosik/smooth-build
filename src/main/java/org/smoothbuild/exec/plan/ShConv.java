@@ -104,14 +104,6 @@ public class ShConv {
     }
   }
 
-  private ParamRefH newParamRef(NList<ItemS> items, int i) {
-    var index = BigInteger.valueOf(i);
-    var item = items.get(i);
-    var typeS = item.type();
-    var typeH = convertType(typeS);
-    return objFactory.paramRef(index, typeH);
-  }
-
   private NatFuncH convertNatFunc(NatFuncS natFuncS) {
     var resType = convertType(natFuncS.resType());
     var paramTypes = convertParams(natFuncS.params());
