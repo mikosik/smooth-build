@@ -280,7 +280,6 @@ public class JobCreator {
       case NatFuncH nat -> natFuncEager(nat, actualResType, args, loc);
       case IfFuncH iff -> ifFuncEager(actualResType, args, loc);
       case MapFuncH map -> mapFuncEager(actualResType, args, scope, loc);
-      default -> throw new RuntimeException();
     };
   }
 

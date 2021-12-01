@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public sealed class EvalN extends NamedN implements EvalLike
+public sealed abstract class EvalN extends NamedN implements EvalLike
     permits FuncN, ItemN, ValN {
   private final Optional<TypeN> typeNode;
   private final Optional<ExprN> body;

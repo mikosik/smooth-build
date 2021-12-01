@@ -33,7 +33,7 @@ public class AstVisitor {
     switch (eval) {
       case FuncN func -> visitFunc(func);
       case ValN value -> visitValue(value);
-      default -> throw new RuntimeException(
+      case ItemN item -> throw new RuntimeException(
           "Didn't expect instance of " + eval.getClass().getCanonicalName());
     }
   }
@@ -75,8 +75,6 @@ public class AstVisitor {
       case RefN refN -> visitRef(refN);
       case SelectN selectN -> visitSelect(selectN);
       case StringN stringN -> visitStringLiteral(stringN);
-      case null, default -> throw new RuntimeException(
-          "Unknown node " + expr.getClass().getSimpleName());
     }
   }
 
