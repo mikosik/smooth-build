@@ -491,7 +491,11 @@ public class TestingContext {
   }
 
   public NatFuncH natFuncH(BlobH jarFile, StringH classBinaryName) {
-    return objDb().natFunc(natFuncHT(), jarFile, classBinaryName, boolH(true));
+    return natFuncH(natFuncHT(), jarFile, classBinaryName);
+  }
+
+  public NatFuncH natFuncH(NatFuncTypeH type, BlobH jarFile, StringH classBinaryName) {
+    return objDb().natFunc(type, jarFile, classBinaryName, boolH(true));
   }
 
   public TupleH personH(String firstName, String lastName) {
