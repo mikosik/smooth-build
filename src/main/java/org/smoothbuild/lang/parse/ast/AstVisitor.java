@@ -39,19 +39,19 @@ public class AstVisitor {
   }
 
   public void visitValue(ValN valN) {
-    valN.ann().ifPresent(this::visitNative);
+    valN.ann().ifPresent(this::visitAnn);
     valN.typeNode().ifPresent(this::visitType);
     valN.body().ifPresent(this::visitExpr);
   }
 
   public void visitFunc(FuncN funcN) {
-    funcN.ann().ifPresent(this::visitNative);
+    funcN.ann().ifPresent(this::visitAnn);
     funcN.typeNode().ifPresent(this::visitType);
     visitParams(funcN.params());
     funcN.body().ifPresent(this::visitExpr);
   }
 
-  public void visitNative(AnnN annotation) {
+  public void visitAnn(AnnN annotation) {
     visitStringLiteral(annotation.path());
   }
 
@@ -71,9 +71,9 @@ public class AstVisitor {
       case ArrayN arrayN -> visitArray(arrayN);
       case BlobN blobN -> visitBlobLiteral(blobN);
       case CallN callN -> visitCall(callN);
-      case SelectN selectN -> visitSelect(selectN);
       case IntN intN -> visitIntLiteral(intN);
       case RefN refN -> visitRef(refN);
+      case SelectN selectN -> visitSelect(selectN);
       case StringN stringN -> visitStringLiteral(stringN);
       case null, default -> throw new RuntimeException(
           "Unknown node " + expr.getClass().getSimpleName());
