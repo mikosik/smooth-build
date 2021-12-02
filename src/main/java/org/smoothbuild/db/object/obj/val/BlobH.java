@@ -18,7 +18,7 @@ public final class BlobH extends ValH {
   }
 
   @Override
-  public String valToString() {
+  public String objToString() {
     return "0x??";
   }
 }

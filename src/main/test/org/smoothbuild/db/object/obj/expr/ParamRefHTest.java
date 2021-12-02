@@ -92,6 +92,6 @@ public class ParamRefHTest extends TestingContext {
   public void to_string() {
     ParamRefH paramRef = paramRefH(intHT(), 123);
     assertThat(paramRef.toString())
-        .isEqualTo("Ref(123)@" + paramRef.hash());
+        .isEqualTo("ParamRef:Int(123)@" + paramRef.hash());
   }
 }

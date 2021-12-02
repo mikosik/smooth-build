@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.type.base.TypeH;
  */
 public class CallTypeH extends ExprSpecH {
   public CallTypeH(Hash hash, TypeH evaluationType) {
-    super("CALL", hash, CALL, evaluationType);
+    super("Call", hash, CALL, evaluationType);
   }
 
   @Override

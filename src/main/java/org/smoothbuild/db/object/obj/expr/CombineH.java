@@ -53,8 +53,4 @@ public class CombineH extends ExprH {
     return items;
   }
 
-  @Override
-  public String valToString() {
-    return "CONSTRUCT(???)";
-  }
 }

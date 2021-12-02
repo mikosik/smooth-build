@@ -28,7 +28,7 @@ public final class DefFuncH extends FuncH {
   }
 
   @Override
-  public String valToString() {
+  public String objToString() {
     return "DefFuncH(" + spec().name() + ")";
   }
 }

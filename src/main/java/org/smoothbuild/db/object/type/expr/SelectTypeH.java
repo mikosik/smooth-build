@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.type.base.TypeH;
  */
 public class SelectTypeH extends ExprSpecH {
   public SelectTypeH(Hash hash, TypeH evaluationType) {
-    super("SELECT", hash, SELECT, evaluationType);
+    super("Select", hash, SELECT, evaluationType);
   }
 
   @Override

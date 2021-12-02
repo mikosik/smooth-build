@@ -65,9 +65,4 @@ public class SelectH extends ExprH {
     return readSeqElemObj(
         DATA_PATH, dataHash(), INDEX_INDEX, DATA_SEQ_SIZE, IntH.class);
   }
-
-  @Override
-  public String valToString() {
-    return "Select(???)";
-  }
 }

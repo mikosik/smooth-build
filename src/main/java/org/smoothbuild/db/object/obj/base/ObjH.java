@@ -61,7 +61,7 @@ public abstract class ObjH {
 
   public abstract TypeH type();
 
-  public abstract String valToString();
+  public abstract String objToString();
 
   @Override
   public boolean equals(Object object) {
@@ -181,7 +181,7 @@ public abstract class ObjH {
 
   private String valToStringSafe() {
     try {
-      return valToString();
+      return objToString();
     } catch (DecodeObjNodeExc e) {
       return "?Exception?@" + hash();
     }

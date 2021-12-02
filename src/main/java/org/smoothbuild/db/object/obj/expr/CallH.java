@@ -78,9 +78,4 @@ public class CallH extends ExprH {
     return readSeqElemObj(
         DATA_PATH, dataHash(), ARGS_INDEX, DATA_SEQ_SIZE, CombineH.class);
   }
-
-  @Override
-  public String valToString() {
-    return "Call(???)";
-  }
 }

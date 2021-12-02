@@ -42,7 +42,7 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
-import org.smoothbuild.db.object.type.expr.RefTypeH;
+import org.smoothbuild.db.object.type.expr.ParamRefTypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
 import org.smoothbuild.db.object.type.val.AnyTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
@@ -391,11 +391,11 @@ public class TestingContext {
     return typeDb().order(elemSpec);
   }
 
-  public RefTypeH refHT() {
+  public ParamRefTypeH refHT() {
     return refHT(intHT());
   }
 
-  public RefTypeH refHT(TypeH evaluationType) {
+  public ParamRefTypeH refHT(TypeH evaluationType) {
     return typeDb().ref(evaluationType);
   }
 

@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
  */
 public class CombineTypeH extends ExprSpecH {
   public CombineTypeH(Hash hash, TupleTypeH evaluationType) {
-    super("CONSTRUCT", hash, COMBINE, evaluationType);
+    super("Combine", hash, COMBINE, evaluationType);
   }
 
   @Override

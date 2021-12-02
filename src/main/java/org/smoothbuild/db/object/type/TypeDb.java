@@ -48,7 +48,7 @@ import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqExc;
 import org.smoothbuild.db.object.type.expr.CallTypeH;
 import org.smoothbuild.db.object.type.expr.CombineTypeH;
 import org.smoothbuild.db.object.type.expr.OrderTypeH;
-import org.smoothbuild.db.object.type.expr.RefTypeH;
+import org.smoothbuild.db.object.type.expr.ParamRefTypeH;
 import org.smoothbuild.db.object.type.expr.SelectTypeH;
 import org.smoothbuild.db.object.type.val.AbstFuncTypeH;
 import org.smoothbuild.db.object.type.val.AnyTypeH;
@@ -232,7 +232,7 @@ public class TypeDb implements TypeFactoryH {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elemType));
   }
 
-  public RefTypeH ref(TypeH evaluationType) {
+  public ParamRefTypeH ref(TypeH evaluationType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType));
   }
 
@@ -444,13 +444,13 @@ public class TypeDb implements TypeFactoryH {
     return cache(new OrderTypeH(rootHash, evaluationType));
   }
 
-  private RefTypeH newRef(TypeH evaluationType) throws HashedDbExc {
+  private ParamRefTypeH newRef(TypeH evaluationType) throws HashedDbExc {
     var rootHash = writeExprRoot(PARAM_REF, evaluationType);
     return newRef(rootHash, evaluationType);
   }
 
-  private RefTypeH newRef(Hash rootHash, TypeH evaluationType) {
-    return cache(new RefTypeH(rootHash, evaluationType));
+  private ParamRefTypeH newRef(Hash rootHash, TypeH evaluationType) {
+    return cache(new ParamRefTypeH(rootHash, evaluationType));
   }
 
   private SelectTypeH newSelect(TypeH evaluationType) throws HashedDbExc {

@@ -44,7 +44,7 @@ import org.smoothbuild.db.object.type.exc.DecodeTypeRootExc;
 import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameExc;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeNodeExc;
 import org.smoothbuild.db.object.type.exc.UnexpectedTypeSeqExc;
-import org.smoothbuild.db.object.type.expr.RefTypeH;
+import org.smoothbuild.db.object.type.expr.ParamRefTypeH;
 import org.smoothbuild.db.object.type.val.ArrayTypeH;
 import org.smoothbuild.db.object.type.val.FuncTypeH;
 import org.smoothbuild.db.object.type.val.IntTypeH;
@@ -179,7 +179,7 @@ public class SpecHCorruptedTest extends TestingContext {
       );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeExc(
-              hash, ARRAY, DATA_PATH, TypeH.class, RefTypeH.class));
+              hash, ARRAY, DATA_PATH, TypeH.class, ParamRefTypeH.class));
     }
   }
 
@@ -396,7 +396,7 @@ public class SpecHCorruptedTest extends TestingContext {
       );
       assertCall(() -> typeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeExc(
-              typeHash, ABST_FUNC, FUNCTION_RES_PATH, TypeH.class, RefTypeH.class));
+              typeHash, ABST_FUNC, FUNCTION_RES_PATH, TypeH.class, ParamRefTypeH.class));
     }
 
     @Test
@@ -454,7 +454,7 @@ public class SpecHCorruptedTest extends TestingContext {
       );
       assertCall(() -> typeDb().get(typeHash))
           .throwsException(new UnexpectedTypeNodeExc(
-              typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH, TupleTypeH.class, RefTypeH.class));
+              typeHash, ABST_FUNC, FUNCTION_PARAMS_PATH, TupleTypeH.class, ParamRefTypeH.class));
     }
 
     @Test
@@ -628,7 +628,7 @@ public class SpecHCorruptedTest extends TestingContext {
     );
     assertThatGet(hash)
         .throwsException(new UnexpectedTypeNodeExc(
-            hash, kind, DATA_PATH, expected, RefTypeH.class));
+            hash, kind, DATA_PATH, expected, ParamRefTypeH.class));
   }
 
   private ThrownExceptionSubject assertThatGet(Hash hash) {
@@ -800,7 +800,7 @@ public class SpecHCorruptedTest extends TestingContext {
           );
       assertThatGet(hash)
           .throwsException(new UnexpectedTypeNodeExc(
-              hash, TUPLE, "data", 0, TypeH.class, RefTypeH.class));
+              hash, TUPLE, "data", 0, TypeH.class, ParamRefTypeH.class));
     }
 
     @Test

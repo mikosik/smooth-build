@@ -87,6 +87,6 @@ public class CombineHTest extends TestingContext {
   public void to_string() {
     CombineH expr = combineH(list(intH(1)));
     assertThat(expr.toString())
-        .isEqualTo("CONSTRUCT(???)@" + expr.hash());
+        .isEqualTo("Combine:{Int}(???)@" + expr.hash());
   }
 }

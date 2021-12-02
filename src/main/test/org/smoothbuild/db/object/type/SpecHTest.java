@@ -26,7 +26,7 @@ import static org.smoothbuild.db.object.type.TestingTypesH.ARRAY_VARIABLE;
 import static org.smoothbuild.db.object.type.TestingTypesH.BLOB;
 import static org.smoothbuild.db.object.type.TestingTypesH.BOOL;
 import static org.smoothbuild.db.object.type.TestingTypesH.CALL;
-import static org.smoothbuild.db.object.type.TestingTypesH.CONSTRUCT;
+import static org.smoothbuild.db.object.type.TestingTypesH.COMBINE;
 import static org.smoothbuild.db.object.type.TestingTypesH.INT;
 import static org.smoothbuild.db.object.type.TestingTypesH.NOTHING;
 import static org.smoothbuild.db.object.type.TestingTypesH.ORDER;
@@ -142,16 +142,16 @@ public class SpecHTest extends TestingContext {
         args(f -> f.tuple(list(f.string(), f.bool())), "{String,Bool}"),
         args(f -> f.tuple(list(f.tuple(list(f.int_())))), "{{Int}}"),
 
-        args(f -> f.call(f.int_()), "CALL:Int"),
-        args(f -> f.combine(f.tuple(list(f.string(), f.int_()))), "CONSTRUCT:{String,Int}"),
+        args(f -> f.call(f.int_()), "Call:Int"),
+        args(f -> f.combine(f.tuple(list(f.string(), f.int_()))), "Combine:{String,Int}"),
         args(f -> f.ifFunc(), "A(Bool, A, A)"),
         args(f -> f.mapFunc(), "[B]([A], B(A))"),
         args(f -> f.natFunc(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.defFunc(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
-        args(f -> f.order(f.string()), "ORDER:[String]"),
-        args(f -> f.ref(f.int_()), "REF:Int"),
-        args(f -> f.select(f.int_()), "SELECT:Int")
+        args(f -> f.order(f.string()), "Order:[String]"),
+        args(f -> f.ref(f.int_()), "ParamRef:Int"),
+        args(f -> f.select(f.int_()), "Select:Int")
     );
   }
 
@@ -393,7 +393,7 @@ public class SpecHTest extends TestingContext {
 
         arguments(CALL, CallH.class),
         arguments(ORDER, OrderH.class),
-        arguments(CONSTRUCT, CombineH.class),
+        arguments(COMBINE, CombineH.class),
         arguments(SELECT, SelectH.class),
         arguments(PARAM_REF, ParamRefH.class)
     );
@@ -487,7 +487,7 @@ public class SpecHTest extends TestingContext {
     tester.addEqualityGroup(ARRAY2_PERSON_TUPLE, ARRAY2_PERSON_TUPLE);
 
     tester.addEqualityGroup(CALL, CALL);
-    tester.addEqualityGroup(CONSTRUCT, CONSTRUCT);
+    tester.addEqualityGroup(COMBINE, COMBINE);
     tester.addEqualityGroup(ORDER, ORDER);
     tester.addEqualityGroup(PARAM_REF, PARAM_REF);
     tester.addEqualityGroup(SELECT, SELECT);

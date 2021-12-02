@@ -16,7 +16,7 @@ public final class BoolH extends ValH {
   }
 
   @Override
-  public String valToString() {
+  public String objToString() {
     return Boolean.toString(toJ());
   }
 }

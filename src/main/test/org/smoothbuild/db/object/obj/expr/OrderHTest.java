@@ -95,6 +95,6 @@ public class OrderHTest extends TestingContext {
   public void to_string() {
     OrderH array = orderH(list(intH(1)));
     assertThat(array.toString())
-        .isEqualTo("Order(???)@" + array.hash());
+        .isEqualTo("Order:[Int](???)@" + array.hash());
   }
 }

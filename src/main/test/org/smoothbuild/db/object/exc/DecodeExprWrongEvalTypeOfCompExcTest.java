@@ -13,7 +13,7 @@ public class DecodeExprWrongEvalTypeOfCompExcTest extends TestingContext {
     var exception = new DecodeExprWrongEvalTypeOfCompExc(
         Hash.of(13), selectHT(intHT()), "tuple", intHT(), stringHT());
     assertThat(exception.getMessage())
-        .isEqualTo("Cannot decode `SELECT:Int` "
+        .isEqualTo("Cannot decode `Select:Int` "
             + "object at b1197c208248d0f7ffb3e322d5ec187441dc1b26. "
             + "Its `tuple` component evaluation type is `String` while expected `Int`.");
   }

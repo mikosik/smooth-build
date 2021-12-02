@@ -25,4 +25,9 @@ public abstract class ExprH extends ObjH {
   public TypeH type() {
     return spec().evalType();
   }
+
+  @Override
+  public String objToString() {
+    return spec().name() + "(???)";
+  }
 }

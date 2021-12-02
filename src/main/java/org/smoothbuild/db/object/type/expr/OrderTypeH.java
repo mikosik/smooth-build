@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.type.val.ArrayTypeH;
  */
 public class OrderTypeH extends ExprSpecH {
   public OrderTypeH(Hash hash, ArrayTypeH evaluationType) {
-    super("ORDER", hash, ORDER, evaluationType);
+    super("Order", hash, ORDER, evaluationType);
   }
 
   @Override

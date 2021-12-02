@@ -20,6 +20,7 @@ public class ParamRefH extends ExprH {
   }
 
   @Override
-  public String valToString() {
-    return "Ref(" + value() + ")";
-  }}
+  public String objToString() {
+    return spec().name() + "(" + value() + ")";
+  }
+}

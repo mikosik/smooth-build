@@ -46,9 +46,4 @@ public class OrderH extends ExprH {
     }
     return elems;
   }
-
-  @Override
-  public String valToString() {
-    return "Order(???)";
-  }
 }

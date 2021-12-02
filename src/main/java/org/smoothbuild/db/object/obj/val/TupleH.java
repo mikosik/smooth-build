@@ -58,7 +58,7 @@ public final class TupleH extends ValH {
   }
 
   @Override
-  public String valToString() {
+  public String objToString() {
     return "{" + seqToString(items()) + '}';
   }
 }

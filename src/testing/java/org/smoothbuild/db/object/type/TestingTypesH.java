@@ -35,7 +35,7 @@ public class TestingTypesH {
 
   public static final SpecH CALL = CONTEXT.callHT();
   public static final SpecH ORDER = CONTEXT.orderHT();
-  public static final SpecH CONSTRUCT = CONTEXT.combineHT(list(INT, STRING));
+  public static final SpecH COMBINE = CONTEXT.combineHT(list(INT, STRING));
   public static final SpecH SELECT = CONTEXT.selectHT(INT);
   public static final SpecH PARAM_REF = CONTEXT.refHT(INT);
 

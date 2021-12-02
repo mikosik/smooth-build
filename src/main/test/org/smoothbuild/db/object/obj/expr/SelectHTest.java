@@ -133,6 +133,6 @@ public class SelectHTest extends TestingContext {
   public void to_string() {
     SelectH select = selectH(animalH(), intH(0));
     assertThat(select.toString())
-        .isEqualTo("Select(???)@" + select.hash());
+        .isEqualTo("Select:String(???)@" + select.hash());
   }
 }
