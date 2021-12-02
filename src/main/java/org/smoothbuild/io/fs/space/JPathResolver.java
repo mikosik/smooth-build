@@ -17,7 +17,7 @@ public class JPathResolver {
   public Path resolve(FilePath filePath) {
     Path path = spacePaths.get(filePath.space());
     if (path == null) {
-      throw new RuntimeException("Cannot resolve full path for " + filePath);
+      throw new IllegalArgumentException("Unknown space = " + filePath.space() + ".");
     }
     return path.resolve(filePath.path().toString());
   }
