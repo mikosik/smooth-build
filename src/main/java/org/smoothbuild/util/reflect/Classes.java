@@ -4,6 +4,7 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.util.io.Okios.readAndClose;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +20,12 @@ import okio.ByteString;
 public class Classes {
   public static final String CLASS_FILE_EXTENSION = ".class";
 
-  public static Class<?> loadClass(Path jarPath, String binaryName) throws ClassNotFoundException {
+  public static Class<?> loadClass(Path jarPath, String binaryName)
+      throws ClassNotFoundException, FileNotFoundException {
     return jarClassLoader(jarPath).loadClass(binaryName);
   }
 
-  private static ClassLoader jarClassLoader(Path jar) {
+  private static ClassLoader jarClassLoader(Path jar) throws FileNotFoundException {
     ClassLoader parentClassLoader = Classes.class.getClassLoader();
     return ClassLoaders.jarClassLoader(parentClassLoader, jar);
   }

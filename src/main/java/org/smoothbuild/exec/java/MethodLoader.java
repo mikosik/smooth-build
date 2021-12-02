@@ -6,6 +6,7 @@ import static org.smoothbuild.util.reflect.Classes.loadClass;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.file.Path;
@@ -88,8 +89,9 @@ public class MethodLoader {
       return loadClass(jarPath, classBinaryName);
     } catch (ClassNotFoundException e) {
       throw newLoadingException(extendedName, classBinaryName,
-          "Class '" + classBinaryName + "' does not exist in jar '" + originalJarFile + "'."
-      );
+          "Class '" + classBinaryName + "' does not exist in jar '" + originalJarFile + "'.");
+    } catch (FileNotFoundException e) {
+      throw newLoadingException(extendedName, classBinaryName, e.getMessage(), e);
     }
   }
 
