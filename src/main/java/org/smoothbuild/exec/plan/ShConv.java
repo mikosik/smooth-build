@@ -61,7 +61,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class ShConv {
   private final ObjFactory objFactory;
-  private final DefsS definitions;
+  private final DefsS defs;
   private final TypeShConv typeShConv;
   private final FileLoader fileLoader;
   private final Deque<NList<ItemS>> callStack;
@@ -72,7 +72,7 @@ public class ShConv {
   @Inject
   public ShConv(ObjFactory objFactory, DefsS defs, TypeShConv typeShConv, FileLoader fileLoader) {
     this.objFactory = objFactory;
-    this.definitions = defs;
+    this.defs = defs;
     this.typeShConv = typeShConv;
     this.fileLoader = fileLoader;
     this.callStack = new LinkedList<>();
@@ -203,7 +203,7 @@ public class ShConv {
   }
 
   public ObjH convertRef(RefS refS) {
-    return switch (definitions.referencables().get(refS.name())) {
+    return switch (defs.referencables().get(refS.name())) {
       case FuncS f -> convertFunc(f);
       case ValS v -> convertVal(v);
     };
