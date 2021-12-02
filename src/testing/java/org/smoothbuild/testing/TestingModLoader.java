@@ -59,17 +59,17 @@ public class TestingModLoader {
   }
 
   public void containsEvalWithType(String name, Type expectedType) {
-    TopEvalS referencable = assertContainsEval(name);
-    assertThat(referencable.type())
+    var topEval = assertContainsEval(name);
+    assertThat(topEval.type())
         .isEqualTo(expectedType);
   }
 
   private TopEvalS assertContainsEval(String name) {
-    var referencables = modS.value().referencables();
+    var topEvals = modS.value().topEvals();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(referencables.containsName(name))
+        .that(topEvals.containsName(name))
         .isTrue();
-    return referencables.get(name);
+    return topEvals.get(name);
   }
 
   public void containsType(Type expected) {

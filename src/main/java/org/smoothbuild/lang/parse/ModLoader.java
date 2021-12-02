@@ -85,8 +85,8 @@ public class ModLoader {
 
     var modules = imported.modules().values().asList();
     var types = sortedAst.structs().map(s -> (DefTypeS) loadStruct(path, s));
-    var referencables = loadEvaluables(path, sortedAst);
-    var moduleS = new ModS(path, modFiles, modules, types, referencables);
+    var evals = loadTopEvals(path, sortedAst);
+    var moduleS = new ModS(path, modFiles, modules, types, evals);
     return maybeValueAndLogs(moduleS, logBuffer);
   }
 
@@ -97,14 +97,14 @@ public class ModLoader {
     return new StructS(type, path, name, loc);
   }
 
-  private NList<TopEvalS> loadEvaluables(ModPath path, Ast ast) {
+  private NList<TopEvalS> loadTopEvals(ModPath path, Ast ast) {
     var local = ImmutableList.<TopEvalS>builder();
     for (StructN struct : ast.structs()) {
       var ctorS = loadCtor(path, struct);
       local.add(ctorS);
     }
-    for (EvalN referencable : ast.evaluables()) {
-      local.add(topEvalLoader.loadEvaluables(path, referencable));
+    for (EvalN eval : ast.topEvals()) {
+      local.add(topEvalLoader.loadEvaluables(path, eval));
     }
     return nList(local.build());
   }

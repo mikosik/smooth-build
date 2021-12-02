@@ -9,5 +9,5 @@ public record ModS(
     ModFiles files,
     ImmutableList<ModS> referencedMods,
     NList<DefTypeS> types,
-    NList<TopEvalS> referencables) {
+    NList<TopEvalS> topEvals) {
 }

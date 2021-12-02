@@ -28,15 +28,15 @@ import com.google.common.collect.ImmutableList;
 
 public class Ast {
   private final NList<StructN> structs;
-  private final ImmutableList<EvalN> evaluables;
+  private final ImmutableList<EvalN> topEvals;
 
-  public Ast(List<StructN> structs, List<EvalN> evaluables) {
+  public Ast(List<StructN> structs, List<EvalN> topEvals) {
     this.structs = nListWithNonUniqueNames(ImmutableList.copyOf(structs));
-    this.evaluables = ImmutableList.copyOf(evaluables);
+    this.topEvals = ImmutableList.copyOf(topEvals);
   }
 
-  public ImmutableList<EvalN> evaluables() {
-    return evaluables;
+  public ImmutableList<EvalN> topEvals() {
+    return topEvals;
   }
 
   public NList<StructN> structs() {
@@ -49,21 +49,21 @@ public class Ast {
       Log error = createCycleError("Type hierarchy", sortedTypes.cycle());
       return maybeLogs(logs(error));
     }
-    var sortedReferencables = sortEvalsByDeps();
-    if (sortedReferencables.sorted() == null) {
-      Log error = createCycleError("Dependency graph", sortedReferencables.cycle());
+    var sortedEvals = sortEvalsByDeps();
+    if (sortedEvals.sorted() == null) {
+      Log error = createCycleError("Dependency graph", sortedEvals.cycle());
       return maybeLogs(logs(error));
     }
-    Ast ast = new Ast(sortedTypes.valuesReversed(), sortedReferencables.valuesReversed());
+    Ast ast = new Ast(sortedTypes.valuesReversed(), sortedEvals.valuesReversed());
     return maybeValue(ast);
   }
 
   private TopologicalSortingRes<String, EvalN, Loc> sortEvalsByDeps() {
     HashSet<String> names = new HashSet<>();
-    evaluables.forEach(v -> names.add(v.name()));
+    topEvals.forEach(v -> names.add(v.name()));
 
     HashSet<GraphNode<String, EvalN, Loc>> nodes = new HashSet<>();
-    nodes.addAll(map(evaluables, value -> evalToGraphNode(value, names)));
+    nodes.addAll(map(topEvals, value -> evalToGraphNode(value, names)));
     return sortTopologically(nodes);
   }
 

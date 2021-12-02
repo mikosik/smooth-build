@@ -203,7 +203,7 @@ public class ShConv {
   }
 
   public ObjH convertRef(RefS refS) {
-    return switch (defs.referencables().get(refS.name())) {
+    return switch (defs.topEvals().get(refS.name())) {
       case FuncS f -> convertFunc(f);
       case ValS v -> convertVal(v);
     };

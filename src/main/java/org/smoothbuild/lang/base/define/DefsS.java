@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableMap;
 public record DefsS(
     ImmutableMap<ModPath, ModS> modules,
     NList<DefTypeS> types,
-    NList<TopEvalS> referencables) {
+    NList<TopEvalS> topEvals) {
 
   public static DefsS empty() {
     return new DefsS(ImmutableMap.of(), nList(), nList());
@@ -22,7 +22,7 @@ public record DefsS(
     return new DefsS(
         concat(modules, mod),
         nList(Lists.concat(types, mod.types())),
-        nList(Lists.concat(referencables, mod.referencables()))
+        nList(Lists.concat(topEvals, mod.topEvals()))
     );
   }
 

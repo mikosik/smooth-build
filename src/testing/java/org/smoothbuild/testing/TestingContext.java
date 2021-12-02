@@ -727,8 +727,8 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public RefS refS(TopEvalS referencable) {
-    return refS(1, referencable.type(), referencable.name());
+  public RefS refS(TopEvalS topEval) {
+    return refS(1, topEval.type(), topEval.name());
   }
 
   public RefS refS(int line, TypeS type, String name) {

@@ -20,7 +20,7 @@ public class ListRunner {
 
   public int run() {
     return runtimeController.setUpRuntimeAndRun(defintions -> defintions
-        .referencables()
+        .topEvals()
         .stream()
         .filter(f -> f.loc().file().space().equals(PRJ))
         .filter(ValS.class::isInstance)

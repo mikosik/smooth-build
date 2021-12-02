@@ -378,8 +378,8 @@ public class NativeTest extends AcceptanceTestCase {
     return matcher.group(1);
   }
 
-  private static String errorLoadingMessage(String referencable, String path, String message) {
-    return "Error loading native implementation for `" + referencable + "` specified as `" + path +
+  private static String errorLoadingMessage(String funcName, String path, String message) {
+    return "Error loading native implementation for `" + funcName + "` specified as `" + path +
         "`: " + message;
   }
 }

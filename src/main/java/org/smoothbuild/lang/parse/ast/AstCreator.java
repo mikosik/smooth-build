@@ -46,7 +46,7 @@ import com.google.common.collect.ImmutableList;
 public class AstCreator {
   public static Ast fromParseTree(FilePath filePath, ModContext module) {
     List<StructN> structs = new ArrayList<>();
-    List<EvalN> referencables = new ArrayList<>();
+    List<EvalN> evals = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
@@ -85,10 +85,10 @@ public class AstCreator {
         Optional<AnnN> annotation = createNativeSane(evaluable.ann());
         Loc loc = locOf(filePath, nameNode);
         if (evaluable.paramList() == null) {
-          referencables.add(new ValN(type, name, expr, annotation, loc));
+          evals.add(new ValN(type, name, expr, annotation, loc));
         } else {
           List<ItemN> params = createParams(evaluable.paramList());
-          referencables.add(new FuncN(type, name, params, expr, annotation, loc));
+          evals.add(new FuncN(type, name, params, expr, annotation, loc));
         }
         return null;
       }
@@ -281,7 +281,7 @@ public class AstCreator {
             + " without children.");
       }
     }.visit(module);
-    return new Ast(structs, referencables);
+    return new Ast(structs, evals);
   }
 
   private static String unquote(String quotedString) {

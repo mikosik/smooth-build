@@ -24,9 +24,9 @@ public class CallJob extends AbstractJob {
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public CallJob(TypeH type, Job referencable, ImmutableList<Job> args, Loc loc,
+  public CallJob(TypeH type, Job called, ImmutableList<Job> args, Loc loc,
       BoundsMap<TypeH> vars, IndexedScope<Job> scope, JobCreator jobCreator) {
-    super(type, concat(referencable, args), new NalImpl("building-evaluation", loc));
+    super(type, concat(called, args), new NalImpl("building-evaluation", loc));
     this.args = args;
     this.vars = vars;
     this.scope = scope;
