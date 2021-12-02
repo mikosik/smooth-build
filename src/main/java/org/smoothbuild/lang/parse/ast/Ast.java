@@ -8,7 +8,7 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
 import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NList.nListWithDuplicates;
+import static org.smoothbuild.util.collect.NList.nListWithNonUniqueNames;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class Ast {
   private final ImmutableList<EvalN> evaluables;
 
   public Ast(List<StructN> structs, List<EvalN> evaluables) {
-    this.structs = nListWithDuplicates(ImmutableList.copyOf(structs));
+    this.structs = nListWithNonUniqueNames(ImmutableList.copyOf(structs));
     this.evaluables = ImmutableList.copyOf(evaluables);
   }
 

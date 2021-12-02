@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
-import static org.smoothbuild.util.collect.NList.nListWithDuplicates;
+import static org.smoothbuild.util.collect.NList.nListWithNonUniqueNames;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +17,7 @@ public final class StructN extends NamedN {
   private final FuncN ctor;
 
   public StructN(String name, List<ItemN> fields, Loc loc) {
-    this(name, nListWithDuplicates(ImmutableList.copyOf(fields)), loc);
+    this(name, nListWithNonUniqueNames(ImmutableList.copyOf(fields)), loc);
   }
 
   private StructN(String name, NList<ItemN> fields, Loc loc) {

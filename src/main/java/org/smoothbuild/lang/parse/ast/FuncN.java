@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NList.nListWithDuplicates;
+import static org.smoothbuild.util.collect.NList.nListWithNonUniqueNames;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +19,7 @@ public final class FuncN extends EvalN {
 
   public FuncN(Optional<TypeN> type, String name, List<ItemN> params, Optional<ExprN> body,
       Optional<AnnN> ann, Loc loc) {
-    this(type, name, nListWithDuplicates(ImmutableList.copyOf(params)), body, ann, loc);
+    this(type, name, nListWithNonUniqueNames(ImmutableList.copyOf(params)), body, ann, loc);
   }
 
   public FuncN(Optional<TypeN> type, String name, NList<ItemN> params, Optional<ExprN> body,

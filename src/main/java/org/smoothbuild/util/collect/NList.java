@@ -1,24 +1,28 @@
 package org.smoothbuild.util.collect;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.base.Suppliers.memoize;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.AbstractList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
+/**
+ * This class is thread-safe.
+ */
 public class NList<T extends Nameable> extends AbstractList<T> {
   private static final NList<?> EMPTY = nList(ImmutableList.of());
 
@@ -49,30 +53,36 @@ public class NList<T extends Nameable> extends AbstractList<T> {
         () -> calculateIndexMap(map.values()));
   }
 
-  public static <E extends Nameable> NList<E> nListWithDuplicates(ImmutableList<E> list) {
-    var withoutDuplicates = list.stream().collect(toImmutableSet());
+  public static <E extends Nameable> NList<E> nListWithNonUniqueNames(ImmutableList<E> list) {
     return new NList<>(
         () -> list,
-        () -> calculateMap(withoutDuplicates),
-        () -> calculateIndexMap(withoutDuplicates));
+        () -> calculateMap(list),
+        () -> calculateIndexMap(list));
   }
 
-  private NList(
+  // visible for testing
+  NList(
       Supplier<ImmutableList<T>> list,
       Supplier<ImmutableMap<String, T>> map,
       Supplier<ImmutableMap<String, Integer>> indexMap) {
-    this.list = list;
-    this.map = map;
-    this.indexMap = indexMap;
+    this.list = memoize(list);
+    this.map = memoize(map);
+    this.indexMap = memoize(indexMap);
   }
 
   private static <E extends Nameable> ImmutableMap<String, Integer> calculateIndexMap(
       Iterable<E> nameables) {
     Builder<String, Integer> builder = ImmutableMap.builder();
+    var names = new HashSet<String>();
     int i = 0;
     for (E nameable : nameables) {
       int index = i;
-      nameable.nameO().ifPresent(n -> builder.put(n, index));
+      nameable.nameO().ifPresent(n -> {
+        if (!names.contains(n)) {
+          builder.put(n, index);
+          names.add(n);
+        }
+      });
       i++;
     }
     return builder.build();
@@ -80,8 +90,14 @@ public class NList<T extends Nameable> extends AbstractList<T> {
 
   private static <E extends Nameable> ImmutableMap<String, E> calculateMap(Iterable<E> nameables) {
     Builder<String, E> builder = ImmutableMap.builder();
+    var names = new HashSet<String>();
     for (E nameable : nameables) {
-      nameable.nameO().ifPresent(n -> builder.put(n, nameable));
+      nameable.nameO().ifPresent(n -> {
+        if (!names.contains(n)) {
+          builder.put(n, nameable);
+          names.add(n);
+        }
+      });
     }
     return builder.build();
   }
