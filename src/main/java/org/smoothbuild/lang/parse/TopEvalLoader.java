@@ -178,7 +178,7 @@ public class TopEvalLoader {
       var index = structType.fields().indexMap().get(selectN.fieldName());
       var fieldType = structType.fields().get(index).type();
       var expr = createExpression(selectN.expr());
-      return new SelectS(fieldType, expr, index, selectN.loc());
+      return new SelectS(fieldType, expr, selectN.fieldName(), selectN.loc());
     }
 
     private ExprS createReference(RefN ref) {

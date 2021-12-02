@@ -735,8 +735,8 @@ public class TestingContext {
     return new RefS(type, name, loc(line));
   }
 
-  public SelectS selectS(int line, TypeS field, int index, ExprS expr) {
-    return new SelectS(field, expr, index, loc(line));
+  public SelectS selectS(int line, TypeS type, String field, ExprS expr) {
+    return new SelectS(type, expr, field, loc(line));
   }
 
   public StringS stringS() {

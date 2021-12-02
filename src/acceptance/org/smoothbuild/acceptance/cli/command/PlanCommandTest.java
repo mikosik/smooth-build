@@ -107,7 +107,7 @@ public class PlanCommandTest {
       runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          String .0
+          String .field
             {String} building-evaluation
               {String}(String) myStruct
               String "abc"

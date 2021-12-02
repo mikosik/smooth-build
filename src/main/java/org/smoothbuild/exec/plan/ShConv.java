@@ -41,6 +41,7 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.ValS;
+import org.smoothbuild.lang.base.type.impl.StructTypeS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
@@ -210,7 +211,9 @@ public class ShConv {
 
   private SelectH convertSel(SelectS selectS) {
     var tupleH = convertExpr(selectS.structExpr());
-    var indexH = objFactory.int_(BigInteger.valueOf(selectS.index()));
+    var structTypeS = (StructTypeS) selectS.structExpr().type();
+    var indexJ = structTypeS.fields().indexMap().get(selectS.field());
+    var indexH = objFactory.int_(BigInteger.valueOf(indexJ));
     return objFactory.select(tupleH, indexH);
   }
 

@@ -212,7 +212,7 @@ public class BuildCommandTest {
             result = aStruct.myField;
             """;
       private static final String SELECT_TASK_HEADER = """
-          .0                                       build.smooth:5                 exec
+          .myField                                 build.smooth:5                 exec
           """;
 
       @Test
@@ -455,7 +455,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          .0                                       build.smooth:4                 exec
+          .myField                                 build.smooth:4                 exec
           """);
     }
 
