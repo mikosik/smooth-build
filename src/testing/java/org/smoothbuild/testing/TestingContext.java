@@ -1,5 +1,6 @@
 package org.smoothbuild.testing;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.define.ItemS.toTypes;
@@ -12,6 +13,7 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import java.math.BigInteger;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -61,6 +63,7 @@ import org.smoothbuild.db.object.type.val.VarH;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
+import org.smoothbuild.exec.plan.TypeShConv;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -68,9 +71,11 @@ import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
+import org.smoothbuild.lang.base.define.IfFuncS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
+import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
@@ -159,6 +164,10 @@ public class TestingContext {
 
   private Container newContainer() {
     return new Container(fullFileSystem(), objFactory());
+  }
+
+  public TypeShConv typeShConv() {
+    return new TypeShConv(objFactory());
   }
 
   public ObjFactory objFactory() {
@@ -436,6 +445,10 @@ public class TestingContext {
     return objFactory().blob(sink -> sink.writeUtf8("blob data"));
   }
 
+  public BlobH blobH(int data) {
+    return blobH(ByteString.of((byte) data));
+  }
+
   public BlobH blobH(ByteString bytes) {
     return objFactory().blob(sink -> sink.write(bytes));
   }
@@ -466,7 +479,11 @@ public class TestingContext {
   }
 
   public DefFuncH defFuncH(ObjH body) {
-    var type = defFuncHT(body.type(), list(stringHT()));
+    return defFuncH(list(), body);
+  }
+
+  public DefFuncH defFuncH(ImmutableList<TypeH> paramTypes, ObjH body) {
+    var type = defFuncHT(body.type(), paramTypes);
     return defFuncH(type, body);
   }
 
@@ -681,8 +698,23 @@ public class TestingContext {
     return new CallS(type, expr, list(args), loc(line));
   }
 
+  public CombineS combineS(ExprS... expr) {
+    var exprs = ImmutableList.copyOf(expr);
+    return combineS(1, structST("MyStruct", nList(exprsToItemSigs(exprs))), exprs);
+  }
+
+  private ImmutableList<ItemSigS> exprsToItemSigs(ImmutableList<ExprS> exprs) {
+    return IntStream.range(0, exprs.size())
+        .mapToObj(i -> new ItemSigS(exprs.get(i).type(), "field" + i, empty()))
+        .collect(toImmutableList());
+  }
+
   public CombineS combineS(int line, StructTypeS type, ExprS... expr) {
-    return new CombineS(type, ImmutableList.copyOf(expr), loc(line));
+    return combineS(line, type, ImmutableList.copyOf(expr));
+  }
+
+  public CombineS combineS(int line, StructTypeS type, ImmutableList<ExprS> exprs) {
+    return new CombineS(type, exprs, loc(line));
   }
 
   public NatFuncS funcS(TypeS type, String name, ItemS... params) {
@@ -715,8 +747,16 @@ public class TestingContext {
     return new IntS(intST(), BigInteger.valueOf(value), loc(line));
   }
 
-  public OrderS orderS(int line, TypeS elemType, ExprS... expr) {
-    return new OrderS(arrayST(elemType), ImmutableList.copyOf(expr), loc(line));
+  public OrderS orderS(TypeS elemType, ExprS... exprs) {
+    return orderS(1, elemType, exprs);
+  }
+
+  public OrderS orderS(int line, TypeS elemType, ExprS... exprs) {
+    return new OrderS(arrayST(elemType), ImmutableList.copyOf(exprs), loc(line));
+  }
+
+  public ParamRefS paramRefS(TypeS type) {
+    return paramRefS(type, "refName");
   }
 
   public ParamRefS paramRefS(TypeS type, String name) {
@@ -735,12 +775,20 @@ public class TestingContext {
     return new RefS(type, name, loc(line));
   }
 
+  public SelectS selectS(TypeS type, String field, ExprS expr) {
+    return selectS(1, type, field, expr);
+  }
+
   public SelectS selectS(int line, TypeS type, String field, ExprS expr) {
     return new SelectS(type, expr, field, loc(line));
   }
 
   public StringS stringS() {
-    return stringS(1, "abc");
+    return stringS("abc");
+  }
+
+  public StringS stringS(String string) {
+    return stringS(1, string);
   }
 
   public StringS stringS(int line, String data) {
@@ -748,6 +796,10 @@ public class TestingContext {
   }
 
   // other smooth language thingies
+
+  public AnnS annS() {
+    return annS(1, stringS("implementation.Class"));
+  }
 
   public AnnS annS(int line, StringS implementedBy) {
     return annS(line, implementedBy, true);
@@ -777,16 +829,35 @@ public class TestingContext {
     return new ItemS(type, modPath(), name, defaultArg, loc(line));
   }
 
+  public DefValS defValS(String name, ExprS expr) {
+    return defValS(1, expr.type(), name, expr);
+  }
+
   public DefValS defValS(int line, TypeS type, String name, ExprS expr) {
     return new DefValS(type, modPath(), name, expr, loc(line));
+  }
+
+  public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS expr) {
+    return defFuncS(1, funcST(expr.type(), toTypes(params)), name, params, expr);
   }
 
   public DefFuncS defFuncS(int line, FuncTypeS type, String name, NList<ItemS> params, ExprS expr) {
     return new DefFuncS(type, modPath(), name, params, expr, loc(line));
   }
 
-  public NatFuncS natFuncS(int line, FuncTypeS type, String name, NList<ItemS> params,
-      AnnS ann) {
+  public IfFuncS ifFuncS() {
+    return new IfFuncS(modPath(), typeFactoryS());
+  }
+
+  public MapFuncS mapFuncS() {
+    return new MapFuncS(modPath(), typeFactoryS());
+  }
+
+  public NatFuncS natFuncS(FuncTypeS type, String name, NList<ItemS> params) {
+    return natFuncS(1, type, name, params, annS());
+  }
+
+  public NatFuncS natFuncS(int line, FuncTypeS type, String name, NList<ItemS> params, AnnS ann) {
     return new NatFuncS(type, modPath(), name, params, ann, loc(line));
   }
 

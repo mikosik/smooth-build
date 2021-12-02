@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 public class CallHTest extends TestingContext {
   @Test
   public void type_of_call_expr_is_inferred_correctly() {
-    assertThat(callH(defFuncH(), list(stringH())).spec())
+    assertThat(callH(defFuncH(list(stringHT()), intH()), list(stringH())).spec())
         .isEqualTo(callHT(intHT()));
   }
 
@@ -27,19 +27,19 @@ public class CallHTest extends TestingContext {
 
   @Test
   public void creating_call_with_too_few_args_causes_exception() {
-    assertCall(() -> callH(defFuncH(), list()))
+    assertCall(() -> callH(defFuncH(list(stringHT()), intH()), list()))
         .throwsException(argsNotMatchingParamsException("{}", "{String}"));
   }
 
   @Test
   public void creating_call_with_too_many_args_causes_exception() {
-    assertCall(() -> callH(defFuncH(), list(intH(), intH())))
+    assertCall(() -> callH(defFuncH(list(stringHT()), intH()), list(intH(), intH())))
         .throwsException(argsNotMatchingParamsException("{Int,Int}", "{String}"));
   }
 
   @Test
   public void creating_call_with_arg_not_matching_param_type_causes_exception() {
-    assertCall(() -> callH(defFuncH(), list(intH(3))))
+    assertCall(() -> callH(defFuncH(list(stringHT()), intH()), list(intH(3))))
         .throwsException(argsNotMatchingParamsException("{Int}", "{String}"));
   }
 
@@ -51,14 +51,14 @@ public class CallHTest extends TestingContext {
 
   @Test
   public void func_returns_func_expr() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     assertThat(callH(func, list(stringH())).data().func())
         .isEqualTo(func);
   }
 
   @Test
   public void args_returns_arg_exprs() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func, args).data().args())
         .isEqualTo(combineH(args));
@@ -66,7 +66,7 @@ public class CallHTest extends TestingContext {
 
   @Test
   public void call_with_equal_values_are_equal() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func, args))
         .isEqualTo(callH(func, args));
@@ -74,8 +74,8 @@ public class CallHTest extends TestingContext {
 
   @Test
   public void call_with_different_funcs_are_not_equal() {
-    var func1 = defFuncH(intH(1));
-    var func2 = defFuncH(intH(2));
+    var func1 = defFuncH(list(stringHT()), intH(1));
+    var func2 = defFuncH(list(stringHT()), intH(2));
     ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func1, args))
         .isNotEqualTo(callH(func2, args));
@@ -83,14 +83,14 @@ public class CallHTest extends TestingContext {
 
   @Test
   public void call_with_different_args_are_not_equal() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     assertThat(callH(func, list(stringH("abc"))))
         .isNotEqualTo(callH(func, list(stringH("def"))));
   }
 
   @Test
   public void hash_of_calls_with_equal_values_is_the_same() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func, args).hash())
         .isEqualTo(callH(func, args).hash());
@@ -108,14 +108,14 @@ public class CallHTest extends TestingContext {
 
   @Test
   public void hash_of_calls_with_different_args_is_not_the_same() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     assertThat(callH(func, list(stringH("abc"))).hash())
         .isNotEqualTo(callH(func, list(stringH("def"))).hash());
   }
 
   @Test
   public void hash_code_of_calls_with_equal_values_is_the_same() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     ImmutableList<ObjH> args = list(stringH()) ;
     assertThat(callH(func, args).hashCode())
         .isEqualTo(callH(func, args).hashCode());
@@ -123,30 +123,30 @@ public class CallHTest extends TestingContext {
 
   @Test
   public void hash_code_of_calls_with_different_func_is_not_the_same() {
-    var func1 = defFuncH(intH(1));
-    var func2 = defFuncH(intH(2));
-    ImmutableList<ObjH> args = list(stringH()) ;
+    var func1 = defFuncH(list(stringHT()), intH(1));
+    var func2 = defFuncH(list(stringHT()), intH(2));
+    ImmutableList<ObjH> args = list(stringH());
     assertThat(callH(func1, args).hashCode())
         .isNotEqualTo(callH(func2, args).hashCode());
   }
 
   @Test
   public void hash_code_of_calls_with_different_args_is_not_the_same() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     assertThat(callH(func, list(stringH("abc"))).hashCode())
         .isNotEqualTo(callH(func, list(stringH("def"))).hashCode());
   }
 
   @Test
   public void call_can_be_read_back_by_hash() {
-    var call = callH(defFuncH(), list(stringH()));
+    var call = callH(defFuncH(list(stringHT()), intH()), list(stringH()));
     assertThat(objDbOther().get(call.hash()))
         .isEqualTo(call);
   }
 
   @Test
   public void call_read_back_by_hash_has_same_data() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     ImmutableList<ObjH> args = list(stringH());
     var call = callH(func, args);
     assertThat(((CallH) objDbOther().get(call.hash())).data())
@@ -155,7 +155,7 @@ public class CallHTest extends TestingContext {
 
   @Test
   public void to_string() {
-    var func = defFuncH();
+    var func = defFuncH(list(stringHT()), intH());
     var call = callH(func, list(stringH()));
     assertThat(call.toString())
         .isEqualTo("Call:Int(???)@" + call.hash());

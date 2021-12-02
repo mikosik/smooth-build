@@ -85,7 +85,7 @@ public class ShConv {
     return ImmutableMap.copyOf(nals);
   }
 
-  public FuncH convertFunc(FuncS funcS) {
+  private FuncH convertFunc(FuncS funcS) {
     return computeIfAbsent(funcCache, funcS.name(), name -> convertFuncImpl(funcS));
   }
 
@@ -130,7 +130,7 @@ public class ShConv {
 
   // handling value
 
-  public ObjH convertVal(ValS valS) {
+  private ObjH convertVal(ValS valS) {
     return computeIfAbsent(valCache, valS.name(), name -> convertValImpl(valS));
   }
 
@@ -153,17 +153,17 @@ public class ShConv {
     return map(exprs, this::convertExpr);
   }
 
-  private ObjH convertExpr(ExprS exprS) {
+  public ObjH convertExpr(ExprS exprS) {
     return switch (exprS) {
       case BlobS blobS -> convertAndStoreMapping(blobS, this::convertBlob);
       case CallS callS -> convertAndStoreMapping(callS, this::convertCall);
       case CombineS combineS -> convertAndStoreMapping(combineS, this::convertCombine);
       case IntS intS -> convertAndStoreMapping(intS, this::convertInt);
-      case OrderS orderS -> convertAndStoreMapping(orderS, this::convertOrd);
+      case OrderS orderS -> convertAndStoreMapping(orderS, this::convertOrder);
       case ParamRefS paramRefS -> convertAndStoreMapping(paramRefS, this::convertParamRef);
       case RefS refS -> convertRef(refS);
-      case SelectS selectS -> convertAndStoreMapping(selectS, this::convertSel);
-      case StringS stringS -> convertAndStoreMapping(stringS, this::convertStr);
+      case SelectS selectS -> convertAndStoreMapping(selectS, this::convertSelect);
+      case StringS stringS -> convertAndStoreMapping(stringS, this::convertString);
     };
   }
 
@@ -193,7 +193,7 @@ public class ShConv {
     return objFactory.int_(intS.bigInteger());
   }
 
-  private OrderH convertOrd(OrderS orderS) {
+  private OrderH convertOrder(OrderS orderS) {
     return objFactory.order(convertExprs(orderS.elems()));
   }
 
@@ -202,14 +202,14 @@ public class ShConv {
     return objFactory.paramRef(BigInteger.valueOf(index), convertType(paramRefS.type()));
   }
 
-  public ObjH convertRef(RefS refS) {
+  private ObjH convertRef(RefS refS) {
     return switch (defs.topEvals().get(refS.name())) {
       case FuncS f -> convertFunc(f);
       case ValS v -> convertVal(v);
     };
   }
 
-  private SelectH convertSel(SelectS selectS) {
+  private SelectH convertSelect(SelectS selectS) {
     var tupleH = convertExpr(selectS.structExpr());
     var structTypeS = (StructTypeS) selectS.structExpr().type();
     var indexJ = structTypeS.fields().indexMap().get(selectS.field());
@@ -217,7 +217,7 @@ public class ShConv {
     return objFactory.select(tupleH, indexH);
   }
 
-  private StringH convertStr(StringS stringS) {
+  private StringH convertString(StringS stringS) {
     return objFactory.string(stringS.string());
   }
 

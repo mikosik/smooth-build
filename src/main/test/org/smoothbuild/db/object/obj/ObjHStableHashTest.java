@@ -102,7 +102,7 @@ public class ObjHStableHashTest extends TestingContext {
   class _call {
     @Test
     public void call_expression_with_one_arg() {
-      assertThat(callH(defFuncH(), list(stringH("abc"))).hash())
+      assertThat(callH(defFuncH(list(stringHT()), intH()), list(stringH("abc"))).hash())
           .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
     }
 

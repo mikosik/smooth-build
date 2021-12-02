@@ -26,7 +26,7 @@ public class ExecutionPlanner {
 
   public ImmutableMap<RefS, Job> createPlans(DefsS defs, List<RefS> values) {
     var shConverter = shConvProv.get(defs);
-    var shMapping = toMap(values, shConverter::convertRef);
+    var shMapping = toMap(values, shConverter::convertExpr);
     var jobCreator = jobCreatorProvider.get(shConverter.nals());
     return mapValues(shMapping, jobCreator::commandLineExprEagerJob);
   }
