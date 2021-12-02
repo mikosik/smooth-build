@@ -23,7 +23,7 @@ public class ClassLoaders {
     try {
       return new URL(urlString);
     } catch (MalformedURLException e) {
-      throw new RuntimeException("Cannot convert '" + urlString + "' to URL.");
+      throw new IllegalArgumentException("Cannot convert '" + urlString + "' to URL.");
     }
   }
 }
