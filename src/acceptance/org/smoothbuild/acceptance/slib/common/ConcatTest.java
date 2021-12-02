@@ -57,4 +57,15 @@ public class ConcatTest extends AcceptanceTestCase {
     assertThat(artifactStringified("result"))
         .isEqualTo(list("abc", "def"));
   }
+
+  @Test
+  public void concatenate_that_requires_conversion() throws Exception {
+    createUserModule("""
+            result = concat([], ["abc", "def"]);
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(artifactStringified("result"))
+        .isEqualTo(list("abc", "def"));
+  }
 }
