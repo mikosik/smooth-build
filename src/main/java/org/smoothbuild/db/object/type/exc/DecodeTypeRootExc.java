@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.type.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.SpecKindH;
+import org.smoothbuild.db.object.type.base.CatKindH;
 
 public class DecodeTypeRootExc extends DecodeTypeExc {
   public DecodeTypeRootExc(Hash hash, int actualSize) {
@@ -10,7 +10,7 @@ public class DecodeTypeRootExc extends DecodeTypeExc {
         .formatted(hash, actualSize));
   }
 
-  public DecodeTypeRootExc(Hash hash, SpecKindH kind, int size, int expectedSize) {
+  public DecodeTypeRootExc(Hash hash, CatKindH kind, int size, int expectedSize) {
     super("Cannot decode %s type at %s. Its merkle root has %d children when %d is expected."
         .formatted(kind.name(), hash, size, expectedSize));
   }

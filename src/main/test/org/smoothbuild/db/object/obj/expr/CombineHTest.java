@@ -12,14 +12,14 @@ import com.google.common.collect.ImmutableList;
 public class CombineHTest extends TestingContext {
   @Test
   public void type_of_empty_combine_is_inferred_correctly() {
-    assertThat(combineH(list()).spec())
-        .isEqualTo(combineHT(list()));
+    assertThat(combineH(list()).cat())
+        .isEqualTo(combineCH(list()));
   }
 
   @Test
   public void type_of_combine_is_inferred_correctly() {
-    assertThat(combineH(list(intH(3))).spec())
-        .isEqualTo(combineHT(list(intHT())));
+    assertThat(combineH(list(intH(3))).cat())
+        .isEqualTo(combineCH(list(intTH())));
   }
 
   @Test

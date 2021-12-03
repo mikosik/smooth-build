@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.type.val;
 
-import static org.smoothbuild.db.object.type.base.SpecKindH.VARIABLE;
+import static org.smoothbuild.db.object.type.base.CatKindH.VARIABLE;
 import static org.smoothbuild.util.collect.Sets.set;
 
 import org.smoothbuild.db.hashed.Hash;

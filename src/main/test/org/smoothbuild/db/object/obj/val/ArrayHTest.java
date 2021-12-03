@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.type.TestingTypesH;
-import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.NothingTypeH;
+import org.smoothbuild.db.object.type.val.NothingTH;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -21,7 +21,7 @@ import okio.ByteString;
 public class ArrayHTest extends TestingContext {
   @Test
   public void empty_nothing_array_can_be_iterated_as_tuple() {
-    ArrayH array = objDb().arrayBuilder(arrayHT(nothingHT()))
+    ArrayH array = objDb().arrayBuilder(arrayTH(nothingTH()))
         .build();
     assertThat(array.elems(TupleH.class))
         .isEmpty();
@@ -29,7 +29,7 @@ public class ArrayHTest extends TestingContext {
 
   @Test
   public void string_array_cannot_be_iterated_as_tuple() {
-    ArrayH array = objDb().arrayBuilder(arrayHT(stringHT()))
+    ArrayH array = objDb().arrayBuilder(arrayTH(stringTH()))
         .add(stringH("abc"))
         .build();
     assertCall(() -> array.elems(TupleH.class))
@@ -39,7 +39,7 @@ public class ArrayHTest extends TestingContext {
 
   @Test
   public void empty_array_is_empty() {
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .build();
     assertThat(array.elems(StringH.class))
         .isEmpty();
@@ -47,21 +47,21 @@ public class ArrayHTest extends TestingContext {
 
   @Test
   public void adding_null_is_forbidden() {
-    ArrayHBuilder arrayBuilder = objDb().arrayBuilder(arrayHT());
+    ArrayHBuilder arrayBuilder = objDb().arrayBuilder(arrayTH());
     assertCall(() -> arrayBuilder.add(null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void adding_elem_with_wrong_type_is_forbidden() {
-    ArrayHBuilder arrayBuilder = objDb().arrayBuilder(arrayHT());
+    ArrayHBuilder arrayBuilder = objDb().arrayBuilder(arrayTH());
     assertCall(() -> arrayBuilder.add(blobH(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void array_contains_added_elem() {
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .add(stringH("abc"))
         .build();
     assertThat(array.elems(StringH.class))
@@ -72,7 +72,7 @@ public class ArrayHTest extends TestingContext {
   public void array_contains_added_elem_via_add_all_method() {
     StringH str = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .addAll(list(str, str2))
         .build();
     assertThat(array.elems(StringH.class))
@@ -85,7 +85,7 @@ public class ArrayHTest extends TestingContext {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
     StringH str3 = stringH("ghi");
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .add(str1)
         .add(str2)
         .add(str3)
@@ -98,7 +98,7 @@ public class ArrayHTest extends TestingContext {
   @Test
   public void adding_same_elem_twice_builds_array_with_two_elems() {
     StringH str = stringH("abc");
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .add(str)
         .add(str)
         .build();
@@ -110,7 +110,7 @@ public class ArrayHTest extends TestingContext {
   public void arrays_with_same_elems_have_same_hash() {
     var str1 = stringH("abc");
     var str2 = stringH("def");
-    var arrayTypeH = arrayHT(stringHT());
+    var arrayTypeH = arrayTH(stringTH());
     ArrayH array = objDb().arrayBuilder(arrayTypeH)
         .add(str1)
         .add(str2)
@@ -126,7 +126,7 @@ public class ArrayHTest extends TestingContext {
   @Test
   public void one_elem_array_hash_is_different_than_its_elem_hash() {
     StringH str = stringH("abc");
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .add(str)
         .build();
     assertThat(array.hash())
@@ -137,7 +137,7 @@ public class ArrayHTest extends TestingContext {
   public void arrays_with_same_elems_but_in_different_order_have_different_hashes() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    var arrayTypeH = arrayHT(stringHT());
+    var arrayTypeH = arrayTH(stringTH());
     ArrayH array = objDb().arrayBuilder(arrayTypeH)
         .add(str1)
         .add(str2)
@@ -154,7 +154,7 @@ public class ArrayHTest extends TestingContext {
   public void array_with_one_more_elem_have_different_hash() {
     var str1 = stringH("abc");
     var str2 = stringH("def");
-    var arrayTypeH = arrayHT(stringHT());
+    var arrayTypeH = arrayTH(stringTH());
     var array1 = objDb().arrayBuilder(arrayTypeH)
         .add(str1)
         .build();
@@ -170,7 +170,7 @@ public class ArrayHTest extends TestingContext {
   public void array_can_be_read_by_hash() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .add(str1)
         .add(str2)
         .build();
@@ -182,7 +182,7 @@ public class ArrayHTest extends TestingContext {
   public void array_read_by_hash_contains_same_elems() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .add(str1)
         .add(str2)
         .build();
@@ -195,7 +195,7 @@ public class ArrayHTest extends TestingContext {
   public void array_read_by_hash_has_same_hash() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .add(str1)
         .add(str2)
         .build();
@@ -206,13 +206,13 @@ public class ArrayHTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("type_test_data")
   public void type(TypeH elemType) {
-    var arrayTypeH = arrayHT(elemType);
+    var arrayTypeH = arrayTH(elemType);
     var arrayH = objDb().arrayBuilder(arrayTypeH).build();
-    assertThat(arrayH.spec())
+    assertThat(arrayH.cat())
         .isEqualTo(arrayTypeH);
   }
 
-  private static List<SpecH> type_test_data() {
+  private static List<CatH> type_test_data() {
     return TestingTypesH.TYPESV_TO_TEST;
   }
 
@@ -220,7 +220,7 @@ public class ArrayHTest extends TestingContext {
   public void to_string() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    ArrayH array = objDb().arrayBuilder(arrayHT())
+    ArrayH array = objDb().arrayBuilder(arrayTH())
         .add(str1)
         .add(str2)
         .build();
@@ -233,40 +233,40 @@ public class ArrayHTest extends TestingContext {
   class _nothing_array {
     @Test
     public void type_of_nothing_array_is_nothing_array() {
-      ArrayH array = emptyArrayOf(nothingHT());
-      assertThat(array.spec())
-          .isEqualTo(arrayHT(nothingHT()));
+      ArrayH array = emptyArrayOf(nothingTH());
+      assertThat(array.cat())
+          .isEqualTo(arrayTH(nothingTH()));
     }
 
     @Test
     public void nothing_array_is_empty() {
-      assertThat(emptyArrayOf(nothingHT()).elems(ValH.class))
+      assertThat(emptyArrayOf(nothingTH()).elems(ValH.class))
           .isEmpty();
     }
 
     @Test
     public void nothing_array_can_be_read_by_hash() {
-      ArrayH array = emptyArrayOf(nothingHT());
+      ArrayH array = emptyArrayOf(nothingTH());
       assertThat(objDbOther().get(array.hash()))
           .isEqualTo(array);
     }
 
     @Test
     public void nothing_array_read_by_hash_is_empty() {
-      ArrayH array = emptyArrayOf(nothingHT());
+      ArrayH array = emptyArrayOf(nothingTH());
       assertThat(((ArrayH) objDbOther().get(array.hash())).elems(ValH.class))
           .isEmpty();
     }
 
     @Test
     public void nothing_array_to_string() {
-      ArrayH array = emptyArrayOf(nothingHT());
+      ArrayH array = emptyArrayOf(nothingTH());
       assertThat(array.toString())
           .isEqualTo("[]@" + array.hash());
     }
 
-    private ArrayH emptyArrayOf(NothingTypeH elemType) {
-      return objDb().arrayBuilder(arrayHT(elemType)).build();
+    private ArrayH emptyArrayOf(NothingTH elemType) {
+      return objDb().arrayBuilder(arrayTH(elemType)).build();
     }
   }
 }

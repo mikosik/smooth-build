@@ -57,7 +57,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_order_algorithm_and_empty_input_is_stable() {
-    var algorithm = new OrderAlgorithm(arrayHT(stringHT()));
+    var algorithm = new OrderAlgorithm(arrayTH(stringTH()));
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("5c7516a24023883079ab5322ca2a208adf83734e"));
@@ -65,7 +65,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_order_algorithm_and_non_empty_input_is_stable() {
-    var algorithm = new OrderAlgorithm(arrayHT(stringHT()));
+    var algorithm = new OrderAlgorithm(arrayTH(stringTH()));
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("26ca327d87fe70373d6bb568b4af332331b6ea34"));
@@ -74,7 +74,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_invoke_algorithm_and_empty_input_is_stable() {
     var natFuncH = natFuncH(blobH(), stringH("class path"));
-    var algorithm = new InvokeAlgorithm(stringHT(), "name", natFuncH, null);
+    var algorithm = new InvokeAlgorithm(stringTH(), "name", natFuncH, null);
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("f8891fe1c53f463d5917970ca0b51bda154ecdaa"));
@@ -83,7 +83,7 @@ public class ComputationHashTest extends TestingContext {
   @Test
   public void hash_of_computation_with_invoke_algorithm_and_non_empty_input_is_stable() {
     var natFuncH = natFuncH(blobH(), stringH("class path"));
-    var algorithm = new InvokeAlgorithm(stringHT(), "name", natFuncH, null);
+    var algorithm = new InvokeAlgorithm(stringTH(), "name", natFuncH, null);
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("33d8dc290cb161e148bf90770978131e423ea046"));

@@ -13,8 +13,8 @@ import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.SelectTypeH;
-import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.expr.SelectCH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 
 /**
  * This class is thread-safe.
@@ -26,31 +26,31 @@ public class SelectH extends ExprH {
 
   public SelectH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
-    checkArgument(merkleRoot.spec() instanceof SelectTypeH);
+    checkArgument(merkleRoot.cat() instanceof SelectCH);
   }
 
   @Override
-  public SelectTypeH spec() {
-    return (SelectTypeH) super.spec();
+  public SelectCH cat() {
+    return (SelectCH) super.cat();
   }
 
   public SelectData data() {
     ObjH selectable = readSelectable();
-    if (selectable.type() instanceof TupleTypeH tupleEvalType) {
+    if (selectable.type() instanceof TupleTH tupleEvalT) {
       IntH index = readIndex();
       int i = index.toJ().intValue();
-      int size = tupleEvalType.items().size();
+      int size = tupleEvalT.items().size();
       if (i < 0 || size <= i) {
-        throw new DecodeSelectIndexOutOfBoundsExc(hash(), spec(), i, size);
+        throw new DecodeSelectIndexOutOfBoundsExc(hash(), cat(), i, size);
       }
-      TypeH fieldType = tupleEvalType.items().get(i);
+      TypeH fieldType = tupleEvalT.items().get(i);
       if (!Objects.equals(type(), fieldType)) {
-        throw new DecodeSelectWrongEvalTypeExc(hash(), spec(), fieldType);
+        throw new DecodeSelectWrongEvalTypeExc(hash(), cat(), fieldType);
       }
       return new SelectData(selectable, index);
     } else {
       throw new DecodeExprWrongEvalTypeOfCompExc(
-          hash(), spec(), "tuple", TupleTypeH.class, selectable.type());
+          hash(), cat(), "tuple", TupleTH.class, selectable.type());
     }
   }
 

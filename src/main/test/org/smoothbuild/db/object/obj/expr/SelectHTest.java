@@ -14,33 +14,33 @@ public class SelectHTest extends TestingContext {
   @Test
   public void type_of_select_is_inferred_correctly() {
     TupleH tuple = animalH("rabbit", 7);
-    assertThat(selectH(tuple, intH(1)).spec())
-        .isEqualTo(selectHT(intHT()));
+    assertThat(selectH(tuple, intH(1)).cat())
+        .isEqualTo(selectCH(intTH()));
   }
 
   @Test
   public void creating_select_with_non_tuple_expr_causes_exception() {
-    assertCall(() -> selectH(intH(3), intH(2)).spec())
+    assertCall(() -> selectH(intH(3), intH(2)).cat())
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_select_with_too_great_index_causes_exception() {
     TupleH tuple = animalH("rabbit", 7);
-    assertCall(() -> selectH(tuple, intH(2)).spec())
+    assertCall(() -> selectH(tuple, intH(2)).cat())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   public void creating_select_with_index_lower_than_zero_causes_exception() {
     TupleH tuple = animalH("rabbit", 7);
-    assertCall(() -> selectH(tuple, intH(-1)).spec())
+    assertCall(() -> selectH(tuple, intH(-1)).cat())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
   }
 
   @Test
   public void data_returns_tuple_and_index() {
-    TupleH selectable = tupleH(tupleHT(), list(intH(7)));
+    TupleH selectable = tupleH(tupleTH(), list(intH(7)));
     IntH index = intH(0);
     assertThat(selectH(selectable, index).data())
         .isEqualTo(new SelectData(selectable, index));

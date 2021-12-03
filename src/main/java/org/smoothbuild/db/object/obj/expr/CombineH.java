@@ -11,8 +11,8 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
-import org.smoothbuild.db.object.type.expr.CombineTypeH;
-import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.expr.CombineCH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 
 import com.google.common.collect.ImmutableList;
 
@@ -22,31 +22,31 @@ import com.google.common.collect.ImmutableList;
 public class CombineH extends ExprH {
   public CombineH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
-    checkArgument(merkleRoot.spec() instanceof CombineTypeH);
+    checkArgument(merkleRoot.cat() instanceof CombineCH);
   }
 
   @Override
-  public CombineTypeH spec() {
-    return (CombineTypeH) super.spec();
+  public CombineCH cat() {
+    return (CombineCH) super.cat();
   }
 
   @Override
-  public TupleTypeH type() {
-    return spec().evalType();
+  public TupleTH type() {
+    return this.cat().evalType();
   }
 
   public ImmutableList<ObjH> items() {
-    var expectedItemTypes = spec().evalType().items();
+    var expectedItemTypes = this.cat().evalType().items();
     var items = readSeqObjs(DATA_PATH, dataHash(), ObjH.class);
     allMatchOtherwise(
         expectedItemTypes,
         items,
         (s, i) -> Objects.equals(s, i.type()),
         (i, j) -> {
-          throw new DecodeCombineWrongItemsSizeExc(hash(), spec(), j);
+          throw new DecodeCombineWrongItemsSizeExc(hash(), this.cat(), j);
         },
         (i) -> {
-          throw new DecodeExprWrongEvalTypeOfCompExc(hash(), spec(),
+          throw new DecodeExprWrongEvalTypeOfCompExc(hash(), this.cat(),
               "items[" + i + "]", expectedItemTypes.get(i), items.get(i).type());
         }
     );

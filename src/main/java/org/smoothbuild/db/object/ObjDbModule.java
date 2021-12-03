@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.type.TypeDb;
+import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.install.TempManager;
@@ -23,19 +23,19 @@ public class ObjDbModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ObjDb provideObjDb(HashedDb hashedDb, TypeDb typeDb, TypingH typing) {
-    return new ObjDb(hashedDb, typeDb, typing);
+  public ObjDb provideObjDb(HashedDb hashedDb, CatDb catDb, TypingH typing) {
+    return new ObjDb(hashedDb, catDb, typing);
   }
 
   @Provides
-  public TypeFactoryH provideTypeFactoryH(TypeDb typeDb) {
-    return typeDb;
+  public TypeFactoryH provideTypeFactoryH(CatDb catDb) {
+    return catDb;
   }
 
   @Provides
   @Singleton
-  public TypeDb provideObjTypeDb(HashedDb hashedDb) {
-    return new TypeDb(hashedDb);
+  public CatDb provideCatDb(HashedDb hashedDb) {
+    return new CatDb(hashedDb);
   }
 
   @Provides

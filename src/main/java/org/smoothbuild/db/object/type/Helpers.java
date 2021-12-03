@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.type;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbExc;
 import org.smoothbuild.db.object.db.ObjDbExc;
-import org.smoothbuild.db.object.type.base.SpecKindH;
+import org.smoothbuild.db.object.type.base.CatKindH;
 import org.smoothbuild.db.object.type.exc.DecodeTypeExc;
 import org.smoothbuild.db.object.type.exc.DecodeTypeNodeExc;
 
@@ -18,7 +18,7 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeTypeNodeException(
-      Hash hash, SpecKindH kind, String path, int index, HashedDbCallable<T> callable) {
+      Hash hash, CatKindH kind, String path, int index, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbExc e) {
@@ -27,7 +27,7 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeTypeNodeException(
-      Hash hash, SpecKindH kind, String path, HashedDbCallable<T> callable) {
+      Hash hash, CatKindH kind, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbExc e) {
@@ -36,7 +36,7 @@ public class Helpers {
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeTypeNodeException(
-      SpecKindH kind, Hash hash, String path, int index, ObjDbCallable<T> callable) {
+      CatKindH kind, Hash hash, String path, int index, ObjDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjDbExc e) {
@@ -45,7 +45,7 @@ public class Helpers {
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeTypeNodeException(
-      SpecKindH kind, Hash hash, String path, ObjDbCallable<T> callable) {
+      CatKindH kind, Hash hash, String path, ObjDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjDbExc e) {

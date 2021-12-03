@@ -39,16 +39,16 @@ import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.TypeDb;
+import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypingH;
-import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.SelectTypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
-import org.smoothbuild.db.object.type.val.DefFuncTypeH;
-import org.smoothbuild.db.object.type.val.FuncTypeH;
-import org.smoothbuild.db.object.type.val.NatFuncTypeH;
-import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.expr.SelectCH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.type.val.DefFuncTH;
+import org.smoothbuild.db.object.type.val.FuncTH;
+import org.smoothbuild.db.object.type.val.NatFuncTH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.util.collect.Lists;
 
@@ -59,15 +59,15 @@ import com.google.common.collect.ImmutableList;
  */
 public class ObjDb {
   private final HashedDb hashedDb;
-  private final TypeDb typeDb;
+  private final CatDb catDb;
   private final TypingH typing;
 
   private final IfFuncH ifFunc;
   private final MapFuncH mapFunc;
 
-  public ObjDb(HashedDb hashedDb, TypeDb typeDb, TypingH typing) {
+  public ObjDb(HashedDb hashedDb, CatDb catDb, TypingH typing) {
     this.hashedDb = hashedDb;
-    this.typeDb = typeDb;
+    this.catDb = catDb;
     this.typing = typing;
 
     try {
@@ -80,7 +80,7 @@ public class ObjDb {
 
   // methods for creating ValueH subclasses
 
-  public ArrayHBuilder arrayBuilder(ArrayTypeH type) {
+  public ArrayHBuilder arrayBuilder(ArrayTH type) {
     return new ArrayHBuilder(type, this);
   }
 
@@ -92,7 +92,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
-  public DefFuncH defFunc(DefFuncTypeH type, ObjH body) {
+  public DefFuncH defFunc(DefFuncTH type, ObjH body) {
     if (!typing.isAssignable(type.res(), body.type())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.res().name()
           + " but body.evalType() is " + body.type().name() + ".");
@@ -105,7 +105,7 @@ public class ObjDb {
   }
 
   public NatFuncH natFunc(
-      NatFuncTypeH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
+      NatFuncTH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
     return wrapHashedDbExceptionAsObjectDbException(
         () -> newNatFunc(type, jarFile, classBinaryName, isPure));
   }
@@ -114,9 +114,9 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
   }
 
-  public TupleH tuple(TupleTypeH tupleType, ImmutableList<ValH> items) {
-    var types = tupleType.items();
-    allMatchOtherwise(types, items, (s, i) -> Objects.equals(s, i.spec()),
+  public TupleH tuple(TupleTH tupleT, ImmutableList<ValH> items) {
+    var types = tupleT.items();
+    allMatchOtherwise(types, items, (s, i) -> Objects.equals(s, i.cat()),
         (i, j) -> {
           throw new IllegalArgumentException(
               "tupleType specifies " + i + " items but provided " + j + ".");
@@ -124,11 +124,11 @@ public class ObjDb {
         (i) -> {
           throw new IllegalArgumentException("tupleType specifies item at index " + i
               + " with type " + types.get(i).name() + " but provided item has type "
-              + items.get(i).spec().name() + " at that index.");
+              + items.get(i).cat().name() + " at that index.");
         }
     );
 
-    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleType, items));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleT, items));
   }
 
   // methods for creating ExprH subclasses
@@ -168,14 +168,14 @@ public class ObjDb {
     if (hashes.size() != 2) {
       throw wrongSizeOfRootSeqException(rootHash, hashes.size());
     }
-    SpecH type = getTypeOrChainException(rootHash, hashes.get(0));
+    CatH cat = getCatOrChainException(rootHash, hashes.get(0));
     Hash dataHash = hashes.get(1);
-    return type.newObj(new MerkleRoot(rootHash, type, dataHash), this);
+    return cat.newObj(new MerkleRoot(rootHash, cat, dataHash), this);
   }
 
-  private SpecH getTypeOrChainException(Hash rootHash, Hash typeHash) {
+  private CatH getCatOrChainException(Hash rootHash, Hash typeHash) {
     try {
-      return typeDb.get(typeHash);
+      return catDb.get(typeHash);
     } catch (ObjDbExc e) {
       throw new DecodeObjTypeExc(rootHash, e);
     }
@@ -193,24 +193,24 @@ public class ObjDb {
 
   // methods for creating Val Obj-s
 
-  public ArrayH newArray(ArrayTypeH type, List<ValH> elems) throws HashedDbExc {
+  public ArrayH newArray(ArrayTH type, List<ValH> elems) throws HashedDbExc {
     var data = writeArrayData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
   public BlobH newBlob(Hash dataHash) throws HashedDbExc {
-    var root = newRoot(typeDb.blob(), dataHash);
-    return typeDb.blob().newObj(root, this);
+    var root = newRoot(catDb.blob(), dataHash);
+    return catDb.blob().newObj(root, this);
   }
 
   private BoolH newBool(boolean value) throws HashedDbExc {
     var data = writeBoolData(value);
-    var root = newRoot(typeDb.bool(), data);
-    return typeDb.bool().newObj(root, this);
+    var root = newRoot(catDb.bool(), data);
+    return catDb.bool().newObj(root, this);
   }
 
-  private DefFuncH newFunc(DefFuncTypeH type, ObjH body)
+  private DefFuncH newFunc(DefFuncTH type, ObjH body)
       throws HashedDbExc {
     var data = writeFuncData(body);
     var root = newRoot(type, data);
@@ -219,11 +219,11 @@ public class ObjDb {
 
   private IntH newInt(BigInteger value) throws HashedDbExc {
     var data = writeIntData(value);
-    var root = newRoot(typeDb.int_(), data);
-    return typeDb.int_().newObj(root, this);
+    var root = newRoot(catDb.int_(), data);
+    return catDb.int_().newObj(root, this);
   }
 
-  private NatFuncH newNatFunc(NatFuncTypeH type, BlobH jarFile,
+  private NatFuncH newNatFunc(NatFuncTH type, BlobH jarFile,
       StringH classBinaryName, BoolH isPure) throws HashedDbExc {
     var data = writeNatFuncData(jarFile, classBinaryName, isPure);
     var root = newRoot(type, data);
@@ -232,11 +232,11 @@ public class ObjDb {
 
   private StringH newString(String string) throws HashedDbExc {
     var data = writeStringData(string);
-    var root = newRoot(typeDb.string(), data);
-    return typeDb.string().newObj(root, this);
+    var root = newRoot(catDb.string(), data);
+    return catDb.string().newObj(root, this);
   }
 
-  private TupleH newTuple(TupleTypeH type, ImmutableList<ValH> vals) throws HashedDbExc {
+  private TupleH newTuple(TupleTH type, ImmutableList<ValH> vals) throws HashedDbExc {
     var data = writeTupleData(vals);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -246,7 +246,7 @@ public class ObjDb {
 
   private CallH newCall(ObjH callable, CombineH args) throws HashedDbExc {
     var resultType = inferCallResType(callable, args);
-    var type = typeDb.call(resultType);
+    var type = catDb.call(resultType);
     var data = writeCallData(callable, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -264,17 +264,17 @@ public class ObjDb {
         i -> illegalArgs(funcType, args)
     );
     var varBounds = typing.inferVarBoundsInCall(paramTypes, argTypes);
-    return typing.mapVars(funcType.res(), varBounds, typeDb.lower());
+    return typing.mapVars(funcType.res(), varBounds, catDb.lower());
   }
 
-  private void illegalArgs(FuncTypeH funcType, CombineH args) {
+  private void illegalArgs(FuncTH funcT, CombineH args) {
     throw new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to function evaluation type parameters %s."
-            .formatted(args.type().name(), funcType.paramsTuple().name()));
+            .formatted(args.type().name(), funcT.paramsTuple().name()));
   }
 
-  private FuncTypeH callableEvalType(ObjH callable) {
-    if (callable.type() instanceof FuncTypeH funcType) {
+  private FuncTH callableEvalType(ObjH callable) {
+    if (callable.type() instanceof FuncTH funcType) {
       return funcType;
     } else {
       throw new IllegalArgumentException("`func` component doesn't evaluate to function.");
@@ -282,11 +282,11 @@ public class ObjDb {
   }
 
   private IfFuncH newIfFunc() throws HashedDbExc {
-    var type = typeDb.ifFunc();
+    var type = catDb.ifFunc();
     return (IfFuncH) newInternalFunc(type);
   }
 
-  private FuncH newInternalFunc(FuncTypeH type) throws HashedDbExc {
+  private FuncH newInternalFunc(FuncTH type) throws HashedDbExc {
     // Internal funcs don't have any data. We use empty sequence as its data so
     // code reading such func from hashedDb can be simpler and code that stores
     // h-objects as artifacts doesn't need handle this special case.
@@ -297,7 +297,7 @@ public class ObjDb {
 
   private OrderH newOrder(ImmutableList<ObjH> elems) throws HashedDbExc {
     TypeH elemType = elemType(elems);
-    var type = typeDb.order(elemType);
+    var type = catDb.order(elemType);
     var data = writeOrderData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -314,7 +314,7 @@ public class ObjDb {
                 + type1.name() + " != " + type2.name() + ".");
           }
         });
-    SpecH type = elemType.orElse(typeDb.nothing());
+    CatH type = elemType.orElse(catDb.nothing());
     if (type instanceof TypeH typeH) {
       return typeH;
     } else {
@@ -325,32 +325,32 @@ public class ObjDb {
 
   private CombineH newCombine(ImmutableList<ObjH> items) throws HashedDbExc {
     var itemTypes = Lists.map(items, ObjH::type);
-    var evalType = typeDb.tuple(itemTypes);
-    var type = typeDb.combine(evalType);
+    var evalType = catDb.tuple(itemTypes);
+    var type = catDb.combine(evalType);
     var data = writeCombineData(items);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
   private MapFuncH newMapFunc() throws HashedDbExc {
-    var type = typeDb.mapFunc();
+    var type = catDb.mapFunc();
     return (MapFuncH) newInternalFunc(type);
   }
 
   private SelectH newSelect(ObjH selectable, IntH index) throws HashedDbExc {
-    var type = selectType(selectable, index);
+    var type = selectCat(selectable, index);
     var data = writeSelectData(selectable, index);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private SelectTypeH selectType(ObjH selectable, IntH index) {
-    if (selectable.type() instanceof TupleTypeH tuple) {
+  private SelectCH selectCat(ObjH selectable, IntH index) {
+    if (selectable.type() instanceof TupleTH tuple) {
       int intIndex = index.toJ().intValue();
       ImmutableList<TypeH> items = tuple.items();
       checkElementIndex(intIndex, items.size());
       var itemType = items.get(intIndex);
-      return typeDb.select(itemType);
+      return catDb.select(itemType);
     } else {
       throw new IllegalArgumentException();
     }
@@ -358,14 +358,14 @@ public class ObjDb {
 
   private ParamRefH newParamRef(TypeH evalType, BigInteger index) throws HashedDbExc {
     var data = writeParamRefData(index);
-    var type = typeDb.ref(evalType);
+    var type = catDb.ref(evalType);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private MerkleRoot newRoot(SpecH type, Hash dataHash) throws HashedDbExc {
-    Hash rootHash = hashedDb.writeSeq(type.hash(), dataHash);
-    return new MerkleRoot(rootHash, type, dataHash);
+  private MerkleRoot newRoot(CatH cat, Hash dataHash) throws HashedDbExc {
+    Hash rootHash = hashedDb.writeSeq(cat.hash(), dataHash);
+    return new MerkleRoot(rootHash, cat, dataHash);
   }
 
   // methods for writing data of Expr-s

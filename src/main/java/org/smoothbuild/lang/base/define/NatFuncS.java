@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.util.collect.NList;
 
@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
 public final class NatFuncS extends FuncS {
   private final AnnS annS;
 
-  public NatFuncS(FuncTypeS type, ModPath modPath, String name,
+  public NatFuncS(FuncTS type, ModPath modPath, String name,
       NList<ItemS> params, AnnS annS, Loc loc) {
     super(type, modPath, name, params, loc);
     this.annS = annS;

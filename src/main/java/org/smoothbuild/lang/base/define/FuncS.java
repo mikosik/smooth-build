@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.define;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NList;
 
@@ -15,15 +15,15 @@ public sealed abstract class FuncS extends TopEvalS
   public static final String PARENTHESES = "()";
   private final NList<ItemS> params;
 
-  public FuncS(FuncTypeS type, ModPath modPath, String name, NList<ItemS> params,
+  public FuncS(FuncTS type, ModPath modPath, String name, NList<ItemS> params,
       Loc loc) {
     super(type, modPath, name, loc);
     this.params = requireNonNull(params);
   }
 
   @Override
-  public FuncTypeS type() {
-    return (FuncTypeS) super.type();
+  public FuncTS type() {
+    return (FuncTS) super.type();
   }
 
   @Override

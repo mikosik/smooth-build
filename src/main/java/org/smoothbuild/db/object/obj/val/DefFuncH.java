@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static org.smoothbuild.db.object.type.base.SpecKindH.DEF_FUNC;
+import static org.smoothbuild.db.object.type.base.CatKindH.DEF_FUNC;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
@@ -18,17 +18,17 @@ public final class DefFuncH extends FuncH {
 
   public ObjH body() {
     var body = readObj(DATA_PATH, dataHash(), ObjH.class);
-    var resultType = spec().res();
+    var resultType = cat().res();
     var bodyType = body.type();
     if (!objDb().typing().isAssignable(resultType, bodyType)) {
       throw new DecodeExprWrongEvalTypeOfCompExc(
-          hash(), spec(), DATA_PATH, resultType, bodyType);
+          hash(), cat(), DATA_PATH, resultType, bodyType);
     }
     return body;
   }
 
   @Override
   public String objToString() {
-    return "DefFuncH(" + spec().name() + ")";
+    return "DefFuncH(" + cat().name() + ")";
   }
 }

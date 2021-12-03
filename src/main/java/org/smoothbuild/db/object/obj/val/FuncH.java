@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.type.base.SpecKindH;
-import org.smoothbuild.db.object.type.val.FuncTypeH;
+import org.smoothbuild.db.object.type.base.CatKindH;
+import org.smoothbuild.db.object.type.val.FuncTH;
 
 /**
  * Function.
@@ -13,23 +13,23 @@ import org.smoothbuild.db.object.type.val.FuncTypeH;
  */
 public sealed abstract class FuncH extends ValH
     permits DefFuncH, IfFuncH, MapFuncH, NatFuncH {
-  public FuncH(MerkleRoot merkleRoot, ObjDb objDb, SpecKindH kind) {
+  public FuncH(MerkleRoot merkleRoot, ObjDb objDb, CatKindH kind) {
     super(merkleRoot, objDb);
     checkType(merkleRoot, kind);
   }
 
-  protected void checkType(MerkleRoot merkleRoot, SpecKindH kind) {
-    checkArgument(merkleRoot.spec() instanceof FuncTypeH funcTypeH
-            && funcTypeH.kind().equals(kind));
+  protected void checkType(MerkleRoot merkleRoot, CatKindH kind) {
+    checkArgument(merkleRoot.cat() instanceof FuncTH funcTH
+            && funcTH.kind().equals(kind));
   }
 
   @Override
-  public FuncTypeH type() {
-    return (FuncTypeH) super.type();
+  public FuncTH type() {
+    return (FuncTH) super.type();
   }
 
   @Override
-  public FuncTypeH spec() {
-    return (FuncTypeH) super.spec();
+  public FuncTH cat() {
+    return (FuncTH) super.cat();
   }
 }

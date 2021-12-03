@@ -22,7 +22,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.ItemSigS;
-import org.smoothbuild.lang.base.type.api.FuncType;
+import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallN;
 import org.smoothbuild.util.collect.NList;
@@ -135,7 +135,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static String inCallToPrefix(CallN call, List<ItemSigS> params) {
-    String result = ((FuncType) call.callable().type().get()).res().name();
+    String result = ((FuncT) call.callable().type().get()).res().name();
     String paramsString = join(", ", map(params, ItemSigS::typeAndName));
     return "In call to function with type `" + result + "(" + paramsString + ")`: ";
   }

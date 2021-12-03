@@ -4,7 +4,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbExc;
 import org.smoothbuild.db.object.db.ObjDbExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
-import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.CatH;
 
 public class Helpers {
   public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {
@@ -24,29 +24,29 @@ public class Helpers {
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeObjNodeException(
-      Hash hash, SpecH type, String path, HashedDbCallable<T> callable) {
+      Hash hash, CatH cat, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbExc e) {
-      throw new DecodeObjNodeExc(hash, type, path, e);
+      throw new DecodeObjNodeExc(hash, cat, path, e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, SpecH type, String path, ObjDbCallable<T> callable) {
+      Hash hash, CatH cat, String path, ObjDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjDbExc e) {
-      throw new DecodeObjNodeExc(hash, type, path, e);
+      throw new DecodeObjNodeExc(hash, cat, path, e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, SpecH type, String path, int pathIndex, ObjDbCallable<T> callable) {
+      Hash hash, CatH cat, String path, int pathIndex, ObjDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjDbExc e) {
-      throw new DecodeObjNodeExc(hash, type, path + "[" + pathIndex + "]", e);
+      throw new DecodeObjNodeExc(hash, cat, path + "[" + pathIndex + "]", e);
     }
   }
 

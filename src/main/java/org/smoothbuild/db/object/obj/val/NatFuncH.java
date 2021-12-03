@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static org.smoothbuild.db.object.type.base.SpecKindH.NAT_FUNC;
+import static org.smoothbuild.db.object.type.base.CatKindH.NAT_FUNC;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;

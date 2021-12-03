@@ -15,7 +15,7 @@ public class ObjHStableHashTest extends TestingContext {
   class _array {
     @Test
     public void empty_blob_array() {
-      assertThat(arrayH(blobHT()).hash())
+      assertThat(arrayH(blobTH()).hash())
           .isEqualTo(Hash.decode("fd11e3a7a0eca23315da184c8ce90c051724e90b"));
     }
 
@@ -27,7 +27,7 @@ public class ObjHStableHashTest extends TestingContext {
 
     @Test
     public void empty_bool_array() {
-      assertThat(arrayH(boolHT()).hash())
+      assertThat(arrayH(boolTH()).hash())
           .isEqualTo(Hash.decode("e4478355c1f6ea8d4a9edef0a7213cb1aa5b44d4"));
     }
 
@@ -39,13 +39,13 @@ public class ObjHStableHashTest extends TestingContext {
 
     @Test
     public void empty_nothing_array() {
-      assertThat(arrayH(nothingHT()).hash())
+      assertThat(arrayH(nothingTH()).hash())
           .isEqualTo(Hash.decode("fc21e8e3b2e04f46fa35cdd3fa0b932cb59c38a0"));
     }
 
     @Test
     public void empty_string_array() {
-      assertThat(arrayH(stringHT()).hash())
+      assertThat(arrayH(stringTH()).hash())
           .isEqualTo(Hash.decode("5e8edad671513a73f56c6bb216789c6f85de320f"));
     }
 
@@ -57,7 +57,7 @@ public class ObjHStableHashTest extends TestingContext {
 
     @Test
     public void empty_tuple_array() {
-      assertThat(arrayH(personHT()).hash())
+      assertThat(arrayH(personTH()).hash())
           .isEqualTo(Hash.decode("a9688c71bf2aae5f4a8e219ce92e8ab8e6b46e27"));
     }
 
@@ -102,13 +102,13 @@ public class ObjHStableHashTest extends TestingContext {
   class _call {
     @Test
     public void call_expression_with_one_arg() {
-      assertThat(callH(defFuncH(list(stringHT()), intH()), list(stringH("abc"))).hash())
+      assertThat(callH(defFuncH(list(stringTH()), intH()), list(stringH("abc"))).hash())
           .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
     }
 
     @Test
     public void call_expression_without_args() {
-      var type = defFuncHT(intHT(), list(stringHT()));
+      var type = defFuncTH(intTH(), list(stringTH()));
       var defFunc = defFuncH(type, intH());
       assertThat(callH(defFunc, list(stringH("abc"))).hash())
           .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
@@ -119,14 +119,14 @@ public class ObjHStableHashTest extends TestingContext {
   class _func {
     @Test
     public void with_no_params() {
-      var defFunc = defFuncH(defFuncHT(intHT(), list()), intH(1));
+      var defFunc = defFuncH(defFuncTH(intTH(), list()), intH(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("998efe35e88cbf9dc973880f96f5fc5dea3f2664"));
     }
 
     @Test
     public void with_one_param() {
-      var defFunc = defFuncH(defFuncHT(intHT(), list(intHT())), intH(1));
+      var defFunc = defFuncH(defFuncTH(intTH(), list(intTH())), intH(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("5a69dadd0f5d07869ba7676dc2d1f25500d7a1a0"));
     }
@@ -134,7 +134,7 @@ public class ObjHStableHashTest extends TestingContext {
     @Test
     public void with_two_params() {
       var defFunc =
-          defFuncH(defFuncHT(intHT(), list(intHT(), stringHT())), intH(1));
+          defFuncH(defFuncTH(intTH(), list(intTH(), stringTH())), intH(1));
       assertThat(defFunc.hash())
           .isEqualTo(Hash.decode("8450b8f6b33d766600b980d143f24090f5c54936"));
     }
@@ -246,19 +246,19 @@ public class ObjHStableHashTest extends TestingContext {
   class _ref {
     @Test
     public void zero_ref() {
-      assertThat(paramRefH(intHT(), 0).hash())
+      assertThat(paramRefH(intTH(), 0).hash())
           .isEqualTo(Hash.decode("c41708244b3367007e1a216c7712cb2235371707"));
     }
 
     @Test
     public void positive_ref() {
-      assertThat(paramRefH(intHT(), 123).hash())
+      assertThat(paramRefH(intTH(), 123).hash())
           .isEqualTo(Hash.decode("130112c820a58abd4b90086ff7abfcf29f39a8e8"));
     }
 
     @Test
     public void negative_ref() {
-      assertThat(paramRefH(intHT(), -123).hash())
+      assertThat(paramRefH(intTH(), -123).hash())
           .isEqualTo(Hash.decode("f7ccbc4c95d78604753662395b5c5357f833fd64"));
     }
   }

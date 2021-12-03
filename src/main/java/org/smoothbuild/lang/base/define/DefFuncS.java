@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.util.collect.NList;
 
@@ -12,7 +12,7 @@ import org.smoothbuild.util.collect.NList;
 public final class DefFuncS extends FuncS {
   private final ExprS body;
 
-  public DefFuncS(FuncTypeS type, ModPath modPath, String name,
+  public DefFuncS(FuncTS type, ModPath modPath, String name,
       NList<ItemS> params, ExprS body, Loc loc) {
     super(type, modPath, name, params, loc);
     this.body = body;

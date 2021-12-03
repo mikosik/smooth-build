@@ -4,13 +4,13 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.orderAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class OrderAlgorithm extends Algorithm {
-  public OrderAlgorithm(ArrayTypeH arrayType) {
+  public OrderAlgorithm(ArrayTH arrayType) {
     super(arrayType);
   }
 
@@ -23,7 +23,7 @@ public class OrderAlgorithm extends Algorithm {
   public Output run(Input input, NativeApi nativeApi) {
     ArrayH array = nativeApi
         .factory()
-        .arrayBuilder((ArrayTypeH) outputType())
+        .arrayBuilder((ArrayTH) outputType())
         .addAll(input.vals())
         .build();
     return new Output(array, nativeApi.messages());

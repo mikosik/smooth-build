@@ -6,10 +6,10 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 
 public class AlgorithmHashes {
-  public static Hash combineAlgorithmHash(TupleTypeH type) {
+  public static Hash combineAlgorithmHash(TupleTH type) {
     return hash(0, type.hash());
   }
 

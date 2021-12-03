@@ -1,26 +1,26 @@
 package org.smoothbuild.db.object.type.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.SpecH;
-import org.smoothbuild.db.object.type.base.SpecKindH;
+import org.smoothbuild.db.object.type.base.CatH;
+import org.smoothbuild.db.object.type.base.CatKindH;
 
 public class UnexpectedTypeNodeExc extends DecodeTypeNodeExc {
-  public UnexpectedTypeNodeExc(Hash hash, SpecKindH kind, String path, int pathIndex,
-      SpecH expected, SpecH actual) {
+  public UnexpectedTypeNodeExc(Hash hash, CatKindH kind, String path, int pathIndex,
+      CatH expected, CatH actual) {
     this(hash, kind, indexedPath(path, pathIndex), expected, actual);
   }
 
-  public UnexpectedTypeNodeExc(Hash hash, SpecKindH kind, String path, SpecH expected,
-      SpecH actual) {
+  public UnexpectedTypeNodeExc(Hash hash, CatKindH kind, String path, CatH expected,
+      CatH actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }
 
-  private static String buildMessage(SpecH expected, SpecH actual) {
+  private static String buildMessage(CatH expected, CatH actual) {
     return "Node has unexpected type. Expected " + expected.name() + " but was " + actual.name()
         + ".";
   }
 
-  public UnexpectedTypeNodeExc(Hash hash, SpecKindH kind, String memberPath, int pathIndex,
+  public UnexpectedTypeNodeExc(Hash hash, CatKindH kind, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, kind, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -29,7 +29,7 @@ public class UnexpectedTypeNodeExc extends DecodeTypeNodeExc {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public UnexpectedTypeNodeExc(Hash hash, SpecKindH kind, String path, Class<?> expected,
+  public UnexpectedTypeNodeExc(Hash hash, CatKindH kind, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }

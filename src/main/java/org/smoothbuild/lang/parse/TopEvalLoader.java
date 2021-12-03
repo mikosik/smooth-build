@@ -19,8 +19,8 @@ import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.like.EvalLike;
-import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
-import org.smoothbuild.lang.base.type.impl.StructTypeS;
+import org.smoothbuild.lang.base.type.impl.ArrayTS;
+import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
@@ -29,9 +29,9 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
+import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.parse.ast.AnnN;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayN;
@@ -130,7 +130,7 @@ public class TopEvalLoader {
     }
 
     private ExprS createArrayLiteral(ArrayN array) {
-      var type = (ArrayTypeS) array.type().get();
+      var type = (ArrayTS) array.type().get();
       ImmutableList<ExprS> elems = map(array.elems(), this::createExpression);
       return new OrderS(type, elems, array.loc());
     }
@@ -174,7 +174,7 @@ public class TopEvalLoader {
     }
 
     private ExprS createSelect(SelectN selectN) {
-      var structType = (StructTypeS) selectN.selectable().type().get();
+      var structType = (StructTS) selectN.selectable().type().get();
       var index = structType.fields().indexMap().get(selectN.field());
       var fieldType = structType.fields().get(index).type();
       var selectable = createExpression(selectN.selectable());

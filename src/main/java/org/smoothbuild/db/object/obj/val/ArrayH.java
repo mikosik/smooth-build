@@ -3,9 +3,9 @@ package org.smoothbuild.db.object.obj.val;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
-import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
 
 import com.google.common.collect.ImmutableList;
 
@@ -18,14 +18,14 @@ public final class ArrayH extends ValH {
   }
 
   @Override
-  public ArrayTypeH spec() {
-    return (ArrayTypeH) super.spec();
+  public ArrayTH cat() {
+    return (ArrayTH) super.cat();
   }
 
   public <T extends ValH> ImmutableList<T> elems(Class<T> elemJType) {
     assertIsIterableAs(elemJType);
     var elems = elemObjs();
-    return checkTypeOfSeqObjs(elems, spec().elem());
+    return checkTypeOfSeqObjs(elems, this.cat().elem());
   }
 
   private ImmutableList<ValH> elemObjs() {
@@ -33,9 +33,9 @@ public final class ArrayH extends ValH {
   }
 
   private <T extends ValH> void assertIsIterableAs(Class<T> clazz) {
-    SpecH elem = spec().elem();
+    CatH elem = this.cat().elem();
     if (!(elem.isNothing() || clazz.isAssignableFrom(elem.typeJ()))) {
-      throw new IllegalArgumentException(spec().name() + " cannot be viewed as Iterable of "
+      throw new IllegalArgumentException(this.cat().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
     }
   }
@@ -43,9 +43,9 @@ public final class ArrayH extends ValH {
   protected <T> ImmutableList<T> checkTypeOfSeqObjs(
       ImmutableList<ValH> elems, TypeH expectedElementType) {
     for (int i = 0; i < elems.size(); i++) {
-      var elemType = elems.get(i).spec();
+      var elemType = elems.get(i).cat();
       if (!(objDb().typing().isAssignable(expectedElementType, elemType))) {
-        throw new UnexpectedObjNodeExc(hash(), spec(), DATA_PATH, i,
+        throw new UnexpectedObjNodeExc(hash(), this.cat(), DATA_PATH, i,
             expectedElementType, elemType);
       }
     }

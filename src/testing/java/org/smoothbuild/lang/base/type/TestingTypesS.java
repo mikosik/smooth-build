@@ -8,16 +8,16 @@ import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.impl.AnyTypeS;
-import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
-import org.smoothbuild.lang.base.type.impl.BaseTypeS;
-import org.smoothbuild.lang.base.type.impl.BlobTypeS;
-import org.smoothbuild.lang.base.type.impl.BoolTypeS;
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
-import org.smoothbuild.lang.base.type.impl.IntTypeS;
-import org.smoothbuild.lang.base.type.impl.NothingTypeS;
-import org.smoothbuild.lang.base.type.impl.StringTypeS;
-import org.smoothbuild.lang.base.type.impl.StructTypeS;
+import org.smoothbuild.lang.base.type.impl.AnyTS;
+import org.smoothbuild.lang.base.type.impl.ArrayTS;
+import org.smoothbuild.lang.base.type.impl.BaseTS;
+import org.smoothbuild.lang.base.type.impl.BlobTS;
+import org.smoothbuild.lang.base.type.impl.BoolTS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
+import org.smoothbuild.lang.base.type.impl.IntTS;
+import org.smoothbuild.lang.base.type.impl.NothingTS;
+import org.smoothbuild.lang.base.type.impl.StringTS;
+import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -32,19 +32,19 @@ public class TestingTypesS {
   private static final TypeFactoryS FACTORY = CONTEXT.typeFactoryS();
   public static final TypingS TYPING = CONTEXT.typingS();
 
-  public static final ImmutableList<BaseTypeS> BASE_TYPES = FACTORY.baseTypes();
-  public static final ImmutableList<BaseTypeS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
+  public static final ImmutableList<BaseTS> BASE_TYPES = FACTORY.baseTypes();
+  public static final ImmutableList<BaseTS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
 
-  public static final AnyTypeS ANY = FACTORY.any();
-  public static final BlobTypeS BLOB = FACTORY.blob();
-  public static final BoolTypeS BOOL = FACTORY.bool();
-  public static final IntTypeS INT = FACTORY.int_();
-  public static final NothingTypeS NOTHING = FACTORY.nothing();
-  public static final StringTypeS STRING = FACTORY.string();
-  public static final StructTypeS PERSON = struct("Person",
+  public static final AnyTS ANY = FACTORY.any();
+  public static final BlobTS BLOB = FACTORY.blob();
+  public static final BoolTS BOOL = FACTORY.bool();
+  public static final IntTS INT = FACTORY.int_();
+  public static final NothingTS NOTHING = FACTORY.nothing();
+  public static final StringTS STRING = FACTORY.string();
+  public static final StructTS PERSON = struct("Person",
       nList(itemSigS("firstName", STRING), itemSigS("lastName", STRING)));
-  public static final StructTypeS FLAG = struct("Flag", nList(itemSigS("flab", BOOL)));
-  public static final StructTypeS DATA = struct("Data", nList(itemSigS("data", BLOB)));
+  public static final StructTS FLAG = struct("Flag", nList(itemSigS("flab", BOOL)));
+  public static final StructTS DATA = struct("Data", nList(itemSigS("data", BLOB)));
   public static final VarS A = var("A");
   public static final VarS B = var("B");
   public static final VarS C = var("C");
@@ -58,13 +58,13 @@ public class TestingTypesS {
       .add(PERSON)
       .build();
 
-  public static final FuncTypeS STRING_GETTER_FUNCTION = f(STRING);
-  public static final FuncTypeS PERSON_GETTER_FUNCTION = f(PERSON);
-  public static final FuncTypeS STRING_MAP_FUNCTION = f(STRING, STRING);
-  public static final FuncTypeS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
-  public static final FuncTypeS IDENTITY_FUNCTION = f(A, A);
-  public static final FuncTypeS ARRAY_HEAD_FUNCTION = f(A, a(A));
-  public static final FuncTypeS ARRAY_LENGTH_FUNCTION = f(STRING, a(A));
+  public static final FuncTS STRING_GETTER_FUNCTION = f(STRING);
+  public static final FuncTS PERSON_GETTER_FUNCTION = f(PERSON);
+  public static final FuncTS STRING_MAP_FUNCTION = f(STRING, STRING);
+  public static final FuncTS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
+  public static final FuncTS IDENTITY_FUNCTION = f(A, A);
+  public static final FuncTS ARRAY_HEAD_FUNCTION = f(A, a(A));
+  public static final FuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(A));
 
   public static final ImmutableList<TypeS> FUNCTION_TYPES =
       list(
@@ -83,19 +83,19 @@ public class TestingTypesS {
           .add(X)
           .build();
 
-  public static ArrayTypeS a(TypeS elemType) {
+  public static ArrayTS a(TypeS elemType) {
     return FACTORY.array(elemType);
   }
 
-  public static FuncTypeS f(TypeS resultType) {
+  public static FuncTS f(TypeS resultType) {
     return FACTORY.func(resultType, list());
   }
 
-  public static FuncTypeS f(TypeS resultType, TypeS... params) {
+  public static FuncTS f(TypeS resultType, TypeS... params) {
     return f(resultType, list(params));
   }
 
-  public static FuncTypeS f(TypeS resultType, ImmutableList<TypeS> params) {
+  public static FuncTS f(TypeS resultType, ImmutableList<TypeS> params) {
     return FACTORY.func(resultType, params);
   }
 
@@ -103,7 +103,7 @@ public class TestingTypesS {
     return FACTORY.var(a);
   }
 
-  public static StructTypeS struct(String name, NList<ItemSigS> fields) {
+  public static StructTS struct(String name, NList<ItemSigS> fields) {
     return FACTORY.struct(name, fields);
   }
 

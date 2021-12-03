@@ -103,7 +103,7 @@ public class MethodLoader {
   private void assertMethodMatchesFuncRequirements(String extendedName,
       NatFuncH func, Method method, String classBinaryName) throws LoadingMethodExc {
     assertNativeResMatchesDeclared(
-        extendedName, method, func.spec().res(), classBinaryName);
+        extendedName, method, func.cat().res(), classBinaryName);
     assertNativeParamTypesMatchesFuncParams(extendedName, method, func, classBinaryName);
   }
 
@@ -122,7 +122,7 @@ public class MethodLoader {
   private static void assertNativeParamTypesMatchesFuncParams(String extendedName,
       Method method, NatFuncH func, String classBinaryName) throws LoadingMethodExc {
     Parameter[] nativeParams = method.getParameters();
-    var params = func.spec().params();
+    var params = func.cat().params();
     if (params.size() != nativeParams.length - 1) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " has "
           + params.size() + " parameter(s) but its native implementation has "

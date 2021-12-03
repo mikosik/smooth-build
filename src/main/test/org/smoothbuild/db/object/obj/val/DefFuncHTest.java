@@ -10,14 +10,14 @@ import org.smoothbuild.testing.TestingContext;
 public class DefFuncHTest extends TestingContext {
   @Test
   public void creating_func_with_body_evaluation_type_not_equal_result_type_causes_exception() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
+    var funcType = defFuncTH(intTH(), list(stringTH()));
     assertCall(() -> defFuncH(funcType, boolH(true)))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_body_to_null_throws_exception() {
-    var funcType = defFuncHT(intHT(), list(boolHT()));
+    var funcType = defFuncTH(intTH(), list(boolTH()));
     assertCall(() -> defFuncH(funcType, null))
         .throwsException(NullPointerException.class);
   }
@@ -25,14 +25,14 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void type_of_func_is_func_type() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
-    assertThat(defFuncH(funcType, intH()).spec())
+    var funcType = defFuncTH(intTH(), list(stringTH()));
+    assertThat(defFuncH(funcType, intH()).cat())
         .isEqualTo(funcType);
   }
 
   @Test
   public void body_contains_object_passed_during_combineion() {
-    var funcType = defFuncHT(intHT(), list(boolHT()));
+    var funcType = defFuncTH(intTH(), list(boolTH()));
     var body = intH(33);
     assertThat(defFuncH(funcType, body).body())
         .isEqualTo(body);
@@ -40,7 +40,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void funcs_with_equal_body_are_equal() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
+    var funcType = defFuncTH(intTH(), list(stringTH()));
     var func1 = defFuncH(funcType, intH());
     var func2 = defFuncH(funcType, intH());
     assertThat(func1)
@@ -49,7 +49,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void funcs_with_different_body_are_not_equal() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
+    var funcType = defFuncTH(intTH(), list(stringTH()));
     var func1 = defFuncH(funcType, intH(1));
     var func2 = defFuncH(funcType, intH(2));
     assertThat(func1)
@@ -58,7 +58,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void funcs_with_equal_body_have_equal_hashes() {
-    var funcType = defFuncHT(intHT(), list(intHT()));
+    var funcType = defFuncTH(intTH(), list(intTH()));
     var func1 = defFuncH(funcType, intH());
     var func2 = defFuncH(funcType, intH());
     assertThat(func1.hash())
@@ -67,7 +67,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void funcs_with_different_bodies_have_not_equal_hashes() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
+    var funcType = defFuncTH(intTH(), list(stringTH()));
     var func1 = defFuncH(funcType, intH(1));
     var func2 = defFuncH(funcType, intH(2));
     assertThat(func1.hash())
@@ -76,7 +76,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void funcs_with_equal_body_have_equal_hash_code() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
+    var funcType = defFuncTH(intTH(), list(stringTH()));
     var func1 = defFuncH(funcType, intH());
     var func2 = defFuncH(funcType, intH());
     assertThat(func1.hashCode())
@@ -85,7 +85,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void funcs_with_different_bodies_have_not_equal_hash_code() {
-    var funcType = defFuncHT(intHT(), list(intHT()));
+    var funcType = defFuncTH(intTH(), list(intTH()));
     var func1 = defFuncH(funcType, intH(1));
     var func2 = defFuncH(funcType, intH(2));
     assertThat(func1.hashCode())
@@ -94,7 +94,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void func_can_be_read_by_hash() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
+    var funcType = defFuncTH(intTH(), list(stringTH()));
     var func = defFuncH(funcType, intH());
     assertThat(objDbOther().get(func.hash()))
         .isEqualTo(func);
@@ -102,7 +102,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void funcs_read_by_hash_have_equal_bodies() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
+    var funcType = defFuncTH(intTH(), list(stringTH()));
     var func = defFuncH(funcType, intH());
     var funcRead = (DefFuncH) objDbOther().get(func.hash());
     assertThat(func.body())
@@ -111,7 +111,7 @@ public class DefFuncHTest extends TestingContext {
 
   @Test
   public void to_string() {
-    var funcType = defFuncHT(intHT(), list(stringHT()));
+    var funcType = defFuncTH(intTH(), list(stringTH()));
     var func = defFuncH(funcType, intH());
     assertThat(func.toString())
         .isEqualTo("DefFuncH(Int(String))@" + func.hash());

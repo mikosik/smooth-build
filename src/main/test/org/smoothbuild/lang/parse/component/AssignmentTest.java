@@ -16,9 +16,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
-import org.smoothbuild.lang.base.type.api.FuncType;
+import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -77,8 +77,8 @@ public class AssignmentTest extends TestingContext {
       module.loadsSuccessfully();
     } else {
       var type = targetType.type();
-      FuncType funcType = new FuncTypeS(type, list(type));
-      module.loadsWithError(3, "In call to function with type " + funcType.q()
+      FuncT funcT = new FuncTS(type, list(type));
+      module.loadsWithError(3, "In call to function with type " + funcT.q()
           + ": Cannot assign argument of type " + sourceType.q()
           + " to parameter `target` of type " + targetType.q() + ".");
     }
@@ -98,9 +98,9 @@ public class AssignmentTest extends TestingContext {
       module.loadsSuccessfully();
     } else {
       var type = targetType.type();
-      FuncType funcType = new FuncTypeS(type, list(type));
+      FuncT funcT = new FuncTS(type, list(type));
       module.loadsWithError(3,
-          "In call to function with type " + funcType.q() +
+          "In call to function with type " + funcT.q() +
               ": Cannot assign argument of type " + sourceType.q()
               + " to parameter `target` of type " + targetType.q() + ".");
     }

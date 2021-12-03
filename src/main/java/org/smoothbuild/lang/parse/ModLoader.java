@@ -25,7 +25,7 @@ import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.StructS;
 import org.smoothbuild.lang.base.define.TopEvalS;
-import org.smoothbuild.lang.base.type.impl.StructTypeS;
+import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
@@ -90,7 +90,7 @@ public class ModLoader {
   }
 
   private StructS loadStruct(ModPath path, StructN struct) {
-    var type = (StructTypeS) struct.type().get();
+    var type = (StructTS) struct.type().get();
     var name = struct.name();
     var loc = struct.loc();
     return new StructS(type, path, name, loc);
@@ -109,7 +109,7 @@ public class ModLoader {
   }
 
   private DefFuncS loadCtor(ModPath path, StructN struct) {
-    var resultType = (StructTypeS) struct.type().get();
+    var resultType = (StructTS) struct.type().get();
     var name = struct.ctor().name();
     var paramTypes = map(struct.fields(), f -> f.type().get());
     var type = typeFactory.func(resultType, paramTypes);
@@ -119,7 +119,7 @@ public class ModLoader {
     return new DefFuncS(type, path, name, params, body, loc);
   }
 
-  private CombineS ctorBody(StructTypeS resultType, NList<ItemS> params, Loc loc) {
+  private CombineS ctorBody(StructTS resultType, NList<ItemS> params, Loc loc) {
     var paramRefs = map(params, p -> (ExprS) new ParamRefS(p.type(), p.name(), loc));
     return new CombineS(resultType, paramRefs, loc);
   }

@@ -91,7 +91,7 @@ public class ResHandlerTest extends TestingContext {
   }
 
   private Output output(ValH val) {
-    return new Output(val, arrayH(stringHT()));
+    return new Output(val, arrayH(stringTH()));
   }
 
   private TaskInfo taskInfo() {

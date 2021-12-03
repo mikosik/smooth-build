@@ -40,7 +40,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.NothingTypeS;
+import org.smoothbuild.lang.base.type.impl.NothingTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public class TypingTest {
@@ -213,7 +213,7 @@ public class TypingTest {
   public static List<Arguments> inferVarBounds_test_data() {
     var r = new ArrayList<Arguments>();
     for (TypeS type : concat(ELEMENTARY_TYPES, X)) {
-      if (type instanceof NothingTypeS) {
+      if (type instanceof NothingTS) {
         // arrays
         r.add(arguments(A, NOTHING, bm(A, LOWER, NOTHING)));
         r.add(arguments(A, a(NOTHING), bm(A, LOWER, a(NOTHING))));

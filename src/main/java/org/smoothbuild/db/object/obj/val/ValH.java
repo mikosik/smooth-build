@@ -16,12 +16,12 @@ public sealed abstract class ValH extends ObjH
   }
 
   @Override
-  public TypeH spec() {
-    return (TypeH) super.spec();
+  public TypeH cat() {
+    return (TypeH) super.cat();
   }
 
   @Override
   public TypeH type() {
-    return spec();
+    return cat();
   }
 }

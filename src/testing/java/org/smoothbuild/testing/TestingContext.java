@@ -37,28 +37,28 @@ import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.TypeDb;
+import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.CallTypeH;
-import org.smoothbuild.db.object.type.expr.CombineTypeH;
-import org.smoothbuild.db.object.type.expr.OrderTypeH;
-import org.smoothbuild.db.object.type.expr.ParamRefTypeH;
-import org.smoothbuild.db.object.type.expr.SelectTypeH;
-import org.smoothbuild.db.object.type.val.AnyTypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
-import org.smoothbuild.db.object.type.val.BlobTypeH;
-import org.smoothbuild.db.object.type.val.BoolTypeH;
-import org.smoothbuild.db.object.type.val.DefFuncTypeH;
-import org.smoothbuild.db.object.type.val.FuncTypeH;
-import org.smoothbuild.db.object.type.val.IfFuncTypeH;
-import org.smoothbuild.db.object.type.val.IntTypeH;
-import org.smoothbuild.db.object.type.val.MapFuncTypeH;
-import org.smoothbuild.db.object.type.val.NatFuncTypeH;
-import org.smoothbuild.db.object.type.val.NothingTypeH;
-import org.smoothbuild.db.object.type.val.StringTypeH;
-import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.expr.CallCH;
+import org.smoothbuild.db.object.type.expr.CombineCH;
+import org.smoothbuild.db.object.type.expr.OrderCH;
+import org.smoothbuild.db.object.type.expr.ParamRefCH;
+import org.smoothbuild.db.object.type.expr.SelectCH;
+import org.smoothbuild.db.object.type.val.AnyTH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.type.val.BlobTH;
+import org.smoothbuild.db.object.type.val.BoolTH;
+import org.smoothbuild.db.object.type.val.DefFuncTH;
+import org.smoothbuild.db.object.type.val.FuncTH;
+import org.smoothbuild.db.object.type.val.IfFuncTH;
+import org.smoothbuild.db.object.type.val.IntTH;
+import org.smoothbuild.db.object.type.val.MapFuncTH;
+import org.smoothbuild.db.object.type.val.NatFuncTH;
+import org.smoothbuild.db.object.type.val.NothingTH;
+import org.smoothbuild.db.object.type.val.StringTH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.db.object.type.val.VarH;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
@@ -83,15 +83,15 @@ import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.impl.AnyTypeS;
-import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
-import org.smoothbuild.lang.base.type.impl.BlobTypeS;
-import org.smoothbuild.lang.base.type.impl.BoolTypeS;
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
-import org.smoothbuild.lang.base.type.impl.IntTypeS;
-import org.smoothbuild.lang.base.type.impl.NothingTypeS;
-import org.smoothbuild.lang.base.type.impl.StringTypeS;
-import org.smoothbuild.lang.base.type.impl.StructTypeS;
+import org.smoothbuild.lang.base.type.impl.AnyTS;
+import org.smoothbuild.lang.base.type.impl.ArrayTS;
+import org.smoothbuild.lang.base.type.impl.BlobTS;
+import org.smoothbuild.lang.base.type.impl.BoolTS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
+import org.smoothbuild.lang.base.type.impl.IntTS;
+import org.smoothbuild.lang.base.type.impl.NothingTS;
+import org.smoothbuild.lang.base.type.impl.StringTS;
+import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -104,9 +104,9 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
+import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
 
@@ -125,7 +125,7 @@ public class TestingContext {
   private ObjDb objDb;
   private TypingS typingS;
   private TypingH typingH;
-  private TypeDb typeDb;
+  private CatDb catDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
@@ -172,7 +172,7 @@ public class TestingContext {
 
   public ObjFactory objFactory() {
     if (objFactory == null) {
-      objFactory = new ObjFactory(objDb(), typeDb(), typingH());
+      objFactory = new ObjFactory(objDb(), catDb(), typingH());
     }
     return objFactory;
   }
@@ -186,13 +186,13 @@ public class TestingContext {
 
   public TypingH typingH() {
     if (typingH == null) {
-      typingH = new TypingH(typeDb());
+      typingH = new TypingH(catDb());
     }
     return typingH;
   }
 
   public TypeFactoryH typeFactoryH() {
-    return typeDb();
+    return catDb();
   }
 
   public TypeFactoryS typeFactoryS() {
@@ -202,16 +202,16 @@ public class TestingContext {
     return typeFactoryS;
   }
 
-  public TypeDb typeDb() {
-    if (typeDb == null) {
-      typeDb = new TypeDb(hashedDb());
+  public CatDb catDb() {
+    if (catDb == null) {
+      catDb = new CatDb(hashedDb());
     }
-    return typeDb;
+    return catDb;
   }
 
   public ObjDb objDb() {
     if (objDb == null) {
-      objDb = new ObjDb(hashedDb(), typeDb(), typingH());
+      objDb = new ObjDb(hashedDb(), catDb(), typingH());
     }
     return objDb;
   }
@@ -232,11 +232,11 @@ public class TestingContext {
   }
 
   public ObjDb objDbOther() {
-    return new ObjDb(hashedDb(), typeDbOther(), typingH());
+    return new ObjDb(hashedDb(), catDbOther(), typingH());
   }
 
-  public TypeDb typeDbOther() {
-    return new TypeDb(hashedDb());
+  public CatDb catDbOther() {
+    return new CatDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -270,150 +270,150 @@ public class TestingContext {
 
   // H types
 
-  public TupleTypeH animalHT() {
-    return typeDb().tuple(list(stringHT(), intHT()));
+  public TupleTH animalTH() {
+    return catDb().tuple(list(stringTH(), intTH()));
   }
 
-  public AnyTypeH anyHT() {
-    return typeDb().any();
+  public AnyTH anyTH() {
+    return catDb().any();
   }
 
-  public ArrayTypeH arrayHT() {
-    return arrayHT(stringHT());
+  public ArrayTH arrayTH() {
+    return arrayTH(stringTH());
   }
 
-  public ArrayTypeH arrayHT(TypeH elemSpec) {
-    return typeDb().array(elemSpec);
+  public ArrayTH arrayTH(TypeH elemType) {
+    return catDb().array(elemType);
   }
 
-  public BlobTypeH blobHT() {
-    return typeDb().blob();
+  public BlobTH blobTH() {
+    return catDb().blob();
   }
 
-  public BoolTypeH boolHT() {
-    return typeDb().bool();
+  public BoolTH boolTH() {
+    return catDb().bool();
   }
 
-  public DefFuncTypeH defFuncHT() {
-    return defFuncHT(intHT(), list(blobHT(), stringHT()));
+  public DefFuncTH defFuncTH() {
+    return defFuncTH(intTH(), list(blobTH(), stringTH()));
   }
 
-  public DefFuncTypeH defFuncHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeDb().defFunc(result, params);
+  public DefFuncTH defFuncTH(TypeH result, ImmutableList<TypeH> params) {
+    return catDb().defFunc(result, params);
   }
 
-  public TupleTypeH fileHT() {
-    return tupleHT(list(blobHT(), stringHT()));
+  public TupleTH fileTH() {
+    return tupleTH(list(blobTH(), stringTH()));
   }
 
-  public FuncTypeH abstFuncHT() {
-    return abstFuncHT(intHT(), list(blobHT(), stringHT()));
+  public FuncTH abstFuncTH() {
+    return abstFuncTH(intTH(), list(blobTH(), stringTH()));
   }
 
-  public FuncTypeH abstFuncHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeDb().func(result, params);
+  public FuncTH abstFuncTH(TypeH result, ImmutableList<TypeH> params) {
+    return catDb().func(result, params);
   }
 
-  public IfFuncTypeH ifFuncHT() {
-    return typeDb().ifFunc();
+  public IfFuncTH ifFuncTH() {
+    return catDb().ifFunc();
   }
 
-  public IntTypeH intHT() {
-    return typeDb().int_();
+  public IntTH intTH() {
+    return catDb().int_();
   }
 
-  public MapFuncTypeH mapFuncHT() {
-    return typeDb().mapFunc();
+  public MapFuncTH mapFuncTH() {
+    return catDb().mapFunc();
   }
 
-  public NatFuncTypeH natFuncHT() {
-    return typeDb().natFunc(blobHT(), list(boolHT()));
+  public NatFuncTH natFuncTH() {
+    return catDb().natFunc(blobTH(), list(boolTH()));
   }
 
-  public NatFuncTypeH natFuncHT(TypeH result, ImmutableList<TypeH> params) {
-    return typeDb().natFunc(result, params);
+  public NatFuncTH natFuncTH(TypeH result, ImmutableList<TypeH> params) {
+    return catDb().natFunc(result, params);
   }
 
-  public NothingTypeH nothingHT() {
-    return typeDb().nothing();
+  public NothingTH nothingTH() {
+    return catDb().nothing();
   }
 
-  public TupleTypeH personHT() {
-    return tupleHT(list(stringHT(), stringHT()));
+  public TupleTH personTH() {
+    return tupleTH(list(stringTH(), stringTH()));
   }
 
-  public StringTypeH stringHT() {
-    return typeDb().string();
+  public StringTH stringTH() {
+    return catDb().string();
   }
 
-  public TupleTypeH tupleHT() {
-    return typeDb().tuple(list(intHT()));
+  public TupleTH tupleTH() {
+    return catDb().tuple(list(intTH()));
   }
 
-  public TupleTypeH tupleHT(ImmutableList<TypeH> itemSpecs) {
-    return typeDb().tuple(itemSpecs);
+  public TupleTH tupleTH(ImmutableList<TypeH> itemTypes) {
+    return catDb().tuple(itemTypes);
   }
 
-  public TupleTypeH tupleEmptyHT() {
-    return tupleHT(list());
+  public TupleTH tupleEmptyTH() {
+    return tupleTH(list());
   }
 
-  public TupleTypeH tupleWithStrHT() {
-    return tupleHT(list(stringHT()));
+  public TupleTH tupleWithStrTH() {
+    return tupleTH(list(stringTH()));
   }
 
-  public VarH varHT(String name) {
-    return typeDb().var(name);
+  public VarH varTH(String name) {
+    return catDb().var(name);
   }
 
-  public Side<TypeH> lowerHT() {
+  public Side<TypeH> lowerH() {
     return typeFactoryH().lower();
   }
 
-  public Side<TypeH> upperHT() {
+  public Side<TypeH> upperH() {
     return typeFactoryH().upper();
   }
 
   // Expr types
 
-  public CallTypeH callHT() {
-    return callHT(intHT());
+  public CallCH callCH() {
+    return callCH(intTH());
   }
 
-  public CallTypeH callHT(TypeH evalType) {
-    return typeDb().call(evalType);
+  public CallCH callCH(TypeH evalType) {
+    return catDb().call(evalType);
   }
 
-  public CombineTypeH combineHT() {
-    return combineHT(list(intHT(), stringHT()));
+  public CombineCH combineCH() {
+    return combineCH(list(intTH(), stringTH()));
   }
 
-  public CombineTypeH combineHT(ImmutableList<TypeH> itemSpecs) {
-    return typeDb().combine(tupleHT(itemSpecs));
+  public CombineCH combineCH(ImmutableList<TypeH> itemTypes) {
+    return catDb().combine(tupleTH(itemTypes));
   }
 
-  public OrderTypeH orderHT() {
-    return orderHT(intHT());
+  public OrderCH orderCH() {
+    return orderCH(intTH());
   }
 
-  public OrderTypeH orderHT(TypeH elemSpec) {
-    return typeDb().order(elemSpec);
+  public OrderCH orderCH(TypeH elemType) {
+    return catDb().order(elemType);
   }
 
-  public ParamRefTypeH refHT() {
-    return refHT(intHT());
+  public ParamRefCH paramRefCH() {
+    return paramRefCH(intTH());
   }
 
-  public ParamRefTypeH refHT(TypeH evalType) {
-    return typeDb().ref(evalType);
+  public ParamRefCH paramRefCH(TypeH evalType) {
+    return catDb().ref(evalType);
   }
 
-  public SelectTypeH selectHT() {
-    return selectHT(intHT());
+  public SelectCH selectCH() {
+    return selectCH(intTH());
   }
 
-  public SelectTypeH selectHT(TypeH evalType) {
-    return typeDb().select(evalType);
+  public SelectCH selectCH(TypeH evalType) {
+    return catDb().select(evalType);
   }
 
   // Obj-s (values)
@@ -427,16 +427,16 @@ public class TestingContext {
   }
 
   public TupleH animalH(StringH species, IntH speed) {
-    return tupleH(animalHT(), list(species, speed));
+    return tupleH(animalTH(), list(species, speed));
   }
 
   public ArrayH arrayH(ValH... elems) {
-    return arrayH(elems[0].spec(), elems);
+    return arrayH(elems[0].type(), elems);
   }
 
-  public ArrayH arrayH(TypeH elemSpec, ValH... elems) {
+  public ArrayH arrayH(TypeH elemType, ValH... elems) {
     return objDb()
-        .arrayBuilder(arrayHT(elemSpec))
+        .arrayBuilder(arrayTH(elemType))
         .addAll(list(elems))
         .build();
   }
@@ -483,12 +483,12 @@ public class TestingContext {
   }
 
   public DefFuncH defFuncH(ImmutableList<TypeH> paramTypes, ObjH body) {
-    var type = defFuncHT(body.type(), paramTypes);
+    var type = defFuncTH(body.type(), paramTypes);
     return defFuncH(type, body);
   }
 
-  public DefFuncH defFuncH(DefFuncTypeH spec, ObjH body) {
-    return objDb().defFunc(spec, body);
+  public DefFuncH defFuncH(DefFuncTH type, ObjH body) {
+    return objDb().defFunc(type, body);
   }
 
   public IfFuncH ifFuncH() {
@@ -508,10 +508,10 @@ public class TestingContext {
   }
 
   public NatFuncH natFuncH(BlobH jarFile, StringH classBinaryName) {
-    return natFuncH(natFuncHT(), jarFile, classBinaryName);
+    return natFuncH(natFuncTH(), jarFile, classBinaryName);
   }
 
-  public NatFuncH natFuncH(NatFuncTypeH type, BlobH jarFile, StringH classBinaryName) {
+  public NatFuncH natFuncH(NatFuncTH type, BlobH jarFile, StringH classBinaryName) {
     return objDb().natFunc(type, jarFile, classBinaryName, boolH(true));
   }
 
@@ -528,11 +528,11 @@ public class TestingContext {
   }
 
   public TupleH tupleH(ImmutableList<ValH> items) {
-    var spec = tupleHT(map(items, ValH::spec));
-    return tupleH(spec, items);
+    var type = tupleTH(map(items, ValH::type));
+    return tupleH(type, items);
   }
 
-  public TupleH tupleH(TupleTypeH tupleType, ImmutableList<ValH> items) {
+  public TupleH tupleH(TupleTH tupleType, ImmutableList<ValH> items) {
     return objDb().tuple(tupleType, items);
   }
 
@@ -553,7 +553,7 @@ public class TestingContext {
   }
 
   public ArrayH messageArrayEmtpy() {
-    return arrayH(objFactory().messageType());
+    return arrayH(objFactory().messageT());
   }
 
   public TupleH errorMessage(String text) {
@@ -583,7 +583,7 @@ public class TestingContext {
   }
 
   public ParamRefH paramRefH(int value) {
-    return objDb().newParamRef(BigInteger.valueOf(value), intHT());
+    return objDb().newParamRef(BigInteger.valueOf(value), intTH());
   }
 
   public ParamRefH paramRefH(TypeH evalType, int pointer) {
@@ -596,48 +596,48 @@ public class TestingContext {
 
   // Types Smooth
 
-  public AnyTypeS anyST() {
+  public AnyTS anyST() {
     return typeFactoryS().any();
   }
 
-  public ArrayTypeS arrayST(TypeS elemType) {
+  public ArrayTS arrayST(TypeS elemType) {
     return typeFactoryS().array(elemType);
   }
 
-  public BlobTypeS blobST() {
+  public BlobTS blobST() {
     return typeFactoryS().blob();
   }
 
-  public BoolTypeS boolST() {
+  public BoolTS boolST() {
     return typeFactoryS().bool();
   }
 
-  public FuncTypeS funcST(TypeS resultType, ItemS... params) {
+  public FuncTS funcST(TypeS resultType, ItemS... params) {
     return funcST(resultType, toTypes(list(params)));
   }
 
-  public FuncTypeS funcST(TypeS resultType, ImmutableList<TypeS> types) {
+  public FuncTS funcST(TypeS resultType, ImmutableList<TypeS> types) {
     return typeFactoryS().func(resultType, types);
   }
 
-  public IntTypeS intST() {
+  public IntTS intST() {
     return typeFactoryS().int_();
   }
 
-  public NothingTypeS nothingST() {
+  public NothingTS nothingST() {
     return typeFactoryS().nothing();
   }
 
-  public StructTypeS personST() {
+  public StructTS personST() {
     return typeFactoryS().struct("Person",
         nList(sigS(stringST(), "firstName"), sigS(stringST(), "lastName")));
   }
 
-  public StringTypeS stringST() {
+  public StringTS stringST() {
     return typeFactoryS().string();
   }
 
-  public StructTypeS structST(String name, NList<ItemSigS> fields) {
+  public StructTS structST(String name, NList<ItemSigS> fields) {
     return typeFactoryS().struct(name, fields);
   }
 
@@ -709,11 +709,11 @@ public class TestingContext {
         .collect(toImmutableList());
   }
 
-  public CombineS combineS(int line, StructTypeS type, ExprS... expr) {
+  public CombineS combineS(int line, StructTS type, ExprS... expr) {
     return combineS(line, type, ImmutableList.copyOf(expr));
   }
 
-  public CombineS combineS(int line, StructTypeS type, ImmutableList<ExprS> exprs) {
+  public CombineS combineS(int line, StructTS type, ImmutableList<ExprS> exprs) {
     return new CombineS(type, exprs, loc(line));
   }
 
@@ -837,7 +837,7 @@ public class TestingContext {
     return defFuncS(1, funcST(expr.type(), toTypes(params)), name, params, expr);
   }
 
-  public DefFuncS defFuncS(int line, FuncTypeS type, String name, NList<ItemS> params, ExprS expr) {
+  public DefFuncS defFuncS(int line, FuncTS type, String name, NList<ItemS> params, ExprS expr) {
     return new DefFuncS(type, modPath(), name, params, expr, loc(line));
   }
 
@@ -849,11 +849,11 @@ public class TestingContext {
     return new MapFuncS(modPath(), typeFactoryS());
   }
 
-  public NatFuncS natFuncS(FuncTypeS type, String name, NList<ItemS> params) {
+  public NatFuncS natFuncS(FuncTS type, String name, NList<ItemS> params) {
     return natFuncS(1, type, name, params, annS());
   }
 
-  public NatFuncS natFuncS(int line, FuncTypeS type, String name, NList<ItemS> params, AnnS ann) {
+  public NatFuncS natFuncS(int line, FuncTS type, String name, NList<ItemS> params, AnnS ann) {
     return new NatFuncS(type, modPath(), name, params, ann, loc(line));
   }
 

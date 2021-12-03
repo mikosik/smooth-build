@@ -13,7 +13,7 @@ public interface TypeFactory<T extends Type> {
 
   public Side<T> lower();
 
-  public ArrayType array(T elemType);
+  public ArrayT array(T elemType);
 
-  public FuncType func(T result, ImmutableList<T> params);
+  public FuncT func(T result, ImmutableList<T> params);
 }

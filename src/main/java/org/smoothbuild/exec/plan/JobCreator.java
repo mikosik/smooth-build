@@ -33,8 +33,8 @@ import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
-import org.smoothbuild.db.object.type.val.FuncTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
 import org.smoothbuild.exec.algorithm.ConstAlgorithm;
 import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
@@ -147,7 +147,7 @@ public class JobCreator {
     if (eager) {
       return callEagerJob(scope, func, args, loc, vars);
     } else {
-      var funcType = (FuncTypeH) func.type();
+      var funcType = (FuncTH) func.type();
       var actualResultType = typing.mapVars(funcType.res(), vars, factory.lower());
       return new LazyJob(actualResultType, loc,
           () -> callEagerJob(scope, func, args, loc, vars));
@@ -161,7 +161,7 @@ public class JobCreator {
 
   private Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Loc loc,
       BoundsMap<TypeH> vars) {
-    var funcType = (FuncTypeH) func.type();
+    var funcType = (FuncTH) func.type();
     var actualResultType = typing.mapVars(funcType.res(), vars, factory.lower());
     return new CallJob(actualResultType, func, args, loc, vars, scope, JobCreator.this);
   }
@@ -172,7 +172,7 @@ public class JobCreator {
   }
 
   private BoundsMap<TypeH> inferVarsInFuncCall(Job func, ImmutableList<TypeH> argTypes) {
-    var funcType = (FuncTypeH) func.type();
+    var funcType = (FuncTH) func.type();
     return typing.inferVarBounds(funcType.params(), argTypes, factory.lower());
   }
 
@@ -181,7 +181,7 @@ public class JobCreator {
   private Job valueLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
     Nal nal = nals.get(val);
     var loc = nal.loc();
-    return new LazyJob(val.spec(), loc, () -> valueEagerJob(nal, val));
+    return new LazyJob(val.cat(), loc, () -> valueEagerJob(nal, val));
   }
 
   private Job valueEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
@@ -192,7 +192,7 @@ public class JobCreator {
   private Task valueEagerJob(Nal nal, ValH val) {
     var info = new TaskInfo(LITERAL, nal);
     var algorithm = new ConstAlgorithm(val);
-    return new Task(val.spec(), list(), info, algorithm);
+    return new Task(val.cat(), list(), info, algorithm);
   }
 
   // Combine
@@ -232,15 +232,15 @@ public class JobCreator {
 
   private Task orderEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH order, Nal nal) {
     var type = order.type();
-    var actualType = (ArrayTypeH) typing.mapVars(type, vars, factory.lower());
+    var actualType = (ArrayTH) typing.mapVars(type, vars, factory.lower());
     var elemsJ = map(order.elems(), e -> eagerJobFor(scope, vars, e));
     var info = new TaskInfo(LITERAL, nal);
     return orderEager(actualType, elemsJ, info);
   }
 
-  public Task orderEager(ArrayTypeH typeHV, ImmutableList<Job> elemsJ, TaskInfo info) {
-    var algorithm = new OrderAlgorithm(typeHV);
-    return new Task(typeHV, elemsJ, info, algorithm);
+  public Task orderEager(ArrayTH arrayTH, ImmutableList<Job> elemsJ, TaskInfo info) {
+    var algorithm = new OrderAlgorithm(arrayTH);
+    return new Task(arrayTH, elemsJ, info, algorithm);
   }
 
   // ParamRef

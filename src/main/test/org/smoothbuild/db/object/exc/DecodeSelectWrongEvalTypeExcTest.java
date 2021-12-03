@@ -11,7 +11,7 @@ public class DecodeSelectWrongEvalTypeExcTest extends TestingContext {
   @Test
   public void message() {
     var exception = new DecodeSelectWrongEvalTypeExc(
-        Hash.of(13), selectHT(intHT()), stringHT());
+        Hash.of(13), selectCH(intTH()), stringTH());
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Select:Int` object"
             + " at b1197c208248d0f7ffb3e322d5ec187441dc1b26."

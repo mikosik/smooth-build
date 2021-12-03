@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.type.impl;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.api.AbstractType;
+import org.smoothbuild.lang.base.type.api.AbstractT;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -10,8 +10,8 @@ import com.google.common.collect.ImmutableSet;
  * Smooth language type.
  * This class and all its subclasses are immutable.
  */
-public abstract sealed class TypeS extends AbstractType
-    permits ArrayTypeS, BaseTypeS, FuncTypeS, StructTypeS, VarS {
+public abstract sealed class TypeS extends AbstractT
+    permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
   protected TypeS(String name, ImmutableSet<VarS> vars) {
     super(name, vars);
   }

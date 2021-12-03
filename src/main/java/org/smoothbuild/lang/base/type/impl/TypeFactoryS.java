@@ -17,12 +17,12 @@ import com.google.common.collect.ImmutableList;
 
 @Singleton
 public class TypeFactoryS implements TypeFactory<TypeS> {
-  private static final AnyTypeS ANY = new AnyTypeS();
-  private static final BlobTypeS BLOB = new BlobTypeS();
-  private static final BoolTypeS BOOL = new BoolTypeS();
-  private static final IntTypeS INT = new IntTypeS();
-  private static final NothingTypeS NOTHING = new NothingTypeS();
-  private static final StringTypeS STRING = new StringTypeS();
+  private static final AnyTS ANY = new AnyTS();
+  private static final BlobTS BLOB = new BlobTS();
+  private static final BoolTS BOOL = new BoolTS();
+  private static final IntTS INT = new IntTS();
+  private static final NothingTS NOTHING = new NothingTS();
+  private static final StringTS STRING = new StringTS();
 
   private final Sides<TypeS> sides;
 
@@ -35,8 +35,8 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
    */
-  public ImmutableList<BaseTypeS> inferableBaseTypes() {
-    return ImmutableList.<BaseTypeS>builder()
+  public ImmutableList<BaseTS> inferableBaseTypes() {
+    return ImmutableList.<BaseTS>builder()
         .addAll(baseTypes())
         .add(any())
         .build();
@@ -45,7 +45,7 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
   /**
    * Base types that are legal in smooth language.
    */
-  public ImmutableList<BaseTypeS> baseTypes() {
+  public ImmutableList<BaseTS> baseTypes() {
     return ImmutableList.of(
         blob(),
         bool(),
@@ -78,37 +78,37 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
     return sides.lower();
   }
 
-  public AnyTypeS any() {
+  public AnyTS any() {
     return ANY;
   }
 
   @Override
-  public ArrayTypeS array(TypeS elemType) {
-    return new ArrayTypeS(elemType);
+  public ArrayTS array(TypeS elemType) {
+    return new ArrayTS(elemType);
   }
 
-  public BlobTypeS blob() {
+  public BlobTS blob() {
     return BLOB;
   }
 
-  public BoolTypeS bool() {
+  public BoolTS bool() {
     return BOOL;
   }
 
   @Override
-  public FuncTypeS func(TypeS result, ImmutableList<TypeS> params) {
-    return new FuncTypeS(result, ImmutableList.copyOf(params));
+  public FuncTS func(TypeS result, ImmutableList<TypeS> params) {
+    return new FuncTS(result, ImmutableList.copyOf(params));
   }
 
-  public IntTypeS int_() {
+  public IntTS int_() {
     return INT;
   }
 
-  public NothingTypeS nothing() {
+  public NothingTS nothing() {
     return NOTHING;
   }
 
-  public StringTypeS string() {
+  public StringTS string() {
     return STRING;
   }
 
@@ -117,7 +117,7 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
     return new VarS(name);
   }
 
-  public StructTypeS struct(String name, NList<ItemSigS> fields) {
-    return new StructTypeS(name, fields);
+  public StructTS struct(String name, NList<ItemSigS> fields) {
+    return new StructTS(name, fields);
   }
 }

@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.define.Loc.internal;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NList;
@@ -25,7 +25,7 @@ public final class IfFuncS extends FuncS {
     super(funcType(resType, params, factory), modPath, IF_FUNCTION_NAME, params, internal());
   }
 
-  private static FuncTypeS funcType(TypeS resType, NList<ItemS> params, TypeFactoryS factory) {
+  private static FuncTS funcType(TypeS resType, NList<ItemS> params, TypeFactoryS factory) {
     return factory.func(resType, map(params, DefinedS::type));
   }
 

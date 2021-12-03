@@ -259,12 +259,12 @@ public class AstCreator {
 
       private TypeN createArrayType(ArrayTypeContext arrayType) {
         TypeN elemType = createType(arrayType.type());
-        return new ArrayTypeN(elemType, locOf(filePath, arrayType));
+        return new ArrayTN(elemType, locOf(filePath, arrayType));
       }
 
       private TypeN createFuncType(FuncTypeContext funcType) {
         TypeN resultType = createType(funcType.type());
-        return new FuncTypeN(resultType, createTypeList(funcType.typeList()),
+        return new FuncTN(resultType, createTypeList(funcType.typeList()),
             locOf(filePath, funcType));
       }
 

@@ -9,8 +9,8 @@ import org.smoothbuild.testing.TestingContext;
 public class BoolHTest extends TestingContext {
   @Test
   public void type_of_bool_is_bool_type() {
-    assertThat(boolH(true).spec())
-        .isEqualTo(boolHT());
+    assertThat(boolH(true).cat())
+        .isEqualTo(boolTH());
   }
 
   @Test

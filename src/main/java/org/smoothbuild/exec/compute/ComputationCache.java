@@ -20,7 +20,7 @@ import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -72,10 +72,10 @@ public class ComputationCache {
   public synchronized Output read(Hash taskHash, TypeH type) throws ComputationCacheExc {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       ObjH messagesObject = objDb.get(Hash.read(source));
-      ArrayTypeH messageArrayType = objFactory.arrayT(objFactory.messageType());
-      if (!messagesObject.spec().equals(messageArrayType)) {
+      ArrayTH messageArrayType = objFactory.arrayT(objFactory.messageT());
+      if (!messagesObject.cat().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
-            + " as first child of its Merkle root, but got " + messagesObject.spec());
+            + " as first child of its Merkle root, but got " + messagesObject.cat());
       }
 
       ArrayH messages = (ArrayH) messagesObject;
@@ -92,9 +92,9 @@ public class ComputationCache {
       } else {
         Hash resultObjectHash = Hash.read(source);
         ObjH obj = objDb.get(resultObjectHash);
-        if (!type.equals(obj.spec())) {
+        if (!type.equals(obj.cat())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
-              + " as second child of its Merkle root, but got " + obj.spec());
+              + " as second child of its Merkle root, but got " + obj.cat());
         } else {
           return new Output((ValH) obj, messages);
         }

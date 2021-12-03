@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.smoothbuild.lang.base.type.api.ArrayType;
+import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
-import org.smoothbuild.lang.base.type.api.FuncType;
+import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
@@ -34,9 +34,9 @@ public class Typing<T extends Type> {
       return true;
     }
     return switch (type) {
-      case ArrayType arrayType -> contains((T) arrayType.elem(), inner);
-      case FuncType funcType ->  contains((T) funcType.res(), inner)
-          || funcType.params().stream().anyMatch(t -> contains((T) t, inner));
+      case ArrayT arrayT -> contains((T) arrayT.elem(), inner);
+      case FuncT funcT ->  contains((T) funcT.res(), inner)
+          || funcT.params().stream().anyMatch(t -> contains((T) t, inner));
       default -> false;
     };
   }
@@ -73,8 +73,8 @@ public class Typing<T extends Type> {
   private boolean inequalByConstruction(Type t1, Type t2, Side<T> side,
       InequalFunc<T> isInequal) {
     return switch (t1) {
-      case ArrayType a1 -> t2 instanceof ArrayType a2 && isInequal.apply(a1.elem(), a2.elem(), side);
-      case FuncType f1 -> t2 instanceof FuncType f2
+      case ArrayT a1 -> t2 instanceof ArrayT a2 && isInequal.apply(a1.elem(), a2.elem(), side);
+      case FuncT f1 -> t2 instanceof FuncT f2
           && isInequal.apply(f1.res(), f2.res(), side)
           && allMatch(f1.params(), f2.params(), (a, b) -> isInequal.apply(a, b, side.reversed()));
       default -> t1.equals(t2);
@@ -121,19 +121,19 @@ public class Typing<T extends Type> {
   private void inferImpl(T t1, T t2, Side<T> side, Map<Var, Bounded<T>> result) {
     switch (t1) {
       case Var v -> result.merge(v, new Bounded<>(v, factory.oneSideBound(side, t2)), this::merge);
-      case ArrayType arrayA -> {
+      case ArrayT arrayA -> {
         if (t2.equals(side.edge())) {
           inferImpl((T) arrayA.elem(), side.edge(), side, result);
-        } else if (t2 instanceof ArrayType arrayB) {
+        } else if (t2 instanceof ArrayT arrayB) {
           inferImpl((T) arrayA.elem(), (T) arrayB.elem(), side, result);
         }
       }
-      case FuncType f1 -> {
+      case FuncT f1 -> {
         if (t2.equals(side.edge())) {
           var reversed = side.reversed();
           inferImpl((T) f1.res(), side.edge(), side, result);
           f1.params().forEach(t -> inferImpl((T) t, reversed.edge(), reversed, result));
-        } else if (t2 instanceof FuncType f2 && f1.params().size() == f2.params().size()) {
+        } else if (t2 instanceof FuncT f2 && f1.params().size() == f2.params().size()) {
           var reversed = side.reversed();
           inferImpl((T) f1.res(), (T) f2.res(), side, result);
           for (int i = 0; i < f1.params().size(); i++) {
@@ -158,16 +158,16 @@ public class Typing<T extends Type> {
             yield bounded.bounds().get(side);
           }
         }
-        case ArrayType arrayType -> {
-          T elemTypeM = mapVars((T) arrayType.elem(), boundsMap, side);
-          yield  (T) createArrayType(arrayType, elemTypeM);
+        case ArrayT arrayT -> {
+          T elemTypeM = mapVars((T) arrayT.elem(), boundsMap, side);
+          yield  (T) createArrayType(arrayT, elemTypeM);
         }
-        case FuncType funcType -> {
-          var resultTypeM = mapVars((T) funcType.res(), boundsMap, side);
+        case FuncT funcT -> {
+          var resultTypeM = mapVars((T) funcT.res(), boundsMap, side);
           ImmutableList<T> paramsM = map(
-              funcType.params(),
+              funcT.params(),
               p -> mapVars((T) p, boundsMap, side.reversed()));
-          yield  (T) createFuncType(funcType, resultTypeM, paramsM);
+          yield  (T) createFuncType(funcT, resultTypeM, paramsM);
         }
         default -> type;
       };
@@ -191,8 +191,8 @@ public class Typing<T extends Type> {
       return type2;
     } else if (type1.equals(type2)) {
       return type1;
-    } else if (type1 instanceof ArrayType arrayA) {
-      if (type2 instanceof ArrayType arrayB) {
+    } else if (type1 instanceof ArrayT arrayA) {
+      if (type2 instanceof ArrayT arrayB) {
         var elemA = (T) arrayA.elem();
         var elemB = (T) arrayB.elem();
         var elemM = merge(elemA, elemB, direction);
@@ -204,8 +204,8 @@ public class Typing<T extends Type> {
           return (T) factory.array(elemM);
         }
       }
-    } else if (type1 instanceof FuncType funcA) {
-      if (type2 instanceof FuncType funcB) {
+    } else if (type1 instanceof FuncT funcA) {
+      if (type2 instanceof FuncT funcB) {
         if (funcA.params().size() == funcB.params().size()) {
           var resultM = merge((T) funcA.res(), (T) funcB.res(), direction);
           var paramsM = zip(funcA.params(), funcB.params(),
@@ -233,7 +233,7 @@ public class Typing<T extends Type> {
         merge(bounds1.upper(), bounds2.upper(), factory.lower()));
   }
 
-  private ArrayType createArrayType(ArrayType type, T elemType) {
+  private ArrayT createArrayType(ArrayT type, T elemType) {
     if (type.elem() == elemType) {
       return type;
     } else {
@@ -241,14 +241,14 @@ public class Typing<T extends Type> {
     }
   }
 
-  private FuncType createFuncType(FuncType type, T resultType, ImmutableList<T> params) {
+  private FuncT createFuncType(FuncT type, T resultType, ImmutableList<T> params) {
     if (isFuncTypeEqual(type, resultType, params)) {
       return type;
     }
     return factory.func(resultType, params);
   }
 
-  private boolean isFuncTypeEqual(FuncType type, Type result, ImmutableList<T> params) {
+  private boolean isFuncTypeEqual(FuncT type, Type result, ImmutableList<T> params) {
     return type.res() == result && type.params().equals(params);
   }
 

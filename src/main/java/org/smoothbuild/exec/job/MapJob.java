@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Loc;
@@ -47,7 +47,7 @@ public class MapJob extends AbstractJob {
 
   private void onArrayCompleted(ArrayH array, FuncH funcH, Worker worker,
       Consumer<ValH> result) {
-    var outputArrayTypeH = (ArrayTypeH) type();
+    var outputArrayTypeH = (ArrayTH) type();
     var outputElemType = outputArrayTypeH.elem();
     var funcJob = getJob(funcH);
     var mapElemJobs = map(

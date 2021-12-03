@@ -12,7 +12,7 @@ public class ConstAlgorithm extends Algorithm {
   private final ValH val;
 
   public ConstAlgorithm(ValH val) {
-    super(val.spec());
+    super(val.cat());
     this.val = val;
   }
 

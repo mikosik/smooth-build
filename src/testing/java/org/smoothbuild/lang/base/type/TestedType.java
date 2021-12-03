@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 
 import org.smoothbuild.lang.base.define.ItemSigS;
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
-import org.smoothbuild.lang.base.type.impl.NothingTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
+import org.smoothbuild.lang.base.type.impl.NothingTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -265,7 +265,7 @@ public class TestedType {
   }
 
   public boolean isNothing() {
-    return type instanceof NothingTypeS;
+    return type instanceof NothingTS;
   }
 
   public boolean isFunc(Predicate<TestedType> result, Predicate<TestedType>... params) {
@@ -337,7 +337,7 @@ public class TestedType {
     public final TestedType resType;
     public final ImmutableList<TestedType> params;
 
-    public TestedFuncType(TestedType resType, ImmutableList<TestedType> params, FuncTypeS type,
+    public TestedFuncType(TestedType resType, ImmutableList<TestedType> params, FuncTS type,
         String literal, Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
       this.resType = resType;

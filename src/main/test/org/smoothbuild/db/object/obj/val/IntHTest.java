@@ -10,8 +10,8 @@ import org.smoothbuild.testing.TestingContext;
 public class IntHTest extends TestingContext {
   @Test
   public void type_of_int_is_int_type() {
-    assertThat(intH(123).spec())
-        .isEqualTo(intHT());
+    assertThat(intH(123).cat())
+        .isEqualTo(intTH());
   }
 
   @Test

@@ -7,8 +7,8 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.impl.ArrayTypeS;
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
+import org.smoothbuild.lang.base.type.impl.ArrayTS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NList;
@@ -20,32 +20,27 @@ public final class MapFuncS extends FuncS {
     this(modPath, factory.var("E"), factory.var("R"), factory);
   }
 
-  public MapFuncS(ModPath modPath, TypeS inputElemType, TypeS resElemType, TypeFactoryS factory) {
-    this(factory.array(resElemType),
-        factory.array(inputElemType),
-        factory.func(resElemType, list(inputElemType)), modPath,
+  public MapFuncS(ModPath modPath, TypeS inputElemT, TypeS resElemT, TypeFactoryS factory) {
+    this(factory.array(resElemT),
+        factory.array(inputElemT),
+        factory.func(resElemT, list(inputElemT)), modPath,
         factory);
   }
 
-  private MapFuncS(ArrayTypeS resType, ArrayTypeS inputArrayType,
-      FuncTypeS mappingFuncType, ModPath modPath, TypeFactoryS factory) {
-    this(resType, createParams(modPath, inputArrayType, mappingFuncType), modPath,
-        factory);
+  private MapFuncS(ArrayTS resT, ArrayTS inputArrayT, FuncTS mappingFuncT, ModPath modPath,
+      TypeFactoryS factory) {
+    this(resT, createParams(modPath, inputArrayT, mappingFuncT), modPath, factory);
   }
 
-  private MapFuncS(ArrayTypeS resType, NList<ItemS> params, ModPath modPath, TypeFactoryS factory) {
-    super(
-        factory.func(resType, map(params, DefinedS::type)), modPath,
-        MAP_FUNCTION_NAME,
-        params,
-        internal()
-    );
+  private MapFuncS(ArrayTS resT, NList<ItemS> params, ModPath modPath, TypeFactoryS factory) {
+    super(factory.func(
+        resT, map(params, DefinedS::type)), modPath, MAP_FUNCTION_NAME, params, internal());
   }
 
   private static NList<ItemS> createParams(
-      ModPath modPath, ArrayTypeS inputArrayType, FuncTypeS mappingFuncType) {
+      ModPath modPath, ArrayTS inputArrayT, FuncTS mappingFuncT) {
     return nList(
-        new ItemS(inputArrayType, modPath, "array", Optional.empty(), internal()),
-        new ItemS(mappingFuncType, modPath, "func", Optional.empty(), internal()));
+        new ItemS(inputArrayT, modPath, "array", Optional.empty(), internal()),
+        new ItemS(mappingFuncT, modPath, "func", Optional.empty(), internal()));
   }
 }

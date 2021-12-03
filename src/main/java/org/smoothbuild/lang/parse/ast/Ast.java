@@ -101,8 +101,8 @@ public class Ast {
 
       private void addToDeps(TypeN type) {
         switch (type) {
-          case ArrayTypeN arrayType -> addToDeps(arrayType.elemType());
-          case FuncTypeN funcType -> {
+          case ArrayTN arrayType -> addToDeps(arrayType.elemType());
+          case FuncTN funcType -> {
             addToDeps(funcType.resType());
             funcType.paramTypes().forEach(this::addToDeps);
           }

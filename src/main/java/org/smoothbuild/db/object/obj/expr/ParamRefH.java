@@ -21,6 +21,6 @@ public class ParamRefH extends ExprH {
 
   @Override
   public String objToString() {
-    return spec().name() + "(" + value() + ")";
+    return cat().name() + "(" + value() + ")";
   }
 }

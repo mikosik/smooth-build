@@ -33,7 +33,7 @@ public class OutputClassFileTest extends TestingContext {
 
   @Test
   public void get_name_returns_file_path() {
-    var arrayTypeH = arrayHT(fileHT());
+    var arrayTypeH = arrayTH(fileTH());
     OutputClassFile outputClassFile =
         new OutputClassFile(objDb().arrayBuilder(arrayTypeH), path, nativeApi());
     assertThat(outputClassFile.getName())

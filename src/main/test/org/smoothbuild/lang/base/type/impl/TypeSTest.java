@@ -21,8 +21,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.lang.base.define.ItemSigS;
-import org.smoothbuild.lang.base.type.api.ArrayType;
-import org.smoothbuild.lang.base.type.api.FuncType;
+import org.smoothbuild.lang.base.type.api.ArrayT;
+import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.Var;
 import org.smoothbuild.testing.TestingContext;
@@ -184,7 +184,7 @@ public class TypeSTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("func_result_cases")
-  public void func_result(Function<TypeFactoryS, FuncType> factoryCall,
+  public void func_result(Function<TypeFactoryS, FuncT> factoryCall,
       Function<TypeFactoryS, List<Type>> expected) {
     assertThat(invoke(factoryCall).res())
         .isEqualTo(invoke(expected));
@@ -200,7 +200,7 @@ public class TypeSTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("func_params_cases")
-  public void func_params(Function<TypeFactoryS, FuncType> factoryCall,
+  public void func_params(Function<TypeFactoryS, FuncT> factoryCall,
       Function<TypeFactoryS, List<Type>> expected) {
     assertThat(invoke(factoryCall).params())
         .isEqualTo(invoke(expected));
@@ -229,7 +229,7 @@ public class TypeSTest extends TestingContext {
     @MethodSource("elemType_test_data")
     public void elemType(Function<TypeFactoryS, TypeS> factoryCall) {
       TypeS elem = invoke(factoryCall);
-      ArrayType array = typeFactoryS().array(elem);
+      ArrayT array = typeFactoryS().array(elem);
       assertThat(array.elem())
           .isEqualTo(elem);
     }
@@ -292,7 +292,7 @@ public class TypeSTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("struct_fields_cases")
     public void struct_fields(
-        Function<TypeFactoryS, StructTypeS> factoryCall,
+        Function<TypeFactoryS, StructTS> factoryCall,
         Function<TypeFactoryS, NList<ItemSigS>> expected) {
       assertThat(invoke(factoryCall).fields())
           .isEqualTo(invoke(expected));

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
@@ -37,6 +37,6 @@ public final class FuncN extends EvalN {
   }
 
   public Optional<TypeS> resType() {
-    return type().map(f -> ((FuncTypeS) f).res());
+    return type().map(f -> ((FuncTS) f).res());
   }
 }

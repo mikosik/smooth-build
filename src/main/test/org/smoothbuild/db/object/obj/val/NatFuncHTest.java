@@ -10,8 +10,8 @@ import okio.ByteString;
 public class NatFuncHTest extends TestingContext {
   @Test
   public void type_of_nat_func_expr_is_calculated_correctly() {
-    assertThat(natFuncH(blobH(), stringH()).spec())
-        .isEqualTo(natFuncHT());
+    assertThat(natFuncH(blobH(), stringH()).cat())
+        .isEqualTo(natFuncTH());
   }
 
   @Test

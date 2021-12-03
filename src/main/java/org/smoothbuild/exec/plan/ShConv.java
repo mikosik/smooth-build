@@ -41,7 +41,7 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.ValS;
-import org.smoothbuild.lang.base.type.impl.StructTypeS;
+import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
@@ -50,9 +50,9 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
+import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.run.QuitExc;
 import org.smoothbuild.util.collect.NList;
 
@@ -211,7 +211,7 @@ public class ShConv {
 
   private SelectH convertSelect(SelectS selectS) {
     var selectableH = convertExpr(selectS.selectable());
-    var structTypeS = (StructTypeS) selectS.selectable().type();
+    var structTypeS = (StructTS) selectS.selectable().type();
     var indexJ = structTypeS.fields().indexMap().get(selectS.field());
     var indexH = objFactory.int_(BigInteger.valueOf(indexJ));
     return objFactory.select(selectableH, indexH);

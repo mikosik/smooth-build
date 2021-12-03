@@ -12,7 +12,7 @@ public class DecodeCombineWrongItemsSizeExcTest extends TestingContext {
   @Test
   public void message() {
     var exception = new DecodeCombineWrongItemsSizeExc(
-        Hash.of(13), combineHT(list(intHT(), stringHT())), 3);
+        Hash.of(13), combineCH(list(intTH(), stringTH())), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Combine:{Int,String}` object at "
             + "b1197c208248d0f7ffb3e322d5ec187441dc1b26. "

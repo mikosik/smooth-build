@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqExc;
-import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
 import com.google.common.collect.ImmutableList;
@@ -55,8 +55,8 @@ public abstract class ObjH {
     return merkleRoot.dataHash();
   }
 
-  public SpecH spec() {
-    return merkleRoot.spec();
+  public CatH cat() {
+    return merkleRoot.cat();
   }
 
   public abstract TypeH type();
@@ -79,19 +79,19 @@ public abstract class ObjH {
   }
 
   protected <T> T readData(HashedDbCallable<T> reader) {
-    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), DATA_PATH, reader);
+    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), cat(), DATA_PATH, reader);
   }
 
   protected <T> T readObj(String path, Hash hash, Class<T> clazz) {
     ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
-        hash(), spec(), path, () -> objDb().get(hash));
+        hash(), cat(), path, () -> objDb().get(hash));
     return castObj(obj, path, clazz);
   }
 
   protected <T> T readSeqElemObj(String path, Hash hash, int i, int expectedSize, Class<T> clazz) {
     Hash elemHash = readSeqElemHash(path, hash, i, expectedSize);
     ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
-        hash(), spec(), path, i, () -> objDb().get(elemHash));
+        hash(), cat(), path, i, () -> objDb().get(elemHash));
     return castObj(obj, path, i, clazz);
   }
 
@@ -122,7 +122,7 @@ public abstract class ObjH {
     Builder<ObjH> builder = ImmutableList.builder();
     for (int i = 0; i < seq.size(); i++) {
       int index = i;
-      ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), spec(), path, index,
+      ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(hash(), cat(), path, index,
           () -> objDb.get(seq.get(index)));
       builder.add(obj);
     }
@@ -132,13 +132,13 @@ public abstract class ObjH {
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash, int expectedSize) {
     ImmutableList<Hash> data = readSeqHashes(path, hash);
     if (data.size() != expectedSize) {
-      throw new UnexpectedObjSeqExc(hash(), spec(), path, expectedSize, data.size());
+      throw new UnexpectedObjSeqExc(hash(), cat(), path, expectedSize, data.size());
     }
     return data;
   }
 
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash) {
-    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), spec(), path,
+    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), cat(), path,
         () -> objDb.readSeq(hash));
   }
 
@@ -152,7 +152,7 @@ public abstract class ObjH {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedObjNodeExc(hash(), spec(), path, clazz, obj.getClass());
+      throw new UnexpectedObjNodeExc(hash(), cat(), path, clazz, obj.getClass());
     }
   }
 
@@ -163,7 +163,7 @@ public abstract class ObjH {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedObjNodeExc(hash(), spec(), path, index, clazz, obj.getClass());
+      throw new UnexpectedObjNodeExc(hash(), cat(), path, index, clazz, obj.getClass());
     }
   }
 
@@ -171,7 +171,7 @@ public abstract class ObjH {
     for (int i = 0; i < elems.size(); i++) {
       ObjH elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
-        throw new UnexpectedObjNodeExc(hash(), spec(), path, i, clazz, elem.getClass());
+        throw new UnexpectedObjNodeExc(hash(), cat(), path, i, clazz, elem.getClass());
       }
     }
     @SuppressWarnings("unchecked")

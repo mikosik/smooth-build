@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
-import org.smoothbuild.db.object.type.expr.CallTypeH;
-import org.smoothbuild.db.object.type.val.FuncTypeH;
+import org.smoothbuild.db.object.type.expr.CallCH;
+import org.smoothbuild.db.object.type.val.FuncTH;
 
 /**
  * This class is thread-safe.
@@ -23,12 +23,12 @@ public class CallH extends ExprH {
 
   public CallH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
-    checkArgument(merkleRoot.spec() instanceof CallTypeH);
+    checkArgument(merkleRoot.cat() instanceof CallCH);
   }
 
   @Override
-  public CallTypeH spec() {
-    return (CallTypeH) super.spec();
+  public CallCH cat() {
+    return (CallCH) super.cat();
   }
 
   public CallData data() {
@@ -41,10 +41,10 @@ public class CallH extends ExprH {
   public record CallData(ObjH callable, CombineH args) {}
 
   private void validate(ObjH callable, CombineH argsCombine) {
-    if (callable.type() instanceof FuncTypeH funcType) {
+    if (callable.type() instanceof FuncTH funcType) {
       var typing = objDb().typing();
       var params = funcType.params();
-      var args = argsCombine.spec().evalType().items();
+      var args = argsCombine.cat().evalType().items();
       allMatchOtherwise(
           params,
           args,
@@ -56,17 +56,17 @@ public class CallH extends ExprH {
       var actualResult = typing.mapVars(funcType.res(), varBounds, typing.factory().lower());
       if (!Objects.equals(type(), actualResult)) {
         throw new DecodeExprWrongEvalTypeOfCompExc(
-            hash(), spec(), "func.result", type(), actualResult);
+            hash(), this.cat(), "func.result", type(), actualResult);
       }
     } else {
       throw new DecodeExprWrongEvalTypeOfCompExc(
-          hash(), spec(), "func", FuncTypeH.class, callable.type());
+          hash(), this.cat(), "func", FuncTH.class, callable.type());
     }
   }
 
-  private void illegalArgs(FuncTypeH funcType, CombineH args) {
-    throw new DecodeExprWrongEvalTypeOfCompExc(hash(), spec(), "args",
-        funcType.paramsTuple(), args.type());
+  private void illegalArgs(FuncTH funcT, CombineH args) {
+    throw new DecodeExprWrongEvalTypeOfCompExc(hash(), this.cat(), "args",
+        funcT.paramsTuple(), args.type());
   }
 
   private ObjH readFunc() {

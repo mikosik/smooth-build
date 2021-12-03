@@ -30,19 +30,19 @@ import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.TypeDb;
+import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
-import org.smoothbuild.db.object.type.val.BlobTypeH;
-import org.smoothbuild.db.object.type.val.BoolTypeH;
-import org.smoothbuild.db.object.type.val.DefFuncTypeH;
-import org.smoothbuild.db.object.type.val.FuncTypeH;
-import org.smoothbuild.db.object.type.val.IntTypeH;
-import org.smoothbuild.db.object.type.val.NatFuncTypeH;
-import org.smoothbuild.db.object.type.val.NothingTypeH;
-import org.smoothbuild.db.object.type.val.StringTypeH;
-import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.type.val.BlobTH;
+import org.smoothbuild.db.object.type.val.BoolTH;
+import org.smoothbuild.db.object.type.val.DefFuncTH;
+import org.smoothbuild.db.object.type.val.FuncTH;
+import org.smoothbuild.db.object.type.val.IntTH;
+import org.smoothbuild.db.object.type.val.NatFuncTH;
+import org.smoothbuild.db.object.type.val.NothingTH;
+import org.smoothbuild.db.object.type.val.StringTH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.db.object.type.val.VarH;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -55,17 +55,17 @@ import com.google.common.collect.ImmutableList;
 @Singleton
 public class ObjFactory {
   private final ObjDb objDb;
-  private final TypeDb typeDb;
-  private final TupleTypeH messageType;
-  private final TupleTypeH fileType;
+  private final CatDb catDb;
+  private final TupleTH messageType;
+  private final TupleTH fileType;
   private final TypingH typing;
 
   @Inject
-  public ObjFactory(ObjDb objDb, TypeDb typeDb, TypingH typing) {
+  public ObjFactory(ObjDb objDb, CatDb catDb, TypingH typing) {
     this.objDb = objDb;
-    this.typeDb = typeDb;
-    this.messageType = createMessageType(typeDb);
-    this.fileType = createFileT(typeDb);
+    this.catDb = catDb;
+    this.messageType = createMessageT(catDb);
+    this.fileType = createFileT(catDb);
     this.typing = typing;
   }
 
@@ -76,10 +76,10 @@ public class ObjFactory {
   // Objects
 
   public ArrayHBuilder arrayBuilderWithElems(TypeH elemType) {
-    return objDb.arrayBuilder(typeDb.array(elemType));
+    return objDb.arrayBuilder(catDb.array(elemType));
   }
 
-  public ArrayHBuilder arrayBuilder(ArrayTypeH type) {
+  public ArrayHBuilder arrayBuilder(ArrayTH type) {
     return objDb.arrayBuilder(type);
   }
 
@@ -112,7 +112,7 @@ public class ObjFactory {
     return objDb.tuple(fileT(), list(content, path));
   }
 
-  public DefFuncH defFunc(DefFuncTypeH type, ObjH body) {
+  public DefFuncH defFunc(DefFuncTH type, ObjH body) {
     return objDb.defFunc(type, body);
   }
 
@@ -128,8 +128,7 @@ public class ObjFactory {
     return objDb.mapFunc();
   }
 
-  public NatFuncH natFunc(
-      NatFuncTypeH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
+  public NatFuncH natFunc(NatFuncTH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
     return objDb.natFunc(type, jarFile, classBinaryName,isPure);
   }
 
@@ -145,7 +144,7 @@ public class ObjFactory {
     return objDb.string(string);
   }
 
-  public TupleH tuple(TupleTypeH type, ImmutableList<ValH> items) {
+  public TupleH tuple(TupleTH type, ImmutableList<ValH> items) {
     return objDb.tuple(type, items);
   }
 
@@ -155,61 +154,61 @@ public class ObjFactory {
 
   // Types
 
-  public ArrayTypeH arrayT(TypeH elemType) {
-    return typeDb.array(elemType);
+  public ArrayTH arrayT(TypeH elemType) {
+    return catDb.array(elemType);
   }
 
-  public BlobTypeH blobT() {
-    return typeDb.blob();
+  public BlobTH blobT() {
+    return catDb.blob();
   }
 
-  public BoolTypeH boolT() {
-    return typeDb.bool();
+  public BoolTH boolT() {
+    return catDb.bool();
   }
 
-  public DefFuncTypeH defFuncT(TypeH result, ImmutableList<TypeH> params) {
-    return typeDb.defFunc(result, params);
+  public DefFuncTH defFuncT(TypeH result, ImmutableList<TypeH> params) {
+    return catDb.defFunc(result, params);
   }
 
-  public FuncTypeH ifFuncT() {
-    return typeDb.ifFunc();
+  public FuncTH ifFuncT() {
+    return catDb.ifFunc();
   }
 
-  public IntTypeH intT() {
-    return typeDb.int_();
+  public IntTH intT() {
+    return catDb.int_();
   }
 
-  public FuncTypeH mapFuncT() {
-    return typeDb.ifFunc();
+  public FuncTH mapFuncT() {
+    return catDb.ifFunc();
   }
 
-  public TupleTypeH messageType() {
+  public TupleTH messageT() {
     return messageType;
   }
 
-  public NatFuncTypeH natFuncT(TypeH result, ImmutableList<TypeH> params) {
-    return typeDb.natFunc(result, params);
+  public NatFuncTH natFuncT(TypeH result, ImmutableList<TypeH> params) {
+    return catDb.natFunc(result, params);
   }
 
-  public NothingTypeH nothingT() {
-    return typeDb.nothing();
+  public NothingTH nothingT() {
+    return catDb.nothing();
   }
 
-  public StringTypeH stringT() {
-    return typeDb.string();
+  public StringTH stringT() {
+    return catDb.string();
   }
 
-  public TupleTypeH tupleType(ImmutableList<TypeH> itemTypes) {
-    return typeDb.tuple(itemTypes);
+  public TupleTH tupleT(ImmutableList<TypeH> itemTypes) {
+    return catDb.tuple(itemTypes);
   }
 
   public VarH var(String name) {
-    return typeDb.var(name);
+    return catDb.var(name);
   }
 
   // other values and its types
 
-  public TupleTypeH fileT() {
+  public TupleTH fileT() {
     return fileType;
   }
 
@@ -228,15 +227,15 @@ public class ObjFactory {
   private TupleH message(String severity, String text) {
     ValH textObject = objDb.string(text);
     ValH severityObject = objDb.string(severity);
-    return objDb.tuple(messageType(), list(textObject, severityObject));
+    return objDb.tuple(messageT(), list(textObject, severityObject));
   }
 
-  private static TupleTypeH createMessageType(TypeDb typeDb) {
-    StringTypeH stringType = typeDb.string();
-    return typeDb.tuple(list(stringType, stringType));
+  private static TupleTH createMessageT(CatDb catDb) {
+    StringTH stringType = catDb.string();
+    return catDb.tuple(list(stringType, stringType));
   }
 
-  private static TupleTypeH createFileT(TypeDb typeDb) {
-    return typeDb.tuple(list(typeDb.blob(), typeDb.string()));
+  private static TupleTH createFileT(CatDb catDb) {
+    return catDb.tuple(list(catDb.blob(), catDb.string()));
   }
 }

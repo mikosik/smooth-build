@@ -4,7 +4,7 @@ import static java.lang.String.join;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
-import static org.smoothbuild.lang.parse.ast.FuncTypeN.countFuncVars;
+import static org.smoothbuild.lang.parse.ast.FuncTN.countFuncVars;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
@@ -19,13 +19,13 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.Nal;
-import org.smoothbuild.lang.parse.ast.ArrayTypeN;
+import org.smoothbuild.lang.parse.ast.ArrayTN;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobN;
 import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.FuncN;
-import org.smoothbuild.lang.parse.ast.FuncTypeN;
+import org.smoothbuild.lang.parse.ast.FuncTN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.NamedN;
@@ -123,9 +123,9 @@ public class AnalyzeSemantically {
       }
 
       private void assertTypeIsDefined(TypeN type) {
-        if (type instanceof ArrayTypeN array) {
+        if (type instanceof ArrayTN array) {
           assertTypeIsDefined(array.elemType());
-        } else if (type instanceof FuncTypeN func) {
+        } else if (type instanceof FuncTN func) {
           assertTypeIsDefined(func.resType());
           func.paramTypes().forEach(this::assertTypeIsDefined);
         } else if (!isDefinedType(type)) {

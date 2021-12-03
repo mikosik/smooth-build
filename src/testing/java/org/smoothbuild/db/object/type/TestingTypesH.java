@@ -4,18 +4,18 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
-import org.smoothbuild.db.object.type.base.SpecH;
+import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.CombineTypeH;
-import org.smoothbuild.db.object.type.val.ArrayTypeH;
-import org.smoothbuild.db.object.type.val.TupleTypeH;
+import org.smoothbuild.db.object.type.expr.CombineCH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
 public class TestingTypesH {
   private static final TestingContext CONTEXT = new TestingContext();
-  public static final TypeDb TYPEH_DB = CONTEXT.typeDb();
+  public static final CatDb TYPEH_DB = CONTEXT.catDb();
 
   public static final TypeH ANY = TYPEH_DB.any();
   public static final TypeH BLOB = TYPEH_DB.blob();
@@ -28,40 +28,40 @@ public class TestingTypesH {
   public static final TypeH STRING = TYPEH_DB.string();
   public static final TypeH VARIABLE = TYPEH_DB.var("A");
 
-  public static final TupleTypeH PERSON = CONTEXT.personHT();
-  public static final TupleTypeH FILE = CONTEXT.fileHT();
-  public static final TupleTypeH TUPLE_EMPTY = CONTEXT.tupleEmptyHT();
-  public static final TupleTypeH TUPLE_WITH_STRING = CONTEXT.tupleWithStrHT();
+  public static final TupleTH PERSON = CONTEXT.personTH();
+  public static final TupleTH FILE = CONTEXT.fileTH();
+  public static final TupleTH TUPLE_EMPTY = CONTEXT.tupleEmptyTH();
+  public static final TupleTH TUPLE_WITH_STRING = CONTEXT.tupleWithStrTH();
 
-  public static final SpecH CALL = CONTEXT.callHT();
-  public static final SpecH ORDER = CONTEXT.orderHT();
-  public static final SpecH COMBINE = CONTEXT.combineHT(list(INT, STRING));
-  public static final SpecH SELECT = CONTEXT.selectHT(INT);
-  public static final SpecH PARAM_REF = CONTEXT.refHT(INT);
+  public static final CatH CALL = CONTEXT.callCH();
+  public static final CatH ORDER = CONTEXT.orderCH();
+  public static final CatH COMBINE = CONTEXT.combineCH(list(INT, STRING));
+  public static final CatH SELECT = CONTEXT.selectCH(INT);
+  public static final CatH PARAM_REF = CONTEXT.paramRefCH(INT);
 
-  public static final ArrayTypeH ARRAY_ANY = array(ANY);
-  public static final ArrayTypeH ARRAY_BLOB = array(BLOB);
-  public static final ArrayTypeH ARRAY_BOOL = array(BOOL);
-  public static final ArrayTypeH ARRAY_FUNCTION = array(ABST_FUNC);
-  public static final ArrayTypeH ARRAY_INT = array(INT);
-  public static final ArrayTypeH ARRAY_NOTHING = array(NOTHING);
-  public static final ArrayTypeH ARRAY_STR = array(STRING);
-  public static final ArrayTypeH ARRAY_PERSON_TUPLE = array(PERSON);
-  public static final ArrayTypeH ARRAY_PERSON = array(PERSON);
-  public static final ArrayTypeH ARRAY_VARIABLE = array(VARIABLE);
+  public static final ArrayTH ARRAY_ANY = array(ANY);
+  public static final ArrayTH ARRAY_BLOB = array(BLOB);
+  public static final ArrayTH ARRAY_BOOL = array(BOOL);
+  public static final ArrayTH ARRAY_FUNCTION = array(ABST_FUNC);
+  public static final ArrayTH ARRAY_INT = array(INT);
+  public static final ArrayTH ARRAY_NOTHING = array(NOTHING);
+  public static final ArrayTH ARRAY_STR = array(STRING);
+  public static final ArrayTH ARRAY_PERSON_TUPLE = array(PERSON);
+  public static final ArrayTH ARRAY_PERSON = array(PERSON);
+  public static final ArrayTH ARRAY_VARIABLE = array(VARIABLE);
 
-  public static final ArrayTypeH ARRAY2_ANY = array(ARRAY_ANY);
-  public static final ArrayTypeH ARRAY2_BLOB = array(ARRAY_BLOB);
-  public static final ArrayTypeH ARRAY2_BOOL = array(ARRAY_BOOL);
-  public static final ArrayTypeH ARRAY2_FUNCTION = array(ARRAY_FUNCTION);
-  public static final ArrayTypeH ARRAY2_INT = array(ARRAY_INT);
-  public static final ArrayTypeH ARRAY2_NOTHING = array(ARRAY_NOTHING);
-  public static final ArrayTypeH ARRAY2_STR = array(ARRAY_STR);
-  public static final ArrayTypeH ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
-  public static final ArrayTypeH ARRAY2_PERSON = array(ARRAY_PERSON);
-  public static final ArrayTypeH ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
+  public static final ArrayTH ARRAY2_ANY = array(ARRAY_ANY);
+  public static final ArrayTH ARRAY2_BLOB = array(ARRAY_BLOB);
+  public static final ArrayTH ARRAY2_BOOL = array(ARRAY_BOOL);
+  public static final ArrayTH ARRAY2_FUNCTION = array(ARRAY_FUNCTION);
+  public static final ArrayTH ARRAY2_INT = array(ARRAY_INT);
+  public static final ArrayTH ARRAY2_NOTHING = array(ARRAY_NOTHING);
+  public static final ArrayTH ARRAY2_STR = array(ARRAY_STR);
+  public static final ArrayTH ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
+  public static final ArrayTH ARRAY2_PERSON = array(ARRAY_PERSON);
+  public static final ArrayTH ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
-  public static final ImmutableList<SpecH> BASE_TYPESV_TO_TEST = list(
+  public static final ImmutableList<CatH> BASE_TYPESV_TO_TEST = list(
       BLOB,
       BOOL, ABST_FUNC,
       INT,
@@ -70,7 +70,7 @@ public class TestingTypesH {
       PERSON
   );
 
-  public static final ImmutableList<SpecH> ARRAY_TYPESV_TO_TEST = list(
+  public static final ImmutableList<CatH> ARRAY_TYPESV_TO_TEST = list(
       ARRAY_BLOB,
       ARRAY_BOOL,
       ARRAY_FUNCTION,
@@ -88,12 +88,12 @@ public class TestingTypesH {
       ARRAY2_PERSON_TUPLE
   );
 
-  public static final ImmutableList<SpecH> TYPESV_TO_TEST =
+  public static final ImmutableList<CatH> TYPESV_TO_TEST =
       concat(BASE_TYPESV_TO_TEST, ARRAY_TYPESV_TO_TEST);
 
-  public static final ImmutableList<SpecH> ALL_TYPES_TO_TEST = createAllTypes();
+  public static final ImmutableList<CatH> ALL_TYPES_TO_TEST = createAllTypes();
 
-  private static ImmutableList<SpecH> createAllTypes() {
+  private static ImmutableList<CatH> createAllTypes() {
     var baseTypes = list(
         ANY,
         BLOB,
@@ -117,7 +117,7 @@ public class TestingTypesH {
         TYPEH_DB.var("B")
     );
     var arrayTypes = map(baseTypes, TYPEH_DB::array);
-    ImmutableList<SpecH> valueTypes = concat(baseTypes, arrayTypes);
+    ImmutableList<CatH> valueTypes = concat(baseTypes, arrayTypes);
 
     var exprTypes = list(
         TYPEH_DB.call(BLOB),
@@ -135,15 +135,15 @@ public class TestingTypesH {
     return concat(valueTypes, exprTypes);
   }
 
-  private static ArrayTypeH array(TypeH elemType) {
+  private static ArrayTH array(TypeH elemType) {
     return TYPEH_DB.array(elemType);
   }
 
-  public static TupleTypeH tuple(ImmutableList<TypeH> itemTypes) {
+  public static TupleTH tuple(ImmutableList<TypeH> itemTypes) {
     return TYPEH_DB.tuple(itemTypes);
   }
 
-  public static CombineTypeH combine(TupleTypeH tupleType) {
+  public static CombineCH combine(TupleTH tupleType) {
     return TYPEH_DB.combine(tupleType);
   }
 }

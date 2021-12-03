@@ -233,7 +233,7 @@ public class ParallelJobExecutorTest extends TestingContext {
 
   private Task job(String name, Algorithm algorithm, Job... deps) {
     TaskInfo info = new TaskInfo(CALL, name, loc());
-    return new Task(stringHT(), list(deps), info, algorithm);
+    return new Task(stringTH(), list(deps), info, algorithm);
   }
 
   private Algorithm valueAlgorithm(String value) {

@@ -23,14 +23,14 @@ import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.like.EvalLike;
-import org.smoothbuild.lang.base.type.impl.FuncTypeS;
-import org.smoothbuild.lang.base.type.impl.StructTypeS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
+import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayN;
-import org.smoothbuild.lang.parse.ast.ArrayTypeN;
+import org.smoothbuild.lang.parse.ast.ArrayTN;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobN;
@@ -38,7 +38,7 @@ import org.smoothbuild.lang.parse.ast.CallN;
 import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.ExprN;
 import org.smoothbuild.lang.parse.ast.FuncN;
-import org.smoothbuild.lang.parse.ast.FuncTypeN;
+import org.smoothbuild.lang.parse.ast.FuncTN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.RefN;
@@ -155,8 +155,8 @@ public class TypeInferrer {
           return Optional.of(factory.var(type.name()));
         }
         return switch (type) {
-          case ArrayTypeN array -> createType(array.elemType()).map(factory::array);
-          case FuncTypeN func -> {
+          case ArrayTN array -> createType(array.elemType()).map(factory::array);
+          case FuncTN func -> {
             Optional<TypeS> result = createType(func.resType());
             var params = Optionals.pullUp(map(func.paramTypes(), this::createType));
             yield optionalFuncType(result, params);
@@ -199,7 +199,7 @@ public class TypeInferrer {
         super.visitSelect(select);
         select.selectable().type().ifPresentOrElse(
             t -> {
-              if (!(t instanceof StructTypeS st)) {
+              if (!(t instanceof StructTS st)) {
                 select.setType(empty());
                 logBuffer.log(parseError(select.loc(), "Type " + t.q()
                     + " is not a struct so it doesn't have " + q(select.field()) + " field."));
@@ -208,7 +208,7 @@ public class TypeInferrer {
                 logBuffer.log(parseError(select.loc(), "Struct " + t.q()
                     + " doesn't have field `" + select.field() + "`."));
               } else {
-                select.setType(((StructTypeS) t).fields().get(select.field()).type());
+                select.setType(((StructTS) t).fields().get(select.field()).type());
               }
             },
             () -> select.setType(empty())
@@ -257,7 +257,7 @@ public class TypeInferrer {
         Optional<TypeS> calledType = called.type();
         if (calledType.isEmpty()) {
           call.setType(empty());
-        } else if (!(calledType.get() instanceof FuncTypeS funcType)) {
+        } else if (!(calledType.get() instanceof FuncTS funcT)) {
           logBuffer.log(parseError(call.loc(), description(called)
               + " cannot be called as it is not a function but " + calledType.get().q() + "."));
           call.setType(empty());
@@ -275,7 +275,7 @@ public class TypeInferrer {
               call.setType(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<TypeS> type = callTypeInferrer.inferCallType(call, funcType.res(), params);
+              Maybe<TypeS> type = callTypeInferrer.inferCallType(call, funcT.res(), params);
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
             }
@@ -293,12 +293,12 @@ public class TypeInferrer {
                 map(funcN.params(), ItemN::sig));
             return itemSignatures.map(NList::nList);
           } else {
-            var params = ((FuncTypeS) referenced.inferredType().get()).params();
+            var params = ((FuncTS) referenced.inferredType().get()).params();
             return Optional.of(nList(map(params, ItemSigS::itemSigS)));
           }
         } else {
           return called.type().map(
-              t -> nList(map(((FuncTypeS) t).params(), ItemSigS::itemSigS)));
+              t -> nList(map(((FuncTS) t).params(), ItemSigS::itemSigS)));
         }
       }
 

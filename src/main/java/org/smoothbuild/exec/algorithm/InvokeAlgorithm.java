@@ -46,11 +46,11 @@ public class InvokeAlgorithm extends Algorithm {
         }
         return new Output(null, nativeApi.messages());
       }
-      if (!outputType().equals(result.spec())) {
+      if (!outputType().equals(result.cat())) {
         nativeApi.log().error(q(extendedName)
             + " has faulty native implementation: Its declared result type == "
             + outputType().q()
-            + " but it returned object with type == " + result.spec().q() + ".");
+            + " but it returned object with type == " + result.cat().q() + ".");
         return new Output(null, nativeApi.messages());
       }
       return new Output(result, nativeApi.messages());
