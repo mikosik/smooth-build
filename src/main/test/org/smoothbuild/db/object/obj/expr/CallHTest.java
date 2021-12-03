@@ -52,7 +52,7 @@ public class CallHTest extends TestingContext {
   @Test
   public void func_returns_func_expr() {
     var func = defFuncH(list(stringHT()), intH());
-    assertThat(callH(func, list(stringH())).data().func())
+    assertThat(callH(func, list(stringH())).data().callable())
         .isEqualTo(func);
   }
 

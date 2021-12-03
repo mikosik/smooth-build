@@ -8,18 +8,18 @@ import org.smoothbuild.lang.base.define.Loc;
 import com.google.common.collect.ImmutableList;
 
 public final class CallN extends ExprN {
-  private final ExprN func;
+  private final ExprN callable;
   private final List<ArgNode> args;
   private List<Optional<ArgNode>> assignedArgs;
 
-  public CallN(ExprN func, List<ArgNode> args, Loc loc) {
+  public CallN(ExprN callable, List<ArgNode> args, Loc loc) {
     super(loc);
-    this.func = func;
+    this.callable = callable;
     this.args = ImmutableList.copyOf(args);
   }
 
-  public ExprN func() {
-    return func;
+  public ExprN callable() {
+    return callable;
   }
 
   public List<ArgNode> args() {

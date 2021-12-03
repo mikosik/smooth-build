@@ -235,9 +235,9 @@ public class AstCreator {
       }
 
       private ExprN createCall(
-          ExprN func, List<ArgNode> args, ArgListContext argListContext) {
+          ExprN callable, List<ArgNode> args, ArgListContext argListContext) {
         Loc loc = locOf(filePath, argListContext);
-        return new CallN(func, args, loc);
+        return new CallN(callable, args, loc);
       }
 
       private Optional<TypeN> createTypeSane(TypeContext type) {

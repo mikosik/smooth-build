@@ -133,8 +133,8 @@ public class ObjDb {
 
   // methods for creating ExprH subclasses
 
-  public CallH call(ObjH func, CombineH args) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(func, args));
+  public CallH call(ObjH callable, CombineH args) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(callable, args));
   }
 
   public CombineH combine(ImmutableList<ObjH> items) {
@@ -244,16 +244,16 @@ public class ObjDb {
 
   // methods for creating Expr-s
 
-  private CallH newCall(ObjH func, CombineH args) throws HashedDbExc {
-    var resultType = inferCallResType(func, args);
+  private CallH newCall(ObjH callable, CombineH args) throws HashedDbExc {
+    var resultType = inferCallResType(callable, args);
     var type = typeDb.call(resultType);
-    var data = writeCallData(func, args);
+    var data = writeCallData(callable, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private TypeH inferCallResType(ObjH func, CombineH args) {
-    var funcType = funcEvaluationType(func);
+  private TypeH inferCallResType(ObjH callable, CombineH args) {
+    var funcType = callableEvaluationType(callable);
     var argTypes = args.type().items();
     var paramTypes = funcType.params();
     allMatchOtherwise(
@@ -273,8 +273,8 @@ public class ObjDb {
             .formatted(args.type().name(), funcType.paramsTuple().name()));
   }
 
-  private FuncTypeH funcEvaluationType(ObjH func) {
-    if (func.type() instanceof FuncTypeH funcType) {
+  private FuncTypeH callableEvaluationType(ObjH callable) {
+    if (callable.type() instanceof FuncTypeH funcType) {
       return funcType;
     } else {
       throw new IllegalArgumentException("`func` component doesn't evaluate to function.");
@@ -370,8 +370,8 @@ public class ObjDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ObjH func, CombineH args) throws HashedDbExc {
-    return hashedDb.writeSeq(func.hash(), args.hash());
+  private Hash writeCallData(ObjH callable, CombineH args) throws HashedDbExc {
+    return hashedDb.writeSeq(callable.hash(), args.hash());
   }
 
   private Hash writeCombineData(ImmutableList<ObjH> items) throws HashedDbExc {

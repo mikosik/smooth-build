@@ -253,7 +253,7 @@ public class TypeInferrer {
       @Override
       public void visitCall(CallN call) {
         super.visitCall(call);
-        ExprN called = call.func();
+        ExprN called = call.callable();
         Optional<TypeS> calledType = called.type();
         if (calledType.isEmpty()) {
           call.setType(empty());

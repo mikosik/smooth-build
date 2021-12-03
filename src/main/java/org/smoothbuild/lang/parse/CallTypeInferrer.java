@@ -78,7 +78,7 @@ public class CallTypeInferrer {
   }
 
   private static String inCallToPrefix(CallN call) {
-    return "In call to function with type " + call.func().type().get().q() + ": ";
+    return "In call to function with type " + call.callable().type().get().q() + ": ";
   }
 
   private List<Optional<TypeS>> assignedTypes(List<ItemSigS> params, List<Optional<ArgNode>> args) {

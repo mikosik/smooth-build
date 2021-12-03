@@ -392,7 +392,7 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
 
-      assertThat(((CallH) objDb().get(objHash)).data().func())
+      assertThat(((CallH) objDb().get(objHash)).data().callable())
           .isEqualTo(func);
       assertThat(((CallH) objDb().get(objHash)).data().args())
           .isEqualTo(args);

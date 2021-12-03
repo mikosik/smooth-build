@@ -8,8 +8,8 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public record CallS(TypeS type, ExprS funcExpr,
-    ImmutableList<ExprS> args, Loc loc) implements ExprS {
+public record CallS(TypeS type, ExprS callable, ImmutableList<ExprS> args, Loc loc)
+    implements ExprS {
   @Override
   public String name() {
     return "()";

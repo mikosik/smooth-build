@@ -135,7 +135,7 @@ public class InferArgsToParamsAssignment {
   }
 
   private static String inCallToPrefix(CallN call, List<ItemSigS> params) {
-    String result = ((FuncType) call.func().type().get()).res().name();
+    String result = ((FuncType) call.callable().type().get()).res().name();
     String paramsString = join(", ", map(params, ItemSigS::typeAndName));
     return "In call to function with type `" + result + "(" + paramsString + ")`: ";
   }

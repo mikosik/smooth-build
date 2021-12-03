@@ -178,11 +178,11 @@ public class ShConv {
   }
 
   private CallH convertCall(CallS callS) {
-    var funcExprH = convertExpr(callS.funcExpr());
+    var callableH = convertExpr(callS.callable());
     var argsH = convertExprs(callS.args());
-    var combine = objFactory.combine(argsH);
-    nals.put(combine, new NalImpl("{}", callS.loc()));
-    return objFactory.call(funcExprH, combine);
+    var combineH = objFactory.combine(argsH);
+    nals.put(combineH, new NalImpl("{}", callS.loc()));
+    return objFactory.call(callableH, combineH);
   }
 
   private CombineH convertCombine(CombineS combineS) {

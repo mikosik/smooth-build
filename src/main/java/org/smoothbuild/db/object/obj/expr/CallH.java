@@ -38,10 +38,10 @@ public class CallH extends ExprH {
     return new CallData(func, args);
   }
 
-  public record CallData(ObjH func, CombineH args) {}
+  public record CallData(ObjH callable, CombineH args) {}
 
-  private void validate(ObjH func, CombineH argsCombine) {
-    if (func.type() instanceof FuncTypeH funcType) {
+  private void validate(ObjH callable, CombineH argsCombine) {
+    if (callable.type() instanceof FuncTypeH funcType) {
       var typing = objDb().typing();
       var params = funcType.params();
       var args = argsCombine.spec().evalType().items();
@@ -60,7 +60,7 @@ public class CallH extends ExprH {
       }
     } else {
       throw new DecodeExprWrongEvalTypeOfCompExc(
-          hash(), spec(), "func", FuncTypeH.class, func.type());
+          hash(), spec(), "func", FuncTypeH.class, callable.type());
     }
   }
 

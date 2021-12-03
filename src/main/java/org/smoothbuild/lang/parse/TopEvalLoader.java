@@ -136,10 +136,10 @@ public class TopEvalLoader {
     }
 
     private ExprS createCall(CallN call) {
-      var called = createExpression(call.func());
+      var callable = createExpression(call.callable());
       var argExpressions = createArgExpressions(call);
       var resultType = call.type().get();
-      return new CallS(resultType, called, argExpressions, call.loc());
+      return new CallS(resultType, callable, argExpressions, call.loc());
     }
 
     private ImmutableList<ExprS> createArgExpressions(CallN call) {
@@ -165,7 +165,7 @@ public class TopEvalLoader {
       // This means that this call is made on reference to actual func and that func
       // has default arg for given param, otherwise checkers that ran so far would
       // report an error.
-      EvalLike referenced = ((RefN) call.func()).referenced();
+      EvalLike referenced = ((RefN) call.callable()).referenced();
       return switch (referenced) {
         case FuncS func -> func.params().get(i).defaultVal().get();
         case FuncN node -> createExpression(node.params().get(i).body().get());

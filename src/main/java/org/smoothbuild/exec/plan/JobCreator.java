@@ -134,7 +134,7 @@ public class JobCreator {
 
   private Job callJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars, CallH call, boolean eager) {
     var callData = call.data();
-    var funcJ = jobFor(scope, vars, callData.func(), eager);
+    var funcJ = jobFor(scope, vars, callData.callable(), eager);
     var argsJ = map(callData.args().items(), a -> lazyJobFor(scope, vars, a));
     var loc = nals.get(call).loc();
     var actualArgTypes = map(argsJ, a -> typing.mapVars(a.type(), vars, factory.lower()));

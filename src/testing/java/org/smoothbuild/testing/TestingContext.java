@@ -690,12 +690,12 @@ public class TestingContext {
     return new BlobS(blobST(), ByteString.of((byte) data), loc(line));
   }
 
-  public CallS callS(TypeS type, ExprS expr, ExprS... args) {
-    return callS(1, type, expr, args);
+  public CallS callS(TypeS type, ExprS callable, ExprS... args) {
+    return callS(1, type, callable, args);
   }
 
-  public CallS callS(int line, TypeS type, ExprS expr, ExprS... args) {
-    return new CallS(type, expr, list(args), loc(line));
+  public CallS callS(int line, TypeS type, ExprS callable, ExprS... args) {
+    return new CallS(type, callable, list(args), loc(line));
   }
 
   public CombineS combineS(ExprS... expr) {
