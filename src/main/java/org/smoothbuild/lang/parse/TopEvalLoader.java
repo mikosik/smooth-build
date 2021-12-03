@@ -29,7 +29,7 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.RefS;
+import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.parse.ast.AnnN;
@@ -186,7 +186,7 @@ public class TopEvalLoader {
       return switch (referenced) {
         case ItemN n ->  new ParamRefS(
             funcParams.get(ref.name()).type(), ref.name(), ref.loc());
-        default -> new RefS(referenced.inferredType().get(), ref.name(), ref.loc());
+        default -> new TopRefS(referenced.inferredType().get(), ref.name(), ref.loc());
       };
     }
   }

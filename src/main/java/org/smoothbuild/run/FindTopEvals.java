@@ -11,19 +11,19 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.ValS;
-import org.smoothbuild.lang.expr.RefS;
+import org.smoothbuild.lang.expr.TopRefS;
 
 public class FindTopEvals {
-  public static Optional<List<RefS>> findTopEvaluables(
+  public static Optional<List<TopRefS>> findTopEvaluables(
       Reporter reporter, DefsS defs, List<String> names) {
     var topEvals = defs.topEvals();
-    var refs = new ArrayList<RefS>();
+    var topRefs = new ArrayList<TopRefS>();
     var logs = new ArrayList<Log>();
     for (String name : names) {
       var topEval = topEvals.get(name);
       if (topEval != null) {
         if (topEval instanceof ValS value) {
-          refs.add(new RefS(value.type(), value.name(), commandLineLoc()));
+          topRefs.add(new TopRefS(value.type(), value.name(), commandLineLoc()));
         } else {
           logs.add(error(
               "`" + name + "` cannot be calculated as it is not a value but a function."));
@@ -35,7 +35,7 @@ public class FindTopEvals {
     }
     reporter.report("Validating arguments", logs);
     if (logs.isEmpty()) {
-      return Optional.of(refs);
+      return Optional.of(topRefs);
     } else {
       return Optional.empty();
     }

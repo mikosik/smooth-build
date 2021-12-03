@@ -950,7 +950,7 @@ public class DeclarationTest extends TestingContext {
               .loadsSuccessfully()
               .containsEval(defValS(2, BLOB, "result",
                   callS(2, BLOB,
-                      refS(2, f(BLOB, BLOB), "myFunc"),
+                      topRefS(2, f(BLOB, BLOB), "myFunc"),
                       blobS(2, 7))));
         }
 

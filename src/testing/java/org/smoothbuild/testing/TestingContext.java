@@ -104,7 +104,7 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.RefS;
+import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.plugin.NativeApi;
@@ -767,12 +767,12 @@ public class TestingContext {
     return new ParamRefS(type, name, loc(line));
   }
 
-  public RefS refS(TopEvalS topEval) {
-    return refS(1, topEval.type(), topEval.name());
+  public TopRefS topRefS(TopEvalS topEval) {
+    return topRefS(1, topEval.type(), topEval.name());
   }
 
-  public RefS refS(int line, TypeS type, String name) {
-    return new RefS(type, name, loc(line));
+  public TopRefS topRefS(int line, TypeS type, String name) {
+    return new TopRefS(type, name, loc(line));
   }
 
   public SelectS selectS(TypeS type, ExprS selectable, String field) {

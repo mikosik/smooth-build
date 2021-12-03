@@ -46,7 +46,7 @@ import org.smoothbuild.exec.compute.ResSource;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.job.Task;
 import org.smoothbuild.exec.job.TaskInfo;
-import org.smoothbuild.lang.expr.RefS;
+import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -181,9 +181,9 @@ public class ParallelJobExecutorTest extends TestingContext {
     parallelJobExecutor = new ParallelJobExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
     var job = job(throwingAlgorithm(exception));
-    var ref = new RefS(STRING, "name", loc());
+    var topRef = new TopRefS(STRING, "name", loc());
 
-    assertThat(parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref).isEmpty())
+    assertThat(parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef).isEmpty())
         .isTrue();
     verify(reporter).report(
         eq(job.info()),
@@ -201,10 +201,10 @@ public class ParallelJobExecutorTest extends TestingContext {
       }
     };
     parallelJobExecutor = new ParallelJobExecutor(computer, reporter);
-    var ref = new RefS(STRING, "name", loc());
+    var topRef = new TopRefS(STRING, "name", loc());
     var job = job(valueAlgorithm("A"));
 
-    Optional<ObjH> obj = parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref);
+    Optional<ObjH> obj = parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef);
 
     verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
     assertThat(obj.isEmpty())
@@ -295,8 +295,8 @@ public class ParallelJobExecutorTest extends TestingContext {
 
   private static ObjH executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
-    var ref = new RefS(STRING, "name", loc());
-    return parallelJobExecutor.executeAll(Map.of(ref, job)).get(ref).get();
+    var topRef = new TopRefS(STRING, "name", loc());
+    return parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef).get();
   }
 
   private static Output toStr(NativeApi nativeApi, int i) {

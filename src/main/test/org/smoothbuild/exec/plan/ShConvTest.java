@@ -31,7 +31,7 @@ public class ShConvTest extends TestingContext {
     @Test
     public void call() {
       var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
-      var call = callS(stringST(), refS(defFunc));
+      var call = callS(stringST(), topRefS(defFunc));
       assertConversion(defFunc, call, callH(defFuncH(stringH("abc")), list()));
     }
 
@@ -56,7 +56,7 @@ public class ShConvTest extends TestingContext {
     @Test
     public void paramRef() {
       var func = defFuncS("f", nList(itemS(intST(), "p")), paramRefS(intST(), "p"));
-      assertConversion(func, refS(func), defFuncH(list(intHT()), paramRefH(intHT(), 0)));
+      assertConversion(func, topRefS(func), defFuncH(list(intHT()), paramRefH(intHT(), 0)));
     }
 
     @Test
@@ -75,13 +75,13 @@ public class ShConvTest extends TestingContext {
     @Test
     public void topRef_to_val() {
       var defVal = defValS("myVal", stringS("abc"));
-      assertConversion(defVal, refS(defVal), stringH("abc"));
+      assertConversion(defVal, topRefS(defVal), stringH("abc"));
     }
 
     @Test
     public void topRef_to_func() {
       var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
-      assertConversion(defFunc, refS(defFunc), defFuncH(stringH("abc")));
+      assertConversion(defFunc, topRefS(defFunc), defFuncH(stringH("abc")));
     }
 
     private void assertConversion(ExprS exprS, ObjH expected) {
@@ -128,8 +128,8 @@ public class ShConvTest extends TestingContext {
 
     private void assertConversionIsCached(TopEvalS topEval) {
       var shConv = newShConv(topEval);
-      assertThat(shConv.convertExpr(refS(topEval)))
-          .isSameInstanceAs(shConv.convertExpr(refS(topEval)));
+      assertThat(shConv.convertExpr(topRefS(topEval)))
+          .isSameInstanceAs(shConv.convertExpr(topRefS(topEval)));
     }
   }
 

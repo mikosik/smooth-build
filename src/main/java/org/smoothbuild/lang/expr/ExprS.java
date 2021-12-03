@@ -8,7 +8,7 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
  * Expression in smooth language.
  */
 public sealed interface ExprS extends Nal
-    permits BlobS, CallS, CombineS, IntS, OrderS, ParamRefS, RefS, SelectS, StringS {
+    permits BlobS, CallS, CombineS, IntS, OrderS, ParamRefS, TopRefS, SelectS, StringS {
   public TypeS type();
 
   @Override

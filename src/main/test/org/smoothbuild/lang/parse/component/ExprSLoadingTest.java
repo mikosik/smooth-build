@@ -56,7 +56,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(defValS(2, STRING, "result",
-              callS(2, STRING, refS(2, f(STRING), "myFunc"))));
+              callS(2, STRING, topRefS(2, f(STRING), "myFunc"))));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(defValS(2, STRING, "result",
-              callS(2, STRING, refS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
+              callS(2, STRING, topRefS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(defValS(2, STRING, "result",
-              callS(2, STRING, refS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
+              callS(2, STRING, topRefS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class ExprSLoadingTest extends TestingContext {
           .loadsSuccessfully()
           .containsEval(
               defValS(4, STRING, "result",
-                  callS(4, STRING, refS(4, f(STRING), "myValue"))));
+                  callS(4, STRING, topRefS(4, f(STRING), "myValue"))));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class ExprSLoadingTest extends TestingContext {
           .loadsSuccessfully()
           .containsEval(
               defValS(4, STRING, "result",
-                  callS(4, STRING, refS(4, f(STRING, BLOB), "myValue"), blobS(5, 7))));
+                  callS(4, STRING, topRefS(4, f(STRING, BLOB), "myValue"), blobS(5, 7))));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(defValS(4, struct, "result",
-              callS(4, struct, refS(4, f(struct, STRING), "myStruct"), stringS(5, "aaa"))));
+              callS(4, struct, topRefS(4, f(struct, STRING), "myStruct"), stringS(5, "aaa"))));
     }
 
     @Test
@@ -175,8 +175,8 @@ public class ExprSLoadingTest extends TestingContext {
             .field;
           """)
         .loadsSuccessfully()
-        .containsEval(
-            defValS(5, STRING, "result", selectS(6, STRING, refS(5, myStruct, "struct"), "field")));
+        .containsEval(defValS(5, STRING, "result",
+            selectS(6, STRING, topRefS(5, myStruct, "struct"), "field")));
   }
 
   @Nested
@@ -237,7 +237,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(
-              defValS(2, STRING, "result", refS(3, STRING, "myValue")));
+              defValS(2, STRING, "result", topRefS(3, STRING, "myValue")));
     }
 
     @Test
@@ -248,8 +248,7 @@ public class ExprSLoadingTest extends TestingContext {
             myFunc;
           """)
           .loadsSuccessfully()
-          .containsEval(defValS(2, f(STRING), "result",
-              refS(3, f(STRING), "myFunc")));
+          .containsEval(defValS(2, f(STRING), "result", topRefS(3, f(STRING), "myFunc")));
     }
 
     @Test
@@ -261,8 +260,7 @@ public class ExprSLoadingTest extends TestingContext {
             myStruct;
           """)
           .loadsSuccessfully()
-          .containsEval(defValS(2, f(structType), "result",
-              refS(3, f(structType), "myStruct")));
+          .containsEval(defValS(2, f(structType), "result", topRefS(3, f(structType), "myStruct")));
     }
   }
 

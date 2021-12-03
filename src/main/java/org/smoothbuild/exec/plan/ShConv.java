@@ -50,7 +50,7 @@ import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.lang.expr.OrderS;
 import org.smoothbuild.lang.expr.ParamRefS;
-import org.smoothbuild.lang.expr.RefS;
+import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.run.QuitExc;
@@ -161,7 +161,7 @@ public class ShConv {
       case IntS intS -> convertAndStoreMapping(intS, this::convertInt);
       case OrderS orderS -> convertAndStoreMapping(orderS, this::convertOrder);
       case ParamRefS paramRefS -> convertAndStoreMapping(paramRefS, this::convertParamRef);
-      case RefS refS -> convertRef(refS);
+      case TopRefS topRefS -> convertTopRef(topRefS);
       case SelectS selectS -> convertAndStoreMapping(selectS, this::convertSelect);
       case StringS stringS -> convertAndStoreMapping(stringS, this::convertString);
     };
@@ -202,8 +202,8 @@ public class ShConv {
     return objFactory.paramRef(BigInteger.valueOf(index), convertType(paramRefS.type()));
   }
 
-  private ObjH convertRef(RefS refS) {
-    return switch (defs.topEvals().get(refS.name())) {
+  private ObjH convertTopRef(TopRefS topRefS) {
+    return switch (defs.topEvals().get(topRefS.name())) {
       case FuncS f -> convertFunc(f);
       case ValS v -> convertVal(v);
     };
