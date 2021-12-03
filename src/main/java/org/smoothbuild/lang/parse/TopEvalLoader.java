@@ -57,7 +57,7 @@ public class TopEvalLoader {
     this.factory = factory;
   }
 
-  public TopEvalS loadEvaluables(ModPath path, EvalN evalN) {
+  public TopEvalS loadEval(ModPath path, EvalN evalN) {
     if (evalN instanceof FuncN funcN) {
       return loadFunc(path, funcN);
     } else {

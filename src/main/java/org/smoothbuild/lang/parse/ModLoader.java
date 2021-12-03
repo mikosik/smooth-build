@@ -104,7 +104,7 @@ public class ModLoader {
       local.add(ctorS);
     }
     for (EvalN eval : ast.topEvals()) {
-      local.add(topEvalLoader.loadEvaluables(path, eval));
+      local.add(topEvalLoader.loadEval(path, eval));
     }
     return nList(local.build());
   }
