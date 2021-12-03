@@ -148,10 +148,10 @@ public class ShConvTest extends TestingContext {
   }
 
   private DefsS defs() {
-    return new DefsS(null, nList(), nList());
+    return new DefsS(nList(), nList());
   }
 
   private DefsS defs(TopEvalS topEval) {
-    return new DefsS(null, nList(), nList(topEval));
+    return new DefsS(nList(), nList(topEval));
   }
 }

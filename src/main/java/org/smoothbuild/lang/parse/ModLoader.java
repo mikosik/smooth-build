@@ -83,10 +83,9 @@ public class ModLoader {
       return maybeLogs(logBuffer);
     }
 
-    var modules = imported.modules().values().asList();
     var types = sortedAst.structs().map(s -> (DefTypeS) loadStruct(path, s));
     var evals = loadTopEvals(path, sortedAst);
-    var moduleS = new ModS(path, modFiles, modules, types, evals);
+    var moduleS = new ModS(path, modFiles, types, evals);
     return maybeValueAndLogs(moduleS, logBuffer);
   }
 

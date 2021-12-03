@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -20,7 +19,7 @@ public class InternalModLoader {
   public ModS load() {
     ModPath path = new ModPath("internal-module");
     var types = nList(map(factory.baseTypes(), t -> (DefTypeS) new DefBaseTypeS(path, t)));
-    return new ModS(path, null, list(), types, evaluables(path));
+    return new ModS(path, null, types, evaluables(path));
   }
 
   private NList<TopEvalS> evaluables(ModPath modPath) {
