@@ -114,7 +114,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_ctor_reference() {
-      var struct = structST("MyStruct", nList(sigS("field", STRING)));
+      var struct = structST("MyStruct", nList(sigS(STRING, "field")));
       var combine = combineS(1, struct, paramRefS(1, stringST(), "field"));
       var ctor = funcS(1, struct, "myStruct", combine, itemS(2, STRING, "field"));
       mod("""
@@ -128,7 +128,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_ctor_reference_and_arg() {
-      var struct = structST("MyStruct", nList(sigS("field", STRING)));
+      var struct = structST("MyStruct", nList(sigS(STRING, "field")));
       mod("""
           MyStruct {
             String field
@@ -165,7 +165,7 @@ public class ExprSLoadingTest extends TestingContext {
 
   @Test
   public void select_expression() {
-    var myStruct = structST("MyStruct", nList(sigS("field", STRING)));
+    var myStruct = structST("MyStruct", nList(sigS(STRING, "field")));
     mod("""
           MyStruct {
             String field,
@@ -331,7 +331,7 @@ public class ExprSLoadingTest extends TestingContext {
           }
           """)
           .loadsSuccessfully()
-          .containsType(structST("MyStruct", nList(sigS("field", STRING))));
+          .containsType(structST("MyStruct", nList(sigS(STRING, "field"))));
     }
   }
 }

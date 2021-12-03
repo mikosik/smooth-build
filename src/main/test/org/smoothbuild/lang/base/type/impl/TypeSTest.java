@@ -267,12 +267,12 @@ public class TypeSTest extends TestingContext {
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structST("MyStruct", nList(sigS("fieldName", nothingST())));
+      structST("MyStruct", nList(sigS(nothingST(), "fieldName")));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structST("MyStruct", nList(sigS("fieldName", arrayST(nothingST()))));
+      structST("MyStruct", nList(sigS(arrayST(nothingST()), "fieldName")));
     }
 
     @Test
@@ -322,7 +322,7 @@ public class TypeSTest extends TestingContext {
         f.nothing(),
         f.string(),
         f.struct("MyStruct", nList()),
-        f.struct("MyStruct", nList(sigS("field", f.int_()))),
+        f.struct("MyStruct", nList(sigS(f.int_(), "field"))),
         f.var("A"),
         f.var("B"),
         f.var("C"),

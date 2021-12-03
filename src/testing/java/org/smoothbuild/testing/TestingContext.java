@@ -630,7 +630,7 @@ public class TestingContext {
 
   public StructTypeS personST() {
     return typeFactoryS().struct("Person",
-        nList(sigS("firstName", stringST()), sigS("lastName", stringST())));
+        nList(sigS(stringST(), "firstName"), sigS(stringST(), "lastName")));
   }
 
   public StringTypeS stringST() {
@@ -857,7 +857,7 @@ public class TestingContext {
     return new NatFuncS(type, modPath(), name, params, ann, loc(line));
   }
 
-  public ItemSigS sigS(String name, TypeS type) {
+  public ItemSigS sigS(TypeS type, String name) {
     return new ItemSigS(type, name, empty());
   }
 }
