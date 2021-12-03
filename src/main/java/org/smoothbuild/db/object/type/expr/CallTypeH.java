@@ -13,8 +13,8 @@ import org.smoothbuild.db.object.type.base.TypeH;
  * This class is immutable.
  */
 public class CallTypeH extends ExprSpecH {
-  public CallTypeH(Hash hash, TypeH evaluationType) {
-    super("Call", hash, CALL, evaluationType);
+  public CallTypeH(Hash hash, TypeH evalType) {
+    super("Call", hash, CALL, evalType);
   }
 
   @Override

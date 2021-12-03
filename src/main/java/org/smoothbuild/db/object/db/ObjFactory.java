@@ -133,8 +133,8 @@ public class ObjFactory {
     return objDb.natFunc(type, jarFile, classBinaryName,isPure);
   }
 
-  public ParamRefH paramRef(BigInteger value, TypeH evaluationType) {
-    return objDb.newParamRef(value, evaluationType);
+  public ParamRefH paramRef(BigInteger value, TypeH evalType) {
+    return objDb.newParamRef(value, evalType);
   }
 
   public SelectH select(ObjH tuple, IntH index) {

@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.type.base.ExprSpecH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
 public class ParamRefTypeH extends ExprSpecH {
-  public ParamRefTypeH(Hash hash, TypeH evaluationType) {
-    super("ParamRef", hash, PARAM_REF, evaluationType);
+  public ParamRefTypeH(Hash hash, TypeH evalType) {
+    super("ParamRef", hash, PARAM_REF, evalType);
   }
 
   @Override

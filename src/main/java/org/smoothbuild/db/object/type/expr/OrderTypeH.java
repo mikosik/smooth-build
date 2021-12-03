@@ -13,8 +13,8 @@ import org.smoothbuild.db.object.type.val.ArrayTypeH;
  * This class is immutable.
  */
 public class OrderTypeH extends ExprSpecH {
-  public OrderTypeH(Hash hash, ArrayTypeH evaluationType) {
-    super("Order", hash, ORDER, evaluationType);
+  public OrderTypeH(Hash hash, ArrayTypeH evalType) {
+    super("Order", hash, ORDER, evalType);
   }
 
   @Override

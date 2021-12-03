@@ -36,14 +36,14 @@ public class SelectH extends ExprH {
 
   public SelectData data() {
     ObjH selectable = readSelectable();
-    if (selectable.type() instanceof TupleTypeH tupleEvaluationType) {
+    if (selectable.type() instanceof TupleTypeH tupleEvalType) {
       IntH index = readIndex();
       int i = index.toJ().intValue();
-      int size = tupleEvaluationType.items().size();
+      int size = tupleEvalType.items().size();
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), spec(), i, size);
       }
-      TypeH fieldType = tupleEvaluationType.items().get(i);
+      TypeH fieldType = tupleEvalType.items().get(i);
       if (!Objects.equals(type(), fieldType)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), spec(), fieldType);
       }

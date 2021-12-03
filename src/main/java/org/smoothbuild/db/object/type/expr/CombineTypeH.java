@@ -13,8 +13,8 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
  * This class is immutable.
  */
 public class CombineTypeH extends ExprSpecH {
-  public CombineTypeH(Hash hash, TupleTypeH evaluationType) {
-    super("Combine", hash, COMBINE, evaluationType);
+  public CombineTypeH(Hash hash, TupleTypeH evalType) {
+    super("Combine", hash, COMBINE, evalType);
   }
 
   @Override

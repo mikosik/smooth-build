@@ -95,7 +95,7 @@ public class ObjDb {
   public DefFuncH defFunc(DefFuncTypeH type, ObjH body) {
     if (!typing.isAssignable(type.res(), body.type())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.res().name()
-          + " but body.evaluationType() is " + body.type().name() + ".");
+          + " but body.evalType() is " + body.type().name() + ".");
     }
     return wrapHashedDbExceptionAsObjectDbException(() -> newFunc(type, body));
   }
@@ -253,7 +253,7 @@ public class ObjDb {
   }
 
   private TypeH inferCallResType(ObjH callable, CombineH args) {
-    var funcType = callableEvaluationType(callable);
+    var funcType = callableEvalType(callable);
     var argTypes = args.type().items();
     var paramTypes = funcType.params();
     allMatchOtherwise(
@@ -273,7 +273,7 @@ public class ObjDb {
             .formatted(args.type().name(), funcType.paramsTuple().name()));
   }
 
-  private FuncTypeH callableEvaluationType(ObjH callable) {
+  private FuncTypeH callableEvalType(ObjH callable) {
     if (callable.type() instanceof FuncTypeH funcType) {
       return funcType;
     } else {

@@ -220,24 +220,24 @@ public class TypeDb implements TypeFactoryH {
 
   // methods for getting Expr-s types
 
-  public CallTypeH call(TypeH evaluationType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evaluationType));
+  public CallTypeH call(TypeH evalType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evalType));
   }
 
-  public CombineTypeH combine(TupleTypeH evaluationType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evaluationType));
+  public CombineTypeH combine(TupleTypeH evalType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evalType));
   }
 
   public OrderTypeH order(TypeH elemType) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elemType));
   }
 
-  public ParamRefTypeH ref(TypeH evaluationType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evaluationType));
+  public ParamRefTypeH ref(TypeH evalType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evalType));
   }
 
-  public SelectTypeH select(TypeH evaluationType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evaluationType));
+  public SelectTypeH select(TypeH evalType) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evalType));
   }
 
   // methods for reading from db
@@ -416,50 +416,50 @@ public class TypeDb implements TypeFactoryH {
 
   // methods for creating Expr types
 
-  private CallTypeH newCall(TypeH evaluationType) throws HashedDbExc {
-    var rootHash = writeExprRoot(CALL, evaluationType);
-    return newCall(rootHash, evaluationType);
+  private CallTypeH newCall(TypeH evalType) throws HashedDbExc {
+    var rootHash = writeExprRoot(CALL, evalType);
+    return newCall(rootHash, evalType);
   }
 
-  private CallTypeH newCall(Hash rootHash, TypeH evaluationType) {
-    return cache(new CallTypeH(rootHash, evaluationType));
+  private CallTypeH newCall(Hash rootHash, TypeH evalType) {
+    return cache(new CallTypeH(rootHash, evalType));
   }
 
-  private CombineTypeH newCombine(TupleTypeH evaluationType) throws HashedDbExc {
-    var rootHash = writeExprRoot(COMBINE, evaluationType);
-    return newCombine(rootHash, evaluationType);
+  private CombineTypeH newCombine(TupleTypeH evalType) throws HashedDbExc {
+    var rootHash = writeExprRoot(COMBINE, evalType);
+    return newCombine(rootHash, evalType);
   }
 
-  private CombineTypeH newCombine(Hash rootHash, TupleTypeH evaluationType) {
-    return cache(new CombineTypeH(rootHash, evaluationType));
+  private CombineTypeH newCombine(Hash rootHash, TupleTypeH evalType) {
+    return cache(new CombineTypeH(rootHash, evalType));
   }
 
   private OrderTypeH newOrder(TypeH elemType) throws HashedDbExc {
-    var evaluationType = array(elemType);
-    var rootHash = writeExprRoot(ORDER, evaluationType);
-    return newOrder(rootHash, evaluationType);
+    var evalType = array(elemType);
+    var rootHash = writeExprRoot(ORDER, evalType);
+    return newOrder(rootHash, evalType);
   }
 
-  private OrderTypeH newOrder(Hash rootHash, ArrayTypeH evaluationType) {
-    return cache(new OrderTypeH(rootHash, evaluationType));
+  private OrderTypeH newOrder(Hash rootHash, ArrayTypeH evalType) {
+    return cache(new OrderTypeH(rootHash, evalType));
   }
 
-  private ParamRefTypeH newRef(TypeH evaluationType) throws HashedDbExc {
-    var rootHash = writeExprRoot(PARAM_REF, evaluationType);
-    return newRef(rootHash, evaluationType);
+  private ParamRefTypeH newRef(TypeH evalType) throws HashedDbExc {
+    var rootHash = writeExprRoot(PARAM_REF, evalType);
+    return newRef(rootHash, evalType);
   }
 
-  private ParamRefTypeH newRef(Hash rootHash, TypeH evaluationType) {
-    return cache(new ParamRefTypeH(rootHash, evaluationType));
+  private ParamRefTypeH newRef(Hash rootHash, TypeH evalType) {
+    return cache(new ParamRefTypeH(rootHash, evalType));
   }
 
-  private SelectTypeH newSelect(TypeH evaluationType) throws HashedDbExc {
-    var rootHash = writeExprRoot(SELECT, evaluationType);
-    return newSelect(rootHash, evaluationType);
+  private SelectTypeH newSelect(TypeH evalType) throws HashedDbExc {
+    var rootHash = writeExprRoot(SELECT, evalType);
+    return newSelect(rootHash, evalType);
   }
 
-  private SelectTypeH newSelect(Hash rootHash, TypeH evaluationType) {
-    return cache(new SelectTypeH(rootHash, evaluationType));
+  private SelectTypeH newSelect(Hash rootHash, TypeH evalType) {
+    return cache(new SelectTypeH(rootHash, evalType));
   }
 
   private <T extends SpecH> T cache(T type) {
@@ -492,8 +492,8 @@ public class TypeDb implements TypeFactoryH {
 
   // Helper methods for writing roots
 
-  private Hash writeExprRoot(SpecKindH kind, SpecH evaluationType) throws HashedDbExc {
-    return writeNonBaseRoot(kind, evaluationType.hash());
+  private Hash writeExprRoot(SpecKindH kind, SpecH evalType) throws HashedDbExc {
+    return writeNonBaseRoot(kind, evalType.hash());
   }
 
   private Hash writeNonBaseRoot(SpecKindH kind, Hash dataHash) throws HashedDbExc {

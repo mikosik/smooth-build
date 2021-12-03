@@ -380,8 +380,8 @@ public class TestingContext {
     return callHT(intHT());
   }
 
-  public CallTypeH callHT(TypeH evaluationType) {
-    return typeDb().call(evaluationType);
+  public CallTypeH callHT(TypeH evalType) {
+    return typeDb().call(evalType);
   }
 
   public CombineTypeH combineHT() {
@@ -404,16 +404,16 @@ public class TestingContext {
     return refHT(intHT());
   }
 
-  public ParamRefTypeH refHT(TypeH evaluationType) {
-    return typeDb().ref(evaluationType);
+  public ParamRefTypeH refHT(TypeH evalType) {
+    return typeDb().ref(evalType);
   }
 
   public SelectTypeH selectHT() {
     return selectHT(intHT());
   }
 
-  public SelectTypeH selectHT(TypeH evaluationType) {
-    return typeDb().select(evaluationType);
+  public SelectTypeH selectHT(TypeH evalType) {
+    return typeDb().select(evalType);
   }
 
   // Obj-s (values)
@@ -586,8 +586,8 @@ public class TestingContext {
     return objDb().newParamRef(BigInteger.valueOf(value), intHT());
   }
 
-  public ParamRefH paramRefH(TypeH evaluationType, int pointer) {
-    return objDb().newParamRef(BigInteger.valueOf(pointer), evaluationType);
+  public ParamRefH paramRefH(TypeH evalType, int pointer) {
+    return objDb().newParamRef(BigInteger.valueOf(pointer), evalType);
   }
 
   public SelectH selectH(ObjH tuple, IntH index) {
