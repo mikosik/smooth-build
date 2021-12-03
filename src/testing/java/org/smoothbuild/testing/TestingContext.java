@@ -809,23 +809,19 @@ public class TestingContext {
     return new AnnS(implementedBy, pure, loc(line));
   }
 
-  public ItemS field(TypeS type, String name) {
-    return new ItemS(type, modPath(), name, empty(), loc(1));
+  public ItemS itemS(TypeS type, String name) {
+    return itemS(1, type, name);
   }
 
-  public ItemS param(TypeS type, String name) {
-    return param(1, type, name);
+  public ItemS itemS(int line, TypeS type, String name) {
+    return itemS(line, type, name, empty());
   }
 
-  public ItemS param(int line, TypeS type, String name) {
-    return param(line, type, name, empty());
+  public ItemS itemS(int line, TypeS type, String name, ExprS defaultArg) {
+    return itemS(line, type, name, Optional.of(defaultArg));
   }
 
-  public ItemS param(int line, TypeS type, String name, ExprS defaultArg) {
-    return param(line, type, name, Optional.of(defaultArg));
-  }
-
-  private ItemS param(int line, TypeS type, String name, Optional<ExprS> defaultArg) {
+  private ItemS itemS(int line, TypeS type, String name, Optional<ExprS> defaultArg) {
     return new ItemS(type, modPath(), name, defaultArg, loc(line));
   }
 

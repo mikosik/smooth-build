@@ -659,8 +659,8 @@ public class DeclarationTest extends TestingContext {
               .loadsSuccessfully()
               .containsEval(funcS(2, STRING, "myFunc",
                   annS(1, stringS(1, "Impl.met")),
-                  param(3, STRING, "default", stringS(3, "value")),
-                  param(4, STRING, "nonDefault")));
+                  itemS(3, STRING, "default", stringS(3, "value")),
+                  itemS(4, STRING, "nonDefault")));
         }
 
         @Test
@@ -688,7 +688,7 @@ public class DeclarationTest extends TestingContext {
           mod(funcDeclaration("String param1,"))
               .loadsSuccessfully()
               .containsEval(funcS(1, STRING, "myFunc",
-                  stringS(1, "abc"), param(1, STRING, "param1")));
+                  stringS(1, "abc"), itemS(1, STRING, "param1")));
         }
 
         @Test

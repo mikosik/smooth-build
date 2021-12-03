@@ -55,7 +55,7 @@ public class ShConvTest extends TestingContext {
 
     @Test
     public void paramRef() {
-      var func = defFuncS("f", nList(param(intST(), "p")), paramRefS(intST(), "p"));
+      var func = defFuncS("f", nList(itemS(intST(), "p")), paramRefS(intST(), "p"));
       assertConversion(func, refS(func), defFuncH(list(intHT()), paramRefH(intHT(), 0)));
     }
 

@@ -116,7 +116,7 @@ public class ExprSLoadingTest extends TestingContext {
     public void with_ctor_reference() {
       var struct = structST("MyStruct", nList(sigS("field", STRING)));
       var combine = combineS(1, struct, paramRefS(1, stringST(), "field"));
-      var ctor = funcS(1, struct, "myStruct", combine, param(2, STRING, "field"));
+      var ctor = funcS(1, struct, "myStruct", combine, itemS(2, STRING, "field"));
       mod("""
           MyStruct {
             String field
@@ -148,7 +148,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(funcS(1, STRING, "result",
-              callS(1, STRING, paramRefS(f(STRING), "f")), param(1, f(STRING), "f")));
+              callS(1, STRING, paramRefS(f(STRING), "f")), itemS(1, f(STRING), "f")));
     }
 
     @Test
@@ -159,7 +159,7 @@ public class ExprSLoadingTest extends TestingContext {
           .loadsSuccessfully()
           .containsEval(funcS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING, BLOB), "f"), blobS(1, 9)),
-              param(1, f(STRING, BLOB), "f")));
+              itemS(1, f(STRING, BLOB), "f")));
     }
   }
 
@@ -223,7 +223,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
         .loadsSuccessfully()
         .containsEval(funcS(
-            1, BLOB, "myFunc", paramRefS(2, BLOB, "param1"), param(1, BLOB, "param1")));
+            1, BLOB, "myFunc", paramRefS(2, BLOB, "param1"), itemS(1, BLOB, "param1")));
   }
 
   @Nested
@@ -307,7 +307,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(funcS(1, STRING, "myFunc",
-              stringS(3, "abc"), param(2, BLOB, "param1")));
+              stringS(3, "abc"), itemS(2, BLOB, "param1")));
     }
 
     @Test
@@ -320,7 +320,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(funcS(1, STRING, "myFunc",
-              stringS(4, "abc"), param(2, BLOB, "param1", blobS(3, 7))));
+              stringS(4, "abc"), itemS(2, BLOB, "param1", blobS(3, 7))));
     }
 
     @Test
