@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 
-public class RealFuncNTest {
+public class FuncNTest {
   @Test
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
