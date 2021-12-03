@@ -201,10 +201,10 @@ public class AstCreator {
         return new RefN(name.getText(), locOf(filePath, name));
       }
 
-      private SelectN createSelect(ExprN result, SelectContext fieldRead) {
+      private SelectN createSelect(ExprN selectable, SelectContext fieldRead) {
         String name = fieldRead.NAME().getText();
         Loc loc = locOf(filePath, fieldRead);
-        return new SelectN(result, name, loc);
+        return new SelectN(selectable, name, loc);
       }
 
       private ExprN createChainParts(ExprN expr, List<ChainPartContext> chainParts) {

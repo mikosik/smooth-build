@@ -99,8 +99,8 @@ public class AstVisitor {
     visitExpr(arg.expr());
   }
 
-  public void visitSelect(SelectN expr) {
-    visitExpr(expr.expr());
+  public void visitSelect(SelectN select) {
+    visitExpr(select.selectable());
   }
 
   public void visitIntLiteral(IntN int_) {

@@ -195,23 +195,23 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitSelect(SelectN expr) {
-        super.visitSelect(expr);
-        expr.expr().type().ifPresentOrElse(
+      public void visitSelect(SelectN select) {
+        super.visitSelect(select);
+        select.selectable().type().ifPresentOrElse(
             t -> {
               if (!(t instanceof StructTypeS st)) {
-                expr.setType(empty());
-                logBuffer.log(parseError(expr.loc(), "Type " + t.q()
-                    + " is not a struct so it doesn't have " + q(expr.fieldName()) + " field."));
-              } else if (!st.fields().containsName(expr.fieldName())) {
-                expr.setType(empty());
-                logBuffer.log(parseError(expr.loc(), "Struct " + t.q()
-                    + " doesn't have field `" + expr.fieldName() + "`."));
+                select.setType(empty());
+                logBuffer.log(parseError(select.loc(), "Type " + t.q()
+                    + " is not a struct so it doesn't have " + q(select.field()) + " field."));
+              } else if (!st.fields().containsName(select.field())) {
+                select.setType(empty());
+                logBuffer.log(parseError(select.loc(), "Struct " + t.q()
+                    + " doesn't have field `" + select.field() + "`."));
               } else {
-                expr.setType(((StructTypeS) t).fields().get(expr.fieldName()).type());
+                select.setType(((StructTypeS) t).fields().get(select.field()).type());
               }
             },
-            () -> expr.setType(empty())
+            () -> select.setType(empty())
         );
       }
 

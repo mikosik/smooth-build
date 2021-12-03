@@ -174,11 +174,11 @@ public class TopEvalLoader {
     }
 
     private ExprS createSelect(SelectN selectN) {
-      var structType = (StructTypeS) selectN.expr().type().get();
-      var index = structType.fields().indexMap().get(selectN.fieldName());
+      var structType = (StructTypeS) selectN.selectable().type().get();
+      var index = structType.fields().indexMap().get(selectN.field());
       var fieldType = structType.fields().get(index).type();
-      var expr = createExpression(selectN.expr());
-      return new SelectS(fieldType, expr, selectN.fieldName(), selectN.loc());
+      var selectable = createExpression(selectN.selectable());
+      return new SelectS(fieldType, selectable, selectN.field(), selectN.loc());
     }
 
     private ExprS createReference(RefN ref) {

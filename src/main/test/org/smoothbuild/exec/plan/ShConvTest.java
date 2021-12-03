@@ -62,7 +62,7 @@ public class ShConvTest extends TestingContext {
     @Test
     public void select() {
       var combine = combineS(stringS("abc"));
-      var select = selectS(stringST(), "field0", combine);
+      var select = selectS(stringST(), combine, "field0");
       assertConversion(select, selectH(combineH(list(stringH("abc"))), intH(0)));
     }
 

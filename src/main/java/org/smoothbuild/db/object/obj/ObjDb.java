@@ -157,8 +157,8 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalType, value));
   }
 
-  public SelectH select(ObjH tuple, IntH index) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(tuple, index));
+  public SelectH select(ObjH selectable, IntH index) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(selectable, index));
   }
 
   // generic getter
@@ -337,15 +337,15 @@ public class ObjDb {
     return (MapFuncH) newInternalFunc(type);
   }
 
-  private SelectH newSelect(ObjH tuple, IntH index) throws HashedDbExc {
-    var type = selectType(tuple, index);
-    var data = writeSelectData(tuple, index);
+  private SelectH newSelect(ObjH selectable, IntH index) throws HashedDbExc {
+    var type = selectType(selectable, index);
+    var data = writeSelectData(selectable, index);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private SelectTypeH selectType(ObjH expr, IntH index) {
-    if (expr.type() instanceof TupleTypeH tuple) {
+  private SelectTypeH selectType(ObjH selectable, IntH index) {
+    if (selectable.type() instanceof TupleTypeH tuple) {
       int intIndex = index.toJ().intValue();
       ImmutableList<TypeH> items = tuple.items();
       checkElementIndex(intIndex, items.size());
@@ -391,8 +391,8 @@ public class ObjDb {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeSelectData(ObjH tuple, IntH index) throws HashedDbExc {
-    return hashedDb.writeSeq(tuple.hash(), index.hash());
+  private Hash writeSelectData(ObjH selectable, IntH index) throws HashedDbExc {
+    return hashedDb.writeSeq(selectable.hash(), index.hash());
   }
 
   // methods for writing data of Val-s

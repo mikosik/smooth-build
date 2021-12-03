@@ -176,7 +176,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
         .loadsSuccessfully()
         .containsEval(
-            defValS(5, STRING, "result", selectS(6, STRING, "field", refS(5, myStruct, "struct"))));
+            defValS(5, STRING, "result", selectS(6, STRING, refS(5, myStruct, "struct"), "field")));
   }
 
   @Nested

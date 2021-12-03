@@ -21,7 +21,7 @@ import org.smoothbuild.db.object.type.val.TupleTypeH;
  */
 public class SelectH extends ExprH {
   private static final int DATA_SEQ_SIZE = 2;
-  private static final int TUPLE_INDEX = 0;
+  private static final int SELECTABLE_INDEX = 0;
   private static final int INDEX_INDEX = 1;
 
   public SelectH(MerkleRoot merkleRoot, ObjDb objDb) {
@@ -35,8 +35,8 @@ public class SelectH extends ExprH {
   }
 
   public SelectData data() {
-    ObjH tuple = readTuple();
-    if (tuple.type() instanceof TupleTypeH tupleEvaluationType) {
+    ObjH selectable = readSelectable();
+    if (selectable.type() instanceof TupleTypeH tupleEvaluationType) {
       IntH index = readIndex();
       int i = index.toJ().intValue();
       int size = tupleEvaluationType.items().size();
@@ -47,18 +47,18 @@ public class SelectH extends ExprH {
       if (!Objects.equals(type(), fieldType)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), spec(), fieldType);
       }
-      return new SelectData(tuple, index);
+      return new SelectData(selectable, index);
     } else {
       throw new DecodeExprWrongEvalTypeOfCompExc(
-          hash(), spec(), "tuple", TupleTypeH.class, tuple.type());
+          hash(), spec(), "tuple", TupleTypeH.class, selectable.type());
     }
   }
 
-  public static record SelectData(ObjH tuple, IntH index) {}
+  public static record SelectData(ObjH selectable, IntH index) {}
 
-  private ObjH readTuple() {
+  private ObjH readSelectable() {
     return readSeqElemObj(
-        DATA_PATH, dataHash(), TUPLE_INDEX, DATA_SEQ_SIZE, ObjH.class);
+        DATA_PATH, dataHash(), SELECTABLE_INDEX, DATA_SEQ_SIZE, ObjH.class);
   }
 
   private IntH readIndex() {

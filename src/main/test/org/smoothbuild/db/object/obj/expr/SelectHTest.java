@@ -40,10 +40,10 @@ public class SelectHTest extends TestingContext {
 
   @Test
   public void data_returns_tuple_and_index() {
-    TupleH tuple = tupleH(tupleHT(), list(intH(7)));
+    TupleH selectable = tupleH(tupleHT(), list(intH(7)));
     IntH index = intH(0);
-    assertThat(selectH(tuple, index).data())
-        .isEqualTo(new SelectData(tuple, index));
+    assertThat(selectH(selectable, index).data())
+        .isEqualTo(new SelectData(selectable, index));
   }
 
   @Test
@@ -122,11 +122,11 @@ public class SelectHTest extends TestingContext {
 
   @Test
   public void select_read_back_by_hash_has_same_data() {
-    var tuple = animalH();
+    var selectable = animalH();
     var index = intH(0);
-    var select = selectH(tuple, index);
+    var select = selectH(selectable, index);
     assertThat(((SelectH) objDbOther().get(select.hash())).data())
-        .isEqualTo(new SelectData(tuple, index));
+        .isEqualTo(new SelectData(selectable, index));
   }
 
   @Test

@@ -3,20 +3,20 @@ package org.smoothbuild.lang.parse.ast;
 import org.smoothbuild.lang.base.define.Loc;
 
 public final class SelectN extends ExprN {
-  private final ExprN expr;
-  private final String fieldName;
+  private final ExprN selectable;
+  private final String field;
 
-  public SelectN(ExprN expr, String fieldName, Loc loc) {
+  public SelectN(ExprN selectable, String field, Loc loc) {
     super(loc);
-    this.expr = expr;
-    this.fieldName = fieldName;
+    this.selectable = selectable;
+    this.field = field;
   }
 
-  public ExprN expr() {
-    return expr;
+  public ExprN selectable() {
+    return selectable;
   }
 
-  public String fieldName() {
-    return fieldName;
+  public String field() {
+    return field;
   }
 }

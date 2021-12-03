@@ -210,11 +210,11 @@ public class ShConv {
   }
 
   private SelectH convertSelect(SelectS selectS) {
-    var tupleH = convertExpr(selectS.structExpr());
-    var structTypeS = (StructTypeS) selectS.structExpr().type();
+    var selectableH = convertExpr(selectS.selectable());
+    var structTypeS = (StructTypeS) selectS.selectable().type();
     var indexJ = structTypeS.fields().indexMap().get(selectS.field());
     var indexH = objFactory.int_(BigInteger.valueOf(indexJ));
-    return objFactory.select(tupleH, indexH);
+    return objFactory.select(selectableH, indexH);
   }
 
   private StringH convertString(StringS stringS) {

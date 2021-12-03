@@ -841,18 +841,18 @@ public class ObjHCorruptedTest extends TestingContext {
        */
       var tupleType = tupleHT(list(stringHT()));
       var tuple = tupleH(tupleType, list(stringH("abc")));
-      var expr = (ValH) tuple;
+      var selectable = (ValH) tuple;
       var index = intH(0);
       Hash objHash =
           hash(
               hash(selectHT(stringHT())),
               hash(
-                  hash(expr),
+                  hash(selectable),
                   hash(index)
               )
           );
       assertThat(((SelectH) objDb().get(objHash)).data())
-          .isEqualTo(new SelectData(expr, index));
+          .isEqualTo(new SelectData(selectable, index));
     }
 
     @Test
