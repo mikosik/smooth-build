@@ -15,12 +15,11 @@ public sealed abstract class FuncH extends ValH
     permits DefFuncH, IfFuncH, MapFuncH, NatFuncH {
   public FuncH(MerkleRoot merkleRoot, ObjDb objDb, CatKindH kind) {
     super(merkleRoot, objDb);
-    checkType(merkleRoot, kind);
+    checkT(merkleRoot, kind);
   }
 
-  protected void checkType(MerkleRoot merkleRoot, CatKindH kind) {
-    checkArgument(merkleRoot.cat() instanceof FuncTH funcTH
-            && funcTH.kind().equals(kind));
+  protected void checkT(MerkleRoot merkleRoot, CatKindH kind) {
+    checkArgument(merkleRoot.cat() instanceof FuncTH funcTH && funcTH.kind().equals(kind));
   }
 
   @Override

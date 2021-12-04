@@ -67,9 +67,9 @@ public class ComputationCacheTest extends TestingContext {
   public void written_file_array_can_be_read_back() throws Exception {
     var file = fileH(path("file/path"), bytes);
     computationCache().write(hash, new Output(arrayH(file), messageArrayEmtpy()));
-    var arrayType = arrayTH(objFactory().fileT());
+    var arrayT = arrayTH(objFactory().fileT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(TupleH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(TupleH.class))
         .containsExactly(file);
   }
 
@@ -77,9 +77,9 @@ public class ComputationCacheTest extends TestingContext {
   public void written_blob_array_can_be_read_back() throws Exception {
     var blob = blobH(bytes);
     computationCache().write(hash, new Output(arrayH(blob), messageArrayEmtpy()));
-    var arrayType = arrayTH(blobTH());
+    var arrayT = arrayTH(blobTH());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(BlobH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(BlobH.class))
         .containsExactly(blob);
   }
 
@@ -87,9 +87,9 @@ public class ComputationCacheTest extends TestingContext {
   public void written_bool_array_can_be_read_back() throws Exception {
     var boolV = boolH(true);
     computationCache().write(hash, new Output(arrayH(boolV), messageArrayEmtpy()));
-    var arrayType = arrayTH(boolTH());
+    var arrayT = arrayTH(boolTH());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(BoolH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(BoolH.class))
         .containsExactly(boolV);
   }
 
@@ -97,21 +97,21 @@ public class ComputationCacheTest extends TestingContext {
   public void written_int_array_can_be_read_back() throws Exception {
     var intV = intH(123);
     computationCache().write(hash, new Output(arrayH(intV), messageArrayEmtpy()));
-    var arrayType = arrayTH(intTH());
+    var arrayT = arrayTH(intTH());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(IntH.class))
+    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(IntH.class))
         .containsExactly(intV);
   }
 
   @Test
   public void written_string_array_can_be_read_back() throws Exception {
-    var strV = stringH("some string");
-    var array = arrayH(strV);
+    var string = stringH("some string");
+    var array = arrayH(string);
     computationCache().write(hash, new Output(array, messageArrayEmtpy()));
-    var arrayType = arrayTH(stringTH());
+    var arrayT = arrayTH(stringTH());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayType).val()).elems(StringH.class))
-        .containsExactly(strV);
+    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(StringH.class))
+        .containsExactly(string);
   }
 
   @Test

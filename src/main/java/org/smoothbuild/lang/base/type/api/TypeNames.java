@@ -17,15 +17,15 @@ public class TypeNames {
     return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 
-  public static String arrayTypeName(Type elemType) {
-    return "[" + elemType.name() + "]";
+  public static String arrayTypeName(Type elemT) {
+    return "[" + elemT.name() + "]";
   }
 
-  public static String funcTypeName(Type resultType, List<? extends Type> params) {
-    String paramsString = params
+  public static String funcTypeName(Type resT, List<? extends Type> paramTs) {
+    String paramsString = paramTs
         .stream()
         .map(Type::name)
         .collect(joining(", "));
-    return resultType.name() + "(" + paramsString + ")";
+    return resT.name() + "(" + paramsString + ")";
   }
 }

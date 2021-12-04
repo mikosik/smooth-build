@@ -122,7 +122,7 @@ public class InferArgsToParamsAssignment {
       List<Optional<ArgNode>> assignedList, NList<ItemSigS> params) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i).isEmpty())
-        .filter(i -> params.get(i).defaultValType().isEmpty())
+        .filter(i -> params.get(i).defaultValT().isEmpty())
         .mapToObj(i -> paramsMustBeSpecifiedError(call, i, params.get(i), params))
         .collect(toList());
   }

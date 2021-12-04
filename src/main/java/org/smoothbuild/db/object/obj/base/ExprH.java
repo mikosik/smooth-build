@@ -23,7 +23,7 @@ public abstract class ExprH extends ObjH {
 
   @Override
   public TypeH type() {
-    return cat().evalType();
+    return cat().evalT();
   }
 
   @Override

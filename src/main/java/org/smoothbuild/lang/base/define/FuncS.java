@@ -31,7 +31,7 @@ public sealed abstract class FuncS extends TopEvalS
     return name() + PARENTHESES;
   }
 
-  public TypeS resType() {
+  public TypeS resT() {
     return type().res();
   }
 
@@ -45,7 +45,7 @@ public sealed abstract class FuncS extends TopEvalS
   }
 
   protected String signature() {
-    return resType().name() + " " + name() + "(" + paramsToString() + ")";
+    return resT().name() + " " + name() + "(" + paramsToString() + ")";
   }
 
   protected String paramsToString() {

@@ -17,22 +17,22 @@ public final class IfFuncS extends FuncS {
     this(factory.var("A"), factory.bool(), modPath, factory);
   }
 
-  private IfFuncS(TypeS resType, TypeS boolType, ModPath modPath, TypeFactoryS factory) {
-    this(resType, createParams(resType, boolType, modPath), modPath, factory);
+  private IfFuncS(TypeS resT, TypeS boolT, ModPath modPath, TypeFactoryS factory) {
+    this(resT, createParams(resT, boolT, modPath), modPath, factory);
   }
 
-  private IfFuncS(TypeS resType, NList<ItemS> params, ModPath modPath, TypeFactoryS factory) {
-    super(funcType(resType, params, factory), modPath, IF_FUNCTION_NAME, params, internal());
+  private IfFuncS(TypeS resT, NList<ItemS> params, ModPath modPath, TypeFactoryS factory) {
+    super(funcT(resT, params, factory), modPath, IF_FUNCTION_NAME, params, internal());
   }
 
-  private static FuncTS funcType(TypeS resType, NList<ItemS> params, TypeFactoryS factory) {
-    return factory.func(resType, map(params, DefinedS::type));
+  private static FuncTS funcT(TypeS resT, NList<ItemS> params, TypeFactoryS factory) {
+    return factory.func(resT, map(params, DefinedS::type));
   }
 
-  private static NList<ItemS> createParams(TypeS resType, TypeS boolType, ModPath modPath) {
+  private static NList<ItemS> createParams(TypeS resT, TypeS boolT, ModPath modPath) {
     return nList(
-        new ItemS(boolType, modPath, "condition", empty(), internal()),
-        new ItemS(resType, modPath, "then", empty(), internal()),
-        new ItemS(resType, modPath, "else", empty(), internal()));
+        new ItemS(boolT, modPath, "condition", empty(), internal()),
+        new ItemS(resT, modPath, "then", empty(), internal()),
+        new ItemS(resT, modPath, "else", empty(), internal()));
   }
 }

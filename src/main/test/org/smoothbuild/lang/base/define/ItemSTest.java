@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.define;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
-import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.Optional;

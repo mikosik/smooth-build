@@ -19,7 +19,7 @@ import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothParser.AnnContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ArrayTContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainCallContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ChainPartContext;
@@ -28,7 +28,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprHeadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.FuncTypeContext;
+import org.smoothbuild.antlr.lang.SmoothParser.FuncTContext;
 import org.smoothbuild.antlr.lang.SmoothParser.LiteralContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
@@ -68,7 +68,7 @@ public class AstCreator {
       }
 
       private ItemN createField(FieldContext field) {
-        TypeN type = createType(field.type());
+        TypeN type = createT(field.type());
         TerminalNode nameNode = field.NAME();
         String name = nameNode.getText();
         Loc loc = locOf(filePath, nameNode);
@@ -119,7 +119,7 @@ public class AstCreator {
       }
 
       private ItemN createParam(ParamContext param) {
-        var type = createType(param.type());
+        var type = createT(param.type());
         var name = param.NAME().getText();
         var defaultArg = Optional.ofNullable(param.expr()).map(this::createExpr);
         var loc = locOf(filePath, param);
@@ -241,36 +241,36 @@ public class AstCreator {
       }
 
       private Optional<TypeN> createTypeSane(TypeContext type) {
-        return type == null ? Optional.empty() : Optional.of(createType(type));
+        return type == null ? Optional.empty() : Optional.of(createT(type));
       }
 
-      private TypeN createType(TypeContext type) {
+      private TypeN createT(TypeContext type) {
         return switch (type) {
-          case TypeNameContext typeIdentifier -> createType(typeIdentifier);
-          case ArrayTypeContext arrayType -> createArrayType(arrayType);
-          case FuncTypeContext funcType -> createFuncType(funcType);
+          case TypeNameContext name -> createT(name);
+          case ArrayTContext arrayT -> createArrayT(arrayT);
+          case FuncTContext funcT -> createFuncT(funcT);
           default -> throw unexpectedCaseExc(type);
         };
       }
 
-      private TypeN createType(TypeNameContext type) {
+      private TypeN createT(TypeNameContext type) {
         return new TypeN(type.getText(), locOf(filePath, type.TNAME()));
       }
 
-      private TypeN createArrayType(ArrayTypeContext arrayType) {
-        TypeN elemType = createType(arrayType.type());
-        return new ArrayTN(elemType, locOf(filePath, arrayType));
+      private TypeN createArrayT(ArrayTContext arrayT) {
+        TypeN elemType = createT(arrayT.type());
+        return new ArrayTN(elemType, locOf(filePath, arrayT));
       }
 
-      private TypeN createFuncType(FuncTypeContext funcType) {
-        TypeN resultType = createType(funcType.type());
-        return new FuncTN(resultType, createTypeList(funcType.typeList()),
-            locOf(filePath, funcType));
+      private TypeN createFuncT(FuncTContext funcT) {
+        TypeN resultType = createT(funcT.type());
+        return new FuncTN(resultType, createTs(funcT.typeList()),
+            locOf(filePath, funcT));
       }
 
-      private ImmutableList<TypeN> createTypeList(TypeListContext typeList) {
+      private ImmutableList<TypeN> createTs(TypeListContext typeList) {
         if (typeList != null) {
-          return map(typeList.type(), this::createType);
+          return map(typeList.type(), this::createT);
         } else {
           return list();
         }

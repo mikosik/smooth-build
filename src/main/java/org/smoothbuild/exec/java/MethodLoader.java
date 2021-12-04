@@ -104,40 +104,40 @@ public class MethodLoader {
       NatFuncH func, Method method, String classBinaryName) throws LoadingMethodExc {
     assertNativeResMatchesDeclared(
         extendedName, method, func.cat().res(), classBinaryName);
-    assertNativeParamTypesMatchesFuncParams(extendedName, method, func, classBinaryName);
+    assertNativeParamTsMatchesFuncParamTs(extendedName, method, func, classBinaryName);
   }
 
   private static void assertNativeResMatchesDeclared(String extendedName, Method method,
-      TypeH resType, String classBinaryName) throws LoadingMethodExc {
-    var methodResTypeJ = method.getReturnType();
-    var resTypeJ = resType.typeJ();
-    if (!resTypeJ.equals(methodResTypeJ)) {
+      TypeH resTH, String classBinaryName) throws LoadingMethodExc {
+    var methodResTJ = method.getReturnType();
+    var resTJ = resTH.typeJ();
+    if (!resTJ.equals(methodResTJ)) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " declares type "
-          + resType.q() + " so its native implementation result type must be "
-          + resTypeJ.getCanonicalName() + " but it is "
-          + methodResTypeJ.getCanonicalName() + ".");
+          + resTH.q() + " so its native implementation result type must be "
+          + resTJ.getCanonicalName() + " but it is "
+          + methodResTJ.getCanonicalName() + ".");
     }
   }
 
-  private static void assertNativeParamTypesMatchesFuncParams(String extendedName,
+  private static void assertNativeParamTsMatchesFuncParamTs(String extendedName,
       Method method, NatFuncH func, String classBinaryName) throws LoadingMethodExc {
     Parameter[] nativeParams = method.getParameters();
-    var params = func.cat().params();
-    if (params.size() != nativeParams.length - 1) {
+    var paramTHs = func.cat().params();
+    if (paramTHs.size() != nativeParams.length - 1) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " has "
-          + params.size() + " parameter(s) but its native implementation has "
+          + paramTHs.size() + " parameter(s) but its native implementation has "
           + (nativeParams.length - 1) + " parameter(s).");
     }
-    for (int i = 0; i < params.size(); i++) {
+    for (int i = 0; i < paramTHs.size(); i++) {
       var paramJ = nativeParams[i + 1];
-      var typeH = params.get(i);
-      var paramTypeJ = paramJ.getType();
-      var expectedParamTypeJ = typeH.typeJ();
-      if (!expectedParamTypeJ.equals(paramTypeJ)) {
+      var paramTH = paramTHs.get(i);
+      var paramTJ = paramJ.getType();
+      var expectedParamTJ = paramTH.typeJ();
+      if (!expectedParamTJ.equals(paramTJ)) {
         throw newLoadingException(extendedName, classBinaryName, extendedName
-            + " parameter at index " + i + " has type " + typeH.q()
-            + " so its native implementation type must be " + expectedParamTypeJ.getCanonicalName()
-            + " but it is " + paramTypeJ.getCanonicalName() + ".");
+            + " parameter at index " + i + " has type " + paramTH.q()
+            + " so its native implementation type must be " + expectedParamTJ.getCanonicalName()
+            + " but it is " + paramTJ.getCanonicalName() + ".");
       }
     }
   }

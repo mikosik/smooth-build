@@ -1,13 +1,13 @@
 package org.smoothbuild.acceptance.lang.convert;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL;
-import static org.smoothbuild.lang.base.type.TestedType.INT;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
-import static org.smoothbuild.lang.base.type.TestedType.STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
-import static org.smoothbuild.lang.base.type.TestedType.a;
+import static org.smoothbuild.lang.base.type.TestedT.BLOB;
+import static org.smoothbuild.lang.base.type.TestedT.BOOL;
+import static org.smoothbuild.lang.base.type.TestedT.INT;
+import static org.smoothbuild.lang.base.type.TestedT.NOTHING;
+import static org.smoothbuild.lang.base.type.TestedT.STRING;
+import static org.smoothbuild.lang.base.type.TestedT.STRUCT;
+import static org.smoothbuild.lang.base.type.TestedT.a;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.ReportError;
 import org.smoothbuild.lang.base.type.TestedAssignment;
-import org.smoothbuild.lang.base.type.TestedType;
+import org.smoothbuild.lang.base.type.TestedT;
 
 public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
   @ParameterizedTest
@@ -117,7 +117,7 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
     );
   }
 
-  public static TestedAssignment allowedConversion(TestedType target, TestedType source) {
+  public static TestedAssignment allowedConversion(TestedT target, TestedT source) {
     return new TestedAssignment(target, source);
   }
 }

@@ -4,13 +4,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.CatKindH;
 
-public class UnexpectedTypeNodeExc extends DecodeTypeNodeExc {
-  public UnexpectedTypeNodeExc(Hash hash, CatKindH kind, String path, int pathIndex,
+public class UnexpectedCatNodeExc extends DecodeCatNodeExc {
+  public UnexpectedCatNodeExc(Hash hash, CatKindH kind, String path, int pathIndex,
       CatH expected, CatH actual) {
     this(hash, kind, indexedPath(path, pathIndex), expected, actual);
   }
 
-  public UnexpectedTypeNodeExc(Hash hash, CatKindH kind, String path, CatH expected,
+  public UnexpectedCatNodeExc(Hash hash, CatKindH kind, String path, CatH expected,
       CatH actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }
@@ -20,7 +20,7 @@ public class UnexpectedTypeNodeExc extends DecodeTypeNodeExc {
         + ".";
   }
 
-  public UnexpectedTypeNodeExc(Hash hash, CatKindH kind, String memberPath, int pathIndex,
+  public UnexpectedCatNodeExc(Hash hash, CatKindH kind, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, kind, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -29,7 +29,7 @@ public class UnexpectedTypeNodeExc extends DecodeTypeNodeExc {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public UnexpectedTypeNodeExc(Hash hash, CatKindH kind, String path, Class<?> expected,
+  public UnexpectedCatNodeExc(Hash hash, CatKindH kind, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }

@@ -76,17 +76,17 @@ public class TopEvalLoader {
 
   private FuncS loadFunc(ModPath path, FuncN funcN) {
     var params = loadParams(path, funcN);
-    var resultType = funcN.resType().get();
+    var resT = funcN.resT().get();
     var name = funcN.name();
     var loc = funcN.loc();
-    var type = factory.func(resultType, map(params, DefinedS::type));
+    var funcT = factory.func(resT, map(params, DefinedS::type));
     if (funcN.ann().isPresent()) {
-      return new NatFuncS(type,
+      return new NatFuncS(funcT,
           path, name, params, loadAnn(funcN.ann().get()), loc
       );
     } else {
       var expressionLoader = new ExpressionLoader(path, params);
-      return new DefFuncS(type, path,
+      return new DefFuncS(funcT, path,
           name, params, expressionLoader.createExpression(funcN.body().get()), loc);
     }
   }
@@ -138,8 +138,8 @@ public class TopEvalLoader {
     private ExprS createCall(CallN call) {
       var callable = createExpression(call.callable());
       var argExpressions = createArgExpressions(call);
-      var resultType = call.type().get();
-      return new CallS(resultType, callable, argExpressions, call.loc());
+      var resT = call.type().get();
+      return new CallS(resT, callable, argExpressions, call.loc());
     }
 
     private ImmutableList<ExprS> createArgExpressions(CallN call) {
@@ -174,11 +174,11 @@ public class TopEvalLoader {
     }
 
     private ExprS createSelect(SelectN selectN) {
-      var structType = (StructTS) selectN.selectable().type().get();
-      var index = structType.fields().indexMap().get(selectN.field());
-      var fieldType = structType.fields().get(index).type();
+      var structT = (StructTS) selectN.selectable().type().get();
+      var index = structT.fields().indexMap().get(selectN.field());
+      var fieldT = structT.fields().get(index).type();
       var selectable = createExpression(selectN.selectable());
-      return new SelectS(fieldType, selectable, selectN.field(), selectN.loc());
+      return new SelectS(fieldT, selectable, selectN.field(), selectN.loc());
     }
 
     private ExprS createReference(RefN ref) {

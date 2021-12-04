@@ -23,8 +23,8 @@ arg          : ( NAME '=' )? expr ;
 array        : '[' ( expr (',' expr)* (',')? )?  ']' ;
 select       : '.' NAME ;
 type         : TNAME                        # typeName
-             | '[' type ']'                 # arrayType
-             | type '(' typeList ')'        # funcType
+             | '[' type ']'                 # arrayT
+             | type '(' typeList ')'        # funcT
              ;
 typeList     : ( type (',' type)* ','? )? ;
 

@@ -21,16 +21,16 @@ import com.google.common.collect.ImmutableList;
  */
 public class ItemSigS extends NameableImpl {
   private final TypeS type;
-  private final Optional<TypeS> defaultValType;
+  private final Optional<TypeS> defaultValT;
 
-  public ItemSigS(TypeS type, String name, Optional<TypeS> defaultValType) {
-    this(type, Optional.of(name), defaultValType);
+  public ItemSigS(TypeS type, String name, Optional<TypeS> defaultValT) {
+    this(type, Optional.of(name), defaultValT);
   }
 
-  public ItemSigS(TypeS type, Optional<String> name, Optional<TypeS> defaultValType) {
+  public ItemSigS(TypeS type, Optional<String> name, Optional<TypeS> defaultValT) {
     super(name);
     this.type = requireNonNull(type);
-    this.defaultValType = requireNonNull(defaultValType);
+    this.defaultValT = requireNonNull(defaultValT);
   }
 
   public static ItemSigS itemSigS(TypeS type) {
@@ -49,8 +49,8 @@ public class ItemSigS extends NameableImpl {
     return type;
   }
 
-  public Optional<TypeS> defaultValType() {
-    return defaultValType;
+  public Optional<TypeS> defaultValT() {
+    return defaultValT;
   }
 
   public String typeAndName() {
@@ -76,11 +76,11 @@ public class ItemSigS extends NameableImpl {
     return object instanceof ItemSigS that
         && Objects.equals(this.type(), that.type())
         && Objects.equals(this.nameO(), that.nameO())
-        && Objects.equals(this.defaultValType, that.defaultValType);
+        && Objects.equals(this.defaultValT, that.defaultValT);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type(), nameO(), defaultValType);
+    return Objects.hash(type(), nameO(), defaultValT);
   }
 }

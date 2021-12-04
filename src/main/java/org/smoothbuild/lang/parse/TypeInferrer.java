@@ -87,13 +87,13 @@ public class TypeInferrer {
       public void visitFunc(FuncN funcN) {
         visitParams(funcN.params());
         funcN.body().ifPresent(this::visitExpr);
-        funcN.setType(optionalFuncType(evalTypeOfTopEvals(funcN), funcN.optParamTypes()));
+        funcN.setType(optionalFuncType(evalTypeOfTopEval(funcN), funcN.optParamTs()));
       }
 
       @Override
       public void visitValue(ValN valN) {
         valN.body().ifPresent(this::visitExpr);
-        valN.setType(evalTypeOfTopEvals(valN));
+        valN.setType(evalTypeOfTopEval(valN));
       }
 
       @Override
@@ -111,12 +111,11 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evalTypeOfTopEvals(EvalN evalN) {
+      private Optional<TypeS> evalTypeOfTopEval(EvalN evalN) {
         return evalTypeOf(evalN, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
-            logBuffer.log(parseError(evalN, "`" + evalN.name()
-                + "` has body which type is " + source.q()
-                + " and it is not convertible to its declared type " + target.q()
+            logBuffer.log(parseError(evalN, "`" + evalN.name() + "` has body which type is "
+                + source.q() + " and it is not convertible to its declared type " + target.q()
                 + "."));
           }
         });
@@ -155,10 +154,10 @@ public class TypeInferrer {
           return Optional.of(factory.var(type.name()));
         }
         return switch (type) {
-          case ArrayTN array -> createType(array.elemType()).map(factory::array);
+          case ArrayTN array -> createType(array.elemT()).map(factory::array);
           case FuncTN func -> {
-            Optional<TypeS> result = createType(func.resType());
-            var params = Optionals.pullUp(map(func.paramTypes(), this::createType));
+            Optional<TypeS> result = createType(func.resT());
+            var params = Optionals.pullUp(map(func.paramTs(), this::createType));
             yield optionalFuncType(result, params);
           }
           default -> Optional.of(findType(type.name()));
@@ -218,10 +217,10 @@ public class TypeInferrer {
       @Override
       public void visitArray(ArrayN array) {
         super.visitArray(array);
-        array.setType(findArrayType(array));
+        array.setType(findArrayT(array));
       }
 
-      private Optional<TypeS> findArrayType(ArrayN array) {
+      private Optional<TypeS> findArrayT(ArrayN array) {
         List<ExprN> expressions = array.elems();
         if (expressions.isEmpty()) {
           return Optional.of(factory.array(factory.nothing()));
@@ -234,16 +233,16 @@ public class TypeInferrer {
         TypeS type = firstType.get();
         for (int i = 1; i < expressions.size(); i++) {
           ExprN elem = expressions.get(i);
-          Optional<TypeS> elemType = elem.type();
-          if (elemType.isEmpty()) {
+          Optional<TypeS> elemT = elem.type();
+          if (elemT.isEmpty()) {
             return empty();
           }
-          type = typing.mergeUp(type, elemType.get());
+          type = typing.mergeUp(type, elemT.get());
           if (typing.contains(type, factory.any())) {
             logBuffer.log(parseError(elem.loc(),
                 "Array elems at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
-                + "\nElement at index " + i + " type = " + elemType.get().q()));
+                + "\nElement at index " + i + " type = " + elemT.get().q()));
             return empty();
           }
         }
@@ -254,12 +253,12 @@ public class TypeInferrer {
       public void visitCall(CallN call) {
         super.visitCall(call);
         ExprN called = call.callable();
-        Optional<TypeS> calledType = called.type();
-        if (calledType.isEmpty()) {
+        Optional<TypeS> calledT = called.type();
+        if (calledT.isEmpty()) {
           call.setType(empty());
-        } else if (!(calledType.get() instanceof FuncTS funcT)) {
+        } else if (!(calledT.get() instanceof FuncTS funcT)) {
           logBuffer.log(parseError(call.loc(), description(called)
-              + " cannot be called as it is not a function but " + calledType.get().q() + "."));
+              + " cannot be called as it is not a function but " + calledT.get().q() + "."));
           call.setType(empty());
         } else {
           var funcParams = funcParams(called);
@@ -275,7 +274,7 @@ public class TypeInferrer {
               call.setType(empty());
             } else {
               call.setAssignedArgs(args.value());
-              Maybe<TypeS> type = callTypeInferrer.inferCallType(call, funcT.res(), params);
+              Maybe<TypeS> type = callTypeInferrer.inferCallT(call, funcT.res(), params);
               logBuffer.logAll(type.logs());
               call.setType(type.valueOptional());
             }

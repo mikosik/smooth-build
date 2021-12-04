@@ -36,8 +36,8 @@ import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
-import org.smoothbuild.db.object.obj.exc.DecodeObjTypeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjExc;
@@ -59,11 +59,10 @@ import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.CatH;
-import org.smoothbuild.db.object.type.exc.DecodeTypeExc;
+import org.smoothbuild.db.object.type.exc.DecodeCatExc;
 import org.smoothbuild.db.object.type.expr.CallCH;
 import org.smoothbuild.db.object.type.expr.CombineCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
-import org.smoothbuild.db.object.type.val.DefFuncTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.testing.TestingContext;
@@ -106,8 +105,8 @@ public class ObjHCorruptedTest extends TestingContext {
               typeHash,
               hash("aaa"));
       assertCall(() -> objDb().get(objHash))
-          .throwsException(new DecodeObjTypeExc(objHash))
-          .withCause(new DecodeTypeExc(typeHash));
+          .throwsException(new DecodeObjCatExc(objHash))
+          .withCause(new DecodeCatExc(typeHash));
     }
 
     @Test
@@ -380,8 +379,8 @@ public class ObjHCorruptedTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var funcType = defFuncTH(intTH(), list(stringTH(), intTH()));
-      var func = defFuncH(funcType, intH());
+      var funcT = defFuncTH(intTH(), list(stringTH(), intTH()));
+      var func = defFuncH(funcT, intH());
       CombineH args = combineH(list(stringH(), intH()));
       Hash objHash =
           hash(
@@ -477,8 +476,8 @@ public class ObjHCorruptedTest extends TestingContext {
 
     @Test
     public void args_is_val_instead_of_expr() throws Exception {
-      var funcType = defFuncTH(intTH(), list(stringTH(), intTH()));
-      var func = defFuncH(funcType, intH());
+      var funcT = defFuncTH(intTH(), list(stringTH(), intTH()));
+      var func = defFuncH(funcT, intH());
       Hash objHash =
           hash(
               hash(callCH()),
@@ -495,8 +494,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void args_component_evaluation_type_is_not_combine_but_different_expr()
         throws Exception {
-      var funcType = defFuncTH(intTH(), list(stringTH(), intTH()));
-      var func = defFuncH(funcType, intH());
+      var funcT = defFuncTH(intTH(), list(stringTH(), intTH()));
+      var func = defFuncH(funcT, intH());
       var type = callCH();
       Hash objHash =
           hash(
@@ -514,8 +513,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void evaluation_type_is_different_than_func_evaluation_type_result()
         throws Exception {
-      DefFuncTH funcType = defFuncTH(intTH(), list(stringTH()));
-      var func = defFuncH(funcType, intH());
+      var funcT = defFuncTH(intTH(), list(stringTH()));
+      var func = defFuncH(funcT, intH());
       var args = combineH(list(stringH()));
       var type = callCH(stringTH());
       Hash objHash =
@@ -534,8 +533,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void func_evaluation_type_params_does_not_match_args_evaluation_types()
         throws Exception {
-      var funcType = defFuncTH(intTH(), list(stringTH(), boolTH()));
-      var func = defFuncH(funcType, intH());
+      var funcT = defFuncTH(intTH(), list(stringTH(), boolTH()));
+      var func = defFuncH(funcT, intH());
       var args = combineH(list(stringH(), intH()));
       var spec = callCH(intTH());
       Hash objHash =
@@ -839,8 +838,8 @@ public class ObjHCorruptedTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * select in HashedDb.
        */
-      var tupleType = tupleTH(list(stringTH()));
-      var tuple = tupleH(tupleType, list(stringH("abc")));
+      var tupleT = tupleTH(list(stringTH()));
+      var tuple = tupleH(tupleT, list(stringH("abc")));
       var selectable = (ValH) tuple;
       var index = intH(0);
       Hash objHash =
@@ -937,8 +936,8 @@ public class ObjHCorruptedTest extends TestingContext {
 
     @Test
     public void index_is_out_of_bounds() throws Exception {
-      var tupleType = tupleTH(list(stringTH()));
-      var tuple = tupleH(tupleType, list(stringH("abc")));
+      var tupleT = tupleTH(list(stringTH()));
+      var tuple = tupleH(tupleT, list(stringH("abc")));
       var index = intH(1);
       var type = selectCH(stringTH());
       Hash objHash =
@@ -957,8 +956,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void evaluation_type_is_different_than_type_of_item_pointed_to_by_index()
         throws Exception {
-      var tupleType = tupleTH(list(stringTH()));
-      var tuple = tupleH(tupleType, list(stringH("abc")));
+      var tupleT = tupleTH(list(stringTH()));
+      var tuple = tupleH(tupleT, list(stringH("abc")));
       var index = intH(0);
       var type = selectCH(intTH());
       Hash objHash =
@@ -977,8 +976,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void index_is_string_instead_of_int() throws Exception {
       var type = selectCH(stringTH());
-      var tupleType = tupleTH(list(stringTH()));
-      var tuple = tupleH(tupleType, list(stringH("abc")));
+      var tupleT = tupleTH(list(stringTH()));
+      var tuple = tupleH(tupleT, list(stringH("abc")));
       var strVal = stringH("abc");
       Hash objHash =
           hash(

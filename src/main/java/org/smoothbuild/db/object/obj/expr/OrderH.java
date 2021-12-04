@@ -9,7 +9,6 @@ import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
-import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.OrderCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 
@@ -31,17 +30,17 @@ public class OrderH extends ExprH {
 
   @Override
   public ArrayTH type() {
-    return cat().evalType();
+    return cat().evalT();
   }
 
   public ImmutableList<ObjH> elems() {
     var elems = readSeqObjs(DATA_PATH, dataHash(), ObjH.class);
-    var expectedElementType = cat().evalType().elem();
+    var expectedElemT = cat().evalT().elem();
     for (int i = 0; i < elems.size(); i++) {
-      TypeH actualType = elems.get(i).type();
-      if (!Objects.equals(expectedElementType, actualType)) {
+      var actualT = elems.get(i).type();
+      if (!Objects.equals(expectedElemT, actualT)) {
         throw new DecodeExprWrongEvalTypeOfCompExc(
-            hash(), cat(), "elems[" + i + "]", expectedElementType, actualType);
+            hash(), cat(), "elems[" + i + "]", expectedElemT, actualT);
       }
     }
     return elems;

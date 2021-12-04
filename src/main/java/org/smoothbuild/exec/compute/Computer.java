@@ -49,7 +49,7 @@ public class Computer {
     } else {
       newPromised.addConsumer(consumer);
       if (computationCache.contains(hash)) {
-        Output output = computationCache.read(hash, algorithm.outputType());
+        Output output = computationCache.read(hash, algorithm.outputT());
         newPromised.accept(new Computed(output, DISK));
         promisedValues.remove(hash);
       } else {

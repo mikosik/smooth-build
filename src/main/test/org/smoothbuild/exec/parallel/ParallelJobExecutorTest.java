@@ -17,7 +17,7 @@ import static org.smoothbuild.exec.compute.ResSource.MEMORY;
 import static org.smoothbuild.exec.job.TaskKind.CALL;
 import static org.smoothbuild.exec.parallel.ExecutionReporter.header;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
-import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
@@ -35,7 +35,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.type.TestingTypesH;
+import org.smoothbuild.db.object.type.TestingCatsH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
@@ -319,7 +319,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     protected TestAlgorithm(Hash hash, boolean isPure) {
-      super(TestingTypesH.STRING, isPure);
+      super(TestingCatsH.STRING, isPure);
       this.hash = hash;
     }
 
@@ -329,8 +329,8 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     @Override
-    public TypeH outputType() {
-      return TestingTypesH.STRING;
+    public TypeH outputT() {
+      return TestingCatsH.STRING;
     }
   }
 }

@@ -109,18 +109,18 @@ public class ModLoader {
   }
 
   private DefFuncS loadCtor(ModPath path, StructN struct) {
-    var resultType = (StructTS) struct.type().get();
+    var resultT = (StructTS) struct.type().get();
     var name = struct.ctor().name();
-    var paramTypes = map(struct.fields(), f -> f.type().get());
-    var type = typeFactory.func(resultType, paramTypes);
+    var paramTs = map(struct.fields(), f -> f.type().get());
+    var type = typeFactory.func(resultT, paramTs);
     var params = struct.fields().map(f -> f.toItem(path));
     var loc = struct.loc();
-    var body = ctorBody(resultType, params, loc);
+    var body = ctorBody(resultT, params, loc);
     return new DefFuncS(type, path, name, params, body, loc);
   }
 
-  private CombineS ctorBody(StructTS resultType, NList<ItemS> params, Loc loc) {
+  private CombineS ctorBody(StructTS resT, NList<ItemS> params, Loc loc) {
     var paramRefs = map(params, p -> (ExprS) new ParamRefS(p.type(), p.name(), loc));
-    return new CombineS(resultType, paramRefs, loc);
+    return new CombineS(resT, paramRefs, loc);
   }
 }

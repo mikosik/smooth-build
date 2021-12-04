@@ -10,18 +10,18 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CombineAlgorithm extends Algorithm {
-  public CombineAlgorithm(TupleTH tupleType) {
-    super(tupleType);
+  public CombineAlgorithm(TupleTH tupleT) {
+    super(tupleT);
   }
 
   @Override
   public Hash hash() {
-    return combineAlgorithmHash((TupleTH) outputType());
+    return combineAlgorithmHash((TupleTH) outputT());
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    TupleH tuple = nativeApi.factory().tuple(((TupleTH) outputType()), input.vals());
+    TupleH tuple = nativeApi.factory().tuple(((TupleTH) outputT()), input.vals());
     return new Output(tuple, nativeApi.messages());
   }
 }

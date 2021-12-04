@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.base.type.api;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.TestingTypesS.ANY;
-import static org.smoothbuild.lang.base.type.TestingTypesS.LOWER;
-import static org.smoothbuild.lang.base.type.TestingTypesS.NOTHING;
-import static org.smoothbuild.lang.base.type.TestingTypesS.UPPER;
+import static org.smoothbuild.lang.base.type.TestingTsS.ANY;
+import static org.smoothbuild.lang.base.type.TestingTsS.LOWER;
+import static org.smoothbuild.lang.base.type.TestingTsS.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTsS.UPPER;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.base.type.TestingTypesS.A;
-import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
-import static org.smoothbuild.lang.base.type.TestingTypesS.INT;
-import static org.smoothbuild.lang.base.type.TestingTypesS.NOTHING;
-import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
-import static org.smoothbuild.lang.base.type.TestingTypesS.a;
-import static org.smoothbuild.lang.base.type.TestingTypesS.f;
+import static org.smoothbuild.lang.base.type.TestingTsS.A;
+import static org.smoothbuild.lang.base.type.TestingTsS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTsS.INT;
+import static org.smoothbuild.lang.base.type.TestingTsS.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTsS.a;
+import static org.smoothbuild.lang.base.type.TestingTsS.f;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;

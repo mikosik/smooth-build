@@ -9,8 +9,8 @@ import org.smoothbuild.db.object.obj.val.DefFuncH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
 public class DefFuncTH extends FuncTH {
-  public DefFuncTH(Hash hash, TypeH result, TupleTH paramsTuple) {
-    super(hash, DEF_FUNC, result, paramsTuple);
+  public DefFuncTH(Hash hash, TypeH res, TupleTH paramsTuple) {
+    super(hash, DEF_FUNC, res, paramsTuple);
   }
 
   @Override

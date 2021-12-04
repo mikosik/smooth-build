@@ -14,7 +14,7 @@ public class DecodeCombineWrongItemsSizeExc extends DecodeObjExc {
         .formatted(
             cat.q(),
             hash,
-            cat.evalType().items().size(),
+            cat.evalT().items().size(),
             actual);
   }
 }

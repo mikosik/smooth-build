@@ -124,10 +124,10 @@ public class AnalyzeSemantically {
 
       private void assertTypeIsDefined(TypeN type) {
         if (type instanceof ArrayTN array) {
-          assertTypeIsDefined(array.elemType());
+          assertTypeIsDefined(array.elemT());
         } else if (type instanceof FuncTN func) {
-          assertTypeIsDefined(func.resType());
-          func.paramTypes().forEach(this::assertTypeIsDefined);
+          assertTypeIsDefined(func.resT());
+          func.paramTs().forEach(this::assertTypeIsDefined);
         } else if (!isDefinedType(type)) {
           logger.log(parseError(type.loc(), type.q() + " type is undefined."));
         }

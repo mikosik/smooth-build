@@ -1,7 +1,7 @@
 package org.smoothbuild.db.object.type;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.db.object.type.TestingTypesH.ALL_TYPES_TO_TEST;
+import static org.smoothbuild.db.object.type.TestingCatsH.ALL_CATS_TO_TEST;
 
 import java.util.HashMap;
 
@@ -14,7 +14,7 @@ public class CatHCollisionsTest extends TestingContext {
   @Test
   public void collisions() {
     HashMap<Hash, CatH> map = new HashMap<>();
-    for (CatH type : ALL_TYPES_TO_TEST) {
+    for (CatH type : ALL_CATS_TO_TEST) {
       Hash hash = type.hash();
       if (map.containsKey(hash)) {
         fail("Hash " + hash + " is used by two types " + type + " and " + map.get(hash) + ".");

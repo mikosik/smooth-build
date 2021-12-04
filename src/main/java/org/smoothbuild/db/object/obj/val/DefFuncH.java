@@ -18,11 +18,11 @@ public final class DefFuncH extends FuncH {
 
   public ObjH body() {
     var body = readObj(DATA_PATH, dataHash(), ObjH.class);
-    var resultType = cat().res();
-    var bodyType = body.type();
-    if (!objDb().typing().isAssignable(resultType, bodyType)) {
+    var resT = cat().res();
+    var bodyT = body.type();
+    if (!objDb().typing().isAssignable(resT, bodyT)) {
       throw new DecodeExprWrongEvalTypeOfCompExc(
-          hash(), cat(), DATA_PATH, resultType, bodyType);
+          hash(), cat(), DATA_PATH, resT, bodyT);
     }
     return body;
   }

@@ -30,9 +30,8 @@ public class FuncTH extends TypeH implements FuncT {
     this.paramsTuple = paramsTuple;
   }
 
-  public static ImmutableSet<VarH> calculateVars(
-      TypeH resultType, ImmutableList<TypeH> params) {
-    return concat(resultType, params).stream()
+  public static ImmutableSet<VarH> calculateVars(TypeH resT, ImmutableList<TypeH> params) {
+    return concat(resT, params).stream()
         .map(TypeH::vars)
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))

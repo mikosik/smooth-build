@@ -21,9 +21,9 @@ public class InvokeAlgorithm extends Algorithm {
   private final String extendedName;
   private final MethodLoader methodLoader;
 
-  public InvokeAlgorithm(TypeH outputType, String extendedName, NatFuncH natFuncH,
+  public InvokeAlgorithm(TypeH outputT, String extendedName, NatFuncH natFuncH,
       MethodLoader methodLoader) {
-    super(outputType, natFuncH.isPure().toJ());
+    super(outputT, natFuncH.isPure().toJ());
     this.extendedName = extendedName;
     this.methodLoader = methodLoader;
     this.natFuncH = natFuncH;
@@ -46,10 +46,10 @@ public class InvokeAlgorithm extends Algorithm {
         }
         return new Output(null, nativeApi.messages());
       }
-      if (!outputType().equals(result.cat())) {
+      if (!outputT().equals(result.cat())) {
         nativeApi.log().error(q(extendedName)
             + " has faulty native implementation: Its declared result type == "
-            + outputType().q()
+            + outputT().q()
             + " but it returned object with type == " + result.cat().q() + ".");
         return new Output(null, nativeApi.messages());
       }

@@ -41,19 +41,19 @@ public class CallH extends ExprH {
   public record CallData(ObjH callable, CombineH args) {}
 
   private void validate(ObjH callable, CombineH argsCombine) {
-    if (callable.type() instanceof FuncTH funcType) {
+    if (callable.type() instanceof FuncTH funcT) {
       var typing = objDb().typing();
-      var params = funcType.params();
-      var args = argsCombine.cat().evalType().items();
+      var params = funcT.params();
+      var args = argsCombine.cat().evalT().items();
       allMatchOtherwise(
           params,
           args,
           typing::isParamAssignable,
-          (expectedSize, actualSize) -> illegalArgs(funcType, argsCombine),
-          i -> illegalArgs(funcType, argsCombine)
+          (expectedSize, actualSize) -> illegalArgs(funcT, argsCombine),
+          i -> illegalArgs(funcT, argsCombine)
       );
       var varBounds = typing.inferVarBoundsInCall(params, args);
-      var actualResult = typing.mapVars(funcType.res(), varBounds, typing.factory().lower());
+      var actualResult = typing.mapVars(funcT.res(), varBounds, typing.factory().lower());
       if (!Objects.equals(type(), actualResult)) {
         throw new DecodeExprWrongEvalTypeOfCompExc(
             hash(), this.cat(), "func.result", type(), actualResult);

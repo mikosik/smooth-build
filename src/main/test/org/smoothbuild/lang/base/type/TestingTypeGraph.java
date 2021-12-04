@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.collect.Multimaps.newSetMultimap;
-import static org.smoothbuild.lang.base.type.TestingTypesS.ANY;
-import static org.smoothbuild.lang.base.type.TestingTypesS.NOTHING;
-import static org.smoothbuild.lang.base.type.TestingTypesS.a;
-import static org.smoothbuild.lang.base.type.TestingTypesS.f;
+import static org.smoothbuild.lang.base.type.TestingTsS.ANY;
+import static org.smoothbuild.lang.base.type.TestingTsS.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTsS.a;
+import static org.smoothbuild.lang.base.type.TestingTsS.f;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -153,21 +153,21 @@ public record TestingTypeGraph(ImmutableMultimap<TypeS, TypeS> edges) {
     }
   }
 
-  private int[][] buildIntEdges(ArrayList<TypeS> sortedTypes) {
-    var typeToIndex = typeToIndex(sortedTypes);
+  private int[][] buildIntEdges(ArrayList<TypeS> sortedTs) {
+    var typeToIndex = typeToIndex(sortedTs);
 
-    int[][] intEdges = new int[sortedTypes.size()][];
-    for (int i = 0; i < sortedTypes.size(); i++) {
-      var type = sortedTypes.get(i);
+    int[][] intEdges = new int[sortedTs.size()][];
+    for (int i = 0; i < sortedTs.size(); i++) {
+      var type = sortedTs.get(i);
       intEdges[i] = edges.get(type).stream().mapToInt(typeToIndex::get).toArray();
     }
     return intEdges;
   }
 
-  private static HashMap<Type, Integer> typeToIndex(ArrayList<TypeS> sortedTypes) {
+  private static HashMap<Type, Integer> typeToIndex(ArrayList<TypeS> sortedTs) {
     HashMap<Type, Integer> typeToInteger = new HashMap<>();
-    for (int i = 0; i < sortedTypes.size(); i++) {
-      typeToInteger.put(sortedTypes.get(i), i);
+    for (int i = 0; i < sortedTs.size(); i++) {
+      typeToInteger.put(sortedTs.get(i), i);
     }
     return typeToInteger;
   }

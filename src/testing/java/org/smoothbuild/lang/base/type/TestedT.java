@@ -5,8 +5,8 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.define.ItemSigS.itemSigS;
-import static org.smoothbuild.lang.base.type.TestingTypesS.struct;
-import static org.smoothbuild.lang.base.type.TestingTypesS.var;
+import static org.smoothbuild.lang.base.type.TestingTsS.struct;
+import static org.smoothbuild.lang.base.type.TestingTsS.var;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -27,74 +27,66 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 
-public class TestedType {
+public class TestedT {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedType A = new TestedType(
-      var("A"),
-      null,
-      null
-  );
-  public static final TestedType B = new TestedType(
-      var("B"),
-      null,
-      null
-  );
-  public static final TestedType ANY = new TestedType(
-      TestingTypesS.ANY,
+  public static final TestedT A = new TestedT(var("A"), null, null);
+  public static final TestedT B = new TestedT(var("B"), null, null);
+  public static final TestedT ANY = new TestedT(
+      TestingTsS.ANY,
       "createAny()",
       null,
       Set.of(),
       Set.of("Any createAny() = \"abc\";"));
-  public static final TestedType BLOB = new TestedType(
-      TestingTypesS.BLOB,
+  public static final TestedT BLOB = new TestedT(
+      TestingTsS.BLOB,
       "0x" + encodeString("xyz", US_ASCII).hex(),
       "xyz"
   );
-  public static final TestedType BOOL = new TestedType(
-      TestingTypesS.BOOL,
+  public static final TestedT BOOL = new TestedT(
+      TestingTsS.BOOL,
       "true",
       new String(new byte[] {1})
   );
-  public static final TestedType INT = new TestedType(
-      TestingTypesS.INT,
+  public static final TestedT INT = new TestedT(
+      TestingTsS.INT,
       "123",
       new String(new byte[] {123})
   );
-  public static final TestedType NOTHING = new TestedType(
-      TestingTypesS.NOTHING,
+  public static final TestedT NOTHING = new TestedT(
+      TestingTsS.NOTHING,
       "reportError(\"e\")",
       null,
       Set.of(),
       Set.of("@Native(\"impl\") Nothing reportError(String message);"));
-  public static final TestedType STRING = new TestedType(
-      TestingTypesS.STRING,
+  public static final TestedT STRING = new TestedT(
+      TestingTsS.STRING,
       "\"abc\"",
       "abc"
   );
-  public static final TestedType STRUCT = new TestedType(
-      struct("Person", nList(itemSigS("name", TestingTypesS.STRING))),
+  public static final TestedT STRUCT = new TestedT(
+      struct("Person", nList(itemSigS("name", TestingTsS.STRING))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
       Set.of("Person{ String name }")
   );
-  public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", nList(itemSigS("value", TestingTypesS.BLOB))),
+  public static final TestedT STRUCT_WITH_BLOB = new TestedT(
+      struct("Data", nList(itemSigS("value", TestingTsS.BLOB))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
-  public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", nList(itemSigS("value", TestingTypesS.BOOL))),
+  public static final TestedT STRUCT_WITH_BOOL = new TestedT(
+      struct("Flag", nList(itemSigS("value", TestingTsS.BOOL))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),
       Set.of("Flag{ Bool value }")
   );
 
-  public static final ImmutableList<TestedType> ELEMENTARY_TYPES = list(
+  public static final ImmutableList<TestedT> ELEMENTARY_TYPES = list(
       ANY,
       BLOB,
       BOOL,
@@ -103,7 +95,7 @@ public class TestedType {
       STRUCT,
       A);
 
-  public static final List<TestedType> TESTED_MONOTYPES = list(
+  public static final List<TestedT> TESTED_MONOTYPES = list(
       BLOB,
       BOOL,
       NOTHING,
@@ -129,7 +121,7 @@ public class TestedType {
    * Polytypes that can be used in any place. Each var in such a polytype occurs more than
    * once.
    */
-  public static final List<TestedType> TESTED_VALID_POLYTYPES = list(
+  public static final List<TestedT> TESTED_VALID_POLYTYPES = list(
       a(f(A, A)),
       a(a(f(A, A))),
       f(A, A),
@@ -143,7 +135,7 @@ public class TestedType {
   /**
    * Polytypes that can be used in any place. Each var in such a polytype occurs exactly once.
    */
-  public static final List<TestedType> TESTED_SINGLE_VARIABLE_POLYTYPES = list(
+  public static final List<TestedT> TESTED_SINGLE_VARIABLE_POLYTYPES = list(
       A,
       a(A),
       a(a(A)),
@@ -154,21 +146,21 @@ public class TestedType {
       f(BOOL, f(BOOL, A))
   );
 
-  public static final List<TestedType> TESTED_TYPES = ImmutableList.<TestedType>builder()
+  public static final List<TestedT> TESTED_TYPES = ImmutableList.<TestedT>builder()
       .addAll(TESTED_MONOTYPES)
       .addAll(TESTED_VALID_POLYTYPES)
       .addAll(TESTED_SINGLE_VARIABLE_POLYTYPES)
       .build();
 
-  public static TestedType a2(TestedType type) {
+  public static TestedT a2(TestedT type) {
     return a(a(type));
   }
 
-  public static TestedType a(TestedType type) {
+  public static TestedT a(TestedT type) {
     if (type == NOTHING) {
-      return new TestedArrayType(
+      return new TestedArrayT(
           type,
-          TestingTypesS.a(TestingTypesS.NOTHING),
+          TestingTsS.a(TestingTsS.NOTHING),
           "[]",
           list(),
           Set.of(),
@@ -180,10 +172,10 @@ public class TestedType {
     }
   }
 
-  private static TestedType a(TestedType type, Object value) {
-    return new TestedArrayType(
+  private static TestedT a(TestedT type, Object value) {
+    return new TestedArrayT(
         type,
-        TestingTypesS.a(type.type),
+        TestingTsS.a(type.type),
         "[" + type.literal + "]",
         value,
         type.typeDeclarations(),
@@ -197,11 +189,11 @@ public class TestedType {
   private final Set<String> typeDeclarations;
   private final Set<String> allDeclarations;
 
-  public TestedType(TypeS type, String literal, Object value) {
+  public TestedT(TypeS type, String literal, Object value) {
     this(type, literal, value, Set.of(), Set.of());
   }
 
-  public TestedType(TypeS type, String literal, Object value, Set<String> typeDeclarations,
+  public TestedT(TypeS type, String literal, Object value, Set<String> typeDeclarations,
       Set<String> allDeclarations) {
     this.type = type;
     this.literal = literal;
@@ -252,7 +244,7 @@ public class TestedType {
     return join("\n", typeDeclarations);
   }
 
-  public boolean isArrayOf(TestedType elem) {
+  public boolean isArrayOf(TestedT elem) {
     return false;
   }
 
@@ -268,7 +260,7 @@ public class TestedType {
     return type instanceof NothingTS;
   }
 
-  public boolean isFunc(Predicate<TestedType> result, Predicate<TestedType>... params) {
+  public boolean isFunc(Predicate<TestedT> result, Predicate<TestedT>... params) {
     return false;
   }
 
@@ -276,7 +268,7 @@ public class TestedType {
   public boolean equals(Object obj) {
     if (obj == this) return true;
     if (obj == null || obj.getClass() != this.getClass()) return false;
-    var that = (TestedType) obj;
+    var that = (TestedT) obj;
     return Objects.equals(this.type, that.type) &&
         Objects.equals(this.literal, that.literal) &&
         Objects.equals(this.value, that.value) &&
@@ -293,31 +285,31 @@ public class TestedType {
     return "TestedType(" + type + ")";
   }
 
-  public static TestedType f(TestedType resultType, TestedType... paramTestedTypes2) {
-    ImmutableList<TestedType> paramTestedTypes3 = list(paramTestedTypes2);
-    var paramSignatures = toSigs(paramTestedTypes3);
+  public static TestedT f(TestedT resT, TestedT... paramTestedTs) {
+    ImmutableList<TestedT> paramTestedTs2 = list(paramTestedTs);
+    var paramSignatures = toSigs(paramTestedTs2);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
     String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
-        resultType.name(),
+        resT.name(),
         name,
         join(",", map(paramSignatures, ItemSigS::toString)));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
-        .addAll(resultType.allDeclarations())
-        .addAll(paramTestedTypes3.stream()
+        .addAll(resT.allDeclarations())
+        .addAll(paramTestedTs2.stream()
             .flatMap(t -> t.allDeclarations().stream())
             .collect(toList()))
         .build();
     Set<String> typeDeclarations = ImmutableSet.<String>builder()
-        .addAll(resultType.typeDeclarations())
-        .addAll(paramTestedTypes3.stream()
+        .addAll(resT.typeDeclarations())
+        .addAll(paramTestedTs2.stream()
             .flatMap(t -> t.typeDeclarations().stream())
             .collect(toList()))
         .build();
-    return new TestedFuncType(
-        resultType,
-        ImmutableList.copyOf(paramTestedTypes2),
-        TestingTypesS.f(resultType.type, map(paramSignatures, ItemSigS::type)),
+    return new TestedFuncT(
+        resT,
+        ImmutableList.copyOf(paramTestedTs),
+        TestingTsS.f(resT.type, map(paramSignatures, ItemSigS::type)),
         name,
         null,
         typeDeclarations,
@@ -325,28 +317,28 @@ public class TestedType {
     );
   }
 
-  private static ImmutableList<ItemSigS> toSigs(List<TestedType> paramTestedTypes) {
+  private static ImmutableList<ItemSigS> toSigs(List<TestedT> paramTestedTs) {
     Builder<ItemSigS> builder = ImmutableList.builder();
-    for (int i = 0; i < paramTestedTypes.size(); i++) {
-      builder.add(new ItemSigS(paramTestedTypes.get(i).type(), "p" + i, Optional.empty()));
+    for (int i = 0; i < paramTestedTs.size(); i++) {
+      builder.add(new ItemSigS(paramTestedTs.get(i).type(), "p" + i, Optional.empty()));
     }
     return builder.build();
   }
 
-  public static class TestedFuncType extends TestedType {
-    public final TestedType resType;
-    public final ImmutableList<TestedType> params;
+  public static class TestedFuncT extends TestedT {
+    public final TestedT resT;
+    public final ImmutableList<TestedT> params;
 
-    public TestedFuncType(TestedType resType, ImmutableList<TestedType> params, FuncTS type,
+    public TestedFuncT(TestedT resT, ImmutableList<TestedT> params, FuncTS type,
         String literal, Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
-      this.resType = resType;
+      this.resT = resT;
       this.params = params;
     }
 
     @Override
-    public boolean isFunc(Predicate<TestedType> result, Predicate<TestedType>... params) {
-      if (result.test(resType) && this.params.size() == params.length) {
+    public boolean isFunc(Predicate<TestedT> result, Predicate<TestedT>... params) {
+      if (result.test(resT) && this.params.size() == params.length) {
         for (int i = 0; i < this.params.size(); i++) {
           if (!params[i].test(this.params.get(i))) {
             return false;
@@ -359,18 +351,18 @@ public class TestedType {
     }
   }
 
-  public static class TestedArrayType extends TestedType {
-    public final TestedType elemType;
+  public static class TestedArrayT extends TestedT {
+    public final TestedT elemT;
 
-    public TestedArrayType(TestedType elemType, TypeS type, String literal,
-        Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
+    public TestedArrayT(TestedT elemT, TypeS type, String literal, Object value,
+        Set<String> typeDeclarations, Set<String> allDeclarations) {
       super(type, literal, value, typeDeclarations, allDeclarations);
-      this.elemType = elemType;
+      this.elemT = elemT;
     }
 
     @Override
-    public boolean isArrayOf(TestedType elemType) {
-      return this.elemType.equals(elemType);
+    public boolean isArrayOf(TestedT elemT) {
+      return this.elemT.equals(elemT);
     }
 
     @Override
@@ -380,7 +372,7 @@ public class TestedType {
 
     @Override
     public boolean isArrayOfArrays() {
-      return elemType.isArray();
+      return elemT.isArray();
     }
   }
 }

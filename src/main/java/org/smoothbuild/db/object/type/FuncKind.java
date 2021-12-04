@@ -21,36 +21,36 @@ public abstract class FuncKind<T extends FuncTH> {
   public static final FuncKind<AbstFuncTH> ABSTRACT_KIND =
       new FuncKind<>(ABST_FUNC) {
         @Override
-        public AbstFuncTH newInstance(Hash hash, TypeH result, TupleTH params) {
-          return new AbstFuncTH(hash, result, params);
+        public AbstFuncTH newInstance(Hash hash, TypeH res, TupleTH params) {
+          return new AbstFuncTH(hash, res, params);
         }
       };
   public static final FuncKind<NatFuncTH> NATIVE_KIND =
       new FuncKind<>(NAT_FUNC) {
         @Override
-        public NatFuncTH newInstance(Hash hash, TypeH result, TupleTH params) {
-          return new NatFuncTH(hash, result, params);
+        public NatFuncTH newInstance(Hash hash, TypeH res, TupleTH params) {
+          return new NatFuncTH(hash, res, params);
         }
       };
   public static final FuncKind<DefFuncTH> DEFINED_KIND =
       new FuncKind<>(DEF_FUNC) {
         @Override
-        public DefFuncTH newInstance(Hash hash, TypeH result, TupleTH params) {
-          return new DefFuncTH(hash, result, params);
+        public DefFuncTH newInstance(Hash hash, TypeH res, TupleTH params) {
+          return new DefFuncTH(hash, res, params);
         }
       };
   public static final FuncKind<IfFuncTH> IF_KIND =
       new FuncKind<>(IF_FUNC) {
         @Override
-        public IfFuncTH newInstance(Hash hash, TypeH result, TupleTH params) {
-          return new IfFuncTH(hash, result, params);
+        public IfFuncTH newInstance(Hash hash, TypeH res, TupleTH params) {
+          return new IfFuncTH(hash, res, params);
         }
       };
   public static final FuncKind<MapFuncTH> MAP_KIND =
       new FuncKind<>(MAP_FUNC) {
         @Override
-        public MapFuncTH newInstance(Hash hash, TypeH result, TupleTH params) {
-          return new MapFuncTH(hash, result, params);
+        public MapFuncTH newInstance(Hash hash, TypeH res, TupleTH params) {
+          return new MapFuncTH(hash, res, params);
         }
       };
 
@@ -75,5 +75,5 @@ public abstract class FuncKind<T extends FuncTH> {
     return kind;
   }
 
-  public abstract T newInstance(Hash hash, TypeH result, TupleTH params);
+  public abstract T newInstance(Hash hash, TypeH res, TupleTH params);
 }

@@ -28,7 +28,7 @@ public final class NatFuncS extends FuncS {
       return true;
     }
     return object instanceof NatFuncS that
-        && this.resType().equals(that.resType())
+        && this.resT().equals(that.resT())
         && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
@@ -38,7 +38,7 @@ public final class NatFuncS extends FuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resType(), modPath(), name(), params(), annS, loc());
+    return Objects.hash(resT(), modPath(), name(), params(), annS, loc());
   }
 
   @Override

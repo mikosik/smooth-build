@@ -56,16 +56,16 @@ import com.google.common.collect.ImmutableList;
 public class ObjFactory {
   private final ObjDb objDb;
   private final CatDb catDb;
-  private final TupleTH messageType;
-  private final TupleTH fileType;
+  private final TupleTH messageT;
+  private final TupleTH fileT;
   private final TypingH typing;
 
   @Inject
   public ObjFactory(ObjDb objDb, CatDb catDb, TypingH typing) {
     this.objDb = objDb;
     this.catDb = catDb;
-    this.messageType = createMessageT(catDb);
-    this.fileType = createFileT(catDb);
+    this.messageT = createMessageT(catDb);
+    this.fileT = createFileT(catDb);
     this.typing = typing;
   }
 
@@ -75,8 +75,8 @@ public class ObjFactory {
 
   // Objects
 
-  public ArrayHBuilder arrayBuilderWithElems(TypeH elemType) {
-    return objDb.arrayBuilder(catDb.array(elemType));
+  public ArrayHBuilder arrayBuilderWithElems(TypeH elemT) {
+    return objDb.arrayBuilder(catDb.array(elemT));
   }
 
   public ArrayHBuilder arrayBuilder(ArrayTH type) {
@@ -132,8 +132,8 @@ public class ObjFactory {
     return objDb.natFunc(type, jarFile, classBinaryName,isPure);
   }
 
-  public ParamRefH paramRef(BigInteger value, TypeH evalType) {
-    return objDb.newParamRef(value, evalType);
+  public ParamRefH paramRef(BigInteger value, TypeH evalT) {
+    return objDb.newParamRef(value, evalT);
   }
 
   public SelectH select(ObjH tuple, IntH index) {
@@ -154,8 +154,8 @@ public class ObjFactory {
 
   // Types
 
-  public ArrayTH arrayT(TypeH elemType) {
-    return catDb.array(elemType);
+  public ArrayTH arrayT(TypeH elemT) {
+    return catDb.array(elemT);
   }
 
   public BlobTH blobT() {
@@ -166,8 +166,8 @@ public class ObjFactory {
     return catDb.bool();
   }
 
-  public DefFuncTH defFuncT(TypeH result, ImmutableList<TypeH> params) {
-    return catDb.defFunc(result, params);
+  public DefFuncTH defFuncT(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb.defFunc(resT, paramTs);
   }
 
   public FuncTH ifFuncT() {
@@ -183,11 +183,11 @@ public class ObjFactory {
   }
 
   public TupleTH messageT() {
-    return messageType;
+    return messageT;
   }
 
-  public NatFuncTH natFuncT(TypeH result, ImmutableList<TypeH> params) {
-    return catDb.natFunc(result, params);
+  public NatFuncTH natFuncT(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb.natFunc(resT, paramTs);
   }
 
   public NothingTH nothingT() {
@@ -198,8 +198,8 @@ public class ObjFactory {
     return catDb.string();
   }
 
-  public TupleTH tupleT(ImmutableList<TypeH> itemTypes) {
-    return catDb.tuple(itemTypes);
+  public TupleTH tupleT(ImmutableList<TypeH> itemTs) {
+    return catDb.tuple(itemTs);
   }
 
   public VarH var(String name) {
@@ -209,7 +209,7 @@ public class ObjFactory {
   // other values and its types
 
   public TupleTH fileT() {
-    return fileType;
+    return fileT;
   }
 
   public TupleH errorMessage(String text) {
@@ -231,8 +231,8 @@ public class ObjFactory {
   }
 
   private static TupleTH createMessageT(CatDb catDb) {
-    StringTH stringType = catDb.string();
-    return catDb.tuple(list(stringType, stringType));
+    var stringT = catDb.string();
+    return catDb.tuple(list(stringT, stringT));
   }
 
   private static TupleTH createFileT(CatDb catDb) {

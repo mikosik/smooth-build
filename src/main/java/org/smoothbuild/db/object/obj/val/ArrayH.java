@@ -22,8 +22,8 @@ public final class ArrayH extends ValH {
     return (ArrayTH) super.cat();
   }
 
-  public <T extends ValH> ImmutableList<T> elems(Class<T> elemJType) {
-    assertIsIterableAs(elemJType);
+  public <T extends ValH> ImmutableList<T> elems(Class<T> elemTJ) {
+    assertIsIterableAs(elemTJ);
     var elems = elemObjs();
     return checkTypeOfSeqObjs(elems, this.cat().elem());
   }
@@ -40,13 +40,11 @@ public final class ArrayH extends ValH {
     }
   }
 
-  protected <T> ImmutableList<T> checkTypeOfSeqObjs(
-      ImmutableList<ValH> elems, TypeH expectedElementType) {
+  protected <T> ImmutableList<T> checkTypeOfSeqObjs(ImmutableList<ValH> elems, TypeH expectedElemT) {
     for (int i = 0; i < elems.size(); i++) {
-      var elemType = elems.get(i).cat();
-      if (!(objDb().typing().isAssignable(expectedElementType, elemType))) {
-        throw new UnexpectedObjNodeExc(hash(), this.cat(), DATA_PATH, i,
-            expectedElementType, elemType);
+      var elemT = elems.get(i).cat();
+      if (!(objDb().typing().isAssignable(expectedElemT, elemT))) {
+        throw new UnexpectedObjNodeExc(hash(), this.cat(), DATA_PATH, i, expectedElemT, elemT);
       }
     }
     @SuppressWarnings("unchecked")

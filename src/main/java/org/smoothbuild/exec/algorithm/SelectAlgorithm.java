@@ -14,8 +14,8 @@ import org.smoothbuild.plugin.NativeApi;
 public class SelectAlgorithm extends Algorithm {
   private final IntH index;
 
-  public SelectAlgorithm(IntH index, TypeH outputType) {
-    super(outputType);
+  public SelectAlgorithm(IntH index, TypeH outputT) {
+    super(outputT);
     this.index = index;
   }
 

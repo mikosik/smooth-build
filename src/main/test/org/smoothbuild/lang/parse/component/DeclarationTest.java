@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.parse.component;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
-import static org.smoothbuild.lang.base.type.TestedType.TESTED_SINGLE_VARIABLE_POLYTYPES;
-import static org.smoothbuild.lang.base.type.TestedType.TESTED_VALID_POLYTYPES;
-import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
-import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
-import static org.smoothbuild.lang.base.type.TestingTypesS.a;
-import static org.smoothbuild.lang.base.type.TestingTypesS.f;
+import static org.smoothbuild.lang.base.type.TestedT.TESTED_MONOTYPES;
+import static org.smoothbuild.lang.base.type.TestedT.TESTED_SINGLE_VARIABLE_POLYTYPES;
+import static org.smoothbuild.lang.base.type.TestedT.TESTED_VALID_POLYTYPES;
+import static org.smoothbuild.lang.base.type.TestingTsS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTsS.a;
+import static org.smoothbuild.lang.base.type.TestingTsS.f;
 import static org.smoothbuild.testing.TestingModLoader.err;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -22,7 +22,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.lang.base.type.TestedType;
+import org.smoothbuild.lang.base.type.TestedT;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModLoader;
 
@@ -96,33 +96,33 @@ public class DeclarationTest extends TestingContext {
         class _type {
           @ParameterizedTest
           @ArgumentsSource(TestedMonotypes.class)
-          public void can_be_monotype(TestedType testedType) {
+          public void can_be_monotype(TestedT testedT) {
             mod(unlines(
-                testedType.typeDeclarationsAsString(),
+                testedT.typeDeclarationsAsString(),
                 "MyStruct {",
-                "  " + testedType.name() + " field,",
+                "  " + testedT.name() + " field,",
                 "}"))
                 .loadsSuccessfully();
           }
 
           @ParameterizedTest
           @ArgumentsSource(TestedValidPolytypes.class)
-          public void can_be_valid_polytype(TestedType testedType) {
+          public void can_be_valid_polytype(TestedT testedT) {
             mod(unlines(
-                testedType.typeDeclarationsAsString(),
+                testedT.typeDeclarationsAsString(),
                 "MyStruct {",
-                "  " + testedType.name() + " field,",
+                "  " + testedT.name() + " field,",
                 "}"))
                 .loadsSuccessfully();
           }
 
           @ParameterizedTest
           @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void cannot_be_single_var_polytype(TestedType testedType) {
+          public void cannot_be_single_var_polytype(TestedT testedT) {
             TestingModLoader module = mod(unlines(
-                testedType.typeDeclarationsAsString(),
+                testedT.typeDeclarationsAsString(),
                 "MyStruct {",
-                "  " + testedType.name() + " field,",
+                "  " + testedT.name() + " field,",
                 "}"));
             module.loadsWithError(3, "Type var(s) `A` are used once in declaration of `field`. " +
                 "This means each one can be replaced with `Any`.");
@@ -280,7 +280,7 @@ public class DeclarationTest extends TestingContext {
 
         @ParameterizedTest
         @ArgumentsSource(TestedMonotypes.class)
-        public void can_be_monotype(TestedType type) {
+        public void can_be_monotype(TestedT type) {
           mod(unlines(
               "@Native(\"Impl.met\")",
               type.name() + " myFunc();",
@@ -291,7 +291,7 @@ public class DeclarationTest extends TestingContext {
 
         @ParameterizedTest
         @ArgumentsSource(TestedValidPolytypes.class)
-        public void can_be_valid_polytype(TestedType type) {
+        public void can_be_valid_polytype(TestedT type) {
           mod(unlines(
               "@Native(\"Impl.met\")",
               type.name() + " myFunc();",
@@ -302,7 +302,7 @@ public class DeclarationTest extends TestingContext {
 
         @ParameterizedTest
         @ArgumentsSource(TestedSingleVarPolytypes.class)
-        public void cannot_be_single_var_polytype(TestedType type) {
+        public void cannot_be_single_var_polytype(TestedT type) {
           mod(unlines(
               "@Native(\"Impl.met\")",
               type.name() + " myFunc(" + type.name() + " param);",
@@ -450,7 +450,7 @@ public class DeclarationTest extends TestingContext {
 
           @ParameterizedTest
           @ArgumentsSource(TestedMonotypes.class)
-          public void can_be_monotype(TestedType type) {
+          public void can_be_monotype(TestedT type) {
             mod(unlines(
                 "@Native(\"impl\")",
                 type.name() + " myFunc();",
@@ -460,7 +460,7 @@ public class DeclarationTest extends TestingContext {
 
           @ParameterizedTest
           @ArgumentsSource(TestedValidPolytypes.class)
-          public void can_be_valid_polytype(TestedType type) {
+          public void can_be_valid_polytype(TestedT type) {
             mod(unlines(
                 "@Native(\"impl\")",
                 type.name() + " myFunc();",
@@ -470,7 +470,7 @@ public class DeclarationTest extends TestingContext {
 
           @ParameterizedTest
           @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void cannot_be_single_var_polytype(TestedType type) {
+          public void cannot_be_single_var_polytype(TestedT type) {
             mod(unlines(
                 "@Native(\"impl\")",
                 type.name() + " myFunc();",
@@ -503,7 +503,7 @@ public class DeclarationTest extends TestingContext {
 
           @ParameterizedTest
           @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void can_be_single_var_polytype_when_param_type_has_such_var(TestedType type) {
+          public void can_be_single_var_polytype_when_param_type_has_such_var(TestedT type) {
             mod(unlines(
                 "@Native(\"Impl.met\")",
                 type.name() + " myFunc(" + type.name() + " param);",
@@ -563,7 +563,7 @@ public class DeclarationTest extends TestingContext {
         class _type {
           @ParameterizedTest
           @ArgumentsSource(TestedMonotypes.class)
-          public void can_be_monotype(TestedType type) {
+          public void can_be_monotype(TestedT type) {
             mod(unlines(
                 "@Native(\"Impl.met\")",
                 "String myFunc(" + type.name() + " param);",
@@ -573,7 +573,7 @@ public class DeclarationTest extends TestingContext {
 
           @ParameterizedTest
           @ArgumentsSource(TestedValidPolytypes.class)
-          public void can_be_valid_polytype(TestedType type) {
+          public void can_be_valid_polytype(TestedT type) {
             mod(unlines(
                 "@Native(\"Impl.met\")",
                 "String myFunc(" + type.name() + " param);",
@@ -583,7 +583,7 @@ public class DeclarationTest extends TestingContext {
 
           @ParameterizedTest
           @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void cannot_be_single_var_polytype(TestedType type) {
+          public void cannot_be_single_var_polytype(TestedT type) {
             mod(unlines(
                 "@Native(\"Impl.met\")",
                 "String myFunc(" + type.name() + " param);",
@@ -595,7 +595,7 @@ public class DeclarationTest extends TestingContext {
           @ParameterizedTest
           @ArgumentsSource(TestedSingleVarPolytypes.class)
           public void can_be_single_var_polytype_param_when_some_other_param_has_such_type(
-              TestedType type) {
+              TestedT type) {
             mod(unlines(
                 "@Native(\"Impl.met\")",
                 "Blob myFunc(" + type.name() + " param, " + type.name() + " param2);",
@@ -720,7 +720,7 @@ public class DeclarationTest extends TestingContext {
       class _type_param_list {
         @Test
         public void can_have_trailing_comma() {
-          mod(funcTypeDeclaration("String,"))
+          mod(funcTDeclaration("String,"))
               .loadsSuccessfully()
               .containsEval(natFuncS(2, f(f(BLOB, STRING)), "myFunc", nList(),
                   annS(1, stringS(1, "Impl.met"))));
@@ -728,23 +728,23 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void cannot_have_only_comma() {
-          mod(funcTypeDeclaration(","))
+          mod(funcTDeclaration(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          mod(funcTypeDeclaration(",String"))
+          mod(funcTDeclaration(",String"))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          mod(funcTypeDeclaration("String,,"))
+          mod(funcTDeclaration("String,,"))
               .loadsWithProblems();
         }
 
-        private String funcTypeDeclaration(String string) {
+        private String funcTDeclaration(String string) {
           return """
               @Native("Impl.met")
               Blob(PLACEHOLDER) myFunc();

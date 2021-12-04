@@ -26,9 +26,4 @@ public non-sealed abstract class AbstractT implements Type {
   public ImmutableSet<? extends Var> vars() {
     return vars;
   }
-
-  @Override
-  public String toString() {
-    return "Type(`" + name() + "`)";
-  }
 }

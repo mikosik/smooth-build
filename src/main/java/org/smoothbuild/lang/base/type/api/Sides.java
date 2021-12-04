@@ -12,9 +12,9 @@ public class Sides<T extends Type> {
     return lower;
   }
 
-  public Sides(T anyType, T nothingType) {
-    this.upper = new Upper(anyType);
-    this.lower = new Lower(nothingType);
+  public Sides(T anyT, T nothingT) {
+    this.upper = new Upper(anyT);
+    this.lower = new Lower(nothingT);
   }
 
   public sealed abstract static class Side<T> permits Sides.Upper, Sides.Lower {

@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.type.val.TupleTH;
  * This class is immutable.
  */
 public class CombineCH extends ExprCatH {
-  public CombineCH(Hash hash, TupleTH evalType) {
-    super("Combine", hash, COMBINE, evalType);
+  public CombineCH(Hash hash, TupleTH evalT) {
+    super("Combine", hash, COMBINE, evalT);
   }
 
   @Override
-  public TupleTH evalType() {
-    return (TupleTH) super.evalType();
+  public TupleTH evalT() {
+    return (TupleTH) super.evalT();
   }
 
   @Override

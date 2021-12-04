@@ -18,7 +18,7 @@ import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.db.ObjDbExc;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.exc.DecodeObjTypeExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
@@ -95,7 +95,7 @@ public class ObjDb {
   public DefFuncH defFunc(DefFuncTH type, ObjH body) {
     if (!typing.isAssignable(type.res(), body.type())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.res().name()
-          + " but body.evalType() is " + body.type().name() + ".");
+          + " but body.type() is " + body.type().name() + ".");
     }
     return wrapHashedDbExceptionAsObjectDbException(() -> newFunc(type, body));
   }
@@ -153,8 +153,8 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elems));
   }
 
-  public ParamRefH newParamRef(BigInteger value, TypeH evalType) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalType, value));
+  public ParamRefH newParamRef(BigInteger value, TypeH evalT) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT, value));
   }
 
   public SelectH select(ObjH selectable, IntH index) {
@@ -177,7 +177,7 @@ public class ObjDb {
     try {
       return catDb.get(typeHash);
     } catch (ObjDbExc e) {
-      throw new DecodeObjTypeExc(rootHash, e);
+      throw new DecodeObjCatExc(rootHash, e);
     }
   }
 
@@ -245,26 +245,26 @@ public class ObjDb {
   // methods for creating Expr-s
 
   private CallH newCall(ObjH callable, CombineH args) throws HashedDbExc {
-    var resultType = inferCallResType(callable, args);
-    var type = catDb.call(resultType);
+    var resT = inferCallResType(callable, args);
+    var type = catDb.call(resT);
     var data = writeCallData(callable, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
   private TypeH inferCallResType(ObjH callable, CombineH args) {
-    var funcType = callableEvalType(callable);
-    var argTypes = args.type().items();
-    var paramTypes = funcType.params();
+    var funcT = callableEvalT(callable);
+    var argTs = args.type().items();
+    var paramTs = funcT.params();
     allMatchOtherwise(
-        paramTypes,
-        argTypes,
+        paramTs,
+        argTs,
         typing::isParamAssignable,
-        (expectedSize, actualSize) -> illegalArgs(funcType, args),
-        i -> illegalArgs(funcType, args)
+        (expectedSize, actualSize) -> illegalArgs(funcT, args),
+        i -> illegalArgs(funcT, args)
     );
-    var varBounds = typing.inferVarBoundsInCall(paramTypes, argTypes);
-    return typing.mapVars(funcType.res(), varBounds, catDb.lower());
+    var varBounds = typing.inferVarBoundsInCall(paramTs, argTs);
+    return typing.mapVars(funcT.res(), varBounds, catDb.lower());
   }
 
   private void illegalArgs(FuncTH funcT, CombineH args) {
@@ -273,9 +273,9 @@ public class ObjDb {
             .formatted(args.type().name(), funcT.paramsTuple().name()));
   }
 
-  private FuncTH callableEvalType(ObjH callable) {
-    if (callable.type() instanceof FuncTH funcType) {
-      return funcType;
+  private FuncTH callableEvalT(ObjH callable) {
+    if (callable.type() instanceof FuncTH funcT) {
+      return funcT;
     } else {
       throw new IllegalArgumentException("`func` component doesn't evaluate to function.");
     }
@@ -296,15 +296,15 @@ public class ObjDb {
   }
 
   private OrderH newOrder(ImmutableList<ObjH> elems) throws HashedDbExc {
-    TypeH elemType = elemType(elems);
-    var type = catDb.order(elemType);
+    var elemT = elemType(elems);
+    var type = catDb.order(elemT);
     var data = writeOrderData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
   private TypeH elemType(ImmutableList<ObjH> elems) {
-    Optional<TypeH> elemType = elems.stream()
+    Optional<TypeH> elemT = elems.stream()
         .map(ObjH::type)
         .reduce((type1, type2) -> {
           if (type1.equals(type2)) {
@@ -314,7 +314,7 @@ public class ObjDb {
                 + type1.name() + " != " + type2.name() + ".");
           }
         });
-    CatH type = elemType.orElse(catDb.nothing());
+    CatH type = elemT.orElse(catDb.nothing());
     if (type instanceof TypeH typeH) {
       return typeH;
     } else {
@@ -324,9 +324,9 @@ public class ObjDb {
   }
 
   private CombineH newCombine(ImmutableList<ObjH> items) throws HashedDbExc {
-    var itemTypes = Lists.map(items, ObjH::type);
-    var evalType = catDb.tuple(itemTypes);
-    var type = catDb.combine(evalType);
+    var itemTs = Lists.map(items, ObjH::type);
+    var evalT = catDb.tuple(itemTs);
+    var type = catDb.combine(evalT);
     var data = writeCombineData(items);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -347,18 +347,18 @@ public class ObjDb {
   private SelectCH selectCat(ObjH selectable, IntH index) {
     if (selectable.type() instanceof TupleTH tuple) {
       int intIndex = index.toJ().intValue();
-      ImmutableList<TypeH> items = tuple.items();
+      var items = tuple.items();
       checkElementIndex(intIndex, items.size());
-      var itemType = items.get(intIndex);
-      return catDb.select(itemType);
+      var itemT = items.get(intIndex);
+      return catDb.select(itemT);
     } else {
       throw new IllegalArgumentException();
     }
   }
 
-  private ParamRefH newParamRef(TypeH evalType, BigInteger index) throws HashedDbExc {
+  private ParamRefH newParamRef(TypeH evalT, BigInteger index) throws HashedDbExc {
     var data = writeParamRefData(index);
-    var type = catDb.ref(evalType);
+    var type = catDb.ref(evalT);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }

@@ -31,12 +31,12 @@ public class ReflectionUtil {
   public static Object runReflexively(Object object, String method,
       Object... args) throws JunitExc {
     try {
-      Class<?>[] paramTypes = Arrays.stream(args)
+      Class<?>[] paramTs = Arrays.stream(args)
           .map(Object::getClass)
           .toArray(Class<?>[]::new);
       return object
           .getClass()
-          .getMethod(method, paramTypes)
+          .getMethod(method, paramTs)
           .invoke(object, args);
     } catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
       throw brokenJunitImplementation(

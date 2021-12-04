@@ -64,4 +64,9 @@ public abstract class CatH extends AbstractT {
   public boolean isNothing() {
     return false;
   }
+
+  @Override
+  public String toString() {
+    return "Category(`" + name() + "`)";
+  }
 }

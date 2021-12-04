@@ -37,11 +37,7 @@ public class ArrayTNTest {
 
     @Test
     public void non_polytype_array_node_with_depth_2() {
-      TypeN typeN = new ArrayTN(
-          new ArrayTN(
-              new TypeN("MyType", internal()),
-              internal()),
-          internal());
+      var typeN = new ArrayTN(new ArrayTN(new TypeN("MyType", internal()), internal()), internal());
       assertThat(typeN.isPolytype())
           .isFalse();
     }
@@ -51,34 +47,32 @@ public class ArrayTNTest {
   class _vars_used_once {
     @Test
     public void array_node_which_elem_is_a_var() {
-      TypeN elemTypeN = new TypeN("A", internal());
-      TypeN typeN = new ArrayTN(elemTypeN, internal());
+      TypeN elemTN = new TypeN("A", internal());
+      TypeN typeN = new ArrayTN(elemTN, internal());
       assertThat(typeN.varsUsedOnce())
           .containsExactly("A");
     }
 
     @Test
     public void array_node_which_elem_is_not_a_var() {
-      TypeN elemTypeN = new TypeN("MyType", internal());
-      TypeN typeN = new ArrayTN(elemTypeN, internal());
+      TypeN elemTN = new TypeN("MyType", internal());
+      TypeN typeN = new ArrayTN(elemTN, internal());
       assertThat(typeN.varsUsedOnce())
           .isEmpty();
     }
 
     @Test
     public void array_of_array_which_elem_is_a_var() {
-      TypeN elemTypeN = new TypeN("A", internal());
-      TypeN typeN =
-          new ArrayTN(new ArrayTN(elemTypeN, internal()), internal());
+      TypeN elemTN = new TypeN("A", internal());
+      TypeN typeN = new ArrayTN(new ArrayTN(elemTN, internal()), internal());
       assertThat(typeN.varsUsedOnce())
           .containsExactly("A");
     }
 
     @Test
     public void array_of_array_which_elem_is_not_a_var() {
-      TypeN elemTypeN = new TypeN("MyType", internal());
-      TypeN typeN =
-          new ArrayTN(new ArrayTN(elemTypeN, internal()), internal());
+      TypeN elemTN = new TypeN("MyType", internal());
+      TypeN typeN = new ArrayTN(new ArrayTN(elemTN, internal()), internal());
       assertThat(typeN.varsUsedOnce())
           .isEmpty();
     }

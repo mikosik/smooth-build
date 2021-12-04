@@ -13,8 +13,8 @@ import org.smoothbuild.db.object.type.base.TypeH;
  * This class is immutable.
  */
 public class SelectCH extends ExprCatH {
-  public SelectCH(Hash hash, TypeH evalType) {
-    super("Select", hash, SELECT, evalType);
+  public SelectCH(Hash hash, TypeH evalT) {
+    super("Select", hash, SELECT, evalT);
   }
 
   @Override

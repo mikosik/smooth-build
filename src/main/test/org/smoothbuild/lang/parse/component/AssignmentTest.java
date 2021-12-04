@@ -15,12 +15,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
-import org.smoothbuild.lang.base.type.TestedType;
+import org.smoothbuild.lang.base.type.TestedT;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
-import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModLoader;
@@ -29,8 +28,8 @@ public class AssignmentTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
   public void value_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target();
-    TestedType source = testSpec.source();
+    TestedT target = testSpec.target();
+    TestedT source = testSpec.source();
     String sourceCode = unlines(
         target.name() + " result = " + source.literal() + ";",
         testSpec.declarations());
@@ -47,8 +46,8 @@ public class AssignmentTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("test_specs")
   public void func_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target();
-    TestedType source = testSpec.source();
+    TestedT target = testSpec.target();
+    TestedT source = testSpec.source();
     String sourceCode = unlines(
         "%s myFunc(%s param, %s probablyPolytype) = param;"
             .formatted(target.name(), source.name(), target.name()),
@@ -66,43 +65,43 @@ public class AssignmentTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("param_assignment_test_data")
   public void arg_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
-    TestedType targetType = testSpec.target();
-    TestedType sourceType = testSpec.source();
+    TestedT targetT = testSpec.target();
+    TestedT sourceT = testSpec.source();
     TestingModLoader module = mod(unlines(
         "@Native(\"impl\")",
-        targetType.name() + " innerFunc(" + targetType.name() + " target);     ",
-        "outerFunc(" + sourceType.name() + " source) = innerFunc(source);  ",
+        targetT.name() + " innerFunc(" + targetT.name() + " target);     ",
+        "outerFunc(" + sourceT.name() + " source) = innerFunc(source);  ",
         testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      var type = targetType.type();
+      var type = targetT.type();
       FuncT funcT = new FuncTS(type, list(type));
       module.loadsWithError(3, "In call to function with type " + funcT.q()
-          + ": Cannot assign argument of type " + sourceType.q()
-          + " to parameter `target` of type " + targetType.q() + ".");
+          + ": Cannot assign argument of type " + sourceT.q()
+          + " to parameter `target` of type " + targetT.q() + ".");
     }
   }
 
   @ParameterizedTest
   @MethodSource("param_assignment_test_data")
   public void arg_type_is_assignable_to_named_param_type(TestedAssignmentSpec testSpec) {
-    TestedType targetType = testSpec.target();
-    TestedType sourceType = testSpec.source();
+    TestedT targetT = testSpec.target();
+    TestedT sourceT = testSpec.source();
     TestingModLoader module = mod(unlines(
         "@Native(\"impl\")",
-        targetType.name() + " innerFunc(" + targetType.name() + " target);            ",
-        "outerFunc(" + sourceType.name() + " source) = innerFunc(target=source);  ",
+        targetT.name() + " innerFunc(" + targetT.name() + " target);            ",
+        "outerFunc(" + sourceT.name() + " source) = innerFunc(target=source);  ",
         testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      var type = targetType.type();
+      var type = targetT.type();
       FuncT funcT = new FuncTS(type, list(type));
       module.loadsWithError(3,
           "In call to function with type " + funcT.q() +
-              ": Cannot assign argument of type " + sourceType.q()
-              + " to parameter `target` of type " + targetType.q() + ".");
+              ": Cannot assign argument of type " + sourceT.q()
+              + " to parameter `target` of type " + targetT.q() + ".");
     }
   }
 
@@ -113,8 +112,8 @@ public class AssignmentTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
   public void default_arg_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target();
-    TestedType source = testSpec.source();
+    TestedT target = testSpec.target();
+    TestedT source = testSpec.source();
     String sourceCode = unlines(
         "myFunc(" + target.name() + " param = " + source.literal() + ") = param; ",
         testSpec.declarations());
@@ -131,9 +130,9 @@ public class AssignmentTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("array_elem_assignment_test_specs")
   public void array_literal_elem_types_is_assignable_to_common_super_type(
-      TestedType type1, TestedType type2, Type joinType) {
+      TestedT type1, TestedT type2, Type joinT) {
     String sourceCode = unlines(
-        "[" + joinType.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
+        "[" + joinT.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
         join("\n", union(type1.allDeclarations(), type2.allDeclarations())));
     mod(sourceCode)
         .loadsSuccessfully();
@@ -144,11 +143,11 @@ public class AssignmentTest extends TestingContext {
     TypingS typing = context.typingS();
     TypeFactoryS factory = context.typeFactoryS();
     ArrayList<Arguments> result = new ArrayList<>();
-    for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
-      for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        TypeS commonSuperType = typing.mergeUp(type1.type(), type2.type());
-        if (!typing.contains(commonSuperType, factory.any())) {
-          result.add(Arguments.of(type1, type2, commonSuperType));
+    for (TestedT type1 : TestedT.TESTED_MONOTYPES) {
+      for (TestedT type2 : TestedT.TESTED_MONOTYPES) {
+        var commonSuperT = typing.mergeUp(type1.type(), type2.type());
+        if (!typing.contains(commonSuperT, factory.any())) {
+          result.add(Arguments.of(type1, type2, commonSuperT));
         }
       }
     }

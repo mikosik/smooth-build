@@ -35,24 +35,24 @@ public class CallTypeInferrer {
     this.typing = typing;
   }
 
-  public Maybe<TypeS> inferCallType(CallN call, TypeS resultType, NList<ItemSigS> params) {
+  public Maybe<TypeS> inferCallT(CallN call, TypeS resT, NList<ItemSigS> params) {
     var logBuffer = new LogBuffer();
     List<Optional<ArgNode>> assignedArgs = call.assignedArgs();
     findIllegalTypeAssignmentErrors(call, assignedArgs, params, logBuffer);
     if (logBuffer.containsProblem()) {
       return maybeLogs(logBuffer);
     }
-    List<Optional<TypeS>> assignedTypes = assignedTypes(params, assignedArgs);
-    if (allAssignedTypesAreInferred(assignedTypes)) {
+    List<Optional<TypeS>> assignedTs = assignedTs(params, assignedArgs);
+    if (allAssignedTypesAreInferred(assignedTs)) {
       var boundedVars = typing.inferVarBoundsInCall(
           map(params, ItemSigS::type),
-          map(assignedTypes, Optional::get));
+          map(assignedTs, Optional::get));
       var varProblems = findVarProblems(call, boundedVars);
       if (!varProblems.isEmpty()) {
         logBuffer.logAll(varProblems);
         return maybeLogs(logBuffer);
       }
-      TypeS mapped = typing.mapVars(resultType, boundedVars, factory.lower());
+      TypeS mapped = typing.mapVars(resT, boundedVars, factory.lower());
       return maybeValueAndLogs(mapped, logBuffer);
     }
     return maybeLogs(logBuffer);
@@ -81,14 +81,14 @@ public class CallTypeInferrer {
     return "In call to function with type " + call.callable().type().get().q() + ": ";
   }
 
-  private List<Optional<TypeS>> assignedTypes(List<ItemSigS> params, List<Optional<ArgNode>> args) {
+  private List<Optional<TypeS>> assignedTs(List<ItemSigS> params, List<Optional<ArgNode>> args) {
     List<Optional<TypeS>> assigned = new ArrayList<>();
     for (int i = 0; i < params.size(); i++) {
       Optional<ArgNode> arg = args.get(i);
       if (arg.isPresent()) {
         assigned.add(arg.get().type());
       } else {
-        assigned.add(params.get(i).defaultValType());
+        assigned.add(params.get(i).defaultValT());
       }
     }
     return assigned;
@@ -98,8 +98,7 @@ public class CallTypeInferrer {
     return assigned.stream().allMatch(Optional::isPresent);
   }
 
-  private ImmutableList<Log> findVarProblems(
-      CallN call, BoundsMap<TypeS> boundedVars) {
+  private ImmutableList<Log> findVarProblems(CallN call, BoundsMap<TypeS> boundedVars) {
     return boundedVars.map().values().stream()
         .filter(b -> typing.contains(b.bounds().lower(), factory.any()))
         .map(b -> parseError(call, "Cannot infer actual type for type var "

@@ -58,10 +58,10 @@ public class TestingModLoader {
         .isEqualTo(expected);
   }
 
-  public void containsEvalWithType(String name, Type expectedType) {
+  public void containsEvalWithType(String name, Type expectedT) {
     var topEval = assertContainsEval(name);
     assertThat(topEval.type())
-        .isEqualTo(expectedType);
+        .isEqualTo(expectedT);
   }
 
   private TopEvalS assertContainsEval(String name) {

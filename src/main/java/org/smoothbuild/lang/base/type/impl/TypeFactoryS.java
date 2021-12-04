@@ -35,9 +35,9 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
    */
-  public ImmutableList<BaseTS> inferableBaseTypes() {
+  public ImmutableList<BaseTS> inferableBaseTs() {
     return ImmutableList.<BaseTS>builder()
-        .addAll(baseTypes())
+        .addAll(baseTs())
         .add(any())
         .build();
   }
@@ -45,7 +45,7 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
   /**
    * Base types that are legal in smooth language.
    */
-  public ImmutableList<BaseTS> baseTypes() {
+  public ImmutableList<BaseTS> baseTs() {
     return ImmutableList.of(
         blob(),
         bool(),
@@ -83,8 +83,8 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
   }
 
   @Override
-  public ArrayTS array(TypeS elemType) {
-    return new ArrayTS(elemType);
+  public ArrayTS array(TypeS elemT) {
+    return new ArrayTS(elemT);
   }
 
   public BlobTS blob() {
@@ -96,8 +96,8 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
   }
 
   @Override
-  public FuncTS func(TypeS result, ImmutableList<TypeS> params) {
-    return new FuncTS(result, ImmutableList.copyOf(params));
+  public FuncTS func(TypeS resT, ImmutableList<TypeS> paramTs) {
+    return new FuncTS(resT, ImmutableList.copyOf(paramTs));
   }
 
   public IntTS int_() {

@@ -44,9 +44,9 @@ public class Ast {
   }
 
   public Maybe<Ast> sortedByDeps() {
-    var sortedTypes = sortStructsByDeps();
-    if (sortedTypes.sorted() == null) {
-      Log error = createCycleError("Type hierarchy", sortedTypes.cycle());
+    var sortedTs = sortStructsByDeps();
+    if (sortedTs.sorted() == null) {
+      Log error = createCycleError("Type hierarchy", sortedTs.cycle());
       return maybeLogs(logs(error));
     }
     var sortedEvals = sortEvalsByDeps();
@@ -54,7 +54,7 @@ public class Ast {
       Log error = createCycleError("Dependency graph", sortedEvals.cycle());
       return maybeLogs(logs(error));
     }
-    Ast ast = new Ast(sortedTypes.valuesReversed(), sortedEvals.valuesReversed());
+    Ast ast = new Ast(sortedTs.valuesReversed(), sortedEvals.valuesReversed());
     return maybeValue(ast);
   }
 
@@ -101,10 +101,10 @@ public class Ast {
 
       private void addToDeps(TypeN type) {
         switch (type) {
-          case ArrayTN arrayType -> addToDeps(arrayType.elemType());
-          case FuncTN funcType -> {
-            addToDeps(funcType.resType());
-            funcType.paramTypes().forEach(this::addToDeps);
+          case ArrayTN arrayT -> addToDeps(arrayT.elemT());
+          case FuncTN funcT -> {
+            addToDeps(funcT.resT());
+            funcT.paramTs().forEach(this::addToDeps);
           }
           default -> {
             if (funcNames.contains(type.name())) {

@@ -32,14 +32,14 @@ public class CombineH extends ExprH {
 
   @Override
   public TupleTH type() {
-    return this.cat().evalType();
+    return this.cat().evalT();
   }
 
   public ImmutableList<ObjH> items() {
-    var expectedItemTypes = this.cat().evalType().items();
+    var expectedItemTs = this.cat().evalT().items();
     var items = readSeqObjs(DATA_PATH, dataHash(), ObjH.class);
     allMatchOtherwise(
-        expectedItemTypes,
+        expectedItemTs,
         items,
         (s, i) -> Objects.equals(s, i.type()),
         (i, j) -> {
@@ -47,7 +47,7 @@ public class CombineH extends ExprH {
         },
         (i) -> {
           throw new DecodeExprWrongEvalTypeOfCompExc(hash(), this.cat(),
-              "items[" + i + "]", expectedItemTypes.get(i), items.get(i).type());
+              "items[" + i + "]", expectedItemTs.get(i), items.get(i).type());
         }
     );
     return items;

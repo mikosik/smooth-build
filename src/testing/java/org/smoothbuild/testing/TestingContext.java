@@ -282,8 +282,8 @@ public class TestingContext {
     return arrayTH(stringTH());
   }
 
-  public ArrayTH arrayTH(TypeH elemType) {
-    return catDb().array(elemType);
+  public ArrayTH arrayTH(TypeH elemT) {
+    return catDb().array(elemT);
   }
 
   public BlobTH blobTH() {
@@ -298,8 +298,8 @@ public class TestingContext {
     return defFuncTH(intTH(), list(blobTH(), stringTH()));
   }
 
-  public DefFuncTH defFuncTH(TypeH result, ImmutableList<TypeH> params) {
-    return catDb().defFunc(result, params);
+  public DefFuncTH defFuncTH(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb().defFunc(resT, paramTs);
   }
 
   public TupleTH fileTH() {
@@ -310,8 +310,8 @@ public class TestingContext {
     return abstFuncTH(intTH(), list(blobTH(), stringTH()));
   }
 
-  public FuncTH abstFuncTH(TypeH result, ImmutableList<TypeH> params) {
-    return catDb().func(result, params);
+  public FuncTH abstFuncTH(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb().func(resT, paramTs);
   }
 
   public IfFuncTH ifFuncTH() {
@@ -330,8 +330,8 @@ public class TestingContext {
     return catDb().natFunc(blobTH(), list(boolTH()));
   }
 
-  public NatFuncTH natFuncTH(TypeH result, ImmutableList<TypeH> params) {
-    return catDb().natFunc(result, params);
+  public NatFuncTH natFuncTH(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb().natFunc(resT, paramTs);
   }
 
   public NothingTH nothingTH() {
@@ -350,8 +350,8 @@ public class TestingContext {
     return catDb().tuple(list(intTH()));
   }
 
-  public TupleTH tupleTH(ImmutableList<TypeH> itemTypes) {
-    return catDb().tuple(itemTypes);
+  public TupleTH tupleTH(ImmutableList<TypeH> itemTs) {
+    return catDb().tuple(itemTs);
   }
 
   public TupleTH tupleEmptyTH() {
@@ -380,40 +380,40 @@ public class TestingContext {
     return callCH(intTH());
   }
 
-  public CallCH callCH(TypeH evalType) {
-    return catDb().call(evalType);
+  public CallCH callCH(TypeH evalT) {
+    return catDb().call(evalT);
   }
 
   public CombineCH combineCH() {
     return combineCH(list(intTH(), stringTH()));
   }
 
-  public CombineCH combineCH(ImmutableList<TypeH> itemTypes) {
-    return catDb().combine(tupleTH(itemTypes));
+  public CombineCH combineCH(ImmutableList<TypeH> itemTs) {
+    return catDb().combine(tupleTH(itemTs));
   }
 
   public OrderCH orderCH() {
     return orderCH(intTH());
   }
 
-  public OrderCH orderCH(TypeH elemType) {
-    return catDb().order(elemType);
+  public OrderCH orderCH(TypeH elemT) {
+    return catDb().order(elemT);
   }
 
   public ParamRefCH paramRefCH() {
     return paramRefCH(intTH());
   }
 
-  public ParamRefCH paramRefCH(TypeH evalType) {
-    return catDb().ref(evalType);
+  public ParamRefCH paramRefCH(TypeH evalT) {
+    return catDb().ref(evalT);
   }
 
   public SelectCH selectCH() {
     return selectCH(intTH());
   }
 
-  public SelectCH selectCH(TypeH evalType) {
-    return catDb().select(evalType);
+  public SelectCH selectCH(TypeH evalT) {
+    return catDb().select(evalT);
   }
 
   // Obj-s (values)
@@ -434,9 +434,9 @@ public class TestingContext {
     return arrayH(elems[0].type(), elems);
   }
 
-  public ArrayH arrayH(TypeH elemType, ValH... elems) {
+  public ArrayH arrayH(TypeH elemT, ValH... elems) {
     return objDb()
-        .arrayBuilder(arrayTH(elemType))
+        .arrayBuilder(arrayTH(elemT))
         .addAll(list(elems))
         .build();
   }
@@ -482,8 +482,8 @@ public class TestingContext {
     return defFuncH(list(), body);
   }
 
-  public DefFuncH defFuncH(ImmutableList<TypeH> paramTypes, ObjH body) {
-    var type = defFuncTH(body.type(), paramTypes);
+  public DefFuncH defFuncH(ImmutableList<TypeH> paramTs, ObjH body) {
+    var type = defFuncTH(body.type(), paramTs);
     return defFuncH(type, body);
   }
 
@@ -532,8 +532,8 @@ public class TestingContext {
     return tupleH(type, items);
   }
 
-  public TupleH tupleH(TupleTH tupleType, ImmutableList<ValH> items) {
-    return objDb().tuple(tupleType, items);
+  public TupleH tupleH(TupleTH tupleT, ImmutableList<ValH> items) {
+    return objDb().tuple(tupleT, items);
   }
 
   public TupleH tupleHEmpty() {
@@ -586,8 +586,8 @@ public class TestingContext {
     return objDb().newParamRef(BigInteger.valueOf(value), intTH());
   }
 
-  public ParamRefH paramRefH(TypeH evalType, int pointer) {
-    return objDb().newParamRef(BigInteger.valueOf(pointer), evalType);
+  public ParamRefH paramRefH(TypeH evalT, int pointer) {
+    return objDb().newParamRef(BigInteger.valueOf(pointer), evalT);
   }
 
   public SelectH selectH(ObjH tuple, IntH index) {
@@ -600,8 +600,8 @@ public class TestingContext {
     return typeFactoryS().any();
   }
 
-  public ArrayTS arrayST(TypeS elemType) {
-    return typeFactoryS().array(elemType);
+  public ArrayTS arrayST(TypeS elemT) {
+    return typeFactoryS().array(elemT);
   }
 
   public BlobTS blobST() {
@@ -612,12 +612,12 @@ public class TestingContext {
     return typeFactoryS().bool();
   }
 
-  public FuncTS funcST(TypeS resultType, ItemS... params) {
-    return funcST(resultType, toTypes(list(params)));
+  public FuncTS funcST(TypeS resT, ItemS... params) {
+    return funcST(resT, toTypes(list(params)));
   }
 
-  public FuncTS funcST(TypeS resultType, ImmutableList<TypeS> types) {
-    return typeFactoryS().func(resultType, types);
+  public FuncTS funcST(TypeS resT, ImmutableList<TypeS> paramTs) {
+    return typeFactoryS().func(resT, paramTs);
   }
 
   public IntTS intST() {
@@ -747,12 +747,12 @@ public class TestingContext {
     return new IntS(intST(), BigInteger.valueOf(value), loc(line));
   }
 
-  public OrderS orderS(TypeS elemType, ExprS... exprs) {
-    return orderS(1, elemType, exprs);
+  public OrderS orderS(TypeS elemT, ExprS... exprs) {
+    return orderS(1, elemT, exprs);
   }
 
-  public OrderS orderS(int line, TypeS elemType, ExprS... exprs) {
-    return new OrderS(arrayST(elemType), ImmutableList.copyOf(exprs), loc(line));
+  public OrderS orderS(int line, TypeS elemT, ExprS... exprs) {
+    return new OrderS(arrayST(elemT), ImmutableList.copyOf(exprs), loc(line));
   }
 
   public ParamRefS paramRefS(TypeS type) {

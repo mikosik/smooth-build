@@ -106,10 +106,10 @@ public class ShConv {
   }
 
   private NatFuncH convertNatFunc(NatFuncS natFuncS) {
-    var resType = convertType(natFuncS.resType());
-    var paramTypes = convertParams(natFuncS.params());
+    var resT = convertType(natFuncS.resT());
+    var paramTs = convertParams(natFuncS.params());
     var jar = loadNatJar(natFuncS);
-    var type = objFactory.natFuncT(resType, paramTypes);
+    var type = objFactory.natFuncT(resT, paramTs);
     var ann = natFuncS.ann();
     var classBinaryName = objFactory.string(ann.path().string());
     var isPure = objFactory.bool(ann.isPure());
@@ -122,9 +122,9 @@ public class ShConv {
 
   private DefFuncH convertDefFunc(DefFuncS defFuncS) {
     var body = convertExpr(defFuncS.body());
-    var resTypeH = convertType(defFuncS.resType());
-    var paramTypesH = convertParams(defFuncS.params());
-    var type = objFactory.defFuncT(resTypeH, paramTypesH);
+    var resTH = convertType(defFuncS.resT());
+    var paramTsH = convertParams(defFuncS.params());
+    var type = objFactory.defFuncT(resTH, paramTsH);
     return objFactory.defFunc(type, body);
   }
 
@@ -211,8 +211,8 @@ public class ShConv {
 
   private SelectH convertSelect(SelectS selectS) {
     var selectableH = convertExpr(selectS.selectable());
-    var structTypeS = (StructTS) selectS.selectable().type();
-    var indexJ = structTypeS.fields().indexMap().get(selectS.field());
+    var structTS = (StructTS) selectS.selectable().type();
+    var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexH = objFactory.int_(BigInteger.valueOf(indexJ));
     return objFactory.select(selectableH, indexH);
   }

@@ -13,13 +13,13 @@ import org.smoothbuild.db.object.type.val.ArrayTH;
  * This class is immutable.
  */
 public class OrderCH extends ExprCatH {
-  public OrderCH(Hash hash, ArrayTH evalType) {
-    super("Order", hash, ORDER, evalType);
+  public OrderCH(Hash hash, ArrayTH evalT) {
+    super("Order", hash, ORDER, evalT);
   }
 
   @Override
-  public ArrayTH evalType() {
-    return (ArrayTH) super.evalType();
+  public ArrayTH evalT() {
+    return (ArrayTH) super.evalT();
   }
 
   @Override

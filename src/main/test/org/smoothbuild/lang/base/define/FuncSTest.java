@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.ItemS.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
-import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -51,8 +51,8 @@ public class FuncSTest extends TestingContext {
     return new ItemS(STRING, modPath(), name, defaultArg, loc());
   }
 
-  private FuncS myFunc(TypeS resultType, ImmutableList<ItemS> params) {
-    return new DefFuncS(funcST(resultType, toTypes(params)),
+  private FuncS myFunc(TypeS resT, ImmutableList<ItemS> params) {
+    return new DefFuncS(funcST(resT, toTypes(params)),
         modPath(), "name", nList(params), stringS(), loc(1)
     );
   }

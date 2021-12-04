@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.base.type.TestingTypesS.BLOB;
-import static org.smoothbuild.lang.base.type.TestingTypesS.INT;
-import static org.smoothbuild.lang.base.type.TestingTypesS.STRING;
-import static org.smoothbuild.lang.base.type.TestingTypesS.a;
-import static org.smoothbuild.lang.base.type.TestingTypesS.f;
+import static org.smoothbuild.lang.base.type.TestingTsS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTsS.INT;
+import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTsS.a;
+import static org.smoothbuild.lang.base.type.TestingTsS.f;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import org.junit.jupiter.api.Nested;
@@ -253,14 +253,14 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void to_ctor() {
-      var structType = structST("MyStruct", nList());
+      var structT = structST("MyStruct", nList());
       mod("""
           MyStruct {}
           MyStruct() result =
             myStruct;
           """)
           .loadsSuccessfully()
-          .containsEval(defValS(2, f(structType), "result", topRefS(3, f(structType), "myStruct")));
+          .containsEval(defValS(2, f(structT), "result", topRefS(3, f(structT), "myStruct")));
     }
   }
 

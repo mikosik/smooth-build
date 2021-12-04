@@ -7,35 +7,35 @@ import com.google.common.collect.ImmutableList;
 
 public final class FuncTN extends TypeN {
   private final TypeN resT;
-  private final ImmutableList<TypeN> paramsT;
+  private final ImmutableList<TypeN> paramTs;
 
-  public FuncTN(TypeN resT, ImmutableList<TypeN> paramsT, Loc loc) {
+  public FuncTN(TypeN resT, ImmutableList<TypeN> paramTs, Loc loc) {
     super("[" + resT.name() + "]", loc);
     this.resT = resT;
-    this.paramsT = paramsT;
+    this.paramTs = paramTs;
   }
 
   @Override
   public boolean isPolytype() {
-    return resT.isPolytype() || paramsT.stream().anyMatch(TypeN::isPolytype);
+    return resT.isPolytype() || paramTs.stream().anyMatch(TypeN::isPolytype);
   }
 
   @Override
   public void countVars(CountersMap<String> countersMap) {
-    countFuncVars(countersMap, resT, paramsT);
+    countFuncVars(countersMap, resT, paramTs);
   }
 
-  public static void countFuncVars(CountersMap<String> countersMap, TypeN resultType,
-      ImmutableList<TypeN> paramTypes) {
-    resultType.countVars(countersMap);
-    paramTypes.forEach(p -> p.countVars(countersMap));
+  public static void countFuncVars(CountersMap<String> countersMap, TypeN resT,
+      ImmutableList<TypeN> paramTs) {
+    resT.countVars(countersMap);
+    paramTs.forEach(p -> p.countVars(countersMap));
   }
 
-  public TypeN resType() {
+  public TypeN resT() {
     return resT;
   }
 
-  public ImmutableList<TypeN> paramTypes() {
-    return paramsT;
+  public ImmutableList<TypeN> paramTs() {
+    return paramTs;
   }
 }

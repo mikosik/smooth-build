@@ -10,8 +10,8 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class OrderAlgorithm extends Algorithm {
-  public OrderAlgorithm(ArrayTH arrayType) {
-    super(arrayType);
+  public OrderAlgorithm(ArrayTH arrayT) {
+    super(arrayT);
   }
 
   @Override
@@ -23,7 +23,7 @@ public class OrderAlgorithm extends Algorithm {
   public Output run(Input input, NativeApi nativeApi) {
     ArrayH array = nativeApi
         .factory()
-        .arrayBuilder((ArrayTH) outputType())
+        .arrayBuilder((ArrayTH) outputT())
         .addAll(input.vals())
         .build();
     return new Output(array, nativeApi.messages());

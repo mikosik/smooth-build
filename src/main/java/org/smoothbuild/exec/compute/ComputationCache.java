@@ -71,14 +71,14 @@ public class ComputationCache {
 
   public synchronized Output read(Hash taskHash, TypeH type) throws ComputationCacheExc {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      ObjH messagesObject = objDb.get(Hash.read(source));
-      ArrayTH messageArrayType = objFactory.arrayT(objFactory.messageT());
-      if (!messagesObject.cat().equals(messageArrayType)) {
-        throw corruptedValueException(taskHash, "Expected " + messageArrayType
-            + " as first child of its Merkle root, but got " + messagesObject.cat());
+      ObjH messagesObj = objDb.get(Hash.read(source));
+      ArrayTH messageArrayT = objFactory.arrayT(objFactory.messageT());
+      if (!messagesObj.cat().equals(messageArrayT)) {
+        throw corruptedValueException(taskHash, "Expected " + messageArrayT
+            + " as first child of its Merkle root, but got " + messagesObj.cat());
       }
 
-      ArrayH messages = (ArrayH) messagesObject;
+      ArrayH messages = (ArrayH) messagesObj;
       Iterable<TupleH> tuples = messages.elems(TupleH.class);
       for (TupleH m : tuples) {
         String severity = severity(m);

@@ -147,10 +147,9 @@ public class JobCreator {
     if (eager) {
       return callEagerJob(scope, func, args, loc, vars);
     } else {
-      var funcType = (FuncTH) func.type();
-      var actualResultType = typing.mapVars(funcType.res(), vars, factory.lower());
-      return new LazyJob(actualResultType, loc,
-          () -> callEagerJob(scope, func, args, loc, vars));
+      var funcT = (FuncTH) func.type();
+      var actualResT = typing.mapVars(funcT.res(), vars, factory.lower());
+      return new LazyJob(actualResT, loc, () -> callEagerJob(scope, func, args, loc, vars));
     }
   }
 
@@ -161,19 +160,19 @@ public class JobCreator {
 
   private Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Loc loc,
       BoundsMap<TypeH> vars) {
-    var funcType = (FuncTH) func.type();
-    var actualResultType = typing.mapVars(funcType.res(), vars, factory.lower());
-    return new CallJob(actualResultType, func, args, loc, vars, scope, JobCreator.this);
+    var funcT = (FuncTH) func.type();
+    var actualResT = typing.mapVars(funcT.res(), vars, factory.lower());
+    return new CallJob(actualResT, func, args, loc, vars, scope, JobCreator.this);
   }
 
   private BoundsMap<TypeH> inferVarsInFuncCall(Job func, List<Job> args) {
-    var argTypes = map(args, Job::type);
-    return inferVarsInFuncCall(func, argTypes);
+    var argTs = map(args, Job::type);
+    return inferVarsInFuncCall(func, argTs);
   }
 
-  private BoundsMap<TypeH> inferVarsInFuncCall(Job func, ImmutableList<TypeH> argTypes) {
-    var funcType = (FuncTH) func.type();
-    return typing.inferVarBounds(funcType.params(), argTypes, factory.lower());
+  private BoundsMap<TypeH> inferVarsInFuncCall(Job func, ImmutableList<TypeH> argTs) {
+    var funcT = (FuncTH) func.type();
+    return typing.inferVarBounds(funcT.params(), argTs, factory.lower());
   }
 
   // Value
@@ -232,10 +231,10 @@ public class JobCreator {
 
   private Task orderEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH order, Nal nal) {
     var type = order.type();
-    var actualType = (ArrayTH) typing.mapVars(type, vars, factory.lower());
+    var actualT = (ArrayTH) typing.mapVars(type, vars, factory.lower());
     var elemsJ = map(order.elems(), e -> eagerJobFor(scope, vars, e));
     var info = new TaskInfo(LITERAL, nal);
-    return orderEager(actualType, elemsJ, info);
+    return orderEager(actualT, elemsJ, info);
   }
 
   public Task orderEager(ArrayTH arrayTH, ImmutableList<Job> elemsJ, TaskInfo info) {
@@ -274,12 +273,12 @@ public class JobCreator {
   // helper methods
 
   public Job evaluateFuncEagerJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
-      TypeH actualResType, FuncH func, ImmutableList<Job> args, Loc loc) {
+      TypeH actualResT, FuncH func, ImmutableList<Job> args, Loc loc) {
     return switch (func) {
       case DefFuncH def -> defFuncEager(def, args, scope, vars, loc);
-      case NatFuncH nat -> natFuncEager(nat, actualResType, args, loc);
-      case IfFuncH iff -> ifFuncEager(actualResType, args, loc);
-      case MapFuncH map -> mapFuncEager(actualResType, args, scope, loc);
+      case NatFuncH nat -> natFuncEager(nat, actualResT, args, loc);
+      case IfFuncH iff -> ifFuncEager(actualResT, args, loc);
+      case MapFuncH map -> mapFuncEager(actualResT, args, scope, loc);
     };
   }
 
@@ -290,20 +289,20 @@ public class JobCreator {
     return new VirtualJob(job, new TaskInfo(CALL, name, loc));
   }
 
-  private Job natFuncEager(NatFuncH func, TypeH actualResType, ImmutableList<Job> args, Loc loc) {
+  private Job natFuncEager(NatFuncH func, TypeH actualResT, ImmutableList<Job> args, Loc loc) {
     var name = nals.get(func).name();
-    var algorithm = new InvokeAlgorithm(actualResType, name, func, methodLoader);
+    var algorithm = new InvokeAlgorithm(actualResT, name, func, methodLoader);
     var info = new TaskInfo(CALL, name, loc);
-    return new Task(actualResType, args, info, algorithm);
+    return new Task(actualResT, args, info, algorithm);
   }
 
-  private Job ifFuncEager(TypeH actualResType, ImmutableList<Job> args, Loc loc) {
-    return new IfJob(actualResType, args, loc);
+  private Job ifFuncEager(TypeH actualResT, ImmutableList<Job> args, Loc loc) {
+    return new IfJob(actualResT, args, loc);
   }
 
-  private Job mapFuncEager(TypeH actualResType, ImmutableList<Job> args, IndexedScope<Job> scope,
+  private Job mapFuncEager(TypeH actualResT, ImmutableList<Job> args, IndexedScope<Job> scope,
       Loc loc) {
-    return new MapJob(actualResType, loc, args, scope, this);
+    return new MapJob(actualResT, loc, args, scope, this);
   }
 
   public Job commandLineExprEagerJob(ObjH obj) {

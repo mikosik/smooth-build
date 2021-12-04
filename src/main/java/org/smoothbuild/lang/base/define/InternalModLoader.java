@@ -18,7 +18,7 @@ public class InternalModLoader {
 
   public ModS load() {
     ModPath path = new ModPath("internal-module");
-    var types = nList(map(factory.baseTypes(), t -> (DefTypeS) new DefBaseTypeS(path, t)));
+    var types = nList(map(factory.baseTs(), t -> (DefTypeS) new DefBaseTypeS(path, t)));
     return new ModS(path, null, types, evaluables(path));
   }
 

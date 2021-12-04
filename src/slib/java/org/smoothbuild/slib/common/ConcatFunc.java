@@ -8,9 +8,9 @@ import org.smoothbuild.plugin.NativeApi;
 public class ConcatFunc {
   public static ArrayH func(NativeApi nativeApi, ArrayH array1, ArrayH array2) {
     var factory = nativeApi.factory();
-    var elemType = ((ArrayTH) factory.typing().mergeUp(array1.cat(), array2.cat())).elem();
+    var elemT = ((ArrayTH) factory.typing().mergeUp(array1.cat(), array2.cat())).elem();
     return factory
-        .arrayBuilderWithElems(elemType)
+        .arrayBuilderWithElems(elemT)
         .addAll(array1.elems(ValH.class))
         .addAll(array2.elems(ValH.class))
         .build();

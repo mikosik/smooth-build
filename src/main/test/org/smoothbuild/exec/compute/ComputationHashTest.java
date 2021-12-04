@@ -1,14 +1,14 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.object.type.TestingTypesH.PERSON;
+import static org.smoothbuild.db.object.type.TestingCatsH.PERSON;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.TestingTypesH;
+import org.smoothbuild.db.object.type.TestingCatsH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
@@ -115,7 +115,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_select_algorithm_and_one_elem_input_is_stable() {
-    var algorithm = new SelectAlgorithm(intH(0), TestingTypesH.STRING);
+    var algorithm = new SelectAlgorithm(intH(0), TestingCatsH.STRING);
     var input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("6513f0e8ee2db27f5e59b8ac0a7cf0b8cd2b16b0"));
@@ -129,7 +129,7 @@ public class ComputationHashTest extends TestingContext {
       }
 
       @Override
-      public TypeH outputType() {
+      public TypeH outputT() {
         return null;
       }
 

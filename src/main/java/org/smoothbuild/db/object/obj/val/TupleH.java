@@ -48,14 +48,14 @@ public final class TupleH extends ValH {
   }
 
   private ImmutableList<ValH> instantiateItems() {
-    var itemTypes = type().items();
-    var objs = readSeqObjs(DATA_PATH, dataHash(), itemTypes.size(), ValH.class);
-    for (int i = 0; i < itemTypes.size(); i++) {
+    var itemTs = type().items();
+    var objs = readSeqObjs(DATA_PATH, dataHash(), itemTs.size(), ValH.class);
+    for (int i = 0; i < itemTs.size(); i++) {
       var val = objs.get(i);
-      var expectedType = itemTypes.get(i);
-      var actualType = val.cat();
-      if (!expectedType.equals(actualType)) {
-        throw new UnexpectedObjNodeExc(hash(), cat(), DATA_PATH, i, expectedType, actualType);
+      var expectedT = itemTs.get(i);
+      var actualT = val.cat();
+      if (!expectedT.equals(actualT)) {
+        throw new UnexpectedObjNodeExc(hash(), cat(), DATA_PATH, i, expectedT, actualT);
       }
     }
     return objs;

@@ -27,9 +27,8 @@ public final class FuncTS extends TypeS implements FuncT {
     this.params = requireNonNull(params);
   }
 
-  public static ImmutableSet<VarS> calculateVars(
-      TypeS resultType, ImmutableList<TypeS> params) {
-    return concat(resultType, params).stream()
+  public static ImmutableSet<VarS> calculateVars(TypeS resT, ImmutableList<TypeS> paramTs) {
+    return concat(resT, paramTs).stream()
         .map(TypeS::vars)
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))

@@ -28,7 +28,7 @@ public final class DefFuncS extends FuncS {
       return true;
     }
     return object instanceof DefFuncS that
-        && this.resType().equals(that.resType())
+        && this.resT().equals(that.resT())
         && this.modPath().equals(that.modPath())
         && this.name().equals(that.name())
         && this.params().equals(that.params())
@@ -38,7 +38,7 @@ public final class DefFuncS extends FuncS {
 
   @Override
   public int hashCode() {
-    return Objects.hash(resType(), modPath(), name(), params(), body, loc());
+    return Objects.hash(resT(), modPath(), name(), params(), body, loc());
   }
 
   @Override
@@ -47,6 +47,6 @@ public final class DefFuncS extends FuncS {
   }
 
   private String code() {
-    return resType().name() + " " + name() + "(" + paramsToString() + ")" + " = ?";
+    return resT().name() + " " + name() + "(" + paramsToString() + ")" + " = ?";
   }
 }

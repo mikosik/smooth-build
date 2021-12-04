@@ -10,8 +10,8 @@ import org.smoothbuild.db.object.type.base.ExprCatH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
 public class ParamRefCH extends ExprCatH {
-  public ParamRefCH(Hash hash, TypeH evalType) {
-    super("ParamRef", hash, PARAM_REF, evalType);
+  public ParamRefCH(Hash hash, TypeH evalT) {
+    super("ParamRef", hash, PARAM_REF, evalT);
   }
 
   @Override

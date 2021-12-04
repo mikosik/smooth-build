@@ -35,40 +35,40 @@ public class CatHCachingTest extends TestingContext {
     return list(
         CatDb::blob,
         CatDb::bool,
-        CatHCachingTest::funcType,
+        CatHCachingTest::funcT,
         CatDb::int_,
         CatDb::nothing,
         CatDb::string,
-        CatHCachingTest::tupleType,
+        CatHCachingTest::tupleT,
 
-        objTypeDb -> objTypeDb.call(objTypeDb.int_()),
-        objTypeDb -> objTypeDb.order(objTypeDb.int_()),
-        objTypeDb -> objTypeDb.select(objTypeDb.int_()),
-        objTypeDb -> objTypeDb.ref(objTypeDb.int_()),
+        catDb -> catDb.call(catDb.int_()),
+        catDb -> catDb.order(catDb.int_()),
+        catDb -> catDb.select(catDb.int_()),
+        catDb -> catDb.ref(catDb.int_()),
 
-        objTypeDb -> objTypeDb.array(objTypeDb.blob()),
-        objTypeDb -> objTypeDb.array(objTypeDb.bool()),
-        objTypeDb -> objTypeDb.array(objTypeDb.int_()),
-        objTypeDb -> objTypeDb.array(objTypeDb.nothing()),
-        objTypeDb -> objTypeDb.array(objTypeDb.string()),
-        objTypeDb -> objTypeDb.array(tupleType(objTypeDb)),
-        objTypeDb -> objTypeDb.array(funcType(objTypeDb)),
+        catDb -> catDb.array(catDb.blob()),
+        catDb -> catDb.array(catDb.bool()),
+        catDb -> catDb.array(catDb.int_()),
+        catDb -> catDb.array(catDb.nothing()),
+        catDb -> catDb.array(catDb.string()),
+        catDb -> catDb.array(tupleT(catDb)),
+        catDb -> catDb.array(funcT(catDb)),
 
-        objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.blob())),
-        objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.bool())),
-        objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.int_())),
-        objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.nothing())),
-        objTypeDb -> objTypeDb.array(objTypeDb.array(objTypeDb.string())),
-        objTypeDb -> objTypeDb.array(objTypeDb.array(tupleType(objTypeDb))),
-        objTypeDb -> objTypeDb.array(objTypeDb.array(funcType(objTypeDb)))
+        catDb -> catDb.array(catDb.array(catDb.blob())),
+        catDb -> catDb.array(catDb.array(catDb.bool())),
+        catDb -> catDb.array(catDb.array(catDb.int_())),
+        catDb -> catDb.array(catDb.array(catDb.nothing())),
+        catDb -> catDb.array(catDb.array(catDb.string())),
+        catDb -> catDb.array(catDb.array(tupleT(catDb))),
+        catDb -> catDb.array(catDb.array(funcT(catDb)))
     );
   }
 
-  private static TupleTH tupleType(CatDb catDb) {
+  private static TupleTH tupleT(CatDb catDb) {
     return catDb.tuple(list(catDb.string(), catDb.string()));
   }
 
-  private static FuncTH funcType(CatDb catDb) {
+  private static FuncTH funcT(CatDb catDb) {
     return catDb.func(catDb.string(), list(catDb.bool(), catDb.blob()));
   }
 }

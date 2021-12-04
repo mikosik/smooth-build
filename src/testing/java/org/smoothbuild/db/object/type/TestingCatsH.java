@@ -13,7 +13,7 @@ import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestingTypesH {
+public class TestingCatsH {
   private static final TestingContext CONTEXT = new TestingContext();
   public static final CatDb TYPEH_DB = CONTEXT.catDb();
 
@@ -61,7 +61,7 @@ public class TestingTypesH {
   public static final ArrayTH ARRAY2_PERSON = array(ARRAY_PERSON);
   public static final ArrayTH ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
 
-  public static final ImmutableList<CatH> BASE_TYPESV_TO_TEST = list(
+  public static final ImmutableList<CatH> BASE_CATS_TO_TEST = list(
       BLOB,
       BOOL, ABST_FUNC,
       INT,
@@ -70,7 +70,7 @@ public class TestingTypesH {
       PERSON
   );
 
-  public static final ImmutableList<CatH> ARRAY_TYPESV_TO_TEST = list(
+  public static final ImmutableList<CatH> ARRAY_CATS_TO_TEST = list(
       ARRAY_BLOB,
       ARRAY_BOOL,
       ARRAY_FUNCTION,
@@ -88,13 +88,13 @@ public class TestingTypesH {
       ARRAY2_PERSON_TUPLE
   );
 
-  public static final ImmutableList<CatH> TYPESV_TO_TEST =
-      concat(BASE_TYPESV_TO_TEST, ARRAY_TYPESV_TO_TEST);
+  public static final ImmutableList<CatH> CATS_TO_TEST =
+      concat(BASE_CATS_TO_TEST, ARRAY_CATS_TO_TEST);
 
-  public static final ImmutableList<CatH> ALL_TYPES_TO_TEST = createAllTypes();
+  public static final ImmutableList<CatH> ALL_CATS_TO_TEST = createAllCats();
 
-  private static ImmutableList<CatH> createAllTypes() {
-    var baseTypes = list(
+  private static ImmutableList<CatH> createAllCats() {
+    var baseCs = list(
         ANY,
         BLOB,
         BOOL,
@@ -116,10 +116,10 @@ public class TestingTypesH {
         TYPEH_DB.var("A"),
         TYPEH_DB.var("B")
     );
-    var arrayTypes = map(baseTypes, TYPEH_DB::array);
-    ImmutableList<CatH> valueTypes = concat(baseTypes, arrayTypes);
+    var arrayCs = map(baseCs, TYPEH_DB::array);
+    ImmutableList<CatH> valueCs = concat(baseCs, arrayCs);
 
-    var exprTypes = list(
+    var exprCs = list(
         TYPEH_DB.call(BLOB),
         TYPEH_DB.call(STRING),
         TYPEH_DB.combine(TYPEH_DB.tuple(list(BLOB))),
@@ -132,15 +132,15 @@ public class TestingTypesH {
         TYPEH_DB.select(STRING)
     );
 
-    return concat(valueTypes, exprTypes);
+    return concat(valueCs, exprCs);
   }
 
-  private static ArrayTH array(TypeH elemType) {
-    return TYPEH_DB.array(elemType);
+  private static ArrayTH array(TypeH elemT) {
+    return TYPEH_DB.array(elemT);
   }
 
-  public static TupleTH tuple(ImmutableList<TypeH> itemTypes) {
-    return TYPEH_DB.tuple(itemTypes);
+  public static TupleTH tuple(ImmutableList<TypeH> itemTs) {
+    return TYPEH_DB.tuple(itemTs);
   }
 
   public static CombineCH combine(TupleTH tupleType) {

@@ -3,20 +3,20 @@ package org.smoothbuild.db.object.type.exc;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.CatKindH;
 
-public class DecodeTypeNodeExc extends DecodeTypeExc {
-  public DecodeTypeNodeExc(Hash hash, CatKindH kind, String path, String message) {
+public class DecodeCatNodeExc extends DecodeCatExc {
+  public DecodeCatNodeExc(Hash hash, CatKindH kind, String path, String message) {
     super(buildMessage(hash, kind, path, message));
   }
 
-  public DecodeTypeNodeExc(Hash hash, CatKindH kind, String path) {
+  public DecodeCatNodeExc(Hash hash, CatKindH kind, String path) {
     super(buildMessage(hash, kind, path, null));
   }
 
-  public DecodeTypeNodeExc(Hash hash, CatKindH kind, String path, int index, Throwable e) {
+  public DecodeCatNodeExc(Hash hash, CatKindH kind, String path, int index, Throwable e) {
     this(hash, kind, path + "[" + index + "]", e);
   }
 
-  public DecodeTypeNodeExc(Hash hash, CatKindH kind, String path, Throwable e) {
+  public DecodeCatNodeExc(Hash hash, CatKindH kind, String path, Throwable e) {
     super(buildMessage(hash, kind, path, null), e);
   }
 

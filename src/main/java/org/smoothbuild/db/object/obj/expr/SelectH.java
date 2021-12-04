@@ -12,7 +12,6 @@ import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.SelectCH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 
@@ -43,9 +42,9 @@ public class SelectH extends ExprH {
       if (i < 0 || size <= i) {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), cat(), i, size);
       }
-      TypeH fieldType = tupleEvalT.items().get(i);
-      if (!Objects.equals(type(), fieldType)) {
-        throw new DecodeSelectWrongEvalTypeExc(hash(), cat(), fieldType);
+      var fieldT = tupleEvalT.items().get(i);
+      if (!Objects.equals(type(), fieldT)) {
+        throw new DecodeSelectWrongEvalTypeExc(hash(), cat(), fieldT);
       }
       return new SelectData(selectable, index);
     } else {

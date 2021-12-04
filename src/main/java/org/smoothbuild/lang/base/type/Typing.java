@@ -90,10 +90,9 @@ public class Typing<T extends Type> {
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public BoundsMap<T> inferVarBoundsInCall(
-      List<? extends T> paramTypes, List<? extends T> argTypes) {
+  public BoundsMap<T> inferVarBoundsInCall(List<? extends T> paramTs, List<? extends T> argTs) {
     var result = new HashMap<Var, Bounded<T>>();
-    inferVarBounds(paramTypes, argTypes, factory.lower(), result);
+    inferVarBounds(paramTs, argTs, factory.lower(), result);
     return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
@@ -137,9 +136,9 @@ public class Typing<T extends Type> {
           var reversed = side.reversed();
           inferImpl((T) f1.res(), (T) f2.res(), side, result);
           for (int i = 0; i < f1.params().size(); i++) {
-            Type paramType1 = f1.params().get(i);
-            Type paramType2 = f2.params().get(i);
-            inferImpl((T) paramType1, (T) paramType2, reversed, result);
+            Type paramT1 = f1.params().get(i);
+            Type paramT2 = f2.params().get(i);
+            inferImpl((T) paramT1, (T) paramT2, reversed, result);
           }
         }
       }
@@ -159,15 +158,15 @@ public class Typing<T extends Type> {
           }
         }
         case ArrayT arrayT -> {
-          T elemTypeM = mapVars((T) arrayT.elem(), boundsMap, side);
-          yield  (T) createArrayType(arrayT, elemTypeM);
+          T elemTM = mapVars((T) arrayT.elem(), boundsMap, side);
+          yield  (T) createArrayT(arrayT, elemTM);
         }
         case FuncT funcT -> {
-          var resultTypeM = mapVars((T) funcT.res(), boundsMap, side);
+          var resultTM = mapVars((T) funcT.res(), boundsMap, side);
           ImmutableList<T> paramsM = map(
               funcT.params(),
               p -> mapVars((T) p, boundsMap, side.reversed()));
-          yield  (T) createFuncType(funcT, resultTypeM, paramsM);
+          yield  (T) createFuncT(funcT, resultTM, paramsM);
         }
         default -> type;
       };
@@ -210,9 +209,9 @@ public class Typing<T extends Type> {
           var resultM = merge((T) funcA.res(), (T) funcB.res(), direction);
           var paramsM = zip(funcA.params(), funcB.params(),
               (a, b) -> merge((T) a, (T) b, direction.reversed()));
-          if (isFuncTypeEqual(funcA, resultM, paramsM)) {
+          if (isFuncTEqual(funcA, resultM, paramsM)) {
             return type1;
-          } else if (isFuncTypeEqual(funcB, resultM, paramsM)){
+          } else if (isFuncTEqual(funcB, resultM, paramsM)){
             return type2;
           } else {
             return (T) factory.func(resultM, paramsM);
@@ -233,22 +232,22 @@ public class Typing<T extends Type> {
         merge(bounds1.upper(), bounds2.upper(), factory.lower()));
   }
 
-  private ArrayT createArrayType(ArrayT type, T elemType) {
-    if (type.elem() == elemType) {
+  private ArrayT createArrayT(ArrayT type, T elemT) {
+    if (type.elem() == elemT) {
       return type;
     } else {
-      return factory.array(elemType);
+      return factory.array(elemT);
     }
   }
 
-  private FuncT createFuncType(FuncT type, T resultType, ImmutableList<T> params) {
-    if (isFuncTypeEqual(type, resultType, params)) {
+  private FuncT createFuncT(FuncT type, T resT, ImmutableList<T> paramTs) {
+    if (isFuncTEqual(type, resT, paramTs)) {
       return type;
     }
-    return factory.func(resultType, params);
+    return factory.func(resT, paramTs);
   }
 
-  private boolean isFuncTypeEqual(FuncT type, Type result, ImmutableList<T> params) {
+  private boolean isFuncTEqual(FuncT type, Type result, ImmutableList<T> params) {
     return type.res() == result && type.params().equals(params);
   }
 

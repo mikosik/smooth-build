@@ -1,17 +1,17 @@
 package org.smoothbuild.lang.base.type;
 
 import static java.util.Arrays.stream;
-import static org.smoothbuild.lang.base.type.TestedType.A;
-import static org.smoothbuild.lang.base.type.TestedType.ANY;
-import static org.smoothbuild.lang.base.type.TestedType.B;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB;
-import static org.smoothbuild.lang.base.type.TestedType.INT;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
-import static org.smoothbuild.lang.base.type.TestedType.STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
-import static org.smoothbuild.lang.base.type.TestedType.a;
-import static org.smoothbuild.lang.base.type.TestedType.a2;
-import static org.smoothbuild.lang.base.type.TestedType.f;
+import static org.smoothbuild.lang.base.type.TestedT.A;
+import static org.smoothbuild.lang.base.type.TestedT.ANY;
+import static org.smoothbuild.lang.base.type.TestedT.B;
+import static org.smoothbuild.lang.base.type.TestedT.BLOB;
+import static org.smoothbuild.lang.base.type.TestedT.INT;
+import static org.smoothbuild.lang.base.type.TestedT.NOTHING;
+import static org.smoothbuild.lang.base.type.TestedT.STRING;
+import static org.smoothbuild.lang.base.type.TestedT.STRUCT;
+import static org.smoothbuild.lang.base.type.TestedT.a;
+import static org.smoothbuild.lang.base.type.TestedT.a2;
+import static org.smoothbuild.lang.base.type.TestedT.f;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
@@ -23,15 +23,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed) {
-  TestedAssignmentSpec(TestedType target, TestedType source, boolean allowed) {
+  TestedAssignmentSpec(TestedT target, TestedT source, boolean allowed) {
     this(new TestedAssignment(target, source), allowed);
   }
 
-  public TestedType source() {
+  public TestedT source() {
     return assignment.source();
   }
 
-  public TestedType target() {
+  public TestedT target() {
     return assignment.target();
   }
 
@@ -48,11 +48,11 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     return assignment.toString() + " :" + (allowed ? "allowed" : "illegal");
   }
 
-  public static TestedAssignmentSpec illegalAssignment(TestedType target, TestedType source) {
+  public static TestedAssignmentSpec illegalAssignment(TestedT target, TestedT source) {
     return new TestedAssignmentSpec(target, source, false);
   }
 
-  public static TestedAssignmentSpec allowedAssignment(TestedType target, TestedType source) {
+  public static TestedAssignmentSpec allowedAssignment(TestedT target, TestedT source) {
     return new TestedAssignmentSpec(target, source, true);
   }
 
@@ -81,13 +81,13 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     gen(r, STRUCT, includeAny, oneOf(STRUCT, NOTHING));
 
     if (includeAny) {
-      gen(r, a(ANY), includeAny, TestedType::isArray, mNothing());
+      gen(r, a(ANY), includeAny, TestedT::isArray, mNothing());
     }
     gen(r, a(BLOB), includeAny, oneOf(a(BLOB), a(NOTHING), NOTHING));
     gen(r, a(NOTHING), includeAny, oneOf(a(NOTHING), NOTHING));
     gen(r, a(STRUCT), includeAny, oneOf(a(STRUCT), a(NOTHING), NOTHING));
     if (includeAny) {
-      gen(r, a2(ANY), includeAny, TestedType::isArrayOfArrays, t -> t.isArrayOf(NOTHING), mNothing());
+      gen(r, a2(ANY), includeAny, TestedT::isArrayOfArrays, t -> t.isArrayOf(NOTHING), mNothing());
     }
     gen(r, a2(BLOB), includeAny, oneOf(a2(BLOB), a2(NOTHING), a(NOTHING), NOTHING));
     gen(r, a2(NOTHING), includeAny, oneOf(a2(NOTHING), a(NOTHING), NOTHING));
@@ -241,10 +241,10 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     List<TestedAssignmentSpec> r = new ArrayList<>();
     gen(r, A, includeAny, mAll());
     gen(r, B, includeAny, mAll());
-    gen(r, a(A), includeAny, mNothing(), TestedType::isArray);
-    gen(r, a(B), includeAny, mNothing(), TestedType::isArray);
-    gen(r, a2(A), includeAny, oneOf(NOTHING, a(NOTHING)), TestedType::isArrayOfArrays);
-    gen(r, a2(B), includeAny, oneOf(NOTHING, a(NOTHING)), TestedType::isArrayOfArrays);
+    gen(r, a(A), includeAny, mNothing(), TestedT::isArray);
+    gen(r, a(B), includeAny, mNothing(), TestedT::isArray);
+    gen(r, a2(A), includeAny, oneOf(NOTHING, a(NOTHING)), TestedT::isArrayOfArrays);
+    gen(r, a2(B), includeAny, oneOf(NOTHING, a(NOTHING)), TestedT::isArrayOfArrays);
 
     r.addAll(list(
         allowedAssignment(f(A, A), f(A, A)),
@@ -302,50 +302,50 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
   /**
    * Match a func.
    */
-  private static Predicate<TestedType> mFunc(Predicate<TestedType> result,
-      Predicate<TestedType>... params) {
+  private static Predicate<TestedT> mFunc(Predicate<TestedT> result,
+      Predicate<TestedT>... params) {
     return t -> t.isFunc(result, params);
   }
 
   /**
    * Match anything.
    */
-  private static Predicate<TestedType> mAll() {
+  private static Predicate<TestedT> mAll() {
     return t -> true;
   }
 
   /**
    * Match nothing.
    */
-  private static Predicate<TestedType> mNothing() {
+  private static Predicate<TestedT> mNothing() {
     return type -> type.equals(NOTHING);
   }
 
-  private static Predicate<TestedType> oneOf(TestedType... types) {
+  private static Predicate<TestedT> oneOf(TestedT... types) {
     return Set.of(types)::contains;
   }
 
   private static List<TestedAssignmentSpec> gen(List<TestedAssignmentSpec> result,
-      TestedType target, boolean includeAny, Predicate<TestedType>... allowedPredicates) {
-    for (TestedType type : generateTypes(2, includeAny)) {
+      TestedT target, boolean includeAny, Predicate<TestedT>... allowedPredicates) {
+    for (TestedT type : generateTypes(2, includeAny)) {
       boolean allowed = stream(allowedPredicates).anyMatch(predicate -> predicate.test(type));
       result.add(new TestedAssignmentSpec(target, type, allowed));
     }
     return result;
   }
 
-  private static ImmutableList<TestedType> generateTypes(int depth, boolean includeAny) {
-    Builder<TestedType> builder = ImmutableList.builder();
+  private static ImmutableList<TestedT> generateTypes(int depth, boolean includeAny) {
+    Builder<TestedT> builder = ImmutableList.builder();
     builder.add(BLOB, NOTHING, STRUCT);
     if (includeAny) {
       builder.add(ANY);
     }
     if (0 < depth) {
-      List<TestedType> types = generateTypes(depth - 1, includeAny);
-      for (TestedType type : types) {
+      List<TestedT> types = generateTypes(depth - 1, includeAny);
+      for (TestedT type : types) {
         builder.add(a(type));
         builder.add(f(type));
-        for (TestedType type2 : types) {
+        for (TestedT type2 : types) {
           builder.add(f(type, type2));
         }
       }

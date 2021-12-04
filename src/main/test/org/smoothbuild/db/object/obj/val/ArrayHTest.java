@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.type.TestingTypesH;
+import org.smoothbuild.db.object.type.TestingCatsH;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.NothingTH;
@@ -110,12 +110,12 @@ public class ArrayHTest extends TestingContext {
   public void arrays_with_same_elems_have_same_hash() {
     var str1 = stringH("abc");
     var str2 = stringH("def");
-    var arrayTypeH = arrayTH(stringTH());
-    ArrayH array = objDb().arrayBuilder(arrayTypeH)
+    var arrayTH = arrayTH(stringTH());
+    ArrayH array = objDb().arrayBuilder(arrayTH)
         .add(str1)
         .add(str2)
         .build();
-    ArrayH array2 = objDb().arrayBuilder(arrayTypeH)
+    ArrayH array2 = objDb().arrayBuilder(arrayTH)
         .add(str1)
         .add(str2)
         .build();
@@ -137,12 +137,12 @@ public class ArrayHTest extends TestingContext {
   public void arrays_with_same_elems_but_in_different_order_have_different_hashes() {
     StringH str1 = stringH("abc");
     StringH str2 = stringH("def");
-    var arrayTypeH = arrayTH(stringTH());
-    ArrayH array = objDb().arrayBuilder(arrayTypeH)
+    var arrayTH = arrayTH(stringTH());
+    ArrayH array = objDb().arrayBuilder(arrayTH)
         .add(str1)
         .add(str2)
         .build();
-    ArrayH array2 = objDb().arrayBuilder(arrayTypeH)
+    ArrayH array2 = objDb().arrayBuilder(arrayTH)
         .add(str2)
         .add(str1)
         .build();
@@ -154,11 +154,11 @@ public class ArrayHTest extends TestingContext {
   public void array_with_one_more_elem_have_different_hash() {
     var str1 = stringH("abc");
     var str2 = stringH("def");
-    var arrayTypeH = arrayTH(stringTH());
-    var array1 = objDb().arrayBuilder(arrayTypeH)
+    var arrayTH = arrayTH(stringTH());
+    var array1 = objDb().arrayBuilder(arrayTH)
         .add(str1)
         .build();
-    var array2 = objDb().arrayBuilder(arrayTypeH)
+    var array2 = objDb().arrayBuilder(arrayTH)
         .add(str1)
         .add(str2)
         .build();
@@ -205,15 +205,15 @@ public class ArrayHTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("type_test_data")
-  public void type(TypeH elemType) {
-    var arrayTypeH = arrayTH(elemType);
-    var arrayH = objDb().arrayBuilder(arrayTypeH).build();
+  public void type(TypeH elemT) {
+    var arrayTH = arrayTH(elemT);
+    var arrayH = objDb().arrayBuilder(arrayTH).build();
     assertThat(arrayH.cat())
-        .isEqualTo(arrayTypeH);
+        .isEqualTo(arrayTH);
   }
 
   private static List<CatH> type_test_data() {
-    return TestingTypesH.TYPESV_TO_TEST;
+    return TestingCatsH.CATS_TO_TEST;
   }
 
   @Test
@@ -265,8 +265,8 @@ public class ArrayHTest extends TestingContext {
           .isEqualTo("[]@" + array.hash());
     }
 
-    private ArrayH emptyArrayOf(NothingTH elemType) {
-      return objDb().arrayBuilder(arrayTH(elemType)).build();
+    private ArrayH emptyArrayOf(NothingTH elemT) {
+      return objDb().arrayBuilder(arrayTH(elemT)).build();
     }
   }
 }

@@ -27,13 +27,13 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestingTypesS {
+public class TestingTsS {
   private static final TestingContext CONTEXT = new TestingContext();
   private static final TypeFactoryS FACTORY = CONTEXT.typeFactoryS();
   public static final TypingS TYPING = CONTEXT.typingS();
 
-  public static final ImmutableList<BaseTS> BASE_TYPES = FACTORY.baseTypes();
-  public static final ImmutableList<BaseTS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTypes();
+  public static final ImmutableList<BaseTS> BASE_TYPES = FACTORY.baseTs();
+  public static final ImmutableList<BaseTS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTs();
 
   public static final AnyTS ANY = FACTORY.any();
   public static final BlobTS BLOB = FACTORY.blob();
@@ -83,20 +83,20 @@ public class TestingTypesS {
           .add(X)
           .build();
 
-  public static ArrayTS a(TypeS elemType) {
-    return FACTORY.array(elemType);
+  public static ArrayTS a(TypeS elemT) {
+    return FACTORY.array(elemT);
   }
 
-  public static FuncTS f(TypeS resultType) {
-    return FACTORY.func(resultType, list());
+  public static FuncTS f(TypeS resT) {
+    return FACTORY.func(resT, list());
   }
 
-  public static FuncTS f(TypeS resultType, TypeS... params) {
-    return f(resultType, list(params));
+  public static FuncTS f(TypeS resT, TypeS... paramTs) {
+    return f(resT, list(paramTs));
   }
 
-  public static FuncTS f(TypeS resultType, ImmutableList<TypeS> params) {
-    return FACTORY.func(resultType, params);
+  public static FuncTS f(TypeS resT, ImmutableList<TypeS> paramTs) {
+    return FACTORY.func(resT, paramTs);
   }
 
   public static VarS var(String a) {
