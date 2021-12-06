@@ -8,7 +8,7 @@ import org.smoothbuild.testing.TestingContext;
 public class DefFuncSTest extends TestingContext {
   @Test
   public void to_string() {
-    var func = funcS(stringST(), "myFunc", intS(17), itemS(intST(), "myParam"));
+    var func = funcS(stringTS(), "myFunc", intS(17), itemS(intTS(), "myParam"));
     assertThat(func.toString())
         .isEqualTo("DefFunc(`String myFunc(Int myParam) = ?`)");
   }

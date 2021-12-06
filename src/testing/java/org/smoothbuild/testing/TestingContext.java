@@ -596,68 +596,68 @@ public class TestingContext {
 
   // Types Smooth
 
-  public AnyTS anyST() {
+  public AnyTS anyTS() {
     return typeFactoryS().any();
   }
 
-  public ArrayTS arrayST(TypeS elemT) {
+  public ArrayTS arrayTS(TypeS elemT) {
     return typeFactoryS().array(elemT);
   }
 
-  public BlobTS blobST() {
+  public BlobTS blobTS() {
     return typeFactoryS().blob();
   }
 
-  public BoolTS boolST() {
+  public BoolTS boolTS() {
     return typeFactoryS().bool();
   }
 
-  public FuncTS funcST(TypeS resT, ItemS... params) {
-    return funcST(resT, toTypes(list(params)));
+  public FuncTS funcTS(TypeS resT, ItemS... params) {
+    return funcTS(resT, toTypes(list(params)));
   }
 
-  public FuncTS funcST(TypeS resT, ImmutableList<TypeS> paramTs) {
+  public FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
     return typeFactoryS().func(resT, paramTs);
   }
 
-  public IntTS intST() {
+  public IntTS intTS() {
     return typeFactoryS().int_();
   }
 
-  public NothingTS nothingST() {
+  public NothingTS nothingTS() {
     return typeFactoryS().nothing();
   }
 
-  public StructTS personST() {
+  public StructTS personTS() {
     return typeFactoryS().struct("Person",
-        nList(sigS(stringST(), "firstName"), sigS(stringST(), "lastName")));
+        nList(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
   }
 
-  public StringTS stringST() {
+  public StringTS stringTS() {
     return typeFactoryS().string();
   }
 
-  public StructTS structST(String name, NList<ItemSigS> fields) {
+  public StructTS structTS(String name, NList<ItemSigS> fields) {
     return typeFactoryS().struct(name, fields);
   }
 
-  public VarS varST(String name) {
+  public VarS varS(String name) {
     return typeFactoryS().var(name);
   }
 
-  public Side<TypeS> lowerST() {
+  public Side<TypeS> lowerS() {
     return typeFactoryS().lower();
   }
 
-  public Side<TypeS> upperST() {
+  public Side<TypeS> upperS() {
     return typeFactoryS().upper();
   }
 
-  public BoundsMap<TypeS> bmST(
+  public BoundsMap<TypeS> bmS(
       VarS var1, Side<TypeS> side1, TypeS bound1,
       VarS var2, Side<TypeS> side2, TypeS bound2) {
-    Bounds<TypeS> bounds1 = oneSideBoundST(side1, bound1);
-    Bounds<TypeS> bounds2 = oneSideBoundST(side2, bound2);
+    Bounds<TypeS> bounds1 = oneSideBoundS(side1, bound1);
+    Bounds<TypeS> bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
       return boundsMap(new Bounded<>(var1, typingS().merge(bounds1, bounds2)));
     } else {
@@ -668,15 +668,15 @@ public class TestingContext {
     }
   }
 
-  public BoundsMap<TypeS> bmST(VarS var, Side<TypeS> side, TypeS bound) {
-    return boundsMap(new Bounded<>(var, oneSideBoundST(side, bound)));
+  public BoundsMap<TypeS> bmS(VarS var, Side<TypeS> side, TypeS bound) {
+    return boundsMap(new Bounded<>(var, oneSideBoundS(side, bound)));
   }
 
-  public BoundsMap<TypeS> bmST() {
+  public BoundsMap<TypeS> bmS() {
     return boundsMap();
   }
 
-  public Bounds<TypeS> oneSideBoundST(Side<TypeS> side, TypeS type) {
+  public Bounds<TypeS> oneSideBoundS(Side<TypeS> side, TypeS type) {
     return typeFactoryS().oneSideBound(side, type);
   }
 
@@ -687,7 +687,7 @@ public class TestingContext {
   }
 
   public BlobS blobS(int line, int data) {
-    return new BlobS(blobST(), ByteString.of((byte) data), loc(line));
+    return new BlobS(blobTS(), ByteString.of((byte) data), loc(line));
   }
 
   public CallS callS(TypeS type, ExprS callable, ExprS... args) {
@@ -700,7 +700,7 @@ public class TestingContext {
 
   public CombineS combineS(ExprS... expr) {
     var exprs = ImmutableList.copyOf(expr);
-    return combineS(1, structST("MyStruct", nList(exprsToItemSigs(exprs))), exprs);
+    return combineS(1, structTS("MyStruct", nList(exprsToItemSigs(exprs))), exprs);
   }
 
   private ImmutableList<ItemSigS> exprsToItemSigs(ImmutableList<ExprS> exprs) {
@@ -723,7 +723,7 @@ public class TestingContext {
 
   public NatFuncS funcS(int line, TypeS type, String name, AnnS annS,
       ItemS... params) {
-    return new NatFuncS(funcST(type, params), modPath(), name,
+    return new NatFuncS(funcTS(type, params), modPath(), name,
         nList(params), annS, loc(line)
     );
   }
@@ -734,7 +734,7 @@ public class TestingContext {
 
   public DefFuncS funcS(
       int line, TypeS type, String name, ExprS body, ItemS... params) {
-    return new DefFuncS(funcST(type, params), modPath(), name,
+    return new DefFuncS(funcTS(type, params), modPath(), name,
         nList(params), body, loc(line)
     );
   }
@@ -744,7 +744,7 @@ public class TestingContext {
   }
 
   public IntS intS(int line, int value) {
-    return new IntS(intST(), BigInteger.valueOf(value), loc(line));
+    return new IntS(intTS(), BigInteger.valueOf(value), loc(line));
   }
 
   public OrderS orderS(TypeS elemT, ExprS... exprs) {
@@ -752,7 +752,7 @@ public class TestingContext {
   }
 
   public OrderS orderS(int line, TypeS elemT, ExprS... exprs) {
-    return new OrderS(arrayST(elemT), ImmutableList.copyOf(exprs), loc(line));
+    return new OrderS(arrayTS(elemT), ImmutableList.copyOf(exprs), loc(line));
   }
 
   public ParamRefS paramRefS(TypeS type) {
@@ -792,7 +792,7 @@ public class TestingContext {
   }
 
   public StringS stringS(int line, String data) {
-    return new StringS(stringST(), data, loc(line));
+    return new StringS(stringTS(), data, loc(line));
   }
 
   // other smooth language thingies
@@ -834,7 +834,7 @@ public class TestingContext {
   }
 
   public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS expr) {
-    return defFuncS(1, funcST(expr.type(), toTypes(params)), name, params, expr);
+    return defFuncS(1, funcTS(expr.type(), toTypes(params)), name, params, expr);
   }
 
   public DefFuncS defFuncS(int line, FuncTS type, String name, NList<ItemS> params, ExprS expr) {

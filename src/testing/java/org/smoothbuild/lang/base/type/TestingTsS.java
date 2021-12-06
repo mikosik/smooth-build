@@ -114,14 +114,14 @@ public class TestingTsS {
   public static BoundsMap<TypeS> bm(
       VarS var1, Side<TypeS> side1, TypeS bound1,
       VarS var2, Side<TypeS> side2, TypeS bound2) {
-    return CONTEXT.bmST(var1, side1, bound1, var2, side2, bound2);
+    return CONTEXT.bmS(var1, side1, bound1, var2, side2, bound2);
   }
 
   public static BoundsMap<TypeS> bm(VarS var, Side<TypeS> side, TypeS bound) {
-    return CONTEXT.bmST(var, side, bound);
+    return CONTEXT.bmS(var, side, bound);
   }
 
   public static BoundsMap<TypeS> bm() {
-    return CONTEXT.bmST();
+    return CONTEXT.bmS();
   }
 }

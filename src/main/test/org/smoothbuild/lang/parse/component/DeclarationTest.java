@@ -237,7 +237,7 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           mod(structDeclaration("String field,"))
               .loadsSuccessfully()
-              .containsType(structST("MyStruct", nList(sigS(STRING, "field"))));
+              .containsType(structTS("MyStruct", nList(sigS(STRING, "field"))));
         }
 
         @Test

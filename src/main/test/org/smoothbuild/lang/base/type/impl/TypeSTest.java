@@ -218,7 +218,7 @@ public class TypeSTest extends TestingContext {
   class _var {
     @Test
     public void illegal_name() {
-      assertCall(() -> varST("a"))
+      assertCall(() -> varS("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
@@ -262,17 +262,17 @@ public class TypeSTest extends TestingContext {
   class _struct {
     @Test
     public void without_fields_can_be_created() {
-      structST("MyStruct", nList());
+      structTS("MyStruct", nList());
     }
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structST("MyStruct", nList(sigS(nothingST(), "fieldName")));
+      structTS("MyStruct", nList(sigS(nothingTS(), "fieldName")));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structST("MyStruct", nList(sigS(arrayST(nothingST()), "fieldName")));
+      structTS("MyStruct", nList(sigS(arrayTS(nothingTS()), "fieldName")));
     }
 
     @Test

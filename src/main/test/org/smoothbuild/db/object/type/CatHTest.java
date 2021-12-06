@@ -281,13 +281,13 @@ public class CatHTest extends TestingContext {
   class _var {
     @Test
     public void name() {
-      assertThat(varST("A").name())
+      assertThat(varS("A").name())
           .isEqualTo("A");
     }
 
     @Test
     public void illegal_name() {
-      assertCall(() -> varST("a"))
+      assertCall(() -> varS("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }

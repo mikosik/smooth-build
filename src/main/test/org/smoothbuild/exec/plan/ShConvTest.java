@@ -31,7 +31,7 @@ public class ShConvTest extends TestingContext {
     @Test
     public void call() {
       var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
-      var call = callS(stringST(), topRefS(defFunc));
+      var call = callS(stringTS(), topRefS(defFunc));
       assertConversion(defFunc, call, callH(defFuncH(stringH("abc")), list()));
     }
 
@@ -49,20 +49,20 @@ public class ShConvTest extends TestingContext {
 
     @Test
     public void order() {
-      var order = orderS(stringST(), stringS("abc"), stringS("def"));
+      var order = orderS(stringTS(), stringS("abc"), stringS("def"));
       assertConversion(order, orderH(list(stringH("abc"), stringH("def"))));
     }
 
     @Test
     public void paramRef() {
-      var func = defFuncS("f", nList(itemS(intST(), "p")), paramRefS(intST(), "p"));
+      var func = defFuncS("f", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
       assertConversion(func, topRefS(func), defFuncH(list(intTH()), paramRefH(intTH(), 0)));
     }
 
     @Test
     public void select() {
       var combine = combineS(stringS("abc"));
-      var select = selectS(stringST(), combine, "field0");
+      var select = selectS(stringTS(), combine, "field0");
       assertConversion(select, selectH(combineH(list(stringH("abc"))), intH(0)));
     }
 
@@ -123,7 +123,7 @@ public class ShConvTest extends TestingContext {
 
     @Test
     public void nat_func_conversion_result() {
-      assertConversionIsCached(natFuncS(funcST(stringST()), "myFunc", nList()));
+      assertConversionIsCached(natFuncS(funcTS(stringTS()), "myFunc", nList()));
     }
 
     private void assertConversionIsCached(TopEvalS topEval) {
