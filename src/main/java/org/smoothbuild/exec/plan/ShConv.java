@@ -155,19 +155,19 @@ public class ShConv {
 
   public ObjH convertExpr(ExprS exprS) {
     return switch (exprS) {
-      case BlobS blobS -> convertAndStoreMapping(blobS, this::convertBlob);
-      case CallS callS -> convertAndStoreMapping(callS, this::convertCall);
-      case CombineS combineS -> convertAndStoreMapping(combineS, this::convertCombine);
-      case IntS intS -> convertAndStoreMapping(intS, this::convertInt);
-      case OrderS orderS -> convertAndStoreMapping(orderS, this::convertOrder);
-      case ParamRefS paramRefS -> convertAndStoreMapping(paramRefS, this::convertParamRef);
+      case BlobS blobS -> convertAndCacheNal(blobS, this::convertBlob);
+      case CallS callS -> convertAndCacheNal(callS, this::convertCall);
+      case CombineS combineS -> convertAndCacheNal(combineS, this::convertCombine);
+      case IntS intS -> convertAndCacheNal(intS, this::convertInt);
+      case OrderS orderS -> convertAndCacheNal(orderS, this::convertOrder);
+      case ParamRefS paramRefS -> convertAndCacheNal(paramRefS, this::convertParamRef);
       case TopRefS topRefS -> convertTopRef(topRefS);
-      case SelectS selectS -> convertAndStoreMapping(selectS, this::convertSelect);
-      case StringS stringS -> convertAndStoreMapping(stringS, this::convertString);
+      case SelectS selectS -> convertAndCacheNal(selectS, this::convertSelect);
+      case StringS stringS -> convertAndCacheNal(stringS, this::convertString);
     };
   }
 
-  private <T extends ExprS> ObjH convertAndStoreMapping(T exprS, Function<T, ObjH> mapping) {
+  private <T extends ExprS> ObjH convertAndCacheNal(T exprS, Function<T, ObjH> mapping) {
     var objH = mapping.apply(exprS);
     nals.put(objH, exprS);
     return objH;
