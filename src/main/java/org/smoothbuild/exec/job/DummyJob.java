@@ -9,9 +9,6 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 
-/**
- * Subclasses of this class must be immutable.
- */
 public class DummyJob extends AbstractJob {
   private final ValH val;
 
