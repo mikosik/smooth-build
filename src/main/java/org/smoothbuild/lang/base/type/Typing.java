@@ -96,6 +96,10 @@ public class Typing<T extends Type> {
     return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
+  public BoundsMap<T> inferVarBoundsLower(List<? extends T> types1, List<? extends T> types2) {
+    return inferVarBounds(types1, types2, factory.lower());
+  }
+
   public BoundsMap<T> inferVarBounds(
       List<? extends T> types1, List<? extends T> types2, Side<T> side) {
     var result = new HashMap<Var, Bounded<T>>();
@@ -144,6 +148,10 @@ public class Typing<T extends Type> {
       }
       default -> {}
     }
+  }
+
+  public T mapVarsLower(T type, BoundsMap<T> boundsMap) {
+    return mapVars(type, boundsMap, factory.lower());
   }
 
   public T mapVars(T type, BoundsMap<T> boundsMap, Side<T> side) {

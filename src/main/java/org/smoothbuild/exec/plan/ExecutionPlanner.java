@@ -28,6 +28,6 @@ public class ExecutionPlanner {
     var shConverter = shConvProv.get(defs);
     var shMapping = toMap(values, shConverter::convertExpr);
     var jobCreator = jobCreatorProvider.get(shConverter.nals());
-    return mapValues(shMapping, jobCreator::commandLineExprEagerJob);
+    return mapValues(shMapping, jobCreator::eagerJobFor);
   }
 }

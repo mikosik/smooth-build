@@ -23,6 +23,6 @@ public class JobCreatorProvider {
   }
 
   public JobCreator get(ImmutableMap<ObjH, Nal> nals) {
-    return new JobCreator(methodLoader, typeFactoryH, typingH, nals);
+    return new JobCreator(methodLoader, typingH, nals);
   }
 }

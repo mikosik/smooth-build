@@ -30,7 +30,6 @@ import org.smoothbuild.db.object.obj.val.MapFuncH;
 import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.TypeFactoryH;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
@@ -60,16 +59,13 @@ import com.google.common.collect.ImmutableMap;
 
 public class JobCreator {
   private final MethodLoader methodLoader;
-  private final TypeFactoryH factory;
   private final TypingH typing;
   private final ImmutableMap<ObjH, Nal> nals;
   private final Map<Class<?>, Handler<?>> handler;
 
   @Inject
-  public JobCreator(MethodLoader methodLoader, TypeFactoryH factory, TypingH typing,
-      ImmutableMap<ObjH, Nal> nals) {
+  public JobCreator(MethodLoader methodLoader, TypingH typing, ImmutableMap<ObjH, Nal> nals) {
     this.methodLoader = methodLoader;
-    this.factory = factory;
     this.typing = typing;
     this.nals = nals;
     this.handler = combineHandlers();
@@ -95,17 +91,21 @@ public class JobCreator {
         .build();
   }
 
+  public Job eagerJobFor(ObjH obj) {
+    return eagerJobFor(new IndexedScope<>(list()), boundsMap(), obj);
+  }
+
   private ImmutableList<Job> eagerJobsFor(
       IndexedScope<Job> scope, BoundsMap<TypeH> vars, ImmutableList<ObjH> objs) {
     return map(objs, e -> eagerJobFor(scope, vars, e));
   }
 
-  public Job jobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjH expr,
+  private Job jobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjH expr,
       boolean eager) {
     return handlerFor(expr).job(eager).apply(scope, vars, expr);
   }
 
-  public Job eagerJobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjH expr) {
+  private Job eagerJobFor(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ObjH expr) {
     return handlerFor(expr).eagerJob().apply(scope, vars, expr);
   }
 
@@ -113,7 +113,7 @@ public class JobCreator {
     return handlerFor(expr).lazyJob().apply(scope, vars, expr);
   }
 
-  public <T> Handler<T> handlerFor(ObjH obj) {
+  private <T> Handler<T> handlerFor(ObjH obj) {
     @SuppressWarnings("unchecked")
     Handler<T> result = (Handler<T>) handler.get(obj.getClass());
     if (result == null) {
@@ -137,7 +137,7 @@ public class JobCreator {
     var funcJ = jobFor(scope, vars, callData.callable(), eager);
     var argsJ = map(callData.args().items(), a -> lazyJobFor(scope, vars, a));
     var loc = nals.get(call).loc();
-    var actualArgTypes = map(argsJ, a -> typing.mapVars(a.type(), vars, factory.lower()));
+    var actualArgTypes = map(argsJ, a -> typing.mapVarsLower(a.type(), vars));
     var newVars = inferVarsInFuncCall(funcJ, actualArgTypes);
     return callJob(scope, funcJ, argsJ, loc, newVars, eager);
   }
@@ -148,7 +148,7 @@ public class JobCreator {
       return callEagerJob(scope, func, args, loc, vars);
     } else {
       var funcT = (FuncTH) func.type();
-      var actualResT = typing.mapVars(funcT.res(), vars, factory.lower());
+      var actualResT = typing.mapVarsLower(funcT.res(), vars);
       return new LazyJob(actualResT, loc, () -> callEagerJob(scope, func, args, loc, vars));
     }
   }
@@ -161,7 +161,7 @@ public class JobCreator {
   private Job callEagerJob(IndexedScope<Job> scope, Job func, ImmutableList<Job> args, Loc loc,
       BoundsMap<TypeH> vars) {
     var funcT = (FuncTH) func.type();
-    var actualResT = typing.mapVars(funcT.res(), vars, factory.lower());
+    var actualResT = typing.mapVarsLower(funcT.res(), vars);
     return new CallJob(actualResT, func, args, loc, vars, scope, JobCreator.this);
   }
 
@@ -172,7 +172,7 @@ public class JobCreator {
 
   private BoundsMap<TypeH> inferVarsInFuncCall(Job func, ImmutableList<TypeH> argTs) {
     var funcT = (FuncTH) func.type();
-    return typing.inferVarBounds(funcT.params(), argTs, factory.lower());
+    return typing.inferVarBoundsLower(funcT.params(), argTs);
   }
 
   // Value
@@ -231,7 +231,7 @@ public class JobCreator {
 
   private Task orderEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, OrderH order, Nal nal) {
     var type = order.type();
-    var actualT = (ArrayTH) typing.mapVars(type, vars, factory.lower());
+    var actualT = (ArrayTH) typing.mapVarsLower(type, vars);
     var elemsJ = map(order.elems(), e -> eagerJobFor(scope, vars, e));
     var info = new TaskInfo(LITERAL, nal);
     return orderEager(actualT, elemsJ, info);
@@ -303,10 +303,6 @@ public class JobCreator {
   private Job mapFuncEager(TypeH actualResT, ImmutableList<Job> args, IndexedScope<Job> scope,
       Loc loc) {
     return new MapJob(actualResT, loc, args, scope, this);
-  }
-
-  public Job commandLineExprEagerJob(ObjH obj) {
-    return eagerJobFor(new IndexedScope<>(list()), boundsMap(), obj);
   }
 
   public record Handler<E>(
