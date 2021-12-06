@@ -238,7 +238,7 @@ public class BuildCommandTest {
             result = "myLiteral";
             """;
       private static final String LITERAL_TASK_HEADER = """
-          "myLiteral"                              build.smooth:1                 exec
+          "myLiteral"                              build.smooth:1
           """;
 
       @Test
@@ -467,7 +467,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          if                                       smooth internal                exec
+          if                                       smooth internal
           """);
     }
 
@@ -491,7 +491,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          0x0102                                   build.smooth:1                 exec
+          0x0102                                   build.smooth:1
           """);
     }
 
@@ -503,7 +503,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          "abc"                                    build.smooth:1                 exec
+          "abc"                                    build.smooth:1
           """);
     }
 
@@ -516,7 +516,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-            "abc"                                    build.smooth:1                 exec
+            "abc"                                    build.smooth:1
           """);
     }
   }

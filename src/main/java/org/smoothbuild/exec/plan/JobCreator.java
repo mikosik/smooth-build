@@ -35,12 +35,12 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
-import org.smoothbuild.exec.algorithm.ConstAlgorithm;
 import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
 import org.smoothbuild.exec.algorithm.OrderAlgorithm;
 import org.smoothbuild.exec.algorithm.SelectAlgorithm;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.exec.job.CallJob;
+import org.smoothbuild.exec.job.ConstJob;
 import org.smoothbuild.exec.job.IfJob;
 import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.job.LazyJob;
@@ -178,20 +178,14 @@ public class JobCreator {
   // Value
 
   private Job valueLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
-    Nal nal = nals.get(val);
+    var nal = nals.get(val);
     var loc = nal.loc();
-    return new LazyJob(val.cat(), loc, () -> valueEagerJob(nal, val));
+    return new LazyJob(val.cat(), loc, () -> new ConstJob(val, nal));
   }
 
   private Job valueEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
     var nal = nals.get(val);
-    return valueEagerJob(nal, val);
-  }
-
-  private Task valueEagerJob(Nal nal, ValH val) {
-    var info = new TaskInfo(LITERAL, nal);
-    var algorithm = new ConstAlgorithm(val);
-    return new Task(val.cat(), list(), info, algorithm);
+    return new ConstJob(val, nal);
   }
 
   // Combine

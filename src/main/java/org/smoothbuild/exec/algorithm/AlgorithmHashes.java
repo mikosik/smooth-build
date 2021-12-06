@@ -5,7 +5,6 @@ import static java.util.Arrays.asList;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.NatFuncH;
-import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 
 public class AlgorithmHashes {
@@ -13,9 +12,7 @@ public class AlgorithmHashes {
     return hash(0, type.hash());
   }
 
-  public static Hash constAlgorithmHash(ValH val) {
-    return hash(1, val.hash());
-  }
+  // TODO 1 is unused
 
   public static Hash invokeAlgorithmHash(NatFuncH natFuncH) {
     return hash(2, natFuncH.hash());
