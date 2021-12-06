@@ -1,5 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.base.Input;
@@ -17,6 +19,7 @@ public abstract class Algorithm {
   protected Algorithm(TypeH outputT, boolean isPure) {
     this.outputT = outputT;
     this.isPure = isPure;
+    checkArgument(!outputT.isPolytype());
   }
 
   public TypeH outputT() {
