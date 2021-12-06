@@ -32,8 +32,7 @@ public class AlgorithmHashesCollisionTest extends TestingContext {
     addHash(list, set, callNativeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 2")), stringH("class 1"))));
     addHash(list, set, callNativeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 2")), stringH("class 2"))));
     addHash(list, set, orderAlgorithmHash());
-    addHash(list, set, selectAlgorithmHash(intH(0)));
-    addHash(list, set, selectAlgorithmHash(intH(1)));
+    addHash(list, set, selectAlgorithmHash());
   }
 
   private void addHash(List<Hash> list, Set<Hash> set, Hash hash) {

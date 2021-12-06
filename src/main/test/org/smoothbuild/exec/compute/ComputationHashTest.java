@@ -115,10 +115,10 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_select_algorithm_and_one_elem_input_is_stable() {
-    var algorithm = new SelectAlgorithm(intH(0), TestingCatsH.STRING);
+    var algorithm = new SelectAlgorithm(TestingCatsH.STRING);
     var input = input(list(stringH("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("6513f0e8ee2db27f5e59b8ac0a7cf0b8cd2b16b0"));
+        .isEqualTo(Hash.decode("930d713aa3678bf1fab120b8925aadd428b79ce9"));
   }
 
   private static Algorithm computation(Hash hash) {

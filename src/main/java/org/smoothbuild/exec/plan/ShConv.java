@@ -214,6 +214,7 @@ public class ShConv {
     var structTS = (StructTS) selectS.selectable().type();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexH = objFactory.int_(BigInteger.valueOf(indexJ));
+    nals.put(indexH, selectS);
     return objFactory.select(selectableH, indexH);
   }
 

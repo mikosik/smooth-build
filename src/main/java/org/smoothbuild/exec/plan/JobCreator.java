@@ -257,11 +257,11 @@ public class JobCreator {
   private Task selectEager(
       IndexedScope<Job> scope, BoundsMap<TypeH> vars, SelectH selectH, Nal nal) {
     var data = selectH.data();
-    var index = data.index();
-    var algorithm = new SelectAlgorithm(index, selectH.type());
-    var deps = list(eagerJobFor(scope, vars, data.selectable()));
+    var algorithm = new SelectAlgorithm(selectH.type());
+    var selectable = eagerJobFor(scope, vars, data.selectable());
+    var index = eagerJobFor(data.index());
     var info = new TaskInfo(SELECT, nal);
-    return new Task(selectH.type(), deps, info, algorithm);
+    return new Task(selectH.type(), list(selectable, index), info, algorithm);
   }
 
   // helper methods
