@@ -2,8 +2,8 @@ package org.smoothbuild.exec.algorithm;
 
 import static okio.ByteString.encodeUtf8;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.combineAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.invokeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.orderAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.selectAlgorithmHash;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -27,10 +27,10 @@ public class AlgorithmHashesCollisionTest extends TestingContext {
     addHash(list, set, combineAlgorithmHash(tupleTH(list(intTH()))));
     addHash(list, set, combineAlgorithmHash(tupleTH(list(stringTH()))));
     addHash(list, set, combineAlgorithmHash(tupleTH(list(intTH(), stringTH()))));
-    addHash(list, set, invokeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 1")), stringH("class 1"))));
-    addHash(list, set, invokeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 1")), stringH("class 2"))));
-    addHash(list, set, invokeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 2")), stringH("class 1"))));
-    addHash(list, set, invokeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 2")), stringH("class 2"))));
+    addHash(list, set, callNativeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 1")), stringH("class 1"))));
+    addHash(list, set, callNativeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 1")), stringH("class 2"))));
+    addHash(list, set, callNativeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 2")), stringH("class 1"))));
+    addHash(list, set, callNativeAlgorithmHash(natFuncH(blobH(encodeUtf8("blob 2")), stringH("class 2"))));
     addHash(list, set, orderAlgorithmHash());
     addHash(list, set, selectAlgorithmHash(intH(0)));
     addHash(list, set, selectAlgorithmHash(intH(1)));

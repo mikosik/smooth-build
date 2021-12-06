@@ -34,8 +34,8 @@ import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
+import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
-import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
 import org.smoothbuild.exec.algorithm.OrderAlgorithm;
 import org.smoothbuild.exec.algorithm.SelectAlgorithm;
 import org.smoothbuild.exec.java.MethodLoader;
@@ -266,35 +266,35 @@ public class JobCreator {
 
   // helper methods
 
-  public Job evaluateFuncEagerJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
+  public Job callFuncEagerJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
       TypeH actualResT, FuncH func, ImmutableList<Job> args, Loc loc) {
     return switch (func) {
-      case DefFuncH def -> defFuncEager(def, args, scope, vars, loc);
-      case NatFuncH nat -> natFuncEager(nat, actualResT, args, loc);
-      case IfFuncH iff -> ifFuncEager(actualResT, args, loc);
-      case MapFuncH map -> mapFuncEager(actualResT, args, scope, loc);
+      case DefFuncH def -> callDefFuncEager(def, args, scope, vars, loc);
+      case NatFuncH nat -> callNatFuncEager(nat, actualResT, args, loc);
+      case IfFuncH iff -> callIfFuncEager(actualResT, args, loc);
+      case MapFuncH map -> callMapFuncEager(actualResT, args, scope, loc);
     };
   }
 
-  private Job defFuncEager(DefFuncH defFuncH, ImmutableList<Job> args,
+  private Job callDefFuncEager(DefFuncH defFuncH, ImmutableList<Job> args,
       IndexedScope<Job> scope, BoundsMap<TypeH> vars, Loc loc) {
     var job = eagerJobFor(new IndexedScope<>(scope, args), vars, defFuncH.body());
     var name = nals.get(defFuncH).name();
     return new VirtualJob(job, new TaskInfo(CALL, name, loc));
   }
 
-  private Job natFuncEager(NatFuncH func, TypeH actualResT, ImmutableList<Job> args, Loc loc) {
+  private Job callNatFuncEager(NatFuncH func, TypeH actualResT, ImmutableList<Job> args, Loc loc) {
     var name = nals.get(func).name();
-    var algorithm = new InvokeAlgorithm(actualResT, name, func, methodLoader);
+    var algorithm = new CallNativeAlgorithm(actualResT, name, func, methodLoader);
     var info = new TaskInfo(CALL, name, loc);
     return new Task(actualResT, args, info, algorithm);
   }
 
-  private Job ifFuncEager(TypeH actualResT, ImmutableList<Job> args, Loc loc) {
+  private Job callIfFuncEager(TypeH actualResT, ImmutableList<Job> args, Loc loc) {
     return new IfJob(actualResT, args, loc);
   }
 
-  private Job mapFuncEager(TypeH actualResT, ImmutableList<Job> args, IndexedScope<Job> scope,
+  private Job callMapFuncEager(TypeH actualResT, ImmutableList<Job> args, IndexedScope<Job> scope,
       Loc loc) {
     return new MapJob(actualResT, loc, args, scope, this);
   }

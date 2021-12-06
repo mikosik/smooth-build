@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.algorithm;
 
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.invokeAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.base.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 
@@ -16,12 +16,12 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.plugin.NativeApi;
 
-public class InvokeAlgorithm extends Algorithm {
+public class CallNativeAlgorithm extends Algorithm {
   private final NatFuncH natFuncH;
   private final String extendedName;
   private final MethodLoader methodLoader;
 
-  public InvokeAlgorithm(TypeH outputT, String extendedName, NatFuncH natFuncH,
+  public CallNativeAlgorithm(TypeH outputT, String extendedName, NatFuncH natFuncH,
       MethodLoader methodLoader) {
     super(outputT, natFuncH.isPure().toJ());
     this.extendedName = extendedName;
@@ -31,7 +31,7 @@ public class InvokeAlgorithm extends Algorithm {
 
   @Override
   public Hash hash() {
-    return invokeAlgorithmHash(natFuncH);
+    return callNativeAlgorithmHash(natFuncH);
   }
 
   @Override

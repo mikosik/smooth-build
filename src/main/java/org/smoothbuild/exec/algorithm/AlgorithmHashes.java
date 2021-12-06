@@ -14,7 +14,7 @@ public class AlgorithmHashes {
 
   // TODO 1 is unused
 
-  public static Hash invokeAlgorithmHash(NatFuncH natFuncH) {
+  public static Hash callNativeAlgorithmHash(NatFuncH natFuncH) {
     return hash(2, natFuncH.hash());
   }
 
