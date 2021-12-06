@@ -1,6 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.db.object.type.TestingCatsH.INT;
 import static org.smoothbuild.db.object.type.TestingCatsH.PERSON;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
@@ -9,7 +10,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.TestingCatsH;
-import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
@@ -23,7 +23,7 @@ import org.smoothbuild.testing.TestingContext;
 public class ComputationHashTest extends TestingContext {
   @Test
   public void hashes_of_computations_with_same_algorithm_runtime_and_input_are_equal() {
-    var algorithm = computation(Hash.of(1));
+    var algorithm = algorithm(Hash.of(1));
     var input = input(list(stringH("input")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(computationHash(Hash.of(13), algorithm, input));
@@ -31,8 +31,8 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hashes_of_computations_with_different_algorithm_but_same_runtime_and_input_are_not_equal() {
-    var algorithm1 = computation(Hash.of(1));
-    var algorithm2 = computation(Hash.of(2));
+    var algorithm1 = algorithm(Hash.of(1));
+    var algorithm2 = algorithm(Hash.of(2));
     var input = input(list(stringH("input")));
     assertThat(computationHash(Hash.of(13), algorithm1, input))
         .isNotEqualTo(computationHash(Hash.of(13), algorithm2, input));
@@ -40,7 +40,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hashes_of_computations_with_same_algorithm_and_input_but_different_runtime_are_not_equal() {
-    var algorithm = computation(Hash.of(1));
+    var algorithm = algorithm(Hash.of(1));
     var input = input(list(stringH("input")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isNotEqualTo(computationHash(Hash.of(14), algorithm, input));
@@ -48,7 +48,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hashes_of_computations_with_same_algorithm_runtime_but_different_input_are_not_equal() {
-    var algorithm = computation(Hash.of(1));
+    var algorithm = algorithm(Hash.of(1));
     var input1 = input(list(stringH("input")));
     var input2 = input(list(stringH("input2")));
     assertThat(computationHash(Hash.of(13), algorithm, input1))
@@ -121,16 +121,11 @@ public class ComputationHashTest extends TestingContext {
         .isEqualTo(Hash.decode("930d713aa3678bf1fab120b8925aadd428b79ce9"));
   }
 
-  private static Algorithm computation(Hash hash) {
-    return new Algorithm(null) {
+  private static Algorithm algorithm(Hash hash) {
+    return new Algorithm(INT) {
       @Override
       public Hash hash() {
         return hash;
-      }
-
-      @Override
-      public TypeH outputT() {
-        return null;
       }
 
       @Override
