@@ -138,10 +138,6 @@ public class TestingContext {
   private ModS internalMod;
   private TypeFactoryS typeFactoryS;
 
-  public NativeApi nativeApi() {
-    return container();
-  }
-
   public TestingModLoader mod(String sourceCode) {
     return new TestingModLoader(this, sourceCode);
   }
@@ -158,6 +154,14 @@ public class TestingContext {
       computer = new Computer(computationCache(), Hash.of(123), Providers.of(newContainer()));
     }
     return computer;
+  }
+
+  public NativeApi nativeApi() {
+    return container();
+  }
+
+  public NativeApi newNativeApi() {
+    return newContainer();
   }
 
   public Container container() {

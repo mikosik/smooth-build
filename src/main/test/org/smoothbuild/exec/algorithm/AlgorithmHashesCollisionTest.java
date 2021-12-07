@@ -2,6 +2,7 @@ package org.smoothbuild.exec.algorithm;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.combineAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.invokeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.orderAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.selectAlgorithmHash;
@@ -26,6 +27,8 @@ public class AlgorithmHashesCollisionTest extends TestingContext {
     addHash(list, set, combineAlgorithmHash(tupleTB(list(intTB()))));
     addHash(list, set, combineAlgorithmHash(tupleTB(list(stringTB()))));
     addHash(list, set, combineAlgorithmHash(tupleTB(list(intTB(), stringTB()))));
+    addHash(list, set, convertAlgorithmHash(intTB()));
+    addHash(list, set, convertAlgorithmHash(stringTB()));
     addHash(list, set, invokeAlgorithmHash(
         methodB(methodTB(intTB(), list()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, invokeAlgorithmHash(
