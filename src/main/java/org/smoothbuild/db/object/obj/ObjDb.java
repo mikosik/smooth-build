@@ -1,10 +1,12 @@
 package org.smoothbuild.db.object.obj;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static org.smoothbuild.db.object.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootExc.cannotReadRootException;
 import static org.smoothbuild.db.object.obj.exc.DecodeObjRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -22,6 +24,9 @@ import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.db.object.obj.exc.NoSuchObjExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
+import org.smoothbuild.db.object.obj.expr.IfH;
+import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -30,12 +35,8 @@ import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefFuncH;
 import org.smoothbuild.db.object.obj.val.FuncH;
-import org.smoothbuild.db.object.obj.val.IfFuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MapFuncH;
-import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -43,11 +44,10 @@ import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.expr.InvokeCH;
 import org.smoothbuild.db.object.type.expr.SelectCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
-import org.smoothbuild.db.object.type.val.DefFuncTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
-import org.smoothbuild.db.object.type.val.NatFuncTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.util.collect.Lists;
@@ -62,20 +62,10 @@ public class ObjDb {
   private final CatDb catDb;
   private final TypingH typing;
 
-  private final IfFuncH ifFunc;
-  private final MapFuncH mapFunc;
-
   public ObjDb(HashedDb hashedDb, CatDb catDb, TypingH typing) {
     this.hashedDb = hashedDb;
     this.catDb = catDb;
     this.typing = typing;
-
-    try {
-      this.ifFunc = newIfFunc();
-      this.mapFunc = newMapFunc();
-    } catch (HashedDbExc e) {
-      throw new ObjDbExc(e);
-    }
   }
 
   // methods for creating ValueH subclasses
@@ -92,7 +82,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
-  public DefFuncH defFunc(DefFuncTH type, ObjH body) {
+  public FuncH func(FuncTH type, ObjH body) {
     if (!typing.isAssignable(type.res(), body.type())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.res().name()
           + " but body.type() is " + body.type().name() + ".");
@@ -104,10 +94,10 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInt(value));
   }
 
-  public NatFuncH natFunc(
-      NatFuncTH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
+  public InvokeH invoke(InvokeCH type, BlobH jarFile, StringH classBinaryName, BoolH isPure,
+      CombineH args) {
     return wrapHashedDbExceptionAsObjectDbException(
-        () -> newNatFunc(type, jarFile, classBinaryName, isPure));
+        () -> newInvoke(type, jarFile, classBinaryName, isPure, args));
   }
 
   public StringH string(String value) {
@@ -141,12 +131,12 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(items));
   }
 
-  public IfFuncH ifFunc() {
-    return ifFunc;
+  public IfH if_(ObjH condition, ObjH then, ObjH else_) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
   }
 
-  public MapFuncH mapFunc() {
-    return mapFunc;
+  public MapH map(ObjH array, ObjH func) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newMap(array, func));
   }
 
   public OrderH order(ImmutableList<ObjH> elems) {
@@ -210,8 +200,7 @@ public class ObjDb {
     return catDb.bool().newObj(root, this);
   }
 
-  private DefFuncH newFunc(DefFuncTH type, ObjH body)
-      throws HashedDbExc {
+  private FuncH newFunc(FuncTH type, ObjH body) throws HashedDbExc {
     var data = writeFuncData(body);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -223,9 +212,9 @@ public class ObjDb {
     return catDb.int_().newObj(root, this);
   }
 
-  private NatFuncH newNatFunc(NatFuncTH type, BlobH jarFile,
-      StringH classBinaryName, BoolH isPure) throws HashedDbExc {
-    var data = writeNatFuncData(jarFile, classBinaryName, isPure);
+  private InvokeH newInvoke(InvokeCH type, BlobH jarFile, StringH classBinaryName, BoolH isPure,
+      CombineH args) throws HashedDbExc {
+    var data = writeInvokeData(jarFile, classBinaryName, isPure, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -281,20 +270,6 @@ public class ObjDb {
     }
   }
 
-  private IfFuncH newIfFunc() throws HashedDbExc {
-    var type = catDb.ifFunc();
-    return (IfFuncH) newInternalFunc(type);
-  }
-
-  private FuncH newInternalFunc(FuncTH type) throws HashedDbExc {
-    // Internal funcs don't have any data. We use empty sequence as its data so
-    // code reading such func from hashedDb can be simpler and code that stores
-    // h-objects as artifacts doesn't need handle this special case.
-    Hash dataHash = hashedDb.writeSeq();
-    var root = newRoot(type, dataHash);
-    return type.newObj(root, this);
-  }
-
   private OrderH newOrder(ImmutableList<ObjH> elems) throws HashedDbExc {
     var elemT = elemType(elems);
     var type = catDb.order(elemT);
@@ -332,9 +307,33 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private MapFuncH newMapFunc() throws HashedDbExc {
-    var type = catDb.mapFunc();
-    return (MapFuncH) newInternalFunc(type);
+  private IfH newIf(ObjH condition, ObjH then, ObjH else_) throws HashedDbExc {
+    checkArgument(condition.type().equals(catDb.bool()));
+    var evalT = typing.mergeUp(then.type(), else_.type());
+    var type = catDb.if_(evalT);
+    var data = writeIfData(condition, then, else_);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
+  }
+
+  private MapH newMap(ObjH array, ObjH func) throws HashedDbExc {
+    if (array.type() instanceof ArrayTH arrayT
+        && func.type() instanceof FuncTH funcT
+        && funcT.params().size() == 1
+        && typing.isAssignable(funcT.params().get(0), arrayT.elem())) {
+      // TODO func can be generic so we need to infer proper result type
+      var vars = typing.inferVarBoundsInCall(funcT.params(), list(arrayT.elem()));
+      var elemEvalT = typing.mapVarsLower(funcT.res(), vars);
+      var evalT = catDb.array(elemEvalT);
+      var type = catDb.map(evalT);
+
+      var data = writeMapData(array, func);
+      var root = newRoot(type, data);
+      return type.newObj(root, this);
+    } else {
+      // TODO add more info
+      throw new IllegalArgumentException();
+    }
   }
 
   private SelectH newSelect(ObjH selectable, IntH index) throws HashedDbExc {
@@ -378,9 +377,17 @@ public class ObjDb {
     return writeSeq(items);
   }
 
-  private Hash writeNatFuncData(BlobH jarFile, StringH classBinaryName, BoolH isPure)
-      throws HashedDbExc {
-    return hashedDb.writeSeq(jarFile.hash(), classBinaryName.hash(), isPure.hash());
+  private Hash writeIfData(ObjH condition, ObjH then, ObjH else_) throws HashedDbExc {
+    return hashedDb.writeSeq(condition.hash(), then.hash(), else_.hash());
+  }
+
+  private Hash writeInvokeData(BlobH jarFile, StringH classBinaryName, BoolH isPure,
+      CombineH args) throws HashedDbExc {
+    return hashedDb.writeSeq(jarFile.hash(), classBinaryName.hash(), isPure.hash(), args.hash());
+  }
+
+  private Hash writeMapData(ObjH array, ObjH func) throws HashedDbExc {
+    return hashedDb.writeSeq(array.hash(), func.hash());
   }
 
   private Hash writeOrderData(ImmutableList<ObjH> elems) throws HashedDbExc {

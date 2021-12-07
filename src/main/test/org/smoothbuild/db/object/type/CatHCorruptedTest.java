@@ -4,13 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.db.object.type.CatDb.DATA_PATH;
 import static org.smoothbuild.db.object.type.CatDb.FUNC_PARAMS_PATH;
 import static org.smoothbuild.db.object.type.CatDb.FUNC_RES_PATH;
-import static org.smoothbuild.db.object.type.base.CatKindH.ABST_FUNC;
 import static org.smoothbuild.db.object.type.base.CatKindH.ANY;
 import static org.smoothbuild.db.object.type.base.CatKindH.ARRAY;
 import static org.smoothbuild.db.object.type.base.CatKindH.BLOB;
 import static org.smoothbuild.db.object.type.base.CatKindH.BOOL;
 import static org.smoothbuild.db.object.type.base.CatKindH.CALL;
 import static org.smoothbuild.db.object.type.base.CatKindH.COMBINE;
+import static org.smoothbuild.db.object.type.base.CatKindH.FUNC;
 import static org.smoothbuild.db.object.type.base.CatKindH.INT;
 import static org.smoothbuild.db.object.type.base.CatKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.CatKindH.ORDER;
@@ -279,7 +279,7 @@ public class CatHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _abstract_func {
+  class _func {
     @Test
     public void learning_test() throws Exception {
       /*
@@ -289,29 +289,29 @@ public class CatHCorruptedTest extends TestingContext {
       ImmutableList<TypeH> paramTs = list(stringTH(), boolTH());
       TupleTH paramsTuple = tupleTH(paramTs);
       Hash specHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               hash(intTH()),
               hash(paramsTuple)
           )
       );
       assertThat(specHash)
-          .isEqualTo(abstFuncTH(intTH(), paramTs).hash());
+          .isEqualTo(funcTH(intTH(), paramTs).hash());
     }
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(ABST_FUNC);
+      test_type_without_data(FUNC);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(ABST_FUNC);
+      test_type_with_additional_data(FUNC);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_seq(ABST_FUNC);
+      test_data_hash_pointing_nowhere_instead_of_being_seq(FUNC);
     }
 
     @Test
@@ -319,18 +319,18 @@ public class CatHCorruptedTest extends TestingContext {
       Hash notHashOfSeq = hash("abc");
       Hash hash =
           hash(
-              hash(ABST_FUNC.marker()),
+              hash(FUNC.marker()),
               notHashOfSeq
           );
       assertThatGet(hash)
-          .throwsException(new DecodeCatNodeExc(hash, ABST_FUNC, DATA_PATH));
+          .throwsException(new DecodeCatNodeExc(hash, FUNC, DATA_PATH));
     }
 
     @Test
     public void with_data_having_three_elems() throws Exception {
       TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
       Hash hash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               hash(intTH()),
               hash(paramTs),
@@ -338,19 +338,19 @@ public class CatHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedCatSeqExc(hash, ABST_FUNC, DATA_PATH, 2, 3));
+          .throwsException(new UnexpectedCatSeqExc(hash, FUNC, DATA_PATH, 2, 3));
     }
 
     @Test
     public void with_data_having_one_elems() throws Exception {
       Hash hash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               hash(intTH())
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedCatSeqExc(hash, ABST_FUNC, DATA_PATH, 2, 1));
+          .throwsException(new UnexpectedCatSeqExc(hash, FUNC, DATA_PATH, 2, 1));
     }
 
     @ParameterizedTest
@@ -359,11 +359,11 @@ public class CatHCorruptedTest extends TestingContext {
         int byteCount) throws Exception {
       Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
       Hash typeHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           notHashOfSeq
       );
       assertCall(() -> ((FuncTH) catDb().get(typeHash)).res())
-          .throwsException(new DecodeCatNodeExc(typeHash, ABST_FUNC, DATA_PATH))
+          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
@@ -373,14 +373,14 @@ public class CatHCorruptedTest extends TestingContext {
       TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               nowhere,
               hash(paramTs)
           )
       );
       assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, ABST_FUNC, FUNC_RES_PATH))
+          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
           .withCause(new DecodeCatExc(nowhere));
     }
 
@@ -388,7 +388,7 @@ public class CatHCorruptedTest extends TestingContext {
     public void with_result_being_expr_type() throws Exception {
       TupleTH paramT = tupleTH(list(stringTH(), boolTH()));
       Hash typeHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               hash(paramRefCH()),
               hash(paramT)
@@ -396,21 +396,21 @@ public class CatHCorruptedTest extends TestingContext {
       );
       assertCall(() -> catDb().get(typeHash))
           .throwsException(new UnexpectedCatNodeExc(
-              typeHash, ABST_FUNC, FUNC_RES_PATH, TypeH.class, ParamRefCH.class));
+              typeHash, FUNC, FUNC_RES_PATH, TypeH.class, ParamRefCH.class));
     }
 
     @Test
     public void with_result_type_corrupted() throws Exception {
       TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
       Hash typeHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               corruptedArrayTHash(),
               hash(paramTs)
           )
       );
       assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, ABST_FUNC, FUNC_RES_PATH))
+          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
           .withCause(corruptedArrayTypeExc());
     }
 
@@ -418,21 +418,21 @@ public class CatHCorruptedTest extends TestingContext {
     public void with_params_pointing_nowhere() throws Exception {
       Hash nowhere = Hash.of(33);
       Hash typeHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               hash(intTH()),
               nowhere
           )
       );
       assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, ABST_FUNC, FUNC_PARAMS_PATH))
+          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
           .withCause(new DecodeCatExc(nowhere));
     }
 
     @Test
     public void with_params_not_being_tuple() throws Exception {
       Hash typeHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               hash(intTH()),
               hash(stringTH())
@@ -440,13 +440,13 @@ public class CatHCorruptedTest extends TestingContext {
       );
       assertThatGet(typeHash)
           .throwsException(new UnexpectedCatNodeExc(
-              typeHash, ABST_FUNC, DATA_PATH, 1, TupleTH.class, StringTH.class));
+              typeHash, FUNC, DATA_PATH, 1, TupleTH.class, StringTH.class));
     }
 
     @Test
     public void with_params_being_expr_type() throws Exception {
       Hash typeHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               hash(intTH()),
               hash(paramRefCH())
@@ -454,20 +454,20 @@ public class CatHCorruptedTest extends TestingContext {
       );
       assertCall(() -> catDb().get(typeHash))
           .throwsException(new UnexpectedCatNodeExc(
-              typeHash, ABST_FUNC, FUNC_PARAMS_PATH, TupleTH.class, ParamRefCH.class));
+              typeHash, FUNC, FUNC_PARAMS_PATH, TupleTH.class, ParamRefCH.class));
     }
 
     @Test
     public void with_params_type_corrupted() throws Exception {
       Hash typeHash = hash(
-          hash(ABST_FUNC.marker()),
+          hash(FUNC.marker()),
           hash(
               hash(intTH()),
               corruptedArrayTHash()
           )
       );
       assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, ABST_FUNC, FUNC_PARAMS_PATH))
+          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
           .withCause(corruptedArrayTypeExc());
     }
   }

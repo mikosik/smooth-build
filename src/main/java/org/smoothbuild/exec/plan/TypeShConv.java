@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
@@ -37,7 +38,11 @@ public class TypeShConv {
       case StructTS st -> objFactory.tupleT(map(st.fields(), isig -> visit(isig.type())));
       case VarS v ->  objFactory.var(v.name());
       case ArrayTS a -> objFactory.arrayT(visit(a.elem()));
-      case FuncTS f -> objFactory.defFuncT(visit(f.res()), map(f.params(), this::visit));
+      case FuncTS f -> visit(f);
     };
+  }
+
+  public FuncTH visit(FuncTS funcTS) {
+    return objFactory.funcT(visit(funcTS.res()), map(funcTS.params(), this::visit));
   }
 }

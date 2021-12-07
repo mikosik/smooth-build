@@ -1,25 +1,18 @@
 package org.smoothbuild.db.object.obj.val;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.type.base.CatKindH;
+import org.smoothbuild.db.object.obj.base.ObjH;
+import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
 import org.smoothbuild.db.object.type.val.FuncTH;
 
 /**
  * Function.
  * This class is thread-safe.
  */
-public sealed abstract class FuncH extends ValH
-    permits DefFuncH, IfFuncH, MapFuncH, NatFuncH {
-  public FuncH(MerkleRoot merkleRoot, ObjDb objDb, CatKindH kind) {
+public final class FuncH extends ValH {
+  public FuncH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
-    checkT(merkleRoot, kind);
-  }
-
-  protected void checkT(MerkleRoot merkleRoot, CatKindH kind) {
-    checkArgument(merkleRoot.cat() instanceof FuncTH funcTH && funcTH.kind().equals(kind));
   }
 
   @Override
@@ -30,5 +23,20 @@ public sealed abstract class FuncH extends ValH
   @Override
   public FuncTH cat() {
     return (FuncTH) super.cat();
+  }
+
+  public ObjH body() {
+    var body = readObj(DATA_PATH, dataHash(), ObjH.class);
+    var resT = cat().res();
+    var bodyT = body.type();
+    if (!objDb().typing().isAssignable(resT, bodyT)) {
+      throw new DecodeExprWrongEvalTypeOfCompExc(hash(), cat(), DATA_PATH, resT, bodyT);
+    }
+    return body;
+  }
+
+  @Override
+  public String objToString() {
+    return "Func(" + cat().name() + ")";
   }
 }

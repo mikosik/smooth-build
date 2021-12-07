@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.job;
 
-import static org.smoothbuild.exec.job.TaskKind.CALL;
+import static org.smoothbuild.exec.job.TaskKind.INTERNAL;
 import static org.smoothbuild.lang.base.define.FuncS.PARENTHESES;
 import static org.smoothbuild.lang.base.define.MapFuncS.MAP_FUNCTION_NAME;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -53,7 +53,7 @@ public class MapJob extends AbstractJob {
     var mapElemJobs = map(
         array.elems(ValH.class),
         o -> mapElementJob(outputElemType, funcJob, o));
-    var info = new TaskInfo(CALL, MAP_TASK_NAME, loc());
+    var info = new TaskInfo(INTERNAL, MAP_TASK_NAME, loc());
     jobCreator.orderEager(outputArrayTypeH, mapElemJobs, info)
         .schedule(worker)
         .addConsumer(result);

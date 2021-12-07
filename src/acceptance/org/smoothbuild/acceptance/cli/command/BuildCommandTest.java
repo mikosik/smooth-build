@@ -122,19 +122,19 @@ public class BuildCommandTest {
             result = concat(["a"], ["b"]);
             """;
       private static final String NATIVE_CALL_TASK_HEADER = """
-          concat                                   build.smooth:1                 exec
+          concat                                   build.smooth:1
           """;
       private static final String IF_FUNCTION_CALL = """
             result = if(true, "true", "false");
             """;
       private static final String IF_CALL_TASK_HEADER = """
-          if()                                     build.smooth:1
+          if                                       build.smooth:1
           """;
       private static final String MAP_FUNCTION_CALL = """
             result = map([false, true], not);
             """;
       private static final String MAP_CALL_TASK_HEADER = """
-          map()                                    build.smooth:1                 exec
+          map                                      build.smooth:1
           """;
 
       @Test

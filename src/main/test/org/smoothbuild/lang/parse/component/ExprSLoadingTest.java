@@ -116,7 +116,7 @@ public class ExprSLoadingTest extends TestingContext {
     public void with_ctor_reference() {
       var struct = structTS("MyStruct", nList(sigS(STRING, "field")));
       var combine = combineS(1, struct, paramRefS(1, stringTS(), "field"));
-      var ctor = funcS(1, struct, "myStruct", combine, itemS(2, STRING, "field"));
+      var ctor = defFuncS(1, struct, "myStruct", combine, itemS(2, STRING, "field"));
       mod("""
           MyStruct {
             String field
@@ -147,7 +147,7 @@ public class ExprSLoadingTest extends TestingContext {
           result(String() f) = f();
           """)
           .loadsSuccessfully()
-          .containsEval(funcS(1, STRING, "result",
+          .containsEval(defFuncS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING), "f")), itemS(1, f(STRING), "f")));
     }
 
@@ -157,7 +157,7 @@ public class ExprSLoadingTest extends TestingContext {
           result(String(Blob) f) = f(0x09);
           """)
           .loadsSuccessfully()
-          .containsEval(funcS(1, STRING, "result",
+          .containsEval(defFuncS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING, BLOB), "f"), blobS(1, 9)),
               itemS(1, f(STRING, BLOB), "f")));
     }
@@ -189,7 +189,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(
-              funcS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), true)));
+              natFuncS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), true)));
     }
 
     @Test
@@ -200,7 +200,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(
-              funcS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), false)));
+              natFuncS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), false)));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ExprSLoadingTest extends TestingContext {
           """)
           .loadsSuccessfully()
           .containsEval(
-              funcS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), true)));
+              natFuncS(2, STRING, "myFunc", annS(1, stringS(1, "Impl.met"), true)));
     }
   }
 
@@ -222,7 +222,7 @@ public class ExprSLoadingTest extends TestingContext {
             = param1;
           """)
         .loadsSuccessfully()
-        .containsEval(funcS(
+        .containsEval(defFuncS(
             1, BLOB, "myFunc", paramRefS(2, BLOB, "param1"), itemS(1, BLOB, "param1")));
   }
 
@@ -293,7 +293,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x07;
           """)
           .loadsSuccessfully()
-          .containsEval(funcS(1, BLOB, "myFunc", blobS(2, 7)));
+          .containsEval(defFuncS(1, BLOB, "myFunc", blobS(2, 7)));
     }
 
     @Test
@@ -304,7 +304,7 @@ public class ExprSLoadingTest extends TestingContext {
             = "abc";
           """)
           .loadsSuccessfully()
-          .containsEval(funcS(1, STRING, "myFunc",
+          .containsEval(defFuncS(1, STRING, "myFunc",
               stringS(3, "abc"), itemS(2, BLOB, "param1")));
     }
 
@@ -317,7 +317,7 @@ public class ExprSLoadingTest extends TestingContext {
               = "abc";
           """)
           .loadsSuccessfully()
-          .containsEval(funcS(1, STRING, "myFunc",
+          .containsEval(defFuncS(1, STRING, "myFunc",
               stringS(4, "abc"), itemS(2, BLOB, "param1", blobS(3, 7))));
     }
 

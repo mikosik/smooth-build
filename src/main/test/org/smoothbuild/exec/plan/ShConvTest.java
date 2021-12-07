@@ -4,6 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.space.FilePath.filePath;
+import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.lang.base.define.Loc.loc;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -12,7 +16,9 @@ import java.io.FileNotFoundException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.ObjH;
+import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.exec.java.FileLoader;
+import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.expr.ExprS;
@@ -32,7 +38,7 @@ public class ShConvTest extends TestingContext {
     public void call() {
       var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
       var call = callS(stringTS(), topRefS(defFunc));
-      assertConversion(defFunc, call, callH(defFuncH(stringH("abc")), list()));
+      assertConversion(defFunc, call, callH(funcH(stringH("abc")), list()));
     }
 
     @Test
@@ -56,7 +62,7 @@ public class ShConvTest extends TestingContext {
     @Test
     public void paramRef() {
       var func = defFuncS("f", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-      assertConversion(func, topRefS(func), defFuncH(list(intTH()), paramRefH(intTH(), 0)));
+      assertConversion(func, topRefS(func), funcH(list(intTH()), paramRefH(intTH(), 0)));
     }
 
     @Test
@@ -81,7 +87,48 @@ public class ShConvTest extends TestingContext {
     @Test
     public void topRef_to_func() {
       var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
-      assertConversion(defFunc, topRefS(defFunc), defFuncH(stringH("abc")));
+      assertConversion(defFunc, topRefS(defFunc), funcH(stringH("abc")));
+    }
+
+    @Test
+    public void topRef_to_if_func() {
+      var ifFuncS = ifFuncS();
+      var varA = varTH("A");
+      var bodyH = ifH(paramRefH(boolTH(), 0), paramRefH(varA, 1), paramRefH(varA, 2));
+      var funcTH = funcTH(varA, list(boolTH(), varA, varA));
+      var funcH = funcH(funcTH, bodyH);
+      assertConversion(ifFuncS, topRefS(ifFuncS), funcH);
+    }
+
+    @Test
+    public void topRef_to_map_func() {
+      var mapFuncS = mapFuncS();
+      var varA = varTH("E");
+      var varB = varTH("R");
+      var mappingFuncT = funcTH(varB, list(varA));
+      var funcTH = funcTH(arrayTH(varB), list(arrayTH(varA), mappingFuncT));
+      var bodyH = mapH(paramRefH(arrayTH(varA), 0), paramRefH(mappingFuncT, 1));
+      var funcH = funcH(funcTH, bodyH);
+      assertConversion(mapFuncS, topRefS(mapFuncS), funcH);
+    }
+
+    @Test
+    public void topRef_to_native_func() {
+      var funcTS = funcTS(intTS(), list(blobTS()));
+      var filePath = filePath(PRJ, path("my/path"));
+      var classBinaryName = "class.binary.name";
+      var ann = annS(loc(filePath, 1), stringS(classBinaryName));
+      var natFuncS = natFuncS(funcTS, "myFunc", nList(itemS(intTS(), "param")), ann);
+
+      var funcTH = funcTH(intTH(), list(blobTH()));
+      var jarFile = blobH(37);
+      var bodyH = invokeH(invokeCH(funcTH.res(), funcTH.params()), jarFile, stringH(classBinaryName));
+      var funcH = funcH(funcTH, bodyH);
+
+      var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jarFile);
+      var shConv = newShConv(defs(natFuncS), fileLoader);
+      assertThat(shConv.convertExpr(topRefS(natFuncS)))
+          .isEqualTo(funcH);
     }
 
     private void assertConversion(ExprS exprS, ObjH expected) {
@@ -141,7 +188,21 @@ public class ShConvTest extends TestingContext {
     try {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(any())).thenReturn(blobH(1));
-      return new ShConv(objFactory(), defs, typeShConv(), mock);
+      return newShConv(defs, mock);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private ShConv newShConv(DefsS defs, FileLoader fileLoader) {
+    return new ShConv(objFactory(), defs, typeShConv(), fileLoader);
+  }
+
+  private FileLoader createFileLoaderMock(FilePath filePath, BlobH value) {
+    try {
+      FileLoader mock = mock(FileLoader.class);
+      when(mock.load(filePath)).thenReturn(value);
+      return mock;
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }

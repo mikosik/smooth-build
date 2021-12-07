@@ -21,9 +21,7 @@ public class TestingCatsH {
   public static final TypeH BLOB = TYPEH_DB.blob();
   public static final TypeH BOOL = TYPEH_DB.bool();
   public static final TypeH INT = TYPEH_DB.int_();
-  public static final TypeH IF_FUNC = TYPEH_DB.ifFunc();
   public static final TypeH ABST_FUNC = TYPEH_DB.func(BLOB, list(BOOL));
-  public static final TypeH MAP_FUNC = TYPEH_DB.mapFunc();
   public static final TypeH NOTHING = TYPEH_DB.nothing();
   public static final TypeH STRING = TYPEH_DB.string();
   public static final TypeH VARIABLE = TYPEH_DB.var("A");
@@ -36,6 +34,9 @@ public class TestingCatsH {
   public static final CatH CALL = CONTEXT.callCH();
   public static final CatH ORDER = CONTEXT.orderCH();
   public static final CatH COMBINE = CONTEXT.combineCH(list(INT, STRING));
+  public static final CatH IF = CONTEXT.ifCH();
+  public static final CatH INVOKE = CONTEXT.invokeCH();
+  public static final CatH MAP = CONTEXT.mapCH();
   public static final CatH SELECT = CONTEXT.selectCH(INT);
   public static final CatH PARAM_REF = CONTEXT.paramRefCH(INT);
 
@@ -102,11 +103,7 @@ public class TestingCatsH {
         TYPEH_DB.func(BLOB, list(BLOB)),
         TYPEH_DB.func(BLOB, list(BLOB, BLOB)),
         TYPEH_DB.func(STRING, list()),
-        TYPEH_DB.defFunc(BLOB, list()),
-        TYPEH_DB.natFunc(BLOB, list()),
-        IF_FUNC,
         INT,
-        MAP_FUNC,
         NOTHING,
         STRING,
         TYPEH_DB.tuple(list()),
@@ -117,13 +114,18 @@ public class TestingCatsH {
         TYPEH_DB.var("B")
     );
     var arrayCs = map(baseCs, TYPEH_DB::array);
-    ImmutableList<CatH> valueCs = concat(baseCs, arrayCs);
-
+    var valueCs = concat(baseCs, arrayCs);
     var exprCs = list(
         TYPEH_DB.call(BLOB),
         TYPEH_DB.call(STRING),
         TYPEH_DB.combine(TYPEH_DB.tuple(list(BLOB))),
         TYPEH_DB.combine(TYPEH_DB.tuple(list(STRING))),
+        TYPEH_DB.if_(BLOB),
+        TYPEH_DB.if_(STRING),
+        TYPEH_DB.invoke(BLOB, list(BLOB)),
+        TYPEH_DB.invoke(STRING, list(BLOB)),
+        TYPEH_DB.map(ARRAY_BLOB),
+        TYPEH_DB.map(ARRAY_STR),
         TYPEH_DB.order(BLOB),
         TYPEH_DB.order(STRING),
         TYPEH_DB.ref(BLOB),

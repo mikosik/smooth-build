@@ -2,6 +2,7 @@ package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.exec.job.TaskKind.CALL;
 import static org.smoothbuild.exec.job.TaskKind.COMBINE;
+import static org.smoothbuild.exec.job.TaskKind.INTERNAL;
 import static org.smoothbuild.exec.job.TaskKind.LITERAL;
 import static org.smoothbuild.exec.job.TaskKind.SELECT;
 import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
@@ -16,26 +17,26 @@ import javax.inject.Inject;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
+import org.smoothbuild.db.object.obj.expr.IfH;
+import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.expr.MapH;
+import org.smoothbuild.db.object.obj.expr.MapH.MapData;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefFuncH;
 import org.smoothbuild.db.object.obj.val.FuncH;
-import org.smoothbuild.db.object.obj.val.IfFuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MapFuncH;
-import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
-import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
+import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
 import org.smoothbuild.exec.algorithm.OrderAlgorithm;
 import org.smoothbuild.exec.algorithm.SelectAlgorithm;
 import org.smoothbuild.exec.java.MethodLoader;
@@ -78,12 +79,11 @@ public class JobCreator {
         .put(BlobH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(CallH.class, new Handler<>(this::callLazy, this::callEager))
         .put(CombineH.class, new Handler<>(this::combineLazy, this::combineEager))
-        .put(DefFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(FuncH.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(IfFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(IfH.class, new Handler<>(this::ifLazy, this::ifEager))
         .put(IntH.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(MapFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(NatFuncH.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(MapH.class, new Handler<>(this::mapLazy, this::mapEager))
+        .put(InvokeH.class, new Handler<>(this::invokeLazy, this::invokeEager))
         .put(OrderH.class, new Handler<>(this::orderLazy, this::orderEager))
         .put(ParamRefH.class, new Handler<>(this::paramRefLazy, this::paramRefLazy))
         .put(SelectH.class, new Handler<>(this::selectLazy, this::selectEager))
@@ -96,7 +96,7 @@ public class JobCreator {
   }
 
   private ImmutableList<Job> eagerJobsFor(
-      IndexedScope<Job> scope, BoundsMap<TypeH> vars, ImmutableList<ObjH> objs) {
+      IndexedScope<Job> scope, BoundsMap<TypeH> vars, ImmutableList<? extends ObjH> objs) {
     return map(objs, e -> eagerJobFor(scope, vars, e));
   }
 
@@ -175,19 +175,6 @@ public class JobCreator {
     return typing.inferVarBoundsLower(funcT.params(), argTs);
   }
 
-  // Value
-
-  private Job valueLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
-    var nal = nals.get(val);
-    var loc = nal.loc();
-    return new LazyJob(val.cat(), loc, () -> new ConstJob(val, nal));
-  }
-
-  private Job valueEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
-    var nal = nals.get(val);
-    return new ConstJob(val, nal);
-  }
-
   // Combine
 
   private Job combineLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, CombineH combine) {
@@ -208,6 +195,73 @@ public class JobCreator {
     var info = new TaskInfo(COMBINE, nal);
     var algorithm = new CombineAlgorithm(combine.type());
     return new Task(type, argsJ, info, algorithm);
+  }
+
+  // If
+
+  private Job ifLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, IfH ifH) {
+    Nal nal = nals.get(ifH);
+    return new LazyJob(ifH.type(), nal.loc(),
+        () -> ifEager(scope, vars, ifH, nal));
+  }
+
+  private Job ifEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, IfH ifH) {
+    Nal nal = nals.get(ifH);
+    return ifEager(scope, vars, ifH, nal);
+  }
+
+  private Job ifEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, IfH ifH, Nal nal) {
+    var ifData = ifH.data();
+    var conditionJ = eagerJobFor(scope, vars, ifData.condition());
+    var thenJ = lazyJobFor(scope, vars, ifData.then_());
+    var elseJ = lazyJobFor(scope, vars, ifData.else_());
+    var deps = list(conditionJ, thenJ, elseJ);
+    return new IfJob(ifH.type(), deps, nal.loc());
+  }
+
+  // Invoke
+
+  private Job invokeLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, InvokeH invokeH) {
+    Nal nal = nals.get(invokeH);
+    return new LazyJob(invokeH.type(), nal.loc(),
+        () -> invokeEager(scope, vars, invokeH, nal));
+  }
+
+  private Job invokeEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, InvokeH invokeH) {
+    Nal nal = nals.get(invokeH);
+    return invokeEager(scope, vars, invokeH, nal);
+  }
+
+  private Task invokeEager(
+      IndexedScope<Job> scope, BoundsMap<TypeH> vars, InvokeH invokeH, Nal nal) {
+    var name = nal.name();
+    var actualType = typing.mapVarsLower(invokeH.type(), vars);
+    var algorithm = new InvokeAlgorithm(actualType, name, invokeH, methodLoader);
+    var info = new TaskInfo(INTERNAL, name, nal.loc());
+    var argsJ = eagerJobsFor(scope, vars, invokeH.args().items());
+    return new Task(actualType, argsJ, info, algorithm);
+  }
+
+  // Map
+
+  private Job mapLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, MapH mapH) {
+    Nal nal = nals.get(mapH);
+    return new LazyJob(mapH.type(), nal.loc(),
+        () -> mapEager(scope, vars, mapH, nal));
+  }
+
+  private Job mapEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, MapH mapH) {
+    Nal nal = nals.get(mapH);
+    return mapEager(scope, vars, mapH, nal);
+  }
+
+  private Job mapEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, MapH mapH, Nal nal) {
+    MapData data = mapH.data();
+    var arrayJ = eagerJobFor(scope, vars, data.array());
+    var funcJ = eagerJobFor(scope, vars, data.func());
+    var deps = list(arrayJ, funcJ);
+    TypeH actualType = typing.mapVarsLower(mapH.type(), vars);
+    return new MapJob(actualType, nal.loc(), deps, scope, this);
   }
 
   // Order
@@ -264,39 +318,26 @@ public class JobCreator {
     return new Task(selectH.type(), list(selectable, index), info, algorithm);
   }
 
+  // Value
+
+  private Job valueLazy(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
+    var nal = nals.get(val);
+    var loc = nal.loc();
+    return new LazyJob(val.cat(), loc, () -> new ConstJob(val, nal));
+  }
+
+  private Job valueEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, ValH val) {
+    var nal = nals.get(val);
+    return new ConstJob(val, nal);
+  }
+
   // helper methods
 
   public Job callFuncEagerJob(IndexedScope<Job> scope, BoundsMap<TypeH> vars,
       TypeH actualResT, FuncH func, ImmutableList<Job> args, Loc loc) {
-    return switch (func) {
-      case DefFuncH def -> callDefFuncEager(def, args, scope, vars, loc);
-      case NatFuncH nat -> callNatFuncEager(nat, actualResT, args, loc);
-      case IfFuncH iff -> callIfFuncEager(actualResT, args, loc);
-      case MapFuncH map -> callMapFuncEager(actualResT, args, scope, loc);
-    };
-  }
-
-  private Job callDefFuncEager(DefFuncH defFuncH, ImmutableList<Job> args,
-      IndexedScope<Job> scope, BoundsMap<TypeH> vars, Loc loc) {
-    var job = eagerJobFor(new IndexedScope<>(scope, args), vars, defFuncH.body());
-    var name = nals.get(defFuncH).name();
-    return new VirtualJob(job, new TaskInfo(CALL, name, loc));
-  }
-
-  private Job callNatFuncEager(NatFuncH func, TypeH actualResT, ImmutableList<Job> args, Loc loc) {
+    var job = eagerJobFor(new IndexedScope<>(scope, args), vars, func.body());
     var name = nals.get(func).name();
-    var algorithm = new CallNativeAlgorithm(actualResT, name, func, methodLoader);
-    var info = new TaskInfo(CALL, name, loc);
-    return new Task(actualResT, args, info, algorithm);
-  }
-
-  private Job callIfFuncEager(TypeH actualResT, ImmutableList<Job> args, Loc loc) {
-    return new IfJob(actualResT, args, loc);
-  }
-
-  private Job callMapFuncEager(TypeH actualResT, ImmutableList<Job> args, IndexedScope<Job> scope,
-      Loc loc) {
-    return new MapJob(actualResT, loc, args, scope, this);
+    return new VirtualJob(job, new TaskInfo(CALL, name, loc));
   }
 
   public record Handler<E>(

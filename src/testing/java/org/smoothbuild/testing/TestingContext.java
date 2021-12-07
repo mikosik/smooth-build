@@ -22,6 +22,9 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
+import org.smoothbuild.db.object.obj.expr.IfH;
+import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -29,11 +32,8 @@ import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefFuncH;
-import org.smoothbuild.db.object.obj.val.IfFuncH;
+import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MapFuncH;
-import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -43,6 +43,9 @@ import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.CallCH;
 import org.smoothbuild.db.object.type.expr.CombineCH;
+import org.smoothbuild.db.object.type.expr.IfCH;
+import org.smoothbuild.db.object.type.expr.InvokeCH;
+import org.smoothbuild.db.object.type.expr.MapCH;
 import org.smoothbuild.db.object.type.expr.OrderCH;
 import org.smoothbuild.db.object.type.expr.ParamRefCH;
 import org.smoothbuild.db.object.type.expr.SelectCH;
@@ -50,12 +53,8 @@ import org.smoothbuild.db.object.type.val.AnyTH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.BlobTH;
 import org.smoothbuild.db.object.type.val.BoolTH;
-import org.smoothbuild.db.object.type.val.DefFuncTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
-import org.smoothbuild.db.object.type.val.IfFuncTH;
 import org.smoothbuild.db.object.type.val.IntTH;
-import org.smoothbuild.db.object.type.val.MapFuncTH;
-import org.smoothbuild.db.object.type.val.NatFuncTH;
 import org.smoothbuild.db.object.type.val.NothingTH;
 import org.smoothbuild.db.object.type.val.StringTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
@@ -75,7 +74,9 @@ import org.smoothbuild.lang.base.define.IfFuncS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
 import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
+import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.MapFuncS;
+import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
@@ -111,6 +112,7 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.util.Providers;
 
@@ -294,44 +296,20 @@ public class TestingContext {
     return catDb().bool();
   }
 
-  public DefFuncTH defFuncTH() {
-    return defFuncTH(intTH(), list(blobTH(), stringTH()));
-  }
-
-  public DefFuncTH defFuncTH(TypeH resT, ImmutableList<TypeH> paramTs) {
-    return catDb().defFunc(resT, paramTs);
-  }
-
   public TupleTH fileTH() {
     return tupleTH(list(blobTH(), stringTH()));
   }
 
-  public FuncTH abstFuncTH() {
-    return abstFuncTH(intTH(), list(blobTH(), stringTH()));
+  public FuncTH funcTH() {
+    return funcTH(intTH(), list(blobTH(), stringTH()));
   }
 
-  public FuncTH abstFuncTH(TypeH resT, ImmutableList<TypeH> paramTs) {
+  public FuncTH funcTH(TypeH resT, ImmutableList<TypeH> paramTs) {
     return catDb().func(resT, paramTs);
-  }
-
-  public IfFuncTH ifFuncTH() {
-    return catDb().ifFunc();
   }
 
   public IntTH intTH() {
     return catDb().int_();
-  }
-
-  public MapFuncTH mapFuncTH() {
-    return catDb().mapFunc();
-  }
-
-  public NatFuncTH natFuncTH() {
-    return catDb().natFunc(blobTH(), list(boolTH()));
-  }
-
-  public NatFuncTH natFuncTH(TypeH resT, ImmutableList<TypeH> paramTs) {
-    return catDb().natFunc(resT, paramTs);
   }
 
   public NothingTH nothingTH() {
@@ -390,6 +368,30 @@ public class TestingContext {
 
   public CombineCH combineCH(ImmutableList<TypeH> itemTs) {
     return catDb().combine(tupleTH(itemTs));
+  }
+
+  public IfCH ifCH() {
+    return ifCH(intTH());
+  }
+
+  public IfCH ifCH(TypeH evalT) {
+    return catDb().if_(evalT);
+  }
+
+  public InvokeCH invokeCH() {
+    return invokeCH(blobTH(), list(boolTH()));
+  }
+
+  public InvokeCH invokeCH(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb().invoke(resT, paramTs);
+  }
+
+  public MapCH mapCH() {
+    return mapCH(arrayTH(intTH()));
+  }
+
+  public MapCH mapCH(ArrayTH evalT) {
+    return catDb().map(evalT);
   }
 
   public OrderCH orderCH() {
@@ -457,6 +459,10 @@ public class TestingContext {
     return objDb().blobBuilder();
   }
 
+  public BoolH boolH() {
+    return boolH(true);
+  }
+
   public BoolH boolH(boolean value) {
     return objDb().bool(value);
   }
@@ -474,25 +480,21 @@ public class TestingContext {
     return objFactory().file(string, blob);
   }
 
-  public DefFuncH defFuncH() {
-    return defFuncH(intH());
+  public FuncH funcH() {
+    return funcH(intH());
   }
 
-  public DefFuncH defFuncH(ObjH body) {
-    return defFuncH(list(), body);
+  public FuncH funcH(ObjH body) {
+    return funcH(list(), body);
   }
 
-  public DefFuncH defFuncH(ImmutableList<TypeH> paramTs, ObjH body) {
-    var type = defFuncTH(body.type(), paramTs);
-    return defFuncH(type, body);
+  public FuncH funcH(ImmutableList<TypeH> paramTs, ObjH body) {
+    var type = funcTH(body.type(), paramTs);
+    return funcH(type, body);
   }
 
-  public DefFuncH defFuncH(DefFuncTH type, ObjH body) {
-    return objDb().defFunc(type, body);
-  }
-
-  public IfFuncH ifFuncH() {
-    return objDb().ifFunc();
+  public FuncH funcH(FuncTH type, ObjH body) {
+    return objDb().func(type, body);
   }
 
   public IntH intH() {
@@ -503,16 +505,21 @@ public class TestingContext {
     return objDb().int_(BigInteger.valueOf(value));
   }
 
-  public MapFuncH mapFuncH() {
-    return objDb().mapFunc();
+  public InvokeH invokeH(BlobH jarFile, StringH classBinaryName) {
+    return invokeH(invokeCH(), jarFile, classBinaryName);
   }
 
-  public NatFuncH natFuncH(BlobH jarFile, StringH classBinaryName) {
-    return natFuncH(natFuncTH(), jarFile, classBinaryName);
+  public InvokeH invokeH(InvokeCH type, BlobH jarFile, StringH classBinaryName) {
+    var args = combineH(createParamRefsH(type.params()));
+    return objDb().invoke(type, jarFile, classBinaryName, boolH(true), args);
   }
 
-  public NatFuncH natFuncH(NatFuncTH type, BlobH jarFile, StringH classBinaryName) {
-    return objDb().natFunc(type, jarFile, classBinaryName, boolH(true));
+  private ImmutableList<ObjH> createParamRefsH(ImmutableList<TypeH> paramTs) {
+    Builder<ObjH> builder = ImmutableList.builder();
+    for (int i = 0; i < paramTs.size(); i++) {
+      builder.add(paramRefH(paramTs.get(i), i));
+    }
+    return builder.build();
   }
 
   public TupleH personH(String firstName, String lastName) {
@@ -578,16 +585,24 @@ public class TestingContext {
     return objDb().combine(items);
   }
 
+  public IfH ifH(ObjH condition, ObjH then, ObjH else_) {
+    return objDb().if_(condition, then, else_);
+  }
+
+  public MapH mapH(ObjH array, ObjH func) {
+    return objDb().map(array, func);
+  }
+
   public OrderH orderH(ImmutableList<ObjH> elems) {
     return objDb().order(elems);
   }
 
-  public ParamRefH paramRefH(int value) {
-    return objDb().newParamRef(BigInteger.valueOf(value), intTH());
+  public ParamRefH paramRefH(int index) {
+    return paramRefH(intTH(), index);
   }
 
-  public ParamRefH paramRefH(TypeH evalT, int pointer) {
-    return objDb().newParamRef(BigInteger.valueOf(pointer), evalT);
+  public ParamRefH paramRefH(TypeH evalT, int index) {
+    return objDb().newParamRef(BigInteger.valueOf(index), evalT);
   }
 
   public SelectH selectH(ObjH tuple, IntH index) {
@@ -717,28 +732,6 @@ public class TestingContext {
     return new CombineS(type, exprs, loc(line));
   }
 
-  public NatFuncS funcS(TypeS type, String name, ItemS... params) {
-    return funcS(1, type, name, annS(1, stringS(1, "Impl.met")), params);
-  }
-
-  public NatFuncS funcS(int line, TypeS type, String name, AnnS annS,
-      ItemS... params) {
-    return new NatFuncS(funcTS(type, params), modPath(), name,
-        nList(params), annS, loc(line)
-    );
-  }
-
-  public DefFuncS funcS(TypeS type, String name, ExprS body, ItemS... params) {
-    return funcS(1, type, name, body, params);
-  }
-
-  public DefFuncS funcS(
-      int line, TypeS type, String name, ExprS body, ItemS... params) {
-    return new DefFuncS(funcTS(type, params), modPath(), name,
-        nList(params), body, loc(line)
-    );
-  }
-
   public IntS intS(int value) {
     return intS(1, value);
   }
@@ -806,7 +799,15 @@ public class TestingContext {
   }
 
   public AnnS annS(int line, StringS implementedBy, boolean pure) {
-    return new AnnS(implementedBy, pure, loc(line));
+    return annS(loc(line), implementedBy, pure);
+  }
+
+  public AnnS annS(Loc loc, StringS implementedBy) {
+    return annS(loc, implementedBy, true);
+  }
+
+  public AnnS annS(Loc loc, StringS implementedBy, boolean pure) {
+    return new AnnS(implementedBy, pure, loc);
   }
 
   public ItemS itemS(TypeS type, String name) {
@@ -833,12 +834,40 @@ public class TestingContext {
     return new DefValS(type, modPath(), name, expr, loc(line));
   }
 
-  public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS expr) {
-    return defFuncS(1, funcTS(expr.type(), toTypes(params)), name, params, expr);
+  public NatFuncS natFuncS(TypeS type, String name, ItemS... params) {
+    return natFuncS(1, type, name, annS(1, stringS(1, "Impl.met")), params);
   }
 
-  public DefFuncS defFuncS(int line, FuncTS type, String name, NList<ItemS> params, ExprS expr) {
-    return new DefFuncS(type, modPath(), name, params, expr, loc(line));
+  public NatFuncS natFuncS(int line, TypeS type, String name, AnnS annS, ItemS... params) {
+    return natFuncS(line, funcTS(type, params), modPath(), name, nList(params), annS);
+  }
+  public NatFuncS natFuncS(FuncTS type, String name, NList<ItemS> params) {
+    return natFuncS(type, name, params, annS());
+  }
+
+  public NatFuncS natFuncS(FuncTS type, String name, NList<ItemS> params, AnnS ann) {
+    return natFuncS(1, type, name, params, ann);
+  }
+
+  public NatFuncS natFuncS(int line, FuncTS type, String name, NList<ItemS> params, AnnS ann) {
+    return natFuncS(line, type, modPath(), name, params, ann);
+  }
+
+  public NatFuncS natFuncS(int line, FuncTS type, ModPath modPath, String name, NList<ItemS> params,
+      AnnS ann) {
+    return new NatFuncS(type, modPath, name, params, ann, loc(line));
+  }
+
+  public DefFuncS defFuncS(TypeS type, String name, ExprS body, ItemS... params) {
+    return defFuncS(1, type, name, body, params);
+  }
+
+  public DefFuncS defFuncS(int line, TypeS type, String name, ExprS body, ItemS... params) {
+    return new DefFuncS(funcTS(type, params), modPath(), name, nList(params), body, loc(line));
+  }
+
+  public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS expr) {
+    return new DefFuncS(funcTS(expr.type(), toTypes(params)), modPath(), name, params, expr, loc(1));
   }
 
   public IfFuncS ifFuncS() {
@@ -847,14 +876,6 @@ public class TestingContext {
 
   public MapFuncS mapFuncS() {
     return new MapFuncS(modPath(), typeFactoryS());
-  }
-
-  public NatFuncS natFuncS(FuncTS type, String name, NList<ItemS> params) {
-    return natFuncS(1, type, name, params, annS());
-  }
-
-  public NatFuncS natFuncS(int line, FuncTS type, String name, NList<ItemS> params, AnnS ann) {
-    return new NatFuncS(type, modPath(), name, params, ann, loc(line));
   }
 
   public ItemSigS sigS(TypeS type, String name) {

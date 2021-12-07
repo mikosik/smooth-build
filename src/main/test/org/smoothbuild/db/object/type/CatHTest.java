@@ -27,7 +27,10 @@ import static org.smoothbuild.db.object.type.TestingCatsH.BLOB;
 import static org.smoothbuild.db.object.type.TestingCatsH.BOOL;
 import static org.smoothbuild.db.object.type.TestingCatsH.CALL;
 import static org.smoothbuild.db.object.type.TestingCatsH.COMBINE;
+import static org.smoothbuild.db.object.type.TestingCatsH.IF;
 import static org.smoothbuild.db.object.type.TestingCatsH.INT;
+import static org.smoothbuild.db.object.type.TestingCatsH.INVOKE;
+import static org.smoothbuild.db.object.type.TestingCatsH.MAP;
 import static org.smoothbuild.db.object.type.TestingCatsH.NOTHING;
 import static org.smoothbuild.db.object.type.TestingCatsH.ORDER;
 import static org.smoothbuild.db.object.type.TestingCatsH.PARAM_REF;
@@ -51,6 +54,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
+import org.smoothbuild.db.object.obj.expr.IfH;
+import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -82,7 +88,7 @@ public class CatHTest extends TestingContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindH.values())
-        .hasLength(19);
+        .hasLength(18);
   }
 
   @ParameterizedTest
@@ -144,10 +150,10 @@ public class CatHTest extends TestingContext {
 
         args(f -> f.call(f.int_()), "Call:Int"),
         args(f -> f.combine(f.tuple(list(f.string(), f.int_()))), "Combine:{String,Int}"),
-        args(f -> f.ifFunc(), "A(Bool, A, A)"),
-        args(f -> f.mapFunc(), "[B]([A], B(A))"),
-        args(f -> f.natFunc(f.blob(), list(f.bool())), "Blob(Bool)"),
-        args(f -> f.defFunc(f.blob(), list(f.bool())), "Blob(Bool)"),
+        args(f -> f.if_(f.int_()), "If:Int"),
+        args(f -> f.map(f.array(f.int_())), "Map:[Int]"),
+        args(f -> f.invoke(f.blob(), list(f.bool())), "Invoke:Blob"),
+        args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.order(f.string()), "Order:[String]"),
         args(f -> f.ref(f.int_()), "ParamRef:Int"),
@@ -394,8 +400,11 @@ public class CatHTest extends TestingContext {
         arguments(CALL, CallH.class),
         arguments(ORDER, OrderH.class),
         arguments(COMBINE, CombineH.class),
-        arguments(SELECT, SelectH.class),
-        arguments(PARAM_REF, ParamRefH.class)
+        arguments(IF, IfH.class),
+        arguments(INVOKE, InvokeH.class),
+        arguments(MAP, MapH.class),
+        arguments(PARAM_REF, ParamRefH.class),
+        arguments(SELECT, SelectH.class)
     );
   }
 
@@ -488,6 +497,9 @@ public class CatHTest extends TestingContext {
 
     tester.addEqualityGroup(CALL, CALL);
     tester.addEqualityGroup(COMBINE, COMBINE);
+    tester.addEqualityGroup(IF, IF);
+    tester.addEqualityGroup(INVOKE, INVOKE);
+    tester.addEqualityGroup(MAP, MAP);
     tester.addEqualityGroup(ORDER, ORDER);
     tester.addEqualityGroup(PARAM_REF, PARAM_REF);
     tester.addEqualityGroup(SELECT, SELECT);

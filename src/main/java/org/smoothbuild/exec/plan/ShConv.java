@@ -1,5 +1,8 @@
 package org.smoothbuild.exec.plan;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.TWO;
+import static java.math.BigInteger.ZERO;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 
@@ -22,12 +25,12 @@ import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefFuncH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.BoolValS;
 import org.smoothbuild.lang.base.define.DefFuncS;
@@ -41,6 +44,7 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.ValS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.expr.BlobS;
@@ -57,6 +61,7 @@ import org.smoothbuild.run.QuitExc;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class ShConv {
@@ -93,9 +98,9 @@ public class ShConv {
     try {
       callStack.push(funcS.params());
       var funcH = switch (funcS) {
-        case IfFuncS i -> objFactory.ifFunc();
-        case MapFuncS m -> objFactory.mapFunc();
         case DefFuncS d -> convertDefFunc(d);
+        case IfFuncS i -> convertIfFunc(i);
+        case MapFuncS m -> convertMapFunc(m);
         case NatFuncS n -> convertNatFunc(n);
       };
       nals.put(funcH, funcS);
@@ -105,27 +110,54 @@ public class ShConv {
     }
   }
 
-  private NatFuncH convertNatFunc(NatFuncS natFuncS) {
-    var resT = convertType(natFuncS.resT());
-    var paramTs = convertParams(natFuncS.params());
-    var jar = loadNatJar(natFuncS);
-    var type = objFactory.natFuncT(resT, paramTs);
-    var ann = natFuncS.ann();
-    var classBinaryName = objFactory.string(ann.path().string());
-    var isPure = objFactory.bool(ann.isPure());
-    return objFactory.natFunc(type, jar, classBinaryName, isPure);
-  }
-
-  private ImmutableList<TypeH> convertParams(NList<ItemS> items) {
-    return map(items, item -> convertType(item.type()));
-  }
-
-  private DefFuncH convertDefFunc(DefFuncS defFuncS) {
+  private FuncH convertDefFunc(DefFuncS defFuncS) {
+    var funcTH = convertFuncT(defFuncS.type());
     var body = convertExpr(defFuncS.body());
-    var resTH = convertType(defFuncS.resT());
-    var paramTsH = convertParams(defFuncS.params());
-    var type = objFactory.defFuncT(resTH, paramTsH);
-    return objFactory.defFunc(type, body);
+    return objFactory.func(funcTH, body);
+  }
+
+  private FuncH convertIfFunc(IfFuncS ifFuncS) {
+    var funcTH = convertFuncT(ifFuncS.type());
+    var conditionH = objFactory.paramRef(ZERO, objFactory.boolT());
+    var resTH = funcTH.res();
+    var thenH = objFactory.paramRef(ONE, resTH);
+    var elseH = objFactory.paramRef(TWO, resTH);
+    var bodyH = objFactory.if_(conditionH, thenH, elseH);
+    nals.put(bodyH, ifFuncS);
+    return objFactory.func(funcTH, bodyH);
+  }
+
+  private FuncH convertMapFunc(MapFuncS mapFuncS) {
+    var funcTH = convertFuncT(mapFuncS.type());
+    var inputArrayT = (ArrayTH) funcTH.params().get(0);
+    var mappingFuncT = (FuncTH) funcTH.params().get(1);
+    var arrayParam = objFactory.paramRef(ZERO, inputArrayT);
+    var mappingFuncParam = objFactory.paramRef(ONE, mappingFuncT);
+    var bodyH = objFactory.map(arrayParam, mappingFuncParam);
+    nals.put(bodyH, mapFuncS);
+    return objFactory.func(funcTH, bodyH);
+  }
+
+  private FuncH convertNatFunc(NatFuncS natFuncS) {
+    var funcTH = convertFuncT(natFuncS.type());
+    var invokeCH = objFactory.invokeT(funcTH.res(), funcTH.params());
+    var jarH = loadNatJar(natFuncS);
+    var annS = natFuncS.ann();
+    var classBinaryNameJ = annS.path().string();
+    var classBinaryNameH = objFactory.string(classBinaryNameJ);
+    var isPureH = objFactory.bool(annS.isPure());
+    var args = objFactory.combine(createParamRefsH(funcTH.params()));
+    var bodyH = objFactory.invoke(invokeCH, jarH, classBinaryNameH, isPureH, args);
+    nals.put(bodyH, natFuncS);
+    return objFactory.func(funcTH, bodyH);
+  }
+
+  private ImmutableList<ObjH> createParamRefsH(ImmutableList<TypeH> paramTs) {
+    Builder<ObjH> builder = ImmutableList.builder();
+    for (int i = 0; i < paramTs.size(); i++) {
+      builder.add(objFactory.paramRef(BigInteger.valueOf(i), paramTs.get(i)));
+    }
+    return builder.build();
   }
 
   // handling value
@@ -199,7 +231,7 @@ public class ShConv {
 
   private ParamRefH convertParamRef(ParamRefS paramRefS) {
     var index = callStack.peek().indexMap().get(paramRefS.paramName());
-    return objFactory.paramRef(BigInteger.valueOf(index), convertType(paramRefS.type()));
+    return objFactory.paramRef(BigInteger.valueOf(index), convertT(paramRefS.type()));
   }
 
   private ObjH convertTopRef(TopRefS topRefS) {
@@ -235,7 +267,11 @@ public class ShConv {
     }
   }
 
-  private TypeH convertType(TypeS typeS) {
+  private TypeH convertT(TypeS typeS) {
     return typeShConv.visit(typeS);
+  }
+
+  private FuncTH convertFuncT(FuncTS funcTS) {
+    return typeShConv.visit(funcTS);
   }
 }

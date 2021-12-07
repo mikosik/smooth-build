@@ -15,6 +15,9 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
+import org.smoothbuild.db.object.obj.expr.IfH;
+import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.expr.MapH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -22,24 +25,20 @@ import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefFuncH;
-import org.smoothbuild.db.object.obj.val.IfFuncH;
+import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MapFuncH;
-import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.expr.InvokeCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.BlobTH;
 import org.smoothbuild.db.object.type.val.BoolTH;
-import org.smoothbuild.db.object.type.val.DefFuncTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.IntTH;
-import org.smoothbuild.db.object.type.val.NatFuncTH;
 import org.smoothbuild.db.object.type.val.NothingTH;
 import org.smoothbuild.db.object.type.val.StringTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
@@ -112,24 +111,25 @@ public class ObjFactory {
     return objDb.tuple(fileT(), list(content, path));
   }
 
-  public DefFuncH defFunc(DefFuncTH type, ObjH body) {
-    return objDb.defFunc(type, body);
+  public IfH if_(ObjH condition, ObjH then, ObjH else_) {
+    return objDb.if_(condition, then, else_);
   }
 
-  public IfFuncH ifFunc() {
-    return objDb.ifFunc();
+  public FuncH func(FuncTH type, ObjH body) {
+    return objDb.func(type, body);
   }
 
   public IntH int_(BigInteger value) {
     return objDb.int_(value);
   }
 
-  public MapFuncH mapFunc() {
-    return objDb.mapFunc();
+  public MapH map(ObjH array, ObjH func) {
+    return objDb.map(array, func);
   }
 
-  public NatFuncH natFunc(NatFuncTH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
-    return objDb.natFunc(type, jarFile, classBinaryName,isPure);
+  public InvokeH invoke(InvokeCH type, BlobH jarFile, StringH classBinaryName, BoolH isPure,
+      CombineH args) {
+    return objDb.invoke(type, jarFile, classBinaryName,isPure, args);
   }
 
   public ParamRefH paramRef(BigInteger value, TypeH evalT) {
@@ -166,28 +166,20 @@ public class ObjFactory {
     return catDb.bool();
   }
 
-  public DefFuncTH defFuncT(TypeH resT, ImmutableList<TypeH> paramTs) {
-    return catDb.defFunc(resT, paramTs);
-  }
-
-  public FuncTH ifFuncT() {
-    return catDb.ifFunc();
+  public FuncTH funcT(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb.func(resT, paramTs);
   }
 
   public IntTH intT() {
     return catDb.int_();
   }
 
-  public FuncTH mapFuncT() {
-    return catDb.ifFunc();
-  }
-
   public TupleTH messageT() {
     return messageT;
   }
 
-  public NatFuncTH natFuncT(TypeH resT, ImmutableList<TypeH> paramTs) {
-    return catDb.natFunc(resT, paramTs);
+  public InvokeCH invokeT(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb.invoke(resT, paramTs);
   }
 
   public NothingTH nothingT() {

@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.type.TestingCatsH;
 import org.smoothbuild.exec.algorithm.Algorithm;
-import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
+import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
 import org.smoothbuild.exec.algorithm.OrderAlgorithm;
 import org.smoothbuild.exec.algorithm.SelectAlgorithm;
 import org.smoothbuild.exec.base.Input;
@@ -72,21 +72,21 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_call_native_algorithm_and_empty_input_is_stable() {
-    var natFuncH = natFuncH(blobH(), stringH("class path"));
-    var algorithm = new CallNativeAlgorithm(stringTH(), "name", natFuncH, null);
+  public void hash_of_computation_with_invoke_algorithm_and_empty_input_is_stable() {
+    var invokeH = invokeH(blobH(), stringH("class path"));
+    var algorithm = new InvokeAlgorithm(stringTH(), "name", invokeH, null);
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("f8891fe1c53f463d5917970ca0b51bda154ecdaa"));
+        .isEqualTo(Hash.decode("32c42b28ef92572ae880c6e47063b25aad427015"));
   }
 
   @Test
-  public void hash_of_computation_with_call_native_algorithm_and_non_empty_input_is_stable() {
-    var natFuncH = natFuncH(blobH(), stringH("class path"));
-    var algorithm = new CallNativeAlgorithm(stringTH(), "name", natFuncH, null);
+  public void hash_of_computation_with_invoke_algorithm_and_non_empty_input_is_stable() {
+    var invokeH = invokeH(blobH(), stringH("class path"));
+    var algorithm = new InvokeAlgorithm(stringTH(), "name", invokeH, null);
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("33d8dc290cb161e148bf90770978131e423ea046"));
+        .isEqualTo(Hash.decode("62607e99f94312feb5a95e88961c1d219159064d"));
   }
 
   @Test

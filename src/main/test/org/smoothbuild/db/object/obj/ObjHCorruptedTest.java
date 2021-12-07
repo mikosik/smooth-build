@@ -45,6 +45,7 @@ import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
+import org.smoothbuild.db.object.obj.expr.InvokeH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -52,9 +53,8 @@ import org.smoothbuild.db.object.obj.expr.SelectH.SelectData;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.DefFuncH;
+import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.NatFuncH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -379,8 +379,8 @@ public class ObjHCorruptedTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save call
        * in HashedDb.
        */
-      var funcT = defFuncTH(intTH(), list(stringTH(), intTH()));
-      var func = defFuncH(funcT, intH());
+      var funcT = funcTH(intTH(), list(stringTH(), intTH()));
+      var func = funcH(funcT, intH());
       CombineH args = combineH(list(stringH(), intH()));
       Hash objHash =
           hash(
@@ -476,8 +476,8 @@ public class ObjHCorruptedTest extends TestingContext {
 
     @Test
     public void args_is_val_instead_of_expr() throws Exception {
-      var funcT = defFuncTH(intTH(), list(stringTH(), intTH()));
-      var func = defFuncH(funcT, intH());
+      var funcT = funcTH(intTH(), list(stringTH(), intTH()));
+      var func = funcH(funcT, intH());
       Hash objHash =
           hash(
               hash(callCH()),
@@ -494,8 +494,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void args_component_evaluation_type_is_not_combine_but_different_expr()
         throws Exception {
-      var funcT = defFuncTH(intTH(), list(stringTH(), intTH()));
-      var func = defFuncH(funcT, intH());
+      var funcT = funcTH(intTH(), list(stringTH(), intTH()));
+      var func = funcH(funcT, intH());
       var type = callCH();
       Hash objHash =
           hash(
@@ -513,8 +513,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void evaluation_type_is_different_than_func_evaluation_type_result()
         throws Exception {
-      var funcT = defFuncTH(intTH(), list(stringTH()));
-      var func = defFuncH(funcT, intH());
+      var funcT = funcTH(intTH(), list(stringTH()));
+      var func = funcH(funcT, intH());
       var args = combineH(list(stringH()));
       var type = callCH(stringTH());
       Hash objHash =
@@ -533,8 +533,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void func_evaluation_type_params_does_not_match_args_evaluation_types()
         throws Exception {
-      var funcT = defFuncTH(intTH(), list(stringTH(), boolTH()));
-      var func = defFuncH(funcT, intH());
+      var funcT = funcTH(intTH(), list(stringTH(), boolTH()));
+      var func = funcH(funcT, intH());
       var args = combineH(list(stringH(), intH()));
       var spec = callCH(intTH());
       Hash objHash =
@@ -563,49 +563,48 @@ public class ObjHCorruptedTest extends TestingContext {
        * in HashedDb.
        */
       var bodyExpr = boolH(true);
-      FuncTH type = defFuncTH(boolTH(), list(intTH(), stringTH()));
+      FuncTH type = funcTH(boolTH(), list(intTH(), stringTH()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertThat(((DefFuncH) objDb().get(objHash)).body())
+      assertThat(((FuncH) objDb().get(objHash)).body())
           .isEqualTo(bodyExpr);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(defFuncTH());
+      obj_root_without_data_hash(funcTH());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var bodyExpr = boolH(true);
-      var type = defFuncTH(boolTH(), list(intTH(), stringTH()));
+      var type = funcTH(boolTH(), list(intTH(), stringTH()));
       var dataHash = hash(bodyExpr);
       obj_root_with_two_data_hashes(
           type,
           dataHash,
-          (Hash objHash) -> ((DefFuncH) objDb().get(objHash)).body());
+          (Hash objHash) -> ((FuncH) objDb().get(objHash)).body());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(
-          defFuncTH(),
-          (Hash objHash) -> ((DefFuncH) objDb().get(objHash)).body());
+      obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(funcTH(),
+          (Hash objHash) -> ((FuncH) objDb().get(objHash)).body());
     }
 
     @Test
     public void body_evaluation_type_is_not_equal_func_type_result() throws Exception {
       var bodyExpr = intH(3);
-      var type = defFuncTH(boolTH(), list(intTH(), stringTH()));
+      var type = funcTH(boolTH(), list(intTH(), stringTH()));
       Hash objHash =
           hash(
               hash(type),
               hash(bodyExpr)
           );
-      assertCall(() -> ((DefFuncH) objDb().get(objHash)).body())
+      assertCall(() -> ((FuncH) objDb().get(objHash)).body())
           .throwsException(new DecodeExprWrongEvalTypeOfCompExc(
               objHash, type, DATA_PATH, boolTH(), intTH()));
     }
@@ -1033,158 +1032,181 @@ public class ObjHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _nat_func {
+  class _invoke {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save
        * nat_func in HashedDb.
        */
-      BlobH jarFile = blobH();
-      StringH classBinaryName = stringH();
-      BoolH isPure = boolH(true);
+      var type = invokeCH(stringTH(), list(intTH()));
+      var jar = blobH();
+      var classBinaryName = stringH();
+      var isPure = boolH(true);
+      var args = combineH(list(intH(1)));
       Hash objHash =
           hash(
-              hash(natFuncTH()),
+              hash(type),
               hash(
-                  hash(jarFile),
+                  hash(jar),
                   hash(classBinaryName),
-                  hash(isPure)
+                  hash(isPure),
+                  hash(args)
               )
           );
 
-      assertThat(((NatFuncH) objDb().get(objHash)).jarFile())
-          .isEqualTo(jarFile);
-      assertThat(((NatFuncH) objDb().get(objHash)).classBinaryName())
+      assertThat(((InvokeH) objDb().get(objHash)).jarFile())
+          .isEqualTo(jar);
+      assertThat(((InvokeH) objDb().get(objHash)).classBinaryName())
           .isEqualTo(classBinaryName);
+      assertThat(((InvokeH) objDb().get(objHash)).isPure())
+          .isEqualTo(isPure);
+      assertThat(((InvokeH) objDb().get(objHash)).args())
+          .isEqualTo(args);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(natFuncTH());
+      obj_root_without_data_hash(invokeCH());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      BlobH jarFile = blobH();
-      StringH classBinaryName = stringH();
-      BoolH isPure = boolH(true);
+      var type = invokeCH(stringTH(), list(intTH()));
+      var jar = blobH();
+      var classBinaryName = stringH();
+      var isPure = boolH(true);
+      var args = combineH(list(intH(1)));
       Hash dataHash = hash(
-          hash(jarFile),
+          hash(jar),
           hash(classBinaryName),
-          hash(isPure)
+          hash(isPure),
+          hash(args)
       );
-      obj_root_with_two_data_hashes(
-          natFuncTH(),
-          dataHash,
-          (Hash objHash) -> ((NatFuncH) objDb().get(objHash)).classBinaryName());
+      obj_root_with_two_data_hashes(type, dataHash,
+          (Hash objHash) -> ((InvokeH) objDb().get(objHash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          natFuncTH(),
-          (Hash objHash) -> ((NatFuncH) objDb().get(objHash)).classBinaryName());
+      var type = invokeCH(stringTH(), list(intTH()));
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(type,
+          (Hash objHash) -> ((InvokeH) objDb().get(objHash)).classBinaryName());
     }
 
     @Test
-    public void data_is_seq_with_two_elem() throws Exception {
-      BlobH jarFile = blobH();
-      StringH classBinaryName = stringH();
-      Hash dataHash = hash(
-          hash(jarFile),
-          hash(classBinaryName)
-      );
-      Hash objHash =
-          hash(
-              hash(natFuncTH()),
-              dataHash
-          );
-
-      assertCall(() -> ((NatFuncH) objDb().get(objHash)).classBinaryName())
-          .throwsException(new UnexpectedObjSeqExc(
-              objHash, natFuncTH(), DATA_PATH, 3, 2));
-    }
-
-    @Test
-    public void data_is_seq_with_four_elems() throws Exception {
-      BlobH jarFile = blobH();
-      StringH classBinaryName = stringH();
-      BoolH isPure = boolH(true);
+    public void data_is_seq_with_three_elem() throws Exception {
+      var type = invokeCH(stringTH(), list(intTH()));
+      var jarFile = blobH();
+      var classBinaryName = stringH();
+      var isPure = boolH(true);
       Hash dataHash = hash(
           hash(jarFile),
           hash(classBinaryName),
-          hash(isPure),
           hash(isPure)
       );
       Hash objHash =
           hash(
-              hash(natFuncTH()),
+              hash(type),
               dataHash
           );
 
-      assertCall(() -> ((NatFuncH) objDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjSeqExc(
-              objHash, natFuncTH(), DATA_PATH, 3, 4));
+              objHash, type, DATA_PATH, 4, 3));
+    }
+
+    @Test
+    public void data_is_seq_with_five_elems() throws Exception {
+      var type = invokeCH(stringTH(), list(intTH()));
+      var jarFile = blobH();
+      var classBinaryName = stringH();
+      var isPure = boolH(true);
+      var args = combineH(list(intH(1)));
+      Hash dataHash = hash(
+          hash(jarFile),
+          hash(classBinaryName),
+          hash(isPure),
+          hash(args),
+          hash(args)
+      );
+      Hash objHash =
+          hash(
+              hash(type),
+              dataHash
+          );
+
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedObjSeqExc(
+              objHash, type, DATA_PATH, 4, 5));
     }
 
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
-      StringH jarFile = stringH();
-      StringH classBinaryName = stringH();
-      BoolH isPure = boolH(true);
-      Hash objHash =
+      var type = invokeCH(stringTH(), list(intTH()));
+      var jarFile = stringH();
+      var classBinaryName = stringH();
+      var isPure = boolH(true);
+      var args = combineH(list(intH(1)));
+      var objHash =
           hash(
-              hash(natFuncTH()),
+              hash(type),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
-                  hash(isPure)
+                  hash(isPure),
+                  hash(args)
               )
           );
-      assertCall(() -> ((NatFuncH) objDb().get(objHash)).jarFile())
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).jarFile())
           .throwsException(new UnexpectedObjNodeExc(
-              objHash, natFuncTH(), DATA_PATH + "[0]", BlobH.class, StringH.class));
+              objHash, type, DATA_PATH + "[0]", BlobH.class, StringH.class));
     }
 
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
-      BlobH jarFile = blobH();
-      IntH classBinaryName = intH();
-      BoolH isPure = boolH(true);
-      Hash objHash =
+      var type = invokeCH(stringTH(), list(intTH()));
+      var jarFile = blobH();
+      var classBinaryName = intH();
+      var isPure = boolH(true);
+      var args = combineH(list(intH(1)));
+      var objHash =
           hash(
-              hash(natFuncTH()),
+              hash(type),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
-                  hash(isPure)
+                  hash(isPure),
+                  hash(args)
               )
           );
 
-      assertCall(() -> ((NatFuncH) objDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjNodeExc(
-              objHash, natFuncTH(), DATA_PATH + "[1]", StringH.class, IntH.class));
+              objHash, type, DATA_PATH + "[1]", StringH.class, IntH.class));
     }
 
     @Test
     public void is_pure_is_not_bool_value() throws Exception {
-      BlobH jarFile = blobH();
-      StringH classBinaryName = stringH();
-      StringH isPure = stringH();
-      Hash objHash =
+      var type = invokeCH(stringTH(), list(intTH()));
+      var jarFile = blobH();
+      var classBinaryName = stringH();
+      var isPure = stringH();
+      var args = combineH(list(intH(1)));
+      var objHash =
           hash(
-              hash(natFuncTH()),
+              hash(type),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
-                  hash(isPure)
+                  hash(isPure),
+                  hash(args)
               )
           );
 
-      assertCall(() -> ((NatFuncH) objDb().get(objHash)).isPure())
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).isPure())
           .throwsException(new UnexpectedObjNodeExc(
-              objHash, natFuncTH(), DATA_PATH + "[2]", BoolH.class, StringH.class));
+              objHash, type, DATA_PATH + "[2]", BoolH.class, StringH.class));
     }
   }
 

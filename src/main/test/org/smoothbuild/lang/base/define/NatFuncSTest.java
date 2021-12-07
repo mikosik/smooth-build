@@ -8,7 +8,7 @@ import org.smoothbuild.testing.TestingContext;
 public class NatFuncSTest extends TestingContext {
   @Test
   public void to_string() {
-    var func = funcS(stringTS(), "myFunc", itemS(intTS(), "myParam"));
+    var func = natFuncS(stringTS(), "myFunc", itemS(intTS(), "myParam"));
     assertThat(func.toString())
         .isEqualTo("NatFunc(`@Native(\"Impl.met\", PURE) String myFunc(Int myParam)`)");
   }
