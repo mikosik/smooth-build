@@ -46,7 +46,7 @@ public class CallHTest extends TestingContext {
   private static IllegalArgumentException argsNotMatchingParamsException(
       String args, String params) {
     return new IllegalArgumentException("Arguments evaluation type " + args + " should be"
-        + " equal to function evaluation type parameters " + params + ".");
+        + " equal to callable type parameters " + params + ".");
   }
 
   @Test

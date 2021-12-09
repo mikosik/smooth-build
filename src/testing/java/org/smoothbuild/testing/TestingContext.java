@@ -511,7 +511,12 @@ public class TestingContext {
 
   public InvokeH invokeH(InvokeCH type, BlobH jarFile, StringH classBinaryName) {
     var args = combineH(createParamRefsH(type.params()));
-    return objDb().invoke(type, jarFile, classBinaryName, boolH(true), args);
+    return invokeH(type, jarFile, classBinaryName, boolH(true), args);
+  }
+
+  public InvokeH invokeH(
+      InvokeCH type, BlobH jarFile, StringH classBinaryName, BoolH isPure, CombineH args) {
+    return objDb().invoke(type, jarFile, classBinaryName, isPure, args);
   }
 
   private ImmutableList<ObjH> createParamRefsH(ImmutableList<TypeH> paramTs) {

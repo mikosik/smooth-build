@@ -47,6 +47,7 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.InvokeCH;
 import org.smoothbuild.db.object.type.expr.SelectCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.type.val.CallableTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.lang.base.type.Typing;
@@ -234,32 +235,31 @@ public class ObjDb {
   // methods for creating Expr-s
 
   private CallH newCall(ObjH callable, CombineH args) throws HashedDbExc {
-    var resT = inferCallResType(callable, args);
+    var resT = inferCallResT(callableEvalT(callable), args);
     var type = catDb.call(resT);
     var data = writeCallData(callable, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private TypeH inferCallResType(ObjH callable, CombineH args) {
-    var funcT = callableEvalT(callable);
+  private TypeH inferCallResT(CallableTH callableTH, CombineH args) {
     var argTs = args.type().items();
-    var paramTs = funcT.params();
+    var paramTs = callableTH.params();
     allMatchOtherwise(
         paramTs,
         argTs,
         typing::isParamAssignable,
-        (expectedSize, actualSize) -> illegalArgs(funcT, args),
-        i -> illegalArgs(funcT, args)
+        (expectedSize, actualSize) -> illegalArgs(callableTH, args),
+        i -> illegalArgs(callableTH, args)
     );
     var varBounds = typing.inferVarBoundsInCall(paramTs, argTs);
-    return typing.mapVars(funcT.res(), varBounds, catDb.lower());
+    return typing.mapVarsLower(callableTH.res(), varBounds);
   }
 
-  private void illegalArgs(FuncTH funcT, CombineH args) {
+  private void illegalArgs(CallableTH callableTH, CombineH args) {
     throw new IllegalArgumentException(
-        "Arguments evaluation type %s should be equal to function evaluation type parameters %s."
-            .formatted(args.type().name(), funcT.paramsTuple().name()));
+        "Arguments evaluation type %s should be equal to callable type parameters %s."
+            .formatted(args.type().name(), callableTH.paramsTuple().name()));
   }
 
   private FuncTH callableEvalT(ObjH callable) {

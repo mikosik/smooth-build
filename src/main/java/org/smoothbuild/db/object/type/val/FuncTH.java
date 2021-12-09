@@ -19,7 +19,7 @@ import org.smoothbuild.lang.base.type.api.Type;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public final class FuncTH extends TypeH implements FuncT {
+public final class FuncTH extends TypeH implements FuncT, CallableTH {
   private final TypeH res;
   private final TupleTH paramsTuple;
 
@@ -48,6 +48,7 @@ public final class FuncTH extends TypeH implements FuncT {
     return paramsTuple.items();
   }
 
+  @Override
   public TupleTH paramsTuple() {
     return paramsTuple;
   }

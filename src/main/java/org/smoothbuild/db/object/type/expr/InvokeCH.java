@@ -30,6 +30,10 @@ public class InvokeCH extends ExprCatH {
     return params.items();
   }
 
+  public TupleTH paramsTuple() {
+    return params;
+  }
+
   @Override
   public InvokeH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
     return (InvokeH) super.newObj(merkleRoot, objDb);
