@@ -18,6 +18,7 @@ import static org.smoothbuild.db.object.type.base.CatKindH.IF;
 import static org.smoothbuild.db.object.type.base.CatKindH.INT;
 import static org.smoothbuild.db.object.type.base.CatKindH.INVOKE;
 import static org.smoothbuild.db.object.type.base.CatKindH.MAP;
+import static org.smoothbuild.db.object.type.base.CatKindH.METHOD;
 import static org.smoothbuild.db.object.type.base.CatKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.CatKindH.ORDER;
 import static org.smoothbuild.db.object.type.base.CatKindH.PARAM_REF;
@@ -57,6 +58,7 @@ import org.smoothbuild.db.object.type.val.BlobTH;
 import org.smoothbuild.db.object.type.val.BoolTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.IntTH;
+import org.smoothbuild.db.object.type.val.MethodTH;
 import org.smoothbuild.db.object.type.val.NothingTH;
 import org.smoothbuild.db.object.type.val.StringTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
@@ -159,6 +161,10 @@ public class CatDb implements TypeFactoryH {
     return int_;
   }
 
+  public MethodTH method(TypeH res, ImmutableList<TypeH> params) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newMethod(res, tuple(params)));
+  }
+
   public NothingTH nothing() {
     return nothing;
   }
@@ -190,8 +196,8 @@ public class CatDb implements TypeFactoryH {
     return wrapHashedDbExceptionAsObjectDbException(() -> newIf(evalT));
   }
 
-  public InvokeCH invoke(TypeH res, ImmutableList<TypeH> params) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(res, tuple(params)));
+  public InvokeCH invoke(TypeH evalT) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evalT));
   }
 
   public MapCH map(ArrayTH evalT) {
@@ -230,8 +236,9 @@ public class CatDb implements TypeFactoryH {
       case COMBINE -> newCombine(hash, readDataAsTupleT(hash, rootSeq, kind));
       case FUNC -> readFunc(hash, rootSeq, kind);
       case IF -> newIf(hash, readDataAsValT(hash, rootSeq, kind));
-      case INVOKE -> readInvoke(hash, rootSeq, kind);
+      case INVOKE -> newInvoke(hash, readDataAsValT(hash, rootSeq, kind));
       case MAP -> newMap(hash, readDataAsArrayT(hash, rootSeq, kind));
+      case METHOD -> readMethod(hash, rootSeq, kind);
       case ORDER -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
       case PARAM_REF -> newRef(hash, readDataAsValT(hash, rootSeq, kind));
       case SELECT -> newSelect(hash, readDataAsValT(hash, rootSeq, kind));
@@ -285,14 +292,14 @@ public class CatDb implements TypeFactoryH {
   }
 
   private CatH readFunc(Hash rootHash, List<Hash> rootSeq, CatKindH kind) {
-    return readFuncLike(rootHash, rootSeq, kind, this::newFunc);
+    return readCallable(rootHash, rootSeq, kind, this::newFunc);
   }
 
-  private CatH readInvoke(Hash rootHash, List<Hash> rootSeq, CatKindH kind) {
-    return readFuncLike(rootHash, rootSeq, kind, this::newInvoke);
+  private CatH readMethod(Hash rootHash, List<Hash> rootSeq, CatKindH kind) {
+    return readCallable(rootHash, rootSeq, kind, this::newMethod);
   }
 
-  private CatH readFuncLike(Hash rootHash, List<Hash> rootSeq, CatKindH kind,
+  private CatH readCallable(Hash rootHash, List<Hash> rootSeq, CatKindH kind,
       TriFunction<Hash, TypeH, TupleTH, CatH> instantiator) {
     assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     Hash dataHash = rootSeq.get(DATA_IDX);
@@ -370,6 +377,15 @@ public class CatDb implements TypeFactoryH {
     return cache(new FuncTH(rootHash, res, params));
   }
 
+  private MethodTH newMethod(TypeH res, TupleTH params) throws HashedDbExc {
+    var rootHash = writeFuncLikeRoot(res, params, METHOD);
+    return newMethod(rootHash, res, params);
+  }
+
+  private MethodTH newMethod(Hash rootHash, TypeH res, TupleTH params) {
+    return cache(new MethodTH(rootHash, res, params));
+  }
+
   private TupleTH newTuple(ImmutableList<TypeH> itemTs) throws HashedDbExc {
     var hash = writeTupleRoot(itemTs);
     return newTuple(hash, itemTs);
@@ -417,13 +433,13 @@ public class CatDb implements TypeFactoryH {
     return cache(new IfCH(rootHash, evalT));
   }
 
-  private InvokeCH newInvoke(TypeH res, TupleTH params) throws HashedDbExc {
-    var rootHash = writeFuncLikeRoot(res, params, INVOKE);
-    return newInvoke(rootHash, res, params);
+  private InvokeCH newInvoke(TypeH evalT) throws HashedDbExc {
+    var rootHash = writeExprRoot(INVOKE, evalT);
+    return newInvoke(rootHash, evalT);
   }
 
-  private InvokeCH newInvoke(Hash rootHash, TypeH res, TupleTH params) {
-    return cache(new InvokeCH(rootHash, res, params));
+  private InvokeCH newInvoke(Hash rootHash, TypeH evalT) {
+    return cache(new InvokeCH(rootHash, evalT));
   }
 
   private MapCH newMap(ArrayTH evalT) throws HashedDbExc {

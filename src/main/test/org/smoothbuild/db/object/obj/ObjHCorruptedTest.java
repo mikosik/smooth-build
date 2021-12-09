@@ -45,7 +45,6 @@ import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
-import org.smoothbuild.db.object.obj.expr.InvokeH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -55,6 +54,7 @@ import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -1032,77 +1032,92 @@ public class ObjHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _invoke {
+  class _method {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save
        * nat_func in HashedDb.
        */
-      var type = invokeCH(stringTH(), list(intTH()));
+      var type = methodTH(stringTH(), list(intTH()));
       var jar = blobH();
       var classBinaryName = stringH();
       var isPure = boolH(true);
-      var args = combineH(list(intH(1)));
       Hash objHash =
           hash(
               hash(type),
               hash(
                   hash(jar),
                   hash(classBinaryName),
-                  hash(isPure),
-                  hash(args)
+                  hash(isPure)
               )
           );
 
-      assertThat(((InvokeH) objDb().get(objHash)).jarFile())
+      assertThat(((MethodH) objDb().get(objHash)).jar())
           .isEqualTo(jar);
-      assertThat(((InvokeH) objDb().get(objHash)).classBinaryName())
+      assertThat(((MethodH) objDb().get(objHash)).classBinaryName())
           .isEqualTo(classBinaryName);
-      assertThat(((InvokeH) objDb().get(objHash)).isPure())
+      assertThat(((MethodH) objDb().get(objHash)).isPure())
           .isEqualTo(isPure);
-      assertThat(((InvokeH) objDb().get(objHash)).args())
-          .isEqualTo(args);
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(invokeCH());
+      obj_root_without_data_hash(methodTH(stringTH(), list(intTH())));
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var type = invokeCH(stringTH(), list(intTH()));
+      var type = methodTH(stringTH(), list(intTH()));
       var jar = blobH();
       var classBinaryName = stringH();
       var isPure = boolH(true);
-      var args = combineH(list(intH(1)));
       Hash dataHash = hash(
           hash(jar),
           hash(classBinaryName),
-          hash(isPure),
-          hash(args)
+          hash(isPure)
       );
       obj_root_with_two_data_hashes(type, dataHash,
-          (Hash objHash) -> ((InvokeH) objDb().get(objHash)).classBinaryName());
+          (Hash objHash) -> ((MethodH) objDb().get(objHash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
-      var type = invokeCH(stringTH(), list(intTH()));
+      var type = methodTH(stringTH(), list(intTH()));
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(type,
-          (Hash objHash) -> ((InvokeH) objDb().get(objHash)).classBinaryName());
+          (Hash objHash) -> ((MethodH) objDb().get(objHash)).classBinaryName());
     }
 
     @Test
-    public void data_is_seq_with_three_elem() throws Exception {
-      var type = invokeCH(stringTH(), list(intTH()));
+    public void data_is_seq_with_two_elem() throws Exception {
+      var type = methodTH(stringTH(), list(intTH()));
+      var jarFile = blobH();
+      var classBinaryName = stringH();
+      Hash dataHash = hash(
+          hash(jarFile),
+          hash(classBinaryName)
+      );
+      Hash objHash =
+          hash(
+              hash(type),
+              dataHash
+          );
+
+      assertCall(() -> ((MethodH) objDb().get(objHash)).classBinaryName())
+          .throwsException(new UnexpectedObjSeqExc(
+              objHash, type, DATA_PATH, 3, 2));
+    }
+
+    @Test
+    public void data_is_seq_with_four_elems() throws Exception {
+      var type = methodTH(stringTH(), list(intTH()));
       var jarFile = blobH();
       var classBinaryName = stringH();
       var isPure = boolH(true);
       Hash dataHash = hash(
           hash(jarFile),
           hash(classBinaryName),
+          hash(isPure),
           hash(isPure)
       );
       Hash objHash =
@@ -1111,100 +1126,69 @@ public class ObjHCorruptedTest extends TestingContext {
               dataHash
           );
 
-      assertCall(() -> ((InvokeH) objDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((MethodH) objDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjSeqExc(
-              objHash, type, DATA_PATH, 4, 3));
-    }
-
-    @Test
-    public void data_is_seq_with_five_elems() throws Exception {
-      var type = invokeCH(stringTH(), list(intTH()));
-      var jarFile = blobH();
-      var classBinaryName = stringH();
-      var isPure = boolH(true);
-      var args = combineH(list(intH(1)));
-      Hash dataHash = hash(
-          hash(jarFile),
-          hash(classBinaryName),
-          hash(isPure),
-          hash(args),
-          hash(args)
-      );
-      Hash objHash =
-          hash(
-              hash(type),
-              dataHash
-          );
-
-      assertCall(() -> ((InvokeH) objDb().get(objHash)).classBinaryName())
-          .throwsException(new UnexpectedObjSeqExc(
-              objHash, type, DATA_PATH, 4, 5));
+              objHash, type, DATA_PATH, 3, 4));
     }
 
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
-      var type = invokeCH(stringTH(), list(intTH()));
+      var type = methodTH(stringTH(), list(intTH()));
       var jarFile = stringH();
       var classBinaryName = stringH();
       var isPure = boolH(true);
-      var args = combineH(list(intH(1)));
       var objHash =
           hash(
               hash(type),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
-                  hash(isPure),
-                  hash(args)
+                  hash(isPure)
               )
           );
-      assertCall(() -> ((InvokeH) objDb().get(objHash)).jarFile())
+      assertCall(() -> ((MethodH) objDb().get(objHash)).jar())
           .throwsException(new UnexpectedObjNodeExc(
               objHash, type, DATA_PATH + "[0]", BlobH.class, StringH.class));
     }
 
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
-      var type = invokeCH(stringTH(), list(intTH()));
+      var type = methodTH(stringTH(), list(intTH()));
       var jarFile = blobH();
       var classBinaryName = intH();
       var isPure = boolH(true);
-      var args = combineH(list(intH(1)));
       var objHash =
           hash(
               hash(type),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
-                  hash(isPure),
-                  hash(args)
+                  hash(isPure)
               )
           );
 
-      assertCall(() -> ((InvokeH) objDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((MethodH) objDb().get(objHash)).classBinaryName())
           .throwsException(new UnexpectedObjNodeExc(
               objHash, type, DATA_PATH + "[1]", StringH.class, IntH.class));
     }
 
     @Test
     public void is_pure_is_not_bool_value() throws Exception {
-      var type = invokeCH(stringTH(), list(intTH()));
+      var type = methodTH(stringTH(), list(intTH()));
       var jarFile = blobH();
       var classBinaryName = stringH();
       var isPure = stringH();
-      var args = combineH(list(intH(1)));
       var objHash =
           hash(
               hash(type),
               hash(
                   hash(jarFile),
                   hash(classBinaryName),
-                  hash(isPure),
-                  hash(args)
+                  hash(isPure)
               )
           );
 
-      assertCall(() -> ((InvokeH) objDb().get(objHash)).isPure())
+      assertCall(() -> ((MethodH) objDb().get(objHash)).isPure())
           .throwsException(new UnexpectedObjNodeExc(
               objHash, type, DATA_PATH + "[2]", BoolH.class, StringH.class));
     }

@@ -27,6 +27,7 @@ import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -39,6 +40,7 @@ import org.smoothbuild.db.object.type.val.BlobTH;
 import org.smoothbuild.db.object.type.val.BoolTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.IntTH;
+import org.smoothbuild.db.object.type.val.MethodTH;
 import org.smoothbuild.db.object.type.val.NothingTH;
 import org.smoothbuild.db.object.type.val.StringTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
@@ -119,6 +121,10 @@ public class ObjFactory {
     return objDb.func(type, body);
   }
 
+  public MethodH method(MethodTH type, BlobH jar, StringH classBinaryName, BoolH isPure) {
+    return objDb.method(type, jar, classBinaryName, isPure);
+  }
+
   public IntH int_(BigInteger value) {
     return objDb.int_(value);
   }
@@ -127,9 +133,8 @@ public class ObjFactory {
     return objDb.map(array, func);
   }
 
-  public InvokeH invoke(InvokeCH type, BlobH jarFile, StringH classBinaryName, BoolH isPure,
-      CombineH args) {
-    return objDb.invoke(type, jarFile, classBinaryName,isPure, args);
+  public InvokeH invoke(ObjH method, CombineH args) {
+    return objDb.invoke(method, args);
   }
 
   public ParamRefH paramRef(BigInteger value, TypeH evalT) {
@@ -174,12 +179,16 @@ public class ObjFactory {
     return catDb.int_();
   }
 
+  public InvokeCH invokeT(TypeH evalT) {
+    return catDb.invoke(evalT);
+  }
+
   public TupleTH messageT() {
     return messageT;
   }
 
-  public InvokeCH invokeT(TypeH resT, ImmutableList<TypeH> paramTs) {
-    return catDb.invoke(resT, paramTs);
+  public MethodTH methodT(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb.method(resT, paramTs);
   }
 
   public NothingTH nothingT() {

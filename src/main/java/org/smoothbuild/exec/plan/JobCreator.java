@@ -236,7 +236,7 @@ public class JobCreator {
       IndexedScope<Job> scope, BoundsMap<TypeH> vars, InvokeH invokeH, Nal nal) {
     var name = nal.name();
     var actualType = typing.mapVarsLower(invokeH.type(), vars);
-    var algorithm = new InvokeAlgorithm(actualType, name, invokeH, methodLoader);
+    var algorithm = new InvokeAlgorithm(actualType, name, invokeH.method(), methodLoader);
     var info = new TaskInfo(INTERNAL, name, nal.loc());
     var argsJ = eagerJobsFor(scope, vars, invokeH.args().items());
     return new Task(actualType, argsJ, info, algorithm);

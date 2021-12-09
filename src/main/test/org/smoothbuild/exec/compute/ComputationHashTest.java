@@ -73,20 +73,20 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_invoke_algorithm_and_empty_input_is_stable() {
-    var invokeH = invokeH(blobH(), stringH("class path"));
-    var algorithm = new InvokeAlgorithm(stringTH(), "name", invokeH, null);
+    var method = methodH(methodTH(intTH(), list()), blobH(1), stringH("1"), boolH(true));
+    var algorithm = new InvokeAlgorithm(stringTH(), "name", method, null);
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("32c42b28ef92572ae880c6e47063b25aad427015"));
+        .isEqualTo(Hash.decode("07de1e56ffb6edbbd8e474691631991ab52ce067"));
   }
 
   @Test
   public void hash_of_computation_with_invoke_algorithm_and_non_empty_input_is_stable() {
-    var invokeH = invokeH(blobH(), stringH("class path"));
-    var algorithm = new InvokeAlgorithm(stringTH(), "name", invokeH, null);
+    var method = methodH(methodTH(intTH(), list()), blobH(1), stringH("1"), boolH(true));
+    var algorithm = new InvokeAlgorithm(stringTH(), "name", method, null);
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("62607e99f94312feb5a95e88961c1d219159064d"));
+        .isEqualTo(Hash.decode("978f490dfaf1be635689956bf7d0aa6a120f7f2f"));
   }
 
   @Test

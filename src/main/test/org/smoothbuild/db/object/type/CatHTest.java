@@ -3,7 +3,6 @@ package org.smoothbuild.db.object.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.db.object.type.TestingCatsH.ABST_FUNC;
 import static org.smoothbuild.db.object.type.TestingCatsH.ANY;
 import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY2_ANY;
 import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY2_BLOB;
@@ -19,6 +18,7 @@ import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY_BLOB;
 import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY_BOOL;
 import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY_FUNCTION;
 import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY_INT;
+import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY_METHOD;
 import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY_NOTHING;
 import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY_PERSON_TUPLE;
 import static org.smoothbuild.db.object.type.TestingCatsH.ARRAY_STR;
@@ -27,10 +27,12 @@ import static org.smoothbuild.db.object.type.TestingCatsH.BLOB;
 import static org.smoothbuild.db.object.type.TestingCatsH.BOOL;
 import static org.smoothbuild.db.object.type.TestingCatsH.CALL;
 import static org.smoothbuild.db.object.type.TestingCatsH.COMBINE;
+import static org.smoothbuild.db.object.type.TestingCatsH.FUNC;
 import static org.smoothbuild.db.object.type.TestingCatsH.IF;
 import static org.smoothbuild.db.object.type.TestingCatsH.INT;
 import static org.smoothbuild.db.object.type.TestingCatsH.INVOKE;
 import static org.smoothbuild.db.object.type.TestingCatsH.MAP;
+import static org.smoothbuild.db.object.type.TestingCatsH.METHOD;
 import static org.smoothbuild.db.object.type.TestingCatsH.NOTHING;
 import static org.smoothbuild.db.object.type.TestingCatsH.ORDER;
 import static org.smoothbuild.db.object.type.TestingCatsH.PARAM_REF;
@@ -65,6 +67,7 @@ import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -72,6 +75,7 @@ import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.CatKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.expr.CombineCH;
+import org.smoothbuild.db.object.type.val.MethodTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.FuncT;
@@ -88,27 +92,27 @@ public class CatHTest extends TestingContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindH.values())
-        .hasLength(18);
+        .hasLength(19);
   }
 
   @ParameterizedTest
   @MethodSource("names")
   public void name(Function<CatDb, CatH> factoryCall, String name) {
-    assertThat(invoke(factoryCall).name())
+    assertThat(execute(factoryCall).name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
   public void quoted_name(Function<CatDb, CatH> factoryCall, String name) {
-    assertThat(invoke(factoryCall).q())
+    assertThat(execute(factoryCall).q())
         .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
   public void to_string(Function<CatDb, CatH> factoryCall, String name) {
-    assertThat(invoke(factoryCall).toString())
+    assertThat(execute(factoryCall).toString())
         .isEqualTo("Category(`" + name + "`)");
   }
 
@@ -144,6 +148,12 @@ public class CatHTest extends TestingContext {
         args(f -> f.func(f.string(), list()), "String()"),
         args(f -> f.func(f.string(), list(f.string())), "String(String)"),
 
+        args(f -> f.method(f.var("A"), list(f.array(f.var("A")))), "_A([A])"),
+        args(f -> f.method(f.string(), list(f.array(f.var("A")))), "_String([A])"),
+        args(f -> f.method(f.var("A"), list(f.var("A"))), "_A(A)"),
+        args(f -> f.method(f.string(), list()), "_String()"),
+        args(f -> f.method(f.string(), list(f.string())), "_String(String)"),
+
         args(f -> f.tuple(list()), "{}"),
         args(f -> f.tuple(list(f.string(), f.bool())), "{String,Bool}"),
         args(f -> f.tuple(list(f.tuple(list(f.int_())))), "{{Int}}"),
@@ -152,7 +162,7 @@ public class CatHTest extends TestingContext {
         args(f -> f.combine(f.tuple(list(f.string(), f.int_()))), "Combine:{String,Int}"),
         args(f -> f.if_(f.int_()), "If:Int"),
         args(f -> f.map(f.array(f.int_())), "Map:[Int]"),
-        args(f -> f.invoke(f.blob(), list(f.bool())), "Invoke:Blob"),
+        args(f -> f.invoke(f.int_()), "Invoke:Int"),
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.order(f.string()), "Order:[String]"),
@@ -164,7 +174,7 @@ public class CatHTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
   public void isPolytype(Function<CatDb, CatH> factoryCall, boolean expected) {
-    assertThat(invoke(factoryCall).isPolytype())
+    assertThat(execute(factoryCall).isPolytype())
         .isEqualTo(expected);
   }
 
@@ -176,17 +186,23 @@ public class CatHTest extends TestingContext {
 
         args(f -> f.func(f.var("A"), list()), true),
         args(f -> f.func(f.func(f.var("A"), list()), list()), true),
-        args(f -> f.func(f.func(f.func(f.var("A"), list()), list()), list()),
-            true),
+        args(f -> f.func(f.func(f.func(f.var("A"), list()), list()), list()), true),
 
         args(f -> f.func(f.bool(), list(f.var("A"))), true),
         args(f -> f.func(f.bool(), list(f.func(f.var("A"), list()))), true),
-        args(f -> f
-                .func(f.bool(), list(f.func(f.func(f.var("A"), list()), list()))),
-            true),
+        args(f -> f.func(f.bool(), list(f.func(f.func(f.var("A"), list()), list()))), true),
 
-        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.var("A"))))),
-            true),
+        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.var("A"))))), true),
+
+        args(f -> f.method(f.var("A"), list()), true),
+        args(f -> f.method(f.func(f.var("A"), list()), list()), true),
+        args(f -> f.method(f.func(f.func(f.var("A"), list()), list()), list()), true),
+
+        args(f -> f.method(f.bool(), list(f.var("A"))), true),
+        args(f -> f.method(f.bool(), list(f.method(f.var("A"), list()))), true),
+        args(f -> f.method(f.bool(), list(f.method(f.func(f.var("A"), list()), list()))), true),
+
+        args(f -> f.method(f.bool(), list(f.method(f.blob(), list(f.var("A"))))), true),
 
         args(f -> f.any(), false),
         args(f -> f.blob(), false),
@@ -204,8 +220,8 @@ public class CatHTest extends TestingContext {
   public void vars(
       Function<CatDb, CatH> factoryCall,
       Function<CatDb, Set<Var>> resultCall) {
-    assertThat(invoke(factoryCall).vars())
-        .containsExactlyElementsIn(invoke(resultCall))
+    assertThat(execute(factoryCall).vars())
+        .containsExactlyElementsIn(execute(resultCall))
         .inOrder();
   }
 
@@ -232,18 +248,27 @@ public class CatHTest extends TestingContext {
         args(f -> f.func(f.string(), list()), f -> set()),
         args(f -> f.func(f.string(), list(f.bool())), f -> set()),
 
+        args(f -> f.method(f.string(), list()), f -> set()),
+        args(f -> f.method(f.string(), list(f.bool())), f -> set()),
+
         args(f -> f.array(f.var("A")), f -> set(f.var("A"))),
         args(f -> f.array(f.array(f.var("A"))), f -> set(f.var("A"))),
 
         args(f -> f.func(f.var("A"), list()), f -> set(f.var("A"))),
         args(f -> f.func(f.var("A"), list(f.string())), f -> set(f.var("A"))),
         args(f -> f.func(f.string(), list(f.var("A"))), f -> set(f.var("A"))),
-        args(f -> f.func(f.var("B"), list(f.var("A"))),
-            f -> set(f.var("A"), f.var("B"))),
+        args(f -> f.func(f.var("B"), list(f.var("A"))), f -> set(f.var("A"), f.var("B"))),
 
-        args(f -> f.func(f.func(f.var("A"), list()), list()),
-            f -> set(f.var("A"))),
-        args(f -> f.func(f.var("D"), list(f.var("C"), f.var("B"))),
+        args(f -> f.func(f.func(f.var("A"), list()), list()), f -> set(f.var("A"))),
+        args(f -> f.func(f.var("D"), list(f.var("C"), f.var("B"))), f -> set(f.var("B"), f.var("C"), f.var("D"))),
+
+        args(f -> f.method(f.var("A"), list()), f -> set(f.var("A"))),
+        args(f -> f.method(f.var("A"), list(f.string())), f -> set(f.var("A"))),
+        args(f -> f.method(f.string(), list(f.var("A"))), f -> set(f.var("A"))),
+        args(f -> f.method(f.var("B"), list(f.var("A"))), f -> set(f.var("A"), f.var("B"))),
+
+        args(f -> f.method(f.method(f.var("A"), list()), list()), f -> set(f.var("A"))),
+        args(f -> f.method(f.var("D"), list(f.var("C"), f.var("B"))),
             f -> set(f.var("B"), f.var("C"), f.var("D")))
     );
   }
@@ -254,8 +279,8 @@ public class CatHTest extends TestingContext {
     @MethodSource("result_cases")
     public void result(Function<CatDb, FuncT> factoryCall,
         Function<CatDb, List<Type>> expected) {
-      assertThat(invoke(factoryCall).res())
-          .isEqualTo(invoke(expected));
+      assertThat(execute(factoryCall).res())
+          .isEqualTo(execute(expected));
     }
 
     public static List<Arguments> result_cases() {
@@ -270,8 +295,8 @@ public class CatHTest extends TestingContext {
     @MethodSource("params_cases")
     public void params(Function<CatDb, FuncT> factoryCall,
         Function<CatDb, List<Type>> expected) {
-      assertThat(invoke(factoryCall).params())
-          .isEqualTo(invoke(expected));
+      assertThat(execute(factoryCall).params())
+          .isEqualTo(execute(expected));
     }
 
     public static List<Arguments> params_cases() {
@@ -279,6 +304,40 @@ public class CatHTest extends TestingContext {
           args(f -> f.func(f.int_(), list()), f -> list()),
           args(f -> f.func(f.blob(), list(f.bool())), f -> list(f.bool())),
           args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+      );
+    }
+  }
+  @Nested
+  class _method {
+    @ParameterizedTest
+    @MethodSource("result_cases")
+    public void result(Function<CatDb, MethodTH> factoryCall,
+        Function<CatDb, List<Type>> expected) {
+      assertThat(execute(factoryCall).res())
+          .isEqualTo(execute(expected));
+    }
+
+    public static List<Arguments> result_cases() {
+      return asList(
+          args(f -> f.method(f.int_(), list()), f -> f.int_()),
+          args(f -> f.method(f.blob(), list(f.bool())), f -> f.blob()),
+          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+      );
+    }
+
+    @ParameterizedTest
+    @MethodSource("params_cases")
+    public void params(Function<CatDb, MethodTH> factoryCall,
+        Function<CatDb, List<Type>> expected) {
+      assertThat(execute(factoryCall).params())
+          .isEqualTo(execute(expected));
+    }
+
+    public static List<Arguments> params_cases() {
+      return asList(
+          args(f -> f.method(f.int_(), list()), f -> list()),
+          args(f -> f.method(f.blob(), list(f.bool())), f -> list(f.bool())),
+          args(f -> f.method(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
       );
     }
   }
@@ -303,7 +362,7 @@ public class CatHTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
     public void elemType(Function<CatDb, TypeH> factoryCall) {
-      TypeH elem = invoke(factoryCall);
+      TypeH elem = execute(factoryCall);
       ArrayT array = typeFactoryH().array(elem);
       assertThat(array.elem())
           .isEqualTo(elem);
@@ -315,6 +374,7 @@ public class CatHTest extends TestingContext {
           args(f -> f.blob()),
           args(f -> f.bool()),
           args(f -> f.func(f.string(), list())),
+          args(f -> f.method(f.string(), list())),
           args(f -> f.int_()),
           args(f -> f.nothing()),
           args(f -> f.string()),
@@ -325,6 +385,7 @@ public class CatHTest extends TestingContext {
           args(f -> f.array(f.blob())),
           args(f -> f.array(f.bool())),
           args(f -> f.array(f.func(f.string(), list()))),
+          args(f -> f.array(f.method(f.string(), list()))),
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),
@@ -355,8 +416,8 @@ public class CatHTest extends TestingContext {
     public void tuple_item(
         Function<CatDb, TupleTH> factoryCall,
         Function<CatDb, NList<Labeled<Type>>> expected) {
-      assertThat(invoke(factoryCall).items())
-          .isEqualTo(invoke(expected));
+      assertThat(execute(factoryCall).items())
+          .isEqualTo(execute(expected));
     }
 
     public static List<Arguments> tuple_item_cases() {
@@ -380,8 +441,9 @@ public class CatHTest extends TestingContext {
         arguments(ANY, ValH.class),
         arguments(BLOB, BlobH.class),
         arguments(BOOL, BoolH.class),
-        arguments(ABST_FUNC, FuncH.class),
+        arguments(FUNC, FuncH.class),
         arguments(INT, IntH.class),
+        arguments(METHOD, MethodH.class),
         arguments(NOTHING, ValH.class),
         arguments(PERSON, TupleH.class),
         arguments(STRING, StringH.class),
@@ -392,6 +454,7 @@ public class CatHTest extends TestingContext {
         arguments(ARRAY_BOOL, ArrayH.class),
         arguments(ARRAY_FUNCTION, ArrayH.class),
         arguments(ARRAY_INT, ArrayH.class),
+        arguments(ARRAY_METHOD, ArrayH.class),
         arguments(ARRAY_NOTHING, ArrayH.class),
         arguments(ARRAY_PERSON_TUPLE, ArrayH.class),
         arguments(ARRAY_STR, ArrayH.class),
@@ -434,6 +497,13 @@ public class CatHTest extends TestingContext {
 
     @ParameterizedTest
     @MethodSource("types")
+    public void invoke(TypeH type) {
+      assertThat(TYPEH_DB.invoke(type).evalT())
+          .isEqualTo(type);
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
     public void order(TypeH type) {
       assertThat(TYPEH_DB.order(type).evalT())
           .isEqualTo(TYPEH_DB.array(type));
@@ -456,10 +526,6 @@ public class CatHTest extends TestingContext {
     public static ImmutableList<CatH> types() {
       return TestingCatsH.CATS_TO_TEST;
     }
-
-    public static ImmutableList<CatH> arrayTypes() {
-      return TestingCatsH.ARRAY_CATS_TO_TEST;
-    }
   }
 
   @Test
@@ -468,7 +534,7 @@ public class CatHTest extends TestingContext {
     tester.addEqualityGroup(ANY, ANY);
     tester.addEqualityGroup(BLOB, BLOB);
     tester.addEqualityGroup(BOOL, BOOL);
-    tester.addEqualityGroup(ABST_FUNC, ABST_FUNC);
+    tester.addEqualityGroup(FUNC, FUNC);
     tester.addEqualityGroup(INT, INT);
     tester.addEqualityGroup(NOTHING, NOTHING);
     tester.addEqualityGroup(STRING, STRING);
@@ -507,7 +573,7 @@ public class CatHTest extends TestingContext {
     tester.testEquals();
   }
 
-  private <R> R invoke(Function<CatDb, R> f) {
+  private <R> R execute(Function<CatDb, R> f) {
     return f.apply(catDb());
   }
 

@@ -3,7 +3,7 @@ package org.smoothbuild.exec.algorithm;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 
 public class AlgorithmHashes {
@@ -13,8 +13,8 @@ public class AlgorithmHashes {
 
   // TODO 1 is unused
 
-  public static Hash invokeAlgorithmHash(InvokeH invokeH) {
-    return hash(2, invokeH.hash());
+  public static Hash invokeAlgorithmHash(MethodH method) {
+    return hash(2, method.hash());
   }
 
   public static Hash orderAlgorithmHash() {

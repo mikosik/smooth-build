@@ -37,6 +37,7 @@ import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -44,11 +45,11 @@ import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.InvokeCH;
 import org.smoothbuild.db.object.type.expr.SelectCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.CallableTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
+import org.smoothbuild.db.object.type.val.MethodTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.util.collect.Lists;
@@ -83,6 +84,11 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
+  public MethodH method(MethodTH type, BlobH jar, StringH classBinaryName, BoolH isPure) {
+    return wrapHashedDbExceptionAsObjectDbException(
+        () -> newMethod(type, jar, classBinaryName, isPure));
+  }
+
   public FuncH func(FuncTH type, ObjH body) {
     if (!typing.isAssignable(type.res(), body.type())) {
       throw new IllegalArgumentException("`type` specifies result as " + type.res().name()
@@ -93,12 +99,6 @@ public class ObjDb {
 
   public IntH int_(BigInteger value) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInt(value));
-  }
-
-  public InvokeH invoke(InvokeCH type, BlobH jarFile, StringH classBinaryName, BoolH isPure,
-      CombineH args) {
-    return wrapHashedDbExceptionAsObjectDbException(
-        () -> newInvoke(type, jarFile, classBinaryName, isPure, args));
   }
 
   public StringH string(String value) {
@@ -134,6 +134,10 @@ public class ObjDb {
 
   public IfH if_(ObjH condition, ObjH then, ObjH else_) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
+  }
+
+  public InvokeH invoke(ObjH method, CombineH args) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(method, args));
   }
 
   public MapH map(ObjH array, ObjH func) {
@@ -213,9 +217,9 @@ public class ObjDb {
     return catDb.int_().newObj(root, this);
   }
 
-  private InvokeH newInvoke(InvokeCH type, BlobH jarFile, StringH classBinaryName, BoolH isPure,
-      CombineH args) throws HashedDbExc {
-    var data = writeInvokeData(jarFile, classBinaryName, isPure, args);
+  private MethodH newMethod(MethodTH type, BlobH jar, StringH classBinaryName, BoolH isPure)
+      throws HashedDbExc {
+    var data = writeMethodData(jar, classBinaryName, isPure);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -235,11 +239,19 @@ public class ObjDb {
   // methods for creating Expr-s
 
   private CallH newCall(ObjH callable, CombineH args) throws HashedDbExc {
-    var resT = inferCallResT(callableEvalT(callable), args);
+    var resT = inferCallResT(castTypeToFuncTH(callable), args);
     var type = catDb.call(resT);
     var data = writeCallData(callable, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
+  }
+
+  private FuncTH castTypeToFuncTH(ObjH callable) {
+    if (callable.type() instanceof FuncTH funcT) {
+      return funcT;
+    } else {
+      throw new IllegalArgumentException("`func` component doesn't evaluate to FuncH.");
+    }
   }
 
   private TypeH inferCallResT(CallableTH callableTH, CombineH args) {
@@ -260,14 +272,6 @@ public class ObjDb {
     throw new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to callable type parameters %s."
             .formatted(args.type().name(), callableTH.paramsTuple().name()));
-  }
-
-  private FuncTH callableEvalT(ObjH callable) {
-    if (callable.type() instanceof FuncTH funcT) {
-      return funcT;
-    } else {
-      throw new IllegalArgumentException("`func` component doesn't evaluate to function.");
-    }
   }
 
   private OrderH newOrder(ImmutableList<ObjH> elems) throws HashedDbExc {
@@ -314,6 +318,22 @@ public class ObjDb {
     var data = writeIfData(condition, then, else_);
     var root = newRoot(type, data);
     return type.newObj(root, this);
+  }
+
+  private InvokeH newInvoke(ObjH method, CombineH args) throws HashedDbExc {
+    var resT = inferCallResT(castTypeToMethodTH(method), args);
+    var type = catDb.invoke(resT);
+    var data = writeInvokeData(method, args);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
+  }
+
+  private MethodTH castTypeToMethodTH(ObjH callable) {
+    if (callable.type() instanceof MethodTH methodTH) {
+      return methodTH;
+    } else {
+      throw new IllegalArgumentException("`method` component doesn't evaluate to MethodH.");
+    }
   }
 
   private MapH newMap(ObjH array, ObjH func) throws HashedDbExc {
@@ -381,9 +401,8 @@ public class ObjDb {
     return hashedDb.writeSeq(condition.hash(), then.hash(), else_.hash());
   }
 
-  private Hash writeInvokeData(BlobH jarFile, StringH classBinaryName, BoolH isPure,
-      CombineH args) throws HashedDbExc {
-    return hashedDb.writeSeq(jarFile.hash(), classBinaryName.hash(), isPure.hash(), args.hash());
+  private Hash writeInvokeData(ObjH method, CombineH args) throws HashedDbExc {
+    return hashedDb.writeSeq(method.hash(), args.hash());
   }
 
   private Hash writeMapData(ObjH array, ObjH func) throws HashedDbExc {
@@ -412,12 +431,17 @@ public class ObjDb {
     return hashedDb.writeBoolean(value);
   }
 
+  private Hash writeFuncData(ObjH body) {
+    return body.hash();
+  }
+
   private Hash writeIntData(BigInteger value) throws HashedDbExc {
     return hashedDb.writeBigInteger(value);
   }
 
-  private Hash writeFuncData(ObjH body) {
-    return body.hash();
+  private Hash writeMethodData(BlobH jar, StringH classBinaryName, BoolH isPure)
+      throws HashedDbExc {
+    return hashedDb.writeSeq(jar.hash(), classBinaryName.hash(), isPure.hash());
   }
 
   private Hash writeStringData(String string) throws HashedDbExc {

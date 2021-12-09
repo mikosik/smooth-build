@@ -18,6 +18,7 @@ import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -29,7 +30,7 @@ public enum CatKindH {
   ARRAY(        (byte) 0,  ArrayH.class,      ArrayH::new),
   BLOB(         (byte) 1,  BlobH.class,       BlobH::new),
   BOOL(         (byte) 2,  BoolH.class,       BoolH::new),
-  // TODO unused 3
+  METHOD(       (byte) 3,  MethodH.class,     MethodH::new),
   INT(          (byte) 4,  IntH.class,        IntH::new),
   IF(           (byte) 5,  IfH.class,         IfH::new),
   NOTHING(      (byte) 6,  ValH.class,        CatKindH::throwException),
@@ -57,6 +58,7 @@ public enum CatKindH {
           .put((byte) 0, ARRAY)
           .put((byte) 1, BLOB)
           .put((byte) 2, BOOL)
+          .put((byte) 3, METHOD)
           .put((byte) 4, INT)
           .put((byte) 5, IF)
           .put((byte) 6, NOTHING)

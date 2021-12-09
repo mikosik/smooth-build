@@ -207,8 +207,8 @@ public class ObjHStableHashTest extends TestingContext {
   class _invoke {
     @Test
     public void invoke() {
-      assertThat(invokeH(blobH(), stringH()).hash())
-          .isEqualTo(Hash.decode("49859a90fa1c2faefa0bb97edc8d3f1cffef47b7"));
+      assertThat(invokeH(methodH(methodTH())).hash())
+          .isEqualTo(Hash.decode("3e7615f6c89c3cf6776649c90585e5f58fd38ec8"));
     }
   }
 

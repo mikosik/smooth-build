@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.expr.InvokeH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.base.Input;
@@ -17,26 +17,26 @@ import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.plugin.NativeApi;
 
 public class InvokeAlgorithm extends Algorithm {
-  private final InvokeH invokeH;
+  private final MethodH methodH;
   private final String extendedName;
   private final MethodLoader methodLoader;
 
-  public InvokeAlgorithm(TypeH outputT, String extendedName, InvokeH invokeH,
+  public InvokeAlgorithm(TypeH outputT, String extendedName, MethodH method,
       MethodLoader methodLoader) {
-    super(outputT, invokeH.isPure().toJ());
+    super(outputT, method.isPure().toJ());
     this.extendedName = extendedName;
     this.methodLoader = methodLoader;
-    this.invokeH = invokeH;
+    this.methodH = method;
   }
 
   @Override
   public Hash hash() {
-    return invokeAlgorithmHash(invokeH);
+    return invokeAlgorithmHash(methodH);
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    var method = methodLoader.load(extendedName, invokeH);
+    var method = methodLoader.load(extendedName, methodH);
     try {
       var result = (ValH) method.invoke(null, createArgs(nativeApi, input.vals()));
       if (result == null) {

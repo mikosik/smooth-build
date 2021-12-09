@@ -1,6 +1,5 @@
 package org.smoothbuild.exec.algorithm;
 
-import static okio.ByteString.encodeUtf8;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.combineAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.invokeAlgorithmHash;
@@ -27,10 +26,16 @@ public class AlgorithmHashesCollisionTest extends TestingContext {
     addHash(list, set, combineAlgorithmHash(tupleTH(list(intTH()))));
     addHash(list, set, combineAlgorithmHash(tupleTH(list(stringTH()))));
     addHash(list, set, combineAlgorithmHash(tupleTH(list(intTH(), stringTH()))));
-    addHash(list, set, invokeAlgorithmHash(invokeH(blobH(encodeUtf8("blob 1")), stringH("class 1"))));
-    addHash(list, set, invokeAlgorithmHash(invokeH(blobH(encodeUtf8("blob 1")), stringH("class 2"))));
-    addHash(list, set, invokeAlgorithmHash(invokeH(blobH(encodeUtf8("blob 2")), stringH("class 1"))));
-    addHash(list, set, invokeAlgorithmHash(invokeH(blobH(encodeUtf8("blob 2")), stringH("class 2"))));
+    addHash(list, set, invokeAlgorithmHash(
+        methodH(methodTH(intTH(), list()), blobH(1), stringH("1"), boolH(true))));
+    addHash(list, set, invokeAlgorithmHash(
+        methodH(methodTH(intTH(), list()), blobH(1), stringH("1"), boolH(false))));
+    addHash(list, set, invokeAlgorithmHash(
+        methodH(methodTH(intTH(), list()), blobH(1), stringH("2"), boolH(true))));
+    addHash(list, set, invokeAlgorithmHash(
+        methodH(methodTH(intTH(), list()), blobH(2), stringH("1"), boolH(true))));
+    addHash(list, set, invokeAlgorithmHash(
+        methodH(methodTH(boolTH(), list()), blobH(1), stringH("1"), boolH(true))));
     addHash(list, set, orderAlgorithmHash());
     addHash(list, set, selectAlgorithmHash());
   }

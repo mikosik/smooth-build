@@ -83,7 +83,8 @@ public class NativeTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("result");
       assertFinishedWithError();
-      assertSysOutContains(fileNotFoundErrorMessage("myFunc"));
+      assertSysOutContains(
+          "build.smooth:1: Error loading native jar: File '{prj}/build.jar' doesn't exist.");
     }
 
     @Test
@@ -363,11 +364,6 @@ public class NativeTest extends AcceptanceTestCase {
       String name, String declared, String actual) {
     return "`" + name + "` has faulty native implementation: Its declared result type == `"
         + declared + "` but it returned object with type == `" + actual + "`.";
-  }
-
-  private String fileNotFoundErrorMessage(String memberName) {
-    return
-        "Error loading native jar for `" + memberName +"`: File '{prj}/build.jar' doesn't exist.";
   }
 
   private static String fetchTimestamp(String text) {

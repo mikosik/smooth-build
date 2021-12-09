@@ -31,6 +31,7 @@ public class CatKindHTest {
         Arguments.of(0, CatKindH.ARRAY),
         Arguments.of(1, CatKindH.BLOB),
         Arguments.of(2, CatKindH.BOOL),
+        Arguments.of(3, CatKindH.METHOD),
         Arguments.of(4, CatKindH.INT),
         Arguments.of(5, CatKindH.IF),
         Arguments.of(6, CatKindH.NOTHING),

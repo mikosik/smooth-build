@@ -1,24 +1,24 @@
 package org.smoothbuild.db.object.type.val;
 
-import static org.smoothbuild.db.object.type.base.CatKindH.FUNC;
+import static org.smoothbuild.db.object.type.base.CatKindH.METHOD;
 import static org.smoothbuild.db.object.type.val.CallableTH.calculateVars;
 import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.val.FuncH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.lang.base.type.api.FuncT;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncTH extends TypeH implements FuncT, CallableTH {
+public class MethodTH extends TypeH implements CallableTH{
   private final TypeH res;
   private final TupleTH params;
 
-  public FuncTH(Hash hash, TypeH res, TupleTH params) {
-    super(funcTypeName(res, params.items()), hash, FUNC, calculateVars(res, params.items()));
+  public MethodTH(Hash hash, TypeH res, TupleTH params) {
+    super("_" + funcTypeName(res, params.items()), hash, METHOD,
+        calculateVars(res, params.items()));
     this.res = res;
     this.params = params;
   }
@@ -39,7 +39,7 @@ public final class FuncTH extends TypeH implements FuncT, CallableTH {
   }
 
   @Override
-  public FuncH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
-    return (FuncH) super.newObj(merkleRoot, objDb);
+  public MethodH newObj(MerkleRoot merkleRoot, ObjDb objDb) {
+    return (MethodH) super.newObj(merkleRoot, objDb);
   }
 }

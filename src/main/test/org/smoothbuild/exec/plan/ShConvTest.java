@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.val.BlobH;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefsS;
@@ -24,6 +25,8 @@ import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.testing.TestingContext;
+
+import com.google.common.collect.ImmutableList;
 
 public class ShConvTest extends TestingContext {
   @Nested
@@ -120,9 +123,12 @@ public class ShConvTest extends TestingContext {
       var ann = annS(loc(filePath, 1), stringS(classBinaryName));
       var natFuncS = natFuncS(funcTS, "myFunc", nList(itemS(intTS(), "param")), ann);
 
-      var funcTH = funcTH(intTH(), list(blobTH()));
+      var resT = intTH();
+      ImmutableList<TypeH> paramTs = list(blobTH());
+      var funcTH = funcTH(resT, paramTs);
       var jarFile = blobH(37);
-      var bodyH = invokeH(invokeCH(funcTH.res(), funcTH.params()), jarFile, stringH(classBinaryName));
+      var method = methodH(methodTH(resT, paramTs), jarFile, stringH(classBinaryName), boolH(true));
+      var bodyH = invokeH(method, combineH(list(paramRefH(blobTH(), 0))));
       var funcH = funcH(funcTH, bodyH);
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jarFile);

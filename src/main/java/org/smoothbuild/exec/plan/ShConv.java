@@ -27,6 +27,7 @@ import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
@@ -47,6 +48,7 @@ import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
 import org.smoothbuild.lang.expr.CombineS;
@@ -140,16 +142,19 @@ public class ShConv {
 
   private FuncH convertNatFunc(NatFuncS natFuncS) {
     var funcTH = convertFuncT(natFuncS.type());
-    var invokeCH = objFactory.invokeT(funcTH.res(), funcTH.params());
-    var jarH = loadNatJar(natFuncS);
-    var annS = natFuncS.ann();
-    var classBinaryNameJ = annS.path().string();
-    var classBinaryNameH = objFactory.string(classBinaryNameJ);
-    var isPureH = objFactory.bool(annS.isPure());
+    var methodH = createMethodH(natFuncS.ann(), funcTH);
     var args = objFactory.combine(createParamRefsH(funcTH.params()));
-    var bodyH = objFactory.invoke(invokeCH, jarH, classBinaryNameH, isPureH, args);
+    var bodyH = objFactory.invoke(methodH, args);
     nals.put(bodyH, natFuncS);
     return objFactory.func(funcTH, bodyH);
+  }
+
+  private MethodH createMethodH(AnnS annS, FuncTH funcTH) {
+    var methodTH = objFactory.methodT(funcTH.res(), funcTH.params());
+    var jarH = loadNativeJar(annS);
+    var classBinaryNameH = objFactory.string(annS.path().string());
+    var isPureH = objFactory.bool(annS.isPure());
+    return objFactory.method(methodTH, jarH, classBinaryNameH, isPureH);
   }
 
   private ImmutableList<ObjH> createParamRefsH(ImmutableList<TypeH> paramTs) {
@@ -256,13 +261,13 @@ public class ShConv {
 
   // helpers
 
-  private BlobH loadNatJar(NatFuncS natFuncS) {
-    var filePath = natFuncS.ann().loc().file().withExtension("jar");
+  private BlobH loadNativeJar(AnnS ann) {
+    var filePath = ann.loc().file().withExtension("jar");
     try {
       return fileLoader.load(filePath);
     } catch (FileNotFoundException e) {
-      String message = "Error loading native jar for `%s`: File %s doesn't exist."
-          .formatted(natFuncS.name(), filePath.q());
+      String message = ann.loc() + ": Error loading native jar: File %s doesn't exist."
+          .formatted(filePath.q());
       throw new QuitExc(message);
     }
   }

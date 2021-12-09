@@ -22,7 +22,7 @@ public class CallHTest extends TestingContext {
   public void creating_call_with_expr_not_being_func_causes_exception() {
     assertCall(() -> callH(intH(), list()))
         .throwsException(new IllegalArgumentException(
-            "`func` component doesn't evaluate to function."));
+            "`func` component doesn't evaluate to FuncH."));
   }
 
   @Test

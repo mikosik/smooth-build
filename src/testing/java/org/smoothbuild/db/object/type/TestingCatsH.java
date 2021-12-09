@@ -21,7 +21,8 @@ public class TestingCatsH {
   public static final TypeH BLOB = TYPEH_DB.blob();
   public static final TypeH BOOL = TYPEH_DB.bool();
   public static final TypeH INT = TYPEH_DB.int_();
-  public static final TypeH ABST_FUNC = TYPEH_DB.func(BLOB, list(BOOL));
+  public static final TypeH FUNC = TYPEH_DB.func(BLOB, list(BOOL));
+  public static final TypeH METHOD = TYPEH_DB.method(BLOB, list(BOOL));
   public static final TypeH NOTHING = TYPEH_DB.nothing();
   public static final TypeH STRING = TYPEH_DB.string();
   public static final TypeH VARIABLE = TYPEH_DB.var("A");
@@ -43,8 +44,9 @@ public class TestingCatsH {
   public static final ArrayTH ARRAY_ANY = array(ANY);
   public static final ArrayTH ARRAY_BLOB = array(BLOB);
   public static final ArrayTH ARRAY_BOOL = array(BOOL);
-  public static final ArrayTH ARRAY_FUNCTION = array(ABST_FUNC);
+  public static final ArrayTH ARRAY_FUNCTION = array(FUNC);
   public static final ArrayTH ARRAY_INT = array(INT);
+  public static final ArrayTH ARRAY_METHOD = array(METHOD);
   public static final ArrayTH ARRAY_NOTHING = array(NOTHING);
   public static final ArrayTH ARRAY_STR = array(STRING);
   public static final ArrayTH ARRAY_PERSON_TUPLE = array(PERSON);
@@ -56,6 +58,7 @@ public class TestingCatsH {
   public static final ArrayTH ARRAY2_BOOL = array(ARRAY_BOOL);
   public static final ArrayTH ARRAY2_FUNCTION = array(ARRAY_FUNCTION);
   public static final ArrayTH ARRAY2_INT = array(ARRAY_INT);
+  public static final ArrayTH ARRAY2_METHOD = array(ARRAY_METHOD);
   public static final ArrayTH ARRAY2_NOTHING = array(ARRAY_NOTHING);
   public static final ArrayTH ARRAY2_STR = array(ARRAY_STR);
   public static final ArrayTH ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
@@ -64,8 +67,10 @@ public class TestingCatsH {
 
   public static final ImmutableList<CatH> BASE_CATS_TO_TEST = list(
       BLOB,
-      BOOL, ABST_FUNC,
+      BOOL,
+      FUNC,
       INT,
+      METHOD,
       NOTHING,
       STRING,
       PERSON
@@ -76,6 +81,7 @@ public class TestingCatsH {
       ARRAY_BOOL,
       ARRAY_FUNCTION,
       ARRAY_INT,
+      ARRAY_METHOD,
       ARRAY_NOTHING,
       ARRAY_STR,
       ARRAY_PERSON_TUPLE,
@@ -84,6 +90,7 @@ public class TestingCatsH {
       ARRAY2_BOOL,
       ARRAY2_FUNCTION,
       ARRAY2_INT,
+      ARRAY2_METHOD,
       ARRAY2_NOTHING,
       ARRAY2_STR,
       ARRAY2_PERSON_TUPLE
@@ -104,6 +111,10 @@ public class TestingCatsH {
         TYPEH_DB.func(BLOB, list(BLOB, BLOB)),
         TYPEH_DB.func(STRING, list()),
         INT,
+        TYPEH_DB.method(BLOB, list()),
+        TYPEH_DB.method(BLOB, list(BLOB)),
+        TYPEH_DB.method(BLOB, list(BLOB, BLOB)),
+        TYPEH_DB.method(STRING, list()),
         NOTHING,
         STRING,
         TYPEH_DB.tuple(list()),
@@ -122,8 +133,8 @@ public class TestingCatsH {
         TYPEH_DB.combine(TYPEH_DB.tuple(list(STRING))),
         TYPEH_DB.if_(BLOB),
         TYPEH_DB.if_(STRING),
-        TYPEH_DB.invoke(BLOB, list(BLOB)),
-        TYPEH_DB.invoke(STRING, list(BLOB)),
+        TYPEH_DB.invoke(BLOB),
+        TYPEH_DB.invoke(STRING),
         TYPEH_DB.map(ARRAY_BLOB),
         TYPEH_DB.map(ARRAY_STR),
         TYPEH_DB.order(BLOB),

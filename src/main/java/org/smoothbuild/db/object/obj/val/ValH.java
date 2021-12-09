@@ -10,7 +10,7 @@ import org.smoothbuild.db.object.type.base.TypeH;
  * This class is thread-safe.
  */
 public sealed abstract class ValH extends ObjH
-    permits ArrayH, BlobH, BoolH, FuncH, IntH, StringH, TupleH {
+    permits ArrayH, BlobH, BoolH, FuncH, IntH, MethodH, StringH, TupleH {
   public ValH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
   }

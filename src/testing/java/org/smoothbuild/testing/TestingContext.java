@@ -34,6 +34,7 @@ import org.smoothbuild.db.object.obj.val.BlobHBuilder;
 import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
+import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
@@ -55,6 +56,7 @@ import org.smoothbuild.db.object.type.val.BlobTH;
 import org.smoothbuild.db.object.type.val.BoolTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.IntTH;
+import org.smoothbuild.db.object.type.val.MethodTH;
 import org.smoothbuild.db.object.type.val.NothingTH;
 import org.smoothbuild.db.object.type.val.StringTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
@@ -312,6 +314,14 @@ public class TestingContext {
     return catDb().int_();
   }
 
+  public MethodTH methodTH() {
+    return methodTH(blobTH(), list(boolTH()));
+  }
+
+  public MethodTH methodTH(TypeH resT, ImmutableList<TypeH> paramTs) {
+    return catDb().method(resT, paramTs);
+  }
+
   public NothingTH nothingTH() {
     return catDb().nothing();
   }
@@ -379,11 +389,11 @@ public class TestingContext {
   }
 
   public InvokeCH invokeCH() {
-    return invokeCH(blobTH(), list(boolTH()));
+    return invokeCH(blobTH());
   }
 
-  public InvokeCH invokeCH(TypeH resT, ImmutableList<TypeH> paramTs) {
-    return catDb().invoke(resT, paramTs);
+  public InvokeCH invokeCH(TypeH evalT) {
+    return catDb().invoke(evalT);
   }
 
   public MapCH mapCH() {
@@ -505,26 +515,24 @@ public class TestingContext {
     return objDb().int_(BigInteger.valueOf(value));
   }
 
-  public InvokeH invokeH(BlobH jarFile, StringH classBinaryName) {
-    return invokeH(invokeCH(), jarFile, classBinaryName);
+  public MethodH methodH() {
+    return methodH(methodTH());
   }
 
-  public InvokeH invokeH(InvokeCH type, BlobH jarFile, StringH classBinaryName) {
-    var args = combineH(createParamRefsH(type.params()));
-    return invokeH(type, jarFile, classBinaryName, boolH(true), args);
+  public MethodH methodH(MethodTH methodTH) {
+    return methodH(methodTH, blobH(7), stringH("class binary name"), boolH(true));
   }
 
-  public InvokeH invokeH(
-      InvokeCH type, BlobH jarFile, StringH classBinaryName, BoolH isPure, CombineH args) {
-    return objDb().invoke(type, jarFile, classBinaryName, isPure, args);
+  public MethodH methodH(BlobH jarFile, StringH classBinaryName) {
+    return methodH(methodTH(), jarFile, classBinaryName);
   }
 
-  private ImmutableList<ObjH> createParamRefsH(ImmutableList<TypeH> paramTs) {
-    Builder<ObjH> builder = ImmutableList.builder();
-    for (int i = 0; i < paramTs.size(); i++) {
-      builder.add(paramRefH(paramTs.get(i), i));
-    }
-    return builder.build();
+  public MethodH methodH(MethodTH type, BlobH jarFile, StringH classBinaryName) {
+    return methodH(type, jarFile, classBinaryName, boolH(true));
+  }
+
+  public MethodH methodH(MethodTH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
+    return objDb().method(type, jarFile, classBinaryName, isPure);
   }
 
   public TupleH personH(String firstName, String lastName) {
@@ -592,6 +600,28 @@ public class TestingContext {
 
   public IfH ifH(ObjH condition, ObjH then, ObjH else_) {
     return objDb().if_(condition, then, else_);
+  }
+
+  public InvokeH invokeH(ObjH method) {
+    MethodH castMethod = (MethodH) method;
+    var args = combineH(createParamRefsH(castMethod.type().params()));
+    return invokeH(method, args);
+  }
+
+  public InvokeH invokeH(ObjH method, ImmutableList<ObjH> args) {
+    return objDb().invoke(method, combineH(args));
+  }
+
+  public InvokeH invokeH(ObjH method, CombineH args) {
+    return objDb().invoke(method, args);
+  }
+
+  private ImmutableList<ObjH> createParamRefsH(ImmutableList<TypeH> paramTs) {
+    Builder<ObjH> builder = ImmutableList.builder();
+    for (int i = 0; i < paramTs.size(); i++) {
+      builder.add(paramRefH(paramTs.get(i), i));
+    }
+    return builder.build();
   }
 
   public MapH mapH(ObjH array, ObjH func) {
