@@ -16,7 +16,7 @@ public class OrderAlgorithm extends Algorithm {
 
   @Override
   public Hash hash() {
-    return orderAlgorithmHash();
+    return orderAlgorithmHash(outputT());
   }
 
   @Override

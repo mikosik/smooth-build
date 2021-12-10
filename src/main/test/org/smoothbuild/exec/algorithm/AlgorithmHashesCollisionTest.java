@@ -36,7 +36,8 @@ public class AlgorithmHashesCollisionTest extends TestingContext {
         methodH(methodTH(intTH(), list()), blobH(2), stringH("1"), boolH(true))));
     addHash(list, set, invokeAlgorithmHash(
         methodH(methodTH(boolTH(), list()), blobH(1), stringH("1"), boolH(true))));
-    addHash(list, set, orderAlgorithmHash());
+    addHash(list, set, orderAlgorithmHash(arrayTH(intTH())));
+    addHash(list, set, orderAlgorithmHash(arrayTH(boolTH())));
     addHash(list, set, selectAlgorithmHash());
   }
 

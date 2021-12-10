@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.val.MethodH;
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 
 public class AlgorithmHashes {
@@ -17,8 +18,8 @@ public class AlgorithmHashes {
     return hash(2, method.hash());
   }
 
-  public static Hash orderAlgorithmHash() {
-    return hash(3);
+  public static Hash orderAlgorithmHash(TypeH typeH) {
+    return hash(3, typeH.hash());
   }
 
   public static Hash selectAlgorithmHash() {
