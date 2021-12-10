@@ -1091,10 +1091,10 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void data_is_seq_with_two_elem() throws Exception {
       var type = methodTH(stringTH(), list(intTH()));
-      var jarFile = blobH();
+      var jar = blobH();
       var classBinaryName = stringH();
       Hash dataHash = hash(
-          hash(jarFile),
+          hash(jar),
           hash(classBinaryName)
       );
       Hash objHash =
@@ -1111,11 +1111,11 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void data_is_seq_with_four_elems() throws Exception {
       var type = methodTH(stringTH(), list(intTH()));
-      var jarFile = blobH();
+      var jar = blobH();
       var classBinaryName = stringH();
       var isPure = boolH(true);
       Hash dataHash = hash(
-          hash(jarFile),
+          hash(jar),
           hash(classBinaryName),
           hash(isPure),
           hash(isPure)
@@ -1134,14 +1134,14 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void jar_file_is_not_blob_value() throws Exception {
       var type = methodTH(stringTH(), list(intTH()));
-      var jarFile = stringH();
+      var jar = stringH();
       var classBinaryName = stringH();
       var isPure = boolH(true);
       var objHash =
           hash(
               hash(type),
               hash(
-                  hash(jarFile),
+                  hash(jar),
                   hash(classBinaryName),
                   hash(isPure)
               )
@@ -1154,14 +1154,14 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void class_binary_name_is_not_string_value() throws Exception {
       var type = methodTH(stringTH(), list(intTH()));
-      var jarFile = blobH();
+      var jar = blobH();
       var classBinaryName = intH();
       var isPure = boolH(true);
       var objHash =
           hash(
               hash(type),
               hash(
-                  hash(jarFile),
+                  hash(jar),
                   hash(classBinaryName),
                   hash(isPure)
               )
@@ -1175,14 +1175,14 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void is_pure_is_not_bool_value() throws Exception {
       var type = methodTH(stringTH(), list(intTH()));
-      var jarFile = blobH();
+      var jar = blobH();
       var classBinaryName = stringH();
       var isPure = stringH();
       var objHash =
           hash(
               hash(type),
               hash(
-                  hash(jarFile),
+                  hash(jar),
                   hash(classBinaryName),
                   hash(isPure)
               )

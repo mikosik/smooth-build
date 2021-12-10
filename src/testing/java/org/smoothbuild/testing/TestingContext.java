@@ -523,16 +523,16 @@ public class TestingContext {
     return methodH(methodTH, blobH(7), stringH("class binary name"), boolH(true));
   }
 
-  public MethodH methodH(BlobH jarFile, StringH classBinaryName) {
-    return methodH(methodTH(), jarFile, classBinaryName);
+  public MethodH methodH(BlobH jar, StringH classBinaryName) {
+    return methodH(methodTH(), jar, classBinaryName);
   }
 
-  public MethodH methodH(MethodTH type, BlobH jarFile, StringH classBinaryName) {
-    return methodH(type, jarFile, classBinaryName, boolH(true));
+  public MethodH methodH(MethodTH type, BlobH jar, StringH classBinaryName) {
+    return methodH(type, jar, classBinaryName, boolH(true));
   }
 
-  public MethodH methodH(MethodTH type, BlobH jarFile, StringH classBinaryName, BoolH isPure) {
-    return objDb().method(type, jarFile, classBinaryName, isPure);
+  public MethodH methodH(MethodTH type, BlobH jar, StringH classBinaryName, BoolH isPure) {
+    return objDb().method(type, jar, classBinaryName, isPure);
   }
 
   public TupleH personH(String firstName, String lastName) {

@@ -43,8 +43,8 @@ public class Classes {
     return binaryPath.substring(0, newLength).replace('/', '.');
   }
 
-  public static void saveBytecodeInJar(Path jarFile, Class<?>... classes) throws IOException {
-    try (JarOutputStream jarOutputStream = jarOutputStream(jarFile)) {
+  public static void saveBytecodeInJar(Path jarPath, Class<?>... classes) throws IOException {
+    try (JarOutputStream jarOutputStream = jarOutputStream(jarPath)) {
       for (Class<?> clazz : classes) {
         jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
         try (InputStream byteCodeInputStream = byteCodeAsInputStream(clazz)) {
@@ -54,8 +54,8 @@ public class Classes {
     }
   }
 
-  private static JarOutputStream jarOutputStream(Path jarFile) throws IOException {
-    return new JarOutputStream(new FileOutputStream(jarFile.toFile()));
+  private static JarOutputStream jarOutputStream(Path jarPath) throws IOException {
+    return new JarOutputStream(new FileOutputStream(jarPath.toFile()));
   }
 
   public static InputStream byteCodeAsInputStream(Class<?> clazz) {

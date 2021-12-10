@@ -82,13 +82,13 @@ public class MethodLoader {
 
   private Class<?> findClass(String extendedName, MethodH methodH, String classBinaryName)
       throws LoadingMethodExc {
-    FilePath originalJarFile = fileLoader.filePathOf(methodH.jar().hash());
-    Path jarPath = jPathResolver.resolve(originalJarFile);
+    FilePath originalJarFilePath = fileLoader.filePathOf(methodH.jar().hash());
+    Path jarPath = jPathResolver.resolve(originalJarFilePath);
     try {
       return loadClass(jarPath, classBinaryName);
     } catch (ClassNotFoundException e) {
       throw newLoadingException(extendedName, classBinaryName,
-          "Class '" + classBinaryName + "' does not exist in jar '" + originalJarFile + "'.");
+          "Class '" + classBinaryName + "' does not exist in jar '" + originalJarFilePath + "'.");
     } catch (FileNotFoundException e) {
       throw newLoadingException(extendedName, classBinaryName, e.getMessage(), e);
     }

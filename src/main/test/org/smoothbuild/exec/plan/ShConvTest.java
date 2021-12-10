@@ -126,12 +126,12 @@ public class ShConvTest extends TestingContext {
       var resT = intTH();
       ImmutableList<TypeH> paramTs = list(blobTH());
       var funcTH = funcTH(resT, paramTs);
-      var jarFile = blobH(37);
-      var method = methodH(methodTH(resT, paramTs), jarFile, stringH(classBinaryName), boolH(true));
+      var jar = blobH(37);
+      var method = methodH(methodTH(resT, paramTs), jar, stringH(classBinaryName), boolH(true));
       var bodyH = invokeH(method, combineH(list(paramRefH(blobTH(), 0))));
       var funcH = funcH(funcTH, bodyH);
 
-      var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jarFile);
+      var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
       var shConv = newShConv(defs(natFuncS), fileLoader);
       assertThat(shConv.convertExpr(topRefS(natFuncS)))
           .isEqualTo(funcH);
