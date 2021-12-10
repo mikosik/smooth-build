@@ -215,8 +215,7 @@ public class JobCreator {
     var conditionJ = eagerJobFor(scope, vars, ifData.condition());
     var thenJ = lazyJobFor(scope, vars, ifData.then_());
     var elseJ = lazyJobFor(scope, vars, ifData.else_());
-    var deps = list(conditionJ, thenJ, elseJ);
-    return new IfJob(ifH.type(), deps, nal.loc());
+    return new IfJob(ifH.type(), conditionJ, thenJ, elseJ, nal.loc());
   }
 
   // Invoke
@@ -260,9 +259,8 @@ public class JobCreator {
     MapData data = mapH.data();
     var arrayJ = eagerJobFor(scope, vars, data.array());
     var funcJ = eagerJobFor(scope, vars, data.func());
-    var deps = list(arrayJ, funcJ);
     TypeH actualType = typing.mapVarsLower(mapH.type(), vars);
-    return new MapJob(actualType, nal.loc(), deps, scope, this);
+    return new MapJob(actualType, arrayJ, funcJ, nal.loc(), scope, this);
   }
 
   // Order
