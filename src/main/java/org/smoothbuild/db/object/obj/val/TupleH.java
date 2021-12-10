@@ -1,5 +1,6 @@
 package org.smoothbuild.db.object.obj.val;
 
+import static com.google.common.base.Suppliers.memoize;
 import static java.util.Objects.checkIndex;
 
 import org.smoothbuild.db.object.obj.ObjDb;
@@ -7,16 +8,18 @@ import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
 import org.smoothbuild.db.object.type.val.TupleTH;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
  */
 public final class TupleH extends ValH {
-  private ImmutableList<ValH> items;
+  private final Supplier<ImmutableList<ValH>> itemsSupplier;
 
   public TupleH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
+    this.itemsSupplier = memoize(this::instantiateItems);
   }
 
   @Override
@@ -36,10 +39,7 @@ public final class TupleH extends ValH {
   }
 
   public ImmutableList<ValH> items() {
-    if (items == null) {
-      items = instantiateItems();
-    }
-    return items;
+    return itemsSupplier.get();
   }
 
   private ImmutableList<ValH> instantiateItems() {
