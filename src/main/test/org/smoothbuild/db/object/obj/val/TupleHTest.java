@@ -70,20 +70,6 @@ public class TupleHTest extends TestingContext {
   }
 
   @Test
-  public void super_object_is_equal_to_first_item() {
-    TupleH person = johnDoePerson();
-    assertThat(person.superObject())
-        .isEqualTo(stringH("John"));
-  }
-
-  @Test
-  public void super_object_is_null_when_tuple_type_has_no_items() {
-    TupleH tuple = tupleH(list());
-    assertThat(tuple.superObject())
-        .isNull();
-  }
-
-  @Test
   public void tuple_hash_is_different_of_its_item_hash() {
     TupleH person = johnDoePerson();
     assertThat(person.hash())

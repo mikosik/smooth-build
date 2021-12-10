@@ -35,11 +35,6 @@ public final class TupleH extends ValH {
     return items.get(index);
   }
 
-  public ValH superObject() {
-    ImmutableList<ValH> items = items();
-    return items.size() == 0 ? null : items.iterator().next();
-  }
-
   public ImmutableList<ValH> items() {
     if (items == null) {
       items = instantiateItems();
