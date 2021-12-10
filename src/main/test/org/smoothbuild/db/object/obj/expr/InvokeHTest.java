@@ -51,7 +51,7 @@ public class InvokeHTest extends TestingContext {
   @Test
   public void method_returns_method_expr() {
     var method = methodH(methodTH(intTH(), list(stringTH())));
-    assertThat(invokeH(method, list(stringH())).method())
+    assertThat(invokeH(method, list(stringH())).data().method())
         .isEqualTo(method);
   }
 
@@ -59,7 +59,7 @@ public class InvokeHTest extends TestingContext {
   public void args_returns_arg_exprs() {
     var method = methodH(methodTH(intTH(), list(stringTH())));
     var args = combineH(list(stringH()));
-    assertThat(invokeH(method, args).args())
+    assertThat(invokeH(method, args).data().args())
         .isEqualTo(args);
   }
 
@@ -156,10 +156,12 @@ public class InvokeHTest extends TestingContext {
     var args = combineH(list(stringH()));
     var invoke = invokeH(method, args);
     var readInvoke = (InvokeH) objDbOther().get(invoke.hash());
-    assertThat(readInvoke.method())
-        .isEqualTo(invoke.method());
-    assertThat(readInvoke.args())
-        .isEqualTo(invoke.args());
+    var readInvokeData = readInvoke.data();
+    var invokeData = invoke.data();
+    assertThat(readInvokeData.method())
+        .isEqualTo(invokeData.method());
+    assertThat(readInvokeData.args())
+        .isEqualTo(invokeData.args());
   }
 
   @Test

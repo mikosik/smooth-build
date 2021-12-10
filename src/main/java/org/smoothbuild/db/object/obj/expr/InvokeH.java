@@ -25,11 +25,17 @@ public final class InvokeH extends ExprH {
     return (InvokeCH) super.cat();
   }
 
-  public MethodH method() {
+  public record Data(MethodH method, CombineH args) {}
+
+  public Data data() {
+    return new Data(method(), args());
+  }
+
+  private MethodH method() {
     return readSeqElemObj(DATA_PATH, dataHash(), METHOD_INDEX, DATA_SEQ_SIZE, MethodH.class);
   }
 
-  public CombineH args() {
+  private CombineH args() {
     return readSeqElemObj(DATA_PATH, dataHash(), ARGS_INDEX, DATA_SEQ_SIZE, CombineH.class);
   }
 }
