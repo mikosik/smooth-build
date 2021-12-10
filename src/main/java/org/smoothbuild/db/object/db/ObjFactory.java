@@ -34,7 +34,6 @@ import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypingH;
 import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.InvokeCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.BlobTH;
 import org.smoothbuild.db.object.type.val.BoolTH;
@@ -177,10 +176,6 @@ public class ObjFactory {
 
   public IntTH intT() {
     return catDb.int_();
-  }
-
-  public InvokeCH invokeT(TypeH evalT) {
-    return catDb.invoke(evalT);
   }
 
   public TupleTH messageT() {
