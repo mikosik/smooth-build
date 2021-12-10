@@ -99,23 +99,6 @@ public class ObjHStableHashTest extends TestingContext {
   }
 
   @Nested
-  class _call {
-    @Test
-    public void call_expression_with_one_arg() {
-      assertThat(callH(funcH(list(stringTH()), intH()), list(stringH("abc"))).hash())
-          .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
-    }
-
-    @Test
-    public void call_expression_without_args() {
-      var type = funcTH(intTH(), list(stringTH()));
-      var defFunc = funcH(type, intH());
-      assertThat(callH(defFunc, list(stringH("abc"))).hash())
-          .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
-    }
-  }
-
-  @Nested
   class _func {
     @Test
     public void with_no_params() {
@@ -141,48 +124,6 @@ public class ObjHStableHashTest extends TestingContext {
   }
 
   @Nested
-  class _if {
-    @Test
-    public void if_() {
-      assertThat(ifH(boolH(true), intH(1), intH(2)).hash())
-          .isEqualTo(Hash.decode("d2fadb5c97a33675d3854149734c8a0bca9779d1"));
-    }
-  }
-
-  @Nested
-  class _map {
-    @Test
-    public void map() {
-      assertThat(mapH(arrayH(intH(1)), funcH(list(intTH()), intH(1))).hash())
-          .isEqualTo(Hash.decode("c09ea55c05c98df2689ae12009448b3ee27a2378"));
-    }
-  }
-
-  @Nested
-  class _order {
-    @Test
-    public void empty_order_expression() {
-      assertThat(orderH(list()).hash())
-          .isEqualTo(Hash.decode("a0b82433f715eef1e275af8702914efa74c1bffe"));
-    }
-
-    @Test
-    public void order_expression() {
-      assertThat(orderH(list(intH(1))).hash())
-          .isEqualTo(Hash.decode("f05ca9450196cec30ab9ac0bc06bcf2c182f7434"));
-    }
-  }
-
-  @Nested
-  class _select {
-    @Test
-    public void select_expression() {
-      assertThat(selectH(animalH(), intH(0)).hash())
-          .isEqualTo(Hash.decode("43cea8a5fe2387317f40c1ba960f0753c952909e"));
-    }
-  }
-
-  @Nested
   class _int {
     @Test
     public void zero_int() {
@@ -204,11 +145,12 @@ public class ObjHStableHashTest extends TestingContext {
   }
 
   @Nested
-  class _invoke {
+  class _method {
     @Test
-    public void invoke() {
-      assertThat(invokeH(methodH(methodTH())).hash())
-          .isEqualTo(Hash.decode("3e7615f6c89c3cf6776649c90585e5f58fd38ec8"));
+    public void method() {
+      assertThat(
+          methodH(methodTH(intTH(), list(boolTH())), blobH(1), stringH("cbn"), boolH(true)).hash())
+          .isEqualTo(Hash.decode("1590b8ef2a27b91e1036df55d513e2423f196d89"));
     }
   }
 
@@ -242,8 +184,84 @@ public class ObjHStableHashTest extends TestingContext {
     }
   }
 
+  // expressions
+
   @Nested
-  class _ref {
+  class _call {
+    @Test
+    public void call_expression_with_one_arg() {
+      assertThat(callH(funcH(list(stringTH()), intH()), list(stringH("abc"))).hash())
+          .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
+    }
+
+    @Test
+    public void call_expression_without_args() {
+      var type = funcTH(intTH(), list(stringTH()));
+      var defFunc = funcH(type, intH());
+      assertThat(callH(defFunc, list(stringH("abc"))).hash())
+          .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
+    }
+  }
+
+  @Nested
+  class _combine {
+    @Test
+    public void combine_expression_with_one_arg() {
+      assertThat(combineH(list(intH(1))).hash())
+          .isEqualTo(Hash.decode("16913cad3fbbe28270c3e51765de40c636944d0f"));
+    }
+
+    @Test
+    public void combine_expression_without_args() {
+      assertThat(combineH(list()).hash())
+          .isEqualTo(Hash.decode("3b2048ce36decfa28bc39b783dd88502103c73fd"));
+    }
+  }
+
+  @Nested
+  class _if {
+    @Test
+    public void if_() {
+      assertThat(ifH(boolH(true), intH(1), intH(2)).hash())
+          .isEqualTo(Hash.decode("d2fadb5c97a33675d3854149734c8a0bca9779d1"));
+    }
+  }
+
+  @Nested
+  class _invoke {
+    @Test
+    public void invoke() {
+      assertThat(invokeH(methodH(methodTH())).hash())
+          .isEqualTo(Hash.decode("3e7615f6c89c3cf6776649c90585e5f58fd38ec8"));
+    }
+  }
+
+  @Nested
+  class _map {
+    @Test
+    public void map() {
+      assertThat(mapH(arrayH(intH(1)), funcH(list(intTH()), intH(1))).hash())
+          .isEqualTo(Hash.decode("c09ea55c05c98df2689ae12009448b3ee27a2378"));
+    }
+  }
+
+  @Nested
+  class _order {
+    @Test
+    public void empty_order_expression() {
+      assertThat(orderH(list()).hash())
+          .isEqualTo(Hash.decode("a0b82433f715eef1e275af8702914efa74c1bffe"));
+    }
+
+    @Test
+    public void order_expression() {
+      assertThat(orderH(list(intH(1))).hash())
+          .isEqualTo(Hash.decode("f05ca9450196cec30ab9ac0bc06bcf2c182f7434"));
+    }
+  }
+
+  @Nested
+  class _param_ref {
     @Test
     public void zero_ref() {
       assertThat(paramRefH(intTH(), 0).hash())
@@ -260,6 +278,15 @@ public class ObjHStableHashTest extends TestingContext {
     public void negative_ref() {
       assertThat(paramRefH(intTH(), -123).hash())
           .isEqualTo(Hash.decode("f7ccbc4c95d78604753662395b5c5357f833fd64"));
+    }
+  }
+
+  @Nested
+  class _select {
+    @Test
+    public void select_expression() {
+      assertThat(selectH(animalH(), intH(0)).hash())
+          .isEqualTo(Hash.decode("43cea8a5fe2387317f40c1ba960f0753c952909e"));
     }
   }
 }
