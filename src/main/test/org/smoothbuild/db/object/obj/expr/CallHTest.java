@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.expr.CallH.CallData;
@@ -12,10 +13,19 @@ import org.smoothbuild.testing.TestingContext;
 import com.google.common.collect.ImmutableList;
 
 public class CallHTest extends TestingContext {
-  @Test
-  public void type_of_call_expr_is_inferred_correctly() {
-    assertThat(callH(funcH(list(stringTH()), intH()), list(stringH())).cat())
-        .isEqualTo(callCH(intTH()));
+  @Nested
+  class _infer_type_of_call {
+    @Test
+    public void without_generic_params() {
+      assertThat(callH(funcH(list(stringTH()), intH()), list(stringH())).cat())
+          .isEqualTo(callCH(intTH()));
+    }
+
+    @Test
+    public void with_generic_params() {
+      assertThat(callH(funcH(list(varTH("A")), paramRefH(varTH("A"), 0)), list(intH())).cat())
+          .isEqualTo(callCH(intTH()));
+    }
   }
 
   @Test

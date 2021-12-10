@@ -4,14 +4,24 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
 public class InvokeHTest extends TestingContext {
-  @Test
-  public void type_of_invoke_expr_is_inferred_correctly() {
-    assertThat(invokeH(methodH(methodTH(intTH(), list(boolTH()))), list(boolH())).cat())
-        .isEqualTo(invokeCH(intTH()));
+  @Nested
+  class _infer_type_of_invoke {
+    @Test
+    public void without_generic_params() {
+      assertThat(invokeH(methodH(methodTH(intTH(), list(boolTH()))), list(boolH())).cat())
+          .isEqualTo(invokeCH(intTH()));
+    }
+
+    @Test
+    public void with_generic_params() {
+      assertThat(invokeH(methodH(methodTH(varTH("A"), list(varTH("A")))), list(boolH())).cat())
+          .isEqualTo(invokeCH(boolTH()));
+    }
   }
 
   @Test
