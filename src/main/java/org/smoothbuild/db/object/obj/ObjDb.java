@@ -90,11 +90,15 @@ public class ObjDb {
   }
 
   public FuncH func(FuncTH type, ObjH body) {
-    if (!typing.isAssignable(type.res(), body.type())) {
-      throw new IllegalArgumentException("`type` specifies result as " + type.res().name()
-          + " but body.type() is " + body.type().name() + ".");
-    }
+    checkBodyTypeAssignableToFuncResT(type, body);
     return wrapHashedDbExceptionAsObjectDbException(() -> newFunc(type, body));
+  }
+
+  private void checkBodyTypeAssignableToFuncResT(FuncTH type, ObjH body) {
+    if (!typing.isAssignable(type.res(), body.type())) {
+      throw new IllegalArgumentException("`type` specifies result as " + type.res().q()
+          + " but body.type() is " + body.type().q() + ".");
+    }
   }
 
   public IntH int_(BigInteger value) {
