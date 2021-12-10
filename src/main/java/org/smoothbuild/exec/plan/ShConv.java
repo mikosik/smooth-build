@@ -273,10 +273,10 @@ public class ShConv {
   }
 
   private TypeH convertT(TypeS typeS) {
-    return typeShConv.visit(typeS);
+    return typeShConv.convert(typeS);
   }
 
   private FuncTH convertFuncT(FuncTS funcTS) {
-    return typeShConv.visit(funcTS);
+    return typeShConv.convert(funcTS);
   }
 }

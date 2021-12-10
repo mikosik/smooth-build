@@ -27,7 +27,7 @@ public class TypeShConv {
     this.objFactory = objFactory;
   }
 
-  public TypeH visit(TypeS type) {
+  public TypeH convert(TypeS type) {
     return switch (type) {
       case AnyTS any -> throw new RuntimeException("S-Any cannot be converted to H-type.");
       case BlobTS blob -> objFactory.blobT();
@@ -35,14 +35,14 @@ public class TypeShConv {
       case IntTS i -> objFactory.intT();
       case NothingTS n -> objFactory.nothingT();
       case StringTS s -> objFactory.stringT();
-      case StructTS st -> objFactory.tupleT(map(st.fields(), isig -> visit(isig.type())));
+      case StructTS st -> objFactory.tupleT(map(st.fields(), isig -> convert(isig.type())));
       case VarS v ->  objFactory.var(v.name());
-      case ArrayTS a -> objFactory.arrayT(visit(a.elem()));
-      case FuncTS f -> visit(f);
+      case ArrayTS a -> objFactory.arrayT(convert(a.elem()));
+      case FuncTS f -> convert(f);
     };
   }
 
-  public FuncTH visit(FuncTS funcTS) {
-    return objFactory.funcT(visit(funcTS.res()), map(funcTS.params(), this::visit));
+  public FuncTH convert(FuncTS funcTS) {
+    return objFactory.funcT(convert(funcTS.res()), map(funcTS.params(), this::convert));
   }
 }
