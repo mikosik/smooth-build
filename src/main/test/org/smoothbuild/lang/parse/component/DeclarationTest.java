@@ -657,10 +657,9 @@ public class DeclarationTest extends TestingContext {
               String nonDefault);
             """)
               .loadsSuccessfully()
-              .containsEval(natFuncS(2, STRING, "myFunc",
-                  annS(1, stringS(1, "Impl.met")),
+              .containsEval(natFuncS(2, STRING, "myFunc", nList(
                   itemS(3, STRING, "default", stringS(3, "value")),
-                  itemS(4, STRING, "nonDefault")));
+                  itemS(4, STRING, "nonDefault")), annS(1, stringS(1, "Impl.met"))));
         }
 
         @Test
@@ -687,8 +686,8 @@ public class DeclarationTest extends TestingContext {
         public void can_have_trailing_comma() {
           mod(funcDeclaration("String param1,"))
               .loadsSuccessfully()
-              .containsEval(defFuncS(1, STRING, "myFunc",
-                  stringS(1, "abc"), itemS(1, STRING, "param1")));
+              .containsEval(defFuncS(1, STRING, "myFunc", stringS(1, "abc"),
+                  nList(itemS(1, STRING, "param1"))));
         }
 
         @Test

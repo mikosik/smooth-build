@@ -12,6 +12,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -662,8 +663,12 @@ public class TestingContext {
     return typeFactoryS().bool();
   }
 
-  public FuncTS funcTS(TypeS resT, ItemS... params) {
-    return funcTS(resT, toTypes(list(params)));
+  public FuncTS funcTS(TypeS resT) {
+    return funcTS(resT, ImmutableList.<TypeS>of());
+  }
+
+  public FuncTS funcTS(TypeS resT, List<? extends ItemS> params) {
+    return funcTS(resT, toTypes(params));
   }
 
   public FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
@@ -869,13 +874,14 @@ public class TestingContext {
     return new DefValS(type, modPath(), name, expr, loc(line));
   }
 
-  public NatFuncS natFuncS(TypeS type, String name, ItemS... params) {
-    return natFuncS(1, type, name, annS(1, stringS(1, "Impl.met")), params);
+  public NatFuncS natFuncS(TypeS type, String name, NList<ItemS> params) {
+    return natFuncS(1, type, name, params, annS(1, stringS(1, "Impl.met")));
   }
 
-  public NatFuncS natFuncS(int line, TypeS type, String name, AnnS annS, ItemS... params) {
-    return natFuncS(line, funcTS(type, params), modPath(), name, nList(params), annS);
+  public NatFuncS natFuncS(int line, TypeS type, String name, NList<ItemS> params, AnnS annS) {
+    return natFuncS(line, funcTS(type, params.list()), modPath(), name, params, annS);
   }
+
   public NatFuncS natFuncS(FuncTS type, String name, NList<ItemS> params) {
     return natFuncS(type, name, params, annS());
   }
@@ -893,12 +899,12 @@ public class TestingContext {
     return new NatFuncS(type, modPath, name, params, ann, loc(line));
   }
 
-  public DefFuncS defFuncS(TypeS type, String name, ExprS body, ItemS... params) {
+  public DefFuncS defFuncS(TypeS type, String name, ExprS body, NList<ItemS> params) {
     return defFuncS(1, type, name, body, params);
   }
 
-  public DefFuncS defFuncS(int line, TypeS type, String name, ExprS body, ItemS... params) {
-    return new DefFuncS(funcTS(type, params), modPath(), name, nList(params), body, loc(line));
+  public DefFuncS defFuncS(int line, TypeS type, String name, ExprS body, NList<ItemS> params) {
+    return new DefFuncS(funcTS(type, params), modPath(), name, params, body, loc(line));
   }
 
   public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS expr) {

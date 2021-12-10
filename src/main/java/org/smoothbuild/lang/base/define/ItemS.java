@@ -38,7 +38,7 @@ public class ItemS extends EvalS {
     return defaultVal.map(v -> " = " + v).orElse("");
   }
 
-  public static ImmutableList<TypeS> toTypes(List<ItemS> items) {
+  public static ImmutableList<TypeS> toTypes(List<? extends ItemS> items) {
     return map(items, ItemS::type);
   }
 

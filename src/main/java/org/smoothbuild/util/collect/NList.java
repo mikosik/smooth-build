@@ -194,7 +194,7 @@ public class NList<T extends Nameable> extends AbstractList<T> {
 
   // helper methods
 
-  private ImmutableList<T> list() {
+  public ImmutableList<T> list() {
     return list.get();
   }
 
