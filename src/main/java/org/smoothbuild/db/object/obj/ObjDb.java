@@ -316,7 +316,8 @@ public class ObjDb {
   }
 
   private IfH newIf(ObjH condition, ObjH then, ObjH else_) throws HashedDbExc {
-    checkArgument(condition.type().equals(catDb.bool()));
+    checkArgument(condition.type().equals(catDb.bool()),
+        "`condition` component must evaluate to BoolH but is " + condition.type().q() + ".");
     var evalT = typing.mergeUp(then.type(), else_.type());
     var type = catDb.if_(evalT);
     var data = writeIfData(condition, then, else_);
