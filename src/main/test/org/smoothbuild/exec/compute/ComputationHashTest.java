@@ -60,7 +60,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new OrderAlgorithm(arrayTH(stringTH()));
     var input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("5c7516a24023883079ab5322ca2a208adf83734e"));
+        .isEqualTo(Hash.decode("41ebaae34bb9d4112df469d1099b48425d6d08a8"));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class ComputationHashTest extends TestingContext {
     var algorithm = new OrderAlgorithm(arrayTH(stringTH()));
     var input = input(list(stringH("abc"), stringH("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("26ca327d87fe70373d6bb568b4af332331b6ea34"));
+        .isEqualTo(Hash.decode("d8de4a0428a84c9e51f8a98bbf89df0a5c126861"));
   }
 
   @Test
