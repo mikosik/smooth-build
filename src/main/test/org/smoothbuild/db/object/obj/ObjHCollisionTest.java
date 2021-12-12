@@ -1,6 +1,5 @@
 package org.smoothbuild.db.object.obj;
 
-import static okio.ByteString.encodeUtf8;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.util.collect.Lists.list;
 

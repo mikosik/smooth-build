@@ -2,14 +2,9 @@ package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.expr.IfH.IfData;
-import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.testing.TestingContext;
 
 public class IfHTest extends TestingContext {

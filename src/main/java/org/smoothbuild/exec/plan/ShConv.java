@@ -24,7 +24,6 @@ import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
 import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.BoolH;
 import org.smoothbuild.db.object.obj.val.FuncH;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.MethodH;
@@ -33,7 +32,6 @@ import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.exec.java.FileLoader;
-import org.smoothbuild.lang.base.define.BoolValS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
@@ -44,7 +42,6 @@ import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NatFuncS;
-import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -167,21 +164,8 @@ public class ShConv {
 
   // handling value
 
-  private ObjH convertVal(ValS valS) {
-    return computeIfAbsent(valCache, valS.name(), name -> convertValImpl(valS));
-  }
-
-  private ObjH convertValImpl(ValS valS) {
-    return switch (valS) {
-      case DefValS defValS -> convertExpr(defValS.body());
-      case BoolValS boolValS -> convertBoolVal(boolValS);
-    };
-  }
-
-  private BoolH convertBoolVal(BoolValS boolValS) {
-    var boolH = objFactory.bool(boolValS.valJ());
-    nals.put(boolH, boolValS);
-    return boolH;
+  private ObjH convertVal(DefValS defValS) {
+    return computeIfAbsent(valCache, defValS.name(), name -> convertExpr(defValS.body()));
   }
 
   // handling expressions
@@ -242,7 +226,7 @@ public class ShConv {
   private ObjH convertTopRef(TopRefS topRefS) {
     return switch (defs.topEvals().get(topRefS.name())) {
       case FuncS f -> convertFunc(f);
-      case ValS v -> convertVal(v);
+      case DefValS v -> convertVal(v);
     };
   }
 

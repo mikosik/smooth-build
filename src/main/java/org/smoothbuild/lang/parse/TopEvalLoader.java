@@ -17,7 +17,6 @@ import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
-import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
@@ -65,13 +64,12 @@ public class TopEvalLoader {
     }
   }
 
-  private ValS loadVal(ModPath path, EvalN valN) {
+  private DefValS loadVal(ModPath path, EvalN valN) {
     var type = valN.type().get();
     var name = valN.name();
     var loc = valN.loc();
     var loader = new ExpressionLoader(path, nList());
-    return new DefValS(
-        type, path, name, loader.createExpression(valN.body().get()), loc);
+    return new DefValS(type, path, name, loader.createExpression(valN.body().get()), loc);
   }
 
   private FuncS loadFunc(ModPath path, FuncN funcN) {

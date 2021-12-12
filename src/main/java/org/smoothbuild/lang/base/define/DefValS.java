@@ -8,11 +8,10 @@ import org.smoothbuild.lang.expr.ExprS;
 /**
  * This class is immutable.
  */
-public final class DefValS extends ValS {
+public final class DefValS extends TopEvalS {
   private final ExprS body;
 
-  public DefValS(TypeS type, ModPath modPath, String name, ExprS body,
-      Loc loc) {
+  public DefValS(TypeS type, ModPath modPath, String name, ExprS body, Loc loc) {
     super(type, modPath, name, loc);
     this.body = body;
   }
@@ -40,7 +39,7 @@ public final class DefValS extends ValS {
 
   @Override
   public String toString() {
-    return "Value(`" + type().name() + " " + name() + " = " + body + "`)";
+    return "DefVal(`" + type().name() + " " + name() + " = " + body + "`)";
   }
 }
 
