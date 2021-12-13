@@ -249,8 +249,8 @@ public class ObjHStableHashTest extends TestingContext {
   class _order {
     @Test
     public void empty_order_expression() {
-      assertThat(orderH(list()).hash())
-          .isEqualTo(Hash.decode("a0b82433f715eef1e275af8702914efa74c1bffe"));
+      assertThat(orderH(stringTH(), list()).hash())
+          .isEqualTo(Hash.decode("f37765f87d6b95ddd98af9fcf7a1e3e9554cbe3b"));
     }
 
     @Test

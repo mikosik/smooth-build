@@ -152,8 +152,8 @@ public class ObjFactory {
     return objDb.tuple(type, items);
   }
 
-  public OrderH order(ImmutableList<ObjH> elems) {
-    return objDb.order(elems);
+  public OrderH order(ArrayTH arrayTH, ImmutableList<ObjH> elems) {
+    return objDb.order(arrayTH, elems);
   }
 
   // Types

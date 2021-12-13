@@ -11,7 +11,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -148,8 +147,8 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newMap(array, func));
   }
 
-  public OrderH order(ImmutableList<ObjH> elems) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elems));
+  public OrderH order(ArrayTH arrayTH, ImmutableList<ObjH> elems) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(arrayTH, elems));
   }
 
   public ParamRefH newParamRef(BigInteger value, TypeH evalT) {
@@ -278,31 +277,22 @@ public class ObjDb {
             .formatted(args.type().name(), callableTH.paramsTuple().name()));
   }
 
-  private OrderH newOrder(ImmutableList<ObjH> elems) throws HashedDbExc {
-    var elemT = elemType(elems);
+  private OrderH newOrder(ArrayTH arrayTH, ImmutableList<ObjH> elems) throws HashedDbExc {
+    var elemT = arrayTH.elem();
+    validateOrderElems(elemT, elems);
     var type = catDb.order(elemT);
     var data = writeOrderData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private TypeH elemType(ImmutableList<ObjH> elems) {
-    Optional<TypeH> elemT = elems.stream()
-        .map(ObjH::type)
-        .reduce((type1, type2) -> {
-          if (type1.equals(type2)) {
-            return type1;
-          } else {
-            throw new IllegalArgumentException("Element evaluation types are not equal "
-                + type1.name() + " != " + type2.name() + ".");
-          }
-        });
-    CatH type = elemT.orElse(catDb.nothing());
-    if (type instanceof TypeH typeH) {
-      return typeH;
-    } else {
-      throw new IllegalArgumentException(
-          "Element type should be ValOType but was " + type.getClass().getCanonicalName());
+  private void validateOrderElems(TypeH elemT, ImmutableList<ObjH> elems) {
+    for (int i = 0; i < elems.size(); i++) {
+      var iElemT = elems.get(i).type();
+      if (!elemT.equals(iElemT)) {
+        throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
+            + " but element at index " + i + " has type " + iElemT.q() + ".");
+      }
     }
   }
 

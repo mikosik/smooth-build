@@ -12,22 +12,10 @@ import com.google.common.collect.ImmutableList;
 
 public class OrderHTest extends TestingContext {
   @Test
-  public void type_of_empty_array_is_inferred_correctly() {
-    assertThat(orderH(list()).cat())
-        .isEqualTo(orderCH(nothingTH()));
-  }
-
-  @Test
-  public void type_of_array_is_inferred_correctly() {
-    assertThat(orderH(list(intH(3))).cat())
-        .isEqualTo(orderCH(intTH()));
-  }
-
-  @Test
-  public void creating_array_with_elems_with_different_evaluation_type_causes_exception() {
-    assertCall(() -> orderH(list(intH(3), stringH("abc"))).cat())
-        .throwsException(new IllegalArgumentException("Element evaluation types are not equal "
-            + intTH().name() + " != " + stringTH().name() + "."));
+  public void creating_order_with_element_evalT_different_than_required_causes_exception() {
+    assertCall(() -> orderH(intTH(), list(stringH("abc"))).cat())
+        .throwsException(new IllegalArgumentException("Illegal elem type. Expected " + intTH().q()
+            + " but element at index 0 has type " + stringTH().q() + "."));
   }
 
   @Test

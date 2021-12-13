@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
@@ -30,6 +31,7 @@ public class TypeShConv {
   public TypeH convert(TypeS type) {
     return switch (type) {
       case AnyTS any -> throw new RuntimeException("S-Any cannot be converted to H-type.");
+      case ArrayTS a -> convert(a);
       case BlobTS blob -> objFactory.blobT();
       case BoolTS bool -> objFactory.boolT();
       case IntTS i -> objFactory.intT();
@@ -37,9 +39,12 @@ public class TypeShConv {
       case StringTS s -> objFactory.stringT();
       case StructTS st -> objFactory.tupleT(map(st.fields(), isig -> convert(isig.type())));
       case VarS v ->  objFactory.var(v.name());
-      case ArrayTS a -> objFactory.arrayT(convert(a.elem()));
       case FuncTS f -> convert(f);
     };
+  }
+
+  public ArrayTH convert(ArrayTS a) {
+    return objFactory.arrayT(convert(a.elem()));
   }
 
   public FuncTH convert(FuncTS funcTS) {

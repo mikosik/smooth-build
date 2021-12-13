@@ -630,7 +630,12 @@ public class TestingContext {
   }
 
   public OrderH orderH(ImmutableList<ObjH> elems) {
-    return objDb().order(elems);
+    var elemT = elems.get(0).type();
+    return orderH(elemT, elems);
+  }
+
+  public OrderH orderH(TypeH elemT, ImmutableList<ObjH> elems) {
+    return objDb().order(arrayTH(elemT), elems);
   }
 
   public ParamRefH paramRefH(int index) {

@@ -42,6 +42,7 @@ import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NatFuncS;
+import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
@@ -215,7 +216,9 @@ public class ShConv {
   }
 
   private OrderH convertOrder(OrderS orderS) {
-    return objFactory.order(convertExprs(orderS.elems()));
+    var arrayTH = convertArrayT(orderS.type());
+    var elemsH = convertExprs(orderS.elems());
+    return objFactory.order(arrayTH, elemsH);
   }
 
   private ParamRefH convertParamRef(ParamRefS paramRefS) {
@@ -257,6 +260,10 @@ public class ShConv {
   }
 
   private TypeH convertT(TypeS typeS) {
+    return typeShConv.convert(typeS);
+  }
+
+  private ArrayTH convertArrayT(ArrayTS typeS) {
     return typeShConv.convert(typeS);
   }
 
