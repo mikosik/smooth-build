@@ -3,8 +3,6 @@ package org.smoothbuild.db.object.obj.expr;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
-import java.util.Objects;
-
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
@@ -41,13 +39,13 @@ public class CombineH extends ExprH {
     allMatchOtherwise(
         expectedItemTs,
         items,
-        (s, i) -> Objects.equals(s, i.type()),
-        (i, j) -> {
-          throw new DecodeCombineWrongItemsSizeExc(hash(), this.cat(), j);
+        (type, item) -> objDb().typing().isParamAssignable(type, item.type()),
+        (type, item) -> {
+          throw new DecodeCombineWrongItemsSizeExc(hash(), this.cat(), item);
         },
-        (i) -> {
+        (index) -> {
           throw new DecodeExprWrongEvalTypeOfCompExc(hash(), this.cat(),
-              "items[" + i + "]", expectedItemTs.get(i), items.get(i).type());
+              "items[" + index + "]", expectedItemTs.get(index), items.get(index).type());
         }
     );
     return items;

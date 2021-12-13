@@ -8,6 +8,7 @@ import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
@@ -37,10 +38,14 @@ public class TypeShConv {
       case IntTS i -> objFactory.intT();
       case NothingTS n -> objFactory.nothingT();
       case StringTS s -> objFactory.stringT();
-      case StructTS st -> objFactory.tupleT(map(st.fields(), isig -> convert(isig.type())));
+      case StructTS st -> convert(st);
       case VarS v ->  objFactory.var(v.name());
       case FuncTS f -> convert(f);
     };
+  }
+
+  public TupleTH convert(StructTS st) {
+    return objFactory.tupleT(map(st.fields(), isig -> convert(isig.type())));
   }
 
   public ArrayTH convert(ArrayTS a) {

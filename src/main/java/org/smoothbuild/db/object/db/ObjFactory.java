@@ -104,8 +104,8 @@ public class ObjFactory {
     return objDb.call(func, args);
   }
 
-  public CombineH combine(ImmutableList<ObjH> items) {
-    return objDb.combine(items);
+  public CombineH combine(TupleTH evalT, ImmutableList<ObjH> items) {
+    return objDb.combine(evalT, items);
   }
 
   public TupleH file(StringH path, BlobH content) {

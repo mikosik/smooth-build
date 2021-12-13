@@ -31,6 +31,7 @@ import org.smoothbuild.db.object.obj.val.StringH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
+import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
@@ -141,7 +142,7 @@ public class ShConv {
   private FuncH convertNatFunc(NatFuncS natFuncS) {
     var funcTH = convertFuncT(natFuncS.type());
     var methodH = createMethodH(natFuncS.ann(), funcTH);
-    var args = objFactory.combine(createParamRefsH(funcTH.params()));
+    var args = objFactory.combine(funcTH.paramsTuple(), createParamRefsH(funcTH.params()));
     var bodyH = objFactory.invoke(methodH, args);
     nals.put(bodyH, natFuncS);
     return objFactory.func(funcTH, bodyH);
@@ -202,13 +203,22 @@ public class ShConv {
   private CallH convertCall(CallS callS) {
     var callableH = convertExpr(callS.callable());
     var argsH = convertExprs(callS.args());
-    var combineH = objFactory.combine(argsH);
+
+    var argTupleT = objFactory.tupleT(map(argsH, ObjH::type));
+    var paramTupleT = ((FuncTH) callableH.type()).paramsTuple();
+    var typing = objFactory.typing();
+    var vars = typing.inferVarBounds(paramTupleT, argTupleT, typing.factory().lower());
+    var actualParamTupleT = (TupleTH) typing.mapVarsLower(paramTupleT, vars);
+    var combineH = objFactory.combine(actualParamTupleT, argsH);
+
     nals.put(combineH, new NalImpl("{}", callS.loc()));
     return objFactory.call(callableH, combineH);
   }
 
   private CombineH convertCombine(CombineS combineS) {
-    return objFactory.combine(convertExprs(combineS.elems()));
+    var evalT = convertStructT(combineS.type());
+    var items = convertExprs(combineS.elems());
+    return objFactory.combine(evalT, items);
   }
 
   private IntH convertInt(IntS intS) {
@@ -264,6 +274,10 @@ public class ShConv {
   }
 
   private ArrayTH convertArrayT(ArrayTS typeS) {
+    return typeShConv.convert(typeS);
+  }
+
+  private TupleTH convertStructT(StructTS typeS) {
     return typeShConv.convert(typeS);
   }
 

@@ -131,8 +131,8 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(callable, args));
   }
 
-  public CombineH combine(ImmutableList<ObjH> items) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(items));
+  public CombineH combine(TupleTH evalT, ImmutableList<ObjH> items) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evalT, items));
   }
 
   public IfH if_(ObjH condition, ObjH then, ObjH else_) {
@@ -296,9 +296,7 @@ public class ObjDb {
     }
   }
 
-  private CombineH newCombine(ImmutableList<ObjH> items) throws HashedDbExc {
-    var itemTs = Lists.map(items, ObjH::type);
-    var evalT = catDb.tuple(itemTs);
+  private CombineH newCombine(TupleTH evalT, ImmutableList<ObjH> items) throws HashedDbExc {
     var type = catDb.combine(evalT);
     var data = writeCombineData(items);
     var root = newRoot(type, data);
