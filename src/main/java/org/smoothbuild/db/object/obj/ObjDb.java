@@ -289,7 +289,7 @@ public class ObjDb {
   private void validateOrderElems(TypeH elemT, ImmutableList<ObjH> elems) {
     for (int i = 0; i < elems.size(); i++) {
       var iElemT = elems.get(i).type();
-      if (!elemT.equals(iElemT)) {
+      if (!typing.isAssignable(elemT, iElemT)) {
         throw new IllegalArgumentException("Illegal elem type. Expected " + elemT.q()
             + " but element at index " + i + " has type " + iElemT.q() + ".");
       }

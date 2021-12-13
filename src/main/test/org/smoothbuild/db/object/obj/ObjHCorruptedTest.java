@@ -618,11 +618,11 @@ public class ObjHCorruptedTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save Order expr
        * in HashedDb.
        */
-      var expr1 = intH(1);
-      var expr2 = intH(2);
+      var expr1 = arrayH(intTH(), intH(1));
+      var expr2 = arrayH(nothingTH());
       Hash objHash =
           hash(
-              hash(orderCH()),
+              hash(orderCH(arrayTH(intTH()))),
               hash(
                   hash(expr1),
                   hash(expr2)

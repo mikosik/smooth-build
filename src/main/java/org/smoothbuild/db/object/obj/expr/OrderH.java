@@ -2,8 +2,6 @@ package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.util.Objects;
-
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
@@ -38,7 +36,7 @@ public class OrderH extends ExprH {
     var expectedElemT = cat().evalT().elem();
     for (int i = 0; i < elems.size(); i++) {
       var actualT = elems.get(i).type();
-      if (!Objects.equals(expectedElemT, actualT)) {
+      if (!objDb().typing().isAssignable(expectedElemT, actualT)) {
         throw new DecodeExprWrongEvalTypeOfCompExc(
             hash(), cat(), "elems[" + i + "]", expectedElemT, actualT);
       }

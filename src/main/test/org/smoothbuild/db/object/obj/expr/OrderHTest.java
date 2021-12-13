@@ -19,6 +19,11 @@ public class OrderHTest extends TestingContext {
   }
 
   @Test
+  public void creating_order_with_element_evalT_being_subtype_of_array_type_elem() {
+    orderH(arrayTH(intTH()), list(arrayH(nothingTH())));
+  }
+
+  @Test
   public void elems_returns_elems() {
     ImmutableList<ObjH> elems = list(intH(2));
     assertThat(orderH(elems).elems())

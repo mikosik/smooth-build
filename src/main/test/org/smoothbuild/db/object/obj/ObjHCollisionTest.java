@@ -86,6 +86,7 @@ public class ObjHCollisionTest extends TestingContext {
         orderH(intTH(), list(intH(1))),
         orderH(intTH(), list(intH(2))),
         orderH(arrayTH(intTH()), list(arrayH(intTH()))),
+        orderH(arrayTH(intTH()), list(arrayH(nothingTH()))),
         paramRefH(intTH(), 0),
         paramRefH(intTH(), 1),
         paramRefH(stringTH(), 0),
