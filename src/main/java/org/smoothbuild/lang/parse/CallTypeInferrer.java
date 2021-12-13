@@ -44,7 +44,7 @@ public class CallTypeInferrer {
     }
     List<Optional<TypeS>> assignedTs = assignedTs(params, assignedArgs);
     if (allAssignedTypesAreInferred(assignedTs)) {
-      var boundedVars = typing.inferVarBoundsInCall(
+      var boundedVars = typing.inferVarBoundsLower(
           map(params, ItemSigS::type),
           map(assignedTs, Optional::get));
       var varProblems = findVarProblems(call, boundedVars);

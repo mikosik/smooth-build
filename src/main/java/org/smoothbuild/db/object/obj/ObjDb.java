@@ -267,7 +267,7 @@ public class ObjDb {
         (expectedSize, actualSize) -> illegalArgs(callableTH, args),
         i -> illegalArgs(callableTH, args)
     );
-    var varBounds = typing.inferVarBoundsInCall(paramTs, argTs);
+    var varBounds = typing.inferVarBoundsLower(paramTs, argTs);
     return typing.mapVarsLower(callableTH.res(), varBounds);
   }
 
@@ -337,7 +337,7 @@ public class ObjDb {
         && funcT.params().size() == 1
         && typing.isAssignable(funcT.params().get(0), arrayT.elem())) {
       // TODO func can be generic so we need to infer proper result type
-      var vars = typing.inferVarBoundsInCall(funcT.params(), list(arrayT.elem()));
+      var vars = typing.inferVarBoundsLower(funcT.params(), list(arrayT.elem()));
       var elemEvalT = typing.mapVarsLower(funcT.res(), vars);
       var evalT = catDb.array(elemEvalT);
       var type = catDb.map(evalT);

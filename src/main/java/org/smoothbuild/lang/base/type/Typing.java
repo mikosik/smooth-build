@@ -90,29 +90,18 @@ public class Typing<T extends Type> {
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public BoundsMap<T> inferVarBoundsInCall(List<? extends T> paramTs, List<? extends T> argTs) {
-    var result = new HashMap<Var, Bounded<T>>();
-    inferVarBounds(paramTs, argTs, factory.lower(), result);
-    return new BoundsMap<>(ImmutableMap.copyOf(result));
-  }
-
   public BoundsMap<T> inferVarBoundsLower(List<? extends T> types1, List<? extends T> types2) {
     return inferVarBounds(types1, types2, factory.lower());
   }
 
   public BoundsMap<T> inferVarBounds(
       List<? extends T> types1, List<? extends T> types2, Side<T> side) {
-    var result = new HashMap<Var, Bounded<T>>();
-    inferVarBounds(types1, types2, side, result);
-    return new BoundsMap<>(ImmutableMap.copyOf(result));
-  }
-
-  private void inferVarBounds(List<? extends T> types1, List<? extends T> types2,
-      Side<T> side, Map<Var, Bounded<T>> result) {
     checkArgument(types1.size() == types2.size());
+    var result = new HashMap<Var, Bounded<T>>();
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
+    return new BoundsMap<>(ImmutableMap.copyOf(result));
   }
 
   public BoundsMap<T> inferVarBounds(T type1, T type2, Side<T> side) {
