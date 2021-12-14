@@ -18,12 +18,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.TestedTS.TestedArrayT;
 import org.smoothbuild.lang.base.type.TestedTS.TestedFuncT;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 
-public class TestedTSFactory implements TestedTFactory<TestedTS, TestedAssignSpecS> {
+public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAssignSpecS> {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
   public static final TestedTS A = new TestedTS(var("A"), null, null);
@@ -146,6 +147,11 @@ public class TestedTSFactory implements TestedTFactory<TestedTS, TestedAssignSpe
   );
 
   @Override
+  public TestingT<TypeS> testingT() {
+    return TestingTS.INSTANCE;
+  }
+
+  @Override
   public TestedTS any() {
     return ANY;
   }
@@ -153,6 +159,11 @@ public class TestedTSFactory implements TestedTFactory<TestedTS, TestedAssignSpe
   @Override
   public TestedTS blob() {
     return BLOB;
+  }
+
+  @Override
+  public TestedTS bool() {
+    return BOOL;
   }
 
   @Override

@@ -1,10 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.collect.Multimaps.newSetMultimap;
-import static org.smoothbuild.lang.base.type.TestingTS.ANY;
-import static org.smoothbuild.lang.base.type.TestingTS.NOTHING;
-import static org.smoothbuild.lang.base.type.TestingTS.a;
-import static org.smoothbuild.lang.base.type.TestingTS.f;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,68 +15,70 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.params.provider.Arguments;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
-public record TestingTypeGraph(ImmutableMultimap<TypeS, TypeS> edges) {
-  public TestingTypeGraph(Multimap<TypeS, TypeS> edges) {
+public record TestingTypeGraph<T extends Type>(ImmutableMultimap<T, T> edges) {
+  public TestingTypeGraph(Multimap<T, T> edges) {
     this(ImmutableMultimap.copyOf(edges));
   }
 
   // building graph edges
 
-  public static TestingTypeGraph buildGraph(ImmutableList<TypeS> types, int levelCount) {
-    TestingTypeGraph graph = baseGraph(types);
+  public static <T extends Type> TestingTypeGraph<T> buildGraph(
+      ImmutableList<T> types, int levelCount, TestingT<T> testingT) {
+    TestingTypeGraph<T> graph = baseGraph(types, testingT);
     for (int i = 0; i < levelCount; i++) {
-      graph = levelUp(graph);
+      graph = levelUp(graph, testingT);
     }
     return graph;
   }
 
-  private static TestingTypeGraph baseGraph(ImmutableList<TypeS> types) {
-    Multimap<TypeS, TypeS> graph = newMultimap();
-    types.forEach(t -> graph.put(NOTHING, t));
-    types.forEach(t -> graph.put(t, ANY));
-    return new TestingTypeGraph(graph);
+  private static <T extends Type> TestingTypeGraph<T> baseGraph(
+      ImmutableList<T> types, TestingT<T> testingT) {
+    Multimap<T, T> graph = newMultimap();
+    types.forEach(t -> graph.put(testingT.nothing(), t));
+    types.forEach(t -> graph.put(t, testingT.any()));
+    return new TestingTypeGraph<>(graph);
   }
 
-  private static TestingTypeGraph levelUp(TestingTypeGraph graph) {
-    Multimap<TypeS, TypeS> newDimension = newMultimap();
+  private static <T extends Type> TestingTypeGraph<T> levelUp(TestingTypeGraph<T> graph,
+      TestingT<T> testingT) {
+    Multimap<T, T> newDimension = newMultimap();
 
     // arrays
-    for (Entry<TypeS, TypeS> entry : graph.edges().entries()) {
+    for (Entry<T, T> entry : graph.edges().entries()) {
       var lower = entry.getKey();
       var upper = entry.getValue();
-      newDimension.put(a(lower), a(upper));
+      newDimension.put(testingT.array(lower), testingT.array(upper));
     }
-    newDimension.put(NOTHING, a(NOTHING));
-    newDimension.put(a(ANY), ANY);
+    newDimension.put(testingT.nothing(), testingT.array(testingT.nothing()));
+    newDimension.put(testingT.array(testingT.any()), testingT.any());
 
     // one param funcs
-    Set<TypeS> allTypes = graph.allTypes();
+    Set<T> allTypes = graph.allTypes();
 
-    for (TypeS type : allTypes) {
-      for (Entry<TypeS, TypeS> entry : graph.edges().entries()) {
+    for (T type : allTypes) {
+      for (Entry<T, T> entry : graph.edges().entries()) {
         var lower = entry.getKey();
         var upper = entry.getValue();
-        newDimension.put(f(lower, type), f(upper, type));
-        newDimension.put(f(type, upper), f(type, lower));
+        newDimension.put(testingT.func(lower, list(type)), testingT.func(upper, list(type)));
+        newDimension.put(testingT.func(type, list(upper)), testingT.func(type, list(lower)));
 
       }
     }
-    newDimension.put(NOTHING, f(NOTHING, ANY));
-    newDimension.put(f(ANY, NOTHING), ANY);
+    newDimension.put(testingT.nothing(), testingT.func(testingT.nothing(), list(testingT.any())));
+    newDimension.put(testingT.func(testingT.any(), list(testingT.nothing())), testingT.any());
 
     newDimension.putAll(graph.edges());
     return new TestingTypeGraph(newDimension);
   }
 
-  private Set<TypeS> allTypes() {
-    HashSet<TypeS> types = new HashSet<>();
-    for (Entry<TypeS, TypeS> entry : edges.entries()) {
+  private Set<T> allTypes() {
+    HashSet<T> types = new HashSet<>();
+    for (Entry<T, T> entry : edges.entries()) {
       types.add(entry.getKey());
       types.add(entry.getValue());
     }
@@ -88,8 +87,8 @@ public record TestingTypeGraph(ImmutableMultimap<TypeS, TypeS> edges) {
 
   // building test cases
 
-  public Collection<Arguments> buildTestCases(TypeS rootNode) {
-    ArrayList<TypeS> sorted = typesSortedTopologically(rootNode);
+  public Collection<Arguments> buildTestCases(T rootNode) {
+    ArrayList<T> sorted = typesSortedTopologically(rootNode);
     int typesCount = sorted.size();
     int[][]intEdges = buildIntEdges(sorted);
     List<Arguments> result = new ArrayList<>(typesCount * typesCount);
@@ -101,20 +100,20 @@ public record TestingTypeGraph(ImmutableMultimap<TypeS, TypeS> edges) {
     return result;
   }
 
-  private ArrayList<TypeS> typesSortedTopologically(TypeS rootNode) {
-    var incomingEdgesCount = new HashMap<TypeS, AtomicInteger>();
-    for (Entry<TypeS, TypeS> entry : edges.entries()) {
+  private ArrayList<T> typesSortedTopologically(T rootNode) {
+    var incomingEdgesCount = new HashMap<T, AtomicInteger>();
+    for (Entry<T, T> entry : edges.entries()) {
       incomingEdgesCount.computeIfAbsent(entry.getValue(), e -> new AtomicInteger()).
           incrementAndGet();
     }
 
-    var queue = new LinkedList<TypeS>();
-    var sorted = new ArrayList<TypeS>(incomingEdgesCount.size() + 1);
+    var queue = new LinkedList<T>();
+    var sorted = new ArrayList<T>(incomingEdgesCount.size() + 1);
     queue.addLast(rootNode);
     while (!queue.isEmpty()) {
-      TypeS current = queue.removeFirst();
+      T current = queue.removeFirst();
       sorted.add(current);
-      for (TypeS edgeEnd : edges.get(current)) {
+      for (T edgeEnd : edges.get(current)) {
         AtomicInteger count = incomingEdgesCount.get(edgeEnd);
         if (count.decrementAndGet() == 0) {
           queue.addLast(edgeEnd);
@@ -124,7 +123,7 @@ public record TestingTypeGraph(ImmutableMultimap<TypeS, TypeS> edges) {
     return sorted;
   }
 
-  private Arguments buildTestCase(int i, int j, int[][] intEdges, ArrayList<TypeS> indexToType) {
+  private Arguments buildTestCase(int i, int j, int[][] intEdges, ArrayList<T> indexToType) {
     if (i == j) {
       Type type = indexToType.get(i);
       return Arguments.of(type, type, type);
@@ -153,7 +152,7 @@ public record TestingTypeGraph(ImmutableMultimap<TypeS, TypeS> edges) {
     }
   }
 
-  private int[][] buildIntEdges(ArrayList<TypeS> sortedTs) {
+  private int[][] buildIntEdges(ArrayList<T> sortedTs) {
     var typeToIndex = typeToIndex(sortedTs);
 
     int[][] intEdges = new int[sortedTs.size()][];
@@ -164,19 +163,19 @@ public record TestingTypeGraph(ImmutableMultimap<TypeS, TypeS> edges) {
     return intEdges;
   }
 
-  private static HashMap<Type, Integer> typeToIndex(ArrayList<TypeS> sortedTs) {
-    HashMap<Type, Integer> typeToInteger = new HashMap<>();
+  private static <T extends Type> HashMap<T, Integer> typeToIndex(ArrayList<T> sortedTs) {
+    HashMap<T, Integer> typeToInteger = new HashMap<>();
     for (int i = 0; i < sortedTs.size(); i++) {
       typeToInteger.put(sortedTs.get(i), i);
     }
     return typeToInteger;
   }
 
-  private static Multimap<TypeS, TypeS> newMultimap() {
+  private static <T extends Type> Multimap<T, T> newMultimap() {
     return newSetMultimap(new HashMap<>(), HashSet::new);
   }
 
-  public TestingTypeGraph inverse() {
-    return new TestingTypeGraph(edges.inverse());
+  public TestingTypeGraph<T> inverse() {
+    return new TestingTypeGraph<>(edges.inverse());
   }
 }

@@ -35,8 +35,8 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
    * Inferable base types are types that can be inferred but `Any` type is not legal in smooth
    * language.
    */
-  public ImmutableList<BaseTS> inferableBaseTs() {
-    return ImmutableList.<BaseTS>builder()
+  public ImmutableList<TypeS> inferableBaseTs() {
+    return ImmutableList.<TypeS>builder()
         .addAll(baseTs())
         .add(any())
         .build();

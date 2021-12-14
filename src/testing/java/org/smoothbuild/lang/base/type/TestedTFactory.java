@@ -2,36 +2,44 @@ package org.smoothbuild.lang.base.type;
 
 import java.util.List;
 
-public interface TestedTFactory<T extends TestedT<?>, S extends TestedAssignSpec<? extends T>> {
-  public T any();
+import org.smoothbuild.lang.base.type.api.Type;
 
-  public T blob();
+public interface TestedTFactory
+    <T extends Type, TT extends TestedT<T>, S extends TestedAssignSpec<? extends TT>> {
 
-  public T int_();
+  public TestingT<T> testingT();
 
-  public T nothing();
+  public TT any();
 
-  public T string();
+  public TT blob();
 
-  public T struct();
+  public TT bool();
 
-  public T varA();
+  public TT int_();
 
-  public T varB();
+  public TT nothing();
 
-  public T array(T type);
+  public TT string();
 
-  public T array2(T type);
+  public TT struct();
 
-  public T func(T resT, List<T> paramTestedTs);
+  public TT varA();
 
-  public default S illegalAssignment(T target, T source) {
+  public TT varB();
+
+  public TT array(TT type);
+
+  public TT array2(TT type);
+
+  public TT func(TT resT, List<TT> paramTestedTs);
+
+  public default S illegalAssignment(TT target, TT source) {
     return testedAssignmentSpec(target, source, false);
   }
 
-  public default S allowedAssignment(T target, T source) {
+  public default S allowedAssignment(TT target, TT source) {
     return testedAssignmentSpec(target, source, true);
   }
 
-  public S testedAssignmentSpec(T target, T source, boolean allowed);
+  public S testedAssignmentSpec(TT target, TT source, boolean allowed);
 }

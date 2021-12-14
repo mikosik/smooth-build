@@ -10,7 +10,6 @@ import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
-import org.smoothbuild.lang.base.type.impl.BaseTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
 import org.smoothbuild.lang.base.type.impl.BoolTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
@@ -26,12 +25,14 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestingTS {
-  private static final TestingContext CONTEXT = new TestingContext();
-  private static final TypeFactoryS FACTORY = CONTEXT.typeFactoryS();
+public class TestingTS implements TestingT<TypeS> {
+  public static final TestingT<TypeS> INSTANCE = new TestingTS();
 
-  public static final ImmutableList<BaseTS> BASE_TYPES = FACTORY.baseTs();
-  public static final ImmutableList<BaseTS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTs();
+  private static final TestingContext CONTEXT = new TestingContext();
+  public static final TypeFactoryS FACTORY = CONTEXT.typeFactoryS();
+
+  public static final ImmutableList<TypeS> BASE_TYPES = ImmutableList.copyOf(FACTORY.baseTs());
+  public static final ImmutableList<TypeS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTs();
 
   public static final AnyTS ANY = FACTORY.any();
   public static final BlobTS BLOB = FACTORY.blob();
@@ -105,7 +106,8 @@ public class TestingTS {
     return FACTORY.struct(name, fields);
   }
 
-  public static Bounds<TypeS> oneSideBound(Side<TypeS> side, TypeS type) {
+  @Override
+  public Bounds<TypeS> oneSideBound(Side<TypeS> side, TypeS type) {
     return FACTORY.oneSideBound(side, type);
   }
 
@@ -121,5 +123,95 @@ public class TestingTS {
 
   public static BoundsMap<TypeS> bm() {
     return CONTEXT.bmS();
+  }
+
+  @Override
+  public Typing<TypeS> typing() {
+    return CONTEXT.typingS();
+  }
+
+  @Override
+  public ImmutableList<TypeS> baseTypes() {
+    return BASE_TYPES;
+  }
+
+  @Override
+  public ImmutableList<TypeS> elementaryTypes() {
+    return ELEMENTARY_TYPES;
+  }
+
+  @Override
+  public ImmutableList<TypeS> allTestedTypes() {
+    return ALL_TESTED_TYPES;
+  }
+
+  @Override
+  public TypeS array(TypeS elemT) {
+    return a(elemT);
+  }
+
+  @Override
+  public TypeS func(TypeS resT, ImmutableList<TypeS> params) {
+    return TestingTS.f(resT, params);
+  }
+
+  @Override
+  public TypeS any() {
+    return ANY;
+  }
+
+  @Override
+  public TypeS blob() {
+    return BLOB;
+  }
+
+  @Override
+  public TypeS bool() {
+    return BOOL;
+  }
+
+  @Override
+  public TypeS int_() {
+    return INT;
+  }
+
+  @Override
+  public TypeS nothing() {
+    return NOTHING;
+  }
+
+  @Override
+  public TypeS string() {
+    return STRING;
+  }
+
+  @Override
+  public TypeS struct() {
+    return PERSON;
+  }
+
+  @Override
+  public TypeS a() {
+    return A;
+  }
+
+  @Override
+  public TypeS b() {
+    return B;
+  }
+
+  @Override
+  public TypeS x() {
+    return X;
+  }
+
+  @Override
+  public Side<TypeS> lower() {
+    return LOWER;
+  }
+
+  @Override
+  public Side<TypeS> upper() {
+    return UPPER;
   }
 }

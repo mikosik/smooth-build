@@ -9,26 +9,30 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class TestedAssignCases<
-    T extends TestedT<? extends Type>, S extends TestedAssignSpec<? extends T>> {
-  public static final TestedAssignCases<TestedTS, TestedAssignSpecS> INSTANCE_S =
+    T extends Type,
+    TT extends TestedT<T>,
+    S extends TestedAssignSpec<? extends TT>> {
+
+  public static final TestedAssignCases<TypeS, TestedTS, TestedAssignSpecS> INSTANCE_S =
       new TestedAssignCases<>(new TestedTSFactory());
 
-  private final T a;
-  private final T b;
-  private final T any;
-  private final T blob;
-  private final T int_;
-  private final T nothing;
-  private final T string;
-  private final T struct;
-  private final TestedTFactory<T, S> testedTFactory;
+  private final TT a;
+  private final TT b;
+  private final TT any;
+  private final TT blob;
+  private final TT int_;
+  private final TT nothing;
+  private final TT string;
+  private final TT struct;
+  private final TestedTFactory<T, TT, S> testedTFactory;
 
-  private TestedAssignCases(TestedTFactory<T, S> testedTFactory) {
+  private TestedAssignCases(TestedTFactory<T, TT, S> testedTFactory) {
     this.testedTFactory = testedTFactory;
     this.a = testedTFactory.varA();
     this.b = testedTFactory.varB();
@@ -40,11 +44,19 @@ public class TestedAssignCases<
     this.struct = testedTFactory.struct();
   }
 
-  private S illegalAssignment(T target, T source) {
+  public TestingT<T> testingT() {
+    return testedTFactory.testingT();
+  }
+
+  public TestedTFactory<T, TT, S> testedTFactory() {
+    return testedTFactory;
+  }
+
+  private S illegalAssignment(TT target, TT source) {
     return testedTFactory.illegalAssignment(target, source);
   }
 
-  private S allowedAssignment(T target, T source) {
+  private S allowedAssignment(TT target, TT source) {
     return testedTFactory.allowedAssignment(target, source);
   }
 
@@ -315,21 +327,21 @@ public class TestedAssignCases<
     return type -> type.equals(nothing);
   }
 
-  private Predicate<TestedT<? extends Type>> oneOf(T... types) {
+  private Predicate<TestedT<? extends Type>> oneOf(TT... types) {
     return Set.of(types)::contains;
   }
 
-  private List<S> gen(List<S> result, T target, boolean includeAny,
+  private List<S> gen(List<S> result, TT target, boolean includeAny,
       Predicate<TestedT<? extends Type>>... allowedPredicates) {
-    for (T type : generateTypes(2, includeAny)) {
+    for (TT type : generateTypes(2, includeAny)) {
       boolean allowed = stream(allowedPredicates).anyMatch(predicate -> predicate.test(type));
       result.add(testedTFactory.testedAssignmentSpec(target, type, allowed));
     }
     return result;
   }
 
-  private ImmutableList<T> generateTypes(int depth, boolean includeAny) {
-    Builder<T> builder = ImmutableList.builder();
+  private ImmutableList<TT> generateTypes(int depth, boolean includeAny) {
+    Builder<TT> builder = ImmutableList.builder();
     builder.add(blob);
     builder.add(nothing);
     builder.add(struct);
@@ -337,11 +349,11 @@ public class TestedAssignCases<
       builder.add(any);
     }
     if (0 < depth) {
-      List<T> types = generateTypes(depth - 1, includeAny);
-      for (T type : types) {
+      List<TT> types = generateTypes(depth - 1, includeAny);
+      for (TT type : types) {
         builder.add(a(type));
         builder.add(f(type, list()));
-        for (T type2 : types) {
+        for (TT type2 : types) {
           builder.add(f(type, list(type2)));
         }
       }
@@ -349,19 +361,19 @@ public class TestedAssignCases<
     return builder.build();
   }
 
-  private T a(T type) {
+  private TT a(TT type) {
     return testedTFactory.array(type);
   }
 
-  private T a2(T type) {
+  private TT a2(TT type) {
     return testedTFactory.array2(type);
   }
 
-  private T f(T resT, List<T> paramTs) {
+  private TT f(TT resT, List<TT> paramTs) {
     return testedTFactory.func(resT, paramTs);
   }
 
-  private T f(T resT, T... paramTs) {
+  private TT f(TT resT, TT... paramTs) {
     return testedTFactory.func(resT, list(paramTs));
   }
 }
