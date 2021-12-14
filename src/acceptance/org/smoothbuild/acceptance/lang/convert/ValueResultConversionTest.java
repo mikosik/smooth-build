@@ -2,15 +2,15 @@ package org.smoothbuild.acceptance.lang.convert;
 
 import static org.smoothbuild.util.Strings.unlines;
 
-import org.smoothbuild.lang.base.type.TestedAssignment;
+import org.smoothbuild.lang.base.type.TestedAssignS;
 
 public class ValueResultConversionTest extends AbstractConversionTestCase {
   @Override
-  protected String createTestScript(TestedAssignment testSpec) {
+  protected String createTestScript(TestedAssignS assignment) {
     return unlines(
-        testSpec.target().name() + " value = " + testSpec.source().literal() + ";",
+        assignment.target().name() + " value = " + assignment.source().literal() + ";",
         "result = value;",
-        testSpec.declarations()
+        assignment.declarations()
     );
   }
 }

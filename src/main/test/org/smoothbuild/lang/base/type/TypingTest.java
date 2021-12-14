@@ -2,28 +2,27 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.TestingTsS.A;
-import static org.smoothbuild.lang.base.type.TestingTsS.ALL_TESTED_TYPES;
-import static org.smoothbuild.lang.base.type.TestingTsS.ANY;
-import static org.smoothbuild.lang.base.type.TestingTsS.B;
-import static org.smoothbuild.lang.base.type.TestingTsS.BASE_TYPES;
-import static org.smoothbuild.lang.base.type.TestingTsS.BLOB;
-import static org.smoothbuild.lang.base.type.TestingTsS.BOOL;
-import static org.smoothbuild.lang.base.type.TestingTsS.DATA;
-import static org.smoothbuild.lang.base.type.TestingTsS.ELEMENTARY_TYPES;
-import static org.smoothbuild.lang.base.type.TestingTsS.FLAG;
-import static org.smoothbuild.lang.base.type.TestingTsS.INT;
-import static org.smoothbuild.lang.base.type.TestingTsS.LOWER;
-import static org.smoothbuild.lang.base.type.TestingTsS.NOTHING;
-import static org.smoothbuild.lang.base.type.TestingTsS.PERSON;
-import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
-import static org.smoothbuild.lang.base.type.TestingTsS.TYPING;
-import static org.smoothbuild.lang.base.type.TestingTsS.UPPER;
-import static org.smoothbuild.lang.base.type.TestingTsS.X;
-import static org.smoothbuild.lang.base.type.TestingTsS.a;
-import static org.smoothbuild.lang.base.type.TestingTsS.bm;
-import static org.smoothbuild.lang.base.type.TestingTsS.f;
-import static org.smoothbuild.lang.base.type.TestingTsS.oneSideBound;
+import static org.smoothbuild.lang.base.type.TestingTS.A;
+import static org.smoothbuild.lang.base.type.TestingTS.ALL_TESTED_TYPES;
+import static org.smoothbuild.lang.base.type.TestingTS.ANY;
+import static org.smoothbuild.lang.base.type.TestingTS.B;
+import static org.smoothbuild.lang.base.type.TestingTS.BASE_TYPES;
+import static org.smoothbuild.lang.base.type.TestingTS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTS.BOOL;
+import static org.smoothbuild.lang.base.type.TestingTS.DATA;
+import static org.smoothbuild.lang.base.type.TestingTS.ELEMENTARY_TYPES;
+import static org.smoothbuild.lang.base.type.TestingTS.FLAG;
+import static org.smoothbuild.lang.base.type.TestingTS.INT;
+import static org.smoothbuild.lang.base.type.TestingTS.LOWER;
+import static org.smoothbuild.lang.base.type.TestingTS.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTS.PERSON;
+import static org.smoothbuild.lang.base.type.TestingTS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTS.UPPER;
+import static org.smoothbuild.lang.base.type.TestingTS.X;
+import static org.smoothbuild.lang.base.type.TestingTS.a;
+import static org.smoothbuild.lang.base.type.TestingTS.bm;
+import static org.smoothbuild.lang.base.type.TestingTS.f;
+import static org.smoothbuild.lang.base.type.TestingTS.oneSideBound;
 import static org.smoothbuild.lang.base.type.TestingTypeGraph.buildGraph;
 import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -42,8 +41,12 @@ import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.NothingTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypingS;
+import org.smoothbuild.testing.TestingContext;
 
 public class TypingTest {
+  private static final TypingS TYPING = new TestingContext().typingS();
+
   @ParameterizedTest
   @MethodSource("contains_test_data")
   public void contains(TypeS type, TypeS contained, boolean expected) {
@@ -179,28 +182,28 @@ public class TypingTest {
 
   @ParameterizedTest
   @MethodSource("isAssignable_test_data")
-  public void isAssignable(TestedAssignmentSpec spec) {
+  public void isAssignable(TestedAssignSpecS spec) {
     var target = spec.target().type();
     var source = spec.source().type();
     assertThat(TYPING.isAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
 
-  public static List<TestedAssignmentSpec> isAssignable_test_data() {
-    return TestedAssignmentSpec.assignment_test_specs(true);
+  public static List<TestedAssignSpecS> isAssignable_test_data() {
+    return TestedAssignCases.INSTANCE_S.assignment_test_specs(true);
   }
 
   @ParameterizedTest
   @MethodSource("isParamAssignable_test_data")
-  public void isParamAssignable(TestedAssignmentSpec spec) {
+  public void isParamAssignable(TestedAssignSpec<TestedTS> spec) {
     var target = spec.target().type();
     var source = spec.source().type();
     assertThat(TYPING.isParamAssignable(target, source))
         .isEqualTo(spec.allowed());
   }
 
-  public static List<TestedAssignmentSpec> isParamAssignable_test_data() {
-    return TestedAssignmentSpec.param_assignment_test_specs(true);
+  public static List<TestedAssignSpecS> isParamAssignable_test_data() {
+    return TestedAssignCases.INSTANCE_S.param_assignment_test_specs(true);
   }
 
   @ParameterizedTest

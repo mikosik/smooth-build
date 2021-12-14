@@ -20,17 +20,15 @@ import org.smoothbuild.lang.base.type.impl.StringTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VarS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestingTsS {
+public class TestingTS {
   private static final TestingContext CONTEXT = new TestingContext();
   private static final TypeFactoryS FACTORY = CONTEXT.typeFactoryS();
-  public static final TypingS TYPING = CONTEXT.typingS();
 
   public static final ImmutableList<BaseTS> BASE_TYPES = FACTORY.baseTs();
   public static final ImmutableList<BaseTS> INFERABLE_BASE_TYPES = FACTORY.inferableBaseTs();

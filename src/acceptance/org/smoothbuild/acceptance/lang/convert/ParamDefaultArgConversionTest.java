@@ -2,15 +2,15 @@ package org.smoothbuild.acceptance.lang.convert;
 
 import static org.smoothbuild.util.Strings.unlines;
 
-import org.smoothbuild.lang.base.type.TestedAssignment;
+import org.smoothbuild.lang.base.type.TestedAssignS;
 
 public class ParamDefaultArgConversionTest extends AbstractConversionTestCase {
   @Override
-  protected String createTestScript(TestedAssignment spec) {
+  protected String createTestScript(TestedAssignS assignment) {
     return unlines(
-        "  fun(" + spec.target().name() + " param = " + spec.source().literal() + ") = param; ",
+        "  fun(" + assignment.target().name() + " param = " + assignment.source().literal() + ") = param; ",
         "  result = fun();  ",
-        spec.declarations()
+        assignment.declarations()
     );
   }
 }

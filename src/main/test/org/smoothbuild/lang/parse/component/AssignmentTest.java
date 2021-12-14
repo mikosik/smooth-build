@@ -3,8 +3,6 @@ package org.smoothbuild.lang.parse.component;
 import static com.google.common.collect.Sets.union;
 import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
-import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.param_assignment_test_specs;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -14,8 +12,10 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
-import org.smoothbuild.lang.base.type.TestedT;
+import org.smoothbuild.lang.base.type.TestedAssignCases;
+import org.smoothbuild.lang.base.type.TestedAssignSpecS;
+import org.smoothbuild.lang.base.type.TestedTS;
+import org.smoothbuild.lang.base.type.TestedTSFactory;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
@@ -27,9 +27,9 @@ import org.smoothbuild.testing.TestingModLoader;
 public class AssignmentTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
-  public void value_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
-    TestedT target = testSpec.target();
-    TestedT source = testSpec.source();
+  public void value_body_type_is_assignable_to_declared_type(TestedAssignSpecS testSpec) {
+    TestedTS target = testSpec.target();
+    TestedTS source = testSpec.source();
     String sourceCode = unlines(
         target.name() + " result = " + source.literal() + ";",
         testSpec.declarations());
@@ -45,9 +45,9 @@ public class AssignmentTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("test_specs")
-  public void func_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
-    TestedT target = testSpec.target();
-    TestedT source = testSpec.source();
+  public void func_body_type_is_assignable_to_declared_type(TestedAssignSpecS testSpec) {
+    TestedTS target = testSpec.target();
+    TestedTS source = testSpec.source();
     String sourceCode = unlines(
         "%s myFunc(%s param, %s probablyPolytype) = param;"
             .formatted(target.name(), source.name(), target.name()),
@@ -64,9 +64,9 @@ public class AssignmentTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("param_assignment_test_data")
-  public void arg_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
-    TestedT targetT = testSpec.target();
-    TestedT sourceT = testSpec.source();
+  public void arg_type_is_assignable_to_param_type(TestedAssignSpecS testSpec) {
+    TestedTS targetT = testSpec.target();
+    TestedTS sourceT = testSpec.source();
     TestingModLoader module = mod(unlines(
         "@Native(\"impl\")",
         targetT.name() + " innerFunc(" + targetT.name() + " target);     ",
@@ -85,9 +85,9 @@ public class AssignmentTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("param_assignment_test_data")
-  public void arg_type_is_assignable_to_named_param_type(TestedAssignmentSpec testSpec) {
-    TestedT targetT = testSpec.target();
-    TestedT sourceT = testSpec.source();
+  public void arg_type_is_assignable_to_named_param_type(TestedAssignSpecS testSpec) {
+    TestedTS targetT = testSpec.target();
+    TestedTS sourceT = testSpec.source();
     TestingModLoader module = mod(unlines(
         "@Native(\"impl\")",
         targetT.name() + " innerFunc(" + targetT.name() + " target);            ",
@@ -105,15 +105,15 @@ public class AssignmentTest extends TestingContext {
     }
   }
 
-  private static List<TestedAssignmentSpec> param_assignment_test_data() {
-    return param_assignment_test_specs(false);
+  private static List<TestedAssignSpecS> param_assignment_test_data() {
+    return TestedAssignCases.INSTANCE_S.param_assignment_test_specs(false);
   }
 
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
-  public void default_arg_type_is_assignable_to_param_type(TestedAssignmentSpec testSpec) {
-    TestedT target = testSpec.target();
-    TestedT source = testSpec.source();
+  public void default_arg_type_is_assignable_to_param_type(TestedAssignSpecS testSpec) {
+    TestedTS target = testSpec.target();
+    TestedTS source = testSpec.source();
     String sourceCode = unlines(
         "myFunc(" + target.name() + " param = " + source.literal() + ") = param; ",
         testSpec.declarations());
@@ -130,7 +130,7 @@ public class AssignmentTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("array_elem_assignment_test_specs")
   public void array_literal_elem_types_is_assignable_to_common_super_type(
-      TestedT type1, TestedT type2, Type joinT) {
+      TestedTS type1, TestedTS type2, Type joinT) {
     String sourceCode = unlines(
         "[" + joinT.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
         "Bool true = fake();",
@@ -147,8 +147,8 @@ public class AssignmentTest extends TestingContext {
     TypingS typing = context.typingS();
     TypeFactoryS factory = context.typeFactoryS();
     ArrayList<Arguments> result = new ArrayList<>();
-    for (TestedT type1 : TestedT.TESTED_MONOTYPES) {
-      for (TestedT type2 : TestedT.TESTED_MONOTYPES) {
+    for (TestedTS type1 : TestedTSFactory.TESTED_MONOTYPES) {
+      for (TestedTS type2 : TestedTSFactory.TESTED_MONOTYPES) {
         var commonSuperT = typing.mergeUp(type1.type(), type2.type());
         if (!typing.contains(commonSuperT, factory.any())) {
           result.add(Arguments.of(type1, type2, commonSuperT));
@@ -158,14 +158,14 @@ public class AssignmentTest extends TestingContext {
     return result;
   }
 
-  private static List<TestedAssignmentSpec> without_polytypes_test_specs() {
-    return assignment_test_specs(false)
+  private static List<TestedAssignSpecS> without_polytypes_test_specs() {
+    return TestedAssignCases.INSTANCE_S.assignment_test_specs(false)
         .stream()
         .filter(a -> !(a.target().type().isPolytype() || a.source().type().isPolytype()))
         .collect(toList());
   }
 
-  private static List<TestedAssignmentSpec> test_specs() {
-    return assignment_test_specs(false);
+  private static List<TestedAssignSpecS> test_specs() {
+    return TestedAssignCases.INSTANCE_S.assignment_test_specs(false);
   }
 }

@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.ItemS.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
-import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 

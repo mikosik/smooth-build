@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base.type.api;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.TestingTsS.BLOB;
-import static org.smoothbuild.lang.base.type.TestingTsS.BOOL;
-import static org.smoothbuild.lang.base.type.TestingTsS.STRING;
+import static org.smoothbuild.lang.base.type.TestingTS.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTS.BOOL;
+import static org.smoothbuild.lang.base.type.TestingTS.STRING;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
