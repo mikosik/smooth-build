@@ -285,9 +285,9 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
 
   public List<Arguments> mapVars_test_data() {
     var result = new ArrayList<Arguments>();
+    result.add(arguments(x(), bm(), x()));
+    result.add(arguments(a(x()), bm(), a(x())));
     for (T type : testingT().allTestedTypes()) {
-      result.add(arguments(x(), bm(), x()));
-      result.add(arguments(a(x()), bm(), a(x())));
       result.add(arguments(x(), bm(x(), lower(), type), type));
       result.add(arguments(a(x()), bm(x(), lower(), type), a(type)));
       result.add(arguments(x(), bm(x(), lower(), a(type)), a(type)));
