@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.smoothbuild.db.object.type.CatDb;
@@ -17,6 +18,7 @@ import org.smoothbuild.db.object.type.val.VarH;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -25,9 +27,6 @@ public class TestingTH implements TestingT<TypeH> {
 
   private static final TestingContext CONTEXT = new TestingContext();
   public static final CatDb FACTORY = CONTEXT.catDb();
-
-  private static final ImmutableList<TypeH> BASE_TYPES = CONTEXT.catDb().baseTs();
-  private static final ImmutableList<TypeH> ELEMENTARY_TYPES = BASE_TYPES;
 
   public static final AnyTH ANY = FACTORY.any();
   public static final BlobTH BLOB = FACTORY.blob();
@@ -58,6 +57,9 @@ public class TestingTH implements TestingT<TypeH> {
       IDENTITY_FUNCTION,
       ARRAY_HEAD_FUNCTION,
       ARRAY_LENGTH_FUNCTION);
+
+  private static final ImmutableList<TypeH> BASE_TYPES = CONTEXT.catDb().baseTs();
+  private static final ImmutableList<TypeH> ELEMENTARY_TYPES = concat(BASE_TYPES, TUPLE);
 
   public static final ImmutableList<TypeH> ALL_TESTED_TYPES =
       ImmutableList.<TypeH>builder()
