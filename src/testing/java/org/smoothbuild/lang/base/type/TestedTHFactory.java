@@ -5,6 +5,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.lang.base.type.TestedTH.TestedArrayTH;
 import org.smoothbuild.lang.base.type.TestedTH.TestedFuncTH;
+import org.smoothbuild.lang.base.type.TestedTH.TestedTupleTH;
 
 import com.google.common.collect.ImmutableList;
 
@@ -46,7 +47,18 @@ public class TestedTHFactory implements TestedTFactory<TypeH, TestedTH, TestedAs
 
   @Override
   public TestedTH struct() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public TestedTH tuple() {
     return new TestedTH(TestingTH.TUPLE);
+  }
+
+  @Override
+  public TestedTH tuple(ImmutableList<TestedTH> items) {
+    var typeH = TestingTH.INSTANCE.tuple(map(items, TestedTH::type));
+    return new TestedTupleTH(typeH, items);
   }
 
   @Override

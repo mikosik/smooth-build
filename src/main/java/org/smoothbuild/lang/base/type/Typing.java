@@ -15,6 +15,7 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.TupleT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Var;
@@ -37,6 +38,7 @@ public class Typing<T extends Type> {
       case ArrayT arrayT -> contains((T) arrayT.elem(), inner);
       case FuncT funcT ->  contains((T) funcT.res(), inner)
           || funcT.params().stream().anyMatch(t -> contains((T) t, inner));
+      case TupleT tupleT -> tupleT.items().stream().anyMatch(t -> contains((T) t, inner));
       default -> false;
     };
   }
@@ -77,6 +79,8 @@ public class Typing<T extends Type> {
       case FuncT f1 -> t2 instanceof FuncT f2
           && isInequal.apply(f1.res(), f2.res(), side)
           && allMatch(f1.params(), f2.params(), (a, b) -> isInequal.apply(a, b, side.reversed()));
+      case TupleT tup1 -> t2 instanceof TupleT tup2
+          && allMatch(tup1.items(), tup2.items(), (a, b) -> isInequal.apply(a, b, side));
       default -> t1.equals(t2);
     };
   }
@@ -135,6 +139,17 @@ public class Typing<T extends Type> {
           }
         }
       }
+      case TupleT tup1 -> {
+        if (t2.equals(side.edge())) {
+          tup1.items().forEach(t -> inferImpl((T) t, side.edge(), side, result));
+        } else if (t2 instanceof TupleT tup2 && tup1.items().size() == tup2.items().size()) {
+          for (int i = 0; i < tup1.items().size(); i++) {
+            Type itemT1 = tup1.items().get(i);
+            Type itemT2 = tup2.items().get(i);
+            inferImpl((T) itemT1, (T) itemT2, side, result);
+          }
+        }
+      }
       default -> {}
     }
   }
@@ -160,10 +175,14 @@ public class Typing<T extends Type> {
         }
         case FuncT funcT -> {
           var resultTM = mapVars((T) funcT.res(), boundsMap, side);
-          ImmutableList<T> paramsM = map(
+          var paramsTM = map(
               funcT.params(),
               p -> mapVars((T) p, boundsMap, side.reversed()));
-          yield  (T) createFuncT(funcT, resultTM, paramsM);
+          yield  (T) createFuncT(funcT, resultTM, paramsTM);
+        }
+        case TupleT tupleT -> {
+          var itemsTM = map(tupleT.items(), p -> mapVars((T) p, boundsMap, side));
+          yield  (T) createTupleT(tupleT, itemsTM);
         }
         default -> type;
       };
@@ -215,6 +234,20 @@ public class Typing<T extends Type> {
           }
         }
       }
+    } else if (type1 instanceof TupleT tupleA) {
+      if (type2 instanceof TupleT tupleB) {
+        if (tupleA.items().size() == tupleB.items().size()) {
+          var itemsTM = zip(tupleA.items(), tupleB.items(),
+              (a, b) -> merge((T) a, (T) b, direction));
+          if (isTupleTEqual(tupleA, itemsTM)) {
+            return type1;
+          } else if (isTupleTEqual(tupleB, itemsTM)){
+            return type2;
+          } else {
+            return (T) factory.tuple(itemsTM);
+          }
+        }
+      }
     }
     return direction.edge();
   }
@@ -246,6 +279,18 @@ public class Typing<T extends Type> {
 
   private boolean isFuncTEqual(FuncT type, Type result, ImmutableList<T> params) {
     return type.res() == result && type.params().equals(params);
+  }
+
+  private TupleT createTupleT(TupleT type, ImmutableList<T> items) {
+    if (isTupleTEqual(type, items)) {
+      return type;
+    } else {
+      return factory.tuple(items);
+    }
+  }
+
+  private boolean isTupleTEqual(TupleT type, ImmutableList<T> items) {
+    return type.items().equals(items);
   }
 
   public TypeFactory<T> factory() {

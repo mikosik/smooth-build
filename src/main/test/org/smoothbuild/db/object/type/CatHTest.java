@@ -112,8 +112,14 @@ public class CatHTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("names")
   public void to_string(Function<CatDb, CatH> factoryCall, String name) {
-    assertThat(execute(factoryCall).toString())
-        .isEqualTo("Category(`" + name + "`)");
+    var catH = execute(factoryCall);
+    if (catH instanceof TypeH) {
+      assertThat(catH.toString())
+          .isEqualTo("TypeH(`" + name + "`)");
+    } else {
+      assertThat(catH.toString())
+          .isEqualTo("Category(`" + name + "`)");
+    }
   }
 
   public static List<Arguments> names() {
@@ -211,7 +217,9 @@ public class CatHTest extends TestingContext {
         args(f -> f.nothing(), false),
         args(f -> f.string(), false),
         args(f -> f.tuple(list()), false),
-        args(f -> f.tuple(list(f.int_())), false)
+        args(f -> f.tuple(list(f.int_())), false),
+        args(f -> f.tuple(list(f.var("A"))), true),
+        args(f -> f.tuple(list(f.tuple(list(f.var("A"))))), true)
         );
   }
 
@@ -235,6 +243,8 @@ public class CatHTest extends TestingContext {
         args(f -> f.string(), f -> set()),
         args(f -> f.tuple(list()), f -> set()),
         args(f -> f.tuple(list(f.int_())), f -> set()),
+        args(f -> f.tuple(list(f.var("A"))), f -> set(f.var("A"))),
+        args(f -> f.tuple(list(f.tuple(list(f.var("A"))))), f -> set(f.var("A"))),
         args(f -> f.var("A"), f -> set(f.var("A"))),
 
         args(f -> f.array(f.any()), f -> set()),

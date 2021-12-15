@@ -187,6 +187,16 @@ public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAs
   }
 
   @Override
+  public TestedTS tuple() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public TestedTS tuple(ImmutableList<TestedTS> items) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public TestedTS varA() {
     return A;
   }

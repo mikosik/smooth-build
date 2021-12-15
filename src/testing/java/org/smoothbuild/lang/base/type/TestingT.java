@@ -20,7 +20,11 @@ public interface TestingT<T extends Type> {
   public T int_();
   public T nothing();
   public T string();
+  public boolean isStructSupported();
   public T struct();
+  public boolean isTupleSupported();
+  public T tuple();
+  public T tuple(ImmutableList<T> items);
   public T a();
   public T b();
   public T x();

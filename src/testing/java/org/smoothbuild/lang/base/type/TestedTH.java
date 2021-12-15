@@ -45,6 +45,16 @@ public class TestedTH implements TestedT<TypeH> {
   }
 
   @Override
+  public boolean isTuple() {
+    return false;
+  }
+
+  @Override
+  public boolean isTupleOfTuple() {
+    return false;
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
@@ -103,6 +113,25 @@ public class TestedTH implements TestedT<TypeH> {
     @Override
     public boolean isArrayOfArrays() {
       return elemT.isArray();
+    }
+  }
+
+  public static class TestedTupleTH extends TestedTH {
+    private final ImmutableList<TestedTH> items;
+
+    public TestedTupleTH(TypeH type, ImmutableList<TestedTH> items) {
+      super(type);
+      this.items = items;
+    }
+
+    @Override
+    public boolean isTuple() {
+      return true;
+    }
+
+    @Override
+    public boolean isTupleOfTuple() {
+      return items.size() == 1 && items.get(0).isTuple();
     }
   }
 }

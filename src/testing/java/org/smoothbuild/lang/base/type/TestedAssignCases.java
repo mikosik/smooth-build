@@ -25,6 +25,8 @@ public class TestedAssignCases<
   public static final TestedAssignCases<TypeH, TestedTH, TestedAssignSpecH> INSTANCE_H =
       new TestedAssignCases<>(new TestedTHFactory());
 
+  private final TestedTFactory<T, TT, S> testedTFactory;
+  private final TestingT<T> testingT;
   private final TT a;
   private final TT b;
   private final TT any;
@@ -33,10 +35,13 @@ public class TestedAssignCases<
   private final TT nothing;
   private final TT string;
   private final TT struct;
-  private final TestedTFactory<T, TT, S> testedTFactory;
+  private final TT tuple;
+  private final boolean isStructSupported;
+  private final boolean isTupleSupported;
 
   private TestedAssignCases(TestedTFactory<T, TT, S> testedTFactory) {
     this.testedTFactory = testedTFactory;
+    this.testingT = testedTFactory.testingT();
     this.a = testedTFactory.varA();
     this.b = testedTFactory.varB();
     this.any = testedTFactory.any();
@@ -44,15 +49,18 @@ public class TestedAssignCases<
     this.int_ = testedTFactory.int_();
     this.nothing = testedTFactory.nothing();
     this.string = testedTFactory.string();
-    this.struct = testedTFactory.struct();
-  }
-
-  public TestingT<T> testingT() {
-    return testedTFactory.testingT();
+    this.isStructSupported = testingT.isStructSupported();
+    this.isTupleSupported = testingT.isTupleSupported();
+    this.struct = this.isStructSupported ? testedTFactory.struct() : null;
+    this.tuple = this.isTupleSupported ? testedTFactory.tuple() : null;
   }
 
   public TestedTFactory<T, TT, S> testedTFactory() {
     return testedTFactory;
+  }
+
+  public TestingT<T> testingT() {
+    return testingT;
   }
 
   private S illegalAssignment(TT target, TT source) {
@@ -85,20 +93,35 @@ public class TestedAssignCases<
     }
     gen(r, blob, includeAny, oneOf(blob, nothing));
     gen(r, nothing, includeAny, oneOf(nothing));
-    gen(r, struct, includeAny, oneOf(struct, nothing));
+    if (isStructSupported) {
+      gen(r, struct, includeAny, oneOf(struct, nothing));
+    }
+    if (isTupleSupported) {
+      gen(r, tuple, includeAny, oneOf(tuple, nothing));
+    }
 
     if (includeAny) {
       gen(r, a(any), includeAny, TestedT::isArray, mNothing());
     }
     gen(r, a(blob), includeAny, oneOf(a(blob), a(nothing), nothing));
     gen(r, a(nothing), includeAny, oneOf(a(nothing), nothing));
-    gen(r, a(struct), includeAny, oneOf(a(struct), a(nothing), nothing));
+    if (isStructSupported) {
+      gen(r, a(struct), includeAny, oneOf(a(struct), a(nothing), nothing));
+    }
+    if (isTupleSupported) {
+      gen(r, a(tuple), includeAny, oneOf(a(tuple), a(nothing), nothing));
+    }
     if (includeAny) {
       gen(r, a2(any), includeAny, TestedT::isArrayOfArrays, t -> t.isArrayOf(nothing), mNothing());
     }
     gen(r, a2(blob), includeAny, oneOf(a2(blob), a2(nothing), a(nothing), nothing));
     gen(r, a2(nothing), includeAny, oneOf(a2(nothing), a(nothing), nothing));
-    gen(r, a2(struct), includeAny, oneOf(a2(struct), a2(nothing), a(nothing), nothing));
+    if (isStructSupported) {
+      gen(r, a2(struct), includeAny, oneOf(a2(struct), a2(nothing), a(nothing), nothing));
+    }
+    if (isTupleSupported) {
+      gen(r, a2(tuple), includeAny, oneOf(a2(tuple), a2(nothing), a(nothing), nothing));
+    }
 
     if (includeAny) {
       gen(r, f(any), includeAny, mNothing(), mFunc(mAll()));
@@ -120,58 +143,66 @@ public class TestedAssignCases<
     gen(r, f(nothing, blob), includeAny, mNothing(), mFunc(oneOf(nothing), oneOf(any, blob)));
     gen(r, f(nothing, nothing), includeAny, mNothing(), mFunc(oneOf(nothing), mAll()));
 
-    r.addAll(list(
-        illegalAssignment(f(blob, string), f(blob, string, int_)),
+    r.add(illegalAssignment(f(blob, string), f(blob, string, int_)));
 
-        // funcs
-        illegalAssignment(f(a(blob)), a(blob)),
-        illegalAssignment(f(a(nothing)), a(nothing)),
-        illegalAssignment(f(a(struct)), a(struct)),
-        illegalAssignment(f(a2(blob)), a2(blob)),
-        illegalAssignment(f(a2(nothing)), a2(nothing)),
-        illegalAssignment(f(a2(struct)), a2(struct)),
+    // funcs
+    r.add(illegalAssignment(f(a(blob)), a(blob)));
+    r.add(illegalAssignment(f(a(nothing)), a(nothing)));
+    if (isStructSupported) {
+      r.add(illegalAssignment(f(a(struct)), a(struct)));
+    }
+    if (isTupleSupported) {
+      r.add(illegalAssignment(f(a(tuple)), a(tuple)));
+    }
+    r.add(illegalAssignment(f(a2(blob)), a2(blob)));
+    r.add(illegalAssignment(f(a2(nothing)), a2(nothing)));
+    if (isStructSupported) {
+      r.add(illegalAssignment(f(a2(struct)), a2(struct)));
+    }
+    if (isTupleSupported) {
+      r.add(illegalAssignment(f(a2(tuple)), a2(tuple)));
+    }
 
-        // funcs (as func result type)
-        allowedAssignment(f(f(blob)), f(f(blob))),
-        allowedAssignment(f(f(blob)), f(f(nothing))),
-        illegalAssignment(f(f(nothing)), f(f(blob))),
+    // funcs (as func result type)
+    r.add(allowedAssignment(f(f(blob)), f(f(blob))));
+    r.add(allowedAssignment(f(f(blob)), f(f(nothing))));
+    r.add(illegalAssignment(f(f(nothing)), f(f(blob))));
 
-        allowedAssignment(f(f(blob, string)), f(f(blob, string))),
-        illegalAssignment(f(f(blob, string)), f(f(blob, nothing))),
-        allowedAssignment(f(f(blob, nothing)), f(f(blob, string))),
+    r.add(allowedAssignment(f(f(blob, string)), f(f(blob, string))));
+    r.add(illegalAssignment(f(f(blob, string)), f(f(blob, nothing))));
+    r.add(allowedAssignment(f(f(blob, nothing)), f(f(blob, string))));
 
-        // funcs (as func result type - nested twice)
-        allowedAssignment(f(f(f(blob))), f(f(f(blob)))),
-        allowedAssignment(f(f(f(blob))), f(f(f(nothing)))),
-        illegalAssignment(f(f(f(nothing))), f(f(f(blob)))),
+    // funcs (as func result type - nested twice)
+    r.add(allowedAssignment(f(f(f(blob))), f(f(f(blob)))));
+    r.add(allowedAssignment(f(f(f(blob))), f(f(f(nothing)))));
+    r.add(illegalAssignment(f(f(f(nothing))), f(f(f(blob)))));
 
-        allowedAssignment(f(f(f(blob, string))), f(f(f(blob, string)))),
-        illegalAssignment(f(f(f(blob, string))), f(f(f(blob, nothing)))),
-        allowedAssignment(f(f(f(blob, nothing))), f(f(f(blob, string)))),
+    r.add(allowedAssignment(f(f(f(blob, string))), f(f(f(blob, string)))));
+    r.add(illegalAssignment(f(f(f(blob, string))), f(f(f(blob, nothing)))));
+    r.add(allowedAssignment(f(f(f(blob, nothing))), f(f(f(blob, string)))));
 
-        // funcs (as func param type)
-        allowedAssignment(f(blob, f(string)), f(blob, f(string))),
-        illegalAssignment(f(blob, f(string)), f(blob, f(nothing))),
-        allowedAssignment(f(blob, f(nothing)), f(blob, f(string))),
+    // funcs (as func param type)
+    r.add(allowedAssignment(f(blob, f(string)), f(blob, f(string))));
+    r.add(illegalAssignment(f(blob, f(string)), f(blob, f(nothing))));
+    r.add(allowedAssignment(f(blob, f(nothing)), f(blob, f(string))));
 
-        allowedAssignment(f(blob, f(blob, string)), f(blob, f(blob, string))),
-        allowedAssignment(f(blob, f(blob, string)), f(blob, f(blob, nothing))),
-        illegalAssignment(f(blob, f(blob, nothing)), f(blob, f(blob, string))),
+    r.add(allowedAssignment(f(blob, f(blob, string)), f(blob, f(blob, string))));
+    r.add(allowedAssignment(f(blob, f(blob, string)), f(blob, f(blob, nothing))));
+    r.add(illegalAssignment(f(blob, f(blob, nothing)), f(blob, f(blob, string))));
 
-        // funcs (as func param type - nested twice)
-        allowedAssignment(f(blob, f(blob, f(string))), f(blob, f(blob, f(string)))),
-        allowedAssignment(f(blob, f(blob, f(string))), f(blob, f(blob, f(nothing)))),
-        illegalAssignment(f(blob, f(blob, f(nothing))), f(blob, f(blob, f(string)))),
+    // funcs (as func param type - nested twice)
+    r.add(allowedAssignment(f(blob, f(blob, f(string))), f(blob, f(blob, f(string)))));
+    r.add(allowedAssignment(f(blob, f(blob, f(string))), f(blob, f(blob, f(nothing)))));
+    r.add(illegalAssignment(f(blob, f(blob, f(nothing))), f(blob, f(blob, f(string)))));
 
-        allowedAssignment(f(blob, f(blob, f(blob, string))), f(blob, f(blob, f(blob, string)))),
-        illegalAssignment(f(blob, f(blob, f(blob, string))), f(blob, f(blob, f(blob, nothing)))),
-        allowedAssignment(f(blob, f(blob, f(blob, nothing))), f(blob, f(blob, f(blob, string))))
-    ));
+    r.add(allowedAssignment(f(blob, f(blob, f(blob, string))), f(blob, f(blob, f(blob, string)))));
+    r.add(illegalAssignment(f(blob, f(blob, f(blob, string))), f(blob, f(blob, f(blob, nothing)))));
+    r.add(allowedAssignment(f(blob, f(blob, f(blob, nothing))), f(blob, f(blob, f(blob, string)))));
+
     return r;
   }
 
-  private List<S> testSpecSpecificForNormalAssignment(
-      boolean includeAny) {
+  private List<S> testSpecSpecificForNormalAssignment(boolean includeAny) {
     List<S> r = new ArrayList<>();
     gen(r, a, includeAny, oneOf(nothing, a));
     gen(r, b, includeAny, oneOf(nothing));
@@ -180,6 +211,10 @@ public class TestedAssignCases<
     gen(r, a(b), includeAny, oneOf(nothing, a(nothing)));
     gen(r, a2(a), includeAny, oneOf(nothing, a(nothing), a2(nothing), a2(a)));
     gen(r, a2(b), includeAny, oneOf(nothing, a(nothing), a2(nothing)));
+
+    if (isTupleSupported) {
+      gen(r, tuple(a), includeAny, oneOf(nothing, tuple(nothing), tuple(a)));
+    }
 
     gen(r, f(a), includeAny, oneOf(nothing), mFunc(oneOf(a, nothing)));
 
@@ -243,8 +278,7 @@ public class TestedAssignCases<
     return r;
   }
 
-  private List<S> testSpecsSpecificForParamAssignment(
-      boolean includeAny) {
+  private List<S> testSpecsSpecificForParamAssignment(boolean includeAny) {
     List<S> r = new ArrayList<>();
     gen(r, a, includeAny, mAll());
     gen(r, b, includeAny, mAll());
@@ -252,6 +286,14 @@ public class TestedAssignCases<
     gen(r, a(b), includeAny, mNothing(), TestedT::isArray);
     gen(r, a2(a), includeAny, oneOf(nothing, a(nothing)), TestedT::isArrayOfArrays);
     gen(r, a2(b), includeAny, oneOf(nothing, a(nothing)), TestedT::isArrayOfArrays);
+
+    if (isTupleSupported) {
+      gen(r, tuple(a), includeAny, mNothing(), TestedT::isTuple);
+      gen(r, tuple(b), includeAny, mNothing(), TestedT::isTuple);
+
+      gen(r, tuple(tuple(a)), includeAny, oneOf(nothing, tuple(nothing)), TestedT::isTupleOfTuple);
+      gen(r, tuple(tuple(b)), includeAny, oneOf(nothing, tuple(nothing)), TestedT::isTupleOfTuple);
+    }
 
     r.addAll(list(
         allowedAssignment(f(a, a), f(a, a)),
@@ -347,7 +389,9 @@ public class TestedAssignCases<
     Builder<TT> builder = ImmutableList.builder();
     builder.add(blob);
     builder.add(nothing);
-    builder.add(struct);
+    if (isStructSupported) {
+      builder.add(struct);
+    }
     if (includeAny) {
       builder.add(any);
     }
@@ -355,6 +399,9 @@ public class TestedAssignCases<
       List<TT> types = generateTypes(depth - 1, includeAny);
       for (TT type : types) {
         builder.add(a(type));
+        if (isTupleSupported) {
+          builder.add(tuple(type));
+        }
         builder.add(f(type, list()));
         for (TT type2 : types) {
           builder.add(f(type, list(type2)));
@@ -370,6 +417,10 @@ public class TestedAssignCases<
 
   private TT a2(TT type) {
     return testedTFactory.array2(type);
+  }
+
+  private TT tuple(TT type) {
+    return testedTFactory.tuple(list(type));
   }
 
   private TT f(TT resT, ImmutableList<TT> paramTs) {

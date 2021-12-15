@@ -26,4 +26,8 @@ public interface TestedT<T extends Type> {
   public boolean isArrayOfArrays();
 
   public boolean isArrayOf(TestedT<? extends Type> nothing);
+
+  public boolean isTuple();
+
+  public boolean isTupleOfTuple();
 }

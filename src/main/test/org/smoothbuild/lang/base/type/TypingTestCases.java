@@ -41,129 +41,254 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   public List<Arguments> contains_test_data() {
-    return list(
-        arguments(any(), any(), true),
-        arguments(any(), blob(), false),
-        arguments(any(), bool(), false),
-        arguments(any(), int_(), false),
-        arguments(any(), nothing(), false),
-        arguments(any(), string(), false),
-        arguments(any(), struct(), false),
+    ArrayList<Arguments> result = new ArrayList<>();
 
-        arguments(any(), a(any()), false),
-        arguments(any(), a(blob()), false),
-        arguments(any(), a(bool()), false),
-        arguments(any(), a(int_()), false),
-        arguments(any(), a(nothing()), false),
-        arguments(any(), a(string()), false),
-        arguments(any(), a(struct()), false),
+    result.add(arguments(any(), any(), true));
+    result.add(arguments(any(), blob(), false));
+    result.add(arguments(any(), bool(), false));
+    result.add(arguments(any(), int_(), false));
+    result.add(arguments(any(), nothing(), false));
+    result.add(arguments(any(), string(), false));
+    if (isStructSupported()) {
+      result.add(arguments(any(), struct(), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(any(), tuple(), false));
+    }
 
-        arguments(any(), f(any()), false),
-        arguments(any(), f(blob()), false),
-        arguments(any(), f(bool()), false),
-        arguments(any(), f(int_()), false),
-        arguments(any(), f(nothing()), false),
-        arguments(any(), f(string()), false),
-        arguments(any(), f(struct()), false),
+    result.add(arguments(any(), a(any()), false));
+    result.add(arguments(any(), a(blob()), false));
+    result.add(arguments(any(), a(bool()), false));
+    result.add(arguments(any(), a(int_()), false));
+    result.add(arguments(any(), a(nothing()), false));
+    result.add(arguments(any(), a(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(any(), a(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(any(), a(tuple()), false));
+    }
 
-        arguments(blob(), any(), false),
-        arguments(blob(), blob(), true),
-        arguments(blob(), bool(), false),
-        arguments(blob(), int_(), false),
-        arguments(blob(), nothing(), false),
-        arguments(blob(), string(), false),
-        arguments(blob(), struct(), false),
+    result.add(arguments(any(), f(any()), false));
+    result.add(arguments(any(), f(blob()), false));
+    result.add(arguments(any(), f(bool()), false));
+    result.add(arguments(any(), f(int_()), false));
+    result.add(arguments(any(), f(nothing()), false));
+    result.add(arguments(any(), f(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(any(), f(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(any(), f(tuple()), false));
+    }
 
-        arguments(blob(), a(any()), false),
-        arguments(blob(), a(blob()), false),
-        arguments(blob(), a(bool()), false),
-        arguments(blob(), a(int_()), false),
-        arguments(blob(), a(nothing()), false),
-        arguments(blob(), a(string()), false),
-        arguments(blob(), a(struct()), false),
+    result.add(arguments(blob(), any(), false));
+    result.add(arguments(blob(), blob(), true));
+    result.add(arguments(blob(), bool(), false));
+    result.add(arguments(blob(), int_(), false));
+    result.add(arguments(blob(), nothing(), false));
+    result.add(arguments(blob(), string(), false));
+    if (isStructSupported()) {
+      result.add(arguments(blob(), struct(), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(blob(), tuple(), false));
+    }
 
-        arguments(blob(), f(any()), false),
-        arguments(blob(), f(blob()), false),
-        arguments(blob(), f(bool()), false),
-        arguments(blob(), f(int_()), false),
-        arguments(blob(), f(nothing()), false),
-        arguments(blob(), f(string()), false),
-        arguments(blob(), f(struct()), false),
+    result.add(arguments(blob(), a(any()), false));
+    result.add(arguments(blob(), a(blob()), false));
+    result.add(arguments(blob(), a(bool()), false));
+    result.add(arguments(blob(), a(int_()), false));
+    result.add(arguments(blob(), a(nothing()), false));
+    result.add(arguments(blob(), a(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(blob(), a(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(blob(), a(tuple()), false));
+    }
 
-        arguments(a(blob()), any(), false),
-        arguments(a(blob()), blob(), true),
-        arguments(a(blob()), bool(), false),
-        arguments(a(blob()), int_(), false),
-        arguments(a(blob()), nothing(), false),
-        arguments(a(blob()), string(), false),
-        arguments(a(blob()), struct(), false),
+    result.add(arguments(blob(), f(any()), false));
+    result.add(arguments(blob(), f(blob()), false));
+    result.add(arguments(blob(), f(bool()), false));
+    result.add(arguments(blob(), f(int_()), false));
+    result.add(arguments(blob(), f(nothing()), false));
+    result.add(arguments(blob(), f(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(blob(), f(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(blob(), f(tuple()), false));
+    }
 
-        arguments(a(blob()), a(any()), false),
-        arguments(a(blob()), a(blob()), true),
-        arguments(a(blob()), a(bool()), false),
-        arguments(a(blob()), a(int_()), false),
-        arguments(a(blob()), a(nothing()), false),
-        arguments(a(blob()), a(string()), false),
-        arguments(a(blob()), a(struct()), false),
+    result.add(arguments(a(blob()), any(), false));
+    result.add(arguments(a(blob()), blob(), true));
+    result.add(arguments(a(blob()), bool(), false));
+    result.add(arguments(a(blob()), int_(), false));
+    result.add(arguments(a(blob()), nothing(), false));
+    result.add(arguments(a(blob()), string(), false));
+    if (isStructSupported()) {
+      result.add(arguments(a(blob()), struct(), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(a(blob()), tuple(), false));
+    }
 
-        arguments(a(blob()), f(any()), false),
-        arguments(a(blob()), f(blob()), false),
-        arguments(a(blob()), f(bool()), false),
-        arguments(a(blob()), f(int_()), false),
-        arguments(a(blob()), f(nothing()), false),
-        arguments(a(blob()), f(string()), false),
-        arguments(a(blob()), f(struct()), false),
+    result.add(arguments(a(blob()), a(any()), false));
+    result.add(arguments(a(blob()), a(blob()), true));
+    result.add(arguments(a(blob()), a(bool()), false));
+    result.add(arguments(a(blob()), a(int_()), false));
+    result.add(arguments(a(blob()), a(nothing()), false));
+    result.add(arguments(a(blob()), a(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(a(blob()), a(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(a(blob()), a(tuple()), false));
+    }
 
-        arguments(f(blob()), any(), false),
-        arguments(f(blob()), blob(), true),
-        arguments(f(blob()), bool(), false),
-        arguments(f(blob()), int_(), false),
-        arguments(f(blob()), nothing(), false),
-        arguments(f(blob()), string(), false),
-        arguments(f(blob()), struct(), false),
+    result.add(arguments(a(blob()), f(any()), false));
+    result.add(arguments(a(blob()), f(blob()), false));
+    result.add(arguments(a(blob()), f(bool()), false));
+    result.add(arguments(a(blob()), f(int_()), false));
+    result.add(arguments(a(blob()), f(nothing()), false));
+    result.add(arguments(a(blob()), f(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(a(blob()), f(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(a(blob()), f(tuple()), false));
+    }
 
-        arguments(f(blob()), a(any()), false),
-        arguments(f(blob()), a(blob()), false),
-        arguments(f(blob()), a(bool()), false),
-        arguments(f(blob()), a(int_()), false),
-        arguments(f(blob()), a(nothing()), false),
-        arguments(f(blob()), a(string()), false),
-        arguments(f(blob()), a(struct()), false),
+    if (isTupleSupported()) {
+      result.add(arguments(tuple(blob()), any(), false));
+      result.add(arguments(tuple(blob()), blob(), true));
+      result.add(arguments(tuple(blob()), bool(), false));
+      result.add(arguments(tuple(blob()), int_(), false));
+      result.add(arguments(tuple(blob()), nothing(), false));
+      result.add(arguments(tuple(blob()), string(), false));
+      if (isStructSupported()) {
+        result.add(arguments(tuple(blob()), struct(), false));
+      }
 
-        arguments(f(blob()), f(any()), false),
-        arguments(f(blob()), f(blob()), true),
-        arguments(f(blob()), f(bool()), false),
-        arguments(f(blob()), f(int_()), false),
-        arguments(f(blob()), f(nothing()), false),
-        arguments(f(blob()), f(string()), false),
-        arguments(f(blob()), f(struct()), false),
+      result.add(arguments(tuple(blob()), tuple(any()), false));
+      result.add(arguments(tuple(blob()), tuple(blob()), true));
+      result.add(arguments(tuple(blob()), tuple(bool()), false));
+      result.add(arguments(tuple(blob()), tuple(int_()), false));
+      result.add(arguments(tuple(blob()), tuple(nothing()), false));
+      result.add(arguments(tuple(blob()), tuple(string()), false));
+      if (isStructSupported()) {
+        result.add(arguments(tuple(blob()), tuple(struct()), false));
+      }
 
-        arguments(f(string(), blob()), any(), false),
-        arguments(f(string(), blob()), blob(), true),
-        arguments(f(string(), blob()), bool(), false),
-        arguments(f(string(), blob()), int_(), false),
-        arguments(f(string(), blob()), nothing(), false),
-        arguments(f(string(), blob()), string(), true),
-        arguments(f(string(), blob()), struct(), false),
+      result.add(arguments(tuple(blob()), a(any()), false));
+      result.add(arguments(tuple(blob()), a(blob()), false));
+      result.add(arguments(tuple(blob()), a(bool()), false));
+      result.add(arguments(tuple(blob()), a(int_()), false));
+      result.add(arguments(tuple(blob()), a(nothing()), false));
+      result.add(arguments(tuple(blob()), a(string()), false));
+      if (isStructSupported()) {
+        result.add(arguments(tuple(blob()), a(struct()), false));
+      }
+      if (isTupleSupported()) {
+        result.add(arguments(tuple(blob()), a(tuple()), false));
+      }
 
-        arguments(f(string(), blob()), a(any()), false),
-        arguments(f(string(), blob()), a(blob()), false),
-        arguments(f(string(), blob()), a(bool()), false),
-        arguments(f(string(), blob()), a(int_()), false),
-        arguments(f(string(), blob()), a(nothing()), false),
-        arguments(f(string(), blob()), a(string()), false),
-        arguments(f(string(), blob()), a(struct()), false),
+      result.add(arguments(tuple(blob()), f(any()), false));
+      result.add(arguments(tuple(blob()), f(blob()), false));
+      result.add(arguments(tuple(blob()), f(bool()), false));
+      result.add(arguments(tuple(blob()), f(int_()), false));
+      result.add(arguments(tuple(blob()), f(nothing()), false));
+      result.add(arguments(tuple(blob()), f(string()), false));
+      if (isStructSupported()) {
+        result.add(arguments(tuple(blob()), f(struct()), false));
+      }
+      if (isTupleSupported()) {
+        result.add(arguments(tuple(blob()), f(tuple()), false));
+      }
+    }
 
-        arguments(f(string(), blob()), f(any()), false),
-        arguments(f(string(), blob()), f(blob()), false),
-        arguments(f(string(), blob()), f(bool()), false),
-        arguments(f(string(), blob()), f(int_()), false),
-        arguments(f(string(), blob()), f(nothing()), false),
-        arguments(f(string(), blob()), f(string()), false),
-        arguments(f(string(), blob()), f(struct()), false),
+    result.add(arguments(f(blob()), any(), false));
+    result.add(arguments(f(blob()), blob(), true));
+    result.add(arguments(f(blob()), bool(), false));
+    result.add(arguments(f(blob()), int_(), false));
+    result.add(arguments(f(blob()), nothing(), false));
+    result.add(arguments(f(blob()), string(), false));
+    if (isStructSupported()) {
+      result.add(arguments(f(blob()), struct(), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(f(blob()), tuple(), false));
+    }
 
-        arguments(f(string(), blob()), f(string(), blob()), true)
-    );
+    result.add(arguments(f(blob()), a(any()), false));
+    result.add(arguments(f(blob()), a(blob()), false));
+    result.add(arguments(f(blob()), a(bool()), false));
+    result.add(arguments(f(blob()), a(int_()), false));
+    result.add(arguments(f(blob()), a(nothing()), false));
+    result.add(arguments(f(blob()), a(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(f(blob()), a(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(f(blob()), a(tuple()), false));
+    }
+
+    result.add(arguments(f(blob()), f(any()), false));
+    result.add(arguments(f(blob()), f(blob()), true));
+    result.add(arguments(f(blob()), f(bool()), false));
+    result.add(arguments(f(blob()), f(int_()), false));
+    result.add(arguments(f(blob()), f(nothing()), false));
+    result.add(arguments(f(blob()), f(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(f(blob()), f(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(f(blob()), f(tuple()), false));
+    }
+
+    result.add(arguments(f(string(), blob()), any(), false));
+    result.add(arguments(f(string(), blob()), blob(), true));
+    result.add(arguments(f(string(), blob()), bool(), false));
+    result.add(arguments(f(string(), blob()), int_(), false));
+    result.add(arguments(f(string(), blob()), nothing(), false));
+    result.add(arguments(f(string(), blob()), string(), true));
+    if (isStructSupported()) {
+      result.add(arguments(f(string(), blob()), struct(), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(f(string(), blob()), tuple(), false));
+    }
+
+    result.add(arguments(f(string(), blob()), a(any()), false));
+    result.add(arguments(f(string(), blob()), a(blob()), false));
+    result.add(arguments(f(string(), blob()), a(bool()), false));
+    result.add(arguments(f(string(), blob()), a(int_()), false));
+    result.add(arguments(f(string(), blob()), a(nothing()), false));
+    result.add(arguments(f(string(), blob()), a(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(f(string(), blob()), a(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(f(string(), blob()), a(tuple()), false));
+    }
+
+
+    result.add(arguments(f(string(), blob()), f(any()), false));
+    result.add(arguments(f(string(), blob()), f(blob()), false));
+    result.add(arguments(f(string(), blob()), f(bool()), false));
+    result.add(arguments(f(string(), blob()), f(int_()), false));
+    result.add(arguments(f(string(), blob()), f(nothing()), false));
+    result.add(arguments(f(string(), blob()), f(string()), false));
+    if (isStructSupported()) {
+      result.add(arguments(f(string(), blob()), f(struct()), false));
+    }
+    if (isTupleSupported()) {
+      result.add(arguments(f(string(), blob()), f(tuple()), false));
+    }
+
+    result.add(arguments(f(string(), blob()), f(string(), blob()), true));
+    return result;
   }
 
   public void isAssignable(TestedAssignSpec<? extends TestedT<T>> spec) {
@@ -197,11 +322,11 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     var r = new ArrayList<Arguments>();
     for (T type : concat(testingT().elementaryTypes(), x())) {
       if (type instanceof NothingTS || type instanceof NothingTH) {
-        // arrays
         r.add(arguments(a(), nothing(), bm(a(), lower(), nothing())));
         r.add(arguments(a(), a(nothing()), bm(a(), lower(), a(nothing()))));
         r.add(arguments(a(), a(a(nothing())), bm(a(), lower(), a(a(nothing())))));
 
+        // arrays
         r.add(arguments(a(a()), nothing(), bm(a(), lower(), nothing())));
         r.add(arguments(a(a()), a(nothing()), bm(a(), lower(), nothing())));
         r.add(arguments(a(a()), a(a(nothing())), bm(a(), lower(), a(nothing()))));
@@ -209,6 +334,17 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
         r.add(arguments(a(a(a())), nothing(), bm(a(), lower(), nothing())));
         r.add(arguments(a(a(a())), a(nothing()), bm(a(), lower(), nothing())));
         r.add(arguments(a(a(a())), a(a(nothing())), bm(a(), lower(), nothing())));
+
+        // tuples
+        if (isTupleSupported()) {
+          r.add(arguments(tuple(a()), nothing(), bm(a(), lower(), nothing())));
+          r.add(arguments(tuple(a()), tuple(nothing()), bm(a(), lower(), nothing())));
+          r.add(arguments(tuple(a()), tuple(tuple(nothing())), bm(a(), lower(), tuple(nothing()))));
+
+          r.add(arguments(tuple(tuple(a())), nothing(), bm(a(), lower(), nothing())));
+          r.add(arguments(tuple(tuple(a())), tuple(nothing()), bm(a(), lower(), nothing())));
+          r.add(arguments(tuple(tuple(a())), tuple(tuple(nothing())), bm(a(), lower(), nothing())));
+        }
 
         // funcs
         r.add(arguments(f(a()), nothing(), bm(a(), lower(), nothing())));
@@ -230,11 +366,11 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
         r.add(arguments(f(a(a())), nothing(), bm(a(), lower(), nothing())));
         r.add(arguments(f(bool(), a(a())), nothing(), bm(a(), upper(), any())));
       } else {
-        // arrays
         r.add(arguments(a(), type, bm(a(), lower(), type)));
         r.add(arguments(a(), a(type), bm(a(), lower(), a(type))));
         r.add(arguments(a(), a(a(type)), bm(a(), lower(), a(a(type)))));
 
+        // arrays
         r.add(arguments(a(a()), type, bm()));
         r.add(arguments(a(a()), a(type), bm(a(), lower(), type)));
         r.add(arguments(a(a()), a(a(type)), bm(a(), lower(), a(type))));
@@ -242,6 +378,17 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
         r.add(arguments(a(a(a())), type, bm()));
         r.add(arguments(a(a(a())), a(type), bm()));
         r.add(arguments(a(a(a())), a(a(type)), bm(a(), lower(), type)));
+
+        // tuples
+        if (isTupleSupported()) {
+          r.add(arguments(tuple(a()), type, bm()));
+          r.add(arguments(tuple(a()), tuple(type), bm(a(), lower(), type)));
+          r.add(arguments(tuple(a()), tuple(tuple(type)), bm(a(), lower(), tuple(type))));
+
+          r.add(arguments(tuple(tuple(a())), type, bm()));
+          r.add(arguments(tuple(tuple(a())), tuple(type), bm()));
+          r.add(arguments(tuple(tuple(a())), tuple(tuple(type)), bm(a(), lower(), type)));
+        }
 
         // funcs
         r.add(arguments(f(a()), type, bm()));
@@ -289,9 +436,17 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     result.add(arguments(a(x()), bm(), a(x())));
     for (T type : testingT().allTestedTypes()) {
       result.add(arguments(x(), bm(x(), lower(), type), type));
-      result.add(arguments(a(x()), bm(x(), lower(), type), a(type)));
       result.add(arguments(x(), bm(x(), lower(), a(type)), a(type)));
+      if (isTupleSupported()) {
+        result.add(arguments(x(), bm(x(), lower(), tuple(type)), tuple(type)));
+      }
+      result.add(arguments(a(x()), bm(x(), lower(), type), a(type)));
       result.add(arguments(a(x()), bm(x(), lower(), a(type)), a(a(type))));
+      if (isTupleSupported()) {
+        result.add(arguments(a(x()), bm(x(), lower(), tuple(type)), a(tuple(type))));
+        result.add(arguments(tuple(x()), bm(x(), lower(), type), tuple(type)));
+        result.add(arguments(tuple(x()), bm(x(), lower(), a(type)), tuple(a(type))));
+      }
     }
     for (T newA : testingT().allTestedTypes()) {
       for (T newB : testingT().allTestedTypes()) {
@@ -300,7 +455,14 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     }
     for (T type : testingT().elementaryTypes()) {
       result.add(arguments(type, bm(), type));
+
+      result.add(arguments(a(type), bm(), a(type)));
       result.add(arguments(a(a(type)), bm(), a(a(type))));
+
+      if (isTupleSupported()) {
+        result.add(arguments(tuple(type), bm(), tuple(type)));
+        result.add(arguments(tuple(tuple(type)), bm(), tuple(tuple(type))));
+      }
 
       result.add(arguments(f(type), bm(), f(type)));
       result.add(arguments(f(bool(), type), bm(), f(bool(), type)));
@@ -428,8 +590,24 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     return testingT().string();
   }
 
+  private boolean isStructSupported() {
+    return testingT().isStructSupported();
+  }
+
   private T struct() {
     return testingT().struct();
+  }
+
+  private boolean isTupleSupported() {
+    return testingT().isTupleSupported();
+  }
+
+  private T tuple() {
+    return testingT().tuple();
+  }
+
+  private T tuple(T item) {
+    return testingT().tuple(list(item));
   }
 
   public T a(T elemT) {

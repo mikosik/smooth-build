@@ -18,7 +18,6 @@ import org.smoothbuild.db.object.type.val.VarH;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -75,7 +74,7 @@ public class TestingTH implements TestingT<TypeH> {
 
   @Override
   public ImmutableList<TypeH> typesForBuildWideGraph() {
-    return list(a(), b(), blob(), bool(), int_(), struct(), string());
+    return list(a(), b(), blob(), bool(), int_(), string(), tuple());
   }
 
   @Override
@@ -129,8 +128,28 @@ public class TestingTH implements TestingT<TypeH> {
   }
 
   @Override
+  public boolean isStructSupported() {
+    return false;
+  }
+
+  @Override
   public TypeH struct() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isTupleSupported() {
+    return true;
+  }
+
+  @Override
+  public TypeH tuple() {
     return TUPLE;
+  }
+
+  @Override
+  public TypeH tuple(ImmutableList<TypeH> items) {
+    return FACTORY.tuple(items);
   }
 
   @Override

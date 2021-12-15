@@ -57,6 +57,17 @@ public record TestingTypeGraph<T extends Type>(ImmutableMultimap<T, T> edges) {
     newDimension.put(testingT.nothing(), testingT.array(testingT.nothing()));
     newDimension.put(testingT.array(testingT.any()), testingT.any());
 
+    // tuples
+    if (testingT.isTupleSupported()) {
+      for (Entry<T, T> entry : graph.edges().entries()) {
+        var lower = entry.getKey();
+        var upper = entry.getValue();
+        newDimension.put(testingT.tuple(list(lower)), testingT.tuple(list(upper)));
+      }
+      newDimension.put(testingT.nothing(), testingT.tuple(list(testingT.nothing())));
+      newDimension.put(testingT.tuple(list(testingT.any())), testingT.any());
+    }
+
     // one param funcs
     Set<T> allTypes = graph.allTypes();
 

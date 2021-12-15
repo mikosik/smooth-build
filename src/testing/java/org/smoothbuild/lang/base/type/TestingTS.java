@@ -186,8 +186,28 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   @Override
+  public boolean isStructSupported() {
+    return true;
+  }
+
+  @Override
   public TypeS struct() {
     return PERSON;
+  }
+
+  @Override
+  public boolean isTupleSupported() {
+    return false;
+  }
+
+  @Override
+  public TypeS tuple() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public TypeS tuple(ImmutableList<TypeS> items) {
+    throw new UnsupportedOperationException();
   }
 
   @Override

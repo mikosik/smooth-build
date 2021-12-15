@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type.api;
 
 import static java.lang.Character.isUpperCase;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.List;
 
@@ -27,5 +28,9 @@ public class TypeNames {
         .map(Type::name)
         .collect(joining(", "));
     return resT.name() + "(" + paramsString + ")";
+  }
+
+  public static String tupleTypeName(Iterable<? extends Type> itemTs) {
+    return "{" + toCommaSeparatedString(itemTs, Type::name) + "}";
   }
 }

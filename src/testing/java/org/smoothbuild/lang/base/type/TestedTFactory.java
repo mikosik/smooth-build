@@ -23,6 +23,10 @@ public interface TestedTFactory
 
   public TT struct();
 
+  public TT tuple();
+
+  public TT tuple(ImmutableList<TT> items);
+
   public TT varA();
 
   public TT varB();

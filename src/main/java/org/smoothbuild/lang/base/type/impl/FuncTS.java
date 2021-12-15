@@ -22,13 +22,13 @@ public final class FuncTS extends TypeS implements FuncT {
   private final ImmutableList<TypeS> params;
 
   public FuncTS(TypeS res, ImmutableList<TypeS> params) {
-    super(funcTypeName(res, params), calculateVars(res, params));
+    super(funcTypeName(res, params), calculateVars(concat(res, params)));
     this.res = requireNonNull(res);
     this.params = requireNonNull(params);
   }
 
-  public static ImmutableSet<VarS> calculateVars(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return concat(resT, paramTs).stream()
+  private static ImmutableSet<VarS> calculateVars(ImmutableList<TypeS> types) {
+    return types.stream()
         .map(TypeS::vars)
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))

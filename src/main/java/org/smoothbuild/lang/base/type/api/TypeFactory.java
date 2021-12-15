@@ -16,4 +16,6 @@ public interface TypeFactory<T extends Type> {
   public ArrayT array(T elemType);
 
   public FuncT func(T result, ImmutableList<T> params);
+
+  public TupleT tuple(ImmutableList<T> items);
 }

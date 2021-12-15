@@ -173,6 +173,7 @@ public class CatDb implements TypeFactoryH {
     return nothing;
   }
 
+  @Override
   public TupleTH tuple(ImmutableList<TypeH> itemTs) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(itemTs));
   }

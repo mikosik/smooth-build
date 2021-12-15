@@ -10,6 +10,7 @@ import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.TupleT;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.util.collect.NList;
 
@@ -112,12 +113,17 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
     return STRING;
   }
 
+  public StructTS struct(String name, NList<ItemSigS> fields) {
+    return new StructTS(name, fields);
+  }
+
+  @Override
+  public TupleT tuple(ImmutableList<TypeS> items) {
+    throw new UnsupportedOperationException();
+  }
+
   public VarS var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return new VarS(name);
-  }
-
-  public StructTS struct(String name, NList<ItemSigS> fields) {
-    return new StructTS(name, fields);
   }
 }

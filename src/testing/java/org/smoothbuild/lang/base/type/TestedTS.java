@@ -91,6 +91,16 @@ public class TestedTS implements TestedT<TypeS> {
   }
 
   @Override
+  public boolean isTuple() {
+    return false;
+  }
+
+  @Override
+  public boolean isTupleOfTuple() {
+    return false;
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (obj == this) return true;
     return obj instanceof TestedTS that

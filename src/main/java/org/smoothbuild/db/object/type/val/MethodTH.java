@@ -1,8 +1,8 @@
 package org.smoothbuild.db.object.type.val;
 
 import static org.smoothbuild.db.object.type.base.CatKindH.METHOD;
-import static org.smoothbuild.db.object.type.val.CallableTH.calculateVars;
 import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
+import static org.smoothbuild.util.collect.Lists.concat;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.obj.ObjDb;
@@ -18,7 +18,7 @@ public class MethodTH extends TypeH implements CallableTH{
 
   public MethodTH(Hash hash, TypeH res, TupleTH params) {
     super("_" + funcTypeName(res, params.items()), hash, METHOD,
-        calculateVars(res, params.items()));
+        calculateVars(concat(res, params.items())));
     this.res = res;
     this.params = params;
   }
