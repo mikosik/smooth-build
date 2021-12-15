@@ -17,8 +17,8 @@ public interface TestedT<T extends Type> {
   }
 
   public boolean isFunc(
-      Predicate<? super TestedT<? extends Type>> result,
-      List<? extends Predicate<? super TestedT<? extends Type>>> params);
+      Predicate<? super TestedT<? extends Type>> resPredicate,
+      List<? extends Predicate<? super TestedT<? extends Type>>> paramPredicates);
 
 
   public boolean isArray();

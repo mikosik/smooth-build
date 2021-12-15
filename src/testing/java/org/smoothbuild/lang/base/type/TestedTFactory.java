@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.base.type;
 
-import java.util.List;
-
 import org.smoothbuild.lang.base.type.api.Type;
+
+import com.google.common.collect.ImmutableList;
 
 public interface TestedTFactory
     <T extends Type, TT extends TestedT<T>, S extends TestedAssignSpec<? extends TT>> {
@@ -31,7 +31,7 @@ public interface TestedTFactory
 
   public TT array2(TT type);
 
-  public TT func(TT resT, List<TT> paramTestedTs);
+  public TT func(TT resT, ImmutableList<TT> paramTestedTs);
 
   public default S illegalAssignment(TT target, TT source) {
     return testedAssignmentSpec(target, source, false);

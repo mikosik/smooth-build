@@ -12,4 +12,8 @@ public interface TestedAssignSpec<T extends TestedT<?>> {
   public default T target() {
     return assignment().target();
   }
+
+  public default String toStringImpl() {
+    return assignment().toString() + " :" + (allowed() ? "allowed" : "illegal");
+  }
 }

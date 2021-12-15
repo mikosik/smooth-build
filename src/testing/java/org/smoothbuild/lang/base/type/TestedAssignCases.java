@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
@@ -21,6 +22,8 @@ public class TestedAssignCases<
 
   public static final TestedAssignCases<TypeS, TestedTS, TestedAssignSpecS> INSTANCE_S =
       new TestedAssignCases<>(new TestedTSFactory());
+  public static final TestedAssignCases<TypeH, TestedTH, TestedAssignSpecH> INSTANCE_H =
+      new TestedAssignCases<>(new TestedTHFactory());
 
   private final TT a;
   private final TT b;
@@ -369,7 +372,7 @@ public class TestedAssignCases<
     return testedTFactory.array2(type);
   }
 
-  private TT f(TT resT, List<TT> paramTs) {
+  private TT f(TT resT, ImmutableList<TT> paramTs) {
     return testedTFactory.func(resT, paramTs);
   }
 

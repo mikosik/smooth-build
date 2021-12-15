@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.params.provider.Arguments;
+import org.smoothbuild.db.object.type.val.NothingTH;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
@@ -183,8 +184,8 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
         .isEqualTo(spec.allowed());
   }
 
-  public List<TestedAssignSpecS> isParamAssignable_test_data() {
-    return TestedAssignCases.INSTANCE_S.param_assignment_test_specs(true);
+  public List<? extends TestedAssignSpec<TT>> isParamAssignable_test_data() {
+    return testedAssignCases.param_assignment_test_specs(true);
   }
 
   public void inferVarBounds(T type, T assigned, BoundsMap<T> expected) {
@@ -195,7 +196,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   public List<Arguments> inferVarBounds_test_data() {
     var r = new ArrayList<Arguments>();
     for (T type : concat(testingT().elementaryTypes(), x())) {
-      if (type instanceof NothingTS) {
+      if (type instanceof NothingTS || type instanceof NothingTH) {
         // arrays
         r.add(arguments(a(), nothing(), bm(a(), lower(), nothing())));
         r.add(arguments(a(), a(nothing()), bm(a(), lower(), a(nothing()))));
@@ -353,10 +354,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   private TestingTypeGraph<T> buildWideGraph() {
-    if (testingT().baseTypes().size() != 5) {
-      throw new RuntimeException("Add missing type to list below.");
-    }
-    return buildGraph(list(a(), b(), blob(), bool(), int_(), struct(), string()), 1, testingT());
+    return buildGraph(testingT().typesForBuildWideGraph(), 1, testingT());
   }
 
   private Side<T> lower() {

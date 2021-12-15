@@ -110,6 +110,10 @@ public class CatDb implements TypeFactoryH {
     this.sides = new Sides<>(this.any, this.nothing);
   }
 
+  public ImmutableList<TypeH> baseTs() {
+    return ImmutableList.of(any, blob, bool, int_, nothing, string);
+  }
+
   @Override
   public Bounds<TypeH> unbounded() {
     return new Bounds<>(nothing(), any());

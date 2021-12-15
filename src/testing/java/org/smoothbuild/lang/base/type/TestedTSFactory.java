@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.smoothbuild.lang.base.define.ItemSigS;
-import org.smoothbuild.lang.base.type.TestedTS.TestedArrayT;
-import org.smoothbuild.lang.base.type.TestedTS.TestedFuncT;
+import org.smoothbuild.lang.base.type.TestedTS.TestedArrayTS;
+import org.smoothbuild.lang.base.type.TestedTS.TestedFuncTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 import com.google.common.collect.ImmutableList;
@@ -147,7 +147,7 @@ public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAs
   );
 
   @Override
-  public TestingT<TypeS> testingT() {
+  public TestingTS testingT() {
     return TestingTS.INSTANCE;
   }
 
@@ -203,7 +203,7 @@ public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAs
 
   public static TestedTS a(TestedTS type) {
     if (type == NOTHING) {
-      return new TestedArrayT(
+      return new TestedArrayTS(
           type,
           TestingTS.a(TestingTS.NOTHING),
           "[]",
@@ -218,7 +218,7 @@ public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAs
   }
 
   private static TestedTS a(TestedTS type, Object value) {
-    return new TestedArrayT(
+    return new TestedArrayTS(
         type,
         TestingTS.a(type.type()),
         "[" + type.literal() + "]",
@@ -234,40 +234,38 @@ public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAs
   }
 
   @Override
-  public TestedTS func(TestedTS resT, List<TestedTS> paramTs) {
-    var castedParamTs = map(paramTs, p -> p);
-    return f(resT, castedParamTs);
+  public TestedTS func(TestedTS resT, ImmutableList<TestedTS> paramTs) {
+    return f(resT, paramTs);
   }
 
   public static TestedTS f(TestedTS resT, TestedTS... paramTestedTs) {
-    ImmutableList<TestedTS> paramTestedTs2 = list(paramTestedTs);
-    return f(resT, paramTestedTs2);
+    return f(resT, list(paramTestedTs));
   }
 
-  public static TestedFuncT f(TestedTS resT, ImmutableList<TestedTS> paramTestedTs2) {
-    var paramSignatures = toSigs(paramTestedTs2);
+  public static TestedFuncTS f(TestedTS resT, ImmutableList<TestedTS> paramTestedTs) {
+    var paramSigs = toSigs(paramTestedTs);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
     String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
         resT.name(),
         name,
-        join(",", map(paramSignatures, ItemSigS::toString)));
+        join(",", map(paramSigs, ItemSigS::toString)));
     Set<String> declarations = ImmutableSet.<String>builder()
         .add(declaration)
         .addAll(resT.allDeclarations())
-        .addAll(paramTestedTs2.stream()
+        .addAll(paramTestedTs.stream()
             .flatMap(t -> t.allDeclarations().stream())
             .collect(toList()))
         .build();
     Set<String> typeDeclarations = ImmutableSet.<String>builder()
         .addAll(resT.typeDeclarations())
-        .addAll(paramTestedTs2.stream()
+        .addAll(paramTestedTs.stream()
             .flatMap(t -> t.typeDeclarations().stream())
             .collect(toList()))
         .build();
-    return new TestedFuncT(
+    return new TestedFuncTS(
         resT,
-        paramTestedTs2,
-        TestingTS.f(resT.type(), map(paramSignatures, ItemSigS::type)),
+        paramTestedTs,
+        TestingTS.f(resT.type(), map(paramSigs, ItemSigS::type)),
         name,
         null,
         typeDeclarations,

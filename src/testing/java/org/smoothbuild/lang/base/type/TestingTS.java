@@ -26,7 +26,7 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class TestingTS implements TestingT<TypeS> {
-  public static final TestingT<TypeS> INSTANCE = new TestingTS();
+  public static final TestingTS INSTANCE = new TestingTS();
 
   private static final TestingContext CONTEXT = new TestingContext();
   public static final TypeFactoryS FACTORY = CONTEXT.typeFactoryS();
@@ -131,8 +131,8 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   @Override
-  public ImmutableList<TypeS> baseTypes() {
-    return BASE_TYPES;
+  public ImmutableList<TypeS> typesForBuildWideGraph() {
+    return list(a(), b(), blob(), bool(), int_(), struct(), string());
   }
 
   @Override

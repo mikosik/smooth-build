@@ -33,6 +33,6 @@ public class TestedAssignSpecS implements TestedAssignSpec<TestedTS> {
 
   @Override
   public String toString() {
-    return assignment.toString() + " :" + (allowed ? "allowed" : "illegal");
+    return toStringImpl();
   }
 }
