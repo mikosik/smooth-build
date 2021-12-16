@@ -153,22 +153,22 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(ARRAY);
+      assert_reading_cat_without_data_causes_exc(ARRAY);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(ARRAY);
+      assert_reading_cat_with_additional_data_causes_exc(ARRAY);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(ARRAY);
+      assert_reading_cat_with_data_pointing_nowhere_causes_exc(ARRAY);
     }
 
     @Test
     public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(ARRAY);
+      assert_reading_cat_with_corrupted_type_as_data_causes_exc(ARRAY);
     }
 
     @Test
@@ -201,27 +201,27 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(CALL);
+      assert_reading_cat_without_data_causes_exc(CALL);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(CALL);
+      assert_reading_cat_with_additional_data_causes_exc(CALL);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(CALL);
+      assert_reading_cat_with_data_pointing_nowhere_causes_exc(CALL);
     }
 
     @Test
     public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(CALL);
+      assert_reading_cat_with_corrupted_type_as_data_causes_exc(CALL);
     }
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(CALL, TypeH.class);
+      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(CALL, TypeH.class);
     }
   }
 
@@ -243,27 +243,28 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(COMBINE);
+      assert_reading_cat_without_data_causes_exc(COMBINE);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(COMBINE);
+      assert_reading_cat_with_additional_data_causes_exc(COMBINE);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(COMBINE);
+      assert_reading_cat_with_data_pointing_nowhere_causes_exc(COMBINE);
     }
 
     @Test
     public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(COMBINE);
+      assert_reading_cat_with_corrupted_type_as_data_causes_exc(COMBINE);
     }
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(COMBINE, TupleTH.class);
+      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(
+          COMBINE, TupleTH.class);
     }
 
     @Test
@@ -301,17 +302,17 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(FUNC);
+      assert_reading_cat_without_data_causes_exc(FUNC);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(FUNC);
+      assert_reading_cat_with_additional_data_causes_exc(FUNC);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_seq(FUNC);
+      assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(FUNC);
     }
 
     @Test
@@ -490,27 +491,28 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(ORDER);
+      assert_reading_cat_without_data_causes_exc(ORDER);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(ORDER);
+      assert_reading_cat_with_additional_data_causes_exc(ORDER);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(ORDER);
+      assert_reading_cat_with_data_pointing_nowhere_causes_exc(ORDER);
     }
 
     @Test
     public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(ORDER);
+      assert_reading_cat_with_corrupted_type_as_data_causes_exc(ORDER);
     }
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(ORDER, ArrayTH.class);
+      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(
+          ORDER, ArrayTH.class);
     }
 
     @Test
@@ -543,31 +545,32 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(PARAM_REF);
+      assert_reading_cat_without_data_causes_exc(PARAM_REF);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(PARAM_REF);
+      assert_reading_cat_with_additional_data_causes_exc(PARAM_REF);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(PARAM_REF);
+      assert_reading_cat_with_data_pointing_nowhere_causes_exc(PARAM_REF);
     }
 
     @Test
     public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(PARAM_REF);
+      assert_reading_cat_with_corrupted_type_as_data_causes_exc(PARAM_REF);
     }
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(PARAM_REF, TypeH.class);
+      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(
+          PARAM_REF, TypeH.class);
     }
   }
 
-  private void test_type_without_data(CatKindH speckKind) throws Exception {
+  private void assert_reading_cat_without_data_causes_exc(CatKindH speckKind) throws Exception {
     Hash hash =
         hash(
             hash(speckKind.marker())
@@ -576,7 +579,7 @@ public class CatHCorruptedTest extends TestingContext {
         .throwsException(new DecodeCatRootExc(hash, speckKind, 1, 2));
   }
 
-  private void test_type_with_additional_data(CatKindH kind) throws Exception {
+  private void assert_reading_cat_with_additional_data_causes_exc(CatKindH kind) throws Exception {
     Hash hash = hash(
         hash(kind.marker()),
         hash(stringTH()),
@@ -586,7 +589,7 @@ public class CatHCorruptedTest extends TestingContext {
         .throwsException(new DecodeCatRootExc(hash, 3));
   }
 
-  private void test_data_hash_pointing_nowhere_instead_of_being_type(CatKindH kind)
+  private void assert_reading_cat_with_data_pointing_nowhere_causes_exc(CatKindH kind)
       throws Exception {
     Hash dataHash = Hash.of(33);
     Hash typeHash = hash(
@@ -598,8 +601,8 @@ public class CatHCorruptedTest extends TestingContext {
         .withCause(new DecodeCatExc(dataHash));
   }
 
-  private void test_data_hash_pointing_nowhere_instead_of_being_seq(CatKindH kind)
-      throws Exception {
+  private void assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(
+      CatKindH kind) throws Exception {
     Hash dataHash = Hash.of(33);
     Hash typeHash = hash(
         hash(kind.marker()),
@@ -610,7 +613,8 @@ public class CatHCorruptedTest extends TestingContext {
         .withCause(new NoSuchDataExc(dataHash));
   }
 
-  private void test_type_with_corrupted_type_as_data(CatKindH kind) throws Exception {
+  private void assert_reading_cat_with_corrupted_type_as_data_causes_exc(CatKindH kind)
+      throws Exception {
     Hash hash =
         hash(
             hash(kind.marker()),
@@ -620,8 +624,8 @@ public class CatHCorruptedTest extends TestingContext {
         .withCause(corruptedArrayTypeExc());
   }
 
-  private void test_type_with_data_being_expr_type(CatKindH kind, Class<? extends CatH> expected)
-      throws Exception {
+  private void assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(
+      CatKindH kind, Class<? extends CatH> expected) throws Exception {
     Hash hash = hash(
         hash(kind.marker()),
         hash(paramRefCH())
@@ -704,27 +708,27 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(SELECT);
+      assert_reading_cat_without_data_causes_exc(SELECT);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(SELECT);
+      assert_reading_cat_with_additional_data_causes_exc(SELECT);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_type(SELECT);
+      assert_reading_cat_with_data_pointing_nowhere_causes_exc(SELECT);
     }
 
     @Test
     public void with_corrupted_type_as_data() throws Exception {
-      test_type_with_corrupted_type_as_data(SELECT);
+      assert_reading_cat_with_corrupted_type_as_data_causes_exc(SELECT);
     }
 
     @Test
     public void with_evaluation_type_being_expr_type() throws Exception {
-      test_type_with_data_being_expr_type(SELECT, TypeH.class);
+      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(SELECT, TypeH.class);
     }
   }
 
@@ -749,17 +753,17 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(TUPLE);
+      assert_reading_cat_without_data_causes_exc(TUPLE);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(TUPLE);
+      assert_reading_cat_with_additional_data_causes_exc(TUPLE);
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
-      test_data_hash_pointing_nowhere_instead_of_being_seq(TUPLE);
+      assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(TUPLE);
     }
 
     @Test
@@ -835,12 +839,12 @@ public class CatHCorruptedTest extends TestingContext {
 
     @Test
     public void without_data() throws Exception {
-      test_type_without_data(VARIABLE);
+      assert_reading_cat_without_data_causes_exc(VARIABLE);
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      test_type_with_additional_data(VARIABLE);
+      assert_reading_cat_with_additional_data_causes_exc(VARIABLE);
     }
 
     @Test
