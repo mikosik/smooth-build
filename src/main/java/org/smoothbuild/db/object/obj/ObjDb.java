@@ -466,7 +466,7 @@ public class ObjDb {
   }
 
   public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbExc {
-    return hashedDb().readSeq(hash);
+    return hashedDb.readSeq(hash);
   }
 
   // TODO visible for classes from db.object package tree until creating Obj is cached and
