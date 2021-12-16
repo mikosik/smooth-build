@@ -12,8 +12,8 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.obj.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeCatExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
 
@@ -132,7 +132,7 @@ public abstract class ObjH {
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash, int expectedSize) {
     ImmutableList<Hash> data = readSeqHashes(path, hash);
     if (data.size() != expectedSize) {
-      throw new UnexpectedObjSeqExc(hash(), cat(), path, expectedSize, data.size());
+      throw new DecodeObjWrongSeqSizeExc(hash(), cat(), path, expectedSize, data.size());
     }
     return data;
   }
@@ -152,7 +152,7 @@ public abstract class ObjH {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedObjNodeExc(hash(), cat(), path, clazz, obj.getClass());
+      throw new DecodeObjWrongNodeCatExc(hash(), cat(), path, clazz, obj.getClass());
     }
   }
 
@@ -163,7 +163,7 @@ public abstract class ObjH {
       T result = (T) obj;
       return result;
     } else {
-      throw new UnexpectedObjNodeExc(hash(), cat(), path, index, clazz, obj.getClass());
+      throw new DecodeObjWrongNodeCatExc(hash(), cat(), path, index, clazz, obj.getClass());
     }
   }
 
@@ -171,7 +171,7 @@ public abstract class ObjH {
     for (int i = 0; i < elems.size(); i++) {
       ObjH elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
-        throw new UnexpectedObjNodeExc(hash(), cat(), path, i, clazz, elem.getClass());
+        throw new DecodeObjWrongNodeCatExc(hash(), cat(), path, i, clazz, elem.getClass());
       }
     }
     @SuppressWarnings("unchecked")

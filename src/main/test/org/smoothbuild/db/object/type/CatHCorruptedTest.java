@@ -41,9 +41,9 @@ import org.smoothbuild.db.object.type.exc.DecodeCatExc;
 import org.smoothbuild.db.object.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.db.object.type.exc.DecodeCatNodeExc;
 import org.smoothbuild.db.object.type.exc.DecodeCatRootExc;
+import org.smoothbuild.db.object.type.exc.DecodeCatWrongNodeCatExc;
+import org.smoothbuild.db.object.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameExc;
-import org.smoothbuild.db.object.type.exc.UnexpectedCatNodeExc;
-import org.smoothbuild.db.object.type.exc.UnexpectedCatSeqExc;
 import org.smoothbuild.db.object.type.expr.ParamRefCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
@@ -178,7 +178,7 @@ public class CatHCorruptedTest extends TestingContext {
           hash(paramRefCH())
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedCatNodeExc(
+          .throwsException(new DecodeCatWrongNodeCatExc(
               hash, ARRAY, DATA_PATH, TypeH.class, ParamRefCH.class));
     }
   }
@@ -274,7 +274,7 @@ public class CatHCorruptedTest extends TestingContext {
           hash(intTH())
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedCatNodeExc(
+          .throwsException(new DecodeCatWrongNodeCatExc(
               hash, COMBINE, DATA_PATH, TupleTH.class, IntTH.class));
     }
   }
@@ -339,7 +339,7 @@ public class CatHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedCatSeqExc(hash, FUNC, DATA_PATH, 2, 3));
+          .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 3));
     }
 
     @Test
@@ -351,7 +351,7 @@ public class CatHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedCatSeqExc(hash, FUNC, DATA_PATH, 2, 1));
+          .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 1));
     }
 
     @ParameterizedTest
@@ -396,7 +396,7 @@ public class CatHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> catDb().get(typeHash))
-          .throwsException(new UnexpectedCatNodeExc(
+          .throwsException(new DecodeCatWrongNodeCatExc(
               typeHash, FUNC, FUNC_RES_PATH, TypeH.class, ParamRefCH.class));
     }
 
@@ -440,7 +440,7 @@ public class CatHCorruptedTest extends TestingContext {
           )
       );
       assertThatGet(typeHash)
-          .throwsException(new UnexpectedCatNodeExc(
+          .throwsException(new DecodeCatWrongNodeCatExc(
               typeHash, FUNC, DATA_PATH, 1, TupleTH.class, StringTH.class));
     }
 
@@ -454,7 +454,7 @@ public class CatHCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> catDb().get(typeHash))
-          .throwsException(new UnexpectedCatNodeExc(
+          .throwsException(new DecodeCatWrongNodeCatExc(
               typeHash, FUNC, FUNC_PARAMS_PATH, TupleTH.class, ParamRefCH.class));
     }
 
@@ -522,7 +522,7 @@ public class CatHCorruptedTest extends TestingContext {
           hash(intTH())
       );
       assertThatGet(hash)
-          .throwsException(new UnexpectedCatNodeExc(
+          .throwsException(new DecodeCatWrongNodeCatExc(
               hash, ORDER, DATA_PATH, ArrayTH.class, IntTH.class));
     }
   }
@@ -631,7 +631,7 @@ public class CatHCorruptedTest extends TestingContext {
         hash(paramRefCH())
     );
     assertThatGet(hash)
-        .throwsException(new UnexpectedCatNodeExc(
+        .throwsException(new DecodeCatWrongNodeCatExc(
             hash, kind, DATA_PATH, expected, ParamRefCH.class));
   }
 
@@ -803,7 +803,7 @@ public class CatHCorruptedTest extends TestingContext {
               )
           );
       assertThatGet(hash)
-          .throwsException(new UnexpectedCatNodeExc(
+          .throwsException(new DecodeCatWrongNodeCatExc(
               hash, TUPLE, "data", 0, TypeH.class, ParamRefCH.class));
     }
 

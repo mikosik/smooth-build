@@ -5,7 +5,7 @@ import static java.util.Objects.checkIndex;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeCatExc;
 import org.smoothbuild.db.object.type.val.TupleTH;
 
 import com.google.common.base.Supplier;
@@ -50,7 +50,7 @@ public final class TupleH extends ValH {
       var expectedT = itemTs.get(i);
       var actualT = val.cat();
       if (!expectedT.equals(actualT)) {
-        throw new UnexpectedObjNodeExc(hash(), cat(), DATA_PATH, i, expectedT, actualT);
+        throw new DecodeObjWrongNodeCatExc(hash(), cat(), DATA_PATH, i, expectedT, actualT);
       }
     }
     return objs;

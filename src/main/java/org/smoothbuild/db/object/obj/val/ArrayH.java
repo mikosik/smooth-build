@@ -2,7 +2,7 @@ package org.smoothbuild.db.object.obj.val;
 
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeCatExc;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
@@ -44,7 +44,7 @@ public final class ArrayH extends ValH {
     for (int i = 0; i < elems.size(); i++) {
       var elemT = elems.get(i).cat();
       if (!(objDb().typing().isAssignable(expectedElemT, elemT))) {
-        throw new UnexpectedObjNodeExc(hash(), this.cat(), DATA_PATH, i, expectedElemT, elemT);
+        throw new DecodeObjWrongNodeCatExc(hash(), this.cat(), DATA_PATH, i, expectedElemT, elemT);
       }
     }
     @SuppressWarnings("unchecked")

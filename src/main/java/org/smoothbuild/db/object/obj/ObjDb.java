@@ -20,7 +20,7 @@ import org.smoothbuild.db.object.db.ObjDbExc;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
-import org.smoothbuild.db.object.obj.exc.NoSuchObjExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.IfH;
@@ -183,7 +183,7 @@ public class ObjDb {
     try {
       return hashedDb.readSeq(rootHash);
     } catch (NoSuchDataExc e) {
-      throw new NoSuchObjExc(rootHash, e);
+      throw new DecodeObjNoSuchObjExc(rootHash, e);
     } catch (HashedDbExc e) {
       throw cannotReadRootException(rootHash, e);
     }

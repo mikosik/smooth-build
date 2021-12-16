@@ -41,9 +41,9 @@ import org.smoothbuild.db.object.type.base.CatKindH;
 import org.smoothbuild.db.object.type.base.TypeH;
 import org.smoothbuild.db.object.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.db.object.type.exc.DecodeCatRootExc;
+import org.smoothbuild.db.object.type.exc.DecodeCatWrongNodeCatExc;
+import org.smoothbuild.db.object.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.db.object.type.exc.DecodeVarIllegalNameExc;
-import org.smoothbuild.db.object.type.exc.UnexpectedCatNodeExc;
-import org.smoothbuild.db.object.type.exc.UnexpectedCatSeqExc;
 import org.smoothbuild.db.object.type.expr.CallCH;
 import org.smoothbuild.db.object.type.expr.CombineCH;
 import org.smoothbuild.db.object.type.expr.IfCH;
@@ -310,7 +310,7 @@ public class CatDb implements TypeFactoryH {
     Hash dataHash = rootSeq.get(DATA_IDX);
     List<Hash> data = readSeqHashes(rootHash, dataHash, kind, DATA_PATH);
     if (data.size() != 2) {
-      throw new UnexpectedCatSeqExc(rootHash, kind, DATA_PATH, 2, data.size());
+      throw new DecodeCatWrongSeqSizeExc(rootHash, kind, DATA_PATH, 2, data.size());
     }
     var res = readNode(kind, rootHash, data.get(FUNC_RES_IDX), FUNC_RES_PATH, TypeH.class);
     var params = readNode(kind, rootHash, data.get(FUNC_PARAMS_IDX), FUNC_PARAMS_PATH, TupleTH.class);
@@ -349,7 +349,7 @@ public class CatDb implements TypeFactoryH {
       T castResult = (T) result;
       return castResult;
     } else {
-      throw new UnexpectedCatNodeExc(outerHash, kind, path, clazz, result.getClass());
+      throw new DecodeCatWrongNodeCatExc(outerHash, kind, path, clazz, result.getClass());
     }
   }
 
@@ -358,7 +358,7 @@ public class CatDb implements TypeFactoryH {
     if (result instanceof TypeH typeH) {
       return typeH;
     } else {
-      throw new UnexpectedCatNodeExc(outerHash, kind, path, index, TypeH.class, result.getClass());
+      throw new DecodeCatWrongNodeCatExc(outerHash, kind, path, index, TypeH.class, result.getClass());
     }
   }
 

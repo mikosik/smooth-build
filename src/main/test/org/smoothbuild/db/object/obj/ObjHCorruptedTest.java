@@ -37,12 +37,12 @@ import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeCatExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeExc;
-import org.smoothbuild.db.object.obj.exc.NoSuchObjExc;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjNodeExc;
-import org.smoothbuild.db.object.obj.exc.UnexpectedObjSeqExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
@@ -112,7 +112,7 @@ public class ObjHCorruptedTest extends TestingContext {
     public void reading_elems_from_not_stored_object_throws_exception() {
       Hash objHash = Hash.of(33);
       assertCall(() -> objDb().get(objHash))
-          .throwsException(new NoSuchObjExc(objHash))
+          .throwsException(new DecodeObjNoSuchObjExc(objHash))
           .withCause(new NoSuchDataExc(objHash));
     }
   }
@@ -211,7 +211,7 @@ public class ObjHCorruptedTest extends TestingContext {
               dataHash);
       assertCall(() -> ((ArrayH) objDb().get(objHash)).elems(StringH.class))
           .throwsException(new DecodeObjNodeExc(objHash, type, DATA_PATH + "[0]"))
-          .withCause(new NoSuchObjExc(nowhere));
+          .withCause(new DecodeObjNoSuchObjExc(nowhere));
     }
 
     @Test
@@ -231,7 +231,7 @@ public class ObjHCorruptedTest extends TestingContext {
                   )
               ));
       assertCall(() -> ((ArrayH) objDb().get(objHash)).elems(StringH.class))
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, type, DATA_PATH, 1, stringTH(), boolTH()));
     }
 
@@ -249,7 +249,7 @@ public class ObjHCorruptedTest extends TestingContext {
                   hash(paramRefH(1))
               ));
       assertCall(() -> ((ArrayH) objDb().get(objHash)).elems(StringH.class))
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, type, DATA_PATH, 1, ValH.class, ParamRefH.class));
     }
   }
@@ -434,7 +434,7 @@ public class ObjHCorruptedTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSeqExc(objHash, callCH(), DATA_PATH, 2, 1));
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, callCH(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -452,7 +452,7 @@ public class ObjHCorruptedTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSeqExc(objHash, callCH(), DATA_PATH, 2, 3));
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, callCH(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -486,7 +486,7 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, callCH(), DATA_PATH + "[1]", CombineH.class, IntH.class));
     }
 
@@ -505,7 +505,7 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, type, DATA_PATH + "[1]", CombineH.class, ParamRefH.class));
     }
 
@@ -687,7 +687,7 @@ public class ObjHCorruptedTest extends TestingContext {
           );
       assertCall(() -> ((OrderH) objDb().get(objHash)).elems())
           .throwsException(new DecodeObjNodeExc(objHash, orderCH(), DATA_PATH + "[0]"))
-          .withCause(new NoSuchObjExc(nowhere));
+          .withCause(new DecodeObjNoSuchObjExc(nowhere));
     }
 
     @Test
@@ -807,7 +807,7 @@ public class ObjHCorruptedTest extends TestingContext {
           );
       assertCall(() -> ((CombineH) objDb().get(objHash)).items())
           .throwsException(new DecodeObjNodeExc(objHash, combineCH(), DATA_PATH + "[0]"))
-          .withCause(new NoSuchObjExc(nowhere));
+          .withCause(new DecodeObjNoSuchObjExc(nowhere));
     }
 
     @Test
@@ -909,7 +909,7 @@ public class ObjHCorruptedTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((SelectH) objDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSeqExc(
+          .throwsException(new DecodeObjWrongSeqSizeExc(
               objHash, selectCH(), DATA_PATH, 2, 1));
     }
 
@@ -928,7 +928,7 @@ public class ObjHCorruptedTest extends TestingContext {
               dataHash
           );
       assertCall(() -> ((SelectH) objDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjSeqExc(
+          .throwsException(new DecodeObjWrongSeqSizeExc(
               objHash, selectCH(), DATA_PATH, 2, 3));
     }
 
@@ -1005,7 +1005,7 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((SelectH) objDb().get(objHash)).data())
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, type, DATA_PATH + "[1]", IntH.class, StringH.class));
     }
   }
@@ -1122,7 +1122,7 @@ public class ObjHCorruptedTest extends TestingContext {
           );
 
       assertCall(() -> ((MethodH) objDb().get(objHash)).classBinaryName())
-          .throwsException(new UnexpectedObjSeqExc(
+          .throwsException(new DecodeObjWrongSeqSizeExc(
               objHash, type, DATA_PATH, 3, 2));
     }
 
@@ -1145,7 +1145,7 @@ public class ObjHCorruptedTest extends TestingContext {
           );
 
       assertCall(() -> ((MethodH) objDb().get(objHash)).classBinaryName())
-          .throwsException(new UnexpectedObjSeqExc(
+          .throwsException(new DecodeObjWrongSeqSizeExc(
               objHash, type, DATA_PATH, 3, 4));
     }
 
@@ -1165,7 +1165,7 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((MethodH) objDb().get(objHash)).jar())
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, type, DATA_PATH + "[0]", BlobH.class, StringH.class));
     }
 
@@ -1186,7 +1186,7 @@ public class ObjHCorruptedTest extends TestingContext {
           );
 
       assertCall(() -> ((MethodH) objDb().get(objHash)).classBinaryName())
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, type, DATA_PATH + "[1]", StringH.class, IntH.class));
     }
 
@@ -1207,7 +1207,7 @@ public class ObjHCorruptedTest extends TestingContext {
           );
 
       assertCall(() -> ((MethodH) objDb().get(objHash)).isPure())
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, type, DATA_PATH + "[2]", BoolH.class, StringH.class));
     }
   }
@@ -1342,7 +1342,7 @@ public class ObjHCorruptedTest extends TestingContext {
           );
       assertCall(() -> ((TupleH) objDb().get(objHash)).get(0))
           .throwsException(new DecodeObjNodeExc(objHash, personTH(), DATA_PATH + "[0]"))
-          .withCause(new NoSuchObjExc(nowhere));
+          .withCause(new DecodeObjNoSuchObjExc(nowhere));
     }
 
     @Test
@@ -1356,7 +1356,7 @@ public class ObjHCorruptedTest extends TestingContext {
               dataHash);
       TupleH tuple = (TupleH) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new UnexpectedObjSeqExc(objHash, personTH(), DATA_PATH, 2, 1));
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, personTH(), DATA_PATH, 2, 1));
     }
 
     @Test
@@ -1372,7 +1372,7 @@ public class ObjHCorruptedTest extends TestingContext {
               dataHash);
       TupleH tuple = (TupleH) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new UnexpectedObjSeqExc(objHash, personTH(), DATA_PATH, 2, 3));
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, personTH(), DATA_PATH, 2, 3));
     }
 
     @Test
@@ -1385,7 +1385,7 @@ public class ObjHCorruptedTest extends TestingContext {
                   hash(boolH(true))));
       TupleH tuple = (TupleH) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, personTH(), DATA_PATH, 1, stringTH(), boolTH()));
     }
 
@@ -1399,7 +1399,7 @@ public class ObjHCorruptedTest extends TestingContext {
                   hash(paramRefH(1))));
       TupleH tuple = (TupleH) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new UnexpectedObjNodeExc(
+          .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, personTH(), DATA_PATH + "[1]", ValH.class, ParamRefH.class));
     }
   }
@@ -1471,7 +1471,7 @@ public class ObjHCorruptedTest extends TestingContext {
             dataHash);
     assertCall(() -> readClosure.apply(objHash))
         .throwsException(new DecodeObjNodeExc(objHash, type, DATA_PATH))
-        .withCause(new NoSuchObjExc(dataHash));
+        .withCause(new DecodeObjNoSuchObjExc(dataHash));
   }
 
   private void obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
