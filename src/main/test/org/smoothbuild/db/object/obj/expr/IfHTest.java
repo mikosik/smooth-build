@@ -18,7 +18,7 @@ public class IfHTest extends TestingContext {
 
     @Test
     public void with_one_clauses_being_subtype_of_the_other() {
-      assertThat(ifH(boolH(true), arrayH(stringTH()), arrayH(nothingTH())).cat())
+      assertThat(ifH(boolH(true), arrayH(nothingTH()), arrayH(stringTH())).cat())
           .isEqualTo(ifCH(arrayTH(stringTH())));
     }
   }
