@@ -40,11 +40,14 @@ import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeCatExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
+import org.smoothbuild.db.object.obj.expr.IfH;
+import org.smoothbuild.db.object.obj.expr.IfH.IfData;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -61,6 +64,7 @@ import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.exc.DecodeCatExc;
 import org.smoothbuild.db.object.type.expr.CallCH;
+import org.smoothbuild.db.object.type.expr.IfCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
@@ -606,6 +610,173 @@ public class ObjHCorruptedTest extends TestingContext {
       assertCall(() -> ((FuncH) objDb().get(objHash)).body())
           .throwsException(new DecodeExprWrongEvalTypeOfCompExc(
               objHash, type, DATA_PATH, boolTH(), intTH()));
+    }
+  }
+
+  @Nested
+  class _if {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save IF
+       * in HashedDb.
+       */
+      var condition = boolH(true);
+      var then = intH(1);
+      var else_ = intH(2);
+      Hash objHash =
+          hash(
+              hash(ifCH(intTH())),
+              hash(
+                  hash(condition),
+                  hash(then),
+                  hash(else_)
+              ));
+      var data = ((IfH) objDb().get(objHash)).data();
+      assertThat(data)
+          .isEqualTo(new IfData(condition, then, else_));
+    }
+
+    @Test
+    public void learning_test_then_and_else_can_be_subtypes_of_evalT() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save IF
+       * in HashedDb.
+       */
+      var condition = boolH(true);
+      var then = arrayH(nothingTH());
+      var else_ = arrayH(nothingTH());
+      Hash objHash =
+          hash(
+              hash(ifCH(arrayTH(intTH()))),
+              hash(
+                  hash(condition),
+                  hash(then),
+                  hash(else_)
+              ));
+      var data = ((IfH) objDb().get(objHash)).data();
+      assertThat(data)
+          .isEqualTo(new IfData(condition, then, else_));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(ifCH());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var condition = boolH(true);
+      var then = intH(1);
+      var else_ = intH(2);
+      Hash dataHash = hash(
+          hash(condition),
+          hash(then),
+          hash(else_)
+      );
+      obj_root_with_two_data_hashes(
+          ifCH(intTH()),
+          dataHash,
+          (Hash objHash) -> ((IfH) objDb().get(objHash)).data()
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          ifCH(intTH()),
+          (Hash objHash) -> ((IfH) objDb().get(objHash)).data());
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void with_seq_size_different_than_multiple_of_hash_size(int byteCount) throws Exception {
+      var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
+      var objHash =
+          hash(
+              hash(ifCH(intTH())),
+              notHashOfSeq
+          );
+      assertCall(() -> ((IfH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjNodeExc(objHash, ifCH(intTH()), DATA_PATH))
+          .withCause(new DecodeHashSeqExc(
+              notHashOfSeq, byteCount % Hash.lengthInBytes()));
+    }
+
+    @Test
+    public void with_seq_item_pointing_nowhere() throws Exception {
+      var nowhereHash = Hash.of(33);
+      var then = intH(1);
+      var else_ = intH(2);
+      var objHash =
+          hash(
+              hash(ifCH(intTH())),
+              hash(
+                  nowhereHash,
+                  hash(then),
+                  hash(else_)
+              )
+          );
+      assertCall(() -> ((IfH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjNodeExc(objHash, ifCH(intTH()), DATA_PATH + "[0]"))
+          .withCause(new DecodeObjNoSuchObjExc(nowhereHash));
+    }
+
+    @Test
+    public void condition_type_not_equal_bool_type() throws Exception {
+      var condition = intH();
+      var then = intH(1);
+      var else_ = intH(2);
+      var cat = ifCH(intTH());
+      var objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(condition),
+                  hash(then),
+                  hash(else_)
+              ));
+      assertCall(() -> ((IfH) objDb().get(objHash)).data())
+          .throwsException(
+              new DecodeObjWrongNodeTypeExc(objHash, cat, DATA_PATH, 0, boolTH(), intTH()));
+    }
+
+    @Test
+    public void then_type_not_subtype_of_evalT() throws Exception {
+      var condition = boolH(true);
+      var then = stringH();
+      var else_ = intH();
+      var cat = ifCH(intTH());
+      Hash objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(condition),
+                  hash(then),
+                  hash(else_)
+              ));
+      assertCall(() -> ((IfH) objDb().get(objHash)).data())
+          .throwsException(
+              new DecodeObjWrongNodeTypeExc(objHash, cat, DATA_PATH, 1, intTH(), stringTH()));
+    }
+
+    @Test
+    public void else_type_not_subtype_of_evalT() throws Exception {
+      var condition = boolH(true);
+      var then = intH();
+      var else_ = stringH();
+      var cat = ifCH(intTH());
+      Hash objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(condition),
+                  hash(then),
+                  hash(else_)
+              ));
+      assertCall(() -> ((IfH) objDb().get(objHash)).data())
+          .throwsException(
+              new DecodeObjWrongNodeTypeExc(objHash, cat, DATA_PATH, 2, intTH(), stringTH()));
     }
   }
 

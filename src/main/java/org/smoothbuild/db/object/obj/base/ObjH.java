@@ -191,7 +191,7 @@ public abstract class ObjH {
 
   protected ObjH validateType(ObjH obj, String path, int index, TypeH expectedT) {
     var objT = obj.type();
-    if (!objT.equals(expectedT)) {
+    if (!objDb().typing().isAssignable(expectedT, objT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), path, index, expectedT, objT);
     }
     return obj;

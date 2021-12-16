@@ -4,6 +4,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
+import org.smoothbuild.db.object.type.val.BoolTH;
 
 /**
  * If expression.
@@ -27,14 +28,15 @@ public final class IfH extends ExprH {
   public record IfData(ObjH condition, ObjH then_, ObjH else_) {}
 
   private ObjH readCondition() {
-    return readSeqElemObj(DATA_PATH, dataHash(), COND_INDEX, DATA_SEQ_SIZE, ObjH.class);
+    var expectedT = objDb().catDb().bool();
+    return readSeqElemObj(DATA_PATH, dataHash(), COND_INDEX, DATA_SEQ_SIZE, expectedT);
   }
 
   private ObjH readThen() {
-    return readSeqElemObj(DATA_PATH, dataHash(), THEN_INDEX, DATA_SEQ_SIZE, ObjH.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), THEN_INDEX, DATA_SEQ_SIZE, type());
   }
 
   private ObjH readElse() {
-    return readSeqElemObj(DATA_PATH, dataHash(), ELSE_INDEX, DATA_SEQ_SIZE, ObjH.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), ELSE_INDEX, DATA_SEQ_SIZE, type());
   }
 }
