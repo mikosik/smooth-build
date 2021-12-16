@@ -39,7 +39,7 @@ public class CombineH extends ExprH {
     allMatchOtherwise(
         expectedItemTs,
         items,
-        (type, item) -> objDb().typing().isParamAssignable(type, item.type()),
+        (type, item) -> objDb().typing().isAssignable(type, item.type()),
         (type, item) -> {
           throw new DecodeCombineWrongItemsSizeExc(hash(), this.cat(), item);
         },
