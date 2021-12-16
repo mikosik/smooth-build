@@ -12,14 +12,32 @@ import com.google.common.collect.ImmutableList;
 
 public class OrderHTest extends TestingContext {
   @Test
-  public void creating_order_with_element_evalT_different_than_required_causes_exception() {
+  public void cat_returns_category() {
+    var orderH = orderH(intTH(), list());
+    assertThat(orderH.cat())
+        .isEqualTo(orderCH(intTH()));
+  }
+
+  @Test
+  public void creating_order_with_elemT_different_than_required_causes_exception() {
     assertCall(() -> orderH(intTH(), list(stringH("abc"))).cat())
         .throwsException(new IllegalArgumentException("Illegal elem type. Expected " + intTH().q()
             + " but element at index 0 has type " + stringTH().q() + "."));
   }
 
   @Test
-  public void creating_order_with_element_evalT_being_subtype_of_array_type_elem() {
+  public void elemT_can_be_equal_elemT_specified_in_category() {
+    orderH(arrayTH(intTH()), list(arrayH(intH(3))));
+  }
+
+  @Test
+  public void elemT_can_be_equal_polytype_elemT_specified_in_category() {
+    var varA = varTH("A");
+    orderH(arrayTH(varA), list(arrayH(varA)));
+  }
+
+  @Test
+  public void elemT_can_be_subtype_of_elemT_specified_in_category() {
     orderH(arrayTH(intTH()), list(arrayH(nothingTH())));
   }
 
