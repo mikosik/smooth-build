@@ -6,7 +6,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.db.object.type.expr.OrderCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 
@@ -37,8 +37,7 @@ public class OrderH extends ExprH {
     for (int i = 0; i < elems.size(); i++) {
       var actualT = elems.get(i).type();
       if (!objDb().typing().isAssignable(expectedElemT, actualT)) {
-        throw new DecodeExprWrongEvalTypeOfCompExc(
-            hash(), cat(), "elems[" + i + "]", expectedElemT, actualT);
+        throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "elems", i, expectedElemT, actualT);
       }
     }
     return elems;

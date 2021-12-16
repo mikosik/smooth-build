@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.db.object.type.expr.CombineCH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 
@@ -44,8 +44,8 @@ public class CombineH extends ExprH {
           throw new DecodeCombineWrongItemsSizeExc(hash(), this.cat(), item);
         },
         (index) -> {
-          throw new DecodeExprWrongEvalTypeOfCompExc(hash(), this.cat(),
-              "items[" + index + "]", expectedItemTs.get(index), items.get(index).type());
+          throw new DecodeObjWrongNodeTypeExc(hash(), this.cat(),
+              "items", index, expectedItemTs.get(index), items.get(index).type());
         }
     );
     return items;

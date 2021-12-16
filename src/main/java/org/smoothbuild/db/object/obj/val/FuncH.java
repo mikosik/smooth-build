@@ -3,7 +3,7 @@ package org.smoothbuild.db.object.obj.val;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.db.object.type.val.FuncTH;
 
 /**
@@ -30,7 +30,7 @@ public final class FuncH extends ValH {
     var resT = cat().res();
     var bodyT = body.type();
     if (!objDb().typing().isAssignable(resT, bodyT)) {
-      throw new DecodeExprWrongEvalTypeOfCompExc(hash(), cat(), DATA_PATH, resT, bodyT);
+      throw new DecodeObjWrongNodeTypeExc(hash(), cat(), DATA_PATH, resT, bodyT);
     }
     return body;
   }

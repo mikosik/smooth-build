@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.db.object.obj.val.IntH;
@@ -48,8 +48,8 @@ public class SelectH extends ExprH {
       }
       return new SelectData(selectable, index);
     } else {
-      throw new DecodeExprWrongEvalTypeOfCompExc(
-          hash(), cat(), "tuple", TupleTH.class, selectable.type());
+      throw new DecodeObjWrongNodeTypeExc(
+          hash(), cat(), "tuple", TupleTH.class, selectable.type().getClass());
     }
   }
 

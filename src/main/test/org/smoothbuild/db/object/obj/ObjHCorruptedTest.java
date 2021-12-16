@@ -35,7 +35,6 @@ import org.smoothbuild.db.hashed.exc.HashedDbExc;
 import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.obj.base.ObjH;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
@@ -64,9 +63,9 @@ import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.exc.DecodeCatExc;
 import org.smoothbuild.db.object.type.expr.CallCH;
-import org.smoothbuild.db.object.type.expr.IfCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
+import org.smoothbuild.db.object.type.val.IntTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
 import org.smoothbuild.testing.TestingContext;
 
@@ -473,8 +472,8 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvalTypeOfCompExc(
-              objHash, type, "func", FuncTH.class, intTH()));
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, type, "func", FuncTH.class, IntTH.class));
     }
 
     @Test
@@ -529,7 +528,7 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvalTypeOfCompExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
                   objHash, type, "func.result", stringTH(), intTH()));
     }
 
@@ -549,7 +548,7 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvalTypeOfCompExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, spec, "args",
               tupleTH(list(stringTH(), boolTH())),
               tupleTH(list(stringTH(), intTH()))
@@ -608,7 +607,7 @@ public class ObjHCorruptedTest extends TestingContext {
               hash(bodyExpr)
           );
       assertCall(() -> ((FuncH) objDb().get(objHash)).body())
-          .throwsException(new DecodeExprWrongEvalTypeOfCompExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, DATA_PATH, boolTH(), intTH()));
     }
   }
@@ -875,8 +874,7 @@ public class ObjHCorruptedTest extends TestingContext {
                   hash(expr2)
               ));
       assertCall(() -> ((OrderH) objDb().get(objHash)).elems())
-          .throwsException(
-              new DecodeExprWrongEvalTypeOfCompExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
                   objHash, type, "elems[1]", intTH(), stringTH()));
     }
   }
@@ -1012,8 +1010,7 @@ public class ObjHCorruptedTest extends TestingContext {
               ));
 
       assertCall(() -> ((CombineH) objDb().get(objHash)).items())
-          .throwsException(
-              new DecodeExprWrongEvalTypeOfCompExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
                   objHash, type, "items[1]", boolTH(), stringTH()));
     }
   }
@@ -1118,8 +1115,8 @@ public class ObjHCorruptedTest extends TestingContext {
           );
 
       assertCall(() -> ((SelectH) objDb().get(objHash)).data())
-          .throwsException(new DecodeExprWrongEvalTypeOfCompExc(
-              objHash, type, "tuple", TupleTH.class, intTH()));
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, type, "tuple", TupleTH.class, IntTH.class));
     }
 
     @Test

@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.exc.DecodeExprWrongEvalTypeOfCompExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.db.object.type.expr.CallCH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 
@@ -55,18 +55,17 @@ public class CallH extends ExprH {
       var varBounds = typing.inferVarBoundsLower(params, args);
       var actualResult = typing.mapVars(funcT.res(), varBounds, typing.factory().lower());
       if (!Objects.equals(type(), actualResult)) {
-        throw new DecodeExprWrongEvalTypeOfCompExc(
-            hash(), this.cat(), "func.result", type(), actualResult);
+        throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "func.result", type(), actualResult);
       }
     } else {
-      throw new DecodeExprWrongEvalTypeOfCompExc(
-          hash(), this.cat(), "func", FuncTH.class, callable.type());
+      throw new DecodeObjWrongNodeTypeExc(
+          hash(), cat(), "func", FuncTH.class, callable.type().getClass());
     }
   }
 
   private void illegalArgs(FuncTH funcT, CombineH args) {
-    throw new DecodeExprWrongEvalTypeOfCompExc(hash(), this.cat(), "args",
-        funcT.paramsTuple(), args.type());
+    throw new DecodeObjWrongNodeTypeExc(
+        hash(), this.cat(), "args", funcT.paramsTuple(), args.type());
   }
 
   private ObjH readFunc() {

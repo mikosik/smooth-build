@@ -4,7 +4,6 @@ import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.type.val.BoolTH;
 
 /**
  * If expression.
