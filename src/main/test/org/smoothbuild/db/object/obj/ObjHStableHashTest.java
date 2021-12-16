@@ -189,13 +189,13 @@ public class ObjHStableHashTest extends TestingContext {
   @Nested
   class _call {
     @Test
-    public void call_expression_with_one_arg() {
+    public void call_with_one_arg() {
       assertThat(callH(funcH(list(stringTH()), intH()), list(stringH("abc"))).hash())
           .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
     }
 
     @Test
-    public void call_expression_without_args() {
+    public void call_without_args() {
       var type = funcTH(intTH(), list(stringTH()));
       var defFunc = funcH(type, intH());
       assertThat(callH(defFunc, list(stringH("abc"))).hash())
@@ -206,13 +206,13 @@ public class ObjHStableHashTest extends TestingContext {
   @Nested
   class _combine {
     @Test
-    public void combine_expression_with_one_arg() {
+    public void combine_with_one_arg() {
       assertThat(combineH(list(intH(1))).hash())
           .isEqualTo(Hash.decode("16913cad3fbbe28270c3e51765de40c636944d0f"));
     }
 
     @Test
-    public void combine_expression_without_args() {
+    public void combine_without_args() {
       assertThat(combineH(list()).hash())
           .isEqualTo(Hash.decode("3b2048ce36decfa28bc39b783dd88502103c73fd"));
     }
@@ -248,13 +248,13 @@ public class ObjHStableHashTest extends TestingContext {
   @Nested
   class _order {
     @Test
-    public void empty_order_expression() {
+    public void empty_order() {
       assertThat(orderH(stringTH(), list()).hash())
           .isEqualTo(Hash.decode("f37765f87d6b95ddd98af9fcf7a1e3e9554cbe3b"));
     }
 
     @Test
-    public void order_expression() {
+    public void order() {
       assertThat(orderH(list(intH(1))).hash())
           .isEqualTo(Hash.decode("f05ca9450196cec30ab9ac0bc06bcf2c182f7434"));
     }
@@ -284,7 +284,7 @@ public class ObjHStableHashTest extends TestingContext {
   @Nested
   class _select {
     @Test
-    public void select_expression() {
+    public void select() {
       assertThat(selectH(animalH(), intH(0)).hash())
           .isEqualTo(Hash.decode("43cea8a5fe2387317f40c1ba960f0753c952909e"));
     }
