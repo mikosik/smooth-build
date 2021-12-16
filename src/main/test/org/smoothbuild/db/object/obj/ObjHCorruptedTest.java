@@ -554,7 +554,7 @@ public class ObjHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _def_func {
+  class _func {
     @Test
     public void learning_test() throws Exception {
       /*
