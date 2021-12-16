@@ -33,11 +33,13 @@ public class CatHStableHashTest extends TestingContext {
     assertHash(arrayTH(tupleTH(list(blobTH()))), "e843737d83eb150a51a81d9e43a00142982bd959");
     assertHash(arrayTH(varTH("A")), "5eae2a05ffe2fee34c07a74779e5eecde3521849");
 
-    assertHash(orderCH(intTH()), "04c4786e96bdac890b5089eee99173cd41cecb33");
     assertHash(callCH(intTH()), "f8e8b1d061fcdfb8be52b97cf80e50bc908e59ef");
+    assertHash(combineCH(list()), "7dfcc1569b044dbec3b0e077cff6737ceb0aa99f");
+    assertHash(combineCH(list(intTH())), "3bd468b1587f7bf1921f072e28a7d3b20c8ac70f");
     assertHash(ifCH(), "e89ed0d7c6959af5198d638247cd321ce682fb9a");
     assertHash(invokeCH(), "d8b0ca5e3fc8209c6daff3e081f2ff9d7797395e");
     assertHash(mapCH(), "65476262ff92ca208a8405de21f4e84e7e817d46");
+    assertHash(orderCH(intTH()), "04c4786e96bdac890b5089eee99173cd41cecb33");
     assertHash(paramRefCH(intTH()), "fca4f7c553d3189b050352933410a5b8b6ceadb6");
     assertHash(selectCH(intTH()), "bc511a321ba8a722155574c39f0cb5f58ee84a71");
   }
