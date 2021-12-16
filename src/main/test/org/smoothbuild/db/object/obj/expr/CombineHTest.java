@@ -1,6 +1,7 @@
 package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -11,15 +12,27 @@ import com.google.common.collect.ImmutableList;
 
 public class CombineHTest extends TestingContext {
   @Test
-  public void type_of_empty_combine_is_inferred_correctly() {
-    assertThat(combineH(list()).cat())
-        .isEqualTo(combineCH(list()));
+  public void cat_returns_category() {
+    var combineH = combineH(tupleTH(list(intTH())), list(intH(3)));
+    assertThat(combineH.cat())
+        .isEqualTo(combineCH(list(intTH())));
   }
 
   @Test
-  public void type_of_combine_is_inferred_correctly() {
-    assertThat(combineH(list(intH(3))).cat())
-        .isEqualTo(combineCH(list(intTH())));
+  public void item_not_matching_type_specified_in_category_causes_exc() {
+    assertCall(() -> combineH(tupleTH(list(intTH())), list(stringH())))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void item_being_subtype_of_type_specified_in_category() {
+    combineH(tupleTH(list(arrayTH(intTH()))), list(arrayH(nothingTH())));
+  }
+
+  @Test
+  public void item_matching_polytype_specified_in_category() {
+    var varA = varTH("A");
+    combineH(tupleTH(list(arrayTH(varA))), list(arrayH(varA)));
   }
 
   @Test

@@ -297,10 +297,23 @@ public class ObjDb {
   }
 
   private CombineH newCombine(TupleTH evalT, ImmutableList<ObjH> items) throws HashedDbExc {
+    validateCombineItems(evalT, items);
     var type = catDb.combine(evalT);
     var data = writeCombineData(items);
     var root = newRoot(type, data);
     return type.newObj(root, this);
+  }
+
+  private void validateCombineItems(TupleTH evalT, ImmutableList<ObjH> items) {
+    var expectedItemTs = evalT.items();
+    for (int i = 0; i < items.size(); i++) {
+      var expectedItemT = expectedItemTs.get(i);
+      var actualItemT = items.get(i).type();
+      if (!typing.isAssignable(expectedItemT, actualItemT)) {
+        throw new IllegalArgumentException("Illegal item type. Expected " + expectedItemT.q()
+            + " at index " + i + " has type " + actualItemT.q() + ".");
+      }
+    }
   }
 
   private IfH newIf(ObjH condition, ObjH then, ObjH else_) throws HashedDbExc {

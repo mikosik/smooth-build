@@ -112,7 +112,6 @@ import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
@@ -598,6 +597,10 @@ public class TestingContext {
 
   public CombineH combineH(ImmutableList<ObjH> items) {
     var evalT = tupleTH(map(items, ObjH::type));
+    return combineH(evalT, items);
+  }
+
+  public CombineH combineH(TupleTH evalT, ImmutableList<ObjH> items) {
     return objDb().combine(evalT, items);
   }
 

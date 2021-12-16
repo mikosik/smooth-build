@@ -61,7 +61,6 @@ import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.exc.DecodeCatExc;
 import org.smoothbuild.db.object.type.expr.CallCH;
-import org.smoothbuild.db.object.type.expr.CombineCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.TupleTH;
@@ -735,17 +734,36 @@ public class ObjHCorruptedTest extends TestingContext {
     }
 
     @Test
+    public void learning_test_item_type_can_be_subtype_of_expected_type() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save Combine
+       * in HashedDb.
+       */
+      var item1 = arrayH(nothingTH());
+      Hash objHash =
+          hash(
+              hash(combineCH(list(arrayTH(intTH())))),
+              hash(
+                  hash(item1)
+              ));
+      var items = ((CombineH) objDb().get(objHash)).items();
+      assertThat(items)
+          .containsExactly(item1)
+          .inOrder();
+    }
+
+    @Test
     public void root_without_data_hash() throws Exception {
       obj_root_without_data_hash(combineCH());
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var expr1 = intH(1);
-      var expr2 = stringH("abc");
+      var item1 = intH(1);
+      var item2 = stringH("abc");
       Hash dataHash = hash(
-          hash(expr1),
-          hash(expr2)
+          hash(item1),
+          hash(item2)
       );
       obj_root_with_two_data_hashes(
           orderCH(),
@@ -765,8 +783,8 @@ public class ObjHCorruptedTest extends TestingContext {
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
     public void with_seq_size_different_than_multiple_of_hash_size(
         int byteCount) throws Exception {
-      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
-      Hash objHash =
+      var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
+      var objHash =
           hash(
               hash(combineCH()),
               notHashOfSeq
@@ -779,8 +797,8 @@ public class ObjHCorruptedTest extends TestingContext {
 
     @Test
     public void with_seq_item_pointing_nowhere() throws Exception {
-      Hash nowhere = Hash.of(33);
-      Hash objHash =
+      var nowhere = Hash.of(33);
+      var objHash =
           hash(
               hash(combineCH()),
               hash(
@@ -795,13 +813,13 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void evaluation_type_items_size_is_different_than_actual_items_size()
         throws Exception {
-      IntH expr1 =  intH();
-      CombineCH type = combineCH(list(intTH(), stringTH()));
-      Hash objHash =
+      var item1 =  intH();
+      var type = combineCH(list(intTH(), stringTH()));
+      var objHash =
           hash(
               hash(type),
               hash(
-                  hash(expr1)
+                  hash(item1)
               ));
 
       assertCall(() -> ((CombineH) objDb().get(objHash)).items())
@@ -811,15 +829,15 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void evaluation_type_item_is_different_than_evaluation_type_of_one_of_items()
         throws Exception {
-      var expr1 = intH(1);
-      var expr2 = stringH("abc");
+      var item1 = intH(1);
+      var item2 = stringH("abc");
       var type = combineCH(list(intTH(), boolTH()));
-      Hash objHash =
+      var objHash =
           hash(
               hash(type),
               hash(
-                  hash(expr1),
-                  hash(expr2)
+                  hash(item1),
+                  hash(item2)
               ));
 
       assertCall(() -> ((CombineH) objDb().get(objHash)).items())
