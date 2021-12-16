@@ -10,4 +10,8 @@ public class DecodeObjExc extends ObjDbExc {
   public DecodeObjExc(String message) {
     super(message);
   }
+
+  public static String indexedPath(String memberPath, int pathIndex) {
+    return memberPath + "[" + pathIndex + "]";
+  }
 }

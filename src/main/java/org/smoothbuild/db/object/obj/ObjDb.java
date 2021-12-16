@@ -475,6 +475,10 @@ public class ObjDb {
     return hashedDb;
   }
 
+  public CatDb catDb() {
+    return catDb;
+  }
+
   public Typing<TypeH> typing() {
     return typing;
   }

@@ -15,16 +15,12 @@ public class DecodeObjWrongNodeCatExc extends DecodeObjNodeExc {
   }
 
   private static String buildMessage(CatH expected, CatH actual) {
-    return "Node has unexpected type. Expected " + expected.q() + " but was " + actual.q() + ".";
+    return "Node has unexpected category. Expected " + expected.q() + " but was " + actual.q() + ".";
   }
 
-  public DecodeObjWrongNodeCatExc(Hash hash, CatH cat, String memberPath, int pathIndex,
+  public DecodeObjWrongNodeCatExc(Hash hash, CatH cat, String path, int index,
       Class<?> expected, Class<?> actual) {
-    this(hash, cat, indexedPath(memberPath, pathIndex), expected, actual);
-  }
-
-  private static String indexedPath(String memberPath, int pathIndex) {
-    return memberPath + "[" + pathIndex + "]";
+    this(hash, cat, indexedPath(path, index), expected, actual);
   }
 
   public DecodeObjWrongNodeCatExc(Hash hash, CatH cat, String path, Class<?> expected,

@@ -13,6 +13,7 @@ import org.smoothbuild.db.object.obj.Helpers.HashedDbCallable;
 import org.smoothbuild.db.object.obj.ObjDb;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeCatExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.base.TypeH;
@@ -83,16 +84,26 @@ public abstract class ObjH {
   }
 
   protected <T> T readObj(String path, Hash hash, Class<T> clazz) {
-    ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
+    var obj = wrapObjectDbExceptionAsDecodeObjNodeException(
         hash(), cat(), path, () -> objDb().get(hash));
     return castObj(obj, path, clazz);
   }
 
   protected <T> T readSeqElemObj(String path, Hash hash, int i, int expectedSize, Class<T> clazz) {
-    Hash elemHash = readSeqElemHash(path, hash, i, expectedSize);
-    ObjH obj = wrapObjectDbExceptionAsDecodeObjNodeException(
+    var objH = readSeqElemObj(path, hash, i, expectedSize);
+    return castObj(objH, path, i, clazz);
+  }
+
+  protected ObjH readSeqElemObj(String path, Hash hash, int i, int expectedSize, TypeH type) {
+    var objH = readSeqElemObj(path, hash, i, expectedSize);
+    return validateType(objH, DATA_PATH, i, type);
+  }
+
+  private ObjH readSeqElemObj(String path, Hash hash, int i, int expectedSize) {
+    var elemHash = readSeqElemHash(path, hash, i, expectedSize);
+    var obj = wrapObjectDbExceptionAsDecodeObjNodeException(
         hash(), cat(), path, i, () -> objDb().get(elemHash));
-    return castObj(obj, path, i, clazz);
+    return obj;
   }
 
   protected Hash readSeqElemHash(String path, Hash hash, int i, int expectedSize) {
@@ -156,7 +167,6 @@ public abstract class ObjH {
     }
   }
 
-
   private <T> T castObj(ObjH obj, String path, int index, Class<T> clazz) {
     if (clazz.isInstance(obj)) {
       @SuppressWarnings("unchecked")
@@ -177,6 +187,14 @@ public abstract class ObjH {
     @SuppressWarnings("unchecked")
     ImmutableList<T> result = (ImmutableList<T>) elems;
     return result;
+  }
+
+  protected ObjH validateType(ObjH obj, String path, int index, TypeH expectedT) {
+    var objT = obj.type();
+    if (!objT.equals(expectedT)) {
+      throw new DecodeObjWrongNodeTypeExc(hash(), cat(), path, index, expectedT, objT);
+    }
+    return obj;
   }
 
   private String valToStringSafe() {

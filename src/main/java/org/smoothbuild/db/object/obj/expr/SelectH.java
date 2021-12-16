@@ -53,7 +53,7 @@ public class SelectH extends ExprH {
     }
   }
 
-  public static record SelectData(ObjH selectable, ObjH index) {}
+  public record SelectData(ObjH selectable, ObjH index) {}
 
   private ObjH readSelectable() {
     return readSeqElemObj(
