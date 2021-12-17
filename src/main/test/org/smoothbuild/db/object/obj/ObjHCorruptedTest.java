@@ -47,6 +47,7 @@ import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.IfH;
 import org.smoothbuild.db.object.obj.expr.IfH.IfData;
+import org.smoothbuild.db.object.obj.expr.InvokeH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -62,7 +63,6 @@ import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.db.object.obj.val.ValH;
 import org.smoothbuild.db.object.type.base.CatH;
 import org.smoothbuild.db.object.type.exc.DecodeCatExc;
-import org.smoothbuild.db.object.type.expr.CallCH;
 import org.smoothbuild.db.object.type.val.ArrayTH;
 import org.smoothbuild.db.object.type.val.FuncTH;
 import org.smoothbuild.db.object.type.val.IntTH;
@@ -383,10 +383,10 @@ public class ObjHCorruptedTest extends TestingContext {
        */
       var funcT = funcTH(intTH(), list(stringTH(), intTH()));
       var func = funcH(funcT, intH());
-      CombineH args = combineH(list(stringH(), intH()));
-      Hash objHash =
+      var args = combineH(list(stringH(), intH()));
+      var objHash =
           hash(
-              hash(callCH()),
+              hash(callCH(intTH())),
               hash(
                   hash(func),
                   hash(args)
@@ -401,19 +401,19 @@ public class ObjHCorruptedTest extends TestingContext {
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(callCH());
+      obj_root_without_data_hash(callCH(intTH()));
     }
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
       var func = intH(0);
       var args = combineH(list(stringH(), intH()));
-      Hash dataHash = hash(
+      var dataHash = hash(
           hash(func),
           hash(args)
       );
       obj_root_with_two_data_hashes(
-          callCH(),
+          callCH(intTH()),
           dataHash,
           (Hash objHash) -> ((CallH) objDb().get(objHash)).data());
     }
@@ -421,49 +421,51 @@ public class ObjHCorruptedTest extends TestingContext {
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          callCH(),
+          callCH(intTH()),
           (Hash objHash) -> ((CallH) objDb().get(objHash)).data());
     }
 
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
       var func = intH(0);
-      Hash dataHash = hash(
+      var dataHash = hash(
           hash(func)
       );
-      Hash objHash =
+      var cat = callCH(intTH());
+      var objHash =
           hash(
-              hash(callCH()),
+              hash(cat),
               dataHash
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, callCH(), DATA_PATH, 2, 1));
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 1));
     }
 
     @Test
     public void data_is_seq_with_three_elems() throws Exception {
       var func = intH(0);
       var args = combineH(list(stringH(), intH()));
-      Hash dataHash = hash(
+      var dataHash = hash(
           hash(func),
           hash(args),
           hash(args)
       );
-      Hash objHash =
+      var cat = callCH(intTH());
+      var objHash =
           hash(
-              hash(callCH()),
+              hash(cat),
               dataHash
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, callCH(), DATA_PATH, 2, 3));
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 3));
     }
 
     @Test
-    public void func_component_evaluation_type_is_not_func() throws Exception {
+    public void func_component_evalT_is_not_func() throws Exception {
       var func = intH(3);
-      CombineH args = combineH(list(stringH(), intH()));
-      CallCH type = callCH(stringTH());
-      Hash objHash =
+      var args = combineH(list(stringH(), intH()));
+      var type = callCH(stringTH());
+      var objHash =
           hash(
               hash(type),
               hash(
@@ -480,9 +482,10 @@ public class ObjHCorruptedTest extends TestingContext {
     public void args_is_val_instead_of_expr() throws Exception {
       var funcT = funcTH(intTH(), list(stringTH(), intTH()));
       var func = funcH(funcT, intH());
-      Hash objHash =
+      var type = callCH(intTH());
+      var objHash =
           hash(
-              hash(callCH()),
+              hash(type),
               hash(
                   hash(func),
                   hash(intH())
@@ -490,16 +493,16 @@ public class ObjHCorruptedTest extends TestingContext {
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeCatExc(
-              objHash, callCH(), DATA_PATH + "[1]", CombineH.class, IntH.class));
+              objHash, type, DATA_PATH + "[1]", CombineH.class, IntH.class));
     }
 
     @Test
-    public void args_component_evaluation_type_is_not_combine_but_different_expr()
+    public void args_component_evalT_is_not_combine_but_different_expr()
         throws Exception {
       var funcT = funcTH(intTH(), list(stringTH(), intTH()));
       var func = funcH(funcT, intH());
-      var type = callCH();
-      Hash objHash =
+      var type = callCH(intTH());
+      var objHash =
           hash(
               hash(type),
               hash(
@@ -513,13 +516,13 @@ public class ObjHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void evaluation_type_is_different_than_func_evaluation_type_result()
+    public void evalT_is_different_than_func_evalT_result()
         throws Exception {
       var funcT = funcTH(intTH(), list(stringTH()));
       var func = funcH(funcT, intH());
       var args = combineH(list(stringH()));
       var type = callCH(stringTH());
-      Hash objHash =
+      var objHash =
           hash(
               hash(type),
               hash(
@@ -529,17 +532,17 @@ public class ObjHCorruptedTest extends TestingContext {
           );
       assertCall(() -> ((CallH) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
-                  objHash, type, "func.result", stringTH(), intTH()));
+                  objHash, type, "callable.result", stringTH(), intTH()));
     }
 
     @Test
-    public void func_evaluation_type_params_does_not_match_args_evaluation_types()
+    public void func_evalT_params_does_not_match_args_evalTs()
         throws Exception {
       var funcT = funcTH(intTH(), list(stringTH(), boolTH()));
       var func = funcH(funcT, intH());
       var args = combineH(list(stringH(), intH()));
       var spec = callCH(intTH());
-      Hash objHash =
+      var objHash =
           hash(
               hash(spec),
               hash(
@@ -812,6 +815,174 @@ public class ObjHCorruptedTest extends TestingContext {
       assertCall(() -> ((IfH) objDb().get(objHash)).data())
           .throwsException(
               new DecodeObjWrongNodeTypeExc(objHash, cat, DATA_PATH, 2, intTH(), stringTH()));
+    }
+  }
+
+  @Nested
+  class _invoke {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save invoke
+       * in HashedDb.
+       */
+      var methodT = methodTH(intTH(), list(stringTH(), intTH()));
+      var method = methodH(methodT, blobH(), stringH(), boolH());
+      var args = combineH(list(stringH(), intH()));
+      Hash objHash =
+          hash(
+              hash(invokeCH(intTH())),
+              hash(
+                  hash(method),
+                  hash(args)
+              )
+          );
+      assertThat(((InvokeH) objDb().get(objHash)).data().method())
+          .isEqualTo(method);
+      assertThat(((InvokeH) objDb().get(objHash)).data().args())
+          .isEqualTo(args);
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(invokeCH(intTH()));
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var methodT = methodTH(intTH(), list(stringTH(), intTH()));
+      var method = methodH(methodT, blobH(), stringH(), boolH());
+      var args = combineH(list(stringH(), intH()));
+      Hash dataHash = hash(
+          hash(method),
+          hash(args)
+      );
+      obj_root_with_two_data_hashes(
+          invokeCH(intTH()),
+          dataHash,
+          (Hash objHash) -> ((InvokeH) objDb().get(objHash)).data());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          invokeCH(intTH()),
+          (Hash objHash) -> ((InvokeH) objDb().get(objHash)).data());
+    }
+
+    @Test
+    public void data_is_seq_with_one_elem() throws Exception {
+      var methodT = methodTH(intTH(), list(stringTH(), intTH()));
+      var method = methodH(methodT, blobH(), stringH(), boolH());
+      var dataHash = hash(
+          hash(method)
+      );
+      var cat = invokeCH(intTH());
+      var objHash =
+          hash(
+              hash(cat),
+              dataHash
+          );
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_seq_with_three_elems() throws Exception {
+      var func = intH(0);
+      var args = combineH(list(stringH(), intH()));
+      var dataHash = hash(
+          hash(func),
+          hash(args),
+          hash(args)
+      );
+      var cat = invokeCH(intTH());
+      var objHash =
+          hash(
+              hash(cat),
+              dataHash
+          );
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void args_is_val_instead_of_expr() throws Exception {
+      var methodT = methodTH(intTH(), list(stringTH(), intTH()));
+      var method = methodH(methodT, blobH(), stringH(), boolH());
+      var cat = invokeCH(intTH());
+      var objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(method),
+                  hash(intH())
+              )
+          );
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeCatExc(
+              objHash, cat, DATA_PATH + "[1]", CombineH.class, IntH.class));
+    }
+
+    @Test
+    public void args_component_evalT_is_not_combine_but_different_expr()
+        throws Exception {
+      var methodT = methodTH(intTH(), list(stringTH(), intTH()));
+      var method = methodH(methodT, blobH(), stringH(), boolH());
+      var type = invokeCH(intTH());
+      Hash objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(method),
+                  hash(paramRefH(1))
+              )
+          );
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeCatExc(
+              objHash, type, DATA_PATH + "[1]", CombineH.class, ParamRefH.class));
+    }
+
+    @Test
+    public void evalT_is_different_than_method_evalT_result()
+        throws Exception {
+      var methodT = methodTH(intTH(), list(stringTH(), intTH()));
+      var method = methodH(methodT, blobH(), stringH(), boolH());
+      var args = combineH(list(stringH(), intH()));
+      var type = invokeCH(stringTH());
+      Hash objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(method),
+                  hash(args)
+              )
+          );
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, type, "callable.result", stringTH(), intTH()));
+    }
+
+    @Test
+    public void method_evalT_params_does_not_match_args_evalTs() throws Exception {
+      var methodT = methodTH(intTH(), list(stringTH(), boolTH()));
+      var method = methodH(methodT, blobH(), stringH(), boolH());
+      var args = combineH(list(stringH(), intH()));
+      var spec = invokeCH(intTH());
+      Hash objHash =
+          hash(
+              hash(spec),
+              hash(
+                  hash(method),
+                  hash(args)
+              )
+          );
+      assertCall(() -> ((InvokeH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, spec, "args",
+              tupleTH(list(stringTH(), boolTH())),
+              tupleTH(list(stringTH(), intTH()))
+          ));
     }
   }
 

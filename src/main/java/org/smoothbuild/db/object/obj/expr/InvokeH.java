@@ -1,7 +1,8 @@
 package org.smoothbuild.db.object.obj.expr;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.base.ExprH;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.MethodH;
 import org.smoothbuild.db.object.type.expr.InvokeCH;
@@ -11,13 +12,10 @@ import org.smoothbuild.db.object.type.expr.InvokeCH;
  *
  * This class is thread-safe.
  */
-public final class InvokeH extends ExprH {
-  private static final int DATA_SEQ_SIZE = 2;
-  private static final int METHOD_INDEX = 0;
-  private static final int ARGS_INDEX = 1;
-
+public final class InvokeH extends CallLikeH {
   public InvokeH(MerkleRoot merkleRoot, ObjDb objDb) {
     super(merkleRoot, objDb);
+    checkArgument(merkleRoot.cat() instanceof InvokeCH);
   }
 
   @Override
@@ -28,11 +26,14 @@ public final class InvokeH extends ExprH {
   public record Data(MethodH method, CombineH args) {}
 
   public Data data() {
-    return new Data(method(), args());
+    var method = method();
+    var args = args();
+    validate(method.type(), args);
+    return new Data(method, args);
   }
 
   private MethodH method() {
-    return readSeqElemObj(DATA_PATH, dataHash(), METHOD_INDEX, DATA_SEQ_SIZE, MethodH.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), CALLABLE_INDEX, DATA_SEQ_SIZE, MethodH.class);
   }
 
   private CombineH args() {
