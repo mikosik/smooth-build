@@ -199,29 +199,11 @@ public class CatHCorruptedTest extends TestingContext {
           .isEqualTo(callCH(intTH()).hash());
     }
 
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(CALL);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(CALL);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_causes_exc(CALL);
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      assert_reading_cat_with_corrupted_type_as_data_causes_exc(CALL);
-    }
-
-    @Test
-    public void with_evaluation_type_being_expr_type() throws Exception {
-      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(CALL, TypeH.class);
+    @Nested
+    class _expr_cat_tests extends ExprCatTestSet {
+      protected _expr_cat_tests() {
+        super(CALL);
+      }
     }
   }
 
@@ -241,30 +223,11 @@ public class CatHCorruptedTest extends TestingContext {
           .isEqualTo(combineCH(list(intTH(), stringTH())).hash());
     }
 
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(COMBINE);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(COMBINE);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_causes_exc(COMBINE);
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      assert_reading_cat_with_corrupted_type_as_data_causes_exc(COMBINE);
-    }
-
-    @Test
-    public void with_evaluation_type_being_expr_type() throws Exception {
-      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(
-          COMBINE, TupleTH.class);
+    @Nested
+    class _expr_cat_tests extends ExprCatTestSet {
+      protected _expr_cat_tests() {
+        super(COMBINE, TupleTH.class);
+      }
     }
 
     @Test
@@ -489,30 +452,11 @@ public class CatHCorruptedTest extends TestingContext {
           .isEqualTo(orderCH(intTH()).hash());
     }
 
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(ORDER);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(ORDER);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_causes_exc(ORDER);
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      assert_reading_cat_with_corrupted_type_as_data_causes_exc(ORDER);
-    }
-
-    @Test
-    public void with_evaluation_type_being_expr_type() throws Exception {
-      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(
-          ORDER, ArrayTH.class);
+    @Nested
+    class _expr_cat_tests extends ExprCatTestSet {
+      protected _expr_cat_tests() {
+        super(ORDER, ArrayTH.class);
+      }
     }
 
     @Test
@@ -543,30 +487,11 @@ public class CatHCorruptedTest extends TestingContext {
           .isEqualTo(paramRefCH(intTH()).hash());
     }
 
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(PARAM_REF);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(PARAM_REF);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_causes_exc(PARAM_REF);
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      assert_reading_cat_with_corrupted_type_as_data_causes_exc(PARAM_REF);
-    }
-
-    @Test
-    public void with_evaluation_type_being_expr_type() throws Exception {
-      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(
-          PARAM_REF, TypeH.class);
+    @Nested
+    class _expr_cat_tests extends ExprCatTestSet {
+      protected _expr_cat_tests() {
+        super(PARAM_REF);
+      }
     }
   }
 
@@ -622,17 +547,6 @@ public class CatHCorruptedTest extends TestingContext {
     assertThatGet(hash)
         .throwsException(new DecodeCatNodeExc(hash, kind, DATA_PATH))
         .withCause(corruptedArrayTypeExc());
-  }
-
-  private void assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(
-      CatKindH kind, Class<? extends CatH> expected) throws Exception {
-    Hash hash = hash(
-        hash(kind.marker()),
-        hash(paramRefCH())
-    );
-    assertThatGet(hash)
-        .throwsException(new DecodeCatWrongNodeCatExc(
-            hash, kind, DATA_PATH, expected, ParamRefCH.class));
   }
 
   private ThrownExceptionSubject assertThatGet(Hash hash) {
@@ -706,29 +620,11 @@ public class CatHCorruptedTest extends TestingContext {
           .isEqualTo(selectCH(intTH()).hash());
     }
 
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(SELECT);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(SELECT);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_causes_exc(SELECT);
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      assert_reading_cat_with_corrupted_type_as_data_causes_exc(SELECT);
-    }
-
-    @Test
-    public void with_evaluation_type_being_expr_type() throws Exception {
-      assert_reading_cat_with_data_being_expr_cat_instead_of_val_type_causes_exc(SELECT, TypeH.class);
+    @Nested
+    class _expr_cat_tests extends ExprCatTestSet {
+      protected _expr_cat_tests() {
+        super(SELECT);
+      }
     }
   }
 
@@ -878,6 +774,51 @@ public class CatHCorruptedTest extends TestingContext {
       );
       assertThatGet(hash)
           .throwsException(new DecodeVarIllegalNameExc(hash, "a"));
+    }
+  }
+
+  private abstract class ExprCatTestSet {
+    private final CatKindH catKindH;
+    private final Class<? extends CatH> type;
+
+    protected ExprCatTestSet(CatKindH catKindH) {
+      this(catKindH, TypeH.class);
+    }
+
+    protected ExprCatTestSet(CatKindH catKindH, Class<? extends CatH> type) {
+      this.catKindH = catKindH;
+      this.type = type;
+    }
+
+    @Test
+    public void without_data() throws Exception {
+      assert_reading_cat_without_data_causes_exc(catKindH);
+    }
+
+    @Test
+    public void with_additional_data() throws Exception {
+      assert_reading_cat_with_additional_data_causes_exc(catKindH);
+    }
+
+    @Test
+    public void with_data_hash_pointing_nowhere() throws Exception {
+      assert_reading_cat_with_data_pointing_nowhere_causes_exc(catKindH);
+    }
+
+    @Test
+    public void with_corrupted_type_as_data() throws Exception {
+      assert_reading_cat_with_corrupted_type_as_data_causes_exc(catKindH);
+    }
+
+    @Test
+    public void with_evaluation_type_being_expr_type() throws Exception {
+      Hash hash = hash(
+          hash(catKindH.marker()),
+          hash(paramRefCH())
+      );
+      assertThatGet(hash)
+          .throwsException(new DecodeCatWrongNodeCatExc(
+              hash, catKindH, DATA_PATH, type, ParamRefCH.class));
     }
   }
 }
