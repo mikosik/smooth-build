@@ -689,7 +689,8 @@ public class ObjHCorruptedTest extends TestingContext {
 
     @ParameterizedTest
     @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_seq_size_different_than_multiple_of_hash_size(int byteCount) throws Exception {
+    public void data_seq_size_different_than_multiple_of_hash_size(int byteCount)
+        throws Exception {
       var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
       var objHash =
           hash(
@@ -703,7 +704,42 @@ public class ObjHCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_seq_item_pointing_nowhere() throws Exception {
+    public void data_seq_size_equal_two() throws Exception {
+      var condition = boolH(true);
+      var then = intH(1);
+      var cat = ifCH(intTH());
+      Hash objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(condition),
+                  hash(then)
+              ));
+      assertCall(() -> ((IfH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 3, 2));
+    }
+
+    @Test
+    public void data_seq_size_equal_four() throws Exception {
+      var condition = boolH(true);
+      var then = intH(1);
+      var else_ = intH(2);
+      var cat = ifCH(intTH());
+      Hash objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(condition),
+                  hash(then),
+                  hash(else_),
+                  hash(else_)
+              ));
+      assertCall(() -> ((IfH) objDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 3, 4));
+    }
+
+    @Test
+    public void data_seq_item_pointing_nowhere() throws Exception {
       var nowhereHash = Hash.of(33);
       var then = intH(1);
       var else_ = intH(2);
