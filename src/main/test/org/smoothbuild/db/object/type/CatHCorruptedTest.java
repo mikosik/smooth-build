@@ -136,361 +136,335 @@ public class CatHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _array {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save array type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(ARRAY.marker()),
-          hash(stringTH())
-      );
-      assertThat(hash)
-          .isEqualTo(arrayTH(stringTH()).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(ARRAY);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(ARRAY);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_causes_exc(ARRAY);
-    }
-
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      assert_reading_cat_with_corrupted_type_as_data_causes_exc(ARRAY);
-    }
-
-    @Test
-    public void with_elem_type_being_expr_type() throws Exception {
-      Hash hash = hash(
-          hash(ARRAY.marker()),
-          hash(paramRefCH())
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatWrongNodeCatExc(
-              hash, ARRAY, DATA_PATH, TypeH.class, ParamRefCH.class));
-    }
-  }
-
-  @Nested
-  class _call {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save call type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(CALL.marker()),
-          hash(intTH())
-      );
-      assertThat(hash)
-          .isEqualTo(callCH(intTH()).hash());
-    }
-
+  class _composed {
     @Nested
-    class _expr_cat_tests extends ExprCatTestSet {
-      protected _expr_cat_tests() {
-        super(CALL);
+    class _array {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save array type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(ARRAY.marker()),
+            hash(stringTH())
+        );
+        assertThat(hash)
+            .isEqualTo(arrayTH(stringTH()).hash());
       }
-    }
-  }
 
-  @Nested
-  class _combine {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save Combine type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(COMBINE.marker()),
-          hash(tupleTH(list(intTH(), stringTH())))
-      );
-      assertThat(hash)
-          .isEqualTo(combineCH(list(intTH(), stringTH())).hash());
-    }
+      @Test
+      public void without_data() throws Exception {
+        assert_reading_cat_without_data_causes_exc(ARRAY);
+      }
 
-    @Nested
-    class _expr_cat_tests extends ExprCatTestSet {
-      protected _expr_cat_tests() {
-        super(COMBINE, TupleTH.class);
+      @Test
+      public void with_additional_data() throws Exception {
+        assert_reading_cat_with_additional_data_causes_exc(ARRAY);
+      }
+
+      @Test
+      public void with_data_hash_pointing_nowhere() throws Exception {
+        assert_reading_cat_with_data_pointing_nowhere_causes_exc(ARRAY);
+      }
+
+      @Test
+      public void with_corrupted_type_as_data() throws Exception {
+        assert_reading_cat_with_corrupted_type_as_data_causes_exc(ARRAY);
+      }
+
+      @Test
+      public void with_elem_type_being_expr_type() throws Exception {
+        Hash hash = hash(
+            hash(ARRAY.marker()),
+            hash(paramRefCH())
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                hash, ARRAY, DATA_PATH, TypeH.class, ParamRefCH.class));
       }
     }
 
-    @Test
-    public void with_evaluation_type_not_being_tuple_type() throws Exception {
-      Hash hash = hash(
-          hash(COMBINE.marker()),
-          hash(intTH())
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatWrongNodeCatExc(
-              hash, COMBINE, DATA_PATH, TupleTH.class, IntTH.class));
-    }
-  }
-
-  @Nested
-  class _func {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save func type in HashedDb.
-       */
-      ImmutableList<TypeH> paramTs = list(stringTH(), boolTH());
-      TupleTH paramsTuple = tupleTH(paramTs);
-      Hash specHash = hash(
-          hash(FUNC.marker()),
-          hash(
-              hash(intTH()),
-              hash(paramsTuple)
-          )
-      );
-      assertThat(specHash)
-          .isEqualTo(funcTH(intTH(), paramTs).hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(FUNC);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(FUNC);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(FUNC);
-    }
-
-    @Test
-    public void with_data_not_being_seq_of_hashes() throws Exception {
-      Hash notHashOfSeq = hash("abc");
-      Hash hash =
-          hash(
-              hash(FUNC.marker()),
-              notHashOfSeq
-          );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatNodeExc(hash, FUNC, DATA_PATH));
-    }
-
-    @Test
-    public void with_data_having_three_elems() throws Exception {
-      TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
-      Hash hash = hash(
-          hash(FUNC.marker()),
-          hash(
-              hash(intTH()),
-              hash(paramTs),
-              hash(paramTs)
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 3));
-    }
-
-    @Test
-    public void with_data_having_one_elems() throws Exception {
-      Hash hash = hash(
-          hash(FUNC.marker()),
-          hash(
-              hash(intTH())
-          )
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 1));
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_data_seq_size_different_than_multiple_of_hash_size(
-        int byteCount) throws Exception {
-      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
-      Hash typeHash = hash(
-          hash(FUNC.marker()),
-          notHashOfSeq
-      );
-      assertCall(() -> ((FuncTH) catDb().get(typeHash)).res())
-          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, DATA_PATH))
-          .withCause(new DecodeHashSeqExc(
-              notHashOfSeq, byteCount % Hash.lengthInBytes()));
-    }
-
-    @Test
-    public void with_result_pointing_nowhere() throws Exception {
-      TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
-      Hash nowhere = Hash.of(33);
-      Hash typeHash = hash(
-          hash(FUNC.marker()),
-          hash(
-              nowhere,
-              hash(paramTs)
-          )
-      );
-      assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
-          .withCause(new DecodeCatExc(nowhere));
-    }
-
-    @Test
-    public void with_result_being_expr_type() throws Exception {
-      TupleTH paramT = tupleTH(list(stringTH(), boolTH()));
-      Hash typeHash = hash(
-          hash(FUNC.marker()),
-          hash(
-              hash(paramRefCH()),
-              hash(paramT)
-          )
-      );
-      assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatWrongNodeCatExc(
-              typeHash, FUNC, FUNC_RES_PATH, TypeH.class, ParamRefCH.class));
-    }
-
-    @Test
-    public void with_result_type_corrupted() throws Exception {
-      TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
-      Hash typeHash = hash(
-          hash(FUNC.marker()),
-          hash(
-              corruptedArrayTHash(),
-              hash(paramTs)
-          )
-      );
-      assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
-          .withCause(corruptedArrayTypeExc());
-    }
-
-    @Test
-    public void with_params_pointing_nowhere() throws Exception {
-      Hash nowhere = Hash.of(33);
-      Hash typeHash = hash(
-          hash(FUNC.marker()),
-          hash(
-              hash(intTH()),
-              nowhere
-          )
-      );
-      assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
-          .withCause(new DecodeCatExc(nowhere));
-    }
-
-    @Test
-    public void with_params_not_being_tuple() throws Exception {
-      Hash typeHash = hash(
-          hash(FUNC.marker()),
-          hash(
-              hash(intTH()),
-              hash(stringTH())
-          )
-      );
-      assertThatGet(typeHash)
-          .throwsException(new DecodeCatWrongNodeCatExc(
-              typeHash, FUNC, DATA_PATH, 1, TupleTH.class, StringTH.class));
-    }
-
-    @Test
-    public void with_params_being_expr_type() throws Exception {
-      Hash typeHash = hash(
-          hash(FUNC.marker()),
-          hash(
-              hash(intTH()),
-              hash(paramRefCH())
-          )
-      );
-      assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatWrongNodeCatExc(
-              typeHash, FUNC, FUNC_PARAMS_PATH, TupleTH.class, ParamRefCH.class));
-    }
-
-    @Test
-    public void with_params_type_corrupted() throws Exception {
-      Hash typeHash = hash(
-          hash(FUNC.marker()),
-          hash(
-              hash(intTH()),
-              corruptedArrayTHash()
-          )
-      );
-      assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
-          .withCause(corruptedArrayTypeExc());
-    }
-  }
-
-  @Nested
-  class _order {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save Order type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(ORDER.marker()),
-          hash(arrayTH(intTH()))
-      );
-      assertThat(hash)
-          .isEqualTo(orderCH(intTH()).hash());
-    }
-
     @Nested
-    class _expr_cat_tests extends ExprCatTestSet {
-      protected _expr_cat_tests() {
-        super(ORDER, ArrayTH.class);
+    class _func {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save func type in HashedDb.
+         */
+        ImmutableList<TypeH> paramTs = list(stringTH(), boolTH());
+        TupleTH paramsTuple = tupleTH(paramTs);
+        Hash specHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(intTH()),
+                hash(paramsTuple)
+            )
+        );
+        assertThat(specHash)
+            .isEqualTo(funcTH(intTH(), paramTs).hash());
+      }
+
+      @Test
+      public void without_data() throws Exception {
+        assert_reading_cat_without_data_causes_exc(FUNC);
+      }
+
+      @Test
+      public void with_additional_data() throws Exception {
+        assert_reading_cat_with_additional_data_causes_exc(FUNC);
+      }
+
+      @Test
+      public void with_data_hash_pointing_nowhere() throws Exception {
+        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(FUNC);
+      }
+
+      @Test
+      public void with_data_not_being_seq_of_hashes() throws Exception {
+        Hash notHashOfSeq = hash("abc");
+        Hash hash =
+            hash(
+                hash(FUNC.marker()),
+                notHashOfSeq
+            );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatNodeExc(hash, FUNC, DATA_PATH));
+      }
+
+      @Test
+      public void with_data_having_three_elems() throws Exception {
+        TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
+        Hash hash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(intTH()),
+                hash(paramTs),
+                hash(paramTs)
+            )
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 3));
+      }
+
+      @Test
+      public void with_data_having_one_elems() throws Exception {
+        Hash hash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(intTH())
+            )
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongSeqSizeExc(hash, FUNC, DATA_PATH, 2, 1));
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+      public void with_data_seq_size_different_than_multiple_of_hash_size(
+          int byteCount) throws Exception {
+        Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
+        Hash typeHash = hash(
+            hash(FUNC.marker()),
+            notHashOfSeq
+        );
+        assertCall(() -> ((FuncTH) catDb().get(typeHash)).res())
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, DATA_PATH))
+            .withCause(new DecodeHashSeqExc(
+                notHashOfSeq, byteCount % Hash.lengthInBytes()));
+      }
+
+      @Test
+      public void with_result_pointing_nowhere() throws Exception {
+        TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
+        Hash nowhere = Hash.of(33);
+        Hash typeHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                nowhere,
+                hash(paramTs)
+            )
+        );
+        assertCall(() -> catDb().get(typeHash))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
+            .withCause(new DecodeCatExc(nowhere));
+      }
+
+      @Test
+      public void with_result_being_expr_type() throws Exception {
+        TupleTH paramT = tupleTH(list(stringTH(), boolTH()));
+        Hash typeHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(paramRefCH()),
+                hash(paramT)
+            )
+        );
+        assertCall(() -> catDb().get(typeHash))
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                typeHash, FUNC, FUNC_RES_PATH, TypeH.class, ParamRefCH.class));
+      }
+
+      @Test
+      public void with_result_type_corrupted() throws Exception {
+        TupleTH paramTs = tupleTH(list(stringTH(), boolTH()));
+        Hash typeHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                corruptedArrayTHash(),
+                hash(paramTs)
+            )
+        );
+        assertCall(() -> catDb().get(typeHash))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_RES_PATH))
+            .withCause(corruptedArrayTypeExc());
+      }
+
+      @Test
+      public void with_params_pointing_nowhere() throws Exception {
+        Hash nowhere = Hash.of(33);
+        Hash typeHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(intTH()),
+                nowhere
+            )
+        );
+        assertCall(() -> catDb().get(typeHash))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
+            .withCause(new DecodeCatExc(nowhere));
+      }
+
+      @Test
+      public void with_params_not_being_tuple() throws Exception {
+        Hash typeHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(intTH()),
+                hash(stringTH())
+            )
+        );
+        assertThatGet(typeHash)
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                typeHash, FUNC, DATA_PATH, 1, TupleTH.class, StringTH.class));
+      }
+
+      @Test
+      public void with_params_being_expr_type() throws Exception {
+        Hash typeHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(intTH()),
+                hash(paramRefCH())
+            )
+        );
+        assertCall(() -> catDb().get(typeHash))
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                typeHash, FUNC, FUNC_PARAMS_PATH, TupleTH.class, ParamRefCH.class));
+      }
+
+      @Test
+      public void with_params_type_corrupted() throws Exception {
+        Hash typeHash = hash(
+            hash(FUNC.marker()),
+            hash(
+                hash(intTH()),
+                corruptedArrayTHash()
+            )
+        );
+        assertCall(() -> catDb().get(typeHash))
+            .throwsException(new DecodeCatNodeExc(typeHash, FUNC, FUNC_PARAMS_PATH))
+            .withCause(corruptedArrayTypeExc());
       }
     }
 
-    @Test
-    public void with_evaluation_type_not_being_array_type() throws Exception {
-      Hash hash = hash(
-          hash(ORDER.marker()),
-          hash(intTH())
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatWrongNodeCatExc(
-              hash, ORDER, DATA_PATH, ArrayTH.class, IntTH.class));
-    }
-  }
-
-  @Nested
-  class _ref {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save call type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(PARAM_REF.marker()),
-          hash(intTH())
-      );
-      assertThat(hash)
-          .isEqualTo(paramRefCH(intTH()).hash());
-    }
-
     @Nested
-    class _expr_cat_tests extends ExprCatTestSet {
-      protected _expr_cat_tests() {
-        super(PARAM_REF);
+    class _tuple {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save Tuple type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(TUPLE.marker()),
+            hash(
+                hash(stringTH()),
+                hash(stringTH())
+            )
+        );
+        assertThat(hash)
+            .isEqualTo(personTH().hash());
+      }
+
+      @Test
+      public void without_data() throws Exception {
+        assert_reading_cat_without_data_causes_exc(TUPLE);
+      }
+
+      @Test
+      public void with_additional_data() throws Exception {
+        assert_reading_cat_with_additional_data_causes_exc(TUPLE);
+      }
+
+      @Test
+      public void with_data_hash_pointing_nowhere() throws Exception {
+        assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(TUPLE);
+      }
+
+      @Test
+      public void with_elems_not_being_seq_of_hashes() throws Exception {
+        Hash notHashOfSeq = hash("abc");
+        Hash hash =
+            hash(
+                hash(TUPLE.marker()),
+                notHashOfSeq
+            );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatNodeExc(hash, TUPLE, DATA_PATH));
+      }
+
+      @Test
+      public void with_elems_being_array_of_non_type() throws Exception {
+        Hash stringHash = hash(stringH("abc"));
+        Hash hash =
+            hash(
+                hash(TUPLE.marker()),
+                hash(
+                    stringHash
+                )
+            );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatNodeExc(hash, TUPLE, "data[0]"))
+            .withCause(new DecodeCatExc(stringHash));
+      }
+
+      @Test
+      public void with_elems_being_seq_of_expr_type() throws Exception {
+        Hash hash =
+            hash(
+                hash(TUPLE.marker()),
+                hash(
+                    hash(paramRefCH())
+                )
+            );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                hash, TUPLE, "data", 0, TypeH.class, ParamRefCH.class));
+      }
+
+      @Test
+      public void with_corrupted_elem_type() throws Exception {
+        Hash hash =
+            hash(
+                hash(TUPLE.marker()),
+                hash(
+                    corruptedArrayTHash(),
+                    hash(stringTH())));
+        assertThatGet(hash)
+            .throwsException(new DecodeCatNodeExc(hash, TUPLE, "data[0]"))
+            .withCause(corruptedArrayTypeExc());
       }
     }
   }
@@ -605,119 +579,6 @@ public class CatHCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _select {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save Call type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(SELECT.marker()),
-          hash(intTH())
-      );
-      assertThat(hash)
-          .isEqualTo(selectCH(intTH()).hash());
-    }
-
-    @Nested
-    class _expr_cat_tests extends ExprCatTestSet {
-      protected _expr_cat_tests() {
-        super(SELECT);
-      }
-    }
-  }
-
-  @Nested
-  class _tuple {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme
-       * to save Tuple type in HashedDb.
-       */
-      Hash hash = hash(
-          hash(TUPLE.marker()),
-          hash(
-              hash(stringTH()),
-              hash(stringTH())
-          )
-      );
-      assertThat(hash)
-          .isEqualTo(personTH().hash());
-    }
-
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(TUPLE);
-    }
-
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(TUPLE);
-    }
-
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_instead_of_being_seq_causes_exc(TUPLE);
-    }
-
-    @Test
-    public void with_elems_not_being_seq_of_hashes() throws Exception {
-      Hash notHashOfSeq = hash("abc");
-      Hash hash =
-          hash(
-              hash(TUPLE.marker()),
-              notHashOfSeq
-          );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatNodeExc(hash, TUPLE, DATA_PATH));
-    }
-
-    @Test
-    public void with_elems_being_array_of_non_type() throws Exception {
-      Hash stringHash = hash(stringH("abc"));
-      Hash hash =
-          hash(
-              hash(TUPLE.marker()),
-              hash(
-                  stringHash
-              )
-          );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatNodeExc(hash, TUPLE, "data[0]"))
-          .withCause(new DecodeCatExc(stringHash));
-    }
-
-    @Test
-    public void with_elems_being_seq_of_expr_type() throws Exception {
-      Hash hash =
-          hash(
-              hash(TUPLE.marker()),
-              hash(
-                  hash(paramRefCH())
-              )
-          );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatWrongNodeCatExc(
-              hash, TUPLE, "data", 0, TypeH.class, ParamRefCH.class));
-    }
-
-    @Test
-    public void with_corrupted_elem_type() throws Exception {
-      Hash hash =
-          hash(
-              hash(TUPLE.marker()),
-              hash(
-                  corruptedArrayTHash(),
-                  hash(stringTH())));
-      assertThatGet(hash)
-          .throwsException(new DecodeCatNodeExc(hash, TUPLE, "data[0]"))
-          .withCause(corruptedArrayTypeExc());
-    }
-  }
-
-  @Nested
   class _var {
     @Test
     public void learning_test() throws Exception {
@@ -777,48 +638,193 @@ public class CatHCorruptedTest extends TestingContext {
     }
   }
 
-  private abstract class ExprCatTestSet {
-    private final CatKindH catKindH;
-    private final Class<? extends CatH> type;
+  @Nested
+  class _expr {
+    @Nested
+    class _call {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save call type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(CALL.marker()),
+            hash(intTH())
+        );
+        assertThat(hash)
+            .isEqualTo(callCH(intTH()).hash());
+      }
 
-    protected ExprCatTestSet(CatKindH catKindH) {
-      this(catKindH, TypeH.class);
+      @Nested
+      class _expr_cat_tests extends ExprCatTestSet {
+        protected _expr_cat_tests() {
+          super(CALL);
+        }
+      }
     }
 
-    protected ExprCatTestSet(CatKindH catKindH, Class<? extends CatH> type) {
-      this.catKindH = catKindH;
-      this.type = type;
+    @Nested
+    class _combine {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save Combine type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(COMBINE.marker()),
+            hash(tupleTH(list(intTH(), stringTH())))
+        );
+        assertThat(hash)
+            .isEqualTo(combineCH(list(intTH(), stringTH())).hash());
+      }
+
+      @Nested
+      class _expr_cat_tests extends ExprCatTestSet {
+        protected _expr_cat_tests() {
+          super(COMBINE, TupleTH.class);
+        }
+      }
+
+      @Test
+      public void with_evaluation_type_not_being_tuple_type() throws Exception {
+        Hash hash = hash(
+            hash(COMBINE.marker()),
+            hash(intTH())
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                hash, COMBINE, DATA_PATH, TupleTH.class, IntTH.class));
+      }
     }
 
-    @Test
-    public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(catKindH);
+    @Nested
+    class _order {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save Order type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(ORDER.marker()),
+            hash(arrayTH(intTH()))
+        );
+        assertThat(hash)
+            .isEqualTo(orderCH(intTH()).hash());
+      }
+
+      @Nested
+      class _expr_cat_tests extends ExprCatTestSet {
+        protected _expr_cat_tests() {
+          super(ORDER, ArrayTH.class);
+        }
+      }
+
+      @Test
+      public void with_evaluation_type_not_being_array_type() throws Exception {
+        Hash hash = hash(
+            hash(ORDER.marker()),
+            hash(intTH())
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                hash, ORDER, DATA_PATH, ArrayTH.class, IntTH.class));
+      }
     }
 
-    @Test
-    public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(catKindH);
+    @Nested
+    class _ref {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save call type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(PARAM_REF.marker()),
+            hash(intTH())
+        );
+        assertThat(hash)
+            .isEqualTo(paramRefCH(intTH()).hash());
+      }
+
+      @Nested
+      class _expr_cat_tests extends ExprCatTestSet {
+        protected _expr_cat_tests() {
+          super(PARAM_REF);
+        }
+      }
     }
 
-    @Test
-    public void with_data_hash_pointing_nowhere() throws Exception {
-      assert_reading_cat_with_data_pointing_nowhere_causes_exc(catKindH);
+    @Nested
+    class _select {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save Call type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(SELECT.marker()),
+            hash(intTH())
+        );
+        assertThat(hash)
+            .isEqualTo(selectCH(intTH()).hash());
+      }
+
+      @Nested
+      class _expr_cat_tests extends ExprCatTestSet {
+        protected _expr_cat_tests() {
+          super(SELECT);
+        }
+      }
     }
 
-    @Test
-    public void with_corrupted_type_as_data() throws Exception {
-      assert_reading_cat_with_corrupted_type_as_data_causes_exc(catKindH);
-    }
+    private abstract class ExprCatTestSet {
+      private final CatKindH catKindH;
+      private final Class<? extends CatH> type;
 
-    @Test
-    public void with_evaluation_type_being_expr_type() throws Exception {
-      Hash hash = hash(
-          hash(catKindH.marker()),
-          hash(paramRefCH())
-      );
-      assertThatGet(hash)
-          .throwsException(new DecodeCatWrongNodeCatExc(
-              hash, catKindH, DATA_PATH, type, ParamRefCH.class));
+      protected ExprCatTestSet(CatKindH catKindH) {
+        this(catKindH, TypeH.class);
+      }
+
+      protected ExprCatTestSet(CatKindH catKindH, Class<? extends CatH> type) {
+        this.catKindH = catKindH;
+        this.type = type;
+      }
+
+      @Test
+      public void without_data() throws Exception {
+        assert_reading_cat_without_data_causes_exc(catKindH);
+      }
+
+      @Test
+      public void with_additional_data() throws Exception {
+        assert_reading_cat_with_additional_data_causes_exc(catKindH);
+      }
+
+      @Test
+      public void with_data_hash_pointing_nowhere() throws Exception {
+        assert_reading_cat_with_data_pointing_nowhere_causes_exc(catKindH);
+      }
+
+      @Test
+      public void with_corrupted_type_as_data() throws Exception {
+        assert_reading_cat_with_corrupted_type_as_data_causes_exc(catKindH);
+      }
+
+      @Test
+      public void with_evaluation_type_being_expr_type() throws Exception {
+        Hash hash = hash(
+            hash(catKindH.marker()),
+            hash(paramRefCH())
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                hash, catKindH, DATA_PATH, type, ParamRefCH.class));
+      }
     }
   }
 }
