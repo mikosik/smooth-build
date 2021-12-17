@@ -5,7 +5,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.expr.SelectH.SelectData;
 import org.smoothbuild.db.object.obj.val.IntH;
 import org.smoothbuild.db.object.obj.val.TupleH;
 import org.smoothbuild.testing.TestingContext;
@@ -43,7 +42,7 @@ public class SelectHTest extends TestingContext {
     TupleH selectable = tupleH(tupleTH(), list(intH(7)));
     IntH index = intH(0);
     assertThat(selectH(selectable, index).data())
-        .isEqualTo(new SelectData(selectable, index));
+        .isEqualTo(new SelectH.Data(selectable, index));
   }
 
   @Test
@@ -126,7 +125,7 @@ public class SelectHTest extends TestingContext {
     var index = intH(0);
     var select = selectH(selectable, index);
     assertThat(((SelectH) objDbOther().get(select.hash())).data())
-        .isEqualTo(new SelectData(selectable, index));
+        .isEqualTo(new SelectH.Data(selectable, index));
   }
 
   @Test

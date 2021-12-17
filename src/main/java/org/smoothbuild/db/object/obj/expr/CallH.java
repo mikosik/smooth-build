@@ -23,14 +23,14 @@ public class CallH extends CallLikeH {
     return (CallCH) super.cat();
   }
 
-  public CallData data() {
+  public Data data() {
     var func = readFunc();
     var args = readArgs();
     validate(func, args);
-    return new CallData(func, args);
+    return new Data(func, args);
   }
 
-  public record CallData(ObjH callable, CombineH args) {}
+  public record Data(ObjH callable, CombineH args) {}
 
   private void validate(ObjH func, CombineH argsCombine) {
     if (func.type() instanceof FuncTH funcT) {

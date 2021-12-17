@@ -7,7 +7,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.expr.CallH.CallData;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -160,7 +159,7 @@ public class CallHTest extends TestingContext {
     ImmutableList<ObjH> args = list(stringH());
     var call = callH(func, args);
     assertThat(((CallH) objDbOther().get(call.hash())).data())
-        .isEqualTo(new CallData(func, combineH(args)));
+        .isEqualTo(new CallH.Data(func, combineH(args)));
   }
 
   @Test

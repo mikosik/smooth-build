@@ -20,7 +20,6 @@ import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.IfH;
 import org.smoothbuild.db.object.obj.expr.InvokeH;
 import org.smoothbuild.db.object.obj.expr.MapH;
-import org.smoothbuild.db.object.obj.expr.MapH.MapData;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
@@ -255,7 +254,7 @@ public class JobCreator {
   }
 
   private Job mapEager(IndexedScope<Job> scope, BoundsMap<TypeH> vars, MapH mapH, Nal nal) {
-    MapData data = mapH.data();
+    MapH.Data data = mapH.data();
     var arrayJ = eagerJobFor(scope, vars, data.array());
     var funcJ = eagerJobFor(scope, vars, data.func());
     TypeH actualType = typing.mapVarsLower(mapH.type(), vars);

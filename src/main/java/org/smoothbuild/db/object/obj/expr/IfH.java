@@ -20,11 +20,11 @@ public final class IfH extends ExprH {
     super(merkleRoot, objDb);
   }
 
-  public IfData data() {
-    return new IfData(readCondition(), readThen(), readElse());
+  public Data data() {
+    return new Data(readCondition(), readThen(), readElse());
   }
 
-  public record IfData(ObjH condition, ObjH then_, ObjH else_) {}
+  public record Data(ObjH condition, ObjH then_, ObjH else_) {}
 
   private ObjH readCondition() {
     var expectedT = objDb().catDb().bool();

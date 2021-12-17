@@ -33,7 +33,7 @@ public class SelectH extends ExprH {
     return (SelectCH) super.cat();
   }
 
-  public SelectData data() {
+  public Data data() {
     ObjH selectable = readSelectable();
     if (selectable.type() instanceof TupleTH tupleEvalT) {
       IntH index = readIndex();
@@ -46,14 +46,14 @@ public class SelectH extends ExprH {
       if (!Objects.equals(type(), fieldT)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), cat(), fieldT);
       }
-      return new SelectData(selectable, index);
+      return new Data(selectable, index);
     } else {
       throw new DecodeObjWrongNodeTypeExc(
           hash(), cat(), "tuple", TupleTH.class, selectable.type().getClass());
     }
   }
 
-  public record SelectData(ObjH selectable, ObjH index) {}
+  public record Data(ObjH selectable, ObjH index) {}
 
   private ObjH readSelectable() {
     return readSeqElemObj(

@@ -19,11 +19,11 @@ public final class MapH extends ExprH {
     super(merkleRoot, objDb);
   }
 
-  public MapData data() {
-    return new MapData(readArray(), readFunc());
+  public Data data() {
+    return new Data(readArray(), readFunc());
   }
 
-  public record MapData(ObjH array, ObjH func) {}
+  public record Data(ObjH array, ObjH func) {}
 
   private ObjH readArray() {
     return readSeqElemObj(DATA_PATH, dataHash(), ARRAY_INDEX, DATA_SEQ_SIZE, ObjH.class);

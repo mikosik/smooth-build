@@ -46,12 +46,10 @@ import org.smoothbuild.db.object.obj.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.db.object.obj.expr.CallH;
 import org.smoothbuild.db.object.obj.expr.CombineH;
 import org.smoothbuild.db.object.obj.expr.IfH;
-import org.smoothbuild.db.object.obj.expr.IfH.IfData;
 import org.smoothbuild.db.object.obj.expr.InvokeH;
 import org.smoothbuild.db.object.obj.expr.OrderH;
 import org.smoothbuild.db.object.obj.expr.ParamRefH;
 import org.smoothbuild.db.object.obj.expr.SelectH;
-import org.smoothbuild.db.object.obj.expr.SelectH.SelectData;
 import org.smoothbuild.db.object.obj.val.ArrayH;
 import org.smoothbuild.db.object.obj.val.BlobH;
 import org.smoothbuild.db.object.obj.val.BoolH;
@@ -636,7 +634,7 @@ public class ObjHCorruptedTest extends TestingContext {
               ));
       var data = ((IfH) objDb().get(objHash)).data();
       assertThat(data)
-          .isEqualTo(new IfData(condition, then, else_));
+          .isEqualTo(new IfH.Data(condition, then, else_));
     }
 
     @Test
@@ -658,7 +656,7 @@ public class ObjHCorruptedTest extends TestingContext {
               ));
       var data = ((IfH) objDb().get(objHash)).data();
       assertThat(data)
-          .isEqualTo(new IfData(condition, then, else_));
+          .isEqualTo(new IfH.Data(condition, then, else_));
     }
 
     @Test
@@ -1243,7 +1241,7 @@ public class ObjHCorruptedTest extends TestingContext {
               )
           );
       assertThat(((SelectH) objDb().get(objHash)).data())
-          .isEqualTo(new SelectData(selectable, index));
+          .isEqualTo(new SelectH.Data(selectable, index));
     }
 
     @Test
