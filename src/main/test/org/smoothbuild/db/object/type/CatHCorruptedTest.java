@@ -11,7 +11,10 @@ import static org.smoothbuild.db.object.type.base.CatKindH.BOOL;
 import static org.smoothbuild.db.object.type.base.CatKindH.CALL;
 import static org.smoothbuild.db.object.type.base.CatKindH.COMBINE;
 import static org.smoothbuild.db.object.type.base.CatKindH.FUNC;
+import static org.smoothbuild.db.object.type.base.CatKindH.IF;
 import static org.smoothbuild.db.object.type.base.CatKindH.INT;
+import static org.smoothbuild.db.object.type.base.CatKindH.INVOKE;
+import static org.smoothbuild.db.object.type.base.CatKindH.MAP;
 import static org.smoothbuild.db.object.type.base.CatKindH.NOTHING;
 import static org.smoothbuild.db.object.type.base.CatKindH.ORDER;
 import static org.smoothbuild.db.object.type.base.CatKindH.PARAM_REF;
@@ -696,6 +699,89 @@ public class CatHCorruptedTest extends TestingContext {
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
                 hash, COMBINE, DATA_PATH, TupleTH.class, IntTH.class));
+      }
+    }
+
+    @Nested
+    class _if {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save if category in HashedDb.
+         */
+        Hash hash = hash(
+            hash(IF.marker()),
+            hash(intTH())
+        );
+        assertThat(hash)
+            .isEqualTo(ifCH(intTH()).hash());
+      }
+
+      @Nested
+      class _expr_cat_tests extends ExprCatTestSet {
+        protected _expr_cat_tests() {
+          super(IF);
+        }
+      }
+    }
+
+    @Nested
+    class _invoke {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save `invoke` category in HashedDb.
+         */
+        Hash hash = hash(
+            hash(INVOKE.marker()),
+            hash(intTH())
+        );
+        assertThat(hash)
+            .isEqualTo(invokeCH(intTH()).hash());
+      }
+
+      @Nested
+      class _expr_cat_tests extends ExprCatTestSet {
+        protected _expr_cat_tests() {
+          super(INVOKE);
+        }
+      }
+    }
+
+    @Nested
+    class _map {
+      @Test
+      public void learning_test() throws Exception {
+        /*
+         * This test makes sure that other tests in this class use proper scheme
+         * to save `map` type in HashedDb.
+         */
+        Hash hash = hash(
+            hash(MAP.marker()),
+            hash(arrayTH(intTH()))
+        );
+        assertThat(hash)
+            .isEqualTo(mapCH(arrayTH(intTH())).hash());
+      }
+
+      @Nested
+      class _expr_cat_tests extends ExprCatTestSet {
+        protected _expr_cat_tests() {
+          super(MAP, ArrayTH.class);
+        }
+      }
+
+      @Test
+      public void eval_type_not_being_array_type() throws Exception {
+        Hash hash = hash(
+            hash(MAP.marker()),
+            hash(intTH())
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongNodeCatExc(
+                hash, MAP, DATA_PATH, ArrayTH.class, IntTH.class));
       }
     }
 
