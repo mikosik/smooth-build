@@ -259,17 +259,21 @@ public class ObjDb {
 
   private TypeH inferCallResT(CallableTH callableTH, ObjH args) {
     var argsT = castTypeToTupleTH(args);
+    return inferCallResT(callableTH, argsT, () -> illegalArgs(callableTH, argsT));
+  }
+
+  public TypeH inferCallResT(CallableTH callableT, TupleTH argsT, Runnable illegalArgsExcThrower) {
     var argTs = argsT.items();
-    var paramTs = callableTH.params();
+    var paramTs = callableT.params();
     allMatchOtherwise(
         paramTs,
         argTs,
         typing::isParamAssignable,
-        (expectedSize, actualSize) -> illegalArgs(callableTH, argsT),
-        i -> illegalArgs(callableTH, argsT)
+        (expectedSize, actualSize) -> illegalArgsExcThrower.run(),
+        i -> illegalArgsExcThrower.run()
     );
     var varBounds = typing.inferVarBoundsLower(paramTs, argTs);
-    return typing.mapVarsLower(callableTH.res(), varBounds);
+    return typing.mapVarsLower(callableT.res(), varBounds);
   }
 
   private TupleTH castTypeToTupleTH(ObjH args) {

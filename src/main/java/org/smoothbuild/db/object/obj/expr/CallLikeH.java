@@ -1,7 +1,5 @@
 package org.smoothbuild.db.object.obj.expr;
 
-import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
-
 import java.util.Objects;
 
 import org.smoothbuild.db.object.obj.ObjDb;
@@ -21,21 +19,10 @@ public class CallLikeH extends ExprH {
   }
 
   protected void validate(CallableTH callableT, CombineH argsCombine) {
-    var typing = objDb().typing();
-    var params = callableT.params();
     var argsT = argsCombine.type();
-    var argTs = argsT.items();
-    allMatchOtherwise(
-        params,
-        argTs,
-        typing::isParamAssignable,
-        (expectedSize, actualSize) -> illegalArgs(callableT, argsT),
-        i -> illegalArgs(callableT, argsT)
-    );
-    var varBounds = typing.inferVarBoundsLower(params, argTs);
-    var actualResult = typing.mapVars(callableT.res(), varBounds, typing.factory().lower());
-    if (!Objects.equals(type(), actualResult)) {
-      throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "callable.result", type(), actualResult);
+    var actualResT = objDb().inferCallResT(callableT, argsT, () -> illegalArgs(callableT, argsT));
+    if (!Objects.equals(type(), actualResT)) {
+      throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "callable.result", type(), actualResT);
     }
   }
 
