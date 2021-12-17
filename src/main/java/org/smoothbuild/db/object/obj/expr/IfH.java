@@ -28,14 +28,14 @@ public final class IfH extends ExprH {
 
   private ObjH readCondition() {
     var expectedT = objDb().catDb().bool();
-    return readSeqElemObj(DATA_PATH, dataHash(), COND_INDEX, DATA_SEQ_SIZE, expectedT);
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), COND_INDEX, DATA_SEQ_SIZE, expectedT);
   }
 
   private ObjH readThen() {
-    return readSeqElemObj(DATA_PATH, dataHash(), THEN_INDEX, DATA_SEQ_SIZE, type());
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), THEN_INDEX, DATA_SEQ_SIZE, type());
   }
 
   private ObjH readElse() {
-    return readSeqElemObj(DATA_PATH, dataHash(), ELSE_INDEX, DATA_SEQ_SIZE, type());
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), ELSE_INDEX, DATA_SEQ_SIZE, type());
   }
 }

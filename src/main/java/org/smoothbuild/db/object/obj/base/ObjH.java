@@ -94,7 +94,8 @@ public abstract class ObjH {
     return castObj(objH, path, i, clazz);
   }
 
-  protected ObjH readSeqElemObj(String path, Hash hash, int i, int expectedSize, TypeH type) {
+  protected ObjH readSeqElemObjWithType(
+      String path, Hash hash, int i, int expectedSize, TypeH type) {
     var objH = readSeqElemObj(path, hash, i, expectedSize);
     return validateType(objH, DATA_PATH, i, type);
   }
