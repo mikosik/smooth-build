@@ -9,6 +9,8 @@
  - __base type__ - Unstructured type that is built into language.
    Base type cannot be declared by user.
    They include `Any`, `Blob`, `Bool`, `Nothing` `String`.
+ - __composed type__ - Type that is composed of other types. Composed types include:
+   `Array`, `Func`, `Tuple`.
  - __default argument__ - Value assigned to function parameter upon its declaration.
    Function can be called without specifying such parameter in which case default argument is used.
  - __monotype__ - Type that does not have type variables.
