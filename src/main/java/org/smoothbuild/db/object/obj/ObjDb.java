@@ -127,7 +127,7 @@ public class ObjDb {
 
   // methods for creating ExprH subclasses
 
-  public CallH call(ObjH callable, CombineH args) {
+  public CallH call(ObjH callable, ObjH args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(callable, args));
   }
 
@@ -139,7 +139,7 @@ public class ObjDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
   }
 
-  public InvokeH invoke(ObjH method, CombineH args) {
+  public InvokeH invoke(ObjH method, ObjH args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(method, args));
   }
 
@@ -241,7 +241,7 @@ public class ObjDb {
 
   // methods for creating Expr-s
 
-  private CallH newCall(ObjH callable, CombineH args) throws HashedDbExc {
+  private CallH newCall(ObjH callable, ObjH args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToFuncTH(callable), args);
     var type = catDb.call(resT);
     var data = writeCallData(callable, args);
@@ -257,24 +257,33 @@ public class ObjDb {
     }
   }
 
-  private TypeH inferCallResT(CallableTH callableTH, CombineH args) {
-    var argTs = args.type().items();
+  private TypeH inferCallResT(CallableTH callableTH, ObjH args) {
+    var argsT = castTypeToTupleTH(args);
+    var argTs = argsT.items();
     var paramTs = callableTH.params();
     allMatchOtherwise(
         paramTs,
         argTs,
         typing::isParamAssignable,
-        (expectedSize, actualSize) -> illegalArgs(callableTH, args),
-        i -> illegalArgs(callableTH, args)
+        (expectedSize, actualSize) -> illegalArgs(callableTH, argsT),
+        i -> illegalArgs(callableTH, argsT)
     );
     var varBounds = typing.inferVarBoundsLower(paramTs, argTs);
     return typing.mapVarsLower(callableTH.res(), varBounds);
   }
 
-  private void illegalArgs(CallableTH callableTH, CombineH args) {
+  private TupleTH castTypeToTupleTH(ObjH args) {
+    if (args.type() instanceof TupleTH tupleT) {
+      return tupleT;
+    } else {
+      throw new IllegalArgumentException("`args` component doesn't evaluate to TupleH.");
+    }
+  }
+
+  private void illegalArgs(CallableTH callableTH, TupleTH argsT) {
     throw new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to callable type parameters %s."
-            .formatted(args.type().name(), callableTH.paramsTuple().name()));
+            .formatted(argsT.name(), callableTH.paramsTuple().name()));
   }
 
   private OrderH newOrder(ArrayTH arrayTH, ImmutableList<ObjH> elems) throws HashedDbExc {
@@ -326,7 +335,7 @@ public class ObjDb {
     return type.newObj(root, this);
   }
 
-  private InvokeH newInvoke(ObjH method, CombineH args) throws HashedDbExc {
+  private InvokeH newInvoke(ObjH method, ObjH args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToMethodTH(method), args);
     var type = catDb.invoke(resT);
     var data = writeInvokeData(method, args);
@@ -395,7 +404,7 @@ public class ObjDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ObjH callable, CombineH args) throws HashedDbExc {
+  private Hash writeCallData(ObjH callable, ObjH args) throws HashedDbExc {
     return hashedDb.writeSeq(callable.hash(), args.hash());
   }
 
@@ -407,7 +416,7 @@ public class ObjDb {
     return hashedDb.writeSeq(condition.hash(), then.hash(), else_.hash());
   }
 
-  private Hash writeInvokeData(ObjH method, CombineH args) throws HashedDbExc {
+  private Hash writeInvokeData(ObjH method, ObjH args) throws HashedDbExc {
     return hashedDb.writeSeq(method.hash(), args.hash());
   }
 

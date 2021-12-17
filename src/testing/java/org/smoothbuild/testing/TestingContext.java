@@ -618,7 +618,7 @@ public class TestingContext {
     return objDb().invoke(method, combineH(args));
   }
 
-  public InvokeH invokeH(ObjH method, CombineH args) {
+  public InvokeH invokeH(ObjH method, ObjH args) {
     return objDb().invoke(method, args);
   }
 

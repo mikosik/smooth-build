@@ -100,7 +100,7 @@ public class ObjFactory {
     return objDb.bool(value);
   }
 
-  public CallH call(ObjH func, CombineH args) {
+  public CallH call(ObjH func, ObjH args) {
     return objDb.call(func, args);
   }
 
@@ -132,7 +132,7 @@ public class ObjFactory {
     return objDb.map(array, func);
   }
 
-  public InvokeH invoke(ObjH method, CombineH args) {
+  public InvokeH invoke(ObjH method, ObjH args) {
     return objDb.invoke(method, args);
   }
 
