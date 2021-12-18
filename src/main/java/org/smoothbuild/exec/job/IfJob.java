@@ -7,9 +7,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.obj.val.BoolB;
+import org.smoothbuild.db.object.obj.val.ValB;
+import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.NalImpl;
@@ -22,7 +22,7 @@ public class IfJob extends AbstractJob {
   private final Job thenJ;
   private final Job elseJ;
 
-  public IfJob(TypeH type, Job conditionJ, Job thenJ, Job elseJ, Loc loc) {
+  public IfJob(TypeB type, Job conditionJ, Job thenJ, Job elseJ, Loc loc) {
     super(type, list(conditionJ, thenJ, elseJ), new NalImpl("building:" + IF_TASK_NAME, loc));
     this.conditionJ = conditionJ;
     this.thenJ = thenJ;
@@ -30,15 +30,15 @@ public class IfJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValH> schedule(Worker worker) {
-    var res = new PromisedValue<ValH>();
+  public Promise<ValB> schedule(Worker worker) {
+    var res = new PromisedValue<ValB>();
     conditionJ.schedule(worker)
         .addConsumer(obj -> onConditionCalculated(obj, worker, res));
     return res;
   }
 
-  private void onConditionCalculated(ValH condition, Worker worker, Consumer<ValH> res) {
-    var conditionJ = ((BoolH) condition).toJ();
+  private void onConditionCalculated(ValB condition, Worker worker, Consumer<ValB> res) {
+    var conditionJ = ((BoolB) condition).toJ();
     var job = conditionJ ? thenJ : elseJ;
     new VirtualJob(job, new TaskInfo(INTERNAL, IF_TASK_NAME, loc()))
         .schedule(worker)

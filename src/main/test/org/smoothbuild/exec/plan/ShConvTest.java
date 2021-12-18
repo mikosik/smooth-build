@@ -15,9 +15,9 @@ import java.io.FileNotFoundException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.obj.base.ObjB;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefsS;
@@ -34,84 +34,84 @@ public class ShConvTest extends TestingContext {
     @Test
     public void blob() {
       var blob = blobS(37);
-      assertConversion(blob, blobH(37));
+      assertConversion(blob, blobB(37));
     }
 
     @Test
     public void call() {
       var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
       var call = callS(stringTS(), topRefS(defFunc));
-      assertConversion(defFunc, call, callH(funcH(stringH("abc")), list()));
+      assertConversion(defFunc, call, callB(funcB(stringB("abc")), list()));
     }
 
     @Test
     public void combine() {
       var combine = combineS(stringS("abc"), intS(1));
-      assertConversion(combine, combineH(list(stringH("abc"), intH(1))));
+      assertConversion(combine, combineB(list(stringB("abc"), intB(1))));
     }
 
     @Test
     public void int_() {
       IntS int_ = intS(1);
-      assertConversion(int_, intH(1));
+      assertConversion(int_, intB(1));
     }
 
     @Test
     public void order() {
       var order = orderS(stringTS(), stringS("abc"), stringS("def"));
-      assertConversion(order, orderH(list(stringH("abc"), stringH("def"))));
+      assertConversion(order, orderB(list(stringB("abc"), stringB("def"))));
     }
 
     @Test
     public void paramRef() {
       var func = defFuncS("f", nList(itemS(intTS(), "p")), paramRefS(intTS(), "p"));
-      assertConversion(func, topRefS(func), funcH(list(intTH()), paramRefH(intTH(), 0)));
+      assertConversion(func, topRefS(func), funcB(list(intTB()), paramRefB(intTB(), 0)));
     }
 
     @Test
     public void select() {
       var combine = combineS(stringS("abc"));
       var select = selectS(stringTS(), combine, "field0");
-      assertConversion(select, selectH(combineH(list(stringH("abc"))), intH(0)));
+      assertConversion(select, selectB(combineB(list(stringB("abc"))), intB(0)));
     }
 
     @Test
     public void string() {
       var string = stringS("abc");
-      assertConversion(string, stringH("abc"));
+      assertConversion(string, stringB("abc"));
     }
 
     @Test
     public void topRef_to_val() {
       var defVal = defValS("myVal", stringS("abc"));
-      assertConversion(defVal, topRefS(defVal), stringH("abc"));
+      assertConversion(defVal, topRefS(defVal), stringB("abc"));
     }
 
     @Test
     public void topRef_to_func() {
       var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
-      assertConversion(defFunc, topRefS(defFunc), funcH(stringH("abc")));
+      assertConversion(defFunc, topRefS(defFunc), funcB(stringB("abc")));
     }
 
     @Test
     public void topRef_to_if_func() {
       var ifFuncS = ifFuncS();
-      var varA = varTH("A");
-      var bodyH = ifH(paramRefH(boolTH(), 0), paramRefH(varA, 1), paramRefH(varA, 2));
-      var funcTH = funcTH(varA, list(boolTH(), varA, varA));
-      var funcH = funcH(funcTH, bodyH);
+      var varA = varTB("A");
+      var bodyH = ifB(paramRefB(boolTB(), 0), paramRefB(varA, 1), paramRefB(varA, 2));
+      var funcTH = funcTB(varA, list(boolTB(), varA, varA));
+      var funcH = funcB(funcTH, bodyH);
       assertConversion(ifFuncS, topRefS(ifFuncS), funcH);
     }
 
     @Test
     public void topRef_to_map_func() {
       var mapFuncS = mapFuncS();
-      var varA = varTH("E");
-      var varB = varTH("R");
-      var mappingFuncT = funcTH(varB, list(varA));
-      var funcTH = funcTH(arrayTH(varB), list(arrayTH(varA), mappingFuncT));
-      var bodyH = mapH(paramRefH(arrayTH(varA), 0), paramRefH(mappingFuncT, 1));
-      var funcH = funcH(funcTH, bodyH);
+      var varA = varTB("E");
+      var varB = varTB("R");
+      var mappingFuncT = funcTB(varB, list(varA));
+      var funcTH = funcTB(arrayTB(varB), list(arrayTB(varA), mappingFuncT));
+      var bodyH = mapB(paramRefB(arrayTB(varA), 0), paramRefB(mappingFuncT, 1));
+      var funcH = funcB(funcTH, bodyH);
       assertConversion(mapFuncS, topRefS(mapFuncS), funcH);
     }
 
@@ -123,13 +123,13 @@ public class ShConvTest extends TestingContext {
       var ann = annS(loc(filePath, 1), stringS(classBinaryName));
       var natFuncS = natFuncS(funcTS, "myFunc", nList(itemS(intTS(), "param")), ann);
 
-      var resT = intTH();
-      ImmutableList<TypeH> paramTs = list(blobTH());
-      var funcTH = funcTH(resT, paramTs);
-      var jar = blobH(37);
-      var method = methodH(methodTH(resT, paramTs), jar, stringH(classBinaryName), boolH(true));
-      var bodyH = invokeH(method, combineH(list(paramRefH(blobTH(), 0))));
-      var funcH = funcH(funcTH, bodyH);
+      var resT = intTB();
+      ImmutableList<TypeB> paramTs = list(blobTB());
+      var funcTH = funcTB(resT, paramTs);
+      var jar = blobB(37);
+      var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
+      var bodyH = invokeB(method, combineB(list(paramRefB(blobTB(), 0))));
+      var funcH = funcB(funcTH, bodyH);
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
       var shConv = newShConv(defs(natFuncS), fileLoader);
@@ -137,15 +137,15 @@ public class ShConvTest extends TestingContext {
           .isEqualTo(funcH);
     }
 
-    private void assertConversion(ExprS exprS, ObjH expected) {
+    private void assertConversion(ExprS exprS, ObjB expected) {
       assertConversion(defs(), exprS, expected);
     }
 
-    private void assertConversion(TopEvalS topEval, ExprS exprS, ObjH expected) {
+    private void assertConversion(TopEvalS topEval, ExprS exprS, ObjB expected) {
       assertConversion(defs(topEval), exprS, expected);
     }
 
-    private void assertConversion(DefsS defs, ExprS exprS, ObjH expected) {
+    private void assertConversion(DefsS defs, ExprS exprS, ObjB expected) {
       var shConv = newShConv(defs);
       assertThat(shConv.convertExpr(exprS))
           .isEqualTo(expected);
@@ -193,7 +193,7 @@ public class ShConvTest extends TestingContext {
   private ShConv newShConv(DefsS defs) {
     try {
       FileLoader mock = mock(FileLoader.class);
-      when(mock.load(any())).thenReturn(blobH(1));
+      when(mock.load(any())).thenReturn(blobB(1));
       return newShConv(defs, mock);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
@@ -204,7 +204,7 @@ public class ShConvTest extends TestingContext {
     return new ShConv(objFactory(), defs, typeShConv(), fileLoader);
   }
 
-  private FileLoader createFileLoaderMock(FilePath filePath, BlobH value) {
+  private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {
     try {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(filePath)).thenReturn(value);

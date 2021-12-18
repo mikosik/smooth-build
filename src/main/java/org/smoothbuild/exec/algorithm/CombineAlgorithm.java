@@ -3,25 +3,25 @@ package org.smoothbuild.exec.algorithm;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.combineAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.db.object.type.val.TupleTH;
+import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.object.type.val.TupleTB;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CombineAlgorithm extends Algorithm {
-  public CombineAlgorithm(TupleTH tupleT) {
+  public CombineAlgorithm(TupleTB tupleT) {
     super(tupleT);
   }
 
   @Override
   public Hash hash() {
-    return combineAlgorithmHash((TupleTH) outputT());
+    return combineAlgorithmHash((TupleTB) outputT());
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    TupleH tuple = nativeApi.factory().tuple(((TupleTH) outputT()), input.vals());
+    TupleB tuple = nativeApi.factory().tuple(((TupleTB) outputT()), input.vals());
     return new Output(tuple, nativeApi.messages());
   }
 }

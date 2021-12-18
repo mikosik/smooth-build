@@ -15,8 +15,8 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.ArrayBBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.Lists;
@@ -24,7 +24,7 @@ import org.smoothbuild.util.collect.Lists;
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final NativeApi nativeApi;
   private final Map<String, Set<JavaFileObject>> packageToJavaFileObjects;
-  private final ArrayHBuilder resClassFiles;
+  private final ArrayBBuilder resClassFiles;
 
   SandboxedJavaFileManager(StandardJavaFileManager fileManager, NativeApi nativeApi,
       Iterable<InputClassFile> objects) {
@@ -45,7 +45,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     return result;
   }
 
-  public ArrayH resultClassfiles() {
+  public ArrayB resultClassfiles() {
     return resClassFiles.build();
   }
 

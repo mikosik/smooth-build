@@ -16,16 +16,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.IllegalPathExc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 
 public class UnzipFunc {
-  public static ArrayH func(NativeApi nativeApi, BlobH blob) throws IOException {
+  public static ArrayB func(NativeApi nativeApi, BlobB blob) throws IOException {
     try {
       return unzip(nativeApi, blob, x -> true);
     } catch (ZipException e) {
@@ -34,7 +34,7 @@ public class UnzipFunc {
     }
   }
 
-  public static ArrayH unzip(NativeApi nativeApi, BlobH blob, Predicate<String> filter)
+  public static ArrayB unzip(NativeApi nativeApi, BlobB blob, Predicate<String> filter)
       throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     var fileArrayBuilder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
@@ -45,7 +45,7 @@ public class UnzipFunc {
         ZipEntry entry = entries.nextElement();
         String name = entry.getName();
         if (!name.endsWith("/") && filter.test(name)) {
-          TupleH unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
+          TupleB unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
           if (unzippedEntry != null) {
             String fileName = filePath(unzippedEntry).toJ();
             if (duplicatesDetector.addValue(fileName)) {
@@ -60,13 +60,13 @@ public class UnzipFunc {
     return fileArrayBuilder.build();
   }
 
-  private static File copyToTempFile(BlobH blob) throws IOException {
+  private static File copyToTempFile(BlobB blob) throws IOException {
     File tempFile = createTempFile("unzip", null);
     copyAllAndClose(blob.source(), sink(tempFile));
     return tempFile;
   }
 
-  private static TupleH unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
+  private static TupleB unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
     String fileName = entry.getName();
     try {
       path(fileName);
@@ -75,8 +75,8 @@ public class UnzipFunc {
       return null;
     }
 
-    StringH path = nativeApi.factory().string(fileName);
-    BlobH content = nativeApi.factory().blob(sink -> sink.writeAll(source(inputStream)));
+    StringB path = nativeApi.factory().string(fileName);
+    BlobB content = nativeApi.factory().blob(sink -> sink.writeAll(source(inputStream)));
     return nativeApi.factory().file(path, content);
   }
 }

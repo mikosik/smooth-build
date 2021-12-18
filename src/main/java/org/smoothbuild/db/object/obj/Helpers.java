@@ -2,16 +2,16 @@ package org.smoothbuild.db.object.obj;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.exc.HashedDbExc;
-import org.smoothbuild.db.object.db.ObjDbExc;
+import org.smoothbuild.db.object.db.ByteDbExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
-import org.smoothbuild.db.object.type.base.CatH;
+import org.smoothbuild.db.object.type.base.CatB;
 
 public class Helpers {
   public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {
     try {
       runnable.run();
     } catch (HashedDbExc e) {
-      throw new ObjDbExc(e);
+      throw new ByteDbExc(e);
     }
   }
 
@@ -19,12 +19,12 @@ public class Helpers {
     try {
       return callable.call();
     } catch (HashedDbExc e) {
-      throw new ObjDbExc(e);
+      throw new ByteDbExc(e);
     }
   }
 
   public static <T> T wrapHashedDbExceptionAsDecodeObjNodeException(
-      Hash hash, CatH cat, String path, HashedDbCallable<T> callable) {
+      Hash hash, CatB cat, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbExc e) {
@@ -33,26 +33,26 @@ public class Helpers {
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, CatH cat, String path, ObjDbCallable<T> callable) {
+      Hash hash, CatB cat, String path, ByteDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjDbExc e) {
+    } catch (ByteDbExc e) {
       throw new DecodeObjNodeExc(hash, cat, path, e);
     }
   }
 
   public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
-      Hash hash, CatH cat, String path, int pathIndex, ObjDbCallable<T> callable) {
+      Hash hash, CatB cat, String path, int pathIndex, ByteDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ObjDbExc e) {
+    } catch (ByteDbExc e) {
       throw new DecodeObjNodeExc(hash, cat, path + "[" + pathIndex + "]", e);
     }
   }
 
   @FunctionalInterface
-  public static interface ObjDbCallable<T> {
-    public T call() throws ObjDbExc;
+  public static interface ByteDbCallable<T> {
+    public T call() throws ByteDbExc;
   }
 
   @FunctionalInterface

@@ -1,15 +1,15 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.ValH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Append {
-  public static ArrayH func(NativeApi nativeApi, ArrayH array, ValH elem) {
+  public static ArrayB func(NativeApi nativeApi, ArrayB array, ValB elem) {
     var factory = nativeApi.factory();
     return factory
         .arrayBuilderWithElems(factory.typing().mergeUp(array.cat().elem(), elem.cat()))
-        .addAll(array.elems(ValH.class))
+        .addAll(array.elems(ValB.class))
         .add(elem)
         .build();
   }

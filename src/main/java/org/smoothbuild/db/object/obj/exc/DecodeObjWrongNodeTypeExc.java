@@ -1,30 +1,30 @@
 package org.smoothbuild.db.object.obj.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.CatH;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.CatB;
+import org.smoothbuild.db.object.type.base.TypeB;
 
 public class DecodeObjWrongNodeTypeExc extends DecodeObjNodeExc {
-  public DecodeObjWrongNodeTypeExc(Hash hash, CatH cat, String path, int pathIndex,
-      TypeH expected, TypeH actual) {
+  public DecodeObjWrongNodeTypeExc(Hash hash, CatB cat, String path, int pathIndex,
+      TypeB expected, TypeB actual) {
     this(hash, cat, indexedPath(path, pathIndex), expected, actual);
   }
 
   public DecodeObjWrongNodeTypeExc(
-      Hash hash, CatH cat, String path, TypeH expected, TypeH actual) {
+      Hash hash, CatB cat, String path, TypeB expected, TypeB actual) {
     super(hash, cat, path, buildMessage(expected, actual));
   }
 
-  private static String buildMessage(CatH expected, CatH actual) {
+  private static String buildMessage(CatB expected, CatB actual) {
     return "Node has unexpected type. Expected " + expected.q() + " but was " + actual.q() + ".";
   }
 
-  public DecodeObjWrongNodeTypeExc(Hash hash, CatH cat, String memberPath, int pathIndex,
+  public DecodeObjWrongNodeTypeExc(Hash hash, CatB cat, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, cat, indexedPath(memberPath, pathIndex), expected, actual);
   }
 
-  public DecodeObjWrongNodeTypeExc(Hash hash, CatH cat, String path, Class<?> expected,
+  public DecodeObjWrongNodeTypeExc(Hash hash, CatB cat, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, cat, path, buildMessage(expected, actual));
   }

@@ -15,8 +15,8 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.object.obj.val.MethodH;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.obj.val.MethodB;
+import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.JPathResolver;
@@ -30,7 +30,7 @@ public class MethodLoader {
   private static final String NATIVE_METHOD_NAME = "func";
   private final JPathResolver jPathResolver;
   private final FileLoader fileLoader;
-  private final HashMap<MethodH, Method> methodCache;
+  private final HashMap<MethodB, Method> methodCache;
 
   @Inject
   public MethodLoader(JPathResolver jPathResolver, FileLoader fileLoader) {
@@ -39,23 +39,23 @@ public class MethodLoader {
     this.methodCache = new HashMap<>();
   }
 
-  public synchronized Method load(String extendedName, MethodH methodH) throws LoadingMethodExc {
+  public synchronized Method load(String extendedName, MethodB methodB) throws LoadingMethodExc {
     String quotedName = q(extendedName);
-    String classBinaryName = methodH.classBinaryName().toJ();
-    Method method = loadMethod(quotedName, methodH, classBinaryName);
-    assertMethodMatchesFuncRequirements(quotedName, methodH, method, classBinaryName);
+    String classBinaryName = methodB.classBinaryName().toJ();
+    Method method = loadMethod(quotedName, methodB, classBinaryName);
+    assertMethodMatchesFuncRequirements(quotedName, methodB, method, classBinaryName);
     return method;
   }
 
-  private Method loadMethod(String extendedName, MethodH methodH, String classBinaryName)
+  private Method loadMethod(String extendedName, MethodB methodB, String classBinaryName)
       throws LoadingMethodExc {
-    return methodCache.computeIfAbsent(methodH,
-        n -> findMethod(extendedName, methodH, classBinaryName));
+    return methodCache.computeIfAbsent(methodB,
+        n -> findMethod(extendedName, methodB, classBinaryName));
   }
 
-  private Method findMethod(String extendedName, MethodH methodH, String classBinaryName)
+  private Method findMethod(String extendedName, MethodB methodB, String classBinaryName)
       throws LoadingMethodExc {
-    Method method = findClassMethod(extendedName, methodH, classBinaryName);
+    Method method = findClassMethod(extendedName, methodB, classBinaryName);
     if (!isPublic(method)) {
       throw newLoadingException(extendedName, classBinaryName, "Providing method is not public.");
     } else if (!isStatic(method)) {
@@ -69,9 +69,9 @@ public class MethodLoader {
     }
   }
 
-  private Method findClassMethod(String extendedName, MethodH methodH, String classBinaryName)
+  private Method findClassMethod(String extendedName, MethodB methodB, String classBinaryName)
       throws LoadingMethodExc {
-    Class<?> clazz = findClass(extendedName, methodH, classBinaryName);
+    Class<?> clazz = findClass(extendedName, methodB, classBinaryName);
     return stream(clazz.getDeclaredMethods())
         .filter(m -> m.getName().equals(NATIVE_METHOD_NAME))
         .findFirst()
@@ -80,9 +80,9 @@ public class MethodLoader {
         ));
   }
 
-  private Class<?> findClass(String extendedName, MethodH methodH, String classBinaryName)
+  private Class<?> findClass(String extendedName, MethodB methodB, String classBinaryName)
       throws LoadingMethodExc {
-    FilePath originalJarFilePath = fileLoader.filePathOf(methodH.jar().hash());
+    FilePath originalJarFilePath = fileLoader.filePathOf(methodB.jar().hash());
     Path jarPath = jPathResolver.resolve(originalJarFilePath);
     try {
       return loadClass(jarPath, classBinaryName);
@@ -100,14 +100,14 @@ public class MethodLoader {
   }
 
   private void assertMethodMatchesFuncRequirements(String extendedName,
-      MethodH methodH, Method method, String classBinaryName) throws LoadingMethodExc {
+      MethodB methodB, Method method, String classBinaryName) throws LoadingMethodExc {
     assertNativeResMatchesDeclared(
-        extendedName, method, methodH.type().res(), classBinaryName);
-    assertNativeParamTsMatchesFuncParamTs(extendedName, method, methodH, classBinaryName);
+        extendedName, method, methodB.type().res(), classBinaryName);
+    assertNativeParamTsMatchesFuncParamTs(extendedName, method, methodB, classBinaryName);
   }
 
   private static void assertNativeResMatchesDeclared(String extendedName, Method method,
-      TypeH resTH, String classBinaryName) throws LoadingMethodExc {
+      TypeB resTH, String classBinaryName) throws LoadingMethodExc {
     var methodResTJ = method.getReturnType();
     var resTJ = resTH.typeJ();
     if (!resTJ.equals(methodResTJ)) {
@@ -119,9 +119,9 @@ public class MethodLoader {
   }
 
   private static void assertNativeParamTsMatchesFuncParamTs(String extendedName,
-      Method method, MethodH methodH, String classBinaryName) throws LoadingMethodExc {
+      Method method, MethodB methodB, String classBinaryName) throws LoadingMethodExc {
     Parameter[] nativeParams = method.getParameters();
-    var paramTHs = methodH.type().params();
+    var paramTHs = methodB.type().params();
     if (paramTHs.size() != nativeParams.length - 1) {
       throw newLoadingException(extendedName, classBinaryName, extendedName + " has "
           + paramTHs.size() + " parameter(s) but its native implementation has "

@@ -19,49 +19,49 @@ import java.util.stream.IntStream;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.CombineH;
-import org.smoothbuild.db.object.obj.expr.IfH;
-import org.smoothbuild.db.object.obj.expr.InvokeH;
-import org.smoothbuild.db.object.obj.expr.MapH;
-import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.ParamRefH;
-import org.smoothbuild.db.object.obj.expr.SelectH;
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.BlobHBuilder;
-import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.FuncH;
-import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MethodH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.db.object.obj.val.ValH;
+import org.smoothbuild.db.object.obj.ByteDb;
+import org.smoothbuild.db.object.obj.base.ObjB;
+import org.smoothbuild.db.object.obj.expr.CallB;
+import org.smoothbuild.db.object.obj.expr.CombineB;
+import org.smoothbuild.db.object.obj.expr.IfB;
+import org.smoothbuild.db.object.obj.expr.InvokeB;
+import org.smoothbuild.db.object.obj.expr.MapB;
+import org.smoothbuild.db.object.obj.expr.OrderB;
+import org.smoothbuild.db.object.obj.expr.ParamRefB;
+import org.smoothbuild.db.object.obj.expr.SelectB;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.BlobBBuilder;
+import org.smoothbuild.db.object.obj.val.BoolB;
+import org.smoothbuild.db.object.obj.val.FuncB;
+import org.smoothbuild.db.object.obj.val.IntB;
+import org.smoothbuild.db.object.obj.val.MethodB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.object.obj.val.ValB;
 import org.smoothbuild.db.object.type.CatDb;
-import org.smoothbuild.db.object.type.TypeFactoryH;
-import org.smoothbuild.db.object.type.TypingH;
-import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.expr.CallCH;
-import org.smoothbuild.db.object.type.expr.CombineCH;
-import org.smoothbuild.db.object.type.expr.IfCH;
-import org.smoothbuild.db.object.type.expr.InvokeCH;
-import org.smoothbuild.db.object.type.expr.MapCH;
-import org.smoothbuild.db.object.type.expr.OrderCH;
-import org.smoothbuild.db.object.type.expr.ParamRefCH;
-import org.smoothbuild.db.object.type.expr.SelectCH;
-import org.smoothbuild.db.object.type.val.AnyTH;
-import org.smoothbuild.db.object.type.val.ArrayTH;
-import org.smoothbuild.db.object.type.val.BlobTH;
-import org.smoothbuild.db.object.type.val.BoolTH;
-import org.smoothbuild.db.object.type.val.FuncTH;
-import org.smoothbuild.db.object.type.val.IntTH;
-import org.smoothbuild.db.object.type.val.MethodTH;
-import org.smoothbuild.db.object.type.val.NothingTH;
-import org.smoothbuild.db.object.type.val.StringTH;
-import org.smoothbuild.db.object.type.val.TupleTH;
-import org.smoothbuild.db.object.type.val.VarH;
+import org.smoothbuild.db.object.type.TypeFactoryB;
+import org.smoothbuild.db.object.type.TypingB;
+import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.object.type.expr.CallCB;
+import org.smoothbuild.db.object.type.expr.CombineCB;
+import org.smoothbuild.db.object.type.expr.IfCB;
+import org.smoothbuild.db.object.type.expr.InvokeCB;
+import org.smoothbuild.db.object.type.expr.MapCB;
+import org.smoothbuild.db.object.type.expr.OrderCB;
+import org.smoothbuild.db.object.type.expr.ParamRefCB;
+import org.smoothbuild.db.object.type.expr.SelectCB;
+import org.smoothbuild.db.object.type.val.AnyTB;
+import org.smoothbuild.db.object.type.val.ArrayTB;
+import org.smoothbuild.db.object.type.val.BlobTB;
+import org.smoothbuild.db.object.type.val.BoolTB;
+import org.smoothbuild.db.object.type.val.FuncTB;
+import org.smoothbuild.db.object.type.val.IntTB;
+import org.smoothbuild.db.object.type.val.MethodTB;
+import org.smoothbuild.db.object.type.val.NothingTB;
+import org.smoothbuild.db.object.type.val.StringTB;
+import org.smoothbuild.db.object.type.val.TupleTB;
+import org.smoothbuild.db.object.type.val.VarB;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
@@ -127,9 +127,9 @@ public class TestingContext {
   private ObjFactory objFactory;
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
-  private ObjDb objDb;
+  private ByteDb byteDb;
   private TypingS typingS;
-  private TypingH typingH;
+  private TypingB typingB;
   private CatDb catDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -177,7 +177,7 @@ public class TestingContext {
 
   public ObjFactory objFactory() {
     if (objFactory == null) {
-      objFactory = new ObjFactory(objDb(), catDb(), typingH());
+      objFactory = new ObjFactory(byteDb(), catDb(), typingB());
     }
     return objFactory;
   }
@@ -189,14 +189,14 @@ public class TestingContext {
     return typingS;
   }
 
-  public TypingH typingH() {
-    if (typingH == null) {
-      typingH = new TypingH(catDb());
+  public TypingB typingB() {
+    if (typingB == null) {
+      typingB = new TypingB(catDb());
     }
-    return typingH;
+    return typingB;
   }
 
-  public TypeFactoryH typeFactoryH() {
+  public TypeFactoryB typeFactoryB() {
     return catDb();
   }
 
@@ -214,17 +214,17 @@ public class TestingContext {
     return catDb;
   }
 
-  public ObjDb objDb() {
-    if (objDb == null) {
-      objDb = new ObjDb(hashedDb(), catDb(), typingH());
+  public ByteDb byteDb() {
+    if (byteDb == null) {
+      byteDb = new ByteDb(hashedDb(), catDb(), typingB());
     }
-    return objDb;
+    return byteDb;
   }
 
   public ComputationCache computationCache() {
     if (computationCache == null) {
       computationCache = new ComputationCache(
-          computationCacheFileSystem(), objDb(), objFactory());
+          computationCacheFileSystem(), byteDb(), objFactory());
     }
     return computationCache;
   }
@@ -236,8 +236,8 @@ public class TestingContext {
     return computationCacheFileSystem;
   }
 
-  public ObjDb objDbOther() {
-    return new ObjDb(hashedDb(), catDbOther(), typingH());
+  public ByteDb byteDbOther() {
+    return new ByteDb(hashedDb(), catDbOther(), typingB());
   }
 
   public CatDb catDbOther() {
@@ -275,384 +275,375 @@ public class TestingContext {
 
   // H types
 
-  public TupleTH animalTH() {
-    return catDb().tuple(list(stringTH(), intTH()));
+  public TupleTB animalTB() {
+    return catDb().tuple(list(stringTB(), intTB()));
   }
 
-  public AnyTH anyTH() {
+  public AnyTB anyTB() {
     return catDb().any();
   }
 
-  public ArrayTH arrayTH() {
-    return arrayTH(stringTH());
+  public ArrayTB arrayTB() {
+    return arrayTB(stringTB());
   }
 
-  public ArrayTH arrayTH(TypeH elemT) {
+  public ArrayTB arrayTB(TypeB elemT) {
     return catDb().array(elemT);
   }
 
-  public BlobTH blobTH() {
+  public BlobTB blobTB() {
     return catDb().blob();
   }
 
-  public BoolTH boolTH() {
+  public BoolTB boolTB() {
     return catDb().bool();
   }
 
-  public TupleTH fileTH() {
-    return tupleTH(list(blobTH(), stringTH()));
+  public TupleTB fileTB() {
+    return tupleTB(list(blobTB(), stringTB()));
   }
 
-  public FuncTH funcTH() {
-    return funcTH(intTH(), list(blobTH(), stringTH()));
+  public FuncTB funcTB() {
+    return funcTB(intTB(), list(blobTB(), stringTB()));
   }
 
-  public FuncTH funcTH(TypeH resT, ImmutableList<TypeH> paramTs) {
+  public FuncTB funcTB(TypeB resT, ImmutableList<TypeB> paramTs) {
     return catDb().func(resT, paramTs);
   }
 
-  public IntTH intTH() {
+  public IntTB intTB() {
     return catDb().int_();
   }
 
-  public MethodTH methodTH() {
-    return methodTH(blobTH(), list(boolTH()));
+  public MethodTB methodTB() {
+    return methodTB(blobTB(), list(boolTB()));
   }
 
-  public MethodTH methodTH(TypeH resT, ImmutableList<TypeH> paramTs) {
+  public MethodTB methodTB(TypeB resT, ImmutableList<TypeB> paramTs) {
     return catDb().method(resT, paramTs);
   }
 
-  public NothingTH nothingTH() {
+  public NothingTB nothingTB() {
     return catDb().nothing();
   }
 
-  public TupleTH personTH() {
-    return tupleTH(list(stringTH(), stringTH()));
+  public TupleTB personTB() {
+    return tupleTB(list(stringTB(), stringTB()));
   }
 
-  public StringTH stringTH() {
+  public StringTB stringTB() {
     return catDb().string();
   }
 
-  public TupleTH tupleTH() {
-    return catDb().tuple(list(intTH()));
+  public TupleTB tupleTB() {
+    return catDb().tuple(list(intTB()));
   }
 
-  public TupleTH tupleTH(ImmutableList<TypeH> itemTs) {
+  public TupleTB tupleTB(ImmutableList<TypeB> itemTs) {
     return catDb().tuple(itemTs);
   }
 
-  public TupleTH tupleEmptyTH() {
-    return tupleTH(list());
+  public TupleTB tupleEmptyTB() {
+    return tupleTB(list());
   }
 
-  public TupleTH tupleWithStrTH() {
-    return tupleTH(list(stringTH()));
+  public TupleTB tupleWithStrTB() {
+    return tupleTB(list(stringTB()));
   }
 
-  public VarH varTH(String name) {
+  public VarB varTB(String name) {
     return catDb().var(name);
   }
 
-  public Side<TypeH> lowerH() {
-    return typeFactoryH().lower();
+  public Side<TypeB> lowerB() {
+    return typeFactoryB().lower();
   }
 
-  public Side<TypeH> upperH() {
-    return typeFactoryH().upper();
+  public Side<TypeB> upperB() {
+    return typeFactoryB().upper();
   }
 
   // Expr types
 
-  public CallCH callCH() {
-    return callCH(intTH());
+  public CallCB callCB() {
+    return callCB(intTB());
   }
 
-  public CallCH callCH(TypeH evalT) {
+  public CallCB callCB(TypeB evalT) {
     return catDb().call(evalT);
   }
 
-  public CombineCH combineCH() {
-    return combineCH(list(intTH(), stringTH()));
+  public CombineCB combineCB() {
+    return combineCB(list(intTB(), stringTB()));
   }
 
-  public CombineCH combineCH(ImmutableList<TypeH> itemTs) {
-    return catDb().combine(tupleTH(itemTs));
+  public CombineCB combineCB(ImmutableList<TypeB> itemTs) {
+    return catDb().combine(tupleTB(itemTs));
   }
 
-  public IfCH ifCH() {
-    return ifCH(intTH());
+  public IfCB ifCB() {
+    return ifCB(intTB());
   }
 
-  public IfCH ifCH(TypeH evalT) {
+  public IfCB ifCB(TypeB evalT) {
     return catDb().if_(evalT);
   }
 
-  public InvokeCH invokeCH() {
-    return invokeCH(blobTH());
+  public InvokeCB invokeCB() {
+    return invokeCB(blobTB());
   }
 
-  public InvokeCH invokeCH(TypeH evalT) {
+  public InvokeCB invokeCB(TypeB evalT) {
     return catDb().invoke(evalT);
   }
 
-  public MapCH mapCH() {
-    return mapCH(arrayTH(intTH()));
+  public MapCB mapCB() {
+    return mapCB(arrayTB(intTB()));
   }
 
-  public MapCH mapCH(ArrayTH evalT) {
+  public MapCB mapCB(ArrayTB evalT) {
     return catDb().map(evalT);
   }
 
-  public OrderCH orderCH() {
-    return orderCH(intTH());
+  public OrderCB orderCB() {
+    return orderCB(intTB());
   }
 
-  public OrderCH orderCH(TypeH elemT) {
+  public OrderCB orderCB(TypeB elemT) {
     return catDb().order(elemT);
   }
 
-  public ParamRefCH paramRefCH() {
-    return paramRefCH(intTH());
+  public ParamRefCB paramRefCB() {
+    return paramRefCB(intTB());
   }
 
-  public ParamRefCH paramRefCH(TypeH evalT) {
+  public ParamRefCB paramRefCB(TypeB evalT) {
     return catDb().ref(evalT);
   }
 
-  public SelectCH selectCH() {
-    return selectCH(intTH());
+  public SelectCB selectCB() {
+    return selectCB(intTB());
   }
 
-  public SelectCH selectCH(TypeH evalT) {
+  public SelectCB selectCB(TypeB evalT) {
     return catDb().select(evalT);
   }
 
-  // Obj-s (values)
+  // Obj (values)
 
-  public TupleH animalH() {
-    return animalH("rabbit", 7);
+  public TupleB animalB() {
+    return animalB("rabbit", 7);
   }
 
-  public TupleH animalH(String species, int speed) {
-    return animalH(stringH(species), intH(speed));
+  public TupleB animalB(String species, int speed) {
+    return animalB(stringB(species), intB(speed));
   }
 
-  public TupleH animalH(StringH species, IntH speed) {
-    return tupleH(animalTH(), list(species, speed));
+  public TupleB animalB(StringB species, IntB speed) {
+    return tupleB(animalTB(), list(species, speed));
   }
 
-  public ArrayH arrayH(ValH... elems) {
-    return arrayH(elems[0].type(), elems);
+  public ArrayB arrayB(ValB... elems) {
+    return arrayB(elems[0].type(), elems);
   }
 
-  public ArrayH arrayH(TypeH elemT, ValH... elems) {
-    return objDb()
-        .arrayBuilder(arrayTH(elemT))
+  public ArrayB arrayB(TypeB elemT, ValB... elems) {
+    return byteDb()
+        .arrayBuilder(arrayTB(elemT))
         .addAll(list(elems))
         .build();
   }
 
-  public BlobH blobH() {
+  public BlobB blobB() {
     return objFactory().blob(sink -> sink.writeUtf8("blob data"));
   }
 
-  public BlobH blobH(int data) {
-    return blobH(ByteString.of((byte) data));
+  public BlobB blobB(int data) {
+    return blobB(ByteString.of((byte) data));
   }
 
-  public BlobH blobH(ByteString bytes) {
+  public BlobB blobB(ByteString bytes) {
     return objFactory().blob(sink -> sink.write(bytes));
   }
 
-  public BlobHBuilder blobHBuilder() {
-    return objDb().blobBuilder();
+  public BlobBBuilder blobBBuilder() {
+    return byteDb().blobBuilder();
   }
 
-  public BoolH boolH() {
-    return boolH(true);
+  public BoolB boolB() {
+    return boolB(true);
   }
 
-  public BoolH boolH(boolean value) {
-    return objDb().bool(value);
+  public BoolB boolB(boolean value) {
+    return byteDb().bool(value);
   }
 
-  public TupleH fileH(Path path) {
-    return fileH(path, ByteString.encodeString(path.toString(), CHARSET));
+  public TupleB fileB(Path path) {
+    return fileB(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public TupleH fileH(Path path, ByteString content) {
-    return fileH(path.toString(), blobH(content));
+  public TupleB fileB(Path path, ByteString content) {
+    return fileB(path.toString(), blobB(content));
   }
 
-  public TupleH fileH(String path, BlobH blob) {
-    StringH string = objFactory().string(path);
+  public TupleB fileB(String path, BlobB blob) {
+    StringB string = objFactory().string(path);
     return objFactory().file(string, blob);
   }
 
-  public FuncH funcH() {
-    return funcH(intH());
+  public FuncB funcB() {
+    return funcB(intB());
   }
 
-  public FuncH funcH(ObjH body) {
-    return funcH(list(), body);
+  public FuncB funcB(ObjB body) {
+    return funcB(list(), body);
   }
 
-  public FuncH funcH(ImmutableList<TypeH> paramTs, ObjH body) {
-    var type = funcTH(body.type(), paramTs);
-    return funcH(type, body);
+  public FuncB funcB(ImmutableList<TypeB> paramTs, ObjB body) {
+    var type = funcTB(body.type(), paramTs);
+    return funcB(type, body);
   }
 
-  public FuncH funcH(FuncTH type, ObjH body) {
-    return objDb().func(type, body);
+  public FuncB funcB(FuncTB type, ObjB body) {
+    return byteDb().func(type, body);
   }
 
-  public IntH intH() {
-    return intH(17);
+  public IntB intB() {
+    return intB(17);
   }
 
-  public IntH intH(int value) {
-    return objDb().int_(BigInteger.valueOf(value));
+  public IntB intB(int value) {
+    return byteDb().int_(BigInteger.valueOf(value));
   }
 
-  public MethodH methodH() {
-    return methodH(methodTH());
+  public MethodB methodB() {
+    return methodB(methodTB());
   }
 
-  public MethodH methodH(MethodTH methodTH) {
-    return methodH(methodTH, blobH(7), stringH("class binary name"), boolH(true));
+  public MethodB methodB(MethodTB methodTB) {
+    return methodB(methodTB, blobB(7), stringB("class binary name"), boolB(true));
   }
 
-  public MethodH methodH(BlobH jar, StringH classBinaryName) {
-    return methodH(methodTH(), jar, classBinaryName);
+  public MethodB methodB(BlobB jar, StringB classBinaryName) {
+    return methodB(methodTB(), jar, classBinaryName);
   }
 
-  public MethodH methodH(MethodTH type, BlobH jar, StringH classBinaryName) {
-    return methodH(type, jar, classBinaryName, boolH(true));
+  public MethodB methodB(MethodTB type, BlobB jar, StringB classBinaryName) {
+    return methodB(type, jar, classBinaryName, boolB(true));
   }
 
-  public MethodH methodH(MethodTH type, BlobH jar, StringH classBinaryName, BoolH isPure) {
-    return objDb().method(type, jar, classBinaryName, isPure);
+  public MethodB methodB(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+    return byteDb().method(type, jar, classBinaryName, isPure);
   }
 
-  public TupleH personH(String firstName, String lastName) {
-    return tupleH(list(stringH(firstName), stringH(lastName)));
+  public TupleB personB(String firstName, String lastName) {
+    return tupleB(list(stringB(firstName), stringB(lastName)));
   }
 
-  public StringH stringH() {
-    return objDb().string("abc");
+  public StringB stringB() {
+    return byteDb().string("abc");
   }
 
-  public StringH stringH(String string) {
-    return objDb().string(string);
+  public StringB stringB(String string) {
+    return byteDb().string(string);
   }
 
-  public TupleH tupleH(ImmutableList<ValH> items) {
-    var type = tupleTH(map(items, ValH::type));
-    return tupleH(type, items);
+  public TupleB tupleB(ImmutableList<ValB> items) {
+    var type = tupleTB(map(items, ValB::type));
+    return tupleB(type, items);
   }
 
-  public TupleH tupleH(TupleTH tupleT, ImmutableList<ValH> items) {
-    return objDb().tuple(tupleT, items);
+  public TupleB tupleB(TupleTB tupleT, ImmutableList<ValB> items) {
+    return byteDb().tuple(tupleT, items);
   }
 
-  public TupleH tupleHEmpty() {
-    return tupleH(list());
+  public TupleB tupleBEmpty() {
+    return tupleB(list());
   }
 
-  public TupleH tupleHWithStr() {
-    return tupleH(list(stringH("abc")));
+  public ArrayB messageArrayWithOneError() {
+    return arrayB(objFactory().errorMessage("error message"));
   }
 
-  public TupleH tupleHWithStr(StringH str) {
-    return tupleH(list(str));
+  public ArrayB messageArrayEmtpy() {
+    return arrayB(objFactory().messageT());
   }
 
-  public ArrayH messageArrayWithOneError() {
-    return arrayH(objFactory().errorMessage("error message"));
-  }
-
-  public ArrayH messageArrayEmtpy() {
-    return arrayH(objFactory().messageT());
-  }
-
-  public TupleH errorMessage(String text) {
+  public TupleB errorMessage(String text) {
     return objFactory().errorMessage(text);
   }
 
-  public TupleH warningMessage(String text) {
+  public TupleB warningMessage(String text) {
     return objFactory().warningMessage(text);
   }
 
-  public TupleH infoMessage(String text) {
+  public TupleB infoMessage(String text) {
     return objFactory().infoMessage(text);
   }
 
   // Expr-s
 
-  public CallH callH(ObjH func, ImmutableList<ObjH> args) {
-    return objDb().call(func, combineH(args));
+  public CallB callB(ObjB func, ImmutableList<ObjB> args) {
+    return byteDb().call(func, combineB(args));
   }
 
-  public CombineH combineH(ImmutableList<ObjH> items) {
-    var evalT = tupleTH(map(items, ObjH::type));
-    return combineH(evalT, items);
+  public CombineB combineB(ImmutableList<ObjB> items) {
+    var evalT = tupleTB(map(items, ObjB::type));
+    return combineB(evalT, items);
   }
 
-  public CombineH combineH(TupleTH evalT, ImmutableList<ObjH> items) {
-    return objDb().combine(evalT, items);
+  public CombineB combineB(TupleTB evalT, ImmutableList<ObjB> items) {
+    return byteDb().combine(evalT, items);
   }
 
-  public IfH ifH(ObjH condition, ObjH then, ObjH else_) {
-    return objDb().if_(condition, then, else_);
+  public IfB ifB(ObjB condition, ObjB then, ObjB else_) {
+    return byteDb().if_(condition, then, else_);
   }
 
-  public InvokeH invokeH(ObjH method) {
-    MethodH castMethod = (MethodH) method;
-    var args = combineH(createParamRefsH(castMethod.type().params()));
-    return invokeH(method, args);
+  public InvokeB invokeB(MethodB method) {
+    var args = combineB(createParamRefsB(method.type().params()));
+    return invokeB(method, args);
   }
 
-  public InvokeH invokeH(ObjH method, ImmutableList<ObjH> args) {
-    return objDb().invoke(method, combineH(args));
+  public InvokeB invokeB(ObjB method, ImmutableList<ObjB> args) {
+    return byteDb().invoke(method, combineB(args));
   }
 
-  public InvokeH invokeH(ObjH method, ObjH args) {
-    return objDb().invoke(method, args);
+  public InvokeB invokeB(ObjB method, ObjB args) {
+    return byteDb().invoke(method, args);
   }
 
-  private ImmutableList<ObjH> createParamRefsH(ImmutableList<TypeH> paramTs) {
-    Builder<ObjH> builder = ImmutableList.builder();
+  private ImmutableList<ObjB> createParamRefsB(ImmutableList<TypeB> paramTs) {
+    Builder<ObjB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
-      builder.add(paramRefH(paramTs.get(i), i));
+      builder.add(paramRefB(paramTs.get(i), i));
     }
     return builder.build();
   }
 
-  public MapH mapH(ObjH array, ObjH func) {
-    return objDb().map(array, func);
+  public MapB mapB(ObjB array, ObjB func) {
+    return byteDb().map(array, func);
   }
 
-  public OrderH orderH(ImmutableList<ObjH> elems) {
+  public OrderB orderB(ImmutableList<ObjB> elems) {
     var elemT = elems.get(0).type();
-    return orderH(elemT, elems);
+    return orderB(elemT, elems);
   }
 
-  public OrderH orderH(TypeH elemT, ImmutableList<ObjH> elems) {
-    return objDb().order(arrayTH(elemT), elems);
+  public OrderB orderB(TypeB elemT, ImmutableList<ObjB> elems) {
+    return byteDb().order(arrayTB(elemT), elems);
   }
 
-  public ParamRefH paramRefH(int index) {
-    return paramRefH(intTH(), index);
+  public ParamRefB paramRefB(int index) {
+    return paramRefB(intTB(), index);
   }
 
-  public ParamRefH paramRefH(TypeH evalT, int index) {
-    return objDb().newParamRef(BigInteger.valueOf(index), evalT);
+  public ParamRefB paramRefB(TypeB evalT, int index) {
+    return byteDb().newParamRef(BigInteger.valueOf(index), evalT);
   }
 
-  public SelectH selectH(ObjH tuple, IntH index) {
-    return objDb().select(tuple, index);
+  public SelectB selectB(ObjB tuple, IntB index) {
+    return byteDb().select(tuple, index);
   }
 
   // Types Smooth

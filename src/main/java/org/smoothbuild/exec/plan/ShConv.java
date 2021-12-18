@@ -17,21 +17,21 @@ import java.util.function.Function;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.CombineH;
-import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.ParamRefH;
-import org.smoothbuild.db.object.obj.expr.SelectH;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.FuncH;
-import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MethodH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTH;
-import org.smoothbuild.db.object.type.val.FuncTH;
-import org.smoothbuild.db.object.type.val.TupleTH;
+import org.smoothbuild.db.object.obj.base.ObjB;
+import org.smoothbuild.db.object.obj.expr.CallB;
+import org.smoothbuild.db.object.obj.expr.CombineB;
+import org.smoothbuild.db.object.obj.expr.OrderB;
+import org.smoothbuild.db.object.obj.expr.ParamRefB;
+import org.smoothbuild.db.object.obj.expr.SelectB;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.FuncB;
+import org.smoothbuild.db.object.obj.val.IntB;
+import org.smoothbuild.db.object.obj.val.MethodB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.object.type.val.ArrayTB;
+import org.smoothbuild.db.object.type.val.FuncTB;
+import org.smoothbuild.db.object.type.val.TupleTB;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
@@ -71,9 +71,9 @@ public class ShConv {
   private final TypeShConv typeShConv;
   private final FileLoader fileLoader;
   private final Deque<NList<ItemS>> callStack;
-  private final Map<String, FuncH> funcCache;
-  private final Map<String, ObjH> valCache;
-  private final Map<ObjH, Nal> nals;
+  private final Map<String, FuncB> funcCache;
+  private final Map<String, ObjB> valCache;
+  private final Map<ObjB, Nal> nals;
 
   @Inject
   public ShConv(ObjFactory objFactory, DefsS defs, TypeShConv typeShConv, FileLoader fileLoader) {
@@ -87,15 +87,15 @@ public class ShConv {
     this.nals = new HashMap<>();
   }
 
-  public ImmutableMap<ObjH, Nal> nals() {
+  public ImmutableMap<ObjB, Nal> nals() {
     return ImmutableMap.copyOf(nals);
   }
 
-  private FuncH convertFunc(FuncS funcS) {
+  private FuncB convertFunc(FuncS funcS) {
     return computeIfAbsent(funcCache, funcS.name(), name -> convertFuncImpl(funcS));
   }
 
-  private FuncH convertFuncImpl(FuncS funcS) {
+  private FuncB convertFuncImpl(FuncS funcS) {
     try {
       callStack.push(funcS.params());
       var funcH = switch (funcS) {
@@ -111,53 +111,53 @@ public class ShConv {
     }
   }
 
-  private FuncH convertDefFunc(DefFuncS defFuncS) {
-    var funcTH = convertFuncT(defFuncS.type());
+  private FuncB convertDefFunc(DefFuncS defFuncS) {
+    var funcTB = convertFuncT(defFuncS.type());
     var body = convertExpr(defFuncS.body());
-    return objFactory.func(funcTH, body);
+    return objFactory.func(funcTB, body);
   }
 
-  private FuncH convertIfFunc(IfFuncS ifFuncS) {
-    var funcTH = convertFuncT(ifFuncS.type());
+  private FuncB convertIfFunc(IfFuncS ifFuncS) {
+    var funcTB = convertFuncT(ifFuncS.type());
     var conditionH = objFactory.paramRef(ZERO, objFactory.boolT());
-    var resTH = funcTH.res();
-    var thenH = objFactory.paramRef(ONE, resTH);
-    var elseH = objFactory.paramRef(TWO, resTH);
-    var bodyH = objFactory.if_(conditionH, thenH, elseH);
-    nals.put(bodyH, ifFuncS);
-    return objFactory.func(funcTH, bodyH);
+    var resTB = funcTB.res();
+    var thenB = objFactory.paramRef(ONE, resTB);
+    var elseB = objFactory.paramRef(TWO, resTB);
+    var bodyB = objFactory.if_(conditionH, thenB, elseB);
+    nals.put(bodyB, ifFuncS);
+    return objFactory.func(funcTB, bodyB);
   }
 
-  private FuncH convertMapFunc(MapFuncS mapFuncS) {
-    var funcTH = convertFuncT(mapFuncS.type());
-    var inputArrayT = (ArrayTH) funcTH.params().get(0);
-    var mappingFuncT = (FuncTH) funcTH.params().get(1);
+  private FuncB convertMapFunc(MapFuncS mapFuncS) {
+    var funcTB = convertFuncT(mapFuncS.type());
+    var inputArrayT = (ArrayTB) funcTB.params().get(0);
+    var mappingFuncT = (FuncTB) funcTB.params().get(1);
     var arrayParam = objFactory.paramRef(ZERO, inputArrayT);
     var mappingFuncParam = objFactory.paramRef(ONE, mappingFuncT);
-    var bodyH = objFactory.map(arrayParam, mappingFuncParam);
-    nals.put(bodyH, mapFuncS);
-    return objFactory.func(funcTH, bodyH);
+    var bodyB = objFactory.map(arrayParam, mappingFuncParam);
+    nals.put(bodyB, mapFuncS);
+    return objFactory.func(funcTB, bodyB);
   }
 
-  private FuncH convertNatFunc(NatFuncS natFuncS) {
-    var funcTH = convertFuncT(natFuncS.type());
-    var methodH = createMethodH(natFuncS.ann(), funcTH);
-    var args = objFactory.combine(funcTH.paramsTuple(), createParamRefsH(funcTH.params()));
-    var bodyH = objFactory.invoke(methodH, args);
-    nals.put(bodyH, natFuncS);
-    return objFactory.func(funcTH, bodyH);
+  private FuncB convertNatFunc(NatFuncS natFuncS) {
+    var funcTB = convertFuncT(natFuncS.type());
+    var methodB = createMethodH(natFuncS.ann(), funcTB);
+    var args = objFactory.combine(funcTB.paramsTuple(), createParamRefsH(funcTB.params()));
+    var bodyB = objFactory.invoke(methodB, args);
+    nals.put(bodyB, natFuncS);
+    return objFactory.func(funcTB, bodyB);
   }
 
-  private MethodH createMethodH(AnnS annS, FuncTH funcTH) {
-    var methodTH = objFactory.methodT(funcTH.res(), funcTH.params());
-    var jarH = loadNativeJar(annS);
-    var classBinaryNameH = objFactory.string(annS.path().string());
-    var isPureH = objFactory.bool(annS.isPure());
-    return objFactory.method(methodTH, jarH, classBinaryNameH, isPureH);
+  private MethodB createMethodH(AnnS annS, FuncTB funcTB) {
+    var methodTB = objFactory.methodT(funcTB.res(), funcTB.params());
+    var jarB = loadNativeJar(annS);
+    var classBinaryNameB = objFactory.string(annS.path().string());
+    var isPureB = objFactory.bool(annS.isPure());
+    return objFactory.method(methodTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private ImmutableList<ObjH> createParamRefsH(ImmutableList<TypeH> paramTs) {
-    Builder<ObjH> builder = ImmutableList.builder();
+  private ImmutableList<ObjB> createParamRefsH(ImmutableList<TypeB> paramTs) {
+    Builder<ObjB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
       builder.add(objFactory.paramRef(BigInteger.valueOf(i), paramTs.get(i)));
     }
@@ -166,17 +166,17 @@ public class ShConv {
 
   // handling value
 
-  private ObjH convertVal(DefValS defValS) {
+  private ObjB convertVal(DefValS defValS) {
     return computeIfAbsent(valCache, defValS.name(), name -> convertExpr(defValS.body()));
   }
 
   // handling expressions
 
-  private ImmutableList<ObjH> convertExprs(ImmutableList<ExprS> exprs) {
+  private ImmutableList<ObjB> convertExprs(ImmutableList<ExprS> exprs) {
     return map(exprs, this::convertExpr);
   }
 
-  public ObjH convertExpr(ExprS exprS) {
+  public ObjB convertExpr(ExprS exprS) {
     return switch (exprS) {
       case BlobS blobS -> convertAndCacheNal(blobS, this::convertBlob);
       case CallS callS -> convertAndCacheNal(callS, this::convertCall);
@@ -190,75 +190,75 @@ public class ShConv {
     };
   }
 
-  private <T extends ExprS> ObjH convertAndCacheNal(T exprS, Function<T, ObjH> mapping) {
-    var objH = mapping.apply(exprS);
-    nals.put(objH, exprS);
-    return objH;
+  private <T extends ExprS> ObjB convertAndCacheNal(T exprS, Function<T, ObjB> mapping) {
+    var objB = mapping.apply(exprS);
+    nals.put(objB, exprS);
+    return objB;
   }
 
-  private BlobH convertBlob(BlobS blobS) {
+  private BlobB convertBlob(BlobS blobS) {
     return objFactory.blob(sink -> sink.write(blobS.byteString()));
   }
 
-  private CallH convertCall(CallS callS) {
-    var callableH = convertExpr(callS.callable());
-    var argsH = convertExprs(callS.args());
+  private CallB convertCall(CallS callS) {
+    var callableB = convertExpr(callS.callable());
+    var argsB = convertExprs(callS.args());
 
-    var argTupleT = objFactory.tupleT(map(argsH, ObjH::type));
-    var paramTupleT = ((FuncTH) callableH.type()).paramsTuple();
+    var argTupleT = objFactory.tupleT(map(argsB, ObjB::type));
+    var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
     var typing = objFactory.typing();
     var vars = typing.inferVarBounds(paramTupleT, argTupleT, typing.factory().lower());
-    var actualParamTupleT = (TupleTH) typing.mapVarsLower(paramTupleT, vars);
-    var combineH = objFactory.combine(actualParamTupleT, argsH);
+    var actualParamTupleT = (TupleTB) typing.mapVarsLower(paramTupleT, vars);
+    var combineB = objFactory.combine(actualParamTupleT, argsB);
 
-    nals.put(combineH, new NalImpl("{}", callS.loc()));
-    return objFactory.call(callableH, combineH);
+    nals.put(combineB, new NalImpl("{}", callS.loc()));
+    return objFactory.call(callableB, combineB);
   }
 
-  private CombineH convertCombine(CombineS combineS) {
+  private CombineB convertCombine(CombineS combineS) {
     var evalT = convertStructT(combineS.type());
     var items = convertExprs(combineS.elems());
     return objFactory.combine(evalT, items);
   }
 
-  private IntH convertInt(IntS intS) {
+  private IntB convertInt(IntS intS) {
     return objFactory.int_(intS.bigInteger());
   }
 
-  private OrderH convertOrder(OrderS orderS) {
-    var arrayTH = convertArrayT(orderS.type());
-    var elemsH = convertExprs(orderS.elems());
-    return objFactory.order(arrayTH, elemsH);
+  private OrderB convertOrder(OrderS orderS) {
+    var arrayTB = convertArrayT(orderS.type());
+    var elemsB = convertExprs(orderS.elems());
+    return objFactory.order(arrayTB, elemsB);
   }
 
-  private ParamRefH convertParamRef(ParamRefS paramRefS) {
+  private ParamRefB convertParamRef(ParamRefS paramRefS) {
     var index = callStack.peek().indexMap().get(paramRefS.paramName());
     return objFactory.paramRef(BigInteger.valueOf(index), convertT(paramRefS.type()));
   }
 
-  private ObjH convertTopRef(TopRefS topRefS) {
+  private ObjB convertTopRef(TopRefS topRefS) {
     return switch (defs.topEvals().get(topRefS.name())) {
       case FuncS f -> convertFunc(f);
       case DefValS v -> convertVal(v);
     };
   }
 
-  private SelectH convertSelect(SelectS selectS) {
-    var selectableH = convertExpr(selectS.selectable());
+  private SelectB convertSelect(SelectS selectS) {
+    var selectableB = convertExpr(selectS.selectable());
     var structTS = (StructTS) selectS.selectable().type();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
-    var indexH = objFactory.int_(BigInteger.valueOf(indexJ));
-    nals.put(indexH, selectS);
-    return objFactory.select(selectableH, indexH);
+    var indexB = objFactory.int_(BigInteger.valueOf(indexJ));
+    nals.put(indexB, selectS);
+    return objFactory.select(selectableB, indexB);
   }
 
-  private StringH convertString(StringS stringS) {
+  private StringB convertString(StringS stringS) {
     return objFactory.string(stringS.string());
   }
 
   // helpers
 
-  private BlobH loadNativeJar(AnnS ann) {
+  private BlobB loadNativeJar(AnnS ann) {
     var filePath = ann.loc().file().withExtension("jar");
     try {
       return fileLoader.load(filePath);
@@ -269,19 +269,19 @@ public class ShConv {
     }
   }
 
-  private TypeH convertT(TypeS typeS) {
+  private TypeB convertT(TypeS typeS) {
     return typeShConv.convert(typeS);
   }
 
-  private ArrayTH convertArrayT(ArrayTS typeS) {
+  private ArrayTB convertArrayT(ArrayTS typeS) {
     return typeShConv.convert(typeS);
   }
 
-  private TupleTH convertStructT(StructTS typeS) {
+  private TupleTB convertStructT(StructTS typeS) {
     return typeShConv.convert(typeS);
   }
 
-  private FuncTH convertFuncT(FuncTS funcTS) {
+  private FuncTB convertFuncT(FuncTS funcTS) {
     return typeShConv.convert(funcTS);
   }
 }

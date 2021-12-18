@@ -3,26 +3,26 @@ package org.smoothbuild.exec.algorithm;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public abstract class Algorithm {
   private final boolean isPure;
-  private final TypeH outputT;
+  private final TypeB outputT;
 
-  protected Algorithm(TypeH outputT) {
+  protected Algorithm(TypeB outputT) {
     this(outputT, true);
   }
 
-  protected Algorithm(TypeH outputT, boolean isPure) {
+  protected Algorithm(TypeB outputT, boolean isPure) {
     this.outputT = outputT;
     this.isPure = isPure;
     checkArgument(!outputT.isPolytype());
   }
 
-  public TypeH outputT() {
+  public TypeB outputT() {
     return outputT;
   }
 

@@ -4,11 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.exec.base.MessageStruct.containsErrors;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
 import org.smoothbuild.testing.TestingContext;
 
 public class MessageStructTest extends TestingContext {
-  private ArrayH messages;
+  private ArrayB messages;
 
   @Test
   public void empty_list_contains_no_errors() {
@@ -19,21 +19,21 @@ public class MessageStructTest extends TestingContext {
 
   @Test
   public void list_with_info_message_contains_no_errors() {
-    messages = arrayH(infoMessage("info message"));
+    messages = arrayB(infoMessage("info message"));
     assertThat(containsErrors(messages))
         .isFalse();
   }
 
   @Test
   public void list_with_warning_messsage_contains_no_errors() {
-    messages = arrayH(warningMessage("warning message"));
+    messages = arrayB(warningMessage("warning message"));
     assertThat(containsErrors(messages))
         .isFalse();
   }
 
   @Test
   public void list_with_error_messsage_contains_errors() {
-    messages = arrayH(errorMessage("error message"));
+    messages = arrayB(errorMessage("error message"));
     assertThat(containsErrors(messages))
         .isTrue();
   }

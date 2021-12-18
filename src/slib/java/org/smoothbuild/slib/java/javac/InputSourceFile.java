@@ -9,12 +9,12 @@ import java.util.Scanner;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.TupleB;
 
 public class InputSourceFile extends SimpleJavaFileObject {
-  private final TupleH file;
+  private final TupleB file;
 
-  public InputSourceFile(TupleH file) {
+  public InputSourceFile(TupleB file) {
     super(URI.create("string:///" + filePath(file).toJ()), Kind.SOURCE);
     this.file = file;
   }

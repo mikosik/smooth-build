@@ -1,18 +1,18 @@
 package org.smoothbuild.slib.common;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.ValB;
+import org.smoothbuild.db.object.type.val.ArrayTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConcatFunc {
-  public static ArrayH func(NativeApi nativeApi, ArrayH array1, ArrayH array2) {
+  public static ArrayB func(NativeApi nativeApi, ArrayB array1, ArrayB array2) {
     var factory = nativeApi.factory();
-    var elemT = ((ArrayTH) factory.typing().mergeUp(array1.cat(), array2.cat())).elem();
+    var elemT = ((ArrayTB) factory.typing().mergeUp(array1.cat(), array2.cat())).elem();
     return factory
         .arrayBuilderWithElems(elemT)
-        .addAll(array1.elems(ValH.class))
-        .addAll(array2.elems(ValH.class))
+        .addAll(array1.elems(ValB.class))
+        .addAll(array2.elems(ValB.class))
         .build();
   }
 }

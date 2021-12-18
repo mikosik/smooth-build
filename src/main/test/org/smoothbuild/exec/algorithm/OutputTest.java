@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.StringB;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
@@ -89,7 +89,7 @@ public class OutputTest extends TestingContext {
   public void outputs_with_different_value_and_same_messages_are_not_equal() {
     Output output = new Output(aString(), messages());
     assertThat(output)
-        .isNotEqualTo(new Output(stringH("def"), messages()));
+        .isNotEqualTo(new Output(stringB("def"), messages()));
   }
 
   @Test
@@ -106,11 +106,11 @@ public class OutputTest extends TestingContext {
         .isEqualTo(new Output(aString(), messages()));
   }
 
-  private ArrayH messages() {
+  private ArrayB messages() {
     return messageArrayWithOneError();
   }
 
-  private StringH aString() {
-    return stringH("abc");
+  private StringB aString() {
+    return stringB("abc");
   }
 }

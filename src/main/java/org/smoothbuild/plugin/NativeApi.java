@@ -1,7 +1,7 @@
 package org.smoothbuild.plugin;
 
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.val.ArrayH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
 
 /**
  * Implementation of NativeApi doesn't provide any thread safety and should be used
@@ -12,5 +12,5 @@ public interface NativeApi {
 
   public MessageLogger log();
 
-  public ArrayH messages();
+  public ArrayB messages();
 }

@@ -9,20 +9,20 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.ZipException;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.plugin.NativeApi;
 
 public class PackagedJavaFileObjects {
   public static Iterable<InputClassFile> classesFromJarFiles(NativeApi nativeApi,
-      Iterable<TupleH> libraryJars) throws IOException, ZipException {
+      Iterable<TupleB> libraryJars) throws IOException, ZipException {
     Set<InputClassFile> result = new HashSet<>();
-    for (TupleH jar : libraryJars) {
-      BlobH jarBlob = FileStruct.fileContent(jar);
-      ArrayH files = unzip(nativeApi, jarBlob, isClassFilePredicate());
-      for (TupleH file : files.elems(TupleH.class)) {
+    for (TupleB jar : libraryJars) {
+      BlobB jarBlob = FileStruct.fileContent(jar);
+      ArrayB files = unzip(nativeApi, jarBlob, isClassFilePredicate());
+      for (TupleB file : files.elems(TupleB.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
           nativeApi.log().error("File " + filePath(file).toJ()

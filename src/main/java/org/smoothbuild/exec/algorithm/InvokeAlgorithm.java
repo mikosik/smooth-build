@@ -8,37 +8,37 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.MethodH;
-import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.obj.val.MethodB;
+import org.smoothbuild.db.object.obj.val.ValB;
+import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.plugin.NativeApi;
 
 public class InvokeAlgorithm extends Algorithm {
-  private final MethodH methodH;
+  private final MethodB methodB;
   private final String extendedName;
   private final MethodLoader methodLoader;
 
-  public InvokeAlgorithm(TypeH outputT, String extendedName, MethodH method,
+  public InvokeAlgorithm(TypeB outputT, String extendedName, MethodB method,
       MethodLoader methodLoader) {
     super(outputT, method.isPure().toJ());
     this.extendedName = extendedName;
     this.methodLoader = methodLoader;
-    this.methodH = method;
+    this.methodB = method;
   }
 
   @Override
   public Hash hash() {
-    return invokeAlgorithmHash(methodH);
+    return invokeAlgorithmHash(methodB);
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    var method = methodLoader.load(extendedName, methodH);
+    var method = methodLoader.load(extendedName, methodB);
     try {
-      var result = (ValH) method.invoke(null, createArgs(nativeApi, input.vals()));
+      var result = (ValB) method.invoke(null, createArgs(nativeApi, input.vals()));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
           nativeApi.log().error(q(extendedName)
@@ -62,7 +62,7 @@ public class InvokeAlgorithm extends Algorithm {
     }
   }
 
-  private static Object[] createArgs(NativeApi nativeApi, List<ValH> args) {
+  private static Object[] createArgs(NativeApi nativeApi, List<ValB> args) {
     Object[] nativeArgs = new Object[1 + args.size()];
     nativeArgs[0] = nativeApi;
     for (int i = 0; i < args.size(); i++) {

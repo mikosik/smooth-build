@@ -1,8 +1,8 @@
 package org.smoothbuild.db.object.obj.exc;
 
-import org.smoothbuild.db.object.db.ObjDbExc;
+import org.smoothbuild.db.object.db.ByteDbExc;
 
-public class DecodeObjExc extends ObjDbExc {
+public class DecodeObjExc extends ByteDbExc {
   public DecodeObjExc(String message, Throwable cause) {
     super(message, cause);
   }

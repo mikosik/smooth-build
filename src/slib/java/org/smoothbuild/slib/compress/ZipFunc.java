@@ -8,21 +8,21 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.BlobHBuilder;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.BlobBBuilder;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 
 import okio.BufferedSource;
 
 public class ZipFunc {
-  public static BlobH func(NativeApi nativeApi, ArrayH files) throws IOException {
+  public static BlobB func(NativeApi nativeApi, ArrayB files) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    BlobHBuilder blobBuilder = nativeApi.factory().blobBuilder();
+    BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
-      for (TupleH file : files.elems(TupleH.class)) {
+      for (TupleB file : files.elems(TupleB.class)) {
         String path = filePath(file).toJ();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
@@ -34,7 +34,7 @@ public class ZipFunc {
     return blobBuilder.build();
   }
 
-  private static void zipFile(TupleH file, ZipOutputStream zipOutputStream) throws IOException {
+  private static void zipFile(TupleB file, ZipOutputStream zipOutputStream) throws IOException {
     ZipEntry entry = new ZipEntry(filePath(file).toJ());
     zipOutputStream.putNextEntry(entry);
     try (BufferedSource source = fileContent(file).source()) {

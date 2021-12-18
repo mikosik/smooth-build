@@ -22,22 +22,22 @@ public class AlgorithmHashesCollisionTest extends TestingContext {
   public void each_algorithm_has_different_hash() {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
-    addHash(list, set, combineAlgorithmHash(tupleTH(list())));
-    addHash(list, set, combineAlgorithmHash(tupleTH(list(intTH()))));
-    addHash(list, set, combineAlgorithmHash(tupleTH(list(stringTH()))));
-    addHash(list, set, combineAlgorithmHash(tupleTH(list(intTH(), stringTH()))));
+    addHash(list, set, combineAlgorithmHash(tupleTB(list())));
+    addHash(list, set, combineAlgorithmHash(tupleTB(list(intTB()))));
+    addHash(list, set, combineAlgorithmHash(tupleTB(list(stringTB()))));
+    addHash(list, set, combineAlgorithmHash(tupleTB(list(intTB(), stringTB()))));
     addHash(list, set, invokeAlgorithmHash(
-        methodH(methodTH(intTH(), list()), blobH(1), stringH("1"), boolH(true))));
+        methodB(methodTB(intTB(), list()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, invokeAlgorithmHash(
-        methodH(methodTH(intTH(), list()), blobH(1), stringH("1"), boolH(false))));
+        methodB(methodTB(intTB(), list()), blobB(1), stringB("1"), boolB(false))));
     addHash(list, set, invokeAlgorithmHash(
-        methodH(methodTH(intTH(), list()), blobH(1), stringH("2"), boolH(true))));
+        methodB(methodTB(intTB(), list()), blobB(1), stringB("2"), boolB(true))));
     addHash(list, set, invokeAlgorithmHash(
-        methodH(methodTH(intTH(), list()), blobH(2), stringH("1"), boolH(true))));
+        methodB(methodTB(intTB(), list()), blobB(2), stringB("1"), boolB(true))));
     addHash(list, set, invokeAlgorithmHash(
-        methodH(methodTH(boolTH(), list()), blobH(1), stringH("1"), boolH(true))));
-    addHash(list, set, orderAlgorithmHash(arrayTH(intTH())));
-    addHash(list, set, orderAlgorithmHash(arrayTH(boolTH())));
+        methodB(methodTB(boolTB(), list()), blobB(1), stringB("1"), boolB(true))));
+    addHash(list, set, orderAlgorithmHash(arrayTB(intTB())));
+    addHash(list, set, orderAlgorithmHash(arrayTB(boolTB())));
     addHash(list, set, selectAlgorithmHash());
   }
 

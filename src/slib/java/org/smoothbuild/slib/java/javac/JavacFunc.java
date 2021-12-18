@@ -15,13 +15,13 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class JavacFunc {
-  public static ArrayH func(NativeApi nativeApi, ArrayH srcs, ArrayH libs, ArrayH options)
+  public static ArrayB func(NativeApi nativeApi, ArrayB srcs, ArrayB libs, ArrayB options)
       throws IOException {
     return new Worker(nativeApi, srcs, libs, options).execute();
   }
@@ -29,15 +29,15 @@ public class JavacFunc {
   private static class Worker {
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
-    private final ArrayH srcs;
-    private final ArrayH libs;
-    private final ArrayH options;
+    private final ArrayB srcs;
+    private final ArrayB libs;
+    private final ArrayB options;
 
     public Worker(
         NativeApi nativeApi,
-        ArrayH srcs,
-        ArrayH libs,
-        ArrayH options) {
+        ArrayB srcs,
+        ArrayB libs,
+        ArrayB options) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.srcs = srcs;
@@ -45,7 +45,7 @@ public class JavacFunc {
       this.options = options;
     }
 
-    public ArrayH execute() throws IOException {
+    public ArrayB execute() throws IOException {
       if (compiler == null) {
         nativeApi.log().error("Couldn't find JavaCompiler implementation. "
             + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
@@ -54,7 +54,7 @@ public class JavacFunc {
       return compile(srcs);
     }
 
-    public ArrayH compile(ArrayH files) throws IOException {
+    public ArrayB compile(ArrayB files) throws IOException {
       // prepare args for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
@@ -62,13 +62,13 @@ public class JavacFunc {
       Iterable<String> options = options();
       StandardJavaFileManager fileManager1 =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      var libsClasses = classesFromJarFiles(nativeApi, libs.elems(TupleH.class));
+      var libsClasses = classesFromJarFiles(nativeApi, libs.elems(TupleB.class));
       if (libsClasses == null) {
         return null;
       }
       try (SandboxedJavaFileManager fileManager = new SandboxedJavaFileManager(
           fileManager1, nativeApi, libsClasses)) {
-        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elems(TupleH.class));
+        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elems(TupleB.class));
 
         /*
          * Java compiler fails miserably when there's no java files.
@@ -101,14 +101,14 @@ public class JavacFunc {
     }
 
     private Iterable<String> options() {
-      return StreamSupport.stream(options.elems(StringH.class).spliterator(), false)
-          .map(StringH::toJ)
+      return StreamSupport.stream(options.elems(StringB.class).spliterator(), false)
+          .map(StringB::toJ)
           .collect(Collectors.toList());
     }
 
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleH> sourceFiles) {
+    private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleB> sourceFiles) {
       ArrayList<InputSourceFile> result = new ArrayList<>();
-      for (TupleH file : sourceFiles) {
+      for (TupleB file : sourceFiles) {
         result.add(new InputSourceFile(file));
       }
       return result;

@@ -17,8 +17,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResSource;
 import org.smoothbuild.exec.job.TaskInfo;
@@ -51,8 +51,8 @@ public class ExecutionReporter {
     ExecutionReporter.this.print(taskInfo, list(fatal), EXECUTION.toString());
   }
 
-  private void print(TaskInfo taskInfo, ResSource resSource, ArrayH messages) {
-    var logs = map(messages.elems(TupleH.class), m -> new Log(level(m), text(m)));
+  private void print(TaskInfo taskInfo, ResSource resSource, ArrayB messages) {
+    var logs = map(messages.elems(TupleB.class), m -> new Log(level(m), text(m)));
     print(taskInfo, logs, resSource);
   }
 

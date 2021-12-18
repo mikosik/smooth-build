@@ -5,14 +5,14 @@ import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 
 public class ProjectFileFunc {
-  public static TupleH func(Container container, StringH path) throws IOException {
+  public static TupleB func(Container container, StringB path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {
       return null;

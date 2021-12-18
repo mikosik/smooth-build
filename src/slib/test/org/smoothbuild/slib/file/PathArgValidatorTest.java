@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
@@ -18,7 +18,7 @@ public class PathArgValidatorTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("listOfCorrectProjectPaths")
   public void valid_project_paths_are_accepted(String path) {
-    validatedProjectPath(container(), "name", stringH(path));
+    validatedProjectPath(container(), "name", stringB(path));
   }
 
   public static Stream<String> listOfCorrectProjectPaths() {
@@ -42,11 +42,11 @@ public class PathArgValidatorTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("listOfInvalidProjectPaths")
   public void illegal_project_paths_are_reported(String path) {
-    Path name = validatedProjectPath(container(), "name", stringH(path));
+    Path name = validatedProjectPath(container(), "name", stringB(path));
     assertThat(name)
         .isNull();
     container().messages()
-        .elems(TupleH.class)
+        .elems(TupleB.class)
         .forEach(s -> {
           assertThat(messageText(s).toJ())
               .startsWith("Param `name` has illegal value.");

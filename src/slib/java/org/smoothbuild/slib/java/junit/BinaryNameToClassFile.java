@@ -9,27 +9,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipException;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.compress.UnzipFunc;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, TupleH> binaryNameToClassFile(NativeApi nativeApi,
-      Iterable<BlobH> libraryJars) throws IOException, JunitExc {
+  public static Map<String, TupleB> binaryNameToClassFile(NativeApi nativeApi,
+      Iterable<BlobB> libraryJars) throws IOException, JunitExc {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    Map<String, TupleH> binaryNameToClassFile = new HashMap<>();
-    for (BlobH jarBlob : libraryJars) {
-      ArrayH fileArray;
+    Map<String, TupleB> binaryNameToClassFile = new HashMap<>();
+    for (BlobB jarBlob : libraryJars) {
+      ArrayB fileArray;
       try {
         fileArray = UnzipFunc.unzip(nativeApi, jarBlob, isClassFilePredicate());
       } catch (ZipException e) {
         throw new JunitExc("Cannot read archive. Corrupted data?", e);
       }
-      for (TupleH classFile : fileArray.elems(TupleH.class)) {
+      for (TupleB classFile : fileArray.elems(TupleB.class)) {
         String classFilePath = (filePath(classFile)).toJ();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {

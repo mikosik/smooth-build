@@ -9,11 +9,11 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.FuncH;
-import org.smoothbuild.db.object.obj.val.ValH;
-import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.FuncB;
+import org.smoothbuild.db.object.obj.val.ValB;
+import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.object.type.val.ArrayTB;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Loc;
@@ -29,7 +29,7 @@ public class MapJob extends AbstractJob {
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeH type, Job arrayJ, Job funcJ, Loc loc, IndexedScope<Job> scope,
+  public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, IndexedScope<Job> scope,
       JobCreator jobCreator) {
     super(type, list(arrayJ, funcJ), new NalImpl("building:" + MAP_TASK_NAME, loc));
     this.arrayJ = arrayJ;
@@ -39,22 +39,22 @@ public class MapJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValH> schedule(Worker worker) {
-    PromisedValue<ValH> result = new PromisedValue<>();
-    Promise<ValH> array = arrayJ.schedule(worker);
-    Promise<ValH> func = funcJ.schedule(worker);
+  public Promise<ValB> schedule(Worker worker) {
+    PromisedValue<ValB> result = new PromisedValue<>();
+    Promise<ValB> array = arrayJ.schedule(worker);
+    Promise<ValB> func = funcJ.schedule(worker);
     runWhenAllAvailable(list(array, func),
-        () -> onArrayCompleted((ArrayH) array.get(), (FuncH) func.get(), worker, result));
+        () -> onArrayCompleted((ArrayB) array.get(), (FuncB) func.get(), worker, result));
     return result;
   }
 
-  private void onArrayCompleted(ArrayH array, FuncH funcH, Worker worker,
-      Consumer<ValH> result) {
-    var outputArrayTypeH = (ArrayTH) type();
+  private void onArrayCompleted(ArrayB array, FuncB funcB, Worker worker,
+      Consumer<ValB> result) {
+    var outputArrayTypeH = (ArrayTB) type();
     var outputElemType = outputArrayTypeH.elem();
-    var funcJob = getJob(funcH);
+    var funcJob = getJob(funcB);
     var mapElemJobs = map(
-        array.elems(ValH.class),
+        array.elems(ValB.class),
         o -> mapElementJob(outputElemType, funcJob, o));
     var info = new TaskInfo(INTERNAL, MAP_TASK_NAME, loc());
     jobCreator.orderEager(outputArrayTypeH, mapElemJobs, info)
@@ -62,16 +62,16 @@ public class MapJob extends AbstractJob {
         .addConsumer(result);
   }
 
-  private Job getJob(FuncH func) {
+  private Job getJob(FuncB func) {
     return new DummyJob(funcJ.type(), func, funcJ);
   }
 
-  private Job mapElementJob(TypeH elemType, Job funcJob, ValH elem) {
+  private Job mapElementJob(TypeB elemType, Job funcJob, ValB elem) {
     var elemJob = elemJob(elemType, elem, arrayJ.loc());
     return jobCreator.callEagerJob(scope, funcJob, list(elemJob), funcJob.loc());
   }
 
-  private Job elemJob(TypeH elemType, ValH elem, Loc loc) {
+  private Job elemJob(TypeB elemType, ValB elem, Loc loc) {
     return new DummyJob(elemType, elem, new NalImpl("elem-to-map", loc));
   }
 }

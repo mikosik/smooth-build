@@ -1,10 +1,10 @@
 package org.smoothbuild.db.object.type.exc;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.CatKindH;
+import org.smoothbuild.db.object.type.base.CatKindB;
 
 public class DecodeCatWrongNodeCatExc extends DecodeCatNodeExc {
-  public DecodeCatWrongNodeCatExc(Hash hash, CatKindH kind, String memberPath, int pathIndex,
+  public DecodeCatWrongNodeCatExc(Hash hash, CatKindB kind, String memberPath, int pathIndex,
       Class<?> expected, Class<?> actual) {
     this(hash, kind, indexedPath(memberPath, pathIndex), expected, actual);
   }
@@ -13,7 +13,7 @@ public class DecodeCatWrongNodeCatExc extends DecodeCatNodeExc {
     return memberPath + "[" + pathIndex + "]";
   }
 
-  public DecodeCatWrongNodeCatExc(Hash hash, CatKindH kind, String path, Class<?> expected,
+  public DecodeCatWrongNodeCatExc(Hash hash, CatKindB kind, String path, Class<?> expected,
       Class<?> actual) {
     super(hash, kind, path, buildMessage(expected, actual));
   }

@@ -25,9 +25,9 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.acceptance.testing.WithoutContainer;
 import org.smoothbuild.acceptance.testing.WrongMethodName;
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NativeTest extends AcceptanceTestCase {
@@ -163,8 +163,8 @@ public class NativeTest extends AcceptanceTestCase {
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "`stringIdentity` declares type `{Blob,String}` "
                 + "so its native implementation result type must be "
-                + TupleH.class.getCanonicalName()
-                + " but it is " + StringH.class.getCanonicalName() + ".\n"));
+                + TupleB.class.getCanonicalName()
+                + " but it is " + StringB.class.getCanonicalName() + ".\n"));
       }
 
       @Test
@@ -212,8 +212,8 @@ public class NativeTest extends AcceptanceTestCase {
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
             "`stringIdentity` parameter at index 0 has type `[String]` "
-            + "so its native implementation type must be " + ArrayH.class.getCanonicalName()
-            + " but it is " + StringH.class.getCanonicalName() + "."));
+            + "so its native implementation type must be " + ArrayB.class.getCanonicalName()
+            + " but it is " + StringB.class.getCanonicalName() + "."));
       }
 
       @Test

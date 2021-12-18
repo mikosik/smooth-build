@@ -7,8 +7,8 @@ import static okio.Okio.sink;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayBBuilder;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
@@ -22,20 +22,20 @@ public class OutputClassFileTest extends TestingContext {
   @Test
   public void open_output_stream() throws IOException {
     var factory = nativeApi().factory();
-    ArrayHBuilder fileArrayBuilder = objDb().arrayBuilder(factory.arrayT(factory.fileT()));
+    ArrayBBuilder fileArrayBuilder = byteDb().arrayBuilder(factory.arrayT(factory.fileT()));
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi());
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().elems(TupleH.class))
-        .containsExactly(fileH(path, bytes));
+    assertThat(fileArrayBuilder.build().elems(TupleB.class))
+        .containsExactly(fileB(path, bytes));
   }
 
   @Test
   public void get_name_returns_file_path() {
-    var arrayTH = arrayTH(fileTH());
+    var arrayTH = arrayTB(fileTB());
     OutputClassFile outputClassFile =
-        new OutputClassFile(objDb().arrayBuilder(arrayTH), path, nativeApi());
+        new OutputClassFile(byteDb().arrayBuilder(arrayTH), path, nativeApi());
     assertThat(outputClassFile.getName())
         .isEqualTo("/" + path);
   }

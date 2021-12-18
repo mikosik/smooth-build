@@ -6,16 +6,16 @@ import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
 import java.util.function.Predicate;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.ArrayBBuilder;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 
 public class FilterFunc {
-  public static ArrayH func(NativeApi nativeApi, ArrayH files, StringH pattern) {
+  public static ArrayB func(NativeApi nativeApi, ArrayB files, StringB pattern) {
     Predicate<Path> filter;
     try {
       filter = pathMatcher(pattern.toJ());
@@ -23,9 +23,9 @@ public class FilterFunc {
       nativeApi.log().error("Parameter 'pattern' has illegal value. " + e.getMessage());
       return null;
     }
-    ArrayHBuilder builder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
+    ArrayBBuilder builder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
 
-    for (TupleH file : files.elems(TupleH.class)) {
+    for (TupleB file : files.elems(TupleB.class)) {
       if (filter.test(path(filePath(file).toJ()))) {
         builder.add(file);
       }

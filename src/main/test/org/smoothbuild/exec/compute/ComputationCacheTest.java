@@ -9,12 +9,12 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.BoolB;
+import org.smoothbuild.db.object.obj.val.IntB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
@@ -32,7 +32,7 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void cache_contains_written_result() throws Exception {
-    computationCache().write(hash, new Output(stringH("result"), messageArrayEmtpy()));
+    computationCache().write(hash, new Output(stringB("result"), messageArrayEmtpy()));
     assertThat(computationCache().contains(hash))
         .isTrue();
   }
@@ -48,75 +48,75 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void reading_not_written_value_fails() {
-    assertCall(() -> computationCache().read(hash, stringTH()))
+    assertCall(() -> computationCache().read(hash, stringTB()))
         .throwsException(ComputationCacheExc.class);
   }
 
   @Test
   public void written_messages_can_be_read_back() throws Exception {
-    var strV = stringH("abc");
+    var strV = stringB("abc");
     var message = errorMessage("error message");
-    var messages = arrayH(message);
+    var messages = arrayB(message);
     computationCache().write(hash, new Output(strV, messages));
 
-    assertThat(computationCache().read(hash, stringTH()).messages())
+    assertThat(computationCache().read(hash, stringTB()).messages())
         .isEqualTo(messages);
   }
 
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
-    var file = fileH(path("file/path"), bytes);
-    computationCache().write(hash, new Output(arrayH(file), messageArrayEmtpy()));
-    var arrayT = arrayTH(objFactory().fileT());
+    var file = fileB(path("file/path"), bytes);
+    computationCache().write(hash, new Output(arrayB(file), messageArrayEmtpy()));
+    var arrayT = arrayTB(objFactory().fileT());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(TupleH.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).val()).elems(TupleB.class))
         .containsExactly(file);
   }
 
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
-    var blob = blobH(bytes);
-    computationCache().write(hash, new Output(arrayH(blob), messageArrayEmtpy()));
-    var arrayT = arrayTH(blobTH());
+    var blob = blobB(bytes);
+    computationCache().write(hash, new Output(arrayB(blob), messageArrayEmtpy()));
+    var arrayT = arrayTB(blobTB());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(BlobH.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).val()).elems(BlobB.class))
         .containsExactly(blob);
   }
 
   @Test
   public void written_bool_array_can_be_read_back() throws Exception {
-    var boolV = boolH(true);
-    computationCache().write(hash, new Output(arrayH(boolV), messageArrayEmtpy()));
-    var arrayT = arrayTH(boolTH());
+    var boolV = boolB(true);
+    computationCache().write(hash, new Output(arrayB(boolV), messageArrayEmtpy()));
+    var arrayT = arrayTB(boolTB());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(BoolH.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).val()).elems(BoolB.class))
         .containsExactly(boolV);
   }
 
   @Test
   public void written_int_array_can_be_read_back() throws Exception {
-    var intV = intH(123);
-    computationCache().write(hash, new Output(arrayH(intV), messageArrayEmtpy()));
-    var arrayT = arrayTH(intTH());
+    var intV = intB(123);
+    computationCache().write(hash, new Output(arrayB(intV), messageArrayEmtpy()));
+    var arrayT = arrayTB(intTB());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(IntH.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).val()).elems(IntB.class))
         .containsExactly(intV);
   }
 
   @Test
   public void written_string_array_can_be_read_back() throws Exception {
-    var string = stringH("some string");
-    var array = arrayH(string);
+    var string = stringB("some string");
+    var array = arrayB(string);
     computationCache().write(hash, new Output(array, messageArrayEmtpy()));
-    var arrayT = arrayTH(stringTH());
+    var arrayT = arrayTB(stringTB());
 
-    assertThat(((ArrayH) computationCache().read(hash, arrayT).val()).elems(StringH.class))
+    assertThat(((ArrayB) computationCache().read(hash, arrayT).val()).elems(StringB.class))
         .containsExactly(string);
   }
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
-    var file = fileH(path("file/path"), bytes);
+    var file = fileB(path("file/path"), bytes);
     computationCache().write(hash, new Output(file, messageArrayEmtpy()));
 
     assertThat(computationCache().read(hash, objFactory().fileT()).val())
@@ -125,37 +125,37 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void written_blob_can_be_read_back() throws Exception {
-    var blob = blobH(bytes);
+    var blob = blobB(bytes);
     computationCache().write(hash, new Output(blob, messageArrayEmtpy()));
 
-    assertThat(computationCache().read(hash, blobTH()).val())
+    assertThat(computationCache().read(hash, blobTB()).val())
         .isEqualTo(blob);
   }
 
   @Test
   public void written_bool_can_be_read_back() throws Exception {
-    var boolV = boolH(true);
+    var boolV = boolB(true);
     computationCache().write(hash, new Output(boolV, messageArrayEmtpy()));
 
-    assertThat(((BoolH) computationCache().read(hash, boolTH()).val()).toJ())
+    assertThat(((BoolB) computationCache().read(hash, boolTB()).val()).toJ())
         .isTrue();
   }
 
   @Test
   public void written_int_can_be_read_back() throws Exception {
-    var intV = intH(123);
+    var intV = intB(123);
     computationCache().write(hash, new Output(intV, messageArrayEmtpy()));
 
-    assertThat(((IntH) computationCache().read(hash, intTH()).val()).toJ())
+    assertThat(((IntB) computationCache().read(hash, intTB()).val()).toJ())
         .isEqualTo(BigInteger.valueOf(123));
   }
 
   @Test
   public void written_string_can_be_read_back() throws Exception {
     var string = "some string";
-    var strV = stringH(string);
+    var strV = stringB(string);
     computationCache().write(hash, new Output(strV, messageArrayEmtpy()));
-    assertThat(((StringH) computationCache().read(hash, stringTH()).val()).toJ())
+    assertThat(((StringB) computationCache().read(hash, stringTB()).val()).toJ())
         .isEqualTo(string);
   }
 }

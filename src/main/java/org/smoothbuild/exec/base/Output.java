@@ -3,10 +3,10 @@ package org.smoothbuild.exec.base;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.ValH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.ValB;
 
-public record Output(ValH val, ArrayH messages) {
+public record Output(ValB val, ArrayB messages) {
 
   public Output {
     requireNonNull(messages);
@@ -17,7 +17,7 @@ public record Output(ValH val, ArrayH messages) {
   }
 
   @Override
-  public ValH val() {
+  public ValB val() {
     checkState(hasValue(), "Output does not contain value.");
     return val;
   }

@@ -33,10 +33,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.type.TestingCatsH;
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.obj.base.ObjB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.type.TestingCatsB;
+import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -71,7 +71,7 @@ public class ParallelJobExecutorTest extends TestingContext {
             job(valueAlgorithm("D"))));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(stringH("((A,B),(C,D))"));
+        .isEqualTo(stringB("((A,B),(C,D))"));
   }
 
   @Test
@@ -83,7 +83,7 @@ public class ParallelJobExecutorTest extends TestingContext {
         job(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(stringH("(11,21)"));
+        .isEqualTo(stringB("(11,21)"));
   }
 
   @Test
@@ -98,7 +98,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     var job = concat(job1, job2, job3, job4);
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(stringH("(0,0,0,0)"));
+        .isEqualTo(stringB("(0,0,0,0)"));
 
     ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
     ExecutionReporter reporter = this.reporter;
@@ -124,7 +124,7 @@ public class ParallelJobExecutorTest extends TestingContext {
       var job = concat(job1, job2);
 
       assertThat(executeSingleJob(job))
-          .isEqualTo(stringH("(0,0)"));
+          .isEqualTo(stringB("(0,0)"));
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
       verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
@@ -147,7 +147,7 @@ public class ParallelJobExecutorTest extends TestingContext {
       var job = concat(job1, job2);
 
       assertThat(executeSingleJob(job))
-          .isEqualTo(stringH("(0,0)"));
+          .isEqualTo(stringB("(0,0)"));
 
       ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
       verify(reporter, times(2)).report(eq(job1.info()), captor.capture());
@@ -172,7 +172,7 @@ public class ParallelJobExecutorTest extends TestingContext {
         job(getIncrementAlgorithm(counter)));
 
     assertThat(executeSingleJob(job))
-        .isEqualTo(stringH("(1,1,0)"));
+        .isEqualTo(stringB("(1,1,0)"));
   }
 
   @Test
@@ -204,7 +204,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     var topRef = new TopRefS(STRING, "name", loc());
     var job = job(valueAlgorithm("A"));
 
-    Optional<ObjH> obj = parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef);
+    Optional<ObjB> obj = parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef);
 
     verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
     assertThat(obj.isEmpty())
@@ -220,8 +220,8 @@ public class ParallelJobExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        String joinedArgs = toCommaSeparatedString(input.vals(), v -> ((StringH) v).toJ());
-        StringH result = nativeApi.factory().string("(" + joinedArgs + ")");
+        String joinedArgs = toCommaSeparatedString(input.vals(), v -> ((StringB) v).toJ());
+        StringB result = nativeApi.factory().string("(" + joinedArgs + ")");
         return new Output(result, nativeApi.messages());
       }
     };
@@ -233,14 +233,14 @@ public class ParallelJobExecutorTest extends TestingContext {
 
   private Task job(String name, Algorithm algorithm, Job... deps) {
     TaskInfo info = new TaskInfo(CALL, name, loc());
-    return new Task(stringTH(), list(deps), info, algorithm);
+    return new Task(stringTB(), list(deps), info, algorithm);
   }
 
   private Algorithm valueAlgorithm(String value) {
     return new TestAlgorithm(Hash.of(asList(Hash.of(2), Hash.of(value)))) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        StringH result = nativeApi.factory().string(value);
+        StringB result = nativeApi.factory().string(value);
         return new Output(result, nativeApi.messages());
       }
     };
@@ -289,11 +289,11 @@ public class ParallelJobExecutorTest extends TestingContext {
     };
   }
 
-  private ObjH executeSingleJob(Job job) throws InterruptedException {
+  private ObjB executeSingleJob(Job job) throws InterruptedException {
     return executeSingleJob(parallelJobExecutor, job);
   }
 
-  private static ObjH executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
+  private static ObjB executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
     var topRef = new TopRefS(STRING, "name", loc());
     return parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef).get();
@@ -319,7 +319,7 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     protected TestAlgorithm(Hash hash, boolean isPure) {
-      super(TestingCatsH.STRING, isPure);
+      super(TestingCatsB.STRING, isPure);
       this.hash = hash;
     }
 
@@ -329,8 +329,8 @@ public class ParallelJobExecutorTest extends TestingContext {
     }
 
     @Override
-    public TypeH outputT() {
-      return TestingCatsH.STRING;
+    public TypeB outputT() {
+      return TestingCatsB.STRING;
     }
   }
 }

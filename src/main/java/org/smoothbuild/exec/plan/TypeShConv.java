@@ -5,10 +5,10 @@ import static org.smoothbuild.util.collect.Lists.map;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTH;
-import org.smoothbuild.db.object.type.val.FuncTH;
-import org.smoothbuild.db.object.type.val.TupleTH;
+import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.object.type.val.ArrayTB;
+import org.smoothbuild.db.object.type.val.FuncTB;
+import org.smoothbuild.db.object.type.val.TupleTB;
 import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
@@ -29,7 +29,7 @@ public class TypeShConv {
     this.objFactory = objFactory;
   }
 
-  public TypeH convert(TypeS type) {
+  public TypeB convert(TypeS type) {
     return switch (type) {
       case AnyTS any -> throw new RuntimeException("S-Any cannot be converted to H-type.");
       case ArrayTS a -> convert(a);
@@ -44,15 +44,15 @@ public class TypeShConv {
     };
   }
 
-  public TupleTH convert(StructTS st) {
+  public TupleTB convert(StructTS st) {
     return objFactory.tupleT(map(st.fields(), isig -> convert(isig.type())));
   }
 
-  public ArrayTH convert(ArrayTS a) {
+  public ArrayTB convert(ArrayTS a) {
     return objFactory.arrayT(convert(a.elem()));
   }
 
-  public FuncTH convert(FuncTS funcTS) {
+  public FuncTB convert(FuncTS funcTS) {
     return objFactory.funcT(convert(funcTS.res()), map(funcTS.params(), this::convert));
   }
 }

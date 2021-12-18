@@ -1,10 +1,10 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.StringB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ThrowRandomException {
-  public static StringH func(NativeApi nativeApi) {
+  public static StringB func(NativeApi nativeApi) {
     throw new UnsupportedOperationException(Long.toString(System.nanoTime()));
   }
 }

@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.params.provider.Arguments;
-import org.smoothbuild.db.object.type.val.NothingTH;
+import org.smoothbuild.db.object.type.val.NothingTB;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;
@@ -321,7 +321,7 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   public List<Arguments> inferVarBounds_test_data() {
     var r = new ArrayList<Arguments>();
     for (T type : concat(testingT().elementaryTypes(), x())) {
-      if (type instanceof NothingTS || type instanceof NothingTH) {
+      if (type instanceof NothingTS || type instanceof NothingTB) {
         r.add(arguments(a(), nothing(), bm(a(), lower(), nothing())));
         r.add(arguments(a(), a(nothing()), bm(a(), lower(), a(nothing()))));
         r.add(arguments(a(), a(a(nothing())), bm(a(), lower(), a(a(nothing())))));

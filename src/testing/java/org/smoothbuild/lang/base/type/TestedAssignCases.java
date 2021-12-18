@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.smoothbuild.db.object.type.base.TypeH;
+import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
@@ -22,8 +22,8 @@ public class TestedAssignCases<
 
   public static final TestedAssignCases<TypeS, TestedTS, TestedAssignSpecS> INSTANCE_S =
       new TestedAssignCases<>(new TestedTSFactory());
-  public static final TestedAssignCases<TypeH, TestedTH, TestedAssignSpecH> INSTANCE_H =
-      new TestedAssignCases<>(new TestedTHFactory());
+  public static final TestedAssignCases<TypeB, TestedTB, TestedAssignSpecB> INSTANCE_H =
+      new TestedAssignCases<>(new TestedTBFactory());
 
   private final TestedTFactory<T, TT, S> testedTFactory;
   private final TestingT<T> testingT;

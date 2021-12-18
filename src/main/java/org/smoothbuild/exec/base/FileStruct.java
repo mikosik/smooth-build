@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.base;
 
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
 
 public class FileStruct {
   public static final String NAME = "File";
@@ -11,11 +11,11 @@ public class FileStruct {
   public static final String CONTENT_FIELD_NAME = "content";
   public static final String PATH_FIELD_NAME = "path";
 
-  public static StringH filePath(TupleH file) {
-    return (StringH) file.get(PATH_INDEX);
+  public static StringB filePath(TupleB file) {
+    return (StringB) file.get(PATH_INDEX);
   }
 
-  public static BlobH fileContent(TupleH file) {
-    return (BlobH) file.get(CONTENT_INDEX);
+  public static BlobB fileContent(TupleB file) {
+    return (BlobB) file.get(CONTENT_INDEX);
   }
 }

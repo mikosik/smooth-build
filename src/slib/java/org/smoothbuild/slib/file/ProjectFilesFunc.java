@@ -7,8 +7,8 @@ import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.StringH;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.StringB;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -16,7 +16,7 @@ import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
 
 public class ProjectFilesFunc {
-  public static ArrayH func(Container container, StringH dir) throws IOException {
+  public static ArrayB func(Container container, StringB dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;
@@ -42,7 +42,7 @@ public class ProjectFilesFunc {
     }
   }
 
-  private static ArrayH readFiles(Container container, FileSystem fileSystem, Path dir)
+  private static ArrayB readFiles(Container container, FileSystem fileSystem, Path dir)
       throws IOException {
     var fileArrayBuilder = container.factory().arrayBuilderWithElems(container.factory().fileT());
     var reader = new FileReader(container);

@@ -1,0 +1,172 @@
+package org.smoothbuild.db.object.obj.expr;
+
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.collect.Lists.list;
+
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.base.ObjB;
+import org.smoothbuild.testing.TestingContext;
+
+import com.google.common.collect.ImmutableList;
+
+public class CallBTest extends TestingContext {
+  @Nested
+  class _infer_type_of_call {
+    @Test
+    public void without_generic_params() {
+      assertThat(callB(funcB(list(stringTB()), intB()), list(stringB())).cat())
+          .isEqualTo(callCB(intTB()));
+    }
+
+    @Test
+    public void with_generic_params() {
+      assertThat(callB(funcB(list(varTB("A")), paramRefB(varTB("A"), 0)), list(intB())).cat())
+          .isEqualTo(callCB(intTB()));
+    }
+  }
+
+  @Test
+  public void creating_call_with_expr_not_being_func_causes_exception() {
+    assertCall(() -> callB(intB(), list()))
+        .throwsException(new IllegalArgumentException(
+            "`func` component doesn't evaluate to FuncH."));
+  }
+
+  @Test
+  public void creating_call_with_too_few_args_causes_exception() {
+    assertCall(() -> callB(funcB(list(stringTB()), intB()), list()))
+        .throwsException(argsNotMatchingParamsException("{}", "{String}"));
+  }
+
+  @Test
+  public void creating_call_with_too_many_args_causes_exception() {
+    assertCall(() -> callB(funcB(list(stringTB()), intB()), list(intB(), intB())))
+        .throwsException(argsNotMatchingParamsException("{Int,Int}", "{String}"));
+  }
+
+  @Test
+  public void creating_call_with_arg_not_matching_param_type_causes_exception() {
+    assertCall(() -> callB(funcB(list(stringTB()), intB()), list(intB(3))))
+        .throwsException(argsNotMatchingParamsException("{Int}", "{String}"));
+  }
+
+  private static IllegalArgumentException argsNotMatchingParamsException(
+      String args, String params) {
+    return new IllegalArgumentException("Arguments evaluation type " + args + " should be"
+        + " equal to callable type parameters " + params + ".");
+  }
+
+  @Test
+  public void func_returns_func_expr() {
+    var func = funcB(list(stringTB()), intB());
+    assertThat(callB(func, list(stringB())).data().callable())
+        .isEqualTo(func);
+  }
+
+  @Test
+  public void args_returns_arg_exprs() {
+    var func = funcB(list(stringTB()), intB());
+    ImmutableList<ObjB> args = list(stringB()) ;
+    assertThat(callB(func, args).data().args())
+        .isEqualTo(combineB(args));
+  }
+
+  @Test
+  public void call_with_equal_values_are_equal() {
+    var func = funcB(list(stringTB()), intB());
+    ImmutableList<ObjB> args = list(stringB()) ;
+    assertThat(callB(func, args))
+        .isEqualTo(callB(func, args));
+  }
+
+  @Test
+  public void call_with_different_funcs_are_not_equal() {
+    var func1 = funcB(list(stringTB()), intB(1));
+    var func2 = funcB(list(stringTB()), intB(2));
+    ImmutableList<ObjB> args = list(stringB()) ;
+    assertThat(callB(func1, args))
+        .isNotEqualTo(callB(func2, args));
+  }
+
+  @Test
+  public void call_with_different_args_are_not_equal() {
+    var func = funcB(list(stringTB()), intB());
+    assertThat(callB(func, list(stringB("abc"))))
+        .isNotEqualTo(callB(func, list(stringB("def"))));
+  }
+
+  @Test
+  public void hash_of_calls_with_equal_values_is_the_same() {
+    var func = funcB(list(stringTB()), intB());
+    ImmutableList<ObjB> args = list(stringB()) ;
+    assertThat(callB(func, args).hash())
+        .isEqualTo(callB(func, args).hash());
+  }
+
+  @Test
+  public void hash_of_calls_with_different_func_is_not_the_same() {
+    var type = funcTB(intTB(), list(stringTB()));
+    var func1 = funcB(type, intB(1));
+    var func2 = funcB(type, intB(2));
+    ImmutableList<ObjB> args = list(stringB()) ;
+    assertThat(callB(func1, args).hash())
+        .isNotEqualTo(callB(func2, args).hash());
+  }
+
+  @Test
+  public void hash_of_calls_with_different_args_is_not_the_same() {
+    var func = funcB(list(stringTB()), intB());
+    assertThat(callB(func, list(stringB("abc"))).hash())
+        .isNotEqualTo(callB(func, list(stringB("def"))).hash());
+  }
+
+  @Test
+  public void hash_code_of_calls_with_equal_values_is_the_same() {
+    var func = funcB(list(stringTB()), intB());
+    ImmutableList<ObjB> args = list(stringB()) ;
+    assertThat(callB(func, args).hashCode())
+        .isEqualTo(callB(func, args).hashCode());
+  }
+
+  @Test
+  public void hash_code_of_calls_with_different_func_is_not_the_same() {
+    var func1 = funcB(list(stringTB()), intB(1));
+    var func2 = funcB(list(stringTB()), intB(2));
+    ImmutableList<ObjB> args = list(stringB());
+    assertThat(callB(func1, args).hashCode())
+        .isNotEqualTo(callB(func2, args).hashCode());
+  }
+
+  @Test
+  public void hash_code_of_calls_with_different_args_is_not_the_same() {
+    var func = funcB(list(stringTB()), intB());
+    assertThat(callB(func, list(stringB("abc"))).hashCode())
+        .isNotEqualTo(callB(func, list(stringB("def"))).hashCode());
+  }
+
+  @Test
+  public void call_can_be_read_back_by_hash() {
+    var call = callB(funcB(list(stringTB()), intB()), list(stringB()));
+    assertThat(byteDbOther().get(call.hash()))
+        .isEqualTo(call);
+  }
+
+  @Test
+  public void call_read_back_by_hash_has_same_data() {
+    var func = funcB(list(stringTB()), intB());
+    ImmutableList<ObjB> args = list(stringB());
+    var call = callB(func, args);
+    assertThat(((CallB) byteDbOther().get(call.hash())).data())
+        .isEqualTo(new CallB.Data(func, combineB(args)));
+  }
+
+  @Test
+  public void to_string() {
+    var func = funcB(list(stringTB()), intB());
+    var call = callB(func, list(stringB()));
+    assertThat(call.toString())
+        .isEqualTo("Call:Int(???)@" + call.hash());
+  }
+}

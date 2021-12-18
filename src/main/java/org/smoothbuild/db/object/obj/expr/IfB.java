@@ -1,0 +1,41 @@
+package org.smoothbuild.db.object.obj.expr;
+
+import org.smoothbuild.db.object.obj.ByteDb;
+import org.smoothbuild.db.object.obj.base.ExprB;
+import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.base.ObjB;
+
+/**
+ * If expression.
+ *
+ * This class is thread-safe.
+ */
+public final class IfB extends ExprB {
+  private static final int DATA_SEQ_SIZE = 3;
+  private static final int COND_INDEX = 0;
+  private static final int THEN_INDEX = 1;
+  private static final int ELSE_INDEX = 2;
+
+  public IfB(MerkleRoot merkleRoot, ByteDb byteDb) {
+    super(merkleRoot, byteDb);
+  }
+
+  public Data data() {
+    return new Data(readCondition(), readThen(), readElse());
+  }
+
+  public record Data(ObjB condition, ObjB then_, ObjB else_) {}
+
+  private ObjB readCondition() {
+    var expectedT = byteDb().catDb().bool();
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), COND_INDEX, DATA_SEQ_SIZE, expectedT);
+  }
+
+  private ObjB readThen() {
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), THEN_INDEX, DATA_SEQ_SIZE, type());
+  }
+
+  private ObjB readElse() {
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), ELSE_INDEX, DATA_SEQ_SIZE, type());
+  }
+}

@@ -14,10 +14,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.val.ArrayH;
-import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.db.object.obj.val.ValH;
+import org.smoothbuild.db.object.obj.base.ObjB;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.object.obj.val.ValB;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -38,44 +38,44 @@ public class ArtifactSaver {
     this.fileSystem = fileSystem;
   }
 
-  public Path save(TopRefS topRef, ObjH obj) throws IOException, DuplicatedPathsExc {
+  public Path save(TopRefS topRef, ObjB obj) throws IOException, DuplicatedPathsExc {
     Path artifactPath = artifactPath(topRef.name());
     if (topRef.type() instanceof ArrayT arrayT) {
-      return saveArray(arrayT, artifactPath, (ArrayH) obj);
+      return saveArray(arrayT, artifactPath, (ArrayB) obj);
     } else if (topRef.type().name().equals(FileStruct.NAME)) {
-      return saveFile(artifactPath, (TupleH) obj);
+      return saveFile(artifactPath, (TupleB) obj);
     } else {
       return saveBaseObject(artifactPath, obj);
     }
   }
 
-  private Path saveFile(Path artifactPath, TupleH file)
+  private Path saveFile(Path artifactPath, TupleB file)
       throws IOException, DuplicatedPathsExc {
     saveFileArray(artifactPath, list(file));
     return artifactPath.append(fileObjectPath(file));
   }
 
   private Path saveArray(ArrayT arrayT, Path artifactPath,
-      ArrayH array) throws IOException, DuplicatedPathsExc {
+      ArrayB array) throws IOException, DuplicatedPathsExc {
     fileSystem.createDir(artifactPath);
     Type elemT = arrayT.elem();
     if (elemT instanceof ArrayT elemArrayT) {
       int i = 0;
-      for (ArrayH elem : array.elems(ArrayH.class)) {
+      for (ArrayB elem : array.elems(ArrayB.class)) {
         saveArray(elemArrayT, artifactPath.appendPart(Integer.toString(i)), elem);
         i++;
       }
     } else if (elemT.name().equals(FileStruct.NAME)) {
-      saveFileArray(artifactPath, array.elems(TupleH.class));
+      saveFileArray(artifactPath, array.elems(TupleB.class));
     } else {
       saveObjectArray(artifactPath, array);
     }
     return artifactPath;
   }
 
-  private void saveObjectArray(Path artifactPath, ArrayH array) throws IOException {
+  private void saveObjectArray(Path artifactPath, ArrayB array) throws IOException {
     int i = 0;
-    for (ValH val : array.elems(ValH.class)) {
+    for (ValB val : array.elems(ValB.class)) {
       Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       Path targetPath = targetPath(val);
       fileSystem.createLink(sourcePath, targetPath);
@@ -83,10 +83,10 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveFileArray(Path artifactPath, Iterable<TupleH> files) throws IOException,
+  private void saveFileArray(Path artifactPath, Iterable<TupleB> files) throws IOException,
       DuplicatedPathsExc {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    for (TupleH file : files) {
+    for (TupleB file : files) {
       Path filePath = fileObjectPath(file);
       Path sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
@@ -111,14 +111,14 @@ public class ArtifactSaver {
             + delimiter + list);
   }
 
-  private Path saveBaseObject(Path artifactPath, ObjH obj) throws IOException {
+  private Path saveBaseObject(Path artifactPath, ObjB obj) throws IOException {
     Path targetPath = targetPath(obj);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;
   }
 
-  private static Path fileObjectPath(TupleH file) {
+  private static Path fileObjectPath(TupleB file) {
     return path(filePath(file).toJ());
   }
 }

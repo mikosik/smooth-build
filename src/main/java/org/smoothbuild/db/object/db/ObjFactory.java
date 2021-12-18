@@ -11,39 +11,39 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.object.obj.ObjDb;
-import org.smoothbuild.db.object.obj.base.ObjH;
-import org.smoothbuild.db.object.obj.expr.CallH;
-import org.smoothbuild.db.object.obj.expr.CombineH;
-import org.smoothbuild.db.object.obj.expr.IfH;
-import org.smoothbuild.db.object.obj.expr.InvokeH;
-import org.smoothbuild.db.object.obj.expr.MapH;
-import org.smoothbuild.db.object.obj.expr.OrderH;
-import org.smoothbuild.db.object.obj.expr.ParamRefH;
-import org.smoothbuild.db.object.obj.expr.SelectH;
-import org.smoothbuild.db.object.obj.val.ArrayHBuilder;
-import org.smoothbuild.db.object.obj.val.BlobH;
-import org.smoothbuild.db.object.obj.val.BlobHBuilder;
-import org.smoothbuild.db.object.obj.val.BoolH;
-import org.smoothbuild.db.object.obj.val.FuncH;
-import org.smoothbuild.db.object.obj.val.IntH;
-import org.smoothbuild.db.object.obj.val.MethodH;
-import org.smoothbuild.db.object.obj.val.StringH;
-import org.smoothbuild.db.object.obj.val.TupleH;
-import org.smoothbuild.db.object.obj.val.ValH;
+import org.smoothbuild.db.object.obj.ByteDb;
+import org.smoothbuild.db.object.obj.base.ObjB;
+import org.smoothbuild.db.object.obj.expr.CallB;
+import org.smoothbuild.db.object.obj.expr.CombineB;
+import org.smoothbuild.db.object.obj.expr.IfB;
+import org.smoothbuild.db.object.obj.expr.InvokeB;
+import org.smoothbuild.db.object.obj.expr.MapB;
+import org.smoothbuild.db.object.obj.expr.OrderB;
+import org.smoothbuild.db.object.obj.expr.ParamRefB;
+import org.smoothbuild.db.object.obj.expr.SelectB;
+import org.smoothbuild.db.object.obj.val.ArrayBBuilder;
+import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.object.obj.val.BlobBBuilder;
+import org.smoothbuild.db.object.obj.val.BoolB;
+import org.smoothbuild.db.object.obj.val.FuncB;
+import org.smoothbuild.db.object.obj.val.IntB;
+import org.smoothbuild.db.object.obj.val.MethodB;
+import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.object.obj.val.ValB;
 import org.smoothbuild.db.object.type.CatDb;
-import org.smoothbuild.db.object.type.TypingH;
-import org.smoothbuild.db.object.type.base.TypeH;
-import org.smoothbuild.db.object.type.val.ArrayTH;
-import org.smoothbuild.db.object.type.val.BlobTH;
-import org.smoothbuild.db.object.type.val.BoolTH;
-import org.smoothbuild.db.object.type.val.FuncTH;
-import org.smoothbuild.db.object.type.val.IntTH;
-import org.smoothbuild.db.object.type.val.MethodTH;
-import org.smoothbuild.db.object.type.val.NothingTH;
-import org.smoothbuild.db.object.type.val.StringTH;
-import org.smoothbuild.db.object.type.val.TupleTH;
-import org.smoothbuild.db.object.type.val.VarH;
+import org.smoothbuild.db.object.type.TypingB;
+import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.object.type.val.ArrayTB;
+import org.smoothbuild.db.object.type.val.BlobTB;
+import org.smoothbuild.db.object.type.val.BoolTB;
+import org.smoothbuild.db.object.type.val.FuncTB;
+import org.smoothbuild.db.object.type.val.IntTB;
+import org.smoothbuild.db.object.type.val.MethodTB;
+import org.smoothbuild.db.object.type.val.NothingTB;
+import org.smoothbuild.db.object.type.val.StringTB;
+import org.smoothbuild.db.object.type.val.TupleTB;
+import org.smoothbuild.db.object.type.val.VarB;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -54,184 +54,184 @@ import com.google.common.collect.ImmutableList;
  */
 @Singleton
 public class ObjFactory {
-  private final ObjDb objDb;
+  private final ByteDb byteDb;
   private final CatDb catDb;
-  private final TupleTH messageT;
-  private final TupleTH fileT;
-  private final TypingH typing;
+  private final TupleTB messageT;
+  private final TupleTB fileT;
+  private final TypingB typing;
 
   @Inject
-  public ObjFactory(ObjDb objDb, CatDb catDb, TypingH typing) {
-    this.objDb = objDb;
+  public ObjFactory(ByteDb byteDb, CatDb catDb, TypingB typing) {
+    this.byteDb = byteDb;
     this.catDb = catDb;
     this.messageT = createMessageT(catDb);
     this.fileT = createFileT(catDb);
     this.typing = typing;
   }
 
-  public TypingH typing() {
+  public TypingB typing() {
     return typing;
   }
 
   // Objects
 
-  public ArrayHBuilder arrayBuilderWithElems(TypeH elemT) {
-    return objDb.arrayBuilder(catDb.array(elemT));
+  public ArrayBBuilder arrayBuilderWithElems(TypeB elemT) {
+    return byteDb.arrayBuilder(catDb.array(elemT));
   }
 
-  public ArrayHBuilder arrayBuilder(ArrayTH type) {
-    return objDb.arrayBuilder(type);
+  public ArrayBBuilder arrayBuilder(ArrayTB type) {
+    return byteDb.arrayBuilder(type);
   }
 
-  public BlobH blob(DataWriter dataWriter) {
-    try (BlobHBuilder builder = blobBuilder()) {
+  public BlobB blob(DataWriter dataWriter) {
+    try (BlobBBuilder builder = blobBuilder()) {
       builder.write(dataWriter);
       return builder.build();
     } catch (IOException e) {
-      throw new ObjDbExc(e);
+      throw new ByteDbExc(e);
     }
   }
 
-  public BlobHBuilder blobBuilder() {
-    return objDb.blobBuilder();
+  public BlobBBuilder blobBuilder() {
+    return byteDb.blobBuilder();
   }
 
-  public BoolH bool(boolean value) {
-    return objDb.bool(value);
+  public BoolB bool(boolean value) {
+    return byteDb.bool(value);
   }
 
-  public CallH call(ObjH func, ObjH args) {
-    return objDb.call(func, args);
+  public CallB call(ObjB func, ObjB args) {
+    return byteDb.call(func, args);
   }
 
-  public CombineH combine(TupleTH evalT, ImmutableList<ObjH> items) {
-    return objDb.combine(evalT, items);
+  public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items) {
+    return byteDb.combine(evalT, items);
   }
 
-  public TupleH file(StringH path, BlobH content) {
-    return objDb.tuple(fileT(), list(content, path));
+  public TupleB file(StringB path, BlobB content) {
+    return byteDb.tuple(fileT(), list(content, path));
   }
 
-  public IfH if_(ObjH condition, ObjH then, ObjH else_) {
-    return objDb.if_(condition, then, else_);
+  public IfB if_(ObjB condition, ObjB then, ObjB else_) {
+    return byteDb.if_(condition, then, else_);
   }
 
-  public FuncH func(FuncTH type, ObjH body) {
-    return objDb.func(type, body);
+  public FuncB func(FuncTB type, ObjB body) {
+    return byteDb.func(type, body);
   }
 
-  public MethodH method(MethodTH type, BlobH jar, StringH classBinaryName, BoolH isPure) {
-    return objDb.method(type, jar, classBinaryName, isPure);
+  public MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
+    return byteDb.method(type, jar, classBinaryName, isPure);
   }
 
-  public IntH int_(BigInteger value) {
-    return objDb.int_(value);
+  public IntB int_(BigInteger value) {
+    return byteDb.int_(value);
   }
 
-  public MapH map(ObjH array, ObjH func) {
-    return objDb.map(array, func);
+  public MapB map(ObjB array, ObjB func) {
+    return byteDb.map(array, func);
   }
 
-  public InvokeH invoke(ObjH method, ObjH args) {
-    return objDb.invoke(method, args);
+  public InvokeB invoke(ObjB method, ObjB args) {
+    return byteDb.invoke(method, args);
   }
 
-  public ParamRefH paramRef(BigInteger value, TypeH evalT) {
-    return objDb.newParamRef(value, evalT);
+  public ParamRefB paramRef(BigInteger value, TypeB evalT) {
+    return byteDb.newParamRef(value, evalT);
   }
 
-  public SelectH select(ObjH tuple, IntH index) {
-    return objDb.select(tuple, index);
+  public SelectB select(ObjB tuple, IntB index) {
+    return byteDb.select(tuple, index);
   }
 
-  public StringH string(String string) {
-    return objDb.string(string);
+  public StringB string(String string) {
+    return byteDb.string(string);
   }
 
-  public TupleH tuple(TupleTH type, ImmutableList<ValH> items) {
-    return objDb.tuple(type, items);
+  public TupleB tuple(TupleTB type, ImmutableList<ValB> items) {
+    return byteDb.tuple(type, items);
   }
 
-  public OrderH order(ArrayTH arrayTH, ImmutableList<ObjH> elems) {
-    return objDb.order(arrayTH, elems);
+  public OrderB order(ArrayTB arrayTB, ImmutableList<ObjB> elems) {
+    return byteDb.order(arrayTB, elems);
   }
 
   // Types
 
-  public ArrayTH arrayT(TypeH elemT) {
+  public ArrayTB arrayT(TypeB elemT) {
     return catDb.array(elemT);
   }
 
-  public BlobTH blobT() {
+  public BlobTB blobT() {
     return catDb.blob();
   }
 
-  public BoolTH boolT() {
+  public BoolTB boolT() {
     return catDb.bool();
   }
 
-  public FuncTH funcT(TypeH resT, ImmutableList<TypeH> paramTs) {
+  public FuncTB funcT(TypeB resT, ImmutableList<TypeB> paramTs) {
     return catDb.func(resT, paramTs);
   }
 
-  public IntTH intT() {
+  public IntTB intT() {
     return catDb.int_();
   }
 
-  public TupleTH messageT() {
+  public TupleTB messageT() {
     return messageT;
   }
 
-  public MethodTH methodT(TypeH resT, ImmutableList<TypeH> paramTs) {
+  public MethodTB methodT(TypeB resT, ImmutableList<TypeB> paramTs) {
     return catDb.method(resT, paramTs);
   }
 
-  public NothingTH nothingT() {
+  public NothingTB nothingT() {
     return catDb.nothing();
   }
 
-  public StringTH stringT() {
+  public StringTB stringT() {
     return catDb.string();
   }
 
-  public TupleTH tupleT(ImmutableList<TypeH> itemTs) {
+  public TupleTB tupleT(ImmutableList<TypeB> itemTs) {
     return catDb.tuple(itemTs);
   }
 
-  public VarH var(String name) {
+  public VarB var(String name) {
     return catDb.var(name);
   }
 
   // other values and its types
 
-  public TupleTH fileT() {
+  public TupleTB fileT() {
     return fileT;
   }
 
-  public TupleH errorMessage(String text) {
+  public TupleB errorMessage(String text) {
     return message(ERROR.name(), text);
   }
 
-  public TupleH warningMessage(String text) {
+  public TupleB warningMessage(String text) {
     return message(WARNING.name(), text);
   }
 
-  public TupleH infoMessage(String text) {
+  public TupleB infoMessage(String text) {
     return message(INFO.name(), text);
   }
 
-  private TupleH message(String severity, String text) {
-    ValH textObject = objDb.string(text);
-    ValH severityObject = objDb.string(severity);
-    return objDb.tuple(messageT(), list(textObject, severityObject));
+  private TupleB message(String severity, String text) {
+    ValB textObject = byteDb.string(text);
+    ValB severityObject = byteDb.string(severity);
+    return byteDb.tuple(messageT(), list(textObject, severityObject));
   }
 
-  private static TupleTH createMessageT(CatDb catDb) {
+  private static TupleTB createMessageT(CatDb catDb) {
     var stringT = catDb.string();
     return catDb.tuple(list(stringT, stringT));
   }
 
-  private static TupleTH createFileT(CatDb catDb) {
+  private static TupleTB createFileT(CatDb catDb) {
     return catDb.tuple(list(catDb.blob(), catDb.string()));
   }
 }
