@@ -64,7 +64,9 @@ public class CallBTest extends TestingContext {
   @Test
   public void creating_call_with_resT_being_subtype_of_evalT() {
     var func = funcB(list(), arrayB(nothingTB()));
-    callB(arrayTB(intTB()), func, list());
+    var callB = callB(arrayTB(intTB()), func, list());
+    assertThat(callB.data().args())
+        .isEqualTo(combineB(list()));
   }
 
   @Test

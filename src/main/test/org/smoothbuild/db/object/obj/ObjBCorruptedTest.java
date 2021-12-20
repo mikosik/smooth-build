@@ -480,7 +480,7 @@ public class ObjBCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void args_is_val_instead_of_expr() throws Exception {
+    public void args_is_val_instead_of_combine() throws Exception {
       var funcT = funcTB(intTB(), list(stringTB(), intTB()));
       var func = funcB(funcT, intB());
       var type = callCB(intTB());

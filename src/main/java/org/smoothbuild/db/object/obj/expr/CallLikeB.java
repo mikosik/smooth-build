@@ -1,7 +1,5 @@
 package org.smoothbuild.db.object.obj.expr;
 
-import java.util.Objects;
-
 import org.smoothbuild.db.object.obj.ByteDb;
 import org.smoothbuild.db.object.obj.base.ExprB;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
@@ -21,7 +19,7 @@ public class CallLikeB extends ExprB {
   protected void validate(CallableTB callableT, CombineB argsCombine) {
     var argsT = argsCombine.type();
     var actualResT = byteDb().inferCallResT(callableT, argsT, () -> illegalArgs(callableT, argsT));
-    if (!Objects.equals(type(), actualResT)) {
+    if (!byteDb().typing().isAssignable(type(), actualResT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "callable.result", type(), actualResT);
     }
   }

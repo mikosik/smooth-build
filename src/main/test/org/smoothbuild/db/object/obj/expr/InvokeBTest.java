@@ -65,7 +65,9 @@ public class InvokeBTest extends TestingContext {
   @Test
   public void creating_invoke_with_resT_being_subtype_of_evalT() {
     var method = methodB(methodTB(arrayTB(nothingTB()), list()));
-    invokeB(arrayTB(intTB()), method, list());
+    var invokeB = invokeB(arrayTB(intTB()), method, list());
+    assertThat(invokeB.data().args())
+        .isEqualTo(combineB(list()));
   }
 
   @Test

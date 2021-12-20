@@ -263,7 +263,7 @@ public class ByteDb {
       throw new IllegalArgumentException(
           "Call's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
     }
-    return newCallImpl(resT, callable, args);
+    return newCallImpl(evalT, callable, args);
   }
 
   private CallB newCallImpl(TypeB evalT, ObjB callable, CombineB args) throws HashedDbExc {
@@ -374,7 +374,7 @@ public class ByteDb {
       throw new IllegalArgumentException(
           "Method's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
     }
-    return newInvokeImpl(resT, method, args);
+    return newInvokeImpl(evalT, method, args);
   }
 
   private InvokeB newInvokeImpl(TypeB evalT, ObjB method, CombineB args) throws HashedDbExc {
