@@ -404,7 +404,8 @@ public class ObjBCorruptedTest extends TestingContext {
 
     @Test
     public void root_with_two_data_hashes() throws Exception {
-      var func = intB(0);
+      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+      var func = funcB(funcT, intB());
       var args = combineB(list(stringB(), intB()));
       var dataHash = hash(
           hash(func),
@@ -425,7 +426,8 @@ public class ObjBCorruptedTest extends TestingContext {
 
     @Test
     public void data_is_seq_with_one_elem() throws Exception {
-      var func = intB(0);
+      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+      var func = funcB(funcT, intB());
       var dataHash = hash(
           hash(func)
       );
@@ -441,7 +443,8 @@ public class ObjBCorruptedTest extends TestingContext {
 
     @Test
     public void data_is_seq_with_three_elems() throws Exception {
-      var func = intB(0);
+      var funcT = funcTB(intTB(), list(stringTB(), intTB()));
+      var func = funcB(funcT, intB());
       var args = combineB(list(stringB(), intB()));
       var dataHash = hash(
           hash(func),
