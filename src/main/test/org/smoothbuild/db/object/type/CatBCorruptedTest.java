@@ -821,12 +821,12 @@ public class CatBCorruptedTest extends TestingContext {
     }
 
     @Nested
-    class _ref {
+    class _param_ref {
       @Test
       public void learning_test() throws Exception {
         /*
          * This test makes sure that other tests in this class use proper scheme
-         * to save call type in HashedDb.
+         * to save param-ref in HashedDb.
          */
         Hash hash = hash(
             hash(PARAM_REF.marker()),
