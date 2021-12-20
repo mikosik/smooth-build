@@ -617,7 +617,7 @@ public class TestingContext {
     return byteDb().invoke(method, combineB(args));
   }
 
-  public InvokeB invokeB(ObjB method, ObjB args) {
+  public InvokeB invokeB(ObjB method, CombineB args) {
     return byteDb().invoke(method, args);
   }
 

@@ -126,11 +126,11 @@ public class ByteDb {
 
   // methods for creating ExprH subclasses
 
-  public CallB call(ObjB callable, ObjB args) {
+  public CallB call(ObjB callable, CombineB args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(callable, args));
   }
 
-  public CallB call(TypeB evalT, ObjB callable, ObjB args) {
+  public CallB call(TypeB evalT, ObjB callable, CombineB args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evalT, callable, args));
   }
 
@@ -142,11 +142,11 @@ public class ByteDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
   }
 
-  public InvokeB invoke(ObjB method, ObjB args) {
+  public InvokeB invoke(ObjB method, CombineB args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(method, args));
   }
 
-  public InvokeB invoke(TypeB evalT, ObjB method, ObjB args) {
+  public InvokeB invoke(TypeB evalT, ObjB method, CombineB args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evalT, method, args));
   }
 
@@ -252,12 +252,12 @@ public class ByteDb {
 
   // methods for creating Expr-s
 
-  private CallB newCall(ObjB callable, ObjB args) throws HashedDbExc {
+  private CallB newCall(ObjB callable, CombineB args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToFuncTH(callable), args);
     return newCallImpl(resT, callable, args);
   }
 
-  private CallB newCall(TypeB evalT, ObjB callable, ObjB args) throws HashedDbExc {
+  private CallB newCall(TypeB evalT, ObjB callable, CombineB args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToFuncTH(callable), args);
     if (!typing.isAssignable(evalT, resT)) {
       throw new IllegalArgumentException(
@@ -266,7 +266,7 @@ public class ByteDb {
     return newCallImpl(resT, callable, args);
   }
 
-  private CallB newCallImpl(TypeB evalT, ObjB callable, ObjB args) throws HashedDbExc {
+  private CallB newCallImpl(TypeB evalT, ObjB callable, CombineB args) throws HashedDbExc {
     var type = catDb.call(evalT);
     var data = writeCallData(callable, args);
     var root = newRoot(type, data);
@@ -363,12 +363,12 @@ public class ByteDb {
     return type.newObj(root, this);
   }
 
-  private InvokeB newInvoke(ObjB method, ObjB args) throws HashedDbExc {
+  private InvokeB newInvoke(ObjB method, CombineB args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToMethodTH(method), args);
     return newInvokeImpl(resT, method, args);
   }
 
-  private InvokeB newInvoke(TypeB evalT, ObjB method, ObjB args) throws HashedDbExc {
+  private InvokeB newInvoke(TypeB evalT, ObjB method, CombineB args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToMethodTH(method), args);
     if (!typing.isAssignable(evalT, resT)) {
       throw new IllegalArgumentException(
@@ -377,7 +377,7 @@ public class ByteDb {
     return newInvokeImpl(resT, method, args);
   }
 
-  private InvokeB newInvokeImpl(TypeB evalT, ObjB method, ObjB args) throws HashedDbExc {
+  private InvokeB newInvokeImpl(TypeB evalT, ObjB method, CombineB args) throws HashedDbExc {
     var type = catDb.invoke(evalT);
     var data = writeInvokeData(method, args);
     var root = newRoot(type, data);
@@ -460,7 +460,7 @@ public class ByteDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ObjB callable, ObjB args) throws HashedDbExc {
+  private Hash writeCallData(ObjB callable, CombineB args) throws HashedDbExc {
     return hashedDb.writeSeq(callable.hash(), args.hash());
   }
 
@@ -472,7 +472,7 @@ public class ByteDb {
     return hashedDb.writeSeq(condition.hash(), then.hash(), else_.hash());
   }
 
-  private Hash writeInvokeData(ObjB method, ObjB args) throws HashedDbExc {
+  private Hash writeInvokeData(ObjB method, CombineB args) throws HashedDbExc {
     return hashedDb.writeSeq(method.hash(), args.hash());
   }
 

@@ -100,7 +100,7 @@ public class ObjFactory {
     return byteDb.bool(value);
   }
 
-  public CallB call(ObjB func, ObjB args) {
+  public CallB call(ObjB func, CombineB args) {
     return byteDb.call(func, args);
   }
 
@@ -132,7 +132,7 @@ public class ObjFactory {
     return byteDb.map(array, func);
   }
 
-  public InvokeB invoke(ObjB method, ObjB args) {
+  public InvokeB invoke(ObjB method, CombineB args) {
     return byteDb.invoke(method, args);
   }
 
