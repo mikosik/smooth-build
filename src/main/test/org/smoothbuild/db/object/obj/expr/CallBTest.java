@@ -28,7 +28,7 @@ public class CallBTest extends TestingContext {
   }
 
   @Test
-  public void creating_call_with_expr_not_being_func_causes_exception() {
+  public void creating_call_with_func_type_not_being_func_causes_exception() {
     assertCall(() -> callB(intB(), list()))
         .throwsException(new IllegalArgumentException(
             "`func` component doesn't evaluate to FuncH."));
@@ -47,9 +47,32 @@ public class CallBTest extends TestingContext {
   }
 
   @Test
+  public void creating_call_with_args_being_subtype_of_required_args_is_allowed() {
+    var func = funcB(list(arrayTB(intTB())), paramRefB(arrayTB(intTB()), 0));
+    var args = combineB(list(arrayB(nothingTB())));
+    var call = callB(func, args);
+    assertThat(call.data().args())
+        .isEqualTo(args);
+  }
+
+  @Test
   public void creating_call_with_arg_not_matching_param_type_causes_exception() {
     assertCall(() -> callB(funcB(list(stringTB()), intB()), list(intB(3))))
         .throwsException(argsNotMatchingParamsException("{Int}", "{String}"));
+  }
+
+  @Test
+  public void creating_call_with_resT_being_subtype_of_evalT() {
+    var func = funcB(list(), arrayB(nothingTB()));
+    callB(arrayTB(intTB()), func, list());
+  }
+
+  @Test
+  public void creating_call_with_resT_not_assignable_to_evalT_causes_exc() {
+    var func = funcB(list(), intB(7));
+    assertCall(() -> callB(stringTB(), func, list()))
+        .throwsException(new IllegalArgumentException(
+            "Call's result type `Int` cannot be assigned to evalT `String`."));
   }
 
   private static IllegalArgumentException argsNotMatchingParamsException(

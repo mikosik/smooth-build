@@ -46,10 +46,34 @@ public class InvokeBTest extends TestingContext {
   }
 
   @Test
+  public void creating_invoke_with_args_being_subtype_of_required_args_is_allowed() {
+    var methodT = methodTB(intTB(), list(arrayTB(intTB())));
+    var method = methodB(methodT);
+    var args = combineB(list(arrayB(nothingTB())));
+    var invoke = invokeB(method, args);
+    assertThat(invoke.data().args())
+        .isEqualTo(args);
+  }
+
+  @Test
   public void creating_invoke_with_arg_not_matching_param_type_causes_exception() {
-    var methodT = methodTB(intTB(), list(stringTB()));
-    assertCall(() -> invokeB(methodB(methodT), list(intB(3))))
+    var method = methodB(methodTB(intTB(), list(stringTB())));
+    assertCall(() -> invokeB(method, list(intB(3))))
         .throwsException(argsNotMatchingParamsException("{Int}", "{String}"));
+  }
+
+  @Test
+  public void creating_invoke_with_resT_being_subtype_of_evalT() {
+    var method = methodB(methodTB(arrayTB(nothingTB()), list()));
+    invokeB(arrayTB(intTB()), method, list());
+  }
+
+  @Test
+  public void creating_invoke_with_resT_not_assignable_to_evalT_causes_exc() {
+    var method = methodB(methodTB(intTB(), list()));
+    assertCall(() -> invokeB(stringTB(), method, list()))
+        .throwsException(new IllegalArgumentException(
+            "Method's result type `Int` cannot be assigned to evalT `String`."));
   }
 
   private static IllegalArgumentException argsNotMatchingParamsException(

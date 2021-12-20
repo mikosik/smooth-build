@@ -583,8 +583,16 @@ public class TestingContext {
 
   // Expr-s
 
+  public CallB callB(TypeB evalT, ObjB func, ImmutableList<ObjB> args) {
+    return byteDb().call(evalT, func, combineB(args));
+  }
+
   public CallB callB(ObjB func, ImmutableList<ObjB> args) {
-    return byteDb().call(func, combineB(args));
+    return callB(func, combineB(args));
+  }
+
+  public CallB callB(ObjB func, CombineB args) {
+    return byteDb().call(func, args);
   }
 
   public CombineB combineB(ImmutableList<ObjB> items) {
@@ -611,6 +619,10 @@ public class TestingContext {
 
   public InvokeB invokeB(ObjB method, ObjB args) {
     return byteDb().invoke(method, args);
+  }
+
+  public InvokeB invokeB(TypeB evalT, ObjB method, ImmutableList<ObjB> args) {
+    return byteDb().invoke(evalT, method, combineB(args));
   }
 
   private ImmutableList<ObjB> createParamRefsB(ImmutableList<TypeB> paramTs) {
@@ -644,6 +656,10 @@ public class TestingContext {
 
   public SelectB selectB(ObjB tuple, IntB index) {
     return byteDb().select(tuple, index);
+  }
+
+  public SelectB selectB(TypeB evalT, ObjB tuple, IntB index) {
+    return byteDb().select(evalT, tuple, index);
   }
 
   // Types Smooth

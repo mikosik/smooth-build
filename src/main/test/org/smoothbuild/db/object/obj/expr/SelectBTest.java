@@ -20,7 +20,8 @@ public class SelectBTest extends TestingContext {
   @Test
   public void creating_select_with_non_tuple_expr_causes_exception() {
     assertCall(() -> selectB(intB(3), intB(2)).cat())
-        .throwsException(IllegalArgumentException.class);
+        .throwsException(new IllegalArgumentException(
+            "Selectable.type() should be instance of TupleTB but is `Int`"));
   }
 
   @Test
@@ -35,6 +36,22 @@ public class SelectBTest extends TestingContext {
     TupleB tuple = animalB("rabbit", 7);
     assertCall(() -> selectB(tuple, intB(-1)).cat())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
+  }
+
+  @Test
+  public void tuple_itemT_can_be_subtype_of_elemT_specified_in_category() {
+    var combine = combineB(tupleTB(list(arrayTB(nothingTB()))), list(arrayB(nothingTB())));
+    var select = selectB(arrayTB(intTB()), combine, intB(0));
+    assertThat(select.data().selectable())
+        .isEqualTo(combine);
+  }
+
+  @Test
+  public void tuple_itemT_not_being_subtype_of_elemT_specified_in_category_causes_exc() {
+    var tuple = tupleB(list(intB(7)));
+    assertCall(() -> selectB(stringTB(), tuple, intB(0)))
+        .throwsException(new IllegalArgumentException(
+            "Selected item type `Int` cannot be assigned to evalT `String`."));
   }
 
   @Test

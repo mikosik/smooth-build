@@ -44,7 +44,6 @@ import org.smoothbuild.db.object.type.CatDb;
 import org.smoothbuild.db.object.type.TypingB;
 import org.smoothbuild.db.object.type.base.CatB;
 import org.smoothbuild.db.object.type.base.TypeB;
-import org.smoothbuild.db.object.type.expr.SelectCB;
 import org.smoothbuild.db.object.type.val.ArrayTB;
 import org.smoothbuild.db.object.type.val.CallableTB;
 import org.smoothbuild.db.object.type.val.FuncTB;
@@ -131,6 +130,10 @@ public class ByteDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(callable, args));
   }
 
+  public CallB call(TypeB evalT, ObjB callable, ObjB args) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evalT, callable, args));
+  }
+
   public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evalT, items));
   }
@@ -141,6 +144,10 @@ public class ByteDb {
 
   public InvokeB invoke(ObjB method, ObjB args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(method, args));
+  }
+
+  public InvokeB invoke(TypeB evalT, ObjB method, ObjB args) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evalT, method, args));
   }
 
   public MapB map(ObjB array, ObjB func) {
@@ -157,6 +164,10 @@ public class ByteDb {
 
   public SelectB select(ObjB selectable, IntB index) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(selectable, index));
+  }
+
+  public SelectB select(TypeB evalT, ObjB selectable, IntB index) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evalT, selectable, index));
   }
 
   // generic getter
@@ -243,7 +254,20 @@ public class ByteDb {
 
   private CallB newCall(ObjB callable, ObjB args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToFuncTH(callable), args);
-    var type = catDb.call(resT);
+    return newCallImpl(resT, callable, args);
+  }
+
+  private CallB newCall(TypeB evalT, ObjB callable, ObjB args) throws HashedDbExc {
+    var resT = inferCallResT(castTypeToFuncTH(callable), args);
+    if (!typing.isAssignable(evalT, resT)) {
+      throw new IllegalArgumentException(
+          "Call's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
+    }
+    return newCallImpl(resT, callable, args);
+  }
+
+  private CallB newCallImpl(TypeB evalT, ObjB callable, ObjB args) throws HashedDbExc {
+    var type = catDb.call(evalT);
     var data = writeCallData(callable, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -341,7 +365,20 @@ public class ByteDb {
 
   private InvokeB newInvoke(ObjB method, ObjB args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToMethodTH(method), args);
-    var type = catDb.invoke(resT);
+    return newInvokeImpl(resT, method, args);
+  }
+
+  private InvokeB newInvoke(TypeB evalT, ObjB method, ObjB args) throws HashedDbExc {
+    var resT = inferCallResT(castTypeToMethodTH(method), args);
+    if (!typing.isAssignable(evalT, resT)) {
+      throw new IllegalArgumentException(
+          "Method's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
+    }
+    return newInvokeImpl(resT, method, args);
+  }
+
+  private InvokeB newInvokeImpl(TypeB evalT, ObjB method, ObjB args) throws HashedDbExc {
+    var type = catDb.invoke(evalT);
     var data = writeInvokeData(method, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
@@ -376,21 +413,36 @@ public class ByteDb {
   }
 
   private SelectB newSelect(ObjB selectable, IntB index) throws HashedDbExc {
-    var type = selectCat(selectable, index);
-    var data = writeSelectData(selectable, index);
-    var root = newRoot(type, data);
-    return type.newObj(root, this);
+    var evalT = selectEvalT(selectable, index);
+    return newSelectImpl(evalT, selectable, index);
   }
 
-  private SelectCB selectCat(ObjB selectable, IntB index) {
-    if (selectable.type() instanceof TupleTB tuple) {
+  private SelectB newSelect(TypeB evalT, ObjB selectable, IntB index) throws HashedDbExc {
+    var inferredEvalT = selectEvalT(selectable, index);
+    if (!typing.isAssignable(evalT, inferredEvalT)) {
+      throw new IllegalArgumentException("Selected item type " + inferredEvalT.q()
+          + " cannot be assigned to evalT " + evalT.q() + ".");
+    }
+    return newSelectImpl(inferredEvalT, selectable, index);
+  }
+
+  private SelectB newSelectImpl(TypeB evalT, ObjB selectable, IntB index) throws HashedDbExc {
+    var data = writeSelectData(selectable, index);
+    var cat = catDb.select(evalT);
+    var root = newRoot(cat, data);
+    return cat.newObj(root, this);
+  }
+
+  private TypeB selectEvalT(ObjB selectable, IntB index) {
+    var evalT = selectable.type();
+    if (evalT instanceof TupleTB tuple) {
       int intIndex = index.toJ().intValue();
       var items = tuple.items();
       checkElementIndex(intIndex, items.size());
-      var itemT = items.get(intIndex);
-      return catDb.select(itemT);
+      return items.get(intIndex);
     } else {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(
+          "Selectable.type() should be instance of TupleTB but is " + evalT.q());
     }
   }
 

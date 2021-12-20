@@ -5,6 +5,8 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.val.ArrayB;
+import org.smoothbuild.db.object.type.expr.IfCB;
 import org.smoothbuild.testing.TestingContext;
 
 public class IfBTest extends TestingContext {
@@ -17,10 +19,42 @@ public class IfBTest extends TestingContext {
     }
 
     @Test
-    public void with_one_clauses_being_subtype_of_the_other() {
+    public void with_then_clauses_being_subtype_of_else_clause() {
       assertThat(ifB(boolB(true), arrayB(nothingTB()), arrayB(stringTB())).cat())
           .isEqualTo(ifCB(arrayTB(stringTB())));
     }
+
+    @Test
+    public void with_else_clauses_being_subtype_of_then_clause() {
+      assertThat(ifB(boolB(true), arrayB(stringTB()), arrayB(nothingTB())).cat())
+          .isEqualTo(ifCB(arrayTB(stringTB())));
+    }
+  }
+
+  @Test
+  public void then_clauses_can_be_subtype_of_else_clause() {
+    var ifCB = ifCB(arrayTB(stringTB()));
+    var then = arrayB(stringTB());
+    var else_ = arrayB(nothingTB());
+    test_clauses(ifCB, then, else_);
+  }
+
+  @Test
+  public void else_clauses_can_be_subtype_of_then_clause() {
+    var then = arrayB(stringTB());
+    var else_ = arrayB(nothingTB());
+    var ifCB = ifCB(arrayTB(stringTB()));
+    test_clauses(ifCB, then, else_);
+  }
+
+  private void test_clauses(IfCB ifCB, ArrayB then, ArrayB else_) {
+    var ifB = ifB(boolB(true), then, else_);
+    assertThat(ifB.cat())
+        .isEqualTo(ifCB);
+    assertThat(ifB.data().then_())
+        .isEqualTo(then);
+    assertThat(ifB.data().else_())
+        .isEqualTo(else_);
   }
 
   @Test

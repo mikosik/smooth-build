@@ -25,8 +25,11 @@ public class CombineBTest extends TestingContext {
   }
 
   @Test
-  public void item_being_subtype_of_type_specified_in_category() {
-    combineB(tupleTB(list(arrayTB(intTB()))), list(arrayB(nothingTB())));
+  public void item_can_be_subtype_of_item_type_specified_in_category() {
+    var elemT = arrayB(nothingTB());
+    var combineB = combineB(tupleTB(list(arrayTB(intTB()))), list(elemT));
+    assertThat(combineB.items().get(0))
+        .isEqualTo(elemT);
   }
 
   @Test

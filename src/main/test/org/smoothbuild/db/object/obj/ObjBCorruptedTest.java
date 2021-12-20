@@ -638,28 +638,6 @@ public class ObjBCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void learning_test_then_and_else_can_be_subtypes_of_evalT() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save IF
-       * in HashedDb.
-       */
-      var condition = boolB(true);
-      var then = arrayB(nothingTB());
-      var else_ = arrayB(nothingTB());
-      Hash objHash =
-          hash(
-              hash(ifCB(arrayTB(intTB()))),
-              hash(
-                  hash(condition),
-                  hash(then),
-                  hash(else_)
-              ));
-      var data = ((IfB) byteDb().get(objHash)).data();
-      assertThat(data)
-          .isEqualTo(new IfB.Data(condition, then, else_));
-    }
-
-    @Test
     public void root_without_data_hash() throws Exception {
       obj_root_without_data_hash(ifCB());
     }
@@ -1104,25 +1082,6 @@ public class ObjBCorruptedTest extends TestingContext {
       var items = ((CombineB) byteDb().get(objHash)).items();
       assertThat(items)
           .containsExactly(expr1, expr2)
-          .inOrder();
-    }
-
-    @Test
-    public void learning_test_item_type_can_be_subtype_of_expected_type() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save Combine
-       * in HashedDb.
-       */
-      var item1 = arrayB(nothingTB());
-      Hash objHash =
-          hash(
-              hash(combineCB(list(arrayTB(intTB())))),
-              hash(
-                  hash(item1)
-              ));
-      var items = ((CombineB) byteDb().get(objHash)).items();
-      assertThat(items)
-          .containsExactly(item1)
           .inOrder();
     }
 
