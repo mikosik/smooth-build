@@ -561,6 +561,123 @@ public class ObjBCorruptedTest extends TestingContext {
   }
 
   @Nested
+  class _combine {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save Combine
+       * in HashedDb.
+       */
+      var expr1 = intB(1);
+      var expr2 = stringB("abc");
+      Hash objHash =
+          hash(
+              hash(combineCB(list(intTB(), stringTB()))),
+              hash(
+                  hash(expr1),
+                  hash(expr2)
+              ));
+      var items = ((CombineB) byteDb().get(objHash)).items();
+      assertThat(items)
+          .containsExactly(expr1, expr2)
+          .inOrder();
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(combineCB());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var item1 = intB(1);
+      var item2 = stringB("abc");
+      Hash dataHash = hash(
+          hash(item1),
+          hash(item2)
+      );
+      obj_root_with_two_data_hashes(
+          orderCB(),
+          dataHash,
+          (Hash objHash) -> ((CombineB) byteDb().get(objHash)).items()
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          combineCB(),
+          (Hash objHash) -> ((CombineB) byteDb().get(objHash)).items());
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void with_seq_size_different_than_multiple_of_hash_size(
+        int byteCount) throws Exception {
+      var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
+      var objHash =
+          hash(
+              hash(combineCB()),
+              notHashOfSeq
+          );
+      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
+          .throwsException(new DecodeObjNodeExc(objHash, combineCB(), DATA_PATH))
+          .withCause(new DecodeHashSeqExc(
+              notHashOfSeq, byteCount % Hash.lengthInBytes()));
+    }
+
+    @Test
+    public void with_seq_item_pointing_nowhere() throws Exception {
+      var nowhere = Hash.of(33);
+      var objHash =
+          hash(
+              hash(combineCB()),
+              hash(
+                  nowhere
+              )
+          );
+      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
+          .throwsException(new DecodeObjNodeExc(objHash, combineCB(), DATA_PATH + "[0]"))
+          .withCause(new DecodeObjNoSuchObjExc(nowhere));
+    }
+
+    @Test
+    public void evaluation_type_items_size_is_different_than_actual_items_size()
+        throws Exception {
+      var item1 =  intB();
+      var type = combineCB(list(intTB(), stringTB()));
+      var objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(item1)
+              ));
+
+      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
+          .throwsException(new DecodeCombineWrongItemsSizeExc(objHash, type, 1));
+    }
+
+    @Test
+    public void evaluation_type_item_is_different_than_evaluation_type_of_one_of_items()
+        throws Exception {
+      var item1 = intB(1);
+      var item2 = stringB("abc");
+      var type = combineCB(list(intTB(), boolTB()));
+      var objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(item1),
+                  hash(item2)
+              ));
+
+      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, type, "items[1]", boolTB(), stringTB()));
+    }
+  }
+
+  @Nested
   class _func {
     @Test
     public void learning_test() throws Exception {
@@ -798,6 +915,45 @@ public class ObjBCorruptedTest extends TestingContext {
   }
 
   @Nested
+  class _int {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save int
+       * in HashedDb.
+       */
+      ByteString byteString = ByteString.of((byte) 3, (byte) 2);
+      Hash objHash =
+          hash(
+              hash(intTB()),
+              hash(byteString));
+      assertThat(((IntB) byteDb().get(objHash)).toJ())
+          .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(intTB());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      obj_root_with_two_data_hashes(
+          intTB(),
+          hashedDb().writeByte((byte) 1),
+          (Hash objHash) -> ((IntB) byteDb().get(objHash)).toJ()
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          intTB(),
+          (Hash objHash) -> ((IntB) byteDb().get(objHash)).toJ());
+    }
+  }
+
+  @Nested
   class _invoke {
     @Test
     public void learning_test() throws Exception {
@@ -965,424 +1121,6 @@ public class ObjBCorruptedTest extends TestingContext {
     }
   }
 
-  @Nested
-  class _order {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save Order expr
-       * in HashedDb.
-       */
-      var expr1 = arrayB(intTB(), intB(1));
-      var expr2 = arrayB(nothingTB());
-      Hash objHash =
-          hash(
-              hash(orderCB(arrayTB(intTB()))),
-              hash(
-                  hash(expr1),
-                  hash(expr2)
-              ));
-      var elems = ((OrderB) byteDb().get(objHash)).elems();
-      assertThat(elems)
-          .containsExactly(expr1, expr2)
-          .inOrder();
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(orderCB());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      var expr1 = intB(1);
-      var expr2 = intB(2);
-      var dataHash = hash(
-          hash(expr1),
-          hash(expr2)
-      );
-      obj_root_with_two_data_hashes(
-          orderCB(),
-          dataHash,
-          (Hash objHash) -> ((OrderB) byteDb().get(objHash)).elems()
-      );
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          orderCB(),
-          (Hash objHash) -> ((OrderB) byteDb().get(objHash)).elems());
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_seq_size_different_than_multiple_of_hash_size(
-        int byteCount) throws Exception {
-      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
-      Hash objHash =
-          hash(
-              hash(orderCB()),
-              notHashOfSeq
-          );
-      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
-          .throwsException(new DecodeObjNodeExc(objHash, orderCB(), DATA_PATH))
-          .withCause(new DecodeHashSeqExc(
-              notHashOfSeq, byteCount % Hash.lengthInBytes()));
-    }
-
-    @Test
-    public void with_seq_elem_pointing_nowhere() throws Exception {
-      Hash nowhere = Hash.of(33);
-      Hash objHash =
-          hash(
-              hash(orderCB()),
-              hash(
-                  nowhere
-              )
-          );
-      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
-          .throwsException(new DecodeObjNodeExc(objHash, orderCB(), DATA_PATH + "[0]"))
-          .withCause(new DecodeObjNoSuchObjExc(nowhere));
-    }
-
-    @Test
-    public void evaluation_type_elem_is_different_than_evaluation_type_of_one_of_elems()
-        throws Exception {
-      var expr1 = intB();
-      var expr2 = stringB();
-      var type = orderCB(intTB());
-      Hash objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(expr1),
-                  hash(expr2)
-              ));
-      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
-          .throwsException(new DecodeObjWrongNodeTypeExc(
-                  objHash, type, "elems[1]", intTB(), stringTB()));
-    }
-  }
-
-  @Nested
-  class _combine {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save Combine
-       * in HashedDb.
-       */
-      var expr1 = intB(1);
-      var expr2 = stringB("abc");
-      Hash objHash =
-          hash(
-              hash(combineCB(list(intTB(), stringTB()))),
-              hash(
-                  hash(expr1),
-                  hash(expr2)
-              ));
-      var items = ((CombineB) byteDb().get(objHash)).items();
-      assertThat(items)
-          .containsExactly(expr1, expr2)
-          .inOrder();
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(combineCB());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      var item1 = intB(1);
-      var item2 = stringB("abc");
-      Hash dataHash = hash(
-          hash(item1),
-          hash(item2)
-      );
-      obj_root_with_two_data_hashes(
-          orderCB(),
-          dataHash,
-          (Hash objHash) -> ((CombineB) byteDb().get(objHash)).items()
-      );
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          combineCB(),
-          (Hash objHash) -> ((CombineB) byteDb().get(objHash)).items());
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
-    public void with_seq_size_different_than_multiple_of_hash_size(
-        int byteCount) throws Exception {
-      var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
-      var objHash =
-          hash(
-              hash(combineCB()),
-              notHashOfSeq
-          );
-      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
-          .throwsException(new DecodeObjNodeExc(objHash, combineCB(), DATA_PATH))
-          .withCause(new DecodeHashSeqExc(
-              notHashOfSeq, byteCount % Hash.lengthInBytes()));
-    }
-
-    @Test
-    public void with_seq_item_pointing_nowhere() throws Exception {
-      var nowhere = Hash.of(33);
-      var objHash =
-          hash(
-              hash(combineCB()),
-              hash(
-                  nowhere
-              )
-          );
-      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
-          .throwsException(new DecodeObjNodeExc(objHash, combineCB(), DATA_PATH + "[0]"))
-          .withCause(new DecodeObjNoSuchObjExc(nowhere));
-    }
-
-    @Test
-    public void evaluation_type_items_size_is_different_than_actual_items_size()
-        throws Exception {
-      var item1 =  intB();
-      var type = combineCB(list(intTB(), stringTB()));
-      var objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(item1)
-              ));
-
-      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
-          .throwsException(new DecodeCombineWrongItemsSizeExc(objHash, type, 1));
-    }
-
-    @Test
-    public void evaluation_type_item_is_different_than_evaluation_type_of_one_of_items()
-        throws Exception {
-      var item1 = intB(1);
-      var item2 = stringB("abc");
-      var type = combineCB(list(intTB(), boolTB()));
-      var objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(item1),
-                  hash(item2)
-              ));
-
-      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
-          .throwsException(new DecodeObjWrongNodeTypeExc(
-                  objHash, type, "items[1]", boolTB(), stringTB()));
-    }
-  }
-
-  @Nested
-  class _select {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth
-       * select in HashedDb.
-       */
-      var tupleT = tupleTB(list(stringTB()));
-      var tuple = tupleB(tupleT, list(stringB("abc")));
-      var selectable = (ValB) tuple;
-      var index = intB(0);
-      Hash objHash =
-          hash(
-              hash(selectCB(stringTB())),
-              hash(
-                  hash(selectable),
-                  hash(index)
-              )
-          );
-      assertThat(((SelectB) byteDb().get(objHash)).data())
-          .isEqualTo(new SelectB.Data(selectable, index));
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(selectCB(intTB()));
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      var index = intB(2);
-      var expr = intB(123);
-      Hash dataHash = hash(
-          hash(expr),
-          hash(index)
-      );
-      obj_root_with_two_data_hashes(
-          selectCB(),
-          dataHash,
-          (Hash objHash) -> ((SelectB) byteDb().get(objHash)).data());
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          selectCB(),
-          (Hash objHash) -> ((SelectB) byteDb().get(objHash)).data());
-    }
-
-    @Test
-    public void data_is_seq_with_one_elem() throws Exception {
-      var expr = intB(123);
-      var dataHash = hash(
-          hash(expr)
-      );
-      Hash objHash =
-          hash(
-              hash(selectCB()),
-              dataHash
-          );
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongSeqSizeExc(
-              objHash, selectCB(), DATA_PATH, 2, 1));
-    }
-
-    @Test
-    public void data_is_seq_with_three_elems() throws Exception {
-      var index = intB(2);
-      var expr = intB(123);
-      var dataHash = hash(
-          hash(expr),
-          hash(index),
-          hash(index)
-      );
-      Hash objHash =
-          hash(
-              hash(selectCB()),
-              dataHash
-          );
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongSeqSizeExc(
-              objHash, selectCB(), DATA_PATH, 2, 3));
-    }
-
-    @Test
-    public void tuple_is_not_tuple_expr() throws Exception {
-      var expr = intB(3);
-      var index = intB(0);
-      var type = selectCB(stringTB());
-      Hash objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(expr),
-                  hash(index)
-              )
-          );
-
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeTypeExc(
-              objHash, type, "tuple", TupleTB.class, IntTB.class));
-    }
-
-    @Test
-    public void index_is_out_of_bounds() throws Exception {
-      var tupleT = tupleTB(list(stringTB()));
-      var tuple = tupleB(tupleT, list(stringB("abc")));
-      var index = intB(1);
-      var type = selectCB(stringTB());
-      Hash objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(tuple),
-                  hash(index)
-              )
-          );
-
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeSelectIndexOutOfBoundsExc(objHash, type, 1, 1));
-    }
-
-    @Test
-    public void evaluation_type_is_different_than_type_of_item_pointed_to_by_index()
-        throws Exception {
-      var tupleT = tupleTB(list(stringTB()));
-      var tuple = tupleB(tupleT, list(stringB("abc")));
-      var index = intB(0);
-      var type = selectCB(intTB());
-      Hash objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(tuple),
-                  hash(index)
-              )
-          );
-
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeSelectWrongEvalTypeExc(objHash, type, stringTB()));
-    }
-
-    @Test
-    public void index_is_string_instead_of_int() throws Exception {
-      var type = selectCB(stringTB());
-      var tupleT = tupleTB(list(stringTB()));
-      var tuple = tupleB(tupleT, list(stringB("abc")));
-      var strVal = stringB("abc");
-      Hash objHash =
-          hash(
-              hash(type),
-              hash(
-                  hash(tuple),
-                  hash(strVal)
-              )
-          );
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeCatExc(
-              objHash, type, DATA_PATH + "[1]", IntB.class, StringB.class));
-    }
-  }
-
-  @Nested
-  class _int {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save int
-       * in HashedDb.
-       */
-      ByteString byteString = ByteString.of((byte) 3, (byte) 2);
-      Hash objHash =
-          hash(
-              hash(intTB()),
-              hash(byteString));
-      assertThat(((IntB) byteDb().get(objHash)).toJ())
-          .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(intTB());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      obj_root_with_two_data_hashes(
-          intTB(),
-          hashedDb().writeByte((byte) 1),
-          (Hash objHash) -> ((IntB) byteDb().get(objHash)).toJ()
-      );
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          intTB(),
-          (Hash objHash) -> ((IntB) byteDb().get(objHash)).toJ());
-    }
-  }
 
   @Nested
   class _method {
@@ -1557,6 +1295,269 @@ public class ObjBCorruptedTest extends TestingContext {
               hash("aaa"));
       assertCall(() -> byteDb().get(objHash))
           .throwsException(UnsupportedOperationException.class);
+    }
+  }
+
+  @Nested
+  class _order {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save Order expr
+       * in HashedDb.
+       */
+      var expr1 = arrayB(intTB(), intB(1));
+      var expr2 = arrayB(nothingTB());
+      Hash objHash =
+          hash(
+              hash(orderCB(arrayTB(intTB()))),
+              hash(
+                  hash(expr1),
+                  hash(expr2)
+              ));
+      var elems = ((OrderB) byteDb().get(objHash)).elems();
+      assertThat(elems)
+          .containsExactly(expr1, expr2)
+          .inOrder();
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(orderCB());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var expr1 = intB(1);
+      var expr2 = intB(2);
+      var dataHash = hash(
+          hash(expr1),
+          hash(expr2)
+      );
+      obj_root_with_two_data_hashes(
+          orderCB(),
+          dataHash,
+          (Hash objHash) -> ((OrderB) byteDb().get(objHash)).elems()
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          orderCB(),
+          (Hash objHash) -> ((OrderB) byteDb().get(objHash)).elems());
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void with_seq_size_different_than_multiple_of_hash_size(
+        int byteCount) throws Exception {
+      Hash notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
+      Hash objHash =
+          hash(
+              hash(orderCB()),
+              notHashOfSeq
+          );
+      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
+          .throwsException(new DecodeObjNodeExc(objHash, orderCB(), DATA_PATH))
+          .withCause(new DecodeHashSeqExc(
+              notHashOfSeq, byteCount % Hash.lengthInBytes()));
+    }
+
+    @Test
+    public void with_seq_elem_pointing_nowhere() throws Exception {
+      Hash nowhere = Hash.of(33);
+      Hash objHash =
+          hash(
+              hash(orderCB()),
+              hash(
+                  nowhere
+              )
+          );
+      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
+          .throwsException(new DecodeObjNodeExc(objHash, orderCB(), DATA_PATH + "[0]"))
+          .withCause(new DecodeObjNoSuchObjExc(nowhere));
+    }
+
+    @Test
+    public void evaluation_type_elem_is_different_than_evaluation_type_of_one_of_elems()
+        throws Exception {
+      var expr1 = intB();
+      var expr2 = stringB();
+      var type = orderCB(intTB());
+      Hash objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(expr1),
+                  hash(expr2)
+              ));
+      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+                  objHash, type, "elems[1]", intTB(), stringTB()));
+    }
+  }
+
+  @Nested
+  class _select {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save smooth
+       * select in HashedDb.
+       */
+      var tupleT = tupleTB(list(stringTB()));
+      var tuple = tupleB(tupleT, list(stringB("abc")));
+      var selectable = (ValB) tuple;
+      var index = intB(0);
+      Hash objHash =
+          hash(
+              hash(selectCB(stringTB())),
+              hash(
+                  hash(selectable),
+                  hash(index)
+              )
+          );
+      assertThat(((SelectB) byteDb().get(objHash)).data())
+          .isEqualTo(new SelectB.Data(selectable, index));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(selectCB(intTB()));
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var index = intB(2);
+      var expr = intB(123);
+      Hash dataHash = hash(
+          hash(expr),
+          hash(index)
+      );
+      obj_root_with_two_data_hashes(
+          selectCB(),
+          dataHash,
+          (Hash objHash) -> ((SelectB) byteDb().get(objHash)).data());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          selectCB(),
+          (Hash objHash) -> ((SelectB) byteDb().get(objHash)).data());
+    }
+
+    @Test
+    public void data_is_seq_with_one_elem() throws Exception {
+      var expr = intB(123);
+      var dataHash = hash(
+          hash(expr)
+      );
+      Hash objHash =
+          hash(
+              hash(selectCB()),
+              dataHash
+          );
+      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(
+              objHash, selectCB(), DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_seq_with_three_elems() throws Exception {
+      var index = intB(2);
+      var expr = intB(123);
+      var dataHash = hash(
+          hash(expr),
+          hash(index),
+          hash(index)
+      );
+      Hash objHash =
+          hash(
+              hash(selectCB()),
+              dataHash
+          );
+      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(
+              objHash, selectCB(), DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void tuple_is_not_tuple_expr() throws Exception {
+      var expr = intB(3);
+      var index = intB(0);
+      var type = selectCB(stringTB());
+      Hash objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(expr),
+                  hash(index)
+              )
+          );
+
+      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, type, "tuple", TupleTB.class, IntTB.class));
+    }
+
+    @Test
+    public void index_is_out_of_bounds() throws Exception {
+      var tupleT = tupleTB(list(stringTB()));
+      var tuple = tupleB(tupleT, list(stringB("abc")));
+      var index = intB(1);
+      var type = selectCB(stringTB());
+      Hash objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(tuple),
+                  hash(index)
+              )
+          );
+
+      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeSelectIndexOutOfBoundsExc(objHash, type, 1, 1));
+    }
+
+    @Test
+    public void evaluation_type_is_different_than_type_of_item_pointed_to_by_index()
+        throws Exception {
+      var tupleT = tupleTB(list(stringTB()));
+      var tuple = tupleB(tupleT, list(stringB("abc")));
+      var index = intB(0);
+      var type = selectCB(intTB());
+      Hash objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(tuple),
+                  hash(index)
+              )
+          );
+
+      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeSelectWrongEvalTypeExc(objHash, type, stringTB()));
+    }
+
+    @Test
+    public void index_is_string_instead_of_int() throws Exception {
+      var type = selectCB(stringTB());
+      var tupleT = tupleTB(list(stringTB()));
+      var tuple = tupleB(tupleT, list(stringB("abc")));
+      var strVal = stringB("abc");
+      Hash objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(tuple),
+                  hash(strVal)
+              )
+          );
+      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeCatExc(
+              objHash, type, DATA_PATH + "[1]", IntB.class, StringB.class));
     }
   }
 
