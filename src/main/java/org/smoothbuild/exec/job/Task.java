@@ -33,8 +33,8 @@ public class Task extends AbstractJob {
   @Override
   public Promise<ValB> schedule(Worker worker) {
     PromisedValue<ValB> result = new PromisedValue<>();
-    var input = map(deps(), d -> d.schedule(worker));
-    runWhenAllAvailable(input, () -> worker.enqueue(info, algorithm, input, result));
+    var depResults = map(deps(), d -> d.schedule(worker));
+    runWhenAllAvailable(depResults, () -> worker.enqueue(info, algorithm, depResults, result));
     return result;
   }
 }
