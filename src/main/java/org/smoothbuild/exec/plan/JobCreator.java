@@ -211,7 +211,7 @@ public class JobCreator {
   private Job ifEager(IndexedScope<Job> scope, BoundsMap<TypeB> vars, IfB ifB, Nal nal) {
     var ifData = ifB.data();
     var conditionJ = eagerJobFor(scope, vars, ifData.condition());
-    var thenJ = lazyJobFor(scope, vars, ifData.then_());
+    var thenJ = lazyJobFor(scope, vars, ifData.then());
     var elseJ = lazyJobFor(scope, vars, ifData.else_());
     return new IfJob(ifB.type(), conditionJ, thenJ, elseJ, nal.loc());
   }

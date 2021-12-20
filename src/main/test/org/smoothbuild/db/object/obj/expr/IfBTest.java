@@ -51,7 +51,7 @@ public class IfBTest extends TestingContext {
     var ifB = ifB(boolB(true), then, else_);
     assertThat(ifB.cat())
         .isEqualTo(ifCB);
-    assertThat(ifB.data().then_())
+    assertThat(ifB.data().then())
         .isEqualTo(then);
     assertThat(ifB.data().else_())
         .isEqualTo(else_);
@@ -74,7 +74,7 @@ public class IfBTest extends TestingContext {
   @Test
   public void then_getter() {
     var ifH = ifB(boolB(true), intB(1), intB(2));
-    assertThat(ifH.data().then_())
+    assertThat(ifH.data().then())
         .isEqualTo(intB(1));
   }
 
@@ -224,8 +224,8 @@ public class IfBTest extends TestingContext {
 
     assertThat(readIfData.condition())
         .isEqualTo(ifData.condition());
-    assertThat(readIfData.then_())
-        .isEqualTo(ifData.then_());
+    assertThat(readIfData.then())
+        .isEqualTo(ifData.then());
     assertThat(readIfData.else_())
         .isEqualTo(ifData.else_());
   }

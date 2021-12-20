@@ -24,7 +24,7 @@ public final class IfB extends ExprB {
     return new Data(readCondition(), readThen(), readElse());
   }
 
-  public record Data(ObjB condition, ObjB then_, ObjB else_) {}
+  public record Data(ObjB condition, ObjB then, ObjB else_) {}
 
   private ObjB readCondition() {
     var expectedT = byteDb().catDb().bool();
