@@ -30,7 +30,7 @@ import com.google.common.collect.ImmutableList;
 
 public class CompilerTest extends TestingContext {
   @Nested
-  class _converting {
+  class _compiling {
     @Test
     public void blob() {
       var blob = blobS(37);
@@ -132,8 +132,8 @@ public class CompilerTest extends TestingContext {
       var funcH = funcB(funcTH, bodyH);
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-      var shConv = newShConv(defs(natFuncS), fileLoader);
-      assertThat(shConv.convertExpr(topRefS(natFuncS)))
+      var compiler = newShConv(defs(natFuncS), fileLoader);
+      assertThat(compiler.compileExpr(topRefS(natFuncS)))
           .isEqualTo(funcH);
     }
 
@@ -146,8 +146,8 @@ public class CompilerTest extends TestingContext {
     }
 
     private void assertConversion(DefsS defs, ExprS exprS, ObjB expected) {
-      var shConv = newShConv(defs);
-      assertThat(shConv.convertExpr(exprS))
+      var compiler = newShConv(defs);
+      assertThat(compiler.compileExpr(exprS))
           .isEqualTo(expected);
     }
   }
@@ -180,9 +180,9 @@ public class CompilerTest extends TestingContext {
     }
 
     private void assertConversionIsCached(TopEvalS topEval) {
-      var shConv = newShConv(topEval);
-      assertThat(shConv.convertExpr(topRefS(topEval)))
-          .isSameInstanceAs(shConv.convertExpr(topRefS(topEval)));
+      var compiler = newShConv(topEval);
+      assertThat(compiler.compileExpr(topRefS(topEval)))
+          .isSameInstanceAs(compiler.compileExpr(topRefS(topEval)));
     }
   }
 

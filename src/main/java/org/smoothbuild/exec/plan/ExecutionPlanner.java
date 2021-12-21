@@ -25,9 +25,9 @@ public class ExecutionPlanner {
   }
 
   public ImmutableMap<TopRefS, Job> createPlans(DefsS defs, List<TopRefS> values) {
-    var shConverter = compilerProv.get(defs);
-    var shMapping = toMap(values, shConverter::convertExpr);
-    var jobCreator = jobCreatorProvider.get(shConverter.nals());
-    return mapValues(shMapping, jobCreator::eagerJobFor);
+    var compiler = compilerProv.get(defs);
+    var compiledTopRefs = toMap(values, compiler::compileExpr);
+    var jobCreator = jobCreatorProvider.get(compiler.nals());
+    return mapValues(compiledTopRefs, jobCreator::eagerJobFor);
   }
 }

@@ -91,18 +91,18 @@ public class Compiler {
     return ImmutableMap.copyOf(nals);
   }
 
-  private FuncB convertFunc(FuncS funcS) {
-    return computeIfAbsent(funcCache, funcS.name(), name -> convertFuncImpl(funcS));
+  private FuncB compileFunc(FuncS funcS) {
+    return computeIfAbsent(funcCache, funcS.name(), name -> compileFuncImpl(funcS));
   }
 
-  private FuncB convertFuncImpl(FuncS funcS) {
+  private FuncB compileFuncImpl(FuncS funcS) {
     try {
       callStack.push(funcS.params());
       var funcH = switch (funcS) {
-        case DefFuncS d -> convertDefFunc(d);
-        case IfFuncS i -> convertIfFunc(i);
-        case MapFuncS m -> convertMapFunc(m);
-        case NatFuncS n -> convertNatFunc(n);
+        case DefFuncS d -> compileDefFunc(d);
+        case IfFuncS i -> compileIfFunc(i);
+        case MapFuncS m -> compileMapFunc(m);
+        case NatFuncS n -> compileNatFunc(n);
       };
       nals.put(funcH, funcS);
       return funcH;
@@ -111,13 +111,13 @@ public class Compiler {
     }
   }
 
-  private FuncB convertDefFunc(DefFuncS defFuncS) {
+  private FuncB compileDefFunc(DefFuncS defFuncS) {
     var funcTB = convertFuncT(defFuncS.type());
-    var body = convertExpr(defFuncS.body());
+    var body = compileExpr(defFuncS.body());
     return objFactory.func(funcTB, body);
   }
 
-  private FuncB convertIfFunc(IfFuncS ifFuncS) {
+  private FuncB compileIfFunc(IfFuncS ifFuncS) {
     var funcTB = convertFuncT(ifFuncS.type());
     var conditionH = objFactory.paramRef(objFactory.boolT(), ZERO);
     var resTB = funcTB.res();
@@ -128,7 +128,7 @@ public class Compiler {
     return objFactory.func(funcTB, bodyB);
   }
 
-  private FuncB convertMapFunc(MapFuncS mapFuncS) {
+  private FuncB compileMapFunc(MapFuncS mapFuncS) {
     var funcTB = convertFuncT(mapFuncS.type());
     var inputArrayT = (ArrayTB) funcTB.params().get(0);
     var mappingFuncT = (FuncTB) funcTB.params().get(1);
@@ -139,7 +139,7 @@ public class Compiler {
     return objFactory.func(funcTB, bodyB);
   }
 
-  private FuncB convertNatFunc(NatFuncS natFuncS) {
+  private FuncB compileNatFunc(NatFuncS natFuncS) {
     var funcTB = convertFuncT(natFuncS.type());
     var methodB = createMethodH(natFuncS.ann(), funcTB);
     var args = objFactory.combine(funcTB.paramsTuple(), createParamRefsH(funcTB.params()));
@@ -166,43 +166,43 @@ public class Compiler {
 
   // handling value
 
-  private ObjB convertVal(DefValS defValS) {
-    return computeIfAbsent(valCache, defValS.name(), name -> convertExpr(defValS.body()));
+  private ObjB compileVal(DefValS defValS) {
+    return computeIfAbsent(valCache, defValS.name(), name -> compileExpr(defValS.body()));
   }
 
   // handling expressions
 
-  private ImmutableList<ObjB> convertExprs(ImmutableList<ExprS> exprs) {
-    return map(exprs, this::convertExpr);
+  private ImmutableList<ObjB> compileExprs(ImmutableList<ExprS> exprs) {
+    return map(exprs, this::compileExpr);
   }
 
-  public ObjB convertExpr(ExprS exprS) {
+  public ObjB compileExpr(ExprS exprS) {
     return switch (exprS) {
-      case BlobS blobS -> convertAndCacheNal(blobS, this::convertBlob);
-      case CallS callS -> convertAndCacheNal(callS, this::convertCall);
-      case CombineS combineS -> convertAndCacheNal(combineS, this::convertCombine);
-      case IntS intS -> convertAndCacheNal(intS, this::convertInt);
-      case OrderS orderS -> convertAndCacheNal(orderS, this::convertOrder);
-      case ParamRefS paramRefS -> convertAndCacheNal(paramRefS, this::convertParamRef);
-      case TopRefS topRefS -> convertTopRef(topRefS);
-      case SelectS selectS -> convertAndCacheNal(selectS, this::convertSelect);
-      case StringS stringS -> convertAndCacheNal(stringS, this::convertString);
+      case BlobS blobS -> compileAndCacheNal(blobS, this::compileBlob);
+      case CallS callS -> compileAndCacheNal(callS, this::compileCall);
+      case CombineS combineS -> compileAndCacheNal(combineS, this::compileCombine);
+      case IntS intS -> compileAndCacheNal(intS, this::compileInt);
+      case OrderS orderS -> compileAndCacheNal(orderS, this::compileOrder);
+      case ParamRefS paramRefS -> compileAndCacheNal(paramRefS, this::compileParamRef);
+      case TopRefS topRefS -> compileTopRef(topRefS);
+      case SelectS selectS -> compileAndCacheNal(selectS, this::compileSelect);
+      case StringS stringS -> compileAndCacheNal(stringS, this::compileString);
     };
   }
 
-  private <T extends ExprS> ObjB convertAndCacheNal(T exprS, Function<T, ObjB> mapping) {
+  private <T extends ExprS> ObjB compileAndCacheNal(T exprS, Function<T, ObjB> mapping) {
     var objB = mapping.apply(exprS);
     nals.put(objB, exprS);
     return objB;
   }
 
-  private BlobB convertBlob(BlobS blobS) {
+  private BlobB compileBlob(BlobS blobS) {
     return objFactory.blob(sink -> sink.write(blobS.byteString()));
   }
 
-  private CallB convertCall(CallS callS) {
-    var callableB = convertExpr(callS.callable());
-    var argsB = convertExprs(callS.args());
+  private CallB compileCall(CallS callS) {
+    var callableB = compileExpr(callS.callable());
+    var argsB = compileExprs(callS.args());
 
     var argTupleT = objFactory.tupleT(map(argsB, ObjB::type));
     var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
@@ -215,36 +215,36 @@ public class Compiler {
     return objFactory.call(callableB, combineB);
   }
 
-  private CombineB convertCombine(CombineS combineS) {
+  private CombineB compileCombine(CombineS combineS) {
     var evalT = convertStructT(combineS.type());
-    var items = convertExprs(combineS.elems());
+    var items = compileExprs(combineS.elems());
     return objFactory.combine(evalT, items);
   }
 
-  private IntB convertInt(IntS intS) {
+  private IntB compileInt(IntS intS) {
     return objFactory.int_(intS.bigInteger());
   }
 
-  private OrderB convertOrder(OrderS orderS) {
+  private OrderB compileOrder(OrderS orderS) {
     var arrayTB = convertArrayT(orderS.type());
-    var elemsB = convertExprs(orderS.elems());
+    var elemsB = compileExprs(orderS.elems());
     return objFactory.order(arrayTB, elemsB);
   }
 
-  private ParamRefB convertParamRef(ParamRefS paramRefS) {
+  private ParamRefB compileParamRef(ParamRefS paramRefS) {
     var index = callStack.peek().indexMap().get(paramRefS.paramName());
     return objFactory.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
   }
 
-  private ObjB convertTopRef(TopRefS topRefS) {
+  private ObjB compileTopRef(TopRefS topRefS) {
     return switch (defs.topEvals().get(topRefS.name())) {
-      case FuncS f -> convertFunc(f);
-      case DefValS v -> convertVal(v);
+      case FuncS f -> compileFunc(f);
+      case DefValS v -> compileVal(v);
     };
   }
 
-  private SelectB convertSelect(SelectS selectS) {
-    var selectableB = convertExpr(selectS.selectable());
+  private SelectB compileSelect(SelectS selectS) {
+    var selectableB = compileExpr(selectS.selectable());
     var structTS = (StructTS) selectS.selectable().type();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexB = objFactory.int_(BigInteger.valueOf(indexJ));
@@ -252,7 +252,7 @@ public class Compiler {
     return objFactory.select(selectableB, indexB);
   }
 
-  private StringB convertString(StringS stringS) {
+  private StringB compileString(StringS stringS) {
     return objFactory.string(stringS.string());
   }
 
