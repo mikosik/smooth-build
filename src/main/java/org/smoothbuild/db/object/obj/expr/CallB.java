@@ -42,10 +42,10 @@ public class CallB extends CallLikeB {
   }
 
   private ObjB readFunc() {
-    return readSeqElemObj(DATA_PATH, dataHash(), CALLABLE_INDEX, DATA_SEQ_SIZE, ObjB.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), CALLABLE_IDX, DATA_SEQ_SIZE, ObjB.class);
   }
 
   private CombineB readArgs() {
-    return readSeqElemObj(DATA_PATH, dataHash(), ARGS_INDEX, DATA_SEQ_SIZE, CombineB.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), ARGS_IDX, DATA_SEQ_SIZE, CombineB.class);
   }
 }

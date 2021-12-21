@@ -20,8 +20,8 @@ import org.smoothbuild.db.object.type.val.TupleTB;
  */
 public class SelectB extends ExprB {
   private static final int DATA_SEQ_SIZE = 2;
-  private static final int SELECTABLE_INDEX = 0;
-  private static final int INDEX_INDEX = 1;
+  private static final int SELECTABLE_IDX = 0;
+  private static final int IDX_IDX = 1;
 
   public SelectB(MerkleRoot merkleRoot, ByteDb byteDb) {
     super(merkleRoot, byteDb);
@@ -57,11 +57,11 @@ public class SelectB extends ExprB {
 
   private ObjB readSelectable() {
     return readSeqElemObj(
-        DATA_PATH, dataHash(), SELECTABLE_INDEX, DATA_SEQ_SIZE, ObjB.class);
+        DATA_PATH, dataHash(), SELECTABLE_IDX, DATA_SEQ_SIZE, ObjB.class);
   }
 
   private IntB readIndex() {
     return readSeqElemObj(
-        DATA_PATH, dataHash(), INDEX_INDEX, DATA_SEQ_SIZE, IntB.class);
+        DATA_PATH, dataHash(), IDX_IDX, DATA_SEQ_SIZE, IntB.class);
   }
 }

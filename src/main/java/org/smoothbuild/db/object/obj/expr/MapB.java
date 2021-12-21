@@ -21,8 +21,8 @@ import org.smoothbuild.db.object.type.val.FuncTB;
  */
 public final class MapB extends ExprB {
   private static final int DATA_SEQ_SIZE = 2;
-  private static final int ARRAY_INDEX = 0;
-  private static final int FUNC_INDEX = 1;
+  private static final int ARRAY_IDX = 0;
+  private static final int FUNC_IDX = 1;
 
   public MapB(MerkleRoot merkleRoot, ByteDb byteDb) {
     super(merkleRoot, byteDb);
@@ -44,12 +44,12 @@ public final class MapB extends ExprB {
     var maybeArrayT = array.type();
     if (!(maybeArrayT instanceof ArrayTB arrayT)) {
       throw new DecodeObjWrongNodeTypeExc(
-          hash(), cat(), DATA_PATH, ARRAY_INDEX, ArrayTB.class, maybeArrayT.getClass());
+          hash(), cat(), DATA_PATH, ARRAY_IDX, ArrayTB.class, maybeArrayT.getClass());
     }
     var maybeFuncT = func.type();
     if (!(maybeFuncT instanceof FuncTB funcT)) {
       throw new DecodeObjWrongNodeTypeExc(
-          hash(), cat(), DATA_PATH, FUNC_INDEX, FuncTB.class, maybeFuncT.getClass());
+          hash(), cat(), DATA_PATH, FUNC_IDX, FuncTB.class, maybeFuncT.getClass());
     }
     if (funcT.params().size() != 1) {
       throw new DecodeMapIllegalMappingFuncExc(hash(), cat(), funcT);
@@ -73,10 +73,10 @@ public final class MapB extends ExprB {
   public record Data(ObjB array, ObjB func) {}
 
   private ObjB readArray() {
-    return readSeqElemObj(DATA_PATH, dataHash(), ARRAY_INDEX, DATA_SEQ_SIZE, ObjB.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), ARRAY_IDX, DATA_SEQ_SIZE, ObjB.class);
   }
 
   private ObjB readFunc() {
-    return readSeqElemObj(DATA_PATH, dataHash(), FUNC_INDEX, DATA_SEQ_SIZE, ObjB.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), FUNC_IDX, DATA_SEQ_SIZE, ObjB.class);
   }
 }

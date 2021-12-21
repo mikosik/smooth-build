@@ -11,9 +11,9 @@ import org.smoothbuild.db.object.type.val.MethodTB;
  */
 public final class MethodB extends ValB {
   private static final int DATA_SEQ_SIZE = 3;
-  private static final int JAR_INDEX = 0;
-  private static final int CLASS_BINARY_NAME_INDEX = 1;
-  private static final int IS_PURE_INDEX = 2;
+  private static final int JAR_IDX = 0;
+  private static final int CLASS_BINARY_NAME_IDX = 1;
+  private static final int IS_PURE_IDX = 2;
 
   public MethodB(MerkleRoot merkleRoot, ByteDb byteDb) {
     super(merkleRoot, byteDb);
@@ -30,16 +30,16 @@ public final class MethodB extends ValB {
   }
 
   public BlobB jar() {
-    return readSeqElemObj(DATA_PATH, dataHash(), JAR_INDEX, DATA_SEQ_SIZE, BlobB.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), JAR_IDX, DATA_SEQ_SIZE, BlobB.class);
   }
 
   public StringB classBinaryName() {
     return readSeqElemObj(
-        DATA_PATH, dataHash(), CLASS_BINARY_NAME_INDEX, DATA_SEQ_SIZE, StringB.class);
+        DATA_PATH, dataHash(), CLASS_BINARY_NAME_IDX, DATA_SEQ_SIZE, StringB.class);
   }
 
   public BoolB isPure() {
-    return readSeqElemObj(DATA_PATH, dataHash(), IS_PURE_INDEX, DATA_SEQ_SIZE, BoolB.class);
+    return readSeqElemObj(DATA_PATH, dataHash(), IS_PURE_IDX, DATA_SEQ_SIZE, BoolB.class);
   }
 
   @Override

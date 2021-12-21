@@ -14,8 +14,8 @@ import org.smoothbuild.db.object.obj.val.TupleB;
 
 public class MessageStruct {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
-  private static final int TEXT_INDEX = 0;
-  private static final int SEVERITY_INDEX = 1;
+  private static final int TEXT_IDX = 0;
+  private static final int SEVERITY_IDX = 1;
 
   public static boolean containsErrors(ArrayB messages) {
     return messages.elems(TupleB.class)
@@ -44,10 +44,10 @@ public class MessageStruct {
   }
 
   public static StringB messageText(TupleB message) {
-    return (StringB) message.get(TEXT_INDEX);
+    return (StringB) message.get(TEXT_IDX);
   }
 
   public static StringB messageSeverity(TupleB message) {
-    return (StringB) message.get(SEVERITY_INDEX);
+    return (StringB) message.get(SEVERITY_IDX);
   }
 }

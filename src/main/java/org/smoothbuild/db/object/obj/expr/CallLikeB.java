@@ -9,8 +9,8 @@ import org.smoothbuild.db.object.type.val.TupleTB;
 
 public class CallLikeB extends ExprB {
   protected static final int DATA_SEQ_SIZE = 2;
-  protected static final int CALLABLE_INDEX = 0;
-  protected static final int ARGS_INDEX = 1;
+  protected static final int CALLABLE_IDX = 0;
+  protected static final int ARGS_IDX = 1;
 
   public CallLikeB(MerkleRoot merkleRoot, ByteDb byteDb) {
     super(merkleRoot, byteDb);

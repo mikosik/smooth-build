@@ -12,9 +12,9 @@ import org.smoothbuild.db.object.obj.base.ObjB;
  */
 public final class IfB extends ExprB {
   private static final int DATA_SEQ_SIZE = 3;
-  private static final int COND_INDEX = 0;
-  private static final int THEN_INDEX = 1;
-  private static final int ELSE_INDEX = 2;
+  private static final int COND_IDX = 0;
+  private static final int THEN_IDX = 1;
+  private static final int ELSE_IDX = 2;
 
   public IfB(MerkleRoot merkleRoot, ByteDb byteDb) {
     super(merkleRoot, byteDb);
@@ -28,14 +28,14 @@ public final class IfB extends ExprB {
 
   private ObjB readCondition() {
     var expectedT = byteDb().catDb().bool();
-    return readSeqElemObjWithType(DATA_PATH, dataHash(), COND_INDEX, DATA_SEQ_SIZE, expectedT);
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), COND_IDX, DATA_SEQ_SIZE, expectedT);
   }
 
   private ObjB readThen() {
-    return readSeqElemObjWithType(DATA_PATH, dataHash(), THEN_INDEX, DATA_SEQ_SIZE, type());
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), THEN_IDX, DATA_SEQ_SIZE, type());
   }
 
   private ObjB readElse() {
-    return readSeqElemObjWithType(DATA_PATH, dataHash(), ELSE_INDEX, DATA_SEQ_SIZE, type());
+    return readSeqElemObjWithType(DATA_PATH, dataHash(), ELSE_IDX, DATA_SEQ_SIZE, type());
   }
 }
