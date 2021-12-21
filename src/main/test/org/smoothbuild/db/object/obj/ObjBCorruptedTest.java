@@ -35,6 +35,7 @@ import org.smoothbuild.db.hashed.exc.HashedDbExc;
 import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
 import org.smoothbuild.db.object.obj.base.ObjB;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
+import org.smoothbuild.db.object.obj.exc.DecodeMapIllegalMappingFuncExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
@@ -47,6 +48,7 @@ import org.smoothbuild.db.object.obj.expr.CallB;
 import org.smoothbuild.db.object.obj.expr.CombineB;
 import org.smoothbuild.db.object.obj.expr.IfB;
 import org.smoothbuild.db.object.obj.expr.InvokeB;
+import org.smoothbuild.db.object.obj.expr.MapB;
 import org.smoothbuild.db.object.obj.expr.OrderB;
 import org.smoothbuild.db.object.obj.expr.ParamRefB;
 import org.smoothbuild.db.object.obj.expr.SelectB;
@@ -1121,6 +1123,205 @@ public class ObjBCorruptedTest extends TestingContext {
     }
   }
 
+  @Nested
+  class _map {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save MAP
+       * in HashedDb.
+       */
+      var array = arrayB(intB(7));
+      var func = funcB(list(intTB()), stringB("abc"));
+      var cat = mapCB(arrayTB(stringTB()));
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(array),
+              hash(func)
+          )
+      );
+      var data = ((MapB) byteDb().get(objHash)).data();
+      assertThat(data)
+          .isEqualTo(new MapB.Data(array, func));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(mapCB());
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var array = arrayB(intB(7));
+      var func = funcB(list(intTB()), stringB("abc"));
+      var cat = mapCB(arrayTB(stringTB()));
+      Hash dataHash = hash(
+          hash(array),
+          hash(func)
+      );
+      obj_root_with_two_data_hashes(
+          cat,
+          dataHash,
+          (Hash objHash) -> ((MapB) byteDb().get(objHash)).data()
+      );
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          mapCB(arrayTB(stringTB())),
+          (Hash objHash) -> ((MapB) byteDb().get(objHash)).data());
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(IllegalArrayByteSizesProvider.class)
+    public void data_seq_size_different_than_multiple_of_hash_size(int byteCount) throws Exception {
+      var cat = mapCB(arrayTB(stringTB()));
+      var notHashOfSeq = hash(ByteString.of(new byte[byteCount]));
+      var objHash = hash(
+          hash(cat),
+          notHashOfSeq
+      );
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjNodeExc(objHash, cat, DATA_PATH))
+          .withCause(new DecodeHashSeqExc(notHashOfSeq, byteCount % Hash.lengthInBytes()));
+    }
+
+    @Test
+    public void data_seq_size_equal_one() throws Exception {
+      var array = arrayB(intB(7));
+      var cat = mapCB(arrayTB(stringTB()));
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(array)
+          )
+      );
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_seq_size_equal_three() throws Exception {
+      var array = arrayB(intB(7));
+      var func = funcB(list(intTB()), stringB("abc"));
+      var cat = mapCB(arrayTB(stringTB()));
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(array),
+              hash(func),
+              hash(func)
+          )
+      );
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void data_seq_elem_pointing_nowhere() throws Exception {
+      var array = arrayB(intB(7));
+      var cat = mapCB(arrayTB(stringTB()));
+      var nowhereHash = Hash.of(33);
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(array),
+              nowhereHash
+          )
+      );
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjNodeExc(objHash, cat, DATA_PATH + "[1]"))
+          .withCause(new DecodeObjNoSuchObjExc(nowhereHash));
+    }
+
+    @Test
+    public void array_component_type_not_equal_array_type() throws Exception {
+      var notArray = intB(7);
+      var func = funcB(list(intTB()), stringB("abc"));
+      var cat = mapCB(arrayTB(stringTB()));
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(notArray),
+              hash(func)
+          )
+      );
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, cat, DATA_PATH, 0, ArrayTB.class, IntTB.class));
+    }
+
+    @Test
+    public void func_component_type_not_equal_func_type() throws Exception {
+      var array = arrayB(intB(7));
+      var notFunc = intB(8);
+      var cat = mapCB(arrayTB(stringTB()));
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(array),
+              hash(notFunc)
+          )
+      );
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, cat, DATA_PATH, 1, FuncTB.class, IntTB.class));
+    }
+
+    @Test
+    public void func_component_type_is_func_type_with_more_than_one_param() throws Exception {
+      var array = arrayB(intB(7));
+      var func = funcB(list(intTB(), intTB()), stringB("abc"));
+      var cat = mapCB(arrayTB(stringTB()));
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(array),
+              hash(func)
+          )
+      );
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeMapIllegalMappingFuncExc(
+              objHash, cat, funcTB(stringTB(), list(intTB(), intTB()))));
+    }
+
+    @Test
+    public void array_elemT_is_not_assignable_to_func_paramT() throws Exception {
+      var array = arrayB(blobB());
+      var func = funcB(list(intTB()), stringB("abc"));
+      var cat = mapCB(arrayTB(stringTB()));
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(array),
+              hash(func)
+          )
+      );
+
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, cat, "array element", intTB(), blobTB()));
+    }
+
+    @Test
+    public void func_resT_is_not_assignable_to_output_array_elemT() throws Exception {
+      var array = arrayB(intB(7));
+      var func = funcB(list(intTB()), stringB("abc"));
+      var cat = mapCB(arrayTB(blobTB()));
+      Hash objHash = hash(
+          hash(cat),
+          hash(
+              hash(array),
+              hash(func)
+          )
+      );
+      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, cat, "func.result", blobTB(), stringTB()));
+    }
+  }
 
   @Nested
   class _method {

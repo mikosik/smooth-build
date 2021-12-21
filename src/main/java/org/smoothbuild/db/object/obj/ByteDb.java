@@ -287,7 +287,11 @@ public class ByteDb {
   }
 
   public TypeB inferCallResT(CallableTB callableT, TupleTB argsT, Runnable illegalArgsExcThrower) {
-    var argTs = argsT.items();
+    return inferCallResT(callableT, argsT.items(), illegalArgsExcThrower);
+  }
+
+  public TypeB inferCallResT(CallableTB callableT, ImmutableList<TypeB> argTs,
+      Runnable illegalArgsExcThrower) {
     var paramTs = callableT.params();
     allMatchOtherwise(
         paramTs,
