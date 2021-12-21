@@ -11,6 +11,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -286,19 +287,20 @@ public class ByteDb {
     return inferCallResT(callableTB, argsT, () -> illegalArgs(callableTB, argsT));
   }
 
-  public TypeB inferCallResT(CallableTB callableT, TupleTB argsT, Runnable illegalArgsExcThrower) {
+  public TypeB inferCallResT(CallableTB callableT, TupleTB argsT,
+      Supplier<RuntimeException> illegalArgsExcThrower) {
     return inferCallResT(callableT, argsT.items(), illegalArgsExcThrower);
   }
 
   public TypeB inferCallResT(CallableTB callableT, ImmutableList<TypeB> argTs,
-      Runnable illegalArgsExcThrower) {
+      Supplier<RuntimeException> illegalArgsExcThrower) {
     var paramTs = callableT.params();
     allMatchOtherwise(
         paramTs,
         argTs,
         typing::isParamAssignable,
-        (expectedSize, actualSize) -> illegalArgsExcThrower.run(),
-        i -> illegalArgsExcThrower.run()
+        (expectedSize, actualSize) -> { throw illegalArgsExcThrower.get(); },
+        i -> { throw illegalArgsExcThrower.get(); }
     );
     var varBounds = typing.inferVarBoundsLower(paramTs, argTs);
     return typing.mapVarsLower(callableT.res(), varBounds);
@@ -312,8 +314,8 @@ public class ByteDb {
     }
   }
 
-  private void illegalArgs(CallableTB callableTB, TupleTB argsT) {
-    throw new IllegalArgumentException(
+  private IllegalArgumentException illegalArgs(CallableTB callableTB, TupleTB argsT) {
+    return new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to callable type parameters %s."
             .formatted(argsT.name(), callableTB.paramsTuple().name()));
   }

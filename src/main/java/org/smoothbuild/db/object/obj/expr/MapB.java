@@ -65,8 +65,8 @@ public final class MapB extends ExprB {
     return new Data(array, func);
   }
 
-  private void illegalArgs(CallableTB callableTB, TypeB arrayElemT) {
-    throw new DecodeObjWrongNodeTypeExc(
+  private RuntimeException illegalArgs(CallableTB callableTB, TypeB arrayElemT) {
+    return new DecodeObjWrongNodeTypeExc(
         hash(), this.cat(), "array element", callableTB.paramsTuple().items().get(0), arrayElemT);
   }
 
