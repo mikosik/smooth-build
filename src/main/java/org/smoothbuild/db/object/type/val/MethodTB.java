@@ -12,7 +12,7 @@ import org.smoothbuild.db.object.type.base.TypeB;
 
 import com.google.common.collect.ImmutableList;
 
-public class MethodTB extends TypeB implements CallableTB {
+public final class MethodTB extends TypeB implements CallableTB {
   private final TypeB res;
   private final TupleTB params;
 

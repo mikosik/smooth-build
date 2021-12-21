@@ -2,12 +2,14 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.util.collect.Lists.allMatch;
+import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.Bounded;
@@ -41,6 +43,21 @@ public class Typing<T extends Type> {
       case TupleT tupleT -> tupleT.items().stream().anyMatch(t -> contains((T) t, inner));
       default -> false;
     };
+  }
+
+  public T inferCallResT(FuncT callableT, ImmutableList<T> argTs,
+      Supplier<RuntimeException> illegalArgsExcThrower) {
+    ImmutableList<T> paramTs = (ImmutableList<T>) callableT.params();
+    allMatchOtherwise(
+        paramTs,
+        argTs,
+        this::isParamAssignable,
+        (expectedSize, actualSize) -> { throw illegalArgsExcThrower.get(); },
+        i -> { throw illegalArgsExcThrower.get(); }
+    );
+    var varBounds = inferVarBoundsLower(paramTs, argTs);
+    T res = (T) callableT.res();
+    return mapVarsLower(res, varBounds);
   }
 
   public boolean isAssignable(T target, T source) {

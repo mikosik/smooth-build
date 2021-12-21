@@ -11,7 +11,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -284,26 +283,7 @@ public class ByteDb {
 
   private TypeB inferCallResT(CallableTB callableTB, ObjB args) {
     var argsT = castTypeToTupleTH(args);
-    return inferCallResT(callableTB, argsT, () -> illegalArgs(callableTB, argsT));
-  }
-
-  public TypeB inferCallResT(CallableTB callableT, TupleTB argsT,
-      Supplier<RuntimeException> illegalArgsExcThrower) {
-    return inferCallResT(callableT, argsT.items(), illegalArgsExcThrower);
-  }
-
-  public TypeB inferCallResT(CallableTB callableT, ImmutableList<TypeB> argTs,
-      Supplier<RuntimeException> illegalArgsExcThrower) {
-    var paramTs = callableT.params();
-    allMatchOtherwise(
-        paramTs,
-        argTs,
-        typing::isParamAssignable,
-        (expectedSize, actualSize) -> { throw illegalArgsExcThrower.get(); },
-        i -> { throw illegalArgsExcThrower.get(); }
-    );
-    var varBounds = typing.inferVarBoundsLower(paramTs, argTs);
-    return typing.mapVarsLower(callableT.res(), varBounds);
+    return typing.inferCallResT(callableTB, argsT.items(), () -> illegalArgs(callableTB, argsT));
   }
 
   private TupleTB castTypeToTupleTH(ObjB args) {

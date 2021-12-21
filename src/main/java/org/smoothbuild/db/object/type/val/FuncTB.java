@@ -9,11 +9,10 @@ import org.smoothbuild.db.object.obj.ByteDb;
 import org.smoothbuild.db.object.obj.base.MerkleRoot;
 import org.smoothbuild.db.object.obj.val.FuncB;
 import org.smoothbuild.db.object.type.base.TypeB;
-import org.smoothbuild.lang.base.type.api.FuncT;
 
 import com.google.common.collect.ImmutableList;
 
-public final class FuncTB extends TypeB implements FuncT, CallableTB {
+public final class FuncTB extends TypeB implements CallableTB {
   private final TypeB res;
   private final TupleTB params;
 
