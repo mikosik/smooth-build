@@ -158,7 +158,7 @@ public class ByteDb {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(arrayTB, elems));
   }
 
-  public ParamRefB newParamRef(BigInteger value, TypeB evalT) {
+  public ParamRefB paramRef(TypeB evalT, BigInteger value) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT, value));
   }
 

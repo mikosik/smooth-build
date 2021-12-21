@@ -119,10 +119,10 @@ public class ShConv {
 
   private FuncB convertIfFunc(IfFuncS ifFuncS) {
     var funcTB = convertFuncT(ifFuncS.type());
-    var conditionH = objFactory.paramRef(ZERO, objFactory.boolT());
+    var conditionH = objFactory.paramRef(objFactory.boolT(), ZERO);
     var resTB = funcTB.res();
-    var thenB = objFactory.paramRef(ONE, resTB);
-    var elseB = objFactory.paramRef(TWO, resTB);
+    var thenB = objFactory.paramRef(resTB, ONE);
+    var elseB = objFactory.paramRef(resTB, TWO);
     var bodyB = objFactory.if_(conditionH, thenB, elseB);
     nals.put(bodyB, ifFuncS);
     return objFactory.func(funcTB, bodyB);
@@ -132,8 +132,8 @@ public class ShConv {
     var funcTB = convertFuncT(mapFuncS.type());
     var inputArrayT = (ArrayTB) funcTB.params().get(0);
     var mappingFuncT = (FuncTB) funcTB.params().get(1);
-    var arrayParam = objFactory.paramRef(ZERO, inputArrayT);
-    var mappingFuncParam = objFactory.paramRef(ONE, mappingFuncT);
+    var arrayParam = objFactory.paramRef(inputArrayT, ZERO);
+    var mappingFuncParam = objFactory.paramRef(mappingFuncT, ONE);
     var bodyB = objFactory.map(arrayParam, mappingFuncParam);
     nals.put(bodyB, mapFuncS);
     return objFactory.func(funcTB, bodyB);
@@ -159,7 +159,7 @@ public class ShConv {
   private ImmutableList<ObjB> createParamRefsH(ImmutableList<TypeB> paramTs) {
     Builder<ObjB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
-      builder.add(objFactory.paramRef(BigInteger.valueOf(i), paramTs.get(i)));
+      builder.add(objFactory.paramRef(paramTs.get(i), BigInteger.valueOf(i)));
     }
     return builder.build();
   }
@@ -233,7 +233,7 @@ public class ShConv {
 
   private ParamRefB convertParamRef(ParamRefS paramRefS) {
     var index = callStack.peek().indexMap().get(paramRefS.paramName());
-    return objFactory.paramRef(BigInteger.valueOf(index), convertT(paramRefS.type()));
+    return objFactory.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
   }
 
   private ObjB convertTopRef(TopRefS topRefS) {

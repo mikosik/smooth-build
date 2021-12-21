@@ -651,7 +651,7 @@ public class TestingContext {
   }
 
   public ParamRefB paramRefB(TypeB evalT, int index) {
-    return byteDb().newParamRef(BigInteger.valueOf(index), evalT);
+    return byteDb().paramRef(evalT, BigInteger.valueOf(index));
   }
 
   public SelectB selectB(ObjB tuple, IntB index) {

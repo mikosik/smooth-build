@@ -136,8 +136,8 @@ public class ObjFactory {
     return byteDb.invoke(method, args);
   }
 
-  public ParamRefB paramRef(BigInteger value, TypeB evalT) {
-    return byteDb.newParamRef(value, evalT);
+  public ParamRefB paramRef(TypeB evalT, BigInteger value) {
+    return byteDb.paramRef(evalT, value);
   }
 
   public SelectB select(ObjB tuple, IntB index) {
