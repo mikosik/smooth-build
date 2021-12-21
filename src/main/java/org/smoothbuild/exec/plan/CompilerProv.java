@@ -6,19 +6,19 @@ import org.smoothbuild.db.object.db.ObjFactory;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.DefsS;
 
-public class ShConvProv {
+public class CompilerProv {
   private final TypeShConv typeShConv;
   private final ObjFactory objFactory;
   private final FileLoader fileLoader;
 
   @Inject
-  public ShConvProv(TypeShConv typeShConv, ObjFactory objFactory, FileLoader fileLoader) {
+  public CompilerProv(TypeShConv typeShConv, ObjFactory objFactory, FileLoader fileLoader) {
     this.typeShConv = typeShConv;
     this.objFactory = objFactory;
     this.fileLoader = fileLoader;
   }
 
-  public ShConv get(DefsS defsS) {
-    return new ShConv(objFactory, defsS, typeShConv, fileLoader);
+  public Compiler get(DefsS defsS) {
+    return new Compiler(objFactory, defsS, typeShConv, fileLoader);
   }
 }

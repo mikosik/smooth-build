@@ -28,7 +28,7 @@ import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 
-public class ShConvTest extends TestingContext {
+public class CompilerTest extends TestingContext {
   @Nested
   class _converting {
     @Test
@@ -186,11 +186,11 @@ public class ShConvTest extends TestingContext {
     }
   }
 
-  private ShConv newShConv(TopEvalS topEval) {
+  private Compiler newShConv(TopEvalS topEval) {
     return newShConv(defs(topEval));
   }
 
-  private ShConv newShConv(DefsS defs) {
+  private Compiler newShConv(DefsS defs) {
     try {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(any())).thenReturn(blobB(1));
@@ -200,8 +200,8 @@ public class ShConvTest extends TestingContext {
     }
   }
 
-  private ShConv newShConv(DefsS defs, FileLoader fileLoader) {
-    return new ShConv(objFactory(), defs, typeShConv(), fileLoader);
+  private Compiler newShConv(DefsS defs, FileLoader fileLoader) {
+    return new Compiler(objFactory(), defs, typeShConv(), fileLoader);
   }
 
   private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {

@@ -15,17 +15,17 @@ import com.google.common.collect.ImmutableMap;
 
 public class ExecutionPlanner {
   private final JobCreatorProvider jobCreatorProvider;
-  private final ShConvProv shConvProv;
+  private final CompilerProv compilerProv;
 
   @Inject
   public ExecutionPlanner(JobCreatorProvider jobCreatorProvider,
-      ShConvProv shConvProv) {
+      CompilerProv compilerProv) {
     this.jobCreatorProvider = jobCreatorProvider;
-    this.shConvProv = shConvProv;
+    this.compilerProv = compilerProv;
   }
 
   public ImmutableMap<TopRefS, Job> createPlans(DefsS defs, List<TopRefS> values) {
-    var shConverter = shConvProv.get(defs);
+    var shConverter = compilerProv.get(defs);
     var shMapping = toMap(values, shConverter::convertExpr);
     var jobCreator = jobCreatorProvider.get(shConverter.nals());
     return mapValues(shMapping, jobCreator::eagerJobFor);

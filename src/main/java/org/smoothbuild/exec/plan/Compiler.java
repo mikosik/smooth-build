@@ -65,7 +65,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
-public class ShConv {
+public class Compiler {
   private final ObjFactory objFactory;
   private final DefsS defs;
   private final TypeShConv typeShConv;
@@ -76,7 +76,7 @@ public class ShConv {
   private final Map<ObjB, Nal> nals;
 
   @Inject
-  public ShConv(ObjFactory objFactory, DefsS defs, TypeShConv typeShConv, FileLoader fileLoader) {
+  public Compiler(ObjFactory objFactory, DefsS defs, TypeShConv typeShConv, FileLoader fileLoader) {
     this.objFactory = objFactory;
     this.defs = defs;
     this.typeShConv = typeShConv;
