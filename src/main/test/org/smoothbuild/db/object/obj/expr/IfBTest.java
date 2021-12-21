@@ -2,9 +2,13 @@ package org.smoothbuild.db.object.obj.expr;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.collect.Lists.list;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.db.object.obj.val.ArrayB;
 import org.smoothbuild.db.object.type.expr.IfCB;
 import org.smoothbuild.testing.TestingContext;
@@ -85,121 +89,25 @@ public class IfBTest extends TestingContext {
         .isEqualTo(intB(2));
   }
 
-  @Test
-  public void if_with_equal_values_are_equal() {
-    var condition = boolB(true);
-    var then = intB(1);
-    var else_ = intB(2);
-    assertThat(ifB(condition, then, else_))
-        .isEqualTo(ifB(condition, then, else_));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<IfB> {
+    @Override
+    protected List<IfB> equalValues() {
+      return list(
+          ifB(boolB(true), intB(1), intB(2)),
+          ifB(boolB(true), intB(1), intB(2))
+      );
+    }
 
-  @Test
-  public void if_with_different_condition_are_not_equal() {
-    var condition1 = boolB(true);
-    var condition2 = boolB(false);
-    var then = intB(1);
-    var else_ = intB(2);
-    assertThat(ifB(condition1, then, else_))
-        .isNotEqualTo(ifB(condition2, then, else_));
-  }
-
-  @Test
-  public void if_with_different_then_are_not_equal() {
-    var condition = boolB(true);
-    var then1 = intB(1);
-    var then2 = intB(7);
-    var else_ = intB(2);
-    assertThat(ifB(condition, then1, else_))
-        .isNotEqualTo(ifB(condition, then2, else_));
-  }
-
-  @Test
-  public void if_with_different_else_are_not_equal() {
-    var condition = boolB(true);
-    var then = intB(1);
-    var else1 = intB(2);
-    var else2 = intB(7);
-    assertThat(ifB(condition, then, else1))
-        .isNotEqualTo(ifB(condition, then, else2));
-  }
-
-  @Test
-  public void hash_of_if_with_equal_values_are_equal() {
-    var condition = boolB(true);
-    var then = intB(1);
-    var else_ = intB(2);
-    assertThat(ifB(condition, then, else_).hash())
-        .isEqualTo(ifB(condition, then, else_).hash());
-  }
-
-  @Test
-  public void hash_of_if_with_different_condition_are_not_equal() {
-    var condition1 = boolB(true);
-    var condition2 = boolB(false);
-    var then = intB(1);
-    var else_ = intB(2);
-    assertThat(ifB(condition1, then, else_).hash())
-        .isNotEqualTo(ifB(condition2, then, else_).hash());
-  }
-
-  @Test
-  public void hash_of_if_with_different_then_are_not_equal() {
-    var condition = boolB(true);
-    var then1 = intB(1);
-    var then2 = intB(7);
-    var else_ = intB(2);
-    assertThat(ifB(condition, then1, else_).hash())
-        .isNotEqualTo(ifB(condition, then2, else_).hash());
-  }
-
-  @Test
-  public void hash_of_if_with_different_else_are_not_equal() {
-    var condition = boolB(true);
-    var then = intB(1);
-    var else1 = intB(2);
-    var else2 = intB(7);
-    assertThat(ifB(condition, then, else1).hash())
-        .isNotEqualTo(ifB(condition, then, else2).hash());
-  }
-
-  @Test
-  public void hashCode_of_if_with_equal_values_are_equal() {
-    var condition = boolB(true);
-    var then = intB(1);
-    var else_ = intB(2);
-    assertThat(ifB(condition, then, else_).hashCode())
-        .isEqualTo(ifB(condition, then, else_).hashCode());
-  }
-
-  @Test
-  public void hashCode_of_if_with_different_condition_are_not_equal() {
-    var condition1 = boolB(true);
-    var condition2 = boolB(false);
-    var then = intB(1);
-    var else_ = intB(2);
-    assertThat(ifB(condition1, then, else_).hashCode())
-        .isNotEqualTo(ifB(condition2, then, else_).hashCode());
-  }
-
-  @Test
-  public void hashCode_of_if_with_different_then_are_not_equal() {
-    var condition = boolB(true);
-    var then1 = intB(1);
-    var then2 = intB(7);
-    var else_ = intB(2);
-    assertThat(ifB(condition, then1, else_).hashCode())
-        .isNotEqualTo(ifB(condition, then2, else_).hashCode());
-  }
-
-  @Test
-  public void hashCode_of_if_with_different_else_are_not_equal() {
-    var condition = boolB(true);
-    var then = intB(1);
-    var else1 = intB(2);
-    var else2 = intB(7);
-    assertThat(ifB(condition, then, else1).hashCode())
-        .isNotEqualTo(ifB(condition, then, else2).hashCode());
+    @Override
+    protected List<IfB> nonEqualValues() {
+      return list(
+          ifB(boolB(true), intB(1), intB(2)),
+          ifB(boolB(true), intB(1), intB(9)),
+          ifB(boolB(true), intB(9), intB(2)),
+          ifB(boolB(false), intB(1), intB(2))
+      );
+    }
   }
 
   @Test

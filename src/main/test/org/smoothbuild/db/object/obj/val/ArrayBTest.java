@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.db.object.type.TestingCatsB;
 import org.smoothbuild.db.object.type.base.CatB;
 import org.smoothbuild.db.object.type.base.TypeB;
@@ -106,64 +107,26 @@ public class ArrayBTest extends TestingContext {
         .containsExactly(str, str);
   }
 
-  @Test
-  public void arrays_with_same_elems_have_same_hash() {
-    var str1 = stringB("abc");
-    var str2 = stringB("def");
-    var arrayTH = arrayTB(stringTB());
-    ArrayB array = byteDb().arrayBuilder(arrayTH)
-        .add(str1)
-        .add(str2)
-        .build();
-    ArrayB array2 = byteDb().arrayBuilder(arrayTH)
-        .add(str1)
-        .add(str2)
-        .build();
-    assertThat(array.hash())
-        .isEqualTo(array2.hash());
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<ArrayB> {
+    @Override
+    protected List<ArrayB> equalValues() {
+      return list(
+          arrayB(intB(0), intB(1)),
+          arrayB(intB(0), intB(1))
+      );
+    }
 
-  @Test
-  public void one_elem_array_hash_is_different_than_its_elem_hash() {
-    StringB str = stringB("abc");
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
-        .add(str)
-        .build();
-    assertThat(array.hash())
-        .isNotEqualTo(str.hash());
-  }
-
-  @Test
-  public void arrays_with_same_elems_but_in_different_order_have_different_hashes() {
-    StringB str1 = stringB("abc");
-    StringB str2 = stringB("def");
-    var arrayTH = arrayTB(stringTB());
-    ArrayB array = byteDb().arrayBuilder(arrayTH)
-        .add(str1)
-        .add(str2)
-        .build();
-    ArrayB array2 = byteDb().arrayBuilder(arrayTH)
-        .add(str2)
-        .add(str1)
-        .build();
-    assertThat(array.hash())
-        .isNotEqualTo(array2.hash());
-  }
-
-  @Test
-  public void array_with_one_more_elem_have_different_hash() {
-    var str1 = stringB("abc");
-    var str2 = stringB("def");
-    var arrayTH = arrayTB(stringTB());
-    var array1 = byteDb().arrayBuilder(arrayTH)
-        .add(str1)
-        .build();
-    var array2 = byteDb().arrayBuilder(arrayTH)
-        .add(str1)
-        .add(str2)
-        .build();
-    assertThat(array1.hash())
-        .isNotEqualTo(array2.hash());
+    @Override
+    protected List<ArrayB> nonEqualValues() {
+      return list(
+          arrayB(intTB()),
+          arrayB(stringTB()),
+          arrayB(intB(0)),
+          arrayB(intB(1)),
+          arrayB(intB(0), intB(1))
+      );
+    }
   }
 
   @Test

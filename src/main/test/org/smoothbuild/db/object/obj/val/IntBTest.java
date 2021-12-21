@@ -1,10 +1,14 @@
 package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.util.collect.Lists.list;
 
 import java.math.BigInteger;
+import java.util.List;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 public class IntBTest extends TestingContext {
@@ -20,40 +24,26 @@ public class IntBTest extends TestingContext {
         .isEqualTo(BigInteger.valueOf(123));
   }
 
-  @Test
-  public void ints_with_equal_values_are_equal() {
-    assertThat(intB(123))
-        .isEqualTo(intB(123));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<IntB> {
+    @Override
+    protected List<IntB> equalValues() {
+      return list(
+          intB(7),
+          intB(7)
+      );
+    }
 
-  @Test
-  public void ints_with_different_values_are_not_equal() {
-    assertThat(intB(123))
-        .isNotEqualTo(intB(321));
-  }
-
-  @Test
-  public void hash_of_ints_with_equal_values_is_the_same() {
-    assertThat(intB(123).hash())
-        .isEqualTo(intB(123).hash());
-  }
-
-  @Test
-  public void hash_of_ints_with_different_values_is_not_the_same() {
-    assertThat(intB(123).hash())
-        .isNotEqualTo(intB(321).hash());
-  }
-
-  @Test
-  public void hash_code_of_ints_with_equal_values_is_the_same() {
-    assertThat(intB(123).hashCode())
-        .isEqualTo(intB(123).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_ints_with_different_values_is_not_the_same() {
-    assertThat(intB(123).hashCode())
-        .isNotEqualTo(intB(321).hashCode());
+    @Override
+    protected List<IntB> nonEqualValues() {
+      return list(
+          intB(-7),
+          intB(-1),
+          intB(0),
+          intB(1),
+          intB(7)
+      );
+    }
   }
 
   @Test

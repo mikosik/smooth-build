@@ -4,7 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.db.object.obj.base.ObjB;
 import org.smoothbuild.testing.TestingContext;
 
@@ -45,43 +49,25 @@ public class CombineBTest extends TestingContext {
         .isEqualTo(items);
   }
 
-  @Test
-  public void combine_with_equal_items_are_equal() {
-    ImmutableList<ObjB> items = list(intB(1), stringB("abc"));
-    assertThat(combineB(items))
-        .isEqualTo(combineB(items));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<CombineB> {
+    @Override
+    protected List<CombineB> equalValues() {
+      return list(
+          combineB(list(intB(1), stringB("abc"))),
+          combineB(list(intB(1), stringB("abc")))
+      );
+    }
 
-  @Test
-  public void combine_with_different_items_are_not_equal() {
-    assertThat(combineB(list(intB(1))))
-        .isNotEqualTo(combineB(list(intB(2))));
-  }
-
-  @Test
-  public void hash_of_combine_with_equal_items_is_the_same() {
-    ImmutableList<ObjB> items = list(intB(1));
-    assertThat(combineB(items).hash())
-        .isEqualTo(combineB(items).hash());
-  }
-
-  @Test
-  public void hash_of_combine_with_different_items_is_not_the_same() {
-    assertThat(combineB(list(intB(1))).hash())
-        .isNotEqualTo(combineB(list(intB(2))).hash());
-  }
-
-  @Test
-  public void hash_code_of_combine_with_equal_items_is_the_same() {
-    ImmutableList<ObjB> items = list(intB(1));
-    assertThat(combineB(items).hashCode())
-        .isEqualTo(combineB(items).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_combine_with_different_items_is_not_the_same() {
-    assertThat(combineB(list(intB(1))).hashCode())
-        .isNotEqualTo(combineB(list(intB(2))).hashCode());
+    @Override
+    protected List<CombineB> nonEqualValues() {
+      return list(
+          combineB(list(intB(1))),
+          combineB(list(intB(2))),
+          combineB(list(stringB("abc"))),
+          combineB(list(intB(1), stringB("abc")))
+      );
+    }
   }
 
   @Test

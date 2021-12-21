@@ -4,7 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.db.object.obj.base.ObjB;
 import org.smoothbuild.testing.TestingContext;
 
@@ -51,43 +55,27 @@ public class OrderBTest extends TestingContext {
         .isEqualTo(elems);
   }
 
-  @Test
-  public void arrays_with_equal_elems_are_equal() {
-    ImmutableList<ObjB> elems = list(intB(2)) ;
-    assertThat(orderB(elems))
-        .isEqualTo(orderB(elems));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<OrderB> {
+    @Override
+    protected List<OrderB> equalValues() {
+      return list(
+          orderB(list(intB(1), intB(2))),
+          orderB(list(intB(1), intB(2)))
+      );
+    }
 
-  @Test
-  public void arrays_with_different_elems_are_not_equal() {
-    assertThat(orderB(list(intB(1))))
-        .isNotEqualTo(orderB(list(intB(2))));
-  }
-
-  @Test
-  public void hash_of_arrays_with_equal_elems_is_the_same() {
-    ImmutableList<ObjB> elems = list(intB(1));
-    assertThat(orderB(elems).hash())
-        .isEqualTo(orderB(elems).hash());
-  }
-
-  @Test
-  public void hash_of_arrays_with_different_elems_is_not_the_same() {
-    assertThat(orderB(list(intB(1))).hash())
-        .isNotEqualTo(orderB(list(intB(2))).hash());
-  }
-
-  @Test
-  public void hash_code_of_arrays_with_equal_elems_is_the_same() {
-    ImmutableList<ObjB> elems = list(intB(1));
-    assertThat(orderB(elems).hashCode())
-        .isEqualTo(orderB(elems).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_arrays_with_different_elems_is_not_the_same() {
-    assertThat(orderB(list(intB(1))).hashCode())
-        .isNotEqualTo(orderB(list(intB(2))).hashCode());
+    @Override
+    protected List<OrderB> nonEqualValues() {
+      return list(
+          orderB(intTB(), list()),
+          orderB(stringTB(), list()),
+          orderB(list(intB(1))),
+          orderB(list(intB(2))),
+          orderB(list(intB(1), intB(2))),
+          orderB(list(intB(1), intB(3)))
+      );
+    }
   }
 
   @Test

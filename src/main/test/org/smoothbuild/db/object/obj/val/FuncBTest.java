@@ -4,7 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 public class FuncBTest extends TestingContext {
@@ -38,58 +42,26 @@ public class FuncBTest extends TestingContext {
         .isEqualTo(body);
   }
 
-  @Test
-  public void funcs_with_equal_body_are_equal() {
-    var funcT = funcTB(intTB(), list(stringTB()));
-    var func1 = funcB(funcT, intB());
-    var func2 = funcB(funcT, intB());
-    assertThat(func1)
-        .isEqualTo(func2);
-  }
 
-  @Test
-  public void funcs_with_different_body_are_not_equal() {
-    var funcT = funcTB(intTB(), list(stringTB()));
-    var func1 = funcB(funcT, intB(1));
-    var func2 = funcB(funcT, intB(2));
-    assertThat(func1)
-        .isNotEqualTo(func2);
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<FuncB> {
+    @Override
+    protected List<FuncB> equalValues() {
+      return list(
+          funcB(funcTB(intTB(), list(stringTB())), intB(7)),
+          funcB(funcTB(intTB(), list(stringTB())), intB(7))
+      );
+    }
 
-  @Test
-  public void funcs_with_equal_body_have_equal_hashes() {
-    var funcT = funcTB(intTB(), list(intTB()));
-    var func1 = funcB(funcT, intB());
-    var func2 = funcB(funcT, intB());
-    assertThat(func1.hash())
-        .isEqualTo(func2.hash());
-  }
-
-  @Test
-  public void funcs_with_different_bodies_have_not_equal_hashes() {
-    var funcT = funcTB(intTB(), list(stringTB()));
-    var func1 = funcB(funcT, intB(1));
-    var func2 = funcB(funcT, intB(2));
-    assertThat(func1.hash())
-        .isNotEqualTo(func2.hash());
-  }
-
-  @Test
-  public void funcs_with_equal_body_have_equal_hash_code() {
-    var funcT = funcTB(intTB(), list(stringTB()));
-    var func1 = funcB(funcT, intB());
-    var func2 = funcB(funcT, intB());
-    assertThat(func1.hashCode())
-        .isEqualTo(func2.hashCode());
-  }
-
-  @Test
-  public void funcs_with_different_bodies_have_not_equal_hash_code() {
-    var funcT = funcTB(intTB(), list(intTB()));
-    var func1 = funcB(funcT, intB(1));
-    var func2 = funcB(funcT, intB(2));
-    assertThat(func1.hashCode())
-        .isNotEqualTo(func2.hashCode());
+    @Override
+    protected List<FuncB> nonEqualValues() {
+      return list(
+          funcB(funcTB(intTB(), list(stringTB())), intB(7)),
+          funcB(funcTB(intTB(), list(stringTB())), intB(0)),
+          funcB(funcTB(intTB(), list(blobTB())), intB(7)),
+          funcB(funcTB(boolTB(), list(stringTB())), boolB(true))
+      );
+    }
   }
 
   @Test

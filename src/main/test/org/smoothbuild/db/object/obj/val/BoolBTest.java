@@ -1,9 +1,14 @@
 package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 public class BoolBTest extends TestingContext {
@@ -27,52 +32,24 @@ public class BoolBTest extends TestingContext {
         .isFalse();
   }
 
-  @Test
-  public void bools_with_equal_values_are_equal() {
-    assertThat(boolB(true))
-        .isEqualTo(boolB(true));
-  }
 
-  @Test
-  public void bools_with_different_values_are_not_equal() {
-    assertThat(boolB(true))
-        .isNotEqualTo(boolB(false));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<BoolB> {
+    @Override
+    protected List<BoolB> equalValues() {
+      return list(
+          boolB(true),
+          boolB(true)
+      );
+    }
 
-  @Test
-  public void hash_of_true_bools_are_the_same() {
-    assertThat(boolB(true).hash())
-        .isEqualTo(boolB(true).hash());
-  }
-
-  @Test
-  public void hash_of_false_bools_are_the_same() {
-    assertThat(boolB(false).hash())
-        .isEqualTo(boolB(false).hash());
-  }
-
-  @Test
-  public void hash_of_bools_with_different_values_is_not_the_same() {
-    assertThat(boolB(true).hash())
-        .isNotEqualTo(boolB(false).hash());
-  }
-
-  @Test
-  public void hash_code_of_true_bools_is_the_same() {
-    assertThat(boolB(true).hashCode())
-        .isEqualTo(boolB(true).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_false_bools_is_the_same() {
-    assertThat(boolB(false).hashCode())
-        .isEqualTo(boolB(false).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_bools_with_different_values_is_not_the_same() {
-    assertThat(boolB(true).hashCode())
-        .isNotEqualTo(boolB(false).hashCode());
+    @Override
+    protected List<BoolB> nonEqualValues() {
+      return list(
+          boolB(true),
+          boolB(false)
+      );
+    }
   }
 
   @Test

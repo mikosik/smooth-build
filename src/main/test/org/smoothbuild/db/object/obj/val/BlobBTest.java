@@ -1,9 +1,14 @@
 package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -39,40 +44,24 @@ public class BlobBTest extends TestingContext {
         .isEqualTo(bytes);
   }
 
-  @Test
-  public void blobs_with_equal_content_are_equal() {
-    assertThat(blobB(bytes))
-        .isEqualTo(blobB(bytes));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<BlobB> {
+    @Override
+    protected List<BlobB> equalValues() {
+      return list(
+          blobB(ByteString.encodeUtf8("aaa")),
+          blobB(ByteString.encodeUtf8("aaa"))
+      );
+    }
 
-  @Test
-  public void blobs_with_different_content_are_not_equal() {
-    assertThat(blobB(bytes))
-        .isNotEqualTo(blobB(otherBytes));
-  }
-
-  @Test
-  public void hash_of_blobs_with_equal_content_is_the_same() {
-    assertThat(blobB(bytes).hash())
-        .isEqualTo(blobB(bytes).hash());
-  }
-
-  @Test
-  public void hash_of_blobs_with_different_content_is_not_the_same() {
-    assertThat(blobB(bytes).hash())
-        .isNotEqualTo(blobB(otherBytes).hash());
-  }
-
-  @Test
-  public void hash_code_of_blob_with_equal_content_is_the_same() {
-    assertThat(blobB(bytes).hashCode())
-        .isEqualTo(blobB(bytes).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_blobs_with_different_values_is_not_the_same() {
-    assertThat(blobB(bytes).hashCode())
-        .isNotEqualTo(blobB(otherBytes).hashCode());
+    @Override
+    protected List<BlobB> nonEqualValues() {
+      return list(
+          blobB(ByteString.encodeUtf8("")),
+          blobB(ByteString.encodeUtf8("aaa")),
+          blobB(ByteString.encodeUtf8("bbb"))
+      );
+    }
   }
 
   @Test

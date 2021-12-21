@@ -1,8 +1,13 @@
 package org.smoothbuild.db.object.obj.val;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 public class StringBTest extends TestingContext {
@@ -27,40 +32,26 @@ public class StringBTest extends TestingContext {
         .isEqualTo("");
   }
 
-  @Test
-  public void strs_with_equal_values_are_equal() {
-    assertThat(stringB(string))
-        .isEqualTo(stringB(string));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<StringB> {
+    @Override
+    protected List<StringB> equalValues() {
+      return list(
+          stringB("abc"),
+          stringB("abc")
+      );
+    }
 
-  @Test
-  public void strs_with_different_values_are_not_equal() {
-    assertThat(stringB(string))
-        .isNotEqualTo(stringB(otherString));
-  }
-
-  @Test
-  public void hash_of_strs_with_equal_values_is_the_same() {
-    assertThat(stringB(string).hash())
-        .isEqualTo(stringB(string).hash());
-  }
-
-  @Test
-  public void hash_of_strs_with_different_values_is_not_the_same() {
-    assertThat(stringB(string).hash())
-        .isNotEqualTo(stringB(otherString).hash());
-  }
-
-  @Test
-  public void hash_code_of_strs_with_equal_values_is_the_same() {
-    assertThat(stringB(string).hashCode())
-        .isEqualTo(stringB(string).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_strs_with_different_values_is_not_the_same() {
-    assertThat(stringB(string).hashCode())
-        .isNotEqualTo(stringB(otherString).hashCode());
+    @Override
+    protected List<StringB> nonEqualValues() {
+      return list(
+          stringB(""),
+          stringB("abc"),
+          stringB("ABC"),
+          stringB(" abc"),
+          stringB("abc ")
+      );
+    }
   }
 
   @Test

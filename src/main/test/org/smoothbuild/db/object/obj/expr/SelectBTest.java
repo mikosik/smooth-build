@@ -4,7 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.db.object.obj.val.IntB;
 import org.smoothbuild.db.object.obj.val.TupleB;
 import org.smoothbuild.testing.TestingContext;
@@ -62,70 +66,27 @@ public class SelectBTest extends TestingContext {
         .isEqualTo(new SelectB.Data(selectable, index));
   }
 
-  @Test
-  public void select_with_equal_components_are_equal() {
-    TupleB tuple = animalB("rabbit", 7);
-    assertThat(selectB(tuple, intB(0)))
-        .isEqualTo(selectB(tuple, intB(0)));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<SelectB> {
+    @Override
+    protected List<SelectB> equalValues() {
+      return list(
+          selectB(tupleB(list(intB(7), stringB("abc"))), intB(0)),
+          selectB(tupleB(list(intB(7), stringB("abc"))), intB(0))
+      );
+    }
 
-  @Test
-  public void select_with_different_tuples_are_not_equal() {
-    TupleB tuple1 = animalB("rabbit", 7);
-    TupleB tuple2 = animalB("cat", 7);
-    assertThat(selectB(tuple1, intB(0)))
-        .isNotEqualTo(selectB(tuple2, intB(0)));
-  }
-
-  @Test
-  public void select_with_different_indexes_are_not_equal() {
-    TupleB tuple = animalB("rabbit", 7);
-    assertThat(selectB(tuple, intB(0)))
-        .isNotEqualTo(selectB(tuple, intB(1)));
-  }
-
-  @Test
-  public void hash_of_selects_with_equal_components_is_the_same() {
-    TupleB tuple = animalB("rabbit", 7);
-    assertThat(selectB(tuple, intB(0)).hash())
-        .isEqualTo(selectB(tuple, intB(0)).hash());
-  }
-
-  @Test
-  public void hash_of_selects_with_different_tuples_is_not_the_same() {
-    TupleB tuple1 = animalB("rabbit", 7);
-    TupleB tuple2 = animalB("cat", 7);
-    assertThat(selectB(tuple1, intB(0)).hash())
-        .isNotEqualTo(selectB(tuple2, intB(0)).hash());
-  }
-
-  @Test
-  public void hash_of_selects_with_different_indexes_is_not_the_same() {
-    TupleB tuple = animalB("rabbit", 7);
-    assertThat(selectB(tuple, intB(0)).hash())
-        .isNotEqualTo(selectB(tuple, intB(1)).hash());
-  }
-
-  @Test
-  public void hash_code_of_selects_with_equal_components_is_the_same() {
-    TupleB tuple = animalB("rabbit", 7);
-    assertThat(selectB(tuple, intB(1)).hashCode())
-        .isEqualTo(selectB(tuple, intB(1)).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_selects_with_different_tuples_is_not_the_same() {
-    TupleB tuple1 = animalB("rabbit", 7);
-    TupleB tuple2 = animalB("cat", 7);
-    assertThat(selectB(tuple1, intB(0)).hashCode())
-        .isNotEqualTo(selectB(tuple2, intB(0)).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_selects_with_different_indexes_is_not_the_same() {
-    TupleB tuple = animalB("rabbit", 7);
-    assertThat(selectB(tuple, intB(0)).hashCode())
-        .isNotEqualTo(selectB(tuple, intB(1)).hashCode());
+    @Override
+    protected List<SelectB> nonEqualValues() {
+      return list(
+          selectB(tupleB(list(intB(1))), intB(0)),
+          selectB(tupleB(list(intB(2))), intB(0)),
+          selectB(tupleB(list(intB(2), intB(2))), intB(0)),
+          selectB(tupleB(list(intB(2), intB(2))), intB(1)),
+          selectB(tupleB(list(intB(2), intB(7))), intB(0)),
+          selectB(tupleB(list(intB(7), intB(2))), intB(0))
+      );
+    }
   }
 
   @Test

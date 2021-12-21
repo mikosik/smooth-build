@@ -4,7 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 public class TupleBTest extends TestingContext {
@@ -76,53 +80,27 @@ public class TupleBTest extends TestingContext {
         .isNotEqualTo(person.get(0).hash());
   }
 
-  @Test
-  public void tuples_with_equal_items_are_equal() {
-    TupleB person1 = johnDoePerson();
-    TupleB person2 = johnDoePerson();
-    assertThat(person1)
-        .isEqualTo(person2);
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<TupleB> {
+    @Override
+    protected List<TupleB> equalValues() {
+      return list(
+          tupleB(list(intB(7), stringB("abc"))),
+          tupleB(list(intB(7), stringB("abc")))
+      );
+    }
 
-  @Test
-  public void tuples_with_one_item_different_are_not_equal() {
-    TupleB person1 = johnDoePerson();
-    TupleB person2 = tupleB(list(stringB("John"), stringB("Doe2")));
-
-    assertThat(person1)
-        .isNotEqualTo(person2);
-  }
-
-  @Test
-  public void tuples_with_equal_items_have_equal_hashes() {
-    TupleB person1 = johnDoePerson();
-    TupleB person2 = johnDoePerson();
-    assertThat(person1.hash())
-        .isEqualTo(person2.hash());
-  }
-
-  @Test
-  public void tuples_with_different_item_have_different_hashes() {
-    TupleB person1 = johnDoePerson();
-    TupleB person2 = tupleB(list(stringB("John"), stringB("Doe2")));
-    assertThat(person1.hash())
-        .isNotEqualTo(person2.hash());
-  }
-
-  @Test
-  public void tuples_with_equal_items_have_equal_hash_codes() {
-    TupleB person1 = johnDoePerson();
-    TupleB person2 = johnDoePerson();
-    assertThat(person1.hashCode())
-        .isEqualTo(person2.hashCode());
-  }
-
-  @Test
-  public void tuples_with_different_item_have_different_hash_codes() {
-    TupleB person1 = johnDoePerson();
-    TupleB person2 = tupleB(list(stringB("John"), stringB("Doe2")));
-        assertThat(person1.hashCode())
-            .isNotEqualTo(person2.hashCode());
+    @Override
+    protected List<TupleB> nonEqualValues() {
+      return list(
+          tupleB(list()),
+          tupleB(list(intB(0))),
+          tupleB(list(intB(7))),
+          tupleB(list(intB(0), intB(0))),
+          tupleB(list(intB(0), intB(7))),
+          tupleB(list(intB(7), intB(0)))
+      );
+    }
   }
 
   @Test

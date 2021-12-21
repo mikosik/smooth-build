@@ -4,8 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 public class InvokeBTest extends TestingContext {
@@ -99,82 +102,37 @@ public class InvokeBTest extends TestingContext {
         .isEqualTo(args);
   }
 
-  @Test
-  public void invoke_with_equal_values_are_equal() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
-    var args = combineB(list(stringB()));
-    assertThat(invokeB(method, args))
-        .isEqualTo(invokeB(method, args));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<InvokeB> {
+    @Override
+    protected List<InvokeB> equalValues() {
+      return list(
+          invokeB(methodB(methodTB(intTB(), list(stringTB()))), combineB(list(stringB()))),
+          invokeB(methodB(methodTB(intTB(), list(stringTB()))), combineB(list(stringB())))
+      );
+    }
 
-  @Test
-  public void invoke_with_different_method_are_not_equal() {
-    var method1 = methodB(methodTB(intTB(), list(stringTB())));
-    var method2 = methodB(methodTB(boolTB(), list(stringTB())));
-    var args = combineB(list(stringB()));
-    assertThat(invokeB(method1, args))
-        .isNotEqualTo(invokeB(method2, args));
-  }
+    @Override
+    protected List<InvokeB> nonEqualValues() {
+      var m1 = methodB(methodTB(intTB(), list(stringTB())), blobB(7), stringB("a"), boolB(true));
+      var m2 = methodB(methodTB(intTB(), list(stringTB())), blobB(7), stringB("a"), boolB(false));
+      var m3 = methodB(methodTB(intTB(), list(stringTB())), blobB(7), stringB("b"), boolB(true));
+      var m4 = methodB(methodTB(intTB(), list(stringTB())), blobB(0), stringB("a"), boolB(true));
+      var m5 = methodB(methodTB(intTB(), list(blobTB())), blobB(7), stringB("a"), boolB(true));
+      var m6 = methodB(methodTB(blobTB(), list(stringTB())), blobB(7), stringB("a"), boolB(true));
 
-  @Test
-  public void invoke_with_different_args_are_not_equal() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
-    var args1 = combineB(list(stringB("a")));
-    var args2 = combineB(list(stringB("b")));
-    assertThat(invokeB(method, args1))
-        .isNotEqualTo(invokeB(method, args2));
-  }
+      var stringArgs = combineB(list(stringB()));
+      var blobArgs = combineB(list(blobB()));
 
-  @Test
-  public void hash_of_invoke_with_equal_values_are_equal() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
-    var args = combineB(list(stringB()));
-    assertThat(invokeB(method, args).hash())
-        .isEqualTo(invokeB(method, args).hash());
-  }
-
-  @Test
-  public void hash_of_invoke_with_different_method_are_not_equal() {
-    var method1 = methodB(methodTB(intTB(), list(stringTB())));
-    var method2 = methodB(methodTB(boolTB(), list(stringTB())));
-    var args = combineB(list(stringB()));
-    assertThat(invokeB(method1, args).hash())
-        .isNotEqualTo(invokeB(method2, args).hash());
-  }
-
-  @Test
-  public void hash_of_invoke_with_different_args_are_not_equal() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
-    var args1 = combineB(list(stringB("a")));
-    var args2 = combineB(list(stringB("b")));
-    assertThat(invokeB(method, args1).hash())
-        .isNotEqualTo(invokeB(method, args2).hash());
-  }
-
-  @Test
-  public void hashCode_of_invoke_with_equal_values_are_equal() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
-    var args = combineB(list(stringB()));
-    assertThat(invokeB(method, args).hashCode())
-        .isEqualTo(invokeB(method, args).hashCode());
-  }
-
-  @Test
-  public void hashCode_of_invoke_with_different_method_are_not_equal() {
-    var method1 = methodB(methodTB(intTB(), list(stringTB())));
-    var method2 = methodB(methodTB(boolTB(), list(stringTB())));
-    var args = combineB(list(stringB()));
-    assertThat(invokeB(method1, args).hashCode())
-        .isNotEqualTo(invokeB(method2, args).hashCode());
-  }
-
-  @Test
-  public void hashCode_of_invoke_with_different_args_are_not_equal() {
-    var method = methodB(methodTB(intTB(), list(stringTB())));
-    var args1 = combineB(list(stringB("a")));
-    var args2 = combineB(list(stringB("b")));
-    assertThat(invokeB(method, args1).hashCode())
-        .isNotEqualTo(invokeB(method, args2).hashCode());
+      return list(
+          invokeB(m1, stringArgs),
+          invokeB(m2, stringArgs),
+          invokeB(m3, stringArgs),
+          invokeB(m4, stringArgs),
+          invokeB(m5, blobArgs),
+          invokeB(m6, stringArgs)
+      );
+    }
   }
 
   @Test

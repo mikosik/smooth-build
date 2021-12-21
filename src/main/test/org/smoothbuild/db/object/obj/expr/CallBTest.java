@@ -4,8 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.db.object.obj.base.ObjB;
 import org.smoothbuild.testing.TestingContext;
 
@@ -98,77 +101,24 @@ public class CallBTest extends TestingContext {
         .isEqualTo(combineB(args));
   }
 
-  @Test
-  public void call_with_equal_values_are_equal() {
-    var func = funcB(list(stringTB()), intB());
-    ImmutableList<ObjB> args = list(stringB()) ;
-    assertThat(callB(func, args))
-        .isEqualTo(callB(func, args));
-  }
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<CallB> {
+    @Override
+    protected List<CallB> equalValues() {
+      return list(
+          callB(funcB(list(blobTB()), intB()), list(blobB())),
+          callB(funcB(list(blobTB()), intB()), list(blobB()))
+      );
+    }
 
-  @Test
-  public void call_with_different_funcs_are_not_equal() {
-    var func1 = funcB(list(stringTB()), intB(1));
-    var func2 = funcB(list(stringTB()), intB(2));
-    ImmutableList<ObjB> args = list(stringB()) ;
-    assertThat(callB(func1, args))
-        .isNotEqualTo(callB(func2, args));
-  }
-
-  @Test
-  public void call_with_different_args_are_not_equal() {
-    var func = funcB(list(stringTB()), intB());
-    assertThat(callB(func, list(stringB("abc"))))
-        .isNotEqualTo(callB(func, list(stringB("def"))));
-  }
-
-  @Test
-  public void hash_of_calls_with_equal_values_is_the_same() {
-    var func = funcB(list(stringTB()), intB());
-    ImmutableList<ObjB> args = list(stringB()) ;
-    assertThat(callB(func, args).hash())
-        .isEqualTo(callB(func, args).hash());
-  }
-
-  @Test
-  public void hash_of_calls_with_different_func_is_not_the_same() {
-    var type = funcTB(intTB(), list(stringTB()));
-    var func1 = funcB(type, intB(1));
-    var func2 = funcB(type, intB(2));
-    ImmutableList<ObjB> args = list(stringB()) ;
-    assertThat(callB(func1, args).hash())
-        .isNotEqualTo(callB(func2, args).hash());
-  }
-
-  @Test
-  public void hash_of_calls_with_different_args_is_not_the_same() {
-    var func = funcB(list(stringTB()), intB());
-    assertThat(callB(func, list(stringB("abc"))).hash())
-        .isNotEqualTo(callB(func, list(stringB("def"))).hash());
-  }
-
-  @Test
-  public void hash_code_of_calls_with_equal_values_is_the_same() {
-    var func = funcB(list(stringTB()), intB());
-    ImmutableList<ObjB> args = list(stringB()) ;
-    assertThat(callB(func, args).hashCode())
-        .isEqualTo(callB(func, args).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_calls_with_different_func_is_not_the_same() {
-    var func1 = funcB(list(stringTB()), intB(1));
-    var func2 = funcB(list(stringTB()), intB(2));
-    ImmutableList<ObjB> args = list(stringB());
-    assertThat(callB(func1, args).hashCode())
-        .isNotEqualTo(callB(func2, args).hashCode());
-  }
-
-  @Test
-  public void hash_code_of_calls_with_different_args_is_not_the_same() {
-    var func = funcB(list(stringTB()), intB());
-    assertThat(callB(func, list(stringB("abc"))).hashCode())
-        .isNotEqualTo(callB(func, list(stringB("def"))).hashCode());
+    @Override
+    protected List<CallB> nonEqualValues() {
+      return list(
+          callB(funcB(list(blobTB()), intB()), list(blobB())),
+          callB(funcB(list(stringTB()), intB()), list(stringB())),
+          callB(funcB(list(blobTB()), stringB()), list(blobB()))
+      );
+    }
   }
 
   @Test
