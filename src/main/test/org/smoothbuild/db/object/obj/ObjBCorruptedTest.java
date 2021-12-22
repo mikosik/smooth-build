@@ -1329,7 +1329,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme to save
-       * nat_func in HashedDb.
+       * Method in HashedDb.
        */
       var type = methodTB(stringTB(), list(intTB()));
       var jar = blobB();
