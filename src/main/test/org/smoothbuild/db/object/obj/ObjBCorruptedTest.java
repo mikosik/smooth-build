@@ -218,7 +218,7 @@ public class ObjBCorruptedTest extends TestingContext {
     }
 
     @Test
-    public void with_one_elem_of_wrong_types() throws Exception {
+    public void with_one_elem_of_wrong_type() throws Exception {
       ArrayTB type = arrayTB(stringTB());
       Hash objHash =
           hash(
@@ -1604,22 +1604,21 @@ public class ObjBCorruptedTest extends TestingContext {
     @Test
     public void learning_test() throws Exception {
       /*
-       * This test makes sure that other tests in this class use proper scheme to save smooth
-       * ParamRef in HashedDb.
+       * This test makes sure that other tests in this class use proper scheme to save ref
+       * in HashedDb.
        */
-      var int7 = BigInteger.valueOf(7);
-      var intHash = hashedDb().writeBigInteger(int7);
-      var objHash = hash(
-          hash(paramRefCB(intTB())),
-          intHash
-      );
+      ByteString byteString = ByteString.of((byte) 3, (byte) 2);
+      Hash objHash =
+          hash(
+              hash(paramRefCB(stringTB())),
+              hash(byteString));
       assertThat(((ParamRefB) byteDb().get(objHash)).value())
-          .isEqualTo(int7);
+          .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
     }
 
     @Test
     public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(paramRefCB(intTB()));
+      obj_root_without_data_hash(paramRefCB());
     }
 
     @Test
@@ -1627,9 +1626,10 @@ public class ObjBCorruptedTest extends TestingContext {
       var index = intB(0);
       Hash dataHash = hash(index);
       obj_root_with_two_data_hashes(
-          selectCB(),
+          paramRefCB(intTB()),
           dataHash,
-          (Hash objHash) -> ((ParamRefB) byteDb().get(objHash)).value());
+          (Hash objHash) -> ((ParamRefB) byteDb().get(objHash)).value()
+      );
     }
 
     @Test
@@ -1979,45 +1979,6 @@ public class ObjBCorruptedTest extends TestingContext {
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeObjWrongNodeCatExc(
               objHash, personTB(), DATA_PATH + "[1]", ValB.class, ParamRefB.class));
-    }
-  }
-
-  @Nested
-  class _ref {
-    @Test
-    public void learning_test() throws Exception {
-      /*
-       * This test makes sure that other tests in this class use proper scheme to save ref
-       * in HashedDb.
-       */
-      ByteString byteString = ByteString.of((byte) 3, (byte) 2);
-      Hash objHash =
-          hash(
-              hash(paramRefCB(stringTB())),
-              hash(byteString));
-      assertThat(((ParamRefB) byteDb().get(objHash)).value())
-          .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
-    }
-
-    @Test
-    public void root_without_data_hash() throws Exception {
-      obj_root_without_data_hash(paramRefCB());
-    }
-
-    @Test
-    public void root_with_two_data_hashes() throws Exception {
-      obj_root_with_two_data_hashes(
-          paramRefCB(),
-          hashedDb().writeByte((byte) 1),
-          (Hash objHash) -> ((ParamRefB) byteDb().get(objHash)).value()
-      );
-    }
-
-    @Test
-    public void root_with_data_hash_pointing_nowhere() throws Exception {
-      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
-          paramRefCB(),
-          (Hash objHash) -> ((ParamRefB) byteDb().get(objHash)).value());
     }
   }
 
