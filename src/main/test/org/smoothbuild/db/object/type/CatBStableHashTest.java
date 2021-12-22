@@ -15,8 +15,8 @@ public class CatBStableHashTest extends TestingContext {
     assertHash(blobTB(), "0a2b2a825165ae9742c63b0c6ddafc22f0bd3b1e");
     assertHash(boolTB(), "47f9cc533a5f0c6f650ff0528c0d54d6d2d9d9ab");
     assertHash(funcTB(), "270b743243db48d70aaa745ebd27900338efe7ba");
-    assertHash(methodTB(), "4bb62c6608008ed97a7c8d532218c55e7ca42c34");
     assertHash(intTB(), "8be891c7170d4d1bbca0ffcb3fce71285c55aee4");
+    assertHash(methodTB(), "4bb62c6608008ed97a7c8d532218c55e7ca42c34");
     assertHash(nothingTB(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(stringTB(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
     assertHash(tupleTB(list(blobTB())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
