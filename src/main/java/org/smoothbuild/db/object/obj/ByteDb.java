@@ -294,10 +294,10 @@ public class ByteDb {
     }
   }
 
-  private IllegalArgumentException illegalArgs(CallableTB callableTB, TupleTB argsT) {
+  private IllegalArgumentException illegalArgs(CallableTB callableTB, TypeB argsT) {
     return new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to callable type parameters %s."
-            .formatted(argsT.name(), callableTB.paramsTuple().name()));
+            .formatted(argsT.q(), callableTB.paramsTuple().name()));
   }
 
   private OrderB newOrder(ArrayTB arrayTB, ImmutableList<ObjB> elems) throws HashedDbExc {
@@ -379,23 +379,33 @@ public class ByteDb {
   }
 
   private MapB newMap(ObjB array, ObjB func) throws HashedDbExc {
-    if (array.type() instanceof ArrayTB arrayT
-        && func.type() instanceof FuncTB funcT
-        && funcT.params().size() == 1
-        && typing.isAssignable(funcT.params().get(0), arrayT.elem())) {
-      // TODO func can be generic so we need to infer proper result type
-      var vars = typing.inferVarBoundsLower(funcT.params(), list(arrayT.elem()));
-      var elemEvalT = typing.mapVarsLower(funcT.res(), vars);
-      var evalT = catDb.array(elemEvalT);
-      var type = catDb.map(evalT);
-
-      var data = writeMapData(array, func);
-      var root = newRoot(type, data);
-      return type.newObj(root, this);
-    } else {
-      // TODO add more info
-      throw new IllegalArgumentException();
+    if (!(array.type() instanceof ArrayTB arrayT)) {
+      throw new IllegalArgumentException("array.type() must be instance of "
+          + ArrayTB.class.getSimpleName() + " but is "
+          + array.type().getClass().getSimpleName() + ".");
     }
+    if (!(func.type() instanceof FuncTB funcT)) {
+      throw new IllegalArgumentException("func.type() must be instance of "
+          + FuncTB.class.getSimpleName() + " but is "
+          + func.type().getClass().getSimpleName() + ".");
+    }
+    if (funcT.params().size() != 1) {
+      throw new IllegalArgumentException(
+          "func parameter count must be 1 but is " + funcT.params().size() + ".");
+    }
+    var elemT = arrayT.elem();
+    var mappedElemT = typing.inferCallResT(funcT, list(elemT), () -> illegalElemT(funcT, elemT));
+    var evalT = catDb.array(mappedElemT);
+    var type = catDb.map(evalT);
+
+    var data = writeMapData(array, func);
+    var root = newRoot(type, data);
+    return type.newObj(root, this);
+  }
+
+  private IllegalArgumentException illegalElemT(TypeB funcT, TypeB elemT) {
+    return new IllegalArgumentException(
+        "Function %s cannot accept as argument %s.".formatted(funcT.q(), elemT.q()));
   }
 
   private SelectB newSelect(ObjB selectable, IntB index) throws HashedDbExc {
