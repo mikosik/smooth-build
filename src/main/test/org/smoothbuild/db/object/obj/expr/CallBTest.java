@@ -82,8 +82,8 @@ public class CallBTest extends TestingContext {
 
   private static IllegalArgumentException argsNotMatchingParamsException(
       String args, String params) {
-    return new IllegalArgumentException("Arguments evaluation type " + args + " should be"
-        + " equal to callable type parameters " + params + ".");
+    return new IllegalArgumentException("Arguments evaluation type `" + args + "` should be"
+        + " equal to callable type parameters `" + params + "`.");
   }
 
   @Test

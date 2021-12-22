@@ -297,7 +297,7 @@ public class ByteDb {
   private IllegalArgumentException illegalArgs(CallableTB callableTB, TypeB argsT) {
     return new IllegalArgumentException(
         "Arguments evaluation type %s should be equal to callable type parameters %s."
-            .formatted(argsT.q(), callableTB.paramsTuple().name()));
+            .formatted(argsT.q(), callableTB.paramsTuple().q()));
   }
 
   private OrderB newOrder(ArrayTB arrayTB, ImmutableList<ObjB> elems) throws HashedDbExc {

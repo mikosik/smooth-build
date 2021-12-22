@@ -77,10 +77,10 @@ import com.google.common.collect.ImmutableList;
 public class CatDb implements TypeFactoryB {
   public static final String DATA_PATH = "data";
   private static final int DATA_IDX = 1;
-  private static final int FUNC_RES_IDX = 0;
-  public static final String FUNC_RES_PATH = DATA_PATH + "[" + FUNC_RES_IDX + "]";
-  private static final int FUNC_PARAMS_IDX = 1;
-  public static final String FUNC_PARAMS_PATH = DATA_PATH + "[" + FUNC_PARAMS_IDX + "]";
+  private static final int CALLABLE_RES_IDX = 0;
+  public static final String CALLABLE_RES_PATH = DATA_PATH + "[" + CALLABLE_RES_IDX + "]";
+  private static final int CALLABLE_PARAMS_IDX = 1;
+  public static final String CALLABLE_PARAMS_PATH = DATA_PATH + "[" + CALLABLE_PARAMS_IDX + "]";
 
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, CatB> cache;
@@ -312,8 +312,8 @@ public class CatDb implements TypeFactoryB {
     if (data.size() != 2) {
       throw new DecodeCatWrongSeqSizeExc(rootHash, kind, DATA_PATH, 2, data.size());
     }
-    var res = readNode(kind, rootHash, data.get(FUNC_RES_IDX), FUNC_RES_PATH, TypeB.class);
-    var params = readNode(kind, rootHash, data.get(FUNC_PARAMS_IDX), FUNC_PARAMS_PATH, TupleTB.class);
+    var res = readNode(kind, rootHash, data.get(CALLABLE_RES_IDX), CALLABLE_RES_PATH, TypeB.class);
+    var params = readNode(kind, rootHash, data.get(CALLABLE_PARAMS_IDX), CALLABLE_PARAMS_PATH, TupleTB.class);
     return instantiator.apply(rootHash, res, params);
   }
 
