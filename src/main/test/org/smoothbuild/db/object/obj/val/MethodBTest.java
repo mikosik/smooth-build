@@ -3,7 +3,11 @@ package org.smoothbuild.db.object.obj.val;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.object.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
 public class MethodBTest extends TestingContext {
@@ -34,172 +38,26 @@ public class MethodBTest extends TestingContext {
         .isEqualTo(isPure);
   }
 
-  @Test
-  public void method_with_equal_values_are_equal() {
-    var jar = blobB();
-    var classBinaryName = stringB();
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
+  @Nested
+  class _equals_hash_hashcode extends ObjBTestCase<MethodB> {
+    @Override
+    protected List<MethodB> equalValues() {
+      return list(
+          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("a"), boolB(true)),
+          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("a"), boolB(true))
+      );
+    }
 
-    var method1 = methodB(type, jar, classBinaryName, isPure);
-    var method2 = methodB(type, jar, classBinaryName, isPure);
-    assertThat(method1)
-        .isEqualTo(method2);
-  }
-
-  @Test
-  public void method_with_different_jar_files_are_not_equal() {
-    var jar1 = blobB(1);
-    var jar2 = blobB(2);
-    var classBinaryName = stringB();
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar1, classBinaryName, isPure);
-    var method2 = methodB(type, jar2, classBinaryName, isPure);
-
-    assertThat(method1)
-        .isNotEqualTo(method2);
-  }
-
-  @Test
-  public void method_with_different_class_binary_names_are_not_equal() {
-    var jar = blobB();
-    var classBinaryName1 = stringB("abc");
-    var classBinaryName2 = stringB("def");
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar, classBinaryName1, isPure);
-    var method2 = methodB(type, jar, classBinaryName2, isPure);
-    assertThat(method1)
-        .isNotEqualTo(method2);
-  }
-
-  @Test
-  public void method_with_different_is_pure_are_not_equal() {
-    var jar = blobB();
-    var classBinaryName = stringB();
-    var isPure1 = boolB(true);
-    var isPure2 = boolB(false);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar, classBinaryName, isPure1);
-    var method2 = methodB(type, jar, classBinaryName, isPure2);
-    assertThat(method1)
-        .isNotEqualTo(method2);
-  }
-
-  @Test
-  public void hash_of_method_with_equal_values_are_equal() {
-    var jar = blobB();
-    var classBinaryName = stringB();
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar, classBinaryName, isPure);
-    var method2 = methodB(type, jar, classBinaryName, isPure);
-    assertThat(method1.hash())
-        .isEqualTo(method2.hash());
-  }
-
-  @Test
-  public void hash_of_method_with_different_jar_files_are_not_equal() {
-    var jar1 = blobB(1);
-    var jar2 = blobB(2);
-    var classBinaryName = stringB();
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar1, classBinaryName, isPure);
-    var method2 = methodB(type, jar2, classBinaryName, isPure);
-
-    assertThat(method1.hash())
-        .isNotEqualTo(method2.hash());
-  }
-
-  @Test
-  public void hash_of_method_with_different_class_binary_names_are_not_equal() {
-    var jar = blobB();
-    var classBinaryName1 = stringB("abc");
-    var classBinaryName2 = stringB("def");
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar, classBinaryName1, isPure);
-    var method2 = methodB(type, jar, classBinaryName2, isPure);
-    assertThat(method1.hash())
-        .isNotEqualTo(method2.hash());
-  }
-
-  @Test
-  public void hash_of_method_with_different_is_pure_are_not_equal() {
-    var jar = blobB();
-    var classBinaryName = stringB();
-    var isPure1 = boolB(true);
-    var isPure2 = boolB(false);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar, classBinaryName, isPure1);
-    var method2 = methodB(type, jar, classBinaryName, isPure2);
-    assertThat(method1.hash())
-        .isNotEqualTo(method2.hash());
-  }
-
-  @Test
-  public void hashCode_of_method_with_equal_values_are_equal() {
-    var jar = blobB();
-    var classBinaryName = stringB();
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar, classBinaryName, isPure);
-    var method2 = methodB(type, jar, classBinaryName, isPure);
-    assertThat(method1.hashCode())
-        .isEqualTo(method2.hashCode());
-  }
-
-  @Test
-  public void hashCode_of_method_with_different_jar_files_are_not_equal() {
-    var jar1 = blobB(1);
-    var jar2 = blobB(2);
-    var classBinaryName = stringB();
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar1, classBinaryName, isPure);
-    var method2 = methodB(type, jar2, classBinaryName, isPure);
-
-    assertThat(method1.hashCode())
-        .isNotEqualTo(method2.hashCode());
-  }
-
-  @Test
-  public void hashCode_of_method_with_different_class_binary_names_are_not_equal() {
-    var jar = blobB();
-    var classBinaryName1 = stringB("abc");
-    var classBinaryName2 = stringB("def");
-    var isPure = boolB(true);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar, classBinaryName1, isPure);
-    var method2 = methodB(type, jar, classBinaryName2, isPure);
-    assertThat(method1.hashCode())
-        .isNotEqualTo(method2.hashCode());
-  }
-
-  @Test
-  public void hashCode_of_method_with_different_is_pure_are_not_equal() {
-    var jar = blobB();
-    var classBinaryName = stringB();
-    var isPure1 = boolB(true);
-    var isPure2 = boolB(false);
-    var type = methodTB(stringTB(), list(intTB()));
-
-    var method1 = methodB(type, jar, classBinaryName, isPure1);
-    var method2 = methodB(type, jar, classBinaryName, isPure2);
-    assertThat(method1.hashCode())
-        .isNotEqualTo(method2.hashCode());
+    @Override
+    protected List<MethodB> nonEqualValues() {
+      return list(
+          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("a"), boolB(true)),
+          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("a"), boolB(false)),
+          methodB(methodTB(stringTB(), list(intTB())), blobB(7), stringB("b"), boolB(true)),
+          methodB(methodTB(stringTB(), list(intTB())), blobB(9), stringB("a"), boolB(true)),
+          methodB(methodTB(stringTB(), list(stringTB())), blobB(7), stringB("a"), boolB(true))
+      );
+    }
   }
 
   @Test
