@@ -70,22 +70,22 @@ public class IfBTest extends TestingContext {
 
   @Test
   public void condition_getter() {
-    var ifH = ifB(boolB(true), intB(1), intB(2));
-    assertThat(ifH.data().condition())
+    var ifB = ifB(boolB(true), intB(1), intB(2));
+    assertThat(ifB.data().condition())
         .isEqualTo(boolB(true));
   }
 
   @Test
   public void then_getter() {
-    var ifH = ifB(boolB(true), intB(1), intB(2));
-    assertThat(ifH.data().then())
+    var ifB = ifB(boolB(true), intB(1), intB(2));
+    assertThat(ifB.data().then())
         .isEqualTo(intB(1));
   }
 
   @Test
   public void else_getter() {
-    var ifH = ifB(boolB(true), intB(1), intB(2));
-    assertThat(ifH.data().else_())
+    var ifB = ifB(boolB(true), intB(1), intB(2));
+    assertThat(ifB.data().else_())
         .isEqualTo(intB(2));
   }
 
@@ -115,20 +115,20 @@ public class IfBTest extends TestingContext {
     var condition = boolB(true);
     var then = intB(1);
     var else_ = intB(2);
-    var ifH = ifB(condition, then, else_);
-    assertThat(byteDbOther().get(ifH.hash()))
-        .isEqualTo(ifH);
+    var ifB = ifB(condition, then, else_);
+    assertThat(byteDbOther().get(ifB.hash()))
+        .isEqualTo(ifB);
   }
 
   @Test
-  public void invoke_read_back_by_hash_has_same_data() {
+  public void map_read_back_by_hash_has_same_data() {
     var condition = boolB(true);
     var then = intB(1);
     var else_ = intB(2);
-    var ifH = ifB(condition, then, else_);
-    var readIf = (IfB) byteDbOther().get(ifH.hash());
+    var ifB = ifB(condition, then, else_);
+    var readIf = (IfB) byteDbOther().get(ifB.hash());
     var readIfData = readIf.data();
-    var ifData = ifH.data();
+    var ifData = ifB.data();
 
     assertThat(readIfData.condition())
         .isEqualTo(ifData.condition());
@@ -143,8 +143,8 @@ public class IfBTest extends TestingContext {
     var condition = boolB(true);
     var then = intB(1);
     var else_ = intB(2);
-    var ifH = ifB(condition, then, else_);
-    assertThat(ifH.toString())
-        .isEqualTo("If:Int(???)@" + ifH.hash());
+    var ifB = ifB(condition, then, else_);
+    assertThat(ifB.toString())
+        .isEqualTo("If:Int(???)@" + ifB.hash());
   }
 }
