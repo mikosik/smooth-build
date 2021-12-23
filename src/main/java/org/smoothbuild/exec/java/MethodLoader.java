@@ -152,7 +152,7 @@ public class MethodLoader {
         + extendedName + " specified as `" + classBinaryName + "`: " + message, e);
   }
 
-  public static class LoadingMethodExc extends RuntimeException {
+  private static class LoadingMethodExc extends RuntimeException {
     public LoadingMethodExc(String message, Throwable e) {
       super(message, e);
     }
