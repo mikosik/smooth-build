@@ -66,7 +66,7 @@ public class Typing<T extends Type> {
 
   public boolean isParamAssignable(T target, T source) {
     return inequalParam(target, source, factory.lower())
-        && areConsistent(inferVarBounds(target, source, factory.lower()));
+        && areConsistent(inferVarBoundsLower(target, source));
   }
 
   public boolean inequal(Type type1, Type type2, Side<T> side) {
@@ -123,6 +123,10 @@ public class Typing<T extends Type> {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
     return new BoundsMap<>(ImmutableMap.copyOf(result));
+  }
+
+  public BoundsMap<T> inferVarBoundsLower(T type1, T type2) {
+    return inferVarBounds(type1, type2, factory().lower());
   }
 
   public BoundsMap<T> inferVarBounds(T type1, T type2, Side<T> side) {

@@ -207,7 +207,7 @@ public class Compiler {
     var argTupleT = objFactory.tupleT(map(argsB, ObjB::type));
     var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
     var typing = objFactory.typing();
-    var vars = typing.inferVarBounds(paramTupleT, argTupleT, typing.factory().lower());
+    var vars = typing.inferVarBoundsLower(paramTupleT, argTupleT);
     var actualParamTupleT = (TupleTB) typing.mapVarsLower(paramTupleT, vars);
     var combineB = objFactory.combine(actualParamTupleT, argsB);
 
