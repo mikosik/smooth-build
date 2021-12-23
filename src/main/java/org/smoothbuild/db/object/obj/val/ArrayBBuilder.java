@@ -26,7 +26,7 @@ public class ArrayBBuilder {
   }
 
   public ArrayBBuilder add(ValB elem) {
-    if (!byteDb.typing().isAssignable(type.elem(), elem.cat())) {
+    if (!type.elem().equals(elem.cat())) {
       throw new IllegalArgumentException("Element type must be " + type.elem().name()
           + " but was " + elem.cat().name() + ".");
     }

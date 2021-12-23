@@ -61,6 +61,13 @@ public class ArrayBTest extends TestingContext {
   }
 
   @Test
+  public void adding_elem_with_sub_type_is_forbidden() {
+    ArrayBBuilder arrayBuilder = byteDb().arrayBuilder(arrayTB(arrayTB(intTB())));
+    assertCall(() -> arrayBuilder.add(arrayB(nothingTB())))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
   public void array_contains_added_elem() {
     ArrayB array = byteDb().arrayBuilder(arrayTB())
         .add(stringB("abc"))

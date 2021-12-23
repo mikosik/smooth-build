@@ -239,6 +239,20 @@ public class ObjBCorruptedTest extends TestingContext {
     }
 
     @Test
+    public void with_elem_with_type_being_subtype_of_require_type() throws Exception {
+      ArrayTB type = arrayTB(arrayTB(intTB()));
+      Hash objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(arrayB(nothingTB()))
+              ));
+      assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(ArrayB.class))
+          .throwsException(new DecodeObjWrongNodeCatExc(
+              objHash, type, DATA_PATH, 0, arrayTB(intTB()), arrayTB(nothingTB())));
+    }
+
+    @Test
     public void with_one_elem_being_expr() throws Exception {
       ArrayTB type = arrayTB(stringTB());
       Hash objHash =

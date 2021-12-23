@@ -18,6 +18,11 @@ public final class ArrayB extends ValB {
   }
 
   @Override
+  public ArrayTB type() {
+    return cat();
+  }
+
+  @Override
   public ArrayTB cat() {
     return (ArrayTB) super.cat();
   }
@@ -40,10 +45,10 @@ public final class ArrayB extends ValB {
     }
   }
 
-  protected <T> ImmutableList<T> checkTypeOfSeqObjs(ImmutableList<ValB> elems, TypeB expectedElemT) {
+  private <T> ImmutableList<T> checkTypeOfSeqObjs(ImmutableList<ValB> elems, TypeB expectedElemT) {
     for (int i = 0; i < elems.size(); i++) {
       var elemT = elems.get(i).cat();
-      if (!(byteDb().typing().isAssignable(expectedElemT, elemT))) {
+      if (!expectedElemT.equals(elemT)) {
         throw new DecodeObjWrongNodeCatExc(hash(), this.cat(), DATA_PATH, i, expectedElemT, elemT);
       }
     }

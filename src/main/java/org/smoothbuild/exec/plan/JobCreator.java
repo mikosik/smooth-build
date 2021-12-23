@@ -35,6 +35,7 @@ import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.db.object.type.val.ArrayTB;
 import org.smoothbuild.db.object.type.val.FuncTB;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
+import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.InvokeAlgorithm;
 import org.smoothbuild.exec.algorithm.OrderAlgorithm;
 import org.smoothbuild.exec.algorithm.SelectAlgorithm;
@@ -282,9 +283,10 @@ public class JobCreator {
     return orderEager(actualT, elemsJ, info);
   }
 
-  public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemsJ, TaskInfo info) {
+  public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, TaskInfo info) {
+    var convertedElemJs = convertIfNeeded(arrayTB.elem(), elemJs);
     var algorithm = new OrderAlgorithm(arrayTB);
-    return new Task(arrayTB, elemsJ, info, algorithm);
+    return new Task(arrayTB, convertedElemJs, info, algorithm);
   }
 
   // ParamRef
@@ -335,6 +337,19 @@ public class JobCreator {
     var job = eagerJobFor(new IndexedScope<>(scope, args), vars, func.body());
     var name = nals.get(func).name();
     return new VirtualJob(job, new TaskInfo(CALL, name, loc));
+  }
+
+  private ImmutableList<Job> convertIfNeeded(TypeB type, ImmutableList<Job> elemJs) {
+    return map(elemJs, j -> convertIfNeeded(type, j));
+  }
+
+  private Job convertIfNeeded(TypeB type, Job job) {
+    if (job.type().equals(type)) {
+      return job;
+    } else {
+      var algorithm = new ConvertAlgorithm(type, typing);
+      return new Task(type, list(job), new TaskInfo(INTERNAL, job), algorithm);
+    }
   }
 
   public record Handler<E>(

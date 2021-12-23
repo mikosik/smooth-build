@@ -142,7 +142,7 @@ public class ConvertAlgorithmTest extends TestingContext {
   @Nested
   class _array {
     @Test
-    public void converting_array() {
+    public void converting_array_level_1_to_1() {
       var targetT = arrayTB(stringTB());
       var val = arrayB(nothingTB());
       var expected = arrayB(stringTB());
@@ -151,7 +151,7 @@ public class ConvertAlgorithmTest extends TestingContext {
     }
 
     @Test
-    public void converting_array_two_levels_deep() {
+    public void converting_array_two_levels_deep_level_2_to_2() {
       var targetT = arrayTB(arrayTB(stringTB()));
       var val = arrayB(arrayB(nothingTB()));
       var expected = arrayB(arrayB(stringTB()));
@@ -159,10 +159,18 @@ public class ConvertAlgorithmTest extends TestingContext {
     }
 
     @Test
-    public void converting_array_three_levels_deep() {
+    public void converting_array_three_levels_deep_level_3_to_3() {
       var targetT = arrayTB(arrayTB(arrayTB(stringTB())));
       var val = arrayB(arrayB(arrayB(nothingTB())));
       var expected = arrayB(arrayB(arrayB(stringTB())));
+      assertConversion(targetT, val, expected);
+    }
+
+    @Test
+    public void converting_array_three_levels_deep_level_1_to_3() {
+      var targetT = arrayTB(arrayTB(arrayTB(stringTB())));
+      var val = arrayB(nothingTB());
+      var expected = arrayB(arrayTB(arrayTB(stringTB())));
       assertConversion(targetT, val, expected);
     }
   }
