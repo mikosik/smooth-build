@@ -187,11 +187,13 @@ public class JobCreator {
     var nal = nals.get(combine);
     return combineEager(scope, vars, combine, nal);
   }
+
   private Job combineEager(
       IndexedScope<Job> scope, BoundsMap<TypeB> vars, CombineB combine, Nal nal) {
     var type = combine.type();
     var argsJ = eagerJobsFor(scope, vars, combine.items());
     var info = new TaskInfo(COMBINE, nal);
+//    sdfsdf convert TODO convert
     var algorithm = new CombineAlgorithm(combine.type());
     return new Task(type, argsJ, info, algorithm);
   }

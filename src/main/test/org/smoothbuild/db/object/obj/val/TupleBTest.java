@@ -25,6 +25,13 @@ public class TupleBTest extends TestingContext {
   }
 
   @Test
+  public void creating_tuple_with_item_type_being_subtype_of_specified_in_tupleT_causes_exc() {
+    var tupleT = tupleTB(list(arrayTB(intTB())));
+    assertCall(() -> byteDb().tuple(tupleT, list(arrayB(nothingTB()))))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
   public void creating_tuple_with_more_items_than_specified_in_its_type_causes_exception() {
     assertCall(() -> byteDb().tuple(
         personTB(), list(stringB("John"), stringB("Doe"), stringB("abc"))))

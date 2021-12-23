@@ -1982,6 +1982,22 @@ public class ObjBCorruptedTest extends TestingContext {
     }
 
     @Test
+    public void with_elem_being_subtype_of_required_type() throws Exception {
+      var type = tupleTB(list(arrayTB(intTB())));
+      var objHash =
+          hash(
+              hash(type),
+              hash(
+                  hash(arrayB(nothingTB()))
+              )
+          );
+      var tuple = (TupleB) byteDb().get(objHash);
+      assertCall(() -> tuple.get(0))
+          .throwsException(new DecodeObjWrongNodeCatExc(
+              objHash, type, DATA_PATH, 0, arrayTB(intTB()), arrayTB(nothingTB())));
+    }
+
+    @Test
     public void with_elem_being_expr() throws Exception {
       Hash objHash =
           hash(
