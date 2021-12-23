@@ -147,7 +147,7 @@ public class CompilerTest extends TestingContext {
       var funcB = funcB(funcTB, bodyB);
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
-      var compiler = newShConv(defs(natFuncS), fileLoader);
+      var compiler = newCompiler(defs(natFuncS), fileLoader);
       assertThat(compiler.compileExpr(topRefS(natFuncS)))
           .isEqualTo(funcB);
     }
@@ -161,7 +161,7 @@ public class CompilerTest extends TestingContext {
     }
 
     private void assertConversion(DefsS defs, ExprS exprS, ObjB expected) {
-      var compiler = newShConv(defs);
+      var compiler = newCompiler(defs);
       assertThat(compiler.compileExpr(exprS))
           .isEqualTo(expected);
     }
@@ -195,27 +195,27 @@ public class CompilerTest extends TestingContext {
     }
 
     private void assertConversionIsCached(TopEvalS topEval) {
-      var compiler = newShConv(topEval);
+      var compiler = newCompiler(topEval);
       assertThat(compiler.compileExpr(topRefS(topEval)))
           .isSameInstanceAs(compiler.compileExpr(topRefS(topEval)));
     }
   }
 
-  private Compiler newShConv(TopEvalS topEval) {
-    return newShConv(defs(topEval));
+  private Compiler newCompiler(TopEvalS topEval) {
+    return newCompiler(defs(topEval));
   }
 
-  private Compiler newShConv(DefsS defs) {
+  private Compiler newCompiler(DefsS defs) {
     try {
       FileLoader mock = mock(FileLoader.class);
       when(mock.load(any())).thenReturn(blobB(1));
-      return newShConv(defs, mock);
+      return newCompiler(defs, mock);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private Compiler newShConv(DefsS defs, FileLoader fileLoader) {
+  private Compiler newCompiler(DefsS defs, FileLoader fileLoader) {
     return new Compiler(objFactory(), defs, typeShConv(), fileLoader);
   }
 
