@@ -500,7 +500,11 @@ public class TestingContext {
   }
 
   public FuncB funcB(ImmutableList<TypeB> paramTs, ObjB body) {
-    var type = funcTB(body.type(), paramTs);
+    return funcB(body.type(), paramTs, body);
+  }
+
+  public FuncB funcB(TypeB resT, ImmutableList<TypeB> paramTs, ObjB body) {
+    var type = funcTB(resT, paramTs);
     return funcB(type, body);
   }
 
@@ -925,7 +929,11 @@ public class TestingContext {
   }
 
   public DefFuncS defFuncS(String name, NList<ItemS> params, ExprS expr) {
-    return new DefFuncS(funcTS(expr.type(), toTypes(params)), modPath(), name, params, expr, loc(1));
+    return defFuncS(expr.type(), name, params, expr);
+  }
+
+  public DefFuncS defFuncS(TypeS resT, String name, NList<ItemS> params, ExprS expr) {
+    return new DefFuncS(funcTS(resT, toTypes(params)), modPath(), name, params, expr, loc(1));
   }
 
   public IfFuncS ifFuncS() {

@@ -45,6 +45,14 @@ public class CompilerTest extends TestingContext {
     }
 
     @Test
+    public void call_polymorphic() {
+      var identity = defFuncS("myFunc", nList(itemS(varS("A"), "p")), paramRefS(varS("A"), "p"));
+      var call = callS(stringTS(), topRefS(identity), stringS("abc"));
+      var v = varTB("A");
+      assertConversion(identity, call, callB(funcB(list(v), paramRefB(v, 0)), list(stringB("abc"))));
+    }
+
+    @Test
     public void combine() {
       var combine = combineS(stringS("abc"), intS(1));
       assertConversion(combine, combineB(list(stringB("abc"), intB(1))));
@@ -94,25 +102,32 @@ public class CompilerTest extends TestingContext {
     }
 
     @Test
+    public void topRef_to_func_with_bodyT_being_subtype_of_resT() {
+      var defFunc = defFuncS(arrayTS(stringTS()), "myFunc", nList(), orderS(nothingTS()));
+      assertConversion(defFunc, topRefS(defFunc),
+          funcB(arrayTB(stringTB()), list(), orderB(nothingTB(), list())));
+    }
+
+    @Test
     public void topRef_to_if_func() {
       var ifFuncS = ifFuncS();
       var varA = varTB("A");
-      var bodyH = ifB(paramRefB(boolTB(), 0), paramRefB(varA, 1), paramRefB(varA, 2));
-      var funcTH = funcTB(varA, list(boolTB(), varA, varA));
-      var funcH = funcB(funcTH, bodyH);
-      assertConversion(ifFuncS, topRefS(ifFuncS), funcH);
+      var bodyB = ifB(paramRefB(boolTB(), 0), paramRefB(varA, 1), paramRefB(varA, 2));
+      var funcTB = funcTB(varA, list(boolTB(), varA, varA));
+      var funcb = funcB(funcTB, bodyB);
+      assertConversion(ifFuncS, topRefS(ifFuncS), funcb);
     }
 
     @Test
     public void topRef_to_map_func() {
       var mapFuncS = mapFuncS();
-      var varA = varTB("E");
-      var varB = varTB("R");
-      var mappingFuncT = funcTB(varB, list(varA));
-      var funcTH = funcTB(arrayTB(varB), list(arrayTB(varA), mappingFuncT));
-      var bodyH = mapB(paramRefB(arrayTB(varA), 0), paramRefB(mappingFuncT, 1));
-      var funcH = funcB(funcTH, bodyH);
-      assertConversion(mapFuncS, topRefS(mapFuncS), funcH);
+      var varE = varTB("E");
+      var varR = varTB("R");
+      var mappingFuncT = funcTB(varR, list(varE));
+      var funcTB = funcTB(arrayTB(varR), list(arrayTB(varE), mappingFuncT));
+      var bodyB = mapB(paramRefB(arrayTB(varE), 0), paramRefB(mappingFuncT, 1));
+      var funcB = funcB(funcTB, bodyB);
+      assertConversion(mapFuncS, topRefS(mapFuncS), funcB);
     }
 
     @Test
@@ -125,16 +140,16 @@ public class CompilerTest extends TestingContext {
 
       var resT = intTB();
       ImmutableList<TypeB> paramTs = list(blobTB());
-      var funcTH = funcTB(resT, paramTs);
+      var funcTB = funcTB(resT, paramTs);
       var jar = blobB(37);
       var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
-      var bodyH = invokeB(method, combineB(list(paramRefB(blobTB(), 0))));
-      var funcH = funcB(funcTH, bodyH);
+      var bodyB = invokeB(method, combineB(list(paramRefB(blobTB(), 0))));
+      var funcB = funcB(funcTB, bodyB);
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);
       var compiler = newShConv(defs(natFuncS), fileLoader);
       assertThat(compiler.compileExpr(topRefS(natFuncS)))
-          .isEqualTo(funcH);
+          .isEqualTo(funcB);
     }
 
     private void assertConversion(ExprS exprS, ObjB expected) {
