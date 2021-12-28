@@ -30,7 +30,7 @@ public abstract class TypeB extends CatB {
 
   @Override
   public String toString() {
-    return "TypeH(`" + name() + "`)";
+    return "TypeB(`" + name() + "`)";
   }
 
   public static ImmutableSet<VarB> calculateVars(ImmutableList<TypeB> concat) {

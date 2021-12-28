@@ -48,16 +48,15 @@ public class MapJob extends AbstractJob {
     return result;
   }
 
-  private void onArrayCompleted(ArrayB array, FuncB funcB, Worker worker,
-      Consumer<ValB> result) {
-    var outputArrayTypeH = (ArrayTB) type();
-    var outputElemType = outputArrayTypeH.elem();
-    var funcJob = getJob(funcB);
-    var mapElemJobs = map(
+  private void onArrayCompleted(ArrayB array, FuncB func, Worker worker, Consumer<ValB> result) {
+    var outputArrayT = (ArrayTB) type();
+    var outputElemT = outputArrayT.elem();
+    var funcJ = getJob(func);
+    var mapElemJs = map(
         array.elems(ValB.class),
-        o -> mapElementJob(outputElemType, funcJob, o));
+        o -> mapElementJob(outputElemT, funcJ, o));
     var info = new TaskInfo(INTERNAL, MAP_TASK_NAME, loc());
-    jobCreator.orderEager(outputArrayTypeH, mapElemJobs, info)
+    jobCreator.orderEager(outputArrayT, mapElemJs, info)
         .schedule(worker)
         .addConsumer(result);
   }
@@ -66,12 +65,12 @@ public class MapJob extends AbstractJob {
     return new DummyJob(funcJ.type(), func, funcJ);
   }
 
-  private Job mapElementJob(TypeB elemType, Job funcJob, ValB elem) {
-    var elemJob = elemJob(elemType, elem, arrayJ.loc());
-    return jobCreator.callEagerJob(scope, funcJob, list(elemJob), funcJob.loc());
+  private Job mapElementJob(TypeB elemT, Job funcJ, ValB elem) {
+    var elemJ = elemJob(elemT, elem, arrayJ.loc());
+    return jobCreator.callEagerJob(scope, funcJ, list(elemJ), funcJ.loc());
   }
 
-  private Job elemJob(TypeB elemType, ValB elem, Loc loc) {
-    return new DummyJob(elemType, elem, new NalImpl("elem-to-map", loc));
+  private Job elemJob(TypeB elemT, ValB elem, Loc loc) {
+    return new DummyJob(elemT, elem, new NalImpl("elem-to-map", loc));
   }
 }

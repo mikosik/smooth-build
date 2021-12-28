@@ -115,7 +115,7 @@ public class CatBTest extends TestingContext {
     var catH = execute(factoryCall);
     if (catH instanceof TypeB) {
       assertThat(catH.toString())
-          .isEqualTo("TypeH(`" + name + "`)");
+          .isEqualTo("TypeB(`" + name + "`)");
     } else {
       assertThat(catH.toString())
           .isEqualTo("Category(`" + name + "`)");
