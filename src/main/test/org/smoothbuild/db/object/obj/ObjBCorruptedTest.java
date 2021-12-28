@@ -37,6 +37,7 @@ import org.smoothbuild.db.object.obj.base.ObjB;
 import org.smoothbuild.db.object.obj.exc.DecodeCombineWrongItemsSizeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeMapIllegalMappingFuncExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjCatExc;
+import org.smoothbuild.db.object.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.db.object.obj.exc.DecodeObjWrongNodeCatExc;
@@ -162,6 +163,17 @@ public class ObjBCorruptedTest extends TestingContext {
       assertThat(strings)
           .containsExactly("aaa", "bbb")
           .inOrder();
+    }
+
+    @Test
+    public void with_polymorphic_type() throws Exception {
+      ArrayTB type = arrayTB(varTB("A"));
+      Hash objHash =
+          hash(
+              hash(type),
+              hash());
+      assertCall(() -> byteDb().get(objHash))
+          .throwsException(new DecodeObjIllegalPolymorphicTypeExc(objHash, type));
     }
 
     @Test
@@ -1882,6 +1894,19 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(stringB("John")),
                   hash(stringB("Doe")))))
           .isEqualTo(personB("John", "Doe").hash());
+    }
+
+    @Test
+    public void with_polymorphic_type() throws Exception {
+      TupleTB type = tupleTB(list(varTB("A")));
+      Hash objHash = hash(
+          hash(type),
+          hash(
+              hash(stringB("John"))
+          )
+      );
+      assertCall(() -> byteDb().get(objHash))
+          .throwsException(new DecodeObjIllegalPolymorphicTypeExc(objHash, type));
     }
 
     @Test

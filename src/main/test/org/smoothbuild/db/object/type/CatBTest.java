@@ -434,6 +434,7 @@ public class CatBTest extends TestingContext {
       return asList(
           args(f -> f.tuple(list()), f -> list()),
           args(f -> f.tuple(list(f.string())), f -> list(f.string())),
+          args(f -> f.tuple(list(f.var("A"))), f -> list(f.var("A"))),
           args(f -> f.tuple(list(f.string(), f.int_())), f -> list(f.string(), f.int_()))
       );
     }

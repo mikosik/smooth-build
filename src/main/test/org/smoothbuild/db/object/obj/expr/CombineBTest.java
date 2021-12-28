@@ -39,7 +39,7 @@ public class CombineBTest extends TestingContext {
   @Test
   public void item_matching_polytype_specified_in_category() {
     var varA = varTB("A");
-    combineB(tupleTB(list(arrayTB(varA))), list(arrayB(varA)));
+    combineB(tupleTB(list(varA)), list(paramRefB(varA, 0)));
   }
 
   @Test

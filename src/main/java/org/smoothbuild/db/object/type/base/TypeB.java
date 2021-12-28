@@ -6,6 +6,8 @@ import static java.util.Comparator.comparing;
 import java.util.Collection;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.obj.base.MerkleRoot;
+import org.smoothbuild.db.object.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
 import org.smoothbuild.db.object.type.val.VarB;
 import org.smoothbuild.lang.base.type.api.Type;
 
@@ -37,5 +39,11 @@ public abstract class TypeB extends CatB {
         .flatMap(Collection::stream)
         .sorted(comparing(Type::name))
         .collect(toImmutableSet());
+  }
+
+  protected static void validateNotPolymorphic(MerkleRoot merkleRoot) {
+    if (merkleRoot.cat().isPolytype()) {
+      throw new DecodeObjIllegalPolymorphicTypeExc(merkleRoot.hash(), merkleRoot.cat());
+    }
   }
 }

@@ -108,15 +108,19 @@ public class ByteDb {
   }
 
   public TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items) {
-    var types = tupleT.items();
-    allMatchOtherwise(types, items, (s, i) -> Objects.equals(s, i.cat()),
+    if (tupleT.isPolytype()) {
+      throw new IllegalArgumentException(
+          "Cannot create tuple object with polymorphic type " + tupleT.q() + ".");
+    }
+    var itemTs = tupleT.items();
+    allMatchOtherwise(itemTs, items, (s, i) -> Objects.equals(s, i.cat()),
         (i, j) -> {
           throw new IllegalArgumentException(
               "tupleType specifies " + i + " items but provided " + j + ".");
         },
         (i) -> {
           throw new IllegalArgumentException("tupleType specifies item at index " + i
-              + " with type " + types.get(i).name() + " but provided item has type "
+              + " with type " + itemTs.get(i).name() + " but provided item has type "
               + items.get(i).cat().name() + " at that index.");
         }
     );

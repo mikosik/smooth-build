@@ -29,6 +29,7 @@ public class ArrayTB extends TypeB implements ArrayT {
 
   @Override
   public ArrayB newObj(MerkleRoot merkleRoot, ByteDb byteDb) {
+    validateNotPolymorphic(merkleRoot);
     return (ArrayB) super.newObj(merkleRoot, byteDb);
   }
 }

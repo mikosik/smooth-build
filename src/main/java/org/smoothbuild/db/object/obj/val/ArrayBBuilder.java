@@ -15,6 +15,10 @@ public class ArrayBBuilder {
   private final List<ValB> elems;
 
   public ArrayBBuilder(ArrayTB type, ByteDb byteDb) {
+    if (type.isPolytype()) {
+      throw new IllegalArgumentException(
+          "Cannot create array object with polymorphic type " + type.q() + ".");
+    }
     this.type = type;
     this.byteDb = byteDb;
     this.elems = new ArrayList<>();
