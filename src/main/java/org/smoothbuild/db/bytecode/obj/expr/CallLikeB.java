@@ -1,6 +1,6 @@
 package org.smoothbuild.db.bytecode.obj.expr;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.ExprB;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
@@ -12,7 +12,7 @@ public class CallLikeB extends ExprB {
   protected static final int CALLABLE_IDX = 0;
   protected static final int ARGS_IDX = 1;
 
-  public CallLikeB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public CallLikeB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.db.bytecode.obj.val;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
 import org.smoothbuild.db.bytecode.type.base.CatB;
@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
  * This class is thread-safe.
  */
 public final class ArrayB extends ValB {
-  public ArrayB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public ArrayB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

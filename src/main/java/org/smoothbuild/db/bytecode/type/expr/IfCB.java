@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.type.expr;
 
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.IF;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.expr.IfB;
 import org.smoothbuild.db.bytecode.type.base.ExprCatB;
@@ -15,7 +15,7 @@ public class IfCB extends ExprCatB {
   }
 
   @Override
-  public IfB newObj(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public IfB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     return (IfB) super.newObj(merkleRoot, byteDb);
   }
 }

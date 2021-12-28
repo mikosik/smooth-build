@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.obj.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.type.base.ExprCatB;
 import org.smoothbuild.db.bytecode.type.base.TypeB;
 
@@ -11,7 +11,7 @@ import org.smoothbuild.db.bytecode.type.base.TypeB;
  * This class is thread-safe.
  */
 public abstract class ExprB extends ObjB {
-  public ExprB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public ExprB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
     checkArgument(merkleRoot.cat() instanceof ExprCatB);
   }

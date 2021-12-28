@@ -6,15 +6,15 @@ import static org.smoothbuild.db.bytecode.obj.Helpers.wrapHashedDbExceptionAsObj
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.type.val.ArrayTB;
 
 public class ArrayBBuilder {
   private final ArrayTB type;
-  private final ByteDb byteDb;
+  private final ByteDbImpl byteDb;
   private final List<ValB> elems;
 
-  public ArrayBBuilder(ArrayTB type, ByteDb byteDb) {
+  public ArrayBBuilder(ArrayTB type, ByteDbImpl byteDb) {
     if (type.isPolytype()) {
       throw new IllegalArgumentException(
           "Cannot create array object with polymorphic type " + type.q() + ".");

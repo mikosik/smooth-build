@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
@@ -13,7 +13,7 @@ import org.smoothbuild.db.bytecode.type.val.FuncTB;
  * This class is thread-safe.
  */
 public class CallB extends CallLikeB {
-  public CallB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public CallB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
     checkArgument(merkleRoot.cat() instanceof CallCB);
   }

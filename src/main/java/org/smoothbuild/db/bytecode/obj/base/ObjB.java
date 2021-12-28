@@ -7,7 +7,7 @@ import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.Helpers;
 import org.smoothbuild.db.bytecode.obj.Helpers.HashedDbCallable;
 import org.smoothbuild.db.bytecode.obj.exc.DecodeObjNodeExc;
@@ -30,9 +30,9 @@ public abstract class ObjB {
   public static final String DATA_PATH = "data";
 
   private final MerkleRoot merkleRoot;
-  private final ByteDb byteDb;
+  private final ByteDbImpl byteDb;
 
-  public ObjB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public ObjB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     this.merkleRoot = merkleRoot;
     this.byteDb = byteDb;
   }
@@ -41,7 +41,7 @@ public abstract class ObjB {
     return merkleRoot;
   }
 
-  protected ByteDb byteDb() {
+  protected ByteDbImpl byteDb() {
     return byteDb;
   }
 

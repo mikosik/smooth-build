@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.ExprB;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
@@ -23,7 +23,7 @@ public class SelectB extends ExprB {
   private static final int SELECTABLE_IDX = 0;
   private static final int IDX_IDX = 1;
 
-  public SelectB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public SelectB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
     checkArgument(merkleRoot.cat() instanceof SelectCB);
   }

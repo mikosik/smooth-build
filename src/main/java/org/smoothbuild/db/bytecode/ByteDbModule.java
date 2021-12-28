@@ -6,6 +6,7 @@ import static org.smoothbuild.io.fs.space.Space.PRJ;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.type.CatDb;
 import org.smoothbuild.db.bytecode.type.TypeFactoryB;
 import org.smoothbuild.db.bytecode.type.TypingB;
@@ -24,7 +25,7 @@ public class ByteDbModule extends AbstractModule {
   @Provides
   @Singleton
   public ByteDb provideByteDb(HashedDb hashedDb, CatDb catDb, TypingB typing) {
-    return new ByteDb(hashedDb, catDb, typing);
+    return new ByteDbImpl(hashedDb, catDb, typing);
   }
 
   @Provides

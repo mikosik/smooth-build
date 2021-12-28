@@ -3,7 +3,7 @@ package org.smoothbuild.db.bytecode.obj.expr;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.ExprB;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
  * This class is thread-safe.
  */
 public class CombineB extends ExprB {
-  public CombineB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public CombineB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
     checkArgument(merkleRoot.cat() instanceof CombineCB);
   }

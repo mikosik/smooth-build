@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.type.val;
 
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.BLOB;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.val.BlobB;
 import org.smoothbuild.db.bytecode.type.base.TypeB;
@@ -18,7 +18,7 @@ public class BlobTB extends TypeB {
   }
 
   @Override
-  public BlobB newObj(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public BlobB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     return (BlobB) super.newObj(merkleRoot, byteDb);
   }
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.db.bytecode.obj.val;
 import static com.google.common.base.Suppliers.memoize;
 import static java.util.Objects.checkIndex;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
 import org.smoothbuild.db.bytecode.type.val.TupleTB;
@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 public final class TupleB extends ValB {
   private final Supplier<ImmutableList<ValB>> itemsSupplier;
 
-  public TupleB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public TupleB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
     this.itemsSupplier = memoize(this::instantiateItems);
   }

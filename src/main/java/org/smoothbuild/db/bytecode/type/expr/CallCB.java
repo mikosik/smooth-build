@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.type.expr;
 
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.CALL;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.expr.CallB;
 import org.smoothbuild.db.bytecode.type.base.ExprCatB;
@@ -18,7 +18,7 @@ public class CallCB extends ExprCatB {
   }
 
   @Override
-  public CallB newObj(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public CallB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     return (CallB) super.newObj(merkleRoot, byteDb);
   }
 }

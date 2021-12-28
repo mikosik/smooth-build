@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.ARRAY;
 import static org.smoothbuild.lang.base.type.api.TypeNames.arrayTypeName;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.val.ArrayB;
 import org.smoothbuild.db.bytecode.type.base.TypeB;
@@ -28,7 +28,7 @@ public class ArrayTB extends TypeB implements ArrayT {
   }
 
   @Override
-  public ArrayB newObj(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public ArrayB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     validateNotPolymorphic(merkleRoot);
     return (ArrayB) super.newObj(merkleRoot, byteDb);
   }

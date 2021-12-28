@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.obj.expr;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.ExprB;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
@@ -24,7 +24,7 @@ public final class MapB extends ExprB {
   private static final int ARRAY_IDX = 0;
   private static final int FUNC_IDX = 1;
 
-  public MapB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public MapB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

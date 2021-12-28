@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.obj.expr;
 
 import java.math.BigInteger;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.ExprB;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 
@@ -11,7 +11,7 @@ import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
  * This class is thread-safe.
  */
 public class ParamRefB extends ExprB {
-  public ParamRefB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public ParamRefB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

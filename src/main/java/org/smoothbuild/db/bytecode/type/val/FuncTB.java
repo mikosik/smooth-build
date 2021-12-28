@@ -4,7 +4,7 @@ import static org.smoothbuild.db.bytecode.type.base.CatKindB.FUNC;
 import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
 import static org.smoothbuild.util.collect.Lists.concat;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.val.FuncB;
 import org.smoothbuild.db.bytecode.type.base.TypeB;
@@ -39,7 +39,7 @@ public final class FuncTB extends TypeB implements CallableTB {
   }
 
   @Override
-  public FuncB newObj(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public FuncB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     return (FuncB) super.newObj(merkleRoot, byteDb);
   }
 }

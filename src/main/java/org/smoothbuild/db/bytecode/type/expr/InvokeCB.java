@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.type.expr;
 
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.INVOKE;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.db.bytecode.type.base.ExprCatB;
@@ -15,7 +15,7 @@ public class InvokeCB extends ExprCatB {
   }
 
   @Override
-  public InvokeB newObj(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public InvokeB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     return (InvokeB) super.newObj(merkleRoot, byteDb);
   }
 }

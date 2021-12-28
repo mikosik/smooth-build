@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.type.expr;
 
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.SELECT;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.expr.SelectB;
 import org.smoothbuild.db.bytecode.type.base.ExprCatB;
@@ -18,7 +18,7 @@ public class SelectCB extends ExprCatB {
   }
 
   @Override
-  public SelectB newObj(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public SelectB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     return (SelectB) super.newObj(merkleRoot, byteDb);
   }
 }

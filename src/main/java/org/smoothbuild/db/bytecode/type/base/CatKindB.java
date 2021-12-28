@@ -2,7 +2,7 @@ package org.smoothbuild.db.bytecode.type.base;
 
 import java.util.function.BiFunction;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.bytecode.obj.expr.CallB;
@@ -49,7 +49,7 @@ public enum CatKindB {
   ;
   // @formatter:on
 
-  private static ObjB throwException(MerkleRoot merkleRoot, ByteDb byteDb) {
+  private static ObjB throwException(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     throw new UnsupportedOperationException();
   }
 
@@ -78,10 +78,10 @@ public enum CatKindB {
 
   private final byte marker;
   private final Class<? extends ObjB> typeJ;
-  private final BiFunction<MerkleRoot, ByteDb, ObjB> instantiator;
+  private final BiFunction<MerkleRoot, ByteDbImpl, ObjB> instantiator;
 
   CatKindB(byte marker, Class<? extends ObjB> typeJ,
-      BiFunction<MerkleRoot, ByteDb, ObjB> instantiator) {
+      BiFunction<MerkleRoot, ByteDbImpl, ObjB> instantiator) {
     this.marker = marker;
     this.typeJ = typeJ;
     this.instantiator = instantiator;
@@ -99,7 +99,7 @@ public enum CatKindB {
     return typeJ;
   }
 
-  public ObjB newInstanceJ(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public ObjB newInstanceJ(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     return instantiator.apply(merkleRoot, byteDb);
   }
 }

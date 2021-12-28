@@ -18,6 +18,7 @@ import java.util.stream.IntStream;
 
 import org.smoothbuild.db.bytecode.ObjFactory;
 import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.bytecode.obj.expr.CallB;
 import org.smoothbuild.db.bytecode.obj.expr.CombineB;
@@ -221,7 +222,7 @@ public class TestingContext {
 
   public ByteDb byteDb() {
     if (byteDb == null) {
-      byteDb = new ByteDb(hashedDb(), catDb(), typingB());
+      byteDb = new ByteDbImpl(hashedDb(), catDb(), typingB());
     }
     return byteDb;
   }
@@ -242,7 +243,7 @@ public class TestingContext {
   }
 
   public ByteDb byteDbOther() {
-    return new ByteDb(hashedDb(), catDbOther(), typingB());
+    return new ByteDbImpl(hashedDb(), catDbOther(), typingB());
   }
 
   public CatDb catDbOther() {

@@ -1,6 +1,6 @@
 package org.smoothbuild.db.bytecode.obj.val;
 
-import org.smoothbuild.db.bytecode.obj.ByteDb;
+import org.smoothbuild.db.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.type.val.MethodTB;
 
@@ -15,7 +15,7 @@ public final class MethodB extends ValB {
   private static final int CLASS_BINARY_NAME_IDX = 1;
   private static final int IS_PURE_IDX = 2;
 
-  public MethodB(MerkleRoot merkleRoot, ByteDb byteDb) {
+  public MethodB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 
