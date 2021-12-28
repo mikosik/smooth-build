@@ -130,10 +130,6 @@ public class ByteDb {
 
   // methods for creating ExprH subclasses
 
-  public CallB call(ObjB callable, CombineB args) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(callable, args));
-  }
-
   public CallB call(TypeB evalT, ObjB callable, CombineB args) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evalT, callable, args));
   }
@@ -144,10 +140,6 @@ public class ByteDb {
 
   public IfB if_(ObjB condition, ObjB then, ObjB else_) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
-  }
-
-  public InvokeB invoke(ObjB method, CombineB args) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(method, args));
   }
 
   public InvokeB invoke(TypeB evalT, ObjB method, CombineB args) {
@@ -164,10 +156,6 @@ public class ByteDb {
 
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT, value));
-  }
-
-  public SelectB select(ObjB selectable, IntB index) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(selectable, index));
   }
 
   public SelectB select(TypeB evalT, ObjB selectable, IntB index) {
@@ -256,21 +244,13 @@ public class ByteDb {
 
   // methods for creating Expr-s
 
-  private CallB newCall(ObjB callable, CombineB args) throws HashedDbExc {
-    var resT = inferCallResT(castTypeToFuncTH(callable), args);
-    return newCallImpl(resT, callable, args);
-  }
-
   private CallB newCall(TypeB evalT, ObjB callable, CombineB args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToFuncTH(callable), args);
     if (!typing.isAssignable(evalT, resT)) {
       throw new IllegalArgumentException(
           "Call's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
     }
-    return newCallImpl(evalT, callable, args);
-  }
 
-  private CallB newCallImpl(TypeB evalT, ObjB callable, CombineB args) throws HashedDbExc {
     var type = catDb.call(evalT);
     var data = writeCallData(callable, args);
     var root = newRoot(type, data);
@@ -353,21 +333,12 @@ public class ByteDb {
     return type.newObj(root, this);
   }
 
-  private InvokeB newInvoke(ObjB method, CombineB args) throws HashedDbExc {
-    var resT = inferCallResT(castTypeToMethodTH(method), args);
-    return newInvokeImpl(resT, method, args);
-  }
-
   private InvokeB newInvoke(TypeB evalT, ObjB method, CombineB args) throws HashedDbExc {
     var resT = inferCallResT(castTypeToMethodTH(method), args);
     if (!typing.isAssignable(evalT, resT)) {
       throw new IllegalArgumentException(
           "Method's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
     }
-    return newInvokeImpl(evalT, method, args);
-  }
-
-  private InvokeB newInvokeImpl(TypeB evalT, ObjB method, CombineB args) throws HashedDbExc {
     var type = catDb.invoke(evalT);
     var data = writeInvokeData(method, args);
     var root = newRoot(type, data);
@@ -412,23 +383,14 @@ public class ByteDb {
         "Function %s cannot accept as argument %s.".formatted(funcT.q(), elemT.q()));
   }
 
-  private SelectB newSelect(ObjB selectable, IntB index) throws HashedDbExc {
-    var evalT = selectEvalT(selectable, index);
-    return newSelectImpl(evalT, selectable, index);
-  }
-
   private SelectB newSelect(TypeB evalT, ObjB selectable, IntB index) throws HashedDbExc {
     var inferredEvalT = selectEvalT(selectable, index);
     if (!typing.isAssignable(evalT, inferredEvalT)) {
       throw new IllegalArgumentException("Selected item type " + inferredEvalT.q()
           + " cannot be assigned to evalT " + evalT.q() + ".");
     }
-    return newSelectImpl(inferredEvalT, selectable, index);
-  }
-
-  private SelectB newSelectImpl(TypeB evalT, ObjB selectable, IntB index) throws HashedDbExc {
     var data = writeSelectData(selectable, index);
-    var cat = catDb.select(evalT);
+    var cat = catDb.select(inferredEvalT);
     var root = newRoot(cat, data);
     return cat.newObj(root, this);
   }

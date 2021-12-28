@@ -53,6 +53,7 @@ import org.smoothbuild.db.bytecode.type.val.AnyTB;
 import org.smoothbuild.db.bytecode.type.val.ArrayTB;
 import org.smoothbuild.db.bytecode.type.val.BlobTB;
 import org.smoothbuild.db.bytecode.type.val.BoolTB;
+import org.smoothbuild.db.bytecode.type.val.CallableTB;
 import org.smoothbuild.db.bytecode.type.val.FuncTB;
 import org.smoothbuild.db.bytecode.type.val.IntTB;
 import org.smoothbuild.db.bytecode.type.val.MethodTB;
@@ -600,7 +601,20 @@ public class TestingContext {
   }
 
   public CallB callB(ObjB func, CombineB args) {
-    return byteDb().call(func, args);
+    var evalT = inferResT(func, args);
+    return byteDb().call(evalT, func, args);
+  }
+
+  private TypeB inferResT(ObjB func, CombineB args) {
+    var callableT = (CallableTB) func.type();
+    var argsT = args.type();
+    return typingB().inferCallResT(callableT, argsT.items(), () -> illegalArgs(callableT, argsT));
+  }
+
+  private IllegalArgumentException illegalArgs(CallableTB callableTB, TypeB argsT) {
+    return new IllegalArgumentException(
+        "Arguments evaluation type %s should be equal to callable type parameters %s."
+            .formatted(argsT.q(), callableTB.paramsTuple().q()));
   }
 
   public CombineB combineB(ImmutableList<ObjB> items) {
@@ -622,15 +636,20 @@ public class TestingContext {
   }
 
   public InvokeB invokeB(ObjB method, ImmutableList<ObjB> args) {
-    return byteDb().invoke(method, combineB(args));
+    return invokeB(method, combineB(args));
   }
 
   public InvokeB invokeB(ObjB method, CombineB args) {
-    return byteDb().invoke(method, args);
+    var resT = inferResT(method, args);
+    return byteDb().invoke(resT, method, args);
   }
 
   public InvokeB invokeB(TypeB evalT, ObjB method, ImmutableList<ObjB> args) {
-    return byteDb().invoke(evalT, method, combineB(args));
+    return invokeB(evalT, method, combineB(args));
+  }
+
+  public InvokeB invokeB(TypeB evalT, ObjB method, CombineB args) {
+    return byteDb().invoke(evalT, method, args);
   }
 
   private ImmutableList<ObjB> createParamRefsB(ImmutableList<TypeB> paramTs) {
@@ -663,7 +682,8 @@ public class TestingContext {
   }
 
   public SelectB selectB(ObjB tuple, IntB index) {
-    return byteDb().select(tuple, index);
+    var evalT = ((TupleTB) tuple.type()).items().get(index.toJ().intValue());
+    return byteDb().select(evalT, tuple, index);
   }
 
   public SelectB selectB(TypeB evalT, ObjB tuple, IntB index) {

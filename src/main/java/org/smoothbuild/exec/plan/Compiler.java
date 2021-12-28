@@ -143,7 +143,7 @@ public class Compiler {
     var funcTB = convertFuncT(natFuncS.type());
     var methodB = createMethodH(natFuncS.ann(), funcTB);
     var args = objFactory.combine(funcTB.paramsTuple(), createParamRefsH(funcTB.params()));
-    var bodyB = objFactory.invoke(methodB, args);
+    var bodyB = objFactory.invoke(funcTB.res(), methodB, args);
     nals.put(bodyB, natFuncS);
     return objFactory.func(funcTB, bodyB);
   }
@@ -212,7 +212,7 @@ public class Compiler {
     var combineB = objFactory.combine(actualParamTupleT, argsB);
 
     nals.put(combineB, new NalImpl("{}", callS.loc()));
-    return objFactory.call(callableB, combineB);
+    return objFactory.call(convertT(callS.type()), callableB, combineB);
   }
 
   private CombineB compileCombine(CombineS combineS) {
@@ -249,7 +249,7 @@ public class Compiler {
     var indexJ = structTS.fields().indexMap().get(selectS.field());
     var indexB = objFactory.int_(BigInteger.valueOf(indexJ));
     nals.put(indexB, selectS);
-    return objFactory.select(selectableB, indexB);
+    return objFactory.select(convertT(selectS.type()), selectableB, indexB);
   }
 
   private StringB compileString(StringS stringS) {

@@ -23,7 +23,7 @@ public class SelectBTest extends TestingContext {
 
   @Test
   public void creating_select_with_non_tuple_expr_causes_exception() {
-    assertCall(() -> selectB(intB(3), intB(2)).cat())
+    assertCall(() -> selectB(boolTB(), intB(3), intB(2)))
         .throwsException(new IllegalArgumentException(
             "Selectable.type() should be instance of TupleTB but is `Int`"));
   }
@@ -31,14 +31,14 @@ public class SelectBTest extends TestingContext {
   @Test
   public void creating_select_with_too_great_index_causes_exception() {
     TupleB tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(tuple, intB(2)).cat())
+    assertCall(() -> selectB(boolTB(), tuple, intB(2)).cat())
         .throwsException(new IndexOutOfBoundsException("index (2) must be less than size (2)"));
   }
 
   @Test
   public void creating_select_with_index_lower_than_zero_causes_exception() {
     TupleB tuple = animalB("rabbit", 7);
-    assertCall(() -> selectB(tuple, intB(-1)).cat())
+    assertCall(() -> selectB(stringTB(), tuple, intB(-1)).cat())
         .throwsException(new IndexOutOfBoundsException("index (-1) must not be negative"));
   }
 

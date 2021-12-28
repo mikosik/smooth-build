@@ -101,8 +101,8 @@ public class ObjFactory {
     return byteDb.bool(value);
   }
 
-  public CallB call(ObjB func, CombineB args) {
-    return byteDb.call(func, args);
+  public CallB call(TypeB evalT, ObjB func, CombineB args) {
+    return byteDb.call(evalT, func, args);
   }
 
   public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items) {
@@ -133,16 +133,16 @@ public class ObjFactory {
     return byteDb.map(array, func);
   }
 
-  public InvokeB invoke(ObjB method, CombineB args) {
-    return byteDb.invoke(method, args);
+  public InvokeB invoke(TypeB evalT, ObjB method, CombineB args) {
+    return byteDb.invoke(evalT, method, args);
   }
 
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
     return byteDb.paramRef(evalT, value);
   }
 
-  public SelectB select(ObjB tuple, IntB index) {
-    return byteDb.select(tuple, index);
+  public SelectB select(TypeB evalT, ObjB tuple, IntB index) {
+    return byteDb.select(evalT, tuple, index);
   }
 
   public StringB string(String string) {
