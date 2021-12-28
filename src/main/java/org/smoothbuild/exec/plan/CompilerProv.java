@@ -2,7 +2,7 @@ package org.smoothbuild.exec.plan;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.db.ObjFactory;
+import org.smoothbuild.db.bytecode.db.ObjFactory;
 import org.smoothbuild.exec.java.FileLoader;
 import org.smoothbuild.lang.base.define.DefsS;
 

@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
 
 public class InputSourceFile extends SimpleJavaFileObject {
   private final TupleB file;

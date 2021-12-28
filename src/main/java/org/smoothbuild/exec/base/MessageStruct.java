@@ -7,10 +7,10 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import java.util.Set;
 
 import org.smoothbuild.cli.console.Level;
-import org.smoothbuild.db.object.obj.base.ObjB;
-import org.smoothbuild.db.object.obj.val.ArrayB;
-import org.smoothbuild.db.object.obj.val.StringB;
-import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.obj.base.ObjB;
+import org.smoothbuild.db.bytecode.obj.val.ArrayB;
+import org.smoothbuild.db.bytecode.obj.val.StringB;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
 
 public class MessageStruct {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());

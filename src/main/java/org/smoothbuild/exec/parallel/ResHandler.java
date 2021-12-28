@@ -2,7 +2,7 @@ package org.smoothbuild.exec.parallel;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.val.ValB;
+import org.smoothbuild.db.bytecode.obj.val.ValB;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.job.TaskInfo;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;

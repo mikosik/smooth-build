@@ -1,0 +1,10 @@
+package org.smoothbuild.db.bytecode.type.exc;
+
+import org.smoothbuild.db.bytecode.type.base.CatKindB;
+import org.smoothbuild.db.hashed.Hash;
+
+public class DecodeVarIllegalNameExc extends DecodeCatExc {
+  public DecodeVarIllegalNameExc(Hash hash, String name) {
+    super(hash, "It is " + CatKindB.VARIABLE + " with illegal name `" + name + "`.");
+  }
+}

@@ -4,11 +4,11 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.type.base.TypeB;
-import org.smoothbuild.db.object.type.val.ArrayTB;
-import org.smoothbuild.db.object.type.val.FuncTB;
-import org.smoothbuild.db.object.type.val.TupleTB;
+import org.smoothbuild.db.bytecode.db.ObjFactory;
+import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.db.bytecode.type.val.ArrayTB;
+import org.smoothbuild.db.bytecode.type.val.FuncTB;
+import org.smoothbuild.db.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;

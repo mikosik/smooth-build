@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.object.obj.val.ValB;
+import org.smoothbuild.db.bytecode.obj.val.ValB;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.job.TaskInfo;

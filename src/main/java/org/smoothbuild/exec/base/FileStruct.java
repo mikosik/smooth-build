@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.base;
 
-import org.smoothbuild.db.object.obj.val.BlobB;
-import org.smoothbuild.db.object.obj.val.StringB;
-import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.obj.val.BlobB;
+import org.smoothbuild.db.bytecode.obj.val.StringB;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
 
 public class FileStruct {
   public static final String NAME = "File";

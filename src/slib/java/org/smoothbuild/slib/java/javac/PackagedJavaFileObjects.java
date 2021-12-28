@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.ZipException;
 
-import org.smoothbuild.db.object.obj.val.ArrayB;
-import org.smoothbuild.db.object.obj.val.BlobB;
-import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.obj.val.ArrayB;
+import org.smoothbuild.db.bytecode.obj.val.BlobB;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.plugin.NativeApi;
 

@@ -5,8 +5,8 @@ import static org.smoothbuild.slib.compress.UnzipFunc.unzip;
 import java.io.IOException;
 import java.util.zip.ZipException;
 
-import org.smoothbuild.db.object.obj.val.ArrayB;
-import org.smoothbuild.db.object.obj.val.BlobB;
+import org.smoothbuild.db.bytecode.obj.val.ArrayB;
+import org.smoothbuild.db.bytecode.obj.val.BlobB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class UnjarFunc {

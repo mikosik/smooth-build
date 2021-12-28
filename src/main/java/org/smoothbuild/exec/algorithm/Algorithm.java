@@ -2,8 +2,8 @@ package org.smoothbuild.exec.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import org.smoothbuild.db.bytecode.type.base.TypeB;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

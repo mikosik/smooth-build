@@ -16,10 +16,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.smoothbuild.db.object.obj.val.ArrayB;
-import org.smoothbuild.db.object.obj.val.BlobB;
-import org.smoothbuild.db.object.obj.val.StringB;
-import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.obj.val.ArrayB;
+import org.smoothbuild.db.bytecode.obj.val.BlobB;
+import org.smoothbuild.db.bytecode.obj.val.StringB;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.IllegalPathExc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.DuplicatesDetector;

@@ -2,9 +2,9 @@ package org.smoothbuild.exec.algorithm;
 
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.orderAlgorithmHash;
 
+import org.smoothbuild.db.bytecode.obj.val.ArrayB;
+import org.smoothbuild.db.bytecode.type.val.ArrayTB;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.ArrayB;
-import org.smoothbuild.db.object.type.val.ArrayTB;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

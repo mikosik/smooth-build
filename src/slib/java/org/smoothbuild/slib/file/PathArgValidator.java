@@ -2,7 +2,7 @@ package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 
-import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.bytecode.obj.val.StringB;
 import org.smoothbuild.io.fs.base.IllegalPathExc;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;

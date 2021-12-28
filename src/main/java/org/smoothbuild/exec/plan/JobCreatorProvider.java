@@ -2,9 +2,9 @@ package org.smoothbuild.exec.plan;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.ObjB;
-import org.smoothbuild.db.object.type.TypeFactoryB;
-import org.smoothbuild.db.object.type.TypingB;
+import org.smoothbuild.db.bytecode.obj.base.ObjB;
+import org.smoothbuild.db.bytecode.type.TypeFactoryB;
+import org.smoothbuild.db.bytecode.type.TypingB;
 import org.smoothbuild.exec.java.MethodLoader;
 import org.smoothbuild.lang.base.define.Nal;
 

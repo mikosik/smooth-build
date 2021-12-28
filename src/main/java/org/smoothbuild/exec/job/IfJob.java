@@ -7,9 +7,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.function.Consumer;
 
-import org.smoothbuild.db.object.obj.val.BoolB;
-import org.smoothbuild.db.object.obj.val.ValB;
-import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.bytecode.obj.val.BoolB;
+import org.smoothbuild.db.bytecode.obj.val.ValB;
+import org.smoothbuild.db.bytecode.type.base.TypeB;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.NalImpl;

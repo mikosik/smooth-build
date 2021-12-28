@@ -7,8 +7,8 @@ import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.object.obj.val.ArrayB;
-import org.smoothbuild.db.object.obj.val.StringB;
+import org.smoothbuild.db.bytecode.obj.val.ArrayB;
+import org.smoothbuild.db.bytecode.obj.val.StringB;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;

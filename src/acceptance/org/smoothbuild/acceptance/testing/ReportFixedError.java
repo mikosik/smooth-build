@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.object.obj.val.ValB;
+import org.smoothbuild.db.bytecode.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReportFixedError {

@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.junit.jupiter.params.provider.Arguments;
-import org.smoothbuild.db.object.type.val.NothingTB;
+import org.smoothbuild.db.bytecode.type.val.NothingTB;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.BoundsMap;

@@ -2,10 +2,10 @@ package org.smoothbuild.exec.algorithm;
 
 import static java.util.Arrays.asList;
 
+import org.smoothbuild.db.bytecode.obj.val.MethodB;
+import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.db.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.MethodB;
-import org.smoothbuild.db.object.type.base.TypeB;
-import org.smoothbuild.db.object.type.val.TupleTB;
 
 public class AlgorithmHashes {
   public static Hash combineAlgorithmHash(TupleTB type) {

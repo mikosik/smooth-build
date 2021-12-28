@@ -17,8 +17,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.object.obj.val.ArrayB;
-import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.obj.val.ArrayB;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResSource;
 import org.smoothbuild.exec.job.TaskInfo;

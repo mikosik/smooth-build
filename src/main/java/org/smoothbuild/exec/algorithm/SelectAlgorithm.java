@@ -3,11 +3,11 @@ package org.smoothbuild.exec.algorithm;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.selectAlgorithmHash;
 
+import org.smoothbuild.db.bytecode.obj.val.IntB;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.obj.val.ValB;
+import org.smoothbuild.db.bytecode.type.base.TypeB;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.IntB;
-import org.smoothbuild.db.object.obj.val.TupleB;
-import org.smoothbuild.db.object.obj.val.ValB;
-import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

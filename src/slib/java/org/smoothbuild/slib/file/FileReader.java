@@ -2,9 +2,9 @@ package org.smoothbuild.slib.file;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.object.obj.val.BlobB;
-import org.smoothbuild.db.object.obj.val.StringB;
-import org.smoothbuild.db.object.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.obj.val.BlobB;
+import org.smoothbuild.db.bytecode.obj.val.StringB;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.Path;
 

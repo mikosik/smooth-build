@@ -2,9 +2,9 @@ package org.smoothbuild.acceptance.testing;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
-import org.smoothbuild.db.object.db.ObjFactory;
-import org.smoothbuild.db.object.obj.val.TupleB;
-import org.smoothbuild.db.object.type.val.TupleTB;
+import org.smoothbuild.db.bytecode.db.ObjFactory;
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.type.val.TupleTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ReturnStringStruct {

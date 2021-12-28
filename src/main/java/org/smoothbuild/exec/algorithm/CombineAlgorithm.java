@@ -2,9 +2,9 @@ package org.smoothbuild.exec.algorithm;
 
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.combineAlgorithmHash;
 
+import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.db.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.TupleB;
-import org.smoothbuild.db.object.type.val.TupleTB;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

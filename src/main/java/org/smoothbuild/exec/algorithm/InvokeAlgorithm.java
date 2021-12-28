@@ -7,10 +7,10 @@ import static org.smoothbuild.util.Strings.q;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.smoothbuild.db.bytecode.obj.val.MethodB;
+import org.smoothbuild.db.bytecode.obj.val.ValB;
+import org.smoothbuild.db.bytecode.type.base.TypeB;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.obj.val.MethodB;
-import org.smoothbuild.db.object.obj.val.ValB;
-import org.smoothbuild.db.object.type.base.TypeB;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.java.MethodLoader;

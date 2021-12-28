@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.object.obj.base.ObjB;
-import org.smoothbuild.db.object.obj.val.ValB;
+import org.smoothbuild.db.bytecode.obj.base.ObjB;
+import org.smoothbuild.db.bytecode.obj.val.ValB;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.Computer;

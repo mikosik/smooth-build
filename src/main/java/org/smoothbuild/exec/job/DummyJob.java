@@ -2,8 +2,8 @@ package org.smoothbuild.exec.job;
 
 import static org.smoothbuild.util.collect.Lists.list;
 
-import org.smoothbuild.db.object.obj.val.ValB;
-import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.bytecode.obj.val.ValB;
+import org.smoothbuild.db.bytecode.type.base.TypeB;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.util.concurrent.Promise;

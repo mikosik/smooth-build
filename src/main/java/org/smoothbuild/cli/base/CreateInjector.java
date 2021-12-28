@@ -10,7 +10,7 @@ import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.LoggerModule;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.cli.taskmatcher.TaskMatchers;
-import org.smoothbuild.db.object.ByteDbModule;
+import org.smoothbuild.db.bytecode.ByteDbModule;
 import org.smoothbuild.exec.ExecuteModule;
 import org.smoothbuild.install.InstallationModule;
 import org.smoothbuild.io.fs.FileSystemModule;

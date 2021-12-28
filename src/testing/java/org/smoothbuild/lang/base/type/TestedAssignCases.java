@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.bytecode.type.base.TypeB;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 

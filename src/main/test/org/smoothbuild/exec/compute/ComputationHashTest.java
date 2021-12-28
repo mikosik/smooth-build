@@ -1,15 +1,15 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.object.type.TestingCatsB.INT;
-import static org.smoothbuild.db.object.type.TestingCatsB.PERSON;
+import static org.smoothbuild.db.bytecode.type.TestingCatsB.INT;
+import static org.smoothbuild.db.bytecode.type.TestingCatsB.PERSON;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.bytecode.type.TestingCatsB;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.type.TestingCatsB;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CombineAlgorithm;
 import org.smoothbuild.exec.algorithm.InvokeAlgorithm;

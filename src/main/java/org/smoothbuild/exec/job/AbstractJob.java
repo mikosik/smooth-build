@@ -2,7 +2,7 @@ package org.smoothbuild.exec.job;
 
 import java.util.List;
 
-import org.smoothbuild.db.object.type.base.TypeB;
+import org.smoothbuild.db.bytecode.type.base.TypeB;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 
