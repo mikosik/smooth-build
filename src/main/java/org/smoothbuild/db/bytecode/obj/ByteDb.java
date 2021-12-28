@@ -492,10 +492,6 @@ public class ByteDb {
     return hashedDb.writeSeq(hashes);
   }
 
-  public ImmutableList<Hash> readSeq(Hash hash) throws HashedDbExc {
-    return hashedDb.readSeq(hash);
-  }
-
   // TODO visible for classes from db.object package tree until creating Obj is cached and
   // moved completely to ObjectDb class
   public HashedDb hashedDb() {

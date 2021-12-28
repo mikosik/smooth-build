@@ -152,7 +152,7 @@ public abstract class ObjB {
 
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash) {
     return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), cat(), path,
-        () -> byteDb.readSeq(hash));
+        () -> byteDb.hashedDb().readSeq(hash));
   }
 
   protected static String seqToString(ImmutableList<? extends ObjB> objects) {
