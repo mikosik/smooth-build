@@ -1,9 +1,8 @@
 package org.smoothbuild.db.bytecode.type.exc;
 
-import org.smoothbuild.db.bytecode.db.ByteDbExc;
 import org.smoothbuild.db.hashed.Hash;
 
-public class DecodeCatExc extends ByteDbExc {
+public class DecodeCatExc extends CatDbExc {
   public DecodeCatExc(Hash hash) {
     this(hash, null, null);
   }

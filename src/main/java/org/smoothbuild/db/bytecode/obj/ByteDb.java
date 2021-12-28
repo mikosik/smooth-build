@@ -12,7 +12,6 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
-import org.smoothbuild.db.bytecode.db.ByteDbExc;
 import org.smoothbuild.db.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.bytecode.obj.exc.DecodeObjCatExc;
@@ -40,6 +39,7 @@ import org.smoothbuild.db.bytecode.type.CatDb;
 import org.smoothbuild.db.bytecode.type.TypingB;
 import org.smoothbuild.db.bytecode.type.base.CatB;
 import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.db.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.db.bytecode.type.val.ArrayTB;
 import org.smoothbuild.db.bytecode.type.val.CallableTB;
 import org.smoothbuild.db.bytecode.type.val.FuncTB;
@@ -189,7 +189,7 @@ public class ByteDb {
   private CatB getCatOrChainException(Hash rootHash, Hash typeHash) {
     try {
       return catDb.get(typeHash);
-    } catch (ByteDbExc e) {
+    } catch (CatDbExc e) {
       throw new DecodeObjCatExc(rootHash, e);
     }
   }

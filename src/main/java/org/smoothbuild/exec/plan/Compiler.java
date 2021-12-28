@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.bytecode.db.ObjFactory;
+import org.smoothbuild.db.bytecode.ObjFactory;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.bytecode.obj.expr.CallB;
 import org.smoothbuild.db.bytecode.obj.expr.CombineB;

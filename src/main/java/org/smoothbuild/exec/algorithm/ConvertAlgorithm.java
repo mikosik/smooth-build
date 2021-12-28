@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHas
 import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 
-import org.smoothbuild.db.bytecode.db.ObjFactory;
+import org.smoothbuild.db.bytecode.ObjFactory;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.bytecode.obj.val.ArrayB;
 import org.smoothbuild.db.bytecode.obj.val.FuncB;

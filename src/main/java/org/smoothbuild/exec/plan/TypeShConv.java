@@ -4,7 +4,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.bytecode.db.ObjFactory;
+import org.smoothbuild.db.bytecode.ObjFactory;
 import org.smoothbuild.db.bytecode.type.base.TypeB;
 import org.smoothbuild.db.bytecode.type.val.ArrayTB;
 import org.smoothbuild.db.bytecode.type.val.FuncTB;

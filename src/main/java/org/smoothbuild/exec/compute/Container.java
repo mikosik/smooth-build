@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.bytecode.db.ObjFactory;
+import org.smoothbuild.db.bytecode.ObjFactory;
 import org.smoothbuild.db.bytecode.obj.val.ArrayB;
 import org.smoothbuild.db.bytecode.obj.val.ValB;
 import org.smoothbuild.io.fs.base.FileSystem;

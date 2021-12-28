@@ -1,4 +1,4 @@
-package org.smoothbuild.db.bytecode.db;
+package org.smoothbuild.db.bytecode;
 
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.INFO;
@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.bytecode.obj.ByteDb;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
+import org.smoothbuild.db.bytecode.obj.exc.ByteDbExc;
 import org.smoothbuild.db.bytecode.obj.expr.CallB;
 import org.smoothbuild.db.bytecode.obj.expr.CombineB;
 import org.smoothbuild.db.bytecode.obj.expr.IfB;

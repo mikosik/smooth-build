@@ -1,6 +1,5 @@
 package org.smoothbuild.db.bytecode.obj.exc;
 
-import org.smoothbuild.db.bytecode.db.ByteDbExc;
 
 public class DecodeObjExc extends ByteDbExc {
   public DecodeObjExc(String message, Throwable cause) {

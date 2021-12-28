@@ -1,6 +1,6 @@
 package org.smoothbuild.plugin;
 
-import org.smoothbuild.db.bytecode.db.ObjFactory;
+import org.smoothbuild.db.bytecode.ObjFactory;
 import org.smoothbuild.db.bytecode.obj.val.ArrayB;
 
 /**

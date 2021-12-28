@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.smoothbuild.db.bytecode.db.ObjFactory;
+import org.smoothbuild.db.bytecode.ObjFactory;
 import org.smoothbuild.db.bytecode.obj.ByteDb;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.bytecode.obj.expr.CallB;

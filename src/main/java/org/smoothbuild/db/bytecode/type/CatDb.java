@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.db.bytecode.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.db.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.db.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
 import static org.smoothbuild.db.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
-import static org.smoothbuild.db.bytecode.type.Helpers.wrapObjectDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.ANY;
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.ARRAY;
 import static org.smoothbuild.db.bytecode.type.base.CatKindB.BLOB;
@@ -32,10 +32,10 @@ import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.smoothbuild.db.bytecode.db.ByteDbExc;
 import org.smoothbuild.db.bytecode.type.base.CatB;
 import org.smoothbuild.db.bytecode.type.base.CatKindB;
 import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.db.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.db.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.db.bytecode.type.exc.DecodeCatRootExc;
 import org.smoothbuild.db.bytecode.type.exc.DecodeCatWrongNodeCatExc;
@@ -105,7 +105,7 @@ public class CatDb implements TypeFactoryB {
       this.nothing = cache(new NothingTB(writeBaseRoot(NOTHING)));
       this.string = cache(new StringTB(writeBaseRoot(STRING)));
     } catch (HashedDbExc e) {
-      throw new ByteDbExc(e);
+      throw new CatDbExc(e);
     }
     this.sides = new Sides<>(this.any, this.nothing);
   }
@@ -343,7 +343,7 @@ public class CatDb implements TypeFactoryB {
   }
 
   private <T> T readNode(CatKindB kind, Hash outerHash, Hash hash, String path, Class<T> clazz) {
-    CatB result = wrapObjectDbExcAsDecodeCatNodeExc(kind, outerHash, path, () -> get(hash));
+    CatB result = wrapCatDbExcAsDecodeCatNodeExc(kind, outerHash, path, () -> get(hash));
     if (clazz.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
@@ -354,7 +354,7 @@ public class CatDb implements TypeFactoryB {
   }
 
   private TypeB readNode(CatKindB kind, Hash outerHash, Hash hash, String path, int index) {
-    CatB result = wrapObjectDbExcAsDecodeCatNodeExc(kind, outerHash, path, index, () -> get(hash));
+    CatB result = wrapCatDbExcAsDecodeCatNodeExc(kind, outerHash, path, index, () -> get(hash));
     if (result instanceof TypeB typeB) {
       return typeB;
     } else {

@@ -1,6 +1,6 @@
 package org.smoothbuild.db.bytecode.obj;
 
-import org.smoothbuild.db.bytecode.db.ByteDbExc;
+import org.smoothbuild.db.bytecode.obj.exc.ByteDbExc;
 import org.smoothbuild.db.bytecode.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.db.bytecode.type.base.CatB;
 import org.smoothbuild.db.hashed.Hash;
@@ -32,7 +32,7 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
+  public static <T> T wrapByteDbExceptionAsDecodeObjNodeException(
       Hash hash, CatB cat, String path, ByteDbCallable<T> callable) {
     try {
       return callable.call();
@@ -41,7 +41,7 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapObjectDbExceptionAsDecodeObjNodeException(
+  public static <T> T wrapByteDbExceptionAsDecodeObjNodeException(
       Hash hash, CatB cat, String path, int pathIndex, ByteDbCallable<T> callable) {
     try {
       return callable.call();
