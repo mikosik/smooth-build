@@ -6,8 +6,8 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
@@ -111,18 +111,18 @@ public class TestingTS implements TestingT<TypeS> {
     return FACTORY.oneSideBound(side, type);
   }
 
-  public static BoundsMap<TypeS> bm(
+  public static VarBounds<TypeS> vb(
       VarS var1, Side<TypeS> side1, TypeS bound1,
       VarS var2, Side<TypeS> side2, TypeS bound2) {
-    return CONTEXT.bmS(var1, side1, bound1, var2, side2, bound2);
+    return CONTEXT.vbS(var1, side1, bound1, var2, side2, bound2);
   }
 
-  public static BoundsMap<TypeS> bm(VarS var, Side<TypeS> side, TypeS bound) {
-    return CONTEXT.bmS(var, side, bound);
+  public static VarBounds<TypeS> vb(VarS var, Side<TypeS> side, TypeS bound) {
+    return CONTEXT.vbS(var, side, bound);
   }
 
-  public static BoundsMap<TypeS> bm() {
-    return CONTEXT.bmS();
+  public static VarBounds<TypeS> vb() {
+    return CONTEXT.vbS();
   }
 
   @Override

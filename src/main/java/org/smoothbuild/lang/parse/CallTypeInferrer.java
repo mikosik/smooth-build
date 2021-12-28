@@ -16,7 +16,7 @@ import org.smoothbuild.cli.console.LogBuffer;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.ItemSigS;
-import org.smoothbuild.lang.base.type.api.BoundsMap;
+import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
@@ -98,8 +98,8 @@ public class CallTypeInferrer {
     return assigned.stream().allMatch(Optional::isPresent);
   }
 
-  private ImmutableList<Log> findVarProblems(CallN call, BoundsMap<TypeS> boundedVars) {
-    return boundedVars.map().values().stream()
+  private ImmutableList<Log> findVarProblems(CallN call, VarBounds<TypeS> varBounds) {
+    return varBounds.map().values().stream()
         .filter(b -> typing.contains(b.bounds().lower(), factory.any()))
         .map(b -> parseError(call, "Cannot infer actual type for type var "
             + b.var().q() + "."))

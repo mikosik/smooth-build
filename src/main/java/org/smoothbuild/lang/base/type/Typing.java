@@ -14,13 +14,13 @@ import java.util.function.Supplier;
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.TupleT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.Var;
+import org.smoothbuild.lang.base.type.api.VarBounds;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -106,33 +106,33 @@ public class Typing<T extends Type> {
     public boolean apply(Type type1, Type type2, Side<T> side);
   }
 
-  private boolean areConsistent(BoundsMap<T> boundsMap) {
-    return boundsMap.map().values().stream()
+  private boolean areConsistent(VarBounds<T> varBounds) {
+    return varBounds.map().values().stream()
         .allMatch(b -> isAssignable(b.bounds().upper(), b.bounds().lower()));
   }
 
-  public BoundsMap<T> inferVarBoundsLower(List<? extends T> types1, List<? extends T> types2) {
+  public VarBounds<T> inferVarBoundsLower(List<? extends T> types1, List<? extends T> types2) {
     return inferVarBounds(types1, types2, factory.lower());
   }
 
-  public BoundsMap<T> inferVarBounds(
+  public VarBounds<T> inferVarBounds(
       List<? extends T> types1, List<? extends T> types2, Side<T> side) {
     checkArgument(types1.size() == types2.size());
     var result = new HashMap<Var, Bounded<T>>();
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
-    return new BoundsMap<>(ImmutableMap.copyOf(result));
+    return new VarBounds<>(ImmutableMap.copyOf(result));
   }
 
-  public BoundsMap<T> inferVarBoundsLower(T type1, T type2) {
+  public VarBounds<T> inferVarBoundsLower(T type1, T type2) {
     return inferVarBounds(type1, type2, factory().lower());
   }
 
-  public BoundsMap<T> inferVarBounds(T type1, T type2, Side<T> side) {
+  public VarBounds<T> inferVarBounds(T type1, T type2, Side<T> side) {
     var result = new HashMap<Var, Bounded<T>>();
     inferImpl(type1, type2, side, result);
-    return new BoundsMap<>(ImmutableMap.copyOf(result));
+    return new VarBounds<>(ImmutableMap.copyOf(result));
   }
 
   private void inferImpl(T t1, T t2, Side<T> side, Map<Var, Bounded<T>> result) {
@@ -175,15 +175,15 @@ public class Typing<T extends Type> {
     }
   }
 
-  public T mapVarsLower(T type, BoundsMap<T> boundsMap) {
-    return mapVars(type, boundsMap, factory.lower());
+  public T mapVarsLower(T type, VarBounds<T> varBounds) {
+    return mapVars(type, varBounds, factory.lower());
   }
 
-  public T mapVars(T type, BoundsMap<T> boundsMap, Side<T> side) {
+  public T mapVars(T type, VarBounds<T> varBounds, Side<T> side) {
     if (type.isPolytype()) {
       return switch (type) {
         case Var var -> {
-          Bounded<T> bounded = boundsMap.map().get(var);
+          Bounded<T> bounded = varBounds.map().get(var);
           if (bounded == null) {
             yield type;
           } else {
@@ -191,18 +191,18 @@ public class Typing<T extends Type> {
           }
         }
         case ArrayT arrayT -> {
-          T elemTM = mapVars((T) arrayT.elem(), boundsMap, side);
+          T elemTM = mapVars((T) arrayT.elem(), varBounds, side);
           yield  (T) createArrayT(arrayT, elemTM);
         }
         case FuncT funcT -> {
-          var resultTM = mapVars((T) funcT.res(), boundsMap, side);
+          var resultTM = mapVars((T) funcT.res(), varBounds, side);
           var paramsTM = map(
               funcT.params(),
-              p -> mapVars((T) p, boundsMap, side.reversed()));
+              p -> mapVars((T) p, varBounds, side.reversed()));
           yield  (T) createFuncT(funcT, resultTM, paramsTM);
         }
         case TupleT tupleT -> {
-          var itemsTM = map(tupleT.items(), p -> mapVars((T) p, boundsMap, side));
+          var itemsTM = map(tupleT.items(), p -> mapVars((T) p, varBounds, side));
           yield  (T) createTupleT(tupleT, itemsTM);
         }
         default -> type;

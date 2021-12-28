@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public class TypingSTest {
@@ -48,7 +48,7 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("inferVarBounds_test_data")
-  public void inferVarBounds(TypeS type, TypeS assigned, BoundsMap<TypeS> expected) {
+  public void inferVarBounds(TypeS type, TypeS assigned, VarBounds<TypeS> expected) {
     TYPING_TEST_CASES.inferVarBounds(type, assigned, expected);
   }
 
@@ -58,8 +58,8 @@ public class TypingSTest {
 
   @ParameterizedTest
   @MethodSource("mapVars_test_data")
-  public void mapVars(TypeS type, BoundsMap<TypeS> boundsMap, TypeS expected) {
-    TYPING_TEST_CASES.mapVars(type, boundsMap, expected);
+  public void mapVars(TypeS type, VarBounds<TypeS> varBounds, TypeS expected) {
+    TYPING_TEST_CASES.mapVars(type, varBounds, expected);
   }
 
   public static List<Arguments> mapVars_test_data() {

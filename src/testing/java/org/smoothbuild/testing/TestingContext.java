@@ -6,7 +6,7 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.define.ItemS.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
-import static org.smoothbuild.lang.base.type.api.BoundsMap.boundsMap;
+import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -87,8 +87,8 @@ import org.smoothbuild.lang.base.define.NatFuncS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
@@ -754,27 +754,27 @@ public class TestingContext {
     return typeFactoryS().upper();
   }
 
-  public BoundsMap<TypeS> bmS(
+  public VarBounds<TypeS> vbS(
       VarS var1, Side<TypeS> side1, TypeS bound1,
       VarS var2, Side<TypeS> side2, TypeS bound2) {
     Bounds<TypeS> bounds1 = oneSideBoundS(side1, bound1);
     Bounds<TypeS> bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
-      return boundsMap(new Bounded<>(var1, typingS().merge(bounds1, bounds2)));
+      return varBounds(new Bounded<>(var1, typingS().merge(bounds1, bounds2)));
     } else {
-      return new BoundsMap<>(ImmutableMap.of(
+      return new VarBounds<>(ImmutableMap.of(
           var1, new Bounded<>(var1, bounds1),
           var2, new Bounded<>(var2, bounds2)
       ));
     }
   }
 
-  public BoundsMap<TypeS> bmS(VarS var, Side<TypeS> side, TypeS bound) {
-    return boundsMap(new Bounded<>(var, oneSideBoundS(side, bound)));
+  public VarBounds<TypeS> vbS(VarS var, Side<TypeS> side, TypeS bound) {
+    return varBounds(new Bounded<>(var, oneSideBoundS(side, bound)));
   }
 
-  public BoundsMap<TypeS> bmS() {
-    return boundsMap();
+  public VarBounds<TypeS> vbS() {
+    return varBounds();
   }
 
   public Bounds<TypeS> oneSideBoundS(Side<TypeS> side, TypeS type) {

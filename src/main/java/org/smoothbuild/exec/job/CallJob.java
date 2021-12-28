@@ -11,7 +11,7 @@ import org.smoothbuild.exec.parallel.ParallelJobExecutor.Worker;
 import org.smoothbuild.exec.plan.JobCreator;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.NalImpl;
-import org.smoothbuild.lang.base.type.api.BoundsMap;
+import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -20,12 +20,12 @@ import com.google.common.collect.ImmutableList;
 
 public class CallJob extends AbstractJob {
   private final ImmutableList<Job> args;
-  private final BoundsMap<TypeB> vars;
+  private final VarBounds<TypeB> vars;
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
   public CallJob(TypeB type, Job called, ImmutableList<Job> args, Loc loc,
-      BoundsMap<TypeB> vars, IndexedScope<Job> scope, JobCreator jobCreator) {
+      VarBounds<TypeB> vars, IndexedScope<Job> scope, JobCreator jobCreator) {
     super(type, concat(called, args), new NalImpl("building-evaluation", loc));
     this.args = args;
     this.vars = vars;

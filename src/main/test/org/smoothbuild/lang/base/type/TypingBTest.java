@@ -9,8 +9,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.bytecode.type.base.TypeB;
-import org.smoothbuild.lang.base.type.api.BoundsMap;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.lang.base.type.api.VarBounds;
 
 public class TypingBTest {
   private final static TypingTestCases<TypeB, TestedTB> TYPING_TEST_CASES =
@@ -48,7 +48,7 @@ public class TypingBTest {
 
   @ParameterizedTest
   @MethodSource("inferVarBounds_test_data")
-  public void inferVarBounds(TypeB type, TypeB assigned, BoundsMap<TypeB> expected) {
+  public void inferVarBounds(TypeB type, TypeB assigned, VarBounds<TypeB> expected) {
     TYPING_TEST_CASES.inferVarBounds(type, assigned, expected);
   }
 
@@ -58,8 +58,8 @@ public class TypingBTest {
 
   @ParameterizedTest
   @MethodSource("mapVars_test_data")
-  public void mapVars(TypeB type, BoundsMap<TypeB> boundsMap, TypeB expected) {
-    TYPING_TEST_CASES.mapVars(type, boundsMap, expected);
+  public void mapVars(TypeB type, VarBounds<TypeB> varBounds, TypeB expected) {
+    TYPING_TEST_CASES.mapVars(type, varBounds, expected);
   }
 
   public static List<Arguments> mapVars_test_data() {
