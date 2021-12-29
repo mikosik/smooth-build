@@ -31,37 +31,37 @@ import org.smoothbuild.db.hashed.Hash;
 import com.google.common.collect.ImmutableList;
 
 public interface ByteDb {
-  ArrayBBuilder arrayBuilder(ArrayTB type);
+  public ArrayBBuilder arrayBuilder(ArrayTB type);
 
-  BlobBBuilder blobBuilder();
+  public BlobBBuilder blobBuilder();
 
-  BoolB bool(boolean value);
+  public BoolB bool(boolean value);
 
-  MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure);
+  public MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure);
 
-  FuncB func(FuncTB type, ObjB body);
+  public FuncB func(FuncTB type, ObjB body);
 
-  IntB int_(BigInteger value);
+  public IntB int_(BigInteger value);
 
-  StringB string(String value);
+  public StringB string(String value);
 
-  TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items);
+  public TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items);
 
-  CallB call(TypeB evalT, ObjB callable, CombineB args);
+  public CallB call(TypeB evalT, ObjB callable, CombineB args);
 
-  CombineB combine(TupleTB evalT, ImmutableList<ObjB> items);
+  public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items);
 
-  IfB if_(ObjB condition, ObjB then, ObjB else_);
+  public IfB if_(ObjB condition, ObjB then, ObjB else_);
 
-  InvokeB invoke(TypeB evalT, ObjB method, CombineB args);
+  public InvokeB invoke(TypeB evalT, ObjB method, CombineB args);
 
-  MapB map(ObjB array, ObjB func);
+  public MapB map(ObjB array, ObjB func);
 
-  OrderB order(ArrayTB arrayTB, ImmutableList<ObjB> elems);
+  public OrderB order(ArrayTB evalT, ImmutableList<ObjB> elems);
 
-  ParamRefB paramRef(TypeB evalT, BigInteger value);
+  public ParamRefB paramRef(TypeB evalT, BigInteger value);
 
-  SelectB select(TypeB evalT, ObjB selectable, IntB index);
+  public SelectB select(TypeB evalT, ObjB selectable, IntB index);
 
-  ObjB get(Hash rootHash);
+  public ObjB get(Hash hash);
 }
