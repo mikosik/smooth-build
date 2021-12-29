@@ -67,7 +67,7 @@ public class MapJob extends AbstractJob {
 
   private Job mapElementJob(TypeB elemT, Job funcJ, ValB elem) {
     var elemJ = elemJob(elemT, elem, arrayJ.loc());
-    return jobCreator.callEagerJob(scope, funcJ, list(elemJ), funcJ.loc());
+    return jobCreator.callEagerJob(funcJ, list(elemJ), funcJ.loc(), scope);
   }
 
   private Job elemJob(TypeB elemT, ValB elem, Loc loc) {
