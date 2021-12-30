@@ -34,11 +34,13 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.CallableTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.TriFunction;
+import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.vm.java.MethodLoader;
 import org.smoothbuild.vm.job.algorithm.CombineAlgorithm;
 import org.smoothbuild.vm.job.algorithm.ConvertAlgorithm;
@@ -138,36 +140,39 @@ public class JobCreator {
     var argsJ = map(callData.args().items(), a -> lazyJobFor(scope, vars, a));
     var loc = nals.get(call).loc();
     var newVars = inferVarsInCall(funcJ, map(argsJ, Job::type));
-    return callJob(funcJ, argsJ, loc, eager, scope, newVars);
+    var evalT = typing.mapVarsLower(call.type(), vars);
+    return callJob(evalT, funcJ, argsJ, loc, eager, scope, newVars);
   }
 
-  private Job callJob(Job func, ImmutableList<Job> args, Loc loc, boolean eager,
+  private Job callJob(TypeB evalT, Job func, ImmutableList<Job> args, Loc loc, boolean eager,
       IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     if (eager) {
-      return callEagerJob(func, args, loc, scope, vars);
+      return callEagerJob(evalT, func, args, loc, scope, vars);
     } else {
       var funcT = (FuncTB) func.type();
       var actualResT = typing.mapVarsLower(funcT.res(), vars);
-      return new LazyJob(actualResT, loc,
-          () -> callEagerJob(actualResT, func, args, loc, scope, vars));
+      return new LazyJob(evalT, loc,
+          () -> callEagerJob(evalT, actualResT, func, args, loc, scope, vars));
     }
   }
 
-  public Job callEagerJob(Job func, ImmutableList<Job> args, Loc loc, IndexedScope<Job> scope) {
+  public Job callEagerJob(TypeB evalT, Job func, ImmutableList<Job> args, Loc loc,
+      IndexedScope<Job> scope) {
     var vars = inferVarsInCall(func, map(args, Job::type));
-    return callEagerJob(func, args, loc, scope, vars);
+    return callEagerJob(evalT, func, args, loc, scope, vars);
   }
 
-  private Job callEagerJob(Job func, ImmutableList<Job> args, Loc loc, IndexedScope<Job> scope,
-      VarBounds<TypeB> vars) {
+  private Job callEagerJob(TypeB evalT, Job func, ImmutableList<Job> args, Loc loc,
+      IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var funcT = (FuncTB) func.type();
     var actualResT = typing.mapVarsLower(funcT.res(), vars);
-    return callEagerJob(actualResT, func, args, loc, scope, vars);
+    return callEagerJob(evalT, actualResT, func, args, loc, scope, vars);
   }
 
-  private CallJob callEagerJob(TypeB actualResT, Job func, ImmutableList<Job> args,
+  private Job callEagerJob(TypeB evalT, TypeB actualResT, Job func, ImmutableList<Job> args,
       Loc loc, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
-    return new CallJob(actualResT, func, args, loc, vars, scope, JobCreator.this);
+    var callJ = new CallJob(actualResT, func, args, loc, vars, scope, JobCreator.this);
+    return convertIfNeeded(evalT, callJ);
   }
 
   private VarBounds<TypeB> inferVarsInCall(Job func, ImmutableList<TypeB> argTs) {
@@ -192,11 +197,11 @@ public class JobCreator {
   private Job combineEager(
       IndexedScope<Job> scope, VarBounds<TypeB> vars, CombineB combine, Nal nal) {
     var type = combine.type();
-    var argsJ = eagerJobsFor(scope, vars, combine.items());
+    var itemJs = eagerJobsFor(scope, vars, combine.items());
     var info = new TaskInfo(COMBINE, nal);
-//    sdfsdf convert TODO convert
+    var convertedItemJs = Lists.zip(type.items(), itemJs, this::convertIfNeeded);
     var algorithm = new CombineAlgorithm(combine.type());
-    return new Task(type, argsJ, info, algorithm);
+    return new Task(type, convertedItemJs, info, algorithm);
   }
 
   // If
@@ -310,14 +315,17 @@ public class JobCreator {
     return selectEager(select, nals.get(select), scope, vars);
   }
 
-  private Task selectEager(
+  private Job selectEager(
       SelectB select, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var data = select.data();
-    var algorithm = new SelectAlgorithm(select.type());
-    var selectable = eagerJobFor(scope, vars, data.selectable());
-    var index = eagerJobFor(data.index());
+    var selectableJ = eagerJobFor(scope, vars, data.selectable());
+    var indexJ = eagerJobFor(data.index());
+    var algorithmT = ((TupleTB) selectableJ.type()).items().get(data.index().toJ().intValue());
+    var actualEvalT = typing.mapVarsLower(select.type(), vars);
+    var algorithm = new SelectAlgorithm(algorithmT);
     var info = new TaskInfo(SELECT, nal);
-    return new Task(select.type(), list(selectable, index), info, algorithm);
+    var task = new Task(algorithmT, list(selectableJ, indexJ), info, algorithm);
+    return convertIfNeeded(actualEvalT, task);
   }
 
   // Value

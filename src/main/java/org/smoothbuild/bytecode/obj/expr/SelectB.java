@@ -2,8 +2,6 @@ package org.smoothbuild.bytecode.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.util.Objects;
-
 import org.smoothbuild.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
@@ -43,7 +41,7 @@ public class SelectB extends ExprB {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), cat(), i, size);
       }
       var fieldT = tupleEvalT.items().get(i);
-      if (!Objects.equals(type(), fieldT)) {
+      if (!byteDb().typing().isAssignable(type(), fieldT)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), cat(), fieldT);
       }
       return new Data(selectable, index);
@@ -53,7 +51,7 @@ public class SelectB extends ExprB {
     }
   }
 
-  public record Data(ObjB selectable, ObjB index) {}
+  public record Data(ObjB selectable, IntB index) {}
 
   private ObjB readSelectable() {
     return readSeqElemObj(

@@ -3,6 +3,8 @@ package org.smoothbuild.testing;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.cli.console.Level.INFO;
+import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
 import static org.smoothbuild.lang.base.define.ItemS.toTypes;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
@@ -11,6 +13,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +65,11 @@ import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.cli.console.Console;
+import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.eval.compile.CompilerProv;
 import org.smoothbuild.eval.compile.TypeShConv;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -112,9 +118,14 @@ import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.compute.ComputationCache;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.java.MethodLoader;
+import org.smoothbuild.vm.job.JobCreatorProvider;
+import org.smoothbuild.vm.parallel.ExecutionReporter;
+import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -139,6 +150,19 @@ public class TestingContext {
   private TempManager tempManager;
   private ModS internalMod;
   private TypeFactoryS typeFactoryS;
+
+  public VmProv vmProv() {
+    MethodLoader methodLoader = null;
+    var jobCreatorProvider = new JobCreatorProvider(methodLoader, typeFactoryB(), typingB());
+    var console = new Console(new PrintWriter(System.out, true));
+    var reporter = new ExecutionReporter(new Reporter(console, ALL, INFO));
+    var parallelExecutor = new ParallelJobExecutor(computer(), reporter);
+    return new VmProv(jobCreatorProvider, parallelExecutor);
+  }
+
+  public CompilerProv compilerProv() {
+    return new CompilerProv(typeShConv(), objFactory(), null);
+  }
 
   public TestingModLoader mod(String sourceCode) {
     return new TestingModLoader(this, sourceCode);
@@ -810,12 +834,16 @@ public class TestingContext {
         .collect(toImmutableList());
   }
 
-  public CombineS combineS(int line, StructTS type, ExprS... expr) {
-    return combineS(line, type, ImmutableList.copyOf(expr));
+  public CombineS combineS(int line, StructTS type, ExprS... items) {
+    return combineS(line, type, ImmutableList.copyOf(items));
   }
 
-  public CombineS combineS(int line, StructTS type, ImmutableList<ExprS> exprs) {
-    return new CombineS(type, exprs, loc(line));
+  public CombineS combineS(StructTS type, ImmutableList<ExprS> items) {
+    return combineS(1, type, items);
+  }
+
+  public CombineS combineS(int line, StructTS type, ImmutableList<ExprS> items) {
+    return new CombineS(type, items, loc(line));
   }
 
   public IntS intS(int value) {

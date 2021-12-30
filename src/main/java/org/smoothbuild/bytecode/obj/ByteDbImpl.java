@@ -405,7 +405,7 @@ public class ByteDbImpl implements ByteDb {
           + " cannot be assigned to evalT " + evalT.q() + ".");
     }
     var data = writeSelectData(selectable, index);
-    var cat = catDb.select(inferredEvalT);
+    var cat = catDb.select(evalT);
     var root = newRoot(cat, data);
     return cat.newObj(root, this);
   }
