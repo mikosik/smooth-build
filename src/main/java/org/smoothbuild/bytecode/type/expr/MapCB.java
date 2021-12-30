@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.type.base.ExprCatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 public class MapCB extends ExprCatB {
   public MapCB(Hash hash, TypeB evalT) {

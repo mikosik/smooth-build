@@ -1,4 +1,4 @@
-package org.smoothbuild.db.hashed;
+package org.smoothbuild.db;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;

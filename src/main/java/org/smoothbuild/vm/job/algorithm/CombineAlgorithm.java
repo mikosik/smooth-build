@@ -4,7 +4,7 @@ import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.combineAlgorithmH
 
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CombineAlgorithm extends Algorithm {

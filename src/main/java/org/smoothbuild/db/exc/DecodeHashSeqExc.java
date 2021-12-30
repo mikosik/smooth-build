@@ -1,6 +1,6 @@
-package org.smoothbuild.db.hashed.exc;
+package org.smoothbuild.db.exc;
 
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 public class DecodeHashSeqExc extends HashedDbExc {
   public DecodeHashSeqExc(Hash hash, int remainder) {

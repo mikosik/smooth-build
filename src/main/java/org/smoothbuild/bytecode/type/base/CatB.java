@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.smoothbuild.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.AbstractT;
 import org.smoothbuild.lang.base.type.api.Var;
 

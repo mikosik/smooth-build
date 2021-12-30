@@ -36,7 +36,7 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.type.TestingCatsB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;

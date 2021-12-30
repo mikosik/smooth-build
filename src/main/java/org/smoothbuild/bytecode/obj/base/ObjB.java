@@ -16,8 +16,8 @@ import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.Hash;
+import org.smoothbuild.db.HashedDb;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

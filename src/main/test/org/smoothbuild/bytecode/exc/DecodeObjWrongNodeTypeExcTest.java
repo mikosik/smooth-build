@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 
 public class DecodeObjWrongNodeTypeExcTest extends TestingContext {

@@ -8,7 +8,7 @@ import java.util.Collection;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
 import org.smoothbuild.bytecode.type.val.VarB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;

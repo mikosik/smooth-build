@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 import com.google.common.collect.ImmutableList;
 

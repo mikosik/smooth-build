@@ -3,7 +3,7 @@ package org.smoothbuild.vm.job.algorithm;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 
 public abstract class Algorithm {

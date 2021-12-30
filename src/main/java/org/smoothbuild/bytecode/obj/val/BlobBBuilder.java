@@ -6,8 +6,8 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import org.smoothbuild.bytecode.obj.ByteDbImpl;
-import org.smoothbuild.db.hashed.HashingBufferedSink;
-import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.HashingBufferedSink;
+import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.util.io.DataWriter;
 
 import okio.BufferedSink;

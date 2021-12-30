@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.exc;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.type.base.CatKindB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.truth.Truth;

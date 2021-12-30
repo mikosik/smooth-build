@@ -1,4 +1,4 @@
-package org.smoothbuild.db.hashed.exc;
+package org.smoothbuild.db.exc;
 
 public class CorruptedHashedDbExc extends HashedDbExc {
   public CorruptedHashedDbExc(String message) {

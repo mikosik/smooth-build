@@ -1,6 +1,6 @@
-package org.smoothbuild.db.hashed.exc;
+package org.smoothbuild.db.exc;
 
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 public class NoSuchDataExc extends HashedDbExc {
   public NoSuchDataExc(Hash hash) {

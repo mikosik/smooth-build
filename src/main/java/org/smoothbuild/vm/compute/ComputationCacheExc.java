@@ -2,7 +2,7 @@ package org.smoothbuild.vm.compute;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 public class ComputationCacheExc extends Exception {
   public static ComputationCacheExc corruptedValueException(Hash hash, String message) {

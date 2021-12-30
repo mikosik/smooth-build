@@ -6,7 +6,7 @@ import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;

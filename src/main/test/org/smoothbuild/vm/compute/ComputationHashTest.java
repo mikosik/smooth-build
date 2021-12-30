@@ -7,7 +7,7 @@ import static org.smoothbuild.vm.job.algorithm.Input.input;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.type.TestingCatsB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.job.algorithm.Algorithm;

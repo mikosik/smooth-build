@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 
 public class DecodeObjIllegalPolymorphicTypeExcTest extends TestingContext {

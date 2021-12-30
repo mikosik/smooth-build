@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.exc.DecodeCombineWrongItemsSizeExc;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 
 public class DecodeCombineWrongItemsSizeExcTest extends TestingContext {

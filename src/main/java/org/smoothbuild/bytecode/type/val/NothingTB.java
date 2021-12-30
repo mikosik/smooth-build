@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.val;
 
 import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.TypeNames;
 
 /**

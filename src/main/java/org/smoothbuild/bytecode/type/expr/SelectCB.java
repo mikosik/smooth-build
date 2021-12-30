@@ -7,7 +7,7 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.type.base.ExprCatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 /**
  * This class is immutable.

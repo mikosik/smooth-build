@@ -13,7 +13,7 @@ import org.smoothbuild.bytecode.obj.val.BoolB;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.job.algorithm.Output;
 

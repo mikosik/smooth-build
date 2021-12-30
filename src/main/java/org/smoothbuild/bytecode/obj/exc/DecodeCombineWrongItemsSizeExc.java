@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.obj.exc;
 
 import org.smoothbuild.bytecode.type.expr.CombineCB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 public class DecodeCombineWrongItemsSizeExc extends DecodeObjExc {
   public DecodeCombineWrongItemsSizeExc(Hash hash, CombineCB cat, int actual) {

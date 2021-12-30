@@ -1,7 +1,6 @@
-package org.smoothbuild.db.hashed;
+package org.smoothbuild.db;
 
-import static org.smoothbuild.db.hashed.HashedDb.dataFullPath;
-import static org.smoothbuild.db.hashed.Helpers.wrapIOExceptionAsHashedDbException;
+import static org.smoothbuild.db.Helpers.wrapIOExceptionAsHashedDbException;
 import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
@@ -9,7 +8,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
@@ -59,7 +58,7 @@ public class HashingBufferedSink implements BufferedSink {
   public void close() throws IOException {
     bufferedSink.close();
 
-    Path path = dataFullPath(hashedDbRootPath, hash());
+    Path path = HashedDb.dataFullPath(hashedDbRootPath, hash());
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
       case NOTHING:

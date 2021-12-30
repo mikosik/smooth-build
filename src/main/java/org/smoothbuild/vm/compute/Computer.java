@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.eval.SandboxHash;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.job.algorithm.Algorithm;

@@ -7,7 +7,7 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.type.base.ExprCatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 public class ParamRefCB extends ExprCatB {
   public ParamRefCB(Hash hash, TypeB evalT) {

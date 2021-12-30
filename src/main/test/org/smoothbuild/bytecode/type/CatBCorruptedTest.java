@@ -26,12 +26,12 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashingBufferedSink;
-import org.smoothbuild.db.hashed.exc.DecodeHashSeqExc;
-import org.smoothbuild.db.hashed.exc.DecodeStringExc;
-import org.smoothbuild.db.hashed.exc.HashedDbExc;
-import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
+import org.smoothbuild.db.Hash;
+import org.smoothbuild.db.HashingBufferedSink;
+import org.smoothbuild.db.exc.DecodeHashSeqExc;
+import org.smoothbuild.db.exc.DecodeStringExc;
+import org.smoothbuild.db.exc.HashedDbExc;
+import org.smoothbuild.db.exc.NoSuchDataExc;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.common.AssertCall.ThrownExceptionSubject;
 

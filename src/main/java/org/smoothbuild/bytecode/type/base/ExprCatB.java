@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.type.base;
 
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 public abstract class ExprCatB extends CatB {
   private final TypeB evalT;

@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.type.val;
 import static org.smoothbuild.bytecode.type.base.CatKindB.ANY;
 
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 
 /**
  * This class is immutable.

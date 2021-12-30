@@ -42,10 +42,10 @@ import org.smoothbuild.bytecode.type.val.CallableTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.exc.HashedDbExc;
-import org.smoothbuild.db.hashed.exc.NoSuchDataExc;
+import org.smoothbuild.db.Hash;
+import org.smoothbuild.db.HashedDb;
+import org.smoothbuild.db.exc.HashedDbExc;
+import org.smoothbuild.db.exc.NoSuchDataExc;
 import org.smoothbuild.lang.base.type.Typing;
 import org.smoothbuild.util.collect.Lists;
 

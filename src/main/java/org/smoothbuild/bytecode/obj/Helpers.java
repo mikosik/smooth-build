@@ -3,8 +3,8 @@ package org.smoothbuild.bytecode.obj;
 import org.smoothbuild.bytecode.obj.exc.ByteDbExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNodeExc;
 import org.smoothbuild.bytecode.type.base.CatB;
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.exc.HashedDbExc;
+import org.smoothbuild.db.Hash;
+import org.smoothbuild.db.exc.HashedDbExc;
 
 public class Helpers {
   public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {

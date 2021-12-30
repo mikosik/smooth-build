@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.install.InstallationHashes;
 
 import com.google.inject.AbstractModule;

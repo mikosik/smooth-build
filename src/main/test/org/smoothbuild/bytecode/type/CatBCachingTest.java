@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.truth.Truth;

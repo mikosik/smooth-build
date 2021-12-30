@@ -10,7 +10,7 @@ import org.smoothbuild.bytecode.obj.ByteDbImpl;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypeFactoryB;
 import org.smoothbuild.bytecode.type.TypingB;
-import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.space.ForSpace;
