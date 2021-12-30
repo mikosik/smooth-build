@@ -3,6 +3,7 @@ package org.smoothbuild.vm.job;
 import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
+import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.vm.job.job.TaskKind.CALL;
 import static org.smoothbuild.vm.job.job.TaskKind.COMBINE;
 import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
@@ -196,12 +197,11 @@ public class JobCreator {
 
   private Job combineEager(
       IndexedScope<Job> scope, VarBounds<TypeB> vars, CombineB combine, Nal nal) {
-    var type = combine.type();
     var itemJs = eagerJobsFor(scope, vars, combine.items());
     var info = new TaskInfo(COMBINE, nal);
-    var convertedItemJs = Lists.zip(type.items(), itemJs, this::convertIfNeeded);
+    var convertedItemJs = zip(combine.type().items(), itemJs, this::convertIfNeeded);
     var algorithm = new CombineAlgorithm(combine.type());
-    return new Task(type, convertedItemJs, info, algorithm);
+    return new Task(convertedItemJs, info, algorithm);
   }
 
   // If
@@ -246,7 +246,7 @@ public class JobCreator {
     var algorithm = new InvokeAlgorithm(actualType, name, invokeData.method(), methodLoader);
     var info = new TaskInfo(INTERNAL, name, nal.loc());
     var argsJ = eagerJobsFor(scope, vars, invokeData.args().items());
-    return new Task(actualType, argsJ, info, algorithm);
+    return new Task(argsJ, info, algorithm);
   }
 
   // Map
@@ -294,7 +294,7 @@ public class JobCreator {
   public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, TaskInfo info) {
     var convertedElemJs = convertIfNeeded(arrayTB.elem(), elemJs);
     var algorithm = new OrderAlgorithm(arrayTB);
-    return new Task(arrayTB, convertedElemJs, info, algorithm);
+    return new Task(convertedElemJs, info, algorithm);
   }
 
   // ParamRef
@@ -320,11 +320,11 @@ public class JobCreator {
     var data = select.data();
     var selectableJ = eagerJobFor(scope, vars, data.selectable());
     var indexJ = eagerJobFor(data.index());
-    var algorithmT = ((TupleTB) selectableJ.type()).items().get(data.index().toJ().intValue());
     var actualEvalT = typing.mapVarsLower(select.type(), vars);
+    var algorithmT = ((TupleTB) selectableJ.type()).items().get(data.index().toJ().intValue());
     var algorithm = new SelectAlgorithm(algorithmT);
     var info = new TaskInfo(SELECT, nal);
-    var task = new Task(algorithmT, list(selectableJ, indexJ), info, algorithm);
+    var task = new Task(list(selectableJ, indexJ), info, algorithm);
     return convertIfNeeded(actualEvalT, task);
   }
 
@@ -359,7 +359,7 @@ public class JobCreator {
       return job;
     } else {
       var algorithm = new ConvertAlgorithm(type, typing);
-      return new Task(type, list(job), new TaskInfo(INTERNAL, job), algorithm);
+      return new Task(list(job), new TaskInfo(INTERNAL, job), algorithm);
     }
   }
 

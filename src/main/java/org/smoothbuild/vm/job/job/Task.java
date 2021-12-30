@@ -6,7 +6,6 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import java.util.List;
 
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
@@ -16,8 +15,8 @@ public class Task extends AbstractJob {
   private final TaskInfo info;
   private final Algorithm algorithm;
 
-  public Task(TypeB type, List<Job> deps, TaskInfo info, Algorithm algorithm) {
-    super(type, deps, info);
+  public Task(List<Job> deps, TaskInfo info, Algorithm algorithm) {
+    super(algorithm.outputT(), deps, info);
     this.info = info;
     this.algorithm = algorithm;
   }
