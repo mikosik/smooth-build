@@ -8,8 +8,8 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.bytecode.obj.val.BlobB;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.common.JarTester;
 

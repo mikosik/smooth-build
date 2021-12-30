@@ -25,9 +25,9 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.acceptance.testing.WithoutContainer;
 import org.smoothbuild.acceptance.testing.WrongMethodName;
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
-import org.smoothbuild.db.bytecode.obj.val.StringB;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class NativeTest extends AcceptanceTestCase {

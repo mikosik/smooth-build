@@ -5,7 +5,7 @@ import static org.smoothbuild.util.collect.Maps.mapValues;
 import java.util.Map;
 import java.util.Optional;
 
-import org.smoothbuild.db.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 

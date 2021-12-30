@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.reflect.Classes;
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class AddElementOfWrongTypeToArray {

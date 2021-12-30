@@ -3,8 +3,8 @@ package org.smoothbuild.vm.job.algorithm;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
-import org.smoothbuild.db.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.ValB;
 
 public record Output(ValB val, ArrayB messages) {
 

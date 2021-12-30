@@ -15,9 +15,9 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
-import org.smoothbuild.db.bytecode.obj.val.StringB;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class JavacFunc {

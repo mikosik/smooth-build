@@ -5,7 +5,7 @@ import static org.smoothbuild.eval.artifact.MessageStruct.severity;
 import static org.smoothbuild.eval.artifact.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.truth.Truth;

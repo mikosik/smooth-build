@@ -15,8 +15,8 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.bytecode.obj.val.MethodB;
-import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.obj.val.MethodB;
+import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.JPathResolver;
 import org.smoothbuild.plugin.NativeApi;

@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.bytecode.obj.base.ObjB;
-import org.smoothbuild.db.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.Computer;

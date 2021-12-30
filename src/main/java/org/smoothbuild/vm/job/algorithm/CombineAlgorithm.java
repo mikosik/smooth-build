@@ -2,8 +2,8 @@ package org.smoothbuild.vm.job.algorithm;
 
 import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.combineAlgorithmHash;
 
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
-import org.smoothbuild.db.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.plugin.NativeApi;
 

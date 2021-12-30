@@ -5,7 +5,7 @@ import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 
 import okio.BufferedSource;
 

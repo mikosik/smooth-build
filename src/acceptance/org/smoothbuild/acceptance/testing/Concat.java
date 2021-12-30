@@ -1,8 +1,8 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
-import org.smoothbuild.db.bytecode.obj.val.ValB;
-import org.smoothbuild.db.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class Concat {

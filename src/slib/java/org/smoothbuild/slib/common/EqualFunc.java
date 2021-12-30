@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.common;
 
-import org.smoothbuild.db.bytecode.obj.val.BoolB;
-import org.smoothbuild.db.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.obj.val.BoolB;
+import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class EqualFunc {

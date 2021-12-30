@@ -2,9 +2,9 @@ package org.smoothbuild.vm.job.algorithm;
 
 import static java.util.Arrays.asList;
 
-import org.smoothbuild.db.bytecode.obj.val.MethodB;
-import org.smoothbuild.db.bytecode.type.base.TypeB;
-import org.smoothbuild.db.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.obj.val.MethodB;
+import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.hashed.Hash;
 
 public class AlgorithmHashes {

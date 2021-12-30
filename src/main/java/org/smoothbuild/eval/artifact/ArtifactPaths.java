@@ -3,7 +3,7 @@ package org.smoothbuild.eval.artifact;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.OBJECT_DB_PATH;
 
-import org.smoothbuild.db.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.base.Path;
 

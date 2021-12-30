@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;

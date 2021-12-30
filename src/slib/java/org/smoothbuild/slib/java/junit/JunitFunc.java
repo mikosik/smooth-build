@@ -20,10 +20,10 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.zip.ZipException;
 
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
-import org.smoothbuild.db.bytecode.obj.val.BlobB;
-import org.smoothbuild.db.bytecode.obj.val.StringB;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.eval.artifact.FileStruct;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;

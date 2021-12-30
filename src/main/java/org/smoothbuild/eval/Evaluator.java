@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.eval.compile.CompilerProv;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.expr.TopRefS;

@@ -15,9 +15,9 @@ import java.io.FileNotFoundException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.bytecode.obj.base.ObjB;
-import org.smoothbuild.db.bytecode.obj.val.BlobB;
-import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.TopEvalS;

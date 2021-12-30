@@ -7,12 +7,12 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
-import org.smoothbuild.db.bytecode.obj.val.BlobB;
-import org.smoothbuild.db.bytecode.obj.val.BoolB;
-import org.smoothbuild.db.bytecode.obj.val.IntB;
-import org.smoothbuild.db.bytecode.obj.val.StringB;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.obj.val.BoolB;
+import org.smoothbuild.bytecode.obj.val.IntB;
+import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.job.algorithm.Output;

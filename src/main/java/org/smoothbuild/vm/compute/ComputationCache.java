@@ -10,14 +10,14 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.bytecode.ObjFactory;
-import org.smoothbuild.db.bytecode.obj.ByteDb;
-import org.smoothbuild.db.bytecode.obj.base.ObjB;
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
-import org.smoothbuild.db.bytecode.obj.val.ValB;
-import org.smoothbuild.db.bytecode.type.base.TypeB;
-import org.smoothbuild.db.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.ObjFactory;
+import org.smoothbuild.bytecode.obj.ByteDb;
+import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;

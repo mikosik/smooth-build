@@ -5,8 +5,8 @@ import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.List;
 
-import org.smoothbuild.db.bytecode.obj.val.ValB;
-import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.job.algorithm.Algorithm;

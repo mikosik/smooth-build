@@ -13,9 +13,9 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.bytecode.obj.base.ObjB;
 import org.smoothbuild.eval.Evaluator;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.define.DefsS;

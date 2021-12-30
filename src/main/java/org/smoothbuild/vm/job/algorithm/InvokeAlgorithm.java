@@ -6,9 +6,9 @@ import static org.smoothbuild.util.Strings.q;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.smoothbuild.db.bytecode.obj.val.MethodB;
-import org.smoothbuild.db.bytecode.obj.val.ValB;
-import org.smoothbuild.db.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.obj.val.MethodB;
+import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.vm.java.MethodLoader;

@@ -4,17 +4,17 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 
-import org.smoothbuild.db.bytecode.ObjFactory;
-import org.smoothbuild.db.bytecode.obj.base.ObjB;
-import org.smoothbuild.db.bytecode.obj.val.ArrayB;
-import org.smoothbuild.db.bytecode.obj.val.FuncB;
-import org.smoothbuild.db.bytecode.obj.val.TupleB;
-import org.smoothbuild.db.bytecode.obj.val.ValB;
-import org.smoothbuild.db.bytecode.type.TypingB;
-import org.smoothbuild.db.bytecode.type.base.TypeB;
-import org.smoothbuild.db.bytecode.type.val.ArrayTB;
-import org.smoothbuild.db.bytecode.type.val.FuncTB;
-import org.smoothbuild.db.bytecode.type.val.TupleTB;
+import org.smoothbuild.bytecode.ObjFactory;
+import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.FuncB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
+import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.bytecode.type.TypingB;
+import org.smoothbuild.bytecode.type.base.TypeB;
+import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.plugin.NativeApi;
 

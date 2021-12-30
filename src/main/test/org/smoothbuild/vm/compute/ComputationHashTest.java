@@ -1,12 +1,12 @@
 package org.smoothbuild.vm.compute;
 
-import static org.smoothbuild.db.bytecode.type.TestingCatsB.INT;
-import static org.smoothbuild.db.bytecode.type.TestingCatsB.PERSON;
+import static org.smoothbuild.bytecode.type.TestingCatsB.INT;
+import static org.smoothbuild.bytecode.type.TestingCatsB.PERSON;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.job.algorithm.Input.input;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.bytecode.type.TestingCatsB;
+import org.smoothbuild.bytecode.type.TestingCatsB;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
