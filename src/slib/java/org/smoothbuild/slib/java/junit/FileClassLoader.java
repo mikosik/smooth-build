@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.java.junit;
 
-import static org.smoothbuild.exec.base.FileStruct.fileContent;
+import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
 
 import java.io.IOException;
 import java.util.Map;

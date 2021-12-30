@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.exec.job.TaskInfo.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.vm.job.job.TaskInfo.NAME_LENGTH_LIMIT;
 
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.impl.BlobTS;

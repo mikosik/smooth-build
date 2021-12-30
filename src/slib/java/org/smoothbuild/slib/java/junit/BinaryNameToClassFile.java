@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.java.junit;
 
-import static org.smoothbuild.exec.base.FileStruct.filePath;
+import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 

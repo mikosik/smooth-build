@@ -1,8 +1,8 @@
 package org.smoothbuild.slib.java.javac;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.smoothbuild.exec.base.FileStruct.fileContent;
-import static org.smoothbuild.exec.base.FileStruct.filePath;
+import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
+import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 
 import java.net.URI;
 import java.util.Scanner;

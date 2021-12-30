@@ -2,8 +2,8 @@ package org.smoothbuild.slib.file;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.console.Level.ERROR;
-import static org.smoothbuild.exec.base.MessageStruct.messageSeverity;
-import static org.smoothbuild.exec.base.MessageStruct.messageText;
+import static org.smoothbuild.eval.artifact.MessageStruct.messageSeverity;
+import static org.smoothbuild.eval.artifact.MessageStruct.messageText;
 import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.util.stream.Stream;

@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.java.javac;
 
-import static org.smoothbuild.exec.base.FileStruct.filePath;
+import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.slib.compress.UnzipFunc.unzip;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 
@@ -12,7 +12,7 @@ import java.util.zip.ZipException;
 import org.smoothbuild.db.bytecode.obj.val.ArrayB;
 import org.smoothbuild.db.bytecode.obj.val.BlobB;
 import org.smoothbuild.db.bytecode.obj.val.TupleB;
-import org.smoothbuild.exec.base.FileStruct;
+import org.smoothbuild.eval.artifact.FileStruct;
 import org.smoothbuild.plugin.NativeApi;
 
 public class PackagedJavaFileObjects {

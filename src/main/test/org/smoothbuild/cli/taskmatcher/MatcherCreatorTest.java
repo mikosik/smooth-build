@@ -36,10 +36,10 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.exec.job.TaskInfo;
-import org.smoothbuild.exec.job.TaskKind;
 import org.smoothbuild.io.fs.space.Space;
 import org.smoothbuild.lang.base.define.Loc;
+import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.job.TaskKind;
 
 import picocli.CommandLine.TypeConversionException;
 

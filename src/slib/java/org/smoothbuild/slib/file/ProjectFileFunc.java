@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import org.smoothbuild.db.bytecode.obj.val.StringB;
 import org.smoothbuild.db.bytecode.obj.val.TupleB;
-import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.vm.compute.Container;
 
 public class ProjectFileFunc {
   public static TupleB func(Container container, StringB path) throws IOException {

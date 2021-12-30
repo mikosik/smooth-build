@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.java.javac;
 
-import static org.smoothbuild.exec.base.FileStruct.fileContent;
-import static org.smoothbuild.exec.base.FileStruct.filePath;
+import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
+import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.slib.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 

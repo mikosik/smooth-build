@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.exec.artifact.ArtifactBuilder;
+import org.smoothbuild.eval.artifact.ArtifactBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.space.ForSpace;

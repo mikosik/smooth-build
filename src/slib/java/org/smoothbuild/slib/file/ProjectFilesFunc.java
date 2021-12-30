@@ -9,11 +9,11 @@ import java.io.IOException;
 
 import org.smoothbuild.db.bytecode.obj.val.ArrayB;
 import org.smoothbuild.db.bytecode.obj.val.StringB;
-import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.vm.compute.Container;
 
 public class ProjectFilesFunc {
   public static ArrayB func(Container container, StringB dir) throws IOException {
