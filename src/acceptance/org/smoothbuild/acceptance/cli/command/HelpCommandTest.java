@@ -5,7 +5,6 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.cli.command.BuildCommand;
 import org.smoothbuild.cli.command.CleanCommand;
 import org.smoothbuild.cli.command.ListCommand;
-import org.smoothbuild.cli.command.PlanCommand;
 import org.smoothbuild.cli.command.VersionCommand;
 
 public class HelpCommandTest extends AcceptanceTestCase {
@@ -31,7 +30,6 @@ public class HelpCommandTest extends AcceptanceTestCase {
           help     Displays help information about the specified command
           list     Print user defined values that can be evaluated and stored as
                      artifact
-          plan     Print execution plan for specified value(s)
           version  Print version information
         """);
   }
@@ -160,36 +158,6 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       w, warning - show FATAL, ERROR, WARNING logs
                                       i, info    - show FATAL, ERROR, WARNING, INFO logs
 
-        """);
-  }
-
-  @Test
-  public void help_plan() {
-    runSmoothHelp(PlanCommand.NAME);
-    assertFinishedWithSuccess();
-    assertSysOutContains("""
-        Usage:
-        smooth plan [-d=<projectDir>] [-l=<level>] <value>...
-                
-        Description:
-        Print execution plan for specified value(s)
-                
-        Parameters:
-              <value>...            value(s) which execution plan is printed
-                
-        Options:
-          -d, --project-dir=<projectDir>
-                                    Project directory where 'build.smooth' is located.
-                                      By default equal to current directory.
-                
-          -l, --log-level=<level>   Show logs with specified level or above.
-                
-                                    Available levels:
-                                      f, fatal   - show FATAL logs
-                                      e, error   - show FATAL, ERROR logs
-                                      w, warning - show FATAL, ERROR, WARNING logs
-                                      i, info    - show FATAL, ERROR, WARNING, INFO logs
-        
         """);
   }
 

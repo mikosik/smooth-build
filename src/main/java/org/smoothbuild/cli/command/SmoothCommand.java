@@ -21,7 +21,6 @@ import picocli.CommandLine.HelpCommand;
         CleanCommand.class,
         HelpCommand.class,
         ListCommand.class,
-        PlanCommand.class,
         VersionCommand.class
     },
     synopsisSubcommandLabel = "COMMAND" // to avoid default [COMMAND] because COMMAND is mandatory
