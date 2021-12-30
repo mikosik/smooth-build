@@ -23,7 +23,6 @@ public class Vm {
   public <K> Map<K, Optional<ObjB>> evaluate(ImmutableMap<K, ObjB> objs)
       throws InterruptedException {
     var jobs = mapValues(objs, jobCreator::eagerJobFor);
-    var artifacts = parallelExecutor.executeAll(jobs);
-    return artifacts;
+    return parallelExecutor.executeAll(jobs);
   }
 }
