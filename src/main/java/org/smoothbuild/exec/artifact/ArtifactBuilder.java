@@ -16,9 +16,8 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.bytecode.obj.base.ObjB;
-import org.smoothbuild.exec.job.Job;
 import org.smoothbuild.exec.parallel.ParallelJobExecutor;
-import org.smoothbuild.exec.plan.ExecutionPlanner;
+import org.smoothbuild.exec.plan.Evaluator;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.expr.TopRefS;
@@ -28,25 +27,24 @@ public class ArtifactBuilder {
 
   private final ParallelJobExecutor parallelExecutor;
   private final ArtifactSaver artifactSaver;
-  private final ExecutionPlanner executionPlanner;
+  private final Evaluator evaluator;
   private final Reporter reporter;
 
   @Inject
   public ArtifactBuilder(ParallelJobExecutor parallelExecutor, ArtifactSaver artifactSaver,
-      ExecutionPlanner executionPlanner, Reporter reporter) {
+      Evaluator evaluator, Reporter reporter) {
     this.parallelExecutor = parallelExecutor;
     this.artifactSaver = artifactSaver;
-    this.executionPlanner = executionPlanner;
+    this.evaluator = evaluator;
     this.reporter = reporter;
   }
 
   public void buildArtifacts(DefsS defs, List<TopRefS> topRefs) {
-    Map<TopRefS, Job> plans = executionPlanner.createPlans(defs, topRefs);
     if (reporter.isProblemReported()) {
       return;
     }
     try {
-      Map<TopRefS, Optional<ObjB>> artifacts = parallelExecutor.executeAll(plans);
+      Map<TopRefS, Optional<ObjB>> artifacts = evaluator.evaluate(defs, topRefs);
       if (!artifacts.containsValue(Optional.<ObjB>empty())) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
         artifacts.entrySet()
