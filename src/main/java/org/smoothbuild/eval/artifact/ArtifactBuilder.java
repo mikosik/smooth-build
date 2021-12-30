@@ -20,29 +20,22 @@ import org.smoothbuild.eval.Evaluator;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.expr.TopRefS;
-import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 
 public class ArtifactBuilder {
   private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";
 
-  private final ParallelJobExecutor parallelExecutor;
   private final ArtifactSaver artifactSaver;
   private final Evaluator evaluator;
   private final Reporter reporter;
 
   @Inject
-  public ArtifactBuilder(ParallelJobExecutor parallelExecutor, ArtifactSaver artifactSaver,
-      Evaluator evaluator, Reporter reporter) {
-    this.parallelExecutor = parallelExecutor;
+  public ArtifactBuilder(ArtifactSaver artifactSaver, Evaluator evaluator, Reporter reporter) {
     this.artifactSaver = artifactSaver;
     this.evaluator = evaluator;
     this.reporter = reporter;
   }
 
   public void buildArtifacts(DefsS defs, List<TopRefS> topRefs) {
-    if (reporter.isProblemReported()) {
-      return;
-    }
     try {
       Map<TopRefS, Optional<ObjB>> artifacts = evaluator.evaluate(defs, topRefs);
       if (!artifacts.containsValue(Optional.<ObjB>empty())) {
