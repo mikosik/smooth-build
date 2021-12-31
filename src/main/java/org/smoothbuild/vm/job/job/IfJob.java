@@ -2,7 +2,6 @@ package org.smoothbuild.vm.job.job;
 
 import static org.smoothbuild.lang.base.define.FuncS.PARENTHESES;
 import static org.smoothbuild.lang.base.define.IfFuncS.IF_FUNCTION_NAME;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.function.Consumer;
 
@@ -22,7 +21,7 @@ public class IfJob extends AbstractJob {
   private final Job elseJ;
 
   public IfJob(TypeB type, Job conditionJ, Job thenJ, Job elseJ, Loc loc) {
-    super(type, list(conditionJ, thenJ, elseJ), new NalImpl("building:" + IF_TASK_NAME, loc));
+    super(type, new NalImpl("building:" + IF_TASK_NAME, loc));
     this.conditionJ = conditionJ;
     this.thenJ = thenJ;
     this.elseJ = elseJ;

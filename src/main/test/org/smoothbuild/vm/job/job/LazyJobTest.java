@@ -36,14 +36,6 @@ public class LazyJobTest {
   }
 
   @Test
-  public void multiple_calls_to_deps_causes_only_one_call_to_supplier() {
-    LazyJob lazyJob = new LazyJob(null, null, supplier);
-    lazyJob.deps();
-    lazyJob.deps();
-    verify(supplier, times(1)).get();
-  }
-
-  @Test
   public void multiple_calls_to_schedule_causes_only_one_call_to_supplier() {
     LazyJob lazyJob = new LazyJob(null, null, supplier);
     lazyJob.schedule(mock(Worker.class));

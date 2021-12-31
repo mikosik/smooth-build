@@ -31,7 +31,7 @@ public class MapJob extends AbstractJob {
 
   public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, IndexedScope<Job> scope,
       JobCreator jobCreator) {
-    super(type, list(arrayJ, funcJ), new NalImpl("building:" + MAP_TASK_NAME, loc));
+    super(type, new NalImpl("building:" + MAP_TASK_NAME, loc));
     this.arrayJ = arrayJ;
     this.funcJ = funcJ;
     this.scope = scope;

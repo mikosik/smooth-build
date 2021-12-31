@@ -8,7 +8,6 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -23,11 +22,6 @@ public record LazyJob(TypeB type, Loc loc, Supplier<Job> supplier) implements Jo
   @Override
   public String name() {
     return job().name();
-  }
-
-  @Override
-  public ImmutableList<Job> deps() {
-    return job().deps();
   }
 
   @Override

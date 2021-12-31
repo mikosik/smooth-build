@@ -1,7 +1,5 @@
 package org.smoothbuild.vm.job.job;
 
-import static org.smoothbuild.util.collect.Lists.concat;
-
 import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.obj.val.FuncB;
@@ -19,15 +17,17 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 import com.google.common.collect.ImmutableList;
 
 public class CallJob extends AbstractJob {
-  private final ImmutableList<Job> args;
+  private final Job callableJ;
+  private final ImmutableList<Job> argJs;
   private final VarBounds<TypeB> vars;
   private final IndexedScope<Job> scope;
   private final JobCreator jobCreator;
 
-  public CallJob(TypeB type, Job called, ImmutableList<Job> args, Loc loc,
+  public CallJob(TypeB type, Job callableJ, ImmutableList<Job> argJs, Loc loc,
       VarBounds<TypeB> vars, IndexedScope<Job> scope, JobCreator jobCreator) {
-    super(type, concat(called, args), new NalImpl("building-evaluation", loc));
-    this.args = args;
+    super(type, new NalImpl("building-evaluation", loc));
+    this.callableJ = callableJ;
+    this.argJs = argJs;
     this.vars = vars;
     this.scope = scope;
     this.jobCreator = jobCreator;
@@ -44,12 +44,12 @@ public class CallJob extends AbstractJob {
 
   private void onFuncJobCompleted(ValB val, Worker worker, Consumer<ValB> res) {
     var funcH = (FuncB) val;
-    jobCreator.callFuncEagerJob(type(), funcH, args, loc(), scope, vars)
+    jobCreator.callFuncEagerJob(type(), funcH, argJs, loc(), scope, vars)
         .schedule(worker)
         .addConsumer(res);
   }
 
   private Job funcJob() {
-    return deps().get(0);
+    return callableJ;
   }
 }
