@@ -71,10 +71,10 @@ public class JobCreator {
     this.methodLoader = methodLoader;
     this.typing = typing;
     this.nals = nals;
-    this.handler = combineHandlers();
+    this.handler = createHandlers();
   }
 
-  private ImmutableMap<Class<?>, Handler<?>> combineHandlers() {
+  private ImmutableMap<Class<?>, Handler<?>> createHandlers() {
     return ImmutableMap.<Class<?>, Handler<?>>builder()
         .put(ArrayB.class, new Handler<>(this::valueLazy, this::valueEager))
         .put(BoolB.class, new Handler<>(this::valueLazy, this::valueEager))
