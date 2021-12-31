@@ -41,7 +41,6 @@ import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.TriFunction;
-import org.smoothbuild.util.collect.Lists;
 import org.smoothbuild.vm.java.MethodLoader;
 import org.smoothbuild.vm.job.algorithm.CombineAlgorithm;
 import org.smoothbuild.vm.job.algorithm.ConvertAlgorithm;
@@ -49,13 +48,13 @@ import org.smoothbuild.vm.job.algorithm.InvokeAlgorithm;
 import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.job.algorithm.SelectAlgorithm;
 import org.smoothbuild.vm.job.job.CallJob;
-import org.smoothbuild.vm.job.job.ConstJob;
 import org.smoothbuild.vm.job.job.IfJob;
 import org.smoothbuild.vm.job.job.Job;
 import org.smoothbuild.vm.job.job.LazyJob;
 import org.smoothbuild.vm.job.job.MapJob;
 import org.smoothbuild.vm.job.job.Task;
 import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.job.ValJob;
 import org.smoothbuild.vm.job.job.VirtualJob;
 
 import com.google.common.collect.ImmutableList;
@@ -333,12 +332,12 @@ public class JobCreator {
   private Job valueLazy(ValB val, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var nal = nals.get(val);
     var loc = nal.loc();
-    return new LazyJob(val.cat(), loc, () -> new ConstJob(val, nal));
+    return new LazyJob(val.cat(), loc, () -> new ValJob(val, nal));
   }
 
   private Job valueEager(ValB val, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var nal = nals.get(val);
-    return new ConstJob(val, nal);
+    return new ValJob(val, nal);
   }
 
   // helper methods

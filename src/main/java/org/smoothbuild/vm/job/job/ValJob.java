@@ -8,10 +8,10 @@ import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
-public class ConstJob extends AbstractJob {
+public class ValJob extends AbstractJob {
   private final ValB val;
 
-  public ConstJob(ValB val, Nal nal) {
+  public ValJob(ValB val, Nal nal) {
     super(val.type(), list(), nal);
     this.val = val;
   }
