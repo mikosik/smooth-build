@@ -43,11 +43,11 @@ public class MapJob extends AbstractJob {
     Promise<ValB> array = arrayJ.schedule(worker);
     Promise<ValB> func = funcJ.schedule(worker);
     runWhenAllAvailable(list(array, func),
-        () -> onArrayCompleted((ArrayB) array.get(), (FuncB) func.get(), worker, result));
+        () -> onDepsCompleted((ArrayB) array.get(), (FuncB) func.get(), worker, result));
     return result;
   }
 
-  private void onArrayCompleted(ArrayB array, FuncB func, Worker worker, Consumer<ValB> result) {
+  private void onDepsCompleted(ArrayB array, FuncB func, Worker worker, Consumer<ValB> result) {
     var outputArrayT = (ArrayTB) type();
     var outputElemT = outputArrayT.elem();
     var funcJ = getJob(func);
