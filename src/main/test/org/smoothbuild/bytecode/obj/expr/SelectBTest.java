@@ -14,14 +14,11 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.Lists;
 
-import com.google.common.truth.Truth;
-
 public class SelectBTest extends TestingContext {
   @Test
-  public void type_of_select_is_inferred_correctly() {
-    TupleB tuple = animalB("rabbit", 7);
-    Truth.assertThat(selectB(tuple, intB(1)).cat())
-        .isEqualTo(selectCB(intTB()));
+  public void selected_fieldT_can_be_subtype_of_evalT() {
+    var select = selectB(arrayTB(intTB()), tupleB(list(arrayB(nothingTB()))), intB(0));
+    select.data();
   }
 
   @Test
@@ -65,7 +62,7 @@ public class SelectBTest extends TestingContext {
   public void data_returns_tuple_and_index() {
     TupleB selectable = tupleB(tupleTB(), list(intB(7)));
     IntB index = intB(0);
-    Truth.assertThat(selectB(selectable, index).data())
+    assertThat(selectB(selectable, index).data())
         .isEqualTo(new SelectB.Data(selectable, index));
   }
 
