@@ -118,10 +118,12 @@ import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.compute.ComputationCache;
 import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.compute.Container;
+import org.smoothbuild.vm.java.FileLoader;
 import org.smoothbuild.vm.java.MethodLoader;
 import org.smoothbuild.vm.job.JobCreatorProvider;
 import org.smoothbuild.vm.parallel.ExecutionReporter;
@@ -151,8 +153,15 @@ public class TestingContext {
   private ModS internalMod;
   private TypeFactoryS typeFactoryS;
 
+  public Vm vm() {
+    return vmProv().get(ImmutableMap.of());
+  }
+
   public VmProv vmProv() {
-    MethodLoader methodLoader = null;
+    return vmProv(null);
+  }
+
+  public VmProv vmProv(MethodLoader methodLoader) {
     var jobCreatorProvider = new JobCreatorProvider(methodLoader, typeFactoryB(), typingB());
     var console = new Console(new PrintWriter(System.out, true));
     var reporter = new ExecutionReporter(new Reporter(console, ALL, INFO));
@@ -161,7 +170,11 @@ public class TestingContext {
   }
 
   public CompilerProv compilerProv() {
-    return new CompilerProv(typeShConv(), objFactory(), null);
+    return compilerProv(null);
+  }
+
+  public CompilerProv compilerProv(FileLoader fileLoader) {
+    return new CompilerProv(typeShConv(), objFactory(), fileLoader);
   }
 
   public TestingModLoader mod(String sourceCode) {
@@ -617,16 +630,20 @@ public class TestingContext {
 
   // Expr-s
 
-  public CallB callB(TypeB evalT, ObjB func, ImmutableList<ObjB> args) {
-    return byteDb().call(evalT, func, combineB(args));
-  }
-
   public CallB callB(ObjB func, ImmutableList<ObjB> args) {
     return callB(func, combineB(args));
   }
 
   public CallB callB(ObjB func, CombineB args) {
     var evalT = inferResT(func, args);
+    return callB(evalT, func, args);
+  }
+
+  public CallB callB(TypeB evalT, ObjB func, ImmutableList<ObjB> args) {
+    return callB(evalT, func, combineB(args));
+  }
+
+  public CallB callB(TypeB evalT, ObjB func, CombineB args) {
     return byteDb().call(evalT, func, args);
   }
 
@@ -948,29 +965,33 @@ public class TestingContext {
     return new DefValS(type, modPath(), name, expr, loc(line));
   }
 
-  public NatFuncS natFuncS(TypeS type, String name, NList<ItemS> params) {
-    return natFuncS(1, type, name, params, annS(1, stringS(1, "Impl.met")));
+  public NatFuncS natFuncS(TypeS resT, String name, NList<ItemS> params) {
+    return natFuncS(resT, name, params, annS(1, stringS(1, "Impl.met")));
   }
 
-  public NatFuncS natFuncS(int line, TypeS type, String name, NList<ItemS> params, AnnS annS) {
-    return natFuncS(line, funcTS(type, params.list()), modPath(), name, params, annS);
+  public NatFuncS natFuncS(TypeS resT, String name, NList<ItemS> params, AnnS annS) {
+    return natFuncS(1, resT, name, params, annS);
   }
 
-  public NatFuncS natFuncS(FuncTS type, String name, NList<ItemS> params) {
-    return natFuncS(type, name, params, annS());
+  public NatFuncS natFuncS(int line, TypeS resT, String name, NList<ItemS> params, AnnS annS) {
+    return natFuncS(line, funcTS(resT, params.list()), modPath(), name, params, annS);
   }
 
-  public NatFuncS natFuncS(FuncTS type, String name, NList<ItemS> params, AnnS ann) {
-    return natFuncS(1, type, name, params, ann);
+  public NatFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params) {
+    return natFuncS(funcT, name, params, annS());
   }
 
-  public NatFuncS natFuncS(int line, FuncTS type, String name, NList<ItemS> params, AnnS ann) {
-    return natFuncS(line, type, modPath(), name, params, ann);
+  public NatFuncS natFuncS(FuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
+    return natFuncS(1, funcT, name, params, ann);
   }
 
-  public NatFuncS natFuncS(int line, FuncTS type, ModPath modPath, String name, NList<ItemS> params,
+  public NatFuncS natFuncS(int line, FuncTS funcT, String name, NList<ItemS> params, AnnS ann) {
+    return natFuncS(line, funcT, modPath(), name, params, ann);
+  }
+
+  public NatFuncS natFuncS(int line, FuncTS funcT, ModPath modPath, String name, NList<ItemS> params,
       AnnS ann) {
-    return new NatFuncS(type, modPath, name, params, ann, loc(line));
+    return new NatFuncS(funcT, modPath, name, params, ann, loc(line));
   }
 
   public DefFuncS defFuncS(TypeS type, String name, ExprS body, NList<ItemS> params) {

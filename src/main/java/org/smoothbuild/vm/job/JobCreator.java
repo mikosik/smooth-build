@@ -29,6 +29,7 @@ import org.smoothbuild.bytecode.obj.val.BoolB;
 import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
@@ -92,6 +93,7 @@ public class JobCreator {
         .put(ParamRefB.class, new Handler<>(this::paramRefLazy, this::paramRefLazy))
         .put(SelectB.class, new Handler<>(this::selectLazy, this::selectEager))
         .put(StringB.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(TupleB.class, new Handler<>(this::valueLazy, this::valueEager))
         .build();
   }
 
@@ -99,8 +101,15 @@ public class JobCreator {
     return eagerJobFor(new IndexedScope<>(list()), varBounds(), obj);
   }
 
+  private ImmutableList<Job> eagerJobsWithConversionFor(ImmutableList<TypeB> types,
+      CombineB combine, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+    var jobs = eagerJobsFor(combine.items(), scope, vars);
+    var actualTs = map(types, t -> typing.mapVarsLower(t, vars));
+    return zip(actualTs, jobs, this::convertIfNeeded);
+  }
+
   private ImmutableList<Job> eagerJobsFor(
-      IndexedScope<Job> scope, VarBounds<TypeB> vars, ImmutableList<? extends ObjB> objs) {
+      ImmutableList<? extends ObjB> objs, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     return map(objs, e -> eagerJobFor(scope, vars, e));
   }
 
@@ -120,9 +129,6 @@ public class JobCreator {
   private <T> Handler<T> handlerFor(ObjB obj) {
     @SuppressWarnings("unchecked")
     Handler<T> result = (Handler<T>) handler.get(obj.getClass());
-    if (result == null) {
-      System.out.println("expression.getClass() = " + obj.getClass());
-    }
     return result;
   }
 
@@ -198,10 +204,10 @@ public class JobCreator {
 
   private Job combineEager(
       IndexedScope<Job> scope, VarBounds<TypeB> vars, CombineB combine, Nal nal) {
-    var itemJs = eagerJobsFor(scope, vars, combine.items());
+    var actualEvalT = (TupleTB) typing.mapVarsLower(combine.type(), vars);
+    var convertedItemJs = eagerJobsWithConversionFor(actualEvalT.items(), combine, scope, vars);
     var info = new TaskInfo(COMBINE, nal);
-    var convertedItemJs = zip(combine.type().items(), itemJs, this::convertIfNeeded);
-    var algorithm = new CombineAlgorithm(combine.type());
+    var algorithm = new CombineAlgorithm(actualEvalT);
     return new Task(convertedItemJs, info, algorithm);
   }
 
@@ -221,9 +227,10 @@ public class JobCreator {
   private Job ifEager(IfB if_, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var ifData = if_.data();
     var conditionJ = eagerJobFor(scope, vars, ifData.condition());
-    var thenJ = lazyJobFor(scope, vars, ifData.then());
-    var elseJ = lazyJobFor(scope, vars, ifData.else_());
-    return new IfJob(if_.type(), conditionJ, thenJ, elseJ, nal.loc());
+    var evalT = typing.mapVarsLower(if_.type(), vars);
+    var thenJ = convertIfNeeded(evalT, lazyJobFor(scope, vars, ifData.then()));
+    var elseJ = convertIfNeeded(evalT, lazyJobFor(scope, vars, ifData.else_()));
+    return new IfJob(evalT, conditionJ, thenJ, elseJ, nal.loc());
   }
 
   // Invoke
@@ -242,12 +249,14 @@ public class JobCreator {
   private Task invokeEager(
       InvokeB invoke, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var name = nal.name();
-    var actualType = typing.mapVarsLower(invoke.type(), vars);
     var invokeData = invoke.data();
-    var algorithm = new InvokeAlgorithm(actualType, name, invokeData.method(), methodLoader);
+    var methodT = invokeData.method().type();
+    var actualResT = typing.mapVarsLower(methodT.res(), vars);
+    var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), methodLoader);
     var info = new TaskInfo(INTERNAL, name, nal.loc());
-    var argsJ = eagerJobsFor(scope, vars, invokeData.args().items());
-    return new Task(argsJ, info, algorithm);
+    var convertedArgJs = eagerJobsWithConversionFor(
+        methodT.params(), invokeData.args(), scope, vars);
+    return new Task(convertedArgJs, info, algorithm);
   }
 
   // Map
@@ -267,7 +276,7 @@ public class JobCreator {
     MapB.Data data = mapB.data();
     var arrayJ = eagerJobFor(scope, vars, data.array());
     var funcJ = eagerJobFor(scope, vars, data.func());
-    TypeB actualType = typing.mapVarsLower(mapB.type(), vars);
+    var actualType = typing.mapVarsLower(mapB.type(), vars);
     return new MapJob(actualType, arrayJ, funcJ, nal.loc(), scope, this);
   }
 

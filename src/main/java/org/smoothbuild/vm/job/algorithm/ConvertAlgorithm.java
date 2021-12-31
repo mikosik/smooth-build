@@ -23,8 +23,8 @@ import com.google.common.collect.ImmutableList;
 public class ConvertAlgorithm extends Algorithm {
   private final TypingB typing;
 
-  public ConvertAlgorithm(TypeB typeB, TypingB typing) {
-    super(typeB);
+  public ConvertAlgorithm(TypeB outputT, TypingB typing) {
+    super(outputT);
     this.typing = typing;
   }
 
