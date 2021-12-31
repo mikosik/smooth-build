@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.base.define.MapFuncS.MAP_FUNCTION_NAME;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
+import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
 
 import java.util.function.Consumer;
 
@@ -61,7 +62,7 @@ public class MapJob extends AbstractJob {
   }
 
   private Job getJob(FuncB func) {
-    return new DummyJob(funcJ.type(), func, funcJ);
+    return new ValJob(func, funcJ, INTERNAL);
   }
 
   private Job mapElementJob(TypeB elemT, Job funcJ, ValB elem) {
@@ -70,6 +71,6 @@ public class MapJob extends AbstractJob {
   }
 
   private Job elemJob(ValB elem, Loc loc) {
-    return new DummyJob(elem.type(), elem, new NalImpl("elem-to-map", loc));
+    return new ValJob(elem, new NalImpl("elem-to-map", loc), INTERNAL);
   }
 }
