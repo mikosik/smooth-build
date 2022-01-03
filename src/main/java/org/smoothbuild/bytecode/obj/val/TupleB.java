@@ -59,6 +59,6 @@ public final class TupleB extends ValB {
 
   @Override
   public String objToString() {
-    return "{" + ObjB.seqToString(items()) + '}';
+    return "{" + objsToString(items()) + '}';
   }
 }

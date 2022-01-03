@@ -60,6 +60,6 @@ public final class ArrayB extends ValB {
 
   @Override
   public String objToString() {
-    return "[" + ObjB.seqToString(elemObjs()) + ']';
+    return "[" + objsToString(elemObjs()) + ']';
   }
 }

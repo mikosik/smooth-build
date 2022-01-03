@@ -155,8 +155,8 @@ public abstract class ObjB {
         () -> byteDb.hashedDb().readSeq(hash));
   }
 
-  protected static String seqToString(ImmutableList<? extends ObjB> objects) {
-    return toCommaSeparatedString(objects, ObjB::valToStringSafe);
+  protected static String objsToString(ImmutableList<? extends ObjB> objs) {
+    return toCommaSeparatedString(objs, ObjB::valToStringSafe);
   }
 
   private <T> T castObj(ObjB obj, String path, Class<T> clazz) {
