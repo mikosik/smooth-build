@@ -128,7 +128,7 @@ public class VmTest extends TestingContext {
     }
 
     @Test
-    public void if_else_then_conversion() throws Exception {
+    public void if_else_conversion() throws Exception {
       var if_ = ifB(boolB(false), arrayB(intB(7)), arrayB(nothingTB()));
       assertThat(evaluate(if_))
           .isEqualTo(arrayB(intTB()));
