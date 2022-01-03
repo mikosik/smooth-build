@@ -21,6 +21,7 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.TopEvalS;
+import org.smoothbuild.lang.base.type.impl.VarTS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.testing.TestingContext;
@@ -46,7 +47,8 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void call_polymorphic() {
-      var identity = defFuncS("myFunc", nList(itemS(varS("A"), "p")), paramRefS(varS("A"), "p"));
+      var a = varTS("A");
+      var identity = defFuncS("myFunc", nList(itemS(a, "p")), paramRefS(a, "p"));
       var call = callS(stringTS(), topRefS(identity), stringS("abc"));
       var v = varTB("A");
       assertConversion(identity, call, callB(funcB(list(v), paramRefB(v, 0)), list(stringB("abc"))));

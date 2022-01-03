@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
-import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.Type;
 
@@ -19,13 +19,13 @@ public abstract class TypeB extends CatB {
     super(name, hash, kind, ImmutableSet.of());
   }
 
-  protected TypeB(String name, Hash hash, CatKindB kind, ImmutableSet<VarB> vars) {
+  protected TypeB(String name, Hash hash, CatKindB kind, ImmutableSet<VarTB> vars) {
     super(name, hash, kind, vars);
   }
 
   @Override
-  public ImmutableSet<VarB> vars() {
-    return (ImmutableSet<VarB>) super.vars();
+  public ImmutableSet<VarTB> vars() {
+    return (ImmutableSet<VarTB>) super.vars();
   }
 
   @Override
@@ -33,7 +33,7 @@ public abstract class TypeB extends CatB {
     return "TypeB(`" + name() + "`)";
   }
 
-  public static ImmutableSet<VarB> calculateVars(ImmutableList<TypeB> concat) {
+  public static ImmutableSet<VarTB> calculateVars(ImmutableList<TypeB> concat) {
     return concat.stream()
         .map(TypeB::vars)
         .flatMap(Collection::stream)

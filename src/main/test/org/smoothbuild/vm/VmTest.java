@@ -16,7 +16,7 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
-import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.java.MethodLoader;
@@ -197,7 +197,7 @@ public class VmTest extends TestingContext {
 
     @Test
     public void map_with_polymorphic_func() throws Exception{
-      VarB a = varTB("A");
+      VarTB a = varTB("A");
       var func = funcB(tupleTB(list(a)), list(a), combineB(list(paramRefB(a, 0))));
       var map = mapB(arrayB(intB(1), intB(2)), func);
       assertThat(evaluate(map))

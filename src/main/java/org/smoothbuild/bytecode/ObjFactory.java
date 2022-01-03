@@ -44,7 +44,7 @@ import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -199,7 +199,7 @@ public class ObjFactory {
     return catDb.tuple(itemTs);
   }
 
-  public VarB var(String name) {
+  public VarTB varT(String name) {
     return catDb.var(name);
   }
 

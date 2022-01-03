@@ -19,7 +19,7 @@ import org.smoothbuild.lang.base.type.impl.NothingTS;
 import org.smoothbuild.lang.base.type.impl.StringTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.base.type.impl.VarS;
+import org.smoothbuild.lang.base.type.impl.VarTS;
 
 public class TypeShConv {
   private final ObjFactory objFactory;
@@ -39,7 +39,7 @@ public class TypeShConv {
       case NothingTS n -> objFactory.nothingT();
       case StringTS s -> objFactory.stringT();
       case StructTS st -> convert(st);
-      case VarS v ->  objFactory.var(v.name());
+      case VarTS v ->  objFactory.varT(v.name());
       case FuncTS f -> convert(f);
     };
   }

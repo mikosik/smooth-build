@@ -64,7 +64,7 @@ import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.Hash;
@@ -104,7 +104,7 @@ import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypingS;
-import org.smoothbuild.lang.base.type.impl.VarS;
+import org.smoothbuild.lang.base.type.impl.VarTS;
 import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
@@ -394,7 +394,7 @@ public class TestingContext {
     return tupleTB(list(stringTB()));
   }
 
-  public VarB varTB(String name) {
+  public VarTB varTB(String name) {
     return catDb().var(name);
   }
 
@@ -783,7 +783,7 @@ public class TestingContext {
     return typeFactoryS().struct(name, fields);
   }
 
-  public VarS varS(String name) {
+  public VarTS varTS(String name) {
     return typeFactoryS().var(name);
   }
 
@@ -796,8 +796,8 @@ public class TestingContext {
   }
 
   public VarBounds<TypeS> vbS(
-      VarS var1, Side<TypeS> side1, TypeS bound1,
-      VarS var2, Side<TypeS> side2, TypeS bound2) {
+      VarTS var1, Side<TypeS> side1, TypeS bound1,
+      VarTS var2, Side<TypeS> side2, TypeS bound2) {
     Bounds<TypeS> bounds1 = oneSideBoundS(side1, bound1);
     Bounds<TypeS> bounds2 = oneSideBoundS(side2, bound2);
     if (var1.equals(var2)) {
@@ -810,7 +810,7 @@ public class TestingContext {
     }
   }
 
-  public VarBounds<TypeS> vbS(VarS var, Side<TypeS> side, TypeS bound) {
+  public VarBounds<TypeS> vbS(VarTS var, Side<TypeS> side, TypeS bound) {
     return varBounds(new Bounded<>(var, oneSideBoundS(side, bound)));
   }
 

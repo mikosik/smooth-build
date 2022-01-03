@@ -218,7 +218,7 @@ public class TypeSTest extends TestingContext {
   class _var {
     @Test
     public void illegal_name() {
-      assertCall(() -> varS("a"))
+      assertCall(() -> varTS("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }

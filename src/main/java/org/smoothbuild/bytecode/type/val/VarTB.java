@@ -9,16 +9,16 @@ import org.smoothbuild.lang.base.type.api.Var;
 
 import com.google.common.collect.ImmutableSet;
 
-public class VarB extends TypeB implements Var {
-  private final ImmutableSet<VarB> vars;
+public class VarTB extends TypeB implements Var {
+  private final ImmutableSet<VarTB> vars;
 
-  public VarB(Hash hash, String name) {
+  public VarTB(Hash hash, String name) {
     super(name, hash, CatKindB.VARIABLE);
     this.vars = set(this);
   }
 
   @Override
-  public ImmutableSet<VarB> vars() {
+  public ImmutableSet<VarTB> vars() {
     return vars;
   }
 }

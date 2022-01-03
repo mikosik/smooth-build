@@ -59,7 +59,7 @@ import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarB;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
@@ -182,7 +182,7 @@ public class CatDb implements TypeFactoryB {
     return string;
   }
 
-  public VarB var(String name) {
+  public VarTB var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return wrapHashedDbExceptionAsObjectDbException(() -> newVar(name));
   }
@@ -332,7 +332,7 @@ public class CatDb implements TypeFactoryB {
     return builder.build();
   }
 
-  private VarB readVar(Hash rootHash, List<Hash> rootSeq) {
+  private VarTB readVar(Hash rootHash, List<Hash> rootSeq) {
     assertCatRootSeqSize(rootHash, VARIABLE, rootSeq, 2);
     var name = wrapHashedDbExcAsDecodeCatNodeExc(
         rootHash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSeq.get(1)));
@@ -400,13 +400,13 @@ public class CatDb implements TypeFactoryB {
     return cache(new TupleTB(rootHash, itemTs));
   }
 
-  private VarB newVar(String name) throws HashedDbExc {
+  private VarTB newVar(String name) throws HashedDbExc {
     var rootHash = writeVarRoot(name);
     return newVar(rootHash, name);
   }
 
-  private VarB newVar(Hash rootHash, String name) {
-    return cache(new VarB(rootHash, name));
+  private VarTB newVar(Hash rootHash, String name) {
+    return cache(new VarTB(rootHash, name));
   }
 
   // methods for creating Expr types

@@ -19,7 +19,7 @@ import org.smoothbuild.lang.base.type.impl.StringTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.base.type.impl.VarS;
+import org.smoothbuild.lang.base.type.impl.VarTS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 
@@ -44,11 +44,11 @@ public class TestingTS implements TestingT<TypeS> {
       nList(itemSigS("firstName", STRING), itemSigS("lastName", STRING)));
   public static final StructTS FLAG = struct("Flag", nList(itemSigS("flab", BOOL)));
   public static final StructTS DATA = struct("Data", nList(itemSigS("data", BLOB)));
-  public static final VarS A = var("A");
-  public static final VarS B = var("B");
-  public static final VarS C = var("C");
-  public static final VarS D = var("D");
-  public static final VarS X = var("X");
+  public static final VarTS A = var("A");
+  public static final VarTS B = var("B");
+  public static final VarTS C = var("C");
+  public static final VarTS D = var("D");
+  public static final VarTS X = var("X");
   public static final Side<TypeS> LOWER = FACTORY.lower();
   public static final Side<TypeS> UPPER = FACTORY.upper();
 
@@ -98,7 +98,7 @@ public class TestingTS implements TestingT<TypeS> {
     return FACTORY.func(resT, paramTs);
   }
 
-  public static VarS var(String a) {
+  public static VarTS var(String a) {
     return FACTORY.var(a);
   }
 
@@ -112,12 +112,12 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   public static VarBounds<TypeS> vb(
-      VarS var1, Side<TypeS> side1, TypeS bound1,
-      VarS var2, Side<TypeS> side2, TypeS bound2) {
+      VarTS var1, Side<TypeS> side1, TypeS bound1,
+      VarTS var2, Side<TypeS> side2, TypeS bound2) {
     return CONTEXT.vbS(var1, side1, bound1, var2, side2, bound2);
   }
 
-  public static VarBounds<TypeS> vb(VarS var, Side<TypeS> side, TypeS bound) {
+  public static VarBounds<TypeS> vb(VarTS var, Side<TypeS> side, TypeS bound) {
     return CONTEXT.vbS(var, side, bound);
   }
 

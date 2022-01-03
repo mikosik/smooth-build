@@ -22,7 +22,7 @@ public final class StructTS extends TypeS {
     this.fields = fields;
   }
 
-  private static ImmutableSet<VarS> calculateVars(NList<ItemSigS> fields) {
+  private static ImmutableSet<VarTS> calculateVars(NList<ItemSigS> fields) {
     return fields.stream()
         .map(f -> f.type().vars())
         .flatMap(Collection::stream)

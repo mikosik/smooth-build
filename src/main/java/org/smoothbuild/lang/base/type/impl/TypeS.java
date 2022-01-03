@@ -11,14 +11,14 @@ import com.google.common.collect.ImmutableSet;
  * This class and all its subclasses are immutable.
  */
 public abstract sealed class TypeS extends AbstractT
-    permits ArrayTS, BaseTS, FuncTS, StructTS, VarS {
-  protected TypeS(String name, ImmutableSet<VarS> vars) {
+    permits ArrayTS, BaseTS, FuncTS, StructTS, VarTS {
+  protected TypeS(String name, ImmutableSet<VarTS> vars) {
     super(name, vars);
   }
 
   @Override
-  public ImmutableSet<VarS> vars() {
-    return (ImmutableSet<VarS>) super.vars();
+  public ImmutableSet<VarTS> vars() {
+    return (ImmutableSet<VarTS>) super.vars();
   }
 
   @Override

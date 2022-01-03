@@ -9,16 +9,16 @@ import com.google.common.collect.ImmutableSet;
 /**
  * This class is immutable.
  */
-public final class VarS extends TypeS implements Var {
-  private final ImmutableSet<VarS> vars;
+public final class VarTS extends TypeS implements Var {
+  private final ImmutableSet<VarTS> vars;
 
-  public VarS(String name) {
+  public VarTS(String name) {
     super(name, null);
     this.vars = set(this);
   }
 
   @Override
-  public ImmutableSet<VarS> vars() {
+  public ImmutableSet<VarTS> vars() {
     return vars;
   }
 }

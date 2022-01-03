@@ -122,8 +122,8 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
     throw new UnsupportedOperationException();
   }
 
-  public VarS var(String name) {
+  public VarTS var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return new VarS(name);
+    return new VarTS(name);
   }
 }
