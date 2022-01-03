@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
@@ -318,6 +319,17 @@ public class VmTest extends TestingContext {
     public void with_polymorphic_evalT() throws Exception {
       assertThat(evaluatePolymorphicExpr(p -> orderB(list(p)), intB(7)))
           .isEqualTo(arrayB(intB(7)));
+    }
+  }
+
+  @Nested
+  class _param_ref {
+    @Test
+    public void referencing_param_of_enclosing_func_from_enclosed_func() throws Exception {
+      var inner = funcB(paramRefB(intTB(), 0));
+      var outer = funcB(list(intTB()), callB(inner, list()));
+      assertThat(evaluate(callB(outer, list(intB(7)))))
+          .isEqualTo(intB(7));
     }
   }
 
