@@ -107,7 +107,7 @@ public class EvaluatorTest  extends TestingContext {
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
       when(methodLoader.load(Mockito.any(), Mockito.any()))
-          .thenReturn(EvaluatorTest.class.getMethod("justReturnInt", NativeApi.class));
+          .thenReturn(EvaluatorTest.class.getMethod("returnInt", NativeApi.class));
       assertThat(evaluate(callS, funcS))
           .isEqualTo(intB(173));
     }
@@ -122,7 +122,7 @@ public class EvaluatorTest  extends TestingContext {
           .thenReturn(jarB);
       when(methodLoader.load(Mockito.any(), Mockito.any()))
           .thenReturn(EvaluatorTest.class.getMethod(
-              "justReturnIntParam", NativeApi.class, IntB.class));
+              "returnIntParam", NativeApi.class, IntB.class));
       assertThat(evaluate(callS, funcS))
           .isEqualTo(intB(77));
     }
@@ -137,21 +137,21 @@ public class EvaluatorTest  extends TestingContext {
           .thenReturn(jarB);
       when(methodLoader.load(Mockito.any(), Mockito.any()))
           .thenReturn(EvaluatorTest.class.getMethod(
-              "justReturnArrayParam", NativeApi.class, ArrayB.class));
+              "returnArrayParam", NativeApi.class, ArrayB.class));
       assertThat(evaluate(callS, funcS))
           .isEqualTo(arrayB(intTB()));
     }
   }
 
-  public static IntB justReturnInt(NativeApi nativeApi) {
+  public static IntB returnInt(NativeApi nativeApi) {
     return nativeApi.factory().int_(BigInteger.valueOf(173));
   }
 
-  public static IntB justReturnIntParam(NativeApi nativeApi, IntB param) {
+  public static IntB returnIntParam(NativeApi nativeApi, IntB param) {
     return param;
   }
 
-  public static ArrayB justReturnArrayParam(NativeApi nativeApi, ArrayB param) {
+  public static ArrayB returnArrayParam(NativeApi nativeApi, ArrayB param) {
     return param;
   }
 
