@@ -7,6 +7,7 @@ import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.lang.base.define.Loc.commandLineLoc;
 import static org.smoothbuild.lang.base.define.Loc.internal;
 import static org.smoothbuild.lang.base.define.Loc.loc;
+import static org.smoothbuild.lang.base.define.Loc.unknown;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Nested;
@@ -68,6 +69,13 @@ public class LocTest {
       Loc loc = internal();
       assertThat(loc.toString())
           .isEqualTo("smooth internal");
+    }
+
+    @Test
+    public void unknown_loc() {
+      Loc loc = unknown();
+      assertThat(loc.toString())
+          .isEqualTo("unknown");
     }
   }
 

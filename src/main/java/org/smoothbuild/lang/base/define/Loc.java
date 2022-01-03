@@ -5,21 +5,29 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.io.fs.space.FilePath.filePath;
 import static org.smoothbuild.io.fs.space.Space.INTERNAL;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.io.fs.space.Space.UNKNOWN;
 
 import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.io.fs.space.Space;
 
 /**
  * Location.
  * This class is immutable.
  */
 public record Loc(FilePath file, int line) {
+  private static final Loc INTERNAL_LOC = new Loc(filePath(INTERNAL, null), -1);
+  private static final Loc UNKNOWN_LOC = new Loc(filePath(UNKNOWN, null), -1);
 
   public static Loc commandLineLoc() {
     return new Loc(filePath(PRJ, null), 1);
   }
 
   public static Loc internal() {
-    return new Loc(filePath(INTERNAL, null), -1);
+    return INTERNAL_LOC;
+  }
+
+  public static Loc unknown() {
+    return UNKNOWN_LOC;
   }
 
   public static Loc loc(FilePath filePath, int line) {
@@ -34,8 +42,11 @@ public record Loc(FilePath file, int line) {
 
   @Override
   public String toString() {
-    if (file.space() == INTERNAL) {
+    Space space = file.space();
+    if (space == INTERNAL) {
       return "smooth internal";
+    } else if (space == UNKNOWN) {
+      return "unknown";
     } else if (file.path() == null) {
       return "command line";
     } else {

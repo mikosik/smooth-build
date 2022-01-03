@@ -3,7 +3,8 @@ package org.smoothbuild.io.fs.space;
 public enum Space {
   PRJ("prj"),
   SDK("sdk"),
-  INTERNAL("int");
+  INTERNAL("int"),
+  UNKNOWN("unk");
 
   private final String prefix;
 
