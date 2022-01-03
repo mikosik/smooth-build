@@ -206,7 +206,7 @@ public class JobCreator {
     var convertedItemJs = zip(actualEvalT.items(), jobs, this::convertIfNeeded);
     var info = new TaskInfo(COMBINE, nal);
     var algorithm = new CombineAlgorithm(actualEvalT);
-    return new Task(convertedItemJs, info, algorithm);
+    return new Task(algorithm, convertedItemJs, info);
   }
 
   // If
@@ -256,7 +256,7 @@ public class JobCreator {
     var info = new TaskInfo(INTERNAL, name, nal.loc());
     var actualArgTs = map(methodT.params(), t -> typing.mapVarsLower(t, newVars));
     var convertedArgJs = zip(actualArgTs, argJs, this::convertIfNeeded);
-    var task = new Task(convertedArgJs, info, algorithm);
+    var task = new Task(algorithm, convertedArgJs, info);
     var actualEvalT = typing.mapVarsLower(invoke.type(), vars);
     return convertIfNeeded(actualEvalT, task);
   }
@@ -306,7 +306,7 @@ public class JobCreator {
   public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, TaskInfo info) {
     var convertedElemJs = convertIfNeeded(arrayTB.elem(), elemJs);
     var algorithm = new OrderAlgorithm(arrayTB);
-    return new Task(convertedElemJs, info, algorithm);
+    return new Task(algorithm, convertedElemJs, info);
   }
 
   // ParamRef
@@ -336,7 +336,7 @@ public class JobCreator {
     var algorithmT = ((TupleTB) selectableJ.type()).items().get(data.index().toJ().intValue());
     var algorithm = new SelectAlgorithm(algorithmT);
     var info = new TaskInfo(SELECT, nal);
-    var task = new Task(list(selectableJ, indexJ), info, algorithm);
+    var task = new Task(algorithm, list(selectableJ, indexJ), info);
     return convertIfNeeded(actualEvalT, task);
   }
 
@@ -371,7 +371,7 @@ public class JobCreator {
       return job;
     } else {
       var algorithm = new ConvertAlgorithm(type, typing);
-      return new Task(list(job), new TaskInfo(INTERNAL, job), algorithm);
+      return new Task(algorithm, list(job), new TaskInfo(INTERNAL, job));
     }
   }
 

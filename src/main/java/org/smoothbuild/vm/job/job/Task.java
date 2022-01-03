@@ -12,23 +12,23 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 import com.google.common.collect.ImmutableList;
 
 public class Task extends AbstractJob {
+  private final Algorithm algorithm;
   private final ImmutableList<Job> depJs;
   private final TaskInfo info;
-  private final Algorithm algorithm;
 
-  public Task(ImmutableList<Job> depJs, TaskInfo info, Algorithm algorithm) {
+  public Task(Algorithm algorithm, ImmutableList<Job> depJs, TaskInfo info) {
     super(algorithm.outputT(), info);
+    this.algorithm = algorithm;
     this.depJs = depJs;
     this.info = info;
-    this.algorithm = algorithm;
-  }
-
-  public TaskInfo info() {
-    return info;
   }
 
   public Algorithm algorithm() {
     return algorithm;
+  }
+
+  public TaskInfo info() {
+    return info;
   }
 
   @Override
