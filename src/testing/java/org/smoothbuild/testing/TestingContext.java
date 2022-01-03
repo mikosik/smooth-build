@@ -682,8 +682,7 @@ public class TestingContext {
   }
 
   public InvokeB invokeB(ObjB method, CombineB args) {
-    var resT = inferResT(method, args);
-    return byteDb().invoke(resT, method, args);
+    return invokeB(inferResT(method, args), method, args);
   }
 
   public InvokeB invokeB(TypeB evalT, ObjB method, ImmutableList<ObjB> args) {
