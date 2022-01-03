@@ -246,7 +246,7 @@ public class JobCreator {
     return invokeEager(invoke, nal, scope, vars);
   }
 
-  private Task invokeEager(
+  private Job invokeEager(
       InvokeB invoke, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var name = nal.name();
     var invokeData = invoke.data();
@@ -256,7 +256,9 @@ public class JobCreator {
     var info = new TaskInfo(INTERNAL, name, nal.loc());
     var convertedArgJs = eagerJobsWithConversionFor(
         methodT.params(), invokeData.args(), scope, vars);
-    return new Task(convertedArgJs, info, algorithm);
+    var task = new Task(convertedArgJs, info, algorithm);
+    var actualEvalT = typing.mapVarsLower(invoke.type(), vars);
+    return convertIfNeeded(actualEvalT, task);
   }
 
   // Map

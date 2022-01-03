@@ -169,6 +169,17 @@ public class VmTest extends TestingContext {
       assertThat(evaluate(invoke))
           .isEqualTo(arrayB(intTB()));
     }
+
+    @Test
+    public void invoke_with_res_conversion() throws Exception {
+      var methodT = methodTB(arrayTB(nothingTB()), list());
+      var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
+      var invoke = invokeB(arrayTB(intTB()), method, list());
+      when(methodLoader.load(any(), eq(method)))
+          .thenReturn(VmTest.class.getMethod("justReturnNothingArray", NativeApi.class));
+      assertThat(evaluate(invoke))
+          .isEqualTo(arrayB(intTB()));
+    }
   }
 
   public static IntB justReturnInt(NativeApi nativeApi) {
@@ -182,6 +193,12 @@ public class VmTest extends TestingContext {
   public static ArrayB justReturnArrayParamWithCheck(NativeApi nativeApi, ArrayB param) {
     checkArgument(param.type().name().equals("[Int]"));
     return param;
+  }
+
+  public static ArrayB justReturnNothingArray(NativeApi nativeApi) {
+    var f = nativeApi.factory();
+    var arrayT = f.arrayT(f.nothingT());
+    return f.arrayBuilder(arrayT).build();
   }
 
   @Nested
