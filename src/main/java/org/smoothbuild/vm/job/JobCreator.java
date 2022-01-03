@@ -101,13 +101,6 @@ public class JobCreator {
     return eagerJobFor(new IndexedScope<>(list()), varBounds(), obj);
   }
 
-  private ImmutableList<Job> eagerJobsWithConversionFor(ImmutableList<TypeB> types,
-      CombineB combine, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
-    var jobs = eagerJobsFor(combine.items(), scope, vars);
-    var actualTs = map(types, t -> typing.mapVarsLower(t, vars));
-    return zip(actualTs, jobs, this::convertIfNeeded);
-  }
-
   private ImmutableList<Job> eagerJobsFor(
       ImmutableList<? extends ObjB> objs, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     return map(objs, e -> eagerJobFor(scope, vars, e));
@@ -185,7 +178,11 @@ public class JobCreator {
 
   private VarBounds<TypeB> inferVarsInCall(Job func, ImmutableList<TypeB> argTs) {
     var funcT = (CallableTB) func.type();
-    return typing.inferVarBoundsLower(funcT.params(), argTs);
+    return inferVarsInCallLike(funcT, argTs);
+  }
+
+  private VarBounds<TypeB> inferVarsInCallLike(CallableTB callableT, ImmutableList<TypeB> argTs) {
+    return typing.inferVarBoundsLower(callableT.params(), argTs);
   }
 
   // Combine
@@ -205,7 +202,8 @@ public class JobCreator {
   private Job combineEager(
       IndexedScope<Job> scope, VarBounds<TypeB> vars, CombineB combine, Nal nal) {
     var actualEvalT = (TupleTB) typing.mapVarsLower(combine.type(), vars);
-    var convertedItemJs = eagerJobsWithConversionFor(actualEvalT.items(), combine, scope, vars);
+    var jobs = eagerJobsFor(combine.items(), scope, vars);
+    var convertedItemJs = zip(actualEvalT.items(), jobs, this::convertIfNeeded);
     var info = new TaskInfo(COMBINE, nal);
     var algorithm = new CombineAlgorithm(actualEvalT);
     return new Task(convertedItemJs, info, algorithm);
@@ -251,11 +249,13 @@ public class JobCreator {
     var name = nal.name();
     var invokeData = invoke.data();
     var methodT = invokeData.method().type();
-    var actualResT = typing.mapVarsLower(methodT.res(), vars);
+    var argJs = eagerJobsFor(invokeData.args().items(), scope, vars);
+    var newVars = inferVarsInCallLike(methodT, map(argJs, Job::type));
+    var actualResT = typing.mapVarsLower(methodT.res(), newVars);
     var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), methodLoader);
     var info = new TaskInfo(INTERNAL, name, nal.loc());
-    var convertedArgJs = eagerJobsWithConversionFor(
-        methodT.params(), invokeData.args(), scope, vars);
+    var actualArgTs = map(methodT.params(), t -> typing.mapVarsLower(t, newVars));
+    var convertedArgJs = zip(actualArgTs, argJs, this::convertIfNeeded);
     var task = new Task(convertedArgJs, info, algorithm);
     var actualEvalT = typing.mapVarsLower(invoke.type(), vars);
     return convertIfNeeded(actualEvalT, task);

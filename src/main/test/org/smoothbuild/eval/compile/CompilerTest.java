@@ -21,7 +21,6 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.TopEvalS;
-import org.smoothbuild.lang.base.type.impl.VarTS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.IntS;
 import org.smoothbuild.testing.TestingContext;
