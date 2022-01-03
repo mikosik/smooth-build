@@ -63,7 +63,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class JobCreator {
-  private static final Nal UNKNOWN_NAL = new NalImpl("?", Loc.internal());
   private final MethodLoader methodLoader;
   private final TypingB typing;
   private final ImmutableMap<ObjB, Nal> nals;
@@ -376,7 +375,12 @@ public class JobCreator {
   }
 
   private Nal nalFor(ObjB obj) {
-    return nals.getOrDefault(obj, UNKNOWN_NAL);
+    Nal nal = nals.get(obj);
+    if (nal == null) {
+      return new NalImpl("@" + obj.hash(), Loc.unknown());
+    } else {
+      return nal;
+    }
   }
 
   public record Handler<E>(

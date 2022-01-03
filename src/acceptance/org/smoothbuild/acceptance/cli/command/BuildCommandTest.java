@@ -116,25 +116,25 @@ public class BuildCommandTest {
           result = myFunc();
           """;
       private static final String DEFINED_CALL_TASK_HEADER = """
-          myFunc                                   build.smooth:2
+          myFunc                                    build.smooth:2
           """;
       private static final String NATIVE_FUNCTION_CALL = """
             result = concat(["a"], ["b"]);
             """;
       private static final String NATIVE_CALL_TASK_HEADER = """
-          concat                                   build.smooth:1
+          concat                                    build.smooth:1
           """;
       private static final String IF_FUNCTION_CALL = """
             result = if(true, "true", "false");
             """;
       private static final String IF_CALL_TASK_HEADER = """
-          if                                       build.smooth:1
+          if                                        build.smooth:1
           """;
       private static final String MAP_FUNCTION_CALL = """
             result = map([false, true], not);
             """;
       private static final String MAP_CALL_TASK_HEADER = """
-          map                                      build.smooth:1
+          map                                       build.smooth:1
           """;
 
       @Test
@@ -212,7 +212,7 @@ public class BuildCommandTest {
             result = aStruct.myField;
             """;
       private static final String SELECT_TASK_HEADER = """
-          .myField                                 build.smooth:5                 exec
+          .myField                                  build.smooth:5                 exec
           """;
 
       @Test
@@ -238,7 +238,7 @@ public class BuildCommandTest {
             result = "myLiteral";
             """;
       private static final String LITERAL_TASK_HEADER = """
-          "myLiteral"                              build.smooth:1
+          "myLiteral"                               build.smooth:1
           """;
 
       @Test
@@ -440,7 +440,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myFunc                                   build.smooth:2
+          myFunc                                    build.smooth:2
           """);
     }
 
@@ -455,7 +455,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          .myField                                 build.smooth:4                 exec
+          .myField                                  build.smooth:4                 exec
           """);
     }
 
@@ -467,7 +467,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          if                                       smooth internal
+          if                                        smooth internal
           """);
     }
 
@@ -479,7 +479,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          []                                       build.smooth:1                 exec
+          []                                        build.smooth:1                 exec
           """);
     }
 
@@ -491,7 +491,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          0x0102                                   build.smooth:1
+          0x0102                                    build.smooth:1
           """);
     }
 
@@ -503,7 +503,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          "abc"                                    build.smooth:1
+          "abc"                                     build.smooth:1
           """);
     }
 
@@ -516,7 +516,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-            "abc"                                    build.smooth:1
+            "abc"                                     build.smooth:1
           """);
     }
   }
