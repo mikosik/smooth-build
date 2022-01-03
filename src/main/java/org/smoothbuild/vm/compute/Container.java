@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.ObjFactory;
+import org.smoothbuild.bytecode.ByteCodeFactory;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -20,19 +20,19 @@ import org.smoothbuild.plugin.NativeApi;
  */
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
-  private final ObjFactory objFactory;
+  private final ByteCodeFactory byteCodeFactory;
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(@ForSpace(PRJ) FileSystem fileSystem, ObjFactory objFactory) {
+  public Container(@ForSpace(PRJ) FileSystem fileSystem, ByteCodeFactory byteCodeFactory) {
     this.fileSystem = fileSystem;
-    this.objFactory = objFactory;
-    this.messageLogger = new MessageLoggerImpl(objFactory);
+    this.byteCodeFactory = byteCodeFactory;
+    this.messageLogger = new MessageLoggerImpl(byteCodeFactory);
   }
 
   @Override
-  public ObjFactory factory() {
-    return objFactory;
+  public ByteCodeFactory factory() {
+    return byteCodeFactory;
   }
 
   public FileSystem fileSystem() {
@@ -46,32 +46,32 @@ public class Container implements NativeApi {
 
   @Override
   public ArrayB messages() {
-    return objFactory.arrayBuilderWithElems(objFactory.messageT())
+    return byteCodeFactory.arrayBuilderWithElems(byteCodeFactory.messageT())
         .addAll(messageLogger.messages)
         .build();
   }
 
   private static class MessageLoggerImpl implements MessageLogger {
     private final List<ValB> messages = new ArrayList<>();
-    private final ObjFactory objFactory;
+    private final ByteCodeFactory byteCodeFactory;
 
-    public MessageLoggerImpl(ObjFactory objFactory) {
-      this.objFactory = objFactory;
+    public MessageLoggerImpl(ByteCodeFactory byteCodeFactory) {
+      this.byteCodeFactory = byteCodeFactory;
     }
 
     @Override
     public void error(String message) {
-      messages.add(objFactory.errorMessage(message));
+      messages.add(byteCodeFactory.errorMessage(message));
     }
 
     @Override
     public void warning(String message) {
-      messages.add(objFactory.warningMessage(message));
+      messages.add(byteCodeFactory.warningMessage(message));
     }
 
     @Override
     public void info(String message) {
-      messages.add(objFactory.infoMessage(message));
+      messages.add(byteCodeFactory.infoMessage(message));
     }
   }
 }

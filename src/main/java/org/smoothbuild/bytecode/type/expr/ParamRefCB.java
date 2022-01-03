@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.expr;
 
 import static org.smoothbuild.bytecode.type.base.CatKindB.PARAM_REF;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.type.base.ExprCatB;
@@ -15,7 +15,7 @@ public class ParamRefCB extends ExprCatB {
   }
 
   @Override
-  public ParamRefB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public ParamRefB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     return (ParamRefB) super.newObj(merkleRoot, byteDb);
   }
 }

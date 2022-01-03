@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.obj.val;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
  * This class is thread-safe.
  */
 public final class FuncB extends ValB {
-  public FuncB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public FuncB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

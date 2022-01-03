@@ -5,8 +5,8 @@ import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.bytecode.obj.ByteDb;
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDb;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypeFactoryB;
 import org.smoothbuild.bytecode.type.TypingB;
@@ -18,14 +18,14 @@ import org.smoothbuild.io.fs.space.ForSpace;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class ByteDbModule extends AbstractModule {
+public class ByteCodeModule extends AbstractModule {
   @Override
   protected void configure() {}
 
   @Provides
   @Singleton
-  public ByteDb provideByteDb(HashedDb hashedDb, CatDb catDb, TypingB typing) {
-    return new ByteDbImpl(hashedDb, catDb, typing);
+  public ObjDb provideByteDb(HashedDb hashedDb, CatDb catDb, TypingB typing) {
+    return new ObjDbImpl(hashedDb, catDb, typing);
   }
 
   @Provides

@@ -10,8 +10,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.ObjFactory;
-import org.smoothbuild.bytecode.obj.ByteDb;
+import org.smoothbuild.bytecode.ByteCodeFactory;
+import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
@@ -33,15 +33,15 @@ import okio.BufferedSource;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final ByteDb byteDb;
-  private final ObjFactory objFactory;
+  private final ObjDb objDb;
+  private final ByteCodeFactory byteCodeFactory;
 
   @Inject
-  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ByteDb byteDb,
-      ObjFactory objFactory) {
+  public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjDb objDb,
+      ByteCodeFactory byteCodeFactory) {
     this.fileSystem = fileSystem;
-    this.byteDb = byteDb;
-    this.objFactory = objFactory;
+    this.objDb = objDb;
+    this.byteCodeFactory = byteCodeFactory;
   }
 
   public synchronized void write(Hash computationHash, Output output)
@@ -69,8 +69,8 @@ public class ComputationCache {
 
   public synchronized Output read(Hash taskHash, TypeB type) throws ComputationCacheExc {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      ObjB messagesObj = byteDb.get(Hash.read(source));
-      ArrayTB messageArrayT = objFactory.arrayT(objFactory.messageT());
+      ObjB messagesObj = objDb.get(Hash.read(source));
+      ArrayTB messageArrayT = byteCodeFactory.arrayT(byteCodeFactory.messageT());
       if (!messagesObj.cat().equals(messageArrayT)) {
         throw ComputationCacheExc.corruptedValueException(taskHash, "Expected " + messageArrayT
             + " as first child of its Merkle root, but got " + messagesObj.cat());
@@ -89,7 +89,7 @@ public class ComputationCache {
         return new Output(null, messages);
       } else {
         Hash resultObjectHash = Hash.read(source);
-        ObjB obj = byteDb.get(resultObjectHash);
+        ObjB obj = objDb.get(resultObjectHash);
         if (!type.equals(obj.cat())) {
           throw ComputationCacheExc.corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its Merkle root, but got " + obj.cat());

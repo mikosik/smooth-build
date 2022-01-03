@@ -55,12 +55,12 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public class ByteDbImpl implements ByteDb {
+public class ObjDbImpl implements ObjDb {
   private final HashedDb hashedDb;
   private final CatDb catDb;
   private final TypingB typing;
 
-  public ByteDbImpl(HashedDb hashedDb, CatDb catDb, TypingB typing) {
+  public ObjDbImpl(HashedDb hashedDb, CatDb catDb, TypingB typing) {
     this.hashedDb = hashedDb;
     this.catDb = catDb;
     this.typing = typing;

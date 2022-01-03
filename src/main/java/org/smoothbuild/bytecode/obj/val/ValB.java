@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.obj.val;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.type.base.TypeB;
@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.type.base.TypeB;
  */
 public sealed abstract class ValB extends ObjB
     permits ArrayB, BlobB, BoolB, FuncB, IntB, MethodB, StringB, TupleB {
-  public ValB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public ValB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

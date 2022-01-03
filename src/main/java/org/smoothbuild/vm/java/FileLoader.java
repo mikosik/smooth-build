@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.bytecode.obj.ByteDb;
+import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
 import org.smoothbuild.db.Hash;
@@ -22,14 +22,14 @@ import org.smoothbuild.io.fs.space.FileResolver;
 @Singleton
 public class FileLoader {
   private final FileResolver fileResolver;
-  private final ByteDb byteDb;
+  private final ObjDb objDb;
   private final ConcurrentHashMap<FilePath, BlobB> fileCache;
   private final ConcurrentHashMap<Hash, FilePath> hashToFilePath;
 
   @Inject
-  public FileLoader(FileResolver fileResolver, ByteDb byteDb) {
+  public FileLoader(FileResolver fileResolver, ObjDb objDb) {
     this.fileResolver = fileResolver;
-    this.byteDb = byteDb;
+    this.objDb = objDb;
     this.fileCache = new ConcurrentHashMap<>();
     this.hashToFilePath = new ConcurrentHashMap<>();
   }
@@ -37,7 +37,7 @@ public class FileLoader {
   public BlobB load(FilePath filePath) throws FileNotFoundException {
     BlobB result = fileCache.get(filePath);
     if (result == null) {
-      BlobBBuilder blobBuilder = byteDb.blobBuilder();
+      BlobBBuilder blobBuilder = objDb.blobBuilder();
       if (!fileResolver.pathState(filePath).equals(FILE)) {
         throw new FileNotFoundException();
       }

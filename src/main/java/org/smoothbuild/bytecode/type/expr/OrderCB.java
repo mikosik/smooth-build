@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.expr;
 
 import static org.smoothbuild.bytecode.type.base.CatKindB.ORDER;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.type.base.ExprCatB;
@@ -23,7 +23,7 @@ public class OrderCB extends ExprCatB {
   }
 
   @Override
-  public OrderB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public OrderB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     return (OrderB) super.newObj(merkleRoot, byteDb);
   }
 }

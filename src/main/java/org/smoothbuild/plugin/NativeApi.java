@@ -1,6 +1,6 @@
 package org.smoothbuild.plugin;
 
-import org.smoothbuild.bytecode.ObjFactory;
+import org.smoothbuild.bytecode.ByteCodeFactory;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 
 /**
@@ -8,7 +8,7 @@ import org.smoothbuild.bytecode.obj.val.ArrayB;
  * from one thread by native funcs.
  */
 public interface NativeApi {
-  public ObjFactory factory();
+  public ByteCodeFactory factory();
 
   public MessageLogger log();
 

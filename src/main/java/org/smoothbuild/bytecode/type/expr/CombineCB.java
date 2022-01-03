@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.expr;
 
 import static org.smoothbuild.bytecode.type.base.CatKindB.COMBINE;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
 import org.smoothbuild.bytecode.type.base.ExprCatB;
@@ -23,7 +23,7 @@ public class CombineCB extends ExprCatB {
   }
 
   @Override
-  public CombineB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public CombineB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     return (CombineB) super.newObj(merkleRoot, byteDb);
   }
 }

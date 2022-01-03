@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.lang.base.type.api.TypeNames.tupleTypeName;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.type.base.CatKindB;
@@ -24,7 +24,7 @@ public class TupleTB extends TypeB implements TupleT {
   }
 
   @Override
-  public TupleB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public TupleB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     validateNotPolymorphic(merkleRoot);
     return (TupleB) super.newObj(merkleRoot, byteDb);
   }

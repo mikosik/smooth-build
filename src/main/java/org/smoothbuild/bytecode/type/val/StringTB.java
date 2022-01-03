@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.type.val;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.type.base.CatKindB;
@@ -17,7 +17,7 @@ public class StringTB extends TypeB {
   }
 
   @Override
-  public StringB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public StringB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     return (StringB) super.newObj(merkleRoot, byteDb);
   }
 }

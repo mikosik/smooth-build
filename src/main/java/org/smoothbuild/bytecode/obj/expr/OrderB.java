@@ -2,7 +2,7 @@ package org.smoothbuild.bytecode.obj.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
  * This class is thread-safe.
  */
 public class OrderB extends ExprB {
-  public OrderB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public OrderB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     super(merkleRoot, byteDb);
     checkArgument(merkleRoot.cat() instanceof OrderCB);
   }

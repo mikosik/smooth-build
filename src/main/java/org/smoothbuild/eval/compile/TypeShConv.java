@@ -4,7 +4,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.ObjFactory;
+import org.smoothbuild.bytecode.ByteCodeFactory;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
@@ -22,37 +22,37 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.VarTS;
 
 public class TypeShConv {
-  private final ObjFactory objFactory;
+  private final ByteCodeFactory byteCodeFactory;
 
   @Inject
-  public TypeShConv(ObjFactory objFactory) {
-    this.objFactory = objFactory;
+  public TypeShConv(ByteCodeFactory byteCodeFactory) {
+    this.byteCodeFactory = byteCodeFactory;
   }
 
   public TypeB convert(TypeS type) {
     return switch (type) {
       case AnyTS any -> throw new RuntimeException("S-Any cannot be converted to H-type.");
       case ArrayTS a -> convert(a);
-      case BlobTS blob -> objFactory.blobT();
-      case BoolTS bool -> objFactory.boolT();
-      case IntTS i -> objFactory.intT();
-      case NothingTS n -> objFactory.nothingT();
-      case StringTS s -> objFactory.stringT();
+      case BlobTS blob -> byteCodeFactory.blobT();
+      case BoolTS bool -> byteCodeFactory.boolT();
+      case IntTS i -> byteCodeFactory.intT();
+      case NothingTS n -> byteCodeFactory.nothingT();
+      case StringTS s -> byteCodeFactory.stringT();
       case StructTS st -> convert(st);
-      case VarTS v ->  objFactory.varT(v.name());
+      case VarTS v ->  byteCodeFactory.varT(v.name());
       case FuncTS f -> convert(f);
     };
   }
 
   public TupleTB convert(StructTS st) {
-    return objFactory.tupleT(map(st.fields(), isig -> convert(isig.type())));
+    return byteCodeFactory.tupleT(map(st.fields(), isig -> convert(isig.type())));
   }
 
   public ArrayTB convert(ArrayTS a) {
-    return objFactory.arrayT(convert(a.elem()));
+    return byteCodeFactory.arrayT(convert(a.elem()));
   }
 
   public FuncTB convert(FuncTS funcTS) {
-    return objFactory.funcT(convert(funcTS.res()), map(funcTS.params(), this::convert));
+    return byteCodeFactory.funcT(convert(funcTS.res()), map(funcTS.params(), this::convert));
   }
 }

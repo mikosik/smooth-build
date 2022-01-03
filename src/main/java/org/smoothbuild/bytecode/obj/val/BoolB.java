@@ -1,13 +1,13 @@
 package org.smoothbuild.bytecode.obj.val;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 
 /**
  * This class is immutable.
  */
 public final class BoolB extends ValB {
-  public BoolB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public BoolB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

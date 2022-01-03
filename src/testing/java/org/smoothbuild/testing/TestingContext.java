@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.smoothbuild.bytecode.ObjFactory;
-import org.smoothbuild.bytecode.obj.ByteDb;
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.ByteCodeFactory;
+import org.smoothbuild.bytecode.obj.ObjDb;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
@@ -139,10 +139,10 @@ import okio.ByteString;
 public class TestingContext {
   private Computer computer;
   private Container container;
-  private ObjFactory objFactory;
+  private ByteCodeFactory byteCodeFactory;
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
-  private ByteDb byteDb;
+  private ObjDb objDb;
   private TypingS typingS;
   private TypingB typingB;
   private CatDb catDb;
@@ -218,11 +218,11 @@ public class TestingContext {
     return new TypeShConv(objFactory());
   }
 
-  public ObjFactory objFactory() {
-    if (objFactory == null) {
-      objFactory = new ObjFactory(byteDb(), catDb(), typingB());
+  public ByteCodeFactory objFactory() {
+    if (byteCodeFactory == null) {
+      byteCodeFactory = new ByteCodeFactory(byteDb(), catDb(), typingB());
     }
-    return objFactory;
+    return byteCodeFactory;
   }
 
   public TypingS typingS() {
@@ -257,11 +257,11 @@ public class TestingContext {
     return catDb;
   }
 
-  public ByteDb byteDb() {
-    if (byteDb == null) {
-      byteDb = new ByteDbImpl(hashedDb(), catDb(), typingB());
+  public ObjDb byteDb() {
+    if (objDb == null) {
+      objDb = new ObjDbImpl(hashedDb(), catDb(), typingB());
     }
-    return byteDb;
+    return objDb;
   }
 
   public ComputationCache computationCache() {
@@ -279,8 +279,8 @@ public class TestingContext {
     return computationCacheFileSystem;
   }
 
-  public ByteDb byteDbOther() {
-    return new ByteDbImpl(hashedDb(), catDbOther(), typingB());
+  public ObjDb byteDbOther() {
+    return new ObjDbImpl(hashedDb(), catDbOther(), typingB());
   }
 
   public CatDb catDbOther() {

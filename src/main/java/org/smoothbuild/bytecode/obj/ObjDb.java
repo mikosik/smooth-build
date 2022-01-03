@@ -30,7 +30,7 @@ import org.smoothbuild.db.Hash;
 
 import com.google.common.collect.ImmutableList;
 
-public interface ByteDb {
+public interface ObjDb {
   public ArrayBBuilder arrayBuilder(ArrayTB type);
 
   public BlobBBuilder blobBuilder();

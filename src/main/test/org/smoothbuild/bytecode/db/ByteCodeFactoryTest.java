@@ -13,7 +13,7 @@ import com.google.common.truth.Truth;
 
 import okio.ByteString;
 
-public class ObjFactoryTest extends TestingContext {
+public class ByteCodeFactoryTest extends TestingContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test

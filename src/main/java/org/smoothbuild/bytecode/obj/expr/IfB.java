@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.obj.expr;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
@@ -16,7 +16,7 @@ public final class IfB extends ExprB {
   private static final int THEN_IDX = 1;
   private static final int ELSE_IDX = 2;
 
-  public IfB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public IfB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

@@ -11,7 +11,7 @@ import java.math.BigInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.bytecode.obj.ByteDb;
+import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.exc.ByteDbExc;
 import org.smoothbuild.bytecode.obj.expr.CallB;
@@ -54,16 +54,16 @@ import com.google.common.collect.ImmutableList;
  * Builders returned by xxxBuilder() methods are not thread-safe.
  */
 @Singleton
-public class ObjFactory {
-  private final ByteDb byteDb;
+public class ByteCodeFactory {
+  private final ObjDb objDb;
   private final CatDb catDb;
   private final TupleTB messageT;
   private final TupleTB fileT;
   private final TypingB typing;
 
   @Inject
-  public ObjFactory(ByteDb byteDb, CatDb catDb, TypingB typing) {
-    this.byteDb = byteDb;
+  public ByteCodeFactory(ObjDb objDb, CatDb catDb, TypingB typing) {
+    this.objDb = objDb;
     this.catDb = catDb;
     this.messageT = createMessageT(catDb);
     this.fileT = createFileT(catDb);
@@ -77,11 +77,11 @@ public class ObjFactory {
   // Objects
 
   public ArrayBBuilder arrayBuilderWithElems(TypeB elemT) {
-    return byteDb.arrayBuilder(catDb.array(elemT));
+    return objDb.arrayBuilder(catDb.array(elemT));
   }
 
   public ArrayBBuilder arrayBuilder(ArrayTB type) {
-    return byteDb.arrayBuilder(type);
+    return objDb.arrayBuilder(type);
   }
 
   public BlobB blob(DataWriter dataWriter) {
@@ -94,67 +94,67 @@ public class ObjFactory {
   }
 
   public BlobBBuilder blobBuilder() {
-    return byteDb.blobBuilder();
+    return objDb.blobBuilder();
   }
 
   public BoolB bool(boolean value) {
-    return byteDb.bool(value);
+    return objDb.bool(value);
   }
 
   public CallB call(TypeB evalT, ObjB func, CombineB args) {
-    return byteDb.call(evalT, func, args);
+    return objDb.call(evalT, func, args);
   }
 
   public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items) {
-    return byteDb.combine(evalT, items);
+    return objDb.combine(evalT, items);
   }
 
   public TupleB file(StringB path, BlobB content) {
-    return byteDb.tuple(fileT(), list(content, path));
+    return objDb.tuple(fileT(), list(content, path));
   }
 
   public IfB if_(ObjB condition, ObjB then, ObjB else_) {
-    return byteDb.if_(condition, then, else_);
+    return objDb.if_(condition, then, else_);
   }
 
   public FuncB func(FuncTB type, ObjB body) {
-    return byteDb.func(type, body);
+    return objDb.func(type, body);
   }
 
   public MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return byteDb.method(type, jar, classBinaryName, isPure);
+    return objDb.method(type, jar, classBinaryName, isPure);
   }
 
   public IntB int_(BigInteger value) {
-    return byteDb.int_(value);
+    return objDb.int_(value);
   }
 
   public MapB map(ObjB array, ObjB func) {
-    return byteDb.map(array, func);
+    return objDb.map(array, func);
   }
 
   public InvokeB invoke(TypeB evalT, ObjB method, CombineB args) {
-    return byteDb.invoke(evalT, method, args);
+    return objDb.invoke(evalT, method, args);
   }
 
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
-    return byteDb.paramRef(evalT, value);
+    return objDb.paramRef(evalT, value);
   }
 
   public SelectB select(TypeB evalT, ObjB tuple, IntB index) {
-    return byteDb.select(evalT, tuple, index);
+    return objDb.select(evalT, tuple, index);
   }
 
   public StringB string(String string) {
-    return byteDb.string(string);
+    return objDb.string(string);
   }
 
   public TupleB tuple(TupleTB type, ImmutableList<ValB> items) {
-    return byteDb.tuple(type, items);
+    return objDb.tuple(type, items);
   }
 
   public OrderB order(ArrayTB arrayTB, ImmutableList<ObjB> elems) {
-    return byteDb.order(arrayTB, elems);
+    return objDb.order(arrayTB, elems);
   }
 
   // Types
@@ -222,9 +222,9 @@ public class ObjFactory {
   }
 
   private TupleB message(String severity, String text) {
-    ValB textObject = byteDb.string(text);
-    ValB severityObject = byteDb.string(severity);
-    return byteDb.tuple(messageT(), list(textObject, severityObject));
+    ValB textObject = objDb.string(text);
+    ValB severityObject = objDb.string(severity);
+    return objDb.tuple(messageT(), list(textObject, severityObject));
   }
 
   private static TupleTB createMessageT(CatDb catDb) {

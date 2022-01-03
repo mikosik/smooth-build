@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.Hash;
@@ -34,7 +34,7 @@ public abstract class CatB extends AbstractT {
   /**
    * Creates new java instance of Obj represented by merkleRoot.
    */
-  public ObjB newObj(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public ObjB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     checkArgument(this.equals(merkleRoot.cat()));
     return kind.newInstanceJ(merkleRoot, byteDb);
   }

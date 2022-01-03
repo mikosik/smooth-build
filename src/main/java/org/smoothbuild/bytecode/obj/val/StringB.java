@@ -2,14 +2,14 @@ package org.smoothbuild.bytecode.obj.val;
 
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 
 /**
  * This class is thread-safe.
  */
 public final class StringB extends ValB {
-  public StringB(MerkleRoot merkleRoot, ByteDbImpl byteDb) {
+  public StringB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     super(merkleRoot, byteDb);
   }
 

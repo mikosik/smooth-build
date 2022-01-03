@@ -5,7 +5,7 @@ import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExceptionAsObject
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.smoothbuild.bytecode.obj.ByteDbImpl;
+import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.db.HashingBufferedSink;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.util.io.DataWriter;
@@ -13,10 +13,10 @@ import org.smoothbuild.util.io.DataWriter;
 import okio.BufferedSink;
 
 public class BlobBBuilder implements Closeable {
-  private final ByteDbImpl byteDb;
+  private final ObjDbImpl byteDb;
   private final HashingBufferedSink sink;
 
-  public BlobBBuilder(ByteDbImpl byteDb, HashingBufferedSink sink) {
+  public BlobBBuilder(ObjDbImpl byteDb, HashingBufferedSink sink) {
     this.byteDb = byteDb;
     this.sink = sink;
   }
