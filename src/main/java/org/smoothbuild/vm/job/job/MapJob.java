@@ -3,7 +3,6 @@ package org.smoothbuild.vm.job.job;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
-import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
 import static org.smoothbuild.vm.job.job.TaskKind.ORDER;
 
 import java.util.function.Consumer;
@@ -13,7 +12,6 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
@@ -63,6 +61,6 @@ public class MapJob extends AbstractJob {
   }
 
   private Job elemJob(ValB elem) {
-    return new ValJob(elem, new NalImpl("elemAt()", arrayJ.loc()), INTERNAL);
+    return new DummyJob(elem, arrayJ.loc());
   }
 }

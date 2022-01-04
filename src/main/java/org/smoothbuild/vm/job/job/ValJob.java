@@ -14,13 +14,9 @@ public class ValJob extends AbstractJob {
   private final TaskInfo taskInfo;
 
   public ValJob(ValB val, Nal nal) {
-    this(val, nal, LITERAL);
-  }
-
-  public ValJob(ValB val, Nal nal, TaskKind taskKind) {
     super(val.type(), nal.loc());
     this.val = val;
-    this.taskInfo = new TaskInfo(taskKind, nal);
+    this.taskInfo = new TaskInfo(LITERAL, nal);
   }
 
   @Override
