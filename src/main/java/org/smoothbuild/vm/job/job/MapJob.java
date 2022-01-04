@@ -1,11 +1,10 @@
 package org.smoothbuild.vm.job.job;
 
-import static org.smoothbuild.lang.base.define.FuncS.PARENTHESES;
-import static org.smoothbuild.lang.base.define.MapFuncS.MAP_FUNCTION_NAME;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
+import static org.smoothbuild.vm.job.job.TaskKind.ORDER;
 
 import java.util.function.Consumer;
 
@@ -22,7 +21,6 @@ import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
 public class MapJob extends AbstractJob {
-  private static final String MAP_TASK_NAME = MAP_FUNCTION_NAME + PARENTHESES;
   private final Job arrayJ;
   private final Job funcJ;
   private final IndexedScope<Job> scope;
@@ -53,7 +51,7 @@ public class MapJob extends AbstractJob {
     var mapElemJs = map(
         array.elems(ValB.class),
         o -> mapElementJob(outputElemT, o));
-    var info = new TaskInfo(INTERNAL, MAP_TASK_NAME, loc());
+    var info = new TaskInfo(ORDER, "[]", loc());
     jobCreator.orderEager(outputArrayT, mapElemJs, info)
         .schedule(worker)
         .addConsumer(result);

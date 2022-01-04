@@ -7,6 +7,7 @@ import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.vm.job.job.TaskKind.CALL;
 import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
 import static org.smoothbuild.vm.job.job.TaskKind.LITERAL;
+import static org.smoothbuild.vm.job.job.TaskKind.ORDER;
 import static org.smoothbuild.vm.job.job.TaskKind.SELECT;
 
 import java.util.Map;
@@ -302,7 +303,7 @@ public class JobCreator {
     var type = order.type();
     var actualEvalT = (ArrayTB) typing.mapVarsLower(type, vars);
     var elemJs = map(order.elems(), e -> eagerJobFor(scope, vars, e));
-    var info = new TaskInfo(LITERAL, nal);
+    var info = new TaskInfo(ORDER, nal);
     return orderEager(actualEvalT, elemJs, info);
   }
 

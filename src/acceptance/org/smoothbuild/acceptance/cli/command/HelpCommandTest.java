@@ -98,9 +98,11 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       smooth SDK module
                    
                                       c, call            - evaluates function call
-                                      s, select          - evaluates field selection
                                       l, literal         - evaluates compile time
                                       literal
+                                      o, order           - evaluates array literal
+                                      (ordered elements)
+                                      s, select          - evaluates field selection
            """);
   }
 
