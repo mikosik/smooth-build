@@ -20,8 +20,8 @@ public record LazyJob(TypeB type, Loc loc, Supplier<Job> supplier) implements Jo
   }
 
   @Override
-  public String name() {
-    return job().name();
+  public Loc loc() {
+    return job().loc();
   }
 
   @Override

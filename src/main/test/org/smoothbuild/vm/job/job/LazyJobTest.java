@@ -28,10 +28,10 @@ public class LazyJobTest {
   }
 
   @Test
-  public void multiple_calls_to_name_causes_only_one_call_to_supplier() {
+  public void multiple_calls_to_loc_causes_only_one_call_to_supplier() {
     LazyJob lazyJob = new LazyJob(null, null, supplier);
-    lazyJob.name();
-    lazyJob.name();
+    lazyJob.loc();
+    lazyJob.loc();
     verify(supplier, times(1)).get();
   }
 

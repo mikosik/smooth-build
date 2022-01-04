@@ -14,7 +14,7 @@ public class VirtualJob extends AbstractJob {
   private final TaskInfo taskInfo;
 
   public VirtualJob(Job job, TaskInfo taskInfo) {
-    super(job.type(), taskInfo);
+    super(job.type(), taskInfo.loc());
     this.job = job;
     this.taskInfo = taskInfo;
   }

@@ -17,7 +17,7 @@ public class Task extends AbstractJob {
   private final TaskInfo info;
 
   public Task(Algorithm algorithm, ImmutableList<Job> depJs, TaskInfo info) {
-    super(algorithm.outputT(), info);
+    super(algorithm.outputT(), info.loc());
     this.algorithm = algorithm;
     this.depJs = depJs;
     this.info = info;

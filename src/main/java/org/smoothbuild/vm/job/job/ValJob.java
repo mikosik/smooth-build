@@ -18,7 +18,7 @@ public class ValJob extends AbstractJob {
   }
 
   public ValJob(ValB val, Nal nal, TaskKind taskKind) {
-    super(val.type(), nal);
+    super(val.type(), nal.loc());
     this.val = val;
     this.taskInfo = new TaskInfo(taskKind, nal);
   }

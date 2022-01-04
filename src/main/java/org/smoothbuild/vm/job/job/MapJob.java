@@ -31,7 +31,7 @@ public class MapJob extends AbstractJob {
 
   public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, IndexedScope<Job> scope,
       JobCreator jobCreator) {
-    super(type, new NalImpl("building:" + MAP_TASK_NAME, loc));
+    super(type, loc);
     this.arrayJ = arrayJ;
     this.funcJ = funcJ;
     this.scope = scope;
@@ -55,14 +55,14 @@ public class MapJob extends AbstractJob {
     var mapElemJs = map(
         array.elems(ValB.class),
         o -> mapElementJob(outputElemT, funcJ, o));
-    var info = new TaskInfo(TaskKind.INTERNAL, MAP_TASK_NAME, loc());
+    var info = new TaskInfo(INTERNAL, MAP_TASK_NAME, loc());
     jobCreator.orderEager(outputArrayT, mapElemJs, info)
         .schedule(worker)
         .addConsumer(result);
   }
 
   private Job getJob(FuncB func) {
-    return new ValJob(func, funcJ, INTERNAL);
+    return new ValJob(func, new NalImpl("mapping", loc()), INTERNAL);
   }
 
   private Job mapElementJob(TypeB elemT, Job funcJ, ValB elem) {

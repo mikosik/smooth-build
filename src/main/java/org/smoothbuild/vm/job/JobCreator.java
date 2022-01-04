@@ -370,7 +370,7 @@ public class JobCreator {
       return job;
     } else {
       var algorithm = new ConvertAlgorithm(type, typing);
-      return new Task(algorithm, list(job), new TaskInfo(INTERNAL, job));
+      return new Task(algorithm, list(job), new TaskInfo(INTERNAL, "-convert-", job.loc()));
     }
   }
 
