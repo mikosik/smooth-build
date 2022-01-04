@@ -10,7 +10,6 @@ import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
 import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
-import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
@@ -44,33 +43,28 @@ public class MapJob extends AbstractJob {
     Promise<ValB> array = arrayJ.schedule(worker);
     Promise<ValB> func = funcJ.schedule(worker);
     runWhenAllAvailable(list(array, func),
-        () -> onDepsCompleted((ArrayB) array.get(), (FuncB) func.get(), worker, result));
+        () -> onDepsCompleted((ArrayB) array.get(), worker, result));
     return result;
   }
 
-  private void onDepsCompleted(ArrayB array, FuncB func, Worker worker, Consumer<ValB> result) {
+  private void onDepsCompleted(ArrayB array, Worker worker, Consumer<ValB> result) {
     var outputArrayT = (ArrayTB) type();
     var outputElemT = outputArrayT.elem();
-    var funcJ = getJob(func);
     var mapElemJs = map(
         array.elems(ValB.class),
-        o -> mapElementJob(outputElemT, funcJ, o));
+        o -> mapElementJob(outputElemT, o));
     var info = new TaskInfo(INTERNAL, MAP_TASK_NAME, loc());
     jobCreator.orderEager(outputArrayT, mapElemJs, info)
         .schedule(worker)
         .addConsumer(result);
   }
 
-  private Job getJob(FuncB func) {
-    return new ValJob(func, new NalImpl("mapping", loc()), INTERNAL);
-  }
-
-  private Job mapElementJob(TypeB elemT, Job funcJ, ValB elem) {
-    var elemJ = elemJob(elem, arrayJ.loc());
+  private Job mapElementJob(TypeB elemT, ValB elem) {
+    var elemJ = elemJob(elem);
     return jobCreator.callEagerJob(elemT, funcJ, list(elemJ), funcJ.loc(), scope);
   }
 
-  private Job elemJob(ValB elem, Loc loc) {
-    return new ValJob(elem, new NalImpl("elem-to-map", loc), INTERNAL);
+  private Job elemJob(ValB elem) {
+    return new ValJob(elem, new NalImpl("elemAt", arrayJ.loc()), INTERNAL);
   }
 }
