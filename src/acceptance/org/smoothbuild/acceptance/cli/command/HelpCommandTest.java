@@ -66,7 +66,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                     Filter is a boolean expression made up of matchers
                                       (listed below), boolean operators '&', '|',
                                       grouping brackets '(', ')'.
-                                    Default value is 'info|(user&(call|select))'
+                                    Default value is 'info|(user&call)'
                    
                                     For each matched tasks its name and properties are
                                       printed together with logs that match filter
@@ -80,8 +80,8 @@ public class HelpCommandTest extends AcceptanceTestCase {
                    
                                     Available task matchers:
                                       a, all             - all tasks
-                                      d, default         - shortcut for 'info|(user&
-                                      (call|select))'
+                                      d, default         - shortcut for 'info|
+                                      (user&call)'
                                       n, none            - no tasks
                    
                                       f, fatal           - contains a log with fatal

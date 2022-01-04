@@ -31,7 +31,7 @@ public class TaskMatchers {
   static final TaskMatcher ORDER = kindMatcher(TaskKind.ORDER);
   static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
 
-  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(CALL, SELECT)));
+  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, CALL));
 
   private static final ImmutableMap<String, TaskMatcher> MATCHERS_MAP =
       ImmutableMap.<String, TaskMatcher>builder()

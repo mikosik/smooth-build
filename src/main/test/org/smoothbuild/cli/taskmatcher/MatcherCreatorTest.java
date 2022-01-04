@@ -94,8 +94,8 @@ public class MatcherCreatorTest {
     return Stream.of(
         arguments("all", ALL),
         arguments("a", ALL),
-        arguments("default", or(and(PRJ, or(CALL, SELECT)), AT_LEAST_INFO)),
-        arguments("d", or(and(PRJ, or(CALL, SELECT)), AT_LEAST_INFO)),
+        arguments("default", or(and(PRJ, CALL), AT_LEAST_INFO)),
+        arguments("d", or(and(PRJ, CALL), AT_LEAST_INFO)),
         arguments("none", NONE),
         arguments("n", NONE),
 
