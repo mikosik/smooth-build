@@ -362,7 +362,7 @@ public class JobCreator {
   public Job callFuncEagerJob(FuncB func, ImmutableList<Job> args, Loc loc,
       IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var job = eagerJobFor(new IndexedScope<>(scope, args), vars, func.body());
-    var name = nalFor(func).name();
+    var name = nalFor(func).name() + "()";
     return new VirtualJob(job, new TaskInfo(CALL, name, loc));
   }
 

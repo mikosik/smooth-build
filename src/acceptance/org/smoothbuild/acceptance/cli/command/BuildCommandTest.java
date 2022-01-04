@@ -116,25 +116,25 @@ public class BuildCommandTest {
           result = myFunc();
           """;
       private static final String DEFINED_CALL_TASK_HEADER = """
-          myFunc                                    build.smooth:2
+          myFunc()                                  build.smooth:2
           """;
       private static final String NATIVE_FUNCTION_CALL = """
             result = concat(["a"], ["b"]);
             """;
       private static final String NATIVE_CALL_TASK_HEADER = """
-          concat                                    build.smooth:1
+          concat()                                  build.smooth:1
           """;
       private static final String IF_FUNCTION_CALL = """
             result = if(true, "true", "false");
             """;
       private static final String IF_CALL_TASK_HEADER = """
-          if                                        build.smooth:1
+          if()                                      build.smooth:1
           """;
       private static final String MAP_FUNCTION_CALL = """
             result = map([false, true], not);
             """;
       private static final String MAP_CALL_TASK_HEADER = """
-          map                                       build.smooth:1
+          map()                                     build.smooth:1
           """;
 
       @Test
@@ -440,7 +440,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          myFunc                                    build.smooth:2
+          myFunc()                                  build.smooth:2
           """);
     }
 
