@@ -33,7 +33,7 @@ public class CallJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> schedule(Worker worker) {
+  public Promise<ValB> scheduleImpl(Worker worker) {
     var result = new PromisedValue<ValB>();
     funcJob()
         .schedule(worker)

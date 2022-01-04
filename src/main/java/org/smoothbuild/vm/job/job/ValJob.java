@@ -24,7 +24,7 @@ public class ValJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> schedule(Worker worker) {
+  public Promise<ValB> scheduleImpl(Worker worker) {
     PromisedValue<ValB> result = new PromisedValue<>();
     worker.reporter().print(taskInfo, list());
     result.accept(val);

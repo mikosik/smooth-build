@@ -28,7 +28,7 @@ public class IfJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> schedule(Worker worker) {
+  public Promise<ValB> scheduleImpl(Worker worker) {
     var res = new PromisedValue<ValB>();
     conditionJ.schedule(worker)
         .addConsumer(obj -> onConditionCalculated(obj, worker, res));

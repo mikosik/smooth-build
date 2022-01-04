@@ -39,7 +39,7 @@ public class MapJob extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> schedule(Worker worker) {
+  public Promise<ValB> scheduleImpl(Worker worker) {
     PromisedValue<ValB> result = new PromisedValue<>();
     Promise<ValB> array = arrayJ.schedule(worker);
     Promise<ValB> func = funcJ.schedule(worker);

@@ -32,7 +32,7 @@ public class Task extends AbstractJob {
   }
 
   @Override
-  public Promise<ValB> schedule(Worker worker) {
+  public Promise<ValB> scheduleImpl(Worker worker) {
     PromisedValue<ValB> result = new PromisedValue<>();
     var depResults = map(depJs, d -> d.schedule(worker));
     runWhenAllAvailable(depResults, () -> worker.enqueue(info, algorithm, depResults, result));
