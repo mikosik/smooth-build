@@ -172,7 +172,7 @@ public class JobCreator {
   private Job callEagerJob(TypeB actualEvalT, TypeB actualResT, Job func, ImmutableList<Job> args,
       Loc loc, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var callJ = new CallJob(actualResT, func, args, loc, vars, scope, JobCreator.this);
-    return convertIfNeeded(actualEvalT, callJ);
+    return convertIfNeeded(actualEvalT, loc, callJ);
   }
 
   private VarBounds<TypeB> inferVarsInCall(Job func, ImmutableList<TypeB> argTs) {
@@ -202,7 +202,7 @@ public class JobCreator {
       IndexedScope<Job> scope, VarBounds<TypeB> vars, CombineB combine, Nal nal) {
     var actualEvalT = (TupleTB) typing.mapVarsLower(combine.type(), vars);
     var itemJs = eagerJobsFor(combine.items(), scope, vars);
-    var convertedItemJs = zip(actualEvalT.items(), itemJs, this::convertIfNeeded);
+    var convertedItemJs = convertItems(actualEvalT.items(), nal, itemJs);
     var info = new TaskInfo(COMBINE, nal);
     var algorithm = new CombineAlgorithm(actualEvalT);
     return new Task(algorithm, convertedItemJs, info);
@@ -225,9 +225,14 @@ public class JobCreator {
     var ifData = if_.data();
     var conditionJ = eagerJobFor(scope, vars, ifData.condition());
     var actualEvalT = typing.mapVarsLower(if_.type(), vars);
-    var thenJ = convertIfNeeded(actualEvalT, lazyJobFor(scope, vars, ifData.then()));
-    var elseJ = convertIfNeeded(actualEvalT, lazyJobFor(scope, vars, ifData.else_()));
+    var thenJ = clauseJob(actualEvalT, nal, ifData.then(), scope, vars);
+    var elseJ = clauseJob(actualEvalT, nal, ifData.else_(), scope, vars);
     return new IfJob(actualEvalT, conditionJ, thenJ, elseJ, nal.loc());
+  }
+
+  private Job clauseJob(TypeB actualEvalT, Nal nal, ObjB clause, IndexedScope<Job> scope,
+      VarBounds<TypeB> vars) {
+    return convertIfNeeded(actualEvalT, nal.loc(), lazyJobFor(scope, vars, clause));
   }
 
   // Invoke
@@ -254,10 +259,10 @@ public class JobCreator {
     var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), methodLoader);
     var info = new TaskInfo(INTERNAL, name, nal.loc());
     var actualArgTs = map(methodT.params(), t -> typing.mapVarsLower(t, newVars));
-    var convertedArgJs = zip(actualArgTs, argJs, this::convertIfNeeded);
+    var convertedArgJs = convertItems(actualArgTs, nal, argJs);
     var task = new Task(algorithm, convertedArgJs, info);
     var actualEvalT = typing.mapVarsLower(invoke.type(), vars);
-    return convertIfNeeded(actualEvalT, task);
+    return convertIfNeeded(actualEvalT, nal.loc(), task);
   }
 
   // Map
@@ -303,7 +308,7 @@ public class JobCreator {
   }
 
   public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, TaskInfo info) {
-    var convertedElemJs = convertIfNeeded(arrayTB.elem(), elemJs);
+    var convertedElemJs = convertIfNeeded(arrayTB.elem(), info.loc(), elemJs);
     var algorithm = new OrderAlgorithm(arrayTB);
     return new Task(algorithm, convertedElemJs, info);
   }
@@ -336,7 +341,7 @@ public class JobCreator {
     var algorithm = new SelectAlgorithm(algorithmT);
     var info = new TaskInfo(SELECT, nal);
     var task = new Task(algorithm, list(selectableJ, indexJ), info);
-    return convertIfNeeded(actualEvalT, task);
+    return convertIfNeeded(actualEvalT, nal.loc(), task);
   }
 
   // Value
@@ -361,16 +366,21 @@ public class JobCreator {
     return new VirtualJob(job, new TaskInfo(CALL, name, loc));
   }
 
-  private ImmutableList<Job> convertIfNeeded(TypeB type, ImmutableList<Job> elemJs) {
-    return map(elemJs, j -> convertIfNeeded(type, j));
+  private ImmutableList<Job> convertItems(
+      ImmutableList<TypeB> items, Nal nal, ImmutableList<Job> itemJs) {
+    return zip(items, itemJs, (t, j) -> convertIfNeeded(t, nal.loc(), j));
   }
 
-  private Job convertIfNeeded(TypeB type, Job job) {
+  private ImmutableList<Job> convertIfNeeded(TypeB type, Loc loc, ImmutableList<Job> elemJs) {
+    return map(elemJs, j -> convertIfNeeded(type, loc, j));
+  }
+
+  private Job convertIfNeeded(TypeB type, Loc loc, Job job) {
     if (job.type().equals(type)) {
       return job;
     } else {
       var algorithm = new ConvertAlgorithm(type, typing);
-      return new Task(algorithm, list(job), new TaskInfo(INTERNAL, "-convert-", job.loc()));
+      return new Task(algorithm, list(job), new TaskInfo(INTERNAL, "-convert-", loc));
     }
   }
 
