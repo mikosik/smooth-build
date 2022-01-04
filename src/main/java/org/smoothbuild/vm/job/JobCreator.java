@@ -5,7 +5,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.vm.job.job.TaskKind.CALL;
-import static org.smoothbuild.vm.job.job.TaskKind.COMBINE;
 import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
 import static org.smoothbuild.vm.job.job.TaskKind.LITERAL;
 import static org.smoothbuild.vm.job.job.TaskKind.SELECT;
@@ -203,7 +202,7 @@ public class JobCreator {
     var actualEvalT = (TupleTB) typing.mapVarsLower(combine.type(), vars);
     var itemJs = eagerJobsFor(combine.items(), scope, vars);
     var convertedItemJs = convertItems(actualEvalT.items(), nal, itemJs);
-    var info = new TaskInfo(COMBINE, nal);
+    var info = new TaskInfo(INTERNAL, nal);
     var algorithm = new CombineAlgorithm(actualEvalT);
     return new Task(algorithm, convertedItemJs, info);
   }

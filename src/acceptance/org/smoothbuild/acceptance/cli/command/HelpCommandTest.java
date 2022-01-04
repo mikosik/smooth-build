@@ -98,12 +98,9 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       smooth SDK module
                    
                                       c, call            - evaluates function call
-                                      t, ctor            - evaluates struct constructor
                                       s, select          - evaluates field selection
                                       l, literal         - evaluates compile time
                                       literal
-                                      m, map             - evaluates single call to a
-                                      function in evaluation of `map` function call
            """);
   }
 

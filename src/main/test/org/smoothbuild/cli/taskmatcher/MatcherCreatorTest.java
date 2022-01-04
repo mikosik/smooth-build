@@ -10,9 +10,7 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_FATAL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_INFO;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.AT_LEAST_WARNING;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CALL;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.COMBINE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.LITERAL;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.MAP;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PRJ;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
@@ -116,14 +114,10 @@ public class MatcherCreatorTest {
 
         arguments("call", CALL),
         arguments("c", CALL),
-        arguments("ctor", COMBINE),
-        arguments("t", COMBINE),
         arguments("select", SELECT),
         arguments("s", SELECT),
         arguments("literal", LITERAL),
         arguments("l", LITERAL),
-        arguments("map", MAP),
-        arguments("m", MAP),
 
         arguments("   project", PRJ),
         arguments("project   ", PRJ),

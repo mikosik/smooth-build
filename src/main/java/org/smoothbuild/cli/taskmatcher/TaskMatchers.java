@@ -27,10 +27,8 @@ public class TaskMatchers {
   static final TaskMatcher SDK = spaceMatcher(Space.SDK);
 
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
-  static final TaskMatcher COMBINE = kindMatcher(TaskKind.COMBINE);
   static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
   static final TaskMatcher LITERAL = kindMatcher(TaskKind.LITERAL);
-  static final TaskMatcher MAP = kindMatcher(TaskKind.MAP);
 
   static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, or(CALL, SELECT)));
 
@@ -59,14 +57,10 @@ public class TaskMatchers {
 
           .put("call", CALL)
           .put("c", CALL)
-          .put("ctor", COMBINE)
-          .put("t", COMBINE)
           .put("select", SELECT)
           .put("s", SELECT)
           .put("literal", LITERAL)
           .put("l", LITERAL)
-          .put("map", MAP)
-          .put("m", MAP)
 
           .build();
 
