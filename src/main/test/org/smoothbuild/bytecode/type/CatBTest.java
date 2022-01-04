@@ -49,12 +49,11 @@ import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
-import com.google.common.truth.Truth;
 
 public class CatBTest extends TestingContext {
   @Test
   public void verify_all_base_cats_are_tested() {
-    Truth.assertThat(CatKindB.values())
+    assertThat(CatKindB.values())
         .hasLength(19);
   }
 
@@ -286,7 +285,7 @@ public class CatBTest extends TestingContext {
     @MethodSource("result_cases")
     public void result(Function<CatDb, MethodTB> factoryCall,
         Function<CatDb, List<Type>> expected) {
-      Truth.assertThat(execute(factoryCall).res())
+      assertThat(execute(factoryCall).res())
           .isEqualTo(execute(expected));
     }
 
@@ -450,14 +449,14 @@ public class CatBTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
-      Truth.assertThat(TestingCatsB.CAT_DB.call(type).evalT())
+      assertThat(TestingCatsB.CAT_DB.call(type).evalT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("combine_cases")
     public void combine(CombineCB type, TupleTB expected) {
-      Truth.assertThat(type.evalT())
+      assertThat(type.evalT())
           .isEqualTo(expected);
     }
 
@@ -473,28 +472,28 @@ public class CatBTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("types")
     public void invoke(TypeB type) {
-      Truth.assertThat(TestingCatsB.CAT_DB.invoke(type).evalT())
+      assertThat(TestingCatsB.CAT_DB.invoke(type).evalT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void order(TypeB type) {
-      Truth.assertThat(TestingCatsB.CAT_DB.order(type).evalT())
+      assertThat(TestingCatsB.CAT_DB.order(type).evalT())
           .isEqualTo(TestingCatsB.CAT_DB.array(type));
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void ref(TypeB type) {
-      Truth.assertThat(TestingCatsB.CAT_DB.ref(type).evalT())
+      assertThat(TestingCatsB.CAT_DB.ref(type).evalT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeB type) {
-      Truth.assertThat(TestingCatsB.CAT_DB.select(type).evalT())
+      assertThat(TestingCatsB.CAT_DB.select(type).evalT())
           .isEqualTo(type);
     }
 

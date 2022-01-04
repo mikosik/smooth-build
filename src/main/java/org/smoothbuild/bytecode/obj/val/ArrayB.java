@@ -2,7 +2,6 @@ package org.smoothbuild.bytecode.obj.val;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
-import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
@@ -35,7 +34,7 @@ public final class ArrayB extends ValB {
   }
 
   private ImmutableList<ValB> elemObjs() {
-    return readSeqObjs(ObjB.DATA_PATH, dataHash(), ValB.class);
+    return readSeqObjs(DATA_PATH, dataHash(), ValB.class);
   }
 
   private <T extends ValB> void assertIsIterableAs(Class<T> clazz) {
@@ -50,7 +49,7 @@ public final class ArrayB extends ValB {
     for (int i = 0; i < elems.size(); i++) {
       var elemT = elems.get(i).cat();
       if (!expectedElemT.equals(elemT)) {
-        throw new DecodeObjWrongNodeCatExc(hash(), this.cat(), ObjB.DATA_PATH, i, expectedElemT, elemT);
+        throw new DecodeObjWrongNodeCatExc(hash(), this.cat(), DATA_PATH, i, expectedElemT, elemT);
       }
     }
     @SuppressWarnings("unchecked")

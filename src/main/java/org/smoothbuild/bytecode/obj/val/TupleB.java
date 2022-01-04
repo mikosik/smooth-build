@@ -5,7 +5,6 @@ import static java.util.Objects.checkIndex;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
-import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 
@@ -45,13 +44,13 @@ public final class TupleB extends ValB {
 
   private ImmutableList<ValB> instantiateItems() {
     var itemTs = type().items();
-    var objs = readSeqObjs(ObjB.DATA_PATH, dataHash(), itemTs.size(), ValB.class);
+    var objs = readSeqObjs(DATA_PATH, dataHash(), itemTs.size(), ValB.class);
     for (int i = 0; i < itemTs.size(); i++) {
       var val = objs.get(i);
       var expectedT = itemTs.get(i);
       var actualT = val.cat();
       if (!expectedT.equals(actualT)) {
-        throw new DecodeObjWrongNodeCatExc(hash(), cat(), ObjB.DATA_PATH, i, expectedT, actualT);
+        throw new DecodeObjWrongNodeCatExc(hash(), cat(), DATA_PATH, i, expectedT, actualT);
       }
     }
     return objs;
