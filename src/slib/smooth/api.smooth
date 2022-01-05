@@ -17,7 +17,7 @@ Bool and(
 Bool or(
   Bool first,
   Bool second,
-) = if (first, true, second);
+) = if(first, true, second);
 
 @Native("org.smoothbuild.slib.common.EqualFunc")
 Bool equal(
