@@ -4,11 +4,10 @@ import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
-import static org.smoothbuild.vm.job.job.TaskKind.CALL;
-import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
-import static org.smoothbuild.vm.job.job.TaskKind.LITERAL;
-import static org.smoothbuild.vm.job.job.TaskKind.ORDER;
-import static org.smoothbuild.vm.job.job.TaskKind.SELECT;
+import static org.smoothbuild.vm.job.job.JobKind.CALL;
+import static org.smoothbuild.vm.job.job.JobKind.INTERNAL;
+import static org.smoothbuild.vm.job.job.JobKind.ORDER;
+import static org.smoothbuild.vm.job.job.JobKind.SELECT;
 
 import java.util.Map;
 
@@ -52,10 +51,10 @@ import org.smoothbuild.vm.job.algorithm.SelectAlgorithm;
 import org.smoothbuild.vm.job.job.CallJob;
 import org.smoothbuild.vm.job.job.IfJob;
 import org.smoothbuild.vm.job.job.Job;
+import org.smoothbuild.vm.job.job.JobInfo;
 import org.smoothbuild.vm.job.job.LazyJob;
 import org.smoothbuild.vm.job.job.MapJob;
 import org.smoothbuild.vm.job.job.Task;
-import org.smoothbuild.vm.job.job.TaskInfo;
 import org.smoothbuild.vm.job.job.ValJob;
 import org.smoothbuild.vm.job.job.VirtualJob;
 
@@ -203,7 +202,7 @@ public class JobCreator {
     var actualEvalT = (TupleTB) typing.mapVarsLower(combine.type(), vars);
     var itemJs = eagerJobsFor(combine.items(), scope, vars);
     var convertedItemJs = convertItems(actualEvalT.items(), nal, itemJs);
-    var info = new TaskInfo(INTERNAL, nal);
+    var info = new JobInfo(INTERNAL, nal);
     var algorithm = new CombineAlgorithm(actualEvalT);
     return new Task(algorithm, convertedItemJs, info);
   }
@@ -257,7 +256,7 @@ public class JobCreator {
     var newVars = inferVarsInCallLike(methodT, map(argJs, Job::type));
     var actualResT = typing.mapVarsLower(methodT.res(), newVars);
     var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), methodLoader);
-    var info = new TaskInfo(INTERNAL, name, nal.loc());
+    var info = new JobInfo(INTERNAL, name, nal.loc());
     var actualArgTs = map(methodT.params(), t -> typing.mapVarsLower(t, newVars));
     var convertedArgJs = convertItems(actualArgTs, nal, argJs);
     var task = new Task(algorithm, convertedArgJs, info);
@@ -303,11 +302,11 @@ public class JobCreator {
     var type = order.type();
     var actualEvalT = (ArrayTB) typing.mapVarsLower(type, vars);
     var elemJs = map(order.elems(), e -> eagerJobFor(scope, vars, e));
-    var info = new TaskInfo(ORDER, nal);
+    var info = new JobInfo(ORDER, nal);
     return orderEager(actualEvalT, elemJs, info);
   }
 
-  public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, TaskInfo info) {
+  public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, JobInfo info) {
     var convertedElemJs = convertIfNeeded(arrayTB.elem(), info.loc(), elemJs);
     var algorithm = new OrderAlgorithm(arrayTB);
     return new Task(algorithm, convertedElemJs, info);
@@ -339,7 +338,7 @@ public class JobCreator {
     var actualEvalT = typing.mapVarsLower(select.type(), vars);
     var algorithmT = ((TupleTB) selectableJ.type()).items().get(data.index().toJ().intValue());
     var algorithm = new SelectAlgorithm(algorithmT);
-    var info = new TaskInfo(SELECT, nal);
+    var info = new JobInfo(SELECT, nal);
     var task = new Task(algorithm, list(selectableJ, indexJ), info);
     return convertIfNeeded(actualEvalT, nal.loc(), task);
   }
@@ -363,7 +362,7 @@ public class JobCreator {
       IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var job = eagerJobFor(new IndexedScope<>(scope, args), vars, func.body());
     var name = nalFor(func).name() + "()";
-    return new VirtualJob(job, new TaskInfo(CALL, name, loc));
+    return new VirtualJob(job, new JobInfo(CALL, name, loc));
   }
 
   private ImmutableList<Job> convertItems(
@@ -380,7 +379,7 @@ public class JobCreator {
       return job;
     } else {
       var algorithm = new ConvertAlgorithm(type, typing);
-      return new Task(algorithm, list(job), new TaskInfo(INTERNAL, "-convert-", loc));
+      return new Task(algorithm, list(job), new JobInfo(INTERNAL, "-convert-", loc));
     }
   }
 

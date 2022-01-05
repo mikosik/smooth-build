@@ -9,7 +9,7 @@ import static org.smoothbuild.eval.artifact.MessageStruct.text;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
-import static org.smoothbuild.vm.job.job.TaskInfo.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.vm.job.job.JobInfo.NAME_LENGTH_LIMIT;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.vm.compute.Computed;
 import org.smoothbuild.vm.compute.ResSource;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.job.JobInfo;
 
 /**
  * This class is thread-safe.
@@ -34,44 +34,44 @@ public class ExecutionReporter {
     this.reporter = reporter;
   }
 
-  public void report(TaskInfo taskInfo, Computed computed) {
+  public void report(JobInfo jobInfo, Computed computed) {
     ResSource resSource = computed.resSource();
     if (computed.hasOutput()) {
-      print(taskInfo, resSource, computed.output().messages());
+      print(jobInfo, resSource, computed.output().messages());
     } else {
       Log error = error(
           "Execution failed with:\n" + getStackTraceAsString(computed.exception()));
-      print(taskInfo, list(error), resSource);
+      print(jobInfo, list(error), resSource);
     }
   }
 
-  public void reportComputerException(TaskInfo taskInfo, Throwable throwable) {
+  public void reportComputerException(JobInfo jobInfo, Throwable throwable) {
     Log fatal = fatal(
         "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
-    ExecutionReporter.this.print(taskInfo, list(fatal), EXECUTION.toString());
+    ExecutionReporter.this.print(jobInfo, list(fatal), EXECUTION.toString());
   }
 
-  private void print(TaskInfo taskInfo, ResSource resSource, ArrayB messages) {
+  private void print(JobInfo jobInfo, ResSource resSource, ArrayB messages) {
     var logs = map(messages.elems(TupleB.class), m -> new Log(level(m), text(m)));
-    print(taskInfo, logs, resSource);
+    print(jobInfo, logs, resSource);
   }
 
-  public void print(TaskInfo taskInfo, List<Log> logs) {
-    print(taskInfo, logs, "");
+  public void print(JobInfo jobInfo, List<Log> logs) {
+    print(jobInfo, logs, "");
   }
 
-  public void print(TaskInfo taskInfo, List<Log> logs, ResSource resSource) {
-    print(taskInfo, logs, resSource.toString());
+  public void print(JobInfo jobInfo, List<Log> logs, ResSource resSource) {
+    print(jobInfo, logs, resSource.toString());
   }
 
-  private void print(TaskInfo taskInfo, List<Log> logs, String resultSource) {
-    reporter.report(taskInfo, header(taskInfo, resultSource), logs);
+  private void print(JobInfo jobInfo, List<Log> logs, String resultSource) {
+    reporter.report(jobInfo, header(jobInfo, resultSource), logs);
   }
 
   // Visible for testing
-  static String header(TaskInfo taskInfo, String resultSource) {
-    String nameString = taskInfo.name();
-    String locString = taskInfo.loc().toString();
+  static String header(JobInfo jobInfo, String resultSource) {
+    String nameString = jobInfo.name();
+    String locString = jobInfo.loc().toString();
 
     String nameColumn = padEnd(nameString, NAME_LENGTH_LIMIT + 1, ' ');
     String locColumn = resultSource.isEmpty()

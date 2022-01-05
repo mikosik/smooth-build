@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
-import static org.smoothbuild.vm.job.job.TaskInfo.NAME_LENGTH_LIMIT;
+import static org.smoothbuild.vm.job.job.JobInfo.NAME_LENGTH_LIMIT;
 
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.impl.StringTS;

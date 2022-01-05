@@ -3,7 +3,7 @@ package org.smoothbuild.vm.job.job;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
-import static org.smoothbuild.vm.job.job.TaskKind.ORDER;
+import static org.smoothbuild.vm.job.job.JobKind.ORDER;
 
 import java.util.function.Consumer;
 
@@ -49,7 +49,7 @@ public class MapJob extends AbstractJob {
     var mapElemJs = map(
         array.elems(ValB.class),
         o -> mapElementJob(outputElemT, o));
-    var info = new TaskInfo(ORDER, "[]", loc());
+    var info = new JobInfo(ORDER, "[]", loc());
     jobCreator.orderEager(outputArrayT, mapElemJs, info)
         .schedule(worker)
         .addConsumer(result);

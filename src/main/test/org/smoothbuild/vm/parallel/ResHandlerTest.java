@@ -5,7 +5,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.vm.compute.ResSource.DISK;
-import static org.smoothbuild.vm.job.job.TaskKind.CALL;
+import static org.smoothbuild.vm.job.job.JobKind.CALL;
 
 import java.util.function.Consumer;
 
@@ -18,7 +18,7 @@ import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.Computed;
 import org.smoothbuild.vm.job.algorithm.Output;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.job.JobInfo;
 
 public class ResHandlerTest extends TestingContext {
   private ExecutionReporter reporter;
@@ -94,7 +94,7 @@ public class ResHandlerTest extends TestingContext {
     return new Output(val, arrayB(stringTB()));
   }
 
-  private TaskInfo taskInfo() {
-    return new TaskInfo(CALL, "name", TestingLoc.loc());
+  private JobInfo taskInfo() {
+    return new JobInfo(CALL, "name", TestingLoc.loc());
   }
 }

@@ -2,7 +2,7 @@ package org.smoothbuild.vm.job.job;
 
 import static org.smoothbuild.lang.base.define.FuncS.PARENTHESES;
 import static org.smoothbuild.lang.base.define.IfFuncS.IF_FUNCTION_NAME;
-import static org.smoothbuild.vm.job.job.TaskKind.INTERNAL;
+import static org.smoothbuild.vm.job.job.JobKind.INTERNAL;
 
 import java.util.function.Consumer;
 
@@ -38,7 +38,7 @@ public class IfJob extends AbstractJob {
   private void onConditionCalculated(ValB condition, Worker worker, Consumer<ValB> res) {
     var conditionJ = ((BoolB) condition).toJ();
     var job = conditionJ ? thenJ : elseJ;
-    new VirtualJob(job, new TaskInfo(INTERNAL, IF_TASK_NAME, loc()))
+    new VirtualJob(job, new JobInfo(INTERNAL, IF_TASK_NAME, loc()))
         .schedule(worker)
         .addConsumer(res);
   }

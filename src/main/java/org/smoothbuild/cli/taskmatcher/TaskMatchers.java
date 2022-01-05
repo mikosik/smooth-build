@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.io.fs.space.Space;
-import org.smoothbuild.vm.job.job.TaskKind;
+import org.smoothbuild.vm.job.job.JobKind;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -26,10 +26,10 @@ public class TaskMatchers {
   static final TaskMatcher PRJ = spaceMatcher(Space.PRJ);
   static final TaskMatcher SDK = spaceMatcher(Space.SDK);
 
-  static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
-  static final TaskMatcher LITERAL = kindMatcher(TaskKind.LITERAL);
-  static final TaskMatcher ORDER = kindMatcher(TaskKind.ORDER);
-  static final TaskMatcher SELECT = kindMatcher(TaskKind.SELECT);
+  static final TaskMatcher CALL = kindMatcher(JobKind.CALL);
+  static final TaskMatcher LITERAL = kindMatcher(JobKind.LITERAL);
+  static final TaskMatcher ORDER = kindMatcher(JobKind.ORDER);
+  static final TaskMatcher SELECT = kindMatcher(JobKind.SELECT);
 
   static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, CALL));
 
@@ -89,7 +89,7 @@ public class TaskMatchers {
     return (task, logs) -> Objects.equals(task.loc().file().space(), user);
   }
 
-  private static TaskMatcher kindMatcher(TaskKind buildingCall) {
+  private static TaskMatcher kindMatcher(JobKind buildingCall) {
     return (task, logs) -> Objects.equals(task.kind(), buildingCall);
   }
 }

@@ -16,7 +16,7 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.vm.job.job.TaskKind.CALL;
+import static org.smoothbuild.vm.job.job.JobKind.CALL;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.TestingLoc;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.job.JobInfo;
 
 public class ReporterTest extends TestingContext {
   private static final String HEADER = "TASK NAME";
@@ -245,7 +245,7 @@ public class ReporterTest extends TestingContext {
     return list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG);
   }
 
-  private static TaskInfo taskInfo() {
-    return new TaskInfo(CALL, "name", TestingLoc.loc());
+  private static JobInfo taskInfo() {
+    return new JobInfo(CALL, "name", TestingLoc.loc());
   }
 }
