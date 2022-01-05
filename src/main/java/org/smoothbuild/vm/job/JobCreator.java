@@ -62,6 +62,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class JobCreator {
+  private static final String PARENTHESES = "()";
+  private static final String PARENTHESES_INVOKE = "()~";
   private final MethodLoader methodLoader;
   private final TypingB typing;
   private final ImmutableMap<ObjB, Nal> nals;
@@ -256,7 +258,7 @@ public class JobCreator {
     var newVars = inferVarsInCallLike(methodT, map(argJs, Job::type));
     var actualResT = typing.mapVarsLower(methodT.res(), newVars);
     var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), methodLoader);
-    var info = new JobInfo(INTERNAL, name, nal.loc());
+    var info = new JobInfo(CALL, name + PARENTHESES_INVOKE, nal.loc());
     var actualArgTs = map(methodT.params(), t -> typing.mapVarsLower(t, newVars));
     var convertedArgJs = convertItems(actualArgTs, nal, argJs);
     var task = new Task(algorithm, convertedArgJs, info);
@@ -361,7 +363,7 @@ public class JobCreator {
   public Job callFuncEagerJob(FuncB func, ImmutableList<Job> args, Loc loc,
       IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var job = eagerJobFor(new IndexedScope<>(scope, args), vars, func.body());
-    var name = nalFor(func).name() + "()";
+    var name = nalFor(func).name() + PARENTHESES;
     return new VirtualJob(job, new JobInfo(CALL, name, loc));
   }
 
