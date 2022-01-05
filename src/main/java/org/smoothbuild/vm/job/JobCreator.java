@@ -5,7 +5,9 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.zip;
 import static org.smoothbuild.vm.job.job.JobKind.CALL;
-import static org.smoothbuild.vm.job.job.JobKind.INTERNAL;
+import static org.smoothbuild.vm.job.job.JobKind.COMBINE;
+import static org.smoothbuild.vm.job.job.JobKind.CONVERT;
+import static org.smoothbuild.vm.job.job.JobKind.INVOKE;
 import static org.smoothbuild.vm.job.job.JobKind.ORDER;
 import static org.smoothbuild.vm.job.job.JobKind.SELECT;
 
@@ -49,13 +51,13 @@ import org.smoothbuild.vm.job.algorithm.InvokeAlgorithm;
 import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.job.algorithm.SelectAlgorithm;
 import org.smoothbuild.vm.job.job.CallJob;
+import org.smoothbuild.vm.job.job.ConstJob;
 import org.smoothbuild.vm.job.job.IfJob;
 import org.smoothbuild.vm.job.job.Job;
 import org.smoothbuild.vm.job.job.JobInfo;
 import org.smoothbuild.vm.job.job.LazyJob;
 import org.smoothbuild.vm.job.job.MapJob;
 import org.smoothbuild.vm.job.job.Task;
-import org.smoothbuild.vm.job.job.ValJob;
 import org.smoothbuild.vm.job.job.VirtualJob;
 
 import com.google.common.collect.ImmutableList;
@@ -79,21 +81,21 @@ public class JobCreator {
 
   private ImmutableMap<Class<?>, Handler<?>> createHandlers() {
     return ImmutableMap.<Class<?>, Handler<?>>builder()
-        .put(ArrayB.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(BoolB.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(BlobB.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(ArrayB.class, new Handler<>(this::constLazy, this::constEager))
+        .put(BoolB.class, new Handler<>(this::constLazy, this::constEager))
+        .put(BlobB.class, new Handler<>(this::constLazy, this::constEager))
         .put(CallB.class, new Handler<>(this::callLazy, this::callEager))
         .put(CombineB.class, new Handler<>(this::combineLazy, this::combineEager))
-        .put(FuncB.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(FuncB.class, new Handler<>(this::constLazy, this::constEager))
         .put(IfB.class, new Handler<>(this::ifLazy, this::ifEager))
-        .put(IntB.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(IntB.class, new Handler<>(this::constLazy, this::constEager))
         .put(MapB.class, new Handler<>(this::mapLazy, this::mapEager))
         .put(InvokeB.class, new Handler<>(this::invokeLazy, this::invokeEager))
         .put(OrderB.class, new Handler<>(this::orderLazy, this::orderEager))
         .put(ParamRefB.class, new Handler<>(this::paramRefLazy, this::paramRefLazy))
         .put(SelectB.class, new Handler<>(this::selectLazy, this::selectEager))
-        .put(StringB.class, new Handler<>(this::valueLazy, this::valueEager))
-        .put(TupleB.class, new Handler<>(this::valueLazy, this::valueEager))
+        .put(StringB.class, new Handler<>(this::constLazy, this::constEager))
+        .put(TupleB.class, new Handler<>(this::constLazy, this::constEager))
         .build();
   }
 
@@ -204,7 +206,7 @@ public class JobCreator {
     var actualEvalT = (TupleTB) typing.mapVarsLower(combine.type(), vars);
     var itemJs = eagerJobsFor(combine.items(), scope, vars);
     var convertedItemJs = convertItems(actualEvalT.items(), nal, itemJs);
-    var info = new JobInfo(INTERNAL, nal);
+    var info = new JobInfo(COMBINE, nal);
     var algorithm = new CombineAlgorithm(actualEvalT);
     return new Task(algorithm, convertedItemJs, info);
   }
@@ -258,7 +260,7 @@ public class JobCreator {
     var newVars = inferVarsInCallLike(methodT, map(argJs, Job::type));
     var actualResT = typing.mapVarsLower(methodT.res(), newVars);
     var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), methodLoader);
-    var info = new JobInfo(CALL, name + PARENTHESES_INVOKE, nal.loc());
+    var info = new JobInfo(INVOKE, name + PARENTHESES_INVOKE, nal.loc());
     var actualArgTs = map(methodT.params(), t -> typing.mapVarsLower(t, newVars));
     var convertedArgJs = convertItems(actualArgTs, nal, argJs);
     var task = new Task(algorithm, convertedArgJs, info);
@@ -347,15 +349,15 @@ public class JobCreator {
 
   // Value
 
-  private Job valueLazy(ValB val, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job constLazy(ValB val, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(val);
     var loc = nal.loc();
-    return new LazyJob(val.cat(), loc, () -> new ValJob(val, nal));
+    return new LazyJob(val.cat(), loc, () -> new ConstJob(val, nal));
   }
 
-  private Job valueEager(ValB val, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job constEager(ValB val, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(val);
-    return new ValJob(val, nal);
+    return new ConstJob(val, nal);
   }
 
   // helper methods
@@ -381,7 +383,8 @@ public class JobCreator {
       return job;
     } else {
       var algorithm = new ConvertAlgorithm(type, typing);
-      return new Task(algorithm, list(job), new JobInfo(INTERNAL, "-convert-", loc));
+      var info = new JobInfo(CONVERT, type.name() + " <- " + job.type().name(), loc);
+      return new Task(algorithm, list(job), info);
     }
   }
 

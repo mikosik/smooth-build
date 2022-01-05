@@ -56,7 +56,10 @@ public class BuildCommand extends ExclusiveCommand {
             sdk                - evaluates expression from smooth SDK module
           
             c, call            - evaluates function call
-            l, literal         - evaluates compile time literal
+            b, combine         - evaluates tuple creation (combined elements)
+            t, const           - evaluates compile time constant
+            r, convert         - evaluates conversion of value to compatible type
+            k, invoke          - evaluates native implementation
             o, order           - evaluates array literal (ordered elements)
             s, select          - evaluates field selection
           """

@@ -2,8 +2,10 @@ package org.smoothbuild.vm.job.job;
 
 public enum JobKind {
   CALL,
-  LITERAL,
+  COMBINE,
+  CONST,
+  CONVERT,
+  INVOKE,
   ORDER,
-  SELECT,
-  INTERNAL
+  SELECT
 }

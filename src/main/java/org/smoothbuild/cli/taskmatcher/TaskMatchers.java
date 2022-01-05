@@ -27,7 +27,10 @@ public class TaskMatchers {
   static final TaskMatcher SDK = spaceMatcher(Space.SDK);
 
   static final TaskMatcher CALL = kindMatcher(JobKind.CALL);
-  static final TaskMatcher LITERAL = kindMatcher(JobKind.LITERAL);
+  static final TaskMatcher COMBINE = kindMatcher(JobKind.COMBINE);
+  static final TaskMatcher CONST = kindMatcher(JobKind.CONST);
+  static final TaskMatcher CONVERT = kindMatcher(JobKind.CONVERT);
+  static final TaskMatcher INVOKE = kindMatcher(JobKind.INVOKE);
   static final TaskMatcher ORDER = kindMatcher(JobKind.ORDER);
   static final TaskMatcher SELECT = kindMatcher(JobKind.SELECT);
 
@@ -58,12 +61,18 @@ public class TaskMatchers {
 
           .put("call", CALL)
           .put("c", CALL)
+          .put("combine", COMBINE)
+          .put("b", COMBINE)
+          .put("const", CONST)
+          .put("t", CONST)
+          .put("convert", CONVERT)
+          .put("r", CONVERT)
+          .put("invoke", INVOKE)
+          .put("k", INVOKE)
           .put("order", ORDER)
           .put("o", ORDER)
           .put("select", SELECT)
           .put("s", SELECT)
-          .put("literal", LITERAL)
-          .put("l", LITERAL)
 
           .build();
 

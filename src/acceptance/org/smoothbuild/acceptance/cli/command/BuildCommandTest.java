@@ -242,15 +242,15 @@ public class BuildCommandTest {
           """;
 
       @Test
-      public void shows_literals_when_enabled() throws IOException {
+      public void shows_consts_when_enabled() throws IOException {
         createUserModule(LITERAL);
-        runSmooth(buildCommand("--show-tasks=literal", "result"));
+        runSmooth(buildCommand("--show-tasks=const", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains(LITERAL_TASK_HEADER);
       }
 
       @Test
-      public void hides_literals_when_not_enabled() throws IOException {
+      public void hides_consts_when_not_enabled() throws IOException {
         createUserModule(LITERAL);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
