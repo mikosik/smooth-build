@@ -8,7 +8,7 @@ import org.smoothbuild.lang.expr.ExprS;
 /**
  * This class is immutable.
  */
-public final class DefValS extends TopEvalS {
+public final class DefValS extends ValS {
   private final ExprS body;
 
   public DefValS(TypeS type, ModPath modPath, String name, ExprS body, Loc loc) {

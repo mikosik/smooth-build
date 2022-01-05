@@ -24,6 +24,7 @@ import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
+import org.smoothbuild.bytecode.obj.val.BoolB;
 import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.MethodB;
@@ -32,6 +33,7 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
+import org.smoothbuild.lang.base.define.BoolValS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
@@ -42,6 +44,7 @@ import org.smoothbuild.lang.base.define.MapFuncS;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.define.NatFuncS;
+import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
@@ -166,8 +169,21 @@ public class Compiler {
 
   // handling value
 
-  private ObjB compileVal(DefValS defValS) {
-    return computeIfAbsent(valCache, defValS.name(), name -> compileExpr(defValS.body()));
+  private ObjB compileVal(ValS valS) {
+    return computeIfAbsent(valCache, valS.name(), name -> compileValImpl(valS));
+  }
+
+  private ObjB compileValImpl(ValS valS) {
+    return switch (valS) {
+      case DefValS defValS -> compileExpr(defValS.body());
+      case BoolValS boolValS -> compileBoolVal(boolValS);
+    };
+  }
+
+  private BoolB compileBoolVal(BoolValS boolValS) {
+    var boolB = byteCodeFactory.bool(boolValS.valJ());
+    nals.put(boolB, boolValS);
+    return boolB;
   }
 
   // handling expressions
@@ -239,7 +255,7 @@ public class Compiler {
   private ObjB compileTopRef(TopRefS topRefS) {
     return switch (defs.topEvals().get(topRefS.name())) {
       case FuncS f -> compileFunc(f);
-      case DefValS v -> compileVal(v);
+      case ValS v -> compileVal(v);
     };
   }
 

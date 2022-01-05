@@ -133,10 +133,6 @@ public class AssignmentTest extends TestingContext {
       TestedTS type1, TestedTS type2, Type joinT) {
     String sourceCode = unlines(
         "[" + joinT.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
-        "Bool true = fake();",
-        "Bool false = fake();",
-        "@Native(\"implementation-is-not-needed-for-this-test\")",
-        "Bool fake();",
         join("\n", union(type1.allDeclarations(), type2.allDeclarations())));
     mod(sourceCode)
         .loadsSuccessfully();

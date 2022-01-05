@@ -9,8 +9,8 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
+import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.expr.TopRefS;
 
 public class FindTopEvals {
@@ -22,7 +22,7 @@ public class FindTopEvals {
     for (String name : names) {
       var topEval = topEvals.get(name);
       if (topEval != null) {
-        if (topEval instanceof DefValS value) {
+        if (topEval instanceof ValS value) {
           topRefs.add(new TopRefS(value.type(), value.name(), commandLineLoc()));
         } else {
           logs.add(error(

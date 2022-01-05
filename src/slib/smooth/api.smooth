@@ -104,13 +104,3 @@ Blob zip(
 );
 
 A id(A a) = a;
-
-Bool false = falseSupplierFunc_();
-Bool true = trueSupplierFunc_();
-
-@Native("org.smoothbuild.slib.bool.FalseSupplierFunc")
-Bool falseSupplierFunc_();
-
-@Native("org.smoothbuild.slib.bool.TrueSupplierFunc")
-Bool trueSupplierFunc_();
-
