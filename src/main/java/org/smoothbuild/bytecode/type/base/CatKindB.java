@@ -12,6 +12,7 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
+import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -40,8 +41,10 @@ public enum CatKindB {
   FUNC(         (byte) 10, FuncB.class,       FuncB::new),
   ORDER(        (byte) 11, OrderB.class,      OrderB::new),
   SELECT(       (byte) 12, SelectB.class,     SelectB::new),
+  PICK(         (byte) 13, PickB.class,       PickB::new),
   PARAM_REF(    (byte) 14, ParamRefB.class,   ParamRefB::new),
   COMBINE(      (byte) 15, CombineB.class,    CombineB::new),
+  // TODO unused 16
   VARIABLE(     (byte) 17, ValB.class,        CatKindB::throwException),
   ANY(          (byte) 18, ValB.class,        CatKindB::throwException),
   INVOKE(       (byte) 19, InvokeB.class,     InvokeB::new),
@@ -68,6 +71,7 @@ public enum CatKindB {
           .put((byte) 10, FUNC)
           .put((byte) 11, ORDER)
           .put((byte) 12, SELECT)
+          .put((byte) 13, PICK)
           .put((byte) 14, PARAM_REF)
           .put((byte) 15, COMBINE)
           .put((byte) 17, VARIABLE)

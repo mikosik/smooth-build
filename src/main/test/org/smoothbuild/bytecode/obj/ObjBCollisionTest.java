@@ -91,6 +91,12 @@ public class ObjBCollisionTest extends TestingContext {
         paramRefB(intTB(), 0),
         paramRefB(intTB(), 1),
         paramRefB(stringTB(), 0),
+        pickB(arrayB(intTB()), intB(0)),
+        pickB(arrayB(intTB()), intB(1)),
+        pickB(arrayB(intB(0)), intB(0)),
+        pickB(arrayB(intB(0)), intB(1)),
+        pickB(arrayB(intB(1)), intB(0)),
+        pickB(arrayB(intB(1)), intB(1)),
         selectB(tupleB(list(intB(1), stringB("a"))), intB(0)),
         selectB(tupleB(list(intB(1), stringB("a"))), intB(1)),
         selectB(tupleB(list(intB(1), stringB("b"))), intB(0))

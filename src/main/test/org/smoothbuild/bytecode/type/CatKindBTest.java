@@ -37,11 +37,11 @@ public class CatKindBTest {
         Arguments.of(6, CatKindB.NOTHING),
         Arguments.of(7, CatKindB.TUPLE),
         Arguments.of(8, CatKindB.STRING),
-
         Arguments.of(9, CatKindB.CALL),
         Arguments.of(10, CatKindB.FUNC),
         Arguments.of(11, CatKindB.ORDER),
         Arguments.of(12, CatKindB.SELECT),
+        Arguments.of(13, CatKindB.PICK),
         Arguments.of(14, CatKindB.PARAM_REF),
         Arguments.of(15, CatKindB.COMBINE),
         Arguments.of(17, CatKindB.VARIABLE),

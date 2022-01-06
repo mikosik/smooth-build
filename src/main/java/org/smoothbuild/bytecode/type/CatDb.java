@@ -22,6 +22,7 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
 import static org.smoothbuild.bytecode.type.base.CatKindB.NOTHING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.ORDER;
 import static org.smoothbuild.bytecode.type.base.CatKindB.PARAM_REF;
+import static org.smoothbuild.bytecode.type.base.CatKindB.PICK;
 import static org.smoothbuild.bytecode.type.base.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
@@ -48,6 +49,7 @@ import org.smoothbuild.bytecode.type.expr.InvokeCB;
 import org.smoothbuild.bytecode.type.expr.MapCB;
 import org.smoothbuild.bytecode.type.expr.OrderCB;
 import org.smoothbuild.bytecode.type.expr.ParamRefCB;
+import org.smoothbuild.bytecode.type.expr.PickCB;
 import org.smoothbuild.bytecode.type.expr.SelectCB;
 import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
@@ -213,8 +215,12 @@ public class CatDb implements TypeFactoryB {
     return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elemT));
   }
 
-  public ParamRefCB ref(TypeB evalT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newRef(evalT));
+  public ParamRefCB paramRef(TypeB evalT) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT));
+  }
+
+  public PickCB pick(TypeB evalT) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newPick(evalT));
   }
 
   public SelectCB select(TypeB evalT) {
@@ -245,7 +251,8 @@ public class CatDb implements TypeFactoryB {
       case MAP -> newMap(hash, readDataAsArrayT(hash, rootSeq, kind));
       case METHOD -> readMethod(hash, rootSeq, kind);
       case ORDER -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
-      case PARAM_REF -> newRef(hash, readDataAsValT(hash, rootSeq, kind));
+      case PICK -> newPick(hash, readDataAsValT(hash, rootSeq, kind));
+      case PARAM_REF -> newParamRef(hash, readDataAsValT(hash, rootSeq, kind));
       case SELECT -> newSelect(hash, readDataAsValT(hash, rootSeq, kind));
       case TUPLE -> readTuple(hash, rootSeq);
       case VARIABLE -> readVar(hash, rootSeq);
@@ -466,12 +473,21 @@ public class CatDb implements TypeFactoryB {
     return cache(new OrderCB(rootHash, evalT));
   }
 
-  private ParamRefCB newRef(TypeB evalT) throws HashedDbExc {
-    var rootHash = writeExprRoot(PARAM_REF, evalT);
-    return newRef(rootHash, evalT);
+  private PickCB newPick(TypeB evalT) throws HashedDbExc {
+    var rootHash = writeExprRoot(PICK, evalT);
+    return newPick(rootHash, evalT);
   }
 
-  private ParamRefCB newRef(Hash rootHash, TypeB evalT) {
+  private PickCB newPick(Hash rootHash, TypeB evalT) {
+    return cache(new PickCB(rootHash, evalT));
+  }
+
+  private ParamRefCB newParamRef(TypeB evalT) throws HashedDbExc {
+    var rootHash = writeExprRoot(PARAM_REF, evalT);
+    return newParamRef(rootHash, evalT);
+  }
+
+  private ParamRefCB newParamRef(Hash rootHash, TypeB evalT) {
     return cache(new ParamRefCB(rootHash, evalT));
   }
 

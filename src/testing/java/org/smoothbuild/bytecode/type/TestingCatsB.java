@@ -6,7 +6,6 @@ import static org.smoothbuild.util.collect.Lists.map;
 
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
-import org.smoothbuild.bytecode.type.expr.CombineCB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.testing.TestingContext;
@@ -33,13 +32,14 @@ public class TestingCatsB {
   public static final TupleTB TUPLE_WITH_STRING = CONTEXT.tupleWithStrTB();
 
   public static final CatB CALL = CONTEXT.callCB();
-  public static final CatB ORDER = CONTEXT.orderCB();
   public static final CatB COMBINE = CONTEXT.combineCB(list(INT, STRING));
   public static final CatB IF = CONTEXT.ifCB();
   public static final CatB INVOKE = CONTEXT.invokeCB();
   public static final CatB MAP = CONTEXT.mapCB();
-  public static final CatB SELECT = CONTEXT.selectCB(INT);
+  public static final CatB ORDER = CONTEXT.orderCB();
   public static final CatB PARAM_REF = CONTEXT.paramRefCB(INT);
+  public static final CatB PICK = CONTEXT.pickCB(INT);
+  public static final CatB SELECT = CONTEXT.selectCB(INT);
 
   public static final ArrayTB ARRAY_ANY = array(ANY);
   public static final ArrayTB ARRAY_BLOB = array(BLOB);
@@ -139,8 +139,10 @@ public class TestingCatsB {
         CAT_DB.map(ARRAY_STR),
         CAT_DB.order(BLOB),
         CAT_DB.order(STRING),
-        CAT_DB.ref(BLOB),
-        CAT_DB.ref(STRING),
+        CAT_DB.paramRef(BLOB),
+        CAT_DB.paramRef(STRING),
+        CAT_DB.pick(BLOB),
+        CAT_DB.pick(STRING),
         CAT_DB.select(BLOB),
         CAT_DB.select(STRING)
     );
@@ -150,13 +152,5 @@ public class TestingCatsB {
 
   private static ArrayTB array(TypeB elemT) {
     return CAT_DB.array(elemT);
-  }
-
-  public static TupleTB tuple(ImmutableList<TypeB> itemTs) {
-    return CAT_DB.tuple(itemTs);
-  }
-
-  public static CombineCB combine(TupleTB tupleType) {
-    return CAT_DB.combine(tupleType);
   }
 }

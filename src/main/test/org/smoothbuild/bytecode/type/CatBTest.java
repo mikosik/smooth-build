@@ -3,6 +3,45 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ANY;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_ANY;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_BLOB;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_BOOL;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_FUNCTION;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_INT;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_NOTHING;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_PERSON_TUPLE;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_STR;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY2_VARIABLE;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_ANY;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_BLOB;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_BOOL;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_FUNCTION;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_INT;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_METHOD;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_NOTHING;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_PERSON_TUPLE;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_STR;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ARRAY_VARIABLE;
+import static org.smoothbuild.bytecode.type.TestingCatsB.BLOB;
+import static org.smoothbuild.bytecode.type.TestingCatsB.BOOL;
+import static org.smoothbuild.bytecode.type.TestingCatsB.CALL;
+import static org.smoothbuild.bytecode.type.TestingCatsB.CAT_DB;
+import static org.smoothbuild.bytecode.type.TestingCatsB.COMBINE;
+import static org.smoothbuild.bytecode.type.TestingCatsB.FUNC;
+import static org.smoothbuild.bytecode.type.TestingCatsB.IF;
+import static org.smoothbuild.bytecode.type.TestingCatsB.INT;
+import static org.smoothbuild.bytecode.type.TestingCatsB.INVOKE;
+import static org.smoothbuild.bytecode.type.TestingCatsB.MAP;
+import static org.smoothbuild.bytecode.type.TestingCatsB.METHOD;
+import static org.smoothbuild.bytecode.type.TestingCatsB.NOTHING;
+import static org.smoothbuild.bytecode.type.TestingCatsB.ORDER;
+import static org.smoothbuild.bytecode.type.TestingCatsB.PARAM_REF;
+import static org.smoothbuild.bytecode.type.TestingCatsB.PERSON;
+import static org.smoothbuild.bytecode.type.TestingCatsB.PICK;
+import static org.smoothbuild.bytecode.type.TestingCatsB.SELECT;
+import static org.smoothbuild.bytecode.type.TestingCatsB.STRING;
+import static org.smoothbuild.bytecode.type.TestingCatsB.VARIABLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Sets.set;
@@ -23,6 +62,7 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
+import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -54,7 +94,7 @@ public class CatBTest extends TestingContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindB.values())
-        .hasLength(19);
+        .hasLength(20);
   }
 
   @ParameterizedTest
@@ -134,7 +174,8 @@ public class CatBTest extends TestingContext {
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.order(f.string()), "Order:[String]"),
-        args(f -> f.ref(f.int_()), "ParamRef:Int"),
+        args(f -> f.paramRef(f.int_()), "ParamRef:Int"),
+        args(f -> f.pick(f.string()), "Pick:String"),
         args(f -> f.select(f.int_()), "Select:Int")
     );
   }
@@ -411,36 +452,37 @@ public class CatBTest extends TestingContext {
 
   public static List<Arguments> typeJ_test_data() {
     return list(
-        arguments(TestingCatsB.ANY, ValB.class),
-        arguments(TestingCatsB.BLOB, BlobB.class),
-        arguments(TestingCatsB.BOOL, BoolB.class),
-        arguments(TestingCatsB.FUNC, FuncB.class),
-        arguments(TestingCatsB.INT, IntB.class),
-        arguments(TestingCatsB.METHOD, MethodB.class),
-        arguments(TestingCatsB.NOTHING, ValB.class),
-        arguments(TestingCatsB.PERSON, TupleB.class),
-        arguments(TestingCatsB.STRING, StringB.class),
-        arguments(TestingCatsB.VARIABLE, ValB.class),
+        arguments(ANY, ValB.class),
+        arguments(BLOB, BlobB.class),
+        arguments(BOOL, BoolB.class),
+        arguments(FUNC, FuncB.class),
+        arguments(INT, IntB.class),
+        arguments(METHOD, MethodB.class),
+        arguments(NOTHING, ValB.class),
+        arguments(PERSON, TupleB.class),
+        arguments(STRING, StringB.class),
+        arguments(VARIABLE, ValB.class),
 
-        arguments(TestingCatsB.ARRAY_ANY, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_BLOB, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_BOOL, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_FUNCTION, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_INT, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_METHOD, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_NOTHING, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_PERSON_TUPLE, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_STR, ArrayB.class),
-        arguments(TestingCatsB.ARRAY_VARIABLE, ArrayB.class),
+        arguments(ARRAY_ANY, ArrayB.class),
+        arguments(ARRAY_BLOB, ArrayB.class),
+        arguments(ARRAY_BOOL, ArrayB.class),
+        arguments(ARRAY_FUNCTION, ArrayB.class),
+        arguments(ARRAY_INT, ArrayB.class),
+        arguments(ARRAY_METHOD, ArrayB.class),
+        arguments(ARRAY_NOTHING, ArrayB.class),
+        arguments(ARRAY_PERSON_TUPLE, ArrayB.class),
+        arguments(ARRAY_STR, ArrayB.class),
+        arguments(ARRAY_VARIABLE, ArrayB.class),
 
-        arguments(TestingCatsB.CALL, CallB.class),
-        arguments(TestingCatsB.ORDER, OrderB.class),
-        arguments(TestingCatsB.COMBINE, CombineB.class),
-        arguments(TestingCatsB.IF, IfB.class),
-        arguments(TestingCatsB.INVOKE, InvokeB.class),
-        arguments(TestingCatsB.MAP, MapB.class),
-        arguments(TestingCatsB.PARAM_REF, ParamRefB.class),
-        arguments(TestingCatsB.SELECT, SelectB.class)
+        arguments(CALL, CallB.class),
+        arguments(ORDER, OrderB.class),
+        arguments(COMBINE, CombineB.class),
+        arguments(IF, IfB.class),
+        arguments(INVOKE, InvokeB.class),
+        arguments(MAP, MapB.class),
+        arguments(PARAM_REF, ParamRefB.class),
+        arguments(PICK, PickB.class),
+        arguments(SELECT, SelectB.class)
     );
   }
 
@@ -449,7 +491,7 @@ public class CatBTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
-      assertThat(TestingCatsB.CAT_DB.call(type).evalT())
+      assertThat(CAT_DB.call(type).evalT())
           .isEqualTo(type);
     }
 
@@ -461,39 +503,45 @@ public class CatBTest extends TestingContext {
     }
 
     public static List<Arguments> combine_cases() {
-      CatDb db = TestingCatsB.CAT_DB;
+      CatDb db = CAT_DB;
       return list(
           arguments(db.combine(db.tuple(list())), db.tuple(list())),
-          arguments(db.combine(db.tuple(list(TestingCatsB.STRING))), db.tuple(list(
-              TestingCatsB.STRING)))
+          arguments(db.combine(db.tuple(list(STRING))), db.tuple(list(STRING)))
       );
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void invoke(TypeB type) {
-      assertThat(TestingCatsB.CAT_DB.invoke(type).evalT())
+      assertThat(CAT_DB.invoke(type).evalT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void order(TypeB type) {
-      assertThat(TestingCatsB.CAT_DB.order(type).evalT())
-          .isEqualTo(TestingCatsB.CAT_DB.array(type));
+      assertThat(CAT_DB.order(type).evalT())
+          .isEqualTo(CAT_DB.array(type));
+    }
+
+    @ParameterizedTest
+    @MethodSource("types")
+    public void pick(TypeB type) {
+      assertThat(CAT_DB.pick(type).evalT())
+          .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void ref(TypeB type) {
-      assertThat(TestingCatsB.CAT_DB.ref(type).evalT())
+      assertThat(CAT_DB.paramRef(type).evalT())
           .isEqualTo(type);
     }
 
     @ParameterizedTest
     @MethodSource("types")
     public void select(TypeB type) {
-      assertThat(TestingCatsB.CAT_DB.select(type).evalT())
+      assertThat(CAT_DB.select(type).evalT())
           .isEqualTo(type);
     }
 
@@ -505,44 +553,45 @@ public class CatBTest extends TestingContext {
   @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(TestingCatsB.ANY, TestingCatsB.ANY);
-    tester.addEqualityGroup(TestingCatsB.BLOB, TestingCatsB.BLOB);
-    tester.addEqualityGroup(TestingCatsB.BOOL, TestingCatsB.BOOL);
-    tester.addEqualityGroup(TestingCatsB.FUNC, TestingCatsB.FUNC);
-    tester.addEqualityGroup(TestingCatsB.INT, TestingCatsB.INT);
-    tester.addEqualityGroup(TestingCatsB.NOTHING, TestingCatsB.NOTHING);
-    tester.addEqualityGroup(TestingCatsB.STRING, TestingCatsB.STRING);
-    tester.addEqualityGroup(TestingCatsB.PERSON, TestingCatsB.PERSON);
-    tester.addEqualityGroup(TestingCatsB.VARIABLE, TestingCatsB.VARIABLE);
+    tester.addEqualityGroup(ANY, ANY);
+    tester.addEqualityGroup(BLOB, BLOB);
+    tester.addEqualityGroup(BOOL, BOOL);
+    tester.addEqualityGroup(FUNC, FUNC);
+    tester.addEqualityGroup(INT, INT);
+    tester.addEqualityGroup(NOTHING, NOTHING);
+    tester.addEqualityGroup(STRING, STRING);
+    tester.addEqualityGroup(PERSON, PERSON);
+    tester.addEqualityGroup(VARIABLE, VARIABLE);
 
-    tester.addEqualityGroup(TestingCatsB.ARRAY_ANY, TestingCatsB.ARRAY_ANY);
-    tester.addEqualityGroup(TestingCatsB.ARRAY_BLOB, TestingCatsB.ARRAY_BLOB);
-    tester.addEqualityGroup(TestingCatsB.ARRAY_BOOL, TestingCatsB.ARRAY_BOOL);
-    tester.addEqualityGroup(TestingCatsB.ARRAY_FUNCTION, TestingCatsB.ARRAY_FUNCTION);
-    tester.addEqualityGroup(TestingCatsB.ARRAY_INT, TestingCatsB.ARRAY_INT);
-    tester.addEqualityGroup(TestingCatsB.ARRAY_NOTHING, TestingCatsB.ARRAY_NOTHING);
-    tester.addEqualityGroup(TestingCatsB.ARRAY_STR, TestingCatsB.ARRAY_STR);
-    tester.addEqualityGroup(TestingCatsB.ARRAY_PERSON_TUPLE, TestingCatsB.ARRAY_PERSON_TUPLE);
-    tester.addEqualityGroup(TestingCatsB.ARRAY_VARIABLE, TestingCatsB.ARRAY_VARIABLE);
+    tester.addEqualityGroup(ARRAY_ANY, ARRAY_ANY);
+    tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
+    tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
+    tester.addEqualityGroup(ARRAY_FUNCTION, ARRAY_FUNCTION);
+    tester.addEqualityGroup(ARRAY_INT, ARRAY_INT);
+    tester.addEqualityGroup(ARRAY_NOTHING, ARRAY_NOTHING);
+    tester.addEqualityGroup(ARRAY_STR, ARRAY_STR);
+    tester.addEqualityGroup(ARRAY_PERSON_TUPLE, ARRAY_PERSON_TUPLE);
+    tester.addEqualityGroup(ARRAY_VARIABLE, ARRAY_VARIABLE);
 
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_VARIABLE, TestingCatsB.ARRAY2_VARIABLE);
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_ANY, TestingCatsB.ARRAY2_ANY);
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_BLOB, TestingCatsB.ARRAY2_BLOB);
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_BOOL, TestingCatsB.ARRAY2_BOOL);
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_FUNCTION, TestingCatsB.ARRAY2_FUNCTION);
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_INT, TestingCatsB.ARRAY2_INT);
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_NOTHING, TestingCatsB.ARRAY2_NOTHING);
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_STR, TestingCatsB.ARRAY2_STR);
-    tester.addEqualityGroup(TestingCatsB.ARRAY2_PERSON_TUPLE, TestingCatsB.ARRAY2_PERSON_TUPLE);
+    tester.addEqualityGroup(ARRAY2_VARIABLE, ARRAY2_VARIABLE);
+    tester.addEqualityGroup(ARRAY2_ANY, ARRAY2_ANY);
+    tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
+    tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
+    tester.addEqualityGroup(ARRAY2_FUNCTION, ARRAY2_FUNCTION);
+    tester.addEqualityGroup(ARRAY2_INT, ARRAY2_INT);
+    tester.addEqualityGroup(ARRAY2_NOTHING, ARRAY2_NOTHING);
+    tester.addEqualityGroup(ARRAY2_STR, ARRAY2_STR);
+    tester.addEqualityGroup(ARRAY2_PERSON_TUPLE, ARRAY2_PERSON_TUPLE);
 
-    tester.addEqualityGroup(TestingCatsB.CALL, TestingCatsB.CALL);
-    tester.addEqualityGroup(TestingCatsB.COMBINE, TestingCatsB.COMBINE);
-    tester.addEqualityGroup(TestingCatsB.IF, TestingCatsB.IF);
-    tester.addEqualityGroup(TestingCatsB.INVOKE, TestingCatsB.INVOKE);
-    tester.addEqualityGroup(TestingCatsB.MAP, TestingCatsB.MAP);
-    tester.addEqualityGroup(TestingCatsB.ORDER, TestingCatsB.ORDER);
-    tester.addEqualityGroup(TestingCatsB.PARAM_REF, TestingCatsB.PARAM_REF);
-    tester.addEqualityGroup(TestingCatsB.SELECT, TestingCatsB.SELECT);
+    tester.addEqualityGroup(CALL, CALL);
+    tester.addEqualityGroup(COMBINE, COMBINE);
+    tester.addEqualityGroup(IF, IF);
+    tester.addEqualityGroup(INVOKE, INVOKE);
+    tester.addEqualityGroup(MAP, MAP);
+    tester.addEqualityGroup(ORDER, ORDER);
+    tester.addEqualityGroup(PARAM_REF, PARAM_REF);
+    tester.addEqualityGroup(PICK, PICK);
+    tester.addEqualityGroup(SELECT, SELECT);
 
     tester.testEquals();
   }

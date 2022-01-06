@@ -41,6 +41,7 @@ public class CatBStableHashTest extends TestingContext {
     assertHash(mapCB(), "65476262ff92ca208a8405de21f4e84e7e817d46");
     assertHash(orderCB(intTB()), "04c4786e96bdac890b5089eee99173cd41cecb33");
     assertHash(paramRefCB(intTB()), "fca4f7c553d3189b050352933410a5b8b6ceadb6");
+    assertHash(pickCB(intTB()), "45080ffcad70b3bbae1d3f3627849ed819c3bc79");
     assertHash(selectCB(intTB()), "bc511a321ba8a722155574c39f0cb5f58ee84a71");
   }
 

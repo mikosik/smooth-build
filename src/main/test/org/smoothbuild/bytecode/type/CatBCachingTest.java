@@ -44,9 +44,15 @@ public class CatBCachingTest extends TestingContext {
         CatBCachingTest::tupleT,
 
         catDb -> catDb.call(catDb.int_()),
+        catDb -> catDb.combine(catDb.tuple(list())),
+        catDb -> catDb.combine(catDb.tuple(list(catDb.int_()))),
+        catDb -> catDb.if_(catDb.int_()),
+        catDb -> catDb.invoke(catDb.int_()),
+        catDb -> catDb.map(catDb.array(catDb.int_())),
         catDb -> catDb.order(catDb.int_()),
+        catDb -> catDb.paramRef(catDb.int_()),
+        catDb -> catDb.pick(catDb.int_()),
         catDb -> catDb.select(catDb.int_()),
-        catDb -> catDb.ref(catDb.int_()),
 
         catDb -> catDb.array(catDb.blob()),
         catDb -> catDb.array(catDb.bool()),

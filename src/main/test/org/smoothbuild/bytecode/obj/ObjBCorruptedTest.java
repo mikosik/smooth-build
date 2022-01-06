@@ -44,6 +44,7 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
+import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -57,8 +58,10 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.BoolTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
+import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashingBufferedSink;
@@ -69,8 +72,6 @@ import org.smoothbuild.db.exc.DecodeStringExc;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
 import org.smoothbuild.testing.TestingContext;
-
-import com.google.common.truth.Truth;
 
 import okio.ByteString;
 
@@ -1002,7 +1003,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(args)
               )
           );
-      Truth.assertThat(((InvokeB) byteDb().get(objHash)).data().method())
+      assertThat(((InvokeB) byteDb().get(objHash)).data().method())
           .isEqualTo(method);
       assertThat(((InvokeB) byteDb().get(objHash)).data().args())
           .isEqualTo(args);
@@ -1669,6 +1670,141 @@ public class ObjBCorruptedTest extends TestingContext {
   }
 
   @Nested
+  class _pick {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme to save smooth
+       * `Pick` in HashedDb.
+       */
+      var array = arrayB(stringB("abc"));
+      var index = intB(0);
+      var objHash =
+          hash(
+              hash(pickCB(stringTB())),
+              hash(
+                  hash(array),
+                  hash(index)
+              )
+          );
+      assertThat(((PickB) byteDb().get(objHash)).data())
+          .isEqualTo(new PickB.Data(array, index));
+    }
+
+    @Test
+    public void root_without_data_hash() throws Exception {
+      obj_root_without_data_hash(pickCB(intTB()));
+    }
+
+    @Test
+    public void root_with_two_data_hashes() throws Exception {
+      var array = arrayB(stringB("abc"));
+      var index = intB(0);
+      Hash dataHash = hash(
+          hash(array),
+          hash(index)
+      );
+      obj_root_with_two_data_hashes(
+          pickCB(),
+          dataHash,
+          (Hash objHash) -> ((PickB) byteDb().get(objHash)).data());
+    }
+
+    @Test
+    public void root_with_data_hash_pointing_nowhere() throws Exception {
+      obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
+          pickCB(),
+          (Hash objHash) -> ((PickB) byteDb().get(objHash)).data());
+    }
+
+    @Test
+    public void data_is_seq_with_one_elem() throws Exception {
+      var array = arrayB(stringB("abc"));
+      var cat = pickCB(stringTB());
+      var objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(array)
+              )
+          );
+      assertCall(() -> ((PickB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 1));
+    }
+
+    @Test
+    public void data_is_seq_with_three_elems() throws Exception {
+      var array = arrayB(stringB("abc"));
+      var index = intB(0);
+      var cat = pickCB(stringTB());
+      var objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(array),
+                  hash(index),
+                  hash(index)
+              )
+          );assertCall(() -> ((PickB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 3));
+    }
+
+    @Test
+    public void array_is_not_array_expr() throws Exception {
+      var array = stringB();
+      var index = intB(0);
+      var cat = pickCB(stringTB());
+      var objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(array),
+                  hash(index)
+              )
+          );
+      assertCall(() -> ((PickB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, cat, "array", ArrayTB.class, StringTB.class));
+    }
+
+    @Test
+    public void index_is_not_int_expr() throws Exception {
+      var array = arrayB(stringB("abc"));
+      var index = boolB();
+      var cat = pickCB(stringTB());
+      var objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(array),
+                  hash(index)
+              )
+          );
+      assertCall(() -> ((PickB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, cat, "index", IntTB.class, BoolTB.class));
+    }
+
+    @Test
+    public void evaluation_type_is_different_than_array_elemT() throws Exception {
+      var array = arrayB(stringB("abc"));
+      var index = intB(7);
+      var cat = pickCB(blobTB());
+      var objHash =
+          hash(
+              hash(cat),
+              hash(
+                  hash(array),
+                  hash(index)
+              )
+          );
+      assertCall(() -> ((PickB) byteDb().get(objHash)).data())
+          .throwsException(new DecodeObjWrongNodeTypeExc(
+              objHash, cat, "array element type", blobTB(), stringTB()));
+    }
+  }
+
+  @Nested
   class _select {
     @Test
     public void learning_test() throws Exception {
@@ -1688,7 +1824,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(index)
               )
           );
-      Truth.assertThat(((SelectB) byteDb().get(objHash)).data())
+      assertThat(((SelectB) byteDb().get(objHash)).data())
           .isEqualTo(new SelectB.Data(selectable, index));
     }
 

@@ -1,6 +1,9 @@
 package org.smoothbuild.bytecode.obj;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
+import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.cannotReadRootException;
+import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -12,7 +15,6 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNoSuchObjExc;
-import org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
 import org.smoothbuild.bytecode.obj.expr.IfB;
@@ -20,6 +22,7 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
+import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
@@ -40,6 +43,7 @@ import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.CallableTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.Hash;
@@ -75,24 +79,24 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public BlobBBuilder blobBuilder() {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> new BlobBBuilder(this, hashedDb.sink()));
+    return wrapHashedDbExceptionAsObjectDbException(() -> new BlobBBuilder(this, hashedDb.sink()));
   }
 
   @Override
   public BoolB bool(boolean value) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
   }
 
   @Override
   public MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(
+    return wrapHashedDbExceptionAsObjectDbException(
         () -> newMethod(type, jar, classBinaryName, isPure));
   }
 
   @Override
   public FuncB func(FuncTB type, ObjB body) {
     checkBodyTypeAssignableToFuncResT(type, body);
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newFunc(type, body));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newFunc(type, body));
   }
 
   private void checkBodyTypeAssignableToFuncResT(FuncTB type, ObjB body) {
@@ -104,12 +108,12 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public IntB int_(BigInteger value) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newInt(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newInt(value));
   }
 
   @Override
   public StringB string(String value) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
   }
 
   @Override
@@ -131,49 +135,54 @@ public class ObjDbImpl implements ObjDb {
         }
     );
 
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleT, items));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleT, items));
   }
 
   // methods for creating ExprH subclasses
 
   @Override
   public CallB call(TypeB evalT, ObjB callable, CombineB args) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newCall(evalT, callable, args));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evalT, callable, args));
   }
 
   @Override
   public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evalT, items));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evalT, items));
   }
 
   @Override
   public IfB if_(ObjB condition, ObjB then, ObjB else_) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
   }
 
   @Override
   public InvokeB invoke(TypeB evalT, ObjB method, CombineB args) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evalT, method, args));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evalT, method, args));
   }
 
   @Override
   public MapB map(ObjB array, ObjB func) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newMap(array, func));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newMap(array, func));
   }
 
   @Override
   public OrderB order(ArrayTB arrayTB, ImmutableList<ObjB> elems) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newOrder(arrayTB, elems));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(arrayTB, elems));
   }
 
   @Override
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT, value));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT, value));
+  }
+
+  @Override
+  public PickB pick(TypeB evalT, ObjB pickable, ObjB index) {
+    return wrapHashedDbExceptionAsObjectDbException(() -> newPick(evalT, pickable, index));
   }
 
   @Override
   public SelectB select(TypeB evalT, ObjB selectable, IntB index) {
-    return Helpers.wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evalT, selectable, index));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evalT, selectable, index));
   }
 
   // generic getter
@@ -182,7 +191,7 @@ public class ObjDbImpl implements ObjDb {
   public ObjB get(Hash rootHash) {
     List<Hash> hashes = decodeRootSeq(rootHash);
     if (hashes.size() != 2) {
-      throw DecodeObjRootExc.wrongSizeOfRootSeqException(rootHash, hashes.size());
+      throw wrongSizeOfRootSeqException(rootHash, hashes.size());
     }
     CatB cat = getCatOrChainException(rootHash, hashes.get(0));
     Hash dataHash = hashes.get(1);
@@ -203,7 +212,7 @@ public class ObjDbImpl implements ObjDb {
     } catch (NoSuchDataExc e) {
       throw new DecodeObjNoSuchObjExc(rootHash, e);
     } catch (HashedDbExc e) {
-      throw DecodeObjRootExc.cannotReadRootException(rootHash, e);
+      throw cannotReadRootException(rootHash, e);
     }
   }
 
@@ -398,6 +407,32 @@ public class ObjDbImpl implements ObjDb {
         "Function %s cannot accept as argument %s.".formatted(funcT.q(), elemT.q()));
   }
 
+  private PickB newPick(TypeB evalT, ObjB pickable, ObjB index) throws HashedDbExc {
+    if (!(index.type() instanceof IntTB)) {
+      throw new IllegalArgumentException("Index type is " + index.type().q()
+          + " but must be `Int`.");
+    }
+    var elemT = elemT(pickable);
+    if (!typing.isAssignable(evalT, elemT)) {
+      throw new IllegalArgumentException("Array elem type " + elemT.q()
+          + " cannot be assigned to evalT " + evalT.q() + ".");
+    }
+    var data = writePickData(pickable, index);
+    var cat = catDb.pick(evalT);
+    var root = newRoot(cat, data);
+    return cat.newObj(root, this);
+  }
+
+  private TypeB elemT(ObjB pickable) {
+    var evalT = pickable.type();
+    if (evalT instanceof ArrayTB arrayT) {
+      return arrayT.elem();
+    } else {
+      throw new IllegalArgumentException(
+          "pickable.type() should be instance of ArrayTB but is " + evalT.q() + ".");
+    }
+  }
+
   private SelectB newSelect(TypeB evalT, ObjB selectable, IntB index) throws HashedDbExc {
     var inferredEvalT = selectEvalT(selectable, index);
     if (!typing.isAssignable(evalT, inferredEvalT)) {
@@ -425,7 +460,7 @@ public class ObjDbImpl implements ObjDb {
 
   private ParamRefB newParamRef(TypeB evalT, BigInteger index) throws HashedDbExc {
     var data = writeParamRefData(index);
-    var type = catDb.ref(evalT);
+    var type = catDb.paramRef(evalT);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
@@ -463,6 +498,10 @@ public class ObjDbImpl implements ObjDb {
 
   private Hash writeParamRefData(BigInteger value) throws HashedDbExc {
     return hashedDb.writeBigInteger(value);
+  }
+
+  private Hash writePickData(ObjB pickable, ObjB index) throws HashedDbExc {
+    return hashedDb.writeSeq(pickable.hash(), index.hash());
   }
 
   private Hash writeSelectData(ObjB selectable, IntB index) throws HashedDbExc {

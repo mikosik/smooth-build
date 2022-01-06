@@ -30,6 +30,7 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
+import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -52,6 +53,7 @@ import org.smoothbuild.bytecode.type.expr.InvokeCB;
 import org.smoothbuild.bytecode.type.expr.MapCB;
 import org.smoothbuild.bytecode.type.expr.OrderCB;
 import org.smoothbuild.bytecode.type.expr.ParamRefCB;
+import org.smoothbuild.bytecode.type.expr.PickCB;
 import org.smoothbuild.bytecode.type.expr.SelectCB;
 import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
@@ -461,7 +463,15 @@ public class TestingContext {
   }
 
   public ParamRefCB paramRefCB(TypeB evalT) {
-    return catDb().ref(evalT);
+    return catDb().paramRef(evalT);
+  }
+
+  public PickCB pickCB() {
+    return pickCB(intTB());
+  }
+
+  public PickCB pickCB(TypeB evalT) {
+    return catDb().pick(evalT);
   }
 
   public SelectCB selectCB() {
@@ -722,9 +732,18 @@ public class TestingContext {
     return byteDb().paramRef(evalT, BigInteger.valueOf(index));
   }
 
+  public PickB pickB(ObjB pickable, ObjB index) {
+    var evalT = ((ArrayTB) pickable.type()).elem();
+    return pickB(evalT, pickable, index);
+  }
+
+  public PickB pickB(TypeB evalT, ObjB pickable, ObjB index) {
+    return byteDb().pick(evalT, pickable, index);
+  }
+
   public SelectB selectB(ObjB tuple, IntB index) {
     var evalT = ((TupleTB) tuple.type()).items().get(index.toJ().intValue());
-    return byteDb().select(evalT, tuple, index);
+    return selectB(evalT, tuple, index);
   }
 
   public SelectB selectB(TypeB evalT, ObjB tuple, IntB index) {

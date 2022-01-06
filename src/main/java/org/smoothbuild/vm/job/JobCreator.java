@@ -9,6 +9,7 @@ import static org.smoothbuild.vm.job.job.JobKind.COMBINE;
 import static org.smoothbuild.vm.job.job.JobKind.CONVERT;
 import static org.smoothbuild.vm.job.job.JobKind.INVOKE;
 import static org.smoothbuild.vm.job.job.JobKind.ORDER;
+import static org.smoothbuild.vm.job.job.JobKind.PICK;
 import static org.smoothbuild.vm.job.job.JobKind.SELECT;
 
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
+import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -49,6 +51,7 @@ import org.smoothbuild.vm.job.algorithm.CombineAlgorithm;
 import org.smoothbuild.vm.job.algorithm.ConvertAlgorithm;
 import org.smoothbuild.vm.job.algorithm.InvokeAlgorithm;
 import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
+import org.smoothbuild.vm.job.algorithm.PickAlgorithm;
 import org.smoothbuild.vm.job.algorithm.SelectAlgorithm;
 import org.smoothbuild.vm.job.job.CallJob;
 import org.smoothbuild.vm.job.job.ConstJob;
@@ -93,6 +96,7 @@ public class JobCreator {
         .put(InvokeB.class, new Handler<>(this::invokeLazy, this::invokeEager))
         .put(OrderB.class, new Handler<>(this::orderLazy, this::orderEager))
         .put(ParamRefB.class, new Handler<>(this::paramRefLazy, this::paramRefLazy))
+        .put(PickB.class, new Handler<>(this::pickLazy, this::pickEager))
         .put(SelectB.class, new Handler<>(this::selectLazy, this::selectEager))
         .put(StringB.class, new Handler<>(this::constLazy, this::constEager))
         .put(TupleB.class, new Handler<>(this::constLazy, this::constEager))
@@ -320,6 +324,30 @@ public class JobCreator {
 
   private Job paramRefLazy(ParamRefB paramRef, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     return scope.get(paramRef.value().intValue());
+  }
+
+  // Pick
+
+  private Job pickLazy(PickB pick, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+    var nal = nalFor(pick);
+    return new LazyJob(pick.type(), nal.loc(),
+        () -> pickEager(pick, nal, scope, vars));
+  }
+
+  private Job pickEager(PickB pick, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+    return pickEager(pick, nalFor(pick), scope, vars);
+  }
+
+  private Job pickEager(PickB pick, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+    var data = pick.data();
+    var pickableJ = eagerJobFor(scope, vars, data.pickable());
+    var indexJ = eagerJobFor(data.index());
+    var actualEvalT = typing.mapVarsLower(pick.type(), vars);
+    var algorithmT = ((ArrayTB) pickableJ.type()).elem();
+    var algorithm = new PickAlgorithm(algorithmT);
+    var info = new JobInfo(PICK, nal);
+    var task = new Task(algorithm, list(pickableJ, indexJ), info);
+    return convertIfNeeded(actualEvalT, nal.loc(), task);
   }
 
   // Select

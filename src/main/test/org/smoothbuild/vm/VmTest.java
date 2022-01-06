@@ -333,6 +333,31 @@ public class VmTest extends TestingContext {
   }
 
   @Nested
+  class _pick {
+    @Test
+    public void pick() throws Exception {
+      var array = arrayB(intB(7), intB(8), intB(9));
+      var select = pickB(array, intB(1));
+      assertThat(evaluate(select))
+          .isEqualTo(intB(8));
+    }
+
+    @Test
+    public void with_conversion() throws Exception {
+      var array = arrayB(arrayB(nothingTB()));
+      var select = pickB(arrayTB(intTB()), array, intB(0));
+      assertThat(evaluate(select))
+          .isEqualTo(arrayB(intTB()));
+    }
+
+    @Test
+    public void with_polymorphic_evalT() throws Exception {
+      assertThat(evaluatePolymorphicExpr(p -> pickB(orderB(list(p)), intB(0)), intB(7)))
+          .isEqualTo(intB(7));
+    }
+  }
+
+  @Nested
   class _select {
     @Test
     public void select() throws Exception {

@@ -10,6 +10,7 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
+import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -60,6 +61,8 @@ public interface ObjDb {
   public OrderB order(ArrayTB evalT, ImmutableList<ObjB> elems);
 
   public ParamRefB paramRef(TypeB evalT, BigInteger value);
+
+  public PickB pick(TypeB evalT, ObjB pickable, ObjB index);
 
   public SelectB select(TypeB evalT, ObjB selectable, IntB index);
 

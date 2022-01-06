@@ -24,8 +24,12 @@ public class AlgorithmHashes {
     return hash(3, typeB.hash());
   }
 
-  public static Hash selectAlgorithmHash() {
+  public static Hash pickAlgorithmHash() {
     return hash(4);
+  }
+
+  public static Hash selectAlgorithmHash() {
+    return hash(5);
   }
 
   private static Hash hash(int id, Hash hash) {
