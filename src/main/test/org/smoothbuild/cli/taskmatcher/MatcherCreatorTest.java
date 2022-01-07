@@ -16,6 +16,7 @@ import static org.smoothbuild.cli.taskmatcher.TaskMatchers.CONVERT;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.INVOKE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ORDER;
+import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PICK;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.PRJ;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SDK;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.SELECT;
@@ -125,9 +126,11 @@ public class MatcherCreatorTest {
         arguments("convert", CONVERT),
         arguments("r", CONVERT),
         arguments("invoke", INVOKE),
-        arguments("k", INVOKE),
+        arguments("v", INVOKE),
         arguments("order", ORDER),
         arguments("o", ORDER),
+        arguments("pick", PICK),
+        arguments("k", PICK),
         arguments("select", SELECT),
         arguments("s", SELECT),
 

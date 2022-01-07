@@ -32,6 +32,7 @@ public class TaskMatchers {
   static final TaskMatcher CONVERT = kindMatcher(JobKind.CONVERT);
   static final TaskMatcher INVOKE = kindMatcher(JobKind.INVOKE);
   static final TaskMatcher ORDER = kindMatcher(JobKind.ORDER);
+  static final TaskMatcher PICK = kindMatcher(JobKind.PICK);
   static final TaskMatcher SELECT = kindMatcher(JobKind.SELECT);
 
   static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(PRJ, CALL));
@@ -68,9 +69,11 @@ public class TaskMatchers {
           .put("convert", CONVERT)
           .put("r", CONVERT)
           .put("invoke", INVOKE)
-          .put("k", INVOKE)
+          .put("v", INVOKE)
           .put("order", ORDER)
           .put("o", ORDER)
+          .put("pick", PICK)
+          .put("k", PICK)
           .put("select", SELECT)
           .put("s", SELECT)
 

@@ -104,10 +104,12 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       constant
                                       r, convert         - evaluates conversion of
                                       value to compatible type
-                                      k, invoke          - evaluates native
+                                      v, invoke          - evaluates native
                                       implementation
                                       o, order           - evaluates array literal
                                       (ordered elements)
+                                      k, pick            - evaluates reading array
+                                      element
                                       s, select          - evaluates field selection
            """);
   }

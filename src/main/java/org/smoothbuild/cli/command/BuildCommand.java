@@ -59,8 +59,9 @@ public class BuildCommand extends ExclusiveCommand {
             b, combine         - evaluates tuple creation (combined elements)
             t, const           - evaluates compile time constant
             r, convert         - evaluates conversion of value to compatible type
-            k, invoke          - evaluates native implementation
+            v, invoke          - evaluates native implementation
             o, order           - evaluates array literal (ordered elements)
+            k, pick            - evaluates reading array element
             s, select          - evaluates field selection
           """
   )
