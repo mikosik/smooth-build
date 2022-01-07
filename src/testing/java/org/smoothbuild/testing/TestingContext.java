@@ -1,6 +1,7 @@
 package org.smoothbuild.testing;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.io.ByteStreams.nullOutputStream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.cli.console.Level.INFO;
@@ -165,7 +166,10 @@ public class TestingContext {
 
   public VmProv vmProv(MethodLoader methodLoader) {
     var jobCreatorProvider = new JobCreatorProvider(methodLoader, typeFactoryB(), typingB());
-    var console = new Console(new PrintWriter(System.out, true));
+    // Use System.out if you want to see smooth logs in junit output
+    // var outputStream = System.out;
+    var outputStream = nullOutputStream();
+    var console = new Console(new PrintWriter(outputStream, true));
     var reporter = new ExecutionReporter(new Reporter(console, ALL, INFO));
     var parallelExecutor = new ParallelJobExecutor(computer(), reporter);
     return new VmProv(jobCreatorProvider, parallelExecutor);
