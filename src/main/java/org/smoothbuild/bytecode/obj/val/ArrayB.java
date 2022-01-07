@@ -1,20 +1,25 @@
 package org.smoothbuild.bytecode.obj.val;
 
+import static com.google.common.base.Suppliers.memoize;
+
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.base.CatB;
-import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 
+import java.util.function.Supplier;
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
  */
 public final class ArrayB extends ValB {
+  private final Supplier<Object> elemsSupplier;
+
   public ArrayB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     super(merkleRoot, byteDb);
+    this.elemsSupplier = memoize(this::instantiateElems);
   }
 
   @Override
@@ -29,12 +34,7 @@ public final class ArrayB extends ValB {
 
   public <T extends ValB> ImmutableList<T> elems(Class<T> elemTJ) {
     assertIsIterableAs(elemTJ);
-    var elems = elemObjs();
-    return checkTypeOfSeqObjs(elems, this.cat().elem());
-  }
-
-  private ImmutableList<ValB> elemObjs() {
-    return readSeqObjs(DATA_PATH, dataHash(), ValB.class);
+    return (ImmutableList<T>) elemsSupplier.get();
   }
 
   private <T extends ValB> void assertIsIterableAs(Class<T> clazz) {
@@ -45,20 +45,24 @@ public final class ArrayB extends ValB {
     }
   }
 
-  private <T> ImmutableList<T> checkTypeOfSeqObjs(ImmutableList<ValB> elems, TypeB expectedElemT) {
+  private ImmutableList<ValB> instantiateElems() {
+    var elems = readElemObjs();
+    var expectedElemT = type().elem();
     for (int i = 0; i < elems.size(); i++) {
       var elemT = elems.get(i).cat();
       if (!expectedElemT.equals(elemT)) {
-        throw new DecodeObjWrongNodeCatExc(hash(), this.cat(), DATA_PATH, i, expectedElemT, elemT);
+        throw new DecodeObjWrongNodeCatExc(hash(), cat(), DATA_PATH, i, expectedElemT, elemT);
       }
     }
-    @SuppressWarnings("unchecked")
-    ImmutableList<T> result = (ImmutableList<T>) elems;
-    return result;
+    return elems;
+  }
+
+  private ImmutableList<ValB> readElemObjs() {
+    return readSeqObjs(DATA_PATH, dataHash(), ValB.class);
   }
 
   @Override
   public String objToString() {
-    return "[" + objsToString(elemObjs()) + ']';
+    return "[" + objsToString(readElemObjs()) + ']';
   }
 }
