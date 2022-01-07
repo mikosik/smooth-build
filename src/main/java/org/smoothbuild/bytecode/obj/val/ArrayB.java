@@ -2,13 +2,14 @@ package org.smoothbuild.bytecode.obj.val;
 
 import static com.google.common.base.Suppliers.memoize;
 
+import java.util.function.Supplier;
+
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 
-import java.util.function.Supplier;
 import com.google.common.collect.ImmutableList;
 
 /**

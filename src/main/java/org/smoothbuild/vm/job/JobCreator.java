@@ -341,7 +341,7 @@ public class JobCreator {
   private Job pickEager(PickB pick, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var data = pick.data();
     var pickableJ = eagerJobFor(scope, vars, data.pickable());
-    var indexJ = eagerJobFor(data.index());
+    var indexJ = eagerJobFor(scope, vars, data.index());
     var actualEvalT = typing.mapVarsLower(pick.type(), vars);
     var algorithmT = ((ArrayTB) pickableJ.type()).elem();
     var algorithm = new PickAlgorithm(algorithmT);
@@ -366,7 +366,7 @@ public class JobCreator {
       SelectB select, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var data = select.data();
     var selectableJ = eagerJobFor(scope, vars, data.selectable());
-    var indexJ = eagerJobFor(data.index());
+    var indexJ = eagerJobFor(scope, vars, data.index());
     var actualEvalT = typing.mapVarsLower(select.type(), vars);
     var algorithmT = ((TupleTB) selectableJ.type()).items().get(data.index().toJ().intValue());
     var algorithm = new SelectAlgorithm(algorithmT);

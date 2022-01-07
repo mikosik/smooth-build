@@ -32,11 +32,13 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.define.BoolValS;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.DefsS;
+import org.smoothbuild.lang.base.define.ElemFuncS;
 import org.smoothbuild.lang.base.define.FuncS;
 import org.smoothbuild.lang.base.define.IfFuncS;
 import org.smoothbuild.lang.base.define.ItemS;
@@ -103,6 +105,7 @@ public class Compiler {
       callStack.push(funcS.params());
       var funcH = switch (funcS) {
         case DefFuncS d -> compileDefFunc(d);
+        case ElemFuncS e -> compileElemFunc(e);
         case IfFuncS i -> compileIfFunc(i);
         case MapFuncS m -> compileMapFunc(m);
         case NatFuncS n -> compileNatFunc(n);
@@ -118,6 +121,17 @@ public class Compiler {
     var funcTB = convertFuncT(defFuncS.type());
     var body = compileExpr(defFuncS.body());
     return byteCodeFactory.func(funcTB, body);
+  }
+
+  private FuncB compileElemFunc(ElemFuncS elemFuncS) {
+    var funcTB = convertFuncT(elemFuncS.type());
+    var arrayT = (ArrayTB) funcTB.params().get(0);
+    var indexT = (IntTB) funcTB.params().get(1);
+    var arrayParam = byteCodeFactory.paramRef(arrayT, ZERO);
+    var indexParam = byteCodeFactory.paramRef(indexT, ONE);
+    var bodyB = byteCodeFactory.pick(funcTB.res(), arrayParam, indexParam);
+    nals.put(bodyB, elemFuncS);
+    return byteCodeFactory.func(funcTB, bodyB);
   }
 
   private FuncB compileIfFunc(IfFuncS ifFuncS) {

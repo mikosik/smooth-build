@@ -26,6 +26,14 @@ public class PickAlgorithm extends Algorithm {
     checkArgument(vals.size() == 2);
     var array = (ArrayB) vals.get(0);
     var index = (IntB) vals.get(1);
-    return new Output(array.elems(ValB.class).get(index.toJ().intValue()), nativeApi.messages());
+
+    var elems = array.elems(ValB.class);
+    int indexJ = index.toJ().intValue();
+    if (indexJ < 0 || elems.size() <= indexJ) {
+      nativeApi.log()
+          .error("Index (" + indexJ + ") out of bounds. Array size = " + elems.size() + ".");
+      return new Output(null, nativeApi.messages());
+    }
+    return new Output(elems.get(indexJ), nativeApi.messages());
   }
 }

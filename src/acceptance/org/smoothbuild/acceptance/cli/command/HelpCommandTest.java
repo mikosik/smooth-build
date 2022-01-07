@@ -84,15 +84,15 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       (user&call)'
                                       n, none            - no tasks
                    
-                                      f, fatal           - contains a log with fatal
+                                      lf, fatal          - contains a log with fatal
                                       level
-                                      e, error           - contains a log with at least
+                                      le, error          - contains a log with at least
                                       error level
-                                      w, warning         - contains a log with at least
+                                      lw, warning        - contains a log with at least
                                       warning level
-                                      i, info            - contains any log
+                                      li, info           - contains any log
                    
-                                      p, prj, project    - evaluates expression from
+                                      prj, project       - evaluates expression from
                                       project module
                                       sdk                - evaluates expression from
                                       smooth SDK module
@@ -104,11 +104,11 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       constant
                                       r, convert         - evaluates conversion of
                                       value to compatible type
-                                      v, invoke          - evaluates native
+                                      i, invoke          - evaluates native
                                       implementation
                                       o, order           - evaluates array literal
                                       (ordered elements)
-                                      k, pick            - evaluates reading array
+                                      p, pick            - evaluates reading array
                                       element
                                       s, select          - evaluates field selection
            """);

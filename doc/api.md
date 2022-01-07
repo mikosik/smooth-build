@@ -4,6 +4,7 @@ Smooth standard library
 |-------------------------------------|--------------------------------------------------------|
 | [and](api/and.md)                   | Returns `true` if both arguments are `true`.           |
 | [concat](api/concat.md)             | Concatenates two arrays.                               |
+| [elem](api/elem.md)                 | Returns array element.                                 |
 | [equal](api/equal.md)               | Returns `true` when arguments are equal.               |
 | [file](api/file.md)                 | Creates File from path and content.                    |
 | [filter](api/filter.md)             | Filters files according to glob pattern.               |
