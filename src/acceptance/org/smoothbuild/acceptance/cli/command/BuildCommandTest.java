@@ -119,20 +119,20 @@ public class BuildCommandTest {
           myFunc()                                    build.smooth:2
           """;
       private static final String NATIVE_FUNCTION_CALL = """
-            result = concat(["a"], ["b"]);
-            """;
+          result = concat(["a"], ["b"]);
+          """;
       private static final String NATIVE_CALL_TASK_HEADER = """
           concat()                                    build.smooth:1
           """;
       private static final String IF_FUNCTION_CALL = """
-            result = if(true, "true", "false");
-            """;
+          result = if(true, "true", "false");
+          """;
       private static final String IF_CALL_TASK_HEADER = """
           if()                                        build.smooth:1
           """;
       private static final String MAP_FUNCTION_CALL = """
-            result = map([false, true], not);
-            """;
+          result = map([false, true], not);
+          """;
       private static final String MAP_CALL_TASK_HEADER = """
           map()                                       build.smooth:1
           """;
