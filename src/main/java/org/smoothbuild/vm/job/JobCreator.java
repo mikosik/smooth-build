@@ -159,10 +159,10 @@ public class JobCreator {
     }
   }
 
-  public Job callEagerJob(TypeB evalT, Job func, ImmutableList<Job> args, Loc loc,
+  public Job callEagerJob(TypeB actualEvalT, Job func, ImmutableList<Job> args, Loc loc,
       IndexedScope<Job> scope) {
     var vars = inferVarsInCall(func, map(args, Job::type));
-    return callEagerJob(evalT, func, args, loc, scope, vars);
+    return callEagerJob(actualEvalT, func, args, loc, scope, vars);
   }
 
   private Job callEagerJob(TypeB actualEvalT, Job func, ImmutableList<Job> args, Loc loc,
@@ -205,7 +205,7 @@ public class JobCreator {
       IndexedScope<Job> scope, VarBounds<TypeB> vars, CombineB combine, Nal nal) {
     var actualEvalT = (TupleTB) typing.mapVarsLower(combine.type(), vars);
     var itemJs = eagerJobsFor(combine.items(), scope, vars);
-    var convertedItemJs = convertItems(actualEvalT.items(), nal, itemJs);
+    var convertedItemJs = convertJobs(actualEvalT.items(), nal, itemJs);
     var info = new JobInfo(COMBINE, nal);
     var algorithm = new CombineAlgorithm(actualEvalT);
     return new Task(algorithm, convertedItemJs, info);
@@ -262,7 +262,7 @@ public class JobCreator {
     var algorithm = new InvokeAlgorithm(actualResT, name, invokeData.method(), methodLoader);
     var info = new JobInfo(INVOKE, name + PARENTHESES_INVOKE, nal.loc());
     var actualArgTs = map(methodT.params(), t -> typing.mapVarsLower(t, newVars));
-    var convertedArgJs = convertItems(actualArgTs, nal, argJs);
+    var convertedArgJs = convertJobs(actualArgTs, nal, argJs);
     var task = new Task(algorithm, convertedArgJs, info);
     var actualEvalT = typing.mapVarsLower(invoke.type(), vars);
     return convertIfNeeded(actualEvalT, nal.loc(), task);
@@ -369,9 +369,9 @@ public class JobCreator {
     return new VirtualJob(job, new JobInfo(CALL, name, loc));
   }
 
-  private ImmutableList<Job> convertItems(
-      ImmutableList<TypeB> items, Nal nal, ImmutableList<Job> itemJs) {
-    return zip(items, itemJs, (t, j) -> convertIfNeeded(t, nal.loc(), j));
+  private ImmutableList<Job> convertJobs(
+      ImmutableList<TypeB> types, Nal nal, ImmutableList<Job> jobs) {
+    return zip(types, jobs, (t, j) -> convertIfNeeded(t, nal.loc(), j));
   }
 
   private ImmutableList<Job> convertIfNeeded(TypeB type, Loc loc, ImmutableList<Job> elemJs) {
