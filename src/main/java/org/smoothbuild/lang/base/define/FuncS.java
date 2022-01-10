@@ -11,7 +11,7 @@ import org.smoothbuild.util.collect.NList;
  * This class and all its subclasses are immutable.
  */
 public sealed abstract class FuncS extends TopEvalS
-    permits DefFuncS, ElemFuncS, IfFuncS, MapFuncS, NatFuncS {
+    permits DefFuncS, IfFuncS, MapFuncS, NatFuncS {
   public static final String PARENTHESES = "()";
   private final NList<ItemS> params;
 

@@ -21,7 +21,6 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
-import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -140,10 +139,6 @@ public class ByteCodeFactory {
 
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
     return objDb.paramRef(evalT, value);
-  }
-
-  public PickB pick(TypeB evalT, ObjB pickable, ObjB index) {
-    return objDb.pick(evalT, pickable, index);
   }
 
   public SelectB select(TypeB evalT, ObjB tuple, IntB index) {

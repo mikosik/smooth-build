@@ -25,6 +25,12 @@ Bool equal(
   A second,
 );
 
+@Native("org.smoothbuild.slib.array.ElemFunc")
+A elem(
+  [A] array,
+  Int index,
+);
+
 @Native("org.smoothbuild.slib.common.ConcatFunc")
 [A] concat(
   [A] array1,

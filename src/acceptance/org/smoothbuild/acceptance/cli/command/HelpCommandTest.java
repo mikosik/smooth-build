@@ -108,8 +108,6 @@ public class HelpCommandTest extends AcceptanceTestCase {
                                       implementation
                                       o, order           - evaluates array literal
                                       (ordered elements)
-                                      p, pick            - evaluates reading array
-                                      element
                                       s, select          - evaluates field selection
            """);
   }

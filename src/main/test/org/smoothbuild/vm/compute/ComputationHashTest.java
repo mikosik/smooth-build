@@ -18,7 +18,6 @@ import org.smoothbuild.vm.job.algorithm.Input;
 import org.smoothbuild.vm.job.algorithm.InvokeAlgorithm;
 import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.job.algorithm.Output;
-import org.smoothbuild.vm.job.algorithm.PickAlgorithm;
 import org.smoothbuild.vm.job.algorithm.SelectAlgorithm;
 
 public class ComputationHashTest extends TestingContext {
@@ -115,19 +114,11 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_pick_algorithm_and_one_elem_input_is_stable() {
-    var algorithm = new PickAlgorithm(STRING);
-    var input = input(list(stringB("abc")));
-    assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("930d713aa3678bf1fab120b8925aadd428b79ce9"));
-  }
-
-  @Test
   public void hash_of_computation_with_select_algorithm_and_one_elem_input_is_stable() {
     var algorithm = new SelectAlgorithm(STRING);
     var input = input(list(stringB("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("556d6faf937b43d9c080143d666fa47f9fdd438d"));
+        .isEqualTo(Hash.decode("930d713aa3678bf1fab120b8925aadd428b79ce9"));
   }
 
   private static Algorithm algorithm(Hash hash) {

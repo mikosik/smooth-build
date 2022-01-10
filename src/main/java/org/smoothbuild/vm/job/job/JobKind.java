@@ -7,6 +7,5 @@ public enum JobKind {
   CONVERT,
   INVOKE,
   ORDER,
-  PICK,
   SELECT
 }

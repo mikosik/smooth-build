@@ -6,7 +6,6 @@ import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.combineAlgorithmH
 import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.invokeAlgorithmHash;
 import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.orderAlgorithmHash;
-import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.pickAlgorithmHash;
 import static org.smoothbuild.vm.job.algorithm.AlgorithmHashes.selectAlgorithmHash;
 
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class AlgorithmHashesCollisionTest extends TestingContext {
         methodB(methodTB(boolTB(), list()), blobB(1), stringB("1"), boolB(true))));
     addHash(list, set, orderAlgorithmHash(arrayTB(intTB())));
     addHash(list, set, orderAlgorithmHash(arrayTB(boolTB())));
-    addHash(list, set, pickAlgorithmHash());
     addHash(list, set, selectAlgorithmHash());
   }
 

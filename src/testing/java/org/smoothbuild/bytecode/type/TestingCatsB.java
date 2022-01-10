@@ -38,7 +38,6 @@ public class TestingCatsB {
   public static final CatB MAP = CONTEXT.mapCB();
   public static final CatB ORDER = CONTEXT.orderCB();
   public static final CatB PARAM_REF = CONTEXT.paramRefCB(INT);
-  public static final CatB PICK = CONTEXT.pickCB(INT);
   public static final CatB SELECT = CONTEXT.selectCB(INT);
 
   public static final ArrayTB ARRAY_ANY = array(ANY);
@@ -141,8 +140,6 @@ public class TestingCatsB {
         CAT_DB.order(STRING),
         CAT_DB.paramRef(BLOB),
         CAT_DB.paramRef(STRING),
-        CAT_DB.pick(BLOB),
-        CAT_DB.pick(STRING),
         CAT_DB.select(BLOB),
         CAT_DB.select(STRING)
     );

@@ -38,7 +38,6 @@ import static org.smoothbuild.bytecode.type.TestingCatsB.NOTHING;
 import static org.smoothbuild.bytecode.type.TestingCatsB.ORDER;
 import static org.smoothbuild.bytecode.type.TestingCatsB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.TestingCatsB.PERSON;
-import static org.smoothbuild.bytecode.type.TestingCatsB.PICK;
 import static org.smoothbuild.bytecode.type.TestingCatsB.SELECT;
 import static org.smoothbuild.bytecode.type.TestingCatsB.STRING;
 import static org.smoothbuild.bytecode.type.TestingCatsB.VARIABLE;
@@ -62,7 +61,6 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
-import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -94,7 +92,7 @@ public class CatBTest extends TestingContext {
   @Test
   public void verify_all_base_cats_are_tested() {
     assertThat(CatKindB.values())
-        .hasLength(20);
+        .hasLength(19);
   }
 
   @ParameterizedTest
@@ -175,7 +173,6 @@ public class CatBTest extends TestingContext {
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.order(f.string()), "Order:[String]"),
         args(f -> f.paramRef(f.int_()), "ParamRef:Int"),
-        args(f -> f.pick(f.string()), "Pick:String"),
         args(f -> f.select(f.int_()), "Select:Int")
     );
   }
@@ -481,7 +478,6 @@ public class CatBTest extends TestingContext {
         arguments(INVOKE, InvokeB.class),
         arguments(MAP, MapB.class),
         arguments(PARAM_REF, ParamRefB.class),
-        arguments(PICK, PickB.class),
         arguments(SELECT, SelectB.class)
     );
   }
@@ -522,13 +518,6 @@ public class CatBTest extends TestingContext {
     public void order(TypeB type) {
       assertThat(CAT_DB.order(type).evalT())
           .isEqualTo(CAT_DB.array(type));
-    }
-
-    @ParameterizedTest
-    @MethodSource("types")
-    public void pick(TypeB type) {
-      assertThat(CAT_DB.pick(type).evalT())
-          .isEqualTo(type);
     }
 
     @ParameterizedTest
@@ -590,7 +579,6 @@ public class CatBTest extends TestingContext {
     tester.addEqualityGroup(MAP, MAP);
     tester.addEqualityGroup(ORDER, ORDER);
     tester.addEqualityGroup(PARAM_REF, PARAM_REF);
-    tester.addEqualityGroup(PICK, PICK);
     tester.addEqualityGroup(SELECT, SELECT);
 
     tester.testEquals();

@@ -61,7 +61,6 @@ public class BuildCommand extends ExclusiveCommand {
             r, convert         - evaluates conversion of value to compatible type
             i, invoke          - evaluates native implementation
             o, order           - evaluates array literal (ordered elements)
-            p, pick            - evaluates reading array element
             s, select          - evaluates field selection
           """
   )

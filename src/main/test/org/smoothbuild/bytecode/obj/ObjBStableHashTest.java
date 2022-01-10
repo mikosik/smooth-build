@@ -289,13 +289,4 @@ public class ObjBStableHashTest extends TestingContext {
           .isEqualTo(Hash.decode("43cea8a5fe2387317f40c1ba960f0753c952909e"));
     }
   }
-
-  @Nested
-  class _pick {
-    @Test
-    public void pick() {
-      assertThat(pickB(arrayB(intB(1)), intB(2)).hash())
-          .isEqualTo(Hash.decode("91f7f6fe682553e9bd19f3185887712074233537"));
-    }
-  }
 }

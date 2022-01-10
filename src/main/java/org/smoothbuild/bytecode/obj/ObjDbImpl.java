@@ -22,7 +22,6 @@ import org.smoothbuild.bytecode.obj.expr.InvokeB;
 import org.smoothbuild.bytecode.obj.expr.MapB;
 import org.smoothbuild.bytecode.obj.expr.OrderB;
 import org.smoothbuild.bytecode.obj.expr.ParamRefB;
-import org.smoothbuild.bytecode.obj.expr.PickB;
 import org.smoothbuild.bytecode.obj.expr.SelectB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
@@ -43,7 +42,6 @@ import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.CallableTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
-import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.Hash;
@@ -173,11 +171,6 @@ public class ObjDbImpl implements ObjDb {
   @Override
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
     return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT, value));
-  }
-
-  @Override
-  public PickB pick(TypeB evalT, ObjB pickable, ObjB index) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newPick(evalT, pickable, index));
   }
 
   @Override
@@ -407,22 +400,6 @@ public class ObjDbImpl implements ObjDb {
         "Function %s cannot accept as argument %s.".formatted(funcT.q(), elemT.q()));
   }
 
-  private PickB newPick(TypeB evalT, ObjB pickable, ObjB index) throws HashedDbExc {
-    if (!(index.type() instanceof IntTB)) {
-      throw new IllegalArgumentException("Index type is " + index.type().q()
-          + " but must be `Int`.");
-    }
-    var elemT = elemT(pickable);
-    if (!typing.isAssignable(evalT, elemT)) {
-      throw new IllegalArgumentException("Array elem type " + elemT.q()
-          + " cannot be assigned to evalT " + evalT.q() + ".");
-    }
-    var data = writePickData(pickable, index);
-    var cat = catDb.pick(evalT);
-    var root = newRoot(cat, data);
-    return cat.newObj(root, this);
-  }
-
   private TypeB elemT(ObjB pickable) {
     var evalT = pickable.type();
     if (evalT instanceof ArrayTB arrayT) {
@@ -498,10 +475,6 @@ public class ObjDbImpl implements ObjDb {
 
   private Hash writeParamRefData(BigInteger value) throws HashedDbExc {
     return hashedDb.writeBigInteger(value);
-  }
-
-  private Hash writePickData(ObjB pickable, ObjB index) throws HashedDbExc {
-    return hashedDb.writeSeq(pickable.hash(), index.hash());
   }
 
   private Hash writeSelectData(ObjB selectable, IntB index) throws HashedDbExc {

@@ -18,7 +18,6 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
 import static org.smoothbuild.bytecode.type.base.CatKindB.NOTHING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.ORDER;
 import static org.smoothbuild.bytecode.type.base.CatKindB.PARAM_REF;
-import static org.smoothbuild.bytecode.type.base.CatKindB.PICK;
 import static org.smoothbuild.bytecode.type.base.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
@@ -874,30 +873,6 @@ public class CatBCorruptedTest extends TestingContext {
       class _expr_cat_tests extends ExprCatTestSet {
         protected _expr_cat_tests() {
           super(PARAM_REF);
-        }
-      }
-    }
-
-    @Nested
-    class _pick {
-      @Test
-      public void learning_test() throws Exception {
-        /*
-         * This test makes sure that other tests in this class use proper scheme
-         * to save Pick type in HashedDb.
-         */
-        Hash hash = hash(
-            hash(PICK.marker()),
-            hash(intTB())
-        );
-        assertThat(hash)
-            .isEqualTo(pickCB(intTB()).hash());
-      }
-
-      @Nested
-      class _expr_cat_tests extends ExprCatTestSet {
-        protected _expr_cat_tests() {
-          super(PICK);
         }
       }
     }
