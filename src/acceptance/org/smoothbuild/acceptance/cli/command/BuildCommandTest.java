@@ -615,7 +615,7 @@ public class BuildCommandTest {
       runSmooth(buildCommand("--show-tasks=all", "result"));
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          if                                          smooth internal
+          if                                          internal
           """);
     }
 

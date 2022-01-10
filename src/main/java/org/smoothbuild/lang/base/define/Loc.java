@@ -44,7 +44,7 @@ public record Loc(FilePath file, int line) {
   public String toString() {
     Space space = file.space();
     if (space == INTERNAL) {
-      return "smooth internal";
+      return "internal";
     } else if (space == UNKNOWN) {
       return "unknown";
     } else if (file.path() == null) {

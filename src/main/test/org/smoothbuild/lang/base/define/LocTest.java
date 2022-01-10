@@ -68,7 +68,7 @@ public class LocTest {
     public void internal_loc() {
       Loc loc = internal();
       assertThat(loc.toString())
-          .isEqualTo("smooth internal");
+          .isEqualTo("internal");
     }
 
     @Test
