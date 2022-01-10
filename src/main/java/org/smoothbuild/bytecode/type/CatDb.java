@@ -64,8 +64,12 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.lang.base.type.api.Bounds;
+import org.smoothbuild.lang.base.type.api.ComposedT;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.impl.ArrayTS;
+import org.smoothbuild.lang.base.type.impl.FuncTS;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.TriFunction;
 import org.smoothbuild.util.collect.Lists;
 
@@ -185,6 +189,21 @@ public class CatDb implements TypeFactoryB {
   public VarTB var(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return wrapHashedDbExceptionAsObjectDbException(() -> newVar(name));
+  }
+
+  @Override
+  public ComposedT rebuildComposed(
+      ComposedT composedT, ImmutableList<TypeB> covars, ImmutableList<TypeB> contravars) {
+    if (composedT.covars().equals(covars) && composedT.contravars().equals(contravars)) {
+      return composedT;
+    }
+    return switch (composedT) {
+      case ArrayTB array -> array(covars.get(0));
+      case FuncTB func -> func(covars.get(0), contravars);
+      case TupleTB tuple -> tuple(covars);
+      default -> throw new IllegalArgumentException(
+          "Illegal case " + composedT.getClass().getCanonicalName());
+    };
   }
 
   // methods for getting Expr-s types

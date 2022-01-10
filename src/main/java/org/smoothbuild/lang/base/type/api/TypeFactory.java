@@ -18,4 +18,7 @@ public interface TypeFactory<T extends Type> {
   public FuncT func(T result, ImmutableList<T> params);
 
   public TupleT tuple(ImmutableList<T> items);
+
+  public ComposedT rebuildComposed(
+      ComposedT composedT, ImmutableList<T> covars, ImmutableList<T> contravars);
 }

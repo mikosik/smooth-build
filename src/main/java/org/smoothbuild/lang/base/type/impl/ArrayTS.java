@@ -3,7 +3,10 @@ package org.smoothbuild.lang.base.type.impl;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.lang.base.type.api.ArrayT;
+import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeNames;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
@@ -19,6 +22,16 @@ public final class ArrayTS extends TypeS implements ArrayT {
   @Override
   public TypeS elem() {
     return elem;
+  }
+
+  @Override
+  public ImmutableList<Type> covars() {
+    return ImmutableList.of(elem);
+  }
+
+  @Override
+  public ImmutableList<Type> contravars() {
+    return ImmutableList.of();
   }
 
   @Override

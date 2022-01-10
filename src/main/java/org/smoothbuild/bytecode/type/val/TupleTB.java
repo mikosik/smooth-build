@@ -9,6 +9,7 @@ import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.TupleT;
+import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 
@@ -36,5 +37,15 @@ public class TupleTB extends TypeB implements TupleT {
 
   private static String calculateName(Iterable<? extends TypeB> itemTs) {
     return tupleTypeName(itemTs);
+  }
+
+  @Override
+  public ImmutableList<Type> covars() {
+    return (ImmutableList<Type>)(Object) items();
+  }
+
+  @Override
+  public ImmutableList<Type> contravars() {
+    return ImmutableList.of();
   }
 }

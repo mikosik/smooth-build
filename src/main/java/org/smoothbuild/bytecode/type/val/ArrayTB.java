@@ -10,6 +10,9 @@ import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.ArrayT;
+import org.smoothbuild.lang.base.type.api.Type;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
@@ -31,5 +34,15 @@ public class ArrayTB extends TypeB implements ArrayT {
   public ArrayB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
     validateNotPolymorphic(merkleRoot);
     return (ArrayB) super.newObj(merkleRoot, byteDb);
+  }
+
+  @Override
+  public ImmutableList<Type> covars() {
+    return ImmutableList.of(elem);
+  }
+
+  @Override
+  public ImmutableList<Type> contravars() {
+    return ImmutableList.of();
   }
 }
