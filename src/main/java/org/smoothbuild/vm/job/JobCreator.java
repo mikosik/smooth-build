@@ -362,11 +362,12 @@ public class JobCreator {
 
   // helper methods
 
-  public Job callFuncEagerJob(FuncB func, ImmutableList<Job> args, Loc loc,
+  public Job callFuncEagerJob(TypeB actualEvalT, FuncB func, ImmutableList<Job> args, Loc loc,
       IndexedScope<Job> scope, VarBounds<TypeB> vars) {
     var job = eagerJobFor(new IndexedScope<>(scope, args), vars, func.body());
     var name = nalFor(func).name() + PARENTHESES;
-    return new VirtualJob(job, new JobInfo(CALL, name, loc));
+    var convertedJ = convertIfNeeded(actualEvalT, nalFor(func).loc(), job);
+    return new VirtualJob(convertedJ, new JobInfo(CALL, name, loc));
   }
 
   private ImmutableList<Job> convertJobs(

@@ -43,7 +43,7 @@ public class CallJob extends AbstractJob {
 
   private void onFuncJobCompleted(ValB val, Worker worker, Consumer<ValB> res) {
     var funcH = (FuncB) val;
-    jobCreator.callFuncEagerJob(funcH, argJs, loc(), scope, vars)
+    jobCreator.callFuncEagerJob(type(), funcH, argJs, loc(), scope, vars)
         .schedule(worker)
         .addConsumer(res);
   }

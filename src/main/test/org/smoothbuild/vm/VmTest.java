@@ -24,7 +24,7 @@ import org.smoothbuild.vm.java.MethodLoader;
 import com.google.common.collect.ImmutableMap;
 
 public class VmTest extends TestingContext {
-  private MethodLoader methodLoader = Mockito.mock(MethodLoader.class);
+  private final MethodLoader methodLoader = Mockito.mock(MethodLoader.class);
 
   @Nested
   class _values {
@@ -70,9 +70,17 @@ public class VmTest extends TestingContext {
     }
 
     @Test
-    public void with_result_conversion() throws Exception {
+    public void with_res_conversion() throws Exception {
       var func = funcB(arrayB(nothingTB()));
       var call = callB(arrayTB(intTB()), func, combineB(list()));
+      assertThat(evaluate(call))
+          .isEqualTo(arrayB(intTB()));
+    }
+
+    @Test
+    public void with_arg_conversion() throws Exception {
+      var func = funcB(list(arrayTB(intTB())), paramRefB(arrayTB(intTB()), 0));
+      var call = callB(func, list(arrayB(nothingTB())));
       assertThat(evaluate(call))
           .isEqualTo(arrayB(intTB()));
     }
