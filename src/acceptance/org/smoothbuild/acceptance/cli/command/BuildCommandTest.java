@@ -93,7 +93,7 @@ public class BuildCommandTest {
   @Nested
   class _show_tasks_option {
     @Nested
-    class basic extends AcceptanceTestCase {
+    class _basic extends AcceptanceTestCase {
       @Test
       public void illegal_value_causes_error() throws IOException {
         createUserModule("""
@@ -110,7 +110,7 @@ public class BuildCommandTest {
     }
 
     @Nested
-    class call_matcher extends AcceptanceTestCase {
+    class _call_matcher extends AcceptanceTestCase {
       private static final String DEFINED_FUNCTION_CALL = """
           myFunc() = "myLiteral";
           result = myFunc();
@@ -139,71 +139,245 @@ public class BuildCommandTest {
 
       @Test
       public void shows_call_when_enabled() throws IOException {
-        createUserModule(DEFINED_FUNCTION_CALL);
-        runSmooth(buildCommand("--show-tasks=call", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(DEFINED_CALL_TASK_HEADER);
+        testThatTaskHeaderShownWhenCallIsEnabled(DEFINED_FUNCTION_CALL, DEFINED_CALL_TASK_HEADER);
       }
 
       @Test
       public void hides_calls_when_not_enabled() throws IOException {
-        createUserModule(DEFINED_FUNCTION_CALL);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(DEFINED_CALL_TASK_HEADER);
+        testThatTaskHeaderIsNotShownWhenCallIsDisabled(
+            DEFINED_FUNCTION_CALL, DEFINED_CALL_TASK_HEADER);
       }
 
       @Test
       public void shows_call_to_nat_func_when_enabled() throws IOException {
-        createUserModule(NATIVE_FUNCTION_CALL);
-        runSmooth(buildCommand("--show-tasks=call", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(NATIVE_CALL_TASK_HEADER);
+        testThatTaskHeaderShownWhenCallIsEnabled(NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }
 
       @Test
       public void hides_call_to_nat_func_when_not_enabled() throws IOException {
-        createUserModule(NATIVE_FUNCTION_CALL);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
+        testThatTaskHeaderIsNotShownWhenCallIsDisabled(
+            NATIVE_FUNCTION_CALL, NATIVE_CALL_TASK_HEADER);
       }
 
       @Test
       public void shows_call_to_internal_if_func_when_enabled() throws IOException {
-        createUserModule(IF_FUNCTION_CALL);
-        runSmooth(buildCommand("--show-tasks=call", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(IF_CALL_TASK_HEADER);
+        testThatTaskHeaderShownWhenCallIsEnabled(IF_FUNCTION_CALL, IF_CALL_TASK_HEADER);
       }
 
       @Test
       public void hides_call_to_internal_if_func_when_not_enabled() throws IOException {
-        createUserModule(IF_FUNCTION_CALL);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(IF_CALL_TASK_HEADER);
+        testThatTaskHeaderIsNotShownWhenCallIsDisabled(IF_FUNCTION_CALL, IF_CALL_TASK_HEADER);
       }
 
       @Test
       public void shows_call_to_internal_map_func_when_enabled() throws IOException {
-        createUserModule(MAP_FUNCTION_CALL);
-        runSmooth(buildCommand("--show-tasks=call", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(MAP_CALL_TASK_HEADER);
+        testThatTaskHeaderShownWhenCallIsEnabled(MAP_FUNCTION_CALL, MAP_CALL_TASK_HEADER);
       }
 
       @Test
       public void hides_call_to_internal_map_func_when_not_enabled() throws IOException {
-        createUserModule(MAP_FUNCTION_CALL);
+        testThatTaskHeaderIsNotShownWhenCallIsDisabled(MAP_FUNCTION_CALL, MAP_CALL_TASK_HEADER);
+      }
+
+      private void testThatTaskHeaderShownWhenCallIsEnabled(String callDeclaration,
+          String expectedHeaderToBeShown) throws IOException {
+        createUserModule(callDeclaration);
+        runSmooth(buildCommand("--show-tasks=call", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(expectedHeaderToBeShown);
+      }
+
+      private void testThatTaskHeaderIsNotShownWhenCallIsDisabled(String callDeclaration,
+          String headerThatShouldNotBeShows) throws IOException {
+        createUserModule(callDeclaration);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(MAP_CALL_TASK_HEADER);
+        assertSysOutDoesNotContain(headerThatShouldNotBeShows);
       }
     }
 
     @Nested
-    class select_matcher extends AcceptanceTestCase {
+    class _combine_matcher extends AcceptanceTestCase {
+      private static final String COMBINE = """
+          MyStruct {
+            String myField
+          }
+          result = myStruct("abc");
+          """;
+      private static final String COMBINE_TASK_HEADER = """
+          {}                                          build.smooth:1                 exec
+          """;
+
+      @Test
+      public void shows_when_enabled() throws IOException {
+        createUserModule(COMBINE);
+        runSmooth(buildCommand("--show-tasks=combine", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(COMBINE_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_when_not_enabled() throws IOException {
+        createUserModule(COMBINE);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(COMBINE_TASK_HEADER);
+      }
+    }
+
+    @Nested
+    class _const_matcher extends AcceptanceTestCase {
+      private static final String BLOB_CONST = """
+          result = 0xABCD;
+          """;
+      private static final String BLOB_CONST_TASK_HEADER = """
+          0xabcd                                      build.smooth:1
+          """;
+      private static final String INT_CONST = """
+          result = 123;
+          """;
+      private static final String INT_CONST_TASK_HEADER = """
+          123                                         build.smooth:1
+          """;
+      private static final String STRING_CONST = """
+          result = "myLiteral";
+          """;
+      private static final String STRING_CONST_TASK_HEADER = """
+          "myLiteral"                                 build.smooth:1
+          """;
+
+      @Test
+      public void shows_blob_when_consts_enabled() throws IOException {
+        testThatTaskHeaderShownWhenConstAreEnabled(BLOB_CONST, BLOB_CONST_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_blob_when_const_not_enabled() throws IOException {
+        testThatTaskHeaderIsNotShownWhenConstAreDisabled(BLOB_CONST, BLOB_CONST_TASK_HEADER);
+      }
+
+      @Test
+      public void shows_int_when_consts_enabled() throws IOException {
+        testThatTaskHeaderShownWhenConstAreEnabled(INT_CONST, INT_CONST_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_int_when_const_not_enabled() throws IOException {
+        testThatTaskHeaderIsNotShownWhenConstAreDisabled(INT_CONST, INT_CONST_TASK_HEADER);
+      }
+
+      @Test
+      public void shows_string_when_consts_enabled() throws IOException {
+        testThatTaskHeaderShownWhenConstAreEnabled(STRING_CONST, STRING_CONST_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_string_when_consts_not_enabled() throws IOException {
+        testThatTaskHeaderIsNotShownWhenConstAreDisabled(STRING_CONST, STRING_CONST_TASK_HEADER);
+      }
+
+      private void testThatTaskHeaderShownWhenConstAreEnabled(String constDeclaration,
+          String expectedTaskHeader) throws IOException {
+        createUserModule(constDeclaration);
+        runSmooth(buildCommand("--show-tasks=const", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(expectedTaskHeader);
+      }
+
+      private void testThatTaskHeaderIsNotShownWhenConstAreDisabled(String constDeclaration,
+          String headerThatShouldNotBeShown) throws IOException {
+        createUserModule(constDeclaration);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(headerThatShouldNotBeShown);
+      }
+    }
+
+    @Nested
+    class _convert_matcher extends AcceptanceTestCase {
+      private static final String CONVERT = """
+          result = [
+            [ 123 ],
+            [],
+          ];
+          """;
+      private static final String CONVERT_TASK_HEADER = """
+          [Int] <- [Nothing]                          build.smooth:3                 exec
+          """;
+
+      @Test
+      public void shows_when_enabled() throws IOException {
+        createUserModule(CONVERT);
+        runSmooth(buildCommand("--show-tasks=convert", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(CONVERT_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_when_not_enabled() throws IOException {
+        createUserModule(CONVERT);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(CONVERT_TASK_HEADER);
+      }
+    }
+
+    @Nested
+    class _invoke_matcher extends AcceptanceTestCase {
+      private static final String INVOKE = """
+            result = not(true);
+            """;
+      private static final String INVOKE_TASK_HEADER = """
+          not()~                                      api.smooth:""";
+
+      @Test
+      public void shows_when_enabled() throws IOException {
+        createUserModule(INVOKE);
+        runSmooth(buildCommand("--show-tasks=invoke", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(INVOKE_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_when_not_enabled() throws IOException {
+        createUserModule(INVOKE);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(INVOKE_TASK_HEADER);
+      }
+    }
+
+    @Nested
+    class _order_matcher extends AcceptanceTestCase {
+      private static final String ORDER = """
+          result = [
+            123,
+            456,
+          ];
+          """;
+      private static final String ORDER_TASK_HEADER = """
+          []                                          build.smooth:1                 exec
+          """;
+
+      @Test
+      public void shows_when_enabled() throws IOException {
+        createUserModule(ORDER);
+        runSmooth(buildCommand("--show-tasks=order", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(ORDER_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_when_not_enabled() throws IOException {
+        createUserModule(ORDER);
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(ORDER_TASK_HEADER);
+      }
+    }
+
+    @Nested
+    class _select_matcher extends AcceptanceTestCase {
       private static final String SELECT = """
             MyStruct {
               String myField
@@ -216,7 +390,7 @@ public class BuildCommandTest {
           """;
 
       @Test
-      public void shows_select_when_enabled() throws IOException {
+      public void shows_when_enabled() throws IOException {
         createUserModule(SELECT);
         runSmooth(buildCommand("--show-tasks=select", "result"));
         assertFinishedWithSuccess();
@@ -224,37 +398,11 @@ public class BuildCommandTest {
       }
 
       @Test
-      public void hides_literals_when_not_enabled() throws IOException {
+      public void hides_when_not_enabled() throws IOException {
         createUserModule(SELECT);
         runSmooth(buildCommand("--show-tasks=none", "result"));
         assertFinishedWithSuccess();
         assertSysOutDoesNotContain(SELECT_TASK_HEADER);
-      }
-    }
-
-    @Nested
-    class literal_matcher extends AcceptanceTestCase {
-      private static final String LITERAL = """
-            result = "myLiteral";
-            """;
-      private static final String LITERAL_TASK_HEADER = """
-          "myLiteral"                                 build.smooth:1
-          """;
-
-      @Test
-      public void shows_consts_when_enabled() throws IOException {
-        createUserModule(LITERAL);
-        runSmooth(buildCommand("--show-tasks=const", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutContains(LITERAL_TASK_HEADER);
-      }
-
-      @Test
-      public void hides_consts_when_not_enabled() throws IOException {
-        createUserModule(LITERAL);
-        runSmooth(buildCommand("--show-tasks=none", "result"));
-        assertFinishedWithSuccess();
-        assertSysOutDoesNotContain(LITERAL_TASK_HEADER);
       }
     }
   }

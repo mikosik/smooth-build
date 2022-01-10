@@ -311,7 +311,7 @@ public class JobCreator {
   }
 
   public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, JobInfo info) {
-    var convertedElemJs = convertIfNeeded(arrayTB.elem(), info.loc(), elemJs);
+    var convertedElemJs = convertIfNeeded(arrayTB.elem(), elemJs);
     var algorithm = new OrderAlgorithm(arrayTB);
     return new Task(algorithm, convertedElemJs, info);
   }
@@ -377,8 +377,8 @@ public class JobCreator {
     return zip(types, jobs, (t, j) -> convertIfNeeded(t, nal.loc(), j));
   }
 
-  private ImmutableList<Job> convertIfNeeded(TypeB type, Loc loc, ImmutableList<Job> elemJs) {
-    return map(elemJs, j -> convertIfNeeded(type, loc, j));
+  private ImmutableList<Job> convertIfNeeded(TypeB type, ImmutableList<Job> elemJs) {
+    return map(elemJs, j -> convertIfNeeded(type, j.loc(), j));
   }
 
   private Job convertIfNeeded(TypeB type, Loc loc, Job job) {
