@@ -1,4 +1,4 @@
-package org.smoothbuild.slib.common;
+package org.smoothbuild.slib.array;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.ValB;

@@ -31,7 +31,7 @@ A elem(
   Int index,
 );
 
-@Native("org.smoothbuild.slib.common.ConcatFunc")
+@Native("org.smoothbuild.slib.array.ConcatFunc")
 [A] concat(
   [A] array1,
   [A] array2,

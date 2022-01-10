@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.slib.common;
+package org.smoothbuild.acceptance.slib.array;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.BooleanCreators.falseByteString;
