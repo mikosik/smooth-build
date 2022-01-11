@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
+import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.testing.TestingContext;
 
 public class MapBTest extends TestingContext {
@@ -26,13 +27,6 @@ public class MapBTest extends TestingContext {
       var mapB = mapB(arrayB(arrayB(nothingTB())), funcB(list(arrayTB(intTB())), stringB("abc")));
       assertThat(mapB.type())
           .isEqualTo(arrayTB(stringTB()));
-    }
-
-    @Test
-    public void with_generic_mapping_func() {
-      var mapB = mapB(arrayB(intB(7)), funcB(list(varTB("A")), paramRefB(varTB("A"), 0)));
-      assertThat(mapB.type())
-          .isEqualTo(arrayTB(intTB()));
     }
   }
 
@@ -57,6 +51,21 @@ public class MapBTest extends TestingContext {
   @Test
   public void array_elem_not_assignable_to_mapping_func_param_causes_exc() {
     assertCall(() -> mapB(arrayB(boolB()), funcB(list(intTB()), stringB("abc"))))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void generic_array_elemT_not_assignable_to_generic_mapping_func_paramT_causes_exc() {
+    var a = varTB("A");
+    var b = varTB("B");
+    assertCall(() -> mapB(orderB(a, list()), funcB(list(b), paramRefB(b, 0))))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void concrete_array_elemT_not_assignable_to_generic_mapping_func_paramT_causes_exc() {
+    var a = varTB("A");
+    assertCall(() -> mapB(arrayB(intB(7)), funcB(list(a), paramRefB(a, 0))))
         .throwsException(IllegalArgumentException.class);
   }
 

@@ -278,11 +278,13 @@ public class VmTest extends TestingContext {
 
     @Test
     public void with_polymorphic_func() throws Exception {
-      var a = varTB("A");
-      var func = funcB(tupleTB(list(a)), list(a), combineB(list(paramRefB(a, 0))));
-      var map = mapB(arrayB(intB(1), intB(2)), func);
-      assertThat(evaluate(map))
-          .isEqualTo(arrayB(tupleB(list(intB(1))), tupleB(list(intB(2)))));
+      var evaluated = evaluatePolymorphicExpr(p -> {
+        var t = p.type();
+        var mappingFunc = funcB(tupleTB(list(t)), list(t), combineB(list(paramRefB(t, 0))));
+        return mapB(orderB(t, list(paramRefB(t, 0))), mappingFunc);
+      }, intB(7));
+      assertThat(evaluated)
+          .isEqualTo(arrayB(tupleB(list(intB(7)))));
     }
 
     @Test
@@ -297,8 +299,8 @@ public class VmTest extends TestingContext {
     @Test
     public void with_polymorphic_evalT() throws Exception {
       var evaluated = evaluatePolymorphicExpr(p -> {
-        var b = varTB("B");
-        var func = funcB(tupleTB(list(b)), list(b), combineB(list(paramRefB(b, 0))));
+        var t = p.type();
+        var func = funcB(tupleTB(list(t)), list(t), combineB(list(paramRefB(t, 0))));
         return mapB(orderB(list(p)), func);
       }, intB(7));
       assertThat(evaluated)

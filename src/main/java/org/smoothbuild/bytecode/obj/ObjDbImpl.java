@@ -386,8 +386,12 @@ public class ObjDbImpl implements ObjDb {
           "func parameter count must be 1 but is " + funcT.params().size() + ".");
     }
     var elemT = arrayT.elem();
-    var mappedElemT = typing.inferCallResT(funcT, list(elemT), () -> illegalElemT(funcT, elemT));
-    var evalT = catDb.array(mappedElemT);
+    var funcParamT = funcT.params().get(0);
+    if (!typing.isAssignable(funcParamT, elemT)) {
+      throw new IllegalArgumentException("array element type " + elemT
+          + " is not assignable to func parameter type " + funcParamT + ".");
+    }
+    var evalT = catDb.array(funcT.res());
     var type = catDb.map(evalT);
 
     var data = writeMapData(array, func);
