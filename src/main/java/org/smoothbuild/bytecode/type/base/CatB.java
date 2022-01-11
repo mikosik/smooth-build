@@ -9,7 +9,7 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.AbstractT;
-import org.smoothbuild.lang.base.type.api.Var;
+import org.smoothbuild.lang.base.type.api.VarT;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -25,7 +25,7 @@ public abstract class CatB extends AbstractT {
   }
 
   protected CatB(String name, Hash hash, CatKindB kind,
-      ImmutableSet<? extends Var> vars) {
+      ImmutableSet<? extends VarT> vars) {
     super(name, vars);
     this.hash = hash;
     this.kind = kind;

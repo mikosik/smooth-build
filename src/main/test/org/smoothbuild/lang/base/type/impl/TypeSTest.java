@@ -24,7 +24,7 @@ import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.Var;
+import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 
@@ -138,7 +138,7 @@ public class TypeSTest extends TestingContext {
   @MethodSource("vars_test_data")
   public void vars(
       Function<TypeFactoryS, TypeS> factoryCall,
-      Function<TypeFactoryS, Set<Var>> resultCall) {
+      Function<TypeFactoryS, Set<VarT>> resultCall) {
     assertThat(invoke(factoryCall).vars())
         .containsExactlyElementsIn(invoke(resultCall))
         .inOrder();

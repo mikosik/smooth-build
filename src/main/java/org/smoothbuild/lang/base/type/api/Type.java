@@ -8,12 +8,12 @@ import com.google.common.collect.ImmutableSet;
  * This class and all its subclasses are immutable.
  */
 public sealed interface Type extends Named
-    permits AbstractT, BaseT, ComposedT, Var {
+    permits AbstractT, BaseT, ComposedT, VarT {
 
   @Override
   public String name();
 
-  public ImmutableSet<? extends Var> vars();
+  public ImmutableSet<? extends VarT> vars();
 
   /**
    * @return true iff this type contains type var(s).

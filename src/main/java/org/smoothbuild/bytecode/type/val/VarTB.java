@@ -5,11 +5,11 @@ import static org.smoothbuild.util.collect.Sets.set;
 import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.base.type.api.Var;
+import org.smoothbuild.lang.base.type.api.VarT;
 
 import com.google.common.collect.ImmutableSet;
 
-public class VarTB extends TypeB implements Var {
+public class VarTB extends TypeB implements VarT {
   private final ImmutableSet<VarTB> vars;
 
   public VarTB(Hash hash, String name) {

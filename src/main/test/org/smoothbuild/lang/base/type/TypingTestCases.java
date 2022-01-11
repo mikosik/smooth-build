@@ -18,7 +18,7 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.api.Var;
+import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.impl.NothingTS;
 
@@ -537,17 +537,17 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     Bounds<T> bounds1 = oneSideBound(side1, bound1);
     Bounds<T> bounds2 = oneSideBound(side2, bound2);
     if (var1.equals(var2)) {
-      return varBounds(new Bounded<>((Var) var1, typing.merge(bounds1, bounds2)));
+      return varBounds(new Bounded<>((VarT) var1, typing.merge(bounds1, bounds2)));
     } else {
       return new VarBounds<>(ImmutableMap.of(
-          (Var) var1, new Bounded<>((Var) var1, bounds1),
-          (Var) var2, new Bounded<>((Var) var2, bounds2)
+          (VarT) var1, new Bounded<>((VarT) var1, bounds1),
+          (VarT) var2, new Bounded<>((VarT) var2, bounds2)
       ));
     }
   }
 
   public VarBounds<T> vb(T var, Side<T> side, T bound) {
-    return varBounds(new Bounded<>((Var) var, oneSideBound(side, bound)));
+    return varBounds(new Bounded<>((VarT) var, oneSideBound(side, bound)));
   }
 
   public VarBounds<T> vb() {

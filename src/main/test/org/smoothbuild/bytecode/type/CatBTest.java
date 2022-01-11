@@ -80,7 +80,7 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.Var;
+import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NList;
@@ -227,7 +227,7 @@ public class CatBTest extends TestingContext {
   @MethodSource("vars_test_data")
   public void vars(
       Function<CatDb, CatB> factoryCall,
-      Function<CatDb, Set<Var>> resultCall) {
+      Function<CatDb, Set<VarT>> resultCall) {
     assertThat(execute(factoryCall).vars())
         .containsExactlyElementsIn(execute(resultCall))
         .inOrder();

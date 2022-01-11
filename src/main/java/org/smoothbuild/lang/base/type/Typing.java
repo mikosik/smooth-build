@@ -11,16 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.ComposedT;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.api.TupleT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.api.Var;
+import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.lang.base.type.api.VarBounds;
 
 import com.google.common.collect.ImmutableList;
@@ -74,7 +72,7 @@ public class Typing<T extends Type> {
   }
 
   public boolean inequalParam(Type type1, Type type2, Side<T> side) {
-    return (type1 instanceof Var)
+    return (type1 instanceof VarT)
         || inequalImpl(type1, type2, side, this::inequalParam);
   }
 
@@ -120,7 +118,7 @@ public class Typing<T extends Type> {
   public VarBounds<T> inferVarBounds(
       List<? extends T> types1, List<? extends T> types2, Side<T> side) {
     checkArgument(types1.size() == types2.size());
-    var result = new HashMap<Var, Bounded<T>>();
+    var result = new HashMap<VarT, Bounded<T>>();
     for (int i = 0; i < types1.size(); i++) {
       inferImpl(types1.get(i), types2.get(i), side, result);
     }
@@ -132,14 +130,14 @@ public class Typing<T extends Type> {
   }
 
   public VarBounds<T> inferVarBounds(T type1, T type2, Side<T> side) {
-    var result = new HashMap<Var, Bounded<T>>();
+    var result = new HashMap<VarT, Bounded<T>>();
     inferImpl(type1, type2, side, result);
     return new VarBounds<>(ImmutableMap.copyOf(result));
   }
 
-  private void inferImpl(T t1, T t2, Side<T> side, Map<Var, Bounded<T>> result) {
+  private void inferImpl(T t1, T t2, Side<T> side, Map<VarT, Bounded<T>> result) {
     switch (t1) {
-      case Var v -> result.merge(v, new Bounded<>(v, factory.oneSideBound(side, t2)), this::merge);
+      case VarT v -> result.merge(v, new Bounded<>(v, factory.oneSideBound(side, t2)), this::merge);
       case ComposedT c1 -> {
         if (t2.equals(side.edge())) {
           var reversed = side.reversed();
@@ -162,7 +160,7 @@ public class Typing<T extends Type> {
   }
 
   private void inferImplForEach(ImmutableList<Type> types1, ImmutableList<Type> types2,
-      Side<T> side, Map<Var, Bounded<T>> result) {
+      Side<T> side, Map<VarT, Bounded<T>> result) {
     for (int i = 0; i < types1.size(); i++) {
       inferImpl((T) types1.get(i), (T) types2.get(i), side, result);
     }
@@ -175,7 +173,7 @@ public class Typing<T extends Type> {
   public T mapVars(T type, VarBounds<T> varBounds, Side<T> side) {
     if (type.isPolytype()) {
       return switch (type) {
-        case Var var -> mapVarsInVar(type, varBounds, side, var);
+        case VarT var -> mapVarsInVar(type, varBounds, side, var);
         case ComposedT composedT -> mapVarsInComposed(composedT, varBounds, side);
         default -> type;
       };
@@ -183,7 +181,7 @@ public class Typing<T extends Type> {
     return type;
   }
 
-  private T mapVarsInVar(T type, VarBounds<T> varBounds, Side<T> side, Var var) {
+  private T mapVarsInVar(T type, VarBounds<T> varBounds, Side<T> side, VarT var) {
     Bounded<T> bounded = varBounds.map().get(var);
     if (bounded == null) {
       return type;

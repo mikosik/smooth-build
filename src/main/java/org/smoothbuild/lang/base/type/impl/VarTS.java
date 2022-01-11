@@ -2,14 +2,14 @@ package org.smoothbuild.lang.base.type.impl;
 
 import static org.smoothbuild.util.collect.Sets.set;
 
-import org.smoothbuild.lang.base.type.api.Var;
+import org.smoothbuild.lang.base.type.api.VarT;
 
 import com.google.common.collect.ImmutableSet;
 
 /**
  * This class is immutable.
  */
-public final class VarTS extends TypeS implements Var {
+public final class VarTS extends TypeS implements VarT {
   private final ImmutableSet<VarTS> vars;
 
   public VarTS(String name) {

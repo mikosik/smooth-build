@@ -6,9 +6,9 @@ import com.google.common.collect.ImmutableSet;
 
 public non-sealed abstract class AbstractT implements Type {
   protected final String name;
-  protected final ImmutableSet<? extends Var> vars;
+  protected final ImmutableSet<? extends VarT> vars;
 
-  public AbstractT(String name, ImmutableSet<? extends Var> vars) {
+  public AbstractT(String name, ImmutableSet<? extends VarT> vars) {
     checkArgument(!name.isBlank());
     this.name = name;
     this.vars = vars;
@@ -23,7 +23,7 @@ public non-sealed abstract class AbstractT implements Type {
    * @return type vars sorted alphabetically
    */
   @Override
-  public ImmutableSet<? extends Var> vars() {
+  public ImmutableSet<? extends VarT> vars() {
     return vars;
   }
 }
