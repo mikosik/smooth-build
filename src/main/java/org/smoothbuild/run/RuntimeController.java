@@ -37,7 +37,6 @@ public class RuntimeController {
           .add(PRJ_MODULE_FILE_PATH)
           .build();
 
-
   private final FileResolver fileResolver;
   private final ModFilesDetector modFilesDetector;
   private final ModLoader modLoader;
