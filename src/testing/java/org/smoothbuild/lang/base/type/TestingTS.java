@@ -99,7 +99,7 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   public static VarTS var(String a) {
-    return FACTORY.var(a);
+    return FACTORY.oVar(a);
   }
 
   public static StructTS struct(String name, NList<ItemSigS> fields) {

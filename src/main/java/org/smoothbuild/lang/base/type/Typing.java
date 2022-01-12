@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -13,13 +14,15 @@ import java.util.function.Supplier;
 
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
+import org.smoothbuild.lang.base.type.api.ClosedVarT;
 import org.smoothbuild.lang.base.type.api.ComposedT;
 import org.smoothbuild.lang.base.type.api.FuncT;
+import org.smoothbuild.lang.base.type.api.OpenVarT;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.lang.base.type.api.VarBounds;
+import org.smoothbuild.lang.base.type.api.VarT;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -239,6 +242,32 @@ public class Typing<T extends Type> {
     return new Bounds<>(
         merge(bounds1.lower(), bounds2.lower(), factory.upper()),
         merge(bounds1.upper(), bounds2.upper(), factory.lower()));
+  }
+
+  public T openVars(T type) {
+    if (!type.hasClosedVars()) {
+      return type;
+    }
+    return switch (type) {
+      case ComposedT composedT -> (T) factory.rebuildComposed(composedT,
+          map(composedT.covars(), t -> openVars((T) t)),
+          map(composedT.contravars(), t -> openVars((T) t)));
+      case ClosedVarT closedVarT -> (T) factory.oVar(closedVarT.name());
+      default -> throw unexpectedCaseExc(type);
+    };
+  }
+
+  public T closeVars(T type) {
+    if (!type.hasOpenVars()) {
+      return type;
+    }
+    return switch (type) {
+      case ComposedT composedT -> (T) factory.rebuildComposed(composedT,
+          map(composedT.covars(), t -> closeVars((T) t)),
+          map(composedT.contravars(), t -> closeVars((T) t)));
+      case OpenVarT openVarT -> (T) factory.cVar(openVarT.name());
+      default -> throw unexpectedCaseExc(type);
+    };
   }
 
   public TypeFactory<T> factory() {

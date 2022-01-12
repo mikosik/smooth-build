@@ -5,7 +5,6 @@ import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExceptionAsObject
 import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.cannotReadRootException;
 import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.math.BigInteger;
 import java.util.List;

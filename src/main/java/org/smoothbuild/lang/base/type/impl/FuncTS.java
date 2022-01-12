@@ -1,18 +1,12 @@
 package org.smoothbuild.lang.base.type.impl;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
-import static org.smoothbuild.util.collect.Lists.concat;
-
-import java.util.Collection;
 
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * This class is immutable.
@@ -22,17 +16,12 @@ public final class FuncTS extends TypeS implements FuncT {
   private final ImmutableList<TypeS> params;
 
   public FuncTS(TypeS res, ImmutableList<TypeS> params) {
-    super(funcTypeName(res, params), calculateVars(concat(res, params)));
+    super(
+        funcTypeName(res, params),
+        FuncT.calculateHasOpenVars(res, params),
+        FuncT.calculateHasClosedVars(res, params));
     this.res = requireNonNull(res);
     this.params = requireNonNull(params);
-  }
-
-  private static ImmutableSet<VarTS> calculateVars(ImmutableList<TypeS> types) {
-    return types.stream()
-        .map(TypeS::vars)
-        .flatMap(Collection::stream)
-        .sorted(comparing(Type::name))
-        .collect(toImmutableSet());
   }
 
   @Override

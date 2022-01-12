@@ -22,7 +22,7 @@ import okio.ByteString;
 public class ArrayBTest extends TestingContext {
   @Test
   public void polymorphic_array_is_forbidden() {
-    assertCall(() -> byteDb().arrayBuilder(arrayTB(varTB("A"))).build())
+    assertCall(() -> byteDb().arrayBuilder(arrayTB(oVarTB("A"))).build())
         .throwsException(new IllegalArgumentException(
             "Cannot create array object with polymorphic type `[A]`."));
   }

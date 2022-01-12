@@ -36,7 +36,7 @@ public class OrderBTest extends TestingContext {
 
   @Test
   public void elemT_can_be_equal_polytype_elemT_specified_in_category() {
-    var varA = varTB("A");
+    var varA = oVarTB("A");
     orderB(varA, list(paramRefB(varA, 0)));
   }
 

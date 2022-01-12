@@ -14,8 +14,6 @@ import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class CatBCachingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("type_creators")
@@ -29,7 +27,7 @@ public class CatBCachingTest extends TestingContext {
   public void read_type_is_cached(Function<CatDb, CatB> typeCreator) {
     Hash hash = typeCreator.apply(catDb()).hash();
     CatDb catDb = catDbOther();
-    Truth.assertThat(catDb.get(hash))
+    assertThat(catDb.get(hash))
         .isSameInstanceAs(catDb.get(hash));
   }
 
@@ -42,6 +40,8 @@ public class CatBCachingTest extends TestingContext {
         CatDb::nothing,
         CatDb::string,
         CatBCachingTest::tupleT,
+        catDb -> catDb.oVar("A"),
+        catDb -> catDb.cVar("A"),
 
         catDb -> catDb.call(catDb.int_()),
         catDb -> catDb.combine(catDb.tuple(list())),

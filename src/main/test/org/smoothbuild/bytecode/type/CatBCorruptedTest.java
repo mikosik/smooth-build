@@ -9,6 +9,7 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.ARRAY;
 import static org.smoothbuild.bytecode.type.base.CatKindB.BLOB;
 import static org.smoothbuild.bytecode.type.base.CatKindB.BOOL;
 import static org.smoothbuild.bytecode.type.base.CatKindB.CALL;
+import static org.smoothbuild.bytecode.type.base.CatKindB.CLOSED_VARIABLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.COMBINE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.IF;
 import static org.smoothbuild.bytecode.type.base.CatKindB.INT;
@@ -16,12 +17,12 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.INVOKE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.MAP;
 import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
 import static org.smoothbuild.bytecode.type.base.CatKindB.NOTHING;
+import static org.smoothbuild.bytecode.type.base.CatKindB.OPEN_VARIABLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.ORDER;
 import static org.smoothbuild.bytecode.type.base.CatKindB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.base.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
-import static org.smoothbuild.bytecode.type.base.CatKindB.VARIABLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -615,40 +616,71 @@ public class CatBCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _var {
+  class _open_var extends _var {
     @Test
     public void learning_test() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save Var type in HashedDb.
+       * to save OpenVar type in HashedDb.
        */
       Hash hash = hash(
-          hash(VARIABLE.marker()),
+          hash(OPEN_VARIABLE.marker()),
           hash("A")
       );
       assertThat(hash)
-          .isEqualTo(varTB("A").hash());
+          .isEqualTo(oVarTB("A").hash());
     }
+
+    @Override
+    protected CatKindB varKind() {
+      return OPEN_VARIABLE;
+    }
+  }
+
+  @Nested
+  class _close_var extends _var {
+    @Test
+    public void learning_test() throws Exception {
+      /*
+       * This test makes sure that other tests in this class use proper scheme
+       * to save OpenVar type in HashedDb.
+       */
+      Hash hash = hash(
+          hash(CLOSED_VARIABLE.marker()),
+          hash("A")
+      );
+      assertThat(hash)
+          .isEqualTo(cVarTB("A").hash());
+    }
+
+    @Override
+    protected CatKindB varKind() {
+      return CLOSED_VARIABLE;
+    }
+  }
+
+  abstract class _var {
+    abstract protected CatKindB varKind();
 
     @Test
     public void without_data() throws Exception {
-      assert_reading_cat_without_data_causes_exc(VARIABLE);
+      assert_reading_cat_without_data_causes_exc(varKind());
     }
 
     @Test
     public void with_additional_data() throws Exception {
-      assert_reading_cat_with_additional_data_causes_exc(VARIABLE);
+      assert_reading_cat_with_additional_data_causes_exc(varKind());
     }
 
     @Test
     public void with_data_hash_pointing_nowhere() throws Exception {
       Hash dataHash = Hash.of(33);
       Hash typeHash = hash(
-          hash(VARIABLE.marker()),
+          hash(varKind().marker()),
           dataHash
       );
       assertCall(() -> catDb().get(typeHash))
-          .throwsException(new DecodeCatNodeExc(typeHash, VARIABLE, DATA_PATH))
+          .throwsException(new DecodeCatNodeExc(typeHash, varKind(), DATA_PATH))
           .withCause(new NoSuchDataExc(dataHash));
     }
 
@@ -656,17 +688,17 @@ public class CatBCorruptedTest extends TestingContext {
     public void with_corrupted_type_as_data() throws Exception {
       Hash hash =
           hash(
-              hash(VARIABLE.marker()),
+              hash(varKind().marker()),
               corruptedArrayTHash());
       assertThatGet(hash)
-          .throwsException(new DecodeCatNodeExc(hash, VARIABLE, DATA_PATH))
+          .throwsException(new DecodeCatNodeExc(hash, varKind(), DATA_PATH))
           .withCause(DecodeStringExc.class);
     }
 
     @Test
     public void with_illegal_name() throws Exception {
       Hash hash = hash(
-          hash(VARIABLE.marker()),
+          hash(varKind().marker()),
           hash("a")
       );
       assertThatGet(hash)

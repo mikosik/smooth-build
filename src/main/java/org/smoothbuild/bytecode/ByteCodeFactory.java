@@ -38,13 +38,14 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
+import org.smoothbuild.bytecode.type.val.ClosedVarTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
+import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -199,8 +200,12 @@ public class ByteCodeFactory {
     return catDb.tuple(itemTs);
   }
 
-  public VarTB varT(String name) {
-    return catDb.var(name);
+  public OpenVarTB oVarT(String name) {
+    return catDb.oVar(name);
+  }
+
+  public ClosedVarTB cVarT(String name) {
+    return catDb.cVar(name);
   }
 
   // other values and its types

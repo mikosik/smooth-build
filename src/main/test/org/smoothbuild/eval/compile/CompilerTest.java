@@ -46,10 +46,10 @@ public class CompilerTest extends TestingContext {
 
     @Test
     public void call_polymorphic() {
-      var a = varTS("A");
+      var a = oVarTS("A");
       var identity = defFuncS("myFunc", nList(itemS(a, "p")), paramRefS(a, "p"));
       var call = callS(stringTS(), topRefS(identity), stringS("abc"));
-      var v = varTB("A");
+      var v = oVarTB("A");
       assertConversion(identity, call, callB(funcB(list(v), paramRefB(v, 0)), list(stringB("abc"))));
     }
 
@@ -112,7 +112,7 @@ public class CompilerTest extends TestingContext {
     @Test
     public void topRef_to_if_func() {
       var ifFuncS = ifFuncS();
-      var varA = varTB("A");
+      var varA = oVarTB("A");
       var bodyB = ifB(paramRefB(boolTB(), 0), paramRefB(varA, 1), paramRefB(varA, 2));
       var funcTB = funcTB(varA, list(boolTB(), varA, varA));
       var funcb = funcB(funcTB, bodyB);
@@ -122,8 +122,8 @@ public class CompilerTest extends TestingContext {
     @Test
     public void topRef_to_map_func() {
       var mapFuncS = mapFuncS();
-      var varE = varTB("E");
-      var varR = varTB("R");
+      var varE = oVarTB("E");
+      var varR = oVarTB("R");
       var mappingFuncT = funcTB(varR, list(varE));
       var funcTB = funcTB(arrayTB(varR), list(arrayTB(varE), mappingFuncT));
       var bodyB = mapB(paramRefB(arrayTB(varE), 0), paramRefB(mappingFuncT, 1));

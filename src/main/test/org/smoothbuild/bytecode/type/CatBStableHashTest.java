@@ -20,7 +20,8 @@ public class CatBStableHashTest extends TestingContext {
     assertHash(nothingTB(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(stringTB(), "5ac99f914f66deae94b7b0d990e821fe2117cf61");
     assertHash(tupleTB(list(blobTB())), "cd811460be1ebf123cab1361cfca1f49dd5c29c5");
-    assertHash(varTB("A"), "99f61661c131c5db3723bdaa5ad26229d06dc6ce");
+    assertHash(oVarTB("A"), "99f61661c131c5db3723bdaa5ad26229d06dc6ce");
+    assertHash(cVarTB("A"), "d4065e703b554791037bb64be166c1ff707ce6d6");
 
     assertHash(arrayTB(anyTB()), "2dfdcb5ccf6df3057cb84565af5b67f64c685e9c");
     assertHash(arrayTB(blobTB()), "7fbebe7b9e6730b6b49fbd19811677bbd1d8880b");
@@ -31,7 +32,8 @@ public class CatBStableHashTest extends TestingContext {
     assertHash(arrayTB(nothingTB()), "223052eec1e2f74ed0234fd1ba43f4d49e7e43db");
     assertHash(arrayTB(stringTB()), "dfeac8190688130683d51d719055d46c47cec4d2");
     assertHash(arrayTB(tupleTB(list(blobTB()))), "e843737d83eb150a51a81d9e43a00142982bd959");
-    assertHash(arrayTB(varTB("A")), "5eae2a05ffe2fee34c07a74779e5eecde3521849");
+    assertHash(arrayTB(oVarTB("A")), "5eae2a05ffe2fee34c07a74779e5eecde3521849");
+    assertHash(arrayTB(cVarTB("A")), "20a009ddf42c16d7113b06a2c0cf0cf7e98c65e8");
 
     assertHash(callCB(intTB()), "f8e8b1d061fcdfb8be52b97cf80e50bc908e59ef");
     assertHash(combineCB(list()), "7dfcc1569b044dbec3b0e077cff6737ceb0aa99f");

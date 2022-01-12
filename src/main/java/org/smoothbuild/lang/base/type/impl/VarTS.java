@@ -1,24 +1,13 @@
 package org.smoothbuild.lang.base.type.impl;
 
-import static org.smoothbuild.util.collect.Sets.set;
-
 import org.smoothbuild.lang.base.type.api.VarT;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * This class is immutable.
  */
-public final class VarTS extends TypeS implements VarT {
-  private final ImmutableSet<VarTS> vars;
-
-  public VarTS(String name) {
-    super(name, null);
-    this.vars = set(this);
-  }
-
-  @Override
-  public ImmutableSet<VarTS> vars() {
-    return vars;
+public abstract sealed class VarTS extends TypeS implements VarT
+    permits ClosedVarTS, OpenVarTS {
+  protected VarTS(String name, boolean hasOpenVars, boolean hasClosedVars) {
+    super(name, hasOpenVars, hasClosedVars);
   }
 }

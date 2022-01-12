@@ -12,6 +12,7 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.ARRAY;
 import static org.smoothbuild.bytecode.type.base.CatKindB.BLOB;
 import static org.smoothbuild.bytecode.type.base.CatKindB.BOOL;
 import static org.smoothbuild.bytecode.type.base.CatKindB.CALL;
+import static org.smoothbuild.bytecode.type.base.CatKindB.CLOSED_VARIABLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.COMBINE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.FUNC;
 import static org.smoothbuild.bytecode.type.base.CatKindB.IF;
@@ -20,17 +21,18 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.INVOKE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.MAP;
 import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
 import static org.smoothbuild.bytecode.type.base.CatKindB.NOTHING;
+import static org.smoothbuild.bytecode.type.base.CatKindB.OPEN_VARIABLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.ORDER;
 import static org.smoothbuild.bytecode.type.base.CatKindB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.base.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
-import static org.smoothbuild.bytecode.type.base.CatKindB.VARIABLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.CatKindB;
@@ -53,10 +55,12 @@ import org.smoothbuild.bytecode.type.val.AnyTB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
+import org.smoothbuild.bytecode.type.val.ClosedVarTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
+import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.bytecode.type.val.VarTB;
@@ -67,9 +71,6 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.ComposedT;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.lang.base.type.impl.ArrayTS;
-import org.smoothbuild.lang.base.type.impl.FuncTS;
-import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.util.TriFunction;
 import org.smoothbuild.util.collect.Lists;
 
@@ -186,9 +187,16 @@ public class CatDb implements TypeFactoryB {
     return string;
   }
 
-  public VarTB var(String name) {
+  @Override
+  public OpenVarTB oVar(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return wrapHashedDbExceptionAsObjectDbException(() -> newVar(name));
+    return wrapHashedDbExceptionAsObjectDbException(() -> newOpenVar(name));
+  }
+
+  @Override
+  public ClosedVarTB cVar(String name) {
+    checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
+    return wrapHashedDbExceptionAsObjectDbException(() -> newClosedVar(name));
   }
 
   @Override
@@ -257,17 +265,18 @@ public class CatDb implements TypeFactoryB {
       }
       case ARRAY -> newArray(hash, readDataAsValT(hash, rootSeq, kind));
       case CALL -> newCall(hash, readDataAsValT(hash, rootSeq, kind));
+      case CLOSED_VARIABLE -> readVar(hash, rootSeq, kind, this::newClosedVar);
       case COMBINE -> newCombine(hash, readDataAsTupleT(hash, rootSeq, kind));
       case FUNC -> readFunc(hash, rootSeq, kind);
       case IF -> newIf(hash, readDataAsValT(hash, rootSeq, kind));
       case INVOKE -> newInvoke(hash, readDataAsValT(hash, rootSeq, kind));
       case MAP -> newMap(hash, readDataAsArrayT(hash, rootSeq, kind));
       case METHOD -> readMethod(hash, rootSeq, kind);
+      case OPEN_VARIABLE -> readVar(hash, rootSeq, kind, this::newOpenVar);
       case ORDER -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
       case PARAM_REF -> newParamRef(hash, readDataAsValT(hash, rootSeq, kind));
       case SELECT -> newSelect(hash, readDataAsValT(hash, rootSeq, kind));
       case TUPLE -> readTuple(hash, rootSeq);
-      case VARIABLE -> readVar(hash, rootSeq);
     };
   }
 
@@ -351,14 +360,15 @@ public class CatDb implements TypeFactoryB {
     return builder.build();
   }
 
-  private VarTB readVar(Hash rootHash, List<Hash> rootSeq) {
-    assertCatRootSeqSize(rootHash, VARIABLE, rootSeq, 2);
+  private <T extends VarTB> T readVar(Hash rootHash, List<Hash> rootSeq, CatKindB kind,
+      BiFunction<Hash, String, T> creator) {
+    assertCatRootSeqSize(rootHash, kind, rootSeq, 2);
     var name = wrapHashedDbExcAsDecodeCatNodeExc(
-        rootHash, VARIABLE, DATA_PATH, () ->hashedDb.readString(rootSeq.get(1)));
+        rootHash, kind, DATA_PATH, () ->hashedDb.readString(rootSeq.get(1)));
     if (!isVarName(name)) {
       throw new DecodeVarIllegalNameExc(rootHash, name);
     }
-    return newVar(rootHash, name);
+    return creator.apply(rootHash, name);
   }
 
   private <T> T readNode(CatKindB kind, Hash outerHash, Hash hash, String path, Class<T> clazz) {
@@ -419,13 +429,22 @@ public class CatDb implements TypeFactoryB {
     return cache(new TupleTB(rootHash, itemTs));
   }
 
-  private VarTB newVar(String name) throws HashedDbExc {
-    var rootHash = writeVarRoot(name);
-    return newVar(rootHash, name);
+  private OpenVarTB newOpenVar(String name) throws HashedDbExc {
+    var rootHash = writeVarRoot(name, OPEN_VARIABLE);
+    return newOpenVar(rootHash, name);
   }
 
-  private VarTB newVar(Hash rootHash, String name) {
-    return cache(new VarTB(rootHash, name));
+  private OpenVarTB newOpenVar(Hash rootHash, String name) {
+    return cache(new OpenVarTB(rootHash, name));
+  }
+
+  private ClosedVarTB newClosedVar(String name) throws HashedDbExc {
+    var rootHash = writeVarRoot(name, CLOSED_VARIABLE);
+    return newClosedVar(rootHash, name);
+  }
+
+  private ClosedVarTB newClosedVar(Hash rootHash, String name) {
+    return cache(new ClosedVarTB(rootHash, name));
   }
 
   // methods for creating Expr types
@@ -525,9 +544,9 @@ public class CatDb implements TypeFactoryB {
     return writeNonBaseRoot(TUPLE, itemsHash);
   }
 
-  private Hash writeVarRoot(String name) throws HashedDbExc {
+  private Hash writeVarRoot(String name, CatKindB kind) throws HashedDbExc {
     var nameHash = hashedDb.writeString(name);
-    return writeNonBaseRoot(VARIABLE, nameHash);
+    return writeNonBaseRoot(kind, nameHash);
   }
 
   // Helper methods for writing roots

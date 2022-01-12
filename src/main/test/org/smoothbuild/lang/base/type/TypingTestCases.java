@@ -18,8 +18,8 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
-import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.lang.base.type.api.VarBounds;
+import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.lang.base.type.impl.NothingTS;
 
 import com.google.common.collect.ImmutableList;

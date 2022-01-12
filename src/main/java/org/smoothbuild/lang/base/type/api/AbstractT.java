@@ -2,16 +2,17 @@ package org.smoothbuild.lang.base.type.api;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.collect.ImmutableSet;
-
 public non-sealed abstract class AbstractT implements Type {
   protected final String name;
-  protected final ImmutableSet<? extends VarT> vars;
+  private final boolean hasOpenVars;
+  private final boolean hasClosedVars;
 
-  public AbstractT(String name, ImmutableSet<? extends VarT> vars) {
+  public AbstractT(String name, boolean hasOpenVars, boolean hasClosedVars) {
     checkArgument(!name.isBlank());
+    this.hasOpenVars = hasOpenVars;
+    this.hasClosedVars = hasClosedVars;
     this.name = name;
-    this.vars = vars;
+
   }
 
   @Override
@@ -19,11 +20,13 @@ public non-sealed abstract class AbstractT implements Type {
     return name;
   }
 
-  /**
-   * @return type vars sorted alphabetically
-   */
   @Override
-  public ImmutableSet<? extends VarT> vars() {
-    return vars;
+  public boolean hasOpenVars() {
+    return hasOpenVars;
+  }
+
+  @Override
+  public boolean hasClosedVars() {
+    return hasClosedVars;
   }
 }

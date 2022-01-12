@@ -8,10 +8,8 @@ import static org.smoothbuild.lang.base.type.TestingTS.INFERABLE_BASE_TYPES;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
-import static org.smoothbuild.util.collect.Sets.set;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
@@ -24,7 +22,6 @@ import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 
@@ -67,7 +64,8 @@ public class TypeSTest extends TestingContext {
         args(f -> f.nothing(), "Nothing"),
         args(f -> f.string(), "String"),
         args(f -> f.struct("MyStruct", nList()), "MyStruct"),
-        args(f -> f.var("A"), "A"),
+        args(f -> f.oVar("A"), "A"),
+        args(f -> f.cVar("A"), "A"),
 
         args(f -> f.array(f.any()), "[Any]"),
         args(f -> f.array(f.blob()), "[Blob]"),
@@ -76,9 +74,11 @@ public class TypeSTest extends TestingContext {
         args(f -> f.array(f.nothing()), "[Nothing]"),
         args(f -> f.array(f.string()), "[String]"),
         args(f -> f.array(f.struct("MyStruct", nList())), "[MyStruct]"),
-        args(f -> f.array(f.var("A")), "[A]"),
+        args(f -> f.array(f.oVar("A")), "[A]"),
+        args(f -> f.array(f.cVar("A")), "[A]"),
 
-        args(f -> f.array(f.array(f.var("A"))), "[[A]]"),
+        args(f -> f.array(f.array(f.oVar("A"))), "[[A]]"),
+        args(f -> f.array(f.array(f.cVar("A"))), "[[A]]"),
         args(f -> f.array(f.array(f.any())), "[[Any]]"),
         args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
         args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
@@ -87,9 +87,12 @@ public class TypeSTest extends TestingContext {
         args(f -> f.array(f.array(f.struct("MyStruct", nList()))), "[[MyStruct]]"),
         args(f -> f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.func(f.var("A"), list(f.array(f.var("A")))), "A([A])"),
-        args(f -> f.func(f.string(), list(f.array(f.var("A")))), "String([A])"),
-        args(f -> f.func(f.var("A"), list(f.var("A"))), "A(A)"),
+        args(f -> f.func(f.oVar("A"), list(f.array(f.oVar("A")))), "A([A])"),
+        args(f -> f.func(f.cVar("A"), list(f.array(f.cVar("A")))), "A([A])"),
+        args(f -> f.func(f.string(), list(f.array(f.oVar("A")))), "String([A])"),
+        args(f -> f.func(f.string(), list(f.array(f.cVar("A")))), "String([A])"),
+        args(f -> f.func(f.oVar("A"), list(f.oVar("A"))), "A(A)"),
+        args(f -> f.func(f.cVar("A"), list(f.cVar("A"))), "A(A)"),
         args(f -> f.func(f.string(), list()), "String()"),
         args(f -> f.func(f.string(), list(f.string())), "String(String)")
     );
@@ -104,23 +107,33 @@ public class TypeSTest extends TestingContext {
 
   public static List<Arguments> isPolytype_test_data() {
     return asList(
-        args(f -> f.var("A"), true),
-        args(f -> f.array(f.var("A")), true),
-        args(f -> f.array(f.array(f.var("A"))), true),
+        args(f -> f.oVar("A"), true),
+        args(f -> f.array(f.oVar("A")), true),
+        args(f -> f.array(f.array(f.oVar("A"))), true),
 
-        args(f -> f.func(f.var("A"), list()), true),
-        args(f -> f.func(f.func(f.var("A"), list()), list()), true),
-        args(f -> f.func(f.func(f.func(f.var("A"), list()), list()), list()),
-            true),
+        args(f -> f.func(f.oVar("A"), list()), true),
+        args(f -> f.func(f.func(f.oVar("A"), list()), list()), true),
+        args(f -> f.func(f.func(f.func(f.oVar("A"), list()), list()), list()), true),
 
-        args(f -> f.func(f.bool(), list(f.var("A"))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.var("A"), list()))), true),
-        args(f -> f
-                .func(f.bool(), list(f.func(f.func(f.var("A"), list()), list()))),
-            true),
+        args(f -> f.func(f.bool(), list(f.oVar("A"))), true),
+        args(f -> f.func(f.bool(), list(f.func(f.oVar("A"), list()))), true),
+        args(f -> f.func(f.bool(), list(f.func(f.func(f.oVar("A"), list()), list()))), true),
 
-        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.var("A"))))),
-            true),
+        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.oVar("A"))))), true),
+
+        args(f -> f.cVar("A"), true),
+        args(f -> f.array(f.cVar("A")), true),
+        args(f -> f.array(f.array(f.cVar("A"))), true),
+
+        args(f -> f.func(f.cVar("A"), list()), true),
+        args(f -> f.func(f.func(f.cVar("A"), list()), list()), true),
+        args(f -> f.func(f.func(f.func(f.cVar("A"), list()), list()), list()), true),
+
+        args(f -> f.func(f.bool(), list(f.cVar("A"))), true),
+        args(f -> f.func(f.bool(), list(f.func(f.cVar("A"), list()))), true),
+        args(f -> f.func(f.bool(), list(f.func(f.func(f.cVar("A"), list()), list()))), true),
+
+        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.cVar("A"))))), true),
 
         args(f -> f.func(f.bool(), list(f.int_())), false),
 
@@ -131,54 +144,6 @@ public class TypeSTest extends TestingContext {
         args(f -> f.nothing(), false),
         args(f -> f.string(), false),
         args(f -> f.struct("MyStruct", nList()), false)
-    );
-  }
-
-  @ParameterizedTest
-  @MethodSource("vars_test_data")
-  public void vars(
-      Function<TypeFactoryS, TypeS> factoryCall,
-      Function<TypeFactoryS, Set<VarT>> resultCall) {
-    assertThat(invoke(factoryCall).vars())
-        .containsExactlyElementsIn(invoke(resultCall))
-        .inOrder();
-  }
-
-  public static List<Arguments> vars_test_data() {
-    return asList(
-        args(f -> f.any(), f -> set()),
-        args(f -> f.blob(), f -> set()),
-        args(f -> f.bool(), f -> set()),
-        args(f -> f.int_(), f -> set()),
-        args(f -> f.nothing(), f -> set()),
-        args(f -> f.string(), f -> set()),
-        args(f -> f.struct("MyStruct", nList()), f -> set()),
-
-        args(f -> f.array(f.any()), f -> set()),
-        args(f -> f.array(f.blob()), f -> set()),
-        args(f -> f.array(f.bool()), f -> set()),
-        args(f -> f.array(f.int_()), f -> set()),
-        args(f -> f.array(f.nothing()), f -> set()),
-        args(f -> f.array(f.string()), f -> set()),
-        args(f -> f.array(f.var("A")), f -> set(f.var("A"))),
-
-        args(f -> f.func(f.string(), list()), f -> set()),
-        args(f -> f.func(f.string(), list(f.bool())), f -> set()),
-
-        args(f -> f.var("A"), f -> set(f.var("A"))),
-        args(f -> f.array(f.var("A")), f -> set(f.var("A"))),
-        args(f -> f.array(f.array(f.var("A"))), f -> set(f.var("A"))),
-
-        args(f -> f.func(f.var("A"), list()), f -> set(f.var("A"))),
-        args(f -> f.func(f.var("A"), list(f.string())), f -> set(f.var("A"))),
-        args(f -> f.func(f.string(), list(f.var("A"))), f -> set(f.var("A"))),
-        args(f -> f.func(f.var("B"), list(f.var("A"))),
-            f -> set(f.var("A"), f.var("B"))),
-
-        args(f -> f.func(f.func(f.var("A"), list()), list()),
-            f -> set(f.var("A"))),
-        args(f -> f.func(f.var("D"), list(f.var("C"), f.var("B"))),
-            f -> set(f.var("B"), f.var("C"), f.var("D")))
     );
   }
 
@@ -215,10 +180,19 @@ public class TypeSTest extends TestingContext {
   }
 
   @Nested
-  class _var {
+  class _open_var {
     @Test
     public void illegal_name() {
-      assertCall(() -> varTS("a"))
+      assertCall(() -> oVarTS("a"))
+          .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
+    }
+  }
+
+  @Nested
+  class _closed_var {
+    @Test
+    public void illegal_name() {
+      assertCall(() -> cVarTS("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
@@ -244,7 +218,8 @@ public class TypeSTest extends TestingContext {
           args(f -> f.nothing()),
           args(f -> f.string()),
           args(f -> f.struct("MyStruct", nList())),
-          args(f -> f.var("A")),
+          args(f -> f.oVar("A")),
+          args(f -> f.cVar("A")),
 
           args(f -> f.array(f.any())),
           args(f -> f.array(f.blob())),
@@ -253,7 +228,8 @@ public class TypeSTest extends TestingContext {
           args(f -> f.array(f.int_())),
           args(f -> f.array(f.nothing())),
           args(f -> f.array(f.string())),
-          args(f -> f.array(f.var("A")))
+          args(f -> f.array(f.oVar("A"))),
+          args(f -> f.array(f.cVar("A")))
       );
     }
   }
@@ -323,9 +299,12 @@ public class TypeSTest extends TestingContext {
         f.string(),
         f.struct("MyStruct", nList()),
         f.struct("MyStruct", nList(sigS(f.int_(), "field"))),
-        f.var("A"),
-        f.var("B"),
-        f.var("C"),
+        f.oVar("A"),
+        f.oVar("B"),
+        f.oVar("C"),
+        f.cVar("A"),
+        f.cVar("B"),
+        f.cVar("C"),
 
         f.func(f.blob(), list()),
         f.func(f.string(), list()),

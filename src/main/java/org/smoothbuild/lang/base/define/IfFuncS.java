@@ -14,7 +14,7 @@ public final class IfFuncS extends FuncS {
   public static final String IF_FUNCTION_NAME = "if";
 
   public IfFuncS(ModPath modPath, TypeFactoryS factory) {
-    this(factory.var("A"), factory.bool(), modPath, factory);
+    this(factory.oVar("A"), factory.bool(), modPath, factory);
   }
 
   private IfFuncS(TypeS resT, TypeS boolT, ModPath modPath, TypeFactoryS factory) {

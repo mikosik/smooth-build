@@ -72,7 +72,7 @@ public class EvaluatorTest  extends TestingContext {
 
     @Test
     public void call_polymorphic() throws Exception {
-      var a = varTS("A");
+      var a = oVarTS("A");
       var defFuncS = defFuncS("n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e")));
       var callS = callS(arrayTS(intTS()), topRefS(defFuncS), intS(7));
       assertThat(evaluate(callS, defFuncS))

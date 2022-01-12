@@ -22,7 +22,7 @@ public class InvokeBTest extends TestingContext {
 
     @Test
     public void with_generic_params() {
-      Truth.assertThat(invokeB(methodB(methodTB(oVarTB("A"), list(oVarTB("A")))), list(boolB())).cat())
+      assertThat(invokeB(methodB(methodTB(oVarTB("A"), list(oVarTB("A")))), list(boolB())).cat())
           .isEqualTo(invokeCB(boolTB()));
     }
   }

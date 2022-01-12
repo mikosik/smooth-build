@@ -24,7 +24,8 @@ public class TestingCatsB {
   public static final TypeB METHOD = CAT_DB.method(BLOB, list(BOOL));
   public static final TypeB NOTHING = CAT_DB.nothing();
   public static final TypeB STRING = CAT_DB.string();
-  public static final TypeB VARIABLE = CAT_DB.var("A");
+  public static final TypeB OPEN_VARIABLE = CAT_DB.oVar("A");
+  public static final TypeB CLOSED_VARIABLE = CAT_DB.cVar("A");
 
   public static final TupleTB PERSON = CONTEXT.personTB();
   public static final TupleTB FILE = CONTEXT.fileTB();
@@ -50,7 +51,8 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY_STR = array(STRING);
   public static final ArrayTB ARRAY_PERSON_TUPLE = array(PERSON);
   public static final ArrayTB ARRAY_PERSON = array(PERSON);
-  public static final ArrayTB ARRAY_VARIABLE = array(VARIABLE);
+  public static final ArrayTB ARRAY_OPEN_VARIABLE = array(OPEN_VARIABLE);
+  public static final ArrayTB ARRAY_CLOSED_VARIABLE = array(CLOSED_VARIABLE);
 
   public static final ArrayTB ARRAY2_ANY = array(ARRAY_ANY);
   public static final ArrayTB ARRAY2_BLOB = array(ARRAY_BLOB);
@@ -62,7 +64,8 @@ public class TestingCatsB {
   public static final ArrayTB ARRAY2_STR = array(ARRAY_STR);
   public static final ArrayTB ARRAY2_PERSON_TUPLE = array(ARRAY_PERSON_TUPLE);
   public static final ArrayTB ARRAY2_PERSON = array(ARRAY_PERSON);
-  public static final ArrayTB ARRAY2_VARIABLE = array(ARRAY_VARIABLE);
+  public static final ArrayTB ARRAY2_OPEN_VARIABLE = array(ARRAY_OPEN_VARIABLE);
+  public static final ArrayTB ARRAY2_CLOSED_VARIABLE = array(ARRAY_CLOSED_VARIABLE);
 
   public static final ImmutableList<CatB> BASE_CATS_TO_TEST = list(
       BLOB,
@@ -120,8 +123,10 @@ public class TestingCatsB {
         CAT_DB.tuple(list(BLOB)),
         CAT_DB.tuple(list(BLOB, BLOB)),
         CAT_DB.tuple(list(STRING)),
-        CAT_DB.var("A"),
-        CAT_DB.var("B")
+        CAT_DB.oVar("A"),
+        CAT_DB.oVar("B"),
+        CAT_DB.cVar("A"),
+        CAT_DB.cVar("B")
     );
     var arrayCs = map(baseCs, CAT_DB::array);
     var valueCs = concat(baseCs, arrayCs);

@@ -13,13 +13,14 @@ import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
 import org.smoothbuild.lang.base.type.impl.BoolTS;
+import org.smoothbuild.lang.base.type.impl.ClosedVarTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.IntTS;
 import org.smoothbuild.lang.base.type.impl.NothingTS;
+import org.smoothbuild.lang.base.type.impl.OpenVarTS;
 import org.smoothbuild.lang.base.type.impl.StringTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
-import org.smoothbuild.lang.base.type.impl.VarTS;
 
 public class TypeShConv {
   private final ByteCodeFactory byteCodeFactory;
@@ -35,11 +36,12 @@ public class TypeShConv {
       case ArrayTS a -> convert(a);
       case BlobTS blob -> byteCodeFactory.blobT();
       case BoolTS bool -> byteCodeFactory.boolT();
+      case ClosedVarTS v ->  byteCodeFactory.cVarT(v.name());
       case IntTS i -> byteCodeFactory.intT();
       case NothingTS n -> byteCodeFactory.nothingT();
+      case OpenVarTS v ->  byteCodeFactory.oVarT(v.name());
       case StringTS s -> byteCodeFactory.stringT();
       case StructTS st -> convert(st);
-      case VarTS v ->  byteCodeFactory.varT(v.name());
       case FuncTS f -> convert(f);
     };
   }

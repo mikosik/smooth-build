@@ -1,11 +1,11 @@
 package org.smoothbuild.bytecode.type.val;
 
+import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
 import static org.smoothbuild.lang.base.type.api.TypeNames.tupleTypeName;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.TupleT;
@@ -20,7 +20,9 @@ public class TupleTB extends TypeB implements TupleT {
   private final ImmutableList<TypeB> itemTs;
 
   public TupleTB(Hash hash, ImmutableList<TypeB> itemTs) {
-    super(calculateName(itemTs), hash, CatKindB.TUPLE, calculateVars(itemTs));
+    super(calculateName(itemTs), hash, TUPLE,
+        itemTs.stream().anyMatch(Type::hasOpenVars),
+        itemTs.stream().anyMatch(Type::hasClosedVars));
     this.itemTs = ImmutableList.copyOf(itemTs);
   }
 

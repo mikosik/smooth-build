@@ -27,27 +27,27 @@ import com.google.common.collect.ImmutableMap;
 
 public enum CatKindB {
   // @formatter:off
-  ARRAY(        (byte) 0,  ArrayB.class,      ArrayB::new),
-  BLOB(         (byte) 1,  BlobB.class,       BlobB::new),
-  BOOL(         (byte) 2,  BoolB.class,       BoolB::new),
-  METHOD(       (byte) 3,  MethodB.class,     MethodB::new),
-  INT(          (byte) 4,  IntB.class,        IntB::new),
-  IF(           (byte) 5,  IfB.class,         IfB::new),
-  NOTHING(      (byte) 6,  ValB.class,        CatKindB::throwException),
-  TUPLE(        (byte) 7,  TupleB.class,      TupleB::new),
-  STRING(       (byte) 8,  StringB.class,     StringB::new),
-  CALL(         (byte) 9,  CallB.class,       CallB::new),
-  FUNC(         (byte) 10, FuncB.class,       FuncB::new),
-  ORDER(        (byte) 11, OrderB.class,      OrderB::new),
-  SELECT(       (byte) 12, SelectB.class,     SelectB::new),
+  ARRAY(          (byte) 0,  ArrayB.class,      ArrayB::new),
+  BLOB(           (byte) 1,  BlobB.class,       BlobB::new),
+  BOOL(           (byte) 2,  BoolB.class,       BoolB::new),
+  METHOD(         (byte) 3,  MethodB.class,     MethodB::new),
+  INT(            (byte) 4,  IntB.class,        IntB::new),
+  IF(             (byte) 5,  IfB.class,         IfB::new),
+  NOTHING(        (byte) 6,  ValB.class,        CatKindB::throwException),
+  TUPLE(          (byte) 7,  TupleB.class,      TupleB::new),
+  STRING(         (byte) 8,  StringB.class,     StringB::new),
+  CALL(           (byte) 9,  CallB.class,       CallB::new),
+  FUNC(           (byte) 10, FuncB.class,       FuncB::new),
+  ORDER(          (byte) 11, OrderB.class,      OrderB::new),
+  SELECT(         (byte) 12, SelectB.class,     SelectB::new),
   // TODO unused 13
-  PARAM_REF(    (byte) 14, ParamRefB.class,   ParamRefB::new),
-  COMBINE(      (byte) 15, CombineB.class,    CombineB::new),
-  // TODO unused 16
-  VARIABLE(     (byte) 17, ValB.class,        CatKindB::throwException),
-  ANY(          (byte) 18, ValB.class,        CatKindB::throwException),
-  INVOKE(       (byte) 19, InvokeB.class,     InvokeB::new),
-  MAP(          (byte) 20, MapB.class,        MapB::new),
+  PARAM_REF(      (byte) 14, ParamRefB.class,   ParamRefB::new),
+  COMBINE(        (byte) 15, CombineB.class,    CombineB::new),
+  CLOSED_VARIABLE((byte) 16, ValB.class,        CatKindB::throwException),
+  OPEN_VARIABLE(  (byte) 17, ValB.class,        CatKindB::throwException),
+  ANY(            (byte) 18, ValB.class,        CatKindB::throwException),
+  INVOKE(         (byte) 19, InvokeB.class,     InvokeB::new),
+  MAP(            (byte) 20, MapB.class,        MapB::new),
   ;
   // @formatter:on
 
@@ -72,7 +72,8 @@ public enum CatKindB {
           .put((byte) 12, SELECT)
           .put((byte) 14, PARAM_REF)
           .put((byte) 15, COMBINE)
-          .put((byte) 17, VARIABLE)
+          .put((byte) 16, CLOSED_VARIABLE)
+          .put((byte) 17, OPEN_VARIABLE)
           .put((byte) 18, ANY)
           .put((byte) 19, INVOKE)
           .put((byte) 20, MAP)

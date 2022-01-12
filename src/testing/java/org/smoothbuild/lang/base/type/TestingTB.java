@@ -12,9 +12,9 @@ import org.smoothbuild.bytecode.type.val.BoolTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
+import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.testing.TestingContext;
@@ -34,9 +34,9 @@ public class TestingTB implements TestingT<TypeB> {
   public static final NothingTB NOTHING = FACTORY.nothing();
   public static final StringTB STRING = FACTORY.string();
   public static final TupleTB TUPLE = FACTORY.tuple(list(STRING, INT));
-  public static final VarTB A = FACTORY.var("A");
-  public static final VarTB B = FACTORY.var("B");
-  public static final VarTB X = FACTORY.var("X");
+  public static final OpenVarTB A = FACTORY.oVar("A");
+  public static final OpenVarTB B = FACTORY.oVar("B");
+  public static final OpenVarTB X = FACTORY.oVar("X");
   public static final Side<TypeB> LOWER = FACTORY.lower();
   public static final Side<TypeB> UPPER = FACTORY.upper();
 

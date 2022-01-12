@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.type.val;
 
-import org.smoothbuild.bytecode.type.base.CatKindB;
+import static org.smoothbuild.bytecode.type.base.CatKindB.NOTHING;
+
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.TypeNames;
@@ -10,7 +11,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
  */
 public class NothingTB extends TypeB {
   public NothingTB(Hash hash) {
-    super(TypeNames.NOTHING, hash, CatKindB.NOTHING);
+    super(TypeNames.NOTHING, hash, NOTHING);
   }
 
   @Override

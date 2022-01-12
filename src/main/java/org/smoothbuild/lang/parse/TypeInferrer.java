@@ -151,7 +151,7 @@ public class TypeInferrer {
 
       private Optional<TypeS> createType(TypeN type) {
         if (isVarName(type.name())) {
-          return Optional.of(factory.var(type.name()));
+          return Optional.of(factory.oVar(type.name()));
         }
         return switch (type) {
           case ArrayTN array -> createType(array.elemT()).map(factory::array);

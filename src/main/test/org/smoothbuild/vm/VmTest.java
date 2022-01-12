@@ -87,7 +87,7 @@ public class VmTest extends TestingContext {
 
     @Test
     public void with_polymorphic_func() throws Exception {
-      var a = varTB("A");
+      var a = oVarTB("A");
       var func = funcB(list(a), orderB(a, list(paramRefB(a, 0))));
       var call = callB(func, list(intB(7)));
       assertThat(evaluate(call))
@@ -97,7 +97,7 @@ public class VmTest extends TestingContext {
     @Test
     public void with_polymorphic_evalT() throws Exception {
       var evaluated = evaluatePolymorphicExpr(p -> {
-        var b = varTB("B");
+        var b = oVarTB("B");
         var funcB = funcB(list(b), orderB(b, list(paramRefB(b, 0))));
         return callB(funcB, list(p));
       }, intB(7));
@@ -221,7 +221,7 @@ public class VmTest extends TestingContext {
     @Test
     public void with_polymorphic_evalT() throws Exception {
       var evaluated = evaluatePolymorphicExpr(p -> {
-        var b = varTB("B");
+        var b = oVarTB("B");
         var methodT = methodTB(arrayTB(b), list(b));
         var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
         try {
@@ -369,7 +369,7 @@ public class VmTest extends TestingContext {
 
   private ObjB evaluatePolymorphicExpr(Function<ObjB, ObjB> exprCreator, ObjB val)
       throws Exception {
-    var a = varTB("A");
+    var a = oVarTB("A");
     var paramRef = paramRefB(a, 0);
     var expr = exprCreator.apply(paramRef);
     var func = funcB(list(a), expr);

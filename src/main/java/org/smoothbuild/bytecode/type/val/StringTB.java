@@ -1,9 +1,10 @@
 package org.smoothbuild.bytecode.type.val;
 
+import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
+
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.TypeNames;
@@ -13,7 +14,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
  */
 public class StringTB extends TypeB {
   public StringTB(Hash hash) {
-    super(TypeNames.STRING, hash, CatKindB.STRING);
+    super(TypeNames.STRING, hash, STRING);
   }
 
   @Override

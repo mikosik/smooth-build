@@ -137,8 +137,15 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
     };
   }
 
-  public VarTS var(String name) {
+  @Override
+  public OpenVarTS oVar(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return new VarTS(name);
+    return new OpenVarTS(name);
+  }
+
+  @Override
+  public ClosedVarTS cVar(String name) {
+    checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
+    return new ClosedVarTS(name);
   }
 }

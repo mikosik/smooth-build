@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.testing.TestingContext;
 
 public class MapBTest extends TestingContext {
@@ -56,15 +55,15 @@ public class MapBTest extends TestingContext {
 
   @Test
   public void generic_array_elemT_not_assignable_to_generic_mapping_func_paramT_causes_exc() {
-    var a = varTB("A");
-    var b = varTB("B");
+    var a = oVarTB("A");
+    var b = oVarTB("B");
     assertCall(() -> mapB(orderB(a, list()), funcB(list(b), paramRefB(b, 0))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void concrete_array_elemT_not_assignable_to_generic_mapping_func_paramT_causes_exc() {
-    var a = varTB("A");
+    var a = oVarTB("A");
     assertCall(() -> mapB(arrayB(intB(7)), funcB(list(a), paramRefB(a, 0))))
         .throwsException(IllegalArgumentException.class);
   }

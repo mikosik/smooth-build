@@ -59,13 +59,14 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
 import org.smoothbuild.bytecode.type.val.BoolTB;
 import org.smoothbuild.bytecode.type.val.CallableTB;
+import org.smoothbuild.bytecode.type.val.ClosedVarTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 import org.smoothbuild.bytecode.type.val.IntTB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
 import org.smoothbuild.bytecode.type.val.NothingTB;
+import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
-import org.smoothbuild.bytecode.type.val.VarTB;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.Hash;
@@ -97,9 +98,11 @@ import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
 import org.smoothbuild.lang.base.type.impl.BoolTS;
+import org.smoothbuild.lang.base.type.impl.ClosedVarTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.IntTS;
 import org.smoothbuild.lang.base.type.impl.NothingTS;
+import org.smoothbuild.lang.base.type.impl.OpenVarTS;
 import org.smoothbuild.lang.base.type.impl.StringTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
@@ -398,8 +401,12 @@ public class TestingContext {
     return tupleTB(list(stringTB()));
   }
 
-  public VarTB varTB(String name) {
-    return catDb().var(name);
+  public OpenVarTB oVarTB(String name) {
+    return catDb().oVar(name);
+  }
+
+  public ClosedVarTB cVarTB(String name) {
+    return catDb().cVar(name);
   }
 
   public Side<TypeB> lowerB() {
@@ -786,8 +793,12 @@ public class TestingContext {
     return typeFactoryS().struct(name, fields);
   }
 
-  public VarTS varTS(String name) {
-    return typeFactoryS().var(name);
+  public OpenVarTS oVarTS(String name) {
+    return typeFactoryS().oVar(name);
+  }
+
+  public ClosedVarTS cVarTS(String name) {
+    return typeFactoryS().cVar(name);
   }
 
   public Side<TypeS> lowerS() {
@@ -1023,5 +1034,20 @@ public class TestingContext {
 
   public ItemSigS sigS(TypeS type, String name) {
     return new ItemSigS(type, name, empty());
+  }
+
+  public TypeS o(TypeS type) {
+    return typingS().openVars(type);
+  }
+
+  public TypeB o(TypeB type) {
+    return typingB().openVars(type);
+  }
+  public TypeS c(TypeS type) {
+    return typingS().closeVars(type);
+  }
+
+  public TypeB c(TypeB type) {
+    return typingB().closeVars(type);
   }
 }

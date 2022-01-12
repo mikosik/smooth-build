@@ -167,7 +167,7 @@ public class ObjBCorruptedTest extends TestingContext {
 
     @Test
     public void with_polymorphic_type() throws Exception {
-      ArrayTB type = arrayTB(varTB("A"));
+      ArrayTB type = arrayTB(oVarTB("A"));
       Hash objHash =
           hash(
               hash(type),
@@ -1898,7 +1898,7 @@ public class ObjBCorruptedTest extends TestingContext {
 
     @Test
     public void with_polymorphic_type() throws Exception {
-      TupleTB type = tupleTB(list(varTB("A")));
+      TupleTB type = tupleTB(list(oVarTB("A")));
       Hash objHash = hash(
           hash(type),
           hash(
@@ -2081,12 +2081,25 @@ public class ObjBCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _var {
+  class _open_var {
     @Test
     public void learning_test() throws Exception {
       Hash objHash =
           hash(
-              hash(varTB("A")),
+              hash(oVarTB("A")),
+              hash("aaa"));
+      assertCall(() -> byteDb().get(objHash))
+          .throwsException(UnsupportedOperationException.class);
+    }
+  }
+
+  @Nested
+  class _closed_var {
+    @Test
+    public void learning_test() throws Exception {
+      Hash objHash =
+          hash(
+              hash(cVarTB("A")),
               hash("aaa"));
       assertCall(() -> byteDb().get(objHash))
           .throwsException(UnsupportedOperationException.class);

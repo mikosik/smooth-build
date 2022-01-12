@@ -9,9 +9,6 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.lang.base.type.api.AbstractT;
-import org.smoothbuild.lang.base.type.api.VarT;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Category of ObjH.
@@ -21,12 +18,12 @@ public abstract class CatB extends AbstractT {
   private final CatKindB kind;
 
   protected CatB(String name, Hash hash, CatKindB kind) {
-    this(name, hash, kind, ImmutableSet.of());
+    this(name, hash, kind, false, false);
   }
 
-  protected CatB(String name, Hash hash, CatKindB kind,
-      ImmutableSet<? extends VarT> vars) {
-    super(name, vars);
+  protected CatB(
+      String name, Hash hash, CatKindB kind, boolean hasOpenVars, boolean hasClosedVars) {
+    super(name, hasOpenVars, hasClosedVars);
     this.hash = hash;
     this.kind = kind;
   }
