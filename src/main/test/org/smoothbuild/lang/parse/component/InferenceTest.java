@@ -244,30 +244,32 @@ public class InferenceTest extends TestingContext {
   }
 
   @Nested
-  class _inferring_func_param_generic_types_fails_when_var_has_two_inconvertible_lower_bounds {
-    @Test
-    public void base_types() {
-      String code = """
+  class _inferring_func_param_types {
+    @Nested
+    class _fails_when_var_has_two_inconvertible_lower_bounds {
+      @Test
+      public void base_types() {
+        String code = """
           String myEqual(A p1, A p2) = "true";
           result = myEqual("def", 0x01);
           """;
-      mod(code)
-          .loadsWithError(2, "Cannot infer actual type for type var `A`.");
-    }
+        mod(code)
+            .loadsWithError(2, "Cannot infer actual type for type var `A`.");
+      }
 
-    @Test
-    public void arrays() {
-      String code = """
+      @Test
+      public void arrays() {
+        String code = """
           String myEqual(A p1, A p2) = "true";
           result = myEqual(["def"], [0x01]);
           """;
-      mod(code)
-          .loadsWithError(2, "Cannot infer actual type for type var `A`.");
-    }
+        mod(code)
+            .loadsWithError(2, "Cannot infer actual type for type var `A`.");
+      }
 
-    @Test
-    public void structs_with_the_same_object_db_representation() {
-      String code = """
+      @Test
+      public void structs_with_the_same_object_db_representation() {
+        String code = """
           Vector {
             String x,
             String y,
@@ -279,8 +281,9 @@ public class InferenceTest extends TestingContext {
           String myEqual(A p1, A p2) = "true";
           result = myEqual(vector("aaa", "bbb"), tuple("aaa", "bbb"));
           """;
-      mod(code)
-          .loadsWithError(10, "Cannot infer actual type for type var `A`.");
+        mod(code)
+            .loadsWithError(10, "Cannot infer actual type for type var `A`.");
+      }
     }
   }
 
