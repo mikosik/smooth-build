@@ -17,8 +17,6 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.job.algorithm.Output;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class ComputationCacheTest extends TestingContext {
@@ -27,14 +25,14 @@ public class ComputationCacheTest extends TestingContext {
 
   @Test
   public void cache_does_not_contain_not_written_result() throws Exception {
-    Truth.assertThat(computationCache().contains(hash))
+    assertThat(computationCache().contains(hash))
         .isFalse();
   }
 
   @Test
   public void cache_contains_written_result() throws Exception {
     computationCache().write(hash, new Output(stringB("result"), messageArrayEmtpy()));
-    Truth.assertThat(computationCache().contains(hash))
+    assertThat(computationCache().contains(hash))
         .isTrue();
   }
 
@@ -60,7 +58,7 @@ public class ComputationCacheTest extends TestingContext {
     var messages = arrayB(message);
     computationCache().write(hash, new Output(strV, messages));
 
-    Truth.assertThat(computationCache().read(hash, stringTB()).messages())
+    assertThat(computationCache().read(hash, stringTB()).messages())
         .isEqualTo(messages);
   }
 
@@ -120,7 +118,7 @@ public class ComputationCacheTest extends TestingContext {
     var file = fileB(path("file/path"), bytes);
     computationCache().write(hash, new Output(file, messageArrayEmtpy()));
 
-    Truth.assertThat(computationCache().read(hash, objFactory().fileT()).val())
+    assertThat(computationCache().read(hash, objFactory().fileT()).val())
         .isEqualTo(file);
   }
 
@@ -129,7 +127,7 @@ public class ComputationCacheTest extends TestingContext {
     var blob = blobB(bytes);
     computationCache().write(hash, new Output(blob, messageArrayEmtpy()));
 
-    Truth.assertThat(computationCache().read(hash, blobTB()).val())
+    assertThat(computationCache().read(hash, blobTB()).val())
         .isEqualTo(blob);
   }
 

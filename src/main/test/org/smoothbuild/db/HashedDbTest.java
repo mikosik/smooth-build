@@ -28,8 +28,6 @@ import org.smoothbuild.db.exc.DecodeStringExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class HashedDbTest extends TestingContext {
@@ -41,7 +39,7 @@ public class HashedDbTest extends TestingContext {
 
   @Test
   public void db_doesnt_contain_not_written_data() throws CorruptedHashedDbExc {
-    Truth.assertThat(hashedDb().contains(Hash.of(33)))
+    assertThat(hashedDb().contains(Hash.of(33)))
         .isFalse();
   }
 
@@ -50,7 +48,7 @@ public class HashedDbTest extends TestingContext {
     sink = hashedDb().sink();
     sink.close();
 
-    Truth.assertThat(hashedDb().contains(sink.hash()))
+    assertThat(hashedDb().contains(sink.hash()))
         .isTrue();
   }
 
@@ -68,7 +66,7 @@ public class HashedDbTest extends TestingContext {
     sink.write(byteString);
     sink.close();
 
-    Truth.assertThat(hashedDb().source(sink.hash()).readUtf8())
+    assertThat(hashedDb().source(sink.hash()).readUtf8())
         .isEqualTo("abc");
   }
 
@@ -77,7 +75,7 @@ public class HashedDbTest extends TestingContext {
     sink = hashedDb().sink();
     sink.close();
 
-    Truth.assertThat(hashedDb().source(sink.hash()).readByteString())
+    assertThat(hashedDb().source(sink.hash()).readByteString())
         .isEqualTo(ByteString.of());
   }
 
@@ -90,7 +88,7 @@ public class HashedDbTest extends TestingContext {
     sink.write(bytes1);
     sink.close();
 
-    Truth.assertThat(hashedDb().source(sink.hash()).readByteString())
+    assertThat(hashedDb().source(sink.hash()).readByteString())
         .isEqualTo(bytes1);
   }
 
@@ -167,7 +165,7 @@ public class HashedDbTest extends TestingContext {
     @MethodSource("allByteValues")
     public void with_single_byte_value_can_be_read_back(int value) throws Exception {
       hash = hashedDb().writeByte((byte) value);
-      Truth.assertThat(hashedDb().readBigInteger(hash))
+      assertThat(hashedDb().readBigInteger(hash))
           .isEqualTo(BigInteger.valueOf(value));
     }
 
@@ -176,7 +174,7 @@ public class HashedDbTest extends TestingContext {
     public void with_given_value_can_be_read_back(int value) throws Exception {
       BigInteger bigInteger = BigInteger.valueOf(value);
       hash = hashedDb().writeBigInteger(bigInteger);
-      Truth.assertThat(hashedDb().readBigInteger(hash))
+      assertThat(hashedDb().readBigInteger(hash))
           .isEqualTo(bigInteger);
     }
 
@@ -191,14 +189,14 @@ public class HashedDbTest extends TestingContext {
     @Test
     public void with_true_value_can_be_read_back() throws Exception {
       hash = hashedDb().writeBoolean(true);
-      Truth.assertThat(hashedDb().readBoolean(hash))
+      assertThat(hashedDb().readBoolean(hash))
           .isTrue();
     }
 
     @Test
     public void with_false_value_can_be_read_back() throws Exception {
       hash = hashedDb().writeBoolean(false);
-      Truth.assertThat(hashedDb().readBoolean(hash))
+      assertThat(hashedDb().readBoolean(hash))
           .isFalse();
     }
   }
@@ -209,7 +207,7 @@ public class HashedDbTest extends TestingContext {
     @MethodSource("allByteValues")
     public void with_given_value_can_be_read_back(int value) throws Exception {
       hash = hashedDb().writeByte((byte) value);
-      Truth.assertThat(hashedDb().readByte(hash))
+      assertThat(hashedDb().readByte(hash))
           .isEqualTo(value);
     }
 
@@ -225,7 +223,7 @@ public class HashedDbTest extends TestingContext {
     @ValueSource(strings = {"", "a", "abc", "!@#$"})
     public void with_given_value_can_be_read_back() throws Exception {
       hash = hashedDb().writeString("abc");
-      Truth.assertThat(hashedDb().readString(hash))
+      assertThat(hashedDb().readString(hash))
           .isEqualTo("abc");
     }
 
@@ -243,21 +241,21 @@ public class HashedDbTest extends TestingContext {
     @Test
     public void with_no_elems_can_be_read_back() throws Exception {
       hash = hashedDb().writeSeq();
-      Truth.assertThat(hashedDb().readSeq(hash))
+      assertThat(hashedDb().readSeq(hash))
           .isEqualTo(list());
     }
 
     @Test
     public void with_one_elem_can_be_read_back() throws Exception {
       hash = hashedDb().writeSeq(Hash.of("abc"));
-      Truth.assertThat(hashedDb().readSeq(hash))
+      assertThat(hashedDb().readSeq(hash))
           .isEqualTo(list(Hash.of("abc")));
     }
 
     @Test
     public void with_two_elems_can_be_read_back() throws Exception {
       hash = hashedDb().writeSeq(Hash.of("abc"), Hash.of("def"));
-      Truth.assertThat(hashedDb().readSeq(hash))
+      assertThat(hashedDb().readSeq(hash))
           .isEqualTo(list(Hash.of("abc"), Hash.of("def")));
     }
 

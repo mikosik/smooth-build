@@ -8,12 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class ContainerTest extends TestingContext {
   @Test
   public void file_system() {
-    Truth.assertThat(container().fileSystem())
+    assertThat(container().fileSystem())
         .isSameInstanceAs(fullFileSystem());
   }
 

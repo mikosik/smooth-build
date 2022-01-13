@@ -13,26 +13,24 @@ import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.type.expr.IfCB;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class IfBTest extends TestingContext {
   @Nested
   class _infer_type_of_if {
     @Test
     public void with_both_clauses_having_same_type() {
-      Truth.assertThat(ifB(boolB(true), intB(1), intB(2)).cat())
+      assertThat(ifB(boolB(true), intB(1), intB(2)).cat())
           .isEqualTo(ifCB(intTB()));
     }
 
     @Test
     public void with_then_clauses_being_subtype_of_else_clause() {
-      Truth.assertThat(ifB(boolB(true), arrayB(nothingTB()), arrayB(stringTB())).cat())
+      assertThat(ifB(boolB(true), arrayB(nothingTB()), arrayB(stringTB())).cat())
           .isEqualTo(ifCB(arrayTB(stringTB())));
     }
 
     @Test
     public void with_else_clauses_being_subtype_of_then_clause() {
-      Truth.assertThat(ifB(boolB(true), arrayB(stringTB()), arrayB(nothingTB())).cat())
+      assertThat(ifB(boolB(true), arrayB(stringTB()), arrayB(nothingTB())).cat())
           .isEqualTo(ifCB(arrayTB(stringTB())));
     }
   }
@@ -55,11 +53,11 @@ public class IfBTest extends TestingContext {
 
   private void test_clauses(IfCB ifCB, ArrayB then, ArrayB else_) {
     var ifB = ifB(boolB(true), then, else_);
-    Truth.assertThat(ifB.cat())
+    assertThat(ifB.cat())
         .isEqualTo(ifCB);
-    Truth.assertThat(ifB.data().then())
+    assertThat(ifB.data().then())
         .isEqualTo(then);
-    Truth.assertThat(ifB.data().else_())
+    assertThat(ifB.data().else_())
         .isEqualTo(else_);
   }
 
@@ -73,21 +71,21 @@ public class IfBTest extends TestingContext {
   @Test
   public void condition_getter() {
     var ifB = ifB(boolB(true), intB(1), intB(2));
-    Truth.assertThat(ifB.data().condition())
+    assertThat(ifB.data().condition())
         .isEqualTo(boolB(true));
   }
 
   @Test
   public void then_getter() {
     var ifB = ifB(boolB(true), intB(1), intB(2));
-    Truth.assertThat(ifB.data().then())
+    assertThat(ifB.data().then())
         .isEqualTo(intB(1));
   }
 
   @Test
   public void else_getter() {
     var ifB = ifB(boolB(true), intB(1), intB(2));
-    Truth.assertThat(ifB.data().else_())
+    assertThat(ifB.data().else_())
         .isEqualTo(intB(2));
   }
 
@@ -132,11 +130,11 @@ public class IfBTest extends TestingContext {
     var readIfData = readIf.data();
     var ifData = ifB.data();
 
-    Truth.assertThat(readIfData.condition())
+    assertThat(readIfData.condition())
         .isEqualTo(ifData.condition());
-    Truth.assertThat(readIfData.then())
+    assertThat(readIfData.then())
         .isEqualTo(ifData.then());
-    Truth.assertThat(readIfData.else_())
+    assertThat(readIfData.else_())
         .isEqualTo(ifData.else_());
   }
 
@@ -146,7 +144,7 @@ public class IfBTest extends TestingContext {
     var then = intB(1);
     var else_ = intB(2);
     var ifB = ifB(condition, then, else_);
-    Truth.assertThat(ifB.toString())
+    assertThat(ifB.toString())
         .isEqualTo("If:Int(???)@" + ifB.hash());
   }
 }

@@ -11,20 +11,18 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class InvokeBTest extends TestingContext {
   @Nested
   class _infer_type_of_invoke {
     @Test
     public void without_generic_params() {
-      Truth.assertThat(invokeB(methodB(methodTB(intTB(), list(boolTB()))), list(boolB())).cat())
+      assertThat(invokeB(methodB(methodTB(intTB(), list(boolTB()))), list(boolB())).cat())
           .isEqualTo(invokeCB(intTB()));
     }
 
     @Test
     public void with_generic_params() {
-      Truth.assertThat(invokeB(methodB(methodTB(varTB("A"), list(varTB("A")))), list(boolB())).cat())
+      Truth.assertThat(invokeB(methodB(methodTB(oVarTB("A"), list(oVarTB("A")))), list(boolB())).cat())
           .isEqualTo(invokeCB(boolTB()));
     }
   }
@@ -92,7 +90,7 @@ public class InvokeBTest extends TestingContext {
   @Test
   public void method_returns_method_expr() {
     var method = methodB(methodTB(intTB(), list(stringTB())));
-    Truth.assertThat(invokeB(method, list(stringB())).data().method())
+    assertThat(invokeB(method, list(stringB())).data().method())
         .isEqualTo(method);
   }
 
@@ -154,7 +152,7 @@ public class InvokeBTest extends TestingContext {
     var readInvoke = (InvokeB) byteDbOther().get(invoke.hash());
     var readInvokeData = readInvoke.data();
     var invokeData = invoke.data();
-    Truth.assertThat(readInvokeData.method())
+    assertThat(readInvokeData.method())
         .isEqualTo(invokeData.method());
     assertThat(readInvokeData.args())
         .isEqualTo(invokeData.args());
@@ -165,7 +163,7 @@ public class InvokeBTest extends TestingContext {
     var method = methodB(methodTB(intTB(), list(stringTB())));
     var args = combineB(list(stringB()));
     var invoke = invokeB(method, args);
-    Truth.assertThat(invoke.toString())
+    assertThat(invoke.toString())
         .isEqualTo("Invoke:Int(???)@" + invoke.hash());
   }
 }

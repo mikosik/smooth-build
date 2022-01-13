@@ -13,13 +13,12 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.truth.Truth;
 
 public class CombineBTest extends TestingContext {
   @Test
   public void cat_returns_category() {
     var combineH = combineB(tupleTB(list(intTB())), list(intB(3)));
-    Truth.assertThat(combineH.cat())
+    assertThat(combineH.cat())
         .isEqualTo(combineCB(list(intTB())));
   }
 
@@ -46,7 +45,7 @@ public class CombineBTest extends TestingContext {
   @Test
   public void items_returns_items() {
     ImmutableList<ObjB> items = list(intB(1), stringB("abc"));
-    Truth.assertThat(combineB(items).items())
+    assertThat(combineB(items).items())
         .isEqualTo(items);
   }
 

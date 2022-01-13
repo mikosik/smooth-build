@@ -11,13 +11,10 @@ import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class BlobBTest extends TestingContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
-  private final ByteString otherBytes = ByteString.encodeUtf8("bbb");
 
   @Test
   public void creating_blob_without_content_creates_empty_blob() throws Exception {
@@ -28,7 +25,7 @@ public class BlobBTest extends TestingContext {
 
   @Test
   public void type_of_blob_is_blob_type() {
-    Truth.assertThat(blobB(bytes).cat())
+    assertThat(blobB(bytes).cat())
         .isEqualTo(blobTB());
   }
 

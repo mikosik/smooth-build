@@ -14,20 +14,19 @@ import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.Lists;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.truth.Truth;
 
 public class CallBTest extends TestingContext {
   @Nested
   class _infer_type_of_call {
     @Test
     public void without_generic_params() {
-      Truth.assertThat(callB(funcB(list(stringTB()), intB()), list(stringB())).cat())
+      assertThat(callB(funcB(list(stringTB()), intB()), list(stringB())).cat())
           .isEqualTo(callCB(intTB()));
     }
 
     @Test
     public void with_generic_params() {
-      Truth.assertThat(callB(funcB(list(varTB("A")), paramRefB(varTB("A"), 0)), list(intB())).cat())
+      assertThat(callB(funcB(list(oVarTB("A")), paramRefB(oVarTB("A"), 0)), list(intB())).cat())
           .isEqualTo(callCB(intTB()));
     }
   }
@@ -56,7 +55,7 @@ public class CallBTest extends TestingContext {
     var func = funcB(list(arrayTB(intTB())), paramRefB(arrayTB(intTB()), 0));
     var args = combineB(Lists.list(arrayB(nothingTB())));
     var call = callB(func, args);
-    Truth.assertThat(call.data().args())
+    assertThat(call.data().args())
         .isEqualTo(args);
   }
 
@@ -70,7 +69,7 @@ public class CallBTest extends TestingContext {
   public void creating_call_with_resT_being_subtype_of_evalT() {
     var func = funcB(list(), arrayB(nothingTB()));
     var callB = callB(arrayTB(intTB()), func, list());
-    Truth.assertThat(callB.data().args())
+    assertThat(callB.data().args())
         .isEqualTo(combineB(list()));
   }
 
@@ -99,7 +98,7 @@ public class CallBTest extends TestingContext {
   public void args_returns_arg_exprs() {
     var func = funcB(list(stringTB()), intB());
     ImmutableList<ObjB> args = list(stringB()) ;
-    Truth.assertThat(callB(func, args).data().args())
+    assertThat(callB(func, args).data().args())
         .isEqualTo(combineB(args));
   }
 
@@ -143,7 +142,7 @@ public class CallBTest extends TestingContext {
   public void to_string() {
     var func = funcB(list(stringTB()), intB());
     var call = callB(func, list(stringB()));
-    Truth.assertThat(call.toString())
+    assertThat(call.toString())
         .isEqualTo("Call:Int(???)@" + call.hash());
   }
 }

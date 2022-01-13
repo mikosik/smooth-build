@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class ParamRefBTest extends TestingContext {
   @Test
   public void type_of_ref_expr_is_ref_type() {
@@ -22,7 +20,7 @@ public class ParamRefBTest extends TestingContext {
 
   @Test
   public void value_returns_stored_value() {
-    Truth.assertThat(paramRefB(123).value())
+    assertThat(paramRefB(123).value())
         .isEqualTo(BigInteger.valueOf(123));
   }
 

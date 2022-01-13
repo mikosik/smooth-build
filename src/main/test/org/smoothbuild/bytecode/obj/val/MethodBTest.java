@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.truth.Truth;
-
 public class MethodBTest extends TestingContext {
   @Test
   public void type_is_read_correctly() {
@@ -20,7 +18,7 @@ public class MethodBTest extends TestingContext {
     var isPure = boolB(true);
     var methodTH = methodTB(stringTB(), list(intTB()));
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
-    Truth.assertThat(methodH.type())
+    assertThat(methodH.type())
         .isEqualTo(methodTH);
   }
 
@@ -96,7 +94,7 @@ public class MethodBTest extends TestingContext {
     var isPure = boolB(true);
     var methodTH = methodTB(stringTB(), list(intTB()));
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
-    Truth.assertThat(methodH.toString())
+    assertThat(methodH.toString())
         .isEqualTo("Method(_String(Int))@" + methodH.hash());
   }
 }

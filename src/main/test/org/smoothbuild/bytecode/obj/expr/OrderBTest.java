@@ -13,13 +13,12 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.truth.Truth;
 
 public class OrderBTest extends TestingContext {
   @Test
   public void cat_returns_category() {
     var orderH = orderB(intTB(), list());
-    Truth.assertThat(orderH.cat())
+    assertThat(orderH.cat())
         .isEqualTo(orderCB(intTB()));
   }
 
@@ -52,7 +51,7 @@ public class OrderBTest extends TestingContext {
   @Test
   public void elems_returns_elems() {
     ImmutableList<ObjB> elems = list(intB(2));
-    Truth.assertThat(orderB(elems).elems())
+    assertThat(orderB(elems).elems())
         .isEqualTo(elems);
   }
 
