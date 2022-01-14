@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base.type.api;
 
-import static org.smoothbuild.lang.base.type.TestingTS.A;
-import static org.smoothbuild.lang.base.type.TestingTS.B;
 import static org.smoothbuild.lang.base.type.TestingTS.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTS.LOWER;
+import static org.smoothbuild.lang.base.type.TestingTS.OPEN_A;
+import static org.smoothbuild.lang.base.type.TestingTS.OPEN_B;
 import static org.smoothbuild.lang.base.type.TestingTS.STRING;
 import static org.smoothbuild.lang.base.type.TestingTS.UPPER;
 import static org.smoothbuild.lang.base.type.TestingTS.vb;
@@ -18,9 +18,9 @@ public class VarBoundsTest extends TestingContext {
   public void equality() {
     new EqualsTester()
         .addEqualityGroup(vb())
-        .addEqualityGroup(vb(A, LOWER, STRING))
-        .addEqualityGroup(vb(A, UPPER, STRING))
-        .addEqualityGroup(vb(A, LOWER, BOOL))
-        .addEqualityGroup(vb(B, LOWER, STRING), vb(B, LOWER, STRING));
+        .addEqualityGroup(vb(OPEN_A, LOWER, STRING))
+        .addEqualityGroup(vb(OPEN_A, UPPER, STRING))
+        .addEqualityGroup(vb(OPEN_A, LOWER, BOOL))
+        .addEqualityGroup(vb(OPEN_B, LOWER, STRING), vb(OPEN_B, LOWER, STRING));
   }
 }

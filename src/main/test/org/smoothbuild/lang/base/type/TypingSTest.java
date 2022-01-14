@@ -105,4 +105,24 @@ public class TypingSTest {
   public static Collection<Arguments> merge_down_deep_graph_cases() {
     return TYPING_TEST_CASES.merge_down_deep_graph_cases();
   }
+
+  @ParameterizedTest
+  @MethodSource("open_cases")
+  public void open(TypeS type, TypeS expected) {
+    TYPING_TEST_CASES.openVars(type, expected);
+  }
+
+  public static Collection<Arguments> open_cases() {
+    return TYPING_TEST_CASES.openVars_test_data();
+  }
+
+  @ParameterizedTest
+  @MethodSource("close_cases")
+  public void close(TypeS type, TypeS expected) {
+    TYPING_TEST_CASES.closeVars(type, expected);
+  }
+
+  public static Collection<Arguments> close_cases() {
+    return TYPING_TEST_CASES.closeVars_test_data();
+  }
 }

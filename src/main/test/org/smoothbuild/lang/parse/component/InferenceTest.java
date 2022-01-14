@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.base.type.TestingTS.A;
 import static org.smoothbuild.lang.base.type.TestingTS.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTS.INT;
 import static org.smoothbuild.lang.base.type.TestingTS.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTS.OPEN_A;
 import static org.smoothbuild.lang.base.type.TestingTS.STRING;
 import static org.smoothbuild.lang.base.type.TestingTS.a;
 import static org.smoothbuild.lang.base.type.TestingTS.f;
@@ -182,7 +182,7 @@ public class InferenceTest extends TestingContext {
           """;
       mod(code)
           .loadsSuccessfully()
-          .containsEvalWithType("myFunc", f(A, A));
+          .containsEvalWithType("myFunc", f(OPEN_A, OPEN_A));
     }
   }
 

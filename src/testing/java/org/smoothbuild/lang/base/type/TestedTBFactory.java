@@ -63,12 +63,12 @@ public class TestedTBFactory implements TestedTFactory<TypeB, TestedTB, TestedAs
 
   @Override
   public TestedTB varA() {
-    return new TestedTB(TestingTB.A);
+    return new TestedTB(TestingTB.OPEN_A);
   }
 
   @Override
   public TestedTB varB() {
-    return new TestedTB(TestingTB.B);
+    return new TestedTB(TestingTB.OPEN_B);
   }
 
   @Override

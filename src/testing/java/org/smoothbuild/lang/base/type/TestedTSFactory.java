@@ -5,7 +5,7 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.util.stream.Collectors.toList;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.define.ItemSigS.itemSigS;
-import static org.smoothbuild.lang.base.type.TestingTS.var;
+import static org.smoothbuild.lang.base.type.TestingTS.oVar;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -27,8 +27,8 @@ import com.google.common.collect.ImmutableSet;
 public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAssignSpecS> {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
-  public static final TestedTS A = new TestedTS(var("A"), null, null);
-  public static final TestedTS B = new TestedTS(var("B"), null, null);
+  public static final TestedTS A = new TestedTS(oVar("A"), null, null);
+  public static final TestedTS B = new TestedTS(oVar("B"), null, null);
   public static final TestedTS ANY = new TestedTS(
       TestingTS.ANY,
       "createAny()",

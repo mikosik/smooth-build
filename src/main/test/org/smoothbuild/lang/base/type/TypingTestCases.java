@@ -320,106 +320,106 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
 
   public List<Arguments> inferVarBounds_test_data() {
     var r = new ArrayList<Arguments>();
-    for (T type : concat(testingT().elementaryTypes(), x())) {
+    for (T type : concat(testingT().elementaryTypes(), ox())) {
       if (type instanceof NothingTS || type instanceof NothingTB) {
-        r.add(arguments(a(), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(a(), a(nothing()), vb(a(), lower(), a(nothing()))));
-        r.add(arguments(a(), a(a(nothing())), vb(a(), lower(), a(a(nothing())))));
+        r.add(arguments(oa(), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(oa(), a(nothing()), vb(oa(), lower(), a(nothing()))));
+        r.add(arguments(oa(), a(a(nothing())), vb(oa(), lower(), a(a(nothing())))));
 
         // arrays
-        r.add(arguments(a(a()), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(a(a()), a(nothing()), vb(a(), lower(), nothing())));
-        r.add(arguments(a(a()), a(a(nothing())), vb(a(), lower(), a(nothing()))));
+        r.add(arguments(a(oa()), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(a(oa()), a(nothing()), vb(oa(), lower(), nothing())));
+        r.add(arguments(a(oa()), a(a(nothing())), vb(oa(), lower(), a(nothing()))));
 
-        r.add(arguments(a(a(a())), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(a(a(a())), a(nothing()), vb(a(), lower(), nothing())));
-        r.add(arguments(a(a(a())), a(a(nothing())), vb(a(), lower(), nothing())));
+        r.add(arguments(a(a(oa())), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(a(a(oa())), a(nothing()), vb(oa(), lower(), nothing())));
+        r.add(arguments(a(a(oa())), a(a(nothing())), vb(oa(), lower(), nothing())));
 
         // tuples
         if (isTupleSupported()) {
-          r.add(arguments(tuple(a()), nothing(), vb(a(), lower(), nothing())));
-          r.add(arguments(tuple(a()), tuple(nothing()), vb(a(), lower(), nothing())));
-          r.add(arguments(tuple(a()), tuple(tuple(nothing())), vb(a(), lower(), tuple(nothing()))));
+          r.add(arguments(tuple(oa()), nothing(), vb(oa(), lower(), nothing())));
+          r.add(arguments(tuple(oa()), tuple(nothing()), vb(oa(), lower(), nothing())));
+          r.add(arguments(tuple(oa()), tuple(tuple(nothing())), vb(oa(), lower(), tuple(nothing()))));
 
-          r.add(arguments(tuple(tuple(a())), nothing(), vb(a(), lower(), nothing())));
-          r.add(arguments(tuple(tuple(a())), tuple(nothing()), vb(a(), lower(), nothing())));
-          r.add(arguments(tuple(tuple(a())), tuple(tuple(nothing())), vb(a(), lower(), nothing())));
+          r.add(arguments(tuple(tuple(oa())), nothing(), vb(oa(), lower(), nothing())));
+          r.add(arguments(tuple(tuple(oa())), tuple(nothing()), vb(oa(), lower(), nothing())));
+          r.add(arguments(tuple(tuple(oa())), tuple(tuple(nothing())), vb(oa(), lower(), nothing())));
         }
 
         // funcs
-        r.add(arguments(f(a()), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(f(f(a())), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(f(f(f(a()))), nothing(), vb(a(), lower(), nothing())));
+        r.add(arguments(f(oa()), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(f(f(oa())), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(f(f(f(oa()))), nothing(), vb(oa(), lower(), nothing())));
 
-        r.add(arguments(f(bool(), a()), nothing(), vb(a(), upper(), any())));
-        r.add(arguments(f(bool(), f(a())), nothing(), vb(a(), upper(), any())));
-        r.add(arguments(f(bool(), f(f(a()))), nothing(), vb(a(), upper(), any())));
+        r.add(arguments(f(bool(), oa()), nothing(), vb(oa(), upper(), any())));
+        r.add(arguments(f(bool(), f(oa())), nothing(), vb(oa(), upper(), any())));
+        r.add(arguments(f(bool(), f(f(oa()))), nothing(), vb(oa(), upper(), any())));
 
-        r.add(arguments(f(bool(), f(blob(), a())), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(f(bool(), f(blob(), f(a()))), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(f(bool(), f(blob(), f(f(a())))), nothing(), vb(a(), lower(), nothing())));
+        r.add(arguments(f(bool(), f(blob(), oa())), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(f(bool(), f(blob(), f(oa()))), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(f(bool(), f(blob(), f(f(oa())))), nothing(), vb(oa(), lower(), nothing())));
 
         // arrays + funcs
-        r.add(arguments(a(f(a())), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(a(f(string(), a())), nothing(), vb(a(), upper(), any())));
+        r.add(arguments(a(f(oa())), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(a(f(string(), oa())), nothing(), vb(oa(), upper(), any())));
 
-        r.add(arguments(f(a(a())), nothing(), vb(a(), lower(), nothing())));
-        r.add(arguments(f(bool(), a(a())), nothing(), vb(a(), upper(), any())));
+        r.add(arguments(f(a(oa())), nothing(), vb(oa(), lower(), nothing())));
+        r.add(arguments(f(bool(), a(oa())), nothing(), vb(oa(), upper(), any())));
       } else {
-        r.add(arguments(a(), type, vb(a(), lower(), type)));
-        r.add(arguments(a(), a(type), vb(a(), lower(), a(type))));
-        r.add(arguments(a(), a(a(type)), vb(a(), lower(), a(a(type)))));
+        r.add(arguments(oa(), type, vb(oa(), lower(), type)));
+        r.add(arguments(oa(), a(type), vb(oa(), lower(), a(type))));
+        r.add(arguments(oa(), a(a(type)), vb(oa(), lower(), a(a(type)))));
 
         // arrays
-        r.add(arguments(a(a()), type, vb()));
-        r.add(arguments(a(a()), a(type), vb(a(), lower(), type)));
-        r.add(arguments(a(a()), a(a(type)), vb(a(), lower(), a(type))));
+        r.add(arguments(a(oa()), type, vb()));
+        r.add(arguments(a(oa()), a(type), vb(oa(), lower(), type)));
+        r.add(arguments(a(oa()), a(a(type)), vb(oa(), lower(), a(type))));
 
-        r.add(arguments(a(a(a())), type, vb()));
-        r.add(arguments(a(a(a())), a(type), vb()));
-        r.add(arguments(a(a(a())), a(a(type)), vb(a(), lower(), type)));
+        r.add(arguments(a(a(oa())), type, vb()));
+        r.add(arguments(a(a(oa())), a(type), vb()));
+        r.add(arguments(a(a(oa())), a(a(type)), vb(oa(), lower(), type)));
 
         // tuples
         if (isTupleSupported()) {
-          r.add(arguments(tuple(a()), type, vb()));
-          r.add(arguments(tuple(a()), tuple(type), vb(a(), lower(), type)));
-          r.add(arguments(tuple(a()), tuple(tuple(type)), vb(a(), lower(), tuple(type))));
+          r.add(arguments(tuple(oa()), type, vb()));
+          r.add(arguments(tuple(oa()), tuple(type), vb(oa(), lower(), type)));
+          r.add(arguments(tuple(oa()), tuple(tuple(type)), vb(oa(), lower(), tuple(type))));
 
-          r.add(arguments(tuple(tuple(a())), type, vb()));
-          r.add(arguments(tuple(tuple(a())), tuple(type), vb()));
-          r.add(arguments(tuple(tuple(a())), tuple(tuple(type)), vb(a(), lower(), type)));
+          r.add(arguments(tuple(tuple(oa())), type, vb()));
+          r.add(arguments(tuple(tuple(oa())), tuple(type), vb()));
+          r.add(arguments(tuple(tuple(oa())), tuple(tuple(type)), vb(oa(), lower(), type)));
         }
 
         // funcs
-        r.add(arguments(f(a()), type, vb()));
-        r.add(arguments(f(a()), f(type), vb(a(), lower(), type)));
-        r.add(arguments(f(a()), f(f(type)), vb(a(), lower(), f(type))));
-        r.add(arguments(f(a()), f(f(f(type))), vb(a(), lower(), f(f(type)))));
+        r.add(arguments(f(oa()), type, vb()));
+        r.add(arguments(f(oa()), f(type), vb(oa(), lower(), type)));
+        r.add(arguments(f(oa()), f(f(type)), vb(oa(), lower(), f(type))));
+        r.add(arguments(f(oa()), f(f(f(type))), vb(oa(), lower(), f(f(type)))));
 
-        r.add(arguments(f(f(a())), type, vb()));
-        r.add(arguments(f(f(a())), f(type), vb()));
-        r.add(arguments(f(f(a())), f(f(type)), vb(a(), lower(), type)));
-        r.add(arguments(f(f(a())), f(f(f(type))), vb(a(), lower(), f(type))));
+        r.add(arguments(f(f(oa())), type, vb()));
+        r.add(arguments(f(f(oa())), f(type), vb()));
+        r.add(arguments(f(f(oa())), f(f(type)), vb(oa(), lower(), type)));
+        r.add(arguments(f(f(oa())), f(f(f(type))), vb(oa(), lower(), f(type))));
 
-        r.add(arguments(f(f(f(a()))), type, vb()));
-        r.add(arguments(f(f(f(a()))), f(type), vb()));
-        r.add(arguments(f(f(f(a()))), f(f(type)), vb()));
-        r.add(arguments(f(f(f(a()))), f(f(f(type))), vb(a(), lower(), type)));
+        r.add(arguments(f(f(f(oa()))), type, vb()));
+        r.add(arguments(f(f(f(oa()))), f(type), vb()));
+        r.add(arguments(f(f(f(oa()))), f(f(type)), vb()));
+        r.add(arguments(f(f(f(oa()))), f(f(f(type))), vb(oa(), lower(), type)));
 
-        r.add(arguments(f(bool(), a()), f(bool(), type), vb(a(), upper(), type)));
-        r.add(arguments(f(bool(), f(a())), f(bool(), f(type)), vb(a(), upper(), type)));
-        r.add(arguments(f(bool(), f(f(a()))), f(bool(), f(f(type))), vb(a(), upper(), type)));
+        r.add(arguments(f(bool(), oa()), f(bool(), type), vb(oa(), upper(), type)));
+        r.add(arguments(f(bool(), f(oa())), f(bool(), f(type)), vb(oa(), upper(), type)));
+        r.add(arguments(f(bool(), f(f(oa()))), f(bool(), f(f(type))), vb(oa(), upper(), type)));
 
-        r.add(arguments(f(bool(), f(blob(), a())), f(bool(), f(blob(), type)), vb(a(), lower(), type)));
-        r.add(arguments(f(bool(), f(blob(), f(a()))), f(bool(), f(blob(), f(type))), vb(a(), lower(), type)));
-        r.add(arguments(f(bool(), f(blob(), f(f(a())))), f(bool(), f(blob(), f(f(type)))), vb(a(), lower(), type)));
+        r.add(arguments(f(bool(), f(blob(), oa())), f(bool(), f(blob(), type)), vb(oa(), lower(), type)));
+        r.add(arguments(f(bool(), f(blob(), f(oa()))), f(bool(), f(blob(), f(type))), vb(oa(), lower(), type)));
+        r.add(arguments(f(bool(), f(blob(), f(f(oa())))), f(bool(), f(blob(), f(f(type)))), vb(oa(), lower(), type)));
 
         // arrays + funcs
-        r.add(arguments(a(f(a())), a(f(type)), vb(a(), lower(), type)));
-        r.add(arguments(a(f(bool(), a())), a(f(bool(), type)), vb(a(), upper(), type)));
+        r.add(arguments(a(f(oa())), a(f(type)), vb(oa(), lower(), type)));
+        r.add(arguments(a(f(bool(), oa())), a(f(bool(), type)), vb(oa(), upper(), type)));
 
-        r.add(arguments(f(a(a())), f(a(type)), vb(a(), lower(), type)));
-        r.add(arguments(f(bool(), a(a())), f(bool(), a(type)), vb(a(), upper(), type)));
+        r.add(arguments(f(a(oa())), f(a(type)), vb(oa(), lower(), type)));
+        r.add(arguments(f(bool(), a(oa())), f(bool(), a(type)), vb(oa(), upper(), type)));
       }
     }
     return r;
@@ -432,25 +432,25 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
 
   public List<Arguments> mapVars_test_data() {
     var result = new ArrayList<Arguments>();
-    result.add(arguments(x(), vb(), x()));
-    result.add(arguments(a(x()), vb(), a(x())));
+    result.add(arguments(ox(), vb(), ox()));
+    result.add(arguments(a(ox()), vb(), a(ox())));
     for (T type : testingT().allTestedTypes()) {
-      result.add(arguments(x(), vb(x(), lower(), type), type));
-      result.add(arguments(x(), vb(x(), lower(), a(type)), a(type)));
+      result.add(arguments(ox(), vb(ox(), lower(), type), type));
+      result.add(arguments(ox(), vb(ox(), lower(), a(type)), a(type)));
       if (isTupleSupported()) {
-        result.add(arguments(x(), vb(x(), lower(), tuple(type)), tuple(type)));
+        result.add(arguments(ox(), vb(ox(), lower(), tuple(type)), tuple(type)));
       }
-      result.add(arguments(a(x()), vb(x(), lower(), type), a(type)));
-      result.add(arguments(a(x()), vb(x(), lower(), a(type)), a(a(type))));
+      result.add(arguments(a(ox()), vb(ox(), lower(), type), a(type)));
+      result.add(arguments(a(ox()), vb(ox(), lower(), a(type)), a(a(type))));
       if (isTupleSupported()) {
-        result.add(arguments(a(x()), vb(x(), lower(), tuple(type)), a(tuple(type))));
-        result.add(arguments(tuple(x()), vb(x(), lower(), type), tuple(type)));
-        result.add(arguments(tuple(x()), vb(x(), lower(), a(type)), tuple(a(type))));
+        result.add(arguments(a(ox()), vb(ox(), lower(), tuple(type)), a(tuple(type))));
+        result.add(arguments(tuple(ox()), vb(ox(), lower(), type), tuple(type)));
+        result.add(arguments(tuple(ox()), vb(ox(), lower(), a(type)), tuple(a(type))));
       }
     }
     for (T newA : testingT().allTestedTypes()) {
       for (T newB : testingT().allTestedTypes()) {
-        result.add(arguments(f(a(), b()), vb(a(), lower(), newA, b(), upper(), newB), f(newA, newB)));
+        result.add(arguments(f(oa(), ob()), vb(oa(), lower(), newA, ob(), upper(), newB), f(newA, newB)));
       }
     }
     for (T type : testingT().elementaryTypes()) {
@@ -519,6 +519,56 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     return buildGraph(testingT().typesForBuildWideGraph(), 1, testingT());
   }
 
+  public void openVars(T type, Type expected) {
+    assertThat(typing.openVars(type))
+        .isEqualTo(expected);
+  }
+
+  public List<Arguments> openVars_test_data() {
+    return generate_close_or_open_cases(ca(), oa());
+  }
+
+  public void closeVars(T type, Type expected) {
+    assertThat(typing.closeVars(type))
+        .isEqualTo(expected);
+  }
+
+  public List<Arguments> closeVars_test_data() {
+    return generate_close_or_open_cases(oa(), ca());
+  }
+
+  private ArrayList<Arguments> generate_close_or_open_cases(T source, T target) {
+    ArrayList<Arguments> result = new ArrayList<>();
+    result.add(arguments(any(), any()));
+    result.add(arguments(blob(), blob()));
+    result.add(arguments(bool(), bool()));
+    result.add(arguments(int_(), int_()));
+    result.add(arguments(string(), string()));
+    result.add(arguments(a(int_()), a(int_())));
+    result.add(arguments(f(int_()), f(int_())));
+    result.add(arguments(f(int_(), bool()), f(int_(), bool())));
+
+    if (isTupleSupported()) {
+      result.add(arguments(tuple(int_()), tuple(int_())));
+
+      result.add(arguments(tuple(source), tuple(target)));
+      result.add(arguments(tuple(target), tuple(target)));
+      result.add(arguments(tuple(tuple(source)), tuple(tuple(target))));
+      result.add(arguments(tuple(tuple(target)), tuple(tuple(target))));
+    }
+
+    result.add(arguments(a(source), a(target)));
+    result.add(arguments(a(target), a(target)));
+    result.add(arguments(a(a(source)), a(a(target))));
+    result.add(arguments(a(a(target)), a(a(target))));
+
+    result.add(arguments(f(source, source), f(target, target)));
+    result.add(arguments(f(target, target), f(target, target)));
+    result.add(arguments(f(f(source), source), f(f(target), target)));
+
+    return result;
+  }
+
   private Side<T> lower() {
     return factory().lower();
   }
@@ -554,16 +604,28 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
     return varBounds();
   }
 
-  private T a() {
-    return testingT().a();
+  private T oa() {
+    return testingT().oa();
   }
 
-  private T b() {
-    return testingT().b();
+  private T ob() {
+    return testingT().ob();
   }
 
-  private T x() {
-    return testingT().x();
+  private T ox() {
+    return testingT().ox();
+  }
+
+  private T ca() {
+    return testingT().ca();
+  }
+
+  private T cb() {
+    return testingT().cb();
+  }
+
+  private T cx() {
+    return testingT().cx();
   }
 
   private T any() {

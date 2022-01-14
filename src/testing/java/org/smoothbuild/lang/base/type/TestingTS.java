@@ -12,9 +12,11 @@ import org.smoothbuild.lang.base.type.impl.AnyTS;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.BlobTS;
 import org.smoothbuild.lang.base.type.impl.BoolTS;
+import org.smoothbuild.lang.base.type.impl.ClosedVarTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.IntTS;
 import org.smoothbuild.lang.base.type.impl.NothingTS;
+import org.smoothbuild.lang.base.type.impl.OpenVarTS;
 import org.smoothbuild.lang.base.type.impl.StringTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
@@ -44,11 +46,12 @@ public class TestingTS implements TestingT<TypeS> {
       nList(itemSigS("firstName", STRING), itemSigS("lastName", STRING)));
   public static final StructTS FLAG = struct("Flag", nList(itemSigS("flab", BOOL)));
   public static final StructTS DATA = struct("Data", nList(itemSigS("data", BLOB)));
-  public static final VarTS A = var("A");
-  public static final VarTS B = var("B");
-  public static final VarTS C = var("C");
-  public static final VarTS D = var("D");
-  public static final VarTS X = var("X");
+  public static final OpenVarTS OPEN_A = oVar("A");
+  public static final OpenVarTS OPEN_B = oVar("B");
+  public static final OpenVarTS OPEN_X = oVar("X");
+  public static final ClosedVarTS CLOSED_A = cVar("A");
+  public static final ClosedVarTS CLOSED_B = cVar("B");
+  public static final ClosedVarTS CLOSED_X = cVar("X");
   public static final Side<TypeS> LOWER = FACTORY.lower();
   public static final Side<TypeS> UPPER = FACTORY.upper();
 
@@ -61,9 +64,9 @@ public class TestingTS implements TestingT<TypeS> {
   public static final FuncTS PERSON_GETTER_FUNCTION = f(PERSON);
   public static final FuncTS STRING_MAP_FUNCTION = f(STRING, STRING);
   public static final FuncTS PERSON_MAP_FUNCTION = f(PERSON, PERSON);
-  public static final FuncTS IDENTITY_FUNCTION = f(A, A);
-  public static final FuncTS ARRAY_HEAD_FUNCTION = f(A, a(A));
-  public static final FuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(A));
+  public static final FuncTS IDENTITY_FUNCTION = f(OPEN_A, OPEN_A);
+  public static final FuncTS ARRAY_HEAD_FUNCTION = f(OPEN_A, a(OPEN_A));
+  public static final FuncTS ARRAY_LENGTH_FUNCTION = f(STRING, a(OPEN_A));
 
   public static final ImmutableList<TypeS> FUNCTION_TYPES =
       list(
@@ -79,7 +82,7 @@ public class TestingTS implements TestingT<TypeS> {
       ImmutableList.<TypeS>builder()
           .addAll(ELEMENTARY_TYPES)
           .addAll(FUNCTION_TYPES)
-          .add(X)
+          .add(OPEN_X)
           .build();
 
   public static ArrayTS a(TypeS elemT) {
@@ -98,8 +101,12 @@ public class TestingTS implements TestingT<TypeS> {
     return FACTORY.func(resT, paramTs);
   }
 
-  public static VarTS var(String a) {
+  public static OpenVarTS oVar(String a) {
     return FACTORY.oVar(a);
+  }
+
+  public static ClosedVarTS cVar(String a) {
+    return FACTORY.cVar(a);
   }
 
   public static StructTS struct(String name, NList<ItemSigS> fields) {
@@ -132,7 +139,7 @@ public class TestingTS implements TestingT<TypeS> {
 
   @Override
   public ImmutableList<TypeS> typesForBuildWideGraph() {
-    return list(a(), b(), blob(), bool(), int_(), struct(), string());
+    return list(oa(), ob(), blob(), bool(), int_(), struct(), string());
   }
 
   @Override
@@ -211,18 +218,33 @@ public class TestingTS implements TestingT<TypeS> {
   }
 
   @Override
-  public TypeS a() {
-    return A;
+  public TypeS oa() {
+    return OPEN_A;
   }
 
   @Override
-  public TypeS b() {
-    return B;
+  public TypeS ob() {
+    return OPEN_B;
   }
 
   @Override
-  public TypeS x() {
-    return X;
+  public TypeS ox() {
+    return OPEN_X;
+  }
+
+  @Override
+  public TypeS ca() {
+    return CLOSED_A;
+  }
+
+  @Override
+  public TypeS cb() {
+    return CLOSED_B;
+  }
+
+  @Override
+  public TypeS cx() {
+    return CLOSED_X;
   }
 
   @Override
