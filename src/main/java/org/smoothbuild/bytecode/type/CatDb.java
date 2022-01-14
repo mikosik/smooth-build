@@ -29,7 +29,6 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
-import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,7 +68,6 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.ComposedT;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.util.TriFunction;
@@ -198,20 +196,6 @@ public class CatDb implements TypeFactoryB {
   public ClosedVarTB cVar(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
     return wrapHashedDbExceptionAsObjectDbException(() -> newClosedVar(name));
-  }
-
-  @Override
-  public ComposedT rebuildComposed(
-      ComposedT composedT, ImmutableList<TypeB> covars, ImmutableList<TypeB> contravars) {
-    if (composedT.covars().equals(covars) && composedT.contravars().equals(contravars)) {
-      return composedT;
-    }
-    return switch (composedT) {
-      case ArrayTB array -> array(covars.get(0));
-      case FuncTB func -> func(covars.get(0), contravars);
-      case TupleTB tuple -> tuple(covars);
-      default -> throw unexpectedCaseExc(composedT);
-    };
   }
 
   // methods for getting Expr-s types

@@ -2,14 +2,12 @@ package org.smoothbuild.lang.base.type.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
-import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.Bounds;
-import org.smoothbuild.lang.base.type.api.ComposedT;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.TupleT;
@@ -122,19 +120,6 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
   @Override
   public TupleT tuple(ImmutableList<TypeS> items) {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public ComposedT rebuildComposed(
-      ComposedT composedT, ImmutableList<TypeS> covars, ImmutableList<TypeS> contravars) {
-    if (composedT.covars().equals(covars) && composedT.contravars().equals(contravars)) {
-      return composedT;
-    }
-    return switch (composedT) {
-      case ArrayTS array -> array(covars.get(0));
-      case FuncTS func -> func(covars.get(0), contravars);
-      default -> throw unexpectedCaseExc(composedT);
-    };
   }
 
   @Override

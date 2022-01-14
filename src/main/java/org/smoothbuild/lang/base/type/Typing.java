@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.ClosedVarT;
@@ -19,6 +20,7 @@ import org.smoothbuild.lang.base.type.api.ComposedT;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.OpenVarT;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
+import org.smoothbuild.lang.base.type.api.TupleT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.TypeFactory;
 import org.smoothbuild.lang.base.type.api.VarBounds;
@@ -177,7 +179,13 @@ public class Typing<T extends Type> {
     if (type.isPolytype()) {
       return switch (type) {
         case VarT var -> mapVarsInVar(type, varBounds, side, var);
-        case ComposedT composedT -> mapVarsInComposed(composedT, varBounds, side);
+        case ComposedT composedT -> {
+          var covars = map(
+              composedT.covars(), p -> mapVars((T) p, varBounds, side));
+          var contravars = map(
+              composedT.contravars(), p -> mapVars((T) p, varBounds, side.reversed()));
+          yield rebuildComposed(type, covars, contravars);
+        }
         default -> type;
       };
     }
@@ -191,12 +199,6 @@ public class Typing<T extends Type> {
     } else {
       return bounded.bounds().get(side);
     }
-  }
-
-  private T mapVarsInComposed(ComposedT composedT, VarBounds<T> varBounds, Side<T> side) {
-    var covars = map(composedT.covars(), p -> mapVars((T) p, varBounds, side));
-    var contravars = map(composedT.contravars(), p -> mapVars((T) p, varBounds, side.reversed()));
-    return (T) factory.rebuildComposed(composedT, covars, contravars);
   }
 
   public T mergeUp(T type1, T type2) {
@@ -227,7 +229,7 @@ public class Typing<T extends Type> {
               (a, b) -> merge((T) a, (T) b, direction.reversed()));
           var covars = zip(c1covars, c2covars,
               (a, b) -> merge((T) a, (T) b, direction));
-          return (T) factory.rebuildComposed(c1, covars, contravars);
+          return rebuildComposed(type1, covars, contravars);
         }
       }
     }
@@ -249,7 +251,7 @@ public class Typing<T extends Type> {
       return type;
     }
     return switch (type) {
-      case ComposedT composedT -> (T) factory.rebuildComposed(composedT,
+      case ComposedT composedT -> rebuildComposed(type,
           map(composedT.covars(), t -> openVars((T) t)),
           map(composedT.contravars(), t -> openVars((T) t)));
       case ClosedVarT closedVarT -> (T) factory.oVar(closedVarT.name());
@@ -262,11 +264,25 @@ public class Typing<T extends Type> {
       return type;
     }
     return switch (type) {
-      case ComposedT composedT -> (T) factory.rebuildComposed(composedT,
+      case ComposedT composedT -> rebuildComposed(type,
           map(composedT.covars(), t -> closeVars((T) t)),
           map(composedT.contravars(), t -> closeVars((T) t)));
       case OpenVarT openVarT -> (T) factory.cVar(openVarT.name());
       default -> throw unexpectedCaseExc(type);
+    };
+  }
+
+  public T rebuildComposed(T type, ImmutableList<T> covars, ImmutableList<T> contravars) {
+    if (!(type instanceof ComposedT composedT)) {
+      throw unexpectedCaseExc(type);
+    }
+    if (composedT.covars().equals(covars) && composedT.contravars().equals(contravars)) {
+      return type;
+    }
+    return switch (composedT) {
+      case ArrayT array -> (T) factory.array(covars.get(0));
+      case FuncT func -> (T) factory.func(covars.get(0), contravars);
+      case TupleT func -> (T) factory.tuple(covars);
     };
   }
 

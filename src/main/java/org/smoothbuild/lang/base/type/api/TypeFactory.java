@@ -22,7 +22,4 @@ public interface TypeFactory<T extends Type> {
   public OpenVarT oVar(String name);
 
   public ClosedVarT cVar(String name);
-
-  public ComposedT rebuildComposed(
-      ComposedT composedT, ImmutableList<T> covars, ImmutableList<T> contravars);
 }
