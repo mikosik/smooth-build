@@ -43,6 +43,7 @@ public final class FuncTS extends TypeS implements FuncT {
   public ImmutableList<Type> contravars() {
     return (ImmutableList<Type>)(Object) params();
   }
+
   @Override
   public boolean equals(Object object) {
     if (this == object) {

@@ -29,6 +29,7 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
 import static org.smoothbuild.bytecode.type.base.CatKindB.fromMarker;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -209,8 +210,7 @@ public class CatDb implements TypeFactoryB {
       case ArrayTB array -> array(covars.get(0));
       case FuncTB func -> func(covars.get(0), contravars);
       case TupleTB tuple -> tuple(covars);
-      default -> throw new IllegalArgumentException(
-          "Illegal case " + composedT.getClass().getCanonicalName());
+      default -> throw unexpectedCaseExc(composedT);
     };
   }
 

@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -132,8 +133,7 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
     return switch (composedT) {
       case ArrayTS array -> array(covars.get(0));
       case FuncTS func -> func(covars.get(0), contravars);
-      default -> throw new IllegalArgumentException(
-          "Illegal case " + composedT.getClass().getCanonicalName());
+      default -> throw unexpectedCaseExc(composedT);
     };
   }
 

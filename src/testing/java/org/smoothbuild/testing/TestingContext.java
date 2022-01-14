@@ -1040,11 +1040,12 @@ public class TestingContext {
     return typingS().openVars(type);
   }
 
-  public TypeB o(TypeB type) {
-    return typingB().openVars(type);
-  }
   public TypeS c(TypeS type) {
     return typingS().closeVars(type);
+  }
+
+  public TypeB o(TypeB type) {
+    return typingB().openVars(type);
   }
 
   public TypeB c(TypeB type) {
