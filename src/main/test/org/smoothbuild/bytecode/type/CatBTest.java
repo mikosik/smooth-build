@@ -44,6 +44,11 @@ import static org.smoothbuild.bytecode.type.TestingCatsB.PARAM_REF;
 import static org.smoothbuild.bytecode.type.TestingCatsB.PERSON;
 import static org.smoothbuild.bytecode.type.TestingCatsB.SELECT;
 import static org.smoothbuild.bytecode.type.TestingCatsB.STRING;
+import static org.smoothbuild.bytecode.type.TestingCatsB.array;
+import static org.smoothbuild.bytecode.type.TestingCatsB.cVar;
+import static org.smoothbuild.bytecode.type.TestingCatsB.func;
+import static org.smoothbuild.bytecode.type.TestingCatsB.oVar;
+import static org.smoothbuild.bytecode.type.TestingCatsB.tuple;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -258,6 +263,70 @@ public class CatBTest extends TestingContext {
         args(f -> f.tuple(list(f.tuple(list(f.oVar("A"))))), true),
         args(f -> f.tuple(list(f.tuple(list(f.cVar("A"))))), true)
         );
+  }
+
+  @ParameterizedTest
+  @MethodSource("hasOpenVars_test_data")
+  public void hasOpenVars(CatB type, boolean expected) {
+    assertThat(type.hasOpenVars())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> hasOpenVars_test_data() {
+    return List.of(
+        arguments(ANY, false),
+        arguments(BLOB, false),
+        arguments(BOOL, false),
+        arguments(INT, false),
+        arguments(NOTHING, false),
+        arguments(STRING, false),
+
+        arguments(array(INT), false),
+        arguments(array(oVar("A")), true),
+        arguments(array(cVar("A")), false),
+
+        arguments(tuple(list(INT)), false),
+        arguments(tuple(list(oVar("A"))), true),
+        arguments(tuple(list(cVar("A"))), false),
+
+        arguments(func(BLOB, list(BOOL)), false),
+        arguments(func(oVar("A"), list(BOOL)), true),
+        arguments(func(cVar("A"), list(BOOL)), false),
+        arguments(func(BLOB, list(oVar("A"))), true),
+        arguments(func(BLOB, list(cVar("A"))), false)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("hasClosedVars_test_data")
+  public void hasOpenClosed(CatB type, boolean expected) {
+    assertThat(type.hasClosedVars())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> hasClosedVars_test_data() {
+    return List.of(
+        arguments(ANY, false),
+        arguments(BLOB, false),
+        arguments(BOOL, false),
+        arguments(INT, false),
+        arguments(NOTHING, false),
+        arguments(STRING, false),
+
+        arguments(array(INT), false),
+        arguments(array(oVar("A")), false),
+        arguments(array(cVar("A")), true),
+
+        arguments(tuple(list(INT)), false),
+        arguments(tuple(list(oVar("A"))), false),
+        arguments(tuple(list(cVar("A"))), true),
+
+        arguments(func(BLOB, list(BOOL)), false),
+        arguments(func(oVar("A"), list(BOOL)), false),
+        arguments(func(cVar("A"), list(BOOL)), true),
+        arguments(func(BLOB, list(oVar("A"))), false),
+        arguments(func(BLOB, list(cVar("A"))), true)
+    );
   }
 
   @Nested

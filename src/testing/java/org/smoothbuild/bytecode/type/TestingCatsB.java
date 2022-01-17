@@ -7,6 +7,9 @@ import static org.smoothbuild.util.collect.Lists.map;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
+import org.smoothbuild.bytecode.type.val.ClosedVarTB;
+import org.smoothbuild.bytecode.type.val.FuncTB;
+import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.testing.TestingContext;
 
@@ -152,7 +155,23 @@ public class TestingCatsB {
     return concat(valueCs, exprCs);
   }
 
-  private static ArrayTB array(TypeB elemT) {
+  public static ArrayTB array(TypeB elemT) {
     return CAT_DB.array(elemT);
+  }
+
+  public static FuncTB func(TypeB res, ImmutableList<TypeB> params) {
+    return CAT_DB.func(res, params);
+  }
+
+  public static TupleTB tuple(ImmutableList<TypeB> params) {
+    return CAT_DB.tuple(params);
+  }
+
+  public static OpenVarTB oVar(String name) {
+    return CAT_DB.oVar(name);
+  }
+
+  public static ClosedVarTB cVar(String name) {
+    return CAT_DB.cVar(name);
   }
 }
