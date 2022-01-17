@@ -14,7 +14,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
  */
 public class IntTB extends TypeB {
   public IntTB(Hash hash) {
-    super(TypeNames.INT, hash, INT);
+    super(hash, TypeNames.INT, INT);
   }
 
   @Override

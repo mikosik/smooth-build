@@ -5,8 +5,8 @@ import org.smoothbuild.db.Hash;
 public abstract class ExprCatB extends CatB {
   private final TypeB evalT;
 
-  protected ExprCatB(String name, Hash hash, CatKindB kind, TypeB evalT) {
-    super(name + ":" + evalT.name(), hash, kind);
+  protected ExprCatB(Hash hash, String name, CatKindB kind, TypeB evalT) {
+    super(hash, name + ":" + evalT.name(), kind);
     this.evalT = evalT;
   }
 

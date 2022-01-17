@@ -14,7 +14,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
  */
 public class BlobTB extends TypeB {
   public BlobTB(Hash hash) {
-    super(TypeNames.BLOB, hash, BLOB);
+    super(hash, TypeNames.BLOB, BLOB);
   }
 
   @Override

@@ -18,8 +18,7 @@ public final class MethodTB extends TypeB implements CallableTB {
 
   public MethodTB(Hash hash, TypeB res, TupleTB params) {
     super(
-        "_" + funcTypeName(res, params.items()),
-        hash,
+        hash, "_" + funcTypeName(res, params.items()),
         METHOD,
         FuncT.calculateHasOpenVars(res, params.items()),
         FuncT.calculateHasClosedVars(res, params.items()));

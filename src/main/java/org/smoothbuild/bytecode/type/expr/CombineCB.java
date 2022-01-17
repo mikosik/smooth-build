@@ -14,7 +14,7 @@ import org.smoothbuild.db.Hash;
  */
 public class CombineCB extends ExprCatB {
   public CombineCB(Hash hash, TupleTB evalT) {
-    super("Combine", hash, COMBINE, evalT);
+    super(hash, "Combine", COMBINE, evalT);
   }
 
   @Override

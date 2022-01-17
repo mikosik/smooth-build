@@ -14,7 +14,7 @@ import org.smoothbuild.db.Hash;
  */
 public class OrderCB extends ExprCatB {
   public OrderCB(Hash hash, ArrayTB evalT) {
-    super("Order", hash, ORDER, evalT);
+    super(hash, "Order", ORDER, evalT);
   }
 
   @Override

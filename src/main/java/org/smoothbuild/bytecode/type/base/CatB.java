@@ -17,7 +17,7 @@ public abstract class CatB {
   private final Hash hash;
   private final CatKindB kind;
 
-  protected CatB(String name, Hash hash, CatKindB kind) {
+  protected CatB(Hash hash, String name, CatKindB kind) {
     this.name = name;
     this.hash = hash;
     this.kind = kind;

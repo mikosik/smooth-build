@@ -11,7 +11,7 @@ import org.smoothbuild.db.Hash;
 
 public class ParamRefCB extends ExprCatB {
   public ParamRefCB(Hash hash, TypeB evalT) {
-    super("ParamRef", hash, PARAM_REF, evalT);
+    super(hash, "ParamRef", PARAM_REF, evalT);
   }
 
   @Override

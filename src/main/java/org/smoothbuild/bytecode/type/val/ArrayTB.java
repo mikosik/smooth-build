@@ -21,7 +21,7 @@ public class ArrayTB extends TypeB implements ArrayT {
   private final TypeB elem;
 
   public ArrayTB(Hash hash, TypeB elem) {
-    super(arrayTypeName(elem), hash, ARRAY, elem.hasOpenVars(), elem.hasClosedVars());
+    super(hash, arrayTypeName(elem), ARRAY, elem.hasOpenVars(), elem.hasClosedVars());
     this.elem = requireNonNull(elem);
   }
 

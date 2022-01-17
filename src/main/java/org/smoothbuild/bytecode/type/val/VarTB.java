@@ -7,6 +7,6 @@ import org.smoothbuild.lang.base.type.api.VarT;
 
 public class VarTB extends TypeB implements VarT {
   public VarTB(Hash hash, String name, CatKindB kind, boolean hasOpenVars, boolean hasClosedVars) {
-    super(name, hash, kind, hasOpenVars, hasClosedVars);
+    super(hash, name, kind, hasOpenVars, hasClosedVars);
   }
 }

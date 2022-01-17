@@ -14,7 +14,7 @@ import org.smoothbuild.db.Hash;
  */
 public class SelectCB extends ExprCatB {
   public SelectCB(Hash hash, TypeB evalT) {
-    super("Select", hash, SELECT, evalT);
+    super(hash, "Select", SELECT, evalT);
   }
 
   @Override

@@ -18,8 +18,7 @@ public final class FuncTB extends TypeB implements CallableTB {
 
   public FuncTB(Hash hash, TypeB res, TupleTB params) {
     super(
-        funcTypeName(res, params.items()),
-        hash,
+        hash, funcTypeName(res, params.items()),
         FUNC,
         FuncT.calculateHasOpenVars(res, params.items()),
         FuncT.calculateHasClosedVars(res, params.items()));

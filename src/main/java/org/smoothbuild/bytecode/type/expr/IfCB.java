@@ -11,7 +11,7 @@ import org.smoothbuild.db.Hash;
 
 public class IfCB extends ExprCatB {
   public IfCB(Hash hash, TypeB evalT) {
-    super("If", hash, IF, evalT);
+    super(hash, "If", IF, evalT);
   }
 
   @Override

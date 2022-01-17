@@ -14,7 +14,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
  */
 public class StringTB extends TypeB {
   public StringTB(Hash hash) {
-    super(TypeNames.STRING, hash, STRING);
+    super(hash, TypeNames.STRING, STRING);
   }
 
   @Override

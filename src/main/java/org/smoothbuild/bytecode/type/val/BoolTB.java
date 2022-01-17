@@ -14,7 +14,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
  */
 public class BoolTB extends TypeB {
   public BoolTB(Hash hash) {
-    super(TypeNames.BOOL, hash, BOOL);
+    super(hash, TypeNames.BOOL, BOOL);
   }
 
   @Override

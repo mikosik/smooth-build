@@ -10,6 +10,6 @@ import org.smoothbuild.db.Hash;
  */
 public class AnyTB extends TypeB {
   public AnyTB(Hash hash) {
-    super("Any", hash, ANY);
+    super(hash, "Any", ANY);
   }
 }

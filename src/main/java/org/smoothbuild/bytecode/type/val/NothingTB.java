@@ -11,7 +11,7 @@ import org.smoothbuild.lang.base.type.api.TypeNames;
  */
 public class NothingTB extends TypeB {
   public NothingTB(Hash hash) {
-    super(TypeNames.NOTHING, hash, NOTHING);
+    super(hash, TypeNames.NOTHING, NOTHING);
   }
 
   @Override

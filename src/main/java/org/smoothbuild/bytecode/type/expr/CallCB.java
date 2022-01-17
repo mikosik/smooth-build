@@ -14,7 +14,7 @@ import org.smoothbuild.db.Hash;
  */
 public class CallCB extends ExprCatB {
   public CallCB(Hash hash, TypeB evalT) {
-    super("Call", hash, CALL, evalT);
+    super(hash, "Call", CALL, evalT);
   }
 
   @Override

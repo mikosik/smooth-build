@@ -9,13 +9,13 @@ public abstract class TypeB extends CatB implements TypeBBridge {
   private final boolean hasOpenVars;
   private final boolean hasClosedVars;
 
-  protected TypeB(String name, Hash hash, CatKindB kind) {
-    this(name, hash, kind, false, false);
+  protected TypeB(Hash hash, String name, CatKindB kind) {
+    this(hash, name, kind, false, false);
   }
 
   protected TypeB(
-      String name, Hash hash, CatKindB kind, boolean hasOpenVars, boolean hasClosedVars) {
-    super(name, hash, kind);
+      Hash hash, String name, CatKindB kind, boolean hasOpenVars, boolean hasClosedVars) {
+    super(hash, name, kind);
     this.hasOpenVars = hasOpenVars;
     this.hasClosedVars = hasClosedVars;
   }

@@ -12,7 +12,7 @@ import org.smoothbuild.db.Hash;
 
 public class MapCB extends ExprCatB {
   public MapCB(Hash hash, TypeB evalT) {
-    super("Map", hash, MAP, evalT);
+    super(hash, "Map", MAP, evalT);
   }
 
   @Override

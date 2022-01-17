@@ -11,7 +11,7 @@ import org.smoothbuild.db.Hash;
 
 public class InvokeCB extends ExprCatB {
   public InvokeCB(Hash hash, TypeB evalT) {
-    super("Invoke", hash, INVOKE, evalT);
+    super(hash, "Invoke", INVOKE, evalT);
   }
 
   @Override
