@@ -181,7 +181,7 @@ public class TestingContext {
   }
 
   public CompilerProv compilerProv(FileLoader fileLoader) {
-    return new CompilerProv(typeShConv(), objFactory(), typingB(), fileLoader);
+    return new CompilerProv(typeShConv(), byteCodeFactory(), typingB(), fileLoader);
   }
 
   public TestingModLoader mod(String sourceCode) {
@@ -218,14 +218,14 @@ public class TestingContext {
   }
 
   private Container newContainer() {
-    return new Container(fullFileSystem(), objFactory(), typingB());
+    return new Container(fullFileSystem(), byteCodeFactory(), typingB());
   }
 
   public TypeShConv typeShConv() {
-    return new TypeShConv(objFactory());
+    return new TypeShConv(byteCodeFactory());
   }
 
-  public ByteCodeFactory objFactory() {
+  public ByteCodeFactory byteCodeFactory() {
     if (byteCodeFactory == null) {
       byteCodeFactory = new ByteCodeFactory(byteDb(), catDb());
     }
@@ -274,7 +274,7 @@ public class TestingContext {
   public ComputationCache computationCache() {
     if (computationCache == null) {
       computationCache = new ComputationCache(
-          computationCacheFileSystem(), byteDb(), objFactory());
+          computationCacheFileSystem(), byteDb(), byteCodeFactory());
     }
     return computationCache;
   }
@@ -509,7 +509,7 @@ public class TestingContext {
   }
 
   public BlobB blobB() {
-    return objFactory().blob(sink -> sink.writeUtf8("blob data"));
+    return byteCodeFactory().blob(sink -> sink.writeUtf8("blob data"));
   }
 
   public BlobB blobB(int data) {
@@ -517,7 +517,7 @@ public class TestingContext {
   }
 
   public BlobB blobB(ByteString bytes) {
-    return objFactory().blob(sink -> sink.write(bytes));
+    return byteCodeFactory().blob(sink -> sink.write(bytes));
   }
 
   public BlobBBuilder blobBBuilder() {
@@ -541,8 +541,8 @@ public class TestingContext {
   }
 
   public TupleB fileB(String path, BlobB blob) {
-    StringB string = objFactory().string(path);
-    return objFactory().file(string, blob);
+    StringB string = byteCodeFactory().string(path);
+    return byteCodeFactory().file(string, blob);
   }
 
   public FuncB funcB() {
@@ -620,23 +620,23 @@ public class TestingContext {
   }
 
   public ArrayB messageArrayWithOneError() {
-    return arrayB(objFactory().errorMessage("error message"));
+    return arrayB(byteCodeFactory().errorMessage("error message"));
   }
 
   public ArrayB messageArrayEmtpy() {
-    return arrayB(objFactory().messageT());
+    return arrayB(byteCodeFactory().messageT());
   }
 
   public TupleB errorMessage(String text) {
-    return objFactory().errorMessage(text);
+    return byteCodeFactory().errorMessage(text);
   }
 
   public TupleB warningMessage(String text) {
-    return objFactory().warningMessage(text);
+    return byteCodeFactory().warningMessage(text);
   }
 
   public TupleB infoMessage(String text) {
-    return objFactory().infoMessage(text);
+    return byteCodeFactory().infoMessage(text);
   }
 
   // Expr-s

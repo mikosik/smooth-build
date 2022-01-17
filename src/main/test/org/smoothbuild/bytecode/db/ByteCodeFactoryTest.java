@@ -16,31 +16,31 @@ public class ByteCodeFactoryTest extends TestingContext {
 
   @Test
   public void blob_data_can_be_read_back() throws Exception {
-    assertThat(objFactory().blob(sink -> sink.write(bytes)).source().readByteString())
+    assertThat(byteCodeFactory().blob(sink -> sink.write(bytes)).source().readByteString())
         .isEqualTo(bytes);
   }
 
   @Test
   public void error_severity_is_error() {
-    assertThat(MessageStruct.severity(objFactory().errorMessage("text")))
+    assertThat(MessageStruct.severity(byteCodeFactory().errorMessage("text")))
         .isEqualTo(ERROR.name());
   }
 
   @Test
   public void warning_severity_is_warning() {
-    assertThat(MessageStruct.severity(objFactory().warningMessage("text")))
+    assertThat(MessageStruct.severity(byteCodeFactory().warningMessage("text")))
         .isEqualTo(WARNING.name());
   }
 
   @Test
   public void info_severity_is_info() {
-    assertThat(MessageStruct.severity(objFactory().infoMessage("text")))
+    assertThat(MessageStruct.severity(byteCodeFactory().infoMessage("text")))
         .isEqualTo(INFO.name());
   }
 
   @Test
   public void text_returns_text() {
-    assertThat(MessageStruct.text(objFactory().errorMessage("text")))
+    assertThat(MessageStruct.text(byteCodeFactory().errorMessage("text")))
         .isEqualTo("text");
   }
 }
