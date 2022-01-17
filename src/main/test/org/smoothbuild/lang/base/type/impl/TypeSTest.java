@@ -10,7 +10,6 @@ import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.List;
-import java.util.function.Function;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,14 +19,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.ArrayT;
-import org.smoothbuild.lang.base.type.api.FuncT;
-import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.testing.EqualsTester;
 
-public class TypeSTest extends TestingContext {
+public class TypeSTest {
+  private static final TypeFactoryS f = new TypeFactoryS();
+
   @Test
   public void verify_all_base_types_are_tested() {
     assertThat(INFERABLE_BASE_TYPES)
@@ -36,146 +34,144 @@ public class TypeSTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("names")
-  public void name(Function<TypeFactoryS, TypeS> factoryCall, String name) {
-    assertThat(invoke(factoryCall).name())
+  public void name(TypeS type, String name) {
+    assertThat(type.name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(Function<TypeFactoryS, TypeS> factoryCall, String name) {
-    assertThat(invoke(factoryCall).q())
+  public void quoted_name(TypeS type, String name) {
+    assertThat(type.q())
         .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(Function<TypeFactoryS, TypeS> factoryCall, String name) {
-    assertThat(invoke(factoryCall).toString())
+  public void to_string(TypeS type, String name) {
+    assertThat(type.toString())
         .isEqualTo("Type(`" + name + "`)");
   }
 
   public static List<Arguments> names() {
     return asList(
-        args(f -> f.any(), "Any"),
-        args(f -> f.blob(), "Blob"),
-        args(f -> f.bool(), "Bool"),
-        args(f -> f.int_(), "Int"),
-        args(f -> f.nothing(), "Nothing"),
-        args(f -> f.string(), "String"),
-        args(f -> f.struct("MyStruct", nList()), "MyStruct"),
-        args(f -> f.oVar("A"), "A"),
-        args(f -> f.cVar("A"), "A"),
+        arguments(f.any(), "Any"),
+        arguments(f.blob(), "Blob"),
+        arguments(f.bool(), "Bool"),
+        arguments(f.int_(), "Int"),
+        arguments(f.nothing(), "Nothing"),
+        arguments(f.string(), "String"),
+        arguments(f.struct("MyStruct", nList()), "MyStruct"),
+        arguments(f.oVar("A"), "A"),
+        arguments(f.cVar("A"), "A"),
 
-        args(f -> f.array(f.any()), "[Any]"),
-        args(f -> f.array(f.blob()), "[Blob]"),
-        args(f -> f.array(f.bool()), "[Bool]"),
-        args(f -> f.array(f.int_()), "[Int]"),
-        args(f -> f.array(f.nothing()), "[Nothing]"),
-        args(f -> f.array(f.string()), "[String]"),
-        args(f -> f.array(f.struct("MyStruct", nList())), "[MyStruct]"),
-        args(f -> f.array(f.oVar("A")), "[A]"),
-        args(f -> f.array(f.cVar("A")), "[A]"),
+        arguments(f.array(f.any()), "[Any]"),
+        arguments(f.array(f.blob()), "[Blob]"),
+        arguments(f.array(f.bool()), "[Bool]"),
+        arguments(f.array(f.int_()), "[Int]"),
+        arguments(f.array(f.nothing()), "[Nothing]"),
+        arguments(f.array(f.string()), "[String]"),
+        arguments(f.array(f.struct("MyStruct", nList())), "[MyStruct]"),
+        arguments(f.array(f.oVar("A")), "[A]"),
+        arguments(f.array(f.cVar("A")), "[A]"),
 
-        args(f -> f.array(f.array(f.oVar("A"))), "[[A]]"),
-        args(f -> f.array(f.array(f.cVar("A"))), "[[A]]"),
-        args(f -> f.array(f.array(f.any())), "[[Any]]"),
-        args(f -> f.array(f.array(f.blob())), "[[Blob]]"),
-        args(f -> f.array(f.array(f.bool())), "[[Bool]]"),
-        args(f -> f.array(f.array(f.int_())), "[[Int]]"),
-        args(f -> f.array(f.array(f.nothing())), "[[Nothing]]"),
-        args(f -> f.array(f.array(f.struct("MyStruct", nList()))), "[[MyStruct]]"),
-        args(f -> f.array(f.array(f.string())), "[[String]]"),
+        arguments(f.array(f.array(f.oVar("A"))), "[[A]]"),
+        arguments(f.array(f.array(f.cVar("A"))), "[[A]]"),
+        arguments(f.array(f.array(f.any())), "[[Any]]"),
+        arguments(f.array(f.array(f.blob())), "[[Blob]]"),
+        arguments(f.array(f.array(f.bool())), "[[Bool]]"),
+        arguments(f.array(f.array(f.int_())), "[[Int]]"),
+        arguments(f.array(f.array(f.nothing())), "[[Nothing]]"),
+        arguments(f.array(f.array(f.struct("MyStruct", nList()))), "[[MyStruct]]"),
+        arguments(f.array(f.array(f.string())), "[[String]]"),
 
-        args(f -> f.func(f.oVar("A"), list(f.array(f.oVar("A")))), "A([A])"),
-        args(f -> f.func(f.cVar("A"), list(f.array(f.cVar("A")))), "A([A])"),
-        args(f -> f.func(f.string(), list(f.array(f.oVar("A")))), "String([A])"),
-        args(f -> f.func(f.string(), list(f.array(f.cVar("A")))), "String([A])"),
-        args(f -> f.func(f.oVar("A"), list(f.oVar("A"))), "A(A)"),
-        args(f -> f.func(f.cVar("A"), list(f.cVar("A"))), "A(A)"),
-        args(f -> f.func(f.string(), list()), "String()"),
-        args(f -> f.func(f.string(), list(f.string())), "String(String)")
+        arguments(f.func(f.oVar("A"), list(f.array(f.oVar("A")))), "A([A])"),
+        arguments(f.func(f.cVar("A"), list(f.array(f.cVar("A")))), "A([A])"),
+        arguments(f.func(f.string(), list(f.array(f.oVar("A")))), "String([A])"),
+        arguments(f.func(f.string(), list(f.array(f.cVar("A")))), "String([A])"),
+        arguments(f.func(f.oVar("A"), list(f.oVar("A"))), "A(A)"),
+        arguments(f.func(f.cVar("A"), list(f.cVar("A"))), "A(A)"),
+        arguments(f.func(f.string(), list()), "String()"),
+        arguments(f.func(f.string(), list(f.string())), "String(String)")
     );
   }
 
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
-  public void isPolytype(Function<TypeFactoryS, TypeS> factoryCall, boolean expected) {
-    assertThat(invoke(factoryCall).isPolytype())
+  public void isPolytype(TypeS type, boolean expected) {
+    assertThat(type.isPolytype())
         .isEqualTo(expected);
   }
 
   public static List<Arguments> isPolytype_test_data() {
     return asList(
-        args(f -> f.oVar("A"), true),
-        args(f -> f.array(f.oVar("A")), true),
-        args(f -> f.array(f.array(f.oVar("A"))), true),
+        arguments(f.oVar("A"), true),
+        arguments(f.array(f.oVar("A")), true),
+        arguments(f.array(f.array(f.oVar("A"))), true),
 
-        args(f -> f.func(f.oVar("A"), list()), true),
-        args(f -> f.func(f.func(f.oVar("A"), list()), list()), true),
-        args(f -> f.func(f.func(f.func(f.oVar("A"), list()), list()), list()), true),
+        arguments(f.func(f.oVar("A"), list()), true),
+        arguments(f.func(f.func(f.oVar("A"), list()), list()), true),
+        arguments(f.func(f.func(f.func(f.oVar("A"), list()), list()), list()), true),
 
-        args(f -> f.func(f.bool(), list(f.oVar("A"))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.oVar("A"), list()))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.func(f.oVar("A"), list()), list()))), true),
+        arguments(f.func(f.bool(), list(f.oVar("A"))), true),
+        arguments(f.func(f.bool(), list(f.func(f.oVar("A"), list()))), true),
+        arguments(f.func(f.bool(), list(f.func(f.func(f.oVar("A"), list()), list()))), true),
 
-        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.oVar("A"))))), true),
+        arguments(f.func(f.bool(), list(f.func(f.blob(), list(f.oVar("A"))))), true),
 
-        args(f -> f.cVar("A"), true),
-        args(f -> f.array(f.cVar("A")), true),
-        args(f -> f.array(f.array(f.cVar("A"))), true),
+        arguments(f.cVar("A"), true),
+        arguments(f.array(f.cVar("A")), true),
+        arguments(f.array(f.array(f.cVar("A"))), true),
 
-        args(f -> f.func(f.cVar("A"), list()), true),
-        args(f -> f.func(f.func(f.cVar("A"), list()), list()), true),
-        args(f -> f.func(f.func(f.func(f.cVar("A"), list()), list()), list()), true),
+        arguments(f.func(f.cVar("A"), list()), true),
+        arguments(f.func(f.func(f.cVar("A"), list()), list()), true),
+        arguments(f.func(f.func(f.func(f.cVar("A"), list()), list()), list()), true),
 
-        args(f -> f.func(f.bool(), list(f.cVar("A"))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.cVar("A"), list()))), true),
-        args(f -> f.func(f.bool(), list(f.func(f.func(f.cVar("A"), list()), list()))), true),
+        arguments(f.func(f.bool(), list(f.cVar("A"))), true),
+        arguments(f.func(f.bool(), list(f.func(f.cVar("A"), list()))), true),
+        arguments(f.func(f.bool(), list(f.func(f.func(f.cVar("A"), list()), list()))), true),
 
-        args(f -> f.func(f.bool(), list(f.func(f.blob(), list(f.cVar("A"))))), true),
+        arguments(f.func(f.bool(), list(f.func(f.blob(), list(f.cVar("A"))))), true),
 
-        args(f -> f.func(f.bool(), list(f.int_())), false),
+        arguments(f.func(f.bool(), list(f.int_())), false),
 
-        args(f -> f.any(), false),
-        args(f -> f.blob(), false),
-        args(f -> f.bool(), false),
-        args(f -> f.int_(), false),
-        args(f -> f.nothing(), false),
-        args(f -> f.string(), false),
-        args(f -> f.struct("MyStruct", nList()), false)
+        arguments(f.any(), false),
+        arguments(f.blob(), false),
+        arguments(f.bool(), false),
+        arguments(f.int_(), false),
+        arguments(f.nothing(), false),
+        arguments(f.string(), false),
+        arguments(f.struct("MyStruct", nList()), false)
     );
   }
 
   @ParameterizedTest
   @MethodSource("func_result_cases")
-  public void func_result(Function<TypeFactoryS, FuncT> factoryCall,
-      Function<TypeFactoryS, List<Type>> expected) {
-    assertThat(invoke(factoryCall).res())
-        .isEqualTo(invoke(expected));
+  public void func_result(FuncTS type, TypeS expected) {
+    assertThat(type.res())
+        .isEqualTo(expected);
   }
 
   public static List<Arguments> func_result_cases() {
     return asList(
-        args(f -> f.func(f.int_(), list()), f -> f.int_()),
-        args(f -> f.func(f.blob(), list(f.bool())), f -> f.blob()),
-        args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> f.blob())
+        arguments(f.func(f.int_(), list()), f.int_()),
+        arguments(f.func(f.blob(), list(f.bool())), f.blob()),
+        arguments(f.func(f.blob(), list(f.bool(), f.int_())), f.blob())
     );
   }
 
   @ParameterizedTest
   @MethodSource("func_params_cases")
-  public void func_params(Function<TypeFactoryS, FuncT> factoryCall,
-      Function<TypeFactoryS, List<Type>> expected) {
-    assertThat(invoke(factoryCall).params())
-        .isEqualTo(invoke(expected));
+  public void func_params(FuncTS type, Object expected) {
+    assertThat(type.params())
+        .isEqualTo(expected);
   }
 
   public static List<Arguments> func_params_cases() {
     return asList(
-        args(f -> f.func(f.int_(), list()), f -> list()),
-        args(f -> f.func(f.blob(), list(f.bool())), f -> list(f.bool())),
-        args(f -> f.func(f.blob(), list(f.bool(), f.int_())), f -> list(f.bool(), f.int_()))
+        arguments(f.func(f.int_(), list()), list()),
+        arguments(f.func(f.blob(), list(f.bool())), list(f.bool())),
+        arguments(f.func(f.blob(), list(f.bool(), f.int_())), list(f.bool(), f.int_()))
     );
   }
 
@@ -183,7 +179,7 @@ public class TypeSTest extends TestingContext {
   class _open_var {
     @Test
     public void illegal_name() {
-      assertCall(() -> oVarTS("a"))
+      assertCall(() -> f.oVar("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
@@ -192,7 +188,7 @@ public class TypeSTest extends TestingContext {
   class _closed_var {
     @Test
     public void illegal_name() {
-      assertCall(() -> cVarTS("a"))
+      assertCall(() -> f.cVar("a"))
           .throwsException(new IllegalArgumentException("Illegal type var name 'a'."));
     }
   }
@@ -201,35 +197,34 @@ public class TypeSTest extends TestingContext {
   class _array {
     @ParameterizedTest
     @MethodSource("elemType_test_data")
-    public void elemType(Function<TypeFactoryS, TypeS> factoryCall) {
-      TypeS elem = invoke(factoryCall);
-      ArrayT array = typeFactoryS().array(elem);
+    public void elemType(TypeS type) {
+      ArrayT array = f.array(type);
       assertThat(array.elem())
-          .isEqualTo(elem);
+          .isEqualTo(type);
     }
 
     public static List<Arguments> elemType_test_data() {
       return asList(
-          args(f -> f.any()),
-          args(f -> f.blob()),
-          args(f -> f.bool()),
-          args(f -> f.func(f.string(), list())),
-          args(f -> f.int_()),
-          args(f -> f.nothing()),
-          args(f -> f.string()),
-          args(f -> f.struct("MyStruct", nList())),
-          args(f -> f.oVar("A")),
-          args(f -> f.cVar("A")),
+          arguments(f.any()),
+          arguments(f.blob()),
+          arguments(f.bool()),
+          arguments(f.func(f.string(), list())),
+          arguments(f.int_()),
+          arguments(f.nothing()),
+          arguments(f.string()),
+          arguments(f.struct("MyStruct", nList())),
+          arguments(f.oVar("A")),
+          arguments(f.cVar("A")),
 
-          args(f -> f.array(f.any())),
-          args(f -> f.array(f.blob())),
-          args(f -> f.array(f.bool())),
-          args(f -> f.array(f.func(f.string(), list()))),
-          args(f -> f.array(f.int_())),
-          args(f -> f.array(f.nothing())),
-          args(f -> f.array(f.string())),
-          args(f -> f.array(f.oVar("A"))),
-          args(f -> f.array(f.cVar("A")))
+          arguments(f.array(f.any())),
+          arguments(f.array(f.blob())),
+          arguments(f.array(f.bool())),
+          arguments(f.array(f.func(f.string(), list()))),
+          arguments(f.array(f.int_())),
+          arguments(f.array(f.nothing())),
+          arguments(f.array(f.string())),
+          arguments(f.array(f.oVar("A"))),
+          arguments(f.array(f.cVar("A")))
       );
     }
   }
@@ -238,22 +233,22 @@ public class TypeSTest extends TestingContext {
   class _struct {
     @Test
     public void without_fields_can_be_created() {
-      structTS("MyStruct", nList());
+      f.struct("MyStruct", nList());
     }
 
     @Test
     public void first_field_type_can_be_nothing() {
-      structTS("MyStruct", nList(sigS(nothingTS(), "fieldName")));
+      f.struct("MyStruct", nList(itemSigS("fieldName", f.nothing())));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      structTS("MyStruct", nList(sigS(arrayTS(nothingTS()), "fieldName")));
+      f.struct("MyStruct", nList(itemSigS("fieldName", f.array(f.nothing()))));
     }
 
     @Test
     public void struct_name() {
-      var struct = typeFactoryS().struct("MyStruct", nList());
+      var struct = f.struct("MyStruct", nList());
       assertThat(struct.name())
           .isEqualTo("MyStruct");
     }
@@ -261,27 +256,25 @@ public class TypeSTest extends TestingContext {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "  "})
     public void illegal_struct_name(String name) {
-      assertCall(() -> typeFactoryS().struct(name, nList()))
+      assertCall(() -> f.struct(name, nList()))
           .throwsException(IllegalArgumentException.class);
     }
 
     @ParameterizedTest
     @MethodSource("struct_fields_cases")
-    public void struct_fields(
-        Function<TypeFactoryS, StructTS> factoryCall,
-        Function<TypeFactoryS, NList<ItemSigS>> expected) {
-      assertThat(invoke(factoryCall).fields())
-          .isEqualTo(invoke(expected));
+    public void struct_fields(StructTS struct, NList<ItemSigS> expected) {
+      assertThat(struct.fields())
+          .isEqualTo(expected);
     }
 
     public static List<Arguments> struct_fields_cases() {
       return asList(
-          args(f -> f.struct("Person", nList()), f -> nList()),
-          args(f -> f.struct("Person", nList(itemSigS("field", f.string()))),
-              f -> nList(itemSigS("field", f.string()))),
-          args(f -> f.struct("Person",
+          arguments(f.struct("Person", nList()), nList()),
+          arguments(f.struct("Person", nList(itemSigS("field", f.string()))),
+              nList(itemSigS("field", f.string()))),
+          arguments(f.struct("Person",
               nList(itemSigS("field", f.string()), itemSigS("field2", f.int_()))),
-              f -> nList(itemSigS("field", f.string()), itemSigS("field2", f.int_())))
+              nList(itemSigS("field", f.string()), itemSigS("field2", f.int_())))
       );
     }
   }
@@ -289,7 +282,6 @@ public class TypeSTest extends TestingContext {
   @Test
   public void equality() {
     EqualsTester equalsTester = new EqualsTester();
-    TypeFactoryS f = typeFactoryS();
     List<TypeS> types = asList(
         f.any(),
         f.blob(),
@@ -298,7 +290,7 @@ public class TypeSTest extends TestingContext {
         f.nothing(),
         f.string(),
         f.struct("MyStruct", nList()),
-        f.struct("MyStruct", nList(sigS(f.int_(), "field"))),
+        f.struct("MyStruct", nList(itemSigS("field", f.int_()))),
         f.oVar("A"),
         f.oVar("B"),
         f.oVar("C"),
@@ -318,35 +310,5 @@ public class TypeSTest extends TestingContext {
       equalsTester.addEqualityGroup(f.array(f.array(type)), f.array(f.array(type)));
     }
     equalsTester.testEquals();
-  }
-
-  private <R> R invoke(Function<TypeFactoryS, R> f) {
-    return f.apply(typeFactoryS());
-  }
-
-  /**
-   * We need this chaining method because without it java compiler is not able to infer
-   * exact type of lambda expression passed to factoryCall.
-   */
-  private static <R> Arguments args(
-      Function<TypeFactoryS, R> factoryCall1,
-      Function<TypeFactoryS, R> factoryCall2) {
-    return arguments(factoryCall1, factoryCall2);
-  }
-
-  /**
-   * We need this chaining method because without it java compiler is not able to infer
-   * exact type of lambda expression passed to factoryCall.
-   */
-  private static <R> Arguments args(Function<TypeFactoryS, R> factoryCall, Object arg) {
-    return arguments(factoryCall, arg);
-  }
-
-  /**
-   * We need this chaining method because without it java compiler is not able to infer
-   * exact type of lambda expression passed to factoryCall.
-   */
-  private static <R> Arguments args(Function<TypeFactoryS, R> factoryCall) {
-    return arguments(factoryCall);
   }
 }
