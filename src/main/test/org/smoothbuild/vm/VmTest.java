@@ -334,6 +334,13 @@ public class VmTest extends TestingContext {
   @Nested
   class _param_ref {
     @Test
+    public void referencing_param_inside_func() throws Exception {
+      var func = funcB(list(intTB()), paramRefB(intTB(), 0));
+      assertThat(evaluate(callB(func, intB(7))))
+          .isEqualTo(intB(7));
+    }
+
+    @Test
     public void referencing_param_of_enclosing_func_from_enclosed_func() throws Exception {
       var inner = funcB(paramRefB(intTB(), 0));
       var outer = funcB(list(intTB()), callB(inner));
