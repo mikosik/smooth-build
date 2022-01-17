@@ -193,7 +193,7 @@ public class CatBTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("isPolytype_test_data")
-  public void isPolytype(Function<CatDb, CatB> factoryCall, boolean expected) {
+  public void isPolytype(Function<CatDb, TypeB> factoryCall, boolean expected) {
     assertThat(execute(factoryCall).isPolytype())
         .isEqualTo(expected);
   }
@@ -267,7 +267,7 @@ public class CatBTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("hasOpenVars_test_data")
-  public void hasOpenVars(CatB type, boolean expected) {
+  public void hasOpenVars(TypeB type, boolean expected) {
     assertThat(type.hasOpenVars())
         .isEqualTo(expected);
   }
@@ -299,7 +299,7 @@ public class CatBTest extends TestingContext {
 
   @ParameterizedTest
   @MethodSource("hasClosedVars_test_data")
-  public void hasOpenClosed(CatB type, boolean expected) {
+  public void hasOpenClosed(TypeB type, boolean expected) {
     assertThat(type.hasClosedVars())
         .isEqualTo(expected);
   }

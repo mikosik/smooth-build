@@ -8,24 +8,27 @@ import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.base.type.api.AbstractT;
 
 /**
  * Category of ObjH.
  */
-public abstract class CatB extends AbstractT {
+public abstract class CatB {
+  private final String name;
   private final Hash hash;
   private final CatKindB kind;
 
   protected CatB(String name, Hash hash, CatKindB kind) {
-    this(name, hash, kind, false, false);
-  }
-
-  protected CatB(
-      String name, Hash hash, CatKindB kind, boolean hasOpenVars, boolean hasClosedVars) {
-    super(name, hasOpenVars, hasClosedVars);
+    this.name = name;
     this.hash = hash;
     this.kind = kind;
+  }
+
+  public String name() {
+    return name;
+  }
+
+  public String q() {
+    return "`" + name() + "`";
   }
 
   /**
