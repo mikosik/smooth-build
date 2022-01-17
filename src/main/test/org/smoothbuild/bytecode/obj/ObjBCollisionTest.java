@@ -11,7 +11,6 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.collect.Lists;
 
 import okio.ByteString;
 
@@ -60,40 +59,40 @@ public class ObjBCollisionTest extends TestingContext {
         methodB(methodTB(stringTB(), list()), blob1, stringB("binary name"), boolB(true)),
         stringB("abc"),
         stringB("def"),
-        tupleB(list()),
-        tupleB(list(intB(0))),
-        tupleB(list(intB(1))),
-        tupleB(list(stringB("abc"))),
-        tupleB(list(stringB("def"))),
+        tupleB(),
+        tupleB(intB(0)),
+        tupleB(intB(1)),
+        tupleB(stringB("abc")),
+        tupleB(stringB("def")),
         // expressions
-        callB(funcB(funcTB(stringTB(), list(intTB())), stringB("a")), list(intB(1))),
-        callB(funcB(funcTB(stringTB(), list(intTB())), stringB("a")), list(intB(2))),
-        callB(funcB(funcTB(stringTB(), list(intTB())), stringB("b")), list(intB(1))),
-        combineB(list()),
-        combineB(list(intB(0))),
-        combineB(list(intB(1))),
+        callB(funcB(funcTB(stringTB(), list(intTB())), stringB("a")), intB(1)),
+        callB(funcB(funcTB(stringTB(), list(intTB())), stringB("a")), intB(2)),
+        callB(funcB(funcTB(stringTB(), list(intTB())), stringB("b")), intB(1)),
+        combineB(),
+        combineB(intB(0)),
+        combineB(intB(1)),
         ifB(boolB(false), intB(1), intB(2)),
         ifB(boolB(false), intB(1), intB(3)),
         ifB(boolB(false), intB(3), intB(2)),
         ifB(boolB(true), intB(1), intB(2)),
-        invokeB(methodB(methodTB(intTB(), list(intTB()))), combineB(list(intB(1)))),
-        invokeB(methodB(methodTB(intTB(), list(intTB()))), combineB(list(intB(2)))),
-        invokeB(methodB(methodTB(stringTB(), list(intTB()))), combineB(list(intB(1)))),
+        invokeB(methodB(methodTB(intTB(), list(intTB()))), intB(1)),
+        invokeB(methodB(methodTB(intTB(), list(intTB()))), intB(2)),
+        invokeB(methodB(methodTB(stringTB(), list(intTB()))), intB(1)),
         mapB(arrayB(intB(1)), funcB(funcTB(intTB(), list(intTB())), paramRefB(intTB(), 0))),
         mapB(arrayB(intB(1)), funcB(funcTB(intTB(), list(intTB())), intB(3))),
         mapB(arrayB(intB(2)), funcB(funcTB(intTB(), list(intTB())), paramRefB(intTB(), 0))),
-        orderB(stringTB(), list()),
-        orderB(nothingTB(), list()),
-        orderB(intTB(), list(intB(1))),
-        orderB(intTB(), list(intB(2))),
-        orderB(arrayTB(intTB()), Lists.list(arrayB(intTB()))),
-        orderB(arrayTB(intTB()), Lists.list(arrayB(nothingTB()))),
+        orderB(stringTB()),
+        orderB(nothingTB()),
+        orderB(intTB(), intB(1)),
+        orderB(intTB(), intB(2)),
+        orderB(arrayTB(intTB()), arrayB(intTB())),
+        orderB(arrayTB(intTB()), arrayB(nothingTB())),
         paramRefB(intTB(), 0),
         paramRefB(intTB(), 1),
         paramRefB(stringTB(), 0),
-        selectB(tupleB(list(intB(1), stringB("a"))), intB(0)),
-        selectB(tupleB(list(intB(1), stringB("a"))), intB(1)),
-        selectB(tupleB(list(intB(1), stringB("b"))), intB(0))
+        selectB(tupleB(intB(1), stringB("a")), intB(0)),
+        selectB(tupleB(intB(1), stringB("a")), intB(1)),
+        selectB(tupleB(intB(1), stringB("b")), intB(0))
     );
     // @formatter:on
   }

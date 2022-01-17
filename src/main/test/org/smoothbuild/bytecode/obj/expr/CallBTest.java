@@ -9,74 +9,69 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.collect.Lists;
-
-import com.google.common.collect.ImmutableList;
 
 public class CallBTest extends TestingContext {
   @Nested
   class _infer_type_of_call {
     @Test
     public void without_generic_params() {
-      assertThat(callB(funcB(list(stringTB()), intB()), list(stringB())).cat())
+      assertThat(callB(funcB(list(stringTB()), intB()), stringB()).cat())
           .isEqualTo(callCB(intTB()));
     }
 
     @Test
     public void with_generic_params() {
-      assertThat(callB(funcB(list(oVarTB("A")), paramRefB(oVarTB("A"), 0)), list(intB())).cat())
+      assertThat(callB(funcB(list(oVarTB("A")), paramRefB(oVarTB("A"), 0)), intB()).cat())
           .isEqualTo(callCB(intTB()));
     }
   }
 
   @Test
   public void creating_call_with_func_type_not_being_func_causes_exception() {
-    assertCall(() -> callB(blobTB(), intB(), list()))
+    assertCall(() -> callB(blobTB(), intB()))
         .throwsException(new IllegalArgumentException(
             "`func` component doesn't evaluate to FuncH."));
   }
 
   @Test
   public void creating_call_with_too_few_args_causes_exception() {
-    assertCall(() -> callB(funcB(list(stringTB()), intB()), list()))
+    assertCall(() -> callB(funcB(list(stringTB()), intB())))
         .throwsException(argsNotMatchingParamsException("{}", "{String}"));
   }
 
   @Test
   public void creating_call_with_too_many_args_causes_exception() {
-    assertCall(() -> callB(funcB(list(stringTB()), intB()), list(intB(), intB())))
+    assertCall(() -> callB(funcB(list(stringTB()), intB()), intB(), intB()))
         .throwsException(argsNotMatchingParamsException("{Int,Int}", "{String}"));
   }
 
   @Test
   public void creating_call_with_args_being_subtype_of_required_args_is_allowed() {
     var func = funcB(list(arrayTB(intTB())), paramRefB(arrayTB(intTB()), 0));
-    var args = combineB(Lists.list(arrayB(nothingTB())));
-    var call = callB(func, args);
+    var call = callB(func, arrayB(nothingTB()));
     assertThat(call.data().args())
-        .isEqualTo(args);
+        .isEqualTo(combineB(arrayB(nothingTB())));
   }
 
   @Test
   public void creating_call_with_arg_not_matching_param_type_causes_exception() {
-    assertCall(() -> callB(funcB(list(stringTB()), intB()), list(intB(3))))
+    assertCall(() -> callB(funcB(list(stringTB()), intB()), intB(3)))
         .throwsException(argsNotMatchingParamsException("{Int}", "{String}"));
   }
 
   @Test
   public void creating_call_with_resT_being_subtype_of_evalT() {
     var func = funcB(list(), arrayB(nothingTB()));
-    var callB = callB(arrayTB(intTB()), func, list());
+    var callB = callB(arrayTB(intTB()), func);
     assertThat(callB.data().args())
-        .isEqualTo(combineB(list()));
+        .isEqualTo(combineB());
   }
 
   @Test
   public void creating_call_with_resT_not_assignable_to_evalT_causes_exc() {
     var func = funcB(list(), intB(7));
-    assertCall(() -> callB(stringTB(), func, list()))
+    assertCall(() -> callB(stringTB(), func))
         .throwsException(new IllegalArgumentException(
             "Call's result type `Int` cannot be assigned to evalT `String`."));
   }
@@ -90,16 +85,15 @@ public class CallBTest extends TestingContext {
   @Test
   public void func_returns_func_expr() {
     var func = funcB(list(stringTB()), intB());
-    assertThat(callB(func, list(stringB())).data().callable())
+    assertThat(callB(func, stringB()).data().callable())
         .isEqualTo(func);
   }
 
   @Test
   public void args_returns_arg_exprs() {
     var func = funcB(list(stringTB()), intB());
-    ImmutableList<ObjB> args = list(stringB()) ;
-    assertThat(callB(func, args).data().args())
-        .isEqualTo(combineB(args));
+    assertThat(callB(func, stringB()).data().args())
+        .isEqualTo(combineB(stringB()));
   }
 
   @Nested
@@ -107,24 +101,24 @@ public class CallBTest extends TestingContext {
     @Override
     protected List<CallB> equalValues() {
       return list(
-          callB(funcB(list(blobTB()), intB()), list(blobB())),
-          callB(funcB(list(blobTB()), intB()), list(blobB()))
+          callB(funcB(list(blobTB()), intB()), blobB()),
+          callB(funcB(list(blobTB()), intB()), blobB())
       );
     }
 
     @Override
     protected List<CallB> nonEqualValues() {
       return list(
-          callB(funcB(list(blobTB()), intB()), list(blobB())),
-          callB(funcB(list(stringTB()), intB()), list(stringB())),
-          callB(funcB(list(blobTB()), stringB()), list(blobB()))
+          callB(funcB(list(blobTB()), intB()), blobB()),
+          callB(funcB(list(stringTB()), intB()), stringB()),
+          callB(funcB(list(blobTB()), stringB()), blobB())
       );
     }
   }
 
   @Test
   public void call_can_be_read_back_by_hash() {
-    var call = callB(funcB(list(stringTB()), intB()), list(stringB()));
+    var call = callB(funcB(list(stringTB()), intB()), stringB());
     assertThat(byteDbOther().get(call.hash()))
         .isEqualTo(call);
   }
@@ -132,16 +126,15 @@ public class CallBTest extends TestingContext {
   @Test
   public void call_read_back_by_hash_has_same_data() {
     var func = funcB(list(stringTB()), intB());
-    ImmutableList<ObjB> args = list(stringB());
-    var call = callB(func, args);
+    var call = callB(func, stringB());
     assertThat(((CallB) byteDbOther().get(call.hash())).data())
-        .isEqualTo(new CallB.Data(func, combineB(args)));
+        .isEqualTo(new CallB.Data(func, combineB(stringB())));
   }
 
   @Test
   public void to_string() {
     var func = funcB(list(stringTB()), intB());
-    var call = callB(func, list(stringB()));
+    var call = callB(func, stringB());
     assertThat(call.toString())
         .isEqualTo("Call:Int(???)@" + call.hash());
   }

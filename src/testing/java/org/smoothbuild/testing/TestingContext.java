@@ -2,6 +2,7 @@ package org.smoothbuild.testing;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.io.ByteStreams.nullOutputStream;
+import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.cli.console.Level.INFO;
@@ -11,7 +12,6 @@ import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
 import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import java.io.PrintWriter;
@@ -134,7 +134,6 @@ import org.smoothbuild.vm.parallel.ExecutionReporter;
 import org.smoothbuild.vm.parallel.ParallelJobExecutor;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.util.Providers;
 
@@ -350,7 +349,7 @@ public class TestingContext {
   }
 
   public TupleTB fileTB() {
-    return tupleTB(list(blobTB(), stringTB()));
+    return tupleTB(blobTB(), stringTB());
   }
 
   public FuncTB funcTB() {
@@ -378,27 +377,15 @@ public class TestingContext {
   }
 
   public TupleTB personTB() {
-    return tupleTB(list(stringTB(), stringTB()));
+    return tupleTB(stringTB(), stringTB());
   }
 
   public StringTB stringTB() {
     return catDb().string();
   }
 
-  public TupleTB tupleTB() {
-    return catDb().tuple(list(intTB()));
-  }
-
-  public TupleTB tupleTB(ImmutableList<TypeB> itemTs) {
-    return catDb().tuple(itemTs);
-  }
-
-  public TupleTB tupleEmptyTB() {
-    return tupleTB(list());
-  }
-
-  public TupleTB tupleWithStrTB() {
-    return tupleTB(list(stringTB()));
+  public TupleTB tupleTB(TypeB... itemTs) {
+    return catDb().tuple(ImmutableList.copyOf(itemTs));
   }
 
   public OpenVarTB oVarTB(String name) {
@@ -427,11 +414,7 @@ public class TestingContext {
     return catDb().call(evalT);
   }
 
-  public CombineCB combineCB() {
-    return combineCB(list(intTB(), stringTB()));
-  }
-
-  public CombineCB combineCB(ImmutableList<TypeB> itemTs) {
+  public CombineCB combineCB(TypeB... itemTs) {
     return catDb().combine(tupleTB(itemTs));
   }
 
@@ -494,7 +477,7 @@ public class TestingContext {
   }
 
   public TupleB animalB(StringB species, IntB speed) {
-    return tupleB(animalTB(), list(species, speed));
+    return tupleB(animalTB(), species, speed);
   }
 
   public ArrayB arrayB(ValB... elems) {
@@ -595,7 +578,7 @@ public class TestingContext {
   }
 
   public TupleB personB(String firstName, String lastName) {
-    return tupleB(list(stringB(firstName), stringB(lastName)));
+    return tupleB(stringB(firstName), stringB(lastName));
   }
 
   public StringB stringB() {
@@ -606,17 +589,13 @@ public class TestingContext {
     return byteDb().string(string);
   }
 
-  public TupleB tupleB(ImmutableList<ValB> items) {
-    var type = tupleTB(map(items, ValB::type));
-    return tupleB(type, items);
+  public TupleB tupleB(ValB... items) {
+    var tupleTB = tupleTB(stream(items).map(ValB::type).toArray(TypeB[]::new));
+    return tupleB(tupleTB, items);
   }
 
-  public TupleB tupleB(TupleTB tupleT, ImmutableList<ValB> items) {
-    return byteDb().tuple(tupleT, items);
-  }
-
-  public TupleB tupleBEmpty() {
-    return tupleB(list());
+  public TupleB tupleB(TupleTB tupleT, ValB... items) {
+    return byteDb().tuple(tupleT, ImmutableList.copyOf(items));
   }
 
   public ArrayB messageArrayWithOneError() {
@@ -641,20 +620,17 @@ public class TestingContext {
 
   // Expr-s
 
-  public CallB callB(ObjB func, ImmutableList<ObjB> args) {
-    return callB(func, combineB(args));
+  public CallB callB(ObjB func, ObjB... args) {
+    var combineB = combineB(args);
+    var evalT = inferResT(func, combineB);
+    return callBImpl(evalT, func, combineB);
   }
 
-  public CallB callB(ObjB func, CombineB args) {
-    var evalT = inferResT(func, args);
-    return callB(evalT, func, args);
+  public CallB callB(TypeB evalT, ObjB func, ObjB... args) {
+    return callBImpl(evalT, func, combineB(args));
   }
 
-  public CallB callB(TypeB evalT, ObjB func, ImmutableList<ObjB> args) {
-    return callB(evalT, func, combineB(args));
-  }
-
-  public CallB callB(TypeB evalT, ObjB func, CombineB args) {
+  public CallB callBImpl(TypeB evalT, ObjB func, CombineB args) {
     return byteDb().call(evalT, func, args);
   }
 
@@ -670,59 +646,43 @@ public class TestingContext {
             .formatted(argsT.q(), callableTB.paramsTuple().q()));
   }
 
-  public CombineB combineB(ImmutableList<ObjB> items) {
-    var evalT = tupleTB(map(items, ObjB::type));
+  public CombineB combineB(ObjB... items) {
+    var evalT = tupleTB(stream(items).map(ObjB::type).toArray(TypeB[]::new));
     return combineB(evalT, items);
   }
 
-  public CombineB combineB(TupleTB evalT, ImmutableList<ObjB> items) {
-    return byteDb().combine(evalT, items);
+  public CombineB combineB(TupleTB evalT, ObjB... items) {
+    return byteDb().combine(evalT, ImmutableList.copyOf(items));
   }
 
   public IfB ifB(ObjB condition, ObjB then, ObjB else_) {
     return byteDb().if_(condition, then, else_);
   }
 
-  public InvokeB invokeB(MethodB method) {
-    var args = combineB(createParamRefsB(method.type().params()));
-    return invokeB(method, args);
+  public InvokeB invokeB(ObjB method, ObjB... args) {
+    var combineB = combineB(args);
+    return invokeBImpl(inferResT(method, combineB), method, combineB);
   }
 
-  public InvokeB invokeB(ObjB method, ImmutableList<ObjB> args) {
-    return invokeB(method, combineB(args));
+  public InvokeB invokeB(TypeB evalT, ObjB method, ObjB... args) {
+    return invokeBImpl(evalT, method, combineB(args));
   }
 
-  public InvokeB invokeB(ObjB method, CombineB args) {
-    return invokeB(inferResT(method, args), method, args);
-  }
-
-  public InvokeB invokeB(TypeB evalT, ObjB method, ImmutableList<ObjB> args) {
-    return invokeB(evalT, method, combineB(args));
-  }
-
-  public InvokeB invokeB(TypeB evalT, ObjB method, CombineB args) {
+  private InvokeB invokeBImpl(TypeB evalT, ObjB method, CombineB args) {
     return byteDb().invoke(evalT, method, args);
-  }
-
-  private ImmutableList<ObjB> createParamRefsB(ImmutableList<TypeB> paramTs) {
-    Builder<ObjB> builder = ImmutableList.builder();
-    for (int i = 0; i < paramTs.size(); i++) {
-      builder.add(paramRefB(paramTs.get(i), i));
-    }
-    return builder.build();
   }
 
   public MapB mapB(ObjB array, ObjB func) {
     return byteDb().map(array, func);
   }
 
-  public OrderB orderB(ImmutableList<ObjB> elems) {
-    var elemT = elems.get(0).type();
-    return orderB(elemT, elems);
+  public OrderB orderB(ObjB... elems) {
+    return orderB(elems[0].type(), elems);
   }
 
-  public OrderB orderB(TypeB elemT, ImmutableList<ObjB> elems) {
-    return byteDb().order(arrayTB(elemT), elems);
+  public OrderB orderB(TypeB elemT, ObjB... elems) {
+    var elemList = ImmutableList.copyOf(elems);
+    return byteDb().order(arrayTB(elemT), elemList);
   }
 
   public ParamRefB paramRefB(int index) {
@@ -855,26 +815,21 @@ public class TestingContext {
   }
 
   public CombineS combineS(ExprS... expr) {
-    var exprs = ImmutableList.copyOf(expr);
-    return combineS(1, structTS("MyStruct", nList(exprsToItemSigs(exprs))), exprs);
+    return combineS(1, structTS("MyStruct", nList(exprsToItemSigs(expr))), expr);
   }
 
-  private ImmutableList<ItemSigS> exprsToItemSigs(ImmutableList<ExprS> exprs) {
-    return IntStream.range(0, exprs.size())
-        .mapToObj(i -> new ItemSigS(exprs.get(i).type(), "field" + i, empty()))
+  private ImmutableList<ItemSigS> exprsToItemSigs(ExprS... exprs) {
+    return IntStream.range(0, exprs.length)
+        .mapToObj(i -> new ItemSigS(exprs[i].type(), "field" + i, empty()))
         .collect(toImmutableList());
   }
 
-  public CombineS combineS(int line, StructTS type, ExprS... items) {
-    return combineS(line, type, ImmutableList.copyOf(items));
-  }
-
-  public CombineS combineS(StructTS type, ImmutableList<ExprS> items) {
+  public CombineS combineS(StructTS type, ExprS... items) {
     return combineS(1, type, items);
   }
 
-  public CombineS combineS(int line, StructTS type, ImmutableList<ExprS> items) {
-    return new CombineS(type, items, loc(line));
+  public CombineS combineS(int line, StructTS type, ExprS... items) {
+    return new CombineS(type, ImmutableList.copyOf(items), loc(line));
   }
 
   public IntS intS(int value) {

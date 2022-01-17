@@ -1,7 +1,6 @@
 package org.smoothbuild.bytecode.exc;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.exc.DecodeCombineWrongItemsSizeExc;
@@ -12,7 +11,7 @@ public class DecodeCombineWrongItemsSizeExcTest extends TestingContext {
   @Test
   public void message() {
     var exception = new DecodeCombineWrongItemsSizeExc(
-        Hash.of(13), combineCB(list(intTB(), stringTB())), 3);
+        Hash.of(13), combineCB(intTB(), stringTB()), 3);
     assertThat(exception.getMessage())
         .isEqualTo("Cannot decode `Combine:{Int,String}` object at "
             + "b1197c208248d0f7ffb3e322d5ec187441dc1b26. "

@@ -32,11 +32,9 @@ public class TestingCatsB {
 
   public static final TupleTB PERSON = CONTEXT.personTB();
   public static final TupleTB FILE = CONTEXT.fileTB();
-  public static final TupleTB TUPLE_EMPTY = CONTEXT.tupleEmptyTB();
-  public static final TupleTB TUPLE_WITH_STRING = CONTEXT.tupleWithStrTB();
 
   public static final CatB CALL = CONTEXT.callCB();
-  public static final CatB COMBINE = CONTEXT.combineCB(list(INT, STRING));
+  public static final CatB COMBINE = CONTEXT.combineCB(INT, STRING);
   public static final CatB IF = CONTEXT.ifCB();
   public static final CatB INVOKE = CONTEXT.invokeCB();
   public static final CatB MAP = CONTEXT.mapCB();

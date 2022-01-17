@@ -9,15 +9,13 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.ObjBTestCase;
-import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.collect.Lists;
 
 public class SelectBTest extends TestingContext {
   @Test
   public void selected_fieldT_can_be_subtype_of_evalT() {
-    var select = selectB(arrayTB(intTB()), tupleB(list(arrayB(nothingTB()))), intB(0));
+    var select = selectB(arrayTB(intTB()), tupleB(arrayB(nothingTB())), intB(0));
     select.data();
   }
 
@@ -44,7 +42,7 @@ public class SelectBTest extends TestingContext {
 
   @Test
   public void tuple_itemT_can_be_subtype_of_elemT_specified_in_category() {
-    var combine = combineB(tupleTB(list(arrayTB(nothingTB()))), Lists.list(arrayB(nothingTB())));
+    var combine = combineB(tupleTB(arrayTB(nothingTB())), arrayB(nothingTB()));
     var select = selectB(arrayTB(intTB()), combine, intB(0));
     assertThat(select.data().selectable())
         .isEqualTo(combine);
@@ -52,7 +50,7 @@ public class SelectBTest extends TestingContext {
 
   @Test
   public void tuple_itemT_not_being_subtype_of_elemT_specified_in_category_causes_exc() {
-    var tuple = tupleB(list(intB(7)));
+    var tuple = tupleB(intB(7));
     assertCall(() -> selectB(stringTB(), tuple, intB(0)))
         .throwsException(new IllegalArgumentException(
             "Selected item type `Int` cannot be assigned to evalT `String`."));
@@ -60,8 +58,8 @@ public class SelectBTest extends TestingContext {
 
   @Test
   public void data_returns_tuple_and_index() {
-    TupleB selectable = tupleB(tupleTB(), list(intB(7)));
-    IntB index = intB(0);
+    var selectable = tupleB(tupleTB(intTB()), intB(7));
+    var index = intB(0);
     assertThat(selectB(selectable, index).data())
         .isEqualTo(new SelectB.Data(selectable, index));
   }
@@ -71,20 +69,20 @@ public class SelectBTest extends TestingContext {
     @Override
     protected List<SelectB> equalValues() {
       return list(
-          selectB(tupleB(list(intB(7), stringB("abc"))), intB(0)),
-          selectB(tupleB(list(intB(7), stringB("abc"))), intB(0))
+          selectB(tupleB(intB(7), stringB("abc")), intB(0)),
+          selectB(tupleB(intB(7), stringB("abc")), intB(0))
       );
     }
 
     @Override
     protected List<SelectB> nonEqualValues() {
       return list(
-          selectB(tupleB(list(intB(1))), intB(0)),
-          selectB(tupleB(list(intB(2))), intB(0)),
-          selectB(tupleB(list(intB(2), intB(2))), intB(0)),
-          selectB(tupleB(list(intB(2), intB(2))), intB(1)),
-          selectB(tupleB(list(intB(2), intB(7))), intB(0)),
-          selectB(tupleB(list(intB(7), intB(2))), intB(0))
+          selectB(tupleB(intB(1)), intB(0)),
+          selectB(tupleB(intB(2)), intB(0)),
+          selectB(tupleB(intB(2), intB(2)), intB(0)),
+          selectB(tupleB(intB(2), intB(2)), intB(1)),
+          selectB(tupleB(intB(2), intB(7)), intB(0)),
+          selectB(tupleB(intB(7), intB(2)), intB(0))
       );
     }
   }

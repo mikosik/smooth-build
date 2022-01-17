@@ -85,15 +85,15 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void combine() throws Exception {
       StructTS type = structTS("n", nList(sigS(intTS(), "f")));
-      assertThat(evaluate(combineS(type, list(intS(7)))))
-          .isEqualTo(tupleB(tupleTB(list(intTB())), list(intB(7))));
+      assertThat(evaluate(combineS(type, intS(7))))
+          .isEqualTo(tupleB(tupleTB(intTB()), intB(7)));
     }
 
     @Test
     public void combine_with_item_conversion() throws Exception {
       StructTS type = structTS("n", nList(sigS(arrayTS(intTS()), "f")));
-      assertThat(evaluate(combineS(type, list(orderS(nothingTS())))))
-          .isEqualTo(tupleB(tupleTB(list(arrayTB(intTB()))), list(arrayB(intTB()))));
+      assertThat(evaluate(combineS(type, orderS(nothingTS()))))
+          .isEqualTo(tupleB(tupleTB(arrayTB(intTB())), arrayB(intTB())));
     }
   }
 
@@ -175,7 +175,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void select() throws Exception {
       StructTS type = structTS("n", nList(sigS(intTS(), "f")));
-      var combineS = combineS(type, list(intS(7)));
+      var combineS = combineS(type, intS(7));
       assertThat(evaluate(selectS(intTS(), combineS, "f")))
           .isEqualTo(intB(7));
     }
@@ -183,7 +183,7 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void select_with_conversion() throws Exception {
       StructTS type = structTS("n", nList(sigS(arrayTS(nothingTS()), "f")));
-      var combineS = combineS(type, list(orderS(nothingTS())));
+      var combineS = combineS(type, orderS(nothingTS()));
       assertThat(evaluate(selectS(arrayTS(intTS()), combineS, "f")))
           .isEqualTo(arrayB(intTB()));
     }

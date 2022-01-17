@@ -57,7 +57,7 @@ public class MapBTest extends TestingContext {
   public void generic_array_elemT_not_assignable_to_generic_mapping_func_paramT_causes_exc() {
     var a = oVarTB("A");
     var b = oVarTB("B");
-    assertCall(() -> mapB(orderB(a, list()), funcB(list(b), paramRefB(b, 0))))
+    assertCall(() -> mapB(orderB(a), funcB(list(b), paramRefB(b, 0))))
         .throwsException(IllegalArgumentException.class);
   }
 

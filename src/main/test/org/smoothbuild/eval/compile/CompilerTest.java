@@ -41,7 +41,7 @@ public class CompilerTest extends TestingContext {
     public void call() {
       var defFunc = defFuncS("myFunc", nList(), stringS("abc"));
       var call = callS(stringTS(), topRefS(defFunc));
-      assertConversion(defFunc, call, callB(funcB(stringB("abc")), list()));
+      assertConversion(defFunc, call, callB(funcB(stringB("abc"))));
     }
 
     @Test
@@ -50,13 +50,13 @@ public class CompilerTest extends TestingContext {
       var identity = defFuncS("myFunc", nList(itemS(a, "p")), paramRefS(a, "p"));
       var call = callS(stringTS(), topRefS(identity), stringS("abc"));
       var v = oVarTB("A");
-      assertConversion(identity, call, callB(funcB(list(v), paramRefB(v, 0)), list(stringB("abc"))));
+      assertConversion(identity, call, callB(funcB(list(v), paramRefB(v, 0)), stringB("abc")));
     }
 
     @Test
     public void combine() {
       var combine = combineS(stringS("abc"), intS(1));
-      assertConversion(combine, combineB(list(stringB("abc"), intB(1))));
+      assertConversion(combine, combineB(stringB("abc"), intB(1)));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class CompilerTest extends TestingContext {
     @Test
     public void order() {
       var order = orderS(stringTS(), stringS("abc"), stringS("def"));
-      assertConversion(order, orderB(list(stringB("abc"), stringB("def"))));
+      assertConversion(order, orderB(stringB("abc"), stringB("def")));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class CompilerTest extends TestingContext {
     public void select() {
       var combine = combineS(stringS("abc"));
       var select = selectS(stringTS(), combine, "field0");
-      assertConversion(select, selectB(combineB(list(stringB("abc"))), intB(0)));
+      assertConversion(select, selectB(combineB(stringB("abc")), intB(0)));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class CompilerTest extends TestingContext {
     public void topRef_to_func_with_bodyT_being_subtype_of_resT() {
       var defFunc = defFuncS(arrayTS(stringTS()), "myFunc", nList(), orderS(nothingTS()));
       assertConversion(defFunc, topRefS(defFunc),
-          funcB(arrayTB(stringTB()), list(), orderB(nothingTB(), list())));
+          funcB(arrayTB(stringTB()), list(), orderB(nothingTB())));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class CompilerTest extends TestingContext {
       var funcTB = funcTB(resT, paramTs);
       var jar = blobB(37);
       var method = methodB(methodTB(resT, paramTs), jar, stringB(classBinaryName), boolB(true));
-      var bodyB = invokeB(method, combineB(list(paramRefB(blobTB(), 0))));
+      var bodyB = invokeB(method, paramRefB(blobTB(), 0));
       var funcB = funcB(funcTB, bodyB);
 
       var fileLoader = createFileLoaderMock(filePath.withExtension("jar"), jar);

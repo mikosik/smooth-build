@@ -40,7 +40,7 @@ public class ConvertAlgorithmTest extends TestingContext {
 
     @Test
     public void converting_tuple_to_tuple_of_same_type_fails() {
-      assertConvertThrowsIllegalArgumentExc(tupleTB(list(intTB())), tupleB(list(intB(3))));
+      assertConvertThrowsIllegalArgumentExc(tupleTB(intTB()), tupleB(intB(3)));
     }
 
     private void assertConvertThrowsIllegalArgumentExc(TypeB typeB, ValB val) {
@@ -62,7 +62,7 @@ public class ConvertAlgorithmTest extends TestingContext {
 
     @Test
     public void array_type_to_tuple_type() {
-      assertConvertThrowsClassCastExc(tupleTB(list(intTB())), arrayB(intB(3)));
+      assertConvertThrowsClassCastExc(tupleTB(intTB()), arrayB(intB(3)));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class ConvertAlgorithmTest extends TestingContext {
 
     @Test
     public void base_type_to_tuple_type() {
-      assertConvertThrowsClassCastExc(tupleTB(list(intTB())), intB(3));
+      assertConvertThrowsClassCastExc(tupleTB(intTB()), intB(3));
     }
 
     @Test
@@ -114,27 +114,27 @@ public class ConvertAlgorithmTest extends TestingContext {
 
     @Test
     public void func_type_to_tuple_type() {
-      assertConvertThrowsClassCastExc(tupleTB(list(intTB())), funcB(intB()));
+      assertConvertThrowsClassCastExc(tupleTB(intTB()), funcB(intB()));
     }
 
     @Test
     public void tuple_type_to_base_type() {
-      assertConvertThrowsRuntimeExc(intTB(), tupleB(list(intB(3))));
+      assertConvertThrowsRuntimeExc(intTB(), tupleB(intB(3)));
     }
 
     @Test
     public void tuple_type_to_array_type() {
-      assertConvertThrowsClassCastExc(arrayTB(intTB()), tupleB(list(intB(3))));
+      assertConvertThrowsClassCastExc(arrayTB(intTB()), tupleB(intB(3)));
     }
 
     @Test
     public void tuple_type_to_func_type() {
-      assertConvertThrowsClassCastExc(funcTB(intTB(), list()), tupleB(list(intB(3))));
+      assertConvertThrowsClassCastExc(funcTB(intTB(), list()), tupleB(intB(3)));
     }
 
     @Test
     public void tuple_type_to_inconvertible_tuple_type() {
-      assertConvertThrowsRuntimeExc(tupleTB(list(stringTB())), tupleB(list(intB(3))));
+      assertConvertThrowsRuntimeExc(tupleTB(stringTB()), tupleB(intB(3)));
     }
   }
 
@@ -197,17 +197,17 @@ public class ConvertAlgorithmTest extends TestingContext {
   class _tuple {
     @Test
     public void converting_tuple() {
-      var targetT = tupleTB(list(arrayTB(stringTB())));
-      var val = tupleB(list(arrayB(nothingTB())));
-      var expected = tupleB(list(arrayB(stringTB())));
+      var targetT = tupleTB(arrayTB(stringTB()));
+      var val = tupleB(arrayB(nothingTB()));
+      var expected = tupleB(arrayB(stringTB()));
       assertConversion(targetT, val, expected);
     }
 
     @Test
     public void converting_tuple_two_levels_deep() {
-      var targetT = tupleTB(list(tupleTB(list(arrayTB(stringTB())))));
-      var val = tupleB(list(tupleB(list(arrayB(nothingTB())))));
-      var expected = tupleB(list(tupleB(list(arrayB(stringTB())))));
+      var targetT = tupleTB(tupleTB(arrayTB(stringTB())));
+      var val = tupleB(tupleB(arrayB(nothingTB())));
+      var expected = tupleB(tupleB(arrayB(stringTB())));
       assertConversion(targetT, val, expected);
     }
   }

@@ -23,10 +23,10 @@ public class AlgorithmHashesCollisionTest extends TestingContext {
   public void each_algorithm_has_different_hash() {
     List<Hash> list = new ArrayList<>();
     Set<Hash> set = new HashSet<>();
-    addHash(list, set, combineAlgorithmHash(tupleTB(list())));
-    addHash(list, set, combineAlgorithmHash(tupleTB(list(intTB()))));
-    addHash(list, set, combineAlgorithmHash(tupleTB(list(stringTB()))));
-    addHash(list, set, combineAlgorithmHash(tupleTB(list(intTB(), stringTB()))));
+    addHash(list, set, combineAlgorithmHash(tupleTB()));
+    addHash(list, set, combineAlgorithmHash(tupleTB(intTB())));
+    addHash(list, set, combineAlgorithmHash(tupleTB(stringTB())));
+    addHash(list, set, combineAlgorithmHash(tupleTB(intTB(), stringTB())));
     addHash(list, set, convertAlgorithmHash(intTB()));
     addHash(list, set, convertAlgorithmHash(stringTB()));
     addHash(list, set, invokeAlgorithmHash(

@@ -15,7 +15,7 @@ import org.smoothbuild.util.collect.Lists;
 public class TupleBTest extends TestingContext {
   @Test
   public void polymorphic_tuple_is_forbidden() {
-    assertCall(() -> byteDb().tuple(tupleTB(list(oVarTB("A"))), list()))
+    assertCall(() -> byteDb().tuple(tupleTB(oVarTB("A")), list()))
         .throwsException(new IllegalArgumentException(
             "Cannot create tuple object with polymorphic type `{A}`."));
   }
@@ -34,7 +34,7 @@ public class TupleBTest extends TestingContext {
 
   @Test
   public void creating_tuple_with_item_type_being_subtype_of_specified_in_tupleT_causes_exc() {
-    var tupleT = tupleTB(list(arrayTB(intTB())));
+    var tupleT = tupleTB(arrayTB(intTB()));
     assertCall(() -> byteDb().tuple(tupleT, Lists.list(arrayB(nothingTB()))))
         .throwsException(IllegalArgumentException.class);
   }
@@ -100,20 +100,20 @@ public class TupleBTest extends TestingContext {
     @Override
     protected List<TupleB> equalValues() {
       return list(
-          tupleB(list(intB(7), stringB("abc"))),
-          tupleB(list(intB(7), stringB("abc")))
+          tupleB(intB(7), stringB("abc")),
+          tupleB(intB(7), stringB("abc"))
       );
     }
 
     @Override
     protected List<TupleB> nonEqualValues() {
       return list(
-          tupleB(list()),
-          tupleB(list(intB(0))),
-          tupleB(list(intB(7))),
-          tupleB(list(intB(0), intB(0))),
-          tupleB(list(intB(0), intB(7))),
-          tupleB(list(intB(7), intB(0)))
+          tupleB(),
+          tupleB(intB(0)),
+          tupleB(intB(7)),
+          tupleB(intB(0), intB(0)),
+          tupleB(intB(0), intB(7)),
+          tupleB(intB(7), intB(0))
       );
     }
   }
@@ -144,6 +144,6 @@ public class TupleBTest extends TestingContext {
   }
 
   private TupleB johnDoePerson() {
-    return tupleB(list(stringB("John"), stringB("Doe")));
+    return tupleB(stringB("John"), stringB("Doe"));
   }
 }

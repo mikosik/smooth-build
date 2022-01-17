@@ -173,7 +173,7 @@ public class ObjBStableHashTest extends TestingContext {
   class _tuple {
     @Test
     public void empty_tuple() {
-      assertThat(tupleBEmpty().hash())
+      assertThat(tupleB().hash())
           .isEqualTo(Hash.decode("54d8451fd0f31c5111433cddf501fabd26e2a9ab"));
     }
 
@@ -190,7 +190,7 @@ public class ObjBStableHashTest extends TestingContext {
   class _call {
     @Test
     public void call_with_one_arg() {
-      assertThat(callB(funcB(list(stringTB()), intB()), list(stringB("abc"))).hash())
+      assertThat(callB(funcB(list(stringTB()), intB()), stringB("abc")).hash())
           .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
     }
 
@@ -198,7 +198,7 @@ public class ObjBStableHashTest extends TestingContext {
     public void call_without_args() {
       var type = funcTB(intTB(), list(stringTB()));
       var defFunc = funcB(type, intB());
-      assertThat(callB(defFunc, list(stringB("abc"))).hash())
+      assertThat(callB(defFunc, stringB("abc")).hash())
           .isEqualTo(Hash.decode("2f8d0f28aa7697573153900439e8c5888aa5b427"));
     }
   }
@@ -207,13 +207,13 @@ public class ObjBStableHashTest extends TestingContext {
   class _combine {
     @Test
     public void combine_with_one_arg() {
-      assertThat(combineB(list(intB(1))).hash())
+      assertThat(combineB(intB(1)).hash())
           .isEqualTo(Hash.decode("16913cad3fbbe28270c3e51765de40c636944d0f"));
     }
 
     @Test
     public void combine_without_args() {
-      assertThat(combineB(list()).hash())
+      assertThat(combineB().hash())
           .isEqualTo(Hash.decode("3b2048ce36decfa28bc39b783dd88502103c73fd"));
     }
   }
@@ -231,8 +231,10 @@ public class ObjBStableHashTest extends TestingContext {
   class _invoke {
     @Test
     public void invoke() {
-      assertThat(invokeB(methodB(methodTB())).hash())
-          .isEqualTo(Hash.decode("3e7615f6c89c3cf6776649c90585e5f58fd38ec8"));
+      var methodTB = methodTB(blobTB(), list(boolTB()));
+      var methodB = methodB(methodTB, blobB(7), stringB("class binary name"), boolB(true));
+      assertThat(invokeB(methodB, boolB(true)).hash())
+          .isEqualTo(Hash.decode("781a8c37890c14f8a0d09158881052c1dffaf81c"));
     }
   }
 
@@ -249,13 +251,13 @@ public class ObjBStableHashTest extends TestingContext {
   class _order {
     @Test
     public void empty_order() {
-      assertThat(orderB(stringTB(), list()).hash())
+      assertThat(orderB(stringTB()).hash())
           .isEqualTo(Hash.decode("f37765f87d6b95ddd98af9fcf7a1e3e9554cbe3b"));
     }
 
     @Test
     public void order() {
-      assertThat(orderB(list(intB(1))).hash())
+      assertThat(orderB(intB(1)).hash())
           .isEqualTo(Hash.decode("f05ca9450196cec30ab9ac0bc06bcf2c182f7434"));
     }
   }

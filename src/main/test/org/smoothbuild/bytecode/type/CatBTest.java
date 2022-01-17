@@ -471,17 +471,17 @@ public class CatBTest extends TestingContext {
   class _tuple {
     @Test
     public void _without_items_can_be_created() {
-      tupleTB(list());
+      tupleTB();
     }
 
     @Test
     public void first_item_type_can_be_nothing() {
-      tupleTB(list(nothingTB()));
+      tupleTB(nothingTB());
     }
 
     @Test
     public void first_item_type_can_be_nothing_array() {
-      tupleTB(list(arrayTB(nothingTB())));
+      tupleTB(arrayTB(nothingTB()));
     }
 
     @ParameterizedTest

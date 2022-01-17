@@ -24,7 +24,6 @@ import static org.smoothbuild.bytecode.type.base.CatKindB.SELECT;
 import static org.smoothbuild.bytecode.type.base.CatKindB.STRING;
 import static org.smoothbuild.bytecode.type.base.CatKindB.TUPLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -230,8 +229,8 @@ public class CatBCorruptedTest extends TestingContext {
          * This test makes sure that other tests in this class use proper scheme
          * to save func type in HashedDb.
          */
-        ImmutableList<TypeB> paramTs = list(stringTB(), boolTB());
-        TupleTB paramsTuple = tupleTB(paramTs);
+        TupleTB paramsTuple = tupleTB(stringTB(), boolTB());
+        ImmutableList<TypeB> paramTs = paramsTuple.items();
         Hash specHash = hash(
             hash(catKind().marker()),
             hash(
@@ -272,7 +271,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_data_having_three_elems() throws Exception {
-        TupleTB paramTs = tupleTB(list(stringTB(), boolTB()));
+        TupleTB paramTs = tupleTB(stringTB(), boolTB());
         Hash hash = hash(
             hash(catKind().marker()),
             hash(
@@ -314,7 +313,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_result_pointing_nowhere() throws Exception {
-        TupleTB paramTs = tupleTB(list(stringTB(), boolTB()));
+        TupleTB paramTs = tupleTB(stringTB(), boolTB());
         Hash nowhere = Hash.of(33);
         Hash typeHash = hash(
             hash(catKind().marker()),
@@ -330,7 +329,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_result_being_expr_type() throws Exception {
-        TupleTB paramT = tupleTB(list(stringTB(), boolTB()));
+        TupleTB paramT = tupleTB(stringTB(), boolTB());
         Hash typeHash = hash(
             hash(catKind().marker()),
             hash(
@@ -345,7 +344,7 @@ public class CatBCorruptedTest extends TestingContext {
 
       @Test
       public void with_result_type_corrupted() throws Exception {
-        TupleTB paramTs = tupleTB(list(stringTB(), boolTB()));
+        TupleTB paramTs = tupleTB(stringTB(), boolTB());
         Hash typeHash = hash(
             hash(catKind().marker()),
             hash(
@@ -742,10 +741,10 @@ public class CatBCorruptedTest extends TestingContext {
          */
         Hash hash = hash(
             hash(COMBINE.marker()),
-            hash(tupleTB(list(intTB(), stringTB())))
+            hash(tupleTB(intTB(), stringTB()))
         );
         assertThat(hash)
-            .isEqualTo(combineCB(list(intTB(), stringTB())).hash());
+            .isEqualTo(combineCB(intTB(), stringTB()).hash());
       }
 
       @Nested

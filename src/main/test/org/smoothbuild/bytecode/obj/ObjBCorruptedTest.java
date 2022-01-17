@@ -409,7 +409,7 @@ public class ObjBCorruptedTest extends TestingContext {
        */
       var funcT = funcTB(intTB(), list(stringTB(), intTB()));
       var func = funcB(funcT, intB());
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       var objHash =
           hash(
               hash(callCB(intTB())),
@@ -434,7 +434,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_two_data_hashes() throws Exception {
       var funcT = funcTB(intTB(), list(stringTB(), intTB()));
       var func = funcB(funcT, intB());
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       var dataHash = hash(
           hash(func),
           hash(args)
@@ -473,7 +473,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void data_is_seq_with_three_elems() throws Exception {
       var funcT = funcTB(intTB(), list(stringTB(), intTB()));
       var func = funcB(funcT, intB());
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       var dataHash = hash(
           hash(func),
           hash(args),
@@ -492,7 +492,7 @@ public class ObjBCorruptedTest extends TestingContext {
     @Test
     public void func_component_evalT_is_not_func() throws Exception {
       var func = intB(3);
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       var type = callCB(stringTB());
       var objHash =
           hash(
@@ -549,7 +549,7 @@ public class ObjBCorruptedTest extends TestingContext {
         throws Exception {
       var funcT = funcTB(intTB(), list(stringTB()));
       var func = funcB(funcT, intB());
-      var args = combineB(list(stringB()));
+      var args = combineB(stringB());
       var type = callCB(stringTB());
       var objHash =
           hash(
@@ -569,7 +569,7 @@ public class ObjBCorruptedTest extends TestingContext {
         throws Exception {
       var funcT = funcTB(intTB(), list(stringTB(), boolTB()));
       var func = funcB(funcT, intB());
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       var spec = callCB(intTB());
       var objHash =
           hash(
@@ -582,8 +582,8 @@ public class ObjBCorruptedTest extends TestingContext {
       assertCall(() -> ((CallB) byteDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, spec, "args",
-              tupleTB(list(stringTB(), boolTB())),
-              tupleTB(list(stringTB(), intTB()))
+              tupleTB(stringTB(), boolTB()),
+              tupleTB(stringTB(), intTB())
           ));
     }
   }
@@ -600,7 +600,7 @@ public class ObjBCorruptedTest extends TestingContext {
       var expr2 = stringB("abc");
       Hash objHash =
           hash(
-              hash(combineCB(list(intTB(), stringTB()))),
+              hash(combineCB(intTB(), stringTB())),
               hash(
                   hash(expr1),
                   hash(expr2)
@@ -672,8 +672,8 @@ public class ObjBCorruptedTest extends TestingContext {
     @Test
     public void evaluation_type_items_size_is_different_than_actual_items_size()
         throws Exception {
-      var item1 =  intB();
-      var type = combineCB(list(intTB(), stringTB()));
+      var item1 = intB();
+      var type = combineCB(intTB(), stringTB());
       var objHash =
           hash(
               hash(type),
@@ -690,7 +690,7 @@ public class ObjBCorruptedTest extends TestingContext {
         throws Exception {
       var item1 = intB(1);
       var item2 = stringB("abc");
-      var type = combineCB(list(intTB(), boolTB()));
+      var type = combineCB(intTB(), boolTB());
       var objHash =
           hash(
               hash(type),
@@ -991,7 +991,7 @@ public class ObjBCorruptedTest extends TestingContext {
        */
       var methodT = methodTB(intTB(), list(stringTB(), intTB()));
       var method = methodB(methodT, blobB(), stringB(), boolB());
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       Hash objHash =
           hash(
               hash(invokeCB(intTB())),
@@ -1015,7 +1015,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_two_data_hashes() throws Exception {
       var methodT = methodTB(intTB(), list(stringTB(), intTB()));
       var method = methodB(methodT, blobB(), stringB(), boolB());
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       Hash dataHash = hash(
           hash(method),
           hash(args)
@@ -1053,7 +1053,7 @@ public class ObjBCorruptedTest extends TestingContext {
     @Test
     public void data_is_seq_with_three_elems() throws Exception {
       var func = intB(0);
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       var dataHash = hash(
           hash(func),
           hash(args),
@@ -1111,7 +1111,7 @@ public class ObjBCorruptedTest extends TestingContext {
         throws Exception {
       var methodT = methodTB(intTB(), list(stringTB(), intTB()));
       var method = methodB(methodT, blobB(), stringB(), boolB());
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       var type = invokeCB(stringTB());
       Hash objHash =
           hash(
@@ -1130,7 +1130,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void method_evalT_params_does_not_match_args_evalTs() throws Exception {
       var methodT = methodTB(intTB(), list(stringTB(), boolTB()));
       var method = methodB(methodT, blobB(), stringB(), boolB());
-      var args = combineB(list(stringB(), intB()));
+      var args = combineB(stringB(), intB());
       var spec = invokeCB(intTB());
       Hash objHash =
           hash(
@@ -1143,8 +1143,8 @@ public class ObjBCorruptedTest extends TestingContext {
       assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, spec, "args",
-              tupleTB(list(stringTB(), boolTB())),
-              tupleTB(list(stringTB(), intTB()))
+              tupleTB(stringTB(), boolTB()),
+              tupleTB(stringTB(), intTB())
           ));
     }
   }
@@ -1674,8 +1674,8 @@ public class ObjBCorruptedTest extends TestingContext {
        * This test makes sure that other tests in this class use proper scheme to save smooth
        * select in HashedDb.
        */
-      var tupleT = tupleTB(list(stringTB()));
-      var tuple = tupleB(tupleT, list(stringB("abc")));
+      var tupleT = tupleTB(stringTB());
+      var tuple = tupleB(tupleT, stringB("abc"));
       var selectable = (ValB) tuple;
       var index = intB(0);
       Hash objHash =
@@ -1772,8 +1772,8 @@ public class ObjBCorruptedTest extends TestingContext {
 
     @Test
     public void index_is_out_of_bounds() throws Exception {
-      var tupleT = tupleTB(list(stringTB()));
-      var tuple = tupleB(tupleT, list(stringB("abc")));
+      var tupleT = tupleTB(stringTB());
+      var tuple = tupleB(tupleT, stringB("abc"));
       var index = intB(1);
       var type = selectCB(stringTB());
       Hash objHash =
@@ -1792,8 +1792,8 @@ public class ObjBCorruptedTest extends TestingContext {
     @Test
     public void evaluation_type_is_different_than_type_of_item_pointed_to_by_index()
         throws Exception {
-      var tupleT = tupleTB(list(stringTB()));
-      var tuple = tupleB(tupleT, list(stringB("abc")));
+      var tupleT = tupleTB(stringTB());
+      var tuple = tupleB(tupleT, stringB("abc"));
       var index = intB(0);
       var type = selectCB(intTB());
       Hash objHash =
@@ -1812,8 +1812,8 @@ public class ObjBCorruptedTest extends TestingContext {
     @Test
     public void index_is_string_instead_of_int() throws Exception {
       var type = selectCB(stringTB());
-      var tupleT = tupleTB(list(stringTB()));
-      var tuple = tupleB(tupleT, list(stringB("abc")));
+      var tupleT = tupleTB(stringTB());
+      var tuple = tupleB(tupleT, stringB("abc"));
       var strVal = stringB("abc");
       Hash objHash =
           hash(
@@ -1898,8 +1898,8 @@ public class ObjBCorruptedTest extends TestingContext {
 
     @Test
     public void with_polymorphic_type() throws Exception {
-      TupleTB type = tupleTB(list(oVarTB("A")));
-      Hash objHash = hash(
+      var type = tupleTB(oVarTB("A"));
+      var objHash = hash(
           hash(type),
           hash(
               hash(stringB("John"))
@@ -2008,7 +2008,7 @@ public class ObjBCorruptedTest extends TestingContext {
 
     @Test
     public void with_elem_being_subtype_of_required_type() throws Exception {
-      var type = tupleTB(list(arrayTB(intTB())));
+      var type = tupleTB(arrayTB(intTB()));
       var objHash =
           hash(
               hash(type),

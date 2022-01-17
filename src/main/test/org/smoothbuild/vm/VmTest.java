@@ -54,8 +54,8 @@ public class VmTest extends TestingContext {
 
     @Test
     public void tuple() throws Exception {
-      assertThat(evaluate(tupleB(list(intB(7)))))
-          .isEqualTo(tupleB(list(intB(7))));
+      assertThat(evaluate(tupleB(intB(7))))
+          .isEqualTo(tupleB(intB(7)));
     }
   }
 
@@ -64,7 +64,7 @@ public class VmTest extends TestingContext {
     @Test
     public void call() throws Exception {
       var func = funcB(intB(7));
-      var call = callB(func, combineB(list()));
+      var call = callB(func);
       assertThat(evaluate(call))
           .isEqualTo(intB(7));
     }
@@ -72,7 +72,7 @@ public class VmTest extends TestingContext {
     @Test
     public void with_res_conversion() throws Exception {
       var func = funcB(arrayB(nothingTB()));
-      var call = callB(arrayTB(intTB()), func, combineB(list()));
+      var call = callB(arrayTB(intTB()), func);
       assertThat(evaluate(call))
           .isEqualTo(arrayB(intTB()));
     }
@@ -80,7 +80,7 @@ public class VmTest extends TestingContext {
     @Test
     public void with_arg_conversion() throws Exception {
       var func = funcB(list(arrayTB(intTB())), paramRefB(arrayTB(intTB()), 0));
-      var call = callB(func, list(arrayB(nothingTB())));
+      var call = callB(func, arrayB(nothingTB()));
       assertThat(evaluate(call))
           .isEqualTo(arrayB(intTB()));
     }
@@ -88,8 +88,8 @@ public class VmTest extends TestingContext {
     @Test
     public void with_polymorphic_func() throws Exception {
       var a = oVarTB("A");
-      var func = funcB(list(a), orderB(a, list(paramRefB(a, 0))));
-      var call = callB(func, list(intB(7)));
+      var func = funcB(list(a), orderB(a, paramRefB(a, 0)));
+      var call = callB(func, intB(7));
       assertThat(evaluate(call))
           .isEqualTo(arrayB(intTB(), intB(7)));
     }
@@ -98,8 +98,8 @@ public class VmTest extends TestingContext {
     public void with_polymorphic_evalT() throws Exception {
       var evaluated = evaluatePolymorphicExpr(p -> {
         var b = oVarTB("B");
-        var funcB = funcB(list(b), orderB(b, list(paramRefB(b, 0))));
-        return callB(funcB, list(p));
+        var funcB = funcB(list(b), orderB(b, paramRefB(b, 0)));
+        return callB(funcB, p);
       }, intB(7));
       assertThat(evaluated)
           .isEqualTo(arrayB(intB(7)));
@@ -110,22 +110,22 @@ public class VmTest extends TestingContext {
   class _combine {
     @Test
     public void combine() throws Exception {
-      var combine = combineB(list(intB(7)));
+      var combine = combineB(intB(7));
       assertThat(evaluate(combine))
-          .isEqualTo(tupleB(list(intB(7))));
+          .isEqualTo(tupleB(intB(7)));
     }
 
     @Test
     public void with_item_conversion() throws Exception {
-      var combine = combineB(tupleTB(list(arrayTB(intTB()))), list(arrayB(nothingTB())));
+      var combine = combineB(tupleTB(arrayTB(intTB())), arrayB(nothingTB()));
       assertThat(evaluate(combine))
-          .isEqualTo(tupleB(list(arrayB(intTB()))));
+          .isEqualTo(tupleB(arrayB(intTB())));
     }
 
     @Test
     public void with_polymorphic_evalT() throws Exception {
-      assertThat(evaluatePolymorphicExpr(p -> combineB(list(p)), intB(7)))
-          .isEqualTo(tupleB(list(intB(7))));
+      assertThat(evaluatePolymorphicExpr(p -> combineB(p), intB(7)))
+          .isEqualTo(tupleB(intB(7)));
     }
   }
 
@@ -177,7 +177,7 @@ public class VmTest extends TestingContext {
     @Test
     public void argless() throws Exception {
       var method = methodB(methodTB(intTB(), list()), blobB(77), stringB("classBinaryName"));
-      var invoke = invokeB(method, list());
+      var invoke = invokeB(method);
       when(methodLoader.load(any(), eq(method)))
           .thenReturn(VmTest.class.getMethod("returnInt", NativeApi.class));
       assertThat(evaluate(invoke))
@@ -187,7 +187,7 @@ public class VmTest extends TestingContext {
     @Test
     public void with_param() throws Exception {
       var method = methodB(methodTB(intTB(), list(intTB())), blobB(77), stringB("classBinaryName"));
-      var invoke = invokeB(method, list(intB(33)));
+      var invoke = invokeB(method, intB(33));
       when(methodLoader.load(any(), eq(method)))
           .thenReturn(VmTest.class.getMethod(
               "returnIntParam", NativeApi.class, IntB.class));
@@ -199,7 +199,7 @@ public class VmTest extends TestingContext {
     public void with_param_conversion() throws Exception {
       var methodT = methodTB(arrayTB(intTB()), list(arrayTB(intTB())));
       var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
-      var invoke = invokeB(arrayTB(intTB()), method, list(arrayB(nothingTB())));
+      var invoke = invokeB(arrayTB(intTB()), method, arrayB(nothingTB()));
       when(methodLoader.load(any(), eq(method)))
           .thenReturn(VmTest.class.getMethod(
               "returnArrayParamWithCheck", NativeApi.class, ArrayB.class));
@@ -211,7 +211,7 @@ public class VmTest extends TestingContext {
     public void with_res_conversion() throws Exception {
       var methodT = methodTB(arrayTB(nothingTB()), list());
       var method = methodB(methodT, blobB(77), stringB("classBinaryName"));
-      var invoke = invokeB(arrayTB(intTB()), method, list());
+      var invoke = invokeB(arrayTB(intTB()), method);
       when(methodLoader.load(any(), eq(method)))
           .thenReturn(VmTest.class.getMethod("returnNothingArray", NativeApi.class));
       assertThat(evaluate(invoke))
@@ -231,7 +231,7 @@ public class VmTest extends TestingContext {
         } catch (NoSuchMethodException e) {
           throw new RuntimeException(e);
         }
-        return invokeB(method, list(p));
+        return invokeB(method, p);
       }, intB(7));
       assertThat(evaluated)
           .isEqualTo(arrayB(intB(7)));
@@ -270,41 +270,41 @@ public class VmTest extends TestingContext {
     @Test
     public void map() throws Exception {
       var t = intTB();
-      var func = funcB(tupleTB(list(t)), list(t), combineB(list(paramRefB(t, 0))));
+      var func = funcB(tupleTB(t), list(t), combineB(paramRefB(t, 0)));
       var map = mapB(arrayB(intB(1), intB(2)), func);
       assertThat(evaluate(map))
-          .isEqualTo(arrayB(tupleB(list(intB(1))), tupleB(list(intB(2)))));
+          .isEqualTo(arrayB(tupleB(intB(1)), tupleB(intB(2))));
     }
 
     @Test
     public void with_polymorphic_func() throws Exception {
       var evaluated = evaluatePolymorphicExpr(p -> {
         var t = p.type();
-        var mappingFunc = funcB(tupleTB(list(t)), list(t), combineB(list(paramRefB(t, 0))));
-        return mapB(orderB(t, list(paramRefB(t, 0))), mappingFunc);
+        var mappingFunc = funcB(tupleTB(t), list(t), combineB(paramRefB(t, 0)));
+        return mapB(orderB(t, paramRefB(t, 0)), mappingFunc);
       }, intB(7));
       assertThat(evaluated)
-          .isEqualTo(arrayB(tupleB(list(intB(7)))));
+          .isEqualTo(arrayB(tupleB(intB(7))));
     }
 
     @Test
     public void with_input_array_conversion() throws Exception {
-      var resT = tupleTB(list(intTB()));
-      var func = funcB(resT, list(intTB()), combineB(list(paramRefB(intTB(), 0))));
+      var resT = tupleTB(intTB());
+      var func = funcB(resT, list(intTB()), combineB(paramRefB(intTB(), 0)));
       var map = mapB(arrayB(nothingTB()), func);
       assertThat(evaluate(map))
-          .isEqualTo(arrayB(tupleTB(list(intTB()))));
+          .isEqualTo(arrayB(tupleTB(intTB())));
     }
 
     @Test
     public void with_polymorphic_evalT() throws Exception {
       var evaluated = evaluatePolymorphicExpr(p -> {
         var t = p.type();
-        var func = funcB(tupleTB(list(t)), list(t), combineB(list(paramRefB(t, 0))));
-        return mapB(orderB(list(p)), func);
+        var func = funcB(tupleTB(t), list(t), combineB(paramRefB(t, 0)));
+        return mapB(orderB(p), func);
       }, intB(7));
       assertThat(evaluated)
-          .isEqualTo(arrayB(tupleB(list(intB(7)))));
+          .isEqualTo(arrayB(tupleB(intB(7))));
     }
   }
 
@@ -312,21 +312,21 @@ public class VmTest extends TestingContext {
   class _order {
     @Test
     public void order() throws Exception {
-      var order = orderB(list(intB(7), intB(8)));
+      var order = orderB(intB(7), intB(8));
       assertThat(evaluate(order))
           .isEqualTo(arrayB(intB(7), intB(8)));
     }
 
     @Test
     public void with_element_conversion() throws Exception {
-      var order = orderB(arrayTB(intTB()), list(arrayB(nothingTB())));
+      var order = orderB(arrayTB(intTB()), arrayB(nothingTB()));
       assertThat(evaluate(order))
           .isEqualTo(arrayB(arrayTB(intTB()), arrayB(intTB())));
     }
 
     @Test
     public void with_polymorphic_evalT() throws Exception {
-      assertThat(evaluatePolymorphicExpr(p -> orderB(list(p)), intB(7)))
+      assertThat(evaluatePolymorphicExpr(p -> orderB(p), intB(7)))
           .isEqualTo(arrayB(intB(7)));
     }
   }
@@ -336,8 +336,8 @@ public class VmTest extends TestingContext {
     @Test
     public void referencing_param_of_enclosing_func_from_enclosed_func() throws Exception {
       var inner = funcB(paramRefB(intTB(), 0));
-      var outer = funcB(list(intTB()), callB(inner, list()));
-      assertThat(evaluate(callB(outer, list(intB(7)))))
+      var outer = funcB(list(intTB()), callB(inner));
+      assertThat(evaluate(callB(outer, intB(7))))
           .isEqualTo(intB(7));
     }
   }
@@ -346,7 +346,7 @@ public class VmTest extends TestingContext {
   class _select {
     @Test
     public void select() throws Exception {
-      var tuple = tupleB(list(intB(7)));
+      var tuple = tupleB(intB(7));
       var select = selectB(tuple, intB(0));
       assertThat(evaluate(select))
           .isEqualTo(intB(7));
@@ -354,7 +354,7 @@ public class VmTest extends TestingContext {
 
     @Test
     public void with_conversion() throws Exception {
-      var tuple = tupleB(list(arrayB(nothingTB())));
+      var tuple = tupleB(arrayB(nothingTB()));
       var select = selectB(arrayTB(intTB()), tuple, intB(0));
       assertThat(evaluate(select))
           .isEqualTo(arrayB(intTB()));
@@ -362,7 +362,7 @@ public class VmTest extends TestingContext {
 
     @Test
     public void with_polymorphic_evalT() throws Exception {
-      assertThat(evaluatePolymorphicExpr(p -> selectB(combineB(list(p)), intB(0)), intB(7)))
+      assertThat(evaluatePolymorphicExpr(p -> selectB(combineB(p), intB(0)), intB(7)))
           .isEqualTo(intB(7));
     }
   }
@@ -373,7 +373,7 @@ public class VmTest extends TestingContext {
     var paramRef = paramRefB(a, 0);
     var expr = exprCreator.apply(paramRef);
     var func = funcB(list(a), expr);
-    var call = callB(func, list(val));
+    var call = callB(func, val);
     return evaluate(call);
   }
 
