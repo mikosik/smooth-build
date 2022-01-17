@@ -2,6 +2,7 @@ package org.smoothbuild.plugin;
 
 import org.smoothbuild.bytecode.ByteCodeFactory;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
+import org.smoothbuild.bytecode.type.TypingB;
 
 /**
  * Implementation of NativeApi doesn't provide any thread safety and should be used
@@ -9,6 +10,8 @@ import org.smoothbuild.bytecode.obj.val.ArrayB;
  */
 public interface NativeApi {
   public ByteCodeFactory factory();
+
+  public TypingB typing();
 
   public MessageLogger log();
 

@@ -181,7 +181,7 @@ public class TestingContext {
   }
 
   public CompilerProv compilerProv(FileLoader fileLoader) {
-    return new CompilerProv(typeShConv(), objFactory(), fileLoader);
+    return new CompilerProv(typeShConv(), objFactory(), typingB(), fileLoader);
   }
 
   public TestingModLoader mod(String sourceCode) {
@@ -218,7 +218,7 @@ public class TestingContext {
   }
 
   private Container newContainer() {
-    return new Container(fullFileSystem(), objFactory());
+    return new Container(fullFileSystem(), objFactory(), typingB());
   }
 
   public TypeShConv typeShConv() {
@@ -227,7 +227,7 @@ public class TestingContext {
 
   public ByteCodeFactory objFactory() {
     if (byteCodeFactory == null) {
-      byteCodeFactory = new ByteCodeFactory(byteDb(), catDb(), typingB());
+      byteCodeFactory = new ByteCodeFactory(byteDb(), catDb());
     }
     return byteCodeFactory;
   }

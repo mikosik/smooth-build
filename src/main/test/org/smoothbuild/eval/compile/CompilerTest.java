@@ -217,7 +217,7 @@ public class CompilerTest extends TestingContext {
   }
 
   private Compiler newCompiler(DefsS defs, FileLoader fileLoader) {
-    return new Compiler(objFactory(), defs, typeShConv(), fileLoader);
+    return new Compiler(objFactory(), typingB(), defs, typeShConv(), fileLoader);
   }
 
   private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {

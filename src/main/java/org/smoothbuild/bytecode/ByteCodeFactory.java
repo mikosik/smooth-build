@@ -33,7 +33,6 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.BlobTB;
@@ -60,19 +59,13 @@ public class ByteCodeFactory {
   private final CatDb catDb;
   private final TupleTB messageT;
   private final TupleTB fileT;
-  private final TypingB typing;
 
   @Inject
-  public ByteCodeFactory(ObjDb objDb, CatDb catDb, TypingB typing) {
+  public ByteCodeFactory(ObjDb objDb, CatDb catDb) {
     this.objDb = objDb;
     this.catDb = catDb;
     this.messageT = createMessageT(catDb);
     this.fileT = createFileT(catDb);
-    this.typing = typing;
-  }
-
-  public TypingB typing() {
-    return typing;
   }
 
   // Objects

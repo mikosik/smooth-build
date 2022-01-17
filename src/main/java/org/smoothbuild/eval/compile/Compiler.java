@@ -29,6 +29,7 @@ import org.smoothbuild.bytecode.obj.val.FuncB;
 import org.smoothbuild.bytecode.obj.val.IntB;
 import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.obj.val.StringB;
+import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
@@ -70,6 +71,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class Compiler {
   private final ByteCodeFactory byteCodeFactory;
+  private final TypingB typing;
   private final DefsS defs;
   private final TypeShConv typeShConv;
   private final FileLoader fileLoader;
@@ -79,8 +81,10 @@ public class Compiler {
   private final Map<ObjB, Nal> nals;
 
   @Inject
-  public Compiler(ByteCodeFactory byteCodeFactory, DefsS defs, TypeShConv typeShConv, FileLoader fileLoader) {
+  public Compiler(ByteCodeFactory byteCodeFactory, TypingB typing, DefsS defs,
+      TypeShConv typeShConv, FileLoader fileLoader) {
     this.byteCodeFactory = byteCodeFactory;
+    this.typing = typing;
     this.defs = defs;
     this.typeShConv = typeShConv;
     this.fileLoader = fileLoader;
@@ -222,7 +226,6 @@ public class Compiler {
 
     var argTupleT = byteCodeFactory.tupleT(map(argsB, ObjB::type));
     var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
-    var typing = byteCodeFactory.typing();
     var vars = typing.inferVarBoundsLower(paramTupleT, argTupleT);
     var actualParamTupleT = (TupleTB) typing.mapVarsLower(paramTupleT, vars);
     var combineB = byteCodeFactory.combine(actualParamTupleT, argsB);
