@@ -43,9 +43,9 @@ public class TestingTS implements TestingT<TypeS> {
   public static final NothingTS NOTHING = FACTORY.nothing();
   public static final StringTS STRING = FACTORY.string();
   public static final StructTS PERSON = struct("Person",
-      nList(itemSigS("firstName", STRING), itemSigS("lastName", STRING)));
-  public static final StructTS FLAG = struct("Flag", nList(itemSigS("flab", BOOL)));
-  public static final StructTS DATA = struct("Data", nList(itemSigS("data", BLOB)));
+      nList(itemSigS(STRING, "firstName"), itemSigS(STRING, "lastName")));
+  public static final StructTS FLAG = struct("Flag", nList(itemSigS(BOOL, "flab")));
+  public static final StructTS DATA = struct("Data", nList(itemSigS(BLOB, "data")));
   public static final OpenVarTS OPEN_A = oVar("A");
   public static final OpenVarTS OPEN_B = oVar("B");
   public static final OpenVarTS OPEN_X = oVar("X");

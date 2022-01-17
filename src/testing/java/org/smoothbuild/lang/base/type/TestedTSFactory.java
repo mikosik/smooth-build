@@ -91,7 +91,7 @@ public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAs
       "abc"
   );
   public static final TestedTS STRUCT = new TestedTS(
-      TestingTS.struct("Person", nList(itemSigS("name", TestingTS.STRING))),
+      TestingTS.struct("Person", nList(itemSigS(TestingTS.STRING, "name"))),
       "person(\"John\")",
       null,
       Set.of("Person{ String name }"),
@@ -132,14 +132,14 @@ public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAs
       STRUCT,
       A);
   public static final TestedTS STRUCT_WITH_BLOB = new TestedTS(
-      TestingTS.struct("Data", nList(itemSigS("value", TestingTS.BLOB))),
+      TestingTS.struct("Data", nList(itemSigS(TestingTS.BLOB, "value"))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"),
       Set.of("Data{ Blob value }")
   );
   public static final TestedTS STRUCT_WITH_BOOL = new TestedTS(
-      TestingTS.struct("Flag", nList(itemSigS("value", TestingTS.BOOL))),
+      TestingTS.struct("Flag", nList(itemSigS(TestingTS.BOOL, "value"))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"),

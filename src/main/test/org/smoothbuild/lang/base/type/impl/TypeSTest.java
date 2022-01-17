@@ -294,12 +294,12 @@ public class TypeSTest {
 
     @Test
     public void first_field_type_can_be_nothing() {
-      f.struct("MyStruct", nList(itemSigS("fieldName", f.nothing())));
+      f.struct("MyStruct", nList(itemSigS(f.nothing(), "fieldName")));
     }
 
     @Test
     public void first_field_type_can_be_nothing_array() {
-      f.struct("MyStruct", nList(itemSigS("fieldName", f.array(f.nothing()))));
+      f.struct("MyStruct", nList(itemSigS(f.array(f.nothing()), "fieldName")));
     }
 
     @Test
@@ -326,11 +326,11 @@ public class TypeSTest {
     public static List<Arguments> struct_fields_cases() {
       return asList(
           arguments(f.struct("Person", nList()), nList()),
-          arguments(f.struct("Person", nList(itemSigS("field", f.string()))),
-              nList(itemSigS("field", f.string()))),
+          arguments(f.struct("Person", nList(itemSigS(f.string(), "field"))),
+              nList(itemSigS(f.string(), "field"))),
           arguments(f.struct("Person",
-              nList(itemSigS("field", f.string()), itemSigS("field2", f.int_()))),
-              nList(itemSigS("field", f.string()), itemSigS("field2", f.int_())))
+              nList(itemSigS(f.string(), "field"), itemSigS(f.int_(), "field2"))),
+              nList(itemSigS(f.string(), "field"), itemSigS(f.int_(), "field2")))
       );
     }
   }
@@ -346,7 +346,7 @@ public class TypeSTest {
         f.nothing(),
         f.string(),
         f.struct("MyStruct", nList()),
-        f.struct("MyStruct", nList(itemSigS("field", f.int_()))),
+        f.struct("MyStruct", nList(itemSigS(f.int_(), "field"))),
         f.oVar("A"),
         f.oVar("B"),
         f.oVar("C"),

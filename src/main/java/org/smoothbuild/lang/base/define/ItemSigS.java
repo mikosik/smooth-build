@@ -37,7 +37,7 @@ public class ItemSigS extends NameableImpl {
     return new ItemSigS(type, empty(), empty());
   }
 
-  public static ItemSigS itemSigS(String name, TypeS type) {
+  public static ItemSigS itemSigS(TypeS type, String name) {
     return new ItemSigS(type, name, empty());
   }
 
