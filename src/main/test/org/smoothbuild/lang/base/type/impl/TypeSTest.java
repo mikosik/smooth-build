@@ -146,6 +146,62 @@ public class TypeSTest {
   }
 
   @ParameterizedTest
+  @MethodSource("hasOpenVars_test_data")
+  public void hasOpenVars(TypeS type, boolean expected) {
+    assertThat(type.hasOpenVars())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> hasOpenVars_test_data() {
+    return List.of(
+        arguments(f.any(), false),
+        arguments(f.blob(), false),
+        arguments(f.bool(), false),
+        arguments(f.int_(), false),
+        arguments(f.nothing(), false),
+        arguments(f.string(), false),
+
+        arguments(f.array(f.int_()), false),
+        arguments(f.array(f.oVar("A")), true),
+        arguments(f.array(f.cVar("A")), false),
+
+        arguments(f.func(f.blob(), list(f.bool())), false),
+        arguments(f.func(f.oVar("A"), list(f.bool())), true),
+        arguments(f.func(f.cVar("A"), list(f.bool())), false),
+        arguments(f.func(f.blob(), list(f.oVar("A"))), true),
+        arguments(f.func(f.blob(), list(f.cVar("A"))), false)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("hasClosedVars_test_data")
+  public void hasOpenClosed(TypeS type, boolean expected) {
+    assertThat(type.hasClosedVars())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> hasClosedVars_test_data() {
+    return List.of(
+        arguments(f.any(), false),
+        arguments(f.blob(), false),
+        arguments(f.bool(), false),
+        arguments(f.int_(), false),
+        arguments(f.nothing(), false),
+        arguments(f.string(), false),
+
+        arguments(f.array(f.int_()), false),
+        arguments(f.array(f.oVar("A")), false),
+        arguments(f.array(f.cVar("A")), true),
+
+        arguments(f.func(f.blob(), list(f.bool())), false),
+        arguments(f.func(f.oVar("A"), list(f.bool())), false),
+        arguments(f.func(f.cVar("A"), list(f.bool())), true),
+        arguments(f.func(f.blob(), list(f.oVar("A"))), false),
+        arguments(f.func(f.blob(), list(f.cVar("A"))), true)
+    );
+  }
+
+  @ParameterizedTest
   @MethodSource("func_result_cases")
   public void func_result(FuncTS type, TypeS expected) {
     assertThat(type.res())
