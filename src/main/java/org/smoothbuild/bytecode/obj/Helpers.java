@@ -7,7 +7,7 @@ import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.exc.HashedDbExc;
 
 public class Helpers {
-  public static void wrapHashedDbExceptionAsObjectDbException(HashedDbRunnable runnable) {
+  public static void wrapHashedDbExcAsObjDbExc(HashedDbRunnable runnable) {
     try {
       runnable.run();
     } catch (HashedDbExc e) {
@@ -15,7 +15,7 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapHashedDbExceptionAsObjectDbException(HashedDbCallable<T> callable) {
+  public static <T> T wrapHashedDbExcAsObjDbExc(HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbExc e) {
@@ -23,7 +23,7 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapHashedDbExceptionAsDecodeObjNodeException(
+  public static <T> T wrapHashedDbExcAsDecodeObjNodeException(
       Hash hash, CatB cat, String path, HashedDbCallable<T> callable) {
     try {
       return callable.call();
@@ -32,7 +32,7 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapByteDbExceptionAsDecodeObjNodeException(
+  public static <T> T wrapObjDbExcAsDecodeObjNodeException(
       Hash hash, CatB cat, String path, ByteDbCallable<T> callable) {
     try {
       return callable.call();
@@ -41,7 +41,7 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapByteDbExceptionAsDecodeObjNodeException(
+  public static <T> T wrapObjDbExcAsDecodeObjNodeException(
       Hash hash, CatB cat, String path, int pathIndex, ByteDbCallable<T> callable) {
     try {
       return callable.call();

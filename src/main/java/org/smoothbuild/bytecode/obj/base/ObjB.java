@@ -1,13 +1,12 @@
 package org.smoothbuild.bytecode.obj.base;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.bytecode.obj.Helpers.wrapByteDbExceptionAsDecodeObjNodeException;
-import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExceptionAsDecodeObjNodeException;
+import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsDecodeObjNodeException;
+import static org.smoothbuild.bytecode.obj.Helpers.wrapObjDbExcAsDecodeObjNodeException;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 
 import java.util.Objects;
 
-import org.smoothbuild.bytecode.obj.Helpers;
 import org.smoothbuild.bytecode.obj.Helpers.HashedDbCallable;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNodeExc;
@@ -81,11 +80,11 @@ public abstract class ObjB {
   }
 
   protected <T> T readData(HashedDbCallable<T> reader) {
-    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), cat(), DATA_PATH, reader);
+    return wrapHashedDbExcAsDecodeObjNodeException(hash(), cat(), DATA_PATH, reader);
   }
 
   protected <T> T readObj(String path, Hash hash, Class<T> clazz) {
-    var obj = Helpers.wrapByteDbExceptionAsDecodeObjNodeException(
+    var obj = wrapObjDbExcAsDecodeObjNodeException(
         hash(), cat(), path, () -> byteDb().get(hash));
     return castObj(obj, path, clazz);
   }
@@ -103,7 +102,7 @@ public abstract class ObjB {
 
   private ObjB readSeqElemObj(String path, Hash hash, int i, int expectedSize) {
     var elemHash = readSeqElemHash(path, hash, i, expectedSize);
-    var obj = wrapByteDbExceptionAsDecodeObjNodeException(
+    var obj = wrapObjDbExcAsDecodeObjNodeException(
         hash(), cat(), path, i, () -> byteDb().get(elemHash));
     return obj;
   }
@@ -135,7 +134,7 @@ public abstract class ObjB {
     Builder<ObjB> builder = ImmutableList.builder();
     for (int i = 0; i < seq.size(); i++) {
       int index = i;
-      ObjB obj = wrapByteDbExceptionAsDecodeObjNodeException(hash(), cat(), path, index,
+      ObjB obj = wrapObjDbExcAsDecodeObjNodeException(hash(), cat(), path, index,
           () -> byteDb.get(seq.get(index)));
       builder.add(obj);
     }
@@ -151,7 +150,7 @@ public abstract class ObjB {
   }
 
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash) {
-    return wrapHashedDbExceptionAsDecodeObjNodeException(hash(), cat(), path,
+    return wrapHashedDbExcAsDecodeObjNodeException(hash(), cat(), path,
         () -> byteDb.hashedDb().readSeq(hash));
   }
 

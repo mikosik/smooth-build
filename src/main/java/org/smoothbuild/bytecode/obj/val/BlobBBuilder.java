@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode.obj.val;
 
-import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class BlobBBuilder implements Closeable {
   }
 
   public void write(DataWriter dataWriter) {
-    wrapHashedDbExceptionAsObjectDbException(() -> sink.write(dataWriter));
+    wrapHashedDbExcAsObjDbExc(() -> sink.write(dataWriter));
   }
 
   @Override
@@ -35,7 +35,7 @@ public class BlobBBuilder implements Closeable {
   }
 
   public BlobB build() {
-    return wrapHashedDbExceptionAsObjectDbException(this::buildImpl);
+    return wrapHashedDbExcAsObjDbExc(this::buildImpl);
   }
 
   private BlobB buildImpl() throws HashedDbExc {

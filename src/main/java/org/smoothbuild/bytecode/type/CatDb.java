@@ -3,7 +3,7 @@ package org.smoothbuild.bytecode.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
-import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapCatDbExcAsDecodeCatNodeExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatExc;
 import static org.smoothbuild.bytecode.type.Helpers.wrapHashedDbExcAsDecodeCatNodeExc;
@@ -149,7 +149,7 @@ public class CatDb implements TypeFactoryB {
 
   @Override
   public ArrayTB array(TypeB elemT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newArray(elemT));
+    return wrapHashedDbExcAsObjDbExc(() -> newArray(elemT));
   }
 
   public BlobTB blob() {
@@ -162,7 +162,7 @@ public class CatDb implements TypeFactoryB {
 
   @Override
   public FuncTB func(TypeB res, ImmutableList<TypeB> params) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newFunc(res, tuple(params)));
+    return wrapHashedDbExcAsObjDbExc(() -> newFunc(res, tuple(params)));
   }
 
   public IntTB int_() {
@@ -170,7 +170,7 @@ public class CatDb implements TypeFactoryB {
   }
 
   public MethodTB method(TypeB res, ImmutableList<TypeB> params) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newMethod(res, tuple(params)));
+    return wrapHashedDbExcAsObjDbExc(() -> newMethod(res, tuple(params)));
   }
 
   public NothingTB nothing() {
@@ -179,7 +179,7 @@ public class CatDb implements TypeFactoryB {
 
   @Override
   public TupleTB tuple(ImmutableList<TypeB> itemTs) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(itemTs));
+    return wrapHashedDbExcAsObjDbExc(() -> newTuple(itemTs));
   }
 
   public StringTB string() {
@@ -189,47 +189,47 @@ public class CatDb implements TypeFactoryB {
   @Override
   public OpenVarTB oVar(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return wrapHashedDbExceptionAsObjectDbException(() -> newOpenVar(name));
+    return wrapHashedDbExcAsObjDbExc(() -> newOpenVar(name));
   }
 
   @Override
   public ClosedVarTB cVar(String name) {
     checkArgument(isVarName(name), "Illegal type var name '%s'.", name);
-    return wrapHashedDbExceptionAsObjectDbException(() -> newClosedVar(name));
+    return wrapHashedDbExcAsObjDbExc(() -> newClosedVar(name));
   }
 
   // methods for getting Expr-s types
 
   public CallCB call(TypeB evalT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evalT));
+    return wrapHashedDbExcAsObjDbExc(() -> newCall(evalT));
   }
 
   public CombineCB combine(TupleTB evalT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evalT));
+    return wrapHashedDbExcAsObjDbExc(() -> newCombine(evalT));
   }
 
   public IfCB if_(TypeB evalT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newIf(evalT));
+    return wrapHashedDbExcAsObjDbExc(() -> newIf(evalT));
   }
 
   public InvokeCB invoke(TypeB evalT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evalT));
+    return wrapHashedDbExcAsObjDbExc(() -> newInvoke(evalT));
   }
 
   public MapCB map(ArrayTB evalT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newMap(evalT));
+    return wrapHashedDbExcAsObjDbExc(() -> newMap(evalT));
   }
 
   public OrderCB order(TypeB elemT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(elemT));
+    return wrapHashedDbExcAsObjDbExc(() -> newOrder(elemT));
   }
 
   public ParamRefCB paramRef(TypeB evalT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT));
+    return wrapHashedDbExcAsObjDbExc(() -> newParamRef(evalT));
   }
 
   public SelectCB select(TypeB evalT) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evalT));
+    return wrapHashedDbExcAsObjDbExc(() -> newSelect(evalT));
   }
 
   // methods for reading from db

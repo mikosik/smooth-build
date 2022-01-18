@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.obj;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
-import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
 import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.cannotReadRootException;
 import static org.smoothbuild.bytecode.obj.exc.DecodeObjRootExc.wrongSizeOfRootSeqException;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
@@ -76,24 +76,24 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public BlobBBuilder blobBuilder() {
-    return wrapHashedDbExceptionAsObjectDbException(() -> new BlobBBuilder(this, hashedDb.sink()));
+    return wrapHashedDbExcAsObjDbExc(() -> new BlobBBuilder(this, hashedDb.sink()));
   }
 
   @Override
   public BoolB bool(boolean value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newBool(value));
+    return wrapHashedDbExcAsObjDbExc(() -> newBool(value));
   }
 
   @Override
   public MethodB method(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return wrapHashedDbExceptionAsObjectDbException(
+    return wrapHashedDbExcAsObjDbExc(
         () -> newMethod(type, jar, classBinaryName, isPure));
   }
 
   @Override
   public FuncB func(FuncTB type, ObjB body) {
     checkBodyTypeAssignableToFuncResT(type, body);
-    return wrapHashedDbExceptionAsObjectDbException(() -> newFunc(type, body));
+    return wrapHashedDbExcAsObjDbExc(() -> newFunc(type, body));
   }
 
   private void checkBodyTypeAssignableToFuncResT(FuncTB type, ObjB body) {
@@ -105,12 +105,12 @@ public class ObjDbImpl implements ObjDb {
 
   @Override
   public IntB int_(BigInteger value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newInt(value));
+    return wrapHashedDbExcAsObjDbExc(() -> newInt(value));
   }
 
   @Override
   public StringB string(String value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newString(value));
+    return wrapHashedDbExcAsObjDbExc(() -> newString(value));
   }
 
   @Override
@@ -132,49 +132,49 @@ public class ObjDbImpl implements ObjDb {
         }
     );
 
-    return wrapHashedDbExceptionAsObjectDbException(() -> newTuple(tupleT, items));
+    return wrapHashedDbExcAsObjDbExc(() -> newTuple(tupleT, items));
   }
 
   // methods for creating ExprH subclasses
 
   @Override
   public CallB call(TypeB evalT, ObjB callable, CombineB args) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCall(evalT, callable, args));
+    return wrapHashedDbExcAsObjDbExc(() -> newCall(evalT, callable, args));
   }
 
   @Override
   public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newCombine(evalT, items));
+    return wrapHashedDbExcAsObjDbExc(() -> newCombine(evalT, items));
   }
 
   @Override
   public IfB if_(ObjB condition, ObjB then, ObjB else_) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newIf(condition, then, else_));
+    return wrapHashedDbExcAsObjDbExc(() -> newIf(condition, then, else_));
   }
 
   @Override
   public InvokeB invoke(TypeB evalT, ObjB method, CombineB args) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newInvoke(evalT, method, args));
+    return wrapHashedDbExcAsObjDbExc(() -> newInvoke(evalT, method, args));
   }
 
   @Override
   public MapB map(ObjB array, ObjB func) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newMap(array, func));
+    return wrapHashedDbExcAsObjDbExc(() -> newMap(array, func));
   }
 
   @Override
   public OrderB order(ArrayTB arrayTB, ImmutableList<ObjB> elems) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newOrder(arrayTB, elems));
+    return wrapHashedDbExcAsObjDbExc(() -> newOrder(arrayTB, elems));
   }
 
   @Override
   public ParamRefB paramRef(TypeB evalT, BigInteger value) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newParamRef(evalT, value));
+    return wrapHashedDbExcAsObjDbExc(() -> newParamRef(evalT, value));
   }
 
   @Override
   public SelectB select(TypeB evalT, ObjB selectable, IntB index) {
-    return wrapHashedDbExceptionAsObjectDbException(() -> newSelect(evalT, selectable, index));
+    return wrapHashedDbExcAsObjDbExc(() -> newSelect(evalT, selectable, index));
   }
 
   // generic getter

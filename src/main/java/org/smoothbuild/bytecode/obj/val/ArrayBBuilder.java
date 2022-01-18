@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.obj.val;
 
 import static com.google.common.collect.Streams.stream;
-import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExceptionAsObjectDbException;
+import static org.smoothbuild.bytecode.obj.Helpers.wrapHashedDbExcAsObjDbExc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +45,6 @@ public class ArrayBBuilder {
   }
 
   public ArrayB build() {
-    return wrapHashedDbExceptionAsObjectDbException(() -> byteDb.newArray(type, elems));
+    return wrapHashedDbExcAsObjDbExc(() -> byteDb.newArray(type, elems));
   }
 }
