@@ -5,7 +5,7 @@ import static java.util.Objects.checkIndex;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
-import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
+import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 
 import com.google.common.base.Supplier;
@@ -50,7 +50,7 @@ public final class TupleB extends ValB {
       var expectedT = itemTs.get(i);
       var actualT = val.cat();
       if (!expectedT.equals(actualT)) {
-        throw new DecodeObjWrongNodeCatExc(hash(), cat(), DATA_PATH, i, expectedT, actualT);
+        throw new DecodeObjWrongNodeTypeExc(hash(), cat(), DATA_PATH, i, expectedT, actualT);
       }
     }
     return objs;

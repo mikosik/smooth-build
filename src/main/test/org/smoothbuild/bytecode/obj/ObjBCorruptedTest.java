@@ -32,7 +32,7 @@ import org.smoothbuild.bytecode.obj.exc.DecodeObjCatExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjIllegalPolymorphicTypeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNoSuchObjExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNodeExc;
-import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
+import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeSelectIndexOutOfBoundsExc;
@@ -246,7 +246,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   )
               ));
       assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(StringB.class))
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, DATA_PATH, 1, stringTB(), boolTB()));
     }
 
@@ -260,7 +260,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(arrayB(nothingTB()))
               ));
       assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(ArrayB.class))
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, DATA_PATH, 0, arrayTB(intTB()), arrayTB(nothingTB())));
     }
 
@@ -278,7 +278,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(paramRefB(1))
               ));
       assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(StringB.class))
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH, 1, ValB.class, ParamRefB.class));
     }
   }
@@ -503,7 +503,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeTypeExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, "func", FuncTB.class, IntTB.class));
     }
 
@@ -521,7 +521,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", CombineB.class, IntB.class));
     }
 
@@ -540,7 +540,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((CallB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", CombineB.class, ParamRefB.class));
     }
 
@@ -1083,7 +1083,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, cat, DATA_PATH + "[1]", CombineB.class, IntB.class));
     }
 
@@ -1102,7 +1102,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", CombineB.class, ParamRefB.class));
     }
 
@@ -1275,7 +1275,7 @@ public class ObjBCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> ((MapB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeTypeExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, cat, DATA_PATH, 0, ArrayTB.class, IntTB.class));
     }
 
@@ -1292,7 +1292,7 @@ public class ObjBCorruptedTest extends TestingContext {
           )
       );
       assertCall(() -> ((MapB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeTypeExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, cat, DATA_PATH, 1, FuncTB.class, IntTB.class));
     }
 
@@ -1465,7 +1465,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((MethodB) byteDb().get(objHash)).jar())
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[0]", BlobB.class, StringB.class));
     }
 
@@ -1486,7 +1486,7 @@ public class ObjBCorruptedTest extends TestingContext {
           );
 
       assertCall(() -> ((MethodB) byteDb().get(objHash)).classBinaryName())
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", StringB.class, IntB.class));
     }
 
@@ -1507,7 +1507,7 @@ public class ObjBCorruptedTest extends TestingContext {
           );
 
       assertCall(() -> ((MethodB) byteDb().get(objHash)).isPure())
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[2]", BoolB.class, StringB.class));
     }
   }
@@ -1766,7 +1766,7 @@ public class ObjBCorruptedTest extends TestingContext {
           );
 
       assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeTypeExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, "tuple", TupleTB.class, IntTB.class));
     }
 
@@ -1824,7 +1824,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
       assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", IntB.class, StringB.class));
     }
   }
@@ -2002,7 +2002,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(boolB(true))));
       TupleB tuple = (TupleB) byteDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, personTB(), DATA_PATH, 1, stringTB(), boolTB()));
     }
 
@@ -2018,7 +2018,7 @@ public class ObjBCorruptedTest extends TestingContext {
           );
       var tuple = (TupleB) byteDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, DATA_PATH, 0, arrayTB(intTB()), arrayTB(nothingTB())));
     }
 
@@ -2032,7 +2032,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(paramRefB(1))));
       TupleB tuple = (TupleB) byteDb().get(objHash);
       assertCall(() -> tuple.get(0))
-          .throwsException(new DecodeObjWrongNodeCatExc(
+          .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, personTB(), DATA_PATH + "[1]", ValB.class, ParamRefB.class));
     }
   }

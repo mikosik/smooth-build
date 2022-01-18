@@ -7,6 +7,7 @@ import org.smoothbuild.bytecode.obj.base.ExprB;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.exc.DecodeMapIllegalMappingFuncExc;
+import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.expr.MapCB;
@@ -43,12 +44,12 @@ public final class MapB extends ExprB {
     var func = readFunc();
     var maybeArrayT = array.type();
     if (!(maybeArrayT instanceof ArrayTB arrayT)) {
-      throw new DecodeObjWrongNodeTypeExc(
+      throw new DecodeObjWrongNodeClassExc(
           hash(), cat(), DATA_PATH, ARRAY_IDX, ArrayTB.class, maybeArrayT.getClass());
     }
     var maybeFuncT = func.type();
     if (!(maybeFuncT instanceof FuncTB funcT)) {
-      throw new DecodeObjWrongNodeTypeExc(
+      throw new DecodeObjWrongNodeClassExc(
           hash(), cat(), DATA_PATH, FUNC_IDX, FuncTB.class, maybeFuncT.getClass());
     }
     if (funcT.params().size() != 1) {

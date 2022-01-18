@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
+import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.bytecode.type.expr.CallCB;
 import org.smoothbuild.bytecode.type.val.FuncTB;
 
@@ -36,7 +36,7 @@ public class CallB extends CallLikeB {
     if (func.type() instanceof FuncTB funcT) {
       validate(funcT, argsCombine);
     } else {
-      throw new DecodeObjWrongNodeTypeExc(
+      throw new DecodeObjWrongNodeClassExc(
           hash(), cat(), "func", FuncTB.class, func.type().getClass());
     }
   }

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
-import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
+import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 
@@ -52,7 +52,7 @@ public final class ArrayB extends ValB {
     for (int i = 0; i < elems.size(); i++) {
       var elemT = elems.get(i).cat();
       if (!expectedElemT.equals(elemT)) {
-        throw new DecodeObjWrongNodeCatExc(hash(), cat(), DATA_PATH, i, expectedElemT, elemT);
+        throw new DecodeObjWrongNodeTypeExc(hash(), cat(), DATA_PATH, i, expectedElemT, elemT);
       }
     }
     return elems;

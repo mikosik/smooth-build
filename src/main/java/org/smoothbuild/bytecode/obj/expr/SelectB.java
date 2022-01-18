@@ -6,7 +6,7 @@ import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ExprB;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
+import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeSelectIndexOutOfBoundsExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeSelectWrongEvalTypeExc;
 import org.smoothbuild.bytecode.obj.val.IntB;
@@ -46,7 +46,7 @@ public class SelectB extends ExprB {
       }
       return new Data(selectable, index);
     } else {
-      throw new DecodeObjWrongNodeTypeExc(
+      throw new DecodeObjWrongNodeClassExc(
           hash(), cat(), "tuple", TupleTB.class, selectable.type().getClass());
     }
   }

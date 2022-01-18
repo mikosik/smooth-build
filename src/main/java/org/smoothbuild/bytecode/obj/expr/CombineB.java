@@ -30,22 +30,22 @@ public class CombineB extends ExprB {
 
   @Override
   public TupleTB type() {
-    return this.cat().evalT();
+    return cat().evalT();
   }
 
   public ImmutableList<ObjB> items() {
-    var expectedItemTs = this.cat().evalT().items();
+    var expectedItemTs = cat().evalT().items();
     var items = readSeqObjs(DATA_PATH, dataHash(), ObjB.class);
     allMatchOtherwise(
         expectedItemTs,
         items,
         (type, item) -> byteDb().typing().isAssignable(type, item.type()),
         (type, item) -> {
-          throw new DecodeCombineWrongItemsSizeExc(hash(), this.cat(), item);
+          throw new DecodeCombineWrongItemsSizeExc(hash(), cat(), item);
         },
         (index) -> {
-          throw new DecodeObjWrongNodeTypeExc(hash(), this.cat(),
-              "items", index, expectedItemTs.get(index), items.get(index).type());
+          throw new DecodeObjWrongNodeTypeExc(
+              hash(), cat(), "items", index, expectedItemTs.get(index), items.get(index).type());
         }
     );
     return items;

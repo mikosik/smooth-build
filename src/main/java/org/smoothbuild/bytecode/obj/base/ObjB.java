@@ -11,7 +11,7 @@ import org.smoothbuild.bytecode.obj.Helpers;
 import org.smoothbuild.bytecode.obj.Helpers.HashedDbCallable;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNodeExc;
-import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeCatExc;
+import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeClassExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongNodeTypeExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.base.CatB;
@@ -165,7 +165,7 @@ public abstract class ObjB {
       T result = (T) obj;
       return result;
     } else {
-      throw new DecodeObjWrongNodeCatExc(hash(), cat(), path, clazz, obj.getClass());
+      throw new DecodeObjWrongNodeClassExc(hash(), cat(), path, clazz, obj.getClass());
     }
   }
 
@@ -175,7 +175,7 @@ public abstract class ObjB {
       T result = (T) obj;
       return result;
     } else {
-      throw new DecodeObjWrongNodeCatExc(hash(), cat(), path, index, clazz, obj.getClass());
+      throw new DecodeObjWrongNodeClassExc(hash(), cat(), path, index, clazz, obj.getClass());
     }
   }
 
@@ -183,7 +183,7 @@ public abstract class ObjB {
     for (int i = 0; i < elems.size(); i++) {
       ObjB elem = elems.get(i);
       if (!clazz.isInstance(elem)) {
-        throw new DecodeObjWrongNodeCatExc(hash(), cat(), path, i, clazz, elem.getClass());
+        throw new DecodeObjWrongNodeClassExc(hash(), cat(), path, i, clazz, elem.getClass());
       }
     }
     @SuppressWarnings("unchecked")
