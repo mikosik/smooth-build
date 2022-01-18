@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.obj.exc.ByteDbExc;
+import org.smoothbuild.bytecode.obj.exc.ObjDbExc;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
 import org.smoothbuild.bytecode.obj.expr.IfB;
@@ -83,7 +83,7 @@ public class ByteCodeFactory {
       builder.write(dataWriter);
       return builder.build();
     } catch (IOException e) {
-      throw new ByteDbExc(e);
+      throw new ObjDbExc(e);
     }
   }
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.obj;
 
-import org.smoothbuild.bytecode.obj.exc.ByteDbExc;
 import org.smoothbuild.bytecode.obj.exc.DecodeObjNodeExc;
+import org.smoothbuild.bytecode.obj.exc.ObjDbExc;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.exc.HashedDbExc;
@@ -11,7 +11,7 @@ public class Helpers {
     try {
       runnable.run();
     } catch (HashedDbExc e) {
-      throw new ByteDbExc(e);
+      throw new ObjDbExc(e);
     }
   }
 
@@ -19,7 +19,7 @@ public class Helpers {
     try {
       return callable.call();
     } catch (HashedDbExc e) {
-      throw new ByteDbExc(e);
+      throw new ObjDbExc(e);
     }
   }
 
@@ -36,7 +36,7 @@ public class Helpers {
       Hash hash, CatB cat, String path, ByteDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ByteDbExc e) {
+    } catch (ObjDbExc e) {
       throw new DecodeObjNodeExc(hash, cat, path, e);
     }
   }
@@ -45,14 +45,14 @@ public class Helpers {
       Hash hash, CatB cat, String path, int pathIndex, ByteDbCallable<T> callable) {
     try {
       return callable.call();
-    } catch (ByteDbExc e) {
+    } catch (ObjDbExc e) {
       throw new DecodeObjNodeExc(hash, cat, path + "[" + pathIndex + "]", e);
     }
   }
 
   @FunctionalInterface
   public static interface ByteDbCallable<T> {
-    public T call() throws ByteDbExc;
+    public T call() throws ObjDbExc;
   }
 
   @FunctionalInterface

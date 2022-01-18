@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode.obj.exc;
 
 
-public class DecodeObjExc extends ByteDbExc {
+public class DecodeObjExc extends ObjDbExc {
   public DecodeObjExc(String message, Throwable cause) {
     super(message, cause);
   }
