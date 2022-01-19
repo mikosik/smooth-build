@@ -93,7 +93,11 @@ public class JavacFunc {
         if (!additionalInfo.isEmpty()) {
           nativeApi.log().warning(additionalInfo);
         }
-        return fileManager.resultClassfiles();
+        if (success) {
+          return fileManager.resultClassfiles();
+        } else {
+          return null;
+        }
       } catch (ZipException e) {
         nativeApi.log().error("Cannot read archive. Corrupted data?");
         return null;
