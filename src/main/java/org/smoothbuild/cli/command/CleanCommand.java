@@ -4,7 +4,7 @@ import static org.smoothbuild.cli.base.CreateInjector.createInjector;
 
 import java.nio.file.Path;
 
-import org.smoothbuild.cli.base.ExclusiveCommand;
+import org.smoothbuild.cli.base.ProjectCommand;
 import org.smoothbuild.run.CleanRunner;
 
 import picocli.CommandLine.Command;
@@ -13,7 +13,7 @@ import picocli.CommandLine.Command;
     name = CleanCommand.NAME,
     description = "Remove all cached objects and artifacts calculated during all previous builds"
 )
-public class CleanCommand extends ExclusiveCommand {
+public class CleanCommand extends ProjectCommand {
   public static final String NAME = "clean";
 
   @Override

@@ -6,7 +6,7 @@ import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.smoothbuild.cli.base.ExclusiveCommand;
+import org.smoothbuild.cli.base.ProjectCommand;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.run.BuildRunner;
 
@@ -19,7 +19,7 @@ import picocli.CommandLine.Parameters;
     name = BuildCommand.NAME,
     description = "Evaluate specified value(s) and store them as artifact(s) "
 )
-public class BuildCommand extends ExclusiveCommand {
+public class BuildCommand extends ProjectCommand {
   public static final String NAME = "build";
 
   @Option(

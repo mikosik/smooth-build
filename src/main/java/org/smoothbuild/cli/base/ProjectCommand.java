@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 
 import picocli.CommandLine.Option;
 
-public abstract class ExclusiveCommand extends LoggingCommand implements Callable<Integer> {
+public abstract class ProjectCommand extends LoggingCommand implements Callable<Integer> {
   @Option(
       names = { "--project-dir", "-d" },
       defaultValue = ".",
