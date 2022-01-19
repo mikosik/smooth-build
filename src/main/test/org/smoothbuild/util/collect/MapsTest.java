@@ -2,10 +2,12 @@ package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
+import static java.util.Map.Entry.comparingByKey;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.map;
+import static org.smoothbuild.util.collect.Maps.sort;
 import static org.smoothbuild.util.collect.Maps.toMap;
 
 import java.util.HashMap;
@@ -14,6 +16,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableMap;
 
 public class MapsTest {
   @Nested
@@ -174,6 +178,27 @@ public class MapsTest {
       });
       assertThat(map)
           .containsExactly(3, "3");
+    }
+  }
+
+  @Nested
+  class _sort {
+    @Test
+    public void empty_map() {
+      assertThat(sort(Map.of(), (v1, v2) -> 0))
+          .isEqualTo(Map.of());
+    }
+
+    @Test
+    public void one_entry_map() {
+      assertThat(sort(Map.of(1, "one"), comparingByKey()))
+          .isEqualTo(Map.of(1, "one"));
+    }
+
+    @Test
+    public void many_entry_map() {
+      assertThat(sort(Map.of(3, "three", 2, "two", 1, "one"), comparingByKey()))
+          .isEqualTo(ImmutableMap.of(1, "one", 2, "two", 3, "three"));
     }
   }
 }
