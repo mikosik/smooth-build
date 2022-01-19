@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.base.ObjB;
+import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.eval.compile.Compiler;
 import org.smoothbuild.eval.compile.CompilerProv;
@@ -31,7 +32,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableMap<TopRefS, ObjB>> evaluate(DefsS defs, List<TopRefS> values) {
+  public Optional<ImmutableMap<TopRefS, ValB>> evaluate(DefsS defs, List<TopRefS> values) {
     reporter.startNewPhase("Compiling");
     var compiler = compilerProv.get(defs);
     var exprs = compile(values, compiler);
@@ -44,7 +45,7 @@ public class Evaluator {
     return evaluate(vm, exprs);
   }
 
-  private Optional<ImmutableMap<TopRefS, ObjB>> evaluate(
+  private Optional<ImmutableMap<TopRefS, ValB>> evaluate(
       Vm vm, Optional<ImmutableMap<TopRefS, ObjB>> exprs) {
     try {
       return vm.evaluate(exprs.get());

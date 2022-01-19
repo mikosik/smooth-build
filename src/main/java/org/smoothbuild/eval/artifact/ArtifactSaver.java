@@ -46,7 +46,7 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<TopRefS, ObjB> artifacts) {
+  public int saveArtifacts(Map<TopRefS, ValB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
     var sorted = sort(artifacts, comparing(e -> e.getKey().name()));
     for (var entry : sorted.entrySet()) {

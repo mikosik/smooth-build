@@ -23,7 +23,6 @@ import static org.smoothbuild.vm.parallel.ExecutionReporter.header;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -204,10 +203,10 @@ public class ParallelJobExecutorTest extends TestingContext {
     var topRef = new TopRefS(STRING, "name", loc());
     var job = job(valueAlgorithm("A"));
 
-    Optional<ObjB> obj = parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef);
+    var val = parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef);
 
     verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
-    assertThat(obj.isEmpty())
+    assertThat(val.isEmpty())
         .isTrue();
   }
 
