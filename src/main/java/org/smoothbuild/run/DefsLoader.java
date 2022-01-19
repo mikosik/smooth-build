@@ -1,7 +1,5 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.cli.console.ImmutableLogs.logs;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Maybe.maybeLogs;
@@ -12,7 +10,7 @@ import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -30,7 +28,7 @@ import org.smoothbuild.lang.parse.ModLoader;
 
 import com.google.common.collect.ImmutableList;
 
-public class RuntimeController {
+public class DefsLoader {
   private static final ImmutableList<FilePath> MODULES =
       ImmutableList.<FilePath>builder()
           .addAll(SDK_MODULES)
@@ -44,7 +42,7 @@ public class RuntimeController {
   private final Reporter reporter;
 
   @Inject
-  public RuntimeController(FileResolver fileResolver, ModFilesDetector modFilesDetector,
+  public DefsLoader(FileResolver fileResolver, ModFilesDetector modFilesDetector,
       ModLoader modLoader, InternalModLoader internalModLoader, Reporter reporter) {
     this.fileResolver = fileResolver;
     this.modFilesDetector = modFilesDetector;
@@ -53,7 +51,7 @@ public class RuntimeController {
     this.reporter = reporter;
   }
 
-  public int setUpRuntimeAndRun(Consumer<DefsS> runner) {
+  public Optional<DefsS> loadDefs() {
     reporter.startNewPhase("Parsing");
 
     var internalMod = internalModLoader.load();
@@ -63,16 +61,13 @@ public class RuntimeController {
       ModFiles modFiles = entry.getValue();
       Maybe<ModS> module = load(allDefs, entry.getKey(), modFiles);
       reporter.report(modFiles.smoothFile().toString(), module.logs().toList());
-      if (reporter.isProblemReported()) {
-        reporter.printSummary();
-        return EXIT_CODE_ERROR;
+      if (module.containsProblem()) {
+        return Optional.empty();
       } else {
         allDefs = allDefs.withModule(module.value());
       }
     }
-    runner.accept(allDefs);
-    reporter.printSummary();
-    return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+    return Optional.of(allDefs);
   }
 
   private Maybe<ModS> load(DefsS imported, ModPath path, ModFiles modFiles) {

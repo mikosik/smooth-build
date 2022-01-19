@@ -34,19 +34,19 @@ public class EvaluatorTest  extends TestingContext {
   @Nested
   class _values {
     @Test
-    public void blob() throws Exception {
+    public void blob() {
       assertThat(evaluate(blobS(7)))
           .isEqualTo(blobB(7));
     }
 
     @Test
-    public void bool() throws Exception {
+    public void bool() {
       assertThat(evaluate(intS(8)))
           .isEqualTo(intB(8));
     }
 
     @Test
-    public void string() throws Exception {
+    public void string() {
       assertThat(evaluate(stringS("abc")))
           .isEqualTo(stringB("abc"));
     }
@@ -55,7 +55,7 @@ public class EvaluatorTest  extends TestingContext {
   @Nested
   class _call {
     @Test
-    public void call() throws Exception {
+    public void call() {
       var defFuncS = defFuncS("n", nList(), intS(7));
       var callS = callS(intTS(), topRefS(defFuncS));
       assertThat(evaluate(callS, defFuncS))
@@ -63,7 +63,7 @@ public class EvaluatorTest  extends TestingContext {
     }
 
     @Test
-    public void call_with_result_conversion() throws Exception {
+    public void call_with_result_conversion() {
       var defFuncS = defFuncS(arrayTS(nothingTS()), "n", nList(), orderS(nothingTS()));
       var callS = callS(arrayTS(intTS()), topRefS(defFuncS));
       assertThat(evaluate(callS, defFuncS))
@@ -71,7 +71,7 @@ public class EvaluatorTest  extends TestingContext {
     }
 
     @Test
-    public void call_polymorphic() throws Exception {
+    public void call_polymorphic() {
       var a = oVarTS("A");
       var defFuncS = defFuncS("n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e")));
       var callS = callS(arrayTS(intTS()), topRefS(defFuncS), intS(7));
@@ -83,14 +83,14 @@ public class EvaluatorTest  extends TestingContext {
   @Nested
   class _combine {
     @Test
-    public void combine() throws Exception {
+    public void combine() {
       StructTS type = structTS("n", nList(sigS(intTS(), "f")));
       assertThat(evaluate(combineS(type, intS(7))))
           .isEqualTo(tupleB(tupleTB(intTB()), intB(7)));
     }
 
     @Test
-    public void combine_with_item_conversion() throws Exception {
+    public void combine_with_item_conversion() {
       StructTS type = structTS("n", nList(sigS(arrayTS(intTS()), "f")));
       assertThat(evaluate(combineS(type, orderS(nothingTS()))))
           .isEqualTo(tupleB(tupleTB(arrayTB(intTB())), arrayB(intTB())));
@@ -158,13 +158,13 @@ public class EvaluatorTest  extends TestingContext {
   @Nested
   class _order {
     @Test
-    public void order() throws Exception {
+    public void order() {
       assertThat(evaluate(orderS(intTS(), intS(7))))
           .isEqualTo(arrayB(intTB(), intB(7)));
     }
 
     @Test
-    public void order_with_element_conversion() throws Exception {
+    public void order_with_element_conversion() {
       assertThat(evaluate(orderS(arrayTS(intTS()), orderS(nothingTS()))))
           .isEqualTo(arrayB(arrayTB(intTB()), arrayB(intTB())));
     }
@@ -173,7 +173,7 @@ public class EvaluatorTest  extends TestingContext {
   @Nested
   class _select {
     @Test
-    public void select() throws Exception {
+    public void select() {
       StructTS type = structTS("n", nList(sigS(intTS(), "f")));
       var combineS = combineS(type, intS(7));
       assertThat(evaluate(selectS(intTS(), combineS, "f")))
@@ -181,7 +181,7 @@ public class EvaluatorTest  extends TestingContext {
     }
 
     @Test
-    public void select_with_conversion() throws Exception {
+    public void select_with_conversion() {
       StructTS type = structTS("n", nList(sigS(arrayTS(nothingTS()), "f")));
       var combineS = combineS(type, orderS(nothingTS()));
       assertThat(evaluate(selectS(arrayTS(intTS()), combineS, "f")))
@@ -189,24 +189,24 @@ public class EvaluatorTest  extends TestingContext {
     }
   }
 
-  private ObjB evaluate(ExprS exprS, TopEvalS other) throws InterruptedException {
+  private ObjB evaluate(ExprS exprS, TopEvalS other) {
     return evaluate(nList(defValS("myVal", exprS), other));
   }
 
-  private ObjB evaluate(ExprS exprS) throws InterruptedException {
+  private ObjB evaluate(ExprS exprS) {
     return evaluate(nList(defValS("myVal", exprS)));
   }
 
-  private ObjB evaluate(NList<TopEvalS> topEvals) throws InterruptedException {
+  private ObjB evaluate(NList<TopEvalS> topEvals) {
     var defsS = new DefsS(nList(), topEvals);
     var topRefS = topRefS(topEvals.get(0));
-    var resultMap = newEvaluator().evaluate(defsS, list(topRefS));
+    var resultMap = newEvaluator().evaluate(defsS, list(topRefS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
-    return resultMap.get(topRefS).get();
+    return resultMap.get(topRefS);
   }
 
   private Evaluator newEvaluator() {
-    return new Evaluator(compilerProv(fileLoader), vmProv(methodLoader));
+    return new Evaluator(compilerProv(fileLoader), vmProv(methodLoader), reporter());
   }
 }

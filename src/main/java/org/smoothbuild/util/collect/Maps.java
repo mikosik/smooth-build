@@ -3,7 +3,9 @@ package org.smoothbuild.util.collect;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
 
+import java.util.Comparator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableMap;
@@ -45,5 +47,13 @@ public class Maps {
       map.put(key, value);
     }
     return value;
+  }
+
+  public static <K, V> ImmutableMap<K, V> sort(Map<K, V> map,
+      Comparator<Entry<K, V>> comparator) {
+    return map.entrySet()
+        .stream()
+        .sorted(comparator)
+        .collect(toImmutableMap(Entry::getKey, Entry::getValue));
   }
 }

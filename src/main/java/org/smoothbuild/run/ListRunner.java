@@ -1,31 +1,46 @@
 package org.smoothbuild.run;
 
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
+
+import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
+import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.DefinedS;
+import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.ValS;
 
 public class ListRunner {
+  private final Reporter reporter;
   private final Console console;
-  private final RuntimeController runtimeController;
+  private final DefsLoader defsLoader;
 
   @Inject
-  public ListRunner(Console console, RuntimeController runtimeController) {
+  public ListRunner(DefsLoader defsLoader, Reporter reporter, Console console) {
+    this.reporter = reporter;
     this.console = console;
-    this.runtimeController = runtimeController;
+    this.defsLoader = defsLoader;
   }
 
   public int run() {
-    return runtimeController.setUpRuntimeAndRun(defintions -> defintions
-        .topEvals()
-        .stream()
-        .filter(f -> f.loc().file().space().equals(PRJ))
-        .filter(ValS.class::isInstance)
-        .map(DefinedS::name)
-        .sorted()
-        .forEach(console::println));
+    Optional<DefsS> defsS = defsLoader.loadDefs();
+    if (defsS.isPresent()) {
+      reporter.startNewPhase("Values that can be evaluated:");
+      defsS.get()
+          .topEvals()
+          .stream()
+          .filter(f -> f.loc().file().space().equals(PRJ))
+          .filter(ValS.class::isInstance)
+          .map(DefinedS::name)
+          .sorted()
+          .forEach(console::println);
+      return EXIT_CODE_SUCCESS;
+    } else {
+      return EXIT_CODE_ERROR;
+    }
   }
 }

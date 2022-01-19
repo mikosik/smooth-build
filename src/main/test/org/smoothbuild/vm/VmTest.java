@@ -387,9 +387,9 @@ public class VmTest extends TestingContext {
   private ObjB evaluate(ObjB obj) throws Exception {
     var key = "a";
     var vm = vmProv(methodLoader).get(ImmutableMap.of());
-    var resultMap = vm.evaluate(ImmutableMap.of(key, obj));
+    var resultMap = vm.evaluate(ImmutableMap.of(key, obj)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
-    return resultMap.get(key).get();
+    return resultMap.get(key);
   }
 }

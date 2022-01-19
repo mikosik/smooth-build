@@ -36,7 +36,7 @@ public class FindTopEvals {
             + "Try 'smooth list' to see all available values that can be calculated."));
       }
     }
-    reporter.report("Validating arguments", logs);
+    reporter.report("command line arguments", logs);
     if (logs.isEmpty()) {
       return Optional.of(ImmutableList.copyOf(topRefs));
     } else {

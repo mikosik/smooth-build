@@ -25,11 +25,9 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
     runSmooth(new CommandWithArgs(commandName(), "unknownValue"));
     assertFinishedWithError();
     assertSysOutContains(
-        sectionName(),
-        "  Validating arguments",
+        "  command line arguments",
         "   + ERROR: Unknown value `unknownValue`.",
-        "     Try 'smooth list' to see all available values that can be calculated.",
-        "");
+        "     Try 'smooth list' to see all available values that can be calculated.");
   }
 
   @Test
@@ -70,8 +68,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
     assertSysOutContains(
-        sectionName(),
-        "  Validating arguments",
+        "  command line arguments",
         "   + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.",
         "Summary",
         "  1 error",
@@ -86,8 +83,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
     assertSysOutContains(
-        sectionName(),
-        "  Validating arguments",
+        "  command line arguments",
         "   + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.",
         "Summary",
         "  1 error",

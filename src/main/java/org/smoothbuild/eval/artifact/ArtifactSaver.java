@@ -1,6 +1,11 @@
 package org.smoothbuild.eval.artifact;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.eval.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.eval.artifact.ArtifactPaths.targetPath;
 import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
@@ -8,8 +13,11 @@ import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.util.collect.Lists.list;
+import static org.smoothbuild.util.collect.Maps.sort;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -18,6 +26,8 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
+import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.space.ForSpace;
@@ -26,18 +36,45 @@ import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 
-/**
- * This class is NOT thread-safe.
- */
 public class ArtifactSaver {
+  private final Reporter reporter;
   private final FileSystem fileSystem;
 
   @Inject
-  public ArtifactSaver(@ForSpace(PRJ) FileSystem fileSystem) {
+  public ArtifactSaver(@ForSpace(PRJ) FileSystem fileSystem, Reporter reporter) {
     this.fileSystem = fileSystem;
+    this.reporter = reporter;
   }
 
-  public Path save(TopRefS topRef, ObjB obj) throws IOException, DuplicatedPathsExc {
+  public int saveArtifacts(Map<TopRefS, ObjB> artifacts) {
+    reporter.startNewPhase("Saving artifact(s)");
+    var sorted = sort(artifacts, comparing(e -> e.getKey().name()));
+    for (var entry : sorted.entrySet()) {
+      if (!save(entry.getKey(), entry.getValue())) {
+        return EXIT_CODE_ERROR;
+      }
+    }
+    return EXIT_CODE_SUCCESS;
+  }
+
+  private boolean save(TopRefS topRef, ObjB obj) {
+    String name = topRef.name();
+    try {
+      Path path = write(topRef, obj);
+      reportSuccess(name, path);
+      return true;
+    } catch (IOException e) {
+      reportError(name,
+          "Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
+              + getStackTraceAsString(e));
+      return false;
+    } catch (DuplicatedPathsExc e) {
+      reportError(name, e.getMessage());
+      return false;
+    }
+  }
+
+  private Path write(TopRefS topRef, ObjB obj) throws IOException, DuplicatedPathsExc {
     Path artifactPath = artifactPath(topRef.name());
     if (topRef.type() instanceof ArrayT arrayT) {
       return saveArray(arrayT, artifactPath, (ArrayB) obj);
@@ -119,5 +156,18 @@ public class ArtifactSaver {
 
   private static Path fileObjectPath(TupleB file) {
     return path(filePath(file).toJ());
+  }
+
+  private void reportSuccess(String name, Path path) {
+    report(name, path.q(), list());
+  }
+
+  private void reportError(String name, String errorMessage) {
+    report(name, "???", list(error(errorMessage)));
+  }
+
+  private void report(String name, String pathOrError, List<Log> logs) {
+    String header = name + " -> " + pathOrError;
+    reporter.report(header, logs);
   }
 }

@@ -166,13 +166,21 @@ public class TestingContext {
 
   public VmProv vmProv(MethodLoader methodLoader) {
     var jobCreatorProvider = new JobCreatorProvider(methodLoader, typeFactoryB(), typingB());
+    var reporter = new ExecutionReporter(reporter());
+    var parallelExecutor = new ParallelJobExecutor(computer(), reporter);
+    return new VmProv(jobCreatorProvider, parallelExecutor);
+  }
+
+  public Reporter reporter() {
+    return new Reporter(console(), ALL, INFO);
+  }
+
+  private Console console() {
     // Use System.out if you want to see smooth logs in junit output
     // var outputStream = System.out;
     var outputStream = nullOutputStream();
     var console = new Console(new PrintWriter(outputStream, true));
-    var reporter = new ExecutionReporter(new Reporter(console, ALL, INFO));
-    var parallelExecutor = new ParallelJobExecutor(computer(), reporter);
-    return new VmProv(jobCreatorProvider, parallelExecutor);
+    return console;
   }
 
   public CompilerProv compilerProv() {

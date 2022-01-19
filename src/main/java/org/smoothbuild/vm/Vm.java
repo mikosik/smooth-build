@@ -1,8 +1,8 @@
 package org.smoothbuild.vm;
 
+import static org.smoothbuild.util.collect.Maps.map;
 import static org.smoothbuild.util.collect.Maps.mapValues;
 
-import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.bytecode.obj.base.ObjB;
@@ -20,9 +20,14 @@ public class Vm {
     this.parallelExecutor = parallelExecutor;
   }
 
-  public <K> Map<K, Optional<ObjB>> evaluate(ImmutableMap<K, ObjB> objs)
+  public <K> Optional<ImmutableMap<K, ObjB>> evaluate(ImmutableMap<K, ObjB> objs)
       throws InterruptedException {
     var jobs = mapValues(objs, jobCreator::eagerJobFor);
-    return parallelExecutor.executeAll(jobs);
+    var result = parallelExecutor.executeAll(jobs);
+    if (result.values().stream().anyMatch(Optional::isEmpty)) {
+      return Optional.empty();
+    } else {
+      return Optional.of(map(result, k -> k, Optional::get));
+    }
   }
 }
