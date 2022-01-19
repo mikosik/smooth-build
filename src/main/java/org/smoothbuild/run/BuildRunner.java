@@ -37,12 +37,6 @@ public class BuildRunner {
   }
 
   public int run(List<String> names) {
-    List<String> errors = ValidateValNames.validateValNames(names);
-    if (!errors.isEmpty()) {
-      console.errors(errors);
-      return EXIT_CODE_ERROR;
-    }
-
     for (Path path : list(ARTIFACTS_PATH, TEMPORARY_PATH)) {
       try {
         fileSystem.delete(path);

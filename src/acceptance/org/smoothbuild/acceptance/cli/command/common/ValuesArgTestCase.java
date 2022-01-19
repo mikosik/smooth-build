@@ -33,24 +33,12 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void value_specified_twice_causes_error() throws Exception {
+  public void value_specified_twice_is_ok() throws Exception {
     createUserModule("""
             result = "abc";
             """);
     runSmooth(new CommandWithArgs(commandName(), "result", "result"));
-    assertFinishedWithError();
-    assertSysOutContains("error: Value `result` has been specified more than once.\n");
-  }
-
-  @Test
-  public void many_values_specified_twice_causes_error_for_each_one() throws Exception {
-    createUserModule("""
-            result = "abc";
-            """);
-    runSmooth(new CommandWithArgs(commandName(), "result", "result", "other", "other"));
-    assertFinishedWithError();
-    assertSysOutContains("error: Value `result` has been specified more than once.\n");
-    assertSysOutContains("error: Value `other` has been specified more than once.\n");
+    assertFinishedWithSuccess();
   }
 
   @Test
@@ -60,7 +48,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal^name"));
     assertFinishedWithError();
-    assertSysOutContains("error: Illegal value name `illegal^name` passed in command line.\n");
+    assertSysOutContains("ERROR: Unknown value `illegal^name`.\n");
   }
 
   @Test
@@ -70,8 +58,8 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal^name", "other^name"));
     assertFinishedWithError();
-    assertSysOutContains("error: Illegal value name `illegal^name` passed in command line.\n");
-    assertSysOutContains("error: Illegal value name `other^name` passed in command line.\n");
+    assertSysOutContains("ERROR: Unknown value `illegal^name`.\n");
+    assertSysOutContains("ERROR: Unknown value `other^name`.\n");
   }
 
   @Test
