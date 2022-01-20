@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.bytecode.ByteCodeExc;
+
 import picocli.CommandLine.Option;
 
 public abstract class ProjectCommand extends LoggingCommand implements Callable<Integer> {
@@ -43,9 +45,18 @@ public abstract class ProjectCommand extends LoggingCommand implements Callable<
     }
     Channel channel = fileLock.acquiredBy();
     try (channel) {
-      return executeCommand(normalizedProjectDir);
+      return execute(normalizedProjectDir);
     } catch (IOException e) {
       printError("Error closing file lock.");
+      return EXIT_CODE_ERROR;
+    }
+  }
+
+  private Integer execute(Path normalizedProjectDir) {
+    try {
+      return executeCommand(normalizedProjectDir);
+    } catch (ByteCodeExc e) {
+      printError(e.getMessage());
       return EXIT_CODE_ERROR;
     }
   }
