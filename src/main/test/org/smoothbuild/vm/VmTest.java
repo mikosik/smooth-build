@@ -4,6 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -20,11 +25,57 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.java.MethodLoader;
+import org.smoothbuild.vm.job.JobCreator;
+import org.smoothbuild.vm.job.JobCreator.TaskCreator;
+import org.smoothbuild.vm.job.algorithm.Algorithm;
+import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
+import org.smoothbuild.vm.job.job.Job;
+import org.smoothbuild.vm.job.job.JobInfo;
+import org.smoothbuild.vm.job.job.Task;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class VmTest extends TestingContext {
   private final MethodLoader methodLoader = Mockito.mock(MethodLoader.class);
+  private TaskCreator taskCreator;
+
+  @Nested
+  class _laziness {
+    @Test
+    public void learning_test() throws Exception {
+      // This test makes sure that it is possible to detect Task creation using a mock.
+      var expr = orderB(intB(7));
+
+      assertThat(evaluate(spyingVm(), expr))
+          .isEqualTo(arrayB(intB(7)));
+
+      verify(taskCreator, times(1)).newTask(isA(OrderAlgorithm.class), any(), any());
+    }
+
+    @Test
+    public void no_task_is_created_for_func_arg_that_is_not_used() throws Exception {
+      var func = funcB(list(arrayTB(boolTB())), intB(7));
+      var expr = callB(func, orderB(boolTB()));
+
+      assertThat(evaluate(spyingVm(), expr))
+          .isEqualTo(intB(7));
+
+      verify(taskCreator, never()).newTask(isA(OrderAlgorithm.class), any(), any());
+    }
+
+    @Test
+    public void only_one_task_is_created_for_func_arg_that_is_used_twice() throws Exception {
+      var arrayT = arrayTB(intTB());
+      var func = funcB(list(arrayT), combineB(paramRefB(arrayT, 0), paramRefB(arrayT, 0)));
+      var expr = callB(func, orderB(intB(7)));
+
+      assertThat(evaluate(spyingVm(), expr))
+          .isEqualTo(tupleB(arrayB(intB(7)), arrayB(intB(7))));
+
+      verify(taskCreator, times(1)).newTask(isA(OrderAlgorithm.class), any(), any());
+    }
+  }
 
   @Nested
   class _values {
@@ -386,9 +437,26 @@ public class VmTest extends TestingContext {
 
   private ObjB evaluate(ObjB obj) throws Exception {
     var vm = vmProv(methodLoader).get(ImmutableMap.of());
+    return evaluate(vm, obj);
+  }
+
+  private ValB evaluate(Vm vm, ObjB obj) throws InterruptedException {
     var results = vm.evaluate(list(obj)).get();
     assertThat(results.size())
         .isEqualTo(1);
     return results.get(0);
+  }
+
+  private Vm spyingVm() {
+    // This anonymous TaskCreator cannot be replaced with Task::new because
+    // the latter is final and cannot be mocked by Mockito.
+    taskCreator = spy(new TaskCreator() {
+      @Override
+      public Task newTask(Algorithm algorithm, ImmutableList<Job> depJs, JobInfo info) {
+        return new Task(algorithm, depJs, info);
+      }
+    });
+    var jobCreator = new JobCreator(null, typingB(), ImmutableMap.of(), taskCreator);
+    return new Vm(jobCreator, parallelJobExecutor());
   }
 }

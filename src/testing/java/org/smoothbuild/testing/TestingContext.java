@@ -161,14 +161,36 @@ public class TestingContext {
   }
 
   public VmProv vmProv() {
-    return vmProv(null);
+    return vmProv((MethodLoader) null);
   }
 
   public VmProv vmProv(MethodLoader methodLoader) {
-    var jobCreatorProvider = new JobCreatorProvider(methodLoader, typeFactoryB(), typingB());
-    var reporter = new ExecutionReporter(reporter());
-    var parallelExecutor = new ParallelJobExecutor(computer(), reporter);
+    return vmProv(new JobCreatorProvider(methodLoader, typeFactoryB(), typingB()));
+  }
+
+  public VmProv vmProv(JobCreatorProvider jobCreatorProvider) {
+    var parallelExecutor = new ParallelJobExecutor(computer(), executionReporter());
     return new VmProv(jobCreatorProvider, parallelExecutor);
+  }
+
+  public CompilerProv compilerProv() {
+    return compilerProv(null);
+  }
+
+  public CompilerProv compilerProv(FileLoader fileLoader) {
+    return new CompilerProv(typeShConv(), byteCodeFactory(), typingB(), fileLoader);
+  }
+
+  public ParallelJobExecutor parallelJobExecutor() {
+    return new ParallelJobExecutor(computer(), executionReporter());
+  }
+
+  public TestingModLoader mod(String sourceCode) {
+    return new TestingModLoader(this, sourceCode);
+  }
+
+  private ExecutionReporter executionReporter() {
+    return new ExecutionReporter(reporter());
   }
 
   public Reporter reporter() {
@@ -181,18 +203,6 @@ public class TestingContext {
     var outputStream = nullOutputStream();
     var console = new Console(new PrintWriter(outputStream, true));
     return console;
-  }
-
-  public CompilerProv compilerProv() {
-    return compilerProv(null);
-  }
-
-  public CompilerProv compilerProv(FileLoader fileLoader) {
-    return new CompilerProv(typeShConv(), byteCodeFactory(), typingB(), fileLoader);
-  }
-
-  public TestingModLoader mod(String sourceCode) {
-    return new TestingModLoader(this, sourceCode);
   }
 
   public ModS internalMod() {

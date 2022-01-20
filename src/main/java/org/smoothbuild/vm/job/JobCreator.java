@@ -45,6 +45,7 @@ import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.TriFunction;
 import org.smoothbuild.vm.java.MethodLoader;
+import org.smoothbuild.vm.job.algorithm.Algorithm;
 import org.smoothbuild.vm.job.algorithm.CombineAlgorithm;
 import org.smoothbuild.vm.job.algorithm.ConvertAlgorithm;
 import org.smoothbuild.vm.job.algorithm.InvokeAlgorithm;
@@ -69,13 +70,20 @@ public class JobCreator {
   private final MethodLoader methodLoader;
   private final TypingB typing;
   private final ImmutableMap<ObjB, Nal> nals;
+  private final TaskCreator taskCreator;
   private final Map<Class<?>, Handler<?>> handler;
 
   @Inject
   public JobCreator(MethodLoader methodLoader, TypingB typing, ImmutableMap<ObjB, Nal> nals) {
+    this(methodLoader, typing, nals, Task::new);
+  }
+
+  public JobCreator(MethodLoader methodLoader, TypingB typing, ImmutableMap<ObjB, Nal> nals,
+      TaskCreator taskCreator) {
     this.methodLoader = methodLoader;
     this.typing = typing;
     this.nals = nals;
+    this.taskCreator = taskCreator;
     this.handler = createHandlers();
   }
 
@@ -208,7 +216,7 @@ public class JobCreator {
     var convertedItemJs = convertJobs(actualEvalT.items(), nal, itemJs);
     var info = new JobInfo(COMBINE, nal);
     var algorithm = new CombineAlgorithm(actualEvalT);
-    return new Task(algorithm, convertedItemJs, info);
+    return taskCreator.newTask(algorithm, convertedItemJs, info);
   }
 
   // If
@@ -263,7 +271,7 @@ public class JobCreator {
     var info = new JobInfo(INVOKE, name + PARENTHESES_INVOKE, nal.loc());
     var actualArgTs = map(methodT.params(), t -> typing.mapVarsLower(t, newVars));
     var convertedArgJs = convertJobs(actualArgTs, nal, argJs);
-    var task = new Task(algorithm, convertedArgJs, info);
+    var task = taskCreator.newTask(algorithm, convertedArgJs, info);
     var actualEvalT = typing.mapVarsLower(invoke.type(), vars);
     return convertIfNeeded(actualEvalT, nal.loc(), task);
   }
@@ -313,7 +321,7 @@ public class JobCreator {
   public Task orderEager(ArrayTB arrayTB, ImmutableList<Job> elemJs, JobInfo info) {
     var convertedElemJs = convertIfNeeded(arrayTB.elem(), elemJs);
     var algorithm = new OrderAlgorithm(arrayTB);
-    return new Task(algorithm, convertedElemJs, info);
+    return taskCreator.newTask(algorithm, convertedElemJs, info);
   }
 
   // ParamRef
@@ -344,7 +352,7 @@ public class JobCreator {
     var algorithmT = ((TupleTB) selectableJ.type()).items().get(data.index().toJ().intValue());
     var algorithm = new SelectAlgorithm(algorithmT);
     var info = new JobInfo(SELECT, nal);
-    var task = new Task(algorithm, list(selectableJ, indexJ), info);
+    var task = taskCreator.newTask(algorithm, list(selectableJ, indexJ), info);
     return convertIfNeeded(actualEvalT, nal.loc(), task);
   }
 
@@ -387,7 +395,7 @@ public class JobCreator {
     } else {
       var algorithm = new ConvertAlgorithm(type, typing);
       var info = new JobInfo(CONVERT, type.name() + " <- " + job.type().name(), loc);
-      return new Task(algorithm, list(job), info);
+      return taskCreator.newTask(algorithm, list(job), info);
     }
   }
 
@@ -415,5 +423,10 @@ public class JobCreator {
     public TriFunction<E, IndexedScope<Job>, VarBounds<TypeB>, Job> job(boolean eager) {
       return eager ? eagerJob : lazyJob;
     }
+  }
+
+  @FunctionalInterface
+  public interface TaskCreator {
+    public Task newTask(Algorithm algorithm, ImmutableList<Job> depJs, JobInfo info);
   }
 }
