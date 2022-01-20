@@ -11,10 +11,10 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.eval.compile.Compiler;
+import org.smoothbuild.eval.compile.CompilerExc;
 import org.smoothbuild.eval.compile.CompilerProv;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.expr.TopRefS;
-import org.smoothbuild.run.QuitExc;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 
@@ -59,7 +59,7 @@ public class Evaluator {
       Compiler compiler) {
     try {
       return Optional.of(toMap(values, compiler::compileExpr));
-    } catch (QuitExc e) {
+    } catch (CompilerExc e) {
       reporter.printlnRawFatal(e.getMessage());
       return Optional.empty();
     }

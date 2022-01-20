@@ -61,7 +61,6 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
-import org.smoothbuild.run.QuitExc;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.java.FileLoader;
 
@@ -284,7 +283,7 @@ public class Compiler {
     } catch (FileNotFoundException e) {
       String message = ann.loc() + ": Error loading native jar: File %s doesn't exist."
           .formatted(filePath.q());
-      throw new QuitExc(message);
+      throw new CompilerExc(message);
     }
   }
 
