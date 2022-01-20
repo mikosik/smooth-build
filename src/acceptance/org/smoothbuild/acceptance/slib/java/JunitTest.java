@@ -46,7 +46,7 @@ public class JunitTest extends AcceptanceTestCase {
             result = junit(tests=srcJar, deps=junitJars);
             """);
     runSmoothBuild("result");
-    assertFinishedWithSuccess();
+    assertFinishedWithError();
     assertSysOutContains("test failed");
   }
 

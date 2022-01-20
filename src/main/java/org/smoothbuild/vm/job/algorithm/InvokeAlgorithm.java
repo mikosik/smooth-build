@@ -36,8 +36,9 @@ public class InvokeAlgorithm extends Algorithm {
     var method = methodLoader.load(extendedName, methodB);
     try {
       var result = (ValB) method.invoke(null, createArgs(nativeApi, input.vals()));
+      var hasErrors = containsErrors(nativeApi.messages());
       if (result == null) {
-        if (!containsErrors(nativeApi.messages())) {
+        if (!hasErrors) {
           nativeApi.log().error(q(extendedName)
               + " has faulty native implementation: it returned `null` but logged no error.");
         }
@@ -48,6 +49,9 @@ public class InvokeAlgorithm extends Algorithm {
             + " has faulty native implementation: Its declared result type == "
             + outputT().q()
             + " but it returned object with type == " + result.cat().q() + ".");
+        return new Output(null, nativeApi.messages());
+      }
+      if (hasErrors) {
         return new Output(null, nativeApi.messages());
       }
       return new Output(result, nativeApi.messages());

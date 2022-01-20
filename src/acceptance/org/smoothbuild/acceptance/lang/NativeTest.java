@@ -15,6 +15,7 @@ import org.smoothbuild.acceptance.testing.BrokenIdentity;
 import org.smoothbuild.acceptance.testing.EmptyStringArray;
 import org.smoothbuild.acceptance.testing.NonPublicMethod;
 import org.smoothbuild.acceptance.testing.NonStaticMethod;
+import org.smoothbuild.acceptance.testing.ReportErrorAndReturnNonNull;
 import org.smoothbuild.acceptance.testing.ReportFixedError;
 import org.smoothbuild.acceptance.testing.ReportWarningAndReturnNull;
 import org.smoothbuild.acceptance.testing.ReturnAbc;
@@ -288,6 +289,19 @@ public class NativeTest extends AcceptanceTestCase {
           runSmoothBuild("result");
           assertFinishedWithError();
           assertSysOutContains(faultyNullReturned("reportWarning"));
+        }
+
+        @Test
+        public void non_null_and_logs_error() throws Exception {
+          createNativeJar(ReportErrorAndReturnNonNull.class);
+          createUserModule(format("""
+            @Native("%s")
+            String reportErrorAndReturnValue();
+            result = reportErrorAndReturnValue();
+            """, ReportErrorAndReturnNonNull.class.getCanonicalName()));
+          runSmoothBuild("result");
+          assertFinishedWithError();
+          assertSysOutContains("some error message");
         }
 
         @Test
