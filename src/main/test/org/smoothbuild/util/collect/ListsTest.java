@@ -2,6 +2,7 @@ package org.smoothbuild.util.collect;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
+import static java.util.Comparator.comparing;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
@@ -12,6 +13,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Lists.mapM;
 import static org.smoothbuild.util.collect.Lists.sane;
 import static org.smoothbuild.util.collect.Lists.skip;
+import static org.smoothbuild.util.collect.Lists.sort;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.util.collect.Lists.zip;
 
@@ -495,6 +497,33 @@ public class ListsTest {
         assertThat(toCommaSeparatedString(asList(1, 2, 3)))
             .isEqualTo("1,2,3");
       }
+    }
+  }
+
+  @Nested
+  class _sort {
+    @Test
+    public void empty_list() {
+      assertThat(sort(list(), comparing(Object::toString)))
+          .isEqualTo(list());
+    }
+
+    @Test
+    public void single_element_list() {
+      assertThat(sort(list("a"), comparing(Object::toString)))
+          .isEqualTo(list("a"));
+    }
+
+    @Test
+    public void two_elements_list() {
+      assertThat(sort(list("b", "a"), comparing(Object::toString)))
+          .isEqualTo(list("a", "b"));
+    }
+
+    @Test
+    public void many_elements_list() {
+      assertThat(sort(list("b", "a", "e", "f", "c", "d", "g"), comparing(Object::toString)))
+          .isEqualTo(list("a", "b", "c", "d", "e", "f", "g"));
     }
   }
 }

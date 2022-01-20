@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -124,5 +125,11 @@ public class Lists {
   public static <T> String toCommaSeparatedString(
       Iterable<T> list, Function<? super T, String> func) {
     return stream(list).map(func).collect(joining(","));
+  }
+
+  public static <E> ImmutableList<E> sort(List<E> list, Comparator<? super E> comparator) {
+    return list.stream()
+        .sorted(comparator)
+        .collect(toImmutableList());
   }
 }
