@@ -91,9 +91,8 @@ public class ModLoader {
 
   private StructS loadStruct(ModPath path, StructN struct) {
     var type = (StructTS) struct.type().get();
-    var name = struct.name();
     var loc = struct.loc();
-    return new StructS(type, path, name, loc);
+    return new StructS(type, path, loc);
   }
 
   private NList<TopEvalS> loadTopEvals(ModPath path, Ast ast) {
