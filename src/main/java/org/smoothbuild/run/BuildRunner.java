@@ -45,11 +45,12 @@ public class BuildRunner {
       return printSummaryAndExitWithErrorCode();
     }
 
-    var evaluationsOpt = evaluator.evaluate(defs, evaluablesOpt.get());
+    var evaluables = evaluablesOpt.get();
+    var evaluationsOpt = evaluator.evaluate(defs, evaluables);
     if (evaluationsOpt.isEmpty()) {
       return printSummaryAndExitWithErrorCode();
     }
-    if (artifactSaver.saveArtifacts(evaluationsOpt.get()) == EXIT_CODE_ERROR) {
+    if (artifactSaver.saveArtifacts(evaluables, evaluationsOpt.get()) == EXIT_CODE_ERROR) {
       return printSummaryAndExitWithErrorCode();
     }
     reporter.printSummary();

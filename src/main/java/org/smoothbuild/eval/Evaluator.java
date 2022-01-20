@@ -1,6 +1,6 @@
 package org.smoothbuild.eval;
 
-import static org.smoothbuild.util.collect.Maps.toMap;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 public class Evaluator {
   private final CompilerProv compilerProv;
@@ -32,7 +32,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableMap<TopRefS, ValB>> evaluate(DefsS defs, List<TopRefS> values) {
+  public Optional<ImmutableList<ValB>> evaluate(DefsS defs, List<TopRefS> values) {
     reporter.startNewPhase("Compiling");
     var compiler = compilerProv.get(defs);
     var exprs = compile(values, compiler);
@@ -45,8 +45,7 @@ public class Evaluator {
     return evaluate(vm, exprs);
   }
 
-  private Optional<ImmutableMap<TopRefS, ValB>> evaluate(
-      Vm vm, Optional<ImmutableMap<TopRefS, ObjB>> exprs) {
+  private Optional<ImmutableList<ValB>> evaluate(Vm vm, Optional<ImmutableList<ObjB>> exprs) {
     try {
       return vm.evaluate(exprs.get());
     } catch (InterruptedException e) {
@@ -55,10 +54,9 @@ public class Evaluator {
     }
   }
 
-  private Optional<ImmutableMap<TopRefS, ObjB>> compile(List<TopRefS> values,
-      Compiler compiler) {
+  private Optional<ImmutableList<ObjB>> compile(List<TopRefS> values, Compiler compiler) {
     try {
-      return Optional.of(toMap(values, compiler::compileExpr));
+      return Optional.of(map(values, compiler::compileExpr));
     } catch (CompilerExc e) {
       reporter.printlnRawFatal(e.getMessage());
       return Optional.empty();

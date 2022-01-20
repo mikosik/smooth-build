@@ -1,10 +1,9 @@
 package org.smoothbuild.vm.parallel;
 
-import static org.smoothbuild.util.collect.Maps.mapValues;
+import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -41,7 +40,7 @@ public class ParallelJobExecutor {
     this.threadCount = threadCount;
   }
 
-  public <K> Map<K, Optional<ValB>> executeAll(Map<K, Job> jobs) throws InterruptedException {
+  public List<Optional<ValB>> executeAll(List<Job> jobs) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(jobs);
   }
@@ -63,13 +62,13 @@ public class ParallelJobExecutor {
       return reporter;
     }
 
-    public <K> Map<K, Optional<ValB>> executeAll(Map<K, Job> jobs)
+    public List<Optional<ValB>> executeAll(List<Job> jobs)
         throws InterruptedException {
-      var results = mapValues(jobs, job -> job.schedule(this));
-      runWhenAllAvailable(results.values(), jobExecutor::terminate);
+      var results = map(jobs, job -> job.schedule(this));
+      runWhenAllAvailable(results, jobExecutor::terminate);
 
       jobExecutor.awaitTermination();
-      return mapValues(results, promise -> Optional.ofNullable(promise.get()));
+      return map(results, promise -> Optional.ofNullable(promise.get()));
     }
 
     public void enqueue(JobInfo info, Algorithm algorithm, List<Promise<ValB>> deps,

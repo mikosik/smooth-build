@@ -203,7 +203,7 @@ public class EvaluatorTest  extends TestingContext {
     var resultMap = newEvaluator().evaluate(defsS, list(topRefS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
-    return resultMap.get(topRefS);
+    return resultMap.get(0);
   }
 
   private Evaluator newEvaluator() {

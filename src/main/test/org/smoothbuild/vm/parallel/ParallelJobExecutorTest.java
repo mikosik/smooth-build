@@ -12,7 +12,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.lang.base.define.TestingLoc.loc;
-import static org.smoothbuild.lang.base.type.TestingTS.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.vm.compute.ResSource.DISK;
@@ -22,7 +21,6 @@ import static org.smoothbuild.vm.job.job.JobKind.CALL;
 import static org.smoothbuild.vm.parallel.ExecutionReporter.header;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -36,7 +34,6 @@ import org.smoothbuild.bytecode.type.TestingCatsB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.compute.Computed;
@@ -180,9 +177,8 @@ public class ParallelJobExecutorTest extends TestingContext {
     parallelJobExecutor = new ParallelJobExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
     var job = job(throwingAlgorithm(exception));
-    var topRef = new TopRefS(STRING, "name", loc());
 
-    assertThat(parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef).isEmpty())
+    assertThat(parallelJobExecutor.executeAll(list(job)).get(0).isEmpty())
         .isTrue();
     verify(reporter).report(
         eq(job.info()),
@@ -200,10 +196,9 @@ public class ParallelJobExecutorTest extends TestingContext {
       }
     };
     parallelJobExecutor = new ParallelJobExecutor(computer, reporter);
-    var topRef = new TopRefS(STRING, "name", loc());
     var job = job(valueAlgorithm("A"));
 
-    var val = parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef);
+    var val = parallelJobExecutor.executeAll(list(job)).get(0);
 
     verify(reporter, only()).reportComputerException(same(job.info()), same(exception));
     assertThat(val.isEmpty())
@@ -294,8 +289,7 @@ public class ParallelJobExecutorTest extends TestingContext {
 
   private static ObjB executeSingleJob(ParallelJobExecutor parallelJobExecutor, Job job)
       throws InterruptedException {
-    var topRef = new TopRefS(STRING, "name", loc());
-    return parallelJobExecutor.executeAll(Map.of(topRef, job)).get(topRef).get();
+    return parallelJobExecutor.executeAll(list(job)).get(0).get();
   }
 
   private static Output toStr(NativeApi nativeApi, int i) {

@@ -13,7 +13,8 @@ import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.util.collect.Lists.list;
-import static org.smoothbuild.util.collect.Maps.sort;
+import static org.smoothbuild.util.collect.Lists.sort;
+import static org.smoothbuild.util.collect.Lists.zip;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,11 +47,12 @@ public class ArtifactSaver {
     this.reporter = reporter;
   }
 
-  public int saveArtifacts(Map<TopRefS, ValB> artifacts) {
+  public int saveArtifacts(List<TopRefS> evaluables, List<ValB> artifacts) {
     reporter.startNewPhase("Saving artifact(s)");
-    var sorted = sort(artifacts, comparing(e -> e.getKey().name()));
-    for (var entry : sorted.entrySet()) {
-      if (!save(entry.getKey(), entry.getValue())) {
+    var pairs = zip(evaluables, artifacts, Map::entry);
+    var sortedPairs = sort(pairs, comparing(e -> e.getKey().name()));
+    for (var pair : sortedPairs) {
+      if (!save(pair.getKey(), pair.getValue())) {
         return EXIT_CODE_ERROR;
       }
     }
