@@ -1,6 +1,7 @@
 package org.smoothbuild.eval;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.io.fs.base.Path.path;
@@ -13,7 +14,6 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.IntB;
@@ -28,8 +28,8 @@ import org.smoothbuild.vm.java.FileLoader;
 import org.smoothbuild.vm.java.MethodLoader;
 
 public class EvaluatorTest  extends TestingContext {
-  private FileLoader fileLoader = mock(FileLoader.class);
-  private MethodLoader methodLoader = mock(MethodLoader.class);
+  private final FileLoader fileLoader = mock(FileLoader.class);
+  private final MethodLoader methodLoader = mock(MethodLoader.class);
 
   @Nested
   class _values {
@@ -106,7 +106,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(Mockito.any(), Mockito.any()))
+      when(methodLoader.load(any(), any()))
           .thenReturn(EvaluatorTest.class.getMethod("returnInt", NativeApi.class));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(173));
@@ -120,7 +120,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(Mockito.any(), Mockito.any()))
+      when(methodLoader.load(any(), any()))
           .thenReturn(EvaluatorTest.class.getMethod(
               "returnIntParam", NativeApi.class, IntB.class));
       assertThat(evaluate(callS, nList(funcS)))
@@ -135,7 +135,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(Mockito.any(), Mockito.any()))
+      when(methodLoader.load(any(), any()))
           .thenReturn(EvaluatorTest.class.getMethod(
               "returnArrayParam", NativeApi.class, ArrayB.class));
       assertThat(evaluate(callS, nList(funcS)))
