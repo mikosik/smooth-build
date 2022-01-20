@@ -287,8 +287,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, ReportWarningAndReturnNull.class.getCanonicalName()));
           runSmoothBuild("result");
           assertFinishedWithError();
-          assertSysOutContains("`reportWarning` has faulty native implementation: "
-              + "it returned `null` but logged no error.");
+          assertSysOutContains(faultyNullReturned("reportWarning"));
         }
 
         @Test
