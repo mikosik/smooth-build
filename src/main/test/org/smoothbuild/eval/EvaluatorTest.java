@@ -58,7 +58,7 @@ public class EvaluatorTest  extends TestingContext {
     public void call() {
       var defFuncS = defFuncS("n", nList(), intS(7));
       var callS = callS(intTS(), topRefS(defFuncS));
-      assertThat(evaluate(callS, defFuncS))
+      assertThat(evaluate(callS, nList(defFuncS)))
           .isEqualTo(intB(7));
     }
 
@@ -66,7 +66,7 @@ public class EvaluatorTest  extends TestingContext {
     public void call_with_result_conversion() {
       var defFuncS = defFuncS(arrayTS(nothingTS()), "n", nList(), orderS(nothingTS()));
       var callS = callS(arrayTS(intTS()), topRefS(defFuncS));
-      assertThat(evaluate(callS, defFuncS))
+      assertThat(evaluate(callS, nList(defFuncS)))
           .isEqualTo(arrayB(intTB()));
     }
 
@@ -75,7 +75,7 @@ public class EvaluatorTest  extends TestingContext {
       var a = oVarTS("A");
       var defFuncS = defFuncS("n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e")));
       var callS = callS(arrayTS(intTS()), topRefS(defFuncS), intS(7));
-      assertThat(evaluate(callS, defFuncS))
+      assertThat(evaluate(callS, nList(defFuncS)))
           .isEqualTo(arrayB(intTB(), intB(7)));
     }
   }
@@ -108,7 +108,7 @@ public class EvaluatorTest  extends TestingContext {
           .thenReturn(jarB);
       when(methodLoader.load(Mockito.any(), Mockito.any()))
           .thenReturn(EvaluatorTest.class.getMethod("returnInt", NativeApi.class));
-      assertThat(evaluate(callS, funcS))
+      assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(173));
     }
 
@@ -123,7 +123,7 @@ public class EvaluatorTest  extends TestingContext {
       when(methodLoader.load(Mockito.any(), Mockito.any()))
           .thenReturn(EvaluatorTest.class.getMethod(
               "returnIntParam", NativeApi.class, IntB.class));
-      assertThat(evaluate(callS, funcS))
+      assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(77));
     }
 
@@ -138,7 +138,7 @@ public class EvaluatorTest  extends TestingContext {
       when(methodLoader.load(Mockito.any(), Mockito.any()))
           .thenReturn(EvaluatorTest.class.getMethod(
               "returnArrayParam", NativeApi.class, ArrayB.class));
-      assertThat(evaluate(callS, funcS))
+      assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(arrayB(intTB()));
     }
   }
@@ -189,18 +189,13 @@ public class EvaluatorTest  extends TestingContext {
     }
   }
 
-  private ObjB evaluate(ExprS exprS, TopEvalS other) {
-    return evaluate(nList(defValS("myVal", exprS), other));
-  }
-
   private ObjB evaluate(ExprS exprS) {
-    return evaluate(nList(defValS("myVal", exprS)));
+    return evaluate(exprS, nList());
   }
 
-  private ObjB evaluate(NList<TopEvalS> topEvals) {
+  private ObjB evaluate(ExprS exprS, NList<TopEvalS> topEvals) {
     var defsS = new DefsS(nList(), topEvals);
-    var topRefS = topRefS(topEvals.get(0));
-    var resultMap = newEvaluator().evaluate(defsS, list(topRefS)).get();
+    var resultMap = newEvaluator().evaluate(defsS, list(exprS)).get();
     assertThat(resultMap.size())
         .isEqualTo(1);
     return resultMap.get(0);

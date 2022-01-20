@@ -14,7 +14,7 @@ import org.smoothbuild.eval.compile.Compiler;
 import org.smoothbuild.eval.compile.CompilerExc;
 import org.smoothbuild.eval.compile.CompilerProv;
 import org.smoothbuild.lang.base.define.DefsS;
-import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 
@@ -32,7 +32,7 @@ public class Evaluator {
     this.reporter = reporter;
   }
 
-  public Optional<ImmutableList<ValB>> evaluate(DefsS defs, List<TopRefS> values) {
+  public Optional<ImmutableList<ValB>> evaluate(DefsS defs, List<? extends ExprS> values) {
     reporter.startNewPhase("Compiling");
     var compiler = compilerProv.get(defs);
     var exprs = compile(values, compiler);
@@ -54,7 +54,7 @@ public class Evaluator {
     }
   }
 
-  private Optional<ImmutableList<ObjB>> compile(List<TopRefS> values, Compiler compiler) {
+  private Optional<ImmutableList<ObjB>> compile(List<? extends ExprS> values, Compiler compiler) {
     try {
       return Optional.of(map(values, compiler::compileExpr));
     } catch (CompilerExc e) {
