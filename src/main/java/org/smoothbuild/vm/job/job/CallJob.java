@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.job.job;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.obj.val.FuncB;
@@ -7,7 +8,6 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.type.api.VarBounds;
-import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.job.JobCreator;
@@ -19,16 +19,16 @@ public class CallJob extends AbstractJob {
   private final Job callableJ;
   private final ImmutableList<Job> argJs;
   private final VarBounds<TypeB> vars;
-  private final IndexedScope<Job> scope;
+  private final List<Job> params;
   private final JobCreator jobCreator;
 
   public CallJob(TypeB type, Job callableJ, ImmutableList<Job> argJs, Loc loc,
-      VarBounds<TypeB> vars, IndexedScope<Job> scope, JobCreator jobCreator) {
+      VarBounds<TypeB> vars, List<Job> params, JobCreator jobCreator) {
     super(type, loc);
     this.callableJ = callableJ;
     this.argJs = argJs;
     this.vars = vars;
-    this.scope = scope;
+    this.params = params;
     this.jobCreator = jobCreator;
   }
 
@@ -43,7 +43,7 @@ public class CallJob extends AbstractJob {
 
   private void onFuncJobCompleted(ValB val, Worker worker, Consumer<ValB> res) {
     var funcH = (FuncB) val;
-    jobCreator.callFuncEagerJob(type(), funcH, argJs, loc(), scope, vars)
+    jobCreator.callFuncEagerJob(type(), funcH, argJs, loc(), params, vars)
         .schedule(worker)
         .addConsumer(res);
   }

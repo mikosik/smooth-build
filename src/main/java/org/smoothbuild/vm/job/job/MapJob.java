@@ -5,6 +5,7 @@ import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.concurrent.Promises.runWhenAllAvailable;
 import static org.smoothbuild.vm.job.job.JobKind.ORDER;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
@@ -12,7 +13,6 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.concurrent.Promise;
 import org.smoothbuild.util.concurrent.PromisedValue;
 import org.smoothbuild.vm.job.JobCreator;
@@ -21,15 +21,15 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 public class MapJob extends AbstractJob {
   private final Job arrayJ;
   private final Job funcJ;
-  private final IndexedScope<Job> scope;
+  private final List<Job> params;
   private final JobCreator jobCreator;
 
-  public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, IndexedScope<Job> scope,
+  public MapJob(TypeB type, Job arrayJ, Job funcJ, Loc loc, List<Job> params,
       JobCreator jobCreator) {
     super(type, loc);
     this.arrayJ = arrayJ;
     this.funcJ = funcJ;
-    this.scope = scope;
+    this.params = params;
     this.jobCreator = jobCreator;
   }
 
@@ -57,7 +57,7 @@ public class MapJob extends AbstractJob {
 
   private Job mapElementJob(TypeB elemT, ValB elem) {
     var elemJ = elemJob(elem);
-    return jobCreator.callEagerJob(elemT, funcJ, list(elemJ), funcJ.loc(), scope);
+    return jobCreator.callEagerJob(elemT, funcJ, list(elemJ), funcJ.loc(), params);
   }
 
   private Job elemJob(ValB elem) {

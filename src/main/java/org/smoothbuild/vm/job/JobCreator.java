@@ -11,6 +11,7 @@ import static org.smoothbuild.vm.job.job.JobKind.INVOKE;
 import static org.smoothbuild.vm.job.job.JobKind.ORDER;
 import static org.smoothbuild.vm.job.job.JobKind.SELECT;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -42,7 +43,6 @@ import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.type.api.VarBounds;
-import org.smoothbuild.util.IndexedScope;
 import org.smoothbuild.util.TriFunction;
 import org.smoothbuild.vm.java.MethodLoader;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
@@ -108,24 +108,24 @@ public class JobCreator {
   }
 
   public Job eagerJobFor(ObjB obj) {
-    return eagerJobFor(new IndexedScope<>(list()), varBounds(), obj);
+    return eagerJobFor(list(), varBounds(), obj);
   }
 
   private ImmutableList<Job> eagerJobsFor(
-      ImmutableList<? extends ObjB> objs, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+      ImmutableList<? extends ObjB> objs, List<Job> scope, VarBounds<TypeB> vars) {
     return map(objs, e -> eagerJobFor(scope, vars, e));
   }
 
-  private Job jobFor(IndexedScope<Job> scope, VarBounds<TypeB> vars, ObjB expr,
+  private Job jobFor(List<Job> scope, VarBounds<TypeB> vars, ObjB expr,
       boolean eager) {
     return handlerFor(expr).job(eager).apply(expr, scope, vars);
   }
 
-  private Job eagerJobFor(IndexedScope<Job> scope, VarBounds<TypeB> vars, ObjB expr) {
+  private Job eagerJobFor(List<Job> scope, VarBounds<TypeB> vars, ObjB expr) {
     return handlerFor(expr).eagerJob().apply(expr, scope, vars);
   }
 
-  private Job lazyJobFor(IndexedScope<Job> scope, VarBounds<TypeB> vars, ObjB expr) {
+  private Job lazyJobFor(List<Job> scope, VarBounds<TypeB> vars, ObjB expr) {
     return handlerFor(expr).lazyJob().apply(expr, scope, vars);
   }
 
@@ -137,15 +137,15 @@ public class JobCreator {
 
   // Call
 
-  private Job callLazy(CallB call, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job callLazy(CallB call, List<Job> scope, VarBounds<TypeB> vars) {
     return callJob(call, false, scope, vars);
   }
 
-  private Job callEager(CallB call, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job callEager(CallB call, List<Job> scope, VarBounds<TypeB> vars) {
     return callJob(call, true, scope, vars);
   }
 
-  private Job callJob(CallB call, boolean eager, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job callJob(CallB call, boolean eager, List<Job> scope, VarBounds<TypeB> vars) {
     var callData = call.data();
     var funcJ = jobFor(scope, vars, callData.callable(), eager);
     var argsJ = map(callData.args().items(), a -> lazyJobFor(scope, vars, a));
@@ -156,7 +156,7 @@ public class JobCreator {
   }
 
   private Job callJob(TypeB actualEvalT, Job func, ImmutableList<Job> args, Loc loc, boolean eager,
-      IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+      List<Job> scope, VarBounds<TypeB> vars) {
     if (eager) {
       return callEagerJob(actualEvalT, func, args, loc, scope, vars);
     } else {
@@ -168,20 +168,20 @@ public class JobCreator {
   }
 
   public Job callEagerJob(TypeB actualEvalT, Job func, ImmutableList<Job> args, Loc loc,
-      IndexedScope<Job> scope) {
+      List<Job> scope) {
     var vars = inferVarsInCall(func, map(args, Job::type));
     return callEagerJob(actualEvalT, func, args, loc, scope, vars);
   }
 
   private Job callEagerJob(TypeB actualEvalT, Job func, ImmutableList<Job> args, Loc loc,
-      IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+      List<Job> scope, VarBounds<TypeB> vars) {
     var funcT = (FuncTB) func.type();
     var actualResT = typing.mapVarsLower(funcT.res(), vars);
     return callEagerJob(actualEvalT, actualResT, func, args, loc, scope, vars);
   }
 
   private Job callEagerJob(TypeB actualEvalT, TypeB actualResT, Job func, ImmutableList<Job> args,
-      Loc loc, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+      Loc loc, List<Job> scope, VarBounds<TypeB> vars) {
     var callJ = new CallJob(actualResT, func, args, loc, vars, scope, JobCreator.this);
     return convertIfNeeded(actualEvalT, loc, callJ);
   }
@@ -197,20 +197,20 @@ public class JobCreator {
 
   // Combine
 
-  private Job combineLazy(CombineB combine, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job combineLazy(CombineB combine, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(combine);
     var loc = nal.loc();
     return new LazyJob(combine.type(), loc,
         () -> combineEager(scope, vars, combine, nal));
   }
 
-  private Job combineEager(CombineB combine, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job combineEager(CombineB combine, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(combine);
     return combineEager(scope, vars, combine, nal);
   }
 
   private Job combineEager(
-      IndexedScope<Job> scope, VarBounds<TypeB> vars, CombineB combine, Nal nal) {
+      List<Job> scope, VarBounds<TypeB> vars, CombineB combine, Nal nal) {
     var actualEvalT = (TupleTB) typing.mapVarsLower(combine.type(), vars);
     var itemJs = eagerJobsFor(combine.items(), scope, vars);
     var convertedItemJs = convertJobs(actualEvalT.items(), nal, itemJs);
@@ -221,18 +221,18 @@ public class JobCreator {
 
   // If
 
-  private Job ifLazy(IfB if_, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job ifLazy(IfB if_, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(if_);
     return new LazyJob(if_.type(), nal.loc(),
         () -> ifEager(if_, nal, scope, vars));
   }
 
-  private Job ifEager(IfB if_, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job ifEager(IfB if_, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(if_);
     return ifEager(if_, nal, scope, vars);
   }
 
-  private Job ifEager(IfB if_, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job ifEager(IfB if_, Nal nal, List<Job> scope, VarBounds<TypeB> vars) {
     var ifData = if_.data();
     var conditionJ = eagerJobFor(scope, vars, ifData.condition());
     var actualEvalT = typing.mapVarsLower(if_.type(), vars);
@@ -241,26 +241,26 @@ public class JobCreator {
     return new IfJob(actualEvalT, conditionJ, thenJ, elseJ, nal.loc());
   }
 
-  private Job clauseJob(TypeB actualEvalT, Nal nal, ObjB clause, IndexedScope<Job> scope,
+  private Job clauseJob(TypeB actualEvalT, Nal nal, ObjB clause, List<Job> scope,
       VarBounds<TypeB> vars) {
     return convertIfNeeded(actualEvalT, nal.loc(), lazyJobFor(scope, vars, clause));
   }
 
   // Invoke
 
-  private Job invokeLazy(InvokeB invoke, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job invokeLazy(InvokeB invoke, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(invoke);
     return new LazyJob(invoke.type(), nal.loc(),
         () -> invokeEager(invoke, nal, scope, vars));
   }
 
-  private Job invokeEager(InvokeB invoke, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job invokeEager(InvokeB invoke, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(invoke);
     return invokeEager(invoke, nal, scope, vars);
   }
 
   private Job invokeEager(
-      InvokeB invoke, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+      InvokeB invoke, Nal nal, List<Job> scope, VarBounds<TypeB> vars) {
     var name = nal.name();
     var invokeData = invoke.data();
     var methodT = invokeData.method().type();
@@ -278,18 +278,18 @@ public class JobCreator {
 
   // Map
 
-  private Job mapLazy(MapB map, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job mapLazy(MapB map, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(map);
     return new LazyJob(map.type(), nal.loc(),
         () -> mapEager(map, nal, scope, vars));
   }
 
-  private Job mapEager(MapB map, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job mapEager(MapB map, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(map);
     return mapEager(map, nal, scope, vars);
   }
 
-  private Job mapEager(MapB mapB, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job mapEager(MapB mapB, Nal nal, List<Job> scope, VarBounds<TypeB> vars) {
     MapB.Data data = mapB.data();
     var arrayJ = eagerJobFor(scope, vars, data.array());
     var funcJ = eagerJobFor(scope, vars, data.func());
@@ -299,18 +299,18 @@ public class JobCreator {
 
   // Order
 
-  private Job orderLazy(OrderB order, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job orderLazy(OrderB order, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(order);
     return new LazyJob(order.type(), nal.loc(),
         () -> orderEager(order, nal, scope, vars));
   }
 
-  private Job orderEager(OrderB order, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job orderEager(OrderB order, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(order);
     return orderEager(order, nal, scope, vars);
   }
 
-  private Task orderEager(OrderB order, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Task orderEager(OrderB order, Nal nal, List<Job> scope, VarBounds<TypeB> vars) {
     var type = order.type();
     var actualEvalT = (ArrayTB) typing.mapVarsLower(type, vars);
     var elemJs = map(order.elems(), e -> eagerJobFor(scope, vars, e));
@@ -326,25 +326,25 @@ public class JobCreator {
 
   // ParamRef
 
-  private Job paramRefLazy(ParamRefB paramRef, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job paramRefLazy(ParamRefB paramRef, List<Job> scope, VarBounds<TypeB> vars) {
     return scope.get(paramRef.value().intValue());
   }
 
   // Select
 
-  private Job selectLazy(SelectB select, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job selectLazy(SelectB select, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(select);
     return new LazyJob(select.type(), nal.loc(),
         () -> selectEager(select, nal, scope, vars));
   }
 
-  private Job selectEager(SelectB select, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job selectEager(SelectB select, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(select);
     return selectEager(select, nal, scope, vars);
   }
 
   private Job selectEager(
-      SelectB select, Nal nal, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+      SelectB select, Nal nal, List<Job> scope, VarBounds<TypeB> vars) {
     var data = select.data();
     var selectableJ = eagerJobFor(scope, vars, data.selectable());
     var indexJ = eagerJobFor(scope, vars, data.index());
@@ -358,13 +358,13 @@ public class JobCreator {
 
   // Value
 
-  private Job constLazy(ValB val, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job constLazy(ValB val, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(val);
     var loc = nal.loc();
     return new LazyJob(val.cat(), loc, () -> new ConstJob(val, nal));
   }
 
-  private Job constEager(ValB val, IndexedScope<Job> scope, VarBounds<TypeB> vars) {
+  private Job constEager(ValB val, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(val);
     return new ConstJob(val, nal);
   }
@@ -372,8 +372,8 @@ public class JobCreator {
   // helper methods
 
   public Job callFuncEagerJob(TypeB actualEvalT, FuncB func, ImmutableList<Job> args, Loc loc,
-      IndexedScope<Job> scope, VarBounds<TypeB> vars) {
-    var job = eagerJobFor(new IndexedScope<>(args), vars, func.body());
+      List<Job> scope, VarBounds<TypeB> vars) {
+    var job = eagerJobFor(args, vars, func.body());
     var nal = nalFor(func);
     var name = nal.name() + PARENTHESES;
     var convertedJ = convertIfNeeded(actualEvalT, nal.loc(), job);
@@ -418,9 +418,9 @@ public class JobCreator {
   }
 
   public record Handler<E>(
-      TriFunction<E, IndexedScope<Job>, VarBounds<TypeB>, Job> lazyJob,
-      TriFunction<E, IndexedScope<Job>, VarBounds<TypeB>, Job> eagerJob) {
-    public TriFunction<E, IndexedScope<Job>, VarBounds<TypeB>, Job> job(boolean eager) {
+      TriFunction<E, List<Job>, VarBounds<TypeB>, Job> lazyJob,
+      TriFunction<E, List<Job>, VarBounds<TypeB>, Job> eagerJob) {
+    public TriFunction<E, List<Job>, VarBounds<TypeB>, Job> job(boolean eager) {
       return eager ? eagerJob : lazyJob;
     }
   }
