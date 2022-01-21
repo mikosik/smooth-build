@@ -390,14 +390,6 @@ public class VmTest extends TestingContext {
       assertThat(evaluate(callB(func, intB(7))))
           .isEqualTo(intB(7));
     }
-
-    @Test
-    public void referencing_param_of_enclosing_func_from_enclosed_func() {
-      var inner = funcB(paramRefB(intTB(), 0));
-      var outer = funcB(list(intTB()), callB(inner));
-      assertThat(evaluate(callB(outer, intB(7))))
-          .isEqualTo(intB(7));
-    }
   }
 
   @Nested

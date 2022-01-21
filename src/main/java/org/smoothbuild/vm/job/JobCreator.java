@@ -373,7 +373,7 @@ public class JobCreator {
 
   public Job callFuncEagerJob(TypeB actualEvalT, FuncB func, ImmutableList<Job> args, Loc loc,
       IndexedScope<Job> scope, VarBounds<TypeB> vars) {
-    var job = eagerJobFor(new IndexedScope<>(scope, args), vars, func.body());
+    var job = eagerJobFor(new IndexedScope<>(args), vars, func.body());
     var nal = nalFor(func);
     var name = nal.name() + PARENTHESES;
     var convertedJ = convertIfNeeded(actualEvalT, nal.loc(), job);
