@@ -10,13 +10,13 @@ import java.util.List;
 
 public class Path {
   public static final String SEPARATOR = "/";
-  private static final String ROOT = ".";
+  private static final Path ROOT = new Path(".");
 
   private final String value;
 
   public static Path path(String value) {
-    if (value.equals(ROOT)) {
-      return root();
+    if (value.equals(ROOT.value)) {
+      return ROOT;
     }
     failIf(value.isEmpty(), "Path cannot be empty string.");
     failIf(value.contains("//"), "Path cannot contain two slashes '//' in a row.");
@@ -36,7 +36,7 @@ public class Path {
   }
 
   public static Path root() {
-    return new Path(ROOT);
+    return ROOT;
   }
 
   private Path(String value) {
@@ -48,7 +48,7 @@ public class Path {
   }
 
   public boolean isRoot() {
-    return value.equals(ROOT);
+    return this == ROOT;
   }
 
   public Path parent() {
