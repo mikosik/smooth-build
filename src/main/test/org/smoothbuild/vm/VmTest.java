@@ -139,7 +139,8 @@ public class VmTest extends TestingContext {
     @Test
     public void with_polymorphic_func() {
       var a = oVarTB("A");
-      var func = funcB(list(a), orderB(a, paramRefB(a, 0)));
+      var ca = close(a);
+      var func = funcB(list(a), orderB(ca, paramRefB(ca, 0)));
       var call = callB(func, intB(7));
       assertThat(evaluate(call))
           .isEqualTo(arrayB(intTB(), intB(7)));
@@ -149,7 +150,8 @@ public class VmTest extends TestingContext {
     public void with_polymorphic_evalT() {
       var evaluated = evaluatePolymorphicExpr(p -> {
         var b = oVarTB("B");
-        var funcB = funcB(list(b), orderB(b, paramRefB(b, 0)));
+        var cb = cVarTB("B");
+        var funcB = funcB(list(b), orderB(cb, paramRefB(cb, 0)));
         return callB(funcB, p);
       }, intB(7));
       assertThat(evaluated)
@@ -418,10 +420,11 @@ public class VmTest extends TestingContext {
   }
 
   private ObjB evaluatePolymorphicExpr(Function<ObjB, ObjB> exprCreator, ObjB val) {
-    var a = oVarTB("A");
-    var paramRef = paramRefB(a, 0);
+    var oa = oVarTB("A");
+    var ca = close(oa);
+    var paramRef = paramRefB(ca, 0);
     var expr = exprCreator.apply(paramRef);
-    var func = funcB(list(a), expr);
+    var func = funcB(list(oa), expr);
     var call = callB(func, val);
     return evaluate(call);
   }

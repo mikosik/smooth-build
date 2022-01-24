@@ -15,8 +15,6 @@ import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
-import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ModLoader;
 import org.smoothbuild.lang.parse.TopEvalLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
@@ -121,10 +119,11 @@ public class TestingModLoader {
   }
 
   private Maybe<ModS> load() {
-    TypingS typing = testingContext.typingS();
-    TypeFactoryS factory = testingContext.typeFactoryS();
-    ModLoader modLoader = new ModLoader(
-        new TypeInferrer(factory, typing), new TopEvalLoader(factory), factory);
+    var typing = testingContext.typingS();
+    var factory = testingContext.typeFactoryS();
+    var typeInferrer = new TypeInferrer(factory, typing);
+    var topEvalLoader = new TopEvalLoader(factory, typing);
+    var modLoader = new ModLoader(typeInferrer, topEvalLoader, factory, typing);
     DefsS importedSane = imported != null ? imported
         : DefsS.empty().withModule(testingContext.internalMod());
     ModFiles modFilesSane = this.modFiles != null ? modFiles : modFiles();

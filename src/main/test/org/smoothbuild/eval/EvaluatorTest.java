@@ -73,9 +73,10 @@ public class EvaluatorTest  extends TestingContext {
     @Test
     public void call_polymorphic() {
       var a = oVarTS("A");
-      var defFuncS = defFuncS("n", nList(itemS(a, "e")), orderS(a, paramRefS(a, "e")));
-      var callS = callS(arrayTS(intTS()), topRefS(defFuncS), intS(7));
-      assertThat(evaluate(callS, nList(defFuncS)))
+      var ca = close(a);
+      var funcS = defFuncS(arrayTS(a), "n", nList(itemS(a, "e")), orderS(ca, paramRefS(ca, "e")));
+      var callS = callS(arrayTS(intTS()), topRefS(funcS), intS(7));
+      assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(arrayB(intTB(), intB(7)));
     }
   }

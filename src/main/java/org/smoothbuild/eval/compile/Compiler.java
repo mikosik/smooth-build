@@ -1,8 +1,5 @@
 package org.smoothbuild.eval.compile;
 
-import static java.math.BigInteger.ONE;
-import static java.math.BigInteger.TWO;
-import static java.math.BigInteger.ZERO;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 
@@ -125,22 +122,16 @@ public class Compiler {
 
   private FuncB compileIfFunc(IfFuncS ifFuncS) {
     var funcTB = convertFuncT(ifFuncS.type());
-    var conditionH = byteCodeFactory.paramRef(byteCodeFactory.boolT(), ZERO);
-    var resTB = funcTB.res();
-    var thenB = byteCodeFactory.paramRef(resTB, ONE);
-    var elseB = byteCodeFactory.paramRef(resTB, TWO);
-    var bodyB = byteCodeFactory.if_(conditionH, thenB, elseB);
+    var paramRefsB = createParamRefsB(funcTB.params());
+    var bodyB = byteCodeFactory.if_(paramRefsB.get(0), paramRefsB.get(1), paramRefsB.get(2));
     nals.put(bodyB, ifFuncS);
     return byteCodeFactory.func(funcTB, bodyB);
   }
 
   private FuncB compileMapFunc(MapFuncS mapFuncS) {
     var funcTB = convertFuncT(mapFuncS.type());
-    var inputArrayT = (ArrayTB) funcTB.params().get(0);
-    var mappingFuncT = (FuncTB) funcTB.params().get(1);
-    var arrayParam = byteCodeFactory.paramRef(inputArrayT, ZERO);
-    var mappingFuncParam = byteCodeFactory.paramRef(mappingFuncT, ONE);
-    var bodyB = byteCodeFactory.map(arrayParam, mappingFuncParam);
+    var paramRefsB = createParamRefsB(funcTB.params());
+    var bodyB = byteCodeFactory.map(paramRefsB.get(0), paramRefsB.get(1));
     nals.put(bodyB, mapFuncS);
     return byteCodeFactory.func(funcTB, bodyB);
   }
@@ -148,8 +139,10 @@ public class Compiler {
   private FuncB compileNatFunc(NatFuncS natFuncS) {
     var funcTB = convertFuncT(natFuncS.type());
     var methodB = createMethodH(natFuncS.ann(), funcTB);
-    var args = byteCodeFactory.combine(funcTB.paramsTuple(), createParamRefsH(funcTB.params()));
-    var bodyB = byteCodeFactory.invoke(funcTB.res(), methodB, args);
+    var paramRefsB = createParamRefsB(funcTB.params());
+    var paramsTuple = byteCodeFactory.tupleT(map(paramRefsB, ObjB::type));
+    var args = byteCodeFactory.combine(paramsTuple, paramRefsB);
+    var bodyB = byteCodeFactory.invoke(typing.closeVars(funcTB.res()), methodB, args);
     nals.put(bodyB, natFuncS);
     return byteCodeFactory.func(funcTB, bodyB);
   }
@@ -162,10 +155,11 @@ public class Compiler {
     return byteCodeFactory.method(methodTB, jarB, classBinaryNameB, isPureB);
   }
 
-  private ImmutableList<ObjB> createParamRefsH(ImmutableList<TypeB> paramTs) {
+  private ImmutableList<ObjB> createParamRefsB(ImmutableList<TypeB> paramTs) {
     Builder<ObjB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
-      builder.add(byteCodeFactory.paramRef(paramTs.get(i), BigInteger.valueOf(i)));
+      var closedT = typing.closeVars(paramTs.get(i));
+      builder.add(byteCodeFactory.paramRef(closedT, BigInteger.valueOf(i)));
     }
     return builder.build();
   }

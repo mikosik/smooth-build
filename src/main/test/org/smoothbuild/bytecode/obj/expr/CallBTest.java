@@ -22,7 +22,8 @@ public class CallBTest extends TestingContext {
 
     @Test
     public void with_generic_params() {
-      assertThat(callB(funcB(list(oVarTB("A")), paramRefB(oVarTB("A"), 0)), intB()).cat())
+      var oa = oVarTB("A");
+      assertThat(callB(funcB(oa, list(oa), paramRefB(cVarTB("A"), 0)), intB()).cat())
           .isEqualTo(callCB(intTB()));
     }
   }

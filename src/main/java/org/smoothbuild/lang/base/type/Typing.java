@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 import static org.smoothbuild.util.collect.Lists.allMatchOtherwise;
@@ -270,6 +271,13 @@ public class Typing<T extends Type> {
       case OpenVarT openVarT -> (T) factory.cVar(openVarT.name());
       default -> throw unexpectedCaseExc(type);
     };
+  }
+
+  public VarBounds<T> closeVars(VarBounds<T> varBounds) {
+    ImmutableMap<VarT, Bounded<T>> collect = varBounds.map().values().stream()
+        .map(bounded -> new Bounded((VarT) closeVars((T) bounded.var()), bounded.bounds()))
+        .collect(toImmutableMap(b -> b.var(), b -> b));
+    return new VarBounds<>(collect);
   }
 
   public T rebuildComposed(T type, ImmutableList<T> covars, ImmutableList<T> contravars) {

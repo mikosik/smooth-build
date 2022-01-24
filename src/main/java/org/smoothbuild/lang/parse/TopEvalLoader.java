@@ -20,6 +20,7 @@ import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
 import org.smoothbuild.lang.expr.CallS;
@@ -49,10 +50,12 @@ import com.google.common.collect.ImmutableList;
 
 public class TopEvalLoader {
   private final TypeFactoryS factory;
+  private final TypingS typing;
 
   @Inject
-  public TopEvalLoader(TypeFactoryS factory) {
+  public TopEvalLoader(TypeFactoryS factory, TypingS typing) {
     this.factory = factory;
+    this.typing = typing;
   }
 
   public TopEvalS loadEval(ModPath path, EvalN evalN) {
@@ -170,7 +173,7 @@ public class TopEvalLoader {
   private ExprS createRef(RefN ref) {
     EvalLike referenced = ref.referenced();
     if (referenced instanceof ItemN) {
-      return new ParamRefS(ref.type().get(), ref.name(), ref.loc());
+      return new ParamRefS(typing.closeVars(ref.type().get()), ref.name(), ref.loc());
     } else {
       return new TopRefS(ref.type().get(), ref.name(), ref.loc());
     }

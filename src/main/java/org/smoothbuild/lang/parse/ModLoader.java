@@ -27,6 +27,7 @@ import org.smoothbuild.lang.base.define.StructS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
 import org.smoothbuild.lang.expr.ParamRefS;
@@ -41,13 +42,15 @@ public class ModLoader {
   private final TypeInferrer typeInferrer;
   private final TopEvalLoader topEvalLoader;
   private final TypeFactoryS typeFactory;
+  private final TypingS typing;
 
   @Inject
   public ModLoader(TypeInferrer typeInferrer, TopEvalLoader topEvalLoader,
-      TypeFactoryS typeFactory) {
+      TypeFactoryS typeFactory, TypingS typing) {
     this.typeInferrer = typeInferrer;
     this.topEvalLoader = topEvalLoader;
     this.typeFactory = typeFactory;
+    this.typing = typing;
   }
 
   public Maybe<ModS> loadModule(
@@ -119,7 +122,12 @@ public class ModLoader {
   }
 
   private CombineS ctorBody(StructTS resT, NList<ItemS> params, Loc loc) {
-    var paramRefs = map(params, p -> (ExprS) new ParamRefS(p.type(), p.name(), loc));
+    var paramRefs = map(params, p -> paramRef(p, loc));
     return new CombineS(resT, paramRefs, loc);
+  }
+
+  private ExprS paramRef(ItemS param, Loc loc) {
+    var type = typing.closeVars(param.type());
+    return new ParamRefS(type, param.name(), loc);
   }
 }

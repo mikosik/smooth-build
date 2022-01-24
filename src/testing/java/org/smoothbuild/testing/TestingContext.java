@@ -414,6 +414,14 @@ public class TestingContext {
     return catDb().cVar(name);
   }
 
+  public TypeB open(TypeB typeB) {
+    return typingB().openVars(typeB);
+  }
+
+  public TypeB close(TypeB typeB) {
+    return typingB().closeVars(typeB);
+  }
+
   public Side<TypeB> lowerB() {
     return typeFactoryB().lower();
   }
@@ -555,7 +563,9 @@ public class TestingContext {
   }
 
   public FuncB funcB(ImmutableList<TypeB> paramTs, ObjB body) {
-    return funcB(body.type(), paramTs, body);
+    // TODO this will only work until we introduce inner functions
+    var resT = typingB.openVars(body.type());
+    return funcB(resT, paramTs, body);
   }
 
   public FuncB funcB(TypeB resT, ImmutableList<TypeB> paramTs, ObjB body) {
@@ -777,6 +787,14 @@ public class TestingContext {
 
   public ClosedVarTS cVarTS(String name) {
     return typeFactoryS().cVar(name);
+  }
+
+  public TypeS open(TypeS typeS) {
+    return typingS().openVars(typeS);
+  }
+
+  public TypeS close(TypeS typeS) {
+    return typingS().closeVars(typeS);
   }
 
   public Side<TypeS> lowerS() {

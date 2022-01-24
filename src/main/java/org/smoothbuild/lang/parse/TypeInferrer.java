@@ -123,14 +123,16 @@ public class TypeInferrer {
 
       private Optional<TypeS> evalTypeOf(EvalN eval, BiConsumer<TypeS, TypeS> assignmentChecker) {
         if (eval.body().isPresent()) {
-          Optional<TypeS> exprType = eval.body().get().type();
+          var exprT = eval.body().get().type();
           if (eval.typeNode().isPresent()) {
-            Optional<TypeS> type = createType(eval.typeNode().get());
-            type.ifPresent(target -> exprType.ifPresent(
-                source -> assignmentChecker.accept(target, source)));
+            var type = createType(eval.typeNode().get());
+            type.ifPresent(target -> exprT.ifPresent(source -> {
+              var targetInAssignment = eval instanceof FuncN ? typing.closeVars(target) : target;
+              assignmentChecker.accept(targetInAssignment, source);
+            }));
             return type;
           } else {
-            return exprType;
+            return exprT.map(typing::openVars);
           }
         } else {
           if (eval.typeNode().isPresent()) {
@@ -317,7 +319,22 @@ public class TypeInferrer {
       @Override
       public void visitRef(RefN ref) {
         super.visitRef(ref);
-        ref.setType(ref.referenced().inferredType());
+        ref.setType(referencedType(ref));
+      }
+
+      private Optional<TypeS> referencedType(RefN ref) {
+        EvalLike referenced = ref.referenced();
+        if (referenced instanceof ItemN) {
+          // Closing vars here is a hack because we lose some important information.
+          // It is worked around by opening vars it in evalTypeOf() method in this class but
+          // workaround works only because here we are referencing parameter of most
+          // inner function. Once we allow referencing outer function parameters (which
+          // have closed vars to most inner function) then opening them in evalTypeOf()
+          // won't work. We would need to pass more information from here.
+          return referenced.inferredType().map(typing::closeVars);
+        } else {
+          return referenced.inferredType();
+        }
       }
 
       @Override
