@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse;
 
 import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
-import static org.smoothbuild.util.collect.NList.nList;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,8 +67,8 @@ public class TopEvalLoader {
     var type = valN.type().get();
     var name = valN.name();
     var loc = valN.loc();
-    var loader = new ExpressionLoader(path, nList());
-    return new DefValS(type, path, name, loader.createExpression(valN.body().get()), loc);
+    var body = createExpr(valN.body().get());
+    return new DefValS(type, path, name, body, loc);
   }
 
   private FuncS loadFunc(ModPath path, FuncN funcN) {
@@ -83,127 +82,115 @@ public class TopEvalLoader {
           path, name, params, loadAnn(funcN.ann().get()), loc
       );
     } else {
-      var expressionLoader = new ExpressionLoader(path, params);
-      return new DefFuncS(funcT, path,
-          name, params, expressionLoader.createExpression(funcN.body().get()), loc);
+      var body = createExpr(funcN.body().get());
+      return new DefFuncS(funcT, path, name, params, body, loc);
     }
   }
 
   private AnnS loadAnn(AnnN annN) {
-    var path = createStringLiteral(annN.path());
+    var path = createString(annN.path());
     return new AnnS(path, annN.isPure(), annN.loc());
   }
 
   private NList<ItemS> loadParams(ModPath path, FuncN funcN) {
-    ExpressionLoader paramLoader = new ExpressionLoader(path, nList());
-    return funcN.params().map(paramLoader::createParam);
+    return funcN.params().map(param -> createParam(param, path));
   }
 
-  private class ExpressionLoader {
-    private final ModPath modPath;
-    private final NList<ItemS> funcParams;
+  public ItemS createParam(ItemN param, ModPath path) {
+    var type = param.typeNode().get().type().get();
+    var name = param.name();
+    var defaultArg = param.body().map(this::createExpr);
+    return new ItemS(type, path, name, defaultArg, param.loc());
+  }
 
-    public ExpressionLoader(ModPath modPath, NList<ItemS> funcParams) {
-      this.modPath = modPath;
-      this.funcParams = funcParams;
+  private ExprS createExpr(ExprN expr) {
+    return switch (expr) {
+      case ArrayN arrayN -> createArrayLiteral(arrayN);
+      case BlobN blobN -> createBlob(blobN);
+      case CallN callN -> createCall(callN);
+      case IntN intN -> createInt(intN);
+      case RefN refN -> createRef(refN);
+      case SelectN selectN -> createSelect(selectN);
+      case StringN stringN -> createString(stringN);
+    };
+  }
+
+  private ExprS createArrayLiteral(ArrayN array) {
+    var type = (ArrayTS) array.type().get();
+    ImmutableList<ExprS> elems = map(array.elems(), this::createExpr);
+    return new OrderS(type, elems, array.loc());
+  }
+
+  private ExprS createCall(CallN call) {
+    var callable = createExpr(call.callable());
+    var argExpressions = createArgExprs(call);
+    var resT = call.type().get();
+    return new CallS(resT, callable, argExpressions, call.loc());
+  }
+
+  private ImmutableList<ExprS> createArgExprs(CallN call) {
+    var builder = ImmutableList.<ExprS>builder();
+    List<Optional<ArgNode>> args = call.assignedArgs();
+    for (int i = 0; i < args.size(); i++) {
+      builder.add(createArgExpr(call, args, i));
     }
+    return builder.build();
+  }
 
-    public ItemS createParam(ItemN param) {
-      var type = param.typeNode().get().type().get();
-      var name = param.name();
-      var defaultArg = param.body().map(this::createExpression);
-      return new ItemS(type, modPath, name, defaultArg, param.loc());
-    }
-
-    private ExprS createExpression(ExprN expr) {
-      return switch (expr) {
-        case ArrayN arrayN -> createArrayLiteral(arrayN);
-        case BlobN blobN -> createBlobLiteral(blobN);
-        case CallN callN -> createCall(callN);
-        case IntN intN -> createIntLiteral(intN);
-        case RefN refN -> createReference(refN);
-        case SelectN selectN -> createSelect(selectN);
-        case StringN stringN -> createStringLiteral(stringN);
-      };
-    }
-
-    private ExprS createArrayLiteral(ArrayN array) {
-      var type = (ArrayTS) array.type().get();
-      ImmutableList<ExprS> elems = map(array.elems(), this::createExpression);
-      return new OrderS(type, elems, array.loc());
-    }
-
-    private ExprS createCall(CallN call) {
-      var callable = createExpression(call.callable());
-      var argExpressions = createArgExpressions(call);
-      var resT = call.type().get();
-      return new CallS(resT, callable, argExpressions, call.loc());
-    }
-
-    private ImmutableList<ExprS> createArgExpressions(CallN call) {
-      var builder = ImmutableList.<ExprS>builder();
-      List<Optional<ArgNode>> args = call.assignedArgs();
-      for (int i = 0; i < args.size(); i++) {
-        builder.add(createArgExpression(call, args, i));
-      }
-      return builder.build();
-    }
-
-    private ExprS createArgExpression(CallN call, List<Optional<ArgNode>> args, int i) {
-      Optional<ArgNode> arg = args.get(i);
-      if (arg.isPresent()) {
-        return createExpression(arg.get().expr());
-      } else {
-        return createDefaultArgExpression(call, i);
-      }
-    }
-
-    private ExprS createDefaultArgExpression(CallN call, int i) {
-      // Arg is not present so we have to use func default arg.
-      // This means that this call is made on reference to actual func and that func
-      // has default arg for given param, otherwise checkers that ran so far would
-      // report an error.
-      EvalLike referenced = ((RefN) call.callable()).referenced();
-      return switch (referenced) {
-        case FuncS func -> func.params().get(i).defaultVal().get();
-        case FuncN node -> createExpression(node.params().get(i).body().get());
-        default -> throw unexpectedCaseExc(referenced);
-      };
-    }
-
-    private ExprS createSelect(SelectN selectN) {
-      var structT = (StructTS) selectN.selectable().type().get();
-      var index = structT.fields().indexMap().get(selectN.field());
-      var fieldT = structT.fields().get(index).type();
-      var selectable = createExpression(selectN.selectable());
-      return new SelectS(fieldT, selectable, selectN.field(), selectN.loc());
-    }
-
-    private ExprS createReference(RefN ref) {
-      EvalLike referenced = ref.referenced();
-      return switch (referenced) {
-        case ItemN n ->  new ParamRefS(
-            funcParams.get(ref.name()).type(), ref.name(), ref.loc());
-        default -> new TopRefS(referenced.inferredType().get(), ref.name(), ref.loc());
-      };
+  private ExprS createArgExpr(CallN call, List<Optional<ArgNode>> args, int i) {
+    Optional<ArgNode> arg = args.get(i);
+    if (arg.isPresent()) {
+      return createExpr(arg.get().expr());
+    } else {
+      return createDefaultArgExpr(call, i);
     }
   }
 
-  public BlobS createBlobLiteral(BlobN blob) {
+  private ExprS createDefaultArgExpr(CallN call, int i) {
+    // Arg is not present so we have to use func default arg.
+    // This means that this call is made on reference to actual func and that func
+    // has default arg for given param, otherwise checkers that ran so far would
+    // report an error.
+    EvalLike referenced = ((RefN) call.callable()).referenced();
+    return switch (referenced) {
+      case FuncS func -> func.params().get(i).defaultVal().get();
+      case FuncN node -> createExpr(node.params().get(i).body().get());
+      default -> throw unexpectedCaseExc(referenced);
+    };
+  }
+
+  private ExprS createSelect(SelectN selectN) {
+    var structT = (StructTS) selectN.selectable().type().get();
+    var index = structT.fields().indexMap().get(selectN.field());
+    var fieldT = structT.fields().get(index).type();
+    var selectable = createExpr(selectN.selectable());
+    return new SelectS(fieldT, selectable, selectN.field(), selectN.loc());
+  }
+
+  private ExprS createRef(RefN ref) {
+    EvalLike referenced = ref.referenced();
+    if (referenced instanceof ItemN) {
+      return new ParamRefS(ref.type().get(), ref.name(), ref.loc());
+    } else {
+      return new TopRefS(ref.type().get(), ref.name(), ref.loc());
+    }
+  }
+
+  public BlobS createBlob(BlobN blob) {
     return new BlobS(
         factory.blob(),
         blob.byteString(),
         blob.loc());
   }
 
-  public IntS createIntLiteral(IntN intN) {
+  public IntS createInt(IntN intN) {
     return new IntS(
         factory.int_(),
         intN.bigInteger(),
         intN.loc());
   }
 
-  public StringS createStringLiteral(StringN string) {
+  public StringS createString(StringN string) {
     return new StringS(
         factory.string(),
         string.unescapedValue(),
