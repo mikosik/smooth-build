@@ -39,7 +39,7 @@ public class CombineB extends ExprB {
     allMatchOtherwise(
         expectedItemTs,
         items,
-        (type, item) -> byteDb().typing().isAssignable(type, item.type()),
+        (type, item) -> typing().isAssignable(type, item.type()),
         (type, item) -> {
           throw new DecodeCombineWrongItemsSizeExc(hash(), cat(), item);
         },

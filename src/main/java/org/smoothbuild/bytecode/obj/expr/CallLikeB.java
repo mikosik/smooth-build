@@ -18,9 +18,9 @@ public class CallLikeB extends ExprB {
 
   protected void validate(CallableTB callableT, CombineB argsCombine) {
     var argsT = argsCombine.type();
-    var actualResT = byteDb().typing()
-        .inferCallResT(callableT, argsT.items(), () -> illegalArgsExc(callableT, argsT));
-    if (!byteDb().typing().isAssignable(type(), actualResT)) {
+    var actualResT = typing().inferCallResT(
+        callableT, argsT.items(), () -> illegalArgsExc(callableT, argsT));
+    if (!typing().isAssignable(type(), actualResT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "callable.result", type(), actualResT);
     }
   }

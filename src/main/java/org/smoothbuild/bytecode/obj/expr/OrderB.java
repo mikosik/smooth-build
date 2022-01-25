@@ -36,7 +36,7 @@ public class OrderB extends ExprB {
     var expectedElemT = cat().evalT().elem();
     for (int i = 0; i < elems.size(); i++) {
       var actualT = elems.get(i).type();
-      if (!byteDb().typing().isAssignable(expectedElemT, actualT)) {
+      if (!typing().isAssignable(expectedElemT, actualT)) {
         throw new DecodeObjWrongNodeTypeExc(hash(), cat(), "elems", i, expectedElemT, actualT);
       }
     }

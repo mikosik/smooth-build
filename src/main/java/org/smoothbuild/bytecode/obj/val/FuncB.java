@@ -29,7 +29,7 @@ public final class FuncB extends ValB {
     var body = readObj(DATA_PATH, dataHash(), ObjB.class);
     var resT = cat().res();
     var bodyT = body.type();
-    if (!byteDb().typing().isAssignable(resT, bodyT)) {
+    if (!typing().isAssignable(resT, bodyT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), DATA_PATH, resT, bodyT);
     }
     return body;

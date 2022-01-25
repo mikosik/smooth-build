@@ -57,9 +57,9 @@ public final class MapB extends ExprB {
     }
     var elemT = arrayT.elem();
     var funcActualResT =
-        byteDb().typing().inferCallResT(funcT, list(elemT), () -> illegalArgs(funcT, elemT));
+        typing().inferCallResT(funcT, list(elemT), () -> illegalArgs(funcT, elemT));
     var expectedElemT = type().elem();
-    if (!byteDb().typing().isAssignable(expectedElemT, funcActualResT)) {
+    if (!typing().isAssignable(expectedElemT, funcActualResT)) {
       throw new DecodeObjWrongNodeTypeExc(
           hash(), cat(), "func.result", expectedElemT, funcActualResT);
     }

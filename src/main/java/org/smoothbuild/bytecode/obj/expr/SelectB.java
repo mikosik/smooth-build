@@ -41,7 +41,7 @@ public class SelectB extends ExprB {
         throw new DecodeSelectIndexOutOfBoundsExc(hash(), cat(), i, size);
       }
       var fieldT = tupleEvalT.items().get(i);
-      if (!byteDb().typing().isAssignable(type(), fieldT)) {
+      if (!typing().isAssignable(type(), fieldT)) {
         throw new DecodeSelectWrongEvalTypeExc(hash(), cat(), fieldT);
       }
       return new Data(selectable, index);

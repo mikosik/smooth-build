@@ -17,6 +17,7 @@ import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
+import org.smoothbuild.lang.base.type.Typing;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -46,6 +47,10 @@ public abstract class ObjB {
 
   protected HashedDb hashedDb() {
     return byteDb.hashedDb();
+  }
+
+  protected Typing<TypeB> typing() {
+    return byteDb.typing();
   }
 
   public Hash hash() {
@@ -192,7 +197,7 @@ public abstract class ObjB {
 
   protected ObjB validateType(ObjB obj, String path, int index, TypeB expectedT) {
     var objT = obj.type();
-    if (!byteDb().typing().isAssignable(expectedT, objT)) {
+    if (!typing().isAssignable(expectedT, objT)) {
       throw new DecodeObjWrongNodeTypeExc(hash(), cat(), path, index, expectedT, objT);
     }
     return obj;
