@@ -47,7 +47,7 @@ public interface ObjDb {
 
   public TupleB tuple(TupleTB tupleT, ImmutableList<ValB> items);
 
-  public CallB call(TypeB evalT, ObjB callable, CombineB args);
+  public CallB call(TypeB evalT, ObjB func, CombineB args);
 
   public CombineB combine(TupleTB evalT, ImmutableList<ObjB> items);
 

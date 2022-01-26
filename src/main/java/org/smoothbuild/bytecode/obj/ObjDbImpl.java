@@ -138,9 +138,9 @@ public class ObjDbImpl implements ObjDb {
   // methods for creating ExprH subclasses
 
   @Override
-  public CallB call(TypeB evalT, ObjB callable, CombineB args) {
+  public CallB call(TypeB evalT, ObjB func, CombineB args) {
     validateNoOpenVars(evalT);
-    return wrapHashedDbExcAsObjDbExc(() -> newCall(evalT, callable, args));
+    return wrapHashedDbExcAsObjDbExc(() -> newCall(evalT, func, args));
   }
 
   @Override
@@ -272,20 +272,20 @@ public class ObjDbImpl implements ObjDb {
 
   // methods for creating Expr-s
 
-  private CallB newCall(TypeB evalT, ObjB callable, CombineB args) throws HashedDbExc {
-    var resT = inferCallResT(castTypeToFuncTH(callable), args);
+  private CallB newCall(TypeB evalT, ObjB func, CombineB args) throws HashedDbExc {
+    var resT = inferCallResT(castTypeToFuncTB(func), args);
     if (!typing.isAssignable(evalT, resT)) {
       throw new IllegalArgumentException(
           "Call's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
     }
 
     var type = catDb.call(evalT);
-    var data = writeCallData(callable, args);
+    var data = writeCallData(func, args);
     var root = newRoot(type, data);
     return type.newObj(root, this);
   }
 
-  private FuncTB castTypeToFuncTH(ObjB callable) {
+  private FuncTB castTypeToFuncTB(ObjB callable) {
     if (callable.type() instanceof FuncTB funcT) {
       return funcT;
     } else {
@@ -294,11 +294,11 @@ public class ObjDbImpl implements ObjDb {
   }
 
   private TypeB inferCallResT(CallableTB callableTB, ObjB args) {
-    var argsT = castTypeToTupleTH(args);
+    var argsT = castTypeToTupleTB(args);
     return typing.inferCallResT(callableTB, argsT.items(), () -> illegalArgs(callableTB, argsT));
   }
 
-  private TupleTB castTypeToTupleTH(ObjB args) {
+  private TupleTB castTypeToTupleTB(ObjB args) {
     if (args.type() instanceof TupleTB tupleT) {
       return tupleT;
     } else {
@@ -362,7 +362,7 @@ public class ObjDbImpl implements ObjDb {
   }
 
   private InvokeB newInvoke(TypeB evalT, ObjB method, CombineB args) throws HashedDbExc {
-    var resT = inferCallResT(castTypeToMethodTH(method), args);
+    var resT = inferCallResT(castTypeToMethodTB(method), args);
     if (!typing.isAssignable(evalT, resT)) {
       throw new IllegalArgumentException(
           "Method's result type " + resT.q() + " cannot be assigned to evalT " + evalT.q() + ".");
@@ -373,8 +373,8 @@ public class ObjDbImpl implements ObjDb {
     return type.newObj(root, this);
   }
 
-  private MethodTB castTypeToMethodTH(ObjB callable) {
-    if (callable.type() instanceof MethodTB methodTB) {
+  private MethodTB castTypeToMethodTB(ObjB method) {
+    if (method.type() instanceof MethodTB methodTB) {
       return methodTB;
     } else {
       throw new IllegalArgumentException("`method` component doesn't evaluate to MethodH.");
@@ -464,8 +464,8 @@ public class ObjDbImpl implements ObjDb {
 
   // methods for writing data of Expr-s
 
-  private Hash writeCallData(ObjB callable, CombineB args) throws HashedDbExc {
-    return hashedDb.writeSeq(callable.hash(), args.hash());
+  private Hash writeCallData(ObjB func, CombineB args) throws HashedDbExc {
+    return hashedDb.writeSeq(func.hash(), args.hash());
   }
 
   private Hash writeCombineData(ImmutableList<ObjB> items) throws HashedDbExc {
