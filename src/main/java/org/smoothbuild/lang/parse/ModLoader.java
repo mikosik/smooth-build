@@ -26,7 +26,7 @@ import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.StructS;
 import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.expr.CombineS;
 import org.smoothbuild.lang.expr.ExprS;
@@ -41,15 +41,15 @@ import com.google.common.collect.ImmutableList;
 public class ModLoader {
   private final TypeInferrer typeInferrer;
   private final TopEvalLoader topEvalLoader;
-  private final TypeFactoryS typeFactory;
+  private final TypeSF typeSF;
   private final TypingS typing;
 
   @Inject
   public ModLoader(TypeInferrer typeInferrer, TopEvalLoader topEvalLoader,
-      TypeFactoryS typeFactory, TypingS typing) {
+      TypeSF typeSF, TypingS typing) {
     this.typeInferrer = typeInferrer;
     this.topEvalLoader = topEvalLoader;
-    this.typeFactory = typeFactory;
+    this.typeSF = typeSF;
     this.typing = typing;
   }
 
@@ -114,7 +114,7 @@ public class ModLoader {
     var resultT = (StructTS) struct.type().get();
     var name = struct.ctor().name();
     var paramTs = map(struct.fields(), f -> f.type().get());
-    var type = typeFactory.func(resultT, paramTs);
+    var type = typeSF.func(resultT, paramTs);
     var params = struct.fields().map(f -> f.toItem(path));
     var loc = struct.loc();
     var body = ctorBody(resultT, params, loc);

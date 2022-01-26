@@ -5,28 +5,28 @@ import static org.smoothbuild.util.collect.NList.nList;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.util.collect.NList;
 
 public class InternalModLoader {
-  private final TypeFactoryS factory;
+  private final TypeSF typeSF;
 
   @Inject
-  public InternalModLoader(TypeFactoryS factory) {
-    this.factory = factory;
+  public InternalModLoader(TypeSF typeSF) {
+    this.typeSF = typeSF;
   }
 
   public ModS load() {
     ModPath path = new ModPath("internal-module");
-    var types = nList(map(factory.baseTs(), t -> (DefTypeS) new DefBaseTypeS(path, t)));
+    var types = nList(map(typeSF.baseTs(), t -> (DefTypeS) new DefBaseTypeS(path, t)));
     return new ModS(path, null, types, evaluables(path));
   }
 
   private NList<TopEvalS> evaluables(ModPath modPath) {
-    var ifFunc = new IfFuncS(modPath, factory);
-    var mapFunc = new MapFuncS(modPath, factory);
-    var trueValue = new BoolValS(true, modPath, factory);
-    var falseValue = new BoolValS(false, modPath, factory);
+    var ifFunc = new IfFuncS(modPath, typeSF);
+    var mapFunc = new MapFuncS(modPath, typeSF);
+    var trueValue = new BoolValS(true, modPath, typeSF);
+    var falseValue = new BoolValS(false, modPath, typeSF);
     return nList(ifFunc, mapFunc, trueValue, falseValue);
   }
 }

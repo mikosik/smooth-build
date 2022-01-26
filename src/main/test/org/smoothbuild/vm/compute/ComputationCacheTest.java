@@ -66,7 +66,7 @@ public class ComputationCacheTest extends TestingContext {
   public void written_file_array_can_be_read_back() throws Exception {
     var file = fileB(path("file/path"), bytes);
     computationCache().write(hash, new Output(arrayB(file), messageArrayEmtpy()));
-    var arrayT = arrayTB(byteCodeFactory().fileT());
+    var arrayT = arrayTB(byteCodeF().fileT());
 
     assertThat(((ArrayB) computationCache().read(hash, arrayT).val()).elems(TupleB.class))
         .containsExactly(file);
@@ -118,7 +118,7 @@ public class ComputationCacheTest extends TestingContext {
     var file = fileB(path("file/path"), bytes);
     computationCache().write(hash, new Output(file, messageArrayEmtpy()));
 
-    assertThat(computationCache().read(hash, byteCodeFactory().fileT()).val())
+    assertThat(computationCache().read(hash, byteCodeF().fileT()).val())
         .isEqualTo(file);
   }
 

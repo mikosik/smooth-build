@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 
-public class TestedTSFactory implements TestedTFactory<TypeS, TestedTS, TestedAssignSpecS> {
+public class TestedTSF implements TestedTF<TypeS, TestedTS, TestedAssignSpecS> {
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
   public static final TestedTS A = new TestedTS(oVar("A"), null, null);

@@ -26,8 +26,8 @@ import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayN;
@@ -55,15 +55,15 @@ import org.smoothbuild.util.collect.Optionals;
 import com.google.common.collect.ImmutableList;
 
 public class TypeInferrer {
-  private final TypeFactoryS factory;
+  private final TypeSF typeSF;
   private final TypingS typing;
   private final CallTypeInferrer callTypeInferrer;
 
   @Inject
-  public TypeInferrer(TypeFactoryS factory, TypingS typing) {
-    this.factory = factory;
+  public TypeInferrer(TypeSF typeSF, TypingS typing) {
+    this.typeSF = typeSF;
     this.typing = typing;
-    this.callTypeInferrer = new CallTypeInferrer(factory, typing);
+    this.callTypeInferrer = new CallTypeInferrer(typeSF, typing);
   }
 
   public List<Log> inferTypes(Ast ast, DefsS imported) {
@@ -74,9 +74,9 @@ public class TypeInferrer {
       public void visitStruct(StructN struct) {
         super.visitStruct(struct);
         var fields = Optionals.pullUp(map(struct.fields(), ItemN::sig));
-        struct.setType(fields.map(f -> factory.struct(struct.name(), nList(f))));
+        struct.setType(fields.map(f -> typeSF.struct(struct.name(), nList(f))));
         struct.ctor().setType(
-            fields.map(s -> factory.func(struct.type().get(), map(s, ItemSigS::type))));
+            fields.map(s -> typeSF.func(struct.type().get(), map(s, ItemSigS::type))));
       }
 
       @Override
@@ -116,7 +116,7 @@ public class TypeInferrer {
             .collect(toImmutableSet());
         var r = result.get();
         if (paramOpenVars.containsAll(r.openVars())) {
-          return Optional.of(factory.func(r, ps));
+          return Optional.of(typeSF.func(r, ps));
         }
         logError(
             resN, "Function result type has type variable(s) not present in any parameter type.");
@@ -184,17 +184,17 @@ public class TypeInferrer {
 
       private Optional<TypeS> createType(TypeN type) {
         if (isVarName(type.name())) {
-          return Optional.of(factory.oVar(type.name()));
+          return Optional.of(typeSF.oVar(type.name()));
         }
         return switch (type) {
-          case ArrayTN array -> createType(array.elemT()).map(factory::array);
+          case ArrayTN array -> createType(array.elemT()).map(typeSF::array);
           case FuncTN func -> {
             var resultOpt = createType(func.resT());
             var paramsOpt = Optionals.pullUp(map(func.paramTs(), this::createType));
             if (resultOpt.isEmpty() || paramsOpt.isEmpty()) {
               yield empty();
             }
-            yield Optional.of(factory.func(resultOpt.get(), paramsOpt.get()));
+            yield Optional.of(typeSF.func(resultOpt.get(), paramsOpt.get()));
           }
           default -> Optional.of(findType(type.name()));
         };
@@ -250,7 +250,7 @@ public class TypeInferrer {
       private Optional<TypeS> findArrayT(ArrayN array) {
         List<ExprN> expressions = array.elems();
         if (expressions.isEmpty()) {
-          return Optional.of(factory.array(factory.nothing()));
+          return Optional.of(typeSF.array(typeSF.nothing()));
         }
         Optional<TypeS> firstType = expressions.get(0).type();
         if (firstType.isEmpty()) {
@@ -265,7 +265,7 @@ public class TypeInferrer {
             return empty();
           }
           type = typing.mergeUp(type, elemT.get());
-          if (typing.contains(type, factory.any())) {
+          if (typing.contains(type, typeSF.any())) {
             logError(elem,
                 "Array elems at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
@@ -273,7 +273,7 @@ public class TypeInferrer {
             return empty();
           }
         }
-        return Optional.of(factory.array(type));
+        return Optional.of(typeSF.array(type));
       }
 
       @Override
@@ -371,19 +371,19 @@ public class TypeInferrer {
       @Override
       public void visitString(StringN string) {
         super.visitString(string);
-        string.setType(factory.string());
+        string.setType(typeSF.string());
       }
 
       @Override
       public void visitBlob(BlobN blob) {
         super.visitBlob(blob);
-        blob.setType(factory.blob());
+        blob.setType(typeSF.blob());
       }
 
       @Override
       public void visitInt(IntN intN) {
         super.visitInt(intN);
-        intN.setType(factory.int_());
+        intN.setType(typeSF.int_());
       }
 
       private void logError(Node node, String message) {

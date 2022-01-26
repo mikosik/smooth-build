@@ -15,11 +15,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.TestedAssignCases;
 import org.smoothbuild.lang.base.type.TestedAssignSpecS;
 import org.smoothbuild.lang.base.type.TestedTS;
-import org.smoothbuild.lang.base.type.TestedTSFactory;
+import org.smoothbuild.lang.base.type.TestedTSF;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModLoader;
@@ -141,10 +141,10 @@ public class AssignmentTest extends TestingContext {
   private static List<Arguments> array_elem_assignment_test_specs() {
     TestingContext context = new TestingContext();
     TypingS typing = context.typingS();
-    TypeFactoryS factory = context.typeFactoryS();
+    TypeSF factory = context.typeSF();
     ArrayList<Arguments> result = new ArrayList<>();
-    for (TestedTS type1 : TestedTSFactory.TESTED_MONOTYPES) {
-      for (TestedTS type2 : TestedTSFactory.TESTED_MONOTYPES) {
+    for (TestedTS type1 : TestedTSF.TESTED_MONOTYPES) {
+      for (TestedTS type2 : TestedTSF.TESTED_MONOTYPES) {
         var commonSuperT = typing.mergeUp(type1.type(), type2.type());
         if (!typing.contains(commonSuperT, factory.any())) {
           result.add(Arguments.of(type1, type2, commonSuperT));

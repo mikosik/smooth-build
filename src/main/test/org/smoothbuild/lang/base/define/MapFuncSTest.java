@@ -9,7 +9,7 @@ import org.smoothbuild.testing.TestingContext;
 public class MapFuncSTest extends TestingContext {
   @Test
   public void to_string() {
-    var func = new MapFuncS(modPath(), typeFactoryS());
+    var func = new MapFuncS(modPath(), typeSF());
     assertThat(func.toString())
         .isEqualTo("MapFuncS(`[R] map([E] array,R(E) func)`)");
   }

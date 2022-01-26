@@ -9,7 +9,7 @@ import org.smoothbuild.testing.TestingContext;
 public class IfFuncSTest extends TestingContext {
   @Test
   public void to_string() {
-    var func = new IfFuncS(modPath(), typeFactoryS());
+    var func = new IfFuncS(modPath(), typeSF());
     assertThat(func.toString())
         .isEqualTo("IfFuncS(`A if(Bool condition,A then,A else)`)");
   }

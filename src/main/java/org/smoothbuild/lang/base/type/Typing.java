@@ -23,7 +23,7 @@ import org.smoothbuild.lang.base.type.api.OpenVarT;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.TupleT;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.api.TypeF;
 import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.api.VarT;
 
@@ -31,10 +31,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class Typing<T extends Type> {
-  private final TypeFactory<T> factory;
+  private final TypeF<T> typeF;
 
-  public Typing(TypeFactory<T> factory) {
-    this.factory = factory;
+  public Typing(TypeF<T> typeF) {
+    this.typeF = typeF;
   }
 
   public boolean contains(T type, T inner) {
@@ -65,11 +65,11 @@ public class Typing<T extends Type> {
   }
 
   public boolean isAssignable(T target, T source) {
-    return inequal(target, source, factory.lower());
+    return inequal(target, source, typeF.lower());
   }
 
   public boolean isParamAssignable(T target, T source) {
-    return inequalParam(target, source, factory.lower())
+    return inequalParam(target, source, typeF.lower())
         && areConsistent(inferVarBoundsLower(target, source));
   }
 
@@ -118,7 +118,7 @@ public class Typing<T extends Type> {
   }
 
   public VarBounds<T> inferVarBoundsLower(List<? extends T> types1, List<? extends T> types2) {
-    return inferVarBounds(types1, types2, factory.lower());
+    return inferVarBounds(types1, types2, typeF.lower());
   }
 
   public VarBounds<T> inferVarBounds(
@@ -132,7 +132,7 @@ public class Typing<T extends Type> {
   }
 
   public VarBounds<T> inferVarBoundsLower(T type1, T type2) {
-    return inferVarBounds(type1, type2, factory().lower());
+    return inferVarBounds(type1, type2, typeF().lower());
   }
 
   public VarBounds<T> inferVarBounds(T type1, T type2, Side<T> side) {
@@ -143,7 +143,7 @@ public class Typing<T extends Type> {
 
   private void inferImpl(T t1, T t2, Side<T> side, Map<VarT, Bounded<T>> result) {
     switch (t1) {
-      case VarT v -> result.merge(v, new Bounded<>(v, factory.oneSideBound(side, t2)), this::merge);
+      case VarT v -> result.merge(v, new Bounded<>(v, typeF.oneSideBound(side, t2)), this::merge);
       case ComposedT c1 -> {
         if (t2.equals(side.edge())) {
           var reversed = side.reversed();
@@ -173,7 +173,7 @@ public class Typing<T extends Type> {
   }
 
   public T mapVarsLower(T type, VarBounds<T> varBounds) {
-    return mapVars(type, varBounds, factory.lower());
+    return mapVars(type, varBounds, typeF.lower());
   }
 
   public T mapVars(T type, VarBounds<T> varBounds, Side<T> side) {
@@ -203,11 +203,11 @@ public class Typing<T extends Type> {
   }
 
   public T mergeUp(T type1, T type2) {
-    return merge(type1, type2, factory.upper());
+    return merge(type1, type2, typeF.upper());
   }
 
   public T mergeDown(T type1, T type2) {
-    return merge(type1, type2, factory.lower());
+    return merge(type1, type2, typeF.lower());
   }
 
   public T merge(T type1, T type2, Side<T> direction) {
@@ -243,8 +243,8 @@ public class Typing<T extends Type> {
 
   public Bounds<T> merge(Bounds<T> bounds1, Bounds<T> bounds2) {
     return new Bounds<>(
-        merge(bounds1.lower(), bounds2.lower(), factory.upper()),
-        merge(bounds1.upper(), bounds2.upper(), factory.lower()));
+        merge(bounds1.lower(), bounds2.lower(), typeF.upper()),
+        merge(bounds1.upper(), bounds2.upper(), typeF.lower()));
   }
 
   public T openVars(T type) {
@@ -255,7 +255,7 @@ public class Typing<T extends Type> {
       case ComposedT composedT -> rebuildComposed(type,
           map(composedT.covars(), t -> openVars((T) t)),
           map(composedT.contravars(), t -> openVars((T) t)));
-      case ClosedVarT closedVarT -> (T) factory.oVar(closedVarT.name());
+      case ClosedVarT closedVarT -> (T) typeF.oVar(closedVarT.name());
       default -> throw unexpectedCaseExc(type);
     };
   }
@@ -268,7 +268,7 @@ public class Typing<T extends Type> {
       case ComposedT composedT -> rebuildComposed(type,
           map(composedT.covars(), t -> closeVars((T) t)),
           map(composedT.contravars(), t -> closeVars((T) t)));
-      case OpenVarT openVarT -> (T) factory.cVar(openVarT.name());
+      case OpenVarT openVarT -> (T) typeF.cVar(openVarT.name());
       default -> throw unexpectedCaseExc(type);
     };
   }
@@ -288,13 +288,13 @@ public class Typing<T extends Type> {
       return type;
     }
     return switch (composedT) {
-      case ArrayT array -> (T) factory.array(covars.get(0));
-      case FuncT func -> (T) factory.func(covars.get(0), contravars);
-      case TupleT func -> (T) factory.tuple(covars);
+      case ArrayT array -> (T) typeF.array(covars.get(0));
+      case FuncT func -> (T) typeF.func(covars.get(0), contravars);
+      case TupleT func -> (T) typeF.tuple(covars);
     };
   }
 
-  public TypeFactory<T> factory() {
-    return factory;
+  public TypeF<T> typeF() {
+    return typeF;
   }
 }

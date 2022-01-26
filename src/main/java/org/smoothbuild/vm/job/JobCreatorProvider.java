@@ -3,7 +3,7 @@ package org.smoothbuild.vm.job;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.base.ObjB;
-import org.smoothbuild.bytecode.type.TypeFactoryB;
+import org.smoothbuild.bytecode.type.TypeBF;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.vm.java.MethodLoader;
@@ -12,13 +12,13 @@ import com.google.common.collect.ImmutableMap;
 
 public class JobCreatorProvider {
   private final MethodLoader methodLoader;
-  private final TypeFactoryB typeFactoryB;
+  private final TypeBF typeBF;
   private final TypingB typingB;
 
   @Inject
-  public JobCreatorProvider(MethodLoader methodLoader, TypeFactoryB typeFactoryB, TypingB typingB) {
+  public JobCreatorProvider(MethodLoader methodLoader, TypeBF typeBF, TypingB typingB) {
     this.methodLoader = methodLoader;
-    this.typeFactoryB = typeFactoryB;
+    this.typeBF = typeBF;
     this.typingB = typingB;
   }
 

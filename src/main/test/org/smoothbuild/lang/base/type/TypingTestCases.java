@@ -17,7 +17,7 @@ import org.smoothbuild.lang.base.type.api.Bounded;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.api.TypeF;
 import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.lang.base.type.impl.NothingTS;
@@ -570,15 +570,15 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   private Side<T> lower() {
-    return factory().lower();
+    return typeF().lower();
   }
 
   private Side<T> upper() {
-    return factory().upper();
+    return typeF().upper();
   }
 
   public Bounds<T> oneSideBound(Side<T> side, T type) {
-    return factory().oneSideBound(side, type);
+    return typeF().oneSideBound(side, type);
   }
 
   public VarBounds<T> vb(
@@ -689,14 +689,14 @@ public class TypingTestCases<T extends Type, TT extends TestedT<T>> {
   }
 
   private TestingT<T> testingT() {
-    return testedFactory().testingT();
+    return testedF().testingT();
   }
 
-  private TestedTFactory<T, TT, ? extends TestedAssignSpec<TT>> testedFactory() {
-    return testedAssignCases.testedTFactory();
+  private TestedTF<T, TT, ? extends TestedAssignSpec<TT>> testedF() {
+    return testedAssignCases.testedTF();
   }
 
-  private TypeFactory<T> factory() {
-    return typing.factory();
+  private TypeF<T> typeF() {
+    return typing.typeF();
   }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.ByteCodeFactory;
+import org.smoothbuild.bytecode.ByteCodeF;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.TypingB;
@@ -21,22 +21,22 @@ import org.smoothbuild.plugin.NativeApi;
  */
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
-  private final ByteCodeFactory byteCodeFactory;
+  private final ByteCodeF byteCodeF;
   private final TypingB typing;
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(@ForSpace(PRJ) FileSystem fileSystem, ByteCodeFactory byteCodeFactory,
+  public Container(@ForSpace(PRJ) FileSystem fileSystem, ByteCodeF byteCodeF,
       TypingB typing) {
     this.fileSystem = fileSystem;
-    this.byteCodeFactory = byteCodeFactory;
-    this.messageLogger = new MessageLoggerImpl(byteCodeFactory);
+    this.byteCodeF = byteCodeF;
+    this.messageLogger = new MessageLoggerImpl(byteCodeF);
     this.typing = typing;
   }
 
   @Override
-  public ByteCodeFactory factory() {
-    return byteCodeFactory;
+  public ByteCodeF factory() {
+    return byteCodeF;
   }
 
   @Override
@@ -55,32 +55,32 @@ public class Container implements NativeApi {
 
   @Override
   public ArrayB messages() {
-    return byteCodeFactory.arrayBuilderWithElems(byteCodeFactory.messageT())
+    return byteCodeF.arrayBuilderWithElems(byteCodeF.messageT())
         .addAll(messageLogger.messages)
         .build();
   }
 
   private static class MessageLoggerImpl implements MessageLogger {
     private final List<ValB> messages = new ArrayList<>();
-    private final ByteCodeFactory byteCodeFactory;
+    private final ByteCodeF byteCodeF;
 
-    public MessageLoggerImpl(ByteCodeFactory byteCodeFactory) {
-      this.byteCodeFactory = byteCodeFactory;
+    public MessageLoggerImpl(ByteCodeF byteCodeF) {
+      this.byteCodeF = byteCodeF;
     }
 
     @Override
     public void error(String message) {
-      messages.add(byteCodeFactory.errorMessage(message));
+      messages.add(byteCodeF.errorMessage(message));
     }
 
     @Override
     public void warning(String message) {
-      messages.add(byteCodeFactory.warningMessage(message));
+      messages.add(byteCodeF.warningMessage(message));
     }
 
     @Override
     public void info(String message) {
-      messages.add(byteCodeFactory.infoMessage(message));
+      messages.add(byteCodeF.infoMessage(message));
     }
   }
 }

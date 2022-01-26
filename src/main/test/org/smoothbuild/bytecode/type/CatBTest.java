@@ -471,7 +471,7 @@ public class CatBTest extends TestingContext {
     @MethodSource("elemType_test_data")
     public void elemType(Function<CatDb, TypeB> factoryCall) {
       TypeB elem = execute(factoryCall);
-      ArrayT array = typeFactoryB().array(elem);
+      ArrayT array = typeBF().array(elem);
       assertThat(array.elem())
           .isEqualTo(elem);
     }

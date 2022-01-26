@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.define;
 
 import static org.smoothbuild.lang.base.define.Loc.internal;
 
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 
 /**
  * This class is immutable.
@@ -10,7 +10,7 @@ import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 public final class BoolValS extends ValS {
   private final boolean valJ;
 
-  public BoolValS(boolean valJ, ModPath modPath, TypeFactoryS factory) {
+  public BoolValS(boolean valJ, ModPath modPath, TypeSF factory) {
     super(factory.bool(), modPath, Boolean.toString(valJ), internal());
     this.valJ = valJ;
   }

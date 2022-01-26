@@ -11,36 +11,36 @@ import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class ByteCodeFactoryTest extends TestingContext {
+public class ByteCodeFTest extends TestingContext {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test
   public void blob_data_can_be_read_back() throws Exception {
-    assertThat(byteCodeFactory().blob(sink -> sink.write(bytes)).source().readByteString())
+    assertThat(byteCodeF().blob(sink -> sink.write(bytes)).source().readByteString())
         .isEqualTo(bytes);
   }
 
   @Test
   public void error_severity_is_error() {
-    assertThat(MessageStruct.severity(byteCodeFactory().errorMessage("text")))
+    assertThat(MessageStruct.severity(byteCodeF().errorMessage("text")))
         .isEqualTo(ERROR.name());
   }
 
   @Test
   public void warning_severity_is_warning() {
-    assertThat(MessageStruct.severity(byteCodeFactory().warningMessage("text")))
+    assertThat(MessageStruct.severity(byteCodeF().warningMessage("text")))
         .isEqualTo(WARNING.name());
   }
 
   @Test
   public void info_severity_is_info() {
-    assertThat(MessageStruct.severity(byteCodeFactory().infoMessage("text")))
+    assertThat(MessageStruct.severity(byteCodeF().infoMessage("text")))
         .isEqualTo(INFO.name());
   }
 
   @Test
   public void text_returns_text() {
-    assertThat(MessageStruct.text(byteCodeFactory().errorMessage("text")))
+    assertThat(MessageStruct.text(byteCodeF().errorMessage("text")))
         .isEqualTo("text");
   }
 }

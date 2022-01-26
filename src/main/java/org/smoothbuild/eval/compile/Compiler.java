@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.ByteCodeFactory;
+import org.smoothbuild.bytecode.ByteCodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.expr.CallB;
 import org.smoothbuild.bytecode.obj.expr.CombineB;
@@ -66,7 +66,7 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class Compiler {
-  private final ByteCodeFactory byteCodeFactory;
+  private final ByteCodeF byteCodeF;
   private final TypingB typing;
   private final DefsS defs;
   private final TypeSbConv typeSbConv;
@@ -77,9 +77,9 @@ public class Compiler {
   private final Map<ObjB, Nal> nals;
 
   @Inject
-  public Compiler(ByteCodeFactory byteCodeFactory, TypingB typing, DefsS defs,
+  public Compiler(ByteCodeF byteCodeF, TypingB typing, DefsS defs,
       TypeSbConv typeSbConv, FileLoader fileLoader) {
-    this.byteCodeFactory = byteCodeFactory;
+    this.byteCodeF = byteCodeF;
     this.typing = typing;
     this.defs = defs;
     this.typeSbConv = typeSbConv;
@@ -117,49 +117,49 @@ public class Compiler {
   private FuncB compileDefFunc(DefFuncS defFuncS) {
     var funcTB = convertFuncT(defFuncS.type());
     var body = compileExpr(defFuncS.body());
-    return byteCodeFactory.func(funcTB, body);
+    return byteCodeF.func(funcTB, body);
   }
 
   private FuncB compileIfFunc(IfFuncS ifFuncS) {
     var funcTB = convertFuncT(ifFuncS.type());
     var paramRefsB = createParamRefsB(funcTB.params());
-    var bodyB = byteCodeFactory.if_(paramRefsB.get(0), paramRefsB.get(1), paramRefsB.get(2));
+    var bodyB = byteCodeF.if_(paramRefsB.get(0), paramRefsB.get(1), paramRefsB.get(2));
     nals.put(bodyB, ifFuncS);
-    return byteCodeFactory.func(funcTB, bodyB);
+    return byteCodeF.func(funcTB, bodyB);
   }
 
   private FuncB compileMapFunc(MapFuncS mapFuncS) {
     var funcTB = convertFuncT(mapFuncS.type());
     var paramRefsB = createParamRefsB(funcTB.params());
-    var bodyB = byteCodeFactory.map(paramRefsB.get(0), paramRefsB.get(1));
+    var bodyB = byteCodeF.map(paramRefsB.get(0), paramRefsB.get(1));
     nals.put(bodyB, mapFuncS);
-    return byteCodeFactory.func(funcTB, bodyB);
+    return byteCodeF.func(funcTB, bodyB);
   }
 
   private FuncB compileNatFunc(NatFuncS natFuncS) {
     var funcTB = convertFuncT(natFuncS.type());
     var methodB = createMethodB(natFuncS.ann(), funcTB);
     var paramRefsB = createParamRefsB(funcTB.params());
-    var paramsTuple = byteCodeFactory.tupleT(map(paramRefsB, ObjB::type));
-    var args = byteCodeFactory.combine(paramsTuple, paramRefsB);
-    var bodyB = byteCodeFactory.invoke(typing.closeVars(funcTB.res()), methodB, args);
+    var paramsTuple = byteCodeF.tupleT(map(paramRefsB, ObjB::type));
+    var args = byteCodeF.combine(paramsTuple, paramRefsB);
+    var bodyB = byteCodeF.invoke(typing.closeVars(funcTB.res()), methodB, args);
     nals.put(bodyB, natFuncS);
-    return byteCodeFactory.func(funcTB, bodyB);
+    return byteCodeF.func(funcTB, bodyB);
   }
 
   private MethodB createMethodB(AnnS annS, FuncTB funcTB) {
-    var methodTB = byteCodeFactory.methodT(funcTB.res(), funcTB.params());
+    var methodTB = byteCodeF.methodT(funcTB.res(), funcTB.params());
     var jarB = loadNativeJar(annS);
-    var classBinaryNameB = byteCodeFactory.string(annS.path().string());
-    var isPureB = byteCodeFactory.bool(annS.isPure());
-    return byteCodeFactory.method(methodTB, jarB, classBinaryNameB, isPureB);
+    var classBinaryNameB = byteCodeF.string(annS.path().string());
+    var isPureB = byteCodeF.bool(annS.isPure());
+    return byteCodeF.method(methodTB, jarB, classBinaryNameB, isPureB);
   }
 
   private ImmutableList<ObjB> createParamRefsB(ImmutableList<TypeB> paramTs) {
     Builder<ObjB> builder = ImmutableList.builder();
     for (int i = 0; i < paramTs.size(); i++) {
       var closedT = typing.closeVars(paramTs.get(i));
-      builder.add(byteCodeFactory.paramRef(closedT, BigInteger.valueOf(i)));
+      builder.add(byteCodeF.paramRef(closedT, BigInteger.valueOf(i)));
     }
     return builder.build();
   }
@@ -178,7 +178,7 @@ public class Compiler {
   }
 
   private BoolB compileBoolVal(BoolValS boolValS) {
-    var boolB = byteCodeFactory.bool(boolValS.valJ());
+    var boolB = byteCodeF.bool(boolValS.valJ());
     nals.put(boolB, boolValS);
     return boolB;
   }
@@ -210,42 +210,42 @@ public class Compiler {
   }
 
   private BlobB compileBlob(BlobS blobS) {
-    return byteCodeFactory.blob(sink -> sink.write(blobS.byteString()));
+    return byteCodeF.blob(sink -> sink.write(blobS.byteString()));
   }
 
   private CallB compileCall(CallS callS) {
     var callableB = compileExpr(callS.callable());
     var argsB = compileExprs(callS.args());
 
-    var argTupleT = byteCodeFactory.tupleT(map(argsB, ObjB::type));
+    var argTupleT = byteCodeF.tupleT(map(argsB, ObjB::type));
     var paramTupleT = ((FuncTB) callableB.type()).paramsTuple();
     var vars = typing.inferVarBoundsLower(paramTupleT, argTupleT);
     var actualParamTupleT = (TupleTB) typing.mapVarsLower(paramTupleT, vars);
-    var combineB = byteCodeFactory.combine(actualParamTupleT, argsB);
+    var combineB = byteCodeF.combine(actualParamTupleT, argsB);
 
     nals.put(combineB, new NalImpl("{}", callS.loc()));
-    return byteCodeFactory.call(convertT(callS.type()), callableB, combineB);
+    return byteCodeF.call(convertT(callS.type()), callableB, combineB);
   }
 
   private CombineB compileCombine(CombineS combineS) {
     var evalT = convertStructT(combineS.type());
     var items = compileExprs(combineS.elems());
-    return byteCodeFactory.combine(evalT, items);
+    return byteCodeF.combine(evalT, items);
   }
 
   private IntB compileInt(IntS intS) {
-    return byteCodeFactory.int_(intS.bigInteger());
+    return byteCodeF.int_(intS.bigInteger());
   }
 
   private OrderB compileOrder(OrderS orderS) {
     var arrayTB = convertArrayT(orderS.type());
     var elemsB = compileExprs(orderS.elems());
-    return byteCodeFactory.order(arrayTB, elemsB);
+    return byteCodeF.order(arrayTB, elemsB);
   }
 
   private ParamRefB compileParamRef(ParamRefS paramRefS) {
     var index = callStack.peek().indexMap().get(paramRefS.paramName());
-    return byteCodeFactory.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
+    return byteCodeF.paramRef(convertT(paramRefS.type()), BigInteger.valueOf(index));
   }
 
   private ObjB compileTopRef(TopRefS topRefS) {
@@ -259,13 +259,13 @@ public class Compiler {
     var selectableB = compileExpr(selectS.selectable());
     var structTS = (StructTS) selectS.selectable().type();
     var indexJ = structTS.fields().indexMap().get(selectS.field());
-    var indexB = byteCodeFactory.int_(BigInteger.valueOf(indexJ));
+    var indexB = byteCodeF.int_(BigInteger.valueOf(indexJ));
     nals.put(indexB, selectS);
-    return byteCodeFactory.select(convertT(selectS.type()), selectableB, indexB);
+    return byteCodeF.select(convertT(selectS.type()), selectableB, indexB);
   }
 
   private StringB compileString(StringS stringS) {
-    return byteCodeFactory.string(stringS.string());
+    return byteCodeF.string(stringS.string());
   }
 
   // helpers

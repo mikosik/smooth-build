@@ -11,13 +11,13 @@ import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.TupleT;
-import org.smoothbuild.lang.base.type.api.TypeFactory;
+import org.smoothbuild.lang.base.type.api.TypeF;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
 
 @Singleton
-public class TypeFactoryS implements TypeFactory<TypeS> {
+public class TypeSF implements TypeF<TypeS> {
   private static final AnyTS ANY = new AnyTS();
   private static final BlobTS BLOB = new BlobTS();
   private static final BoolTS BOOL = new BoolTS();
@@ -28,7 +28,7 @@ public class TypeFactoryS implements TypeFactory<TypeS> {
   private final Sides<TypeS> sides;
 
   @Inject
-  public TypeFactoryS() {
+  public TypeSF() {
     this.sides = new Sides<>(any(), nothing());
   }
 

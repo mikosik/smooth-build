@@ -9,7 +9,7 @@ import org.smoothbuild.lang.base.type.TestedTB.TestedTupleTB;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestedTBFactory implements TestedTFactory<TypeB, TestedTB, TestedAssignSpecB> {
+public class TestedTBF implements TestedTF<TypeB, TestedTB, TestedAssignSpecB> {
   @Override
   public TestingT<TypeB> testingT() {
     return TestingTB.INSTANCE;

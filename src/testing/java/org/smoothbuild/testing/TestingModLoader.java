@@ -120,7 +120,7 @@ public class TestingModLoader {
 
   private Maybe<ModS> load() {
     var typing = testingContext.typingS();
-    var factory = testingContext.typeFactoryS();
+    var factory = testingContext.typeSF();
     var typeInferrer = new TypeInferrer(factory, typing);
     var topEvalLoader = new TopEvalLoader(factory, typing);
     var modLoader = new ModLoader(typeInferrer, topEvalLoader, factory, typing);

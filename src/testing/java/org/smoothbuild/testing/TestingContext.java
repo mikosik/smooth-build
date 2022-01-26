@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.smoothbuild.bytecode.ByteCodeFactory;
+import org.smoothbuild.bytecode.ByteCodeF;
 import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ObjB;
@@ -43,7 +43,7 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.TypeFactoryB;
+import org.smoothbuild.bytecode.type.TypeBF;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.expr.CallCB;
@@ -105,8 +105,8 @@ import org.smoothbuild.lang.base.type.impl.NothingTS;
 import org.smoothbuild.lang.base.type.impl.OpenVarTS;
 import org.smoothbuild.lang.base.type.impl.StringTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.base.type.impl.VarTS;
 import org.smoothbuild.lang.expr.AnnS;
@@ -142,7 +142,7 @@ import okio.ByteString;
 public class TestingContext {
   private Computer computer;
   private Container container;
-  private ByteCodeFactory byteCodeFactory;
+  private ByteCodeF byteCodeF;
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
   private ObjDb objDb;
@@ -154,7 +154,7 @@ public class TestingContext {
   private FileSystem fullFileSystem;
   private TempManager tempManager;
   private ModS internalMod;
-  private TypeFactoryS typeFactoryS;
+  private TypeSF typeSF;
 
   public Vm vm() {
     return vmProv().get(ImmutableMap.of());
@@ -165,7 +165,7 @@ public class TestingContext {
   }
 
   public VmProv vmProv(MethodLoader methodLoader) {
-    return vmProv(new JobCreatorProvider(methodLoader, typeFactoryB(), typingB()));
+    return vmProv(new JobCreatorProvider(methodLoader, typeBF(), typingB()));
   }
 
   public VmProv vmProv(JobCreatorProvider jobCreatorProvider) {
@@ -178,7 +178,7 @@ public class TestingContext {
   }
 
   public CompilerProv compilerProv(FileLoader fileLoader) {
-    return new CompilerProv(typeShConv(), byteCodeFactory(), typingB(), fileLoader);
+    return new CompilerProv(typeShConv(), byteCodeF(), typingB(), fileLoader);
   }
 
   public ParallelJobExecutor parallelJobExecutor() {
@@ -207,7 +207,7 @@ public class TestingContext {
 
   public ModS internalMod() {
     if (internalMod == null) {
-      internalMod = new InternalModLoader(typeFactoryS()).load();
+      internalMod = new InternalModLoader(typeSF()).load();
     }
     return internalMod;
   }
@@ -235,23 +235,23 @@ public class TestingContext {
   }
 
   private Container newContainer() {
-    return new Container(fullFileSystem(), byteCodeFactory(), typingB());
+    return new Container(fullFileSystem(), byteCodeF(), typingB());
   }
 
   public TypeSbConv typeShConv() {
-    return new TypeSbConv(byteCodeFactory());
+    return new TypeSbConv(byteCodeF());
   }
 
-  public ByteCodeFactory byteCodeFactory() {
-    if (byteCodeFactory == null) {
-      byteCodeFactory = new ByteCodeFactory(objDb(), catDb());
+  public ByteCodeF byteCodeF() {
+    if (byteCodeF == null) {
+      byteCodeF = new ByteCodeF(objDb(), catDb());
     }
-    return byteCodeFactory;
+    return byteCodeF;
   }
 
   public TypingS typingS() {
     if (typingS == null) {
-      typingS = new TypingS(typeFactoryS());
+      typingS = new TypingS(typeSF());
     }
     return typingS;
   }
@@ -263,15 +263,15 @@ public class TestingContext {
     return typingB;
   }
 
-  public TypeFactoryB typeFactoryB() {
+  public TypeBF typeBF() {
     return catDb();
   }
 
-  public TypeFactoryS typeFactoryS() {
-    if (typeFactoryS == null) {
-      typeFactoryS = new TypeFactoryS();
+  public TypeSF typeSF() {
+    if (typeSF == null) {
+      typeSF = new TypeSF();
     }
-    return typeFactoryS;
+    return typeSF;
   }
 
   public CatDb catDb() {
@@ -291,7 +291,7 @@ public class TestingContext {
   public ComputationCache computationCache() {
     if (computationCache == null) {
       computationCache = new ComputationCache(
-          computationCacheFileSystem(), objDb(), byteCodeFactory());
+          computationCacheFileSystem(), objDb(), byteCodeF());
     }
     return computationCache;
   }
@@ -423,11 +423,11 @@ public class TestingContext {
   }
 
   public Side<TypeB> lowerB() {
-    return typeFactoryB().lower();
+    return typeBF().lower();
   }
 
   public Side<TypeB> upperB() {
-    return typeFactoryB().upper();
+    return typeBF().upper();
   }
 
   // Expr types
@@ -518,7 +518,7 @@ public class TestingContext {
   }
 
   public BlobB blobB() {
-    return byteCodeFactory().blob(sink -> sink.writeUtf8("blob data"));
+    return byteCodeF().blob(sink -> sink.writeUtf8("blob data"));
   }
 
   public BlobB blobB(int data) {
@@ -526,7 +526,7 @@ public class TestingContext {
   }
 
   public BlobB blobB(ByteString bytes) {
-    return byteCodeFactory().blob(sink -> sink.write(bytes));
+    return byteCodeF().blob(sink -> sink.write(bytes));
   }
 
   public BlobBBuilder blobBBuilder() {
@@ -550,8 +550,8 @@ public class TestingContext {
   }
 
   public TupleB fileB(String path, BlobB blob) {
-    StringB string = byteCodeFactory().string(path);
-    return byteCodeFactory().file(string, blob);
+    StringB string = byteCodeF().string(path);
+    return byteCodeF().file(string, blob);
   }
 
   public FuncB funcB() {
@@ -627,23 +627,23 @@ public class TestingContext {
   }
 
   public ArrayB messageArrayWithOneError() {
-    return arrayB(byteCodeFactory().errorMessage("error message"));
+    return arrayB(byteCodeF().errorMessage("error message"));
   }
 
   public ArrayB messageArrayEmtpy() {
-    return arrayB(byteCodeFactory().messageT());
+    return arrayB(byteCodeF().messageT());
   }
 
   public TupleB errorMessage(String text) {
-    return byteCodeFactory().errorMessage(text);
+    return byteCodeF().errorMessage(text);
   }
 
   public TupleB warningMessage(String text) {
-    return byteCodeFactory().warningMessage(text);
+    return byteCodeF().warningMessage(text);
   }
 
   public TupleB infoMessage(String text) {
-    return byteCodeFactory().infoMessage(text);
+    return byteCodeF().infoMessage(text);
   }
 
   // Expr-s
@@ -733,19 +733,19 @@ public class TestingContext {
   // Types Smooth
 
   public AnyTS anyTS() {
-    return typeFactoryS().any();
+    return typeSF().any();
   }
 
   public ArrayTS arrayTS(TypeS elemT) {
-    return typeFactoryS().array(elemT);
+    return typeSF().array(elemT);
   }
 
   public BlobTS blobTS() {
-    return typeFactoryS().blob();
+    return typeSF().blob();
   }
 
   public BoolTS boolTS() {
-    return typeFactoryS().bool();
+    return typeSF().bool();
   }
 
   public FuncTS funcTS(TypeS resT) {
@@ -757,36 +757,36 @@ public class TestingContext {
   }
 
   public FuncTS funcTS(TypeS resT, ImmutableList<TypeS> paramTs) {
-    return typeFactoryS().func(resT, paramTs);
+    return typeSF().func(resT, paramTs);
   }
 
   public IntTS intTS() {
-    return typeFactoryS().int_();
+    return typeSF().int_();
   }
 
   public NothingTS nothingTS() {
-    return typeFactoryS().nothing();
+    return typeSF().nothing();
   }
 
   public StructTS personTS() {
-    return typeFactoryS().struct("Person",
+    return typeSF().struct("Person",
         nList(sigS(stringTS(), "firstName"), sigS(stringTS(), "lastName")));
   }
 
   public StringTS stringTS() {
-    return typeFactoryS().string();
+    return typeSF().string();
   }
 
   public StructTS structTS(String name, NList<ItemSigS> fields) {
-    return typeFactoryS().struct(name, fields);
+    return typeSF().struct(name, fields);
   }
 
   public OpenVarTS oVarTS(String name) {
-    return typeFactoryS().oVar(name);
+    return typeSF().oVar(name);
   }
 
   public ClosedVarTS cVarTS(String name) {
-    return typeFactoryS().cVar(name);
+    return typeSF().cVar(name);
   }
 
   public TypeS open(TypeS typeS) {
@@ -798,11 +798,11 @@ public class TestingContext {
   }
 
   public Side<TypeS> lowerS() {
-    return typeFactoryS().lower();
+    return typeSF().lower();
   }
 
   public Side<TypeS> upperS() {
-    return typeFactoryS().upper();
+    return typeSF().upper();
   }
 
   public VarBounds<TypeS> vbS(
@@ -829,7 +829,7 @@ public class TestingContext {
   }
 
   public Bounds<TypeS> oneSideBoundS(Side<TypeS> side, TypeS type) {
-    return typeFactoryS().oneSideBound(side, type);
+    return typeSF().oneSideBound(side, type);
   }
 
   // Expressions
@@ -1016,11 +1016,11 @@ public class TestingContext {
   }
 
   public IfFuncS ifFuncS() {
-    return new IfFuncS(modPath(), typeFactoryS());
+    return new IfFuncS(modPath(), typeSF());
   }
 
   public MapFuncS mapFuncS() {
-    return new MapFuncS(modPath(), typeFactoryS());
+    return new MapFuncS(modPath(), typeSF());
   }
 
   public ItemSigS sigS(TypeS type, String name) {

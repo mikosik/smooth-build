@@ -19,7 +19,7 @@ import org.smoothbuild.lang.base.define.TopEvalS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.expr.AnnS;
 import org.smoothbuild.lang.expr.BlobS;
@@ -49,12 +49,12 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class TopEvalLoader {
-  private final TypeFactoryS factory;
+  private final TypeSF typeSF;
   private final TypingS typing;
 
   @Inject
-  public TopEvalLoader(TypeFactoryS factory, TypingS typing) {
-    this.factory = factory;
+  public TopEvalLoader(TypeSF typeSF, TypingS typing) {
+    this.typeSF = typeSF;
     this.typing = typing;
   }
 
@@ -79,7 +79,7 @@ public class TopEvalLoader {
     var resT = funcN.resT().get();
     var name = funcN.name();
     var loc = funcN.loc();
-    var funcT = factory.func(resT, map(params, DefinedS::type));
+    var funcT = typeSF.func(resT, map(params, DefinedS::type));
     if (funcN.ann().isPresent()) {
       return new NatFuncS(funcT,
           path, name, params, loadAnn(funcN.ann().get()), loc
@@ -181,21 +181,21 @@ public class TopEvalLoader {
 
   public BlobS createBlob(BlobN blob) {
     return new BlobS(
-        factory.blob(),
+        typeSF.blob(),
         blob.byteString(),
         blob.loc());
   }
 
   public IntS createInt(IntN intN) {
     return new IntS(
-        factory.int_(),
+        typeSF.int_(),
         intN.bigInteger(),
         intN.loc());
   }
 
   public StringS createString(StringN string) {
     return new StringS(
-        factory.string(),
+        typeSF.string(),
         string.unescapedValue(),
         string.loc());
   }

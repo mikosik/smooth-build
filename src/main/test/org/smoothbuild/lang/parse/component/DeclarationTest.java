@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.parse.component;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.TESTED_MONOTYPES;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.TESTED_SINGLE_VARIABLE_POLYTYPES;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.TESTED_VALID_POLYTYPES;
+import static org.smoothbuild.lang.base.type.TestedTSF.TESTED_MONOTYPES;
+import static org.smoothbuild.lang.base.type.TestedTSF.TESTED_SINGLE_VARIABLE_POLYTYPES;
+import static org.smoothbuild.lang.base.type.TestedTSF.TESTED_VALID_POLYTYPES;
 import static org.smoothbuild.lang.base.type.TestingTS.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTS.STRING;
 import static org.smoothbuild.lang.base.type.TestingTS.a;

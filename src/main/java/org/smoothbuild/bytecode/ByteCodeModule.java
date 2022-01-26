@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.type.CatDb;
-import org.smoothbuild.bytecode.type.TypeFactoryB;
+import org.smoothbuild.bytecode.type.TypeBF;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.install.TempManager;
@@ -29,7 +29,7 @@ public class ByteCodeModule extends AbstractModule {
   }
 
   @Provides
-  public TypeFactoryB provideTypeFactoryH(CatDb catDb) {
+  public TypeBF provideTypeBF(CatDb catDb) {
     return catDb;
   }
 

@@ -1,13 +1,13 @@
 package org.smoothbuild.acceptance.lang.convert;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.BLOB;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.BOOL;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.INT;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.NOTHING;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.STRING;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.STRUCT;
-import static org.smoothbuild.lang.base.type.TestedTSFactory.a;
+import static org.smoothbuild.lang.base.type.TestedTSF.BLOB;
+import static org.smoothbuild.lang.base.type.TestedTSF.BOOL;
+import static org.smoothbuild.lang.base.type.TestedTSF.INT;
+import static org.smoothbuild.lang.base.type.TestedTSF.NOTHING;
+import static org.smoothbuild.lang.base.type.TestedTSF.STRING;
+import static org.smoothbuild.lang.base.type.TestedTSF.STRUCT;
+import static org.smoothbuild.lang.base.type.TestedTSF.a;
 
 import java.io.IOException;
 import java.util.stream.Stream;

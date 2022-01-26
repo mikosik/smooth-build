@@ -9,18 +9,18 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.impl.ArrayTS;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.util.collect.NList;
 
 public final class MapFuncS extends FuncS {
   public static final String MAP_FUNCTION_NAME = "map";
 
-  public MapFuncS(ModPath modPath, TypeFactoryS factory) {
+  public MapFuncS(ModPath modPath, TypeSF factory) {
     this(modPath, factory.oVar("E"), factory.oVar("R"), factory);
   }
 
-  public MapFuncS(ModPath modPath, TypeS inputElemT, TypeS resElemT, TypeFactoryS factory) {
+  public MapFuncS(ModPath modPath, TypeS inputElemT, TypeS resElemT, TypeSF factory) {
     this(factory.array(resElemT),
         factory.array(inputElemT),
         factory.func(resElemT, list(inputElemT)), modPath,
@@ -28,11 +28,11 @@ public final class MapFuncS extends FuncS {
   }
 
   private MapFuncS(ArrayTS resT, ArrayTS inputArrayT, FuncTS mappingFuncT, ModPath modPath,
-      TypeFactoryS factory) {
+      TypeSF factory) {
     this(resT, createParams(modPath, inputArrayT, mappingFuncT), modPath, factory);
   }
 
-  private MapFuncS(ArrayTS resT, NList<ItemS> params, ModPath modPath, TypeFactoryS factory) {
+  private MapFuncS(ArrayTS resT, NList<ItemS> params, ModPath modPath, TypeSF factory) {
     super(factory.func(
         resT, map(params, DefinedS::type)), modPath, MAP_FUNCTION_NAME, params, internal());
   }

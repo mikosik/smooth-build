@@ -17,8 +17,8 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.VarBounds;
-import org.smoothbuild.lang.base.type.impl.TypeFactoryS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallN;
@@ -27,11 +27,11 @@ import org.smoothbuild.util.collect.NList;
 import com.google.common.collect.ImmutableList;
 
 public class CallTypeInferrer {
-  private final TypeFactoryS factory;
+  private final TypeSF typeSF;
   private final TypingS typing;
 
-  public CallTypeInferrer(TypeFactoryS factory, TypingS typing) {
-    this.factory = factory;
+  public CallTypeInferrer(TypeSF typeSF, TypingS typing) {
+    this.typeSF = typeSF;
     this.typing = typing;
   }
 
@@ -52,7 +52,7 @@ public class CallTypeInferrer {
         logBuffer.logAll(varProblems);
         return maybeLogs(logBuffer);
       }
-      TypeS mapped = typing.mapVars(resT, boundedVars, factory.lower());
+      TypeS mapped = typing.mapVars(resT, boundedVars, typeSF.lower());
       return maybeValueAndLogs(mapped, logBuffer);
     }
     return maybeLogs(logBuffer);
@@ -100,7 +100,7 @@ public class CallTypeInferrer {
 
   private ImmutableList<Log> findVarProblems(CallN call, VarBounds<TypeS> varBounds) {
     return varBounds.map().values().stream()
-        .filter(b -> typing.contains(b.bounds().lower(), factory.any()))
+        .filter(b -> typing.contains(b.bounds().lower(), typeSF.any()))
         .map(b -> parseError(call, "Cannot infer actual type for type var "
             + b.var().q() + "."))
         .collect(toImmutableList());

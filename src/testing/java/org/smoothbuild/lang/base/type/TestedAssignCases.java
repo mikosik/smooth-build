@@ -21,11 +21,11 @@ public class TestedAssignCases<
     S extends TestedAssignSpec<? extends TT>> {
 
   public static final TestedAssignCases<TypeS, TestedTS, TestedAssignSpecS> INSTANCE_S =
-      new TestedAssignCases<>(new TestedTSFactory());
+      new TestedAssignCases<>(new TestedTSF());
   public static final TestedAssignCases<TypeB, TestedTB, TestedAssignSpecB> INSTANCE_H =
-      new TestedAssignCases<>(new TestedTBFactory());
+      new TestedAssignCases<>(new TestedTBF());
 
-  private final TestedTFactory<T, TT, S> testedTFactory;
+  private final TestedTF<T, TT, S> testedTF;
   private final TestingT<T> testingT;
   private final TT a;
   private final TT b;
@@ -39,24 +39,24 @@ public class TestedAssignCases<
   private final boolean isStructSupported;
   private final boolean isTupleSupported;
 
-  private TestedAssignCases(TestedTFactory<T, TT, S> testedTFactory) {
-    this.testedTFactory = testedTFactory;
-    this.testingT = testedTFactory.testingT();
-    this.a = testedTFactory.varA();
-    this.b = testedTFactory.varB();
-    this.any = testedTFactory.any();
-    this.blob = testedTFactory.blob();
-    this.int_ = testedTFactory.int_();
-    this.nothing = testedTFactory.nothing();
-    this.string = testedTFactory.string();
+  private TestedAssignCases(TestedTF<T, TT, S> testedTF) {
+    this.testedTF = testedTF;
+    this.testingT = testedTF.testingT();
+    this.a = testedTF.varA();
+    this.b = testedTF.varB();
+    this.any = testedTF.any();
+    this.blob = testedTF.blob();
+    this.int_ = testedTF.int_();
+    this.nothing = testedTF.nothing();
+    this.string = testedTF.string();
     this.isStructSupported = testingT.isStructSupported();
     this.isTupleSupported = testingT.isTupleSupported();
-    this.struct = this.isStructSupported ? testedTFactory.struct() : null;
-    this.tuple = this.isTupleSupported ? testedTFactory.tuple() : null;
+    this.struct = this.isStructSupported ? testedTF.struct() : null;
+    this.tuple = this.isTupleSupported ? testedTF.tuple() : null;
   }
 
-  public TestedTFactory<T, TT, S> testedTFactory() {
-    return testedTFactory;
+  public TestedTF<T, TT, S> testedTF() {
+    return testedTF;
   }
 
   public TestingT<T> testingT() {
@@ -64,11 +64,11 @@ public class TestedAssignCases<
   }
 
   private S illegalAssignment(TT target, TT source) {
-    return testedTFactory.illegalAssignment(target, source);
+    return testedTF.illegalAssignment(target, source);
   }
 
   private S allowedAssignment(TT target, TT source) {
-    return testedTFactory.allowedAssignment(target, source);
+    return testedTF.allowedAssignment(target, source);
   }
 
   public List<S> assignment_test_specs(boolean includeAny) {
@@ -380,7 +380,7 @@ public class TestedAssignCases<
       Predicate<TestedT<? extends Type>>... allowedPredicates) {
     for (TT type : generateTypes(2, includeAny)) {
       boolean allowed = stream(allowedPredicates).anyMatch(predicate -> predicate.test(type));
-      result.add(testedTFactory.testedAssignmentSpec(target, type, allowed));
+      result.add(testedTF.testedAssignmentSpec(target, type, allowed));
     }
     return result;
   }
@@ -412,22 +412,22 @@ public class TestedAssignCases<
   }
 
   private TT a(TT type) {
-    return testedTFactory.array(type);
+    return testedTF.array(type);
   }
 
   private TT a2(TT type) {
-    return testedTFactory.array2(type);
+    return testedTF.array2(type);
   }
 
   private TT tuple(TT type) {
-    return testedTFactory.tuple(list(type));
+    return testedTF.tuple(list(type));
   }
 
   private TT f(TT resT, ImmutableList<TT> paramTs) {
-    return testedTFactory.func(resT, paramTs);
+    return testedTF.func(resT, paramTs);
   }
 
   private TT f(TT resT, TT... paramTs) {
-    return testedTFactory.func(resT, list(paramTs));
+    return testedTF.func(resT, list(paramTs));
   }
 }

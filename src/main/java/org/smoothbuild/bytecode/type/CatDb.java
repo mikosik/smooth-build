@@ -78,7 +78,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is thread-safe.
  */
-public class CatDb implements TypeFactoryB {
+public class CatDb implements TypeBF {
   public static final String DATA_PATH = "data";
   private static final int DATA_IDX = 1;
   private static final int CALLABLE_RES_IDX = 0;

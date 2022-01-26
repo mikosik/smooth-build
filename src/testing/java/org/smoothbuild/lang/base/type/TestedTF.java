@@ -4,7 +4,7 @@ import org.smoothbuild.lang.base.type.api.Type;
 
 import com.google.common.collect.ImmutableList;
 
-public interface TestedTFactory
+public interface TestedTF
     <T extends Type, TT extends TestedT<T>, S extends TestedAssignSpec<? extends TT>> {
 
   public TestingT<T> testingT();
