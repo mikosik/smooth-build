@@ -15,7 +15,7 @@ public class ToStringTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("A");
   }
 }

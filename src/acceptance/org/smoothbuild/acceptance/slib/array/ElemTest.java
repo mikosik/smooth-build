@@ -13,7 +13,7 @@ public class ElemTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("first");
   }
 
@@ -24,7 +24,7 @@ public class ElemTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("third");
   }
 

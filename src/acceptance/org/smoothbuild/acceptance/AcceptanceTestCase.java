@@ -334,7 +334,7 @@ public abstract class AcceptanceTestCase {
     };
   }
 
-  public String artifactFileContentAsString(String artifact) throws IOException {
+  public String artifactAsString(String artifact) throws IOException {
     return fileContentAsString(artifactAbsolutePath(artifact));
   }
 
@@ -366,11 +366,11 @@ public abstract class AcceptanceTestCase {
     return readAndClose(buffer(source(path)), s -> s.readString(CHARSET));
   }
 
-  public ByteString artifactFileContent(String artifact) throws IOException {
-    return fileContent(artifactAbsolutePath(artifact));
+  public ByteString artifactAsByteString(String artifact) throws IOException {
+    return fileContentAsByteSTring(artifactAbsolutePath(artifact));
   }
 
-  public static ByteString fileContent(Path path) throws IOException {
+  public static ByteString fileContentAsByteSTring(Path path) throws IOException {
     return readAndClose(buffer(source(path)), BufferedSource::readByteString);
   }
 

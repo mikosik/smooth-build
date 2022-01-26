@@ -71,7 +71,7 @@ public class NativeTest extends AcceptanceTestCase {
             """, StringIdentity.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactFileContentAsString("result"))
+      assertThat(artifactAsString("result"))
           .isEqualTo("token");
     }
 

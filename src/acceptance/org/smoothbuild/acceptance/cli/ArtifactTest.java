@@ -45,7 +45,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -57,7 +57,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("A");
   }
 

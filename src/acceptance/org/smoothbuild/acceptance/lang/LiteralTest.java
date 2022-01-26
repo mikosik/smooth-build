@@ -24,7 +24,7 @@ public class LiteralTest extends AcceptanceTestCase {
     createUserModule("result = 0x" + hexDigits + ";");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactAsByteString("result"))
         .isEqualTo(ByteString.decodeHex(hexDigits));
   }
 
@@ -40,7 +40,7 @@ public class LiteralTest extends AcceptanceTestCase {
     createUserModule("result = " + intLiteral + ";");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactAsByteString("result"))
         .isEqualTo(ByteString.of(new BigInteger(intLiteral, 10).toByteArray()));
   }
 
@@ -67,7 +67,7 @@ public class LiteralTest extends AcceptanceTestCase {
     createUserModule("result = \"" + string + "\";");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo(string.translateEscapes());
   }
 }

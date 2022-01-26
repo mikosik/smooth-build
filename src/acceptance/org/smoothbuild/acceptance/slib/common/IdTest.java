@@ -15,7 +15,7 @@ public class IdTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -26,7 +26,7 @@ public class IdTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactAsByteString("result"))
         .isEqualTo(ByteString.of((byte) 1, (byte) 2, (byte) 3));
   }
 }

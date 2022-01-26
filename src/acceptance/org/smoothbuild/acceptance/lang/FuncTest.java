@@ -24,7 +24,7 @@ public class FuncTest extends AcceptanceTestCase {
           """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("abc");
       }
 
@@ -36,7 +36,7 @@ public class FuncTest extends AcceptanceTestCase {
               """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("def");
       }
 
@@ -51,7 +51,7 @@ public class FuncTest extends AcceptanceTestCase {
           """, ThrowException.class.getCanonicalName()));
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("def");
       }
     }
@@ -68,7 +68,7 @@ public class FuncTest extends AcceptanceTestCase {
             """, StringIdentity.class.getCanonicalName()));
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("abc");
       }
 
@@ -82,7 +82,7 @@ public class FuncTest extends AcceptanceTestCase {
             """, StringIdentity.class.getCanonicalName()));
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("def");
       }
 
@@ -98,7 +98,7 @@ public class FuncTest extends AcceptanceTestCase {
             """, StringIdentity.class.getCanonicalName(), ThrowException.class.getCanonicalName()));
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("def");
       }
     }
@@ -116,7 +116,7 @@ public class FuncTest extends AcceptanceTestCase {
               """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("abc");
       }
 
@@ -128,7 +128,7 @@ public class FuncTest extends AcceptanceTestCase {
               """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("abc");
       }
     }
@@ -144,7 +144,7 @@ public class FuncTest extends AcceptanceTestCase {
               """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("abc");
       }
 
@@ -157,7 +157,7 @@ public class FuncTest extends AcceptanceTestCase {
               """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
-        assertThat(artifactFileContentAsString("result"))
+        assertThat(artifactAsString("result"))
             .isEqualTo("abc");
       }
     }
@@ -171,7 +171,7 @@ public class FuncTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -183,7 +183,7 @@ public class FuncTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -198,7 +198,7 @@ public class FuncTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -212,7 +212,7 @@ public class FuncTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -226,7 +226,7 @@ public class FuncTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("abc");
   }
 }

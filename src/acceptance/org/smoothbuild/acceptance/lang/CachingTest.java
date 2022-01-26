@@ -21,10 +21,10 @@ public class CachingTest extends AcceptanceTestCase {
             """, Random.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      String resultFromFirstRun = artifactFileContentAsString("result");
+      String resultFromFirstRun = artifactAsString("result");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      String resultFromSecondRun = artifactFileContentAsString("result");
+      String resultFromSecondRun = artifactAsString("result");
 
       assertThat(resultFromSecondRun)
           .isEqualTo(resultFromFirstRun);
@@ -42,8 +42,8 @@ public class CachingTest extends AcceptanceTestCase {
       runSmoothBuild("resultA", "resultB");
       assertFinishedWithSuccess();
 
-      assertThat(artifactFileContentAsString("resultA"))
-          .isEqualTo(artifactFileContentAsString("resultB"));
+      assertThat(artifactAsString("resultA"))
+          .isEqualTo(artifactAsString("resultB"));
     }
 
     @Test
@@ -56,10 +56,10 @@ public class CachingTest extends AcceptanceTestCase {
             """, Random.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      String resultFromFirstRun = artifactFileContentAsString("result");
+      String resultFromFirstRun = artifactAsString("result");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      String resultFromSecondRun = artifactFileContentAsString("result");
+      String resultFromSecondRun = artifactAsString("result");
 
       assertThat(resultFromSecondRun)
           .isNotEqualTo(resultFromFirstRun);
@@ -81,8 +81,8 @@ public class CachingTest extends AcceptanceTestCase {
 
     runSmoothBuild("random1", "random2");
     assertFinishedWithSuccess();
-    String random1 = artifactFileContentAsString("random1");
-    String random2 = artifactFileContentAsString("random2");
+    String random1 = artifactAsString("random1");
+    String random2 = artifactAsString("random2");
 
     assertThat(random1).isEqualTo(random2);
   }
@@ -101,8 +101,8 @@ public class CachingTest extends AcceptanceTestCase {
 
     runSmoothBuild("random1", "random2");
     assertFinishedWithSuccess();
-    String random1 = artifactFileContentAsString("random1");
-    String random2 = artifactFileContentAsString("random2");
+    String random1 = artifactAsString("random1");
+    String random2 = artifactAsString("random2");
 
     assertThat(random1).isEqualTo(random2);
   }
@@ -122,8 +122,8 @@ public class CachingTest extends AcceptanceTestCase {
 
     runSmoothBuild("random1", "random2");
     assertFinishedWithSuccess();
-    String random1 = artifactFileContentAsString("random1");
-    String random2 = artifactFileContentAsString("random2");
+    String random1 = artifactAsString("random1");
+    String random2 = artifactAsString("random2");
 
     assertThat(random1).isNotEqualTo(random2);
   }

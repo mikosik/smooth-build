@@ -16,7 +16,7 @@ public class IfTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("then clause");
   }
 
@@ -27,7 +27,7 @@ public class IfTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("else clause");
   }
 
@@ -41,7 +41,7 @@ public class IfTest extends AcceptanceTestCase {
             """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("else clause");
   }
 
@@ -55,7 +55,7 @@ public class IfTest extends AcceptanceTestCase {
             """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
+    assertThat(artifactAsString("result"))
         .isEqualTo("then clause");
   }
 
@@ -71,7 +71,7 @@ public class IfTest extends AcceptanceTestCase {
             """, ThrowException.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactFileContentAsString("result"))
+      assertThat(artifactAsString("result"))
           .isEqualTo("else clause");
     }
 
@@ -86,7 +86,7 @@ public class IfTest extends AcceptanceTestCase {
             """, ThrowException.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactFileContentAsString("result"))
+      assertThat(artifactAsString("result"))
           .isEqualTo("then clause");
     }
   }
