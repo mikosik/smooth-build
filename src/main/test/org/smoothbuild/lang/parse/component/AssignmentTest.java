@@ -35,7 +35,7 @@ public class AssignmentTest extends TestingContext {
         testSpec.declarations());
     if (testSpec.allowed()) {
       module(sourceCode)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     } else {
       module(sourceCode)
           .loadsWithError(1, "`result` has body which type is " + source.q()
@@ -54,7 +54,7 @@ public class AssignmentTest extends TestingContext {
         testSpec.typeDeclarations());
     if (testSpec.allowed()) {
       module(sourceCode)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     } else {
       module(sourceCode)
           .loadsWithError(1, "`myFunc` has body which type is " + source.q()
@@ -73,7 +73,7 @@ public class AssignmentTest extends TestingContext {
         "outerFunc(" + sourceT.name() + " source) = innerFunc(source);  ",
         testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
-      module.loadsSuccessfully();
+      module.loadsWithSuccess();
     } else {
       var type = targetT.type();
       FuncT funcT = new FuncTS(type, list(type));
@@ -94,7 +94,7 @@ public class AssignmentTest extends TestingContext {
         "outerFunc(" + sourceT.name() + " source) = innerFunc(target=source);  ",
         testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
-      module.loadsSuccessfully();
+      module.loadsWithSuccess();
     } else {
       var type = targetT.type();
       FuncT funcT = new FuncTS(type, list(type));
@@ -119,7 +119,7 @@ public class AssignmentTest extends TestingContext {
         testSpec.declarations());
     if (testSpec.allowed()) {
       module(sourceCode)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     } else {
       module(sourceCode)
           .loadsWithError(1, "Parameter `param` is of type " + target.q()
@@ -135,7 +135,7 @@ public class AssignmentTest extends TestingContext {
         "[" + joinT.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
         join("\n", union(type1.allDeclarations(), type2.allDeclarations())));
     module(sourceCode)
-        .loadsSuccessfully();
+        .loadsWithSuccess();
   }
 
   private static List<Arguments> array_elem_assignment_test_specs() {

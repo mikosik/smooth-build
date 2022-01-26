@@ -33,7 +33,7 @@ public class DeclarationTest extends TestingContext {
       @Test
       public void declaring_empty_struct_is_allowed() {
         module("MyStruct {}")
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -45,7 +45,7 @@ public class DeclarationTest extends TestingContext {
             }
             """;
         module(code)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Nested
@@ -55,7 +55,7 @@ public class DeclarationTest extends TestingContext {
           module("""
              MyStruct{}
              """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -101,7 +101,7 @@ public class DeclarationTest extends TestingContext {
                 "MyStruct {",
                 "  " + testedT.name() + " field,",
                 "}"))
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @Test
@@ -185,7 +185,7 @@ public class DeclarationTest extends TestingContext {
                String field
              }
              """)
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @Test
@@ -234,7 +234,7 @@ public class DeclarationTest extends TestingContext {
         @Test
         public void can_have_trailing_comma() {
           module(structDeclaration("String field,"))
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .containsType(structTS("MyStruct", nList(sigS(STRING, "field"))));
         }
 
@@ -273,7 +273,7 @@ public class DeclarationTest extends TestingContext {
           module("""
             myValue = "abc";
             """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @ParameterizedTest
@@ -284,7 +284,7 @@ public class DeclarationTest extends TestingContext {
               type.name() + " myFunc();",
               type.name() + " myValue = myFunc();",
               type.typeDeclarationsAsString()))
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -306,7 +306,7 @@ public class DeclarationTest extends TestingContext {
               A myId(A param);
               A(A) myValue = myId;
           """;
-          module(code).loadsSuccessfully();
+          module(code).loadsWithSuccess();
         }
 
         @Test
@@ -327,7 +327,7 @@ public class DeclarationTest extends TestingContext {
               Nothing nothingFunc();
               String myValue = nothingFunc();
               """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -350,7 +350,7 @@ public class DeclarationTest extends TestingContext {
           module("""
              myValue = "abc";
              """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -433,7 +433,7 @@ public class DeclarationTest extends TestingContext {
             module("""
             myFunc() = "abc";
             """)
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @ParameterizedTest
@@ -443,7 +443,7 @@ public class DeclarationTest extends TestingContext {
                 "@Native(\"impl\")",
                 type.name() + " myFunc();",
                 type.declarationsAsString()))
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @Test
@@ -464,7 +464,7 @@ public class DeclarationTest extends TestingContext {
                 A myFunc(A a);
                 """;
             module(code)
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @Test
@@ -474,7 +474,7 @@ public class DeclarationTest extends TestingContext {
                 Nothing nothingFunc();
                 String myFunc() = nothingFunc();
                 """)
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @Test
@@ -498,7 +498,7 @@ public class DeclarationTest extends TestingContext {
           module("""
              myFunc() = "abc";
              """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -546,7 +546,7 @@ public class DeclarationTest extends TestingContext {
                 "@Native(\"Impl.met\")",
                 "String myFunc(" + type.name() + " param);",
                 type.typeDeclarationsAsString()))
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @Test
@@ -556,7 +556,7 @@ public class DeclarationTest extends TestingContext {
                 String myFunc(A(A) f);
                 """;
             module(code)
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @Test
@@ -566,7 +566,7 @@ public class DeclarationTest extends TestingContext {
                 String myFunc(Int(A) f);
                 """;
             module(code)
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
         }
 
@@ -577,7 +577,7 @@ public class DeclarationTest extends TestingContext {
             module("""
              String myFunc(String name) = "abc";
              """)
-                .loadsSuccessfully();
+                .loadsWithSuccess();
           }
 
           @Test
@@ -622,7 +622,7 @@ public class DeclarationTest extends TestingContext {
               String default = "value",
               String nonDefault);
             """)
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .containsEval(natFuncS(2, STRING, "myFunc", nList(
                   itemS(3, STRING, "default", stringS(3, "value")),
                   itemS(4, STRING, "nonDefault")), annS(1, stringS(1, "Impl.met"))));
@@ -633,7 +633,7 @@ public class DeclarationTest extends TestingContext {
           module("""
         A myFunc(A value = "abc") = value;
         """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -642,7 +642,7 @@ public class DeclarationTest extends TestingContext {
         [A] myFunc(A param1, [A] param2 = []) = param2;
         [String] result = myFunc("abc");
         """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
       }
 
@@ -651,7 +651,7 @@ public class DeclarationTest extends TestingContext {
         @Test
         public void can_have_trailing_comma() {
           module(funcDeclaration("String param1,"))
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .containsEval(defFuncS(1, STRING, "myFunc", stringS(1, "abc"),
                   nList(itemS(1, STRING, "param1"))));
         }
@@ -686,7 +686,7 @@ public class DeclarationTest extends TestingContext {
         @Test
         public void can_have_trailing_comma() {
           module(funcTDeclaration("String,"))
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .containsEval(natFuncS(2, f(f(BLOB, STRING)), "myFunc", nList(),
                   annS(1, stringS(1, "Impl.met"))));
         }
@@ -777,7 +777,7 @@ public class DeclarationTest extends TestingContext {
               result = returnFirst(param1="abc", param2="def");
               """;
           module(code)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -787,7 +787,7 @@ public class DeclarationTest extends TestingContext {
               result = returnFirst(param2="def", param1="abc");
               """;
           module(code)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -831,7 +831,7 @@ public class DeclarationTest extends TestingContext {
               result = myIdentity("abc", "def");
               """;
           module(code)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -841,7 +841,7 @@ public class DeclarationTest extends TestingContext {
             result = myIdentity(param1="abc", param2="def");
             """;
           module(code)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -878,7 +878,7 @@ public class DeclarationTest extends TestingContext {
               result = myStruct();
               """;
           module(code)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -890,7 +890,7 @@ public class DeclarationTest extends TestingContext {
               result = myStruct("abc");
               """;
           module(code)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -912,7 +912,7 @@ public class DeclarationTest extends TestingContext {
         @Test
         public void can_have_trailing_comma() {
           module(funcCall("0x07,"))
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .containsEval(defValS(2, BLOB, "result",
                   callS(2, BLOB,
                       topRefS(2, f(BLOB, BLOB), "myFunc"),
@@ -957,7 +957,7 @@ public class DeclarationTest extends TestingContext {
             String result = myStruct("abc").field;
             """;
         module(code)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -988,7 +988,7 @@ public class DeclarationTest extends TestingContext {
             "0xabcdefABCDEF"})
         public void is_legal(String literal) {
           module("result = " + literal + ";")
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Nested
@@ -1032,7 +1032,7 @@ public class DeclarationTest extends TestingContext {
         })
         public void is_legal(String literal) {
           module("result = " + literal + ";")
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
 
@@ -1104,7 +1104,7 @@ public class DeclarationTest extends TestingContext {
         })
         public void is_legal(String literal) {
           module("result = \"" + literal + "\";")
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Nested
@@ -1151,35 +1151,35 @@ public class DeclarationTest extends TestingContext {
         @ArgumentsSource(ArrayElements.class)
         public void with_one_elem(String literal) {
           module("result = [" + literal + "];")
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_two_elems(String literal) {
           module("result = [" + literal + ", " + literal + "];")
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_array_containing_one_elem(String literal) {
           module("result = [[" + literal + "]];")
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_array_and_empty_array_elems(String literal) {
           module("result = [[" + literal + "], []];")
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_array_containing_two_elems(String literal) {
           module("result = [[" + literal + ", " + literal + "]];")
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Nested
@@ -1187,7 +1187,7 @@ public class DeclarationTest extends TestingContext {
           @Test
           public void can_have_trailing_comma() {
             module(arrayLiteral("0x07,"))
-                .loadsSuccessfully()
+                .loadsWithSuccess()
                 .containsEval(defValS(1, a(BLOB), "result",
                     orderS(1, BLOB, blobS(1, 7))));
           }
@@ -1315,7 +1315,7 @@ public class DeclarationTest extends TestingContext {
            # ((( full line comment "
            result = "";
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -1323,7 +1323,7 @@ public class DeclarationTest extends TestingContext {
       module("""
            result = "" ;  # comment at the end of line
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
   }
 

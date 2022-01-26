@@ -41,7 +41,7 @@ public class TestingModLoader {
     return this;
   }
 
-  public TestingModLoader loadsSuccessfully() {
+  public TestingModLoader loadsWithSuccess() {
     modS = load();
     assertWithMessage(messageWithSourceCode())
         .that(modS.logs().toList())

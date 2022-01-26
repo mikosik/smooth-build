@@ -21,7 +21,7 @@ public class ExprSLoadingTest extends TestingContext {
             0x08
           ];
           """)
-        .loadsSuccessfully()
+        .loadsWithSuccess()
         .containsEval(defValS(1, a(BLOB), "result",
             orderS(2, BLOB, blobS(3, 7), blobS(4, 8))));
   }
@@ -32,7 +32,7 @@ public class ExprSLoadingTest extends TestingContext {
           result =
             0x07;
           """)
-        .loadsSuccessfully()
+        .loadsWithSuccess()
         .containsEval(defValS(1, BLOB, "result", blobS(2, 7)));
   }
 
@@ -42,7 +42,7 @@ public class ExprSLoadingTest extends TestingContext {
           result =
             123;
           """)
-        .loadsSuccessfully()
+        .loadsWithSuccess()
         .containsEval(defValS(1, INT, "result", intS(2, 123)));
   }
 
@@ -54,7 +54,7 @@ public class ExprSLoadingTest extends TestingContext {
           String myFunc() = "abc";
           result = myFunc();
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defValS(2, STRING, "result",
               callS(2, STRING, topRefS(2, f(STRING), "myFunc"))));
     }
@@ -66,7 +66,7 @@ public class ExprSLoadingTest extends TestingContext {
           result = myFunc(
             0x07);
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defValS(2, STRING, "result",
               callS(2, STRING, topRefS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
     }
@@ -78,7 +78,7 @@ public class ExprSLoadingTest extends TestingContext {
           result = myFunc(b=
             0x07);
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defValS(2, STRING, "result",
               callS(2, STRING, topRefS(2, f(STRING, BLOB), "myFunc"), blobS(3, 7))));
     }
@@ -91,7 +91,7 @@ public class ExprSLoadingTest extends TestingContext {
           String() myValue = myFunc;
           result = myValue();
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(
               defValS(4, STRING, "result",
                   callS(4, STRING, topRefS(4, f(STRING), "myValue"))));
@@ -106,7 +106,7 @@ public class ExprSLoadingTest extends TestingContext {
           result = myValue(
             0x07);
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(
               defValS(4, STRING, "result",
                   callS(4, STRING, topRefS(4, f(STRING, BLOB), "myValue"), blobS(5, 7))));
@@ -122,7 +122,7 @@ public class ExprSLoadingTest extends TestingContext {
             String field
           }
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(ctor);
     }
 
@@ -136,7 +136,7 @@ public class ExprSLoadingTest extends TestingContext {
           result = myStruct(
             "aaa");
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defValS(4, struct, "result",
               callS(4, struct, topRefS(4, f(struct, STRING), "myStruct"), stringS(5, "aaa"))));
     }
@@ -146,7 +146,7 @@ public class ExprSLoadingTest extends TestingContext {
       module("""
           result(String() f) = f();
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defFuncS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING), "f")), nList(itemS(1, f(STRING), "f"))));
     }
@@ -156,7 +156,7 @@ public class ExprSLoadingTest extends TestingContext {
       module("""
           result(String(Blob) f) = f(0x09);
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defFuncS(1, STRING, "result",
               callS(1, STRING, paramRefS(f(STRING, BLOB), "f"), blobS(1, 9)),
               nList(itemS(1, f(STRING, BLOB), "f"))));
@@ -174,7 +174,7 @@ public class ExprSLoadingTest extends TestingContext {
           result = struct
             .field;
           """)
-        .loadsSuccessfully()
+        .loadsWithSuccess()
         .containsEval(defValS(5, STRING, "result",
             selectS(6, STRING, topRefS(5, myStruct, "struct"), "field")));
   }
@@ -187,7 +187,7 @@ public class ExprSLoadingTest extends TestingContext {
           @Native("Impl.met")
           String myFunc();
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(
               natFuncS(2, STRING, "myFunc", nList(), annS(1, stringS(1, "Impl.met"), true)));
     }
@@ -198,7 +198,7 @@ public class ExprSLoadingTest extends TestingContext {
           @Native("Impl.met", IMPURE)
           String myFunc();
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(
               natFuncS(2, STRING, "myFunc", nList(), annS(1, stringS(1, "Impl.met"), false)));
     }
@@ -209,7 +209,7 @@ public class ExprSLoadingTest extends TestingContext {
           @Native("Impl.met", PURE)
           String myFunc();
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(
               natFuncS(2, STRING, "myFunc", nList(), annS(1, stringS(1, "Impl.met"), true)));
     }
@@ -221,7 +221,7 @@ public class ExprSLoadingTest extends TestingContext {
           Blob myFunc(Blob param1)
             = param1;
           """)
-        .loadsSuccessfully()
+        .loadsWithSuccess()
         .containsEval(defFuncS(
             1, BLOB, "myFunc", paramRefS(2, BLOB, "param1"), nList(itemS(1, BLOB, "param1"))));
   }
@@ -235,7 +235,7 @@ public class ExprSLoadingTest extends TestingContext {
           String result =
             myValue;
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(
               defValS(2, STRING, "result", topRefS(3, STRING, "myValue")));
     }
@@ -247,7 +247,7 @@ public class ExprSLoadingTest extends TestingContext {
           String() result =
             myFunc;
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defValS(2, f(STRING), "result", topRefS(3, f(STRING), "myFunc")));
     }
 
@@ -259,7 +259,7 @@ public class ExprSLoadingTest extends TestingContext {
           MyStruct() result =
             myStruct;
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defValS(2, f(structT), "result", topRefS(3, f(structT), "myStruct")));
     }
   }
@@ -270,7 +270,7 @@ public class ExprSLoadingTest extends TestingContext {
           result =
             "abc";
           """)
-        .loadsSuccessfully()
+        .loadsWithSuccess()
         .containsEval(defValS(1, STRING, "result", stringS(2, "abc")));
   }
 
@@ -282,7 +282,7 @@ public class ExprSLoadingTest extends TestingContext {
           Blob myValue =
             0x07;
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defValS(1, BLOB, "myValue", blobS(2, 7)));
     }
 
@@ -292,7 +292,7 @@ public class ExprSLoadingTest extends TestingContext {
           Blob myFunc() =
             0x07;
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defFuncS(1, BLOB, "myFunc", blobS(2, 7), nList()));
     }
 
@@ -303,7 +303,7 @@ public class ExprSLoadingTest extends TestingContext {
             Blob param1)
             = "abc";
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defFuncS(1, STRING, "myFunc", stringS(3, "abc"),
               nList(itemS(2, BLOB, "param1"))));
     }
@@ -316,7 +316,7 @@ public class ExprSLoadingTest extends TestingContext {
               0x07)
               = "abc";
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsEval(defFuncS(1, STRING, "myFunc", stringS(4, "abc"),
               nList(itemS(2, BLOB, "param1", blobS(3, 7)))));
     }
@@ -328,7 +328,7 @@ public class ExprSLoadingTest extends TestingContext {
             String field
           }
           """)
-          .loadsSuccessfully()
+          .loadsWithSuccess()
           .containsType(structTS("MyStruct", nList(sigS(STRING, "field"))));
     }
   }

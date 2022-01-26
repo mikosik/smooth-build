@@ -21,7 +21,7 @@ public class VisibilityTest extends TestingContext {
              String myValue = "abc";
              result = myValue;
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -30,7 +30,7 @@ public class VisibilityTest extends TestingContext {
              result = myValue;
              String myValue = "abc";
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -39,7 +39,7 @@ public class VisibilityTest extends TestingContext {
              String myFunc() = "abc";
              result = myFunc;
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -48,7 +48,7 @@ public class VisibilityTest extends TestingContext {
              result = myFunc;
              String myFunc() = "abc";
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -57,7 +57,7 @@ public class VisibilityTest extends TestingContext {
              MyStruct {}
              result = myStruct;
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -66,7 +66,7 @@ public class VisibilityTest extends TestingContext {
              result = myStruct;
              MyStruct {}
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -76,7 +76,7 @@ public class VisibilityTest extends TestingContext {
              @Native("impl.met")
              MyStruct myFunc();
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -86,7 +86,7 @@ public class VisibilityTest extends TestingContext {
              MyStruct myFunc();
              MyStruct {}
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
     }
 
@@ -97,13 +97,13 @@ public class VisibilityTest extends TestingContext {
         DefsS imported = module("""
           String otherModuleValue = "abc";
           """)
-            .loadsSuccessfully()
+            .loadsWithSuccess()
             .getModAsDefinitions();
         module("""
           myValue = otherModuleValue;
           """)
             .withImported(imported)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -111,13 +111,13 @@ public class VisibilityTest extends TestingContext {
         DefsS imported = module("""
           String otherModuleFunc() = "abc";
           """)
-            .loadsSuccessfully()
+            .loadsWithSuccess()
             .getModAsDefinitions();
         module("""
               myValue = otherModuleFunc;
               """)
             .withImported(imported)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -125,13 +125,13 @@ public class VisibilityTest extends TestingContext {
         DefsS imported = module("""
           OtherModuleStruct{}
           """)
-            .loadsSuccessfully()
+            .loadsWithSuccess()
             .getModAsDefinitions();
         module("""
               myValue = otherModuleStruct;
               """)
             .withImported(imported)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -139,14 +139,14 @@ public class VisibilityTest extends TestingContext {
         DefsS imported = module("""
           OtherModuleStruct{}
           """)
-            .loadsSuccessfully()
+            .loadsWithSuccess()
             .getModAsDefinitions();
         module("""
           @Native("impl.met")
           OtherModuleStruct myFunc();
           """)
             .withImported(imported)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
     }
 
@@ -157,7 +157,7 @@ public class VisibilityTest extends TestingContext {
         module("""
              myFunc(String param) = param;
              """)
-            .loadsSuccessfully();
+            .loadsWithSuccess();
       }
 
       @Test
@@ -505,7 +505,7 @@ public class VisibilityTest extends TestingContext {
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                otherModuleValue = "def";
@@ -520,7 +520,7 @@ public class VisibilityTest extends TestingContext {
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                 otherModuleFunc = "def";
@@ -535,7 +535,7 @@ public class VisibilityTest extends TestingContext {
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                 otherModuleStruct = "def";
@@ -597,7 +597,7 @@ public class VisibilityTest extends TestingContext {
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                 otherModuleValue() = "def";
@@ -612,7 +612,7 @@ public class VisibilityTest extends TestingContext {
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                 otherModuleFunc() = "def";
@@ -627,7 +627,7 @@ public class VisibilityTest extends TestingContext {
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                 otherModuleStruct() = "def";
@@ -699,13 +699,13 @@ public class VisibilityTest extends TestingContext {
               otherModuleValue = "abc";
               """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
               String myFunc(String otherModuleValue) = "abc";
               """)
               .withImported(imported)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -714,13 +714,13 @@ public class VisibilityTest extends TestingContext {
               otherModuleFunc() = "abc";
               """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
               String myFunc(String otherModuleFunc) = "abc";
               """)
               .withImported(imported)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -729,13 +729,13 @@ public class VisibilityTest extends TestingContext {
               OtherModuleStruct {}
               """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
               String myFunc(String otherModuleStruct) = "abc";
               """)
               .withImported(imported)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
       }
 
@@ -747,7 +747,7 @@ public class VisibilityTest extends TestingContext {
               myValue = "abc";
               String myFunc(String myValue) = "abc";
               """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -756,7 +756,7 @@ public class VisibilityTest extends TestingContext {
               myFunc() = "abc";
               String myOtherFunc(String myFunc) = "abc";
               """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -765,7 +765,7 @@ public class VisibilityTest extends TestingContext {
              MyStruct {}
              String myFunc(String myStruct) = "abc";
              """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
       }
 
@@ -777,7 +777,7 @@ public class VisibilityTest extends TestingContext {
               verifying_that_internal_if_func_is_defined = if;
               String myFunc(String if) = "abc";
               """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
       }
     }
@@ -800,7 +800,7 @@ public class VisibilityTest extends TestingContext {
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                 OtherModuleStruct {}
@@ -851,7 +851,7 @@ public class VisibilityTest extends TestingContext {
               otherModuleValue = "abc";
               """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
               MyStruct {
@@ -859,7 +859,7 @@ public class VisibilityTest extends TestingContext {
               }
               """)
               .withImported(imported)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -868,7 +868,7 @@ public class VisibilityTest extends TestingContext {
               otherModuleFunc() = "abc";
               """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
               MyStruct {
@@ -876,7 +876,7 @@ public class VisibilityTest extends TestingContext {
               }
               """)
               .withImported(imported)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -885,7 +885,7 @@ public class VisibilityTest extends TestingContext {
               OtherModuleStruct {}
               """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
               MyStruct {
@@ -893,7 +893,7 @@ public class VisibilityTest extends TestingContext {
               }
               """)
               .withImported(imported)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
       }
 
@@ -907,7 +907,7 @@ public class VisibilityTest extends TestingContext {
                 String myValue,
               }
               """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -918,7 +918,7 @@ public class VisibilityTest extends TestingContext {
                 String myFunc,
               }
               """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
 
         @Test
@@ -929,7 +929,7 @@ public class VisibilityTest extends TestingContext {
                 String myStruct,
              }
              """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
       }
 
@@ -943,7 +943,7 @@ public class VisibilityTest extends TestingContext {
                 String if,
               }
               """)
-              .loadsSuccessfully();
+              .loadsWithSuccess();
         }
       }
     }
@@ -958,7 +958,7 @@ public class VisibilityTest extends TestingContext {
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                 OtherModuleValue{}
@@ -973,7 +973,7 @@ public class VisibilityTest extends TestingContext {
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
-              .loadsSuccessfully()
+              .loadsWithSuccess()
               .getModAsDefinitions();
           module("""
                 OtherModuleFunc{}

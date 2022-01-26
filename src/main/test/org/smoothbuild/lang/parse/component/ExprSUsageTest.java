@@ -15,7 +15,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc(Blob b) = "abc";
           result = myFunc(0x01);
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -23,7 +23,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           result() = 0x01;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -31,7 +31,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           result = 0x01;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
            result = [ 0x01 ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -47,7 +47,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
         String myFunc(Blob b = 0x01) = "abc";
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc(Int i) = "abc";
           result = myFunc(123);
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -90,7 +90,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           result() = 123;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           result = 123;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -106,7 +106,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
            result = [ 123 ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -114,7 +114,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
         String myFunc(Int i = 123) = "abc";
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -149,7 +149,7 @@ public class ExprSUsageTest extends TestingContext {
         String myFunc(String param) = "abc";
         result = myFunc("abc");
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -157,7 +157,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           result() = "abc";
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -165,7 +165,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           result = "abc";
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -173,7 +173,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
            result = [ "abc" ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -181,7 +181,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
         String myFunc(String s = "abc") = "abc";
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -216,7 +216,7 @@ public class ExprSUsageTest extends TestingContext {
         myFunc([String] param) = "abc";
         result = myFunc(["abc"]);
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -224,7 +224,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           result() = ["abc"];
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -232,7 +232,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           result = ["abc"];
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -240,7 +240,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
            result = [ ["abc"] ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -248,7 +248,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
         String myFunc([String] s = ["abc"]) = "abc";
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -287,7 +287,7 @@ public class ExprSUsageTest extends TestingContext {
         String myFunc(String s) = "abc";
         result = myFunc(myValue.field);
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -299,7 +299,7 @@ public class ExprSUsageTest extends TestingContext {
           myValue = myStruct("abc");
           result() = myValue.field;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -311,7 +311,7 @@ public class ExprSUsageTest extends TestingContext {
           myValue = myStruct("abc");
           result = myValue.field;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -323,7 +323,7 @@ public class ExprSUsageTest extends TestingContext {
            myValue = myStruct("abc");
            result = [ myValue.field ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -335,7 +335,7 @@ public class ExprSUsageTest extends TestingContext {
         value = myStruct("abc");
         String myFunc(String value = value.field) = "abc";
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -347,7 +347,7 @@ public class ExprSUsageTest extends TestingContext {
         String justAbc() = "abc";
         result = myStruct(justAbc).myFunc();
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -373,7 +373,7 @@ public class ExprSUsageTest extends TestingContext {
             String result = s1(s2("abc")).f1.f2;
             """;
       module(code)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -398,7 +398,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc(String param) = "abc";
           result = myFunc("abc" | myIdentity());
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -408,7 +408,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc(String param) = "abc";
           result() = "abc" | myIdentity();
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -418,7 +418,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc(String param) = "abc";
           result = "abc" | myIdentity();
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -427,7 +427,7 @@ public class ExprSUsageTest extends TestingContext {
              String myIdentity(String string) = string;
              result = [ "abc" | myIdentity() ];
              """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -436,7 +436,7 @@ public class ExprSUsageTest extends TestingContext {
           A myIdentity(A a) = a;
           String myFunc(String param = "abc" | myIdentity()) = "abc";
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
   }
 
@@ -449,7 +449,7 @@ public class ExprSUsageTest extends TestingContext {
         String myFunc(String param) = "abc";
         result = myFunc(otherFunc());
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -458,7 +458,7 @@ public class ExprSUsageTest extends TestingContext {
           String otherFunc() = "abc";
           result() = otherFunc();
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -467,7 +467,7 @@ public class ExprSUsageTest extends TestingContext {
           String otherFunc() = "abc";
           result = otherFunc();
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -476,7 +476,7 @@ public class ExprSUsageTest extends TestingContext {
            String myFunc() = "abc";
            result = [ myFunc() ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -485,7 +485,7 @@ public class ExprSUsageTest extends TestingContext {
         String myFunc() = "abc";
         String otherFunc(String value = myFunc()) = "abc";
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -495,7 +495,7 @@ public class ExprSUsageTest extends TestingContext {
         String() highOrderFunc() = justAbc;
         result = highOrderFunc()();
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -508,7 +508,7 @@ public class ExprSUsageTest extends TestingContext {
             result = myFunc().myField;
             """;
       module(code)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
   }
 
@@ -521,7 +521,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc(String() param) = "abc";
           result = myFunc(otherFunc);
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -530,7 +530,7 @@ public class ExprSUsageTest extends TestingContext {
           String otherFunc() = "abc";
           result() = otherFunc;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -539,7 +539,7 @@ public class ExprSUsageTest extends TestingContext {
           String otherFunc() = "abc";
           result = otherFunc;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -548,7 +548,7 @@ public class ExprSUsageTest extends TestingContext {
            String myFunc() = "abc";
            result = [ myFunc ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -557,7 +557,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc() = "abc";
           String otherFunc(String() value = myFunc) = "abc";
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -566,7 +566,7 @@ public class ExprSUsageTest extends TestingContext {
           String justAbc() = "abc";
           result = justAbc();
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -588,7 +588,7 @@ public class ExprSUsageTest extends TestingContext {
           myIdentity(String string) = string;
           myFunc(String string) = myIdentity(string);
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -596,7 +596,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           myFunc(String string) = string;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -604,7 +604,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           myFunc(String string) = [ string ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -612,7 +612,7 @@ public class ExprSUsageTest extends TestingContext {
       module("""
           myFunc(String() param) = param();
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -632,7 +632,7 @@ public class ExprSUsageTest extends TestingContext {
             myFunc(MyStruct param) = param.myField;
             """;
       module(code)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -654,7 +654,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc(String param) = "abc";
           result = myFunc(myValue);
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -663,7 +663,7 @@ public class ExprSUsageTest extends TestingContext {
           String myValue = "abc";
           result() = myValue;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -672,7 +672,7 @@ public class ExprSUsageTest extends TestingContext {
           String myValue = "abc";
           result = myValue;
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -681,7 +681,7 @@ public class ExprSUsageTest extends TestingContext {
            String myValue = "abc";
            result = [ myValue ];
            """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -690,7 +690,7 @@ public class ExprSUsageTest extends TestingContext {
           String myValue = "abc";
           String myFunc(String value = myValue) = "abc";
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -700,7 +700,7 @@ public class ExprSUsageTest extends TestingContext {
         myValue = justAbc;
         result = myValue();
         """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -722,7 +722,7 @@ public class ExprSUsageTest extends TestingContext {
             result = myValue.myField;
             """;
       module(code)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -839,7 +839,7 @@ public class ExprSUsageTest extends TestingContext {
           }
           MyStruct {}
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -851,7 +851,7 @@ public class ExprSUsageTest extends TestingContext {
           }
           MyStruct {}
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -862,7 +862,7 @@ public class ExprSUsageTest extends TestingContext {
           MyStruct myValue = myFunc();
           MyStruct {}
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -872,7 +872,7 @@ public class ExprSUsageTest extends TestingContext {
           [MyStruct] myValue();
           MyStruct {}
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -881,7 +881,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc(MyStruct param) = "abc";
           MyStruct {}
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -890,7 +890,7 @@ public class ExprSUsageTest extends TestingContext {
           String myFunc([MyStruct] param) = "abc";
           MyStruct {}
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -900,7 +900,7 @@ public class ExprSUsageTest extends TestingContext {
           MyStruct myFunc(String param);
           MyStruct {}
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
 
     @Test
@@ -909,7 +909,7 @@ public class ExprSUsageTest extends TestingContext {
           [MyStruct] myFunc(String param) = [];
           MyStruct {}
           """)
-          .loadsSuccessfully();
+          .loadsWithSuccess();
     }
   }
 
