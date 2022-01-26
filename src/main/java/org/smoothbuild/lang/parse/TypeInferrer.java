@@ -30,7 +30,6 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.lang.parse.ast.ArgNode;
-import org.smoothbuild.lang.parse.ast.ArrayN;
 import org.smoothbuild.lang.parse.ast.ArrayTN;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
@@ -43,6 +42,7 @@ import org.smoothbuild.lang.parse.ast.FuncTN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
 import org.smoothbuild.lang.parse.ast.Node;
+import org.smoothbuild.lang.parse.ast.OrderN;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.SelectN;
 import org.smoothbuild.lang.parse.ast.StringN;
@@ -242,12 +242,12 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitArray(ArrayN array) {
-        super.visitArray(array);
-        array.setType(findArrayT(array));
+      public void visitOrder(OrderN order) {
+        super.visitOrder(order);
+        order.setType(findArrayT(order));
       }
 
-      private Optional<TypeS> findArrayT(ArrayN array) {
+      private Optional<TypeS> findArrayT(OrderN array) {
         List<ExprN> expressions = array.elems();
         if (expressions.isEmpty()) {
           return Optional.of(typeSF.array(typeSF.nothing()));

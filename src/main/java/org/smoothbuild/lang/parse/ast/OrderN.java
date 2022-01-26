@@ -6,10 +6,10 @@ import org.smoothbuild.lang.base.define.Loc;
 
 import com.google.common.collect.ImmutableList;
 
-public final class ArrayN extends ExprN {
+public final class OrderN extends ExprN {
   private final List<ExprN> elems;
 
-  public ArrayN(List<ExprN> elems, Loc loc) {
+  public OrderN(List<ExprN> elems, Loc loc) {
     super(loc);
     this.elems = ImmutableList.copyOf(elems);
   }

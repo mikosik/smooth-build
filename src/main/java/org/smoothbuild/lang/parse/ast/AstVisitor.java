@@ -69,7 +69,7 @@ public class AstVisitor {
 
   public void visitExpr(ExprN expr) {
     switch (expr) {
-      case ArrayN arrayN -> visitArray(arrayN);
+      case OrderN orderN -> visitOrder(orderN);
       case BlobN blobN -> visitBlob(blobN);
       case CallN callN -> visitCall(callN);
       case IntN intN -> visitInt(intN);
@@ -79,8 +79,8 @@ public class AstVisitor {
     }
   }
 
-  public void visitArray(ArrayN array) {
-    array.elems().forEach(this::visitExpr);
+  public void visitOrder(OrderN order) {
+    order.elems().forEach(this::visitExpr);
   }
 
   public void visitBlob(BlobN blob) {

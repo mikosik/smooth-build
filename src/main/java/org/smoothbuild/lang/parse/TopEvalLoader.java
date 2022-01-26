@@ -33,7 +33,6 @@ import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.lang.parse.ast.AnnN;
 import org.smoothbuild.lang.parse.ast.ArgNode;
-import org.smoothbuild.lang.parse.ast.ArrayN;
 import org.smoothbuild.lang.parse.ast.BlobN;
 import org.smoothbuild.lang.parse.ast.CallN;
 import org.smoothbuild.lang.parse.ast.EvalN;
@@ -41,6 +40,7 @@ import org.smoothbuild.lang.parse.ast.ExprN;
 import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
+import org.smoothbuild.lang.parse.ast.OrderN;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.SelectN;
 import org.smoothbuild.lang.parse.ast.StringN;
@@ -108,7 +108,7 @@ public class TopEvalLoader {
 
   private ExprS createExpr(ExprN expr) {
     return switch (expr) {
-      case ArrayN arrayN -> createArrayLiteral(arrayN);
+      case OrderN orderN -> createArrayLiteral(orderN);
       case BlobN blobN -> createBlob(blobN);
       case CallN callN -> createCall(callN);
       case IntN intN -> createInt(intN);
@@ -118,7 +118,7 @@ public class TopEvalLoader {
     };
   }
 
-  private ExprS createArrayLiteral(ArrayN array) {
+  private ExprS createArrayLiteral(OrderN array) {
     var type = (ArrayTS) array.type().get();
     ImmutableList<ExprS> elems = map(array.elems(), this::createExpr);
     return new OrderS(type, elems, array.loc());

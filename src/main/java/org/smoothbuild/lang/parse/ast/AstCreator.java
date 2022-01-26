@@ -165,7 +165,7 @@ public class AstCreator {
       private ExprN createLiteral(LiteralContext expr) {
         if (expr.array() != null) {
           List<ExprN> elems = map(expr.array().expr(), this::createExpr);
-          return new ArrayN(elems, locOf(filePath, expr));
+          return new OrderN(elems, locOf(filePath, expr));
         }
         if (expr.BLOB() != null) {
           return new BlobN(expr.BLOB().getText().substring(2), locOf(filePath, expr));
