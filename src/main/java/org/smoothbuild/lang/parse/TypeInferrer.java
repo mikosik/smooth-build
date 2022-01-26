@@ -101,13 +101,31 @@ public class TypeInferrer {
         visitParams(funcN.params());
         funcN.body().ifPresent(this::visitExpr);
         var resN = funcN.typeNode().orElse(null);
-        funcN.setType(optionalFuncType(resN, evalTypeOfTopEval(funcN), funcN.optParamTs()));
+        funcN.setType(funcTOpt(resN, evalTOfTopEval(funcN), funcN.optParamTs()));
+      }
+
+      private Optional<TypeS> funcTOpt(TypeN resN, Optional<TypeS> result,
+          Optional<ImmutableList<TypeS>> params) {
+        if (result.isEmpty() || params.isEmpty()) {
+          return empty();
+        }
+        var ps = params.get();
+        var paramOpenVars = ps.stream()
+            .flatMap(t -> t.openVars().stream())
+            .collect(toImmutableSet());
+        var r = result.get();
+        if (paramOpenVars.containsAll(r.openVars())) {
+          return Optional.of(factory.func(r, ps));
+        }
+        logBuffer.log(parseError(resN,
+            "Function result type has type variable(s) not present in any parameter type."));
+        return empty();
       }
 
       @Override
       public void visitValue(ValN valN) {
         valN.body().ifPresent(this::visitExpr);
-        valN.setType(evalTypeOfTopEval(valN));
+        valN.setType(evalTOfTopEval(valN));
       }
 
       @Override
@@ -125,7 +143,7 @@ public class TypeInferrer {
         });
       }
 
-      private Optional<TypeS> evalTypeOfTopEval(EvalN evalN) {
+      private Optional<TypeS> evalTOfTopEval(EvalN evalN) {
         return evalTypeOf(evalN, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
             logBuffer.log(parseError(evalN, "`" + evalN.name() + "` has body which type is "
@@ -181,24 +199,6 @@ public class TypeInferrer {
           }
           default -> Optional.of(findType(type.name()));
         };
-      }
-
-      private Optional<TypeS> optionalFuncType(TypeN resN, Optional<TypeS> result,
-          Optional<ImmutableList<TypeS>> params) {
-        if (result.isEmpty() || params.isEmpty()) {
-          return empty();
-        }
-        var ps = params.get();
-        var paramOpenVars = ps.stream()
-            .flatMap(t -> t.openVars().stream())
-            .collect(toImmutableSet());
-        var r = result.get();
-        if (paramOpenVars.containsAll(r.openVars())) {
-          return Optional.of(factory.func(r, ps));
-        }
-        logBuffer.log(parseError(resN,
-            "Function result type has type variable(s) not present in any parameter type."));
-        return empty();
       }
 
       private TypeS findType(String name) {
