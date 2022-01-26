@@ -185,8 +185,8 @@ public class TestingContext {
     return new ParallelJobExecutor(computer(), executionReporter());
   }
 
-  public TestingModLoader mod(String sourceCode) {
-    return new TestingModLoader(this, sourceCode);
+  public TestingModLoader mod(String code) {
+    return new TestingModLoader(this, code);
   }
 
   private ExecutionReporter executionReporter() {

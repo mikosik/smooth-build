@@ -24,7 +24,6 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.lang.base.type.TestedTS;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.testing.TestingModLoader;
 
 public class DeclarationTest extends TestingContext {
   @Nested
@@ -105,27 +104,26 @@ public class DeclarationTest extends TestingContext {
                 .loadsSuccessfully();
           }
 
-          @ParameterizedTest
-          @ArgumentsSource(TestedValidPolytypes.class)
-          public void can_be_valid_polytype(TestedTS testedT) {
-            mod(unlines(
-                testedT.typeDeclarationsAsString(),
-                "MyStruct {",
-                "  " + testedT.name() + " field,",
-                "}"))
-                .loadsSuccessfully();
+          @Test
+          public void cannot_be_polytype() {
+            mod("""
+                MyStruct {
+                 A field
+                }
+                """)
+                .loadsWithError(
+                    2, "Field type cannot be polymorphic. Found field `field` with type `A`.");
           }
 
-          @ParameterizedTest
-          @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void cannot_be_single_var_polytype(TestedTS testedT) {
-            TestingModLoader module = mod(unlines(
-                testedT.typeDeclarationsAsString(),
-                "MyStruct {",
-                "  " + testedT.name() + " field,",
-                "}"));
-            module.loadsWithError(3, "Type var(s) `A` are used once in declaration of `field`. " +
-                "This means each one can be replaced with `Any`.");
+          @Test
+          public void cannot_be_polytype_array() {
+            mod("""
+                MyStruct {
+                 [A] field
+                }
+                """)
+                .loadsWithError(
+                    2, "Field type cannot be polymorphic. Found field `field` with type `[A]`.");
           }
 
           @Test
@@ -289,27 +287,37 @@ public class DeclarationTest extends TestingContext {
               .loadsSuccessfully();
         }
 
-        @ParameterizedTest
-        @ArgumentsSource(TestedValidPolytypes.class)
-        public void can_be_valid_polytype(TestedTS type) {
-          mod(unlines(
-              "@Native(\"Impl.met\")",
-              type.name() + " myFunc();",
-              type.name() + " myValue = myFunc();",
-              type.typeDeclarationsAsString()))
-              .loadsSuccessfully();
+        @Test
+        public void cannot_be_polytype() {
+          var code = """
+              @Native("Impl.met")
+              A myId(A param);
+              A myValue = myId("abc");
+          """;
+          mod(code)
+              .loadsWithError(3, "`myValue` has body which type is `String` and it is "
+                  + "not convertible to its declared type `A`.");
         }
 
-        @ParameterizedTest
-        @ArgumentsSource(TestedSingleVarPolytypes.class)
-        public void cannot_be_single_var_polytype(TestedTS type) {
-          mod(unlines(
-              "@Native(\"Impl.met\")",
-              type.name() + " myFunc(" + type.name() + " param);",
-              type.name() + " myValue = myFunc(\"abc\");",
-              type.typeDeclarationsAsString()))
-              .loadsWithError(3, "Type var(s) `A` are used once in declaration of `myValue`." +
-                  " This means each one can be replaced with `Any`.");
+        @Test
+        public void can_be_polytype_assigned_from_func() {
+          var code = """
+              @Native("Impl.met")
+              A myId(A param);
+              A(A) myValue = myId;
+          """;
+          mod(code).loadsSuccessfully();
+        }
+
+        @Test
+        public void cannot_be_monotype_assigned_from_polytype_func() {
+          var code = """
+              @Native("Impl.met")
+              A myId(A param);
+              Int(Int) myValue = myId;
+          """;
+          mod(code).loadsWithError(3, "`myValue` has body which type is `A(A)` and it is not"
+              + " convertible to its declared type `Int(Int)`.");
         }
 
         @Test
@@ -416,26 +424,6 @@ public class DeclarationTest extends TestingContext {
             .loadsWithError(2, "`myFunc` is native so it should have declared result type.");
       }
 
-      @Test
-      public void result_cannot_have_type_var_that_is_not_present_elsewhere() {
-        mod("""
-          @Native("Impl.met")
-          A myFunc(String param);
-          """)
-            .loadsWithError(2, "Type var(s) `A` are used once in declaration of `myFunc`."
-                + " This means each one can be replaced with `Any`.");
-      }
-
-      @Test
-      public void result_cannot_have_arrayed_type_var_that_is_not_present_elsewhere() {
-        mod("""
-          [A] myFunc(String param) = [];
-          """)
-            .loadsWithError(1, "Type var(s) `A` are used once in declaration of `myFunc`."
-                + " This means each one can be replaced with `Any`.");
-
-      }
-
       @Nested
       class _result {
         @Nested
@@ -458,25 +446,25 @@ public class DeclarationTest extends TestingContext {
                 .loadsSuccessfully();
           }
 
-          @ParameterizedTest
-          @ArgumentsSource(TestedValidPolytypes.class)
-          public void can_be_valid_polytype(TestedTS type) {
-            mod(unlines(
-                "@Native(\"impl\")",
-                type.name() + " myFunc();",
-                type.typeDeclarationsAsString()))
-                .loadsSuccessfully();
+          @Test
+          public void cannot_be_single_var_polytype_when_no_param_type_has_such_var() {
+            var code = """
+                @Native("Impl.met")
+                A myFunc(B b, C c);
+                """;
+            mod(code)
+                .loadsWithError(2,
+                    "Function result type has type variable(s) not present in any parameter type.");
           }
 
-          @ParameterizedTest
-          @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void cannot_be_single_var_polytype(TestedTS type) {
-            mod(unlines(
-                "@Native(\"impl\")",
-                type.name() + " myFunc();",
-                type.typeDeclarationsAsString()))
-                .loadsWithError(2, "Type var(s) `A` are used once in declaration of `myFunc`."
-                    + " This means each one can be replaced with `Any`.");
+          @Test
+          public void can_be_single_var_polytype_when_param_type_has_such_var() {
+            var code = """
+                @Native("Impl.met")
+                A myFunc(A a);
+                """;
+            mod(code)
+                .loadsSuccessfully();
           }
 
           @Test
@@ -499,16 +487,6 @@ public class DeclarationTest extends TestingContext {
                 """)
                 .loadsWithError(4, "`result` has body which type is `String` and it is not "
                     + "convertible to its declared type `Nothing`.");
-          }
-
-          @ParameterizedTest
-          @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void can_be_single_var_polytype_when_param_type_has_such_var(TestedTS type) {
-            mod(unlines(
-                "@Native(\"Impl.met\")",
-                type.name() + " myFunc(" + type.name() + " param);",
-                type.typeDeclarationsAsString()))
-                .loadsSuccessfully();
           }
         }
       }
@@ -571,35 +549,23 @@ public class DeclarationTest extends TestingContext {
                 .loadsSuccessfully();
           }
 
-          @ParameterizedTest
-          @ArgumentsSource(TestedValidPolytypes.class)
-          public void can_be_valid_polytype(TestedTS type) {
-            mod(unlines(
-                "@Native(\"Impl.met\")",
-                "String myFunc(" + type.name() + " param);",
-                type.typeDeclarationsAsString()))
+          @Test
+          public void can_be_polytype() {
+            var code = """
+                @Native("Impl.met")
+                String myFunc(A(A) f);
+                """;
+            mod(code)
                 .loadsSuccessfully();
           }
 
-          @ParameterizedTest
-          @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void cannot_be_single_var_polytype(TestedTS type) {
-            mod(unlines(
-                "@Native(\"Impl.met\")",
-                "String myFunc(" + type.name() + " param);",
-                type.typeDeclarationsAsString()))
-                .loadsWithError(2, "Type var(s) `A` are used once in declaration of"
-                    + " `myFunc`. This means each one can be replaced with `Any`.");
-          }
-
-          @ParameterizedTest
-          @ArgumentsSource(TestedSingleVarPolytypes.class)
-          public void can_be_single_var_polytype_param_when_some_other_param_has_such_type(
-              TestedTS type) {
-            mod(unlines(
-                "@Native(\"Impl.met\")",
-                "Blob myFunc(" + type.name() + " param, " + type.name() + " param2);",
-                type.typeDeclarationsAsString()))
+          @Test
+          public void can_be_single_var_polytype() {
+            var code = """
+                @Native("Impl.met")
+                String myFunc(Int(A) f);
+                """;
+            mod(code)
                 .loadsSuccessfully();
           }
         }

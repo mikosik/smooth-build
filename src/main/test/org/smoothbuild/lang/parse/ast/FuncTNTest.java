@@ -60,49 +60,6 @@ public class FuncTNTest {
     }
   }
 
-  @Nested
-  class _vars {
-    @Test
-    public void func_without_vars() {
-      TypeN func = new FuncTN(
-          normalType(), list(normalType()), internal());
-      assertThat(func.varsUsedOnce())
-          .isEmpty();
-    }
-
-    @Test
-    public void func_with_var_in_result_type() {
-      TypeN func = new FuncTN(
-          var("A"), list(normalType()), internal());
-      assertThat(func.varsUsedOnce())
-          .containsExactly("A");
-    }
-
-    @Test
-    public void func_with_var_in_param_type() {
-      TypeN func = new FuncTN(
-          normalType(), list(var("A")), internal());
-      assertThat(func.varsUsedOnce())
-          .containsExactly("A");
-    }
-
-    @Test
-    public void func_with_same_var_in_result_type_and_param_type() {
-      TypeN func = new FuncTN(
-          var("A"), list(var("A")), internal());
-      assertThat(func.varsUsedOnce())
-          .isEmpty();
-    }
-
-    @Test
-    public void func_with_same_var_in_two_param_types() {
-      TypeN func = new FuncTN(
-          normalType(), list(var("A"), var("A")), internal());
-      assertThat(func.varsUsedOnce())
-          .isEmpty();
-    }
-  }
-
   private static TypeN normalType() {
     return new TypeN("MyType", internal());
   }

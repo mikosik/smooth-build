@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
@@ -78,16 +79,29 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitField(ItemN fieldNode) {
-        super.visitField(fieldNode);
-        fieldNode.setType(fieldNode.typeNode().get().type());
+      public void visitField(ItemN itemN) {
+        super.visitField(itemN);
+        var typeOpt = itemN.typeNode().get().type();
+        typeOpt.flatMap((t) -> {
+          if (t.isPolytype()) {
+            var message = "Field type cannot be polymorphic. Found field %s with type %s."
+                .formatted(itemN.q(), t.q());
+            logBuffer.log(parseError(itemN, message));
+            return Optional.empty();
+          } else {
+            return Optional.of(t);
+          }
+        });
+
+        itemN.setType(typeOpt);
       }
 
       @Override
       public void visitFunc(FuncN funcN) {
         visitParams(funcN.params());
         funcN.body().ifPresent(this::visitExpr);
-        funcN.setType(optionalFuncType(evalTypeOfTopEval(funcN), funcN.optParamTs()));
+        var resN = funcN.typeNode().orElse(null);
+        funcN.setType(optionalFuncType(resN, evalTypeOfTopEval(funcN), funcN.optParamTs()));
       }
 
       @Override
@@ -158,21 +172,33 @@ public class TypeInferrer {
         return switch (type) {
           case ArrayTN array -> createType(array.elemT()).map(factory::array);
           case FuncTN func -> {
-            Optional<TypeS> result = createType(func.resT());
-            var params = Optionals.pullUp(map(func.paramTs(), this::createType));
-            yield optionalFuncType(result, params);
+            var resultOpt = createType(func.resT());
+            var paramsOpt = Optionals.pullUp(map(func.paramTs(), this::createType));
+            if (resultOpt.isEmpty() || paramsOpt.isEmpty()) {
+              yield empty();
+            }
+            yield Optional.of(factory.func(resultOpt.get(), paramsOpt.get()));
           }
           default -> Optional.of(findType(type.name()));
         };
       }
 
-      private Optional<TypeS> optionalFuncType(
-          Optional<TypeS> result, Optional<ImmutableList<TypeS>> params) {
-        if (result.isPresent() && params.isPresent()) {
-          return Optional.of(factory.func(result.get(), params.get()));
-        } else {
+      private Optional<TypeS> optionalFuncType(TypeN resN, Optional<TypeS> result,
+          Optional<ImmutableList<TypeS>> params) {
+        if (result.isEmpty() || params.isEmpty()) {
           return empty();
         }
+        var ps = params.get();
+        var paramOpenVars = ps.stream()
+            .flatMap(t -> t.openVars().stream())
+            .collect(toImmutableSet());
+        var r = result.get();
+        if (paramOpenVars.containsAll(r.openVars())) {
+          return Optional.of(factory.func(r, ps));
+        }
+        logBuffer.log(parseError(resN,
+            "Function result type has type variable(s) not present in any parameter type."));
+        return empty();
       }
 
       private TypeS findType(String name) {

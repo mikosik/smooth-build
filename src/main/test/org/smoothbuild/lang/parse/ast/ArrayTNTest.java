@@ -42,39 +42,4 @@ public class ArrayTNTest {
           .isFalse();
     }
   }
-
-  @Nested
-  class _vars_used_once {
-    @Test
-    public void array_node_which_elem_is_a_var() {
-      TypeN elemTN = new TypeN("A", internal());
-      TypeN typeN = new ArrayTN(elemTN, internal());
-      assertThat(typeN.varsUsedOnce())
-          .containsExactly("A");
-    }
-
-    @Test
-    public void array_node_which_elem_is_not_a_var() {
-      TypeN elemTN = new TypeN("MyType", internal());
-      TypeN typeN = new ArrayTN(elemTN, internal());
-      assertThat(typeN.varsUsedOnce())
-          .isEmpty();
-    }
-
-    @Test
-    public void array_of_array_which_elem_is_a_var() {
-      TypeN elemTN = new TypeN("A", internal());
-      TypeN typeN = new ArrayTN(new ArrayTN(elemTN, internal()), internal());
-      assertThat(typeN.varsUsedOnce())
-          .containsExactly("A");
-    }
-
-    @Test
-    public void array_of_array_which_elem_is_not_a_var() {
-      TypeN elemTN = new TypeN("MyType", internal());
-      TypeN typeN = new ArrayTN(new ArrayTN(elemTN, internal()), internal());
-      assertThat(typeN.varsUsedOnce())
-          .isEmpty();
-    }
-  }
 }

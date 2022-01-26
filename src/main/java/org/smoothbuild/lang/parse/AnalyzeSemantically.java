@@ -1,10 +1,8 @@
 package org.smoothbuild.lang.parse;
 
-import static java.lang.String.join;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.api.TypeNames.isVarName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
-import static org.smoothbuild.lang.parse.ast.FuncTN.countFuncVars;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ import org.smoothbuild.lang.parse.ast.ArrayTN;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobN;
-import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.FuncTN;
 import org.smoothbuild.lang.parse.ast.IntN;
@@ -35,10 +32,7 @@ import org.smoothbuild.lang.parse.ast.TypeN;
 import org.smoothbuild.lang.parse.ast.ValN;
 import org.smoothbuild.util.DecodeHexExc;
 import org.smoothbuild.util.UnescapingFailedExc;
-import org.smoothbuild.util.collect.CountersMap;
 import org.smoothbuild.util.collect.NList;
-
-import com.google.common.collect.ImmutableList;
 
 public class AnalyzeSemantically {
   public static ImmutableLogs analyzeSemantically(DefsS imported, Ast ast) {
@@ -51,7 +45,6 @@ public class AnalyzeSemantically {
     detectDuplicateFieldNames(logBuffer, ast);
     detectDuplicateParamNames(logBuffer, ast);
     detectStructNameWithSingleCapitalLetter(logBuffer, ast);
-    detectIllegalPolytypes(logBuffer, ast);
     detectIllegalNatives(logBuffer, ast);
     return logBuffer.toImmutableLogs();
   }
@@ -217,52 +210,6 @@ public class AnalyzeSemantically {
           logger.log(parseError(struct.loc(),
               "`" + name + "` is illegal struct name. It must have at least two characters."));
         }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void detectIllegalPolytypes(Logger logger, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitValue(ValN valN) {
-        super.visitValue(valN);
-        if (valN.typeNode().isPresent()) {
-          logErrorIfNeeded(valN, valN.typeNode().get().varsUsedOnce());
-        }
-      }
-
-      @Override
-      public void visitFunc(FuncN funcN) {
-        super.visitFunc(funcN);
-        if (funcN.typeNode().isPresent()) {
-          var counters = new CountersMap<String>();
-          countFuncVars(counters, funcN.typeNode().get(),
-              map(funcN.params(), itemNode -> itemNode.typeNode().get()));
-          logErrorIfNeeded(funcN, counters.keysWithCounter(1));
-        }
-      }
-
-      @Override
-      public void visitStruct(StructN struct) {
-        super.visitStruct(struct);
-        List<ItemN> fields = struct.fields();
-        for (ItemN field : fields) {
-          logErrorIfNeeded(field, field.typeNode().get().varsUsedOnce());
-        }
-      }
-
-      private void logErrorIfNeeded(
-          EvalN node, ImmutableList<String> varsUsedOnce) {
-        if (!varsUsedOnce.isEmpty()) {
-          logError(node, varsUsedOnce);
-        }
-      }
-
-      private void logError(EvalN node, List<String> varsUsedOnce) {
-        logger.log(parseError(node.typeNode().get(), "Type var(s) "
-            + join(", ", map(varsUsedOnce, v -> "`" + v + "`"))
-            + " are used once in declaration of " + node.q()
-            + ". This means each one can be replaced with `Any`."));
       }
     }.visitAst(ast);
   }

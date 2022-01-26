@@ -998,28 +998,6 @@ public class ExprSUsageTest extends TestingContext {
               result = A.myField;
                        ^""");
     }
-
-    @Test
-    public void field_type_fails() {
-      mod("""
-          MyStruct {
-           A field
-          }
-          """)
-          .loadsWithError(2, "Type var(s) `A` are used once in declaration of `field`. "
-              + "This means each one can be replaced with `Any`.");
-    }
-
-    @Test
-    public void field_arrayed_type() {
-      mod("""
-          MyStruct {
-           [A] field
-          }
-          """)
-          .loadsWithError(2, "Type var(s) `A` are used once in declaration of `field`. "
-              + "This means each one can be replaced with `Any`.");
-    }
   }
 
   @Nested
