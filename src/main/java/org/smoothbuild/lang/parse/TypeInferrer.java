@@ -42,6 +42,7 @@ import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.FuncTN;
 import org.smoothbuild.lang.parse.ast.IntN;
 import org.smoothbuild.lang.parse.ast.ItemN;
+import org.smoothbuild.lang.parse.ast.Node;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.SelectN;
 import org.smoothbuild.lang.parse.ast.StringN;
@@ -86,7 +87,7 @@ public class TypeInferrer {
           if (t.isPolytype()) {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
                 .formatted(itemN.q(), t.q());
-            logBuffer.log(parseError(itemN, message));
+            logError(itemN, message);
             return Optional.empty();
           } else {
             return Optional.of(t);
@@ -117,8 +118,8 @@ public class TypeInferrer {
         if (paramOpenVars.containsAll(r.openVars())) {
           return Optional.of(factory.func(r, ps));
         }
-        logBuffer.log(parseError(resN,
-            "Function result type has type variable(s) not present in any parameter type."));
+        logError(
+            resN, "Function result type has type variable(s) not present in any parameter type.");
         return empty();
       }
 
@@ -137,8 +138,8 @@ public class TypeInferrer {
       private Optional<TypeS> typeOfParam(ItemN param) {
         return evalTypeOf(param, (target, source) -> {
           if (!typing.isParamAssignable(target, source)) {
-            logBuffer.log(parseError(param, "Parameter " + param.q() + " is of type " + target.q()
-                + " so it cannot have default argument of type " + source.q() + "."));
+            logError(param, "Parameter " + param.q() + " is of type " + target.q()
+                + " so it cannot have default argument of type " + source.q() + ".");
           }
         });
       }
@@ -146,9 +147,8 @@ public class TypeInferrer {
       private Optional<TypeS> evalTOfTopEval(EvalN evalN) {
         return evalTypeOf(evalN, (target, source) -> {
           if (!typing.isAssignable(target, source)) {
-            logBuffer.log(parseError(evalN, "`" + evalN.name() + "` has body which type is "
-                + source.q() + " and it is not convertible to its declared type " + target.q()
-                + "."));
+            logError(evalN, "`" + evalN.name() + "` has body which type is " + source.q()
+                + " and it is not convertible to its declared type " + target.q() + ".");
           }
         });
       }
@@ -170,8 +170,7 @@ public class TypeInferrer {
           if (eval.typeNode().isPresent()) {
             return createType(eval.typeNode().get());
           } else {
-            logBuffer.log(parseError(eval, eval.q()
-                + " is native so it should have declared result type."));
+            logError(eval, eval.q() + " is native so it should have declared result type.");
             return empty();
           }
         }
@@ -228,12 +227,12 @@ public class TypeInferrer {
             t -> {
               if (!(t instanceof StructTS st)) {
                 select.setType(empty());
-                logBuffer.log(parseError(select.loc(), "Type " + t.q()
-                    + " is not a struct so it doesn't have " + q(select.field()) + " field."));
+                logError(select, "Type " + t.q() + " is not a struct so it doesn't have "
+                    + q(select.field()) + " field.");
               } else if (!st.fields().containsName(select.field())) {
                 select.setType(empty());
-                logBuffer.log(parseError(select.loc(), "Struct " + t.q()
-                    + " doesn't have field `" + select.field() + "`."));
+                logError(select,
+                    "Struct " + t.q() + " doesn't have field `" + select.field() + "`.");
               } else {
                 select.setType(((StructTS) t).fields().get(select.field()).type());
               }
@@ -267,10 +266,10 @@ public class TypeInferrer {
           }
           type = typing.mergeUp(type, elemT.get());
           if (typing.contains(type, factory.any())) {
-            logBuffer.log(parseError(elem.loc(),
+            logError(elem,
                 "Array elems at indexes 0 and " + i + " doesn't have common super type."
                 + "\nElement at index 0 type = " + expressions.get(0).type().get().q()
-                + "\nElement at index " + i + " type = " + elemT.get().q()));
+                + "\nElement at index " + i + " type = " + elemT.get().q());
             return empty();
           }
         }
@@ -285,8 +284,8 @@ public class TypeInferrer {
         if (calledT.isEmpty()) {
           call.setType(empty());
         } else if (!(calledT.get() instanceof FuncTS funcT)) {
-          logBuffer.log(parseError(call.loc(), description(called)
-              + " cannot be called as it is not a function but " + calledT.get().q() + "."));
+          logError(call, description(called) + " cannot be called as it is not a function but "
+              + calledT.get().q() + ".");
           call.setType(empty());
         } else {
           var funcParams = funcParams(called);
@@ -385,6 +384,10 @@ public class TypeInferrer {
       public void visitInt(IntN intN) {
         super.visitInt(intN);
         intN.setType(factory.int_());
+      }
+
+      private void logError(Node node, String message) {
+        logBuffer.log(parseError(node, message));
       }
     }.visitAst(ast);
     return logBuffer.toList();
