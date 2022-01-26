@@ -21,7 +21,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myValue = "abc";
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myValue", STRING);
     }
@@ -31,7 +31,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myValue = 0x07;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myValue", BLOB);
     }
@@ -41,7 +41,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myValue = 123;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myValue", INT);
     }
@@ -51,7 +51,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myValue = [ "abc" ];
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myValue", a(STRING));
     }
@@ -62,7 +62,7 @@ public class InferenceTest extends TestingContext {
           String stringValue = "abc";
           myValue = stringValue;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myValue", STRING);
     }
@@ -73,7 +73,7 @@ public class InferenceTest extends TestingContext {
           String myFunc(Blob param) = "abc";
           myValue = myFunc;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myValue", f(STRING, BLOB));
     }
@@ -84,7 +84,7 @@ public class InferenceTest extends TestingContext {
           String myFunc() = "abc";
           myValue = myFunc();
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myValue", STRING);
     }
@@ -97,7 +97,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc() = "abc";
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(STRING));
     }
@@ -107,7 +107,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc() = 0x07;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(BLOB));
     }
@@ -117,7 +117,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc() = 123;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(INT));
     }
@@ -127,7 +127,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc() = [ "abc" ];
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(a(STRING)));
     }
@@ -138,7 +138,7 @@ public class InferenceTest extends TestingContext {
           String stringValue = "abc";
           myFunc() = stringValue;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(STRING));
     }
@@ -149,7 +149,7 @@ public class InferenceTest extends TestingContext {
           String otherFunc(Blob param) = "abc";
           myFunc() = otherFunc;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(f(STRING, BLOB)));
     }
@@ -160,7 +160,7 @@ public class InferenceTest extends TestingContext {
           String otherFunc() = "abc";
           myFunc() = otherFunc();
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(STRING));
     }
@@ -170,7 +170,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc(String param) = param;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(STRING, STRING));
     }
@@ -180,7 +180,7 @@ public class InferenceTest extends TestingContext {
       String code = """
           myFunc(A param) = param;
           """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("myFunc", f(OPEN_A, OPEN_A));
     }
@@ -193,7 +193,7 @@ public class InferenceTest extends TestingContext {
       String code = """
             result = [ "abc", "def" ];
             """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("result", a(STRING));
     }
@@ -205,7 +205,7 @@ public class InferenceTest extends TestingContext {
             Nothing myNothing();
             result = [ "abc", myNothing() ];
             """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("result", a(STRING));
     }
@@ -218,7 +218,7 @@ public class InferenceTest extends TestingContext {
               0x01,
             ];
             """;
-      mod(code)
+      module(code)
           .loadsWithError(3,"""
                   Array elems at indexes 0 and 1 doesn't have common super type.
                   Element at index 0 type = `String`
@@ -235,7 +235,7 @@ public class InferenceTest extends TestingContext {
               secondFunc,
             ];
             """;
-      mod(code)
+      module(code)
           .loadsWithError(5, """
                   Array elems at indexes 0 and 1 doesn't have common super type.
                   Element at index 0 type = `String()`
@@ -253,7 +253,7 @@ public class InferenceTest extends TestingContext {
           String myEqual(A p1, A p2) = "true";
           result = myEqual("def", 0x01);
           """;
-        mod(code)
+        module(code)
             .loadsWithError(2, "Cannot infer actual type for type var `A`.");
       }
 
@@ -263,7 +263,7 @@ public class InferenceTest extends TestingContext {
           String myEqual(A p1, A p2) = "true";
           result = myEqual(["def"], [0x01]);
           """;
-        mod(code)
+        module(code)
             .loadsWithError(2, "Cannot infer actual type for type var `A`.");
       }
 
@@ -281,7 +281,7 @@ public class InferenceTest extends TestingContext {
           String myEqual(A p1, A p2) = "true";
           result = myEqual(vector("aaa", "bbb"), tuple("aaa", "bbb"));
           """;
-        mod(code)
+        module(code)
             .loadsWithError(10, "Cannot infer actual type for type var `A`.");
       }
     }
@@ -299,7 +299,7 @@ public class InferenceTest extends TestingContext {
             A myIdentity(A a) = a;
             myValue = myIdentity(nothingFunc());
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", NOTHING);
       }
@@ -310,7 +310,7 @@ public class InferenceTest extends TestingContext {
             A myIdentity(A a) = a;
             myValue = myIdentity("abc");
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", STRING);
       }
@@ -321,7 +321,7 @@ public class InferenceTest extends TestingContext {
             A myIdentity(A a) = a;
             myValue = myIdentity(["abc"]);
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", a(STRING));
       }
@@ -333,7 +333,7 @@ public class InferenceTest extends TestingContext {
             String myFunc(Blob param) = "abc";
             myValue = myIdentity(myFunc);
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", f(STRING, BLOB));
       }
@@ -348,7 +348,7 @@ public class InferenceTest extends TestingContext {
             A firstElement([A] array);
             myValue = firstElement([]);
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", NOTHING);
       }
@@ -360,7 +360,7 @@ public class InferenceTest extends TestingContext {
             A firstElement([A] array);
             myValue = firstElement(["abc"]);
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", STRING);
       }
@@ -372,7 +372,7 @@ public class InferenceTest extends TestingContext {
             A firstElement([A] array);
             myValue = firstElement([["abc"]]);
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", a(STRING));
       }
@@ -386,7 +386,7 @@ public class InferenceTest extends TestingContext {
             String myFunc2(String param) = "abc";
             myValue = firstElement([ myFunc1, myFunc2 ]);
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", f(STRING, NOTHING));
       }
@@ -402,7 +402,7 @@ public class InferenceTest extends TestingContext {
             [A] singleElement(A a) = [a];
             myValue = singleElement(nothingFunc());
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", a(NOTHING));
       }
@@ -413,7 +413,7 @@ public class InferenceTest extends TestingContext {
             [A] singleElement(A a) = [a];
             myValue = singleElement("abc");
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", a(STRING));
       }
@@ -424,7 +424,7 @@ public class InferenceTest extends TestingContext {
             [A] singleElement(A a) = [a];
             myValue = singleElement(["abc"]);
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", a(a(STRING)));
       }
@@ -436,7 +436,7 @@ public class InferenceTest extends TestingContext {
             String myFunc(Blob param) = "abc";
             myValue = singleElement(myFunc);
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully()
             .containsEvalWithType("myValue", a(f(STRING, BLOB)));
       }
@@ -459,7 +459,7 @@ public class InferenceTest extends TestingContext {
             [C] single(C elem) = [elem];
             result = f("abc", single);
             """;
-      mod(code)
+      module(code)
           .loadsSuccessfully()
           .containsEvalWithType("result", a(STRING));
     }

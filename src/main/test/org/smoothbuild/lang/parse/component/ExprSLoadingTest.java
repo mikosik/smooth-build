@@ -14,7 +14,7 @@ import org.smoothbuild.testing.TestingContext;
 public class ExprSLoadingTest extends TestingContext {
   @Test
   public void array_literal_expression() {
-    mod("""
+    module("""
           result =
           [
             0x07,
@@ -28,7 +28,7 @@ public class ExprSLoadingTest extends TestingContext {
 
   @Test
   public void blob_literal_expression() {
-    mod("""
+    module("""
           result =
             0x07;
           """)
@@ -38,7 +38,7 @@ public class ExprSLoadingTest extends TestingContext {
 
   @Test
   public void int_literal_expression() {
-    mod("""
+    module("""
           result =
             123;
           """)
@@ -50,7 +50,7 @@ public class ExprSLoadingTest extends TestingContext {
   class _call_expression {
     @Test
     public void with_func_reference() {
-      mod("""
+      module("""
           String myFunc() = "abc";
           result = myFunc();
           """)
@@ -61,7 +61,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_func_reference_and_arg() {
-      mod("""
+      module("""
           String myFunc(Blob b) = "abc";
           result = myFunc(
             0x07);
@@ -73,7 +73,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_func_reference_and_named_arg() {
-      mod("""
+      module("""
           String myFunc(Blob b) = "abc";
           result = myFunc(b=
             0x07);
@@ -85,7 +85,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_value_reference() {
-      mod("""
+      module("""
           @Native("Impl.met")
           String myFunc();
           String() myValue = myFunc;
@@ -99,7 +99,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_value_reference_and_arg() {
-      mod("""
+      module("""
           @Native("Impl.met")
           String myFunc(Blob blob);
           String(Blob) myValue = myFunc;
@@ -117,7 +117,7 @@ public class ExprSLoadingTest extends TestingContext {
       var struct = structTS("MyStruct", nList(sigS(STRING, "field")));
       var combine = combineS(1, struct, paramRefS(1, stringTS(), "field"));
       var ctor = defFuncS(1, struct, "myStruct", combine, nList(itemS(2, STRING, "field")));
-      mod("""
+      module("""
           MyStruct {
             String field
           }
@@ -129,7 +129,7 @@ public class ExprSLoadingTest extends TestingContext {
     @Test
     public void with_ctor_reference_and_arg() {
       var struct = structTS("MyStruct", nList(sigS(STRING, "field")));
-      mod("""
+      module("""
           MyStruct {
             String field
           }
@@ -143,7 +143,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_param_reference() {
-      mod("""
+      module("""
           result(String() f) = f();
           """)
           .loadsSuccessfully()
@@ -153,7 +153,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void with_param_reference_and_arg() {
-      mod("""
+      module("""
           result(String(Blob) f) = f(0x09);
           """)
           .loadsSuccessfully()
@@ -166,7 +166,7 @@ public class ExprSLoadingTest extends TestingContext {
   @Test
   public void select_expression() {
     var myStruct = structTS("MyStruct", nList(sigS(STRING, "field")));
-    mod("""
+    module("""
           MyStruct {
             String field,
           }
@@ -183,7 +183,7 @@ public class ExprSLoadingTest extends TestingContext {
   class _nat_func {
     @Test
     public void default_pureness() {
-      mod("""
+      module("""
           @Native("Impl.met")
           String myFunc();
           """)
@@ -194,7 +194,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void impure() {
-      mod("""
+      module("""
           @Native("Impl.met", IMPURE)
           String myFunc();
           """)
@@ -205,7 +205,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void pure() {
-      mod("""
+      module("""
           @Native("Impl.met", PURE)
           String myFunc();
           """)
@@ -217,7 +217,7 @@ public class ExprSLoadingTest extends TestingContext {
 
   @Test
   public void param_reference_expression() {
-    mod("""
+    module("""
           Blob myFunc(Blob param1)
             = param1;
           """)
@@ -230,7 +230,7 @@ public class ExprSLoadingTest extends TestingContext {
   class _reference_expression {
     @Test
     public void to_value() {
-      mod("""
+      module("""
           String myValue = "abc";
           String result =
             myValue;
@@ -242,7 +242,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void to_func() {
-      mod("""
+      module("""
           String myFunc() = "abc";
           String() result =
             myFunc;
@@ -254,7 +254,7 @@ public class ExprSLoadingTest extends TestingContext {
     @Test
     public void to_ctor() {
       var structT = structTS("MyStruct", nList());
-      mod("""
+      module("""
           MyStruct {}
           MyStruct() result =
             myStruct;
@@ -266,7 +266,7 @@ public class ExprSLoadingTest extends TestingContext {
 
   @Test
   public void string_literal_expression() {
-    mod("""
+    module("""
           result =
             "abc";
           """)
@@ -278,7 +278,7 @@ public class ExprSLoadingTest extends TestingContext {
   class _definition_of {
     @Test
     public void defined_value() {
-      mod("""
+      module("""
           Blob myValue =
             0x07;
           """)
@@ -288,7 +288,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void def_func() {
-      mod("""
+      module("""
           Blob myFunc() =
             0x07;
           """)
@@ -298,7 +298,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void def_func_with_param() {
-      mod("""
+      module("""
           String myFunc(
             Blob param1)
             = "abc";
@@ -310,7 +310,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void def_func_with_param_with_default_arg() {
-      mod("""
+      module("""
           String myFunc(
             Blob param1 =
               0x07)
@@ -323,7 +323,7 @@ public class ExprSLoadingTest extends TestingContext {
 
     @Test
     public void struct_type() {
-      mod("""
+      module("""
           MyStruct {
             String field
           }

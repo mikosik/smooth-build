@@ -185,7 +185,7 @@ public class TestingContext {
     return new ParallelJobExecutor(computer(), executionReporter());
   }
 
-  public TestingModLoader mod(String code) {
+  public TestingModLoader module(String code) {
     return new TestingModLoader(this, code);
   }
 

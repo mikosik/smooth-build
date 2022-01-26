@@ -17,7 +17,7 @@ public class VisibilityTest extends TestingContext {
     class _local {
       @Test
       public void value_declared_above_is_visible() {
-        mod("""
+        module("""
              String myValue = "abc";
              result = myValue;
              """)
@@ -26,7 +26,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void value_declared_below_is_visible() {
-        mod("""
+        module("""
              result = myValue;
              String myValue = "abc";
              """)
@@ -35,7 +35,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func_declared_above_is_visible() {
-        mod("""
+        module("""
              String myFunc() = "abc";
              result = myFunc;
              """)
@@ -44,7 +44,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func_declared_below_is_visible() {
-        mod("""
+        module("""
              result = myFunc;
              String myFunc() = "abc";
              """)
@@ -53,7 +53,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void ctor_declared_above_is_visible() {
-        mod("""
+        module("""
              MyStruct {}
              result = myStruct;
              """)
@@ -62,7 +62,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void ctor_declared_below_is_visible() {
-        mod("""
+        module("""
              result = myStruct;
              MyStruct {}
              """)
@@ -71,7 +71,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_declared_above_is_visible() {
-        mod("""
+        module("""
              MyStruct {}
              @Native("impl.met")
              MyStruct myFunc();
@@ -81,7 +81,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_declared_below_is_visible() {
-        mod("""
+        module("""
              @Native("impl.met")
              MyStruct myFunc();
              MyStruct {}
@@ -94,12 +94,12 @@ public class VisibilityTest extends TestingContext {
     class _imported {
       @Test
       public void value_is_visible() {
-        DefsS imported = mod("""
+        DefsS imported = module("""
           String otherModuleValue = "abc";
           """)
             .loadsSuccessfully()
             .getModAsDefinitions();
-        mod("""
+        module("""
           myValue = otherModuleValue;
           """)
             .withImported(imported)
@@ -108,12 +108,12 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func_is_visible() {
-        DefsS imported = mod("""
+        DefsS imported = module("""
           String otherModuleFunc() = "abc";
           """)
             .loadsSuccessfully()
             .getModAsDefinitions();
-        mod("""
+        module("""
               myValue = otherModuleFunc;
               """)
             .withImported(imported)
@@ -122,12 +122,12 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void ctor_is_visible() {
-        DefsS imported = mod("""
+        DefsS imported = module("""
           OtherModuleStruct{}
           """)
             .loadsSuccessfully()
             .getModAsDefinitions();
-        mod("""
+        module("""
               myValue = otherModuleStruct;
               """)
             .withImported(imported)
@@ -136,12 +136,12 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_is_visible() {
-        DefsS imported = mod("""
+        DefsS imported = module("""
           OtherModuleStruct{}
           """)
             .loadsSuccessfully()
             .getModAsDefinitions();
-        mod("""
+        module("""
           @Native("impl.met")
           OtherModuleStruct myFunc();
           """)
@@ -154,7 +154,7 @@ public class VisibilityTest extends TestingContext {
     class _param {
       @Test
       public void in_func_body_is_visible() {
-        mod("""
+        module("""
              myFunc(String param) = param;
              """)
             .loadsSuccessfully();
@@ -162,7 +162,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void outside_its_func_body_is_not_visible() {
-        mod("""
+        module("""
              myFunc(String param) = "abc";
              result = param;
              """)
@@ -171,7 +171,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void in_default_arg_body_of_other_param_is_not_visible() {
-        mod("""
+        module("""
         func(String param, String withDefault = param) = param;
         """)
             .loadsWithError(1, "`param` is undefined.");
@@ -179,7 +179,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void in_its_default_arg_body_is_not_visible() {
-        mod("""
+        module("""
         func(String withDefault = withDefault) = withDefault;
         """)
             .loadsWithError(1, "`withDefault` is undefined.");
@@ -193,7 +193,7 @@ public class VisibilityTest extends TestingContext {
     class one_elem_cycle {
       @Test
       public void value() {
-        mod("""
+        module("""
              myValue = myValue;
              """)
             .loadsWithError("""
@@ -203,7 +203,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func() {
-        mod("""
+        module("""
              myFunc1() = myFunc1();
              """)
             .loadsWithError("""
@@ -213,7 +213,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct() {
-        mod("""
+        module("""
              MyStruct {
                MyStruct myField
              }
@@ -225,7 +225,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_through_array() {
-        mod("""
+        module("""
              MyStruct {
                [MyStruct] myField
              }
@@ -237,7 +237,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_through_func_result() {
-        mod("""
+        module("""
              MyStruct {
                MyStruct() myField
              }
@@ -249,7 +249,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_through_func_param() {
-        mod("""
+        module("""
              MyStruct {
                Blob(MyStruct) myField
              }
@@ -264,7 +264,7 @@ public class VisibilityTest extends TestingContext {
     class two_elems_cycle {
       @Test
       public void value_value() {
-        mod("""
+        module("""
              myValue1 = myValue2;
              myValue2 = myValue1;
              """)
@@ -276,7 +276,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func_func() {
-        mod("""
+        module("""
              myFunc1() = myFunc2();
              myFunc2() = myFunc1();
              """)
@@ -288,7 +288,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func_func_through_arg() {
-        mod("""
+        module("""
              String myFunc() = myIdentity(myFunc());
              String myIdentity(String s) = s;
              """)
@@ -299,7 +299,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void value_value_through_arg() {
-        mod("""
+        module("""
              String myIdentity(String s) = s;
              String myValue = myIdentity(myValue);
              """)
@@ -310,7 +310,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_struct() {
-        mod("""
+        module("""
              MyStruct1 {
                MyStruct2 myField
              }
@@ -326,7 +326,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_struct_through_array() {
-        mod("""
+        module("""
              MyStruct1 {
                MyStruct2 myField
              }
@@ -342,7 +342,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_struct_through_func_result() {
-        mod("""
+        module("""
              MyStruct1 {
                MyStruct2 myField
              }
@@ -358,7 +358,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_struct_through_func_param() {
-        mod("""
+        module("""
              MyStruct1 {
                MyStruct2 myField
              }
@@ -377,7 +377,7 @@ public class VisibilityTest extends TestingContext {
     class three_elem_cycle {
       @Test
       public void value_value_value() {
-        mod("""
+        module("""
              myValue1 = myValue2;
              myValue2 = myValue3;
              myValue3 = myValue1;
@@ -391,7 +391,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func_func_func() {
-        mod("""
+        module("""
              myFunc1() = myFunc2();
              myFunc2() = myFunc3();
              myFunc3() = myFunc1();
@@ -405,7 +405,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void value_func_value() {
-        mod("""
+        module("""
              myValue1 = myFunc();
              myFunc() = myValue2;
              myValue2 = myValue1;
@@ -419,7 +419,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void func_value_func() {
-        mod("""
+        module("""
              myFunc1() = myValue;
              myValue = myFunc2();
              myFunc2() = myFunc1();
@@ -433,7 +433,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_struct_struct_through_array() {
-        mod("""
+        module("""
              MyStruct1 {
                MyStruct2 myField
              }
@@ -453,7 +453,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_struct_struct_through_func_result() {
-        mod("""
+        module("""
              MyStruct1 {
                [MyStruct2] myField
              }
@@ -473,7 +473,7 @@ public class VisibilityTest extends TestingContext {
 
       @Test
       public void struct_struct_struct_through_func_param() {
-        mod("""
+        module("""
              MyStruct1 {
                [MyStruct2] myField
              }
@@ -501,13 +501,13 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                otherModuleValue = "def";
                """)
               .withImported(imported)
@@ -516,13 +516,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                 otherModuleFunc = "def";
                 """)
               .withImported(imported)
@@ -531,13 +531,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                 otherModuleStruct = "def";
                 """)
               .withImported(imported)
@@ -549,7 +549,7 @@ public class VisibilityTest extends TestingContext {
       class _local {
         @Test
         public void value_fails() {
-          mod("""
+          module("""
                myValue = "abc";
                myValue = "def";
                """)
@@ -558,7 +558,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          mod("""
+          module("""
                myFunc() = "abc";
                myFunc = "def";
                """)
@@ -567,7 +567,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_fails() {
-          mod("""
+          module("""
                MyStruct {}
                myStruct = "abc";
                """)
@@ -579,7 +579,7 @@ public class VisibilityTest extends TestingContext {
       class _internal {
         @Test
         public void func_fails() {
-          mod("""
+          module("""
                 if = "def";
                 """)
               .loadsWithError(1, alreadyDefinedInternally("if"));
@@ -593,13 +593,13 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                 otherModuleValue() = "def";
                 """)
               .withImported(imported)
@@ -608,13 +608,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                 otherModuleFunc() = "def";
                 """)
               .withImported(imported)
@@ -623,13 +623,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                 otherModuleStruct() = "def";
                 """)
               .withImported(imported)
@@ -641,7 +641,7 @@ public class VisibilityTest extends TestingContext {
       class _local {
         @Test
         public void value_fails() {
-          mod("""
+          module("""
                myValue = "abc";
                myValue() = "def";
                """)
@@ -650,7 +650,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          mod("""
+          module("""
                myFunc() = "abc";
                myFunc() = "def";
                """)
@@ -659,7 +659,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_fails() {
-          mod("""
+          module("""
                MyStruct {}
                myStruct() = "abc";
                """)
@@ -671,7 +671,7 @@ public class VisibilityTest extends TestingContext {
       class _internal {
         @Test
         public void func_fails() {
-          mod("""
+          module("""
                 if() = "def";
                 """)
               .loadsWithError(1, alreadyDefinedInternally("if"));
@@ -683,7 +683,7 @@ public class VisibilityTest extends TestingContext {
     class _param_shadowing {
       @Test
       public void other_param_fails() {
-        mod("""
+        module("""
              String myFunc(
                String param,
                String param) = "abc";
@@ -695,13 +695,13 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
               otherModuleValue = "abc";
               """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
               String myFunc(String otherModuleValue) = "abc";
               """)
               .withImported(imported)
@@ -710,13 +710,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_succeeds() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
               otherModuleFunc() = "abc";
               """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
               String myFunc(String otherModuleFunc) = "abc";
               """)
               .withImported(imported)
@@ -725,13 +725,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_succeeds() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
               OtherModuleStruct {}
               """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
               String myFunc(String otherModuleStruct) = "abc";
               """)
               .withImported(imported)
@@ -743,7 +743,7 @@ public class VisibilityTest extends TestingContext {
       class _local {
         @Test
         public void value_succeeds() {
-          mod("""
+          module("""
               myValue = "abc";
               String myFunc(String myValue) = "abc";
               """)
@@ -752,7 +752,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_succeeds() {
-          mod("""
+          module("""
               myFunc() = "abc";
               String myOtherFunc(String myFunc) = "abc";
               """)
@@ -761,7 +761,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_succeeds() {
-          mod("""
+          module("""
              MyStruct {}
              String myFunc(String myStruct) = "abc";
              """)
@@ -773,7 +773,7 @@ public class VisibilityTest extends TestingContext {
       class _internal {
         @Test
         public void func_succeeds() {
-          mod("""
+          module("""
               verifying_that_internal_if_func_is_defined = if;
               String myFunc(String if) = "abc";
               """)
@@ -788,7 +788,7 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void base_type_fails() {
-          mod("""
+          module("""
                String {}
                """)
               .loadsWithError(1, "`" + "String" + "` is already defined internally.");
@@ -796,13 +796,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void struct_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             OtherModuleStruct {}
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                 OtherModuleStruct {}
                 """)
               .withImported(imported)
@@ -817,7 +817,7 @@ public class VisibilityTest extends TestingContext {
       class _local {
         @Test
         public void struct_fails() {
-          mod("""
+          module("""
                OtherModuleStruct {}
                OtherModuleStruct {}
                """)
@@ -833,7 +833,7 @@ public class VisibilityTest extends TestingContext {
     class _field_shadowing {
       @Test
       public void other_field_fails() {
-        mod("""
+        module("""
              MyStruct {
                String field,
                String field
@@ -847,13 +847,13 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_succeeds() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
               otherModuleValue = "abc";
               """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
               MyStruct {
                 String otherModuleValue,
               }
@@ -864,13 +864,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_succeeds() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
               otherModuleFunc() = "abc";
               """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
               MyStruct {
                 String otherModuleFunc,
               }
@@ -881,13 +881,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_succeeds() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
               OtherModuleStruct {}
               """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
               MyStruct {
                 String otherModuleStruct,
               }
@@ -901,7 +901,7 @@ public class VisibilityTest extends TestingContext {
       class _local {
         @Test
         public void value_succeeds() {
-          mod("""
+          module("""
               myValue = "abc";
               MyStruct {
                 String myValue,
@@ -912,7 +912,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_succeeds() {
-          mod("""
+          module("""
               myFunc() = "abc";
               MyStruct {
                 String myFunc,
@@ -923,7 +923,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void ctor_succeeds() {
-          mod("""
+          module("""
              MyStruct {}
              MyOtherStruct {
                 String myStruct,
@@ -937,7 +937,7 @@ public class VisibilityTest extends TestingContext {
       class _internal {
         @Test
         public void func_succeeds() {
-          mod("""
+          module("""
               verifying_that_internal_if_func_is_defined = if;
               MyStruct {
                 String if,
@@ -954,13 +954,13 @@ public class VisibilityTest extends TestingContext {
       class _imported {
         @Test
         public void value_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             otherModuleValue = "abc";
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                 OtherModuleValue{}
                 """)
               .withImported(imported)
@@ -969,13 +969,13 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          DefsS imported = mod("""
+          DefsS imported = module("""
             otherModuleFunc() = "abc";
             """)
               .withImportedModFiles()
               .loadsSuccessfully()
               .getModAsDefinitions();
-          mod("""
+          module("""
                 OtherModuleFunc{}
                 """)
               .withImported(imported)
@@ -987,7 +987,7 @@ public class VisibilityTest extends TestingContext {
       class _local {
         @Test
         public void value_fails() {
-          mod("""
+          module("""
                myValue = "abc";
                MyValue{}
                """)
@@ -996,7 +996,7 @@ public class VisibilityTest extends TestingContext {
 
         @Test
         public void func_fails() {
-          mod("""
+          module("""
                myFunc() = "abc";
                MyFunc{}
                """)
@@ -1008,7 +1008,7 @@ public class VisibilityTest extends TestingContext {
       class _internal {
         @Test
         public void func_fails() {
-          mod("""
+          module("""
                 If{}
                 """)
               .loadsWithError(1, alreadyDefinedInternally("if"));

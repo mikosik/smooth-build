@@ -32,7 +32,7 @@ public class DeclarationTest extends TestingContext {
     class _struct {
       @Test
       public void declaring_empty_struct_is_allowed() {
-        mod("MyStruct {}")
+        module("MyStruct {}")
             .loadsSuccessfully();
       }
 
@@ -44,7 +44,7 @@ public class DeclarationTest extends TestingContext {
               String fieldB
             }
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully();
       }
 
@@ -52,7 +52,7 @@ public class DeclarationTest extends TestingContext {
       class _name {
         @Test
         public void that_is_normal_name() {
-          mod("""
+          module("""
              MyStruct{}
              """)
               .loadsSuccessfully();
@@ -60,7 +60,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_is_illegal_fails() {
-          mod("""
+          module("""
              MyStruct^{}
              """)
               .loadsWithError(1, """
@@ -71,7 +71,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_starts_with_small_letter_fails() {
-          mod("""
+          module("""
              myStruct{}
              """)
               .loadsWithError(1, """
@@ -82,7 +82,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_is_single_large_letter_fails() {
-          mod("""
+          module("""
              A{}
              """)
               .loadsWithError(1, "`A` is illegal struct name. It must have at least two characters.");
@@ -96,7 +96,7 @@ public class DeclarationTest extends TestingContext {
           @ParameterizedTest
           @ArgumentsSource(TestedMonotypes.class)
           public void can_be_monotype(TestedTS testedT) {
-            mod(unlines(
+            module(unlines(
                 testedT.typeDeclarationsAsString(),
                 "MyStruct {",
                 "  " + testedT.name() + " field,",
@@ -106,7 +106,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void cannot_be_polytype() {
-            mod("""
+            module("""
                 MyStruct {
                  A field
                 }
@@ -117,7 +117,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void cannot_be_polytype_array() {
-            mod("""
+            module("""
                 MyStruct {
                  [A] field
                 }
@@ -128,7 +128,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void cannot_be_type_which_encloses_it() {
-            mod("""
+            module("""
              MyStruct {
                MyStruct field
              }
@@ -140,7 +140,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void cannot_be_array_type_which_elem_type_encloses_it() {
-            mod("""
+            module("""
               MyStruct {
                 String firstField,
                 [MyStruct] field
@@ -153,7 +153,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void cannot_declare_func_which_result_type_encloses_it() {
-            mod("""
+            module("""
               MyStruct {
                 MyStruct() field
               }
@@ -165,7 +165,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void cannot_declare_func_which_param_type_encloses_it() {
-            mod("""
+            module("""
               MyStruct {
                 Blob(MyStruct) field
               }
@@ -180,7 +180,7 @@ public class DeclarationTest extends TestingContext {
         class _name {
           @Test
           public void that_is_legal() {
-            mod("""
+            module("""
              MyStruct {
                String field
              }
@@ -190,7 +190,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void that_is_illegal_fails() {
-            mod("""
+            module("""
              MyStruct {
                String field^
              }
@@ -203,7 +203,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void that_starts_with_large_letter_fails() {
-            mod("""
+            module("""
              MyStruct {
                String Field
              }
@@ -216,7 +216,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void that_is_single_large_letter_fails() {
-            mod("""
+            module("""
              MyStruct {
                String A
              }
@@ -233,26 +233,26 @@ public class DeclarationTest extends TestingContext {
       class _field_list {
         @Test
         public void can_have_trailing_comma() {
-          mod(structDeclaration("String field,"))
+          module(structDeclaration("String field,"))
               .loadsSuccessfully()
               .containsType(structTS("MyStruct", nList(sigS(STRING, "field"))));
         }
 
         @Test
         public void cannot_have_only_comma() {
-          mod(structDeclaration(","))
+          module(structDeclaration(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          mod(structDeclaration(", String field"))
+          module(structDeclaration(", String field"))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          mod(structDeclaration("String field,,"))
+          module(structDeclaration("String field,,"))
               .loadsWithProblems();
         }
 
@@ -270,7 +270,7 @@ public class DeclarationTest extends TestingContext {
       class _type {
         @Test
         public void can_be_omitted() {
-          mod("""
+          module("""
             myValue = "abc";
             """)
               .loadsSuccessfully();
@@ -279,7 +279,7 @@ public class DeclarationTest extends TestingContext {
         @ParameterizedTest
         @ArgumentsSource(TestedMonotypes.class)
         public void can_be_monotype(TestedTS type) {
-          mod(unlines(
+          module(unlines(
               "@Native(\"Impl.met\")",
               type.name() + " myFunc();",
               type.name() + " myValue = myFunc();",
@@ -294,7 +294,7 @@ public class DeclarationTest extends TestingContext {
               A myId(A param);
               A myValue = myId("abc");
           """;
-          mod(code)
+          module(code)
               .loadsWithError(3, "`myValue` has body which type is `String` and it is "
                   + "not convertible to its declared type `A`.");
         }
@@ -306,7 +306,7 @@ public class DeclarationTest extends TestingContext {
               A myId(A param);
               A(A) myValue = myId;
           """;
-          mod(code).loadsSuccessfully();
+          module(code).loadsSuccessfully();
         }
 
         @Test
@@ -316,13 +316,13 @@ public class DeclarationTest extends TestingContext {
               A myId(A param);
               Int(Int) myValue = myId;
           """;
-          mod(code).loadsWithError(3, "`myValue` has body which type is `A(A)` and it is not"
+          module(code).loadsWithError(3, "`myValue` has body which type is `A(A)` and it is not"
               + " convertible to its declared type `Int(Int)`.");
         }
 
         @Test
         public void can_be_type_which_is_supertype_of_its_body_type() {
-          mod("""
+          module("""
               @Native("impl")
               Nothing nothingFunc();
               String myValue = nothingFunc();
@@ -332,7 +332,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_is_convertible() {
-          mod("""
+          module("""
               @Native("impl")
               Nothing nothingFunc();
               String myValue = nothingFunc();
@@ -347,7 +347,7 @@ public class DeclarationTest extends TestingContext {
       class _name {
         @Test
         public void that_is_legal() {
-          mod("""
+          module("""
              myValue = "abc";
              """)
               .loadsSuccessfully();
@@ -355,7 +355,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_is_illegal_fails() {
-          mod("""
+          module("""
              myValue^ = "abc";
              """)
               .loadsWithError(1, """
@@ -366,7 +366,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_starts_with_large_letter_fails() {
-          mod("""
+          module("""
              MyValue = "abc";
              """)
               .loadsWithError(1, """
@@ -377,7 +377,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_is_single_large_letter_fails() {
-          mod("""
+          module("""
              A = "abc";
              """)
               .loadsWithError(1, """
@@ -389,7 +389,7 @@ public class DeclarationTest extends TestingContext {
 
       @Test
       public void without_body_fails() {
-        mod("""
+        module("""
             String result;
             """)
             .loadsWithError(1, "Value cannot have empty body.");
@@ -400,7 +400,7 @@ public class DeclarationTest extends TestingContext {
     class _func {
       @Test
       public void non_nat_func_without_body() {
-        mod("""
+        module("""
           String myFunc();
           """)
             .loadsWithError(1, "Non native function cannot have empty body.");
@@ -408,7 +408,7 @@ public class DeclarationTest extends TestingContext {
 
       @Test
       public void nat_func_with_body() {
-        mod("""
+        module("""
           @Native("Impl.met")
           String myFunc() = "abc";
           """)
@@ -417,7 +417,7 @@ public class DeclarationTest extends TestingContext {
 
       @Test
       public void nat_func_without_declared_result_type_fails() {
-        mod("""
+        module("""
         @Native("Impl.met")
         myFunc();
         """)
@@ -430,7 +430,7 @@ public class DeclarationTest extends TestingContext {
         class _type {
           @Test
           public void result_type_can_be_omitted() {
-            mod("""
+            module("""
             myFunc() = "abc";
             """)
                 .loadsSuccessfully();
@@ -439,7 +439,7 @@ public class DeclarationTest extends TestingContext {
           @ParameterizedTest
           @ArgumentsSource(TestedMonotypes.class)
           public void can_be_monotype(TestedTS type) {
-            mod(unlines(
+            module(unlines(
                 "@Native(\"impl\")",
                 type.name() + " myFunc();",
                 type.declarationsAsString()))
@@ -452,7 +452,7 @@ public class DeclarationTest extends TestingContext {
                 @Native("Impl.met")
                 A myFunc(B b, C c);
                 """;
-            mod(code)
+            module(code)
                 .loadsWithError(2,
                     "Function result type has type variable(s) not present in any parameter type.");
           }
@@ -463,13 +463,13 @@ public class DeclarationTest extends TestingContext {
                 @Native("Impl.met")
                 A myFunc(A a);
                 """;
-            mod(code)
+            module(code)
                 .loadsSuccessfully();
           }
 
           @Test
           public void can_be_supertype_of_func_expression() {
-            mod("""
+            module("""
                 @Native("impl")
                 Nothing nothingFunc();
                 String myFunc() = nothingFunc();
@@ -479,7 +479,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_type_is_convertible() {
-            mod("""
+            module("""
                 @Native("impl")
                 Nothing nothingFunc();
                 String myFunc() = nothingFunc();
@@ -495,7 +495,7 @@ public class DeclarationTest extends TestingContext {
       class _name {
         @Test
         public void that_is_legal() {
-          mod("""
+          module("""
              myFunc() = "abc";
              """)
               .loadsSuccessfully();
@@ -503,7 +503,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_is_illegal_fails() {
-          mod("""
+          module("""
              myFunc^() = "abc";
              """)
               .loadsWithError(1, """
@@ -514,7 +514,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_starts_with_large_letter_fails() {
-          mod("""
+          module("""
              MyFunc() = "abc";
              """)
               .loadsWithError(1, """
@@ -525,7 +525,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void that_is_single_large_letter_fails() {
-          mod("""
+          module("""
              A() = "abc";
              """)
               .loadsWithError(1, """
@@ -542,7 +542,7 @@ public class DeclarationTest extends TestingContext {
           @ParameterizedTest
           @ArgumentsSource(TestedMonotypes.class)
           public void can_be_monotype(TestedTS type) {
-            mod(unlines(
+            module(unlines(
                 "@Native(\"Impl.met\")",
                 "String myFunc(" + type.name() + " param);",
                 type.typeDeclarationsAsString()))
@@ -555,7 +555,7 @@ public class DeclarationTest extends TestingContext {
                 @Native("Impl.met")
                 String myFunc(A(A) f);
                 """;
-            mod(code)
+            module(code)
                 .loadsSuccessfully();
           }
 
@@ -565,7 +565,7 @@ public class DeclarationTest extends TestingContext {
                 @Native("Impl.met")
                 String myFunc(Int(A) f);
                 """;
-            mod(code)
+            module(code)
                 .loadsSuccessfully();
           }
         }
@@ -574,7 +574,7 @@ public class DeclarationTest extends TestingContext {
         class _name {
           @Test
           public void that_is_legal() {
-            mod("""
+            module("""
              String myFunc(String name) = "abc";
              """)
                 .loadsSuccessfully();
@@ -582,7 +582,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void that_is_illegal_fails() {
-            mod("""
+            module("""
              String myFunc(String name^);
              """)
                 .loadsWithError(1, """
@@ -593,7 +593,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void that_starts_with_large_letter_fails() {
-            mod("""
+            module("""
              String myFunc(String Name);
              """)
                 .loadsWithError(1, """
@@ -604,7 +604,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void that_is_single_large_letter_fails() {
-            mod("""
+            module("""
              String myFunc(String A);
              """)
                 .loadsWithError(1, """
@@ -616,7 +616,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void default_param_before_non_default_is_allowed() {
-          mod("""
+          module("""
             @Native("Impl.met")
             String myFunc(
               String default = "value",
@@ -630,7 +630,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void polytype_param_can_have_default_arg() {
-          mod("""
+          module("""
         A myFunc(A value = "abc") = value;
         """)
               .loadsSuccessfully();
@@ -638,7 +638,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void default_arg_gets_converted_to_polytype_param() {
-          mod("""
+          module("""
         [A] myFunc(A param1, [A] param2 = []) = param2;
         [String] result = myFunc("abc");
         """)
@@ -650,7 +650,7 @@ public class DeclarationTest extends TestingContext {
       class _param_list {
         @Test
         public void can_have_trailing_comma() {
-          mod(funcDeclaration("String param1,"))
+          module(funcDeclaration("String param1,"))
               .loadsSuccessfully()
               .containsEval(defFuncS(1, STRING, "myFunc", stringS(1, "abc"),
                   nList(itemS(1, STRING, "param1"))));
@@ -658,19 +658,19 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void cannot_have_only_comma() {
-          mod(funcDeclaration(","))
+          module(funcDeclaration(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          mod(funcDeclaration(",String string"))
+          module(funcDeclaration(",String string"))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          mod(funcDeclaration("String string,,"))
+          module(funcDeclaration("String string,,"))
               .loadsWithProblems();
         }
 
@@ -685,7 +685,7 @@ public class DeclarationTest extends TestingContext {
       class _type_param_list {
         @Test
         public void can_have_trailing_comma() {
-          mod(funcTDeclaration("String,"))
+          module(funcTDeclaration("String,"))
               .loadsSuccessfully()
               .containsEval(natFuncS(2, f(f(BLOB, STRING)), "myFunc", nList(),
                   annS(1, stringS(1, "Impl.met"))));
@@ -693,19 +693,19 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void cannot_have_only_comma() {
-          mod(funcTDeclaration(","))
+          module(funcTDeclaration(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          mod(funcTDeclaration(",String"))
+          module(funcTDeclaration(",String"))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          mod(funcTDeclaration("String,,"))
+          module(funcTDeclaration("String,,"))
               .loadsWithProblems();
         }
 
@@ -731,7 +731,7 @@ public class DeclarationTest extends TestingContext {
               myIdentity(String param) = param;
               result = myIdentity("abc", "def");
               """;
-          mod(code)
+          module(code)
               .loadsWithError(2, "In call to function with type `String(String param)`:"
                   + " Too many positional arguments.");
         }
@@ -742,7 +742,7 @@ public class DeclarationTest extends TestingContext {
               returnFirst(String param1, String param2) = param1;
               result = returnFirst("abc");
               """;
-          mod(code)
+          module(code)
               .loadsWithError(2, "In call to function with type `String(String param1,"
                   + " String param2)`: Parameter `param2` must be specified.");
         }
@@ -754,7 +754,7 @@ public class DeclarationTest extends TestingContext {
               funcValue = returnFirst;
               result = funcValue("abc");
               """;
-          mod(code)
+          module(code)
               .loadsWithError(3, "In call to function with type `String(String, String)`:"
                   + " Parameter #2 must be specified.");
         }
@@ -765,7 +765,7 @@ public class DeclarationTest extends TestingContext {
               myIdentity(String param) = param;
               result = myIdentity(wrongName="abc");
               """;
-          mod(code)
+          module(code)
               .loadsWithError(2, "In call to function with type `String(String param)`: "
                   + "Unknown parameter `wrongName`.");
         }
@@ -776,7 +776,7 @@ public class DeclarationTest extends TestingContext {
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param1="abc", param2="def");
               """;
-          mod(code)
+          module(code)
               .loadsSuccessfully();
         }
 
@@ -786,7 +786,7 @@ public class DeclarationTest extends TestingContext {
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param2="def", param1="abc");
               """;
-          mod(code)
+          module(code)
               .loadsSuccessfully();
         }
 
@@ -796,7 +796,7 @@ public class DeclarationTest extends TestingContext {
               returnFirst(String param1, String param2) = param1;
               result = returnFirst(param2="def", "abc");
               """;
-          mod(code)
+          module(code)
               .loadsWithError(2,
                   "In call to function with type `String(String param1, String param2)`: "
                       + "Positional arguments must be placed before named arguments.");
@@ -808,7 +808,7 @@ public class DeclarationTest extends TestingContext {
               myIdentity(String param) = param;
               result = myIdentity(param="abc", param="abc");
               """;
-          mod(code)
+          module(code)
               .loadsWithError(2, "In call to function with type `String(String param)`:"
                   + " `param` is already assigned.");
         }
@@ -819,7 +819,7 @@ public class DeclarationTest extends TestingContext {
               myIdentity(String param) = param;
               result = myIdentity("abc", param="abc");
               """;
-          mod(code)
+          module(code)
               .loadsWithError(2, "In call to function with type `String(String param)`: "
                   + "`param` is already assigned.");
         }
@@ -830,7 +830,7 @@ public class DeclarationTest extends TestingContext {
               myIdentity(String param1="abc", String param2="def") = param1;
               result = myIdentity("abc", "def");
               """;
-          mod(code)
+          module(code)
               .loadsSuccessfully();
         }
 
@@ -840,7 +840,7 @@ public class DeclarationTest extends TestingContext {
             myIdentity(String param1="abc", String param2="def") = param1;
             result = myIdentity(param1="abc", param2="def");
             """;
-          mod(code)
+          module(code)
               .loadsSuccessfully();
         }
 
@@ -851,7 +851,7 @@ public class DeclarationTest extends TestingContext {
             valueReferencingFunc = myFunc;
             result = valueReferencingFunc(param="abc");
             """;
-          mod(code)
+          module(code)
               .loadsWithError(3,
                   "In call to function with type `String(String)`: Unknown parameter `param`.");
         }
@@ -863,7 +863,7 @@ public class DeclarationTest extends TestingContext {
             valueReferencingFunc = myFunc;
             result = valueReferencingFunc();
             """;
-          mod(code)
+          module(code)
               .loadsWithError(3, "In call to function with type `String(String)`: "
                   + "Parameter #1 must be specified.");
         }
@@ -877,7 +877,7 @@ public class DeclarationTest extends TestingContext {
               MyStruct {}
               result = myStruct();
               """;
-          mod(code)
+          module(code)
               .loadsSuccessfully();
         }
 
@@ -889,7 +889,7 @@ public class DeclarationTest extends TestingContext {
               }
               result = myStruct("abc");
               """;
-          mod(code)
+          module(code)
               .loadsSuccessfully();
         }
 
@@ -901,7 +901,7 @@ public class DeclarationTest extends TestingContext {
               }
               result = myStruct();
               """;
-          mod(code)
+          module(code)
               .loadsWithError(4, "In call to function with type `MyStruct(String field)`:" +
                   " Parameter `field` must be specified.");
         }
@@ -911,7 +911,7 @@ public class DeclarationTest extends TestingContext {
       class _arg_list {
         @Test
         public void can_have_trailing_comma() {
-          mod(funcCall("0x07,"))
+          module(funcCall("0x07,"))
               .loadsSuccessfully()
               .containsEval(defValS(2, BLOB, "result",
                   callS(2, BLOB,
@@ -921,19 +921,19 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void cannot_have_only_comma() {
-          mod(funcCall(","))
+          module(funcCall(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_leading_comma() {
-          mod(funcCall(","))
+          module(funcCall(","))
               .loadsWithProblems();
         }
 
         @Test
         public void cannot_have_two_trailing_commas() {
-          mod(funcCall("0x01,,"))
+          module(funcCall("0x01,,"))
               .loadsWithProblems();
         }
 
@@ -956,7 +956,7 @@ public class DeclarationTest extends TestingContext {
             }
             String result = myStruct("abc").field;
             """;
-        mod(code)
+        module(code)
             .loadsSuccessfully();
       }
 
@@ -968,7 +968,7 @@ public class DeclarationTest extends TestingContext {
             }
             result = myStruct("abc").otherField;
             """;
-        mod(code)
+        module(code)
             .loadsWithError(4, "Struct `MyStruct` doesn't have field `otherField`.");
       }
     }
@@ -987,7 +987,7 @@ public class DeclarationTest extends TestingContext {
             "0xABCDEF",
             "0xabcdefABCDEF"})
         public void is_legal(String literal) {
-          mod("result = " + literal + ";")
+          module("result = " + literal + ";")
               .loadsSuccessfully();
         }
 
@@ -995,19 +995,19 @@ public class DeclarationTest extends TestingContext {
         class _causes_error_when {
           @Test
           public void has_only_one_digit() {
-            mod("result = 0x1;")
+            module("result = 0x1;")
                 .loadsWithError(1, "Illegal Blob literal. Expected even number of digits.");
           }
 
           @Test
           public void has_odd_number_of_digits() {
-            mod("result = 0x123;")
+            module("result = 0x123;")
                 .loadsWithError(1, "Illegal Blob literal. Expected even number of digits.");
           }
 
           @Test
           public void has_non_digit_character() {
-            mod("result = 0xGG;")
+            module("result = 0xGG;")
                 .loadsWithError(1, """
               extraneous input 'GG' expecting ';'
               result = 0xGG;
@@ -1031,7 +1031,7 @@ public class DeclarationTest extends TestingContext {
             "-123456789",
         })
         public void is_legal(String literal) {
-          mod("result = " + literal + ";")
+          module("result = " + literal + ";")
               .loadsSuccessfully();
         }
 
@@ -1049,13 +1049,13 @@ public class DeclarationTest extends TestingContext {
               "-001",
           })
           public void has_leading_zeros(String literal) {
-            mod("result = " + literal + ";")
+            module("result = " + literal + ";")
                 .loadsWithError(1, "Illegal Int literal: `" + literal + "`.");
           }
 
           @Test
           public void has_two_minus_signs() {
-            mod("result = --1;")
+            module("result = --1;")
                 .loadsWithError(1, """
                     token recognition error at: '--'
                     result = --1;
@@ -1064,7 +1064,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void has_space_inside() {
-            mod("result = 12 3;")
+            module("result = 12 3;")
                 .loadsWithError(1, """
                   extraneous input '3' expecting ';'
                   result = 12 3;
@@ -1073,7 +1073,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void has_space_after_minus_sign() {
-            mod("result = - 123;")
+            module("result = - 123;")
                 .loadsWithError(1, """
                   token recognition error at: '- '
                   result = - 123;
@@ -1103,7 +1103,7 @@ public class DeclarationTest extends TestingContext {
             "\\\""         // escaped double quotes
         })
         public void is_legal(String literal) {
-          mod("result = \"" + literal + "\";")
+          module("result = \"" + literal + "\";")
               .loadsSuccessfully();
         }
 
@@ -1111,7 +1111,7 @@ public class DeclarationTest extends TestingContext {
         class causes_error_when {
           @Test
           public void has_no_closing_quote() {
-            mod("""
+            module("""
              result = "abc;
              """)
                 .loadsWithProblems();
@@ -1119,7 +1119,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void spans_to_next_line() {
-            mod("""
+            module("""
              result = "ab
              cd";
              """)
@@ -1128,7 +1128,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void has_illegal_escape_seq() {
-            mod("""
+            module("""
              result = "\\A";
              """)
                 .loadsWithError(1, "Illegal escape sequence at char index = 1. "
@@ -1137,7 +1137,7 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void has_escape_seq_without_code() {
-            mod("""
+            module("""
              result = "\\";
              """)
                 .loadsWithError(1, "Missing escape code after backslash \\ at char index = 0.");
@@ -1150,35 +1150,35 @@ public class DeclarationTest extends TestingContext {
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_one_elem(String literal) {
-          mod("result = [" + literal + "];")
+          module("result = [" + literal + "];")
               .loadsSuccessfully();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_two_elems(String literal) {
-          mod("result = [" + literal + ", " + literal + "];")
+          module("result = [" + literal + ", " + literal + "];")
               .loadsSuccessfully();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_array_containing_one_elem(String literal) {
-          mod("result = [[" + literal + "]];")
+          module("result = [[" + literal + "]];")
               .loadsSuccessfully();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_array_and_empty_array_elems(String literal) {
-          mod("result = [[" + literal + "], []];")
+          module("result = [[" + literal + "], []];")
               .loadsSuccessfully();
         }
 
         @ParameterizedTest
         @ArgumentsSource(ArrayElements.class)
         public void with_array_containing_two_elems(String literal) {
-          mod("result = [[" + literal + ", " + literal + "]];")
+          module("result = [[" + literal + ", " + literal + "]];")
               .loadsSuccessfully();
         }
 
@@ -1186,7 +1186,7 @@ public class DeclarationTest extends TestingContext {
         class _elem_list {
           @Test
           public void can_have_trailing_comma() {
-            mod(arrayLiteral("0x07,"))
+            module(arrayLiteral("0x07,"))
                 .loadsSuccessfully()
                 .containsEval(defValS(1, a(BLOB), "result",
                     orderS(1, BLOB, blobS(1, 7))));
@@ -1194,19 +1194,19 @@ public class DeclarationTest extends TestingContext {
 
           @Test
           public void cannot_have_only_comma() {
-            mod(arrayLiteral(","))
+            module(arrayLiteral(","))
                 .loadsWithProblems();
           }
 
           @Test
           public void cannot_have_leading_comma() {
-            mod(arrayLiteral(",0x01"))
+            module(arrayLiteral(",0x01"))
                 .loadsWithProblems();
           }
 
           @Test
           public void cannot_have_two_trailing_commas() {
-            mod(arrayLiteral("0x01,,"))
+            module(arrayLiteral("0x01,,"))
                 .loadsWithProblems();
           }
 
@@ -1230,7 +1230,7 @@ public class DeclarationTest extends TestingContext {
 
         @Test
         public void error_in_first_elem_doesnt_suppress_error_in_second_elem() {
-          mod("""
+          module("""
             myFunc() = "abc";
             result = [
               myFunc(unknown1=""),
@@ -1257,7 +1257,7 @@ public class DeclarationTest extends TestingContext {
             var error = err(1, "Illegal escape sequence at char index = 1. "
                 + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
 
-            mod(module).loadsWith(error);
+            module(module).loadsWith(error);
           }
 
           @Test
@@ -1267,7 +1267,7 @@ public class DeclarationTest extends TestingContext {
                 String myFunc();""";
             var error = err(1, "Missing escape code after backslash \\ at char index = 0.");
 
-            mod(module).loadsWith(error);
+            module(module).loadsWith(error);
           }
         }
       }
@@ -1277,7 +1277,7 @@ public class DeclarationTest extends TestingContext {
     class _pipe {
       @Test
       public void regression_test_error_in_expression_of_arg_of_not_first_elem_of_pipe() {
-        mod("""
+        module("""
             String myFunc(String a, String b) = "abc";
             String myIdentity(String s) = s;
             result = "abc" | myIdentity(myFunc(unknown=""));
@@ -1292,7 +1292,7 @@ public class DeclarationTest extends TestingContext {
 
       @Test
       public void non_first_chain_in_a_pipe_must_have_func_call() {
-        mod("""
+        module("""
             MyStruct {
               String myField
             }
@@ -1311,7 +1311,7 @@ public class DeclarationTest extends TestingContext {
   class _comments {
     @Test
     public void full_line_comment() {
-      mod("""
+      module("""
            # ((( full line comment "
            result = "";
            """)
@@ -1320,7 +1320,7 @@ public class DeclarationTest extends TestingContext {
 
     @Test
     public void trailing_comment() {
-      mod("""
+      module("""
            result = "" ;  # comment at the end of line
            """)
           .loadsSuccessfully();

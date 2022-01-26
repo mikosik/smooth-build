@@ -34,10 +34,10 @@ public class AssignmentTest extends TestingContext {
         target.name() + " result = " + source.literal() + ";",
         testSpec.declarations());
     if (testSpec.allowed()) {
-      mod(sourceCode)
+      module(sourceCode)
           .loadsSuccessfully();
     } else {
-      mod(sourceCode)
+      module(sourceCode)
           .loadsWithError(1, "`result` has body which type is " + source.q()
                + " and it is not convertible to its declared type " + target.q() + ".");
     }
@@ -53,10 +53,10 @@ public class AssignmentTest extends TestingContext {
             .formatted(target.name(), source.name(), target.name()),
         testSpec.typeDeclarations());
     if (testSpec.allowed()) {
-      mod(sourceCode)
+      module(sourceCode)
           .loadsSuccessfully();
     } else {
-      mod(sourceCode)
+      module(sourceCode)
           .loadsWithError(1, "`myFunc` has body which type is " + source.q()
                + " and it is not convertible to its declared type " + target.q() + ".");
     }
@@ -67,7 +67,7 @@ public class AssignmentTest extends TestingContext {
   public void arg_type_is_assignable_to_param_type(TestedAssignSpecS testSpec) {
     TestedTS targetT = testSpec.target();
     TestedTS sourceT = testSpec.source();
-    TestingModLoader module = mod(unlines(
+    TestingModLoader module = module(unlines(
         "@Native(\"impl\")",
         targetT.name() + " innerFunc(" + targetT.name() + " target);     ",
         "outerFunc(" + sourceT.name() + " source) = innerFunc(source);  ",
@@ -88,7 +88,7 @@ public class AssignmentTest extends TestingContext {
   public void arg_type_is_assignable_to_named_param_type(TestedAssignSpecS testSpec) {
     TestedTS targetT = testSpec.target();
     TestedTS sourceT = testSpec.source();
-    TestingModLoader module = mod(unlines(
+    TestingModLoader module = module(unlines(
         "@Native(\"impl\")",
         targetT.name() + " innerFunc(" + targetT.name() + " target);            ",
         "outerFunc(" + sourceT.name() + " source) = innerFunc(target=source);  ",
@@ -118,10 +118,10 @@ public class AssignmentTest extends TestingContext {
         "myFunc(" + target.name() + " param = " + source.literal() + ") = param; ",
         testSpec.declarations());
     if (testSpec.allowed()) {
-      mod(sourceCode)
+      module(sourceCode)
           .loadsSuccessfully();
     } else {
-      mod(sourceCode)
+      module(sourceCode)
           .loadsWithError(1, "Parameter `param` is of type " + target.q()
                + " so it cannot have default argument of type " + source.q() + ".");
     }
@@ -134,7 +134,7 @@ public class AssignmentTest extends TestingContext {
     String sourceCode = unlines(
         "[" + joinT.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
         join("\n", union(type1.allDeclarations(), type2.allDeclarations())));
-    mod(sourceCode)
+    module(sourceCode)
         .loadsSuccessfully();
   }
 
