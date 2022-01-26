@@ -101,14 +101,14 @@ public class Compiler {
   private FuncB compileFuncImpl(FuncS funcS) {
     try {
       callStack.push(funcS.params());
-      var funcH = switch (funcS) {
+      var funcB = switch (funcS) {
         case DefFuncS d -> compileDefFunc(d);
         case IfFuncS i -> compileIfFunc(i);
         case MapFuncS m -> compileMapFunc(m);
         case NatFuncS n -> compileNatFunc(n);
       };
-      nals.put(funcH, funcS);
-      return funcH;
+      nals.put(funcB, funcS);
+      return funcB;
     } finally {
       callStack.pop();
     }
@@ -138,7 +138,7 @@ public class Compiler {
 
   private FuncB compileNatFunc(NatFuncS natFuncS) {
     var funcTB = convertFuncT(natFuncS.type());
-    var methodB = createMethodH(natFuncS.ann(), funcTB);
+    var methodB = createMethodB(natFuncS.ann(), funcTB);
     var paramRefsB = createParamRefsB(funcTB.params());
     var paramsTuple = byteCodeFactory.tupleT(map(paramRefsB, ObjB::type));
     var args = byteCodeFactory.combine(paramsTuple, paramRefsB);
@@ -147,7 +147,7 @@ public class Compiler {
     return byteCodeFactory.func(funcTB, bodyB);
   }
 
-  private MethodB createMethodH(AnnS annS, FuncTB funcTB) {
+  private MethodB createMethodB(AnnS annS, FuncTB funcTB) {
     var methodTB = byteCodeFactory.methodT(funcTB.res(), funcTB.params());
     var jarB = loadNativeJar(annS);
     var classBinaryNameB = byteCodeFactory.string(annS.path().string());
