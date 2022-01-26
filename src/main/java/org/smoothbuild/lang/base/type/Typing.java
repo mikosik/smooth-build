@@ -49,9 +49,9 @@ public class Typing<T extends Type> {
     }
   }
 
-  public T inferCallResT(FuncT callableT, ImmutableList<T> argTs,
+  public T inferCallResT(FuncT funcT, ImmutableList<T> argTs,
       Supplier<RuntimeException> illegalArgsExcThrower) {
-    ImmutableList<T> paramTs = (ImmutableList<T>) callableT.params();
+    ImmutableList<T> paramTs = (ImmutableList<T>) funcT.params();
     allMatchOtherwise(
         paramTs,
         argTs,
@@ -60,7 +60,7 @@ public class Typing<T extends Type> {
         i -> { throw illegalArgsExcThrower.get(); }
     );
     var varBounds = inferVarBoundsLower(paramTs, argTs);
-    T res = (T) callableT.res();
+    T res = (T) funcT.res();
     return mapVarsLower(res, varBounds);
   }
 
