@@ -52,8 +52,8 @@ public class AnalyzeSemantically {
   private static void decodeBlobLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitBlobLiteral(BlobN blob) {
-        super.visitBlobLiteral(blob);
+      public void visitBlob(BlobN blob) {
+        super.visitBlob(blob);
         try {
           blob.decodeByteString();
         } catch (DecodeHexExc e) {
@@ -66,8 +66,8 @@ public class AnalyzeSemantically {
   private static void decodeIntLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitIntLiteral(IntN intN) {
-        super.visitIntLiteral(intN);
+      public void visitInt(IntN intN) {
+        super.visitInt(intN);
         try {
           intN.decodeBigInteger();
         } catch (NumberFormatException e) {
@@ -80,8 +80,8 @@ public class AnalyzeSemantically {
   private static void decodeStringLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitStringLiteral(StringN string) {
-        super.visitStringLiteral(string);
+      public void visitString(StringN string) {
+        super.visitString(string);
         try {
           string.calculateUnescaped();
         } catch (UnescapingFailedExc e) {

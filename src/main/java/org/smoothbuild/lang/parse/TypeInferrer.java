@@ -370,20 +370,20 @@ public class TypeInferrer {
       }
 
       @Override
-      public void visitStringLiteral(StringN string) {
-        super.visitStringLiteral(string);
+      public void visitString(StringN string) {
+        super.visitString(string);
         string.setType(factory.string());
       }
 
       @Override
-      public void visitBlobLiteral(BlobN blob) {
-        super.visitBlobLiteral(blob);
+      public void visitBlob(BlobN blob) {
+        super.visitBlob(blob);
         blob.setType(factory.blob());
       }
 
       @Override
-      public void visitIntLiteral(IntN intN) {
-        super.visitIntLiteral(intN);
+      public void visitInt(IntN intN) {
+        super.visitInt(intN);
         intN.setType(factory.int_());
       }
     }.visitAst(ast);

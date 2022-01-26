@@ -53,7 +53,7 @@ public class AstVisitor {
   }
 
   public void visitAnn(AnnN annotation) {
-    visitStringLiteral(annotation.path());
+    visitString(annotation.path());
   }
 
   public void visitParams(List<ItemN> params) {
@@ -70,12 +70,12 @@ public class AstVisitor {
   public void visitExpr(ExprN expr) {
     switch (expr) {
       case ArrayN arrayN -> visitArray(arrayN);
-      case BlobN blobN -> visitBlobLiteral(blobN);
+      case BlobN blobN -> visitBlob(blobN);
       case CallN callN -> visitCall(callN);
-      case IntN intN -> visitIntLiteral(intN);
+      case IntN intN -> visitInt(intN);
       case RefN refN -> visitRef(refN);
       case SelectN selectN -> visitSelect(selectN);
-      case StringN stringN -> visitStringLiteral(stringN);
+      case StringN stringN -> visitString(stringN);
     }
   }
 
@@ -83,7 +83,7 @@ public class AstVisitor {
     array.elems().forEach(this::visitExpr);
   }
 
-  public void visitBlobLiteral(BlobN blob) {
+  public void visitBlob(BlobN blob) {
   }
 
   public void visitCall(CallN call) {
@@ -103,12 +103,12 @@ public class AstVisitor {
     visitExpr(select.selectable());
   }
 
-  public void visitIntLiteral(IntN int_) {
+  public void visitInt(IntN int_) {
   }
 
   public void visitRef(RefN ref) {}
 
-  public void visitStringLiteral(StringN string) {
+  public void visitString(StringN string) {
   }
 
   public <E> void visitIndexedElements(List<E> elems, BiConsumer<Integer, ? super E> consumer) {
