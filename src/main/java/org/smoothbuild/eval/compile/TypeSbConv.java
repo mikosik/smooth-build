@@ -22,11 +22,11 @@ import org.smoothbuild.lang.base.type.impl.StringTS;
 import org.smoothbuild.lang.base.type.impl.StructTS;
 import org.smoothbuild.lang.base.type.impl.TypeS;
 
-public class TypeShConv {
+public class TypeSbConv {
   private final ByteCodeFactory byteCodeFactory;
 
   @Inject
-  public TypeShConv(ByteCodeFactory byteCodeFactory) {
+  public TypeSbConv(ByteCodeFactory byteCodeFactory) {
     this.byteCodeFactory = byteCodeFactory;
   }
 

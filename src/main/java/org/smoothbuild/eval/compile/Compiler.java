@@ -69,7 +69,7 @@ public class Compiler {
   private final ByteCodeFactory byteCodeFactory;
   private final TypingB typing;
   private final DefsS defs;
-  private final TypeShConv typeShConv;
+  private final TypeSbConv typeSbConv;
   private final FileLoader fileLoader;
   private final Deque<NList<ItemS>> callStack;
   private final Map<String, FuncB> funcCache;
@@ -78,11 +78,11 @@ public class Compiler {
 
   @Inject
   public Compiler(ByteCodeFactory byteCodeFactory, TypingB typing, DefsS defs,
-      TypeShConv typeShConv, FileLoader fileLoader) {
+      TypeSbConv typeSbConv, FileLoader fileLoader) {
     this.byteCodeFactory = byteCodeFactory;
     this.typing = typing;
     this.defs = defs;
-    this.typeShConv = typeShConv;
+    this.typeSbConv = typeSbConv;
     this.fileLoader = fileLoader;
     this.callStack = new LinkedList<>();
     this.funcCache = new HashMap<>();
@@ -282,18 +282,18 @@ public class Compiler {
   }
 
   private TypeB convertT(TypeS typeS) {
-    return typeShConv.convert(typeS);
+    return typeSbConv.convert(typeS);
   }
 
   private ArrayTB convertArrayT(ArrayTS typeS) {
-    return typeShConv.convert(typeS);
+    return typeSbConv.convert(typeS);
   }
 
   private TupleTB convertStructT(StructTS typeS) {
-    return typeShConv.convert(typeS);
+    return typeSbConv.convert(typeS);
   }
 
   private FuncTB convertFuncT(FuncTS funcTS) {
-    return typeShConv.convert(funcTS);
+    return typeSbConv.convert(funcTS);
   }
 }

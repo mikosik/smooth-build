@@ -72,7 +72,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
 import org.smoothbuild.eval.compile.CompilerProv;
-import org.smoothbuild.eval.compile.TypeShConv;
+import org.smoothbuild.eval.compile.TypeSbConv;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -238,8 +238,8 @@ public class TestingContext {
     return new Container(fullFileSystem(), byteCodeFactory(), typingB());
   }
 
-  public TypeShConv typeShConv() {
-    return new TypeShConv(byteCodeFactory());
+  public TypeSbConv typeShConv() {
+    return new TypeSbConv(byteCodeFactory());
   }
 
   public ByteCodeFactory byteCodeFactory() {

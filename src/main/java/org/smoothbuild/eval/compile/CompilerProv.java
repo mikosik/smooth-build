@@ -8,21 +8,21 @@ import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.vm.java.FileLoader;
 
 public class CompilerProv {
-  private final TypeShConv typeShConv;
+  private final TypeSbConv typeSbConv;
   private final ByteCodeFactory byteCodeFactory;
   private final TypingB typing;
   private final FileLoader fileLoader;
 
   @Inject
-  public CompilerProv(TypeShConv typeShConv, ByteCodeFactory byteCodeFactory, TypingB typing,
+  public CompilerProv(TypeSbConv typeSbConv, ByteCodeFactory byteCodeFactory, TypingB typing,
       FileLoader fileLoader) {
-    this.typeShConv = typeShConv;
+    this.typeSbConv = typeSbConv;
     this.byteCodeFactory = byteCodeFactory;
     this.typing = typing;
     this.fileLoader = fileLoader;
   }
 
   public Compiler get(DefsS defsS) {
-    return new Compiler(byteCodeFactory, typing, defsS, typeShConv, fileLoader);
+    return new Compiler(byteCodeFactory, typing, defsS, typeSbConv, fileLoader);
   }
 }
