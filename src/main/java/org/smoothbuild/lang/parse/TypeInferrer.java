@@ -102,7 +102,7 @@ public class TypeInferrer {
         visitParams(funcN.params());
         funcN.body().ifPresent(this::visitExpr);
         var resN = funcN.typeNode().orElse(null);
-        funcN.setType(funcTOpt(resN, evalTOfTopEval(funcN), funcN.optParamTs()));
+        funcN.setType(funcTOpt(resN, evalTOfTopEval(funcN), funcN.paramTsOpt()));
       }
 
       private Optional<TypeS> funcTOpt(TypeN resN, Optional<TypeS> result,

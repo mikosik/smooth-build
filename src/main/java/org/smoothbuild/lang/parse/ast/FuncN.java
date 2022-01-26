@@ -32,7 +32,7 @@ public final class FuncN extends EvalN {
     return params;
   }
 
-  public Optional<ImmutableList<TypeS>> optParamTs() {
+  public Optional<ImmutableList<TypeS>> paramTsOpt() {
     return Optionals.pullUp(map(params(), ItemN::type));
   }
 
