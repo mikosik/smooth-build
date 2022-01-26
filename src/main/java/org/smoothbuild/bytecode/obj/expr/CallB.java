@@ -13,8 +13,8 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
  * This class is thread-safe.
  */
 public class CallB extends CallLikeB {
-  public CallB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public CallB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.cat() instanceof CallCB);
   }
 

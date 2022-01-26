@@ -11,8 +11,8 @@ import org.smoothbuild.bytecode.type.val.FuncTB;
  * This class is thread-safe.
  */
 public final class FuncB extends ValB {
-  public FuncB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public FuncB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override

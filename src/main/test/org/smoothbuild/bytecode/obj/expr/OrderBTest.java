@@ -79,14 +79,14 @@ public class OrderBTest extends TestingContext {
   @Test
   public void array_can_be_read_back_by_hash() {
     OrderB array = orderB(intB(1));
-    assertThat(byteDbOther().get(array.hash()))
+    assertThat(objDbOther().get(array.hash()))
         .isEqualTo(array);
   }
 
   @Test
   public void array_read_back_by_hash_has_same_elems() {
     OrderB array = orderB(intB(1));
-    assertThat(((OrderB) byteDbOther().get(array.hash())).elems())
+    assertThat(((OrderB) objDbOther().get(array.hash())).elems())
         .isEqualTo(Lists.<ObjB>list(intB(1)));
   }
 

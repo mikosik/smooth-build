@@ -21,8 +21,8 @@ public class SelectB extends ExprB {
   private static final int SELECTABLE_IDX = 0;
   private static final int IDX_IDX = 1;
 
-  public SelectB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public SelectB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.cat() instanceof SelectCB);
   }
 

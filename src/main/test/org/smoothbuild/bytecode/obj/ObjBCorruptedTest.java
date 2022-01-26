@@ -85,7 +85,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(stringTB()),
               hash("aaa"));
-      assertThat(((StringB) byteDb().get(objHash)).toJ())
+      assertThat(((StringB) objDb().get(objHash)).toJ())
           .isEqualTo("aaa");
     }
 
@@ -95,7 +95,7 @@ public class ObjBCorruptedTest extends TestingContext {
         int byteCount) throws IOException, HashedDbExc {
       Hash objHash =
           hash(ByteString.of(new byte[byteCount]));
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(cannotReadRootException(objHash, null))
           .withCause(new DecodeHashSeqExc(objHash, byteCount % Hash.lengthInBytes()));
     }
@@ -107,7 +107,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               typeHash,
               hash("aaa"));
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(new DecodeObjCatExc(objHash))
           .withCause(new DecodeCatExc(typeHash));
     }
@@ -115,7 +115,7 @@ public class ObjBCorruptedTest extends TestingContext {
     @Test
     public void reading_elems_from_not_stored_object_throws_exception() {
       Hash objHash = Hash.of(33);
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(new DecodeObjNoSuchObjExc(objHash))
           .withCause(new NoSuchDataExc(objHash));
     }
@@ -129,7 +129,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(anyTB()),
               hash("aaa"));
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(UnsupportedOperationException.class);
     }
   }
@@ -155,7 +155,7 @@ public class ObjBCorruptedTest extends TestingContext {
                       hash("bbb")
                   )
               ));
-      List<String> strings = ((ArrayB) byteDb().get(objHash))
+      List<String> strings = ((ArrayB) objDb().get(objHash))
           .elems(StringB.class)
           .stream()
           .map(StringB::toJ)
@@ -172,7 +172,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(type),
               hash());
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(new DecodeObjIllegalPolymorphicTypeExc(objHash, type));
     }
 
@@ -186,7 +186,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           arrayTB(intTB()),
           hashedDb().writeSeq(),
-          (Hash objHash) -> ((ArrayB) byteDb().get(objHash)).elems(IntB.class)
+          (Hash objHash) -> ((ArrayB) objDb().get(objHash)).elems(IntB.class)
       );
     }
 
@@ -194,7 +194,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           arrayTB(intTB()),
-          (Hash objHash) -> ((ArrayB) byteDb().get(objHash)).elems(IntB.class));
+          (Hash objHash) -> ((ArrayB) objDb().get(objHash)).elems(IntB.class));
     }
 
     @ParameterizedTest
@@ -207,7 +207,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(type),
               notHashOfSeq
           );
-      assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(ValB.class))
+      assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(ValB.class))
           .throwsException(new DecodeObjNodeExc(objHash, type, DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -224,7 +224,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(type),
               dataHash);
-      assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(StringB.class))
+      assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(StringB.class))
           .throwsException(new DecodeObjNodeExc(objHash, type, DATA_PATH + "[0]"))
           .withCause(new DecodeObjNoSuchObjExc(nowhere));
     }
@@ -245,7 +245,7 @@ public class ObjBCorruptedTest extends TestingContext {
                       hash(true)
                   )
               ));
-      assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(StringB.class))
+      assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(StringB.class))
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, DATA_PATH, 1, stringTB(), boolTB()));
     }
@@ -259,7 +259,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(
                   hash(arrayB(nothingTB()))
               ));
-      assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(ArrayB.class))
+      assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(ArrayB.class))
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, DATA_PATH, 0, arrayTB(intTB()), arrayTB(nothingTB())));
     }
@@ -277,7 +277,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   ),
                   hash(paramRefB(1))
               ));
-      assertCall(() -> ((ArrayB) byteDb().get(objHash)).elems(StringB.class))
+      assertCall(() -> ((ArrayB) objDb().get(objHash)).elems(StringB.class))
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH, 1, ValB.class, ParamRefB.class));
     }
@@ -296,7 +296,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(blobTB()),
               hash(byteString));
-      assertThat(((BlobB) byteDb().get(objHash)).source().readByteString())
+      assertThat(((BlobB) objDb().get(objHash)).source().readByteString())
           .isEqualTo(byteString);
     }
 
@@ -310,7 +310,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           blobTB(),
           hashedDb().writeByte((byte) 1),
-          (Hash objHash) -> ((BlobB) byteDb().get(objHash)).source()
+          (Hash objHash) -> ((BlobB) objDb().get(objHash)).source()
       );
     }
 
@@ -318,7 +318,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           blobTB(),
-          (Hash objHash) -> ((BlobB) byteDb().get(objHash)).source());
+          (Hash objHash) -> ((BlobB) objDb().get(objHash)).source());
     }
   }
 
@@ -335,7 +335,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(boolTB()),
               hash(value));
-      assertThat(((BoolB) byteDb().get(objHash)).toJ())
+      assertThat(((BoolB) objDb().get(objHash)).toJ())
           .isEqualTo(value);
     }
 
@@ -349,7 +349,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           boolTB(),
           hashedDb().writeBoolean(true),
-          (Hash objHash) -> ((BoolB) byteDb().get(objHash)).toJ()
+          (Hash objHash) -> ((BoolB) objDb().get(objHash)).toJ()
       );
     }
 
@@ -357,7 +357,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           boolTB(),
-          (Hash objHash) -> ((BoolB) byteDb().get(objHash)).toJ());
+          (Hash objHash) -> ((BoolB) objDb().get(objHash)).toJ());
     }
 
     @Test
@@ -367,7 +367,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(boolTB()),
               dataHash);
-      assertCall(() -> ((BoolB) byteDb().get(objHash)).toJ())
+      assertCall(() -> ((BoolB) objDb().get(objHash)).toJ())
           .throwsException(new DecodeObjNodeExc(objHash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanExc(dataHash, new DecodeByteExc(dataHash)));
     }
@@ -379,7 +379,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(boolTB()),
               dataHash);
-      assertCall(() -> ((BoolB) byteDb().get(objHash)).toJ())
+      assertCall(() -> ((BoolB) objDb().get(objHash)).toJ())
           .throwsException(new DecodeObjNodeExc(objHash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanExc(dataHash, new DecodeByteExc(dataHash)));
     }
@@ -393,7 +393,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(boolTB()),
               dataHash);
-      assertCall(() -> ((BoolB) byteDb().get(objHash)).toJ())
+      assertCall(() -> ((BoolB) objDb().get(objHash)).toJ())
           .throwsException(new DecodeObjNodeExc(objHash, boolTB(), DATA_PATH))
           .withCause(new DecodeBooleanExc(dataHash));
     }
@@ -419,9 +419,9 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
 
-      assertThat(((CallB) byteDb().get(objHash)).data().callable())
+      assertThat(((CallB) objDb().get(objHash)).data().callable())
           .isEqualTo(func);
-      assertThat(((CallB) byteDb().get(objHash)).data().args())
+      assertThat(((CallB) objDb().get(objHash)).data().args())
           .isEqualTo(args);
     }
 
@@ -442,14 +442,14 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           callCB(intTB()),
           dataHash,
-          (Hash objHash) -> ((CallB) byteDb().get(objHash)).data());
+          (Hash objHash) -> ((CallB) objDb().get(objHash)).data());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           callCB(intTB()),
-          (Hash objHash) -> ((CallB) byteDb().get(objHash)).data());
+          (Hash objHash) -> ((CallB) objDb().get(objHash)).data());
     }
 
     @Test
@@ -465,7 +465,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(cat),
               dataHash
           );
-      assertCall(() -> ((CallB) byteDb().get(objHash)).data())
+      assertCall(() -> ((CallB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 1));
     }
 
@@ -485,7 +485,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(cat),
               dataHash
           );
-      assertCall(() -> ((CallB) byteDb().get(objHash)).data())
+      assertCall(() -> ((CallB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 3));
     }
 
@@ -502,7 +502,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(args)
               )
           );
-      assertCall(() -> ((CallB) byteDb().get(objHash)).data())
+      assertCall(() -> ((CallB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, "func", FuncTB.class, IntTB.class));
     }
@@ -520,7 +520,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(intB())
               )
           );
-      assertCall(() -> ((CallB) byteDb().get(objHash)).data())
+      assertCall(() -> ((CallB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", CombineB.class, IntB.class));
     }
@@ -539,7 +539,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(paramRefB(1))
               )
           );
-      assertCall(() -> ((CallB) byteDb().get(objHash)).data())
+      assertCall(() -> ((CallB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", CombineB.class, ParamRefB.class));
     }
@@ -559,7 +559,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(args)
               )
           );
-      assertCall(() -> ((CallB) byteDb().get(objHash)).data())
+      assertCall(() -> ((CallB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
                   objHash, type, "callable.result", stringTB(), intTB()));
     }
@@ -579,7 +579,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(args)
               )
           );
-      assertCall(() -> ((CallB) byteDb().get(objHash)).data())
+      assertCall(() -> ((CallB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, spec, "args",
               tupleTB(stringTB(), boolTB()),
@@ -605,7 +605,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(expr1),
                   hash(expr2)
               ));
-      var items = ((CombineB) byteDb().get(objHash)).items();
+      var items = ((CombineB) objDb().get(objHash)).items();
       assertThat(items)
           .containsExactly(expr1, expr2)
           .inOrder();
@@ -627,7 +627,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           orderCB(),
           dataHash,
-          (Hash objHash) -> ((CombineB) byteDb().get(objHash)).items()
+          (Hash objHash) -> ((CombineB) objDb().get(objHash)).items()
       );
     }
 
@@ -635,7 +635,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           combineCB(),
-          (Hash objHash) -> ((CombineB) byteDb().get(objHash)).items());
+          (Hash objHash) -> ((CombineB) objDb().get(objHash)).items());
     }
 
     @ParameterizedTest
@@ -648,7 +648,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(combineCB()),
               notHashOfSeq
           );
-      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
+      assertCall(() -> ((CombineB) objDb().get(objHash)).items())
           .throwsException(new DecodeObjNodeExc(objHash, combineCB(), DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -664,7 +664,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   nowhere
               )
           );
-      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
+      assertCall(() -> ((CombineB) objDb().get(objHash)).items())
           .throwsException(new DecodeObjNodeExc(objHash, combineCB(), DATA_PATH + "[0]"))
           .withCause(new DecodeObjNoSuchObjExc(nowhere));
     }
@@ -681,7 +681,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(item1)
               ));
 
-      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
+      assertCall(() -> ((CombineB) objDb().get(objHash)).items())
           .throwsException(new DecodeCombineWrongItemsSizeExc(objHash, type, 1));
     }
 
@@ -699,7 +699,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(item2)
               ));
 
-      assertCall(() -> ((CombineB) byteDb().get(objHash)).items())
+      assertCall(() -> ((CombineB) objDb().get(objHash)).items())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, "items[1]", boolTB(), stringTB()));
     }
@@ -720,7 +720,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(type),
               hash(bodyExpr)
           );
-      assertThat(((FuncB) byteDb().get(objHash)).body())
+      assertThat(((FuncB) objDb().get(objHash)).body())
           .isEqualTo(bodyExpr);
     }
 
@@ -737,13 +737,13 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           type,
           dataHash,
-          (Hash objHash) -> ((FuncB) byteDb().get(objHash)).body());
+          (Hash objHash) -> ((FuncB) objDb().get(objHash)).body());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_obj_but_nowhere(funcTB(),
-          (Hash objHash) -> ((FuncB) byteDb().get(objHash)).body());
+          (Hash objHash) -> ((FuncB) objDb().get(objHash)).body());
     }
 
     @Test
@@ -755,7 +755,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(type),
               hash(bodyExpr)
           );
-      assertCall(() -> ((FuncB) byteDb().get(objHash)).body())
+      assertCall(() -> ((FuncB) objDb().get(objHash)).body())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, DATA_PATH, boolTB(), intTB()));
     }
@@ -780,7 +780,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(then),
                   hash(else_)
               ));
-      var data = ((IfB) byteDb().get(objHash)).data();
+      var data = ((IfB) objDb().get(objHash)).data();
       assertThat(data)
           .isEqualTo(new IfB.Data(condition, then, else_));
     }
@@ -803,7 +803,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           ifCB(intTB()),
           dataHash,
-          (Hash objHash) -> ((IfB) byteDb().get(objHash)).data()
+          (Hash objHash) -> ((IfB) objDb().get(objHash)).data()
       );
     }
 
@@ -811,7 +811,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           ifCB(intTB()),
-          (Hash objHash) -> ((IfB) byteDb().get(objHash)).data());
+          (Hash objHash) -> ((IfB) objDb().get(objHash)).data());
     }
 
     @ParameterizedTest
@@ -824,7 +824,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(ifCB(intTB())),
               notHashOfSeq
           );
-      assertCall(() -> ((IfB) byteDb().get(objHash)).data())
+      assertCall(() -> ((IfB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjNodeExc(objHash, ifCB(intTB()), DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -842,7 +842,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(condition),
                   hash(then)
               ));
-      assertCall(() -> ((IfB) byteDb().get(objHash)).data())
+      assertCall(() -> ((IfB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 3, 2));
     }
 
@@ -861,7 +861,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(else_),
                   hash(else_)
               ));
-      assertCall(() -> ((IfB) byteDb().get(objHash)).data())
+      assertCall(() -> ((IfB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 3, 4));
     }
 
@@ -879,7 +879,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(else_)
               )
           );
-      assertCall(() -> ((IfB) byteDb().get(objHash)).data())
+      assertCall(() -> ((IfB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjNodeExc(objHash, ifCB(intTB()), DATA_PATH + "[0]"))
           .withCause(new DecodeObjNoSuchObjExc(nowhereHash));
     }
@@ -898,7 +898,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(then),
                   hash(else_)
               ));
-      assertCall(() -> ((IfB) byteDb().get(objHash)).data())
+      assertCall(() -> ((IfB) objDb().get(objHash)).data())
           .throwsException(
               new DecodeObjWrongNodeTypeExc(objHash, cat, DATA_PATH, 0, boolTB(), intTB()));
     }
@@ -917,7 +917,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(then),
                   hash(else_)
               ));
-      assertCall(() -> ((IfB) byteDb().get(objHash)).data())
+      assertCall(() -> ((IfB) objDb().get(objHash)).data())
           .throwsException(
               new DecodeObjWrongNodeTypeExc(objHash, cat, DATA_PATH, 1, intTB(), stringTB()));
     }
@@ -936,7 +936,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(then),
                   hash(else_)
               ));
-      assertCall(() -> ((IfB) byteDb().get(objHash)).data())
+      assertCall(() -> ((IfB) objDb().get(objHash)).data())
           .throwsException(
               new DecodeObjWrongNodeTypeExc(objHash, cat, DATA_PATH, 2, intTB(), stringTB()));
     }
@@ -955,7 +955,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(intTB()),
               hash(byteString));
-      assertThat(((IntB) byteDb().get(objHash)).toJ())
+      assertThat(((IntB) objDb().get(objHash)).toJ())
           .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
     }
 
@@ -969,7 +969,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           intTB(),
           hashedDb().writeByte((byte) 1),
-          (Hash objHash) -> ((IntB) byteDb().get(objHash)).toJ()
+          (Hash objHash) -> ((IntB) objDb().get(objHash)).toJ()
       );
     }
 
@@ -977,7 +977,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           intTB(),
-          (Hash objHash) -> ((IntB) byteDb().get(objHash)).toJ());
+          (Hash objHash) -> ((IntB) objDb().get(objHash)).toJ());
     }
   }
 
@@ -1000,9 +1000,9 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(args)
               )
           );
-      assertThat(((InvokeB) byteDb().get(objHash)).data().method())
+      assertThat(((InvokeB) objDb().get(objHash)).data().method())
           .isEqualTo(method);
-      assertThat(((InvokeB) byteDb().get(objHash)).data().args())
+      assertThat(((InvokeB) objDb().get(objHash)).data().args())
           .isEqualTo(args);
     }
 
@@ -1023,14 +1023,14 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           invokeCB(intTB()),
           dataHash,
-          (Hash objHash) -> ((InvokeB) byteDb().get(objHash)).data());
+          (Hash objHash) -> ((InvokeB) objDb().get(objHash)).data());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           invokeCB(intTB()),
-          (Hash objHash) -> ((InvokeB) byteDb().get(objHash)).data());
+          (Hash objHash) -> ((InvokeB) objDb().get(objHash)).data());
     }
 
     @Test
@@ -1046,7 +1046,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(cat),
               dataHash
           );
-      assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
+      assertCall(() -> ((InvokeB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 1));
     }
 
@@ -1065,7 +1065,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(cat),
               dataHash
           );
-      assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
+      assertCall(() -> ((InvokeB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 3));
     }
 
@@ -1082,7 +1082,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(intB())
               )
           );
-      assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
+      assertCall(() -> ((InvokeB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, cat, DATA_PATH + "[1]", CombineB.class, IntB.class));
     }
@@ -1101,7 +1101,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(paramRefB(1))
               )
           );
-      assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
+      assertCall(() -> ((InvokeB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", CombineB.class, ParamRefB.class));
     }
@@ -1121,7 +1121,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(args)
               )
           );
-      assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
+      assertCall(() -> ((InvokeB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, "callable.result", stringTB(), intTB()));
     }
@@ -1140,7 +1140,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(args)
               )
           );
-      assertCall(() -> ((InvokeB) byteDb().get(objHash)).data())
+      assertCall(() -> ((InvokeB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, spec, "args",
               tupleTB(stringTB(), boolTB()),
@@ -1167,7 +1167,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(func)
           )
       );
-      var data = ((MapB) byteDb().get(objHash)).data();
+      var data = ((MapB) objDb().get(objHash)).data();
       assertThat(data)
           .isEqualTo(new MapB.Data(array, func));
     }
@@ -1189,7 +1189,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           cat,
           dataHash,
-          (Hash objHash) -> ((MapB) byteDb().get(objHash)).data()
+          (Hash objHash) -> ((MapB) objDb().get(objHash)).data()
       );
     }
 
@@ -1197,7 +1197,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           mapCB(arrayTB(stringTB())),
-          (Hash objHash) -> ((MapB) byteDb().get(objHash)).data());
+          (Hash objHash) -> ((MapB) objDb().get(objHash)).data());
     }
 
     @ParameterizedTest
@@ -1209,7 +1209,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(cat),
           notHashOfSeq
       );
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjNodeExc(objHash, cat, DATA_PATH))
           .withCause(new DecodeHashSeqExc(notHashOfSeq, byteCount % Hash.lengthInBytes()));
     }
@@ -1224,7 +1224,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(array)
           )
       );
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 1));
     }
 
@@ -1241,7 +1241,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(func)
           )
       );
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, cat, DATA_PATH, 2, 3));
     }
 
@@ -1257,7 +1257,7 @@ public class ObjBCorruptedTest extends TestingContext {
               nowhereHash
           )
       );
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjNodeExc(objHash, cat, DATA_PATH + "[1]"))
           .withCause(new DecodeObjNoSuchObjExc(nowhereHash));
     }
@@ -1274,7 +1274,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(func)
           )
       );
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, cat, DATA_PATH, 0, ArrayTB.class, IntTB.class));
     }
@@ -1291,7 +1291,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(notFunc)
           )
       );
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, cat, DATA_PATH, 1, FuncTB.class, IntTB.class));
     }
@@ -1308,7 +1308,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(func)
           )
       );
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeMapIllegalMappingFuncExc(
               objHash, cat, funcTB(stringTB(), list(intTB(), intTB()))));
     }
@@ -1326,7 +1326,7 @@ public class ObjBCorruptedTest extends TestingContext {
           )
       );
 
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, cat, "array element", intTB(), blobTB()));
     }
@@ -1343,7 +1343,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(func)
           )
       );
-      assertCall(() -> ((MapB) byteDb().get(objHash)).data())
+      assertCall(() -> ((MapB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, cat, "func.result", blobTB(), stringTB()));
     }
@@ -1371,11 +1371,11 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
 
-      assertThat(((MethodB) byteDb().get(objHash)).jar())
+      assertThat(((MethodB) objDb().get(objHash)).jar())
           .isEqualTo(jar);
-      assertThat(((MethodB) byteDb().get(objHash)).classBinaryName())
+      assertThat(((MethodB) objDb().get(objHash)).classBinaryName())
           .isEqualTo(classBinaryName);
-      assertThat(((MethodB) byteDb().get(objHash)).isPure())
+      assertThat(((MethodB) objDb().get(objHash)).isPure())
           .isEqualTo(isPure);
     }
 
@@ -1396,14 +1396,14 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(isPure)
       );
       obj_root_with_two_data_hashes(type, dataHash,
-          (Hash objHash) -> ((MethodB) byteDb().get(objHash)).classBinaryName());
+          (Hash objHash) -> ((MethodB) objDb().get(objHash)).classBinaryName());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       var type = methodTB(stringTB(), list(intTB()));
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(type,
-          (Hash objHash) -> ((MethodB) byteDb().get(objHash)).classBinaryName());
+          (Hash objHash) -> ((MethodB) objDb().get(objHash)).classBinaryName());
     }
 
     @Test
@@ -1421,7 +1421,7 @@ public class ObjBCorruptedTest extends TestingContext {
               dataHash
           );
 
-      assertCall(() -> ((MethodB) byteDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((MethodB) objDb().get(objHash)).classBinaryName())
           .throwsException(new DecodeObjWrongSeqSizeExc(
               objHash, type, DATA_PATH, 3, 2));
     }
@@ -1444,7 +1444,7 @@ public class ObjBCorruptedTest extends TestingContext {
               dataHash
           );
 
-      assertCall(() -> ((MethodB) byteDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((MethodB) objDb().get(objHash)).classBinaryName())
           .throwsException(new DecodeObjWrongSeqSizeExc(
               objHash, type, DATA_PATH, 3, 4));
     }
@@ -1464,7 +1464,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(isPure)
               )
           );
-      assertCall(() -> ((MethodB) byteDb().get(objHash)).jar())
+      assertCall(() -> ((MethodB) objDb().get(objHash)).jar())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[0]", BlobB.class, StringB.class));
     }
@@ -1485,7 +1485,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((MethodB) byteDb().get(objHash)).classBinaryName())
+      assertCall(() -> ((MethodB) objDb().get(objHash)).classBinaryName())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", StringB.class, IntB.class));
     }
@@ -1506,7 +1506,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((MethodB) byteDb().get(objHash)).isPure())
+      assertCall(() -> ((MethodB) objDb().get(objHash)).isPure())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[2]", BoolB.class, StringB.class));
     }
@@ -1520,7 +1520,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(nothingTB()),
               hash("aaa"));
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(UnsupportedOperationException.class);
     }
   }
@@ -1542,7 +1542,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(expr1),
                   hash(expr2)
               ));
-      var elems = ((OrderB) byteDb().get(objHash)).elems();
+      var elems = ((OrderB) objDb().get(objHash)).elems();
       assertThat(elems)
           .containsExactly(expr1, expr2)
           .inOrder();
@@ -1564,7 +1564,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           orderCB(),
           dataHash,
-          (Hash objHash) -> ((OrderB) byteDb().get(objHash)).elems()
+          (Hash objHash) -> ((OrderB) objDb().get(objHash)).elems()
       );
     }
 
@@ -1572,7 +1572,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           orderCB(),
-          (Hash objHash) -> ((OrderB) byteDb().get(objHash)).elems());
+          (Hash objHash) -> ((OrderB) objDb().get(objHash)).elems());
     }
 
     @ParameterizedTest
@@ -1585,7 +1585,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(orderCB()),
               notHashOfSeq
           );
-      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
+      assertCall(() -> ((OrderB) objDb().get(objHash)).elems())
           .throwsException(new DecodeObjNodeExc(objHash, orderCB(), DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -1601,7 +1601,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   nowhere
               )
           );
-      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
+      assertCall(() -> ((OrderB) objDb().get(objHash)).elems())
           .throwsException(new DecodeObjNodeExc(objHash, orderCB(), DATA_PATH + "[0]"))
           .withCause(new DecodeObjNoSuchObjExc(nowhere));
     }
@@ -1619,7 +1619,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(expr1),
                   hash(expr2)
               ));
-      assertCall(() -> ((OrderB) byteDb().get(objHash)).elems())
+      assertCall(() -> ((OrderB) objDb().get(objHash)).elems())
           .throwsException(new DecodeObjWrongNodeTypeExc(
                   objHash, type, "elems[1]", intTB(), stringTB()));
     }
@@ -1638,7 +1638,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(paramRefCB(stringTB())),
               hash(byteString));
-      assertThat(((ParamRefB) byteDb().get(objHash)).value())
+      assertThat(((ParamRefB) objDb().get(objHash)).value())
           .isEqualTo(BigInteger.valueOf(3 * 256 + 2));
     }
 
@@ -1654,7 +1654,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           paramRefCB(intTB()),
           dataHash,
-          (Hash objHash) -> ((ParamRefB) byteDb().get(objHash)).value()
+          (Hash objHash) -> ((ParamRefB) objDb().get(objHash)).value()
       );
     }
 
@@ -1662,7 +1662,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           paramRefCB(intTB()),
-          (Hash objHash) -> ((ParamRefB) byteDb().get(objHash)).value());
+          (Hash objHash) -> ((ParamRefB) objDb().get(objHash)).value());
     }
   }
 
@@ -1686,7 +1686,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(index)
               )
           );
-      assertThat(((SelectB) byteDb().get(objHash)).data())
+      assertThat(((SelectB) objDb().get(objHash)).data())
           .isEqualTo(new SelectB.Data(selectable, index));
     }
 
@@ -1706,14 +1706,14 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           selectCB(),
           dataHash,
-          (Hash objHash) -> ((SelectB) byteDb().get(objHash)).data());
+          (Hash objHash) -> ((SelectB) objDb().get(objHash)).data());
     }
 
     @Test
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           selectCB(),
-          (Hash objHash) -> ((SelectB) byteDb().get(objHash)).data());
+          (Hash objHash) -> ((SelectB) objDb().get(objHash)).data());
     }
 
     @Test
@@ -1727,7 +1727,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(selectCB()),
               dataHash
           );
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+      assertCall(() -> ((SelectB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(
               objHash, selectCB(), DATA_PATH, 2, 1));
     }
@@ -1746,7 +1746,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(selectCB()),
               dataHash
           );
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+      assertCall(() -> ((SelectB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongSeqSizeExc(
               objHash, selectCB(), DATA_PATH, 2, 3));
     }
@@ -1765,7 +1765,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+      assertCall(() -> ((SelectB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, "tuple", TupleTB.class, IntTB.class));
     }
@@ -1785,7 +1785,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+      assertCall(() -> ((SelectB) objDb().get(objHash)).data())
           .throwsException(new DecodeSelectIndexOutOfBoundsExc(objHash, type, 1, 1));
     }
 
@@ -1805,7 +1805,7 @@ public class ObjBCorruptedTest extends TestingContext {
               )
           );
 
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+      assertCall(() -> ((SelectB) objDb().get(objHash)).data())
           .throwsException(new DecodeSelectWrongEvalTypeExc(objHash, type, stringTB()));
     }
 
@@ -1823,7 +1823,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(strVal)
               )
           );
-      assertCall(() -> ((SelectB) byteDb().get(objHash)).data())
+      assertCall(() -> ((SelectB) objDb().get(objHash)).data())
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, type, DATA_PATH + "[1]", IntB.class, StringB.class));
     }
@@ -1841,7 +1841,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(stringTB()),
               hash("aaa"));
-      assertThat(((StringB) byteDb().get(objHash)).toJ())
+      assertThat(((StringB) objDb().get(objHash)).toJ())
           .isEqualTo("aaa");
     }
 
@@ -1855,7 +1855,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           stringTB(),
           hashedDb().writeBoolean(true),
-          (Hash objHash) -> ((StringB) byteDb().get(objHash)).toJ()
+          (Hash objHash) -> ((StringB) objDb().get(objHash)).toJ()
       );
     }
 
@@ -1863,7 +1863,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           stringTB(),
-          (Hash objHash) -> ((StringB) byteDb().get(objHash)).toJ());
+          (Hash objHash) -> ((StringB) objDb().get(objHash)).toJ());
     }
 
     @Test
@@ -1873,7 +1873,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(stringTB()),
               notStringHash);
-      assertCall(() -> ((StringB) byteDb().get(objHash)).toJ())
+      assertCall(() -> ((StringB) objDb().get(objHash)).toJ())
           .throwsException(new DecodeObjNodeExc(objHash, stringTB(), DATA_PATH))
           .withCause(new DecodeStringExc(notStringHash, null));
     }
@@ -1905,7 +1905,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(stringB("John"))
           )
       );
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(new DecodeObjIllegalPolymorphicTypeExc(objHash, type));
     }
 
@@ -1919,7 +1919,7 @@ public class ObjBCorruptedTest extends TestingContext {
       obj_root_with_two_data_hashes(
           personTB(),
           hashedDb().writeBoolean(true),
-          (Hash objHash) -> ((TupleB) byteDb().get(objHash)).get(0)
+          (Hash objHash) -> ((TupleB) objDb().get(objHash)).get(0)
       );
     }
 
@@ -1927,7 +1927,7 @@ public class ObjBCorruptedTest extends TestingContext {
     public void root_with_data_hash_pointing_nowhere() throws Exception {
       obj_root_with_data_hash_not_pointing_to_raw_data_but_nowhere(
           personTB(),
-          (Hash objHash) -> ((TupleB) byteDb().get(objHash)).get(0));
+          (Hash objHash) -> ((TupleB) objDb().get(objHash)).get(0));
     }
 
     @ParameterizedTest
@@ -1939,7 +1939,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(personTB()),
               notHashOfSeq);
-      assertCall(() -> ((TupleB) byteDb().get(objHash)).get(0))
+      assertCall(() -> ((TupleB) objDb().get(objHash)).get(0))
           .throwsException(new DecodeObjNodeExc(objHash, personTB(), DATA_PATH))
           .withCause(new DecodeHashSeqExc(
               notHashOfSeq, byteCount % Hash.lengthInBytes()));
@@ -1957,7 +1957,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(personTB()),
               dataHash
           );
-      assertCall(() -> ((TupleB) byteDb().get(objHash)).get(0))
+      assertCall(() -> ((TupleB) objDb().get(objHash)).get(0))
           .throwsException(new DecodeObjNodeExc(objHash, personTB(), DATA_PATH + "[0]"))
           .withCause(new DecodeObjNoSuchObjExc(nowhere));
     }
@@ -1971,7 +1971,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(personTB()),
               dataHash);
-      TupleB tuple = (TupleB) byteDb().get(objHash);
+      TupleB tuple = (TupleB) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, personTB(), DATA_PATH, 2, 1));
     }
@@ -1987,7 +1987,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(personTB()),
               dataHash);
-      TupleB tuple = (TupleB) byteDb().get(objHash);
+      TupleB tuple = (TupleB) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeObjWrongSeqSizeExc(objHash, personTB(), DATA_PATH, 2, 3));
     }
@@ -2000,7 +2000,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(
                   hash(stringB("John")),
                   hash(boolB(true))));
-      TupleB tuple = (TupleB) byteDb().get(objHash);
+      TupleB tuple = (TupleB) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, personTB(), DATA_PATH, 1, stringTB(), boolTB()));
@@ -2016,7 +2016,7 @@ public class ObjBCorruptedTest extends TestingContext {
                   hash(arrayB(nothingTB()))
               )
           );
-      var tuple = (TupleB) byteDb().get(objHash);
+      var tuple = (TupleB) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeObjWrongNodeTypeExc(
               objHash, type, DATA_PATH, 0, arrayTB(intTB()), arrayTB(nothingTB())));
@@ -2030,7 +2030,7 @@ public class ObjBCorruptedTest extends TestingContext {
               hash(
                   hash(stringB("John")),
                   hash(paramRefB(1))));
-      TupleB tuple = (TupleB) byteDb().get(objHash);
+      TupleB tuple = (TupleB) objDb().get(objHash);
       assertCall(() -> tuple.get(0))
           .throwsException(new DecodeObjWrongNodeClassExc(
               objHash, personTB(), DATA_PATH + "[1]", ValB.class, ParamRefB.class));
@@ -2041,7 +2041,7 @@ public class ObjBCorruptedTest extends TestingContext {
     Hash objHash =
         hash(
             hash(type));
-    assertCall(() -> byteDb().get(objHash))
+    assertCall(() -> objDb().get(objHash))
         .throwsException(wrongSizeOfRootSeqException(objHash, 1));
   }
 
@@ -2088,7 +2088,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(oVarTB("A")),
               hash("aaa"));
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(UnsupportedOperationException.class);
     }
   }
@@ -2101,7 +2101,7 @@ public class ObjBCorruptedTest extends TestingContext {
           hash(
               hash(cVarTB("A")),
               hash("aaa"));
-      assertCall(() -> byteDb().get(objHash))
+      assertCall(() -> objDb().get(objHash))
           .throwsException(UnsupportedOperationException.class);
     }
   }

@@ -47,14 +47,14 @@ public class ParamRefBTest extends TestingContext {
   @Test
   public void ref_can_be_read_back_by_hash() {
     ParamRefB paramRef = paramRefB(intTB(), 123);
-    assertThat(byteDbOther().get(paramRef.hash()))
+    assertThat(objDbOther().get(paramRef.hash()))
         .isEqualTo(paramRef);
   }
 
   @Test
   public void const_read_back_by_hash_has_same_value() {
     ParamRefB paramRef = paramRefB(intTB(), 123);
-    assertThat(((ParamRefB) byteDbOther().get(paramRef.hash())).value())
+    assertThat(((ParamRefB) objDbOther().get(paramRef.hash())).value())
         .isEqualTo(BigInteger.valueOf(123));
   }
 

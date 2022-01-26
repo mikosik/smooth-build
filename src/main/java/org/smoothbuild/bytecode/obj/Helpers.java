@@ -33,7 +33,7 @@ public class Helpers {
   }
 
   public static <T> T wrapObjDbExcAsDecodeObjNodeException(
-      Hash hash, CatB cat, String path, ByteDbCallable<T> callable) {
+      Hash hash, CatB cat, String path, objDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjDbExc e) {
@@ -42,7 +42,7 @@ public class Helpers {
   }
 
   public static <T> T wrapObjDbExcAsDecodeObjNodeException(
-      Hash hash, CatB cat, String path, int pathIndex, ByteDbCallable<T> callable) {
+      Hash hash, CatB cat, String path, int pathIndex, objDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (ObjDbExc e) {
@@ -51,7 +51,7 @@ public class Helpers {
   }
 
   @FunctionalInterface
-  public static interface ByteDbCallable<T> {
+  public static interface objDbCallable<T> {
     public T call() throws ObjDbExc;
   }
 

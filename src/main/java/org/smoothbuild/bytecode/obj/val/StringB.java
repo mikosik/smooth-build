@@ -9,8 +9,8 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
  * This class is thread-safe.
  */
 public final class StringB extends ValB {
-  public StringB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public StringB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   public String toJ() {

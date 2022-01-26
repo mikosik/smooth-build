@@ -244,7 +244,7 @@ public class TestingContext {
 
   public ByteCodeFactory byteCodeFactory() {
     if (byteCodeFactory == null) {
-      byteCodeFactory = new ByteCodeFactory(byteDb(), catDb());
+      byteCodeFactory = new ByteCodeFactory(objDb(), catDb());
     }
     return byteCodeFactory;
   }
@@ -281,7 +281,7 @@ public class TestingContext {
     return catDb;
   }
 
-  public ObjDb byteDb() {
+  public ObjDb objDb() {
     if (objDb == null) {
       objDb = new ObjDbImpl(hashedDb(), catDb(), typingB());
     }
@@ -291,7 +291,7 @@ public class TestingContext {
   public ComputationCache computationCache() {
     if (computationCache == null) {
       computationCache = new ComputationCache(
-          computationCacheFileSystem(), byteDb(), byteCodeFactory());
+          computationCacheFileSystem(), objDb(), byteCodeFactory());
     }
     return computationCache;
   }
@@ -303,7 +303,7 @@ public class TestingContext {
     return computationCacheFileSystem;
   }
 
-  public ObjDb byteDbOther() {
+  public ObjDb objDbOther() {
     return new ObjDbImpl(hashedDb(), catDbOther(), typingB());
   }
 
@@ -511,7 +511,7 @@ public class TestingContext {
   }
 
   public ArrayB arrayB(TypeB elemT, ValB... elems) {
-    return byteDb()
+    return objDb()
         .arrayBuilder(arrayTB(elemT))
         .addAll(list(elems))
         .build();
@@ -530,7 +530,7 @@ public class TestingContext {
   }
 
   public BlobBBuilder blobBBuilder() {
-    return byteDb().blobBuilder();
+    return objDb().blobBuilder();
   }
 
   public BoolB boolB() {
@@ -538,7 +538,7 @@ public class TestingContext {
   }
 
   public BoolB boolB(boolean value) {
-    return byteDb().bool(value);
+    return objDb().bool(value);
   }
 
   public TupleB fileB(Path path) {
@@ -574,7 +574,7 @@ public class TestingContext {
   }
 
   public FuncB funcB(FuncTB type, ObjB body) {
-    return byteDb().func(type, body);
+    return objDb().func(type, body);
   }
 
   public IntB intB() {
@@ -582,7 +582,7 @@ public class TestingContext {
   }
 
   public IntB intB(int value) {
-    return byteDb().int_(BigInteger.valueOf(value));
+    return objDb().int_(BigInteger.valueOf(value));
   }
 
   public MethodB methodB() {
@@ -602,7 +602,7 @@ public class TestingContext {
   }
 
   public MethodB methodB(MethodTB type, BlobB jar, StringB classBinaryName, BoolB isPure) {
-    return byteDb().method(type, jar, classBinaryName, isPure);
+    return objDb().method(type, jar, classBinaryName, isPure);
   }
 
   public TupleB personB(String firstName, String lastName) {
@@ -610,11 +610,11 @@ public class TestingContext {
   }
 
   public StringB stringB() {
-    return byteDb().string("abc");
+    return objDb().string("abc");
   }
 
   public StringB stringB(String string) {
-    return byteDb().string(string);
+    return objDb().string(string);
   }
 
   public TupleB tupleB(ValB... items) {
@@ -623,7 +623,7 @@ public class TestingContext {
   }
 
   public TupleB tupleB(TupleTB tupleT, ValB... items) {
-    return byteDb().tuple(tupleT, ImmutableList.copyOf(items));
+    return objDb().tuple(tupleT, ImmutableList.copyOf(items));
   }
 
   public ArrayB messageArrayWithOneError() {
@@ -659,7 +659,7 @@ public class TestingContext {
   }
 
   public CallB callBImpl(TypeB evalT, ObjB func, CombineB args) {
-    return byteDb().call(evalT, func, args);
+    return objDb().call(evalT, func, args);
   }
 
   private TypeB inferResT(ObjB func, CombineB args) {
@@ -680,11 +680,11 @@ public class TestingContext {
   }
 
   public CombineB combineB(TupleTB evalT, ObjB... items) {
-    return byteDb().combine(evalT, ImmutableList.copyOf(items));
+    return objDb().combine(evalT, ImmutableList.copyOf(items));
   }
 
   public IfB ifB(ObjB condition, ObjB then, ObjB else_) {
-    return byteDb().if_(condition, then, else_);
+    return objDb().if_(condition, then, else_);
   }
 
   public InvokeB invokeB(ObjB method, ObjB... args) {
@@ -697,11 +697,11 @@ public class TestingContext {
   }
 
   private InvokeB invokeBImpl(TypeB evalT, ObjB method, CombineB args) {
-    return byteDb().invoke(evalT, method, args);
+    return objDb().invoke(evalT, method, args);
   }
 
   public MapB mapB(ObjB array, ObjB func) {
-    return byteDb().map(array, func);
+    return objDb().map(array, func);
   }
 
   public OrderB orderB(ObjB... elems) {
@@ -710,7 +710,7 @@ public class TestingContext {
 
   public OrderB orderB(TypeB elemT, ObjB... elems) {
     var elemList = ImmutableList.copyOf(elems);
-    return byteDb().order(arrayTB(elemT), elemList);
+    return objDb().order(arrayTB(elemT), elemList);
   }
 
   public ParamRefB paramRefB(int index) {
@@ -718,7 +718,7 @@ public class TestingContext {
   }
 
   public ParamRefB paramRefB(TypeB evalT, int index) {
-    return byteDb().paramRef(evalT, BigInteger.valueOf(index));
+    return objDb().paramRef(evalT, BigInteger.valueOf(index));
   }
 
   public SelectB selectB(ObjB tuple, IntB index) {
@@ -727,7 +727,7 @@ public class TestingContext {
   }
 
   public SelectB selectB(TypeB evalT, ObjB tuple, IntB index) {
-    return byteDb().select(evalT, tuple, index);
+    return objDb().select(evalT, tuple, index);
   }
 
   // Types Smooth

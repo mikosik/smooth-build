@@ -23,7 +23,7 @@ public class OrderCB extends ExprCatB {
   }
 
   @Override
-  public OrderB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (OrderB) super.newObj(merkleRoot, byteDb);
+  public OrderB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (OrderB) super.newObj(merkleRoot, objDb);
   }
 }

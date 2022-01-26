@@ -91,7 +91,7 @@ public class SelectBTest extends TestingContext {
   public void select_can_be_read_back_by_hash() {
     TupleB tuple = animalB("rabbit", 7);
     SelectB select = selectB(tuple, intB(0));
-    assertThat(byteDbOther().get(select.hash()))
+    assertThat(objDbOther().get(select.hash()))
         .isEqualTo(select);
   }
 
@@ -100,7 +100,7 @@ public class SelectBTest extends TestingContext {
     var selectable = animalB();
     var index = intB(0);
     var select = selectB(selectable, index);
-    assertThat(((SelectB) byteDbOther().get(select.hash())).data())
+    assertThat(((SelectB) objDbOther().get(select.hash())).data())
         .isEqualTo(new SelectB.Data(selectable, index));
   }
 

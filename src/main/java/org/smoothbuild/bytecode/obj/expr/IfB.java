@@ -16,8 +16,8 @@ public final class IfB extends ExprB {
   private static final int THEN_IDX = 1;
   private static final int ELSE_IDX = 2;
 
-  public IfB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public IfB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   public Data data() {
@@ -27,7 +27,7 @@ public final class IfB extends ExprB {
   public record Data(ObjB condition, ObjB then, ObjB else_) {}
 
   private ObjB readCondition() {
-    var expectedT = byteDb().catDb().bool();
+    var expectedT = objDb().catDb().bool();
     return readSeqElemObjWithType(DATA_PATH, dataHash(), COND_IDX, DATA_SEQ_SIZE, expectedT);
   }
 

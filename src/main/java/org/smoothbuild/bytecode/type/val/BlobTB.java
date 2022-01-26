@@ -18,7 +18,7 @@ public class BlobTB extends TypeB {
   }
 
   @Override
-  public BlobB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (BlobB) super.newObj(merkleRoot, byteDb);
+  public BlobB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (BlobB) super.newObj(merkleRoot, objDb);
   }
 }

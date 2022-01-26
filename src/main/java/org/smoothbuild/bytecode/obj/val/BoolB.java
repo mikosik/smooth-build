@@ -7,8 +7,8 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
  * This class is immutable.
  */
 public final class BoolB extends ValB {
-  public BoolB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public BoolB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   public boolean toJ() {

@@ -15,46 +15,46 @@ import org.smoothbuild.util.collect.Lists;
 public class TupleBTest extends TestingContext {
   @Test
   public void polymorphic_tuple_is_forbidden() {
-    assertCall(() -> byteDb().tuple(tupleTB(oVarTB("A")), list()))
+    assertCall(() -> objDb().tuple(tupleTB(oVarTB("A")), list()))
         .throwsException(new IllegalArgumentException(
             "Cannot create tuple object with polymorphic type `{A}`."));
   }
 
   @Test
   public void creating_tuple_with_less_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> byteDb().tuple(personTB(), list(stringB("John"))))
+    assertCall(() -> objDb().tuple(personTB(), list(stringB("John"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_item_with_different_type_than_specified_in_tuple_type_causes_exception() {
-    assertCall(() -> byteDb().tuple(personTB(), list(stringB(), intB())))
+    assertCall(() -> objDb().tuple(personTB(), list(stringB(), intB())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_item_type_being_subtype_of_specified_in_tupleT_causes_exc() {
     var tupleT = tupleTB(arrayTB(intTB()));
-    assertCall(() -> byteDb().tuple(tupleT, Lists.list(arrayB(nothingTB()))))
+    assertCall(() -> objDb().tuple(tupleT, Lists.list(arrayB(nothingTB()))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void creating_tuple_with_more_items_than_specified_in_its_type_causes_exception() {
-    assertCall(() -> byteDb().tuple(
+    assertCall(() -> objDb().tuple(
         personTB(), list(stringB("John"), stringB("Doe"), stringB("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_item_to_null_throws_exception() {
-    assertCall(() -> byteDb().tuple(personTB(), list(stringB("John"), null)))
+    assertCall(() -> objDb().tuple(personTB(), list(stringB("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_item_to_object_of_wrong_type_throws_exception() {
-    assertCall(() -> byteDb().tuple(personTB(), list(stringB("John"), intB(123))))
+    assertCall(() -> objDb().tuple(personTB(), list(stringB("John"), intB(123))))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -121,14 +121,14 @@ public class TupleBTest extends TestingContext {
   @Test
   public void tuples_can_be_read_by_hash() {
     TupleB person = johnDoePerson();
-    assertThat(byteDbOther().get(person.hash()))
+    assertThat(objDbOther().get(person.hash()))
         .isEqualTo(person);
   }
 
   @Test
   public void tuples_read_by_hash_have_equal_items() {
     TupleB person = johnDoePerson();
-    TupleB personRead = (TupleB) byteDbOther().get(person.hash());
+    TupleB personRead = (TupleB) objDbOther().get(person.hash());
     assertThat(personRead.get(0))
         .isEqualTo(person.get(0));
     assertThat(personRead.get(1))

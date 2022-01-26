@@ -21,7 +21,7 @@ public class MapCB extends ExprCatB {
   }
 
   @Override
-  public MapB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (MapB) super.newObj(merkleRoot, byteDb);
+  public MapB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (MapB) super.newObj(merkleRoot, objDb);
   }
 }

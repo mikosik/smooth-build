@@ -18,7 +18,7 @@ public class CallCB extends ExprCatB {
   }
 
   @Override
-  public CallB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (CallB) super.newObj(merkleRoot, byteDb);
+  public CallB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (CallB) super.newObj(merkleRoot, objDb);
   }
 }

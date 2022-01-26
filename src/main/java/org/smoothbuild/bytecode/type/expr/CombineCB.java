@@ -23,7 +23,7 @@ public class CombineCB extends ExprCatB {
   }
 
   @Override
-  public CombineB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (CombineB) super.newObj(merkleRoot, byteDb);
+  public CombineB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (CombineB) super.newObj(merkleRoot, objDb);
   }
 }

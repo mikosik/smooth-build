@@ -120,7 +120,7 @@ public class CallBTest extends TestingContext {
   @Test
   public void call_can_be_read_back_by_hash() {
     var call = callB(funcB(list(stringTB()), intB()), stringB());
-    assertThat(byteDbOther().get(call.hash()))
+    assertThat(objDbOther().get(call.hash()))
         .isEqualTo(call);
   }
 
@@ -128,7 +128,7 @@ public class CallBTest extends TestingContext {
   public void call_read_back_by_hash_has_same_data() {
     var func = funcB(list(stringTB()), intB());
     var call = callB(func, stringB());
-    assertThat(((CallB) byteDbOther().get(call.hash())).data())
+    assertThat(((CallB) objDbOther().get(call.hash())).data())
         .isEqualTo(new CallB.Data(func, combineB(stringB())));
   }
 

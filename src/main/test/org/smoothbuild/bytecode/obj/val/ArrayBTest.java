@@ -22,14 +22,14 @@ import okio.ByteString;
 public class ArrayBTest extends TestingContext {
   @Test
   public void polymorphic_array_is_forbidden() {
-    assertCall(() -> byteDb().arrayBuilder(arrayTB(oVarTB("A"))).build())
+    assertCall(() -> objDb().arrayBuilder(arrayTB(oVarTB("A"))).build())
         .throwsException(new IllegalArgumentException(
             "Cannot create array object with polymorphic type `[A]`."));
   }
 
   @Test
   public void empty_nothing_array_can_be_iterated_as_tuple() {
-    ArrayB array = byteDb().arrayBuilder(arrayTB(nothingTB()))
+    ArrayB array = objDb().arrayBuilder(arrayTB(nothingTB()))
         .build();
     assertThat(array.elems(TupleB.class))
         .isEmpty();
@@ -37,7 +37,7 @@ public class ArrayBTest extends TestingContext {
 
   @Test
   public void string_array_cannot_be_iterated_as_tuple() {
-    ArrayB array = byteDb().arrayBuilder(arrayTB(stringTB()))
+    ArrayB array = objDb().arrayBuilder(arrayTB(stringTB()))
         .add(stringB("abc"))
         .build();
     assertCall(() -> array.elems(TupleB.class))
@@ -47,7 +47,7 @@ public class ArrayBTest extends TestingContext {
 
   @Test
   public void empty_array_is_empty() {
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .build();
     assertThat(array.elems(StringB.class))
         .isEmpty();
@@ -55,28 +55,28 @@ public class ArrayBTest extends TestingContext {
 
   @Test
   public void adding_null_is_forbidden() {
-    ArrayBBuilder arrayBuilder = byteDb().arrayBuilder(arrayTB());
+    ArrayBBuilder arrayBuilder = objDb().arrayBuilder(arrayTB());
     assertCall(() -> arrayBuilder.add(null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void adding_elem_with_wrong_type_is_forbidden() {
-    ArrayBBuilder arrayBuilder = byteDb().arrayBuilder(arrayTB());
+    ArrayBBuilder arrayBuilder = objDb().arrayBuilder(arrayTB());
     assertCall(() -> arrayBuilder.add(blobB(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void adding_elem_with_sub_type_is_forbidden() {
-    ArrayBBuilder arrayBuilder = byteDb().arrayBuilder(arrayTB(arrayTB(intTB())));
+    ArrayBBuilder arrayBuilder = objDb().arrayBuilder(arrayTB(arrayTB(intTB())));
     assertCall(() -> arrayBuilder.add(arrayB(nothingTB())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void array_contains_added_elem() {
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .add(stringB("abc"))
         .build();
     assertThat(array.elems(StringB.class))
@@ -87,7 +87,7 @@ public class ArrayBTest extends TestingContext {
   public void array_contains_added_elem_via_add_all_method() {
     StringB str = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .addAll(list(str, str2))
         .build();
     assertThat(array.elems(StringB.class))
@@ -100,7 +100,7 @@ public class ArrayBTest extends TestingContext {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
     StringB str3 = stringB("ghi");
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .add(str1)
         .add(str2)
         .add(str3)
@@ -113,7 +113,7 @@ public class ArrayBTest extends TestingContext {
   @Test
   public void adding_same_elem_twice_builds_array_with_two_elems() {
     StringB str = stringB("abc");
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .add(str)
         .add(str)
         .build();
@@ -147,11 +147,11 @@ public class ArrayBTest extends TestingContext {
   public void array_can_be_read_by_hash() {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .add(str1)
         .add(str2)
         .build();
-    assertThat(byteDbOther().get(array.hash()))
+    assertThat(objDbOther().get(array.hash()))
         .isEqualTo(array);
   }
 
@@ -159,11 +159,11 @@ public class ArrayBTest extends TestingContext {
   public void array_read_by_hash_contains_same_elems() {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .add(str1)
         .add(str2)
         .build();
-    assertThat(((ArrayB) byteDbOther().get(array.hash())).elems(StringB.class))
+    assertThat(((ArrayB) objDbOther().get(array.hash())).elems(StringB.class))
         .containsExactly(str1, str2)
         .inOrder();
   }
@@ -172,11 +172,11 @@ public class ArrayBTest extends TestingContext {
   public void array_read_by_hash_has_same_hash() {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .add(str1)
         .add(str2)
         .build();
-    assertThat(byteDbOther().get(array.hash()).hash())
+    assertThat(objDbOther().get(array.hash()).hash())
         .isEqualTo(array.hash());
   }
 
@@ -184,7 +184,7 @@ public class ArrayBTest extends TestingContext {
   @MethodSource("type_test_data")
   public void type(TypeB elemT) {
     var arrayTH = arrayTB(elemT);
-    var arrayH = byteDb().arrayBuilder(arrayTH).build();
+    var arrayH = objDb().arrayBuilder(arrayTH).build();
     assertThat(arrayH.cat())
         .isEqualTo(arrayTH);
   }
@@ -197,7 +197,7 @@ public class ArrayBTest extends TestingContext {
   public void to_string() {
     StringB str1 = stringB("abc");
     StringB str2 = stringB("def");
-    ArrayB array = byteDb().arrayBuilder(arrayTB())
+    ArrayB array = objDb().arrayBuilder(arrayTB())
         .add(str1)
         .add(str2)
         .build();
@@ -224,14 +224,14 @@ public class ArrayBTest extends TestingContext {
     @Test
     public void nothing_array_can_be_read_by_hash() {
       ArrayB array = emptyArrayOf(nothingTB());
-      assertThat(byteDbOther().get(array.hash()))
+      assertThat(objDbOther().get(array.hash()))
           .isEqualTo(array);
     }
 
     @Test
     public void nothing_array_read_by_hash_is_empty() {
       ArrayB array = emptyArrayOf(nothingTB());
-      assertThat(((ArrayB) byteDbOther().get(array.hash())).elems(ValB.class))
+      assertThat(((ArrayB) objDbOther().get(array.hash())).elems(ValB.class))
           .isEmpty();
     }
 
@@ -243,7 +243,7 @@ public class ArrayBTest extends TestingContext {
     }
 
     private ArrayB emptyArrayOf(NothingTB elemT) {
-      return byteDb().arrayBuilder(arrayTB(elemT)).build();
+      return objDb().arrayBuilder(arrayTB(elemT)).build();
     }
   }
 }

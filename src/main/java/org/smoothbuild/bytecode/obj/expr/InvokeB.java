@@ -13,8 +13,8 @@ import org.smoothbuild.bytecode.type.expr.InvokeCB;
  * This class is thread-safe.
  */
 public final class InvokeB extends CallLikeB {
-  public InvokeB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public InvokeB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.cat() instanceof InvokeCB);
   }
 

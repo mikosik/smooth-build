@@ -68,7 +68,7 @@ public class FuncBTest extends TestingContext {
   public void func_can_be_read_by_hash() {
     var funcT = funcTB(intTB(), list(stringTB()));
     var func = funcB(funcT, intB());
-    assertThat(byteDbOther().get(func.hash()))
+    assertThat(objDbOther().get(func.hash()))
         .isEqualTo(func);
   }
 
@@ -76,7 +76,7 @@ public class FuncBTest extends TestingContext {
   public void funcs_read_by_hash_have_equal_bodies() {
     var funcT = funcTB(intTB(), list(stringTB()));
     var func = funcB(funcT, intB());
-    var funcRead = (FuncB) byteDbOther().get(func.hash());
+    var funcRead = (FuncB) objDbOther().get(func.hash());
     assertThat(func.body())
         .isEqualTo(funcRead.body());
   }

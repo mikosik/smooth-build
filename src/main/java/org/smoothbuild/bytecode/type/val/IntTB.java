@@ -18,7 +18,7 @@ public class IntTB extends TypeB {
   }
 
   @Override
-  public IntB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (IntB) super.newObj(merkleRoot, byteDb);
+  public IntB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (IntB) super.newObj(merkleRoot, objDb);
   }
 }

@@ -11,8 +11,8 @@ import org.smoothbuild.bytecode.type.base.TypeB;
  * This class is thread-safe.
  */
 public abstract class ExprB extends ObjB {
-  public ExprB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public ExprB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.cat() instanceof ExprCatB);
   }
 

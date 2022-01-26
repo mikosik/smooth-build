@@ -15,7 +15,7 @@ public class ParamRefCB extends ExprCatB {
   }
 
   @Override
-  public ParamRefB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (ParamRefB) super.newObj(merkleRoot, byteDb);
+  public ParamRefB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (ParamRefB) super.newObj(merkleRoot, objDb);
   }
 }

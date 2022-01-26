@@ -17,8 +17,8 @@ import com.google.common.collect.ImmutableList;
 public final class TupleB extends ValB {
   private final Supplier<ImmutableList<ValB>> itemsSupplier;
 
-  public TupleB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public TupleB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
     this.itemsSupplier = memoize(this::instantiateItems);
   }
 

@@ -13,11 +13,11 @@ import org.smoothbuild.util.io.DataWriter;
 import okio.BufferedSink;
 
 public class BlobBBuilder implements Closeable {
-  private final ObjDbImpl byteDb;
+  private final ObjDbImpl objDb;
   private final HashingBufferedSink sink;
 
-  public BlobBBuilder(ObjDbImpl byteDb, HashingBufferedSink sink) {
-    this.byteDb = byteDb;
+  public BlobBBuilder(ObjDbImpl objDb, HashingBufferedSink sink) {
+    this.objDb = objDb;
     this.sink = sink;
   }
 
@@ -41,7 +41,7 @@ public class BlobBBuilder implements Closeable {
   private BlobB buildImpl() throws HashedDbExc {
     try {
       sink.close();
-      return byteDb.newBlob(sink.hash());
+      return objDb.newBlob(sink.hash());
     } catch (IOException e) {
       throw new HashedDbExc(e);
     }

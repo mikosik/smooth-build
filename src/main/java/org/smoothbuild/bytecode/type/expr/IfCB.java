@@ -15,7 +15,7 @@ public class IfCB extends ExprCatB {
   }
 
   @Override
-  public IfB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (IfB) super.newObj(merkleRoot, byteDb);
+  public IfB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (IfB) super.newObj(merkleRoot, objDb);
   }
 }

@@ -106,7 +106,7 @@ public class MapBTest extends TestingContext {
   @Test
   public void map_can_be_read_back_by_hash() {
     var mapB = mapB(arrayB(intB(7)), funcB(list(intTB()), stringB("abc")));
-    assertThat(byteDbOther().get(mapB.hash()))
+    assertThat(objDbOther().get(mapB.hash()))
         .isEqualTo(mapB);
   }
 
@@ -116,7 +116,7 @@ public class MapBTest extends TestingContext {
     var func = funcB(list(intTB()), stringB("abc"));
     var mapB = mapB(array, func);
 
-    var readMap = (MapB) byteDbOther().get(mapB.hash());
+    var readMap = (MapB) objDbOther().get(mapB.hash());
     var readMapData = readMap.data();
     var mapData = mapB.data();
 

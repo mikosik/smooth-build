@@ -15,7 +15,7 @@ public class InvokeCB extends ExprCatB {
   }
 
   @Override
-  public InvokeB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (InvokeB) super.newObj(merkleRoot, byteDb);
+  public InvokeB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (InvokeB) super.newObj(merkleRoot, objDb);
   }
 }

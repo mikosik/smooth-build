@@ -18,7 +18,7 @@ public class SelectCB extends ExprCatB {
   }
 
   @Override
-  public SelectB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (SelectB) super.newObj(merkleRoot, byteDb);
+  public SelectB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (SelectB) super.newObj(merkleRoot, objDb);
   }
 }

@@ -18,8 +18,8 @@ import com.google.common.collect.ImmutableList;
 public final class ArrayB extends ValB {
   private final Supplier<Object> elemsSupplier;
 
-  public ArrayB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public ArrayB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
     this.elemsSupplier = memoize(this::instantiateElems);
   }
 

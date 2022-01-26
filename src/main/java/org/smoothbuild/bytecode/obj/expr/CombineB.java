@@ -18,8 +18,8 @@ import com.google.common.collect.ImmutableList;
  * This class is thread-safe.
  */
 public class CombineB extends ExprB {
-  public CombineB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public CombineB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
     checkArgument(merkleRoot.cat() instanceof CombineCB);
   }
 

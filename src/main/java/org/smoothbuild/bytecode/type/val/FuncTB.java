@@ -43,7 +43,7 @@ public final class FuncTB extends TypeB implements CallableTB {
   }
 
   @Override
-  public FuncB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (FuncB) super.newObj(merkleRoot, byteDb);
+  public FuncB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (FuncB) super.newObj(merkleRoot, objDb);
   }
 }

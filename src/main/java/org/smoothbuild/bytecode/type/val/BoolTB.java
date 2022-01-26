@@ -18,7 +18,7 @@ public class BoolTB extends TypeB {
   }
 
   @Override
-  public BoolB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (BoolB) super.newObj(merkleRoot, byteDb);
+  public BoolB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (BoolB) super.newObj(merkleRoot, objDb);
   }
 }

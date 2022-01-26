@@ -51,7 +51,7 @@ public enum CatKindB {
   ;
   // @formatter:on
 
-  private static ObjB throwException(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
+  private static ObjB throwException(MerkleRoot merkleRoot, ObjDbImpl objDb) {
     throw new UnsupportedOperationException();
   }
 
@@ -102,7 +102,7 @@ public enum CatKindB {
     return typeJ;
   }
 
-  public ObjB newInstanceJ(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return instantiator.apply(merkleRoot, byteDb);
+  public ObjB newInstanceJ(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return instantiator.apply(merkleRoot, objDb);
   }
 }

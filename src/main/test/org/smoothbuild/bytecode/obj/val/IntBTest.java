@@ -49,14 +49,14 @@ public class IntBTest extends TestingContext {
   @Test
   public void int_can_be_read_back_by_hash() {
     IntB i = intB(123);
-    assertThat(byteDbOther().get(i.hash()))
+    assertThat(objDbOther().get(i.hash()))
         .isEqualTo(i);
   }
 
   @Test
   public void int_read_back_by_hash_has_same_to_J() {
     IntB i = intB(123);
-    assertThat(((IntB) byteDbOther().get(i.hash())).toJ())
+    assertThat(((IntB) objDbOther().get(i.hash())).toJ())
         .isEqualTo(BigInteger.valueOf(123));
   }
 

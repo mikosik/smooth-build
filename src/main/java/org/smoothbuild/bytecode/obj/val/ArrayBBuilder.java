@@ -11,16 +11,16 @@ import org.smoothbuild.bytecode.type.val.ArrayTB;
 
 public class ArrayBBuilder {
   private final ArrayTB type;
-  private final ObjDbImpl byteDb;
+  private final ObjDbImpl objDb;
   private final List<ValB> elems;
 
-  public ArrayBBuilder(ArrayTB type, ObjDbImpl byteDb) {
+  public ArrayBBuilder(ArrayTB type, ObjDbImpl objDb) {
     if (type.isPolytype()) {
       throw new IllegalArgumentException(
           "Cannot create array object with polymorphic type " + type.q() + ".");
     }
     this.type = type;
-    this.byteDb = byteDb;
+    this.objDb = objDb;
     this.elems = new ArrayList<>();
   }
 
@@ -45,6 +45,6 @@ public class ArrayBBuilder {
   }
 
   public ArrayB build() {
-    return wrapHashedDbExcAsObjDbExc(() -> byteDb.newArray(type, elems));
+    return wrapHashedDbExcAsObjDbExc(() -> objDb.newArray(type, elems));
   }
 }

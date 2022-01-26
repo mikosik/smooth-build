@@ -43,7 +43,7 @@ public final class MethodTB extends TypeB implements CallableTB {
   }
 
   @Override
-  public MethodB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (MethodB) super.newObj(merkleRoot, byteDb);
+  public MethodB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (MethodB) super.newObj(merkleRoot, objDb);
   }
 }

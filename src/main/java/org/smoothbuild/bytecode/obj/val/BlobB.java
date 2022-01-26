@@ -9,8 +9,8 @@ import okio.BufferedSource;
  * This class is thread-safe.
  */
 public final class BlobB extends ValB {
-  public BlobB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public BlobB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   public BufferedSource source() {

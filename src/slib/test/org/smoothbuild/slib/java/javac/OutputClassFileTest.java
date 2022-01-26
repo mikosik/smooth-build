@@ -22,7 +22,7 @@ public class OutputClassFileTest extends TestingContext {
   @Test
   public void open_output_stream() throws IOException {
     var factory = nativeApi().factory();
-    ArrayBBuilder fileArrayBuilder = byteDb().arrayBuilder(factory.arrayT(factory.fileT()));
+    ArrayBBuilder fileArrayBuilder = objDb().arrayBuilder(factory.arrayT(factory.fileT()));
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi());
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
@@ -35,7 +35,7 @@ public class OutputClassFileTest extends TestingContext {
   public void get_name_returns_file_path() {
     var arrayTH = arrayTB(fileTB());
     OutputClassFile outputClassFile =
-        new OutputClassFile(byteDb().arrayBuilder(arrayTH), path, nativeApi());
+        new OutputClassFile(objDb().arrayBuilder(arrayTH), path, nativeApi());
     assertThat(outputClassFile.getName())
         .isEqualTo("/" + path);
   }

@@ -15,8 +15,8 @@ public final class MethodB extends ValB {
   private static final int CLASS_BINARY_NAME_IDX = 1;
   private static final int IS_PURE_IDX = 2;
 
-  public MethodB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public MethodB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override

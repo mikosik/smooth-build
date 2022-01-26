@@ -12,8 +12,8 @@ public class CallLikeB extends ExprB {
   protected static final int CALLABLE_IDX = 0;
   protected static final int ARGS_IDX = 1;
 
-  public CallLikeB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public CallLikeB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   protected void validate(CallableTB callableT, CombineB argsCombine) {

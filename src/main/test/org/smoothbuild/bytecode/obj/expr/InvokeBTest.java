@@ -138,7 +138,7 @@ public class InvokeBTest extends TestingContext {
   public void invoke_can_be_read_back_by_hash() {
     var method = methodB(methodTB(intTB(), list(stringTB())));
     var invoke = invokeB(method, stringB());
-    assertThat(byteDbOther().get(invoke.hash()))
+    assertThat(objDbOther().get(invoke.hash()))
         .isEqualTo(invoke);
   }
 
@@ -146,7 +146,7 @@ public class InvokeBTest extends TestingContext {
   public void invoke_read_back_by_hash_has_same_data() {
     var method = methodB(methodTB(intTB(), list(stringTB())));
     var invoke = invokeB(method, stringB());
-    var readInvoke = (InvokeB) byteDbOther().get(invoke.hash());
+    var readInvoke = (InvokeB) objDbOther().get(invoke.hash());
     var readInvokeData = readInvoke.data();
     var invokeData = invoke.data();
     assertThat(readInvokeData.method())

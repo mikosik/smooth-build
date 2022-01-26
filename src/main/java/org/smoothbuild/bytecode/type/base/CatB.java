@@ -34,9 +34,9 @@ public abstract class CatB {
   /**
    * Creates new java instance of Obj represented by merkleRoot.
    */
-  public ObjB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
+  public ObjB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
     checkArgument(this.equals(merkleRoot.cat()));
-    return kind.newInstanceJ(merkleRoot, byteDb);
+    return kind.newInstanceJ(merkleRoot, objDb);
   }
 
   public Hash hash() {

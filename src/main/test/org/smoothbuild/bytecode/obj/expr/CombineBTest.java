@@ -69,14 +69,14 @@ public class CombineBTest extends TestingContext {
   @Test
   public void combine_can_be_read_back_by_hash() {
     CombineB expr = combineB(intB(1));
-    assertThat(byteDbOther().get(expr.hash()))
+    assertThat(objDbOther().get(expr.hash()))
         .isEqualTo(expr);
   }
 
   @Test
   public void combine_read_back_by_hash_has_same_items() {
     CombineB expr = combineB(intB(), stringB());
-    assertThat(((CombineB) byteDbOther().get(expr.hash())).items())
+    assertThat(((CombineB) objDbOther().get(expr.hash())).items())
         .isEqualTo(list(intB(), stringB()));
   }
 

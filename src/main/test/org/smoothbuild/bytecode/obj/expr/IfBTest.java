@@ -116,7 +116,7 @@ public class IfBTest extends TestingContext {
     var then = intB(1);
     var else_ = intB(2);
     var ifB = ifB(condition, then, else_);
-    assertThat(byteDbOther().get(ifB.hash()))
+    assertThat(objDbOther().get(ifB.hash()))
         .isEqualTo(ifB);
   }
 
@@ -126,7 +126,7 @@ public class IfBTest extends TestingContext {
     var then = intB(1);
     var else_ = intB(2);
     var ifB = ifB(condition, then, else_);
-    var readIf = (IfB) byteDbOther().get(ifB.hash());
+    var readIf = (IfB) objDbOther().get(ifB.hash());
     var readIfData = readIf.data();
     var ifData = ifB.data();
 

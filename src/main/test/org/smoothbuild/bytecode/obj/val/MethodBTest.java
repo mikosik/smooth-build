@@ -67,7 +67,7 @@ public class MethodBTest extends TestingContext {
     var isPure = boolB(true);
     var methodTH = methodTB(stringTB(), list(intTB()));
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
-    assertThat(byteDbOther().get(methodH.hash()))
+    assertThat(objDbOther().get(methodH.hash()))
         .isEqualTo(methodH);
   }
 
@@ -78,7 +78,7 @@ public class MethodBTest extends TestingContext {
     var isPure = boolB(true);
     var methodTH = methodTB(stringTB(), list(intTB()));
     var methodH = methodB(methodTH, jar, classBinaryName, isPure);
-    var readMethodH = (MethodB) byteDbOther().get(methodH.hash());
+    var readMethodH = (MethodB) objDbOther().get(methodH.hash());
     assertThat(readMethodH.classBinaryName())
         .isEqualTo(classBinaryName);
     assertThat(readMethodH.jar())

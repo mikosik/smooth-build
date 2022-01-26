@@ -30,27 +30,27 @@ public abstract class ObjB {
   public static final String DATA_PATH = "data";
 
   private final MerkleRoot merkleRoot;
-  private final ObjDbImpl byteDb;
+  private final ObjDbImpl objDb;
 
-  public ObjB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
+  public ObjB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
     this.merkleRoot = merkleRoot;
-    this.byteDb = byteDb;
+    this.objDb = objDb;
   }
 
   protected MerkleRoot merkleRoot() {
     return merkleRoot;
   }
 
-  protected ObjDbImpl byteDb() {
-    return byteDb;
+  protected ObjDbImpl objDb() {
+    return objDb;
   }
 
   protected HashedDb hashedDb() {
-    return byteDb.hashedDb();
+    return objDb.hashedDb();
   }
 
   protected Typing<TypeB> typing() {
-    return byteDb.typing();
+    return objDb.typing();
   }
 
   public Hash hash() {
@@ -90,7 +90,7 @@ public abstract class ObjB {
 
   protected <T> T readObj(String path, Hash hash, Class<T> clazz) {
     var obj = wrapObjDbExcAsDecodeObjNodeException(
-        hash(), cat(), path, () -> byteDb().get(hash));
+        hash(), cat(), path, () -> objDb().get(hash));
     return castObj(obj, path, clazz);
   }
 
@@ -108,7 +108,7 @@ public abstract class ObjB {
   private ObjB readSeqElemObj(String path, Hash hash, int i, int expectedSize) {
     var elemHash = readSeqElemHash(path, hash, i, expectedSize);
     var obj = wrapObjDbExcAsDecodeObjNodeException(
-        hash(), cat(), path, i, () -> byteDb().get(elemHash));
+        hash(), cat(), path, i, () -> objDb().get(elemHash));
     return obj;
   }
 
@@ -140,7 +140,7 @@ public abstract class ObjB {
     for (int i = 0; i < seq.size(); i++) {
       int index = i;
       ObjB obj = wrapObjDbExcAsDecodeObjNodeException(hash(), cat(), path, index,
-          () -> byteDb.get(seq.get(index)));
+          () -> objDb.get(seq.get(index)));
       builder.add(obj);
     }
     return builder.build();
@@ -156,7 +156,7 @@ public abstract class ObjB {
 
   private ImmutableList<Hash> readSeqHashes(String path, Hash hash) {
     return wrapHashedDbExcAsDecodeObjNodeException(hash(), cat(), path,
-        () -> byteDb.hashedDb().readSeq(hash));
+        () -> objDb.hashedDb().readSeq(hash));
   }
 
   protected static String objsToString(ImmutableList<? extends ObjB> objs) {

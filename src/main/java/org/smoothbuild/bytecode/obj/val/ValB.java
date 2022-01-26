@@ -11,8 +11,8 @@ import org.smoothbuild.bytecode.type.base.TypeB;
  */
 public sealed abstract class ValB extends ObjB
     permits ArrayB, BlobB, BoolB, FuncB, IntB, MethodB, StringB, TupleB {
-  public ValB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public ValB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   @Override

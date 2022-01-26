@@ -27,9 +27,9 @@ public class TupleTB extends TypeB implements TupleT {
   }
 
   @Override
-  public TupleB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
+  public TupleB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
     validateNotPolymorphic(merkleRoot);
-    return (TupleB) super.newObj(merkleRoot, byteDb);
+    return (TupleB) super.newObj(merkleRoot, objDb);
   }
 
   @Override

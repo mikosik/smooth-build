@@ -11,8 +11,8 @@ import org.smoothbuild.bytecode.obj.base.MerkleRoot;
  * This class is thread-safe.
  */
 public class ParamRefB extends ExprB {
-  public ParamRefB(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    super(merkleRoot, byteDb);
+  public ParamRefB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    super(merkleRoot, objDb);
   }
 
   public BigInteger value() {

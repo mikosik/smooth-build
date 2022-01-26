@@ -18,7 +18,7 @@ public class StringTB extends TypeB {
   }
 
   @Override
-  public StringB newObj(MerkleRoot merkleRoot, ObjDbImpl byteDb) {
-    return (StringB) super.newObj(merkleRoot, byteDb);
+  public StringB newObj(MerkleRoot merkleRoot, ObjDbImpl objDb) {
+    return (StringB) super.newObj(merkleRoot, objDb);
   }
 }
