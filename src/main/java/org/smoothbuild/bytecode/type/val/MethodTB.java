@@ -2,6 +2,7 @@ package org.smoothbuild.bytecode.type.val;
 
 import static org.smoothbuild.bytecode.type.base.CatKindB.METHOD;
 import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
+import static org.smoothbuild.util.collect.Lists.concat;
 
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.MerkleRoot;
@@ -20,7 +21,7 @@ public final class MethodTB extends TypeB implements CallableTB {
     super(
         hash, "_" + funcTypeName(res, params.items()),
         METHOD,
-        FuncT.calculateHasOpenVars(res, params.items()),
+        calculateOpenVars(concat(res, params.items())),
         FuncT.calculateHasClosedVars(res, params.items()));
     this.res = res;
     this.params = params;

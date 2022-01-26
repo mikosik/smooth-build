@@ -21,7 +21,7 @@ public class TupleTB extends TypeB implements TupleT {
 
   public TupleTB(Hash hash, ImmutableList<TypeB> itemTs) {
     super(hash, calculateName(itemTs), TUPLE,
-        itemTs.stream().anyMatch(Type::hasOpenVars),
+        calculateOpenVars(itemTs),
         itemTs.stream().anyMatch(Type::hasClosedVars));
     this.itemTs = ImmutableList.copyOf(itemTs);
   }

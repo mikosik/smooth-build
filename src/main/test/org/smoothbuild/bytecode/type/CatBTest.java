@@ -82,6 +82,7 @@ import org.smoothbuild.bytecode.type.base.CatKindB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.expr.CombineCB;
 import org.smoothbuild.bytecode.type.val.MethodTB;
+import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.FuncT;
@@ -91,6 +92,7 @@ import org.smoothbuild.util.collect.Labeled;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class CatBTest extends TestingContext {
@@ -326,6 +328,41 @@ public class CatBTest extends TestingContext {
         arguments(func(cVar("A"), list(BOOL)), true),
         arguments(func(BLOB, list(oVar("A"))), false),
         arguments(func(BLOB, list(cVar("A"))), true)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("open_vars_test_data")
+  public void open_vars(TypeB type, ImmutableSet<OpenVarTB> openVars) {
+    assertThat(type.openVars())
+        .isEqualTo(openVars);
+  }
+
+  public static List<Arguments> open_vars_test_data() {
+    return List.of(
+        arguments(ANY, ImmutableSet.of()),
+        arguments(BLOB, ImmutableSet.of()),
+        arguments(BOOL, ImmutableSet.of()),
+        arguments(INT, ImmutableSet.of()),
+        arguments(NOTHING, ImmutableSet.of()),
+        arguments(STRING, ImmutableSet.of()),
+        arguments(BLOB, ImmutableSet.of()),
+        arguments(BLOB, ImmutableSet.of()),
+
+
+        arguments(array(INT), ImmutableSet.of()),
+        arguments(array(oVar("A")), ImmutableSet.of(oVar("A"))),
+        arguments(array(cVar("A")), ImmutableSet.of()),
+
+        arguments(tuple(list(INT)), ImmutableSet.of()),
+        arguments(tuple(list(oVar("A"))), ImmutableSet.of(oVar("A"))),
+        arguments(tuple(list(cVar("A"))), ImmutableSet.of()),
+
+        arguments(func(BLOB, list(BOOL)), ImmutableSet.of()),
+        arguments(func(oVar("A"), list(BOOL)), ImmutableSet.of(oVar("A"))),
+        arguments(func(cVar("A"), list(BOOL)), ImmutableSet.of()),
+        arguments(func(BLOB, list(oVar("A"))), ImmutableSet.of(oVar("A"))),
+        arguments(func(BLOB, list(cVar("A"))), ImmutableSet.of())
     );
   }
 

@@ -15,7 +15,7 @@ public final class ArrayTS extends TypeS implements ArrayT {
   private final TypeS elem;
 
   public ArrayTS(TypeS elem) {
-    super(TypeNames.arrayTypeName(elem), elem.hasOpenVars(), elem.hasClosedVars());
+    super(TypeNames.arrayTypeName(elem), elem.openVars(), elem.hasClosedVars());
     this.elem = requireNonNull(elem);
   }
 

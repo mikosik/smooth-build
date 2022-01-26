@@ -13,10 +13,6 @@ public non-sealed interface FuncT extends ComposedT {
     return anyMatch(res, params, Type::hasClosedVars);
   }
 
-  public static boolean calculateHasOpenVars(Type res, ImmutableList<? extends Type> params) {
-    return anyMatch(res, params, Type::hasOpenVars);
-  }
-
   private static boolean anyMatch(Type res, ImmutableList<? extends Type> params,
       Predicate<Type> predicate) {
     return predicate.test(res) || params.stream().anyMatch(predicate);

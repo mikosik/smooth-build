@@ -2,6 +2,8 @@ package org.smoothbuild.lang.base.type.api;
 
 import org.smoothbuild.util.collect.Named;
 
+import com.google.common.collect.ImmutableSet;
+
 /**
  * This class and all its subclasses are immutable.
  */
@@ -18,7 +20,11 @@ public sealed interface Type extends Named
     return hasOpenVars() || hasClosedVars();
   }
 
-  public boolean hasOpenVars();
+  public default boolean hasOpenVars() {
+    return !openVars().isEmpty();
+  }
 
   public boolean hasClosedVars();
+
+  public ImmutableSet<? extends OpenVarT> openVars();
 }

@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base.type.impl;
 
+import static org.smoothbuild.util.collect.Lists.map;
+
 import java.util.function.Predicate;
 
 import org.smoothbuild.lang.base.define.ItemSigS;
@@ -14,7 +16,7 @@ public final class StructTS extends TypeS {
   public StructTS(String name, NList<ItemSigS> fields) {
     super(
         name,
-        anyMatch(fields, f -> f.type().hasOpenVars()),
+        calculateOpenVars(map(fields, ItemSigS::type)),
         anyMatch(fields, f -> f.type().hasClosedVars()));
     this.fields = fields;
   }

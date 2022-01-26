@@ -21,6 +21,7 @@ import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.util.collect.NList;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class TypeSTest {
@@ -198,6 +199,34 @@ public class TypeSTest {
         arguments(f.func(f.cVar("A"), list(f.bool())), true),
         arguments(f.func(f.blob(), list(f.oVar("A"))), false),
         arguments(f.func(f.blob(), list(f.cVar("A"))), true)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("openVars_test_data")
+  public void openVars(TypeS type, ImmutableSet<OpenVarTS> expected) {
+    assertThat(type.openVars())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> openVars_test_data() {
+    return List.of(
+        arguments(f.any(), ImmutableSet.of()),
+        arguments(f.blob(), ImmutableSet.of()),
+        arguments(f.bool(), ImmutableSet.of()),
+        arguments(f.int_(), ImmutableSet.of()),
+        arguments(f.nothing(), ImmutableSet.of()),
+        arguments(f.string(), ImmutableSet.of()),
+
+        arguments(f.array(f.int_()), ImmutableSet.of()),
+        arguments(f.array(f.oVar("A")), ImmutableSet.of(f.oVar("A"))),
+        arguments(f.array(f.cVar("A")), ImmutableSet.of()),
+
+        arguments(f.func(f.blob(), list(f.bool())), ImmutableSet.of()),
+        arguments(f.func(f.oVar("A"), list(f.bool())), ImmutableSet.of(f.oVar("A"))),
+        arguments(f.func(f.cVar("A"), list(f.bool())), ImmutableSet.of()),
+        arguments(f.func(f.blob(), list(f.oVar("A"))), ImmutableSet.of(f.oVar("A"))),
+        arguments(f.func(f.blob(), list(f.cVar("A"))), ImmutableSet.of())
     );
   }
 

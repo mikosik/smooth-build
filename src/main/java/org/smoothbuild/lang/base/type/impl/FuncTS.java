@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type.impl;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.type.api.TypeNames.funcTypeName;
+import static org.smoothbuild.util.collect.Lists.concat;
 
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
@@ -18,7 +19,7 @@ public final class FuncTS extends TypeS implements FuncT {
   public FuncTS(TypeS res, ImmutableList<TypeS> params) {
     super(
         funcTypeName(res, params),
-        FuncT.calculateHasOpenVars(res, params),
+        calculateOpenVars(concat(res, params)),
         FuncT.calculateHasClosedVars(res, params));
     this.res = requireNonNull(res);
     this.params = requireNonNull(params);
