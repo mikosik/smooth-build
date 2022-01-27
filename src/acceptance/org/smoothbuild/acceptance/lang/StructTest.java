@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class StructSTest extends AcceptanceTestCase {
+public class StructTest extends AcceptanceTestCase {
   @Test
   public void read_struct_field() throws Exception {
     createUserModule("""
