@@ -40,6 +40,7 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.exc.CatDbExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatWrongEvalTExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.exc.DecodeVarIllegalNameExc;
@@ -201,35 +202,49 @@ public class CatDb implements TypeBF {
   // methods for getting Expr-s types
 
   public CallCB call(TypeB evalT) {
+    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newCall(evalT));
   }
 
   public CombineCB combine(TupleTB evalT) {
+    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newCombine(evalT));
   }
 
   public IfCB if_(TypeB evalT) {
+    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newIf(evalT));
   }
 
   public InvokeCB invoke(TypeB evalT) {
+    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newInvoke(evalT));
   }
 
   public MapCB map(ArrayTB evalT) {
+    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newMap(evalT));
   }
 
   public OrderCB order(TypeB elemT) {
+    validateNoOpenVars(elemT);
     return wrapHashedDbExcAsObjDbExc(() -> newOrder(elemT));
   }
 
   public ParamRefCB paramRef(TypeB evalT) {
+    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newParamRef(evalT));
   }
 
   public SelectCB select(TypeB evalT) {
+    validateNoOpenVars(evalT);
     return wrapHashedDbExcAsObjDbExc(() -> newSelect(evalT));
+  }
+
+  private static void validateNoOpenVars(TypeB evalT) {
+    if (evalT.hasOpenVars()) {
+      throw new IllegalArgumentException("evalT must not have open vars");
+    }
   }
 
   // methods for reading from db
@@ -248,18 +263,18 @@ public class CatDb implements TypeBF {
             "Internal error: Category with kind " + kind + " should be found in cache.");
       }
       case ARRAY -> newArray(hash, readDataAsValT(hash, rootSeq, kind));
-      case CALL -> newCall(hash, readDataAsValT(hash, rootSeq, kind));
+      case CALL -> newCall(hash, readDataAsEvalT(hash, rootSeq, kind));
       case CLOSED_VARIABLE -> readVar(hash, rootSeq, kind, this::newClosedVar);
       case COMBINE -> newCombine(hash, readDataAsTupleT(hash, rootSeq, kind));
       case FUNC -> readFunc(hash, rootSeq, kind);
-      case IF -> newIf(hash, readDataAsValT(hash, rootSeq, kind));
-      case INVOKE -> newInvoke(hash, readDataAsValT(hash, rootSeq, kind));
+      case IF -> newIf(hash, readDataAsEvalT(hash, rootSeq, kind));
+      case INVOKE -> newInvoke(hash, readDataAsEvalT(hash, rootSeq, kind));
       case MAP -> newMap(hash, readDataAsArrayT(hash, rootSeq, kind));
       case METHOD -> readMethod(hash, rootSeq, kind);
       case OPEN_VARIABLE -> readVar(hash, rootSeq, kind, this::newOpenVar);
       case ORDER -> newOrder(hash, readDataAsArrayT(hash, rootSeq, kind));
-      case PARAM_REF -> newParamRef(hash, readDataAsValT(hash, rootSeq, kind));
-      case SELECT -> newSelect(hash, readDataAsValT(hash, rootSeq, kind));
+      case PARAM_REF -> newParamRef(hash, readDataAsEvalT(hash, rootSeq, kind));
+      case SELECT -> newSelect(hash, readDataAsEvalT(hash, rootSeq, kind));
       case TUPLE -> readTuple(hash, rootSeq);
     };
   }
@@ -289,16 +304,32 @@ public class CatDb implements TypeBF {
     }
   }
 
+  private TypeB readDataAsEvalT(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
+    var evalT = readDataAsClass(rootHash, rootSeq, kind, TypeB.class);
+    if (evalT.hasOpenVars()) {
+      throw new DecodeCatWrongEvalTExc(rootHash, kind, evalT);
+    }
+    return evalT;
+  }
+
   private TypeB readDataAsValT(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
     return readDataAsClass(rootHash, rootSeq, kind, TypeB.class);
   }
 
   private ArrayTB readDataAsArrayT(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
-    return readDataAsClass(rootHash, rootSeq, kind, ArrayTB.class);
+    var evalT = readDataAsClass(rootHash, rootSeq, kind, ArrayTB.class);
+    if (evalT.hasOpenVars()) {
+      throw new DecodeCatWrongEvalTExc(rootHash, kind, evalT);
+    }
+    return evalT;
   }
 
   private TupleTB readDataAsTupleT(Hash rootHash, List<Hash> rootSeq, CatKindB kind) {
-    return readDataAsClass(rootHash, rootSeq, kind, TupleTB.class);
+    var evalT = readDataAsClass(rootHash, rootSeq, kind, TupleTB.class);
+    if (evalT.hasOpenVars()) {
+      throw new DecodeCatWrongEvalTExc(rootHash, kind, evalT);
+    }
+    return evalT;
   }
 
   private <T extends CatB> T readDataAsClass(Hash rootHash, List<Hash> rootSeq, CatKindB kind,

@@ -38,6 +38,7 @@ import org.smoothbuild.bytecode.type.exc.DecodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatIllegalKindExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatNodeExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatRootExc;
+import org.smoothbuild.bytecode.type.exc.DecodeCatWrongEvalTExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongNodeCatExc;
 import org.smoothbuild.bytecode.type.exc.DecodeCatWrongSeqSizeExc;
 import org.smoothbuild.bytecode.type.exc.DecodeVarIllegalNameExc;
@@ -637,7 +638,7 @@ public class CatBCorruptedTest extends TestingContext {
   }
 
   @Nested
-  class _close_var extends _var {
+  class _closed_var extends _var {
     @Test
     public void learning_test() throws Exception {
       /*
@@ -752,6 +753,11 @@ public class CatBCorruptedTest extends TestingContext {
         protected _expr_cat_tests() {
           super(COMBINE, TupleTB.class);
         }
+
+        @Override
+        protected TypeB evalTWithOpenVar() {
+          return tupleTB(oVarTB("A"));
+        }
       }
 
       @Test
@@ -835,6 +841,11 @@ public class CatBCorruptedTest extends TestingContext {
         protected _expr_cat_tests() {
           super(MAP, ArrayTB.class);
         }
+
+        @Override
+        protected TypeB evalTWithOpenVar() {
+          return arrayTB(oVarTB("A"));
+        }
       }
 
       @Test
@@ -869,6 +880,11 @@ public class CatBCorruptedTest extends TestingContext {
       class _expr_cat_tests extends ExprCatTestSet {
         protected _expr_cat_tests() {
           super(ORDER, ArrayTB.class);
+        }
+
+        @Override
+        protected TypeB evalTWithOpenVar() {
+          return arrayTB(oVarTB("A"));
         }
       }
 
@@ -974,6 +990,21 @@ public class CatBCorruptedTest extends TestingContext {
         assertThatGet(hash)
             .throwsException(new DecodeCatWrongNodeCatExc(
                 hash, catKindB, DATA_PATH, type, ParamRefCB.class));
+      }
+
+      @Test
+      public void with_evaluation_type_having_open_var() throws Exception {
+        var evalT = evalTWithOpenVar();
+        var hash = hash(
+            hash(catKindB.marker()),
+            hash(evalT)
+        );
+        assertThatGet(hash)
+            .throwsException(new DecodeCatWrongEvalTExc(hash, catKindB, evalT));
+      }
+
+      protected TypeB evalTWithOpenVar() {
+        return oVarTB("A");
       }
     }
   }
