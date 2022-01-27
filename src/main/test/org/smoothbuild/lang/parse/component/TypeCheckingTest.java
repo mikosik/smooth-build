@@ -24,7 +24,7 @@ import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModLoader;
 
-public class AssignmentTest extends TestingContext {
+public class TypeCheckingTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
   public void value_body_type_is_assignable_to_declared_type(TestedAssignSpecS testSpec) {
