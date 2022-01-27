@@ -587,6 +587,57 @@ public class CatBTest extends TestingContext {
 
   @Nested
   class _eval_type {
+    @Nested
+    class _cannot_have_open_vars {
+      @Test
+      public void call() {
+        assertCall(() -> callCB(oVar("A")))
+            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+      }
+
+      @Test
+      public void combine() {
+        assertCall(() -> combineCB(oVar("A")))
+            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+      }
+
+      @Test
+      public void if_() {
+        assertCall(() -> ifCB(oVar("A")))
+            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+      }
+
+      @Test
+      public void invoke() {
+        assertCall(() -> invokeCB(oVar("A")))
+            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+      }
+
+      @Test
+      public void map() {
+        assertCall(() -> mapCB(arrayTB(oVar("A"))))
+            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+      }
+
+      @Test
+      public void order() {
+        assertCall(() -> orderCB(oVar("A")))
+            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+      }
+
+      @Test
+      public void param_ref() {
+        assertCall(() -> paramRefCB(oVar("A")))
+            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+      }
+
+      @Test
+      public void select() {
+        assertCall(() -> selectCB(oVar("A")))
+            .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+      }
+    }
+
     @ParameterizedTest
     @MethodSource("types")
     public void call(TypeB type) {
