@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.like.EvalLike;
-import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public sealed abstract class EvalN extends NamedN implements EvalLike
     permits FuncN, ItemN, ValN {
@@ -30,11 +29,6 @@ public sealed abstract class EvalN extends NamedN implements EvalLike
 
   public Optional<AnnN> ann() {
     return ann;
-  }
-
-  @Override
-  public Optional<TypeS> inferredType() {
-    return type();
   }
 
   @Override

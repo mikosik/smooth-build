@@ -1,7 +1,13 @@
 package org.smoothbuild.lang.parse.ast;
 
+import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+
+import java.util.Optional;
+
+import org.smoothbuild.lang.base.define.DefinedS;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.like.EvalLike;
+import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public final class RefN extends ExprN {
   private final String name;
@@ -22,6 +28,14 @@ public final class RefN extends ExprN {
 
   public EvalLike referenced() {
     return referenced;
+  }
+
+  public Optional<TypeS> referencedType() {
+    return switch (referenced) {
+      case Node n -> n.type();
+      case DefinedS d -> Optional.of(d.type());
+      default -> throw unexpectedCaseExc(referenced);
+    };
   }
 
   @Override

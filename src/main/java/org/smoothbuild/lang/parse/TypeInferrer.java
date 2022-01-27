@@ -319,7 +319,7 @@ public class TypeInferrer {
                 map(funcN.params(), ItemN::sig));
             return itemSignatures.map(NList::nList);
           } else {
-            var params = ((FuncTS) referenced.inferredType().get()).params();
+            var params = ((FuncTS) refN.referencedType().get()).params();
             return Optional.of(nList(map(params, ItemSigS::itemSigS)));
           }
         } else {
@@ -356,9 +356,9 @@ public class TypeInferrer {
           // inner function. Once we allow referencing outer function parameters (which
           // have closed vars to most inner function) then opening them in evalTypeOf()
           // won't work. We would need to pass more information from here.
-          return referenced.inferredType().map(typing::closeVars);
+          return ref.referencedType().map(typing::closeVars);
         } else {
-          return referenced.inferredType();
+          return ref.referencedType();
         }
       }
 

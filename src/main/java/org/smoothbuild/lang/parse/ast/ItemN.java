@@ -27,11 +27,6 @@ public final class ItemN extends EvalN {
     return sig;
   }
 
-  @Override
-  public Optional<TypeS> inferredType() {
-    return type();
-  }
-
   public ItemS toItem(ModPath path) {
     checkState(body().isEmpty());
     return new ItemS(type().get(), path, name(), Optional.empty(), loc());
