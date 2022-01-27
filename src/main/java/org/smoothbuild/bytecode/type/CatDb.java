@@ -226,9 +226,9 @@ public class CatDb implements TypeBF {
     return wrapHashedDbExcAsObjDbExc(() -> newMap(evalT));
   }
 
-  public OrderCB order(TypeB elemT) {
-    validateNoOpenVars(elemT);
-    return wrapHashedDbExcAsObjDbExc(() -> newOrder(elemT));
+  public OrderCB order(ArrayTB evalT) {
+    validateNoOpenVars(evalT);
+    return wrapHashedDbExcAsObjDbExc(() -> newOrder(evalT));
   }
 
   public ParamRefCB paramRef(TypeB evalT) {
@@ -509,8 +509,7 @@ public class CatDb implements TypeBF {
     return cache(new MapCB(rootHash, evalT));
   }
 
-  private OrderCB newOrder(TypeB elemT) throws HashedDbExc {
-    var evalT = array(elemT);
+  private OrderCB newOrder(ArrayTB evalT) throws HashedDbExc {
     var rootHash = writeExprRoot(ORDER, evalT);
     return newOrder(rootHash, evalT);
   }

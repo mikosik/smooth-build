@@ -49,7 +49,7 @@ public class CatBCachingTest extends TestingContext {
         catDb -> catDb.if_(catDb.int_()),
         catDb -> catDb.invoke(catDb.int_()),
         catDb -> catDb.map(catDb.array(catDb.int_())),
-        catDb -> catDb.order(catDb.int_()),
+        catDb -> catDb.order(catDb.array(catDb.int_())),
         catDb -> catDb.paramRef(catDb.int_()),
         catDb -> catDb.select(catDb.int_()),
 

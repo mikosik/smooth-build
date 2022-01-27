@@ -473,7 +473,7 @@ public class TestingContext {
   }
 
   public OrderCB orderCB(TypeB elemT) {
-    return catDb().order(elemT);
+    return catDb().order(arrayTB(elemT));
   }
 
   public ParamRefCB paramRefCB() {

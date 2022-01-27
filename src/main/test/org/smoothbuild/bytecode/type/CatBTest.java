@@ -187,7 +187,7 @@ public class CatBTest extends TestingContext {
         args(f -> f.invoke(f.int_()), "Invoke:Int"),
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
         args(f -> f.func(f.blob(), list(f.bool())), "Blob(Bool)"),
-        args(f -> f.order(f.string()), "Order:[String]"),
+        args(f -> f.order(f.array(f.string())), "Order:[String]"),
         args(f -> f.paramRef(f.int_()), "ParamRef:Int"),
         args(f -> f.select(f.int_()), "Select:Int")
     );
@@ -670,8 +670,9 @@ public class CatBTest extends TestingContext {
     @ParameterizedTest
     @MethodSource("types")
     public void order(TypeB type) {
-      assertThat(CAT_DB.order(type).evalT())
-          .isEqualTo(CAT_DB.array(type));
+      var array = CAT_DB.array(type);
+      assertThat(CAT_DB.order(array).evalT())
+          .isEqualTo(array);
     }
 
     @ParameterizedTest

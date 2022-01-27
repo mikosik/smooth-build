@@ -313,9 +313,8 @@ public class ObjDbImpl implements ObjDb {
   }
 
   private OrderB newOrder(ArrayTB evalT, ImmutableList<ObjB> elems) throws HashedDbExc {
-    var elemT = evalT.elem();
-    validateOrderElems(elemT, elems);
-    var type = catDb.order(elemT);
+    validateOrderElems(evalT.elem(), elems);
+    var type = catDb.order(evalT);
     var data = writeOrderData(elems);
     var root = newRoot(type, data);
     return type.newObj(root, this);
