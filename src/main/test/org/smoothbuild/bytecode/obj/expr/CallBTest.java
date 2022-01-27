@@ -61,6 +61,12 @@ public class CallBTest extends TestingContext {
         .throwsException(argsNotMatchingParamsException("{Int}", "{String}"));
   }
 
+  private static IllegalArgumentException argsNotMatchingParamsException(
+      String args, String params) {
+    return new IllegalArgumentException("Arguments evaluation type `" + args + "` should be"
+        + " equal to callable type parameters `" + params + "`.");
+  }
+
   @Test
   public void creating_call_with_resT_being_subtype_of_evalT() {
     var func = funcB(list(), arrayB(nothingTB()));
@@ -77,10 +83,12 @@ public class CallBTest extends TestingContext {
             "Call's result type `Int` cannot be assigned to evalT `String`."));
   }
 
-  private static IllegalArgumentException argsNotMatchingParamsException(
-      String args, String params) {
-    return new IllegalArgumentException("Arguments evaluation type `" + args + "` should be"
-        + " equal to callable type parameters `" + params + "`.");
+  @Test
+  public void creating_call_with_resT_having_open_vars_causes_exc() {
+    var a = oVarTB("A");
+    var func = funcB(a, list(a), paramRefB(close(a), 0));
+    assertCall(() -> callB(a, func, intB(7)))
+        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
   }
 
   @Test

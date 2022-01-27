@@ -20,6 +20,13 @@ public class CombineBTest extends TestingContext {
   }
 
   @Test
+  public void creating_combine_with_resT_having_open_vars_causes_exc() {
+    var a = oVarTB("A");
+    assertCall(() -> combineB(tupleTB(a)))
+        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+  }
+
+  @Test
   public void item_not_matching_type_specified_in_category_causes_exc() {
     assertCall(() -> combineB(tupleTB(intTB()), stringB()))
         .throwsException(IllegalArgumentException.class);

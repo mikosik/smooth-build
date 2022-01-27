@@ -57,6 +57,14 @@ public class SelectBTest extends TestingContext {
   }
 
   @Test
+  public void creating_select_with_resT_having_open_vars_causes_exc() {
+    var a = oVarTB("A");
+    var tuple = tupleB(intB(7));
+    assertCall(() -> selectB(a, tuple, intB(0)))
+        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+  }
+
+  @Test
   public void data_returns_tuple_and_index() {
     var selectable = tupleB(tupleTB(intTB()), intB(7));
     var index = intB(0);

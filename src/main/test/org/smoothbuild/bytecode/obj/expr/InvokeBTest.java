@@ -81,6 +81,14 @@ public class InvokeBTest extends TestingContext {
             "Method's result type `Int` cannot be assigned to evalT `String`."));
   }
 
+  @Test
+  public void creating_invoke_with_resT_having_open_vars_causes_exc() {
+    var a = oVarTB("A");
+    var method = methodB(methodTB(a, list(a)));
+    assertCall(() -> invokeB(a, method, intB()))
+        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+  }
+
   private static IllegalArgumentException argsNotMatchingParamsException(
       String args, String params) {
     return new IllegalArgumentException("Arguments evaluation type `" + args + "` should be"

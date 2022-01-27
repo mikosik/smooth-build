@@ -1,6 +1,7 @@
 package org.smoothbuild.bytecode.obj.expr;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.math.BigInteger;
@@ -22,6 +23,13 @@ public class ParamRefBTest extends TestingContext {
   public void value_returns_stored_value() {
     assertThat(paramRefB(123).value())
         .isEqualTo(BigInteger.valueOf(123));
+  }
+
+  @Test
+  public void creating_param_ref_with_resT_having_open_vars_causes_exc() {
+    var a = oVarTB("A");
+    assertCall(() -> paramRefB(a, 0))
+        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
   }
 
   @Nested

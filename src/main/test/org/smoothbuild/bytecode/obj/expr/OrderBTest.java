@@ -48,6 +48,13 @@ public class OrderBTest extends TestingContext {
   }
 
   @Test
+  public void creating_order_with_resT_having_open_vars_causes_exc() {
+    var a = oVarTB("A");
+    assertCall(() -> orderB(a))
+        .throwsException(new IllegalArgumentException("evalT must not have open vars"));
+  }
+
+  @Test
   public void elems_returns_elems() {
     assertThat(orderB(intB(2)).elems())
         .isEqualTo(list(intB(2)));
