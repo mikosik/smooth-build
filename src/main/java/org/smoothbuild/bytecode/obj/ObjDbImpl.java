@@ -183,7 +183,7 @@ public class ObjDbImpl implements ObjDb {
     return wrapHashedDbExcAsObjDbExc(() -> newSelect(evalT, selectable, index));
   }
 
-  private void validateNoOpenVars(TypeB evalT) {
+  private static void validateNoOpenVars(TypeB evalT) {
     if (evalT.hasOpenVars()) {
       throw new IllegalArgumentException("evalT must not have open vars");
     }
