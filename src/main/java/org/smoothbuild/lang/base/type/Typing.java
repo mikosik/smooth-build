@@ -274,10 +274,10 @@ public class Typing<T extends Type> {
   }
 
   public VarBounds<T> closeVars(VarBounds<T> varBounds) {
-    ImmutableMap<VarT, Bounded<T>> collect = varBounds.map().values().stream()
-        .map(bounded -> new Bounded((VarT) closeVars((T) bounded.var()), bounded.bounds()))
-        .collect(toImmutableMap(b -> b.var(), b -> b));
-    return new VarBounds<>(collect);
+    var map = varBounds.map().values().stream()
+        .map(bounded -> new Bounded<>((VarT) closeVars((T) bounded.var()), bounded.bounds()))
+        .collect(toImmutableMap(Bounded::var, b -> b));
+    return new VarBounds<>(map);
   }
 
   public T rebuildComposed(T type, ImmutableList<T> covars, ImmutableList<T> contravars) {
