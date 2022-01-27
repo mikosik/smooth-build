@@ -185,6 +185,112 @@ public class VisibilityTest extends TestingContext {
             .loadsWithError(1, "`withDefault` is undefined.");
       }
     }
+
+    @Nested
+    class _undefined {
+      @Nested
+      class _eval_cannot_be_used_as {
+        @Test
+        public void func_arg() {
+          var code = """
+              String myFunc(Blob b) = "abc";
+              result = myFunc(undefined);
+              """;
+          module(code)
+              .loadsWithError(2, "`undefined` is undefined.");
+        }
+
+        @Test
+        public void func_body() {
+          var code = """
+              result() = undefined;
+              """;
+          module(code)
+              .loadsWithError(1, "`undefined` is undefined.");
+        }
+
+        @Test
+        public void func_in_call_expression() {
+          var code = """
+              result = undefined();
+              """;
+          module(code)
+              .loadsWithError(1, "`undefined` is undefined.");
+        }
+
+        @Test
+        public void value_body() {
+          var code = """
+              result = undefined;
+              """;
+          module(code)
+              .loadsWithError(1, "`undefined` is undefined.");
+        }
+
+        @Test
+        public void array_elem() {
+          var code = """
+              result = [ undefined ];
+              """;
+          module(code)
+              .loadsWithError(1, "`undefined` is undefined.");
+        }
+
+        @Test
+        public void param_default_arg() {
+          var code = """
+              String myFunc(Blob b = undefined) = "abc";
+              """;
+          module(code)
+              .loadsWithError(1, "`undefined` is undefined.");
+        }
+      }
+
+      @Nested
+      class _type_cannot_be_used_as_type_of {
+        @Test
+        public void value() {
+          var code = """
+              @Native("Impl.met")
+              Nothing nothingFunc();
+              Undefined myValue = nothingFunc();
+              """;
+          module(code)
+              .loadsWithError(3, "`Undefined` type is undefined.");
+        }
+
+        @Test
+        public void func_result() {
+          var code = """
+              @Native("Impl.met")
+              Undefined myFunc();
+              """;
+          module(code)
+              .loadsWithError(2, "`Undefined` type is undefined.");
+        }
+
+        @Test
+        public void param() {
+          var code = """
+              String myFunc(Undefined param) = "abc";
+              """;
+          module(code)
+              .loadsWithError(1, "`Undefined` type is undefined.");
+        }
+
+        @Test
+        public void field() {
+          var code = """
+              MyStruct {
+                Undefined field
+              }
+              """;
+          module(code)
+              .loadsWithError(2, "`Undefined` type is undefined.");
+        }
+      }
+    }
+
   }
 
   @Nested
