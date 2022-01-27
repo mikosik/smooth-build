@@ -12,7 +12,7 @@ public class DecodeCatWrongEvalTExcTest extends TestingContext {
   public void message() {
     var exc = new DecodeCatWrongEvalTExc(Hash.of(33), CatKindB.COMBINE, arrayTB(oVarTB("A")));
     assertThat(exc.getMessage())
-        .isEqualTo("Cannot decode COMBINE type at 2db3ed483064ec0fac807c34b54e934e5201d658. "
+        .isEqualTo("Cannot decode COMBINE category at 2db3ed483064ec0fac807c34b54e934e5201d658. "
             + "Cannot decode its node at `data` path in Merkle tree. It is equal to `[A]` but "
             + "evalT should not contain open-vars.");
   }
