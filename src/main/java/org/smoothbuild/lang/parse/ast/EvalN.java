@@ -8,20 +8,20 @@ import org.smoothbuild.lang.base.type.impl.TypeS;
 
 public sealed abstract class EvalN extends NamedN implements EvalLike
     permits FuncN, ItemN, ValN {
-  private final Optional<TypeN> typeNode;
+  private final Optional<TypeN> evalT;
   private final Optional<ExprN> body;
   private final Optional<AnnN> ann;
 
-  public EvalN(Optional<TypeN> typeNode, String name, Optional<ExprN> body, Optional<AnnN> ann,
+  public EvalN(Optional<TypeN> evalT, String name, Optional<ExprN> body, Optional<AnnN> ann,
       Loc loc) {
     super(name, loc);
-    this.typeNode = typeNode;
+    this.evalT = evalT;
     this.body = body;
     this.ann = ann;
   }
 
-  public Optional<TypeN> typeNode() {
-    return typeNode;
+  public Optional<TypeN> evalT() {
+    return evalT;
   }
 
   public Optional<ExprN> body() {

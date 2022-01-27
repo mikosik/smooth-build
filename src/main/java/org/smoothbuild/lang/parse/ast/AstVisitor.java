@@ -24,7 +24,7 @@ public class AstVisitor {
   }
 
   public void visitField(ItemN field) {
-    field.typeNode().ifPresent(this::visitType);
+    field.evalT().ifPresent(this::visitType);
   }
 
   public void visitEvaluable(List<EvalN> evals) {
@@ -41,13 +41,13 @@ public class AstVisitor {
 
   public void visitValue(ValN valN) {
     valN.ann().ifPresent(this::visitAnn);
-    valN.typeNode().ifPresent(this::visitType);
+    valN.evalT().ifPresent(this::visitType);
     valN.body().ifPresent(this::visitExpr);
   }
 
   public void visitFunc(FuncN funcN) {
     funcN.ann().ifPresent(this::visitAnn);
-    funcN.typeNode().ifPresent(this::visitType);
+    funcN.evalT().ifPresent(this::visitType);
     visitParams(funcN.params());
     funcN.body().ifPresent(this::visitExpr);
   }
@@ -61,7 +61,7 @@ public class AstVisitor {
   }
 
   public void visitParam(int index, ItemN param) {
-    param.typeNode().ifPresent(this::visitType);
+    param.evalT().ifPresent(this::visitType);
     param.body().ifPresent(this::visitExpr);
   }
 

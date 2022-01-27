@@ -82,7 +82,7 @@ public class TypeInferrer {
       @Override
       public void visitField(ItemN itemN) {
         super.visitField(itemN);
-        var typeOpt = itemN.typeNode().get().type();
+        var typeOpt = itemN.evalT().get().type();
         typeOpt.flatMap((t) -> {
           if (t.isPolytype()) {
             var message = "Field type cannot be polymorphic. Found field %s with type %s."
@@ -101,7 +101,7 @@ public class TypeInferrer {
       public void visitFunc(FuncN funcN) {
         visitParams(funcN.params());
         funcN.body().ifPresent(this::visitExpr);
-        var resN = funcN.typeNode().orElse(null);
+        var resN = funcN.evalT().orElse(null);
         funcN.setType(funcTOpt(resN, evalTOfTopEval(funcN), funcN.paramTsOpt()));
       }
 
@@ -156,8 +156,8 @@ public class TypeInferrer {
       private Optional<TypeS> evalTypeOf(EvalN eval, BiConsumer<TypeS, TypeS> assignmentChecker) {
         if (eval.body().isPresent()) {
           var exprT = eval.body().get().type();
-          if (eval.typeNode().isPresent()) {
-            var type = createType(eval.typeNode().get());
+          if (eval.evalT().isPresent()) {
+            var type = createType(eval.evalT().get());
             type.ifPresent(target -> exprT.ifPresent(source -> {
               var targetInAssignment = eval instanceof FuncN ? typing.closeVars(target) : target;
               assignmentChecker.accept(targetInAssignment, source);
@@ -167,8 +167,8 @@ public class TypeInferrer {
             return exprT.map(typing::openVars);
           }
         } else {
-          if (eval.typeNode().isPresent()) {
-            return createType(eval.typeNode().get());
+          if (eval.evalT().isPresent()) {
+            return createType(eval.evalT().get());
           } else {
             logError(eval, eval.q() + " is native so it should have declared result type.");
             return empty();

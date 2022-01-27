@@ -100,7 +100,7 @@ public class TopEvalLoader {
   }
 
   public ItemS createParam(ItemN param, ModPath path) {
-    var type = param.typeNode().get().type().get();
+    var type = param.evalT().get().type().get();
     var name = param.name();
     var defaultArg = param.body().map(this::createExpr);
     return new ItemS(type, path, name, defaultArg, param.loc());

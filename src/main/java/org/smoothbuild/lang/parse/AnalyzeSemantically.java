@@ -96,23 +96,23 @@ public class AnalyzeSemantically {
       @Override
       public void visitFunc(FuncN funcN) {
         super.visitFunc(funcN);
-        funcN.typeNode().ifPresent(this::assertTypeIsDefined);
+        funcN.evalT().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
       public void visitValue(ValN valN) {
         super.visitValue(valN);
-        valN.typeNode().ifPresent(this::assertTypeIsDefined);
+        valN.evalT().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
       public void visitParam(int index, ItemN param) {
-        param.typeNode().ifPresent(this::assertTypeIsDefined);
+        param.evalT().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
       public void visitField(ItemN field) {
-        field.typeNode().ifPresent(this::assertTypeIsDefined);
+        field.evalT().ifPresent(this::assertTypeIsDefined);
       }
 
       private void assertTypeIsDefined(TypeN type) {
