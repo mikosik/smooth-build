@@ -15,13 +15,13 @@ import org.smoothbuild.vm.java.MethodLoader;
 
 public class InvokeAlgorithm extends Algorithm {
   private final MethodB methodB;
-  private final String extendedName;
+  private final String name;
   private final MethodLoader methodLoader;
 
-  public InvokeAlgorithm(TypeB outputT, String extendedName, MethodB method,
+  public InvokeAlgorithm(TypeB outputT, String name, MethodB method,
       MethodLoader methodLoader) {
     super(outputT, method.isPure().toJ());
-    this.extendedName = extendedName;
+    this.name = name;
     this.methodLoader = methodLoader;
     this.methodB = method;
   }
@@ -33,19 +33,19 @@ public class InvokeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    var method = methodLoader.load(extendedName, methodB);
+    var method = methodLoader.load(name, methodB);
     try {
       var result = (ValB) method.invoke(null, createArgs(nativeApi, input.vals()));
       var hasErrors = containsErrors(nativeApi.messages());
       if (result == null) {
         if (!hasErrors) {
-          nativeApi.log().error(q(extendedName)
+          nativeApi.log().error(q(name)
               + " has faulty native implementation: it returned `null` but logged no error.");
         }
         return new Output(null, nativeApi.messages());
       }
       if (!outputT().equals(result.cat())) {
-        nativeApi.log().error(q(extendedName)
+        nativeApi.log().error(q(name)
             + " has faulty native implementation: Its declared result type == "
             + outputT().q()
             + " but it returned object with type == " + result.cat().q() + ".");
@@ -58,7 +58,7 @@ public class InvokeAlgorithm extends Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallExc(q(extendedName)
+      throw new NativeCallExc(q(name)
           + " threw java exception from its native code.", e.getCause());
     }
   }
