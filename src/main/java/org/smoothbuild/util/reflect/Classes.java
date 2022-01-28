@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
@@ -44,7 +45,14 @@ public class Classes {
   }
 
   public static void saveBytecodeInJar(Path jarPath, Class<?>... classes) throws IOException {
-    try (JarOutputStream jarOutputStream = jarOutputStream(jarPath)) {
+    try (var outputStream = new FileOutputStream(jarPath.toFile())) {
+      saveByteCodeInJar(outputStream, classes);
+    }
+  }
+
+  public static void saveByteCodeInJar(OutputStream outputStream, Class<?>... classes)
+      throws IOException {
+    try (JarOutputStream jarOutputStream = new JarOutputStream(outputStream)) {
       for (Class<?> clazz : classes) {
         jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
         try (InputStream byteCodeInputStream = byteCodeAsInputStream(clazz)) {
@@ -52,10 +60,6 @@ public class Classes {
         }
       }
     }
-  }
-
-  private static JarOutputStream jarOutputStream(Path jarPath) throws IOException {
-    return new JarOutputStream(new FileOutputStream(jarPath.toFile()));
   }
 
   public static InputStream byteCodeAsInputStream(Class<?> clazz) {
