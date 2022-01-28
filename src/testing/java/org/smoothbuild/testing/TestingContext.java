@@ -13,7 +13,9 @@ import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
 import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.reflect.Classes.saveByteCodeInJar;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.List;
@@ -515,6 +517,14 @@ public class TestingContext {
         .arrayBuilder(arrayTB(elemT))
         .addAll(list(elems))
         .build();
+  }
+
+  public BlobB blobBWithJavaByteCode(Class<?>... classes) throws IOException {
+    var blobBBuilder = objDb().blobBuilder();
+    try (var outputStream = blobBBuilder.sink().outputStream()) {
+      saveByteCodeInJar(outputStream, classes);
+    }
+    return blobBBuilder.build();
   }
 
   public BlobB blobB() {
