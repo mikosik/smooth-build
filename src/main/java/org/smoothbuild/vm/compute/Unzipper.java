@@ -31,6 +31,11 @@ public class Unzipper {
   }
 
   public ArrayB unzip(BlobB blob, Predicate<String> filter) throws IOException {
+    // We have to use ZipFile (that can only unzip disk files) instead of
+    // ZipInputStream (that can unzip in memory stream) because the latter
+    // cannot detect corrupted zip-files correctly. Its readLOC() (private) method
+    // returns null in case of some errors as if no more zip entries were present
+    // while in fact those entries might be corrupted.
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     var fileArrayBuilder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
     File tempFile = copyToTempFile(blob);
