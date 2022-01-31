@@ -3,16 +3,16 @@ package org.smoothbuild.io.fs.mem;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 public class MemoryDirTest {
   private final MemoryElement child = createChild(path("childName1"));
   private final MemoryElement child2 = createChild(path("childName2"));
-  private final Path path = path("name");
+  private final PathS path = path("name");
   private final MemoryDir parent = mock(MemoryDir.class);
   private MemoryDir memoryDir;
 
@@ -115,7 +115,7 @@ public class MemoryDirTest {
         .throwsException(UnsupportedOperationException.class);
   }
 
-  private static MemoryElement createChild(Path name) {
+  private static MemoryElement createChild(PathS name) {
     MemoryElement childMock = mock(MemoryElement.class);
     when(childMock.name()).thenReturn(name);
     return childMock;

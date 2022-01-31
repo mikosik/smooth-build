@@ -1,6 +1,6 @@
 package org.smoothbuild.io.fs.base;
 
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import org.smoothbuild.io.fs.space.FilePath;

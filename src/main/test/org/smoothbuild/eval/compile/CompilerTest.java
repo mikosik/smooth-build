@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.io.fs.space.FilePath.filePath;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.lang.base.define.Loc.loc;

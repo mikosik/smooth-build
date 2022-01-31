@@ -3,14 +3,14 @@ package org.smoothbuild.io.fs.space;
 import static java.util.Arrays.asList;
 
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 /**
  * This class is immutable.
  */
-public record FilePath(Space space, Path path) {
+public record FilePath(Space space, PathS path) {
 
-  public static FilePath filePath(Space space, Path path) {
+  public static FilePath filePath(Space space, PathS path) {
     return new FilePath(space, path);
   }
 

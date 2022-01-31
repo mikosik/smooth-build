@@ -5,5 +5,5 @@ import java.io.IOException;
 public interface PathIterator {
   public boolean hasNext();
 
-  public Path next() throws IOException;
+  public PathS next() throws IOException;
 }

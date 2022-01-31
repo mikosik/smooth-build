@@ -3,14 +3,14 @@ package org.smoothbuild.io.fs.mem;
 import java.io.IOException;
 import java.util.List;
 
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 
 public interface MemoryElement {
-  public Path name();
+  public PathS name();
 
   public MemoryDir parent();
 
@@ -18,11 +18,11 @@ public interface MemoryElement {
 
   public boolean isDir();
 
-  public boolean hasChild(Path name);
+  public boolean hasChild(PathS name);
 
-  public MemoryElement child(Path name);
+  public MemoryElement child(PathS name);
 
-  public List<Path> childNames();
+  public List<PathS> childNames();
 
   public void addChild(MemoryElement elem);
 

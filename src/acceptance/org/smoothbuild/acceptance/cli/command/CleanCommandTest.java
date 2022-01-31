@@ -21,7 +21,7 @@ import org.smoothbuild.acceptance.CommandWithArgs;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 public class CleanCommandTest {
   @Nested
@@ -42,7 +42,7 @@ public class CleanCommandTest {
           .containsExactly(absolutePath(SMOOTH_LOCK_PATH.toString()));
     }
 
-    private void createDirInProject(Path path) throws IOException {
+    private void createDirInProject(PathS path) throws IOException {
       createDirectories(absolutePath(path.toString()));
     }
 

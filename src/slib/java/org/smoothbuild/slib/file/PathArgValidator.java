@@ -1,18 +1,18 @@
 package org.smoothbuild.slib.file;
 
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.io.fs.base.IllegalPathExc;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 
 public class PathArgValidator {
-  public static Path validatedProjectPath(NativeApi nativeApi, String name, StringB path) {
+  public static PathS validatedProjectPath(NativeApi nativeApi, String name, StringB path) {
     String value = path.toJ();
     switch (value) {
       case ".":
-        return Path.root();
+        return PathS.root();
       case "":
         nativeApi.log().error("Param `" + name + "` has illegal value. Path cannot be empty.");
         return null;

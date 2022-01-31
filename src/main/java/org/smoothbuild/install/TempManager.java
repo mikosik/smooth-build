@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 /**
  * This class is thread-safe.
@@ -20,7 +20,7 @@ public class TempManager {
   public TempManager() {
   }
 
-  public Path tempPath() {
+  public PathS tempPath() {
     return TEMPORARY_PATH.appendPart(Integer.toString(id.getAndIncrement()));
   }
 }

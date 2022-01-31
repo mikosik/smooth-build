@@ -21,7 +21,7 @@ import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.PathState;
 
 import com.google.common.collect.ImmutableList;
@@ -34,10 +34,10 @@ import okio.BufferedSource;
  */
 public class HashedDb {
   private final FileSystem fileSystem;
-  private final Path rootPath;
+  private final PathS rootPath;
   private final TempManager tempManager;
 
-  public HashedDb(FileSystem fileSystem, Path rootPath, TempManager tempManager) {
+  public HashedDb(FileSystem fileSystem, PathS rootPath, TempManager tempManager) {
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
     this.tempManager = tempManager;
@@ -163,7 +163,7 @@ public class HashedDb {
   }
 
   public boolean contains(Hash hash) throws CorruptedHashedDbExc {
-    Path path = toPath(hash);
+    PathS path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> true;
@@ -174,7 +174,7 @@ public class HashedDb {
   }
 
   public BufferedSource source(Hash hash) throws HashedDbExc {
-    Path path = toPath(hash);
+    PathS path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> sourceFile(hash, path);
@@ -184,7 +184,7 @@ public class HashedDb {
     };
   }
 
-  private BufferedSource sourceFile(Hash hash, Path path) throws HashedDbExc {
+  private BufferedSource sourceFile(Hash hash, PathS path) throws HashedDbExc {
     try {
       return fileSystem.source(path);
     } catch (IOException e) {
@@ -200,11 +200,11 @@ public class HashedDb {
     }
   }
 
-  private Path toPath(Hash hash) {
+  private PathS toPath(Hash hash) {
     return dataFullPath(rootPath, hash);
   }
 
-  public static Path dataFullPath(Path hashedDbPath, Hash hash) {
+  public static PathS dataFullPath(PathS hashedDbPath, Hash hash) {
     return hashedDbPath.appendPart(hash.toHexString());
   }
 }

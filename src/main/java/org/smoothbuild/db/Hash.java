@@ -6,6 +6,7 @@ import static okio.Okio.source;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.google.common.hash.HashCode;
@@ -52,7 +53,7 @@ public class Hash {
     return HashingSink.sha1(sink);
   }
 
-  public static Hash of(java.nio.file.Path path) throws IOException {
+  public static Hash of(Path path) throws IOException {
     return Hash.of(source(path.toFile()));
   }
 

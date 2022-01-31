@@ -2,7 +2,7 @@ package org.smoothbuild.slib.file.match;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -11,12 +11,12 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 public class PathMatcherTest {
   @ParameterizedTest
   @MethodSource("data_set")
-  public void test_matching(String pattern, Path path, boolean expected) {
+  public void test_matching(String pattern, PathS path, boolean expected) {
     assertThat(pathMatcher(pattern).test(path))
         .isEqualTo(expected);
   }

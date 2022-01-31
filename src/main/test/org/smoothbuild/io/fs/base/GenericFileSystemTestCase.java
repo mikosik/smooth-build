@@ -1,7 +1,7 @@
 package org.smoothbuild.io.fs.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
@@ -18,17 +18,17 @@ import okio.ByteString;
 public abstract class GenericFileSystemTestCase {
   private static final ByteString bytes = ByteString.encodeUtf8("abc");
   protected FileSystem fileSystem;
-  protected Path path = path("some/dir/myFile");
-  protected Path path2 = path("other/dir/otherFile");
+  protected PathS path = path("some/dir/myFile");
+  protected PathS path2 = path("other/dir/otherFile");
 
-  private final Path dir = path("my/dir");
-  private final Path linkPath = path("my/link");
+  private final PathS dir = path("my/dir");
+  private final PathS linkPath = path("my/link");
 
   // pathKind()
 
   @Test
   public void rooth_path_is_a_dir() {
-    assertThat(fileSystem.pathState(Path.root()))
+    assertThat(fileSystem.pathState(PathS.root()))
         .isEqualTo(DIR);
   }
 
@@ -121,7 +121,7 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void source_throws_exception_when_path_is_root_dir() {
-    assertCall(() -> fileSystem.source(Path.root()))
+    assertCall(() -> fileSystem.source(PathS.root()))
         .throwsException(new IOException("File '.' doesn't exist. It is a dir."));
   }
 
@@ -245,7 +245,7 @@ public abstract class GenericFileSystemTestCase {
   public void deleting_root_path_removes_all_files() throws Exception {
     createEmptyFile(path);
     createEmptyFile(path2);
-    fileSystem.delete(Path.root());
+    fileSystem.delete(PathS.root());
     assertThat(fileSystem.pathState(path))
         .isEqualTo(NOTHING);
     assertThat(fileSystem.pathState(path2))
@@ -354,9 +354,9 @@ public abstract class GenericFileSystemTestCase {
     createFile(path(stringPath), ByteString.of());
   }
 
-  protected void createEmptyFile(Path path) throws IOException {
+  protected void createEmptyFile(PathS path) throws IOException {
     createFile(path, ByteString.of());
   }
 
-  protected abstract void createFile(Path path, ByteString content) throws IOException;
+  protected abstract void createFile(PathS path, ByteString content) throws IOException;
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.io.fs.base;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
@@ -18,7 +18,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.google.common.testing.EqualsTester;
 
-public class PathTest {
+public class PathSTest {
   @ParameterizedTest
   @MethodSource("paths")
   public void path_creation(String value, boolean isValid) {
@@ -44,21 +44,21 @@ public class PathTest {
 
   @Test
   public void parent_of_root_dir_throws_exception() {
-    assertCall(() -> Path.root().parent())
+    assertCall(() -> PathS.root().parent())
         .throwsException(IllegalArgumentException.class);
   }
 
   @ParameterizedTest
   @MethodSource("parentArguments")
-  public void parent_of_normal_path(Path path, Path expectedParent) {
+  public void parent_of_normal_path(PathS path, PathS expectedParent) {
     assertThat(path.parent())
         .isEqualTo(expectedParent);
   }
 
   public static Stream<Arguments> parentArguments() {
     return Stream.of(
-        arguments(path("abc"), Path.root()),
-        arguments(path(" "), Path.root()),
+        arguments(path("abc"), PathS.root()),
+        arguments(path(" "), PathS.root()),
         arguments(path("abc/def"), path("abc")),
         arguments(path("abc/def/ghi"), path("abc/def")),
         arguments(path("abc/def/ghi/ijk"), path("abc/def/ghi")));
@@ -225,8 +225,8 @@ public class PathTest {
   @ParameterizedTest
   @MethodSource("partsArguments")
   public void parts(String path, List<String> expectedParts) {
-    List<Path> actualParts = path(path).parts();
-    assertThat(map(actualParts, Path::toString))
+    List<PathS> actualParts = path(path).parts();
+    assertThat(map(actualParts, PathS::toString))
         .isEqualTo(expectedParts);
   }
 
@@ -244,7 +244,7 @@ public class PathTest {
 
   @Test
   public void last_part_of_root_dir_throws_exception() {
-    assertCall(() -> Path.root().lastPart())
+    assertCall(() -> PathS.root().lastPart())
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -266,7 +266,7 @@ public class PathTest {
 
   @Test
   public void first_part_of_root_dir_throws_exception() {
-    assertCall(() -> Path.root().firstPart())
+    assertCall(() -> PathS.root().firstPart())
         .throwsException(IllegalArgumentException.class);
   }
 

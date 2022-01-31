@@ -10,7 +10,7 @@ import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
 import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.ForwardingSink;
@@ -18,11 +18,11 @@ import okio.Okio;
 
 public class OutputClassFile extends SimpleJavaFileObject {
   private final ArrayBBuilder fileArrayBuilder;
-  private final Path path;
+  private final PathS path;
   private final BlobBBuilder contentBuilder;
   private final NativeApi nativeApi;
 
-  public OutputClassFile(ArrayBBuilder fileArrayBuilder, Path path, NativeApi nativeApi) {
+  public OutputClassFile(ArrayBBuilder fileArrayBuilder, PathS path, NativeApi nativeApi) {
     super(URI.create("class:///" + path.toString()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;

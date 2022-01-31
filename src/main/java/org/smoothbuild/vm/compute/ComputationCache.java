@@ -20,7 +20,7 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.vm.job.algorithm.Output;
@@ -58,7 +58,7 @@ public class ComputationCache {
   }
 
   public synchronized boolean contains(Hash taskHash) throws ComputationCacheExc {
-    Path path = toPath(taskHash);
+    PathS path = toPath(taskHash);
     PathState pathState = fileSystem.pathState(path);
     return switch (pathState) {
       case FILE -> true;
@@ -102,7 +102,7 @@ public class ComputationCache {
     }
   }
 
-  static Path toPath(Hash computationHash) {
+  static PathS toPath(Hash computationHash) {
     return COMPUTATION_CACHE_PATH.appendPart(computationHash.toHexString());
   }
 }

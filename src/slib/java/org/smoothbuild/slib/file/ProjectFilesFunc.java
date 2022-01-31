@@ -10,14 +10,14 @@ import java.io.IOException;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.vm.compute.Container;
 
 public class ProjectFilesFunc {
   public static ArrayB func(Container container, StringB dir) throws IOException {
-    Path path = validatedProjectPath(container, "dir", dir);
+    PathS path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;
     }
@@ -42,19 +42,19 @@ public class ProjectFilesFunc {
     }
   }
 
-  private static ArrayB readFiles(Container container, FileSystem fileSystem, Path dir)
+  private static ArrayB readFiles(Container container, FileSystem fileSystem, PathS dir)
       throws IOException {
     var fileArrayBuilder = container.factory().arrayBuilderWithElems(container.factory().fileT());
     var reader = new FileReader(container);
     if (dir.isRoot()) {
-      for (Path path : fileSystem.files(Path.root())) {
+      for (PathS path : fileSystem.files(PathS.root())) {
         if (!path.equals(SMOOTH_DIR)) {
           PathState pathState = fileSystem.pathState(path);
           switch (pathState) {
             case DIR:
               for (PathIterator it = recursivePathsIterator(fileSystem, path); it.hasNext(); ) {
-                Path currentPath = it.next();
-                Path projectPath = path.append(currentPath);
+                PathS currentPath = it.next();
+                PathS projectPath = path.append(currentPath);
                 fileArrayBuilder.add(reader.createFile(projectPath, projectPath));
               }
               break;
@@ -68,7 +68,7 @@ public class ProjectFilesFunc {
       }
     } else {
       for (PathIterator it = recursivePathsIterator(fileSystem, dir); it.hasNext(); ) {
-        Path path = it.next();
+        PathS path = it.next();
         fileArrayBuilder.add(reader.createFile(path, dir.append(path)));
       }
     }

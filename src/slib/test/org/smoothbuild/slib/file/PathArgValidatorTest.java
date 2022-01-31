@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.testing.TestingContext;
 
 public class PathArgValidatorTest extends TestingContext {
@@ -42,7 +42,7 @@ public class PathArgValidatorTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("listOfInvalidProjectPaths")
   public void illegal_project_paths_are_reported(String path) {
-    Path name = validatedProjectPath(container(), "name", stringB(path));
+    PathS name = validatedProjectPath(container(), "name", stringB(path));
     assertThat(name)
         .isNull();
     container().messages()

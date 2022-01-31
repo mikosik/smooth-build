@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 import com.google.common.collect.ImmutableList;
 
@@ -14,16 +14,16 @@ import okio.Sink;
 
 public class MemoryDir implements MemoryElement {
   private final MemoryDir parent;
-  private final Path name;
-  private final Map<Path, MemoryElement> map = new HashMap<>();
+  private final PathS name;
+  private final Map<PathS, MemoryElement> map = new HashMap<>();
 
-  public MemoryDir(MemoryDir parent, Path name) {
+  public MemoryDir(MemoryDir parent, PathS name) {
     this.parent = parent;
     this.name = name;
   }
 
   @Override
-  public Path name() {
+  public PathS name() {
     return name;
   }
 
@@ -43,12 +43,12 @@ public class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public boolean hasChild(Path name) {
+  public boolean hasChild(PathS name) {
     return map.containsKey(name);
   }
 
   @Override
-  public MemoryElement child(Path name) {
+  public MemoryElement child(PathS name) {
     MemoryElement result = map.get(name);
     if (result == null) {
       throw new IllegalArgumentException("Element '" + name + "' does not exist.");
@@ -57,13 +57,13 @@ public class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public List<Path> childNames() {
+  public List<PathS> childNames() {
     return ImmutableList.copyOf(map.keySet());
   }
 
   @Override
   public void addChild(MemoryElement elem) {
-    Path elemName = elem.name();
+    PathS elemName = elem.name();
     if (map.containsKey(elemName)) {
       throw new IllegalStateException("Dir already contains child with name '" + elemName
           + "'.");

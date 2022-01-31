@@ -1,7 +1,7 @@
 package org.smoothbuild.io.fs.space;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
 import com.google.common.collect.ImmutableMap;
@@ -35,7 +35,7 @@ public class FileResolverTest {
     @Test
     public void of_file() throws IOException {
       String content = "some string";
-      Path path = path("file.txt");
+      PathS path = path("file.txt");
       createFile(path, content);
 
       Hash hash = fileResolver.hashOf(filePath(PRJ, path));
@@ -47,7 +47,7 @@ public class FileResolverTest {
     @Test
     public void is_cached() throws IOException {
       String content = "some string";
-      Path path = path("file.txt");
+      PathS path = path("file.txt");
       FilePath filePath = filePath(PRJ, path);
       createFile(path, content);
       Hash hash1 = fileResolver.hashOf(filePath);
@@ -61,7 +61,7 @@ public class FileResolverTest {
     @Test
     public void is_cached_when_calling_readFileContentAndCacheHash() throws IOException {
       String content = "some string";
-      Path path = path("file.txt");
+      PathS path = path("file.txt");
       FilePath filePath = filePath(PRJ, path);
       createFile(path, content);
       fileResolver.readFileContentAndCacheHash(filePath);
@@ -77,7 +77,7 @@ public class FileResolverTest {
   class _path_state {
     @Test
     public void of_file() throws IOException {
-      Path path = path("file.txt");
+      PathS path = path("file.txt");
       createFile(path, "some string");
       assertThat(fileResolver.pathState(filePath(PRJ, path)))
           .isEqualTo(FILE);
@@ -85,7 +85,7 @@ public class FileResolverTest {
 
     @Test
     public void of_directory() throws IOException {
-      Path path = path("directory");
+      PathS path = path("directory");
       fileSystem.createDir(path);
       assertThat(fileResolver.pathState(filePath(PRJ, path)))
           .isEqualTo(DIR);
@@ -93,13 +93,13 @@ public class FileResolverTest {
 
     @Test
     public void of_nothing() {
-      Path path = path("file.txt");
+      PathS path = path("file.txt");
       assertThat(fileResolver.pathState(filePath(PRJ, path)))
           .isEqualTo(NOTHING);
     }
   }
 
-  private void createFile(Path path, String string) throws IOException {
+  private void createFile(PathS path, String string) throws IOException {
     writeAndClose(fileSystem.sink(path), s -> s.writeUtf8(string));
   }
 }

@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
 
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.util.io.DataWriter;
 
@@ -26,11 +26,11 @@ public class HashingBufferedSink implements BufferedSink {
   private final HashingSink hashingSink;
   private final BufferedSink bufferedSink;
   private final FileSystem fileSystem;
-  private final Path tempPath;
-  private final Path hashedDbRootPath;
+  private final PathS tempPath;
+  private final PathS hashedDbRootPath;
   private Hash hash;
 
-  public HashingBufferedSink(FileSystem fileSystem, Path tempPath, Path hashedDbRootPath)
+  public HashingBufferedSink(FileSystem fileSystem, PathS tempPath, PathS hashedDbRootPath)
       throws IOException {
     this.hashingSink = Hash.hashingSink(fileSystem.sinkWithoutBuffer(tempPath));
     this.bufferedSink = Okio.buffer(hashingSink);
@@ -58,7 +58,7 @@ public class HashingBufferedSink implements BufferedSink {
   public void close() throws IOException {
     bufferedSink.close();
 
-    Path path = HashedDb.dataFullPath(hashedDbRootPath, hash());
+    PathS path = HashedDb.dataFullPath(hashedDbRootPath, hash());
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
       case NOTHING:

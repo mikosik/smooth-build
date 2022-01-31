@@ -1,15 +1,16 @@
 package org.smoothbuild.slib.file.match;
 
 import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 public class PathMatcher {
-  public static Predicate<Path> pathMatcher(String pattern) {
+  public static Predicate<PathS> pathMatcher(String pattern) {
     validatePattern(pattern);
-    return path -> jdkPathMatcher(pattern).matches(java.nio.file.Path.of(path.value()));
+    return path -> jdkPathMatcher(pattern).matches(Path.of(path.value()));
   }
 
   private static java.nio.file.PathMatcher jdkPathMatcher(String patternString) {

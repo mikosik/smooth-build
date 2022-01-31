@@ -2,7 +2,7 @@ package org.smoothbuild.io.fs.base;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
-import static org.smoothbuild.io.fs.base.Path.root;
+import static org.smoothbuild.io.fs.base.PathS.root;
 import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
 
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.util.NoSuchElementException;
 
 public class RecursivePathsIterator implements PathIterator {
   private final FileSystem fileSystem;
-  private final Path baseDir;
-  private final ArrayDeque<Path> dirStack;
-  private final ArrayDeque<Path> fileStack;
-  private Path nextFile;
+  private final PathS baseDir;
+  private final ArrayDeque<PathS> dirStack;
+  private final ArrayDeque<PathS> fileStack;
+  private PathS nextFile;
 
-  public static PathIterator recursivePathsIterator(FileSystem fileSystem, Path dir)
+  public static PathIterator recursivePathsIterator(FileSystem fileSystem, PathS dir)
       throws IOException {
     PathState state = fileSystem.pathState(dir);
     return switch (state) {
@@ -29,14 +29,14 @@ public class RecursivePathsIterator implements PathIterator {
         }
 
         @Override
-        public Path next() {
+        public PathS next() {
           throw new NoSuchElementException();
         }
       };
     };
   }
 
-  public RecursivePathsIterator(FileSystem fileSystem, Path baseDir) throws IOException {
+  public RecursivePathsIterator(FileSystem fileSystem, PathS baseDir) throws IOException {
     this.fileSystem = fileSystem;
     this.baseDir = baseDir;
     this.dirStack = new ArrayDeque<>();
@@ -51,22 +51,22 @@ public class RecursivePathsIterator implements PathIterator {
   }
 
   @Override
-  public Path next() throws IOException {
+  public PathS next() throws IOException {
     checkState(hasNext());
-    Path result = nextFile;
+    PathS result = nextFile;
     nextFile = fetchNextFile();
     return result;
   }
 
-  private Path fetchNextFile() throws IOException {
+  private PathS fetchNextFile() throws IOException {
     while (!fileStack.isEmpty() || !dirStack.isEmpty()) {
       if (fileStack.isEmpty()) {
-        Path dir = dirStack.remove();
-        for (Path name : fileSystem.files(baseDir.append(dir))) {
+        PathS dir = dirStack.remove();
+        for (PathS name : fileSystem.files(baseDir.append(dir))) {
           fileStack.push(dir.append(name));
         }
       } else {
-        Path file = fileStack.remove();
+        PathS file = fileStack.remove();
         PathState state = fileSystem.pathState(baseDir.append(file));
         switch (state) {
           case FILE:

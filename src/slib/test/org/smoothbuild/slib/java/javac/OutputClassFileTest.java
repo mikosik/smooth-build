@@ -9,14 +9,14 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.BufferedSink;
 import okio.ByteString;
 
 public class OutputClassFileTest extends TestingContext {
-  private final Path path = Path.path("my/path");
+  private final PathS path = PathS.path("my/path");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   @Test

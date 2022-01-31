@@ -4,7 +4,7 @@ import static java.io.File.createTempFile;
 import static okio.Okio.sink;
 import static okio.Okio.source;
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.File;

@@ -7,15 +7,15 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 import okio.BufferedSink;
 import okio.ByteString;
 
 public class MemoryFileTest {
   private final MemoryDir parent = mock(MemoryDir.class);
-  private final Path name = Path.path("some/path");
-  private final Path otherName = Path.path("other/path");
+  private final PathS name = PathS.path("some/path");
+  private final PathS otherName = PathS.path("other/path");
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
   private MemoryFile file;
   private BufferedSink sink;

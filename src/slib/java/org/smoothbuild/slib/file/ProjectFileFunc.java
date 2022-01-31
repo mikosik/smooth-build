@@ -8,12 +8,12 @@ import java.io.IOException;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.vm.compute.Container;
 
 public class ProjectFileFunc {
   public static TupleB func(Container container, StringB path) throws IOException {
-    Path validatedPath = validatedProjectPath(container, "path", path);
+    PathS validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {
       return null;
     }

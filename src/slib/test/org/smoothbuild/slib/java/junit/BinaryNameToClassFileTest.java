@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.java.junit;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.slib.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.util.collect.Lists.list;
 

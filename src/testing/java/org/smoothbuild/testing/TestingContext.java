@@ -77,7 +77,7 @@ import org.smoothbuild.eval.compile.CompilerProv;
 import org.smoothbuild.eval.compile.TypeSbConv;
 import org.smoothbuild.install.TempManager;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.base.define.DefFuncS;
@@ -316,7 +316,7 @@ public class TestingContext {
   public HashedDb hashedDb() {
     if (hashedDb == null) {
       hashedDb = new HashedDb(
-          hashedDbFileSystem(), Path.root(), tempManager());
+          hashedDbFileSystem(), PathS.root(), tempManager());
     }
     return hashedDb;
   }
@@ -551,11 +551,11 @@ public class TestingContext {
     return objDb().bool(value);
   }
 
-  public TupleB fileB(Path path) {
+  public TupleB fileB(PathS path) {
     return fileB(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public TupleB fileB(Path path, ByteString content) {
+  public TupleB fileB(PathS path, ByteString content) {
     return fileB(path.toString(), blobB(content));
   }
 

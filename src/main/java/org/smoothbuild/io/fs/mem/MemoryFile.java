@@ -5,7 +5,7 @@ import static okio.Okio.buffer;
 import java.io.IOException;
 import java.util.List;
 
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 import okio.Buffer;
 import okio.BufferedSink;
@@ -15,16 +15,16 @@ import okio.ForwardingSink;
 
 public class MemoryFile implements MemoryElement {
   private final MemoryDir parent;
-  private final Path name;
+  private final PathS name;
   private ByteString data;
 
-  public MemoryFile(MemoryDir parent, Path name) {
+  public MemoryFile(MemoryDir parent, PathS name) {
     this.parent = parent;
     this.name = name;
   }
 
   @Override
-  public Path name() {
+  public PathS name() {
     return name;
   }
 
@@ -44,17 +44,17 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public boolean hasChild(Path name) {
+  public boolean hasChild(PathS name) {
     return false;
   }
 
   @Override
-  public MemoryElement child(Path name) {
+  public MemoryElement child(PathS name) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public List<Path> childNames() {
+  public List<PathS> childNames() {
     throw new UnsupportedOperationException();
   }
 

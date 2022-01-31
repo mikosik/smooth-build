@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.space.ForSpace;
 
 public class ArtifactsRemover {
@@ -29,7 +29,7 @@ public class ArtifactsRemover {
 
   public int removeArtifacts() {
     reporter.startNewPhase("Removing previous artifacts");
-    for (Path path : list(ARTIFACTS_PATH, TEMPORARY_PATH)) {
+    for (PathS path : list(ARTIFACTS_PATH, TEMPORARY_PATH)) {
       try {
         fileSystem.delete(path);
       } catch (IOException e) {

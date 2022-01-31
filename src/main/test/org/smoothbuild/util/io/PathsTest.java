@@ -39,6 +39,6 @@ public class PathsTest {
   }
 
   private static Path newPath(String path) {
-    return java.nio.file.Path.of(path);
+    return Path.of(path);
   }
 }

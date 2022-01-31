@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.StreamSupport.stream;
 import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.slib.compress.UnzipFunc.unzip;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
@@ -25,7 +25,7 @@ import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.eval.artifact.FileStruct;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 
@@ -44,10 +44,10 @@ public class JunitFunc {
       Thread.currentThread().setContextClassLoader(classLoader);
       try {
         JUnitCoreWrapper jUnitCore = createJUnitCore(nativeApi, allFiles, classLoader);
-        Predicate<Path> filter = createFilter(include);
+        Predicate<PathS> filter = createFilter(include);
         int testCount = 0;
         for (String binaryName : testFiles.keySet()) {
-          Path filePath = path(filePath(testFiles.get(binaryName)).toJ());
+          PathS filePath = path(filePath(testFiles.get(binaryName)).toJ());
           if (filter.test(filePath)) {
             testCount++;
             Class<?> testClass = loadClass(classLoader, binaryName);
@@ -121,7 +121,7 @@ public class JunitFunc {
     }
   }
 
-  private static Predicate<Path> createFilter(StringB includeParam) throws JunitExc {
+  private static Predicate<PathS> createFilter(StringB includeParam) throws JunitExc {
     try {
       return pathMatcher(includeParam.toJ());
     } catch (IllegalPathPatternExc e) {

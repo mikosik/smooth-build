@@ -7,11 +7,12 @@ import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.io.fs.base.GenericFileSystemTestCase;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 
 import okio.BufferedSink;
 import okio.ByteString;
@@ -22,19 +23,19 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   @BeforeEach
   public void before() {
     tempDir = com.google.common.io.Files.createTempDir();
-    fileSystem = new DiskFileSystem(java.nio.file.Path.of(tempDir.getAbsolutePath()));
+    fileSystem = new DiskFileSystem(Path.of(tempDir.getAbsolutePath()));
   }
 
   @AfterEach
   public void after() throws IOException {
-    java.nio.file.Path tempPath = tempDir.toPath();
+    Path tempPath = tempDir.toPath();
     if (Files.isDirectory(tempPath)) {
       deleteRecursively(tempPath);
     }
   }
 
   @Override
-  protected void createFile(Path path, ByteString content) throws IOException {
+  protected void createFile(PathS path, ByteString content) throws IOException {
     File file = stringPathToFile(path.toString());
     file.getParentFile().mkdirs();
     try (BufferedSink sink = buffer(sink(file))) {

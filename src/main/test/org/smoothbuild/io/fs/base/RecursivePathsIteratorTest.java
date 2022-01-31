@@ -2,7 +2,7 @@ package org.smoothbuild.io.fs.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.collect.Lists.list;
@@ -42,7 +42,7 @@ public class RecursivePathsIteratorTest {
   @Test
   public void is_empty_when_dir_doesnt_exist() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    Path path = path("my/file");
+    PathS path = path("my/file");
     assertThat(recursivePathsIterator(fileSystem, path).hasNext())
         .isFalse();
   }
@@ -91,7 +91,7 @@ public class RecursivePathsIteratorTest {
   private void createFiles(FileSystem fileSystem, String rootDir, List<String> names) throws
       IOException {
     for (String name : names) {
-      Path path = path(rootDir).append(path(name));
+      PathS path = path(rootDir).append(path(name));
       fileSystem.sink(path).close();
     }
   }

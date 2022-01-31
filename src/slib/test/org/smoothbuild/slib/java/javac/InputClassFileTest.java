@@ -3,7 +3,7 @@ package org.smoothbuild.slib.java.javac;
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.io.Okios.readAndClose;
 
@@ -11,7 +11,7 @@ import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.BufferedSource;
@@ -19,7 +19,7 @@ import okio.ByteString;
 
 public class InputClassFileTest extends TestingContext {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
-  private final Path path = path("a/b/MyClass.class");
+  private final PathS path = path("a/b/MyClass.class");
 
   @Test
   public void file_without_class_extension_is_forbidden() {

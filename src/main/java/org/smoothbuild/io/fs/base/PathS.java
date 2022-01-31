@@ -8,13 +8,13 @@ import static org.smoothbuild.util.collect.Lists.list;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Path {
+public class PathS {
   public static final String SEPARATOR = "/";
-  private static final Path ROOT = new Path(".");
+  private static final PathS ROOT = new PathS(".");
 
   private final String value;
 
-  public static Path path(String value) {
+  public static PathS path(String value) {
     if (value.equals(ROOT.value)) {
       return ROOT;
     }
@@ -26,7 +26,7 @@ public class Path {
         "Path cannot contain '.' part unless it is path denoting root dir ('.').");
     failIf(list(value.split(quote(SEPARATOR))).contains(".."),
         "Path cannot contain '..'.");
-    return new Path(value);
+    return new PathS(value);
   }
 
   private static void failIf(boolean illegal, String message) {
@@ -35,11 +35,11 @@ public class Path {
     }
   }
 
-  public static Path root() {
+  public static PathS root() {
     return ROOT;
   }
 
-  private Path(String value) {
+  private PathS(String value) {
     this.value = value;
   }
 
@@ -51,7 +51,7 @@ public class Path {
     return this == ROOT;
   }
 
-  public Path parent() {
+  public PathS parent() {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return parent of root path");
     }
@@ -59,13 +59,13 @@ public class Path {
     if (index == -1) {
       return root();
     } else {
-      return new Path(value.substring(0, index));
+      return new PathS(value.substring(0, index));
     }
   }
 
-  public boolean startsWith(Path path) {
-    List<Path> thisParts = parts();
-    List<Path> thatParts = path.parts();
+  public boolean startsWith(PathS path) {
+    List<PathS> thisParts = parts();
+    List<PathS> thatParts = path.parts();
     if (thisParts.size() < thatParts.size()) {
       return false;
     }
@@ -77,17 +77,17 @@ public class Path {
     return true;
   }
 
-  public Path append(Path path) {
+  public PathS append(PathS path) {
     if (isRoot()) {
       return path;
     } else if (path.isRoot()) {
       return this;
     } else {
-      return new Path(this.value + SEPARATOR + path.value);
+      return new PathS(this.value + SEPARATOR + path.value);
     }
   }
 
-  public Path appendPart(String part) {
+  public PathS appendPart(String part) {
     if (part.contains(SEPARATOR) ) {
       throw new IllegalArgumentException(
           "Part cannot contain '" + SEPARATOR + "' (part='" + part + "').");
@@ -97,13 +97,13 @@ public class Path {
           "Part cannot be equal to '" + part + "'.");
     }
     if (isRoot()) {
-      return new Path(part);
+      return new PathS(part);
     } else {
-      return new Path(this.value + SEPARATOR + part);
+      return new PathS(this.value + SEPARATOR + part);
     }
   }
 
-  public Path changeExtension(String extension) {
+  public PathS changeExtension(String extension) {
     failWithIllegalArgumentIf(isRoot(), "Cannot change extension of '.'.");
     failWithIllegalArgumentIf(
         extension.contains("."), "Extension cannot contain '.', but = " + extension);
@@ -111,9 +111,9 @@ public class Path {
         extension.contains("/"), "Extension cannot contain '/', but = " + extension);
     String withoutExtension = removeExtension(value);
     if (extension.isEmpty()) {
-      return new Path(withoutExtension);
+      return new PathS(withoutExtension);
     } else {
-      return new Path(withoutExtension + "." + extension);
+      return new PathS(withoutExtension + "." + extension);
     }
   }
 
@@ -132,15 +132,15 @@ public class Path {
     }
   }
 
-  public List<Path> parts() {
+  public List<PathS> parts() {
     if (isRoot()) {
       return new ArrayList<>();
     } else {
-      return stream(value.split(quote(SEPARATOR))).map(Path::path).collect(toList());
+      return stream(value.split(quote(SEPARATOR))).map(PathS::path).collect(toList());
     }
   }
 
-  public Path firstPart() {
+  public PathS firstPart() {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return first part of root path.");
     }
@@ -148,11 +148,11 @@ public class Path {
     if (index == -1) {
       return this;
     } else {
-      return new Path(value.substring(0, index));
+      return new PathS(value.substring(0, index));
     }
   }
 
-  public Path lastPart() {
+  public PathS lastPart() {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return last part of root path.");
     }
@@ -160,7 +160,7 @@ public class Path {
     if (index == -1) {
       return this;
     } else {
-      return new Path(value.substring(index + 1));
+      return new PathS(value.substring(index + 1));
     }
   }
 
@@ -173,7 +173,7 @@ public class Path {
     if (this == object) {
       return true;
     }
-    return object instanceof Path that
+    return object instanceof PathS that
         && this.value.equals(that.value);
   }
 
