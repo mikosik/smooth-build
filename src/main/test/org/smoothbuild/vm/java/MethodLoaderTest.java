@@ -14,8 +14,8 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.smoothbuild.nativefunc.ReturnAbc;
 import org.smoothbuild.io.fs.space.JPathResolver;
+import org.smoothbuild.nativefunc.ReturnAbc;
 import org.smoothbuild.testing.TestingContext;
 
 public class MethodLoaderTest extends TestingContext {

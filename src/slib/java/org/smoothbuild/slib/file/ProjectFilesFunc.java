@@ -10,8 +10,8 @@ import java.io.IOException;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.PathIterator;
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.vm.compute.Container;
 

@@ -11,7 +11,7 @@
     <property name="dir.src.slib.test" location="${dir.src}/slib/test"/>
     <property name="dir.src.testing.java" location="${dir.src}/testing/java"/>
     <property name="dir.src.testing.test" location="${dir.src}/testing/test"/>
-    <property name="dir.src.acceptance" location="${dir.src}/acceptance"/>
+    <property name="dir.src.systemtest" location="${dir.src}/systemtest"/>
     <property name="dir.src.script" location="${dir.src}/script"/>
     <property name="dir.build" location="build"/>
     <property name="dir.build.java" location="${dir.build}/java"/>
@@ -24,13 +24,13 @@
     <property name="dir.build.class.slib.test" location="${dir.build.class}/slib/test"/>
     <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java"/>
     <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test"/>
-    <property name="dir.build.class.acceptance" location="${dir.build.class}/acceptance"/>
+    <property name="dir.build.class.systemtest" location="${dir.build.class}/systemtest"/>
     <property name="dir.build.jar" location="${dir.build}/jar"/>
     <property name="dir.build.smooth.jar" location="${dir.build.jar}/smooth.jar"/>
     <property name="dir.build.api.jar" location="${dir.build.jar}/api.jar"/>
     <property name="dir.build.release" location="${dir.build}/release"/>
     <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip"/>
-    <property name="dir.build.acceptance" location="${dir.build}/acceptance"/>
+    <property name="dir.build.systemtest" location="${dir.build}/systemtest"/>
 
     <property name="lib.antlr4" value="${dir.lib}/ivy/antlr4-4.9.2.jar"/>
     <property name="lib.antlr4-runtime" value="${dir.lib}/ivy/antlr4-runtime-4.9.2.jar"/>
@@ -66,10 +66,10 @@
         <mkdir dir="${dir.build.class.slib.test}"/>
         <mkdir dir="${dir.build.class.testing.java}"/>
         <mkdir dir="${dir.build.class.testing.test}"/>
-        <mkdir dir="${dir.build.class.acceptance}"/>
+        <mkdir dir="${dir.build.class.systemtest}"/>
         <mkdir dir="${dir.build.jar}"/>
         <mkdir dir="${dir.build.release}"/>
-        <mkdir dir="${dir.build.acceptance}"/>
+        <mkdir dir="${dir.build.systemtest}"/>
 
         <ivy:retrieve pattern="lib/ivy/[artifact]-[revision](-[classifier]).[ext]"/>
     </target>
@@ -299,31 +299,31 @@
         <pathelement location="${dir.build.class.testing.test}"/>
     </path>
 
-    <!-- compile src/acceptance -->
+    <!-- compile src/systemtest -->
 
-    <path id="classpath.for.acceptance">
+    <path id="classpath.for.systemtest">
         <path refid="classpath-with.testing.java"/>
         <path refid="classpath-with.slib.java"/>
         <path refid="classpath.testing.libs"/>
     </path>
 
-    <target name="compile.acceptance.tests" depends="compile.testing.java">
-        <javac destdir="${dir.build.class.acceptance}"
+    <target name="compile.systemtest.tests" depends="compile.testing.java">
+        <javac destdir="${dir.build.class.systemtest}"
                source="17"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
             <compilerarg value="--enable-preview"/>
-            <src path="${dir.src.acceptance}"/>
+            <src path="${dir.src.systemtest}"/>
             <classpath>
-                <path refid="classpath.for.acceptance"/>
+                <path refid="classpath.for.systemtest"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.acceptance">
-        <path refid="classpath.for.acceptance"/>
-        <pathelement location="${dir.build.class.acceptance}"/>
+    <path id="classpath.with.systemtest">
+        <path refid="classpath.for.systemtest"/>
+        <pathelement location="${dir.build.class.systemtest}"/>
     </path>
 
     <!-- run src/testing/test -->
@@ -423,48 +423,48 @@
         </zip>
     </target>
 
-    <!-- run src/acceptance -->
+    <!-- run src/systemtest -->
     <target name="install-smooth" depends="release">
-        <unzip src="${dir.build.release.file}" dest="${dir.build.acceptance}"/>
-        <chmod file="${dir.build.acceptance}/${zipped.dir}/smooth" perm="u+x"/>
+        <unzip src="${dir.build.release.file}" dest="${dir.build.systemtest}"/>
+        <chmod file="${dir.build.systemtest}/${zipped.dir}/smooth" perm="u+x"/>
     </target>
 
-    <target name="run.acceptance.single-jvm" depends="compile.acceptance.tests, install-smooth"
-            description="runs acceptance tests">
+    <target name="run.systemtest.single-jvm" depends="compile.systemtest.tests, install-smooth"
+            description="runs systemtest tests">
         <junitlauncher haltonfailure="yes">
             <classpath>
-                <path refid="classpath.with.acceptance"/>
+                <path refid="classpath.with.systemtest"/>
             </classpath>
             <listener type="legacy-plain"/>
             <testclasses outputdir="${dir.build}">
-                <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
+                <fileset dir="${dir.build.class.systemtest}" includes="**/*Test.class"/>
                 <fork>
                     <sysproperty key="junit.jupiter.execution.parallel.enabled" value="true"/>
                     <sysproperty key="junit.jupiter.execution.parallel.mode.default" value="concurrent"/>
-                    <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
+                    <env key="smooth_home_dir" value="${dir.build.systemtest}/${zipped.dir}"/>
                     <env key="repository_dir" value="${basedir}"/>
-                    <env key="acceptance-test-mode" value="single-jvm"/>
+                    <env key="systemtest-test-mode" value="single-jvm"/>
                     <jvmarg value="--enable-preview"/>
                 </fork>
             </testclasses>
         </junitlauncher>
     </target>
 
-    <target name="run.acceptance.full-binary" depends="compile.acceptance.tests, install-smooth"
-            description="runs acceptance tests">
+    <target name="run.systemtest.full-binary" depends="compile.systemtest.tests, install-smooth"
+            description="runs systemtest tests">
         <junitlauncher haltonfailure="yes">
             <classpath>
-                <path refid="classpath.with.acceptance"/>
+                <path refid="classpath.with.systemtest"/>
             </classpath>
             <listener type="legacy-plain"/>
             <testclasses outputdir="${dir.build}">
-                <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
+                <fileset dir="${dir.build.class.systemtest}" includes="**/*Test.class"/>
                 <fork>
                     <sysproperty key="junit.jupiter.execution.parallel.enabled" value="true"/>
                     <sysproperty key="junit.jupiter.execution.parallel.mode.default" value="concurrent"/>
-                    <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
+                    <env key="smooth_home_dir" value="${dir.build.systemtest}/${zipped.dir}"/>
                     <env key="repository_dir" value="${basedir}"/>
-                    <env key="acceptance-test-mode" value="full-binary"/>
+                    <env key="systemtest-test-mode" value="full-binary"/>
                     <jvmarg value="--enable-preview"/>
                 </fork>
             </testclasses>
@@ -472,7 +472,7 @@
     </target>
 
     <target name="run.all.test"
-            depends="run.testing.test, run.main.test, run.slib.test, run.acceptance.single-jvm, run.acceptance.full-binary">
+            depends="run.testing.test, run.main.test, run.slib.test, run.systemtest.single-jvm, run.systemtest.full-binary">
     </target>
 
     <target name="all" depends="release, run.all.test"/>
