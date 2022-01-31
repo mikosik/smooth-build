@@ -1,4 +1,4 @@
-package org.smoothbuild.systemtest.lang;
+package org.smoothbuild.accept;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -6,11 +6,11 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.accept.AcceptanceTestCase;
 
 import okio.ByteString;
 
-public class LiteralTest extends SystemTestCase {
+public class LiteralTest extends AcceptanceTestCase {
   @ParameterizedTest
   @ValueSource(strings = {
       "",
@@ -22,10 +22,9 @@ public class LiteralTest extends SystemTestCase {
       "ABCDEFabcdef"})
   public void blob_literal_value_is_decoded(String hexDigits) throws Exception {
     createUserModule("result = 0x" + hexDigits + ";");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactAsByteString("result"))
-        .isEqualTo(ByteString.decodeHex(hexDigits));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(blobB(ByteString.decodeHex(hexDigits)));
   }
 
   @ParameterizedTest
@@ -38,10 +37,9 @@ public class LiteralTest extends SystemTestCase {
       "123456789000000"})
   public void int_literal_value_is_decoded(String intLiteral) throws Exception {
     createUserModule("result = " + intLiteral + ";");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactAsByteString("result"))
-        .isEqualTo(ByteString.of(new BigInteger(intLiteral, 10).toByteArray()));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(intB(new BigInteger(intLiteral, 10)));
   }
 
   @ParameterizedTest
@@ -65,9 +63,8 @@ public class LiteralTest extends SystemTestCase {
   })
   public void string_literal_value_is_decoded(String string) throws Exception {
     createUserModule("result = \"" + string + "\";");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactAsString("result"))
-        .isEqualTo(string.translateEscapes());
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(stringB(string.translateEscapes()));
   }
 }

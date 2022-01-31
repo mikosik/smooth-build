@@ -51,21 +51,24 @@ public class InvokeAlgorithm extends Algorithm {
     var hasErrors = containsErrors(nativeApi.messages());
     if (result == null) {
       if (!hasErrors) {
-        nativeApi.log().error(
-            q(name) + " has faulty native implementation: it returned `null` but logged no error.");
+        logFaultyImplementationError(nativeApi, "It returned `null` but logged no error.");
       }
       return new Output(null, nativeApi.messages());
     }
     if (!outputT().equals(result.cat())) {
-      nativeApi.log().error(q(name)
-          + " has faulty native implementation: Its declared result type == "
+      logFaultyImplementationError(nativeApi, "Its declared result type == "
           + outputT().q() + " but it returned object with type == " + result.cat().q() + ".");
       return new Output(null, nativeApi.messages());
     }
     if (hasErrors) {
+      logFaultyImplementationError(nativeApi, "It returned non-null value but logged error.");
       return new Output(null, nativeApi.messages());
     }
     return new Output(result, nativeApi.messages());
+  }
+
+  private void logFaultyImplementationError(NativeApi nativeApi, String message) {
+    nativeApi.log().error(q(name) + " has faulty native implementation: " + message);
   }
 
   private Method loadMethod(ClassLoaderProv classLoaderProv) throws InvokeExc {

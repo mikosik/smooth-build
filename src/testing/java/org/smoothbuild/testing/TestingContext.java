@@ -2,15 +2,17 @@ package org.smoothbuild.testing;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.io.ByteStreams.nullOutputStream;
-import static com.google.common.primitives.Ints.toByteArray;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_NAME;
 import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.lang.base.define.ItemS.toTypes;
 import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
 import static org.smoothbuild.out.log.Level.INFO;
+import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.out.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -126,10 +128,10 @@ import org.smoothbuild.lang.expr.SelectS;
 import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.out.console.Console;
+import org.smoothbuild.out.log.Log;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
-import org.smoothbuild.util.io.Okios;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.compute.ComputationCache;
@@ -1135,5 +1137,17 @@ public class TestingContext {
 
   public static FilePath filePath(String filePath) {
     return new FilePath(PRJ, path(filePath));
+  }
+
+  public static Log userFatal(int line, String message) {
+    return fatal(userFileMessagge(line, message));
+  }
+
+  public static Log userError(int line, String message) {
+    return error(userFileMessagge(line, message));
+  }
+
+  private static String userFileMessagge(int line, String message) {
+    return PRJ_MOD_FILE_NAME + ":" + line + ": " + message;
   }
 }

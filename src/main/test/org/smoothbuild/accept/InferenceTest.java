@@ -1,25 +1,23 @@
-package org.smoothbuild.systemtest.lang;
+package org.smoothbuild.accept;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.nativefunc.Append;
 import org.smoothbuild.nativefunc.Concat;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.accept.AcceptanceTestCase;
 
-public class InferenceTest extends SystemTestCase {
+public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void actual_result_type_can_be_inferred_from_args() throws Exception {
     createUserModule("""
             testIdentity(A value) = value;
             result = testIdentity(value="abc");
             """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactAsString("result"))
-        .isEqualTo("abc");
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(stringB("abc"));
   }
 
   @Test
@@ -28,10 +26,9 @@ public class InferenceTest extends SystemTestCase {
             A myfunc(A res, A forcedType) = res;
             result = myfunc(res = [], forcedType = [ [ "abc" ] ]);
             """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list());
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(arrayTB(stringTB())));
   }
 
   @Test
@@ -39,90 +36,84 @@ public class InferenceTest extends SystemTestCase {
       throws Exception {
     createUserModule("""
             pair(A first, A second) = [ first, second ];
-            result = pair(first = [], second = [ [ "aaa" ] ]);
+            result = pair(first = [], second = [ [ "abc" ] ]);
             """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list(list(), list(list("aaa"))));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(arrayB(arrayTB(stringTB())), arrayB(arrayB(stringB("abc")))));
   }
 
   // testConcat([A] first, [A] second)
 
   @Test
   public void infer_actual_type_of_params_in_concat_func_0() throws Exception {
-    createNativeJar(Concat.class);
+    createUserNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [], second = []);
             """, Concat.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list());
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(nothingTB()));
   }
 
   @Test
   public void infer_actual_type_of_params_in_concat_func_1() throws Exception {
-    createNativeJar(Concat.class);
+    createUserNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [ "aaa" ], second = [ "bbb" ]);
             """, Concat.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("aaa", "bbb"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("aaa"), stringB("bbb")));
   }
 
   @Test
   public void infer_actual_type_of_params_in_concat_func_2() throws Exception {
-    createNativeJar(Concat.class);
+    createUserNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [ "aaa" ], second = []);
             """, Concat.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("aaa"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("aaa")));
   }
 
   @Test
   public void infer_actual_type_of_params_in_concat_func_3() throws Exception {
-    createNativeJar(Concat.class);
+    createUserNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [], second = [ "bbb" ]);
             """, Concat.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("bbb"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("bbb")));
   }
 
   @Test
   public void infer_actual_type_of_params_in_concat_func_5() throws Exception {
-    createNativeJar(Concat.class);
+    createUserNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
             wrapper([Nothing] f, [[A]] s) = testConcat(first = f, second = s);
             result = wrapper(f = [], s = [ [ "aaa" ] ]);
             """, Concat.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list(list("aaa")));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(arrayB(stringB("aaa"))));
   }
 
   @Test
   public void infer_actual_type_of_params_in_concat_func_6() throws Exception {
-    createNativeJar(Concat.class);
+    createUserNativeJar(Concat.class);
     createUserModule(format("""
             @Native("%s")
             [A] testConcat([A] first, [A] second);
@@ -130,46 +121,42 @@ public class InferenceTest extends SystemTestCase {
             wrapper([Nothing] f, [[A]] s) = testConcatW(f = f, s = s);
             result = wrapper(f = [], s = [ [ "aaa" ] ]);
             """, Concat.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list(list("aaa")));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(arrayB(stringB("aaa"))));
   }
 
   // testAppend([A] array, a elem)
 
   @Test
   public void infer_actual_type_of_params_in_append_func_0() throws Exception {
-    createNativeJar(Append.class);
+    createUserNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")
             [A] testAppend([A] array, A elem);
             result = testAppend(array = [], elem = "bbb");
             """, Append.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("bbb"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("bbb")));
   }
 
   @Test
   public void infer_actual_type_of_params_in_append_func_1() throws Exception {
-    createNativeJar(Append.class);
+    createUserNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")
             [A] testAppend([A] array, A elem);
             result = testAppend(array = [ "aaa" ], elem = "bbb");
             """, Append.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("aaa", "bbb"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("aaa"), stringB("bbb")));
   }
-
 
   @Test
   public void infer_actual_type_of_params_in_append_func_3() throws Exception {
-    createNativeJar(Append.class);
+    createUserNativeJar(Append.class);
     createUserModule(format("""
             @Native("%s")
             [A] testAppend([A] array, A elem);
@@ -179,9 +166,8 @@ public class InferenceTest extends SystemTestCase {
             [String] emptyStringArray = [];
             result = testAppend(emptyStringArray, "bbb");
             """, Append.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("bbb"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("bbb")));
   }
 }

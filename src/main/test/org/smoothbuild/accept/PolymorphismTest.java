@@ -1,53 +1,49 @@
-package org.smoothbuild.systemtest.lang;
+package org.smoothbuild.accept;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.nativefunc.Flatten;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.accept.AcceptanceTestCase;
 
-public class PolymorphismTest extends SystemTestCase {
+public class PolymorphismTest extends AcceptanceTestCase {
   @Test
   public void single_elem_array() throws Exception {
-    createNativeJar(Flatten.class);
+    createUserNativeJar(Flatten.class);
     createUserModule("""
             [E] testSingleElement(E elem) = [ elem ];
             result = testSingleElement("abc");
             """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("abc"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("abc")));
   }
 
   @Test
   public void flatten_1() throws Exception {
-    createNativeJar(Flatten.class);
+    createUserNativeJar(Flatten.class);
     createUserModule(format("""
             @Native("%s")
             [E] testFlatten([[E]] array);
             result = testFlatten(array = [ [ "aa" ], [ "bb", "cc" ] ]);
             """, Flatten.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("aa", "bb", "cc"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("aa"), stringB("bb"), stringB("cc")));
   }
 
   @Test
   public void flatten_sample_2() throws Exception {
-    createNativeJar(Flatten.class);
+    createUserNativeJar(Flatten.class);
     createUserModule(format("""
             @Native("%s")
             [E] testFlatten([[E]] array);
             result = testFlatten(array = [ [ [ "aa" ], [ "bb", "cc" ] ] ]);
             """, Flatten.class.getCanonicalName()));
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list(list("aa"), list("bb", "cc")));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(arrayB(stringB("aa")), arrayB(stringB("bb"), stringB("cc"))));
   }
 
   @Test
@@ -57,9 +53,8 @@ public class PolymorphismTest extends SystemTestCase {
             [A] pair(A a1, A a2) = [ a1, a2 ];
             result = pair(a1 = testIdentity(v = "aa"), a2 = testIdentity(v = "bb"));
             """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactStringified("result"))
-        .isEqualTo(list("aa", "bb"));
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(arrayB(stringB("aa"), stringB("bb")));
   }
 }

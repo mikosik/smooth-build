@@ -1,11 +1,11 @@
-package org.smoothbuild.systemtest.lang;
+package org.smoothbuild.accept;
 
 import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.accept.AcceptanceTestCase;
 
-public class ValTest extends SystemTestCase {
+public class ValTest extends AcceptanceTestCase {
   @Test
   public void value_can_be_reference_to_polymorphic_function() throws Exception {
     createUserModule("""
@@ -13,9 +13,8 @@ public class ValTest extends SystemTestCase {
           myId2 = myId;
           result = myId2("abc");
           """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactAsString("result"))
-        .isEqualTo("abc");
+    evaluate("result");
+    assertThat(artifact())
+        .isEqualTo(stringB("abc"));
   }
 }

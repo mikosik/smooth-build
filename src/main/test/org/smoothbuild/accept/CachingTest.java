@@ -1,4 +1,4 @@
-package org.smoothbuild.systemtest.lang;
+package org.smoothbuild.accept;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
@@ -6,25 +6,24 @@ import static java.lang.String.format;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.nativefunc.Random;
-import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.accept.AcceptanceTestCase;
 
-public class CachingTest extends SystemTestCase {
+public class CachingTest extends AcceptanceTestCase {
   @Nested
   class _result_from_eval_which_is_ {
     @Test
     public void pure_func_result_is_cached_on_disk() throws Exception {
-      createNativeJar(Random.class);
+      createUserNativeJar(Random.class);
       createUserModule(format("""
             @Native("%s")
             String cachedRandom();
             result = cachedRandom();
             """, Random.class.getCanonicalName()));
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      String resultFromFirstRun = artifactAsString("result");
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      String resultFromSecondRun = artifactAsString("result");
+      evaluate("result");
+      var resultFromFirstRun = artifact();
+      resetMemory();
+      evaluate("result");
+      var resultFromSecondRun = artifact();
 
       assertThat(resultFromSecondRun)
           .isEqualTo(resultFromFirstRun);
@@ -32,34 +31,31 @@ public class CachingTest extends SystemTestCase {
 
     @Test
     public void impure_func_result_is_cached_in_single_build() throws Exception {
-      createNativeJar(Random.class);
+      createUserNativeJar(Random.class);
       createUserModule(format("""
             @Native("%s", IMPURE)
             String cachedInMemoryRandom();
             resultA = cachedInMemoryRandom();
             resultB = cachedInMemoryRandom();
             """, Random.class.getCanonicalName()));
-      runSmoothBuild("resultA", "resultB");
-      assertFinishedWithSuccess();
-
-      assertThat(artifactAsString("resultA"))
-          .isEqualTo(artifactAsString("resultB"));
+      evaluate("resultA", "resultB");
+      assertThat(artifact(0))
+          .isEqualTo(artifact(1));
     }
 
     @Test
     public void impure_func_result_is_not_cached_on_disk() throws Exception {
-      createNativeJar(Random.class);
+      createUserNativeJar(Random.class);
       createUserModule(format("""
             @Native("%s", IMPURE)
             String cachedInMemoryRandom();
             result = cachedInMemoryRandom();
             """, Random.class.getCanonicalName()));
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      String resultFromFirstRun = artifactAsString("result");
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      String resultFromSecondRun = artifactAsString("result");
+      evaluate("result");
+      var resultFromFirstRun = artifact();
+      resetMemory();
+      evaluate("result");
+      var resultFromSecondRun = artifact();
 
       assertThat(resultFromSecondRun)
           .isNotEqualTo(resultFromFirstRun);
@@ -68,7 +64,7 @@ public class CachingTest extends SystemTestCase {
 
   @Test
   public void native_func_with_same_pure_native_share_cache_results() throws Exception {
-    createNativeJar(Random.class);
+    createUserNativeJar(Random.class);
     createUserModule(format("""
             @Native("%s", PURE)
             String first();
@@ -78,18 +74,17 @@ public class CachingTest extends SystemTestCase {
             random2 = second();
             """, Random.class.getCanonicalName(),
         Random.class.getCanonicalName()));
+    evaluate("random1", "random2");
+    var random1 = artifact(0);
+    var random2 = artifact(1);
 
-    runSmoothBuild("random1", "random2");
-    assertFinishedWithSuccess();
-    String random1 = artifactAsString("random1");
-    String random2 = artifactAsString("random2");
-
-    assertThat(random1).isEqualTo(random2);
+    assertThat(random1)
+        .isEqualTo(random2);
   }
 
   @Test
   public void native_func_with_same_impure_native_share_cache_results() throws Exception {
-    createNativeJar(Random.class);
+    createUserNativeJar(Random.class);
     createUserModule(format("""
             @Native("%s", IMPURE)
             String first();
@@ -98,19 +93,18 @@ public class CachingTest extends SystemTestCase {
             random1 = first();
             random2 = second();
             """, Random.class.getCanonicalName(), Random.class.getCanonicalName()));
+    evaluate("random1", "random2");
+    var random1 = artifact(0);
+    var random2 = artifact(1);
 
-    runSmoothBuild("random1", "random2");
-    assertFinishedWithSuccess();
-    String random1 = artifactAsString("random1");
-    String random2 = artifactAsString("random2");
-
-    assertThat(random1).isEqualTo(random2);
+    assertThat(random1)
+        .isEqualTo(random2);
   }
 
   @Test
   public void native_func_with_same_native_but_different_pureness_dont_share_cache_results()
       throws Exception {
-    createNativeJar(Random.class);
+    createUserNativeJar(Random.class);
     createUserModule(format("""
             @Native("%s", IMPURE)
             String first();
@@ -120,11 +114,11 @@ public class CachingTest extends SystemTestCase {
             random2 = second();
             """, Random.class.getCanonicalName(), Random.class.getCanonicalName()));
 
-    runSmoothBuild("random1", "random2");
-    assertFinishedWithSuccess();
-    String random1 = artifactAsString("random1");
-    String random2 = artifactAsString("random2");
+    evaluate("random1", "random2");
+    var random1 = artifact(0);
+    var random2 = artifact(1);
 
-    assertThat(random1).isNotEqualTo(random2);
+    assertThat(random1)
+        .isNotEqualTo(random2);
   }
 }
