@@ -18,6 +18,11 @@ public class PathS {
     if (value.equals(ROOT.value)) {
       return ROOT;
     }
+    failIfNotLegalPath(value);
+    return new PathS(value);
+  }
+
+  public static void failIfNotLegalPath(String value) {
     failIf(value.isEmpty(), "Path cannot be empty string.");
     failIf(value.contains("//"), "Path cannot contain two slashes '//' in a row.");
     failIf(value.startsWith("/"), "Path cannot start with slash character '/'.");
@@ -26,7 +31,6 @@ public class PathS {
         "Path cannot contain '.' part unless it is path denoting root dir ('.').");
     failIf(list(value.split(quote(SEPARATOR))).contains(".."),
         "Path cannot contain '..'.");
-    return new PathS(value);
   }
 
   private static void failIf(boolean illegal, String message) {

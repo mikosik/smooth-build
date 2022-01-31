@@ -30,6 +30,15 @@ public class PathSTest {
     }
   }
 
+  @ParameterizedTest
+  @MethodSource("paths")
+  public void fail_if_not_legal_path(String value, boolean isValid) {
+    if (!isValid) {
+      assertCall(() -> PathS.failIfNotLegalPath(value))
+          .throwsException(IllegalPathExc.class);
+    }
+  }
+
   @Test
   public void single_dot_string_path_is_root() {
     assertThat(path(".").isRoot())
