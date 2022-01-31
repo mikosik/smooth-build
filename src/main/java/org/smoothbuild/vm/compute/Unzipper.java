@@ -1,10 +1,10 @@
 package org.smoothbuild.vm.compute;
 
 import static java.io.File.createTempFile;
+import static okio.Okio.buffer;
 import static okio.Okio.sink;
 import static okio.Okio.source;
-import static org.smoothbuild.eval.artifact.FileStruct.filePath;
-import static org.smoothbuild.io.fs.base.PathS.path;
+import static org.smoothbuild.io.fs.base.PathS.failIfNotLegalPath;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.File;
@@ -22,6 +22,12 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.IllegalPathExc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.DuplicatesDetector;
+import org.smoothbuild.util.function.ThrowingBiConsumer;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+
+import okio.ByteString;
 
 public class Unzipper {
   private final NativeApi nativeApi;
@@ -31,33 +37,47 @@ public class Unzipper {
   }
 
   public ArrayB unzip(BlobB blob, Predicate<String> filter) throws IOException {
+    var arrayBuilder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
+    unzip(blob, filter, (f, is) -> arrayBuilder.add(fileB(nativeApi, f, is)));
+    return arrayBuilder.build();
+  }
+
+  public ImmutableMap<String, ByteString> unzipToMap(BlobB blob, Predicate<String> filter)
+      throws IOException {
+    Builder<String, ByteString> builder = ImmutableMap.builder();
+    unzip(blob, filter, (f, is) -> builder.put(f, buffer(source(is)).readByteString()));
+    return builder.build();
+  }
+
+  private void unzip(BlobB blob, Predicate<String> filter,
+      ThrowingBiConsumer<String, InputStream, IOException> entryConsumer) throws IOException {
     // We have to use ZipFile (that can only unzip disk files) instead of
     // ZipInputStream (that can unzip in memory stream) because the latter
     // cannot detect corrupted zip-files correctly. Its readLOC() (private) method
     // returns null in case of some errors as if no more zip entries were present
     // while in fact those entries might be corrupted.
-    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    var fileArrayBuilder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
-    File tempFile = copyToTempFile(blob);
-    try (ZipFile zipFile = new ZipFile(tempFile)) {
+    var duplicatesDetector = new DuplicatesDetector<String>();
+    var tempFile = copyToTempFile(blob);
+    try (var zipFile = new ZipFile(tempFile)) {
       Enumeration<? extends ZipEntry> entries = zipFile.entries();
       while (entries.hasMoreElements()) {
-        ZipEntry entry = entries.nextElement();
-        String name = entry.getName();
-        if (!name.endsWith("/") && filter.test(name)) {
-          TupleB unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
-          if (unzippedEntry != null) {
-            String fileName = filePath(unzippedEntry).toJ();
+        var zipEntry = entries.nextElement();
+        var fileName = zipEntry.getName();
+        if (!fileName.endsWith("/") && filter.test(fileName)) {
+          try {
+            failIfNotLegalPath(fileName);
+            entryConsumer.accept(fileName, zipFile.getInputStream(zipEntry));
             if (duplicatesDetector.addValue(fileName)) {
               nativeApi.log().warning(
                   "Archive contains two files with the same path = " + fileName);
             }
-            fileArrayBuilder.add(unzippedEntry);
+          } catch (IllegalPathExc e) {
+            nativeApi.log().error(
+                "File in archive has illegal name = '" + fileName + "'. " + e.getMessage());
           }
         }
       }
     }
-    return fileArrayBuilder.build();
   }
 
   private static File copyToTempFile(BlobB blob) throws IOException {
@@ -66,15 +86,7 @@ public class Unzipper {
     return tempFile;
   }
 
-  private static TupleB unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
-    String fileName = entry.getName();
-    try {
-      path(fileName);
-    } catch (IllegalPathExc e) {
-      nativeApi.log().error("File in archive has illegal name = '" + fileName + "'");
-      return null;
-    }
-
+  private static TupleB fileB(NativeApi nativeApi, String fileName, InputStream inputStream) {
     StringB path = nativeApi.factory().string(fileName);
     BlobB content = nativeApi.factory().blob(sink -> sink.writeAll(source(inputStream)));
     return nativeApi.factory().file(path, content);
