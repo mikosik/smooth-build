@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.function;
 
 @FunctionalInterface
 public interface TriFunction<S, T, U, R> {

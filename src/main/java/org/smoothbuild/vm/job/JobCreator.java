@@ -43,7 +43,7 @@ import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.Nal;
 import org.smoothbuild.lang.base.define.NalImpl;
 import org.smoothbuild.lang.base.type.api.VarBounds;
-import org.smoothbuild.util.TriFunction;
+import org.smoothbuild.util.function.TriFunction;
 import org.smoothbuild.vm.java.MethodLoader;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
 import org.smoothbuild.vm.job.algorithm.CombineAlgorithm;

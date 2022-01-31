@@ -71,8 +71,8 @@ import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
-import org.smoothbuild.util.TriFunction;
 import org.smoothbuild.util.collect.Lists;
+import org.smoothbuild.util.function.TriFunction;
 
 import com.google.common.collect.ImmutableList;
 
