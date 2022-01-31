@@ -203,8 +203,7 @@ public class TestingContext {
     // Use System.out if you want to see smooth logs in junit output
     // var outputStream = System.out;
     var outputStream = nullOutputStream();
-    var console = new Console(new PrintWriter(outputStream, true));
-    return console;
+    return new Console(new PrintWriter(outputStream, true));
   }
 
   public ModS internalMod() {
@@ -592,7 +591,11 @@ public class TestingContext {
   }
 
   public IntB intB(int value) {
-    return objDb().int_(BigInteger.valueOf(value));
+    return intB(BigInteger.valueOf(value));
+  }
+
+  public IntB intB(BigInteger value) {
+    return objDb().int_(value);
   }
 
   public MethodB methodB() {
