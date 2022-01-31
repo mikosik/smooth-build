@@ -7,7 +7,6 @@ import static java.util.stream.StreamSupport.stream;
 import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.PathS.path;
-import static org.smoothbuild.slib.compress.UnzipFunc.unzip;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.slib.java.junit.JUnitCoreWrapper.newInstance;
@@ -94,7 +93,7 @@ public class JunitFunc {
   private static ArrayB unzipTestFiles(NativeApi nativeApi, TupleB tests) throws IOException,
       JunitExc {
     try {
-      return unzip(nativeApi, fileContent(tests), isClassFilePredicate());
+      return nativeApi.unzipper().unzip(fileContent(tests), isClassFilePredicate());
     } catch (ZipException e) {
       throw new JunitExc("Cannot read archive from 'tests' param. Corrupted data?");
     }
