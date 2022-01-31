@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.ReportError;
+import org.smoothbuild.nativefunc.ReportError;
 import org.smoothbuild.lang.base.type.TestedAssignS;
 import org.smoothbuild.lang.base.type.TestedTS;
 

@@ -6,7 +6,7 @@ import static java.lang.String.format;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.Random;
+import org.smoothbuild.nativefunc.Random;
 
 public class CachingTest extends AcceptanceTestCase {
   @Nested

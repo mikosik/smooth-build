@@ -6,7 +6,7 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.Flatten;
+import org.smoothbuild.nativefunc.Flatten;
 
 public class PolymorphismTest extends AcceptanceTestCase {
   @Test

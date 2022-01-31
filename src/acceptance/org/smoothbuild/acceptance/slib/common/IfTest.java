@@ -6,7 +6,7 @@ import static java.lang.String.format;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.ThrowException;
+import org.smoothbuild.nativefunc.ThrowException;
 
 public class IfTest extends AcceptanceTestCase {
   @Test

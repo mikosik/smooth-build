@@ -1,10 +1,10 @@
-package org.smoothbuild.acceptance.testing;
+package org.smoothbuild.nativefunc;
 
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.plugin.NativeApi;
 
-public class WrongMethodName {
-  public static StringB wrongMethodName(NativeApi nativeApi) {
+public class NonPublicMethod {
+  static StringB func(NativeApi nativeApi) {
     return nativeApi.factory().string("abc");
   }
 }

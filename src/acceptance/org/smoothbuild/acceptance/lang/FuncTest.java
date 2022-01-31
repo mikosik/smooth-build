@@ -8,8 +8,8 @@ import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.StringIdentity;
-import org.smoothbuild.acceptance.testing.ThrowException;
+import org.smoothbuild.nativefunc.StringIdentity;
+import org.smoothbuild.nativefunc.ThrowException;
 
 public class FuncTest extends AcceptanceTestCase {
   @Nested

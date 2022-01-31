@@ -18,9 +18,9 @@ import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.acceptance.cli.command.common.ValuesArgTestCase;
-import org.smoothbuild.acceptance.testing.ReportError;
-import org.smoothbuild.acceptance.testing.ReportInfo;
-import org.smoothbuild.acceptance.testing.ReportWarning;
+import org.smoothbuild.nativefunc.ReportError;
+import org.smoothbuild.nativefunc.ReportInfo;
+import org.smoothbuild.nativefunc.ReportWarning;
 import org.smoothbuild.cli.command.BuildCommand;
 
 public class BuildCommandTest {

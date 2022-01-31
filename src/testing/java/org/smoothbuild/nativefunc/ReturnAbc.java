@@ -1,11 +1,10 @@
-package org.smoothbuild.acceptance.testing;
+package org.smoothbuild.nativefunc;
 
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.plugin.NativeApi;
 
-public class ReportErrorAndReturnNonNull {
+public class ReturnAbc {
   public static StringB func(NativeApi nativeApi) {
-    nativeApi.log().error("some error message");
     return nativeApi.factory().string("abc");
   }
 }

@@ -10,9 +10,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.ReportError;
-import org.smoothbuild.acceptance.testing.ReportInfo;
-import org.smoothbuild.acceptance.testing.ReportWarning;
+import org.smoothbuild.nativefunc.ReportError;
+import org.smoothbuild.nativefunc.ReportInfo;
+import org.smoothbuild.nativefunc.ReportWarning;
 
 public class LoggingTest extends AcceptanceTestCase {
   private static final String LOG_MESSAGE = "WARNING: my-message-to-log";

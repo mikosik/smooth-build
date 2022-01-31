@@ -1,12 +1,11 @@
-package org.smoothbuild.acceptance.testing;
+package org.smoothbuild.nativefunc;
 
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.plugin.NativeApi;
 
-public class ReportTwoErrors {
+public class ReportWarningAndReturnNull {
   public static StringB func(NativeApi nativeApi) {
-    nativeApi.log().error("first error");
-    nativeApi.log().error("second error");
+    nativeApi.log().warning("some warning message");
     return null;
   }
 }

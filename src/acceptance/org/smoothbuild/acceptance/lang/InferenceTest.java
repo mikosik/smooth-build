@@ -6,8 +6,8 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.Append;
-import org.smoothbuild.acceptance.testing.Concat;
+import org.smoothbuild.nativefunc.Append;
+import org.smoothbuild.nativefunc.Concat;
 
 public class InferenceTest extends AcceptanceTestCase {
   @Test

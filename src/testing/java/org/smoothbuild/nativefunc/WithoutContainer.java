@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.testing;
+package org.smoothbuild.nativefunc;
 
 import org.smoothbuild.bytecode.obj.val.StringB;
 
