@@ -7,13 +7,14 @@ import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.ZipException;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.DuplicatesDetector;
+
+import net.lingala.zip4j.exception.ZipException;
 
 public class BinaryNameToClassFile {
 
@@ -26,7 +27,8 @@ public class BinaryNameToClassFile {
       try {
         fileArray = nativeApi.unzipper().unzip(jarBlob, isClassFilePredicate());
       } catch (ZipException e) {
-        throw new JunitExc("Cannot read archive. Corrupted data?", e);
+        throw new JunitExc(
+            "Cannot read archive. Corrupted data? Internal message: " + e.getMessage(), e);
       }
       for (TupleB classFile : fileArray.elems(TupleB.class)) {
         String classFilePath = (filePath(classFile)).toJ();

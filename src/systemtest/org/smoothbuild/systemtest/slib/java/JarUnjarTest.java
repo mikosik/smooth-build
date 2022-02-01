@@ -28,6 +28,7 @@ public class JarUnjarTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Cannot read archive. Corrupted data?");
+    assertSysOutContains(
+        "Cannot read archive. Corrupted data? Internal message: Could not fill buffer");
   }
 }

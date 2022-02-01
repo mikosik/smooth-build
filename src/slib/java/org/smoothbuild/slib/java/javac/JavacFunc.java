@@ -99,7 +99,8 @@ public class JavacFunc {
           return null;
         }
       } catch (ZipException e) {
-        nativeApi.log().error("Cannot read archive. Corrupted data?");
+        nativeApi.log().error(
+            "Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
         return null;
       }
     }

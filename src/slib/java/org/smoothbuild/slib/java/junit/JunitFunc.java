@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
-import java.util.zip.ZipException;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
@@ -27,6 +26,8 @@ import org.smoothbuild.eval.artifact.FileStruct;
 import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
+
+import net.lingala.zip4j.exception.ZipException;
 
 public class JunitFunc {
   public static StringB func(NativeApi nativeApi, TupleB tests, ArrayB deps, StringB include)
@@ -95,7 +96,8 @@ public class JunitFunc {
     try {
       return nativeApi.unzipper().unzip(fileContent(tests), isClassFilePredicate());
     } catch (ZipException e) {
-      throw new JunitExc("Cannot read archive from 'tests' param. Corrupted data?");
+      throw new JunitExc("Cannot read archive from 'tests' param. Corrupted data? Internal "
+          + "message: " + e.getMessage());
     }
   }
 
