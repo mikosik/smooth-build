@@ -26,5 +26,6 @@
     <orderEntry type="library" name="com.google.truth:truth" level="project" />
     <orderEntry type="library" name="org.mockito:mockito-core" level="project" />
     <orderEntry type="library" name="info.picocli:picocli" level="project" />
+    <orderEntry type="library" name="net.lingala.zip4j" level="project" />
   </component>
 </module>

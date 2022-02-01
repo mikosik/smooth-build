@@ -14,5 +14,6 @@
         <dependency org="com.squareup.okio" name="okio" rev="2.10.0"/>
         <dependency org="org.antlr" name="antlr4" rev="4.9.2"/>
         <dependency org="info.picocli" name="picocli" rev="4.6.1" />
+        <dependency org="net.lingala.zip4j" name="zip4j" rev="2.9.1" />
     </dependencies>
 </ivy-module>
