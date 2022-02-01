@@ -32,7 +32,11 @@ public class Classes {
   }
 
   public static String binaryPath(Class<?> clazz) {
-    return clazz.getName().replace('.', '/') + CLASS_FILE_EXTENSION;
+    return binaryPath(clazz.getName());
+  }
+
+  public static String binaryPath(String binaryName) {
+    return binaryName.replace('.', '/') + CLASS_FILE_EXTENSION;
   }
 
   public static String binaryPathToBinaryName(String binaryPath) {
