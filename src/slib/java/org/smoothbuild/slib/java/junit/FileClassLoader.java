@@ -1,6 +1,7 @@
 package org.smoothbuild.slib.java.junit;
 
 import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
+import static org.smoothbuild.util.io.Okios.readAndClose;
 
 import java.io.IOException;
 import java.util.Map;
@@ -33,9 +34,7 @@ public class FileClassLoader extends ClassLoader {
   }
 
   private byte[] fileToByteArray(TupleB file) throws IOException {
-    try (BufferedSource source = fileContent(file).source()) {
-      return source.readByteArray();
-    }
+    return readAndClose(fileContent(file).source(), BufferedSource::readByteArray);
   }
 
   public static void sneakyRethrow(Throwable t) {
