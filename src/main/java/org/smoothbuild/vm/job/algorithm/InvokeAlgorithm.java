@@ -18,8 +18,7 @@ public class InvokeAlgorithm extends Algorithm {
   private final String name;
   private final MethodLoader methodLoader;
 
-  public InvokeAlgorithm(TypeB outputT, String name, MethodB method,
-      MethodLoader methodLoader) {
+  public InvokeAlgorithm(TypeB outputT, String name, MethodB method, MethodLoader methodLoader) {
     super(outputT, method.isPure().toJ());
     this.name = name;
     this.methodLoader = methodLoader;
