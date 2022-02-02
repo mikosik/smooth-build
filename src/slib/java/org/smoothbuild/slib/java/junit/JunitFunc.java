@@ -9,6 +9,7 @@ import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.slib.compress.UnzipToArrayB.unzipToArrayB;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
+import static org.smoothbuild.slib.java.UnjarFunc.JAR_MANIFEST_PATH;
 import static org.smoothbuild.slib.java.junit.JUnitCoreWrapper.newInstance;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
@@ -26,6 +27,8 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
+import org.smoothbuild.slib.java.JarFunc;
+import org.smoothbuild.slib.java.UnjarFunc;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 import org.smoothbuild.util.function.ThrowingSupplier;
 
@@ -134,11 +137,11 @@ public class JunitFunc {
 
   private static Map<String, TupleB> filesFromJar(NativeApi nativeApi, TupleB jarFile)
       throws IOException {
-    ArrayB unzipped = unzipToArrayB(nativeApi, fileContent(jarFile), isClassFilePredicate());
-    if (unzipped == null) {
+    var files = unzipToArrayB(nativeApi, fileContent(jarFile), f -> !f.equals(JAR_MANIFEST_PATH));
+    if (files == null) {
       return null;
     }
-    return unzipped.elems(TupleB.class)
+    return files.elems(TupleB.class)
         .stream()
         .collect(toMap(f -> filePath(f).toJ(), identity()));
   }

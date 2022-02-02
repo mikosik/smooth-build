@@ -9,7 +9,9 @@ import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.plugin.NativeApi;
 
 public class UnjarFunc {
+  public static final String JAR_MANIFEST_PATH = "META-INF/MANIFEST.MF";
+
   public static ArrayB func(NativeApi nativeApi, BlobB jar) throws IOException {
-    return unzipToArrayB(nativeApi, jar, string -> !string.equals("META-INF/MANIFEST.MF"));
+    return unzipToArrayB(nativeApi, jar, string -> !string.equals(JAR_MANIFEST_PATH));
   }
 }
