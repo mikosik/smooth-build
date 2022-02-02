@@ -1,7 +1,9 @@
 package org.smoothbuild.slib.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static org.smoothbuild.slib.java.javac.PackagedJavaFileObjects.classesFromJarFiles;
+import static org.smoothbuild.slib.compress.UnzipHelper.filesFromLibJars;
+import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
+import static org.smoothbuild.util.collect.Lists.map;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -19,6 +21,7 @@ import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.slib.java.util.JavaNaming;
 
 public class JavacFunc {
   public static ArrayB func(NativeApi nativeApi, ArrayB srcs, ArrayB libs, ArrayB options)
@@ -62,7 +65,7 @@ public class JavacFunc {
       Iterable<String> options = options();
       StandardJavaFileManager fileManager1 =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      var libsClasses = classesFromJarFiles(nativeApi, libs.elems(TupleB.class));
+      var libsClasses = classesFromJarFiles(nativeApi, libs);
       if (libsClasses == null) {
         return null;
       }
@@ -118,5 +121,13 @@ public class JavacFunc {
       }
       return result;
     }
+  }
+
+  public static Iterable<InputClassFile> classesFromJarFiles(
+      NativeApi nativeApi, ArrayB libraryJars) throws IOException {
+    var filesMap = filesFromLibJars(nativeApi, libraryJars, isClassFilePredicate());
+    return filesMap == null
+        ? null
+        : map(filesMap.entrySet(), e -> new InputClassFile(e.getValue(), e.getKey()));
   }
 }

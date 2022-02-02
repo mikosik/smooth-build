@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.compress;
 
-import static org.smoothbuild.slib.compress.UnzipToArrayB.unzipToArrayB;
+import static org.smoothbuild.slib.compress.UnzipHelper.unzipToArrayB;
 
 import java.io.IOException;
 

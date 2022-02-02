@@ -19,14 +19,18 @@ public class InputClassFile extends SimpleJavaFileObject {
   private final String aPackage;
 
   public InputClassFile(TupleB file) {
-    super(URI.create("jar:///" + ":" + filePath(file).toJ()), Kind.CLASS);
+    this(file, filePath(file).toJ());
+  }
 
-    if (!filePath(file).toJ().endsWith(Kind.CLASS.extension)) {
+  public InputClassFile(TupleB file, String filePath) {
+    super(URI.create("jar:///" + ":" + filePath), Kind.CLASS);
+
+    if (!filePath.endsWith(Kind.CLASS.extension)) {
       throw new IllegalArgumentException();
     }
 
     this.file = file;
-    this.binaryName = toBinaryName(filePath(file).toJ());
+    this.binaryName = toBinaryName(filePath);
     this.aPackage = binaryNameToPackage(binaryName);
   }
 
