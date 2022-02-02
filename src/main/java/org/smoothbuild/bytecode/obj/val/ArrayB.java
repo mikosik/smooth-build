@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
  * This class is thread-safe.
  */
 public final class ArrayB extends ValB {
-  private final Supplier<Object> elemsSupplier;
+  private final Supplier<ImmutableList<ValB>> elemsSupplier;
 
   public ArrayB(MerkleRoot merkleRoot, ObjDbImpl objDb) {
     super(merkleRoot, objDb);
