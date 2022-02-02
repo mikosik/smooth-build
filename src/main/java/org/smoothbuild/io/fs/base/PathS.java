@@ -30,7 +30,7 @@ public class PathS {
     failIf(list(value.split(quote(SEPARATOR))).contains("."),
         "Path cannot contain '.' part unless it is path denoting root dir ('.').");
     failIf(list(value.split(quote(SEPARATOR))).contains(".."),
-        "Path cannot contain '..'.");
+        "Path cannot contain '..' part.");
   }
 
   private static void failIf(boolean illegal, String message) {

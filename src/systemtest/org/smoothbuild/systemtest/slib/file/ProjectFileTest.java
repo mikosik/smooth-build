@@ -35,7 +35,7 @@ public class ProjectFileTest extends SystemTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Param `path` has illegal value. Path cannot contain '..'.");
+    assertSysOutContains("Param `path` has illegal value. Path cannot contain '..' part.");
   }
 
   @Test
