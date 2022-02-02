@@ -1,9 +1,7 @@
 package org.smoothbuild.slib.java.junit;
 
 import static java.lang.ClassLoader.getPlatformClassLoader;
-import static java.lang.Thread.currentThread;
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.PathS.path;
@@ -11,8 +9,8 @@ import static org.smoothbuild.slib.compress.UnzipToArrayB.unzipToArrayB;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.UnjarFunc.JAR_MANIFEST_PATH;
 import static org.smoothbuild.slib.java.junit.JUnitCoreWrapper.newInstance;
-import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
+import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 
 import java.io.IOException;
@@ -27,10 +25,7 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
-import org.smoothbuild.slib.java.JarFunc;
-import org.smoothbuild.slib.java.UnjarFunc;
 import org.smoothbuild.util.collect.DuplicatesDetector;
-import org.smoothbuild.util.function.ThrowingSupplier;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -49,33 +44,29 @@ public class JunitFunc {
         return null;
       }
       assertJunitCoreIsPresent(filesFromDeps);
-      var allFiles = concatMaps(filesFromTests, filesFromDeps);
-
-      var classLoader = classLoader(allFiles);
-      return withClassLoader(classLoader, () -> {
-        var jUnitCore = createJUnitCore(nativeApi, classLoader);
-        var filter = createFilter(include);
-        int testCount = 0;
-        for (var file : filesFromTests.keySet()) {
-          var path = path(filePath(filesFromTests.get(file)).toJ());
-          if (filter.test(path)) {
-            testCount++;
-            var testClass = loadClass(classLoader, toBinaryName(file));
-            var resWrapper = jUnitCore.run(testClass);
-            if (!resWrapper.wasSuccessful()) {
-              for (var failureWrapper : resWrapper.getFailures()) {
-                nativeApi.log().error(
-                    "test failed: " + failureWrapper.toString() + "\n" + failureWrapper.getTrace());
-              }
-              return nativeApi.factory().string("FAILURE");
+      var classLoader = classLoader(concatMaps(filesFromTests, filesFromDeps));
+      var jUnitCore = createJUnitCore(nativeApi, classLoader);
+      var filter = createFilter(include);
+      int testCount = 0;
+      for (var file : filesFromTests.keySet()) {
+        var path = path(filePath(filesFromTests.get(file)).toJ());
+        if (filter.test(path)) {
+          testCount++;
+          var testClass = loadClass(classLoader, toBinaryName(file));
+          var resWrapper = jUnitCore.run(testClass);
+          if (!resWrapper.wasSuccessful()) {
+            for (var failureWrapper : resWrapper.getFailures()) {
+              nativeApi.log().error(
+                  "test failed: " + failureWrapper.toString() + "\n" + failureWrapper.getTrace());
             }
+            return nativeApi.factory().string("FAILURE");
           }
         }
-        if (testCount == 0) {
-          nativeApi.log().warning("No junit tests found.");
-        }
-        return nativeApi.factory().string("SUCCESS");
-      });
+      }
+      if (testCount == 0) {
+        nativeApi.log().warning("No junit tests found.");
+      }
+      return nativeApi.factory().string("SUCCESS");
     } catch (JunitExc e) {
       nativeApi.log().error(e.getMessage());
       return null;
@@ -87,18 +78,6 @@ public class JunitFunc {
       TupleB file = filesMap.get(path);
       return file == null ? null : fileContent(file).source().inputStream();
     });
-  }
-
-  private static <T> T withClassLoader(ClassLoader classLoader,
-      ThrowingSupplier<T, JunitExc> supplier) throws JunitExc {
-    var currentThread = currentThread();
-    var previousClassLoader = currentThread.getContextClassLoader();
-    currentThread.setContextClassLoader(classLoader);
-    try {
-      return supplier.get();
-    } finally {
-      currentThread.setContextClassLoader(previousClassLoader);
-    }
   }
 
   public static Map<String, TupleB> filesFromLibJars(NativeApi nativeApi, ArrayB libJars)
@@ -141,9 +120,7 @@ public class JunitFunc {
     if (files == null) {
       return null;
     }
-    return files.elems(TupleB.class)
-        .stream()
-        .collect(toMap(f -> filePath(f).toJ(), identity()));
+    return toMap(files.elems(TupleB.class), f -> filePath(f).toJ(), identity());
   }
 
   private static ImmutableMap<String, TupleB> concatMaps(Map<String, TupleB> testClasses,
