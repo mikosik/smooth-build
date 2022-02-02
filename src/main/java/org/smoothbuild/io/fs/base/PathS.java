@@ -1,9 +1,9 @@
 package org.smoothbuild.io.fs.base;
 
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.quote;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,20 +23,33 @@ public class PathS {
   }
 
   public static void failIfNotLegalPath(String value) {
-    failIf(value.isEmpty(), "Path cannot be empty string.");
-    failIf(value.contains("//"), "Path cannot contain two slashes '//' in a row.");
-    failIf(value.startsWith("/"), "Path cannot start with slash character '/'.");
-    failIf(value.endsWith("/"), "Path cannot end with slash character '/'.");
-    failIf(list(value.split(quote(SEPARATOR))).contains("."),
-        "Path cannot contain '.' part unless it is path denoting root dir ('.').");
-    failIf(list(value.split(quote(SEPARATOR))).contains(".."),
-        "Path cannot contain '..' part.");
+    String error = detectPathError(value);
+    if (error != null) {
+      throw new IllegalPathExc(error);
+    }
   }
 
-  private static void failIf(boolean illegal, String message) {
-    if (illegal) {
-      throw new IllegalPathExc(message);
+  public static String detectPathError(String value) {
+    if (value.isEmpty()) {
+      return "Path cannot be empty string.";
     }
+    if (value.contains("//")) {
+      return "Path cannot contain two slashes '//' in a row.";
+    }
+    if (value.startsWith("/")) {
+      return "Path cannot start with slash character '/'.";
+    }
+    if (value.endsWith("/")) {
+      return "Path cannot end with slash character '/'.";
+    }
+    var parts = asList(value.split(quote(SEPARATOR)));
+    if (parts.contains(".")) {
+      return "Path cannot contain '.' part unless it is path denoting root dir ('.').";
+    }
+    if (parts.contains("..")) {
+      return "Path cannot contain '..' part.";
+    }
+    return null;
   }
 
   public static PathS root() {
