@@ -8,20 +8,16 @@ import static org.smoothbuild.util.collect.Lists.map;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.List;
 import java.util.zip.ZipException;
 
 import javax.tools.JavaCompiler;
-import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.slib.java.util.JavaNaming;
 
 public class JavacFunc {
   public static ArrayB func(NativeApi nativeApi, ArrayB srcs, ArrayB libs, ArrayB options)
@@ -60,17 +56,15 @@ public class JavacFunc {
     public ArrayB compile(ArrayB files) throws IOException {
       // prepare args for compilation
 
-      StringWriter additionalCompilerOutput = new StringWriter();
-      LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(nativeApi);
-      Iterable<String> options = options();
-      StandardJavaFileManager fileManager1 =
-          compiler.getStandardFileManager(diagnostic, null, defaultCharset());
+      var additionalCompilerOutput = new StringWriter();
+      var diagnostic = new LoggingDiagnosticListener(nativeApi);
+      var options = options();
+      var standardJFM = compiler.getStandardFileManager(diagnostic, null, defaultCharset());
       var libsClasses = classesFromJarFiles(nativeApi, libs);
       if (libsClasses == null) {
         return null;
       }
-      try (SandboxedJavaFileManager fileManager = new SandboxedJavaFileManager(
-          fileManager1, nativeApi, libsClasses)) {
+      try (var sandboxedJFM = new SandboxedJavaFileManager(standardJFM, nativeApi, libsClasses)) {
         Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.elems(TupleB.class));
 
         /*
@@ -82,10 +76,9 @@ public class JavacFunc {
         }
 
         // run compilation task
-        CompilationTask task =
-            compiler.getTask(additionalCompilerOutput, fileManager, diagnostic, options, null,
-                inputSourceFiles);
-        boolean success = task.call();
+        var compilationTask = compiler.getTask(
+            additionalCompilerOutput, sandboxedJFM, diagnostic, options, null, inputSourceFiles);
+        boolean success = compilationTask.call();
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
@@ -97,7 +90,7 @@ public class JavacFunc {
           nativeApi.log().warning(additionalInfo);
         }
         if (success) {
-          return fileManager.resultClassfiles();
+          return sandboxedJFM.resultClassfiles();
         } else {
           return null;
         }
@@ -108,10 +101,8 @@ public class JavacFunc {
       }
     }
 
-    private Iterable<String> options() {
-      return StreamSupport.stream(options.elems(StringB.class).spliterator(), false)
-          .map(StringB::toJ)
-          .collect(Collectors.toList());
+    private List<String> options() {
+      return map(options.elems(StringB.class), StringB::toJ);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<TupleB> sourceFiles) {
