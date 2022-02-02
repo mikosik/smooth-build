@@ -26,8 +26,7 @@ public class Container implements NativeApi {
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(@ForSpace(PRJ) FileSystem fileSystem, ByteCodeF byteCodeF,
-      TypingB typing) {
+  public Container(@ForSpace(PRJ) FileSystem fileSystem, ByteCodeF byteCodeF, TypingB typing) {
     this.fileSystem = fileSystem;
     this.byteCodeF = byteCodeF;
     this.messageLogger = new MessageLoggerImpl(byteCodeF);
