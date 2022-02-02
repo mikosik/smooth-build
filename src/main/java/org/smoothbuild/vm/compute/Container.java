@@ -48,11 +48,6 @@ public class Container implements NativeApi {
   }
 
   @Override
-  public Unzipper unzipper() {
-    return new Unzipper(this);
-  }
-
-  @Override
   public MessageLogger log() {
     return messageLogger;
   }

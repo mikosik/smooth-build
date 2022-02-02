@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.java;
 
-import static org.smoothbuild.slib.compress.UnzipFunc.unzip;
+import static org.smoothbuild.slib.compress.UnzipToArrayB.unzipToArrayB;
 
 import java.io.IOException;
 
@@ -10,6 +10,6 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class UnjarFunc {
   public static ArrayB func(NativeApi nativeApi, BlobB jar) throws IOException {
-    return unzip(nativeApi, jar, string -> !string.equals("META-INF/MANIFEST.MF"));
+    return unzipToArrayB(nativeApi, jar, string -> !string.equals("META-INF/MANIFEST.MF"));
   }
 }

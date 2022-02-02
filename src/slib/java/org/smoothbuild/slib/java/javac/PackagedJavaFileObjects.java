@@ -1,6 +1,7 @@
 package org.smoothbuild.slib.java.javac;
 
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
+import static org.smoothbuild.slib.compress.UnzipToArrayB.unzipToArrayB;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 
 import java.io.IOException;
@@ -19,7 +20,10 @@ public class PackagedJavaFileObjects {
     Set<InputClassFile> result = new HashSet<>();
     for (TupleB jar : libraryJars) {
       BlobB jarBlob = FileStruct.fileContent(jar);
-      ArrayB files = nativeApi.unzipper().unzip(jarBlob, isClassFilePredicate());
+      ArrayB files = unzipToArrayB(nativeApi, jarBlob, isClassFilePredicate());
+      if (files == null) {
+        return null;
+      }
       for (TupleB file : files.elems(TupleB.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {

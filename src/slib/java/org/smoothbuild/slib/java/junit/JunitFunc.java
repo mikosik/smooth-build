@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.PathS.path;
+import static org.smoothbuild.slib.compress.UnzipToArrayB.unzipToArrayB;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.junit.JUnitCoreWrapper.newInstance;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
@@ -37,7 +38,13 @@ public class JunitFunc {
       throws IOException {
     try {
       var filesFromTests = filesFromJar(nativeApi, tests, "tests");
+      if (filesFromTests == null) {
+        return null;
+      }
       var filesFromDeps = filesFromLibJars(nativeApi, deps);
+      if (filesFromDeps == null) {
+        return null;
+      }
       assertJunitCoreIsPresent(filesFromDeps);
       var allFiles = concatMaps(filesFromTests, filesFromDeps);
 
@@ -99,6 +106,9 @@ public class JunitFunc {
     for (int i = 0; i < jars.size(); i++) {
       var jarFile = jars.get(i);
       var classes = filesFromJar(nativeApi, jarFile, "deps[" + i + "]");
+      if (classes == null) {
+        return null;
+      }
       for (var entry : classes.entrySet()) {
         var path = entry.getKey();
         if (duplicatesDetector.addValue(path)) {
@@ -124,7 +134,10 @@ public class JunitFunc {
 
   private static Map<String, TupleB> filesFromJar(NativeApi nativeApi, TupleB jarFile)
       throws IOException {
-    ArrayB unzipped = nativeApi.unzipper().unzip(fileContent(jarFile), isClassFilePredicate());
+    ArrayB unzipped = unzipToArrayB(nativeApi, fileContent(jarFile), isClassFilePredicate());
+    if (unzipped == null) {
+      return null;
+    }
     return unzipped.elems(TupleB.class)
         .stream()
         .collect(toMap(f -> filePath(f).toJ(), identity()));
