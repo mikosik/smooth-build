@@ -9,6 +9,7 @@ import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.collect.Maps.map;
 import static org.smoothbuild.util.collect.Maps.sort;
 import static org.smoothbuild.util.collect.Maps.toMap;
+import static org.smoothbuild.util.collect.Maps.zip;
 
 import java.util.HashMap;
 import java.util.List;
@@ -199,6 +200,33 @@ public class MapsTest {
     public void many_entry_map() {
       assertThat(sort(Map.of(3, "three", 2, "two", 1, "one"), comparingByKey()))
           .isEqualTo(ImmutableMap.of(1, "one", 2, "two", 3, "three"));
+    }
+  }
+
+  @Nested
+  class _zip {
+    @Test
+    public void empty_map() {
+      assertThat(zip(list(), list()))
+          .isEqualTo(Map.of());
+    }
+
+    @Test
+    public void one_entry_map() {
+      assertThat(zip(list(1), list("one")))
+          .isEqualTo(Map.of(1, "one"));
+    }
+
+    @Test
+    public void many_entry_map() {
+      assertThat(zip(list(1, 2, 3), list("one", "two", "three")))
+          .isEqualTo(Map.of(1, "one", 2, "two", 3, "three"));
+    }
+
+    @Test
+    public void different_size_of_keys_and_values_causes_exc() {
+      assertCall(() -> zip(list(1, 2, 3), list("one", "two")))
+          .throwsException(new IllegalArgumentException("List sizes differ 3 != 2."));
     }
   }
 }

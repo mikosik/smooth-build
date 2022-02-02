@@ -4,11 +4,14 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
 public class Maps {
   public static <K, V> ImmutableMap<K, V> toMap(Iterable<K> keys,
@@ -55,5 +58,17 @@ public class Maps {
         .stream()
         .sorted(comparator)
         .collect(toImmutableMap(Entry::getKey, Entry::getValue));
+  }
+
+  public static <K, V> ImmutableMap<K, V> zip(List<? extends K> keys, List<? extends V> values) {
+    if (keys.size() != values.size()) {
+      throw new IllegalArgumentException(
+          "List sizes differ " + keys.size() + " != " + values.size() + ".");
+    }
+    Builder<K, V> builder = ImmutableMap.builder();
+    for (int i = 0; i < keys.size(); i++) {
+      builder.put(keys.get(i), values.get(i));
+    }
+    return builder.build();
   }
 }
