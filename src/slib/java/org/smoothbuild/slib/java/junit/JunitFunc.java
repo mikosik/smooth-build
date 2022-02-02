@@ -16,6 +16,7 @@ import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -25,17 +26,14 @@ import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
-import org.smoothbuild.util.collect.DuplicatesDetector;
 
 import com.google.common.collect.ImmutableMap;
-
-import net.lingala.zip4j.exception.ZipException;
 
 public class JunitFunc {
   public static StringB func(NativeApi nativeApi, TupleB tests, ArrayB deps, StringB include)
       throws IOException {
     try {
-      var filesFromTests = filesFromJar(nativeApi, tests, "tests");
+      var filesFromTests = filesFromJar(nativeApi, tests);
       if (filesFromTests == null) {
         return null;
       }
@@ -82,36 +80,25 @@ public class JunitFunc {
 
   public static Map<String, TupleB> filesFromLibJars(NativeApi nativeApi, ArrayB libJars)
       throws IOException, JunitExc {
-    var duplicatesDetector = new DuplicatesDetector<String>();
+    var fileNames = new HashSet<String>();
     var result = new HashMap<String, TupleB>();
     var jars = libJars.elems(TupleB.class);
     for (int i = 0; i < jars.size(); i++) {
       var jarFile = jars.get(i);
-      var classes = filesFromJar(nativeApi, jarFile, "deps[" + i + "]");
+      var classes = filesFromJar(nativeApi, jarFile);
       if (classes == null) {
         return null;
       }
       for (var entry : classes.entrySet()) {
         var path = entry.getKey();
-        if (duplicatesDetector.addValue(path)) {
-          throw new JunitExc(
-              "File " + path + " is contained by two different library jar files.");
+        if (!fileNames.add(path)) {
+          throw new JunitExc("File " + path + " is contained by two different library jar files.");
         } else {
           result.put(path, entry.getValue());
         }
       }
     }
     return result;
-  }
-
-  private static Map<String, TupleB> filesFromJar(NativeApi nativeApi, TupleB jarFile,
-      String jarName) throws IOException, JunitExc {
-    try {
-      return filesFromJar(nativeApi, jarFile);
-    } catch (ZipException e) {
-      throw new JunitExc("Cannot read archive from '" + jarName
-          + "' param. Corrupted data? Internal message: " + e.getMessage());
-    }
   }
 
   private static Map<String, TupleB> filesFromJar(NativeApi nativeApi, TupleB jarFile)
