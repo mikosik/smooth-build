@@ -2,7 +2,7 @@ package org.smoothbuild.vm.compute;
 
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.io.fs.base.PathS.failIfNotLegalPath;
+import static org.smoothbuild.io.fs.base.PathS.detectPathError;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +12,6 @@ import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.io.fs.base.IllegalPathExc;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 import org.smoothbuild.util.function.ThrowingBiConsumer;
@@ -55,16 +54,15 @@ public class Unzipper {
       while ((header = zipInputStream.getNextEntry()) != null) {
         var fileName = header.getFileName();
         if (!fileName.endsWith("/") && includePredicate.test(fileName)) {
-          try {
-            failIfNotLegalPath(fileName);
-            entryConsumer.accept(fileName, zipInputStream);
-            if (duplicatesDetector.addValue(fileName)) {
-              nativeApi.log().warning(
-                  "Archive contains two files with the same path = " + fileName);
-            }
-          } catch (IllegalPathExc e) {
+          String pathError = detectPathError(fileName);
+          if (pathError != null) {
             nativeApi.log().error(
-                "File in archive has illegal name = '" + fileName + "'. " + e.getMessage());
+                "File in archive has illegal name = '" + fileName + "'. " + pathError);
+          }
+          entryConsumer.accept(fileName, zipInputStream);
+          if (duplicatesDetector.addValue(fileName)) {
+            nativeApi.log().warning(
+                "Archive contains two files with the same path = " + fileName);
           }
         }
       }
