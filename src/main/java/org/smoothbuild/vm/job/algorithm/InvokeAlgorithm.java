@@ -1,5 +1,6 @@
 package org.smoothbuild.vm.job.algorithm;
 
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static org.smoothbuild.eval.artifact.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 
@@ -12,6 +13,7 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.vm.java.ClassLoaderProv;
 import org.smoothbuild.vm.java.MethodLoader;
 import org.smoothbuild.vm.java.MethodLoaderExc;
 
@@ -42,8 +44,9 @@ public class InvokeAlgorithm extends Algorithm {
     }
   }
 
-  private Output runImpl(Input input, NativeApi nativeApi) throws InvokeExc, InvokeRuntimeExc {
-    var method = loadMethod();
+  private Output runImpl(Input input, NativeApi nativeApi) throws InvokeExc {
+    var classLoaderProv = new ClassLoaderProv(getSystemClassLoader(), nativeApi);
+    var method = loadMethod(classLoaderProv);
     var result = invoke(method, input, nativeApi);
     var hasErrors = containsErrors(nativeApi.messages());
     if (result == null) {
@@ -65,9 +68,9 @@ public class InvokeAlgorithm extends Algorithm {
     return new Output(result, nativeApi.messages());
   }
 
-  private Method loadMethod() throws InvokeExc {
+  private Method loadMethod(ClassLoaderProv classLoaderProv) throws InvokeExc {
     try {
-      return methodLoader.load(name, methodB);
+      return methodLoader.load(name, methodB, classLoaderProv);
     } catch (MethodLoaderExc e) {
       throw new InvokeExc(e);
     }
@@ -79,7 +82,7 @@ public class InvokeAlgorithm extends Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new InvokeRuntimeExc(
+      throw new RuntimeException(
           q(name) + " threw java exception from its native code.", e.getCause());
     }
   }
@@ -96,12 +99,6 @@ public class InvokeAlgorithm extends Algorithm {
   private static class InvokeExc extends Exception {
     public InvokeExc(Throwable e) {
       super(e.getMessage(), e);
-    }
-  }
-
-  private static class InvokeRuntimeExc extends RuntimeException {
-    public InvokeRuntimeExc(String message, Throwable cause) {
-      super(message, cause);
     }
   }
 }

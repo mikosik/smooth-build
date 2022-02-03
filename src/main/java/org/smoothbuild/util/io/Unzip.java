@@ -26,7 +26,8 @@ public class Unzip {
         if (!fileName.endsWith("/") && includePredicate.test(fileName)) {
           throwExcIfIllegalFileName(fileName);
           if (!fileNames.add(fileName)) {
-            throw new DuplicateFileNameExc(fileName);
+            throw new DuplicateFileNameExc(
+                "Archive contains more than one file with name '" + fileName + "'.");
           }
           entryConsumer.accept(fileName, zipInputStream);
         }

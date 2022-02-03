@@ -106,7 +106,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(any(), any()))
+      when(methodLoader.load(any(), any(), any()))
           .thenReturn(EvaluatorTest.class.getMethod("returnInt", NativeApi.class));
       assertThat(evaluate(callS, nList(funcS)))
           .isEqualTo(intB(173));
@@ -120,7 +120,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(any(), any()))
+      when(methodLoader.load(any(), any(), any()))
           .thenReturn(EvaluatorTest.class.getMethod(
               "returnIntParam", NativeApi.class, IntB.class));
       assertThat(evaluate(callS, nList(funcS)))
@@ -135,7 +135,7 @@ public class EvaluatorTest  extends TestingContext {
       var jarB = blobB(137);
       when(fileLoader.load(filePath(PRJ, path("myBuild.jar"))))
           .thenReturn(jarB);
-      when(methodLoader.load(any(), any()))
+      when(methodLoader.load(any(), any(), any()))
           .thenReturn(EvaluatorTest.class.getMethod(
               "returnArrayParam", NativeApi.class, ArrayB.class));
       assertThat(evaluate(callS, nList(funcS)))
