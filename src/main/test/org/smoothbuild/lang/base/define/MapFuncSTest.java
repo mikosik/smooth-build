@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;

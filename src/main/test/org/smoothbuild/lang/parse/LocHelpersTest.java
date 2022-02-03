@@ -3,8 +3,8 @@ package org.smoothbuild.lang.parse;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
 import static org.smoothbuild.lang.parse.LocHelpers.locOf;
+import static org.smoothbuild.testing.TestingContext.filePath;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;

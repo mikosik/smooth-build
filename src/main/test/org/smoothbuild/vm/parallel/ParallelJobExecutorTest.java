@@ -11,7 +11,6 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.lang.base.define.TestingLoc.loc;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.toCommaSeparatedString;
 import static org.smoothbuild.vm.compute.ResSource.DISK;

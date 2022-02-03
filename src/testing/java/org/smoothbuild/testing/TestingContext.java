@@ -7,9 +7,9 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
+import static org.smoothbuild.io.fs.base.PathS.path;
+import static org.smoothbuild.io.fs.space.Space.PRJ;
 import static org.smoothbuild.lang.base.define.ItemS.toTypes;
-import static org.smoothbuild.lang.base.define.TestingLoc.loc;
-import static org.smoothbuild.lang.base.define.TestingModPath.modPath;
 import static org.smoothbuild.lang.base.type.api.VarBounds.varBounds;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
@@ -80,6 +80,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
+import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.IfFuncS;
@@ -88,6 +89,7 @@ import org.smoothbuild.lang.base.define.ItemS;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.base.define.MapFuncS;
+import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.base.define.NatFuncS;
@@ -142,6 +144,9 @@ import com.google.inject.util.Providers;
 import okio.ByteString;
 
 public class TestingContext {
+  public static final String BUILD_FILE_PATH = "myBuild.smooth";
+  private static final String IMPORTED_FILE_PATH = "imported.smooth";
+
   private Computer computer;
   private Container container;
   private ByteCodeF byteCodeF;
@@ -1054,5 +1059,53 @@ public class TestingContext {
 
   public TypeB c(TypeB type) {
     return typingB().closeVars(type);
+  }
+
+  public static ModFiles modFiles() {
+    return modFiles(smoothFilePath());
+  }
+
+  public static ModFiles importedModFiles() {
+    return modFiles(importedFilePath());
+  }
+
+  private static ModFiles modFiles(FilePath filePath) {
+    return new ModFiles(filePath, empty());
+  }
+
+  public static ModPath modPath() {
+    return ModPath.of(smoothFilePath());
+  }
+
+  public static ModPath importedModPath() {
+    return ModPath.of(importedFilePath());
+  }
+
+  public static Loc loc() {
+    return loc(11);
+  }
+
+  public static Loc loc(int line) {
+    return Loc.loc(filePath(), line);
+  }
+
+  public static FilePath filePath() {
+    return smoothFilePath();
+  }
+
+  public static FilePath smoothFilePath() {
+    return filePath(BUILD_FILE_PATH);
+  }
+
+  public static FilePath nativeFilePath() {
+    return smoothFilePath().withExtension("jar");
+  }
+
+  public static FilePath importedFilePath() {
+    return filePath(IMPORTED_FILE_PATH);
+  }
+
+  public static FilePath filePath(String filePath) {
+    return new FilePath(PRJ, path(filePath));
   }
 }

@@ -3,9 +3,9 @@ package org.smoothbuild.testing;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.io.fs.base.TestingFilePath.BUILD_FILE_PATH;
-import static org.smoothbuild.lang.base.define.TestingModFiles.importedModFiles;
-import static org.smoothbuild.lang.base.define.TestingModFiles.modFiles;
+import static org.smoothbuild.testing.TestingContext.BUILD_FILE_PATH;
+import static org.smoothbuild.testing.TestingContext.importedModFiles;
+import static org.smoothbuild.testing.TestingContext.modFiles;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;

@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.lang.base.define.TestingLoc;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 import org.smoothbuild.vm.compute.Computed;
@@ -95,6 +94,6 @@ public class ResHandlerTest extends TestingContext {
   }
 
   private JobInfo taskInfo() {
-    return new JobInfo(CALL, "name", TestingLoc.loc());
+    return new JobInfo(CALL, "name", loc());
   }
 }

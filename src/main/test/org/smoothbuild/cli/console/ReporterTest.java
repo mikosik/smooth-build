@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.define.TestingLoc;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.job.job.JobInfo;
 
@@ -246,6 +245,6 @@ public class ReporterTest extends TestingContext {
   }
 
   private static JobInfo taskInfo() {
-    return new JobInfo(CALL, "name", TestingLoc.loc());
+    return new JobInfo(CALL, "name", loc());
   }
 }

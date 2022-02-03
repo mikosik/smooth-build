@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.io.fs.base.TestingFilePath.filePath;
-import static org.smoothbuild.io.fs.base.TestingFilePath.importedFilePath;
 import static org.smoothbuild.testing.TestingModLoader.err;
 
 import org.junit.jupiter.api.Nested;
