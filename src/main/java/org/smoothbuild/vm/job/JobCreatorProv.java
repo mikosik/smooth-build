@@ -10,13 +10,13 @@ import org.smoothbuild.vm.java.MethodLoader;
 
 import com.google.common.collect.ImmutableMap;
 
-public class JobCreatorProvider {
+public class JobCreatorProv {
   private final MethodLoader methodLoader;
   private final TypeBF typeBF;
   private final TypingB typingB;
 
   @Inject
-  public JobCreatorProvider(MethodLoader methodLoader, TypeBF typeBF, TypingB typingB) {
+  public JobCreatorProv(MethodLoader methodLoader, TypeBF typeBF, TypingB typingB) {
     this.methodLoader = methodLoader;
     this.typeBF = typeBF;
     this.typingB = typingB;
