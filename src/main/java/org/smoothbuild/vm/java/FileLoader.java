@@ -12,7 +12,6 @@ import javax.inject.Singleton;
 import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
-import org.smoothbuild.db.Hash;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
 
@@ -24,14 +23,12 @@ public class FileLoader {
   private final FileResolver fileResolver;
   private final ObjDb objDb;
   private final ConcurrentHashMap<FilePath, BlobB> fileCache;
-  private final ConcurrentHashMap<Hash, FilePath> hashToFilePath;
 
   @Inject
   public FileLoader(FileResolver fileResolver, ObjDb objDb) {
     this.fileResolver = fileResolver;
     this.objDb = objDb;
     this.fileCache = new ConcurrentHashMap<>();
-    this.hashToFilePath = new ConcurrentHashMap<>();
   }
 
   public BlobB load(FilePath filePath) throws FileNotFoundException {
@@ -44,12 +41,7 @@ public class FileLoader {
       blobBuilder.write(sink -> copyAllAndClose(fileResolver.source(filePath), sink));
       result = blobBuilder.build();
       fileCache.put(filePath, result);
-      hashToFilePath.put(result.hash(), filePath);
     }
     return result;
-  }
-
-  public FilePath filePathOf(Hash hash) {
-    return hashToFilePath.get(hash);
   }
 }
