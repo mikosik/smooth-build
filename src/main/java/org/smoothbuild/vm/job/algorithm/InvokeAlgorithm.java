@@ -13,6 +13,7 @@ import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.vm.java.MethodLoader;
+import org.smoothbuild.vm.java.MethodLoaderExc;
 
 public class InvokeAlgorithm extends Algorithm {
   private final MethodB methodB;
@@ -33,7 +34,16 @@ public class InvokeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    var method = methodLoader.load(name, methodB);
+    try {
+      return runImpl(input, nativeApi);
+    } catch (InvokeExc e) {
+      nativeApi.log().error(e.getMessage());
+      return new Output(null, nativeApi.messages());
+    }
+  }
+
+  private Output runImpl(Input input, NativeApi nativeApi) throws InvokeExc, InvokeRuntimeExc {
+    var method = loadMethod();
     var result = invoke(method, input, nativeApi);
     var hasErrors = containsErrors(nativeApi.messages());
     if (result == null) {
@@ -53,16 +63,23 @@ public class InvokeAlgorithm extends Algorithm {
       return new Output(null, nativeApi.messages());
     }
     return new Output(result, nativeApi.messages());
-
   }
 
-  private ValB invoke(Method method, Input input, NativeApi nativeApi) throws NativeCallExc {
+  private Method loadMethod() throws InvokeExc {
+    try {
+      return methodLoader.load(name, methodB);
+    } catch (MethodLoaderExc e) {
+      throw new InvokeExc(e);
+    }
+  }
+
+  private ValB invoke(Method method, Input input, NativeApi nativeApi) {
     try {
       return (ValB) method.invoke(null, createArgs(nativeApi, input.vals()));
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallExc(
+      throw new InvokeRuntimeExc(
           q(name) + " threw java exception from its native code.", e.getCause());
     }
   }
@@ -74,5 +91,17 @@ public class InvokeAlgorithm extends Algorithm {
       nativeArgs[i + 1] = args.get(i);
     }
     return nativeArgs;
+  }
+
+  private static class InvokeExc extends Exception {
+    public InvokeExc(Throwable e) {
+      super(e.getMessage(), e);
+    }
+  }
+
+  private static class InvokeRuntimeExc extends RuntimeException {
+    public InvokeRuntimeExc(String message, Throwable cause) {
+      super(message, cause);
+    }
   }
 }

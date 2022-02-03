@@ -25,6 +25,7 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.java.MethodLoader;
+import org.smoothbuild.vm.java.MethodLoaderExc;
 import org.smoothbuild.vm.job.JobCreator;
 import org.smoothbuild.vm.job.JobCreator.TaskCreator;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
@@ -281,7 +282,7 @@ public class VmTest extends TestingContext {
           when(methodLoader.load(any(), eq(method)))
               .thenReturn(VmTest.class.getMethod(
                   "returnSingleElemArray", NativeApi.class, ValB.class));
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException | MethodLoaderExc e) {
           throw new RuntimeException(e);
         }
         return invokeB(method, p);

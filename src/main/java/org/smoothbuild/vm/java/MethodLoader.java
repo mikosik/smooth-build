@@ -2,6 +2,7 @@ package org.smoothbuild.vm.java;
 
 import static java.util.Arrays.stream;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.reflect.Classes.loadClass;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
@@ -39,7 +40,7 @@ public class MethodLoader {
     this.methodCache = new HashMap<>();
   }
 
-  public synchronized Method load(String name, MethodB methodB) throws LoadingMethodExc {
+  public synchronized Method load(String name, MethodB methodB) throws MethodLoaderExc {
     String qName = q(name);
     String classBinaryName = methodB.classBinaryName().toJ();
     Method method = loadMethod(qName, methodB, classBinaryName);
@@ -48,13 +49,13 @@ public class MethodLoader {
   }
 
   private Method loadMethod(String qName, MethodB methodB, String classBinaryName)
-      throws LoadingMethodExc {
-    return methodCache.computeIfAbsent(methodB,
+      throws MethodLoaderExc {
+    return computeIfAbsent(methodCache, methodB,
         n -> findAndVerifyMethod(qName, methodB, classBinaryName));
   }
 
   private Method findAndVerifyMethod(String qName, MethodB methodB, String classBinaryName)
-      throws LoadingMethodExc {
+      throws MethodLoaderExc {
     Method method = findMethod(qName, methodB, classBinaryName);
     if (!isPublic(method)) {
       throw newLoadingExc(qName, classBinaryName, "Providing method is not public.");
@@ -69,7 +70,7 @@ public class MethodLoader {
   }
 
   private Method findMethod(String qName, MethodB methodB, String classBinaryName)
-      throws LoadingMethodExc {
+      throws MethodLoaderExc {
     Class<?> clazz = findClass(qName, methodB, classBinaryName);
     return stream(clazz.getDeclaredMethods())
         .filter(m -> m.getName().equals(NATIVE_METHOD_NAME))
@@ -80,7 +81,7 @@ public class MethodLoader {
   }
 
   private Class<?> findClass(String qName, MethodB methodB, String classBinaryName)
-      throws LoadingMethodExc {
+      throws MethodLoaderExc {
     FilePath originalJarFilePath = fileLoader.filePathOf(methodB.jar().hash());
     Path jarPath = jPathResolver.resolve(originalJarFilePath);
     try {
@@ -99,14 +100,14 @@ public class MethodLoader {
   }
 
   private void assertMethodMatchesFuncRequirements(String qName,
-      MethodB methodB, Method method, String classBinaryName) throws LoadingMethodExc {
+      MethodB methodB, Method method, String classBinaryName) throws MethodLoaderExc {
     assertNativeResMatchesDeclared(
         qName, method, methodB.type().res(), classBinaryName);
     assertNativeParamTsMatchesFuncParamTs(qName, method, methodB, classBinaryName);
   }
 
   private static void assertNativeResMatchesDeclared(String qName, Method method,
-      TypeB resTB, String classBinaryName) throws LoadingMethodExc {
+      TypeB resTB, String classBinaryName) throws MethodLoaderExc {
     var methodResTJ = method.getReturnType();
     var resTJ = resTB.typeJ();
     if (!resTJ.equals(methodResTJ)) {
@@ -118,7 +119,7 @@ public class MethodLoader {
   }
 
   private static void assertNativeParamTsMatchesFuncParamTs(String qName,
-      Method method, MethodB methodB, String classBinaryName) throws LoadingMethodExc {
+      Method method, MethodB methodB, String classBinaryName) throws MethodLoaderExc {
     Parameter[] nativeParams = method.getParameters();
     var paramTBs = methodB.type().params();
     if (paramTBs.size() != nativeParams.length - 1) {
@@ -140,20 +141,14 @@ public class MethodLoader {
     }
   }
 
-  private static LoadingMethodExc newLoadingExc(
+  private static MethodLoaderExc newLoadingExc(
       String qName, String classBinaryName, String message) {
     return newLoadingExc(qName, classBinaryName, message, null);
   }
 
-  private static LoadingMethodExc newLoadingExc(String qName, String classBinaryName,
+  private static MethodLoaderExc newLoadingExc(String qName, String classBinaryName,
       String message, Exception e) {
-    return new LoadingMethodExc("Error loading native implementation for "
+    return new MethodLoaderExc("Error loading native implementation for "
         + qName + " specified as `" + classBinaryName + "`: " + message, e);
-  }
-
-  private static class LoadingMethodExc extends RuntimeException {
-    public LoadingMethodExc(String message, Throwable e) {
-      super(message, e);
-    }
   }
 }
