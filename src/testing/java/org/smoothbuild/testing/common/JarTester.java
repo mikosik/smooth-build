@@ -29,8 +29,7 @@ public class JarTester {
       }
     }
 
-    ByteString bytes = buffer.readByteString();
-    return bytes;
+    return buffer.readByteString();
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, TupleB file) throws IOException {
