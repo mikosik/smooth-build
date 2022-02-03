@@ -81,6 +81,7 @@ import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.io.fs.space.Space;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefValS;
 import org.smoothbuild.lang.base.define.IfFuncS;
@@ -556,11 +557,23 @@ public class TestingContext {
   }
 
   public TupleB fileB(PathS path) {
-    return fileB(path, ByteString.encodeString(path.toString(), CHARSET));
+    return fileB(path, path.toString());
+  }
+
+  public TupleB fileB(PathS path, String content) {
+    return fileB(path.toString(), content);
+  }
+
+  public TupleB fileB(String path, String content) {
+    return fileB(path, ByteString.encodeString(content, CHARSET));
   }
 
   public TupleB fileB(PathS path, ByteString content) {
-    return fileB(path.toString(), blobB(content));
+    return fileB(path.toString(), content);
+  }
+
+  public TupleB fileB(String path, ByteString content) {
+    return fileB(path, blobB(content));
   }
 
   public TupleB fileB(String path, BlobB blob) {
@@ -1086,7 +1099,15 @@ public class TestingContext {
   }
 
   public static Loc loc(int line) {
-    return Loc.loc(filePath(), line);
+    return loc(filePath(), line);
+  }
+
+  public static Loc loc(FilePath filePath, int line) {
+    return Loc.loc(filePath, line);
+  }
+
+  public static FilePath filePath(Space space, PathS path) {
+    return FilePath.filePath(space, path);
   }
 
   public static FilePath filePath() {
