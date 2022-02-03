@@ -524,7 +524,7 @@ public class TestingContext {
         .build();
   }
 
-  public BlobB blobBWithJavaByteCode(Class<?>... classes) throws IOException {
+  public BlobB blobBJarWithJavaByteCode(Class<?>... classes) throws IOException {
     var blobBBuilder = objDb().blobBuilder();
     try (var outputStream = blobBBuilder.sink().outputStream()) {
       saveByteCodeInJar(outputStream, classes);
