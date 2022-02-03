@@ -15,6 +15,7 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.MethodB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.plugin.NativeApi;
@@ -25,12 +26,14 @@ import org.smoothbuild.vm.compute.Container;
  */
 @Singleton
 public class MethodLoader {
-  private static final String NATIVE_METHOD_NAME = "func";
+  static final String NATIVE_METHOD_NAME = "func";
   private final HashMap<MethodB, Method> methodCache;
+  private final HashMap<BlobB, ClassLoader> classLoaderCache;
 
   @Inject
   public MethodLoader() {
     this.methodCache = new HashMap<>();
+    this.classLoaderCache = new HashMap<>();
   }
 
   public synchronized Method load(String name, MethodB methodB, ClassLoaderProv classLoaderProv)
@@ -81,8 +84,8 @@ public class MethodLoader {
       String qName, MethodB methodB, String classBinaryName, ClassLoaderProv classLoaderProv)
       throws MethodLoaderExc {
     try {
-      var classLoader = classLoaderProv.classLoaderForJar(methodB.jar());
-      return classLoader.loadClass(classBinaryName);
+      return findClassLoader(methodB, classLoaderProv)
+          .loadClass(classBinaryName);
     } catch (ClassNotFoundException e) {
       throw newLoadingExc(qName, classBinaryName, "Class not found in jar.");
     } catch (FileNotFoundException | ClassLoaderProvExc e) {
@@ -90,6 +93,17 @@ public class MethodLoader {
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
+  }
+
+  private ClassLoader findClassLoader(MethodB methodB, ClassLoaderProv classLoaderProv)
+      throws ClassLoaderProvExc, IOException {
+    var jar = methodB.jar();
+    var classLoader = classLoaderCache.get(jar);
+    if (classLoader == null) {
+      classLoader = classLoaderProv.classLoaderForJar(jar);
+      classLoaderCache.put(jar, classLoader);
+    }
+    return classLoader;
   }
 
   private static boolean hasContainerParam(Method method) {
