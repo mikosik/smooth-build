@@ -11,6 +11,7 @@ import static org.smoothbuild.util.collect.Maps.sort;
 import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.collect.Maps.zip;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,6 +180,14 @@ public class MapsTest {
       });
       assertThat(map)
           .containsExactly(3, "3");
+    }
+
+    @Test
+    public void exception_is_propagated() {
+      var map = new HashMap<Integer, String>();
+      map.put(3, "three");
+      assertCall(() -> computeIfAbsent(map, 1, i -> {throw new IOException();}))
+          .throwsException(IOException.class);
     }
   }
 

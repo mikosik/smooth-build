@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import org.smoothbuild.util.function.ThrowingFunction;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
@@ -41,8 +43,8 @@ public class Maps {
   /**
    * Works like Map.computeIfAbsent() but allows modifying map from mappingFunction
    */
-  public static <K, V> V computeIfAbsent(Map<K, V> map, K key,
-      Function<? super K, ? extends V> mappingFunction) {
+  public static <K, V, E extends Throwable> V computeIfAbsent(Map<K, V> map, K key,
+      ThrowingFunction<? super K, ? extends V, E> mappingFunction) throws E {
     V value = map.get(key);
     if (value == null) {
       value = mappingFunction.apply(key);
