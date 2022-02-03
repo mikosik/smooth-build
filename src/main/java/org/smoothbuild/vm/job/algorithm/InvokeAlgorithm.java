@@ -4,6 +4,7 @@ import static org.smoothbuild.eval.artifact.MessageStruct.containsErrors;
 import static org.smoothbuild.util.Strings.q;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.smoothbuild.bytecode.obj.val.MethodB;
@@ -33,32 +34,36 @@ public class InvokeAlgorithm extends Algorithm {
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     var method = methodLoader.load(name, methodB);
+    var result = invoke(method, input, nativeApi);
+    var hasErrors = containsErrors(nativeApi.messages());
+    if (result == null) {
+      if (!hasErrors) {
+        nativeApi.log().error(
+            q(name) + " has faulty native implementation: it returned `null` but logged no error.");
+      }
+      return new Output(null, nativeApi.messages());
+    }
+    if (!outputT().equals(result.cat())) {
+      nativeApi.log().error(q(name)
+          + " has faulty native implementation: Its declared result type == "
+          + outputT().q() + " but it returned object with type == " + result.cat().q() + ".");
+      return new Output(null, nativeApi.messages());
+    }
+    if (hasErrors) {
+      return new Output(null, nativeApi.messages());
+    }
+    return new Output(result, nativeApi.messages());
+
+  }
+
+  private ValB invoke(Method method, Input input, NativeApi nativeApi) throws NativeCallExc {
     try {
-      var result = (ValB) method.invoke(null, createArgs(nativeApi, input.vals()));
-      var hasErrors = containsErrors(nativeApi.messages());
-      if (result == null) {
-        if (!hasErrors) {
-          nativeApi.log().error(q(name)
-              + " has faulty native implementation: it returned `null` but logged no error.");
-        }
-        return new Output(null, nativeApi.messages());
-      }
-      if (!outputT().equals(result.cat())) {
-        nativeApi.log().error(q(name)
-            + " has faulty native implementation: Its declared result type == "
-            + outputT().q()
-            + " but it returned object with type == " + result.cat().q() + ".");
-        return new Output(null, nativeApi.messages());
-      }
-      if (hasErrors) {
-        return new Output(null, nativeApi.messages());
-      }
-      return new Output(result, nativeApi.messages());
+      return (ValB) method.invoke(null, createArgs(nativeApi, input.vals()));
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallExc(q(name)
-          + " threw java exception from its native code.", e.getCause());
+      throw new NativeCallExc(
+          q(name) + " threw java exception from its native code.", e.getCause());
     }
   }
 
