@@ -1,22 +1,19 @@
 package org.smoothbuild.slib.compress;
 
 import static java.util.function.Function.identity;
-import static okio.Okio.source;
 import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
+import static org.smoothbuild.plugin.UnzipBlob.unzipBlob;
 import static org.smoothbuild.slib.java.UnjarFunc.JAR_MANIFEST_PATH;
 import static org.smoothbuild.util.collect.Maps.toMap;
-import static org.smoothbuild.util.io.Unzip.unzip;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.BlobB;
-import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.io.DuplicateFileNameExc;
@@ -74,7 +71,7 @@ public class UnzipHelper {
       NativeApi nativeApi, BlobB blob, Predicate<String> includePredicate)
       throws IOException {
     try {
-      return unzipImpl(nativeApi, blob, includePredicate);
+      return unzipBlob(nativeApi, blob, includePredicate);
     } catch (ZipException e) {
       nativeApi.log().error(
           "Cannot read archive. Corrupted data? Internal message: " + e.getMessage());
@@ -86,19 +83,5 @@ public class UnzipHelper {
       nativeApi.log().error(e.getMessage());
       return null;
     }
-  }
-
-  private static ArrayB unzipImpl(NativeApi nativeApi, BlobB blob,
-      Predicate<String> includePredicate)
-      throws IOException, ZipException, DuplicateFileNameExc, IllegalZipEntryFileNameExc {
-    var arrayBuilder = nativeApi.factory().arrayBuilderWithElems(nativeApi.factory().fileT());
-    unzip(blob, includePredicate, (f, is) -> arrayBuilder.add(fileB(nativeApi, f, is)));
-    return arrayBuilder.build();
-  }
-
-  private static TupleB fileB(NativeApi nativeApi, String fileName, InputStream inputStream) {
-    StringB path = nativeApi.factory().string(fileName);
-    BlobB content = nativeApi.factory().blob(sink -> sink.writeAll(source(inputStream)));
-    return nativeApi.factory().file(path, content);
   }
 }
