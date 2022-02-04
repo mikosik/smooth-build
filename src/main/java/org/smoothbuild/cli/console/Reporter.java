@@ -3,8 +3,6 @@ package org.smoothbuild.cli.console;
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.cli.console.Level.ERROR;
-import static org.smoothbuild.cli.console.Level.FATAL;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 
@@ -53,6 +51,11 @@ public class Reporter {
     }
   }
 
+  public void report(List<Log> logs) {
+    increaseCounts(logs);
+    reportFiltered("", logs);
+  }
+
   public void report(String taskHeader, List<Log> logs) {
     increaseCounts(logs);
     reportFiltered(taskHeader, logs);
@@ -78,29 +81,20 @@ public class Reporter {
     counts.get(level).incrementAndGet();
   }
 
-  public boolean isProblemReported() {
-    return fatalCount() != 0 || errorCount() != 0;
-  }
-
-  private int fatalCount() {
-    return counts.get(FATAL).get();
-  }
-
-  private int errorCount() {
-    return counts.get(ERROR).get();
-  }
-
-  public void print(String header, List<Log> logs) {
+  private void print(String header, List<Log> logs) {
     console.println(toText(header, logs));
   }
 
+  // visible for testing
   static String toText(String header, List<Log> logs) {
-    StringBuilder text = new StringBuilder(formattedHeader(header));
+    var builder = new StringBuilder(header.isBlank() ? "" : formattedHeader(header));
     for (Log log : logs) {
-      text.append("\n");
-      text.append(prefixMultiline(log.level() + ": " + log.message()));
+      if (!builder.isEmpty()) {
+        builder.append("\n");
+      }
+      builder.append(prefixMultiline(log.level() + ": " + log.message()));
     }
-    return text.toString();
+    return builder.toString();
   }
 
   private static String formattedHeader(String header) {
@@ -113,7 +107,6 @@ public class Reporter {
   }
 
   // visible for testing
-
   public static String prefixMultiline(String[] lines) {
     lines[0] = MESSAGE_FIRST_LINE_PREFIX + lines[0];
     for (int i = 1; i < lines.length; i++) {
@@ -144,14 +137,5 @@ public class Reporter {
       name = name + "s";
     }
     return value + " " + name;
-  }
-
-  public void printlnRawFatal(String message) {
-    counts.get(FATAL).incrementAndGet();
-    printlnRaw(message);
-  }
-
-  public void printlnRaw(String line) {
-    console.println(line);
   }
 }

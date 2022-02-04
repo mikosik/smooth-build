@@ -1,5 +1,7 @@
 package org.smoothbuild.eval;
 
+import static org.smoothbuild.cli.console.Log.fatal;
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;
@@ -49,7 +51,7 @@ public class Evaluator {
     try {
       return vm.evaluate(exprs.get());
     } catch (InterruptedException e) {
-      reporter.printlnRaw("Evaluation process has been interrupted.");
+      reporter.report(list(fatal("Evaluation process has been interrupted.")));
       return Optional.empty();
     }
   }
@@ -58,7 +60,7 @@ public class Evaluator {
     try {
       return Optional.of(map(values, compiler::compileExpr));
     } catch (CompilerExc e) {
-      reporter.printlnRawFatal(e.getMessage());
+      reporter.report(list(fatal(e.getMessage())));
       return Optional.empty();
     }
   }

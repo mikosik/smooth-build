@@ -148,38 +148,6 @@ public class ReporterTest extends TestingContext {
   }
 
   @Nested
-  class isProblemReported {
-    @Test
-    public void returns_false_when_nothing_was_logged() {
-      assertFalse(reporter.isProblemReported());
-    }
-
-    @Test
-    public void returns_false_when_only_info_was_logged() {
-      reporter.reportTask(taskInfo(), HEADER, list(info("message string")));
-      assertFalse(reporter.isProblemReported());
-    }
-
-    @Test
-    public void returns_false_when_only_warning_was_logged() {
-      reporter.reportTask(taskInfo(), HEADER, list(warning("message string")));
-      assertFalse(reporter.isProblemReported());
-    }
-
-    @Test
-    public void returns_true_when_error_was_logged() {
-      reporter.reportTask(taskInfo(), HEADER, list(error("message string")));
-      assertTrue(reporter.isProblemReported());
-    }
-
-    @Test
-    public void returns_true_when_fatal_was_logged() {
-      reporter.reportTask(taskInfo(), HEADER, list(fatal("message string")));
-      assertTrue(reporter.isProblemReported());
-    }
-  }
-
-  @Nested
   class printSummary {
     @Test
     public void contains_all_stats() {

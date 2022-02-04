@@ -33,7 +33,7 @@ public class ArtifactsRemover {
       try {
         fileSystem.delete(path);
       } catch (IOException e) {
-        reporter.print("Deleting " + path, list(error(e.getMessage())));
+        reporter.report("Deleting " + path, list(error(e.getMessage())));
         return EXIT_CODE_ERROR;
       }
     }
