@@ -52,14 +52,14 @@ import org.smoothbuild.vm.job.algorithm.InvokeAlgorithm;
 import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.job.algorithm.SelectAlgorithm;
 import org.smoothbuild.vm.job.job.CallJob;
-import org.smoothbuild.vm.job.job.ConstJob;
+import org.smoothbuild.vm.job.job.ConstTask;
 import org.smoothbuild.vm.job.job.IfJob;
 import org.smoothbuild.vm.job.job.Job;
 import org.smoothbuild.vm.job.job.LazyJob;
 import org.smoothbuild.vm.job.job.MapJob;
 import org.smoothbuild.vm.job.job.Task;
 import org.smoothbuild.vm.job.job.TaskInfo;
-import org.smoothbuild.vm.job.job.VirtualJob;
+import org.smoothbuild.vm.job.job.VirtualTask;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -362,12 +362,12 @@ public class JobCreator {
   private Job constLazy(ValB val, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(val);
     var loc = nal.loc();
-    return new LazyJob(val.cat(), loc, () -> new ConstJob(val, nal));
+    return new LazyJob(val.cat(), loc, () -> new ConstTask(val, nal));
   }
 
   private Job constEager(ValB val, List<Job> scope, VarBounds<TypeB> vars) {
     var nal = nalFor(val);
-    return new ConstJob(val, nal);
+    return new ConstTask(val, nal);
   }
 
   // helper methods
@@ -378,7 +378,7 @@ public class JobCreator {
     var nal = nalFor(func);
     var name = nal.name() + PARENTHESES;
     var convertedJ = convertIfNeeded(actualEvalT, nal.loc(), job);
-    return new VirtualJob(convertedJ, new TaskInfo(CALL, name, loc));
+    return new VirtualTask(convertedJ, new TaskInfo(CALL, name, loc));
   }
 
   private TypeB mapClosedVarsLower(TypeB t, VarBounds<TypeB> newVars) {
