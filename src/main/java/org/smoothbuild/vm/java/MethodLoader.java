@@ -1,7 +1,8 @@
 package org.smoothbuild.vm.java;
 
-import static java.util.Arrays.stream;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.util.Strings.q;
+import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
@@ -72,12 +73,24 @@ public class MethodLoader {
       String qName, MethodB methodB, String classBinaryName, ClassLoaderProv classLoaderProv)
       throws MethodLoaderExc {
     var clazz = findClass(qName, methodB, classBinaryName, classLoaderProv);
-    return stream(clazz.getDeclaredMethods())
-        .filter(m -> m.getName().equals(NATIVE_METHOD_NAME))
-        .findFirst()
-        .orElseThrow(() -> newLoadingExc(qName, classBinaryName, "Class '" +
-            clazz.getCanonicalName() + "' does not have '" + NATIVE_METHOD_NAME + "' method."
-        ));
+    var declaredMethods = asList(clazz.getDeclaredMethods());
+    var methods = filter(declaredMethods, m -> m.getName().equals(NATIVE_METHOD_NAME));
+    return switch (methods.size()) {
+      case 0 -> throw newMissingMethodExc(qName, classBinaryName, clazz);
+      case 1 -> methods.get(0);
+      default -> throw newOverloadedMethodExc(qName, classBinaryName);
+    };
+  }
+
+  private static MethodLoaderExc newMissingMethodExc(String qName, String classBinaryName,
+      Class<?> clazz) {
+    return newLoadingExc(qName, classBinaryName, "Class '" +
+        clazz.getCanonicalName() + "' does not have '" + NATIVE_METHOD_NAME + "' method.");
+  }
+
+  private static MethodLoaderExc newOverloadedMethodExc(String qName, String classBinaryName) {
+    return newLoadingExc(qName, classBinaryName, "Class '" + classBinaryName + "' has two "
+        + "'func' methods.");
   }
 
   private Class<?> findClass(

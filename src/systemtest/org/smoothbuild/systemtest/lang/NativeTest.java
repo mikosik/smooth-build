@@ -17,6 +17,7 @@ import org.smoothbuild.nativefunc.BrokenIdentity;
 import org.smoothbuild.nativefunc.EmptyStringArray;
 import org.smoothbuild.nativefunc.NonPublicMethod;
 import org.smoothbuild.nativefunc.NonStaticMethod;
+import org.smoothbuild.nativefunc.OverloadedMethodName;
 import org.smoothbuild.nativefunc.ReportErrorAndReturnNonNull;
 import org.smoothbuild.nativefunc.ReportFixedError;
 import org.smoothbuild.nativefunc.ReportWarningAndReturnNull;
@@ -148,6 +149,21 @@ public class NativeTest extends SystemTestCase {
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("wrongMethodName", classPath,
             "Class '" + classPath + "' does not have 'func' method."));
+      }
+
+      @Test
+      public void is_overloaded() throws Exception {
+        createNativeJar(OverloadedMethodName.class);
+        String classPath = OverloadedMethodName.class.getCanonicalName();
+        createUserModule(format("""
+              @Native("%s")
+              String overloadedMethodName();
+              result = overloadedMethodName();
+              """, classPath));
+        runSmoothBuild("result");
+        assertFinishedWithError();
+        assertSysOutContains(errorLoadingMessage("overloadedMethodName", classPath,
+            "Class '" + classPath + "' has two 'func' methods."));
       }
 
       @Test
