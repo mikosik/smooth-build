@@ -179,7 +179,7 @@ public class ParallelJobExecutorTest extends TestingContext {
 
     assertThat(parallelJobExecutor.executeAll(list(job)).get(0).isEmpty())
         .isTrue();
-    verify(reporter).report(
+    verify(reporter).reportTask(
         eq(job.info()),
         eq(header(job.info(), "exec")),
         eq(list(error("Execution failed with:\n" + getStackTraceAsString(exception)))));

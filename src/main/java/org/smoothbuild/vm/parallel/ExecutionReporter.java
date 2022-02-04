@@ -64,7 +64,7 @@ public class ExecutionReporter {
   }
 
   private void print(TaskInfo taskInfo, List<Log> logs, String resultSource) {
-    reporter.report(taskInfo, header(taskInfo, resultSource), logs);
+    reporter.reportTask(taskInfo, header(taskInfo, resultSource), logs);
   }
 
   // Visible for testing
