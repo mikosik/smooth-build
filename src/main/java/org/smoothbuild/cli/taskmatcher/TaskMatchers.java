@@ -93,11 +93,11 @@ public class TaskMatchers {
         .anyMatch(l -> l.level().hasPriorityAtLeast(level));
   }
 
-  private static TaskMatcher spaceMatcher(Space user) {
-    return (task, logs) -> Objects.equals(task.loc().file().space(), user);
+  private static TaskMatcher spaceMatcher(Space space) {
+    return (task, logs) -> Objects.equals(task.loc().file().space(), space);
   }
 
-  private static TaskMatcher kindMatcher(JobKind buildingCall) {
-    return (task, logs) -> Objects.equals(task.kind(), buildingCall);
+  private static TaskMatcher kindMatcher(JobKind kind) {
+    return (task, logs) -> Objects.equals(task.kind(), kind);
   }
 }
