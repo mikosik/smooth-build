@@ -11,12 +11,12 @@ import org.smoothbuild.vm.parallel.ParallelJobExecutor.Worker;
 
 public class VirtualJob extends AbstractJob {
   private final Job job;
-  private final JobInfo jobInfo;
+  private final TaskInfo taskInfo;
 
-  public VirtualJob(Job job, JobInfo jobInfo) {
-    super(job.type(), jobInfo.loc());
+  public VirtualJob(Job job, TaskInfo taskInfo) {
+    super(job.type(), taskInfo.loc());
     this.job = job;
-    this.jobInfo = jobInfo;
+    this.taskInfo = taskInfo;
   }
 
   @Override
@@ -29,7 +29,7 @@ public class VirtualJob extends AbstractJob {
   }
 
   private void onCompleted(ValB val, Worker worker, Consumer<ValB> result) {
-    worker.reporter().print(jobInfo, list());
+    worker.reporter().print(taskInfo, list());
     result.accept(val);
   }
 }

@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.job.job;
 
-public enum JobKind {
+public enum TaskKind {
   CALL,
   COMBINE,
   CONST,

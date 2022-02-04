@@ -14,9 +14,9 @@ import com.google.common.collect.ImmutableList;
 public class Task extends AbstractJob {
   private final Algorithm algorithm;
   private final ImmutableList<Job> depJs;
-  private final JobInfo info;
+  private final TaskInfo info;
 
-  public Task(Algorithm algorithm, ImmutableList<Job> depJs, JobInfo info) {
+  public Task(Algorithm algorithm, ImmutableList<Job> depJs, TaskInfo info) {
     super(algorithm.outputT(), info.loc());
     this.algorithm = algorithm;
     this.depJs = depJs;
@@ -27,7 +27,7 @@ public class Task extends AbstractJob {
     return algorithm;
   }
 
-  public JobInfo info() {
+  public TaskInfo info() {
     return info;
   }
 

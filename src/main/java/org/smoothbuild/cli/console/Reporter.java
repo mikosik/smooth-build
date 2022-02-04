@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
-import org.smoothbuild.vm.job.job.JobInfo;
+import org.smoothbuild.vm.job.job.TaskInfo;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -46,9 +46,9 @@ public class Reporter {
     console.println(name);
   }
 
-  public void report(JobInfo jobInfo, String taskHeader, List<Log> logs) {
+  public void report(TaskInfo taskInfo, String taskHeader, List<Log> logs) {
     increaseCounts(logs);
-    if (taskMatcher.matches(jobInfo, logs)) {
+    if (taskMatcher.matches(taskInfo, logs)) {
       reportFiltered(taskHeader, logs);
     }
   }

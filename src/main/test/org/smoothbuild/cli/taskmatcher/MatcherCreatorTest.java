@@ -40,8 +40,8 @@ import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.io.fs.space.Space;
 import org.smoothbuild.lang.base.define.Loc;
-import org.smoothbuild.vm.job.job.JobInfo;
-import org.smoothbuild.vm.job.job.JobKind;
+import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.job.job.TaskKind;
 
 import picocli.CommandLine.TypeConversionException;
 
@@ -52,13 +52,13 @@ public class MatcherCreatorTest {
     TaskMatcher matcher = createMatcher(expression);
 
     StringBuilder builder = new StringBuilder();
-    for (JobKind kind : JobKind.values()) {
+    for (TaskKind kind : TaskKind.values()) {
       for (Space space : Space.values()) {
         for (Level level : levels()) {
-          JobInfo jobInfo = taskInfo(kind, space);
+          TaskInfo taskInfo = taskInfo(kind, space);
           List<Log> logs = level == null ? list() : list(new Log(level, "message"));
-          boolean actual = matcher.matches(jobInfo, logs);
-          boolean expected = expectedMatcher.matches(jobInfo, logs);
+          boolean actual = matcher.matches(taskInfo, logs);
+          boolean expected = expectedMatcher.matches(taskInfo, logs);
           if (actual != expected) {
             builder
                 .append(kind)
@@ -88,9 +88,9 @@ public class MatcherCreatorTest {
     return levels;
   }
 
-  private static JobInfo taskInfo(JobKind kind, Space space) {
+  private static TaskInfo taskInfo(TaskKind kind, Space space) {
     Loc loc = new Loc(filePath(space, path("path")), 3);
-    return new JobInfo(kind, "name", loc);
+    return new TaskInfo(kind, "name", loc);
   }
 
   public static Stream<? extends Arguments> provideArguments() {

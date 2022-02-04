@@ -31,8 +31,8 @@ import org.smoothbuild.vm.job.JobCreator.TaskCreator;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
 import org.smoothbuild.vm.job.algorithm.OrderAlgorithm;
 import org.smoothbuild.vm.job.job.Job;
-import org.smoothbuild.vm.job.job.JobInfo;
 import org.smoothbuild.vm.job.job.Task;
+import org.smoothbuild.vm.job.job.TaskInfo;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -451,7 +451,7 @@ public class VmTest extends TestingContext {
     // the latter is final and cannot be mocked by Mockito.
     taskCreator = spy(new TaskCreator() {
       @Override
-      public Task newTask(Algorithm algorithm, ImmutableList<Job> depJs, JobInfo info) {
+      public Task newTask(Algorithm algorithm, ImmutableList<Job> depJs, TaskInfo info) {
         return new Task(algorithm, depJs, info);
       }
     });

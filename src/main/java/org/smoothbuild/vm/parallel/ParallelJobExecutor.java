@@ -16,7 +16,7 @@ import org.smoothbuild.vm.compute.Computer;
 import org.smoothbuild.vm.job.algorithm.Algorithm;
 import org.smoothbuild.vm.job.algorithm.Input;
 import org.smoothbuild.vm.job.job.Job;
-import org.smoothbuild.vm.job.job.JobInfo;
+import org.smoothbuild.vm.job.job.TaskInfo;
 
 /**
  * Executes tasks in parallel.
@@ -71,7 +71,7 @@ public class ParallelJobExecutor {
       return map(results, promise -> Optional.ofNullable(promise.get()));
     }
 
-    public void enqueue(JobInfo info, Algorithm algorithm, List<Promise<ValB>> deps,
+    public void enqueue(TaskInfo info, Algorithm algorithm, List<Promise<ValB>> deps,
         Consumer<ValB> consumer) {
       jobExecutor.enqueue(() -> {
         try {
