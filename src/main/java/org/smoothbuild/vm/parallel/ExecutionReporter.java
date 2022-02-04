@@ -39,8 +39,7 @@ public class ExecutionReporter {
     if (computed.hasOutput()) {
       print(taskInfo, resSource, computed.output().messages());
     } else {
-      Log error = error(
-          "Execution failed with:\n" + getStackTraceAsString(computed.exception()));
+      Log error = error("Execution failed with:\n" + getStackTraceAsString(computed.exception()));
       print(taskInfo, list(error), resSource);
     }
   }
@@ -48,7 +47,7 @@ public class ExecutionReporter {
   public void reportComputerException(TaskInfo taskInfo, Throwable throwable) {
     Log fatal = fatal(
         "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
-    ExecutionReporter.this.print(taskInfo, list(fatal), EXECUTION.toString());
+    print(taskInfo, list(fatal), EXECUTION.toString());
   }
 
   private void print(TaskInfo taskInfo, ResSource resSource, ArrayB messages) {
