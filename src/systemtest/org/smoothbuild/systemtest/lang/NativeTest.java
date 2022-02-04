@@ -178,7 +178,7 @@ public class NativeTest extends SystemTestCase {
         runSmoothBuild("result");
         assertFinishedWithError();
         assertSysOutContains(errorLoadingMessage("stringIdentity", classPath,
-            "`stringIdentity` declares type `{Blob,String}` "
+            "`stringIdentity` declares type `{String,Blob}` "
                 + "so its native implementation result type must be "
                 + TupleB.class.getCanonicalName()
                 + " but it is " + StringB.class.getCanonicalName() + ".\n"));

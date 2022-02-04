@@ -374,7 +374,7 @@ public class TestingContext {
   }
 
   public TupleTB fileTB() {
-    return tupleTB(blobTB(), stringTB());
+    return tupleTB(stringTB(), blobTB());
   }
 
   public FuncTB funcTB() {

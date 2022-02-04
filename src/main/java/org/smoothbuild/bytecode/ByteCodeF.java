@@ -104,7 +104,7 @@ public class ByteCodeF {
   }
 
   public TupleB file(StringB path, BlobB content) {
-    return objDb.tuple(fileT(), list(content, path));
+    return objDb.tuple(fileT(), list(path, content));
   }
 
   public IfB if_(ObjB condition, ObjB then, ObjB else_) {
@@ -231,6 +231,6 @@ public class ByteCodeF {
   }
 
   private static TupleTB createFileT(CatDb catDb) {
-    return catDb.tuple(list(catDb.blob(), catDb.string()));
+    return catDb.tuple(list(catDb.string(), catDb.blob()));
   }
 }

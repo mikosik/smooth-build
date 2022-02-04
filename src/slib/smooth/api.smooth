@@ -1,7 +1,7 @@
 
 File {
-  Blob content,
   String path,
+  Blob content,
 }
 
 @Native("org.smoothbuild.slib.bool.NotFunc")

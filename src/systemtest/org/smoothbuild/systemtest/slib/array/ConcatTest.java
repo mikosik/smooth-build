@@ -35,8 +35,8 @@ public class ConcatTest extends SystemTestCase {
   public void concatenate_file_arrays() throws Exception {
     createUserModule("""
             result = concat(
-              [ file(0x41, "file1.txt") ],
-              [ file(0x42, "file2.txt") ],
+              [ file("file1.txt", 0x41) ],
+              [ file("file2.txt", 0x42) ],
             );
             """);
     runSmoothBuild("result");
