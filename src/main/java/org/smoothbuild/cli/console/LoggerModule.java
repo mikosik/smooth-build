@@ -17,5 +17,6 @@ public class LoggerModule extends AbstractModule {
   protected void configure() {
     bind(Level.class).toInstance(logLevel);
     bind(TaskMatcher.class).toInstance(taskMatcher);
+    bind(Reporter.class).to(ConsoleReporter.class);
   }
 }

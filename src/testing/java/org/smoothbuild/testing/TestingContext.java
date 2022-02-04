@@ -70,6 +70,7 @@ import org.smoothbuild.bytecode.type.val.OpenVarTB;
 import org.smoothbuild.bytecode.type.val.StringTB;
 import org.smoothbuild.bytecode.type.val.TupleTB;
 import org.smoothbuild.cli.console.Console;
+import org.smoothbuild.cli.console.ConsoleReporter;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.HashedDb;
@@ -202,7 +203,7 @@ public class TestingContext {
   }
 
   public Reporter reporter() {
-    return new Reporter(console(), ALL, INFO);
+    return new ConsoleReporter(console(), ALL, INFO);
   }
 
   private Console console() {

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.cli.console.Reporter.prefixMultiline;
+import static org.smoothbuild.cli.console.ConsoleReporter.prefixMultiline;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_PATH;
