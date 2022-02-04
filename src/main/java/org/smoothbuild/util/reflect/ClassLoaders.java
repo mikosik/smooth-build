@@ -13,11 +13,11 @@ import java.nio.file.Path;
 import java.util.function.Function;
 
 public class ClassLoaders {
-  public static URLClassLoader mapClassLoader(Function<String, InputStream> filesMap) {
+  public static ClassLoader mapClassLoader(Function<String, InputStream> filesMap) {
     return mapClassLoader(ClassLoaders.class.getClassLoader(), filesMap);
   }
 
-  public static URLClassLoader mapClassLoader(
+  public static ClassLoader mapClassLoader(
       ClassLoader parentClassLoader, Function<String, InputStream> filesMap) {
     try {
       var url = new URL("x-buffer", null, -1, "/", urlStreamHandler(filesMap));

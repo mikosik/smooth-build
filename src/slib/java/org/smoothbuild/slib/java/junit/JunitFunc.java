@@ -12,7 +12,6 @@ import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 
 import java.io.IOException;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -68,7 +67,7 @@ public class JunitFunc {
     }
   }
 
-  private static URLClassLoader classLoader(ImmutableMap<String, TupleB> filesMap) {
+  private static ClassLoader classLoader(ImmutableMap<String, TupleB> filesMap) {
     return mapClassLoader(getPlatformClassLoader(), path -> {
       TupleB file = filesMap.get(path);
       return file == null ? null : fileContent(file).source().inputStream();

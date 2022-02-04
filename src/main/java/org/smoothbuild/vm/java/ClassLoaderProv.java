@@ -8,7 +8,6 @@ import static org.smoothbuild.util.collect.Maps.toMap;
 import static org.smoothbuild.util.reflect.ClassLoaders.mapClassLoader;
 
 import java.io.IOException;
-import java.net.URLClassLoader;
 
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
@@ -39,7 +38,7 @@ public class ClassLoaderProv {
     }
   }
 
-  private URLClassLoader classLoader(ImmutableMap<String, TupleB> filesMap) {
+  private ClassLoader classLoader(ImmutableMap<String, TupleB> filesMap) {
     return mapClassLoader(parentClassLoader, path -> {
       TupleB file = filesMap.get(path);
       return file == null ? null : fileContent(file).source().inputStream();
