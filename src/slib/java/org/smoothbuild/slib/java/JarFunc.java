@@ -8,6 +8,7 @@ import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -17,19 +18,18 @@ import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.BlobBBuilder;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.util.collect.DuplicatesDetector;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class JarFunc {
   public static BlobB func(NativeApi nativeApi, ArrayB files, BlobB manifest) throws IOException {
-    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
+    var duplicatesDetector = new HashSet<String>();
     BlobBBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
       for (TupleB file : files.elems(TupleB.class)) {
         String path = filePath(file).toJ();
-        if (duplicatesDetector.addValue(path)) {
+        if (!duplicatesDetector.add(path)) {
           nativeApi.log().error("Cannot jar two files with the same path = " + path);
           return null;
         }
