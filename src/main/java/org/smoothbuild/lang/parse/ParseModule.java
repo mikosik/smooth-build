@@ -40,7 +40,9 @@ public class ParseModule {
     SmoothParser parser = new SmoothParser(new CommonTokenStream(lexer));
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
-    return maybeValueAndLogs(parser.mod(), logBuffer);
+    var mod = parser.mod();
+    var result = logBuffer.containsProblem() ? null : mod;
+    return maybeValueAndLogs(result, logBuffer);
   }
 
   public static class ErrorListener implements ANTLRErrorListener {

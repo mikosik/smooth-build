@@ -25,7 +25,7 @@ public class Maybe<V> {
   }
 
   private Maybe(V value, Logs logs) {
-    checkArgument(value != null || logs.containsProblem());
+    checkArgument((value == null) == logs.containsProblem());
     this.value = value;
     this.logs = logs.toImmutableLogs();
   }

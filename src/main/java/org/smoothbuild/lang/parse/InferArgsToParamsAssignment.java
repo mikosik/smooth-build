@@ -33,7 +33,7 @@ public class InferArgsToParamsAssignment {
   public static Maybe<List<Optional<ArgNode>>> inferArgsToParamsAssignment(
       CallN call, NList<ItemSigS> params) {
     var logBuffer = new LogBuffer();
-    ImmutableList<ArgNode> positionalArgs = leadingPositionalArgs(call);
+    var positionalArgs = leadingPositionalArgs(call);
     logBuffer.logAll(findPositionalArgAfterNamedArgError(call, params));
     logBuffer.logAll(findTooManyPositionalArgsError(call, positionalArgs, params));
     logBuffer.logAll(findUnknownParamNameErrors(call, params));
@@ -42,10 +42,10 @@ public class InferArgsToParamsAssignment {
       return maybeLogs(logBuffer);
     }
 
-    List<Optional<ArgNode>> assignedArgs = assignedArgs(call, params);
-    logBuffer.logAll(
-        findUnassignedParamsWithoutDefaultArgsErrors(call, assignedArgs, params));
-    return maybeValueAndLogs(assignedArgs, logBuffer);
+    var assignedArgs = assignedArgs(call, params);
+    logBuffer.logAll(findUnassignedParamsWithoutDefaultArgsErrors(call, assignedArgs, params));
+    var result = logBuffer.containsProblem() ? null : assignedArgs;
+    return maybeValueAndLogs(result, logBuffer);
   }
 
   private static ImmutableList<ArgNode> leadingPositionalArgs(CallN call) {
