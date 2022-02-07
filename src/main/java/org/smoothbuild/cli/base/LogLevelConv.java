@@ -1,9 +1,11 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.cli.base;
 
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.FATAL;
 import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
+
+import org.smoothbuild.cli.console.Level;
 
 import com.google.common.collect.ImmutableMap;
 
