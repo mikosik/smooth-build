@@ -1,12 +1,12 @@
 package org.smoothbuild.out.report;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
-import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.log.Level.WARNING;
+import static org.smoothbuild.out.report.TaskMatchers.ALL;
+import static org.smoothbuild.out.report.TaskMatchers.NONE;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.job.job.TaskKind.CALL;

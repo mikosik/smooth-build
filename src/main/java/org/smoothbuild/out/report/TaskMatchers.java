@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.taskmatcher;
+package org.smoothbuild.out.report;
 
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;

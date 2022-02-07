@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.taskmatcher;
+package org.smoothbuild.out.report;
 
 import java.util.List;
 

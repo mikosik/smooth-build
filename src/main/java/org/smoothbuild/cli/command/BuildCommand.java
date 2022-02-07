@@ -1,13 +1,13 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.CreateInjector.createInjector;
-import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
+import static org.smoothbuild.out.report.MatcherCreator.createMatcher;
 
 import java.nio.file.Path;
 import java.util.List;
 
 import org.smoothbuild.cli.base.ProjectCommand;
-import org.smoothbuild.cli.taskmatcher.TaskMatcher;
+import org.smoothbuild.out.report.TaskMatcher;
 import org.smoothbuild.run.BuildRunner;
 
 import picocli.CommandLine.Command;

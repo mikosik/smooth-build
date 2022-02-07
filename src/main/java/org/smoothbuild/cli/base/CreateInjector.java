@@ -6,14 +6,14 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 
 import org.smoothbuild.bytecode.ByteCodeModule;
-import org.smoothbuild.cli.taskmatcher.TaskMatcher;
-import org.smoothbuild.cli.taskmatcher.TaskMatchers;
 import org.smoothbuild.eval.EvaluateModule;
 import org.smoothbuild.install.InstallationModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.LoggerModule;
+import org.smoothbuild.out.report.TaskMatcher;
+import org.smoothbuild.out.report.TaskMatchers;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
