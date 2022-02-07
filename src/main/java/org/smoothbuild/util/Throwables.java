@@ -1,4 +1,4 @@
-package org.smoothbuild.slib.util;
+package org.smoothbuild.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

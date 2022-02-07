@@ -1,6 +1,6 @@
 package org.smoothbuild.io.fs.base;
 
-import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 
 import java.io.IOException;
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse;
 
-import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.map;
 
 import java.util.List;

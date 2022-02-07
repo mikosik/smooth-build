@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 
 import java.util.List;
 import java.util.function.BiConsumer;

@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.job.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 
 import org.smoothbuild.bytecode.ByteCodeF;

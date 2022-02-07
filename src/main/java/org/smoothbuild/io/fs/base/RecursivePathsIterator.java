@@ -3,7 +3,7 @@ package org.smoothbuild.io.fs.base;
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
 import static org.smoothbuild.io.fs.base.PathS.root;
-import static org.smoothbuild.slib.util.Throwables.unexpectedCaseExc;
+import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
