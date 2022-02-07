@@ -125,7 +125,6 @@ import org.smoothbuild.lang.expr.StringS;
 import org.smoothbuild.lang.expr.TopRefS;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
-import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.vm.Vm;
@@ -164,6 +163,7 @@ public class TestingContext {
   private TempManager tempManager;
   private ModS internalMod;
   private TypeSF typeSF;
+  private ConsoleReporter consoleReporter;
 
   public Vm vm() {
     return vmProv().get(ImmutableMap.of());
@@ -202,8 +202,11 @@ public class TestingContext {
     return new ExecutionReporter(reporter());
   }
 
-  public Reporter reporter() {
-    return new ConsoleReporter(console(), ALL, INFO);
+  public ConsoleReporter reporter() {
+    if (this.consoleReporter == null) {
+      this.consoleReporter = new ConsoleReporter(console(), ALL, INFO);
+    }
+    return this.consoleReporter;
   }
 
   private Console console() {

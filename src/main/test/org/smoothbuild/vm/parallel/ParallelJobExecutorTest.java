@@ -32,7 +32,6 @@ import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.type.TestingCatsB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.compute.Computed;
@@ -172,14 +171,14 @@ public class ParallelJobExecutorTest extends TestingContext {
 
   @Test
   public void task_throwing_runtime_exception_causes_error() throws Exception {
-    Reporter reporter = mock(Reporter.class);
+    var reporter = mock(TaskReporter.class);
     parallelJobExecutor = new ParallelJobExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
     var job = job(throwingAlgorithm(exception));
 
     assertThat(parallelJobExecutor.executeAll(list(job)).get(0).isEmpty())
         .isTrue();
-    verify(reporter).reportTask(
+    verify(reporter).report(
         eq(job.info()),
         eq(header(job.info(), "exec")),
         eq(list(error("Execution failed with:\n" + getStackTraceAsString(exception)))));

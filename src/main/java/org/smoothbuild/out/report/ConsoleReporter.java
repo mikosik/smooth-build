@@ -17,6 +17,7 @@ import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.job.job.TaskInfo;
+import org.smoothbuild.vm.parallel.TaskReporter;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -24,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
  * This class is thread-safe.
  */
 @Singleton
-public class ConsoleReporter implements Reporter {
+public class ConsoleReporter implements Reporter, TaskReporter {
   private static final String TASK_HEADER_PREFIX = "  ";
   private static final String MESSAGE_FIRST_LINE_PREFIX = "   + ";
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
@@ -48,7 +49,7 @@ public class ConsoleReporter implements Reporter {
   }
 
   @Override
-  public void reportTask(TaskInfo taskInfo, String taskHeader, List<Log> logs) {
+  public void report(TaskInfo taskInfo, String taskHeader, List<Log> logs) {
     increaseCounts(logs);
     if (taskMatcher.matches(taskInfo, logs)) {
       reportFiltered(taskHeader, logs);

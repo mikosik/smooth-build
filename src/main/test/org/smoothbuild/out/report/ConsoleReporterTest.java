@@ -33,7 +33,7 @@ public class ConsoleReporterTest extends TestingContext {
 
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   private final Console console = new Console(new PrintWriter(outputStream, true));
-  private Reporter reporter = new ConsoleReporter(console, ALL, INFO);
+  private ConsoleReporter reporter = new ConsoleReporter(console, ALL, INFO);
 
   @Nested
   class report_non_build_task {
@@ -77,7 +77,7 @@ public class ConsoleReporterTest extends TestingContext {
       @Test
       public void when_fatal_level_then_prints_only_fatal_logs() {
         reporter = new ConsoleReporter(console, ALL, FATAL);
-        reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
+        reporter.report(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
             .contains(ConsoleReporter.toText("header", list(FATAL_LOG)));
       }
@@ -85,7 +85,7 @@ public class ConsoleReporterTest extends TestingContext {
       @Test
       public void when_error_level_then_prints_fatal_and_error_logs() {
         reporter = new ConsoleReporter(console, ALL, ERROR);
-        reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
+        reporter.report(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
             .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG)));
       }
@@ -93,7 +93,7 @@ public class ConsoleReporterTest extends TestingContext {
       @Test
       public void when_warning_level_then_prints_fatal_error_and_warning_logs() {
         reporter = new ConsoleReporter(console, ALL, WARNING);
-        reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
+        reporter.report(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
             .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
       }
@@ -101,7 +101,7 @@ public class ConsoleReporterTest extends TestingContext {
       @Test
       public void when_info_level_then_prints_all_logs() {
         reporter = new ConsoleReporter(console, ALL, INFO);
-        reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
+        reporter.report(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
             .contains(ConsoleReporter.toText("header", logsWithAllLevels()));
       }
@@ -112,7 +112,7 @@ public class ConsoleReporterTest extends TestingContext {
       @Test
       public void when_fatal_level_then_prints_nothing() {
         reporter = new ConsoleReporter(console, NONE, FATAL);
-        reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
+        reporter.report(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
             .isEmpty();
       }
@@ -120,7 +120,7 @@ public class ConsoleReporterTest extends TestingContext {
       @Test
       public void when_error_level_then_prints_nothing() {
         reporter = new ConsoleReporter(console, NONE, ERROR);
-        reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
+        reporter.report(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
             .isEmpty();
       }
@@ -128,7 +128,7 @@ public class ConsoleReporterTest extends TestingContext {
       @Test
       public void when_warning_level_then_prints_nothing() {
         reporter = new ConsoleReporter(console, NONE, WARNING);
-        reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
+        reporter.report(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
             .isEmpty();
       }
@@ -136,7 +136,7 @@ public class ConsoleReporterTest extends TestingContext {
       @Test
       public void when_info_level_then_prints_nothing() {
         reporter = new ConsoleReporter(console, NONE, INFO);
-        reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
+        reporter.report(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
             .isEmpty();
       }
@@ -156,7 +156,7 @@ public class ConsoleReporterTest extends TestingContext {
     }
 
     private void doTestSummary(Level logLevel) {
-      Reporter reporter = new ConsoleReporter(console, ALL, logLevel);
+      var reporter = new ConsoleReporter(console, ALL, logLevel);
 
       List<Log> logs = new ArrayList<>();
       logs.add(Log.fatal("fatal string"));
@@ -170,7 +170,7 @@ public class ConsoleReporterTest extends TestingContext {
         logs.add(Log.info("info string"));
       }
 
-      reporter.reportTask(taskInfo(), HEADER, logs);
+      reporter.report(taskInfo(), HEADER, logs);
       reporter.printSummary();
 
       assertThat(outputStream.toString())
@@ -185,7 +185,7 @@ public class ConsoleReporterTest extends TestingContext {
 
     @Test
     public void skips_levels_with_zero_logs() {
-      Reporter reporter = new ConsoleReporter(console, ALL, INFO);
+      var reporter = new ConsoleReporter(console, ALL, INFO);
 
       List<Log> logs = new ArrayList<>();
       logs.add(Log.fatal("fatal string"));
@@ -193,7 +193,7 @@ public class ConsoleReporterTest extends TestingContext {
         logs.add(Log.info("info string"));
       }
 
-      reporter.reportTask(taskInfo(), HEADER, logs);
+      reporter.report(taskInfo(), HEADER, logs);
       reporter.printSummary();
 
       assertThat(outputStream.toString())

@@ -11,7 +11,7 @@ import org.smoothbuild.install.InstallationModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Level;
-import org.smoothbuild.out.log.LoggerModule;
+import org.smoothbuild.out.report.ReportModule;
 import org.smoothbuild.out.report.TaskMatcher;
 import org.smoothbuild.out.report.TaskMatchers;
 
@@ -31,7 +31,7 @@ public class CreateInjector {
         new ByteCodeModule(),
         new FileSystemModule(projectDir),
         new InstallationModule(installationDir),
-        new LoggerModule(logLevel, taskMatcher),
+        new ReportModule(logLevel, taskMatcher),
         new ConsoleModule(out));
   }
 

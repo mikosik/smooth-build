@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.out.log.Log;
-import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.compute.Computed;
 import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.job.job.TaskInfo;
@@ -27,11 +26,11 @@ import org.smoothbuild.vm.job.job.TaskInfo;
  * This class is thread-safe.
  */
 public class ExecutionReporter {
-  private final Reporter reporter;
+  private final TaskReporter taskReporter;
 
   @Inject
-  public ExecutionReporter(Reporter reporter) {
-    this.reporter = reporter;
+  public ExecutionReporter(TaskReporter taskReporter) {
+    this.taskReporter = taskReporter;
   }
 
   public void report(TaskInfo taskInfo, Computed computed) {
@@ -64,7 +63,7 @@ public class ExecutionReporter {
   }
 
   private void print(TaskInfo taskInfo, List<Log> logs, String resultSource) {
-    reporter.reportTask(taskInfo, header(taskInfo, resultSource), logs);
+    taskReporter.report(taskInfo, header(taskInfo, resultSource), logs);
   }
 
   // Visible for testing
