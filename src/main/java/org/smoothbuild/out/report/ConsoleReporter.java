@@ -2,8 +2,8 @@ package org.smoothbuild.out.report;
 
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.util.collect.Lists.filter;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.util.List;
@@ -57,25 +57,29 @@ public class ConsoleReporter implements Reporter, TaskReporter {
   }
 
   @Override
-  public void report(List<Log> logs) {
-    increaseCounts(logs);
-    reportFiltered("", logs);
+  public void report(Log log) {
+    increaseCount(log.level());
+    if (passesLevelThreshold(log)) {
+      print(log);
+    }
   }
 
   @Override
-  public void report(String taskHeader, List<Log> logs) {
+  public void report(String header, List<Log> logs) {
     increaseCounts(logs);
-    reportFiltered(taskHeader, logs);
+    reportFiltered(header, logs);
   }
 
   private void reportFiltered(String taskHeader, List<Log> logs) {
-    print(taskHeader, filterLogs(logs));
+    print(taskHeader, logsPassingLevelThreshold(logs));
   }
 
-  private List<Log> filterLogs(List<Log> logs) {
-    return logs.stream()
-        .filter(l -> l.level().hasPriorityAtLeast(logLevel))
-        .collect(toList());
+  private List<Log> logsPassingLevelThreshold(List<Log> logs) {
+    return filter(logs, this::passesLevelThreshold);
+  }
+
+  private boolean passesLevelThreshold(Log log) {
+    return log.level().hasPriorityAtLeast(logLevel);
   }
 
   private void increaseCounts(List<Log> logs) {
@@ -88,29 +92,31 @@ public class ConsoleReporter implements Reporter, TaskReporter {
     counts.get(level).incrementAndGet();
   }
 
+  private void print(Log log) {
+    console.println(formatLog(log));
+  }
+
   private void print(String header, List<Log> logs) {
     console.println(toText(header, logs));
   }
 
   // visible for testing
   static String toText(String header, List<Log> logs) {
-    var builder = new StringBuilder(header.isBlank() ? "" : formattedHeader(header));
+    var builder = new StringBuilder(formattedHeader(header));
     for (Log log : logs) {
-      if (!builder.isEmpty()) {
-        builder.append("\n");
-      }
-      builder.append(prefixMultiline(log.level() + ": " + log.message()));
+      builder.append(formatLog(log));
     }
     return builder.toString();
   }
 
-  private static String formattedHeader(String header) {
-    return TASK_HEADER_PREFIX + header;
+  // visible for testing
+  static String formatLog(Log log) {
+    String[] lines = (log.level() + ": " + log.message()).lines().toArray(String[]::new);
+    return "\n" + prefixMultiline(lines);
   }
 
-  private static String prefixMultiline(String text) {
-    String[] lines = text.lines().toArray(String[]::new);
-    return prefixMultiline(lines);
+  private static String formattedHeader(String header) {
+    return TASK_HEADER_PREFIX + header;
   }
 
   // visible for testing

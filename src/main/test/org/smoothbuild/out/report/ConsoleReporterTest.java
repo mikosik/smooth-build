@@ -1,6 +1,7 @@
 package org.smoothbuild.out.report;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.out.log.Level.ERROR;
 import static org.smoothbuild.out.log.Level.FATAL;
 import static org.smoothbuild.out.log.Level.INFO;
@@ -18,6 +19,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.log.Log;
@@ -26,121 +30,94 @@ import org.smoothbuild.vm.job.job.TaskInfo;
 
 public class ConsoleReporterTest extends TestingContext {
   private static final String HEADER = "TASK NAME";
-  private static final Log FATAL_LOG = Log.fatal("message");
-  private static final Log ERROR_LOG = Log.error("message");
-  private static final Log WARNING_LOG = Log.warning("message");
-  private static final Log INFO_LOG = Log.info("message");
+  private static final Log FATAL_LOG = Log.fatal("fatal message");
+  private static final Log ERROR_LOG = Log.error("error message");
+  private static final Log WARNING_LOG = Log.warning("warning message");
+  private static final Log INFO_LOG = Log.info("info message");
 
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   private final Console console = new Console(new PrintWriter(outputStream, true));
   private ConsoleReporter reporter = new ConsoleReporter(console, ALL, INFO);
 
-  @Nested
-  class report_non_build_task {
-    @Test
-    public void when_fatal_level_then_prints_only_fatal_logs() {
-      reporter = new ConsoleReporter(console, null, FATAL);
-      reporter.report("header", logsWithAllLevels());
+  @ParameterizedTest
+  @MethodSource(value = "single_log_cases")
+  public void report_single_log_logs_log_when_it_passes_threshold(Log log, Level level,
+      boolean logged) {
+    reporter = new ConsoleReporter(console, null, level);
+    reporter.report(log);
+    if (logged) {
       assertThat(outputStream.toString())
-          .contains(ConsoleReporter.toText("header", list(FATAL_LOG)));
+          .contains(ConsoleReporter.formatLog(log));
+    } else {
+      assertThat(outputStream.toString())
+          .doesNotContain(ConsoleReporter.formatLog(log));
     }
-
-    @Test
-    public void when_error_level_then_prints_fatal_and_error_logs() {
-      reporter = new ConsoleReporter(console, null, ERROR);
-      reporter.report("header", logsWithAllLevels());
-      assertThat(outputStream.toString())
-          .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG)));
-    }
-
-    @Test
-    public void when_warning_level_then_prints_fatal_error_and_warning_logs() {
-      reporter = new ConsoleReporter(console, null, WARNING);
-      reporter.report("header", logsWithAllLevels());
-      assertThat(outputStream.toString())
-          .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
-    }
-
-    @Test
-    public void when_info_level_then_prints_all_logs() {
-      reporter = new ConsoleReporter(console, null, INFO);
-      reporter.report("header", logsWithAllLevels());
-      assertThat(outputStream.toString())
-          .contains(ConsoleReporter.toText("header", logsWithAllLevels()));
-     }
   }
 
-  @Nested
-  class report_build_task {
-    @Nested
-    class when_filter_matches {
-      @Test
-      public void when_fatal_level_then_prints_only_fatal_logs() {
-        reporter = new ConsoleReporter(console, ALL, FATAL);
-        reporter.report(taskInfo(), "header", logsWithAllLevels());
-        assertThat(outputStream.toString())
-            .contains(ConsoleReporter.toText("header", list(FATAL_LOG)));
-      }
+  private static List<Arguments> single_log_cases() {
+    return List.of(
+        arguments(FATAL_LOG, FATAL, true),
+        arguments(FATAL_LOG, ERROR, true),
+        arguments(FATAL_LOG, WARNING, true),
+        arguments(FATAL_LOG, INFO, true),
 
-      @Test
-      public void when_error_level_then_prints_fatal_and_error_logs() {
-        reporter = new ConsoleReporter(console, ALL, ERROR);
-        reporter.report(taskInfo(), "header", logsWithAllLevels());
-        assertThat(outputStream.toString())
-            .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG)));
-      }
+        arguments(ERROR_LOG, FATAL, false),
+        arguments(ERROR_LOG, ERROR, true),
+        arguments(ERROR_LOG, WARNING, true),
+        arguments(ERROR_LOG, INFO, true),
 
-      @Test
-      public void when_warning_level_then_prints_fatal_error_and_warning_logs() {
-        reporter = new ConsoleReporter(console, ALL, WARNING);
-        reporter.report(taskInfo(), "header", logsWithAllLevels());
-        assertThat(outputStream.toString())
-            .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
-      }
+        arguments(WARNING_LOG, FATAL, false),
+        arguments(WARNING_LOG, ERROR, false),
+        arguments(WARNING_LOG, WARNING, true),
+        arguments(WARNING_LOG, INFO, true),
 
-      @Test
-      public void when_info_level_then_prints_all_logs() {
-        reporter = new ConsoleReporter(console, ALL, INFO);
-        reporter.report(taskInfo(), "header", logsWithAllLevels());
-        assertThat(outputStream.toString())
-            .contains(ConsoleReporter.toText("header", logsWithAllLevels()));
-      }
-    }
+        arguments(INFO_LOG, FATAL, false),
+        arguments(INFO_LOG, ERROR, false),
+        arguments(INFO_LOG, WARNING, false),
+        arguments(INFO_LOG, INFO, true)
+    );
+  }
 
-    @Nested
-    class when_filter_does_not_match {
-      @Test
-      public void when_fatal_level_then_prints_nothing() {
-        reporter = new ConsoleReporter(console, NONE, FATAL);
-        reporter.report(taskInfo(), "header", logsWithAllLevels());
-        assertThat(outputStream.toString())
-            .isEmpty();
-      }
+  @ParameterizedTest
+  @MethodSource("filtered_logs_cases")
+  public void report_non_build_task_logs_logs_which_passes_threshold(Level level,
+      List<Log> loggedLogs) {
+    reporter = new ConsoleReporter(console, null, level);
+    reporter.report("header", logsWithAllLevels());
+    assertThat(outputStream.toString())
+        .contains(ConsoleReporter.toText("header", loggedLogs));
+  }
 
-      @Test
-      public void when_error_level_then_prints_nothing() {
-        reporter = new ConsoleReporter(console, NONE, ERROR);
-        reporter.report(taskInfo(), "header", logsWithAllLevels());
-        assertThat(outputStream.toString())
-            .isEmpty();
-      }
+  @ParameterizedTest
+  @MethodSource("filtered_logs_cases")
+  public void when_filter_matches_then_logs_which_passes_threshold_are_logged(
+      Level level, List<Log> loggedLogs) {
+    reporter = new ConsoleReporter(console, ALL, level);
+    reporter.report(taskInfo(), "header", logsWithAllLevels());
+    assertThat(outputStream.toString())
+        .contains(ConsoleReporter.toText("header", loggedLogs));
+  }
 
-      @Test
-      public void when_warning_level_then_prints_nothing() {
-        reporter = new ConsoleReporter(console, NONE, WARNING);
-        reporter.report(taskInfo(), "header", logsWithAllLevels());
-        assertThat(outputStream.toString())
-            .isEmpty();
-      }
+  public static List<Arguments> filtered_logs_cases() {
+    return List.of(
+        arguments(FATAL, list(FATAL_LOG)),
+        arguments(ERROR, list(FATAL_LOG, ERROR_LOG)),
+        arguments(WARNING, list(FATAL_LOG, ERROR_LOG, WARNING_LOG)),
+        arguments(INFO, list(FATAL_LOG, ERROR_LOG, WARNING_LOG, INFO_LOG))
+    );
+  }
 
-      @Test
-      public void when_info_level_then_prints_nothing() {
-        reporter = new ConsoleReporter(console, NONE, INFO);
-        reporter.report(taskInfo(), "header", logsWithAllLevels());
-        assertThat(outputStream.toString())
-            .isEmpty();
-      }
-    }
+  @ParameterizedTest
+  @MethodSource("all_levels")
+  public void when_filter_doesnt_match_then_no_log_is_logged(Level level) {
+    reporter = new ConsoleReporter(console, NONE, level);
+    reporter.report(taskInfo(), "header", logsWithAllLevels());
+    assertThat(outputStream.toString())
+        .isEmpty();
+  }
+
+  private static List<Level> all_levels() {
+    return List.of(Level.values());
   }
 
   @Nested
