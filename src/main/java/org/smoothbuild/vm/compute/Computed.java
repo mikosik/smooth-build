@@ -19,7 +19,7 @@ public record Computed(Output output, Exception exception, ResSource resSource) 
     this.output = output;
     this.exception = exception;
     this.resSource = requireNonNull(resSource);
-    checkArgument(output == null ^ exception == null);
+    checkArgument((output == null) != (exception == null));
   }
 
   public boolean hasOutput() {
