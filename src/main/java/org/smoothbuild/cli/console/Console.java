@@ -18,10 +18,6 @@ public class Console {
     this.printWriter = printWriter;
   }
 
-  public void errors(List<String> messages) {
-    messages.forEach(this::error);
-  }
-
   public void error(String message) {
     printErrorToWriter(printWriter, message);
   }
