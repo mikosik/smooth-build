@@ -6,11 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.cli.console.LogBuffer;
-import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.ValS;
 import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.log;
 
 import java.util.List;
 

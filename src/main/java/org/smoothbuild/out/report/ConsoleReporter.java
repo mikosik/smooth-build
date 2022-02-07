@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.report;
 
 import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
@@ -14,6 +14,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
+import org.smoothbuild.out.console.Console;
+import org.smoothbuild.out.log.Level;
+import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.job.job.TaskInfo;
 
 import com.google.common.collect.ImmutableMap;

@@ -15,9 +15,6 @@ import java.util.function.BiConsumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.cli.console.LogBuffer;
-import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.DefinedS;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.FuncS;
@@ -49,6 +46,9 @@ import org.smoothbuild.lang.parse.ast.StringN;
 import org.smoothbuild.lang.parse.ast.StructN;
 import org.smoothbuild.lang.parse.ast.TypeN;
 import org.smoothbuild.lang.parse.ast.ValN;
+import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.collect.NList;
 import org.smoothbuild.util.collect.Optionals;
 

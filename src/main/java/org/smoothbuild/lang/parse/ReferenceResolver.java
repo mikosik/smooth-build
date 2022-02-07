@@ -5,7 +5,6 @@ import static org.smoothbuild.util.collect.Lists.concat;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
-import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.like.EvalLike;
 import org.smoothbuild.lang.parse.ast.Ast;
@@ -13,6 +12,7 @@ import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.FuncN;
 import org.smoothbuild.lang.parse.ast.RefN;
 import org.smoothbuild.lang.parse.ast.StructN;
+import org.smoothbuild.out.log.Logger;
 import org.smoothbuild.util.Scope;
 
 public class ReferenceResolver extends AstVisitor {

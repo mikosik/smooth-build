@@ -1,7 +1,6 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.console;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

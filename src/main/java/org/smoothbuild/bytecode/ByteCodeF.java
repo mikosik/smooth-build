@@ -1,8 +1,8 @@
 package org.smoothbuild.bytecode;
 
-import static org.smoothbuild.cli.console.Level.ERROR;
-import static org.smoothbuild.cli.console.Level.INFO;
-import static org.smoothbuild.cli.console.Level.WARNING;
+import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.INFO;
+import static org.smoothbuild.out.log.Level.WARNING;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;

@@ -1,8 +1,8 @@
 package org.smoothbuild.eval.artifact;
 
-import static org.smoothbuild.cli.console.Level.ERROR;
-import static org.smoothbuild.cli.console.Level.INFO;
-import static org.smoothbuild.cli.console.Level.WARNING;
+import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.INFO;
+import static org.smoothbuild.out.log.Level.WARNING;
 
 import java.util.Set;
 
@@ -10,7 +10,7 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.cli.console.Level;
+import org.smoothbuild.out.log.Level;
 
 public class MessageStruct {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());

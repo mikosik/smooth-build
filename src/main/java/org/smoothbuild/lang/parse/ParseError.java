@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.parse;
 
-import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.out.log.Log.error;
 
-import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.lang.parse.ast.Node;
+import org.smoothbuild.out.log.Log;
 
 public class ParseError {
   public static Log parseError(Node node, String message) {

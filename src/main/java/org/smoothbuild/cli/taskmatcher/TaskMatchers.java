@@ -1,15 +1,15 @@
 package org.smoothbuild.cli.taskmatcher;
 
-import static org.smoothbuild.cli.console.Level.ERROR;
-import static org.smoothbuild.cli.console.Level.FATAL;
-import static org.smoothbuild.cli.console.Level.INFO;
-import static org.smoothbuild.cli.console.Level.WARNING;
+import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.FATAL;
+import static org.smoothbuild.out.log.Level.INFO;
+import static org.smoothbuild.out.log.Level.WARNING;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.io.fs.space.Space;
+import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.job.job.TaskKind;
 
 import com.google.common.collect.ImmutableMap;

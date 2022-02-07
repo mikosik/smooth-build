@@ -1,11 +1,11 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.cli.console.ImmutableLogs.logs;
-import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.cli.console.Maybe.maybeLogs;
-import static org.smoothbuild.cli.console.Maybe.maybeValue;
 import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
+import static org.smoothbuild.out.log.ImmutableLogs.logs;
+import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.maybeValue;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
@@ -14,8 +14,6 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.install.ModFilesDetector;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.io.fs.space.FileResolver;
@@ -25,6 +23,8 @@ import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
 import org.smoothbuild.lang.base.define.ModS;
 import org.smoothbuild.lang.parse.ModLoader;
+import org.smoothbuild.out.log.Maybe;
+import org.smoothbuild.out.report.Reporter;
 
 import com.google.common.collect.ImmutableList;
 

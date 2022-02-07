@@ -1,6 +1,8 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.log;
 
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
+import org.smoothbuild.out.report.ConsoleReporter;
+import org.smoothbuild.out.report.Reporter;
 
 import com.google.inject.AbstractModule;
 

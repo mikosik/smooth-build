@@ -1,17 +1,12 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.report;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.cli.console.ConsoleReporter.toText;
-import static org.smoothbuild.cli.console.Level.ERROR;
-import static org.smoothbuild.cli.console.Level.FATAL;
-import static org.smoothbuild.cli.console.Level.INFO;
-import static org.smoothbuild.cli.console.Level.WARNING;
-import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.cli.console.Log.fatal;
-import static org.smoothbuild.cli.console.Log.info;
-import static org.smoothbuild.cli.console.Log.warning;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.ALL;
 import static org.smoothbuild.cli.taskmatcher.TaskMatchers.NONE;
+import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.FATAL;
+import static org.smoothbuild.out.log.Level.INFO;
+import static org.smoothbuild.out.log.Level.WARNING;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.job.job.TaskKind.CALL;
@@ -23,15 +18,18 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.out.console.Console;
+import org.smoothbuild.out.log.Level;
+import org.smoothbuild.out.log.Log;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.vm.job.job.TaskInfo;
 
 public class ConsoleReporterTest extends TestingContext {
   private static final String HEADER = "TASK NAME";
-  private static final Log FATAL_LOG = fatal("message");
-  private static final Log ERROR_LOG = error("message");
-  private static final Log WARNING_LOG = warning("message");
-  private static final Log INFO_LOG = info("message");
+  private static final Log FATAL_LOG = Log.fatal("message");
+  private static final Log ERROR_LOG = Log.error("message");
+  private static final Log WARNING_LOG = Log.warning("message");
+  private static final Log INFO_LOG = Log.info("message");
 
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   private final Console console = new Console(new PrintWriter(outputStream, true));
@@ -44,7 +42,7 @@ public class ConsoleReporterTest extends TestingContext {
       reporter = new ConsoleReporter(console, null, FATAL);
       reporter.report("header", logsWithAllLevels());
       assertThat(outputStream.toString())
-          .contains(toText("header", list(FATAL_LOG)));
+          .contains(ConsoleReporter.toText("header", list(FATAL_LOG)));
     }
 
     @Test
@@ -52,7 +50,7 @@ public class ConsoleReporterTest extends TestingContext {
       reporter = new ConsoleReporter(console, null, ERROR);
       reporter.report("header", logsWithAllLevels());
       assertThat(outputStream.toString())
-          .contains(toText("header", list(FATAL_LOG, ERROR_LOG)));
+          .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG)));
     }
 
     @Test
@@ -60,7 +58,7 @@ public class ConsoleReporterTest extends TestingContext {
       reporter = new ConsoleReporter(console, null, WARNING);
       reporter.report("header", logsWithAllLevels());
       assertThat(outputStream.toString())
-          .contains(toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
+          .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
     }
 
     @Test
@@ -68,7 +66,7 @@ public class ConsoleReporterTest extends TestingContext {
       reporter = new ConsoleReporter(console, null, INFO);
       reporter.report("header", logsWithAllLevels());
       assertThat(outputStream.toString())
-          .contains(toText("header", logsWithAllLevels()));
+          .contains(ConsoleReporter.toText("header", logsWithAllLevels()));
      }
   }
 
@@ -81,7 +79,7 @@ public class ConsoleReporterTest extends TestingContext {
         reporter = new ConsoleReporter(console, ALL, FATAL);
         reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
-            .contains(toText("header", list(FATAL_LOG)));
+            .contains(ConsoleReporter.toText("header", list(FATAL_LOG)));
       }
 
       @Test
@@ -89,7 +87,7 @@ public class ConsoleReporterTest extends TestingContext {
         reporter = new ConsoleReporter(console, ALL, ERROR);
         reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
-            .contains(toText("header", list(FATAL_LOG, ERROR_LOG)));
+            .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG)));
       }
 
       @Test
@@ -97,7 +95,7 @@ public class ConsoleReporterTest extends TestingContext {
         reporter = new ConsoleReporter(console, ALL, WARNING);
         reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
-            .contains(toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
+            .contains(ConsoleReporter.toText("header", list(FATAL_LOG, ERROR_LOG, WARNING_LOG)));
       }
 
       @Test
@@ -105,7 +103,7 @@ public class ConsoleReporterTest extends TestingContext {
         reporter = new ConsoleReporter(console, ALL, INFO);
         reporter.reportTask(taskInfo(), "header", logsWithAllLevels());
         assertThat(outputStream.toString())
-            .contains(toText("header", logsWithAllLevels()));
+            .contains(ConsoleReporter.toText("header", logsWithAllLevels()));
       }
     }
 
@@ -161,15 +159,15 @@ public class ConsoleReporterTest extends TestingContext {
       Reporter reporter = new ConsoleReporter(console, ALL, logLevel);
 
       List<Log> logs = new ArrayList<>();
-      logs.add(fatal("fatal string"));
+      logs.add(Log.fatal("fatal string"));
       for (int i = 0; i < 2; i++) {
-        logs.add(error("error string"));
+        logs.add(Log.error("error string"));
       }
       for (int i = 0; i < 3; i++) {
-        logs.add(warning("warning string"));
+        logs.add(Log.warning("warning string"));
       }
       for (int i = 0; i < 4; i++) {
-        logs.add(info("info string"));
+        logs.add(Log.info("info string"));
       }
 
       reporter.reportTask(taskInfo(), HEADER, logs);
@@ -190,9 +188,9 @@ public class ConsoleReporterTest extends TestingContext {
       Reporter reporter = new ConsoleReporter(console, ALL, INFO);
 
       List<Log> logs = new ArrayList<>();
-      logs.add(fatal("fatal string"));
+      logs.add(Log.fatal("fatal string"));
       for (int i = 0; i < 4; i++) {
-        logs.add(info("info string"));
+        logs.add(Log.info("info string"));
       }
 
       reporter.reportTask(taskInfo(), HEADER, logs);

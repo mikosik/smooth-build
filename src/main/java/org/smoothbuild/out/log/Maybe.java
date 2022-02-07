@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.log;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;

@@ -1,7 +1,8 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.report;
 
 import java.util.List;
 
+import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.job.job.TaskInfo;
 
 public interface Reporter {

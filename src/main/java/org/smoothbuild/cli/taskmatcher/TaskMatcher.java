@@ -2,7 +2,7 @@ package org.smoothbuild.cli.taskmatcher;
 
 import java.util.List;
 
-import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.out.log.Log;
 import org.smoothbuild.vm.job.job.TaskInfo;
 
 @FunctionalInterface

@@ -1,10 +1,10 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.log;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.cli.console.Level.ERROR;
-import static org.smoothbuild.cli.console.Level.FATAL;
-import static org.smoothbuild.cli.console.Level.INFO;
-import static org.smoothbuild.cli.console.Level.WARNING;
+import static org.smoothbuild.out.log.Level.ERROR;
+import static org.smoothbuild.out.log.Level.FATAL;
+import static org.smoothbuild.out.log.Level.INFO;
+import static org.smoothbuild.out.log.Level.WARNING;
 
 public record Log(Level level, String message) {
   public Log(Level level, String message) {

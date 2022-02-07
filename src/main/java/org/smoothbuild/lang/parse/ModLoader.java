@@ -1,19 +1,17 @@
 package org.smoothbuild.lang.parse;
 
-import static org.smoothbuild.cli.console.Maybe.maybeLogs;
-import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ReferenceResolver.resolveReferences;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
+import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.NList.nList;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.cli.console.LogBuffer;
-import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefTypeS;
@@ -34,6 +32,8 @@ import org.smoothbuild.lang.expr.ParamRefS;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.EvalN;
 import org.smoothbuild.lang.parse.ast.StructN;
+import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;

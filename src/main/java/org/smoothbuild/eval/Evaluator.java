@@ -1,6 +1,6 @@
 package org.smoothbuild.eval;
 
-import static org.smoothbuild.cli.console.Log.fatal;
+import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -11,12 +11,12 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.eval.compile.Compiler;
 import org.smoothbuild.eval.compile.CompilerExc;
 import org.smoothbuild.eval.compile.CompilerProv;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.expr.ExprS;
+import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 

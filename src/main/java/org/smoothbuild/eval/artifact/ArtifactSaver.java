@@ -5,13 +5,13 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.eval.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.eval.artifact.ArtifactPaths.targetPath;
 import static org.smoothbuild.eval.artifact.FileStruct.fileContent;
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.PathS.path;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Maps.sort;
 
@@ -26,14 +26,14 @@ import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.space.ForSpace;
 import org.smoothbuild.lang.base.type.api.ArrayT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.util.collect.DuplicatesDetector;
 
 public class ArtifactSaver {

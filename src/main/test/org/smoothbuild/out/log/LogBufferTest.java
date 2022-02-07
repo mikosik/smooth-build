@@ -1,10 +1,6 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.log;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.cli.console.Log.fatal;
-import static org.smoothbuild.cli.console.Log.info;
-import static org.smoothbuild.cli.console.Log.warning;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -28,59 +24,59 @@ public class LogBufferTest {
 
     @Test
     public void after_logging_fatal_returns_true() {
-      value.log(fatal("message"));
+      value.log(Log.fatal("message"));
       assertThat(value.containsProblem())
           .isTrue();
     }
 
     @Test
     public void after_warning_error_returns_true() {
-      value.log(error("message"));
+      value.log(Log.error("message"));
       assertThat(value.containsProblem())
           .isTrue();
     }
 
     @Test
     public void after_logging_warning_returns_false() {
-      value.log(warning("message"));
+      value.log(Log.warning("message"));
       assertThat(value.containsProblem())
           .isFalse();
     }
 
     @Test
     public void after_logging_info_returns_false() {
-      value.log(info("message"));
+      value.log(Log.info("message"));
       assertThat(value.containsProblem())
           .isFalse();
     }
 
     @Test
     public void after_adding_logs_from_other_logger_with_logs_containing_problems_returns_true() {
-      value.logAll(loggerWith(error("message")));
+      value.logAll(loggerWith(Log.error("message")));
       assertThat(value.containsProblem())
           .isTrue();
     }
 
     @Test
     public void after_logging_fatal_and_adding_logs_from_other_logger_without_problems_returns_true() {
-      value.log(fatal("message"));
-      value.logAll(loggerWith(info("message")));
+      value.log(Log.fatal("message"));
+      value.logAll(loggerWith(Log.info("message")));
       assertThat(value.containsProblem())
           .isTrue();
     }
 
     @Test
     public void after_logging_error_and_adding_logs_from_other_logger_without_problems_returns_true() {
-      value.log(error("message"));
-      value.logAll(loggerWith(info("message")));
+      value.log(Log.error("message"));
+      value.logAll(loggerWith(Log.info("message")));
       assertThat(value.containsProblem())
           .isTrue();
     }
 
     @Test
     public void after_logging_warning_and_adding_logs_from_other_logger_with_error_returns_true() {
-      value.log(warning("message"));
-      value.logAll(loggerWith(error("message")));
+      value.log(Log.warning("message"));
+      value.logAll(loggerWith(Log.error("message")));
       assertThat(value.containsProblem())
           .isTrue();
     }
@@ -88,11 +84,11 @@ public class LogBufferTest {
 
   @Test
   public void logs_contains_all_logs() {
-    Log fatal = fatal("fatal");
-    Log error = error("error");
-    Log warning = warning("warning");
-    Log info = info("info");
-    Log other = info("info");
+    Log fatal = Log.fatal("fatal");
+    Log error = Log.error("error");
+    Log warning = Log.warning("warning");
+    Log info = Log.info("info");
+    Log other = Log.info("info");
 
     value.log(fatal);
     value.log(error);

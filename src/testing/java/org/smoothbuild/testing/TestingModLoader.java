@@ -2,13 +2,11 @@ package org.smoothbuild.testing;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.testing.TestingContext.BUILD_FILE_PATH;
 import static org.smoothbuild.testing.TestingContext.importedModFiles;
 import static org.smoothbuild.testing.TestingContext.modFiles;
 
-import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
@@ -18,6 +16,8 @@ import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.parse.ModLoader;
 import org.smoothbuild.lang.parse.TopEvalLoader;
 import org.smoothbuild.lang.parse.TypeInferrer;
+import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.log.Maybe;
 
 public class TestingModLoader {
   private final TestingContext testingContext;

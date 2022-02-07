@@ -1,11 +1,11 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.log;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.cli.console.ImmutableLogs.logs;
-import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.cli.console.Log.fatal;
-import static org.smoothbuild.cli.console.Log.info;
-import static org.smoothbuild.cli.console.Log.warning;
+import static org.smoothbuild.out.log.ImmutableLogs.logs;
+import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Log.fatal;
+import static org.smoothbuild.out.log.Log.info;
+import static org.smoothbuild.out.log.Log.warning;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

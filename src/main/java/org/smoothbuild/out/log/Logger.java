@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.console;
+package org.smoothbuild.out.log;
 
 public interface Logger {
   public default void logAll(Iterable<? extends Log> logs) {

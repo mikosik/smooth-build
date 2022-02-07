@@ -2,20 +2,20 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.util.collect.Lists.list;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.space.ForSpace;
+import org.smoothbuild.out.report.Reporter;
 
 public class ArtifactsRemover {
   private final FileSystem fileSystem;

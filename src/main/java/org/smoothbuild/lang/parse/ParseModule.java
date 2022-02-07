@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.parse;
 
 import static java.lang.String.join;
-import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.base.define.Loc.loc;
 import static org.smoothbuild.lang.parse.LocHelpers.locOf;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.util.Antlr.errorLine;
 import static org.smoothbuild.util.Antlr.markingLine;
 import static org.smoothbuild.util.Strings.unlines;
@@ -23,11 +23,11 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothLexer;
 import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.cli.console.LogBuffer;
-import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.io.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Loc;
+import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Logger;
+import org.smoothbuild.out.log.Maybe;
 
 public class ParseModule {
   public static Maybe<ModContext> parseModule(FilePath filePath, String sourceCode) {

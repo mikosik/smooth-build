@@ -8,11 +8,11 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.Console;
-import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.define.DefinedS;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.ValS;
+import org.smoothbuild.out.console.Console;
+import org.smoothbuild.out.report.Reporter;
 
 public class ListRunner {
   private final Reporter reporter;

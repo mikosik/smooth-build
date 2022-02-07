@@ -13,9 +13,9 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.space.ForSpace;
+import org.smoothbuild.out.console.Console;
 
 public class CleanRunner {
   private final FileSystem fileSystem;

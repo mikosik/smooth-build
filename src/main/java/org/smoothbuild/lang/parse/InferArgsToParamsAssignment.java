@@ -7,9 +7,9 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;
-import static org.smoothbuild.cli.console.Maybe.maybeLogs;
-import static org.smoothbuild.cli.console.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.out.log.Maybe.maybeLogs;
+import static org.smoothbuild.out.log.Maybe.maybeValueAndLogs;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 
@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.cli.console.LogBuffer;
-import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.ItemSigS;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallN;
+import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.log.LogBuffer;
+import org.smoothbuild.out.log.Maybe;
 import org.smoothbuild.util.collect.NList;
 
 import com.google.common.collect.ImmutableList;

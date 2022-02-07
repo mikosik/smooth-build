@@ -2,10 +2,10 @@ package org.smoothbuild.vm.parallel;
 
 import static com.google.common.base.Strings.padEnd;
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.cli.console.Log.fatal;
 import static org.smoothbuild.eval.artifact.MessageStruct.level;
 import static org.smoothbuild.eval.artifact.MessageStruct.text;
+import static org.smoothbuild.out.log.Log.error;
+import static org.smoothbuild.out.log.Log.fatal;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.vm.compute.ResSource.EXECUTION;
@@ -17,8 +17,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.cli.console.Reporter;
+import org.smoothbuild.out.log.Log;
+import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.vm.compute.Computed;
 import org.smoothbuild.vm.compute.ResSource;
 import org.smoothbuild.vm.job.job.TaskInfo;

@@ -10,10 +10,10 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.smoothbuild.bytecode.obj.val.ValB;
-import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.eval.Evaluator;
 import org.smoothbuild.eval.artifact.ArtifactSaver;
 import org.smoothbuild.lang.expr.TopRefS;
+import org.smoothbuild.out.report.Reporter;
 import org.smoothbuild.util.collect.Maps;
 
 import com.google.common.collect.ImmutableList;

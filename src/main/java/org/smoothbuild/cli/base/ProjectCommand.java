@@ -1,10 +1,10 @@
 package org.smoothbuild.cli.base;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.cli.console.Console.printErrorToWriter;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_NAME;
 import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
+import static org.smoothbuild.out.console.Console.printErrorToWriter;
 import static org.smoothbuild.util.io.LockFile.lockFile;
 
 import java.io.IOException;
