@@ -1,6 +1,6 @@
 package org.smoothbuild.bytecode;
 
-import static org.smoothbuild.install.ProjectPaths.OBJECT_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import javax.inject.Singleton;
@@ -42,6 +42,6 @@ public class ByteCodeModule extends AbstractModule {
   @Provides
   @Singleton
   private HashedDb provideHashedDb(@ForSpace(PRJ) FileSystem fileSystem, TempManager tempManager) {
-    return new HashedDb(fileSystem, OBJECT_DB_PATH, tempManager);
+    return new HashedDb(fileSystem, HASHED_DB_PATH, tempManager);
   }
 }

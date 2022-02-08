@@ -4,7 +4,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.install.ProjectPaths.OBJECT_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.space.Space.PRJ;
@@ -29,7 +29,7 @@ public class CleanRunner {
 
   public int run() {
     try {
-      fileSystem.delete(OBJECT_DB_PATH);
+      fileSystem.delete(HASHED_DB_PATH);
       fileSystem.delete(COMPUTATION_CACHE_PATH);
       fileSystem.delete(ARTIFACTS_PATH);
       fileSystem.delete(TEMPORARY_PATH);
