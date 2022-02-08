@@ -1,14 +1,13 @@
 package org.smoothbuild.util.reflect;
 
 import static okio.Okio.buffer;
+import static okio.Okio.sink;
 import static okio.Okio.source;
 import static org.smoothbuild.util.io.Okios.readAndClose;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
@@ -17,6 +16,7 @@ import com.google.common.io.ByteStreams;
 
 import okio.BufferedSource;
 import okio.ByteString;
+import okio.Sink;
 
 public class Classes {
   public static final String CLASS_FILE_EXTENSION = ".class";
@@ -49,14 +49,14 @@ public class Classes {
   }
 
   public static void saveBytecodeInJar(Path jarPath, Class<?>... classes) throws IOException {
-    try (var outputStream = new FileOutputStream(jarPath.toFile())) {
-      saveByteCodeInJar(outputStream, classes);
+    try (var outputStream = sink(jarPath.toFile())) {
+      saveBytecodeInJar(outputStream, classes);
     }
   }
 
-  public static void saveByteCodeInJar(OutputStream outputStream, Class<?>... classes)
+  public static void saveBytecodeInJar(Sink sink, Class<?>... classes)
       throws IOException {
-    try (JarOutputStream jarOutputStream = new JarOutputStream(outputStream)) {
+    try (var jarOutputStream = new JarOutputStream(buffer(sink).outputStream())) {
       for (Class<?> clazz : classes) {
         jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
         try (InputStream byteCodeInputStream = byteCodeAsInputStream(clazz)) {

@@ -13,7 +13,7 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
-import static org.smoothbuild.util.reflect.Classes.saveByteCodeInJar;
+import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -530,8 +530,8 @@ public class TestingContext {
 
   public BlobB blobBJarWithJavaByteCode(Class<?>... classes) throws IOException {
     var blobBBuilder = objDb().blobBuilder();
-    try (var outputStream = blobBBuilder.sink().outputStream()) {
-      saveByteCodeInJar(outputStream, classes);
+    try (var outputStream = blobBBuilder.sink()) {
+      saveBytecodeInJar(outputStream, classes);
     }
     return blobBBuilder.build();
   }
