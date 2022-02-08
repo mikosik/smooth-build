@@ -24,7 +24,7 @@ public class ByteCodeModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ObjDb provideobjDb(HashedDb hashedDb, CatDb catDb, TypingB typing) {
+  public ObjDb provideObjDb(HashedDb hashedDb, CatDb catDb, TypingB typing) {
     return new ObjDbImpl(hashedDb, catDb, typing);
   }
 
