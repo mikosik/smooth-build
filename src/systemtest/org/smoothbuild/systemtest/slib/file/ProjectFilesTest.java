@@ -1,7 +1,7 @@
 package org.smoothbuild.systemtest.slib.file;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_PATH;
+import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.systemtest.SystemTestCase;
@@ -78,7 +78,7 @@ public class ProjectFilesTest extends SystemTestCase {
     createFile("dir/file.txt", "abc");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    String userModule = PRJ_MODULE_PATH.toString();
+    String userModule = PRJ_MOD_PATH.toString();
     assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly(userModule, script, "dir/file.txt", "abc");
   }

@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.install.ProjectPaths.OBJECT_DB_PATH;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_PATH;
+import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.systemtest.CommandWithArgs.cleanCommand;
@@ -53,7 +53,7 @@ public class CleanCommandTest {
       runSmoothClean();
       assertFinishedWithError();
       assertSysOutContains("smooth: error: Directory '" + projectDirOption() + "' doesn't have "
-          + PRJ_MODULE_PATH.q() + ". Is it really smooth enabled project?");
+          + PRJ_MOD_PATH.q() + ". Is it really smooth enabled project?");
     }
 
     @Test

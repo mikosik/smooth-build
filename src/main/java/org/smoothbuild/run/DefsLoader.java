@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.install.InstallationPaths.SDK_MODULES;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
+import static org.smoothbuild.install.InstallationPaths.SDK_MODS;
+import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
 import static org.smoothbuild.out.log.ImmutableLogs.logs;
 import static org.smoothbuild.out.log.Log.error;
 import static org.smoothbuild.out.log.Maybe.maybeLogs;
@@ -31,8 +31,8 @@ import com.google.common.collect.ImmutableList;
 public class DefsLoader {
   private static final ImmutableList<FilePath> MODULES =
       ImmutableList.<FilePath>builder()
-          .addAll(SDK_MODULES)
-          .add(PRJ_MODULE_FILE_PATH)
+          .addAll(SDK_MODS)
+          .add(PRJ_MOD_FILE_PATH)
           .build();
 
   private final FileResolver fileResolver;

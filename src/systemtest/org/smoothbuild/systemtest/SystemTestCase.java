@@ -12,8 +12,8 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_FILE_PATH;
-import static org.smoothbuild.install.ProjectPaths.PRJ_MODULE_PATH;
+import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_FILE_PATH;
+import static org.smoothbuild.install.ProjectPaths.PRJ_MOD_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.out.report.ConsoleReporter.prefixMultiline;
@@ -70,7 +70,7 @@ public abstract class SystemTestCase {
   }
 
   public void createUserModule(String code) throws IOException {
-    createFile(PRJ_MODULE_PATH.toString(), code);
+    createFile(PRJ_MOD_PATH.toString(), code);
   }
 
   public void createFile(String path, String content) throws IOException {
@@ -206,14 +206,14 @@ public abstract class SystemTestCase {
   }
 
   public void assertSysOutContainsParseError(int lineNumber, String... errorLines) {
-    errorLines[0] = PRJ_MODULE_PATH + ":" + lineNumber + ": " + errorLines[0];
+    errorLines[0] = PRJ_MOD_PATH + ":" + lineNumber + ": " + errorLines[0];
     assertSysOutContainsParseError(errorLines);
   }
 
   public void assertSysOutContainsParseError(String... errorLines) {
     errorLines[0] = "ERROR: " + errorLines[0];
     assertSysOutContains(
-        "  " + PRJ_MODULE_FILE_PATH,
+        "  " + PRJ_MOD_FILE_PATH,
         prefixMultiline(errorLines));
   }
 

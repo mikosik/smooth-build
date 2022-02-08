@@ -14,7 +14,7 @@ public class ProjectPaths {
   public static final PathS COMPUTATION_CACHE_PATH = SMOOTH_DIR.appendPart("computations");
   public static final PathS OBJECT_DB_PATH = SMOOTH_DIR.appendPart("objects");
   public static final PathS SMOOTH_LOCK_PATH = SMOOTH_DIR.appendPart("lock");
-  public static final String PRJ_MODULE_FILE_NAME = "build.smooth";
-  public static final PathS PRJ_MODULE_PATH = path(PRJ_MODULE_FILE_NAME);
-  public static final FilePath PRJ_MODULE_FILE_PATH = filePath(PRJ, PRJ_MODULE_PATH);
+  public static final String PRJ_MOD_FILE_NAME = "build.smooth";
+  public static final PathS PRJ_MOD_PATH = path(PRJ_MOD_FILE_NAME);
+  public static final FilePath PRJ_MOD_FILE_PATH = filePath(PRJ, PRJ_MOD_PATH);
 }

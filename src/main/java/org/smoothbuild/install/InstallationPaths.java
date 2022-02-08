@@ -7,13 +7,16 @@ import static org.smoothbuild.util.collect.Lists.list;
 
 import java.nio.file.Path;
 
+import org.smoothbuild.io.fs.base.PathS;
 import org.smoothbuild.io.fs.space.FilePath;
 
 import com.google.common.collect.ImmutableList;
 
 public class InstallationPaths {
   public static final String LIB_DIR_NAME = "lib";
-  public static final ImmutableList<FilePath> SDK_MODULES = list(filePath(SDK, path("api.smooth")));
+  private static final PathS API_MOD_PATH = path("api.smooth");
+  public static final FilePath API_MOD_FILE_PATH = filePath(SDK, API_MOD_PATH);
+  public static final ImmutableList<FilePath> SDK_MODS = list(API_MOD_FILE_PATH);
   private static final String SMOOTH_JAR = "smooth.jar";
   private final Path installationDir;
 
