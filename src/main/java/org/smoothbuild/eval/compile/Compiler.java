@@ -1,5 +1,6 @@
 package org.smoothbuild.eval.compile;
 
+import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.Lists.map;
 import static org.smoothbuild.util.collect.Maps.computeIfAbsent;
 
@@ -171,10 +172,19 @@ public class Compiler {
   }
 
   private ObjB compileValImpl(ValS valS) {
-    return switch (valS) {
+    var exprB = switch (valS) {
       case DefValS defValS -> compileExpr(defValS.body());
       case BoolValS boolValS -> compileBoolVal(boolValS);
     };
+    var typeB = typeSbConv.convert(valS.type());
+    if (!typeB.equals(exprB.type())) {
+      var funcB = byteCodeF.func(byteCodeF.funcT(typeB, list()), exprB);
+      var callB = byteCodeF.call(typeB, funcB, byteCodeF.combine(byteCodeF.tupleT(list()), list()));
+      nals.put(funcB, valS);
+      nals.put(callB, valS);
+      return callB;
+    }
+    return exprB;
   }
 
   private BoolB compileBoolVal(BoolValS boolValS) {
