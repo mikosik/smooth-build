@@ -43,12 +43,12 @@ public class Evaluator {
 
     reporter.startNewPhase("Evaluating");
     var vm = vmProv.get(compiler.nals());
-    return evaluate(vm, exprs);
+    return evaluate(vm, exprs.get());
   }
 
-  private Optional<ImmutableList<ValB>> evaluate(Vm vm, Optional<ImmutableList<ObjB>> exprs) {
+  private Optional<ImmutableList<ValB>> evaluate(Vm vm, ImmutableList<ObjB> exprs) {
     try {
-      return vm.evaluate(exprs.get());
+      return vm.evaluate(exprs);
     } catch (InterruptedException e) {
       reporter.report(fatal("Evaluation process has been interrupted."));
       return Optional.empty();
