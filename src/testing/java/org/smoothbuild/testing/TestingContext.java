@@ -2,6 +2,7 @@ package org.smoothbuild.testing;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.io.ByteStreams.nullOutputStream;
+import static com.google.common.primitives.Ints.toByteArray;
 import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static org.smoothbuild.SmoothConstants.CHARSET;
@@ -13,6 +14,7 @@ import static org.smoothbuild.out.log.Level.INFO;
 import static org.smoothbuild.out.report.TaskMatchers.ALL;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.util.collect.NList.nList;
+import static org.smoothbuild.util.io.Okios.intToByteString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.IOException;
@@ -127,6 +129,7 @@ import org.smoothbuild.out.console.Console;
 import org.smoothbuild.out.report.ConsoleReporter;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.NList;
+import org.smoothbuild.util.io.Okios;
 import org.smoothbuild.vm.Vm;
 import org.smoothbuild.vm.VmProv;
 import org.smoothbuild.vm.compute.ComputationCache;
@@ -541,7 +544,7 @@ public class TestingContext {
   }
 
   public BlobB blobB(int data) {
-    return blobB(ByteString.of((byte) data));
+    return blobB(intToByteString(data));
   }
 
   public BlobB blobB(ByteString bytes) {
@@ -874,7 +877,7 @@ public class TestingContext {
   }
 
   public BlobS blobS(int line, int data) {
-    return new BlobS(blobTS(), ByteString.of((byte) data), loc(line));
+    return new BlobS(blobTS(), intToByteString(data), loc(line));
   }
 
   public CallS callS(TypeS type, ExprS callable, ExprS... args) {
