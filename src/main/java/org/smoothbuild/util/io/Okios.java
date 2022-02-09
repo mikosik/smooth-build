@@ -1,9 +1,11 @@
 package org.smoothbuild.util.io;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.ByteString;
 import okio.Sink;
 
 public class Okios {
@@ -23,5 +25,9 @@ public class Okios {
     try (sink) {
       writer.writeTo(sink);
     }
+  }
+
+  public static ByteString intToByteString(int data) {
+    return ByteString.of(BigInteger.valueOf(data).toByteArray());
   }
 }
