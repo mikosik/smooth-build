@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
-import org.smoothbuild.bytecode.ByteCodeExc;
+import org.smoothbuild.bytecode.BytecodeExc;
 
 import picocli.CommandLine.Option;
 
@@ -55,7 +55,7 @@ public abstract class ProjectCommand extends LoggingCommand implements Callable<
   private Integer execute(Path normalizedProjectDir) {
     try {
       return executeCommand(normalizedProjectDir);
-    } catch (ByteCodeExc e) {
+    } catch (BytecodeExc e) {
       printError(e.getMessage());
       return EXIT_CODE_ERROR;
     }

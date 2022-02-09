@@ -1,8 +1,8 @@
 package org.smoothbuild.bytecode.type.exc;
 
-import org.smoothbuild.bytecode.ByteCodeExc;
+import org.smoothbuild.bytecode.BytecodeExc;
 
-public class CatDbExc extends ByteCodeExc {
+public class CatDbExc extends BytecodeExc {
   public CatDbExc(String message) {
     super(message);
   }

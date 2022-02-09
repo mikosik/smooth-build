@@ -54,14 +54,14 @@ import com.google.common.collect.ImmutableList;
  * Builders returned by xxxBuilder() methods are not thread-safe.
  */
 @Singleton
-public class ByteCodeF {
+public class BytecodeF {
   private final ObjDb objDb;
   private final CatDb catDb;
   private final TupleTB messageT;
   private final TupleTB fileT;
 
   @Inject
-  public ByteCodeF(ObjDb objDb, CatDb catDb) {
+  public BytecodeF(ObjDb objDb, CatDb catDb) {
     this.objDb = objDb;
     this.catDb = catDb;
     this.messageT = createMessageT(catDb);

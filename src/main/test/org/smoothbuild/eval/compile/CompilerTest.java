@@ -219,7 +219,7 @@ public class CompilerTest extends TestingContext {
   }
 
   private Compiler newCompiler(DefsS defs, FileLoader fileLoader) {
-    return new Compiler(byteCodeF(), typingB(), defs, typeShConv(), fileLoader);
+    return new Compiler(bytecodeF(), typingB(), defs, typeShConv(), fileLoader);
   }
 
   private FileLoader createFileLoaderMock(FilePath filePath, BlobB value) {

@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 import static org.smoothbuild.util.collect.Lists.allMatch;
 
-import org.smoothbuild.bytecode.ByteCodeF;
+import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.FuncB;
@@ -43,7 +43,7 @@ public class ConvertAlgorithm extends Algorithm {
     return new Output(converted, nativeApi.messages());
   }
 
-  private ValB convert(TypeB targetT, ValB val, ByteCodeF factory) {
+  private ValB convert(TypeB targetT, ValB val, BytecodeF factory) {
     if (targetT.equals(val.type())) {
       return val;
     } else {
@@ -56,7 +56,7 @@ public class ConvertAlgorithm extends Algorithm {
     }
   }
 
-  private ArrayB convertArray(ArrayTB targetT, ArrayB array, ByteCodeF factory) {
+  private ArrayB convertArray(ArrayTB targetT, ArrayB array, BytecodeF factory) {
     var builder = factory.arrayBuilder(targetT);
     TypeB elemTargetT = targetT.elem();
     array.elems(ValB.class)
@@ -64,14 +64,14 @@ public class ConvertAlgorithm extends Algorithm {
     return builder.build();
   }
 
-  private FuncB convertFunc(FuncTB targetT, FuncB func, ByteCodeF factory) {
+  private FuncB convertFunc(FuncTB targetT, FuncB func, BytecodeF factory) {
     var sourceT = func.type();
     checkArgument(isAssignable(targetT.res(), sourceT.res()));
     checkArgument(allMatch(sourceT.params(), targetT.params(), this::isAssignable));
     return factory.func(targetT, convertBodyIfNeeded(targetT, func, factory));
   }
 
-  private ObjB convertBodyIfNeeded(FuncTB targetT, FuncB func, ByteCodeF factory) {
+  private ObjB convertBodyIfNeeded(FuncTB targetT, FuncB func, BytecodeF factory) {
     var body = func.body();
     if (body instanceof ValB valB && !targetT.res().equals(body.type())) {
       return convert(targetT.res(), valB, factory);
@@ -83,7 +83,7 @@ public class ConvertAlgorithm extends Algorithm {
     return typing.isAssignable(targetT, sourceT);
   }
 
-  private TupleB convertTuple(TupleTB targetT, TupleB tuple, ByteCodeF factory) {
+  private TupleB convertTuple(TupleTB targetT, TupleB tuple, BytecodeF factory) {
     var targetTs = targetT.items();
     var items = tuple.items();
     checkArgument(targetTs.size() == items.size());

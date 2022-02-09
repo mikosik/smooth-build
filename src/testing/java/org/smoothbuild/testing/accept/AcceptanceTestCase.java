@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.bytecode.ByteCodeModule;
+import org.smoothbuild.bytecode.BytecodeModule;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.eval.SandboxHash;
@@ -177,7 +177,7 @@ public class AcceptanceTestCase extends TestingContext {
       MemoryReporter memoryReporter) {
     return Guice.createInjector(PRODUCTION,
         new TestModule(sdkFileSystem, prjFileSystem, memoryReporter),
-        new ByteCodeModule(),
+        new BytecodeModule(),
         new ConsoleModule(new PrintWriter(nullOutputStream(), true)));
   }
 

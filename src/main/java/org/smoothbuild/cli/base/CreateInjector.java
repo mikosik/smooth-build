@@ -5,7 +5,7 @@ import static com.google.inject.Stage.PRODUCTION;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 
-import org.smoothbuild.bytecode.ByteCodeModule;
+import org.smoothbuild.bytecode.BytecodeModule;
 import org.smoothbuild.eval.EvaluateModule;
 import org.smoothbuild.install.InstallationModule;
 import org.smoothbuild.io.fs.FileSystemModule;
@@ -28,7 +28,7 @@ public class CreateInjector {
       Level logLevel, TaskMatcher taskMatcher) {
     return Guice.createInjector(PRODUCTION,
         new EvaluateModule(),
-        new ByteCodeModule(),
+        new BytecodeModule(),
         new FileSystemModule(projectDir),
         new InstallationModule(installationDir),
         new ReportModule(logLevel, taskMatcher),

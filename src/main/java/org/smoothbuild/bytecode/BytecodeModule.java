@@ -18,7 +18,7 @@ import org.smoothbuild.io.fs.space.ForSpace;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class ByteCodeModule extends AbstractModule {
+public class BytecodeModule extends AbstractModule {
   @Override
   protected void configure() {}
 

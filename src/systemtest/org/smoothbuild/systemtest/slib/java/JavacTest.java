@@ -76,7 +76,7 @@ public class JavacTest extends SystemTestCase {
     Path libraryClassFile = artifactAbsolutePath("result").resolve("library/LibraryClass.class");
     Path classFile = artifactAbsolutePath("result").resolve("MyClass.class");
     MyClassLoader classLoader = new MyClassLoader();
-    loadClass(classLoader, byteCode(libraryClassFile.toFile()));
+    loadClass(classLoader, bytecode(libraryClassFile.toFile()));
     assertThat(invoke(classLoader, classFile.toFile(), "myMethod"))
         .isEqualTo("5");
   }
@@ -133,11 +133,11 @@ public class JavacTest extends SystemTestCase {
 
   private Object invoke(MyClassLoader classLoader, File appClassFile, String method)
       throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-    Class<?> klass = loadClass(classLoader, byteCode(appClassFile));
+    Class<?> klass = loadClass(classLoader, bytecode(appClassFile));
     return klass.getMethod(method).invoke(null);
   }
 
-  private byte[] byteCode(File classFilePath) throws IOException {
+  private byte[] bytecode(File classFilePath) throws IOException {
     return readAndClose(buffer(source(classFilePath)), s -> s.readByteArray());
   }
 

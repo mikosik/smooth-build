@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.bytecode.ByteCodeF;
+import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.base.ObjB;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
@@ -34,14 +34,14 @@ import okio.BufferedSource;
 public class ComputationCache {
   private final FileSystem fileSystem;
   private final ObjDb objDb;
-  private final ByteCodeF byteCodeF;
+  private final BytecodeF bytecodeF;
 
   @Inject
   public ComputationCache(@ForSpace(PRJ) FileSystem fileSystem, ObjDb objDb,
-      ByteCodeF byteCodeF) {
+      BytecodeF bytecodeF) {
     this.fileSystem = fileSystem;
     this.objDb = objDb;
-    this.byteCodeF = byteCodeF;
+    this.bytecodeF = bytecodeF;
   }
 
   public synchronized void write(Hash computationHash, Output output)
@@ -70,7 +70,7 @@ public class ComputationCache {
   public synchronized Output read(Hash taskHash, TypeB type) throws ComputationCacheExc {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       ObjB messagesObj = objDb.get(Hash.read(source));
-      ArrayTB messageArrayT = byteCodeF.arrayT(byteCodeF.messageT());
+      ArrayTB messageArrayT = bytecodeF.arrayT(bytecodeF.messageT());
       if (!messagesObj.cat().equals(messageArrayT)) {
         throw ComputationCacheExc.corruptedValueException(taskHash, "Expected " + messageArrayT
             + " as first child of its Merkle root, but got " + messagesObj.cat());

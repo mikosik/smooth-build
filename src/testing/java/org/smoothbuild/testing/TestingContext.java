@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.smoothbuild.bytecode.ByteCodeF;
+import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.ObjDb;
 import org.smoothbuild.bytecode.obj.ObjDbImpl;
 import org.smoothbuild.bytecode.obj.base.ObjB;
@@ -155,7 +155,7 @@ public class TestingContext {
 
   private Computer computer;
   private Container container;
-  private ByteCodeF byteCodeF;
+  private BytecodeF bytecodeF;
   private ComputationCache computationCache;
   private FileSystem computationCacheFileSystem;
   private ObjDb objDb;
@@ -192,7 +192,7 @@ public class TestingContext {
   }
 
   public CompilerProv compilerProv(FileLoader fileLoader) {
-    return new CompilerProv(typeShConv(), byteCodeF(), typingB(), fileLoader);
+    return new CompilerProv(typeShConv(), bytecodeF(), typingB(), fileLoader);
   }
 
   public ParallelJobExecutor parallelJobExecutor() {
@@ -251,18 +251,18 @@ public class TestingContext {
   }
 
   private Container newContainer() {
-    return new Container(fullFileSystem(), byteCodeF(), typingB());
+    return new Container(fullFileSystem(), bytecodeF(), typingB());
   }
 
   public TypeSbConv typeShConv() {
-    return new TypeSbConv(byteCodeF());
+    return new TypeSbConv(bytecodeF());
   }
 
-  public ByteCodeF byteCodeF() {
-    if (byteCodeF == null) {
-      byteCodeF = new ByteCodeF(objDb(), catDb());
+  public BytecodeF bytecodeF() {
+    if (bytecodeF == null) {
+      bytecodeF = new BytecodeF(objDb(), catDb());
     }
-    return byteCodeF;
+    return bytecodeF;
   }
 
   public TypingS typingS() {
@@ -307,7 +307,7 @@ public class TestingContext {
   public ComputationCache computationCache() {
     if (computationCache == null) {
       computationCache = new ComputationCache(
-          computationCacheFileSystem(), objDb(), byteCodeF());
+          computationCacheFileSystem(), objDb(), bytecodeF());
     }
     return computationCache;
   }
@@ -542,7 +542,7 @@ public class TestingContext {
   }
 
   public BlobB blobB() {
-    return byteCodeF().blob(sink -> sink.writeUtf8("blob data"));
+    return bytecodeF().blob(sink -> sink.writeUtf8("blob data"));
   }
 
   public BlobB blobB(int data) {
@@ -550,7 +550,7 @@ public class TestingContext {
   }
 
   public BlobB blobB(ByteString bytes) {
-    return byteCodeF().blob(sink -> sink.write(bytes));
+    return bytecodeF().blob(sink -> sink.write(bytes));
   }
 
   public BlobBBuilder blobBBuilder() {
@@ -586,8 +586,8 @@ public class TestingContext {
   }
 
   public TupleB fileB(String path, BlobB blob) {
-    StringB string = byteCodeF().string(path);
-    return byteCodeF().file(string, blob);
+    StringB string = bytecodeF().string(path);
+    return bytecodeF().file(string, blob);
   }
 
   public FuncB funcB() {
@@ -667,23 +667,23 @@ public class TestingContext {
   }
 
   public ArrayB messageArrayWithOneError() {
-    return arrayB(byteCodeF().errorMessage("error message"));
+    return arrayB(bytecodeF().errorMessage("error message"));
   }
 
   public ArrayB messageArrayEmtpy() {
-    return arrayB(byteCodeF().messageT());
+    return arrayB(bytecodeF().messageT());
   }
 
   public TupleB errorMessage(String text) {
-    return byteCodeF().errorMessage(text);
+    return bytecodeF().errorMessage(text);
   }
 
   public TupleB warningMessage(String text) {
-    return byteCodeF().warningMessage(text);
+    return bytecodeF().warningMessage(text);
   }
 
   public TupleB infoMessage(String text) {
-    return byteCodeF().infoMessage(text);
+    return bytecodeF().infoMessage(text);
   }
 
   // Expr-s

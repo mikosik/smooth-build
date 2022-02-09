@@ -59,19 +59,19 @@ public class Classes {
     try (var jarOutputStream = new JarOutputStream(buffer(sink).outputStream())) {
       for (Class<?> clazz : classes) {
         jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
-        try (InputStream byteCodeInputStream = byteCodeAsInputStream(clazz)) {
-          ByteStreams.copy(byteCodeInputStream, jarOutputStream);
+        try (InputStream bytecodeInputStream = bytecodeAsInputStream(clazz)) {
+          ByteStreams.copy(bytecodeInputStream, jarOutputStream);
         }
       }
     }
   }
 
-  public static InputStream byteCodeAsInputStream(Class<?> clazz) {
+  public static InputStream bytecodeAsInputStream(Class<?> clazz) {
     return clazz.getClassLoader().getResourceAsStream(binaryPath(clazz));
   }
 
   public static ByteString bytecode(Class<?> clazz) throws IOException {
-    return readAndClose(buffer(source(byteCodeAsInputStream(clazz))),
+    return readAndClose(buffer(source(bytecodeAsInputStream(clazz))),
         BufferedSource::readByteString);
   }
 }

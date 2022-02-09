@@ -1,6 +1,6 @@
 package org.smoothbuild.plugin;
 
-import org.smoothbuild.bytecode.ByteCodeF;
+import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.type.TypingB;
 
@@ -9,7 +9,7 @@ import org.smoothbuild.bytecode.type.TypingB;
  * from one thread by native funcs.
  */
 public interface NativeApi {
-  public ByteCodeF factory();
+  public BytecodeF factory();
 
   public TypingB typing();
 

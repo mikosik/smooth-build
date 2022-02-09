@@ -1,8 +1,8 @@
 package org.smoothbuild.bytecode.obj.exc;
 
-import org.smoothbuild.bytecode.ByteCodeExc;
+import org.smoothbuild.bytecode.BytecodeExc;
 
-public class ObjDbExc extends ByteCodeExc {
+public class ObjDbExc extends BytecodeExc {
   public ObjDbExc(String message) {
     super(message);
   }
