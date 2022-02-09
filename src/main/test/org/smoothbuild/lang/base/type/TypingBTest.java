@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.TestedAssignCases.INSTANCE_H;
+import static org.smoothbuild.lang.base.type.TestedAssignCases.INSTANCE_B;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.smoothbuild.lang.base.type.api.VarBounds;
 
 public class TypingBTest {
   private final static TypingTestCases<TypeB, TestedTB> TYPING_TEST_CASES =
-      new TypingTestCases<>(INSTANCE_H);
+      new TypingTestCases<>(INSTANCE_B);
 
   @ParameterizedTest
   @MethodSource("contains_test_data")

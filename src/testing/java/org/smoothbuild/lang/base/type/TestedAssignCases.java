@@ -22,7 +22,7 @@ public class TestedAssignCases<
 
   public static final TestedAssignCases<TypeS, TestedTS, TestedAssignSpecS> INSTANCE_S =
       new TestedAssignCases<>(new TestedTSF());
-  public static final TestedAssignCases<TypeB, TestedTB, TestedAssignSpecB> INSTANCE_H =
+  public static final TestedAssignCases<TypeB, TestedTB, TestedAssignSpecB> INSTANCE_B =
       new TestedAssignCases<>(new TestedTBF());
 
   private final TestedTF<T, TT, S> testedTF;
