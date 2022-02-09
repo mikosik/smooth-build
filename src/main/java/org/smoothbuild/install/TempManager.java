@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.io.fs.base.PathS;
+import org.smoothbuild.fs.base.PathS;
 
 /**
  * This class is thread-safe.

@@ -9,10 +9,10 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.nativefunc.ReportError;
-import org.smoothbuild.nativefunc.ReportInfo;
-import org.smoothbuild.nativefunc.ReportWarning;
 import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.nativefunc.ReportError;
+import org.smoothbuild.testing.nativefunc.ReportInfo;
+import org.smoothbuild.testing.nativefunc.ReportWarning;
 
 public class LoggingTest extends SystemTestCase {
   private static final String LOG_MESSAGE = "WARNING: my-message-to-log";

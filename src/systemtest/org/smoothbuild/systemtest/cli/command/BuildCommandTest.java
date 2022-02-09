@@ -13,15 +13,15 @@ import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.cli.command.BuildCommand;
-import org.smoothbuild.nativefunc.ReportError;
-import org.smoothbuild.nativefunc.ReportInfo;
-import org.smoothbuild.nativefunc.ReportWarning;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
 import org.smoothbuild.systemtest.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.systemtest.cli.command.common.LockFileTestCase;
 import org.smoothbuild.systemtest.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.systemtest.cli.command.common.ValuesArgTestCase;
+import org.smoothbuild.testing.nativefunc.ReportError;
+import org.smoothbuild.testing.nativefunc.ReportInfo;
+import org.smoothbuild.testing.nativefunc.ReportWarning;
 
 public class BuildCommandTest {
   @Nested

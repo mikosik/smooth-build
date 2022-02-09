@@ -4,7 +4,7 @@ import static org.smoothbuild.testing.TestingModLoader.err;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.testing.TestingContext;
 

@@ -12,7 +12,7 @@ import static org.smoothbuild.util.collect.NList.nList;
 import javax.inject.Inject;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.DefFuncS;
 import org.smoothbuild.lang.base.define.DefTypeS;
 import org.smoothbuild.lang.base.define.DefsS;

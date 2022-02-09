@@ -1,7 +1,7 @@
 package org.smoothbuild.db;
 
 import static org.smoothbuild.db.Helpers.wrapIOExceptionAsHashedDbException;
-import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
+import static org.smoothbuild.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,9 +9,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 import org.smoothbuild.db.exc.HashedDbExc;
-import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.PathS;
-import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.PathS;
+import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.util.io.DataWriter;
 
 import okio.Buffer;

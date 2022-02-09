@@ -14,9 +14,9 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.install.ModFilesDetector;
-import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.io.fs.space.FileResolver;
 import org.smoothbuild.lang.base.define.DefsS;
 import org.smoothbuild.lang.base.define.InternalModLoader;
 import org.smoothbuild.lang.base.define.ModFiles;

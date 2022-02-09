@@ -1,7 +1,7 @@
 package org.smoothbuild.bytecode;
 
+import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
-import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import javax.inject.Singleton;
 
@@ -11,9 +11,9 @@ import org.smoothbuild.bytecode.type.CatDb;
 import org.smoothbuild.bytecode.type.TypeBF;
 import org.smoothbuild.bytecode.type.TypingB;
 import org.smoothbuild.db.HashedDb;
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.install.TempManager;
-import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.space.ForSpace;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.type.api.Bounds;
 import org.smoothbuild.lang.base.type.api.Sides.Side;
 import org.smoothbuild.lang.base.type.api.Type;
+import org.smoothbuild.testing.type.TestingT;
 
 public abstract class TypingMergeBoundsTestCase<T extends Type> {
   private final TestingT<T> testingT;

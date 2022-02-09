@@ -38,7 +38,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
-import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Loc;
 
 import com.google.common.collect.ImmutableList;

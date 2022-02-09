@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.parse.component;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.TestedTSF.TESTED_MONOTYPES;
-import static org.smoothbuild.lang.base.type.TestedTSF.TESTED_SINGLE_VARIABLE_POLYTYPES;
-import static org.smoothbuild.lang.base.type.TestedTSF.TESTED_VALID_POLYTYPES;
-import static org.smoothbuild.lang.base.type.TestingTS.BLOB;
-import static org.smoothbuild.lang.base.type.TestingTS.STRING;
-import static org.smoothbuild.lang.base.type.TestingTS.a;
-import static org.smoothbuild.lang.base.type.TestingTS.f;
 import static org.smoothbuild.testing.TestingModLoader.err;
+import static org.smoothbuild.testing.type.TestedTSF.TESTED_MONOTYPES;
+import static org.smoothbuild.testing.type.TestedTSF.TESTED_SINGLE_VARIABLE_POLYTYPES;
+import static org.smoothbuild.testing.type.TestedTSF.TESTED_VALID_POLYTYPES;
+import static org.smoothbuild.testing.type.TestingTS.BLOB;
+import static org.smoothbuild.testing.type.TestingTS.STRING;
+import static org.smoothbuild.testing.type.TestingTS.a;
+import static org.smoothbuild.testing.type.TestingTS.f;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.collect.NList.nList;
 
@@ -22,8 +22,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.lang.base.type.TestedTS;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.type.TestedTS;
 
 public class DeclarationTest extends TestingContext {
   @Nested

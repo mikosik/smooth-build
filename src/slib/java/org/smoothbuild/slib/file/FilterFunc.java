@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.eval.artifact.FileStruct.filePath;
-import static org.smoothbuild.io.fs.base.PathS.path;
+import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
 import java.util.function.Predicate;
@@ -10,7 +10,7 @@ import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.io.fs.base.PathS;
+import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.file.match.IllegalPathPatternExc;
 

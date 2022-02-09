@@ -1,9 +1,9 @@
 package org.smoothbuild.vm.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.bytecode.type.TestingCatsB.INT;
-import static org.smoothbuild.bytecode.type.TestingCatsB.PERSON;
-import static org.smoothbuild.bytecode.type.TestingCatsB.STRING;
+import static org.smoothbuild.testing.type.TestingCatsB.INT;
+import static org.smoothbuild.testing.type.TestingCatsB.PERSON;
+import static org.smoothbuild.testing.type.TestingCatsB.STRING;
 import static org.smoothbuild.util.collect.Lists.list;
 import static org.smoothbuild.vm.compute.Computer.computationHash;
 import static org.smoothbuild.vm.job.algorithm.Input.input;

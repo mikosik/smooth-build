@@ -8,7 +8,7 @@ import static org.smoothbuild.out.log.Level.WARNING;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.io.fs.space.Space;
+import org.smoothbuild.fs.space.Space;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.vm.job.job.TaskKind;
 

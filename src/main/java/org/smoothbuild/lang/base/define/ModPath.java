@@ -4,7 +4,7 @@ import static org.smoothbuild.util.io.Paths.removeExtension;
 
 import java.util.Objects;
 
-import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.fs.space.FilePath;
 
 public class ModPath {
   private final String path;

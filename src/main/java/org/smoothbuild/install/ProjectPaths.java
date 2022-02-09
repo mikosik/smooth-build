@@ -1,11 +1,11 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.io.fs.base.PathS.path;
-import static org.smoothbuild.io.fs.space.FilePath.filePath;
-import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.base.PathS.path;
+import static org.smoothbuild.fs.space.FilePath.filePath;
+import static org.smoothbuild.fs.space.Space.PRJ;
 
-import org.smoothbuild.io.fs.base.PathS;
-import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.fs.base.PathS;
+import org.smoothbuild.fs.space.FilePath;
 
 public class ProjectPaths {
   public static final PathS SMOOTH_DIR = path(".smooth");

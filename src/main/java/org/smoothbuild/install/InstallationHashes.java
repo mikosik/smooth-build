@@ -14,8 +14,8 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.io.fs.space.FileResolver;
+import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.fs.space.FileResolver;
 import org.smoothbuild.lang.base.define.ModFiles;
 import org.smoothbuild.lang.base.define.ModPath;
 

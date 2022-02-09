@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
-import org.smoothbuild.io.fs.base.PathS;
+import org.smoothbuild.fs.base.PathS;
 
 public class PathMatcher {
   public static Predicate<PathS> pathMatcher(String pattern) {

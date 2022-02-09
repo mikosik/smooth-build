@@ -7,8 +7,8 @@ import java.nio.file.Path;
 
 import org.smoothbuild.bytecode.BytecodeModule;
 import org.smoothbuild.eval.EvaluateModule;
+import org.smoothbuild.fs.FileSystemModule;
 import org.smoothbuild.install.InstallationModule;
-import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.out.console.ConsoleModule;
 import org.smoothbuild.out.log.Level;
 import org.smoothbuild.out.report.ReportModule;

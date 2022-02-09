@@ -2,9 +2,9 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.define.Loc.internal;
-import static org.smoothbuild.lang.base.type.TestingTS.STRING;
 import static org.smoothbuild.testing.TestingContext.loc;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.testing.type.TestingTS.STRING;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.type.impl.TypeS;

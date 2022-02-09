@@ -23,7 +23,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.smoothbuild.antlr.lang.SmoothLexer;
 import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModContext;
-import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Loc;
 import org.smoothbuild.out.log.LogBuffer;
 import org.smoothbuild.out.log.Logger;

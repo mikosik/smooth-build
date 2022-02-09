@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.java.javac;
 
-import static org.smoothbuild.io.fs.base.PathS.path;
+import static org.smoothbuild.fs.base.PathS.path;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import javax.tools.StandardLocation;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.ArrayBBuilder;
-import org.smoothbuild.io.fs.base.PathS;
+import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.util.collect.Lists;
 

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.type.base.CatB;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.type.TestingCatsB;
 
 public class CatBCollisionsTest extends TestingContext {
   @Test

@@ -2,13 +2,13 @@ package org.smoothbuild.lang.base.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.io.fs.space.FilePath.filePath;
-import static org.smoothbuild.io.fs.space.Space.INTERNAL;
-import static org.smoothbuild.io.fs.space.Space.PRJ;
-import static org.smoothbuild.io.fs.space.Space.UNKNOWN;
+import static org.smoothbuild.fs.space.FilePath.filePath;
+import static org.smoothbuild.fs.space.Space.INTERNAL;
+import static org.smoothbuild.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.UNKNOWN;
 
-import org.smoothbuild.io.fs.space.FilePath;
-import org.smoothbuild.io.fs.space.Space;
+import org.smoothbuild.fs.space.FilePath;
+import org.smoothbuild.fs.space.Space;
 
 /**
  * Location.

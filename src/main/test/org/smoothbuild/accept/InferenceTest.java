@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.format;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.nativefunc.Append;
-import org.smoothbuild.nativefunc.Concat;
 import org.smoothbuild.testing.accept.AcceptanceTestCase;
+import org.smoothbuild.testing.nativefunc.Append;
+import org.smoothbuild.testing.nativefunc.Concat;
 
 public class InferenceTest extends AcceptanceTestCase {
   @Test

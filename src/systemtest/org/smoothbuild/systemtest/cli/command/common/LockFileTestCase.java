@@ -9,9 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.nativefunc.Sleep3s;
 import org.smoothbuild.systemtest.CommandWithArgs;
 import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.nativefunc.Sleep3s;
 
 public abstract class LockFileTestCase extends SystemTestCase {
   @Test

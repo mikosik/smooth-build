@@ -3,8 +3,8 @@ package org.smoothbuild.vm.compute;
 import static org.smoothbuild.eval.artifact.MessageStruct.containsErrors;
 import static org.smoothbuild.eval.artifact.MessageStruct.isValidSeverity;
 import static org.smoothbuild.eval.artifact.MessageStruct.severity;
+import static org.smoothbuild.fs.space.Space.PRJ;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.io.fs.space.Space.PRJ;
 
 import java.io.IOException;
 
@@ -19,10 +19,10 @@ import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.base.TypeB;
 import org.smoothbuild.bytecode.type.val.ArrayTB;
 import org.smoothbuild.db.Hash;
-import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.PathS;
-import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.space.ForSpace;
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.PathS;
+import org.smoothbuild.fs.base.PathState;
+import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.vm.job.algorithm.Output;
 
 import okio.BufferedSink;

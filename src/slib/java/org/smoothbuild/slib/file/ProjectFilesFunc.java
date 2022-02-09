@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.file;
 
+import static org.smoothbuild.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
-import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 import static org.smoothbuild.util.Throwables.unexpectedCaseExc;
 
@@ -9,10 +9,10 @@ import java.io.IOException;
 
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.PathIterator;
-import org.smoothbuild.io.fs.base.PathS;
-import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.PathIterator;
+import org.smoothbuild.fs.base.PathS;
+import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.vm.compute.Container;
 
 public class ProjectFilesFunc {

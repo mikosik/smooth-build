@@ -12,10 +12,6 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.type.TestedAssignCases;
-import org.smoothbuild.lang.base.type.TestedAssignSpecS;
-import org.smoothbuild.lang.base.type.TestedTS;
-import org.smoothbuild.lang.base.type.TestedTSF;
 import org.smoothbuild.lang.base.type.api.FuncT;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.impl.FuncTS;
@@ -23,6 +19,10 @@ import org.smoothbuild.lang.base.type.impl.TypeSF;
 import org.smoothbuild.lang.base.type.impl.TypingS;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.TestingModLoader;
+import org.smoothbuild.testing.type.TestedAssignCases;
+import org.smoothbuild.testing.type.TestedAssignSpecS;
+import org.smoothbuild.testing.type.TestedTS;
+import org.smoothbuild.testing.type.TestedTSF;
 
 public class TypeCheckingTest extends TestingContext {
   @ParameterizedTest

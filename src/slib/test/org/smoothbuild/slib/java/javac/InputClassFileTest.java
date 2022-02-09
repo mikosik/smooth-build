@@ -3,7 +3,7 @@ package org.smoothbuild.slib.java.javac;
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.io.fs.base.PathS.path;
+import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.io.Okios.readAndClose;
 
@@ -11,7 +11,7 @@ import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.io.fs.base.PathS;
+import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.BufferedSource;

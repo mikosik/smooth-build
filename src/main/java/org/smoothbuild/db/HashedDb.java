@@ -19,10 +19,10 @@ import org.smoothbuild.db.exc.DecodeHashSeqExc;
 import org.smoothbuild.db.exc.DecodeStringExc;
 import org.smoothbuild.db.exc.HashedDbExc;
 import org.smoothbuild.db.exc.NoSuchDataExc;
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.PathS;
+import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.install.TempManager;
-import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.PathS;
-import org.smoothbuild.io.fs.base.PathState;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

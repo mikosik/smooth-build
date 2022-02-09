@@ -21,6 +21,11 @@ import org.smoothbuild.lang.base.type.api.TypeF;
 import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.api.VarT;
 import org.smoothbuild.lang.base.type.impl.NothingTS;
+import org.smoothbuild.testing.type.TestedAssignCases;
+import org.smoothbuild.testing.type.TestedAssignSpec;
+import org.smoothbuild.testing.type.TestedT;
+import org.smoothbuild.testing.type.TestedTF;
+import org.smoothbuild.testing.type.TestingT;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

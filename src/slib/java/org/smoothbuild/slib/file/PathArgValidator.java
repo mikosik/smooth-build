@@ -1,10 +1,10 @@
 package org.smoothbuild.slib.file;
 
-import static org.smoothbuild.io.fs.base.PathS.path;
+import static org.smoothbuild.fs.base.PathS.path;
 
 import org.smoothbuild.bytecode.obj.val.StringB;
-import org.smoothbuild.io.fs.base.IllegalPathExc;
-import org.smoothbuild.io.fs.base.PathS;
+import org.smoothbuild.fs.base.IllegalPathExc;
+import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.plugin.NativeApi;
 
 public class PathArgValidator {

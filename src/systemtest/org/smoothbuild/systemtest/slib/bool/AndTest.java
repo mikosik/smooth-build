@@ -6,8 +6,8 @@ import static java.lang.String.format;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.nativefunc.ThrowException;
 import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.nativefunc.ThrowException;
 
 public class AndTest extends SystemTestCase {
   @Test

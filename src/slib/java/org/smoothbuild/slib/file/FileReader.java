@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.smoothbuild.bytecode.obj.val.BlobB;
 import org.smoothbuild.bytecode.obj.val.StringB;
 import org.smoothbuild.bytecode.obj.val.TupleB;
-import org.smoothbuild.io.fs.base.PathS;
+import org.smoothbuild.fs.base.PathS;
 import org.smoothbuild.vm.compute.Container;
 
 import okio.BufferedSource;

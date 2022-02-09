@@ -5,8 +5,8 @@ import static java.lang.String.format;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.nativefunc.ThrowException;
 import org.smoothbuild.systemtest.SystemTestCase;
+import org.smoothbuild.testing.nativefunc.ThrowException;
 
 public class IfTest extends SystemTestCase {
   @Test

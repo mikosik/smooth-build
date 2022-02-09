@@ -1,6 +1,6 @@
 package org.smoothbuild.vm.compute;
 
-import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PRJ;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import org.smoothbuild.bytecode.BytecodeF;
 import org.smoothbuild.bytecode.obj.val.ArrayB;
 import org.smoothbuild.bytecode.obj.val.ValB;
 import org.smoothbuild.bytecode.type.TypingB;
-import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.space.ForSpace;
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.space.ForSpace;
 import org.smoothbuild.plugin.MessageLogger;
 import org.smoothbuild.plugin.NativeApi;
 

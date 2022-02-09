@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.TestedAssignCases.INSTANCE_S;
+import static org.smoothbuild.testing.type.TestedAssignCases.INSTANCE_S;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +11,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.api.Type;
 import org.smoothbuild.lang.base.type.api.VarBounds;
 import org.smoothbuild.lang.base.type.impl.TypeS;
+import org.smoothbuild.testing.type.TestedAssignSpec;
+import org.smoothbuild.testing.type.TestedTS;
 
 public class TypingSTest {
   private final static TypingTestCases<TypeS, TestedTS> TYPING_TEST_CASES =

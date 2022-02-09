@@ -2,7 +2,7 @@ package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.io.fs.space.Space.PRJ;
+import static org.smoothbuild.fs.space.Space.PRJ;
 
 import java.util.Optional;
 

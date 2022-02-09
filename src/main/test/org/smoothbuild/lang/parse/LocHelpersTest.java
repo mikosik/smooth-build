@@ -9,7 +9,7 @@ import static org.smoothbuild.testing.TestingContext.filePath;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.io.fs.space.FilePath;
+import org.smoothbuild.fs.space.FilePath;
 import org.smoothbuild.lang.base.define.Loc;
 
 public class LocHelpersTest {

@@ -1,7 +1,7 @@
 package org.smoothbuild.vm.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.io.fs.base.PathS.path;
+import static org.smoothbuild.fs.base.PathS.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.math.BigInteger;

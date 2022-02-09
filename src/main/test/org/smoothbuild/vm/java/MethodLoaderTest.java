@@ -11,10 +11,10 @@ import static org.smoothbuild.vm.java.MethodLoader.NATIVE_METHOD_NAME;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.nativefunc.ReturnAbc;
-import org.smoothbuild.nativefunc.ReturnAbcdef;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.nativefunc.ReturnAbc;
+import org.smoothbuild.testing.nativefunc.ReturnAbcdef;
 
 public class MethodLoaderTest extends TestingContext {
   @Test
