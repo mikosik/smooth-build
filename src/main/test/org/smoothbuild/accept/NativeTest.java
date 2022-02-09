@@ -22,7 +22,7 @@ import org.smoothbuild.testing.nativefunc.BrokenIdentity;
 import org.smoothbuild.testing.nativefunc.EmptyStringArray;
 import org.smoothbuild.testing.nativefunc.NonPublicMethod;
 import org.smoothbuild.testing.nativefunc.NonStaticMethod;
-import org.smoothbuild.testing.nativefunc.OverloadedMethodName;
+import org.smoothbuild.testing.nativefunc.OverloadedMethod;
 import org.smoothbuild.testing.nativefunc.ReportErrorAndReturnNonNull;
 import org.smoothbuild.testing.nativefunc.ReportFixedError;
 import org.smoothbuild.testing.nativefunc.ReportWarningAndReturnNull;
@@ -166,16 +166,16 @@ public class NativeTest extends AcceptanceTestCase {
 
       @Test
       public void is_overloaded() throws Exception {
-        createUserNativeJar(OverloadedMethodName.class);
-        String className = OverloadedMethodName.class.getCanonicalName();
+        createUserNativeJar(OverloadedMethod.class);
+        String className = OverloadedMethod.class.getCanonicalName();
         createUserModule(format("""
               @Native("%s")
-              String overloadedMethodName();
-              result = overloadedMethodName();
+              String overloadedMethod();
+              result = overloadedMethod();
               """, className));
         evaluate("result");
         assertThat(logs())
-            .containsExactly(methodLoadingError(className, "overloadedMethodName",
+            .containsExactly(methodLoadingError(className, "overloadedMethod",
                 "Class '" + className + "' has two 'func' methods."));
       }
 
